@@ -3,6 +3,8 @@ import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core
 export enum HcsSetupModalSelect {
   FirstTimeSetup = 0,
   AgentInstallFileSetup = 1,
+  SftpServerSetup = 2,
+  SoftwareProfileSetup = 3,
 }
 
 export class HcsSetupModalService {

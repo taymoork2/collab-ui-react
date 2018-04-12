@@ -3270,6 +3270,11 @@
               },
             },
           })
+          .state('hcs.sftplist', {
+            parent: 'partner',
+            url: '/hcs/sftplist',
+            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',

@@ -292,6 +292,7 @@
     require('modules/hcs/hcs-inventory/inventory-list').default,
     require('modules/hcs/hcs-upgrade').default,
     require('modules/hcs/hcs-upgrade/upgrade-group').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
