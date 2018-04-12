@@ -60,8 +60,8 @@ export class Attribute {
 }
 
 export class CategoryAttribute extends Attribute {
-  public categoryOptions: string[];
-  constructor (name: string, value: any, options: string[]) {
+  public categoryOptions: string;
+  constructor (name: string, value: any, options: string) {
     super(name, value);
     this.categoryOptions = options;
   }
@@ -143,7 +143,7 @@ export class CustomerInformation {
           new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
           new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultNameText')),
           new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultNameHint')),
-          new CategoryAttribute('type', ctService.getTypeObject('name'), ['']),
+          new CategoryAttribute('type', ctService.getTypeObject('name'), ''),
         ],
       },
 
@@ -153,7 +153,7 @@ export class CustomerInformation {
           new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
           new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultEmailText')),
           new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultEmail')),
-          new CategoryAttribute('type', ctService.getTypeObject('email'), ['']),
+          new CategoryAttribute('type', ctService.getTypeObject('email'), ''),
         ],
       },
 
@@ -163,7 +163,7 @@ export class CustomerInformation {
           new Attribute('category', ctService.getCategoryTypeObject('requestInfo') as string),
           new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText')),
           new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.field3HintText')),
-          new CategoryAttribute('type', ctService.getTypeObject('category'), ['']),
+          new CategoryAttribute('type', ctService.getTypeObject('category'), ''),
         ],
       },
 
@@ -173,7 +173,7 @@ export class CustomerInformation {
           new Attribute('category', ctService.getCategoryTypeObject('requestInfo') as string),
           new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.additionalDetails')),
           new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue')),
-          new CategoryAttribute('type', ctService.getTypeObject('reason'), ['']),
+          new CategoryAttribute('type', ctService.getTypeObject('reason'), ''),
         ],
       },
     };
