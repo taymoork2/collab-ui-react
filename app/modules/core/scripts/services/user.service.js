@@ -48,6 +48,7 @@
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
       _helpers: {
+        checkAndUpdateSunlightUser: checkAndUpdateSunlightUser,
         mkOnboardUsersPayload: mkOnboardUsersPayload,
         onboardUsersAPI: onboardUsersAPI,
       },
@@ -545,26 +546,39 @@
         var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
           timeout: cancelPromise,
         });
-        onboardUsersPromise.then(function (response) {
-          checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users);
-        });
-        return onboardUsersPromise;
+        var onboardUsersResponse;
+        return onboardUsersPromise
+          .then(function (response) {
+            // notes:
+            // - save the original http post response from onboarding users to resolve with later
+            onboardUsersResponse = response;
+
+            // - chain necessary Care-specific logic for updating users as-appropriate
+            // - prevent rejections from Care-specific logic from causing the original promise chain to reject
+            return service._helpers.checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users)
+              .catch(_.noop);
+          })
+          .then(function () {
+            return onboardUsersResponse;
+          });
       } else {
         return $q.reject('No valid emails entered.');
       }
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData) {
       var needSyncKms = !_.includes(ciUserData.roles, Config.backend_roles.spark_synckms);
       var needContextServiceEntitlement = !_.includes(ciUserData.entitlements, Config.entitlements.context);
 
-      onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, sunlightUserData);
+      return onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, sunlightUserData);
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, sunlightUserData) {
       return patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement)
         .then(function () {
-          SunlightConfigService.updateUserInfo(sunlightUserData, userId)
+          return SunlightConfigService.updateUserInfo(sunlightUserData, userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
             });
@@ -574,31 +588,36 @@
         });
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function checkAndUpdateSunlightUser(userResponse, users) {
       var userResponseSuccess = _.filter(userResponse, function (response) {
         return response.status === 200;
       });
-      _.each(userResponseSuccess, function (userResponseSuccess) {
+      var promises = _.map(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _sunlightHelpers.getUserLicence(userResponseSuccess.email, users);
         var userId = userResponseSuccess.uuid;
         if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
           var sunlightUserData = _sunlightHelpers.createUserData();
           // Get user to check for roles and entitlements
-          getUserAsPromise(userId)
+          return getUserAsPromise(userId)
             .then(function (ciUserData) {
               if (ciUserData.status === 200) {
-                checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData);
+                return checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData);
               }
             });
         } else if (_sunlightHelpers.isCareFeatureGettingRemoved(userLicenses)) {
-          SunlightConfigService.deleteUser(userId)
+          return SunlightConfigService.deleteUser(userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careDeleteUserError');
             });
         }
+        return $q.resolve();
       });
+
+      return $q.all(promises);
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function isCareFeatureGettingRemoved(licenses) {
       var careLicenses = _.filter(licenses, function (license) {
         return (_.includes(license.id, Config.offerCodes.CDC) || _.includes(license.id, Config.offerCodes.CVC));
@@ -617,6 +636,7 @@
       });
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement) {
       var userRoleData = {
         schemas: Config.scimSchemas,
