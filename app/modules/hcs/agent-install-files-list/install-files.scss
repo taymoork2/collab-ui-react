@@ -55,28 +55,4 @@
       }
     }
   }
-
-}
-
-.no-install-files {
-  width: 100%;
-  height: rem-calc(420);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  h2 {
-    text-align: center;
-    color: $gray-base;
-  }
-  h5 {
-    text-align: center;
-    margin-top: rem-calc(24);
-    width: 50%;
-    color: $gray-base;
-  }
-  button {
-    margin-top: rem-calc(24);
-    border-radius: 100px;
-  }
 }
