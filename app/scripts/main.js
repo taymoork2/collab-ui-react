@@ -286,6 +286,7 @@
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
     require('modules/hcs/shared').default,
+    require('modules/hcs/shared/hcs-delete-modal').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,

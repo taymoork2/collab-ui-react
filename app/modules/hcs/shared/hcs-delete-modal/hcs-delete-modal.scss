@@ -1,0 +1,14 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+.hcs-delete-modal-class {
+  .row {
+    .columns.medium-3 {
+      margin-top: rem-calc(36);
+      .icon-warning:before {
+        align-items: center;
+        color: $color-red-base;
+        font-size: rem-calc(90);
+      }
+    }
+  }
+}
