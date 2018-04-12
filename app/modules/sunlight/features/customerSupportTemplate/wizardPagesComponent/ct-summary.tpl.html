@@ -1,0 +1,25 @@
+<div class="ct-summary">
+  <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
+  <div class="h4 description">
+    {{ ($ctrl.isEditFeature ? 'careChatTpl.editSummaryDesc' : 'careChatTpl.summaryDesc') | translate }}
+  </div>
+  <button cs-btn
+    loading="$ctrl.creatingChatTemplate"
+    id="chatSetupFinishBtn"
+    class="btn btn--primary"
+    ng-click="$ctrl.submitChatTemplate()">
+    {{$ctrl.ChatTemplateButtonText}}
+  </button>
+  <div class="body-small edit-message" ng-if="$ctrl.isEditFeature">
+    <div class="warning-sign">
+      <i class="icon icon-warning"></i>
+    </div>
+    <div>
+      <div>{{:: 'careChatTpl.editCodeWarnMsg2Line1' | translate }}</div>
+      <div>{{:: 'careChatTpl.editCodeWarnMsg2Line2' | translate }}</div>
+    </div>
+  </div>
+  <div class="h6 retry-message" ng-if="$ctrl.saveCTErrorOccurred">
+    {{:: 'careChatTpl.errorCreateChatTemplate' | translate }}
+  </div>
+</div>
