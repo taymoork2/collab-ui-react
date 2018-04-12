@@ -11010,7 +11010,7 @@
     "inventory": {
       "title": "Inventory",
       "noInventoryTitle": "No Inventory yet",
-      "noInventoryDescription": "Get stated by downloading an Agent Install File and installing it on a node.",
+      "noInventoryDescription": "Get started by downloading an Agent Install File and installing it on a node.",
       "status": {
         "agentoffline": "Agent Offline",
         "failedUpgrade":"Failed Upgrade",
