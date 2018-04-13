@@ -9,6 +9,7 @@ import IDevice = csdm.IDevice;
 import { Device, DeviceSearchConverter, IIdentifiableDevice } from '../services/deviceSearchConverter';
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { Dictionary } from 'lodash';
+import { BulkActionName, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 class DeviceList implements ng.IComponentController {
   private devicePlaceLink: boolean;
@@ -38,6 +39,7 @@ class DeviceList implements ng.IComponentController {
   constructor(private $state,
               private CsdmSearchService: CsdmSearchService,
               private CsdmBulkService: CsdmBulkService,
+              private CsdmAnalyticsHelper: ICsdmAnalyticHelper,
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
@@ -46,7 +48,6 @@ class DeviceList implements ng.IComponentController {
               private GridCellService: GridCellService,
               private DeviceSearchConverter: DeviceSearchConverter,
               private FeatureToggleService,
-              private Analytics,
               Authinfo) {
 
     this.FeatureToggleService.csdmDevicePlaceLinkGetStatus().then((result: boolean) => {
@@ -206,6 +207,12 @@ class DeviceList implements ng.IComponentController {
         this.$state.sidepanel.close();
       }
     } else if (this.bulkAll) {
+      this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.SELECT,
+        {
+          mainAction: BulkActionName.SELECT_ALL,
+          selectedDevices: this.searchHits.total,
+          totalSearchHits: this.searchHits.total,
+        });
       this.selectAllSpinner = true;
       this.CsdmBulkService.getIds(this.searchObject).then((response) => {
         if (response && response.data) {
@@ -218,6 +225,11 @@ class DeviceList implements ng.IComponentController {
         this.selectAllSpinner = false;
       });
     } else {
+      this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.SELECT, {
+        mainAction: BulkActionName.SELECT,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
       if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
         this.expandBulk(); //re expanding
       }
@@ -268,6 +280,12 @@ class DeviceList implements ng.IComponentController {
       selectedDevices: this.selectedDevices,
       devicesDeleted: this.devicesDeleted(this.searchHits),
     });
+    this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.DELETE_ASK,
+      {
+        mainAction: BulkActionName.DELETE_ASK,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
   }
 
   public expandDevice(device) {
@@ -278,14 +296,14 @@ class DeviceList implements ng.IComponentController {
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
-      this.trackExpandDevice(device);
+      this.CsdmAnalyticsHelper.trackExpandDevice(_.size(this.selectedDevices), device);
     } else {
       this.$state.go('device-overview', {
         currentDevice: device,
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
-      this.trackExpandDevice(device);
+      this.CsdmAnalyticsHelper.trackExpandDevice(_.size(this.selectedDevices), device);
     }
   }
 
@@ -313,13 +331,6 @@ class DeviceList implements ng.IComponentController {
         }
       }
     };
-  }
-
-  private trackExpandDevice(device: IDevice) {
-    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.EXPAND_DEVICE, {
-      device_type: device && device.accountType,
-      device_status: device && device.cssColorClass,
-    });
   }
 
   private loadMore(fromScrollEvent = false) {

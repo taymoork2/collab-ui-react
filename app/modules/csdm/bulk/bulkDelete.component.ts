@@ -1,6 +1,7 @@
 import { IStateService } from 'angular-ui-router';
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { IComponentController, IComponentOptions } from 'angular';
+import { BulkActionName, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 class BulkDeleteCtrl implements IComponentController {
   private dismiss: Function;
@@ -15,6 +16,7 @@ class BulkDeleteCtrl implements IComponentController {
   /* @ngInject */
   constructor(private $state: IStateService,
               private CsdmBulkService: CsdmBulkService,
+              private CsdmAnalyticsHelper: ICsdmAnalyticHelper,
               private $q) {
     this.title = this.$state.params.title;
   }
@@ -36,6 +38,12 @@ class BulkDeleteCtrl implements IComponentController {
         bulkAction: bulkAction,
       },
     );
+    this.CsdmAnalyticsHelper.trackBulkAction(
+      BulkActionName.DELETE,
+      {
+        mainAction: this.testDelete ? BulkActionName.DELETE_FAKE : BulkActionName.DELETE,
+        selectedDevices: _.size(this.$state.params.selectedDevices),
+      });
   }
 
   public close() {
