@@ -11411,7 +11411,8 @@
     "subTitle": "Select Users for Conversion",
     "desc": "Selected users will be sent a conversion invite email. Users without any recent activity or in <strong>Pending</strong> status will be converted immediately. Users who do not take any action will be converted after {count, plural, =1{# day} other{# days}}.",
     "csv": "CSV",
-    "csvFilename": "unlicensed_users.csv",
+    "csvFilename": "users_pending_conversion.csv",
+    "csvResultsFilename": "users_converted_results.csv",
     "tab": {
       "potential": "Potential Conversion {{count}}",
       "pending": "Pending Conversion {{count}}"
@@ -11425,11 +11426,21 @@
       "immediate": "Immediate Conversion",
       "delayed": "Delayed Conversion"
     },
+    "convertedStatus": {
+      "converted": "Converted",
+      "pending": "Pending"
+    },
     "banner": {
-      "text": "Manage users' licenses more conveniently, <a href=\"{{href}}\" target=\"_blank\">configure Auto Assign</a>"
+      "text": "Manage users' licenses more conveniently, <a href ng-click='{{click}}'>configure Auto Assign</a>"
     },
     "error": {
       "noUsers": "No users found matching this criteria."
+    },
+    "results": {
+      "subTitle": "Conversion Results",
+      "desc": "<strong>Pending Conversion</strong> users were sent a conversion invite email. Users with <strong>Pending</strong> status were converted immediately. Users who don't take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+      "usersConverted": "Users converted",
+      "usersPending": "Pending Conversion"
     }
   }
 }

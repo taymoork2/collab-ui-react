@@ -1,12 +1,24 @@
 (function () {
   'use strict';
 
-  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
-  var usersCardTemplatePath = require('ngtemplate-loader?module=Core!./usersCard.tpl.html');
+  module.exports = angular
+    .module('core.overview.usersCard', [
+      require('angular-translate'),
+      require('modules/core/config/config').default,
+      require('modules/core/featureToggle').default,
+      require('modules/core/modal').default,
+      require('modules/core/multi-dirsync').default,
+      require('modules/core/scripts/services/accountorgservice'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/org.service'),
+      require('modules/core/users/shared/auto-assign-template').default,
+      require('modules/core/scripts/services/userlist.service'),
+    ])
+    .factory('OverviewUsersCard', OverviewUsersCard)
+    .name;
 
-  angular
-    .module('Core')
-    .factory('OverviewUsersCard', OverviewUsersCard);
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var usersCardTemplatePath = require('ngtemplate-loader?module=core.overview.usersCard!./usersCard.tpl.html');
 
   /* @ngInject */
   function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Authinfo, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice, UserListService) {
@@ -34,9 +46,9 @@
                 card.pendingConversions = 0;
                 _.forEach(data.resources, function (user) {
                   if (user.conversionStatus === 'IMMEDIATE' || user.conversionStatus === 'DELAYED') {
-                    card.potentialConversions += 1;
+                    card.potentialConversions++;
                   } else if (user.conversionStatus == 'TRANSIENT') {
-                    card.pendingConversions += 1;
+                    card.pendingConversions++;
                   }
                 });
                 card.usersToConvert = card.pendingConversions + card.potentialConversions;
@@ -209,6 +221,14 @@
             $timeout(function () {
               $state.go('users.manage.picker');
             });
+          });
+        };
+
+        // helper for external use of this method
+        card.extShowAutoAssignModal = function () {
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
+            card.showEditAutoAssignTemplateModal();
           });
         };
 

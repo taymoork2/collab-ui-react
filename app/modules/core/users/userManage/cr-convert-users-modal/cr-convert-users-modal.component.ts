@@ -4,6 +4,7 @@ import { DirSyncService } from 'modules/core/featureToggle/dirSync.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IOnboardScopeForUsersConvert, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
+import { OverviewUsersCard } from 'modules/core/overview/usersCard';
 
 interface IConversionStatus {
   type: string;
@@ -29,6 +30,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public scopeData: IOnboardScopeForUsersConvert;
 
   public ftF7208: boolean;
+  public ftF3745: boolean;
   public readonly POTENTIAL = 'potential';
   public readonly PENDING = 'pending';
   public conversionStatusMap: IConversionStatus[];
@@ -58,6 +60,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     private OnboardStore: OnboardStore,
     private Orgservice,
     private uiGridConstants: uiGrid.IUiGridConstants,
+    private OverviewUsersCard: OverviewUsersCard,
   ) {
   }
 
@@ -67,6 +70,9 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_CONVERT];
+    if (_.get(this, 'scopeData.selectedState')) {
+      delete this.scopeData.selectedState; // dialog coming up, clear residual scope data
+    }
     this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.convertGridOptions = {
       data: undefined,
@@ -106,7 +112,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.conversionStatusMap = [
       { type: this.POTENTIAL, key: 'IMMEDIATE', cellVal: this.$translate.instant('convertUsersModal.status.immediate') },
       { type: this.POTENTIAL, key: 'DELAYED', cellVal: this.$translate.instant('convertUsersModal.status.delayed') },
-      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return _.get(user, 'meta.created'); } },
+      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return new Date(_.get(user, 'meta.created')).toLocaleString(); } },
     ];
 
     // grid option data
@@ -144,8 +150,12 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.addGridColumns(this.gridPotentialUsers);
     this.addGridColumns(this.gridPendingUsers);
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF7208GDPRConvertUser).then(supported => {
-      this.ftF7208 = supported;
+    this.$q.all({
+      f3745: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF3745AutoAssignLicenses),
+      f7208: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF7208GDPRConvertUser),
+    }).then(features => {
+      this.ftF3745 = features.f3745;
+      this.ftF7208 = features.f7208;
       this.getUnlicensedUsers();
     });
   }
@@ -160,16 +170,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       displayName: this.$translate.instant('convertUsersModal.tableHeader.email'),
       sort: {
         direction: this.uiGridConstants.ASC,
-        priority: 0,
       },
-      sortCellFiltered: true,
     }, {
       field: 'statusText',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.status'),
-      sort: {
-        priority: 0,
-      },
-      sortCellFiltered: true,
     }];
   }
 
@@ -329,6 +333,14 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
     this.dismiss();
+  }
+
+  public showAutoAssignModal(): void {
+    const card = this.OverviewUsersCard.createCard();
+    if (_.isFunction(_.get(card, 'extShowAutoAssignModal'))) {
+      delete this.scopeData.selectedState; // dialog going away, clear scope data
+      card.extShowAutoAssignModal();
+    }
   }
 }
 

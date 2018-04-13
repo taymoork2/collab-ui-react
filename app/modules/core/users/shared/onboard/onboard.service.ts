@@ -232,6 +232,9 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],  // list of parsed results for onboarding of each user
       numUpdatedUsers: 0,                              // count of users successfully modified
       numAddedUsers: 0,                                // count of new users successfully added
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
 
     // notes:
@@ -452,6 +455,9 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],
       numUpdatedUsers: 0,
       numAddedUsers: 0,
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
     _.reduce(response.data.userResponse, (_result, userResponseItem) => {
       const userResult: IParsedOnboardedUserResult = {
@@ -463,6 +469,11 @@ export default class OnboardService {
       switch (httpStatus) {
         case HttpStatus.OK:
           _result.numUpdatedUsers++;
+          if (userResponseItem.message === '100002') {
+            _result.pendingUsers.push(userResponseItem.email);
+          } else {
+            _result.convertedUsers.push(userResponseItem.email);
+          }
         case HttpStatus.CREATED: {
           if (httpStatus !== HttpStatus.OK) {
             _result.numAddedUsers++;
@@ -520,15 +531,25 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],
       numUpdatedUsers: 0,
       numAddedUsers: 0,
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
     _.reduce(response.data.userResponse, (_result, migratedUser) => {
       const userResult: IParsedOnboardedUserResult = {
         email: migratedUser.email,
         httpStatus: migratedUser.httpStatus,
+        message: migratedUser.message,
       };
       if (userResult.httpStatus === HttpStatus.OK) {
         _result.numUpdatedUsers++;
         userResult.alertType = AlertType.SUCCESS;
+        // F7208
+        if (userResult.message === '100002') {
+          _result.pendingUsers.push(userResult.email);
+        } else {
+          _result.convertedUsers.push(userResult.email);
+        }
       } else {
         userResult.errorMsg = `${migratedUser.email} ${this.$translate.instant('homePage.convertError')}`;
         userResult.alertType = AlertType.DANGER;
@@ -546,9 +567,15 @@ export default class OnboardService {
     const resultList = _.flatMap(responses, response => response.resultList);
     const errors = _.compact(_.map(resultList, result => result.errorMsg!));
     const warnings = _.compact(_.map(resultList, result => result.warningMsg!));
+    const converted = _.flatMap(responses, response => response.convertedUsers);
+    const pending = _.flatMap(responses, response => response.pendingUsers);
+
     return {
       numUpdatedUsers: numUpdatedUsers,
       numAddedUsers: numAddedUsers,
+      // F7208,
+      convertedUsers: _.union(converted, converted), // remove possible dupes
+      pendingUsers: _.union(pending, pending), // remove possible dupes
       results: {
         resultList: resultList,
         errors: errors,
