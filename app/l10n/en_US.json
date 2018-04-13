@@ -920,6 +920,7 @@
     "meetingName": "Meeting Name",
     "meetingType": "Meeting Type",
     "participants": "Participants",
+    "numberOfParticipants": "Number of Participants",
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
@@ -931,6 +932,8 @@
     "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
     "end-date-tooltip": "The start date must not be greater than the end date",
+    "meetingNumberTitle": "Meeting Number:",
+    "qualityType": "{{qualityType}} Quality",
     "timelineChartLegend": {
       "joinMeetingTime": "Join Meeting Time is calculated in seconds.",
       "jmtQuality": {
@@ -978,7 +981,8 @@
       "conferenceDate": "Date",
       "startTime": "Start Date",
       "meetingName": "Meeting Name",
-      "conferenceID": "Conference ID"
+      "conferenceID": "Conference ID",
+      "conferenceIDTitle": "Conference ID:"
     },
     "meetingFeatures": {
       "chat": "Chat",

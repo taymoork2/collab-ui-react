@@ -371,11 +371,11 @@
               template: template,
               // TODO(pajeter): remove inline template when cs-modal is updated
               windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-              'modal-animation-class="fade"' +
-              'modal-in-class="in"' +
-              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-              '<div class="modal-content" modal-transclude></div>' +
-              ' </div>',
+                'modal-animation-class="fade"' +
+                'modal-in-class="in"' +
+                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+                '<div class="modal-content" modal-transclude></div>' +
+                ' </div>',
               backdrop: false,
               keyboard: false,
             });
@@ -3017,7 +3017,28 @@
           })
           .state('partnerreports.tab.webexreports.diagnostics', {
             url: '/webexreports/diagnostics',
-            template: '<diagnostics>diagnostics</diagnostics>',
+            template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
+          })
+          .state('partnerreports.dgc', {
+            parent: 'partner',
+            template: '<dgc-partner-tab></dgc-partner-tab>',
+            absract: true,
+          })
+          .state('partnerreports.dgc.meetingdetail', {
+            url: '/diagnostics/meeting/:cid',
+            views: {
+              tabContent: {
+                template: '<dgc-partner-tab-meetingdetail></dgc-partner-tab-meetingdetail>',
+              },
+            },
+          })
+          .state('partnerreports.dgc.participants', {
+            url: '/diagnostics/participants/:cid',
+            views: {
+              tabContent: {
+                template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
+              },
+            },
           })
           .state('partnercustomers', {
             parent: 'partner',
@@ -5561,7 +5582,7 @@
 
         $stateProvider
 
-        //V2 API changes
+          //V2 API changes
           .state('media-cluster-details', {
             parent: 'sidepanel',
             views: {
