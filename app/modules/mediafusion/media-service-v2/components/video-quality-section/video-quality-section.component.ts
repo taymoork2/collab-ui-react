@@ -42,7 +42,11 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
     };
     this.Orgservice.getOrg(_.noop, null, params)
      .then(response => {
-       this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
+       if (this.isWizard) {
+         this.enableVideoQuality = false;
+       } else {
+         this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
+       }
        this.MediaClusterServiceV2.getPropertySets()
         .then((propertySets) => {
           if (propertySets.length > 0) {
