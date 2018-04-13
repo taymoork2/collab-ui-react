@@ -50,6 +50,8 @@
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setAllowCustomerSiteManagementSetting: setAllowCustomerSiteManagementSetting,
+      getAllowCustomerSiteManagementSetting: getAllowCustomerSiteManagementSetting,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
@@ -336,6 +338,26 @@
             data: orgSettings,
           });
         });
+    }
+
+    function setAllowCustomerSiteManagementSetting(orgId, settings) {
+      if ((_.isUndefined(orgId) && !_.isObject(settings))) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + 'settings/allowCustomerSiteManagement';
+
+      return $http.post(url, settings);
+    }
+
+    function getAllowCustomerSiteManagementSetting(orgId) {
+      if (_.isUndefined(orgId)) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + 'settings/allowCustomerSiteManagement';
+
+      return $http.get(url);
     }
 
     function createOrg(enc, country) {

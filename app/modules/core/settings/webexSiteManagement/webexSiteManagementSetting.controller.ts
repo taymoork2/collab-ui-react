@@ -6,12 +6,9 @@ export class WebexSiteManagementController {
   /* @ngInject */
   constructor (private Orgservice, Authinfo, private Notification: Notification) {
     this.orgId = Authinfo.getOrgId();
-    const params = {
-      basicInfo: true,
-    };
-    Orgservice.getOrg((data) => {
+    Orgservice.getAllowCustomerSiteManagementSetting(this.orgId).then((data) => {
       this._allowSiteManagementByCustomer = _.get(data, 'orgSettings.allowSiteManagementByCustomer', true);
-    }, this.orgId, params);
+    });
   }
 
   get allowSiteManagementByCustomer(): boolean {
@@ -20,10 +17,11 @@ export class WebexSiteManagementController {
 
   set allowSiteManagementByCustomer(value: boolean) {
     this._allowSiteManagementByCustomer = value;
-    const settings = {
+    const setting = {
       allowSiteManagementByCustomer: value,
     };
-    this.Orgservice.setOrgSettings(this.orgId, settings).then(() => {
+
+    this.Orgservice.setAllowCustomerSiteManagementSetting(this.orgId, setting).then(() => {
       this.Notification.success('globalSettings.webexSiteManagement.siteManagementSettingUpdated');
     }).catch(response => {
       this.Notification.errorResponse(response);
