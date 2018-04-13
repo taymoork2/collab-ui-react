@@ -36,10 +36,10 @@
           <div class="row" ng-show="$ctrl.radio === 0">
             <div class="columns medium-11">
               <cs-select 
-                ng-model="$ctrl.enteredCluster" 
+                ng-model="$ctrl.selectedClusterFromList" 
                 options="$ctrl.clusterList" 
                 labelfield="label"
-                ng-change="$ctrl.validateClusterName()" 
+                ng-change="$ctrl.validateClusterNameFromList()" 
                 placeholder="$ctrl.selectPlaceHolder"
                 is-disabled="$ctrl.isDiabled">
               </cs-select>
