@@ -81,6 +81,20 @@ describe('Component: WebexSiteNewComponent', function () {
       expect(this.$scope.onValidationStatusChangeFn).not.toHaveBeenCalled();
     });
 
+    it('site will not validate with duplicate site url', function () {
+      this.controller.showError = jasmine.createSpy('showError');
+      this.controller.newSitesArray = [{
+        siteUrl: siteUrl,
+        timezone: '1',
+        setupType: 'TRANSFER',
+      }];
+      $(this.view.find('button')).click().trigger('change');
+      this.$scope.$digest();
+      const sites = _.filter(this.controller.newSitesArray, { siteUrl: siteUrl });
+      expect(sites.length).toBe(1);
+      expect(this.controller.showError).toHaveBeenCalledWith('firstTimeWizard.meetingSettingsError.duplicateSite', 'URL');
+    });
+
     it('site will not validate without setup type selected', function () {
       this.controller.siteModel.setupType = undefined;
       $(this.view.find('button')).click().trigger('change');
