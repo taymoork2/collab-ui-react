@@ -3,7 +3,7 @@ import { DeviceSearchBulletComponent } from './deviceSearchBullet.component';
 import { DeviceSearchComponent } from './deviceSearch.component';
 import { DeviceListComponent } from './deviceList.component';
 import { ChartComponent } from './chart.component';
-import { highlightAndTranslate, highlightFilter } from './highlightFilter';
+import { highlightAndTranslate, highlightFilter, highlightFromSearch } from './highlightFilter';
 import { DeviceExportService } from 'modules/squared/devices/export/deviceExport.service';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service';
 import serviceDescriptorModuleName from 'modules/hercules/services/service-descriptor.service';
@@ -31,5 +31,6 @@ export default angular
   .controller('DevicesReduxCtrl', DevicesCtrl)
   .component('devicesRedux', new DevicesComponent())
   .filter('highlight', highlightFilter)
+  .filter('highlightFromSearch', highlightFromSearch)
   .filter('translateHighlight', highlightAndTranslate)
   .name;
