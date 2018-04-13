@@ -25,15 +25,17 @@ hybrid-services-event-history-page {
     border-bottom: 0;
   }
 
+  .cluster-filter-container,
+  .node-filter-container,
   .service-filter-container,
-  .resource-filter-container,
   .time-filter-container {
     display: flex;
     flex-direction: column;
   }
 
-  .service-filter-container,
-  .resource-filter-container {
+  .cluster-filter-container,
+  .node-filter-container,
+  .service-filter-container {
     margin-right: 1rem;
   }
 

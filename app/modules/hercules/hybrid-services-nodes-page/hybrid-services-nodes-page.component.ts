@@ -11,6 +11,7 @@ export interface ISimplifiedConnector {
   connectorType: ConnectorType;
   extendedProperties: IConnectorExtendedProperties;
   hasUpgradeAvailable: boolean;
+  hostSerial: string;
   id: string;
   isUpgradeUrgent: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
@@ -177,6 +178,7 @@ class HybridServicesNodesPageCtrl implements ng.IComponentController {
                 connectorType: connector.connectorType,
                 extendedProperties: connector.extendedProperties,
                 hasUpgradeAvailable: this.hasUpgradeAvailable(connector),
+                hostSerial: node.serial,
                 id: connector.id,
                 isUpgradeUrgent: this.isUpgradeUrgent(connector),
                 maintenanceMode: connector.extendedProperties.maintenanceMode,

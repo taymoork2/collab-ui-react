@@ -41,9 +41,9 @@ export class HybridCalendarGoogleActiveCardComponent implements ng.IComponentOpt
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="google-calendar-service.settings">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="google-calendar-service.settings" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
         </a>
       </div>
     </article>
