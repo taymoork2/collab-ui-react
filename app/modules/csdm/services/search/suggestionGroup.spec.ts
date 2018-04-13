@@ -122,7 +122,7 @@ describe('SuggestionGroup', () => {
 
   describe('AllContainingGroup', () => {
     beforeEach(function () {
-      this.allContain = new AllContainingGroup(this.$translate);
+      this.allContain = new AllContainingGroup(this.$translate, this.searchTranslator);
     });
 
     it('simple query should set hidden to false', function () {

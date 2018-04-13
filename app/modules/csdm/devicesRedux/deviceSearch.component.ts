@@ -116,7 +116,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
     const rootPill = bullet.getRootPill();
     this.searchObject.hasError = false;
-    this.searchObject.setWorkingElementText(rootPill.toQuery());
+    this.searchObject.setWorkingElementText(rootPill.toQuery(this.DeviceSearchTranslator));
     this.setFocusToInputField();
     rootPill.setBeingEdited(true);
     this.suggestions.updateBasedOnInput(this.searchObject);
