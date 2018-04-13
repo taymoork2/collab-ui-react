@@ -2,6 +2,7 @@ import { HcsUpgradeService } from './hcs-upgrade.service';
 import { HcsSetupModalService, HcsSetupModalSelect } from './hcs-setup-modal.service';
 import { HcsLicenseService } from './hcs-license.service';
 import './hcs-no-data.scss';
+import './hcs-card.scss';
 
 export * from './hcs-base';
 export * from './hcs-license';

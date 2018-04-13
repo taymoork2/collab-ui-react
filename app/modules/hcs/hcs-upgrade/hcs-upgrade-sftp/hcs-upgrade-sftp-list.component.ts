@@ -1,4 +1,4 @@
-import { HcsUpgradeService } from 'modules/hcs/shared';
+import { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/shared';
 import { SftpServer } from '../../setup/hcs-setup-sftp';
 interface IHeaderTab {
   title: string;
@@ -17,6 +17,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HcsUpgradeService: HcsUpgradeService,
+    private HcsSetupModalService: HcsSetupModalService,
   ) {}
 
   public $onInit() {
@@ -34,7 +35,9 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   }
 
 
-  public addSftp(): void {}
+  public addSftp(): void {
+    this.HcsSetupModalService.openSetupModal(false, HcsSetupModalSelect.SftpServerSetup);
+  }
 
   public deleteSftp(): void {}
 
