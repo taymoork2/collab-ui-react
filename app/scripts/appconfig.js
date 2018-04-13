@@ -5426,14 +5426,14 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?clusterId&nodeHostname&serviceId',
-            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" node-hostname="$resolve.nodeHostname" service-id="$resolve.serviceId"></hybrid-services-event-history-page>',
+            url: '/services/clusters/history?clusterId&hostSerial&serviceId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" host-serial="$resolve.hostSerial" service-id="$resolve.serviceId"></hybrid-services-event-history-page>',
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
-              nodeHostname: /* @ngInject */ function ($stateParams) {
-                return $stateParams.nodeHostname;
+              hostSerial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.hostSerial;
               },
               serviceId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.serviceId;

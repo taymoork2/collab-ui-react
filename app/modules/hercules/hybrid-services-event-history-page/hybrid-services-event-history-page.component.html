@@ -39,6 +39,7 @@
           <div class="filter-dropdown">
             <cs-select
               ng-model="$ctrl.serviceSelected"
+              is-disabled="$ctrl.disableServiceSelect()"
               options="$ctrl.serviceOptions"
               >
             </cs-select>
@@ -58,25 +59,11 @@
       </div>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div>
-    <pre><code>&lt;hybrid-services-cluster-status-history-table&gt;</code></pre>
-    <pre>
-  cluster-filter: <code>{{$ctrl.clusterSelected.selectedChild.value}}</code>
-  node-filter: <code>{{$ctrl.nodeSelected.value}}</code>
-  service-filter: <code>{{$ctrl.serviceSelected.value}}</code>
-  time-filter: <code>{{$ctrl.timeSelected.value}}</code></pre>
-    <pre><code>&lt;/hybrid-services-cluster-status-history-table&gt;</code></pre>
-    <hr>
-    <pre>
-  $ctrl.clusterId: <code>{{$ctrl.clusterId}}</code>
-  $ctrl.nodeHostname: <code>{{$ctrl.nodeHostname}}</code>
-  $ctrl.serviceId: <code>{{$ctrl.serviceId}}</code></pre>
-  </div>
-  <!-- <hybrid-services-cluster-status-history-table
-    service-id="$ctrl.serviceId"
-    connector-id="$ctrl.connectorId"
-    resource-filter="$ctrl.selectedResourceFilter.value"
-    time-filter="$ctrl.selectedTimeFilter.value"
-    cluster-id="$ctrl.clusterId">
-  </hybrid-services-cluster-status-history-table> -->
+  <hybrid-services-cluster-status-history-table
+    cluster-filter="$ctrl.clusterSelected.selectedChild.value"
+    node-filter="$ctrl.nodeSelected.value"
+    service-filter="$ctrl.serviceSelected.value"
+    time-filter="$ctrl.timeSelected.value"
+  >
+  </hybrid-services-cluster-status-history-table>
 </div>

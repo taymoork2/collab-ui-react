@@ -86,11 +86,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     },
     {
       label: 'Context',
-      value: 'hds',
+      value: 'context',
       childOptions: [
         {
           label: 'All clusters',
-          value: 'all_hds',
+          value: 'all_context',
           nodes: [],
           services: [],
         },
@@ -99,7 +99,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   ];
 
   public clusterId: string;
-  public nodeHostname: string;
+  public hostSerial: string;
   public serviceId: HybridServiceId;
 
   public backState: string = 'expressway-cluster.nodes';
@@ -125,36 +125,40 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public $onInit() {
     this.populateDropdowns()
       .then(() => {
-        if (!this.clusterId && !this.nodeHostname && !this.serviceId) {
+        if (!this.clusterId && !this.hostSerial && !this.serviceId) {
           // If no parameters provided, select All Expressway clusters by default
           this.clusterSelected = this.clusterOptions[0];
           // "Properly" emulate a click on the dropdown item we need by setting the selectedChild property
           this.clusterSelected.selectedChild = this.clusterSelected.childOptions[0];
           this.clusterSelectedUpdate();
-        } else if (!this.clusterId && !this.nodeHostname && this.serviceId) {
+        } else if (!this.clusterId && !this.hostSerial && this.serviceId) {
           // If no clusterId but serviceId, select the relevant "All Clusters" menu subitem
           if (_.includes(['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-uc', 'spark-hybrid-impinterop'], this.serviceId)) {
-            this.clusterSelected = this.clusterOptions[0];
+            this.clusterSelected = _.find(this.clusterOptions, { value: 'expressway' });
           } else if (this.serviceId === 'squared-fusion-media') {
-            this.clusterSelected = this.clusterOptions[1];
+            this.clusterSelected = _.find(this.clusterOptions, { value: 'media' });
           } else if (this.serviceId === 'spark-hybrid-datasecurity') {
-            this.clusterSelected = this.clusterOptions[2];
+            this.clusterSelected = _.find(this.clusterOptions, { value: 'hds' });
           } else if (this.serviceId === 'contact-center-context') {
-            this.clusterSelected = this.clusterOptions[3];
+            this.clusterSelected = _.find(this.clusterOptions, { value: 'context' });
           }
           this.clusterSelected.selectedChild = this.clusterSelected.childOptions[0];
           this.clusterSelectedUpdate();
-        } else if (this.nodeHostname) {
-          // If nodeHostname, find the relevant clusterId
+        } else if (this.hostSerial) {
+          // If hostSerial, find the relevant clusterId to find the relevant cluster
           const relevantNodeOptions = _.chain(this.clusterOptions)
-            .map(clusterOption => clusterOption.childOptions)
+            .map(clusterOption => {
+               // Ignore the first child option, which is the "All clusters" menu item
+              const [, ...options] = clusterOption.childOptions;
+              return options;
+            })
             .flatten<IChildOption>()
             .map(option => option.nodes)
             .flatten<INodeOption>()
-            .filter(node => node.value === this.nodeHostname)
+            .filter(node => node.value === this.hostSerial)
             .value();
           // If found, the node option will be present twice because it's also listed in the "All Clusters" menu item
-          const clusterId = _.get(relevantNodeOptions, '[1].clusterId');
+          const clusterId = _.get(relevantNodeOptions, '[0].clusterId');
 
           // Now select the cluster properly
           // First, the cluster options with the right cluster id
@@ -162,11 +166,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
             return _.find(clusterOption.childOptions, option => option.value === clusterId);
           });
           this.clusterSelected = clusterOption[0];
-          // Then the sub menu item with the node
-          // TODO: use _.slice instead of relying on _.find() and [1];
-          this.clusterSelected.selectedChild = _.filter(this.clusterSelected.childOptions, option => {
-            return _.find(option.nodes, { value: this.nodeHostname });
-          })[1];
+          // Then the sub menu item
+          const [, ...options] = this.clusterSelected.childOptions;
+          this.clusterSelected.selectedChild = _.find(options, option => {
+            return _.find(option.nodes, { value: this.hostSerial });
+          });
           this.clusterSelectedUpdate();
         }
       })
@@ -175,17 +179,20 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
       });
   }
 
-  public clusterSelectedUpdate(): void {
+  public disableServiceSelect() {
+    return this.clusterSelected && _.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value'));
+  }
 
+  public clusterSelectedUpdate(): void {
     // Read data from the selected cluster to populate the Node dropdown
     this.nodeOptions = _.concat([{
       label: 'All Nodes',
       value: 'all_nodes',
     }], _.get(this.clusterSelected, 'selectedChild.nodes'));
-    if (!this.nodeHostname) {
+    if (!this.hostSerial) {
       this.nodeSelected = this.nodeOptions[0];
     } else {
-      this.nodeSelected = _.find(this.nodeOptions, { value: this.nodeHostname });
+      this.nodeSelected = _.find(this.nodeOptions, { value: this.hostSerial });
     }
 
     // Read data from the selected cluster to populate the Services dropdown
@@ -193,23 +200,19 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
       label: 'All Services',
       value: 'all_services',
     }], _.get(this.clusterSelected, 'selectedChild.services'));
-
-    // If no serviceId selected or if we can't find the requested one
-    if (!this.serviceId) {
-      this.serviceSelected = this.serviceOptions[0];
+    if (_.find(this.serviceOptions, { value: this.serviceId })) {
+      this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
+    } else if (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value')) && this.serviceOptions.length > 1) {
+      this.serviceSelected = this.serviceOptions[1];
     } else {
-      // Careful, this.HybridServicesUtilsService.serviceId2ConnectorType() throws if this.serviceId is undefined
-      if (_.find(this.serviceOptions, { value: this.serviceId })) {
-        this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
-      } else {
-        this.serviceSelected = this.serviceOptions[0];
-      }
+      this.serviceSelected = this.serviceOptions[0];
     }
+
     // TODO: update this.clusterId and the URL at the same time?
+    // TODO: update this.hostSerial and the URL at the same time?
+    // TODO: update this.serviceId and the URL at the same time?
     // this.serviceId = this.selectedServiceFilter.value;
     // this.$state.go('.', { serviceId: this.serviceId }, { notify: false });
-    // TODO: update this.nodeHostname and the URL at the same time?
-    // TODO: update this.serviceId and the URL at the same time?
   }
 
   public nodeSelectedUpdate(): void {
@@ -220,15 +223,12 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     }], this.nodeSelected.services);
 
     // If no serviceId selected or if we can't find the requested one
-    if (!this.serviceId) {
-      this.serviceSelected = this.serviceOptions[0];
+    if (_.find(this.serviceOptions, { value: this.serviceId })) {
+      this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
+    } else if (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value'))) {
+      this.serviceSelected = this.serviceOptions[1];
     } else {
-      // Careful, this.HybridServicesUtilsService.serviceId2ConnectorType() throws if this.serviceId is undefined
-      if (_.find(this.serviceOptions, { value: this.serviceId })) {
-        this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
-      } else {
-        this.serviceSelected = this.serviceOptions[0];
-      }
+      this.serviceSelected = this.serviceOptions[0];
     }
   }
 
@@ -242,7 +242,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
         // Add clusters to menu items and, and at the same time
         // populate the "nodes" and "services" properties which will serve for the other dropdowns
         _.forEach(clusters, cluster => {
-          const services = _.chain(cluster.connectors)
+          const services: IServiceOption[] = _.chain(cluster.connectors)
             .map(connector => ({
               // label: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
               label: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),
@@ -251,12 +251,12 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
             .uniqBy('value')
             .value();
 
-          const nodes = _.chain(cluster.connectors)
+          const nodes: INodeOption[] = _.chain(cluster.connectors)
             .map(connector => ({
               label: connector.hostname,
-              value: connector.hostname,
-              clusterId: cluster.id,
-              services: services, // each node will have the same services as their cluster
+              value: connector.hostSerial,
+              clusterId: cluster.id, // Useful for later
+              services: services, // Each node has the same services as their cluster
             }))
             .uniqBy('value')
             .sortBy(['label'])
@@ -293,7 +293,8 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
         });
 
         // Remove the top-level menu items without clusters
-        clusterOptions = _.filter(clusterOptions, option => option.childOptions.length > 1);
+        // /!\ Filtering disabled for now because it may still be useful, to be discussed
+        // clusterOptions = _.filter(clusterOptions, option => option.childOptions.length > 1);
 
         // Add nodes and services properties to the various "All Clusters" menu items
         clusterOptions = _.map(clusterOptions, clusterOption => {
@@ -325,7 +326,7 @@ export class HybridServicesEventHistoryPageComponent implements ng.IComponentOpt
   public template = require('./hybrid-services-event-history-page.component.html');
   public bindings = {
     clusterId: '<?',
-    nodeHostname: '<?',
-    serviceId: '<',
+    hostSerial: '<?',
+    serviceId: '<?',
   };
 }
