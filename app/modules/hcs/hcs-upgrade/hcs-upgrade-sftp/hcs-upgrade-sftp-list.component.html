@@ -18,13 +18,13 @@
     <button type="button" class="btn--primary" ng-click="$ctrl.addSftp()"> {{::'hcs.sftp.add' | translate}}</button>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
-<div class="cs-card-container" ng-if="$ctrl.sftpList.length">
+<div class="cs-card-container hcs-card-header" ng-if="$ctrl.sftpList.length">
   <cs-card-layout>
     <cs-card class="cs-card--small header-background hoverable" ng-repeat="sftp in $ctrl.sftpList">
       <article ng-click="$ctrl.editSftp()" hover-delay>
         <header>
           <div class="header-with-right-icon">
-            <p class="h4" title="Card Name">{{sftp.name}}</p>
+            <p class="h4 ellipsis" title="Card Name">{{sftp.name}}</p>
             <div class="right card-icon-div">
               <button type="button" class="close"
                 ng-click="$ctrl.deleteSftp()"
@@ -32,12 +32,11 @@
                 aria-label="{{::'common.delete' | translate}}"></button>
             </div>
           </div>
-          <div>
-            <span class="h7">{{sftp.path}}</span>
-          </div>
+          <p class="h6 eliipsis">{{sftp.path}}</p>
         </header>
         <section class="card-body card-section">
         </section>
+        <footer></footer>
       </article>
     </cs-card>
   </cs-card-layout>
