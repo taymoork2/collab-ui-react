@@ -9,9 +9,7 @@
   </div>
   <div class="bulk-banner" ng-class="lctrl.bulkAll !== false ? 'enable' : ''">
 
-    <span class="spinner" ng-show="lctrl.selectAllSpinner">
-      <i class="icon icon-spinner"/>
-    </span>
+    <i class="icon icon-spinner" ng-show="lctrl.selectAllSpinner"/>
     <span
       class="text"
       ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount === 1"
@@ -26,13 +24,12 @@
       translate-values="{nDevices: lctrl.bulkSelectionCount}">
     </span>
 
-    <div class="buttons">
-      <i class="icon icon-trash"
-         tooltip="{{ 'deviceBulk.deleteDevices' | translate }}"
-         tooltip-animation="true"
-         aria-label="{{ 'deviceBulk.deleteDevices' | translate }}"
-         ng-click="lctrl.bulkDelete()"></i>
-    </div>
+    <i class="icon icon-trash"
+       ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount >= 1"
+       tooltip="{{ 'deviceBulk.deleteDevices' | translate }}"
+       tooltip-animation="true"
+       aria-label="{{ 'deviceBulk.deleteDevices' | translate }}"
+       ng-click="lctrl.bulkDelete()"></i>
   </div>
   <cs-grid class="gridStyle" grid-api="lctrl.gridApi" grid-options="lctrl.gridOptions"></cs-grid>
   <div class="loadmorecontainer">

@@ -371,11 +371,11 @@
               template: template,
               // TODO(pajeter): remove inline template when cs-modal is updated
               windowTemplate: '<div modal-render="{{$isRendered}}" tabindex="-1" role="dialog" class="sidepanel-modal"' +
-                'modal-animation-class="fade"' +
-                'modal-in-class="in"' +
-                'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
-                '<div class="modal-content" modal-transclude></div>' +
-                ' </div>',
+              'modal-animation-class="fade"' +
+              'modal-in-class="in"' +
+              'ng-style="{\'z-index\': 1051, display: \'block\', visibility: \'visible\'}">' +
+              '<div class="modal-content" modal-transclude></div>' +
+              ' </div>',
               backdrop: false,
               keyboard: false,
             });
@@ -2967,16 +2967,12 @@
             parent: 'partner',
             url: '/reports',
             template: '<div ui-view></div>',
-            controller: 'PartnerReportsSwitchCtrl',
-          })
-          .state('partnerreports.base', {
-            parent: 'partner',
-            url: '/base',
-            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
-            controller: 'PartnerReportCtrl',
-            controllerAs: 'nav',
+            controller: /* @ngInject */ function ($state) {
+              $state.go('partnerreports.tab.base');
+            },
           })
           .state('partnerreports.tab', {
+            abstract: true,
             parent: 'partner',
             template: '<partner-reports-tabs></partner-reports-tabs>',
           })
@@ -2993,12 +2989,16 @@
             url: '/ccareports/:name',
             template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
           })
-          .state('partnerreports.spark', {
-            parent: 'partner',
-            url: '/spark',
-            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
-            controller: 'SparkReportsCtrl',
-            controllerAs: '$ctrl',
+          .state('partnerreports.tab.webexreports', {
+            template: '<webex-reports-tabs></webex-reports-tabs>',
+          })
+          .state('partnerreports.tab.webexreports.metrics', {
+            url: '/webexreports/metrics',
+            template: '<webex-reports></webex-reports>',
+          })
+          .state('partnerreports.tab.webexreports.diagnostics', {
+            url: '/webexreports/diagnostics',
+            template: '<diagnostics>diagnostics</diagnostics>',
           })
           .state('partnercustomers', {
             parent: 'partner',
@@ -3210,6 +3210,11 @@
             url: '/hcs/subscription',
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
+          .state('hcs.plmReport', {
+            parent: 'partner',
+            url: '/hcs/plm-report',
+            template: '<hcs-licenses-plm-report></hcs-licenses-plm-report>',
+          })
           .state('hcs.clusterList', {
             url: '/hcs/inventory/:groupId/clusters',
             parent: 'partner',
@@ -3264,6 +3269,11 @@
                 return $stateParams.customerId;
               },
             },
+          })
+          .state('hcs.sftplist', {
+            parent: 'partner',
+            url: '/hcs/sftplist',
+            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
           })
           .state('taasSuites', {
             parent: 'main',
@@ -5459,7 +5469,7 @@
 
         $stateProvider
 
-          //V2 API changes
+        //V2 API changes
           .state('media-cluster-details', {
             parent: 'sidepanel',
             views: {

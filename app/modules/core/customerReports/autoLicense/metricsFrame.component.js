@@ -1,3 +1,5 @@
+require('./auto-license-metrics-frame.scss');
+
 (function () {
   'use strict';
 

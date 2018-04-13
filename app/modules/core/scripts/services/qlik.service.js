@@ -17,13 +17,11 @@
       sparkPartner: ['partner_spark_v1', 'spark-report-partner'],
       webexMEI: ['mei', 'MEI'],
       webexSystem: ['system_webex_v1', 'webex-report-system'],
-      /*webexDashboard: ['dashboard_webex_v1', 'webex-report-dashboard'],
-      webexJMS: ['jms_webex_v1', 'webex-report-jms'],
-      webexJMT: ['jmt_webex_v1', 'webex-report-jmt'],*/
       webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],
       webexJMS: ['system_webex_v1', 'webex-report-jms'],
       webexJMT: ['system_webex_v1', 'webex-report-jmt'],
       license: ['basic_license_v1', 'license'],
+      webexPartner: ['partner_webex_v1', 'webex-report-partner'],
     };
     var service = {
       getQBSInfo: getQBSInfo,

@@ -234,23 +234,4 @@
       box-shadow: none;
     }
   }
-
-  .page-sub-header {
-    height: auto;
-    padding: .75rem 1.6rem;
-
-    .nav {
-      margin-bottom: 3px;
-
-      a {
-        color: $gray-base;
-
-        &:hover{
-          border: 0 !important;
-        }
-        font-size: 1rem;
-        border: none  !important;
-      }
-    }
-  }
 }

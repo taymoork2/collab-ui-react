@@ -81,6 +81,7 @@
     require('modules/core/partnerReports/reportCard').default,
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
+    require('modules/core/partnerReports/webexReports').default,
     require('modules/core/partnerProfile/branding').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
@@ -285,14 +286,17 @@
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
     require('modules/hcs/shared').default,
+    require('modules/hcs/shared/hcs-delete-modal').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,
     require('modules/hcs/hcs-inventory/inventory-list').default,
     require('modules/hcs/hcs-upgrade').default,
     require('modules/hcs/hcs-upgrade/upgrade-group').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
+    require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
     require('modules/hcs/setup').default,
   ]);
 

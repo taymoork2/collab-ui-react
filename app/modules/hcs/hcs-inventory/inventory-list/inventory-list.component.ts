@@ -1,7 +1,6 @@
 interface IInventoryObject {
   id: string;
   name?: string;
-  clusterCount: number;
   status: string;
   type: string;
 }
@@ -54,45 +53,43 @@ export class InventoryListCtrl implements ng.IComponentController {
   public $onInit(): void {
     this.inventoryList.push({
       id: 'ax1234b',
-      clusterCount: 6,
       type: 'unassigned',
       status: 'Needs Assigned',
     }, {
       id: 'ax1235b',
       name: 'Susan\'s Mixing Company',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Needs Accepted',
+      status: 'Software update needed',
     }, {
       id: 'ax1231c',
       name: 'Betty\'s Flower Shop',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Active',
+      status: 'Operational',
     }, {
       id: 'ax12345',
       name: 'Mary\'s Bar',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Active',
+      status: 'Operational',
     }, {
       id: 'ax1236r',
       name: 'Roger\'s Burgers',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Agent Inactive',
+      status: 'Agent Offline',
     }, {
       id: 'ax1235m',
       name: 'Jays BBQ',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Active',
+      status: 'Operational',
     }, {
       id: 'ax1239x',
       name: 'Wally World',
-      clusterCount: 4,
       type: 'custGroup',
-      status: 'Active',
+      status: 'Operational',
+    }, {
+      id: 'ax1249y',
+      name: 'Target',
+      type: 'custGroup',
+      status: 'Nodes need Accepted',
     });
     this.inventoryListData = this.inventoryList;
     this.tempFilterOptions = _.uniq(this.inventoryList.map(item => _.get(item, 'status')));
@@ -133,11 +130,11 @@ export class InventoryListCtrl implements ng.IComponentController {
         } else if (this.filter.selected.length === 0 && this.currentSearchString.length > 1) {
           // if only search and no filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          present = _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase());
+          present = _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLowerCase());
         } else {
           // if both search and filter
           const inventoryName = _.get(inventory, 'name', 'Unassigned');
-          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLocaleLowerCase()))) {
+          if (_.find(this.filter.selected, (selected) => selected.value === inventory.status && _.includes(inventoryName.toLowerCase(), this.currentSearchString.toLowerCase()))) {
             present = true;
           }
         }

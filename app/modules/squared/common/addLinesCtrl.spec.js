@@ -173,6 +173,49 @@ describe('AddLinesCtrl: Ctrl', function () {
       });
     });
 
+    describe('isDisabled', function () {
+      beforeEach(function () {
+        this.initController();
+      });
+
+      it('with empty internal number pool should be disabled', function () {
+        this.CommonLineService.getInternalNumberPool.and.returnValue([]);
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('with empty external number pool should be disabled', function () {
+        this.CommonLineService.getExternalNumberPool.and.returnValue([]);
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('without directoryNumber selected should be disabled', function () {
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('with filled pools and directoryNumber selected should be enabled', function () {
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(false);
+      });
+    });
+
     describe('next', function () {
       beforeEach(function () {
         var deviceCisUuid = this.deviceCisUuid;

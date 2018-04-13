@@ -1,9 +1,4 @@
-@import '~@collabui/collab-ui/scss/settings/core';
-@import '~@collabui/collab-ui/scss/settings/page';
-@import '~@collabui/collab-ui/scss/settings/fonts';
-@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
-@import '../../../styles/variables';
 
 .customer-reports {
   @extend %content-subheader;
@@ -11,36 +6,5 @@
   .metricsContent {
     overflow: hidden !important;
     padding: 0 !important;
-  }
-
-  .fullSize {
-    height: 100%;
-    width: 100%;
-  }
-
-  .metrics-loading-icon {
-    margin-top: 10vh;
-    font-size: 7rem;
-  }
-
-  .metrics-loading-data {
-    margin-top: 1rem;
-    font-size: 1.8rem;
-    font-family: $brand-font-extra-light;
-  }
-
-  .metrics-loading-description {
-    margin-top: 1rem;
-  }
-
-  .webex-metrics-sub-header {
-    .page-sub-header .nav li a, .page-sub-header .nav .li a,
-    .page-sub-header .nav li.current.active > a.nav-link, .page-sub-header .nav .current.active.li > a.nav-link,
-    .page-sub-header .nav li a:hover, .page-sub-header .nav .li a:hover{
-      border: none;
-    }
-    .page-sub-header .nav li a, .page-sub-header .nav .li a {
-      font-size: 1rem;
-    }
   }
 }

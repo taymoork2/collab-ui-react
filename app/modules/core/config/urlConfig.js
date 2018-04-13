@@ -276,7 +276,7 @@
       dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
       integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      prod: 'https://admin-batch-service.wbx2.com/api/v1',
+      prod: 'https://admin-batch-service-a.wbx2.com/api/v1',
     },
     SpeechServiceUrl: {
       dev: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',

@@ -151,7 +151,7 @@
                     id="userAdminCkbx"
                     cs-input-label="{{::'rolesPanel.userAdmin' | translate}}"
                     ng-model="rolesObj.userAdminValue"
-                    ng-change="partialCheckboxes()"
+                    ng-change="partialCheckboxesUserAdmin()"
                     ng-disabled="isNotEditable || rolesObj.supportAdminValue">
                   <i aria-label="{{::roleTooltips.userAdminAria}}"
                     tooltip-html-unsafe="{{::roleTooltips.userAdmin}}"
@@ -166,7 +166,7 @@
                     cs-input-label="{{::'rolesPanel.deviceAdmin' | translate}}"
                     ng-model="rolesObj.deviceAdminValue"
                     ng-change="partialCheckboxes()"
-                    ng-disabled="isNotEditable || rolesObj.supportAdminValue">
+                    ng-disabled="isDeviceCheckboxDisabled()">
                   <i aria-label="{{::roleTooltips.deviceAdmin}}"
                     tooltip-html-unsafe="{{::roleTooltips.deviceAdmin}}"
                     tooltip-placement="right"

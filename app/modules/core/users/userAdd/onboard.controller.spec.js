@@ -94,7 +94,6 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.mock.headers = getJSONFixture('core/json/users/headers.json');
     this.mock.getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
-    this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
     this.mock.getCareVoiceServices = getJSONFixture('core/json/authInfo/careVoiceServices.json');
     this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');

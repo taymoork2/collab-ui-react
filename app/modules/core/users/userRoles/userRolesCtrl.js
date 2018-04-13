@@ -31,7 +31,7 @@ require('./_user-roles.scss');
     }).then(function (toggles) {
       $scope.showOrderAdminRole = toggles.atlasHelpDeskOrderSearch;
       $scope.showPartnerManagementRole = toggles.atlasPartnerManagement;
-      $scope.showDeviceRole = toggles.atlasF2993NewDeviceRole;
+      $scope.showDeviceRole = toggles.atlasF2993NewDeviceRole || toggles.atlasF2993NewUserRole;
       $scope.showUserRole = toggles.atlasF2993NewUserRole;
       $scope.showCCAAdminRole = $scope.showCCAAdminRole && toggles.atlasCCARole;
       $scope.showCCARoles = $scope.showCCARoles && toggles.atlasCCARole;
@@ -93,14 +93,14 @@ require('./_user-roles.scss');
 
       // TODO: When altasF2993NewUserAndDeviceRoles is activated for all, Device Management should be added to tooltips above;
       // icon-remove for all but Full-Admin
-      userAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.assignRoles,
+      userAdminAria: ROLE_TRANSLATIONS.userManagement + ' ' + ROLE_TRANSLATIONS.deviceManagement,
       userAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.userManagement +
-        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.deviceManagement +
+        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.deviceManagement +
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.companyPolicyTemplates +
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.analytics +
         '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.supportMetrics +
         '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.licensesAndUpgrades +
-        '</li><li><i class="icon icon-check"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
+        '</li><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.assignRoles + '</li></ul>',
 
       deviceAdminAria: ROLE_TRANSLATIONS.deviceManagement,
       deviceAdmin: '<ul class="roles-tooltip"><li><i class="icon icon-remove"></i>' + ROLE_TRANSLATIONS.userManagement +
@@ -119,6 +119,8 @@ require('./_user-roles.scss');
     $scope.clearCheckboxes = clearCheckboxes;
     $scope.supportCheckboxes = supportCheckboxes;
     $scope.partialCheckboxes = partialCheckboxes;
+    $scope.partialCheckboxesUserAdmin = partialCheckboxesUserAdmin;
+    $scope.isDeviceCheckboxDisabled = isDeviceCheckboxDisabled;
     $scope.hasUserOrDeviceAdmin = hasUserOrDeviceAdmin;
     $scope.orderadminOnCheckedHandler = orderadminOnCheckedHandler;
     $scope.helpdeskOnCheckedHandler = helpdeskOnCheckedHandler;
@@ -629,6 +631,15 @@ require('./_user-roles.scss');
       $scope.rolesObj.adminRadioValue = 2;
       $scope.rolesEdit.form.$dirty = true;
       checkAdminDisplayName();
+    }
+
+    function partialCheckboxesUserAdmin() {
+      $scope.rolesObj.deviceAdminValue = $scope.rolesObj.userAdminValue;
+      $scope.partialCheckboxes();
+    }
+
+    function isDeviceCheckboxDisabled() {
+      return $scope.isNotEditable || $scope.rolesObj.supportAdminValue || $scope.rolesObj.userAdminValue;
     }
 
     function isEntitledToCompliance() {

@@ -314,8 +314,8 @@ export class AllContainingGroup extends SuggestionGroupBase {
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount: number | undefined = undefined): void {
     if (!currentEditedElement
-      || (currentEditedElement instanceof FieldQuery && currentEditedElement.field !== '')
-      || currentEditedElement.toQuery() === '') {
+      || (currentEditedElement instanceof FieldQuery && currentEditedElement.field)
+      || !currentEditedElement.toQuery()) {
       this.hidden = true;
       return;
     }
