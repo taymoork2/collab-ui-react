@@ -2,7 +2,7 @@ import moduleName from './index';
 
 describe('HybridMediaClusterSettingsCtrl', () => {
 
-  let $componentController, $scope, $q, HybridServicesClusterService;
+  let $componentController, $modal, $scope, $q, HybridServicesClusterService;
 
   beforeEach(angular.mock.module(moduleName));
 
@@ -10,15 +10,16 @@ describe('HybridMediaClusterSettingsCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$componentController_, $rootScope, _$q_, _HybridServicesClusterService_) {
+  function dependencies(_$componentController_, _$modal_, $rootScope, _$q_, _HybridServicesClusterService_) {
     $componentController = _$componentController_;
+    $modal = _$modal_;
     $scope = $rootScope.$new();
     $q = _$q_;
     HybridServicesClusterService = _HybridServicesClusterService_;
   }
 
   function cleanup() {
-    $componentController = $scope = $q = HybridServicesClusterService = undefined;
+    $componentController = $modal = $scope = $q = HybridServicesClusterService = undefined;
   }
 
   function initSpies() {

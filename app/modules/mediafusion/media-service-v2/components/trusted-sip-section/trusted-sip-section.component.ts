@@ -6,7 +6,7 @@ interface ITag {
   text: string;
 }
 
-class TrustedSipSectionCtrl implements ng.IComponentController {
+export class TrustedSipSectionCtrl implements ng.IComponentController {
 
   public hasMfTrustedSipToggle: boolean;
   public clusterId: string;
