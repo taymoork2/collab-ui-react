@@ -2,6 +2,7 @@ export interface IHcsCluster {
   uuid: string;
   name: string;
   hcsNodes?: IHcsNode[] | null | undefined;
+  url?: string;
 }
 
 export interface IHcsNode {
@@ -16,6 +17,23 @@ export interface IHcsNode {
   latestTaskName?: string | null;
   latestTaskStatus?: string | null;
   sftpServer?: string | null;
+}
+
+export interface ISftpServerItem {
+  uuid: string;
+  name: string;
+}
+
+export interface IApplicationItem {
+  name: string;
+  count: number;
+}
+
+export interface IClusterItem {
+  id: string;
+  name: string;
+  status: string;
+  applications: IApplicationItem[];
 }
 
 export class HcsNode implements IHcsNode {
@@ -60,14 +78,33 @@ export class HcsNode implements IHcsNode {
 export class HcsCluster implements IHcsCluster {
   public uuid: string;
   public name: string;
-  public hcsNodes: null | undefined;
+  public hcsNodes?: IHcsNode[] | null | undefined;
+  public url?: string;
   constructor(obj: {
     uuid: '',
     name: '',
     hcsNodes: null,
+    url: undefined,
   }) {
     this.uuid = obj.uuid;
     this.name = obj.name;
+    this.url = obj.url;
     this.hcsNodes = _.clone(obj.hcsNodes);
   }
+}
+
+export interface INodeSummaryItem {
+  hostName: string;
+  typeApplication: string;
+  isPublisher: boolean;
+  ipAddress: string;
+}
+
+export interface IHcsClusterSummaryItem {
+  uuid: string;
+  name: string;
+  hcsNodes: INodeSummaryItem[];
+  url?: string;
+  sftpServer?: ISftpServerItem;
+  status?: string;
 }

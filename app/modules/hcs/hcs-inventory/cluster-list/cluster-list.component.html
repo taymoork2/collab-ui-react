@@ -8,35 +8,36 @@
 </cs-page-header>
 <div class="cs-card-container cluster-list-container">
   <cs-card-layout>
-    <cs-card class="cs-card--medium" ng-repeat="cluster in $ctrl.clusterList">
-      <article>
+    <cs-card class="cs-card--small header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
+      <article  ng-click="$ctrl.cardSelected(cluster)" hover-delay>
         <header>
-          <div class="header">
+          <div class="header-with-right-icon">
             <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
+            <div class="right card-icon-div ">
+              <button type="button" class="close"
+                ng-click="$ctrl.closeCard((cluster), $event)"
+                ng-keydown=""
+                aria-label="{{::'common.delete' | translate}}"></button>
+            </div>
           </div>
-          <h4 class="cluster-type">{{cluster.type}}</h4>
         </header>
         <section class="card-body">
           <div class="card-section">
-            <div class="card-section-header h5">{{cluster.nodes.length}} nodes</div>
-            <div class="card-section-item row" ng-repeat="node in cluster.nodes">
-              <div class="columns medium-3 h6">{{node.name}}</div>
-              <div class="columns medium-5 h6">{{node.type}}</div>
-              <div class="columns medium-4 h6" ng-switch="node.status">
-                <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
-                <i ng-switch-when="Needs Accepted" class="icon icon-circle status-indicator warning"></i>
-                <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
-                <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
-                {{node.status}}
-              </div>
+            <div  ng-repeat="application in cluster.applications">
+              <span class="application-name h5">{{application.name}}</span>
+              <span class="application-node-count h5">{{application.count}} nodes</span>
             </div>
           </div>
         </section>
         <footer class="cluster-list-footer">
-          <div>
-              <a ng-if="$ctrl.groupType === 'unassigned'" ui-sref="hcs.clusterDetail({groupId: $ctrl.groupId, groupType: $ctrl.groupType, clusterId: cluster.id, clusterName: cluster.name})" translate="common.assign"></a>
-            <a ng-if="$ctrl.groupType !== 'unassigned'" ui-sref="hcs.clusterDetail({groupId: $ctrl.groupId, groupType: $ctrl.groupType, clusterId: cluster.id, clusterName: cluster.name})" translate="common.settings"></a>
-          </div>
+          <span ng-switch="cluster.status" class="cluster-status">
+              <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
+              <i ng-switch-when="Nodes need Accepted" class="icon icon-circle status-indicator warning"></i>
+              <i ng-switch-when="Needs Software update" class="icon icon-circle status-indicator warning"></i>
+              <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
+              <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
+              {{cluster.status}}
+          </span>
         </footer>
       </article>
     </cs-card>
