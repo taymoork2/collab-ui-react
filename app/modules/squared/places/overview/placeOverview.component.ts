@@ -17,7 +17,6 @@ class PlaceOverview implements ng.IComponentController {
   public services: IFeature[] = [];
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
-  public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
@@ -194,9 +193,6 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    this.FeatureToggleService.csdmATAGetStatus().then(feature => {
-      this.showATA = feature;
-    });
     this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
@@ -352,7 +348,6 @@ class PlaceOverview implements ng.IComponentController {
     const wizardState = {
       data: {
         function: 'showCode',
-        showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
