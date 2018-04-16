@@ -4,6 +4,7 @@ import { IHttpResponse, IHttpService, IIntervalService, IScope } from 'angular';
 import IDevice = csdm.IDevice;
 import moment = require('moment');
 import { Notification } from '../../core/notifications/notification.service';
+import { BulkActionName, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 interface IBulkFailureData {
   url: string;
@@ -42,6 +43,7 @@ class BulkModalCtrl implements ng.IComponentController {
               private $translate: ng.translate.ITranslateService,
               private $http: IHttpService,
               private $scope: IScope,
+              private CsdmAnalyticsHelper: ICsdmAnalyticHelper,
               private Notification: Notification) {
   }
 
@@ -81,6 +83,9 @@ class BulkModalCtrl implements ng.IComponentController {
         this.processBulkResponse(result.data);
         if (BulkAction.isCompleted(result.data.state)) {
           this.$interval.cancel(this.bulkActionPoller);
+          this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.COMPLETE, {
+            totalSuccessSize: _.get(result, 'data.numberOfSuccesses'),
+          });
         }
       })
       .catch(error => {
@@ -93,6 +98,9 @@ class BulkModalCtrl implements ng.IComponentController {
         if (this.pullProgressErrorCount > 9) { //ten seconds with consecutive errors with the current poller
           this.$interval.cancel(this.bulkActionPoller);
           this.Notification.errorWithTrackingId(error, 'deviceBulk.pollProgressError');
+          this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.COMPLETE, {
+            totalSuccessSize: 0,
+          });
         }
       });
   }

@@ -260,6 +260,18 @@
           VIEW_INVOICE: 'Online: View Invoice',
         },
       },
+      DEVICE_BULK: {
+        name: 'Bulk device',
+        eventNames: {
+          BULK: 'bulk',
+          COMPLETE: 'bulk complete',
+          DELETE: 'bulk delete',
+          DELETE_ASK: 'bulk delete ask',
+          DELETE_FAKE: 'bulk delete fake',
+          SELECT: 'bulk select',
+          SELECT_ALL: 'bulk select all',
+        },
+      },
       DEVICE_SEARCH: {
         name: 'Devices search',
         eventNames: {
