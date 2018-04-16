@@ -37,7 +37,7 @@ declare namespace atlas {
       compileTemplateNoApply(name: string): void;
       compileViewTemplate(name: string, template: string, options: IInitControllerOptions): void;
 
-      spyOnComponent<T>(name: string): IComponentSpy<T>;
+      spyOnComponent<T>(name: string, options?: ng.IComponentOptions | ng.IDirective): IComponentSpy<T>;
     }
 
     type IComponentTest<ComponentController extends ng.IComponentController, Dependencies = {}, This = {}> = ITest<Dependencies, This> & {
