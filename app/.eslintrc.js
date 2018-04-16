@@ -52,6 +52,7 @@ module.exports = {
     angular: true,
     beforeAll: true,
     beforeEach: true,
+    Blob: true,
     describe: true,
     expect: true,
     fail: true,
