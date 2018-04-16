@@ -9,7 +9,7 @@ describe('ctSummaryComponent, ', () => {
     this.SunlightConfigService[operation].and.returnValue(deferred.promise);
     this.LogMetricsService.logMetrics.and.returnValue('');
     this.Notification.success.and.returnValue('');
-    this.CTService.openEmbedCodeModal.and.returnValue(deferredCtService.promise);
+    this.CTService.openEmbedCodeModalNew.and.returnValue(deferredCtService.promise);
     deferred.resolve({
       success: true,
       headers: function () {
@@ -29,7 +29,7 @@ describe('ctSummaryComponent, ', () => {
     expect(controller.saveCTErrorOccurred).toBeFalsy();
     expect(this.$state.go).toHaveBeenCalled();
     expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toEqual('CARETEMPLATEFINISH');
-    expect(this.CTService.openEmbedCodeModal).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String));
+    expect(this.CTService.openEmbedCodeModalNew).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String));
   };
 
   const chatTemplateRejected = function (operation) {
@@ -82,7 +82,7 @@ describe('ctSummaryComponent, ', () => {
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.LogMetricsService, 'logMetrics');
-    spyOn(this.CTService, 'openEmbedCodeModal');
+    spyOn(this.CTService, 'openEmbedCodeModalNew');
     spyOn(this.$state, 'go');
     spyOn(this.$modal, 'open');
 
