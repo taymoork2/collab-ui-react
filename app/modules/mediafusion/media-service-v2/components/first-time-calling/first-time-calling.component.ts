@@ -103,7 +103,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
         this.$timeout( () => {
           this.retry = true;
           this.firstTimeCallDetails();
-        }, 600000);
+        }, 60000);
       } else if (this.callParticipants.length !== 0) {
         this.loading = false;
         this.callExists = true;

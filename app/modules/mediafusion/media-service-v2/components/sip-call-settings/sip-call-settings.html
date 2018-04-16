@@ -31,7 +31,7 @@
 			on-cascade-bandwidth-update="$ctrl.cascadeBandwidthUpdated(response)">
 		</cluster-cascade-bandwidth>
 	</div>
-	<div ng-show="!$ctrl.isWizard && !$ctrl.mfWizardToggle">
+	<div ng-show="!$ctrl.isWizard && $ctrl.mfWizardToggle">
 		<div class="sub-section">
 			<h5 class="sub-section__label" translate="mediaFusion.easyConfig.verifysipcalls"></h5>
 			<p class="sub-section__description" translate="mediaFusion.easyConfig.sipcallsdesc"></p>

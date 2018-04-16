@@ -8,7 +8,6 @@ import  trustedSipSectionServiceModuleName from 'modules/mediafusion/media-servi
 export default angular.module('mediafusion.media-service-v2.components.sip-call-settings', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
-  //require('modules/mediafusion/media-service-v2/components/sip-registration-section/sip-registration-section.service'),
   hybridServicesClusterServiceModuleName,
   sipRegistrationSectionModuleName,
   trustedSipSectionServiceModuleName,

@@ -22,7 +22,7 @@ describe('Service: FirstTimeCalling Service', function () {
 
   describe('Getting Call Details for SPARK', function () {
     it ('should return the call details', function () {
-      this.$httpBackend.expectGET(`${this.athenaServiceUrl}organizations//cluster/testcluster/first_time_calling/?relativeTime=15m&callType=SPARK`).respond(200, {
+      this.$httpBackend.expectGET(`${this.athenaServiceUrl}/organizations/${this.Authinfo.getOrgId()}/cluster/testcluster/first_time_calling/?relativeTime=15m&callType=SPARK`).respond(200, {
         callstart: '2018-04-05T06:12:05.293Z',
         callers: [
           'TP_ENDPOINT',
@@ -31,18 +31,18 @@ describe('Service: FirstTimeCalling Service', function () {
         callType: 'SPARK',
       });
       this.FirstTimeCallingService.getServiceStatus('testcluster', 'SPARK').then((result) => {
-        expect(result).toEqual(this.centerDetails);
+        expect(result.callers.length).toEqual(2);
       });
       this.$httpBackend.flush();
     });
     it ('should return empty client types if there is no call', function () {
       this.$httpBackend.expectGET(`${this.athenaServiceUrl}/organizations/${this.Authinfo.getOrgId()}/cluster/testcluster/first_time_calling/?relativeTime=15m&callType=SPARK`).respond(500, {
-        clientTypes: [],
+        callers: [],
         callType: 'SPARK',
         callStartTime: '',
       });
-      this.SetupWizardService.getExistingConferenceServiceDetails('testcluster', 'SPARK').catch((result) => {
-        expect(result.clientTypes.length).toEqual(0);
+      this.FirstTimeCallingService.getServiceStatus('testcluster', 'SPARK').catch((result) => {
+        expect(result.callers.length).toEqual(0);
       });
       this.$httpBackend.flush();
     });

@@ -19,7 +19,7 @@ describe('HybridMediaClusterSettingsCtrl', () => {
   }
 
   function cleanup() {
-    $componentController = $modal = $scope = $q = HybridServicesClusterService = undefined;
+    $componentController  =  $modal = $scope = $q = HybridServicesClusterService = undefined;
   }
 
   function initSpies() {
