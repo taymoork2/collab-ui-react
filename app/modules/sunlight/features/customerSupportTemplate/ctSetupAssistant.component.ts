@@ -58,7 +58,7 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   }
 
   private isCustomerInformationPageValid() {
-    return true;
+    return this.TemplateWizardService.pageValidationResult.isCustomerInfoPageValid || false;
   }
 
   private isProfilePageValid() {
