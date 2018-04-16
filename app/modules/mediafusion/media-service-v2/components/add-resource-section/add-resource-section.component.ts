@@ -97,7 +97,6 @@ export class AddResourceSectionController implements ng.IComponentController {
     this.enteredCluster = '';
     this.clusterExist = false;
   }
-
 }
 
 export class AddResourceSectionComponent implements ng.IComponentOptions {

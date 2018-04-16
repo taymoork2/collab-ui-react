@@ -67,6 +67,9 @@ class DeviceList implements ng.IComponentController {
       multiSelect: false,
       rowHeight: DeviceList.RowHeight,
       appScopeProvider: {
+        searchObject: () => {
+          return this.searchObject;
+        },
         selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
           this.GridCellService.selectRow(grid, row);
           this.expandDevice(row.entity);

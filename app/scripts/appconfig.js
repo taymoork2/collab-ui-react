@@ -3270,6 +3270,11 @@
               },
             },
           })
+          .state('hcs.sftplist', {
+            parent: 'partner',
+            url: '/hcs/sftplist',
+            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',
@@ -5421,23 +5426,17 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?clusterId&serviceId&connectorId',
-            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
-            params: {
-              resourceFilter: null,
-            },
+            url: '/services/clusters/history?clusterId&hostSerial&serviceId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" host-serial="$resolve.hostSerial" service-id="$resolve.serviceId"></hybrid-services-event-history-page>',
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
-              connectorId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.connectorId;
+              hostSerial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.hostSerial;
               },
               serviceId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.serviceId;
-              },
-              resourceFilter: /* @ngInject */ function ($stateParams) {
-                return $stateParams.resourceFilter;
               },
             },
           })

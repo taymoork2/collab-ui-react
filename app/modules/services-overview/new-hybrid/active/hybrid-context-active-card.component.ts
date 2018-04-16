@@ -39,14 +39,18 @@ export class HybridContextActiveCardComponent implements ng.IComponentOptions {
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="context-resources">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="context-resources" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
+        <a ng-if="$ctrl.hasEventsHistoryFeatureToggle" ui-sref="hybrid-services-event-history-page({serviceId: 'contact-center-context'})" class="active-card_footer_events-link">
+          <span>Events</span>
         </a>
       </div>
     </article>
   `;
   public bindings = {
+    hasEventsHistoryFeatureToggle: '<',
     serviceStatus: '<',
   };
 }

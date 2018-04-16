@@ -306,7 +306,7 @@ export class AllContainingGroup extends SuggestionGroupBase {
     return this.suggestions;
   }
 
-  constructor(private $translate: ng.translate.ITranslateService) {
+  constructor(private $translate: ng.translate.ITranslateService, private searchTranslator: SearchTranslator) {
     super({ hidden: true, permanentRank: 1000 });
     this.readableField = this.$translate.instant('spacesPage.allDevices');
     this.hidden = true;
@@ -314,8 +314,8 @@ export class AllContainingGroup extends SuggestionGroupBase {
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount: number | undefined = undefined): void {
     if (!currentEditedElement
-      || (currentEditedElement instanceof FieldQuery && currentEditedElement.field !== '')
-      || currentEditedElement.toQuery() === '') {
+      || (currentEditedElement instanceof FieldQuery && currentEditedElement.field)
+      || !currentEditedElement.toQuery()) {
       this.hidden = true;
       return;
     }
@@ -327,7 +327,7 @@ export class AllContainingGroup extends SuggestionGroupBase {
         searchString: currentEditedElement.toQuery(),
         readableField: this.$translate.instant('spacesPage.allDevices'),
         textTranslationKey: 'spacesPage.containingQuery',
-        textTranslationParams: { query: currentEditedElement.toQuery() },
+        textTranslationParams: { query: currentEditedElement.toQuery(this.searchTranslator) },
         isInputBased: true,
       })];
     if (currentEditedElement instanceof OperatorAnd &&

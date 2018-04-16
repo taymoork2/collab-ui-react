@@ -18,6 +18,8 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public finish: boolean = false;
   public finishDisable: boolean = false;
   public isFirstTimeSetup: boolean;
+  public loading: boolean = false;
+  public isSftp: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -31,33 +33,57 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     if (_.isUndefined(this.currentStepIndex)) {
       this.currentStepIndex = HcsSetupModalCtrl.FIRST_INDEX;
     }
-    this.nextStep();
+    this.initModalInfo();
+  }
+
+  public initModalInfo() {
+    this.currentStepIndex = this.currentStepIndex + 1;
+    this.loading = false;
+    this.finishDisable = true;
+    this.isSftp = false;
+    if (!this.isFirstTimeSetup) {
+      this.finish = true;
+      this.finishDisable = false;
+      this.isSftp = this.currentStepIndex === 3;
+    }
+    switch (this.currentStepIndex) {
+      case 1:
+        this.title = 'hcs.setup.titleServices';
+        break;
+      case 2:
+        this.title = 'hcs.installFiles.setupTitle';
+        break;
+      case 3:
+        this.isSftp = true;
+        this.title = 'hcs.sftp.setupTitle';
+        break;
+      case 4:
+        this.title = 'hcs.softwareProfiles.title';
+        break;
+      default:
+        this.dismissModal();
+    }
   }
 
   public nextStep(): void {
     this.currentStepIndex = this.currentStepIndex + 1;
+    this.nextEnabled = false;
     switch (this.currentStepIndex) {
       case 1:
         this.hcsServices = { license: false, upgrade: false };
-        this.title = 'hcs.setup.titleServices';
         if (this.hcsSetupModalForm) {
           this.hcsSetupModalForm.$setPristine();
         }
       case 2:
-        this.title = 'hcs.installFiles.setupTitle';
         this.nextEnabled = false;
-        if (!this.isFirstTimeSetup) {
-          this.finish = true;
-          this.finishDisable = true;
-        }
         break;
       case 3:
         if (!this.hcsServices.upgrade) {
           this.title = 'hcs.setup.finish';
           this.cancelRemoved = true;
           this.finish = true;
+          this.finishDisable = false;
         } else {
-          this.title = 'hcs.sftp.setupTitle';
           this.nextEnabled = false;
         }
         break;
@@ -65,6 +91,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         if (!this.hcsServices.upgrade) {
           this.dismissModal();
         } else {
+          this.loading = true;
           this.createSftp();
           this.title = 'hcs.softwareProfiles.title';
           this.nextEnabled = false;
@@ -73,6 +100,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       case HcsSetupModalCtrl.MAX_INDEX:
         this.cancelRemoved = true;
         this.finish = true;
+        this.finishDisable = false;
         this.title = 'hcs.setup.finish';
         break;
       default:
@@ -82,9 +110,25 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public createSftp(): void {
     this.HcsUpgradeService.createSftpServer(this.sftpServer)
-      .then(() => this.Notification.success('hcs.sftp.success'))
-      .catch(e => this.Notification.error(e, 'hcs.sftp.error'));
+      .then(() => {
+        this.Notification.success('hcs.sftp.success');
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      })
+      .catch(e => {
+        this.Notification.error(e, 'hcs.sftp.error');
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      });
   }
+
+  public createInstallFile(): void {} //To-do
+
+  public createSoftwareProfile(): void {} //To-do
 
   public disableNext(): boolean  {
     return !this.nextEnabled;
@@ -116,9 +160,24 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     this.HcsSetupModalService.dismissModal();
   }
 
-  public finishFxn() {
-    //save data here if needed or create a save fxn and call here and at the start of nextStep fxn to save previous step data
-    this.dismissModal();
+  public finishModal(): void {
+    if (this.isFirstTimeSetup) {
+      this.dismissModal();
+    } else {
+      switch (this.currentStepIndex) {
+        case 2:
+          this.createInstallFile();
+          break;
+        case 3:
+          this.createSftp();
+          this.dismissModal();
+          break;
+        case 4:
+          this.createSoftwareProfile();
+          break;
+        default:
+      }
+    }
   }
 }
 

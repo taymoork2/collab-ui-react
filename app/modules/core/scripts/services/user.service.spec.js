@@ -152,7 +152,7 @@ describe('User Service', function () {
     });
   });
 
-  describe('onboardUsers():', function () {
+  describe('onboardUsersLegacy():', function () {
     it('onboardUsers success with sunlight K1 license should send PUT request to Sunlight Config', function () {
       this.$httpBackend
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
@@ -436,6 +436,49 @@ describe('User Service', function () {
         userName: 'user-name',
       };
       expect(getAnyDisplayableNameFromUser(userObj)).toBe('user-name');
+    });
+  });
+
+  describe('onboardUsersAPI():', function () {
+    it('should reject if "usersPayload" is empty', function (done) {
+      this.Userservice._helpers.onboardUsersAPI([])
+        .then(fail)
+        .catch(function (rejectReason) {
+          expect(rejectReason).toBe('No valid emails entered.');
+          needsHttpFlush = false;
+          done();
+        });
+      this.$rootScope.$apply();
+    });
+
+    it('should post post to onboard endpoint then call "checkAndUpdateSunlightUser()", and resolve with the original post response', function (done) {
+      var fakeUserPayload = {
+        users: ['fake-user-1'],
+      };
+      var _this = this;
+
+      // assume post to onboard endpoint succeeds
+      this.$httpBackend
+        .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
+        .respond(200, { userResponse: 'fake-onboard-response-userResponse' });
+
+      // assume sunlight updates succeed
+      spyOn(this.Userservice._helpers, 'checkAndUpdateSunlightUser').and.returnValue(this.$q.resolve());
+
+      this.Userservice._helpers.onboardUsersAPI(fakeUserPayload)
+        .catch(fail)
+        .then(function (postResponse) {
+          // check "checkAndUpdateSunlightUser()" is called with expected args
+          expect(_this.Userservice._helpers.checkAndUpdateSunlightUser).toHaveBeenCalledWith('fake-onboard-response-userResponse', ['fake-user-1']);
+
+          // check resolved data arrives in original post response
+          expect(postResponse.data).toEqual({
+            userResponse: 'fake-onboard-response-userResponse',
+          });
+          needsHttpFlush = false;
+          done();
+        });
+      this.$httpBackend.flush();
     });
   });
 });

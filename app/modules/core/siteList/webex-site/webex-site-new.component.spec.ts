@@ -44,10 +44,10 @@ describe('Component: WebexSiteNewComponent', function () {
     it('should display the existing sites which can not be deleted', function () {
       this.controller.$onInit();
       expect(this.view.find('webex-site-new-display').length).toBe(2);
-      expect(_.includes($(this.view.find('webex-site-new-display'))[0].innerHTML, 'abc.dmz.webex.com')).toBeTruthy();
-      expect(_.includes($(this.view.find('webex-site-new-display'))[1].innerHTML, 'site2.dmz.webex.com')).toBeTruthy();
-      expect(_.includes($(this.view.find('webex-site-new-display'))[0].innerHTML, 'delete-site')).toBeFalsy();
-      expect(_.includes($(this.view.find('webex-site-new-display'))[1].innerHTML, 'delete-site')).toBeFalsy();
+      expect(_.includes(this.view.find('webex-site-new-display')[0].innerHTML, 'abc.dmz.webex.com')).toBeTruthy();
+      expect(_.includes(this.view.find('webex-site-new-display')[1].innerHTML, 'site2.dmz.webex.com')).toBeTruthy();
+      expect(_.includes(this.view.find('webex-site-new-display')[0].innerHTML, 'delete-site')).toBeFalsy();
+      expect(_.includes(this.view.find('webex-site-new-display')[1].innerHTML, 'delete-site')).toBeFalsy();
     });
   });
 
@@ -62,7 +62,7 @@ describe('Component: WebexSiteNewComponent', function () {
     });
 
     it('should call validateWebexSiteUrl() and if VALID add the site the sitesArray', function () {
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
       const hasAddedSite = _.some(this.controller.newSitesArray, { siteUrl: siteUrl });
@@ -73,7 +73,7 @@ describe('Component: WebexSiteNewComponent', function () {
 
     it('should call validateWebexSiteUrl() and if INVALID isError  should be TRUE and site should not be added', function () {
       this.TrialWebexService.validateSiteUrl.and.returnValue(this.$q.resolve({ isValid: false, errorCode: 'invalidSite' }));
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
       expect(this.controller.newSitesArray.length).toBe(0);
@@ -81,9 +81,23 @@ describe('Component: WebexSiteNewComponent', function () {
       expect(this.$scope.onValidationStatusChangeFn).not.toHaveBeenCalled();
     });
 
+    it('site will not validate with duplicate site url', function () {
+      spyOn(this.controller, 'showError');
+      this.controller.newSitesArray = [{
+        siteUrl,
+        timezone: '1',
+        setupType: 'TRANSFER',
+      }];
+      this.view.find('button').click().trigger('change');
+      this.$scope.$digest();
+      const sites = _.filter(this.controller.newSitesArray, { siteUrl: siteUrl });
+      expect(sites.length).toBe(1);
+      expect(this.controller.showError).toHaveBeenCalledWith('firstTimeWizard.meetingSettingsError.duplicateSite', 'URL');
+    });
+
     it('site will not validate without setup type selected', function () {
       this.controller.siteModel.setupType = undefined;
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       const hasAddedSite = _.some(this.controller.newSitesArray, { siteUrl: siteUrl });
       expect(hasAddedSite).toBe(false);
@@ -91,7 +105,7 @@ describe('Component: WebexSiteNewComponent', function () {
 
     it('site WILL validate with type selected but not have a setupType if it\'s not LEGACY', function () {
       this.controller.siteModel.setupType = 'undefined';
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       const addedSite = _.find(this.controller.newSitesArray, { siteUrl: siteUrl });
       expect(addedSite).toBeDefined();
@@ -100,7 +114,7 @@ describe('Component: WebexSiteNewComponent', function () {
 
     it('site will validate with type selected and set setup type if it IS LEGACY', function () {
       this.controller.siteModel.setupType = this.Config.setupTypes.legacy;
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       const addedSite = _.find(this.controller.newSitesArray, { siteUrl: siteUrl });
       expect(addedSite).toBeDefined();
@@ -114,13 +128,13 @@ describe('Component: WebexSiteNewComponent', function () {
       this.controller.siteModel.siteUrl = 'testSiteHere';
       this.controller.siteModel.timezone = 'someTimeZoneHere';
       this.controller.siteModel.setupType = 'undefined';
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
     });
 
     it('should add the site to the list with the \'delete\' button ', function () {
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(true);
-      expect(_.includes($(this.view.find('webex-site-new-display'))[2].innerHTML, 'delete-site')).toBeTruthy();
+      expect(_.includes(this.view.find('webex-site-new-display')[2].innerHTML, 'delete-site')).toBeTruthy();
     });
     it('should fire onValidationStatusChange function with isValid true', function () {
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(true);
@@ -170,7 +184,7 @@ describe('Component: WebexSiteNewComponent', function () {
       this.controller.siteModel.siteUrl = siteUrl;
       this.controller.siteModel.timezone = 'someTimeZoneHere';
       this.controller.siteModel.setupType = 'undefined';
-      $(this.view.find('button')).click().trigger('change');
+      this.view.find('button').click().trigger('change');
       this.$scope.$digest();
       expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
       expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith(siteUrl.concat('.webex.com'), 'ATLAS_SERVICE_SETUP');
