@@ -148,13 +148,11 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         this.requestedTaskId = importedTask.id;
       })
       .catch(response => {
-        switch (response.status) {
-          case 503:
-            this.Notification.errorResponse(response);
-            break;
-          default:
-            this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError');
-            break;
+        // Batch process supports only one running job per customer
+        if (response.status === 409 && response.data.errorCode === 1001004) {
+          this.Notification.error('userTaskManagerModal.anotherJobIsRunning');
+        } else {
+          this.Notification.errorResponse(response);
         }
       });
   }
