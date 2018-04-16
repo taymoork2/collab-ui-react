@@ -409,7 +409,8 @@
       "stopped": "Stopped",
       "unknown": "Status Unknown",
       "processing": "Processing..."
-    }
+    },
+    "anotherJobIsRunning": "Import users failed because there is a job already running."
   },
   "ssoCertificateModal": {
     "certificateExpirationWarning": "SSO certificate may expire in {{days}} days. Check below for next steps.",
