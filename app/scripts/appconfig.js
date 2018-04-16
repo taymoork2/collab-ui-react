@@ -5668,6 +5668,25 @@
                 template: '<legal-hold-matter-new dismiss="$dismiss()" class="modal-content legalhold-modal"></legal-hold-matter-new>',
               },
             },
+          })
+          .state('legalhold.detail', {
+            parent: 'sidepanel',
+            params: {
+              matter: null,
+              displayName: null,
+            },
+            views: {
+              'sidepanel@': {
+                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter" class="modal-content legalhold-modal"></legal-hold-matter-detail>',
+
+                resolve: {
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
+                  },
+                  displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+                },
+              },
+            },
           });
         $stateProvider
           .state('partnerManagement-main', {
