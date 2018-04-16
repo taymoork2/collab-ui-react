@@ -43,10 +43,8 @@ export class SipCallSettingsController implements ng.IComponentController {
         const trustedSip = properties['mf.trustedSipSources'];
         this.sipConfigUrl = sipTrunkUrl;
         this.trustedsipconfiguration = trustedSip;
-        if (!_.isUndefined(sipTrunkUrl) || !_.isUndefined(trustedSip)) {
-          if (sipTrunkUrl !== '' || trustedSip !== '') {
-            this.isSipSettingsEnabled = true;
-          }
+        if (!_.isUndefined(sipTrunkUrl) && sipTrunkUrl !== '' || !_.isUndefined(trustedSip) && trustedSip !== '') {
+          this.isSipSettingsEnabled = true;
         }
       });
     } else if (isWizard && isWizard.currentValue) {

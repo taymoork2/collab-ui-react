@@ -11,14 +11,21 @@
     left: 25rem;
     top: 5rem;
   }
+  .icon-loading {
+    left: 23rem;
+    top: 1rem;
+  }
   .loading-text {
     display: flex;
     flex-direction: row;
-    padding-left: 23rem;
-    padding-top: 10rem;
+  }
+  .loading-text-position {
+    padding-left: 14rem;
+    padding-top: 12rem;
+    font-size: 22px;
   }
   .spark-success {
-    background: $gray-light-4;
+    background: $color-white;
     width: 100%;
     height: 25rem;
     margin-top: 20px;
@@ -27,7 +34,7 @@
   }
   .stick-bottom {
     padding-top: 1rem;
-    line-height: 1rem;
+    line-height: 1.5rem;
     position: absolute !important;
   }
   .call-details {
@@ -59,5 +66,8 @@
     width: 63%;
     margin: 11rem auto;
     text-align: center;
+  }
+  .icon-size {
+    font-size: 7em;
   }
 

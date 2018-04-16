@@ -43,11 +43,11 @@ export class FirstTimeCallingController implements ng.IComponentController {
     if (this.spark) {
       this.headerSelected = this.headerOptions[0];
       this.callType = 'Cisco Spark';
-      this.callTypeUrl = 'spark';
+      this.callTypeUrl = 'SPARK';
     } else {
       this.headerSelected = this.headerOptions[1];
       this.callType = 'Sip';
-      this.callTypeUrl = 'cmr';
+      this.callTypeUrl = 'CMR';
     }
     this.clusterName = this.cluster.name.replace(/\W/g, '').toLowerCase();
     this.clusterStatus();
@@ -93,7 +93,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
   public firstTimeCallDetails() {
     this.FirstTimeCallingService.getServiceStatus(this.clusterName, this.callTypeUrl).then(response => {
       if (response.callStartTime !== '') {
-        this.callStartTime = moment(response.callStartTime).format('YYYY-MM-DD HH:mm:ss');
+        this.callStartTime = moment.utc(response.callStartTime).format('YYYY-MM-DD HH:mm:ss');
         this.callStartTime = this.callStartTime + ' ' + this.$translate.instant('mediaFusion.easyConfig.utc');
       }
       this.callParticipants = response.clientTypes;
@@ -103,7 +103,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
         this.$timeout( () => {
           this.retry = true;
           this.firstTimeCallDetails();
-        }, 10000);
+        }, 600000);
       } else if (this.callParticipants.length !== 0) {
         this.loading = false;
         this.callExists = true;

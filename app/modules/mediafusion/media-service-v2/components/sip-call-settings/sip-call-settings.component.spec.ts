@@ -1,13 +1,10 @@
 import moduleName from './index';
 
-import { SipRegistrationSectionService } from 'modules/mediafusion/media-service-v2/components/sip-registration-section/sip-registration-section.service';
-import { TrustedSipSectionService } from 'modules/mediafusion/media-service-v2/components/trusted-sip-section/trusted-sip-section.service';
-
 describe('SipCallSettingsController', () => {
 
   let $componentController, $modal, $state, $q, $scope, HybridServicesClusterService;
-  let SipRegistrationSectionService: SipRegistrationSectionService;
-  let TrustedSipSectionService: TrustedSipSectionService;
+  let SipRegistrationSectionService;
+  let TrustedSipSectionService;
 
   interface ICluster {
     id: string;

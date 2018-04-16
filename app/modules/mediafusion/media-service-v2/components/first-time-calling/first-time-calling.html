@@ -10,21 +10,20 @@
 <div class="modal-body">
 
   <div ng-if="vm.clusterStateValue !== 'operational'">
-    <span><i class="icon icon-error icon-4x"></i></span>
+    <span><i class="icon icon-error icon-size"></i></span>
     <div class="position-msg"> {{vm.clusterStateMsg}} </div>
   </div>
 
   <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'Cisco Spark'">
     <h5 class="sub-section__label" translate="mediaFusion.easyConfig.sparkcallline1"></h5>
     <div class="spark-success">
-      <div class="loading-text " ng-if="vm.loading">
-          <h5 translate="mediaFusion.easyConfig.callwait"></h5>&nbsp;&nbsp;
-          <div cs-loader class="report-loader"></div>
+      <div class="loading-text" ng-if="vm.loading">
+        <i class="icon icon-spinner icon-size icon-loading"></i>
+        <h5 class="loading-text-position" translate="mediaFusion.easyConfig.callwait"></h5>
       </div>
-      
       <h5 ng-show="!vm.loading && !vm.callExists" class="sub-section__label no-calls" translate="mediaFusion.easyConfig.nocalls" translate-values="{callType: vm.callType}"></h5>
       <div ng-show = "vm.callExists">
-        <i class="icon icon-circle-check-mark-success icon-4x icon-sucesss"></i>
+        <i class="icon icon-circle-check-mark-success icon-size icon-sucesss"></i>
         <h5 translate="mediaFusion.easyConfig.callsuccess" class="call-details" translate-values="{callType: vm.callType}"></h5>
         <h5 translate="mediaFusion.easyConfig.lastcalldetails" class="text-align"></h5>
         <ul>
@@ -43,13 +42,13 @@
   <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'Sip'">
     <h5 class="sub-section__label" translate="mediaFusion.easyConfig.sipcallline1"></h5>
     <div class="spark-success">
-        <div class="loading-text " ng-if="vm.loading">
-            <h5 translate="mediaFusion.easyConfig.callwait"></h5>&nbsp;&nbsp;
-            <div cs-loader class="report-loader"></div>
-        </div>
+      <div class="loading-text " ng-if="vm.loading">
+        <i class="icon icon-spinner icon-size icon-loading"></i>
+        <h5 class="loading-text-position" translate="mediaFusion.easyConfig.callwait"></h5>
+      </div>
       <h5 ng-show="!vm.loading && !vm.callExists" class="sub-section__label no-calls" translate="mediaFusion.easyConfig.nocalls" translate-values="{callType: vm.callType}"></h5>
       <div ng-show = "vm.callExists">
-        <i class="icon icon-circle-check-mark-success icon-4x icon-sucesss"></i>
+        <i class="icon icon-circle-check-mark-success icon-size icon-sucesss"></i>
         <h5 translate="mediaFusion.easyConfig.callsuccess" class="call-details" translate-values="{callType: vm.callType}"></h5>
         <h5 translate="mediaFusion.easyConfig.lastcalldetails" class="text-align"></h5>
         <ul class="call-details-list display-flex">
