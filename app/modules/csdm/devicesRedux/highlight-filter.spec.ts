@@ -19,35 +19,47 @@ describe('highlightfilter', () => {
   });
 });
 describe('highlightFromSearchFilter', () => {
-  let filter: (input: string, search: SearchObject | null, restrictToField: string) => string;
+  let filter: (input: string, search: SearchObject | null, restrictToField: string, inputIsTranslated: boolean) => string;
   beforeEach(function () {
     this.initModules(reduxModule);
     this.injectDependencies('DeviceSearchTranslator', '$translate', '$sanitize');
-    filter = highlightFromSearch(this.$sanitize);
+    filter = highlightFromSearch(this.$sanitize, this.DeviceSearchTranslator);
   });
   it('should highlight simple query', function () {
     const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), 'con');
-    expect(filter('connection', so, '')).toBe('<b>con</b>nection');
+    expect(filter('connection', so, '', false)).toBe('<b>con</b>nection');
   });
-  it('should higlight for displayname', function () {
+  it('should highlight for displayname', function () {
     const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), 'displayName:angu');
-    expect(filter('angular 2.0 rock', so, 'displayname')).toBe('<b>angu</b>lar 2.0 rock');
+    expect(filter('angular 2.0 rock', so, 'displayname', false)).toBe('<b>angu</b>lar 2.0 rock');
   });
-  it('should higlight for displayname in or case not tag', function () {
+  it('should highlight for displayname in or case not tag', function () {
     const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator),
       '(displayName:angu or displayName:lar) 1.0 tags:rock');
-    expect(filter('angular 2.0', so, 'displayname')).toBe('<b>angular</b> 2.0');
+    expect(filter('angular 2.0', so, 'displayname', false)).toBe('<b>angular</b> 2.0');
   });
-  it('should higlight for displayname not tag', function () {
+  it('should highlight for displayname not tag', function () {
     const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), 'displayName:angu tag:rock');
-    expect(filter('angular 2.0 rock', so, 'displayname')).toBe('<b>angu</b>lar 2.0 rock');
+    expect(filter('angular 2.0 rock', so, 'displayname', false)).toBe('<b>angu</b>lar 2.0 rock');
   });
-  it('should higlight for displayname in complex search', function () {
+  it('should highlight for displayname in complex search', function () {
     const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator),
       'product:sx and product:n and connectionstatus=OFFLINE_EXPIRED and (displayname:vander or displayname:ort) and displayname:bern');
-    expect(filter('Bernardo Vandervort', so, 'displayname')).toBe('<b>Bern</b>ardo <b>Vander</b>v<b>ort</b>');
+    expect(filter('Bernardo Vandervort', so, 'displayname', false)).toBe('<b>Bern</b>ardo <b>Vander</b>v<b>ort</b>');
   });
 
+  it('should highlight for a translated input', function () {
+    spyOn(this.$translate, 'instant').and.returnValue('Ikke pålogget');
+    const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator),
+      'connectionstatus=DISCONNECTED');
+    expect(filter('Ikke pålogget', so, '', true)).toBe('<b>Ikke</b> <b>p&#229;logget</b>');
+  });
+  it('should highlight for a translated input in complex search', function () {
+    spyOn(this.$translate, 'instant').and.returnValue('Ikke pålogget');
+    const so = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator),
+      'product:sx and product:n and connectionstatus=DISCONNECTED and (displayname:vander or displayname:ort) and displayname:bern');
+    expect(filter('Ikke pålogget', so, 'connectionstatus', false)).toBe('<b>Ikke</b> <b>p&#229;logget</b>');
+  });
 });
 
 describe('highlightAndTranslateFilter', () => {
