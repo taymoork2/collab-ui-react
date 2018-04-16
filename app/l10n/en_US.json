@@ -6515,6 +6515,9 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
+    "newMfReport": {
+      "title": "Hybrid Media(Qlik)"
+    },
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
@@ -6531,6 +6534,8 @@
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
+      "historical-title": "Historical",
+      "live-title": "Live",
       "custom": "Custom",
       "selectedPeriod": "selected period",
       "test-org-alert": "Some reports might not have data, because you are using a test organization."

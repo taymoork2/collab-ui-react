@@ -15,6 +15,7 @@
       sparkBasic: ['basic_spark_v1', 'spark-report-basic'],
       sparkPremium: ['premium_spark_v1', 'spark-report-premium'],
       sparkPartner: ['partner_spark_v1', 'spark-report-partner'],
+      hybridMediaBasic: ['basic_hybrid_media_v1', 'hms-report-full-v1'],
       webexMEI: ['mei', 'MEI'],
       webexSystem: ['system_webex_v1', 'webex-report-system'],
       webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],

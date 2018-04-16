@@ -1,0 +1,35 @@
+<div class="hybrid-media-metrics-frame">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+        <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
+          <span class="name" ng-class="{'active' : nav.displayQlik}" translate="mediaFusion.report.historical-title"></span>
+          <span class="name" ng-class="{'active' : nav.displayLiveResource}" translate="mediaFusion.report.live-title"></span>
+          <i class="icon icon-chevron-down"></i>
+        </div>
+        <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
+          <li id="qlikReportsLi" class="filter" ng-class="{'active' : nav.displayQlik}" ng-click="nav.changeTabs(true, false);">
+            <a id="adoptionReports">
+              <span class="name" translate="mediaFusion.report.historical-title"></span>
+            </a>
+          </li>
+          <li id="resourceReportsLi" class="filter" ng-class="{'active' : nav.displayLiveResource}" ng-click="nav.changeTabs(false, true);">
+            <a id="resourceReports">
+              <span class="name" translate="mediaFusion.report.live-title"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
+  <div ng-if="nav.displayQlik">
+    <div class="metricsContent fullSize height-compensate" ng-class="nav.iframeContainerClass">
+      <hybrid-media-metrics-frame on-iframe-load="iframeLoaded(elem)" class="fullHeight"></hybrid-media-metrics-frame>
+    </div>
+  </div>
+  <div ng-if="nav.displayLiveResource">
+    <div class="metricsContent fullSize" ng-class="nav.iframeContainerClass">
+      <hybrid-media-live-component class="fullHeight"></hybrid-media-live-component>
+    </div>
+  </div>
+</div>
