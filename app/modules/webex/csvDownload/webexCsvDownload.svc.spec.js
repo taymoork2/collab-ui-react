@@ -18,7 +18,7 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test', function () {
     WebExUtilsFact = _WebExUtilsFact_;
 
     spyOn(WebExUtilsFact, 'utf8ToUtf16le').and.returnValue('');
-    spyOn(WebExCsvDownloadService, 'getNewBlob').and.returnValue(null);
+    spyOn(WebExCsvDownloadService, 'getNewBlob').and.returnValue(new Blob());
     spyOn(WebExCsvDownloadService, 'isWindowsIE').and.returnValue(false);
     spyOn(WebExCsvDownloadService, 'windowsIEDownload').and.returnValue(null);
   }));
@@ -47,7 +47,7 @@ describe('WebExCsvDownloadService.webexCreateObjectUrl() test2', function () {
     WebExUtilsFact = _WebExUtilsFact_;
 
     spyOn(WebExUtilsFact, 'utf8ToUtf16le').and.returnValue('');
-    spyOn(WebExCsvDownloadService, 'getNewBlob').and.returnValue(null);
+    spyOn(WebExCsvDownloadService, 'getNewBlob').and.returnValue(new Blob());
     spyOn(WebExCsvDownloadService, 'isWindowsIE').and.returnValue(true);
     spyOn(WebExCsvDownloadService, 'windowsIEDownload').and.returnValue(null);
   }));
