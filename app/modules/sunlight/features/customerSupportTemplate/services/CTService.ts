@@ -308,6 +308,15 @@ export class CTService {
     });
   }
 
+  public openEmbedCodeModalNew(templateId, templateName) {
+    const header = this.$translate.instant('careChatTpl.embedCodeFor');
+    const templateHeader = `${header}${templateName}`;
+    this.$modal.open({
+      template: `<ct-embed-code-modal-component dismiss="$dismiss()" template-id="${templateId}" template-name="${templateName}" template-header="${templateHeader}"></ct-embed-code-modal-component>`,
+      type: 'small',
+    });
+  }
+
   public getValidationMessages(minLength, maxLength) {
     return {
       required: this.$translate.instant('common.invalidRequired'),

@@ -64,7 +64,7 @@ class CtSummaryComponentController extends CtBaseController {
     this.Notification.success(successMsg, {
       featureName: template.name,
     });
-    this.CTService.openEmbedCodeModal(responseTemplateId, template.name);
+    this.CTService.openEmbedCodeModalNew(responseTemplateId, template.name);
   }
 
   public editChatTemplate(template) {
@@ -86,7 +86,7 @@ class CtSummaryComponentController extends CtBaseController {
     this.Notification.success(successMsg, {
       featureName: template.name,
     });
-    this.CTService.openEmbedCodeModal(template.templateId, template.name);
+    this.CTService.openEmbedCodeModalNew(template.templateId, template.name);
   }
 }
 
