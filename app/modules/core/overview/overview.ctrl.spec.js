@@ -17,6 +17,7 @@ describe('Controller: OverviewCtrl', function () {
       'AutoAssignTemplateService',
       'Config',
       'FeatureToggleService',
+      'HealthService',
       'HybridServicesClusterService',
       'HybridServicesFlagService',
       'PrivateTrunkService',
@@ -25,7 +26,6 @@ describe('Controller: OverviewCtrl', function () {
       'Orgservice',
       'OverviewNotificationFactory',
       'PstnService',
-      'ReportsService',
       'ServiceDescriptorService',
       'SetupWizardService',
       'SunlightReportService',
@@ -84,6 +84,10 @@ describe('Controller: OverviewCtrl', function () {
       raised: false,
     }]));
 
+    spyOn(this.HealthService, 'getHealthCheck').and.returnValue(this.$q.resolve({
+      success: true,
+      status: 200,
+    }));
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
@@ -94,7 +98,7 @@ describe('Controller: OverviewCtrl', function () {
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: getOrgNoSip }));
 
@@ -107,8 +111,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.SunlightUtilitiesService, 'isCareSetup').and.returnValue(this.$q.resolve(true));
 
-    spyOn(this.ReportsService, 'getOverviewMetrics').and.callFake(_.noop);
-    spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingCCWSubscriptions').and.returnValue(true);
@@ -138,7 +140,6 @@ describe('Controller: OverviewCtrl', function () {
         Orgservice: this.Orgservice,
         OverviewNotificationFactory: this.OverviewNotificationFactory,
         PstnService: this.PstnService,
-        ReportsService: this.ReportsService,
         ServiceDescriptorService: this.ServiceDescriptorService,
         SunlightReportService: this.SunlightReportService,
         SunlightUtilitiesService: this.SunlightUtilitiesService,
@@ -178,7 +179,7 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.cards).toBeDefined();
 
       var cardnames = _.map(this.controller.cards, function (card) {
-        return card.name;
+        return card.name || card.title;
       });
       expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
@@ -201,38 +202,6 @@ describe('Controller: OverviewCtrl', function () {
         translation: 'rebrand.banner.text',
         closeable: true,
       });
-    });
-  });
-
-  describe('Enable Devices', function () {
-    beforeEach(function () {
-      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
-      this.initController();
-    });
-
-    it('should call do something', function () {
-      var roomSystemsCard = this.getCard('overview.cards.roomSystem.title');
-      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy();
-    });
-  });
-
-  describe('Callcard with healthStatus Event', function () {
-    beforeEach(function () {
-      this.initController();
-    });
-
-    it('should update its status', function () {
-      var callCard = this.getCard('overview.cards.call.title');
-
-      callCard.healthStatusUpdatedHandler({
-        components: [{
-          name: 'Spark Call',
-          status: 'error',
-          id: 'gfg7cvjszyw0',
-        }],
-      });
-
-      expect(callCard.healthStatus).toEqual('danger');
     });
   });
 

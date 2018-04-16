@@ -1,6 +1,10 @@
 require('./_overview.scss');
 var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
 var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+var OfferName = require('modules/core/shared/offer-name').OfferName;
+var OfferType = require('modules/core/shared/offer-name').OfferType;
+var OverviewEvents = require('./overview.keys').OverviewEvents;
+var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
 
 (function () {
   'use strict';
@@ -10,11 +14,13 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q,
+  function OverviewCtrl(
+    $location,
+    $q,
     $rootScope,
     $scope,
     $state,
-    $location,
+    $timeout,
     Authinfo,
     AutoAssignTemplateService,
     CardUtils,
@@ -22,19 +28,20 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
     Config,
     EvaService,
     FeatureToggleService,
+    HealthService,
     HybridServicesClusterService,
     HybridServicesFlagService,
     HybridServicesUtilsService,
     LearnMoreBannerService,
     LinkedSitesService,
-    Log, Notification,
+    Log,
+    Notification,
     Orgservice,
     OverviewCardFactory,
     OverviewNotificationFactory,
     PrivateTrunkService,
     ProPackService,
     PstnService,
-    ReportsService,
     ServiceDescriptorService,
     SetupWizardService,
     SsoCertificateExpirationNotificationService,
@@ -53,6 +60,7 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
 
     var proPackPurchased = false;
 
+    vm.loadingSubscriptions = true;
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
@@ -61,15 +69,62 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
 
-    vm.cards = [
-      OverviewCardFactory.createMessageCard(),
-      OverviewCardFactory.createMeetingCard($scope),
-      OverviewCardFactory.createCallCard(),
+    FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(function (supported) {
+      var callSettingsUrl = '/services/call-settings';
+      if (supported) {
+        callSettingsUrl = '/services/call-settings-location';
+      }
+
+      // license-card info added here to allow for maintaining card order
+      // TODO: all the cards need to be converted to components, not just the license-cards
+      // and code cleaned up here and in the html so that we're no longer using ng-include
+      vm.cards = [{
+        defaultMessage: 'overview.cards.message.notEnabledText',
+        icon: 'icon-circle-message',
+        licenseDescription: 'overview.totalUserLicenses',
+        statusId: HealthStatusIDs.SparkMessage,
+        title: 'overview.cards.message.title',
+        // accepts either OfferType or OfferName
+        offerType: [OfferType.MESSAGING],
+      }, {
+        defaultMessage: 'overview.cards.meeting.notEnabledText',
+        icon: 'icon-circle-group',
+        licenseDescription: 'overview.totalUserLicenses',
+        statusId: HealthStatusIDs.SparkMeeting,
+        title: 'overview.cards.meeting.title',
+        offerType: [OfferType.CONFERENCING],
+        // check the license-card.keys for the interface ISettingsUrlObject
+        settingsUrlObject: {
+          requireSites: true,
+          url: '/site-list',
+        },
+      }, {
+        defaultMessage: 'overview.cards.call.notEnabledText',
+        icon: 'icon-circle-call',
+        licenseDescription: 'overview.totalUserLicenses',
+        statusId: HealthStatusIDs.SparkCall,
+        title: 'overview.cards.call.title',
+        offerType: [OfferType.COMMUNICATION],
+        settingsUrlObject: {
+          url: callSettingsUrl,
+        },
+      },
       OverviewCardFactory.createCareCard(),
-      OverviewCardFactory.createRoomSystemsCard(),
+      {
+        defaultMessage: 'overview.cards.roomSystem.notEnabledText',
+        icon: 'icon-circle-telepresence',
+        licenseDescription: 'overview.totalLicenses',
+        statusId: HealthStatusIDs.SparkMeeting,
+        title: 'overview.cards.roomSystem.title',
+        offerType: [OfferName.SD],
+        settingsUrlObject: {
+          url: '/devices',
+        },
+      },
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard(),
-    ];
+      ];
+    });
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
@@ -149,6 +204,7 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
         closeable: true,
       });
 
+      getHealthStatus();
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -297,27 +353,32 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
-      Orgservice.getLicensesUsage()
+
+      Orgservice.getInternallyManagedSubscriptions()
         .then(function (subscriptions) {
+          // timeout to prevent event from firing before page finishes loading
+          $timeout(function () {
+            $rootScope.$emit(OverviewEvents.SUBSCRIPTIONS_LOADED_EVENT, subscriptions);
+            vm.loadingSubscriptions = false;
+          });
+
           var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
-          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SD]);
+          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', OfferName.SD]);
           var sharedDevicesUsage = _.sumBy(sharedDeviceLicenses, 'usage');
           var showSharedDevicesNotification = sharedDeviceLicenses.length > 0 && sharedDevicesUsage === 0;
-          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SB]);
+          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', OfferName.SB]);
           var sparkBoardUsage = _.sumBy(sparkBoardLicenses, 'usage');
           var showSparkBoardNotification = sparkBoardLicenses.length > 0 && sparkBoardUsage === 0;
-          if (showSharedDevicesNotification || showSparkBoardNotification) {
-            setRoomSystemEnabledDevice(true);
-            if (showSharedDevicesNotification && showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-            } else if (showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-            } else {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-            }
-          } else {
-            setRoomSystemEnabledDevice(false);
+
+          if (showSharedDevicesNotification && showSparkBoardNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+          } else if (showSparkBoardNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+          } else if (showSharedDevicesNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
           }
+        }).catch(function () {
+          vm.loadingSubscriptions = false;
         });
 
       FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
@@ -461,6 +522,18 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
       }
     }
 
+    function getHealthStatus() {
+      HealthService.getHealthCheck().then(function (healthData) {
+        $timeout(function () {
+          // timeout to prevent event from firing before page finishes loading
+          $rootScope.$emit(OverviewEvents.HEALTH_STATUS_LOADED_EVENT, healthData);
+
+          // TODO: this is left in for now for the Care card, which needs to be updated to a component
+          forwardEvent('healthStatusUpdatedHandler', healthData);
+        });
+      });
+    }
+
     function onPstnEsaDisclaimerAccept() {
       if (vm.esaDisclaimerNotification !== null) {
         dismissNotification(vm.esaDisclaimerNotification);
@@ -496,12 +569,6 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
           name: 'overview.cards.users.title',
         });
       }
-    }
-
-    function setRoomSystemEnabledDevice(isDeviceEnabled) {
-      (_.find(vm.cards, function (card) {
-        return card.name === 'overview.cards.roomSystem.title';
-      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
@@ -551,8 +618,6 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
-    ReportsService.getOverviewMetrics(true);
-
     if (Authinfo.isCare()) {
       SunlightReportService.getOverviewData();
     }
@@ -564,8 +629,6 @@ var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
-
-    ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {

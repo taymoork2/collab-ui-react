@@ -8832,6 +8832,8 @@
     "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
+    "totalLicenses": "Total Licenses",
+    "totalUserLicenses": "Total User Licenses",
     "cards": {
       "broadsoft" : {
         "title": "BroadSoft BroadCloud",
@@ -8854,7 +8856,7 @@
       },
       "message": {
         "title": "Message",
-        "notEnabledText": " Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "notEnabledText": "Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
         "currentTitle": "New spaces this week",
         "previousTitle": "Last week:"
       },
