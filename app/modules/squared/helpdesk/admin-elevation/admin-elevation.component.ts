@@ -2,7 +2,7 @@ import { AdminElevationService } from './admin-elevation.service';
 
 enum ElevationState {
   init = 'INIT',
-  validSingature = 'VALID_SIGNATURE',
+  validSignature = 'VALID_SIGNATURE',
   elevationDone = 'ELEVATION_DONE',
   rejected = 'REJECTED',
   invalidSignature = 'INVALID_SIGNATURE',
@@ -45,7 +45,7 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
       this.AdminElevationService.validateSignature(this.orgId, this.signature, this.customerUserId, this.userId, this.timestamp).then((data) => {
         this.helpDeskOperatorName = data.helpDeskOperatorName;
         this.orgName = data.orgName;
-        this.state = ElevationState.validSingature;
+        this.state = ElevationState.validSignature;
       }).catch((error) => {
         this.$log.error('validateSignature', error);
         // TODO other page ?

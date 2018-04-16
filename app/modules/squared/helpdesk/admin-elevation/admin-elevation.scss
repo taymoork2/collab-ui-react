@@ -1,19 +1,77 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
+.hd-admin-elevation-wrapper {
+  border: thin solid $gray-light-2;
+  border-radius: 4px;
+  background-color: $white;
+  width: 34%;
+  margin: 2rem auto;
+  min-height: 36rem;
+
+  .logo {
+    width: 20%;
+    margin: 4rem auto 1rem auto;
+  }
+
+  .title {
+    text-align: center;
+    color: $gray-light-1;
+    margin-bottom: 4rem;
+  }
+
+  .admin-elevation-content-view {
+    width: 64%;
+    margin: 0 auto;
+
+    .loading {
+      margin: 4rem auto;
+      background-color: $white;
+
+      .spinner {
+        font-size: 3rem;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .admin-elevation-info {
+      text-align: center;
+      color: $gray-base;
+      margin: 2rem auto;
+    }
+    .admin-elevation-buttons {
+      margin: 0 auto;
+      text-align: center;
+      margin-bottom: 6rem;
+      margin-top: 4rem;
+    }
+  }
+
+}
+
 .admin-elevation {
+  .admin-elevation-content-view {
+    background-color: #f5f5f5;
+    width: 60%;
+    margin: 0 auto;
+  }
+
   .info-wrapper {
     margin: 0 auto;
   }
+
   .admin-elevation-info {
     text-align: center;
     color: $gray-dark-1;
     margin: 2rem auto;
     font-weight: bold;
   }
+
   .admin-elevation-buttons {
     margin: 0 auto;
     text-align: center;
   }
+
   .admin-elevation-wrapper {
     border-color: $gray-light-2;
     border-radius: 4px;
@@ -22,12 +80,14 @@
     padding: 2rem;
     width: 50%;
   }
+
   .loading {
     width: 50%;
     margin: 4rem auto;
+
     .spinner {
       font-size: 3rem;
-      text-align:center;
+      text-align: center;
       display: inline-block;
       width: 100%;
     }
