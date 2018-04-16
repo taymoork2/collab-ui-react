@@ -1,6 +1,7 @@
 import { FieldQuery, SearchElement } from '../services/search/searchElement';
 import _ = require('lodash');
 import { SearchObject } from '../services/search/searchObject';
+import { SearchTranslator } from '../services/search/searchTranslator';
 
 /* @ngInject */
 export function highlightFilter($sanitize) {
@@ -27,17 +28,17 @@ export function highlightFilter($sanitize) {
   };
 }
 
-function getThisFilter(theFilter) {
-  const thisFilter = (input: string, searchElement: SearchElement | null, highlightMask: HighlightMask, applyHighlight, restrictToField: string | undefined): string => {
+function getThisFilter(theFilter, searchTranslator?: SearchTranslator) {
+  const thisFilter = (input: string, searchElement: SearchElement | null, highlightMask: HighlightMask, applyHighlight, restrictToField: string | undefined, inputIsTranslated: boolean): string => {
     if (searchElement) {
       if (searchElement instanceof FieldQuery) {
         if (!(restrictToField && searchElement.field && searchElement.field !== restrictToField)) {
           input = theFilter(input, searchElement.field, false, highlightMask, false);
-          input = theFilter(input, searchElement.query, false, highlightMask, applyHighlight);
+          input = theFilter(input, searchElement.toQueryComponents(searchTranslator).query, false, highlightMask, applyHighlight);
         }
       } else {
         _.forEach(searchElement.getExpressions(), (element) => {
-          input = thisFilter(input, element, highlightMask, false, restrictToField);
+          input = thisFilter(input, element, highlightMask, false, restrictToField, inputIsTranslated);
         });
         if (applyHighlight) {
           input = highlightMask.highlight(input);
@@ -62,32 +63,32 @@ export function highlightAndTranslate($translate, $sanitize) {
         return $translate.instant(sanitizedInput, _.reduce(textTranslationParams, (result, value, key) => {
           const sanitizedValue = $sanitize(_.escape(value));
           const innerHighlightMask = new HighlightMask(sanitizedValue);
-          result[key] = thisFilter(sanitizedValue, workingElement, innerHighlightMask, true, undefined);
+          result[key] = thisFilter(sanitizedValue, workingElement, innerHighlightMask, true, undefined, false);
           return result;
         }, {}), undefined, undefined, null);
       } else {
-        return thisFilter(sanitizedInput, workingElement, highlightMask, true, undefined);
+        return thisFilter(sanitizedInput, workingElement, highlightMask, true, undefined, false);
       }
     }
     if (textTranslationKey && textTranslationParams) {
       return thisFilter($translate.instant(textTranslationKey, textTranslationParams), null, highlightMask, true,
-        undefined);
+        undefined, false);
     }
-    return thisFilter(sanitizedInput, null, highlightMask, true, undefined);
+    return thisFilter(sanitizedInput, null, highlightMask, true, undefined, false);
   };
 }
 
 /* @ngInject */
-export function highlightFromSearch($sanitize) {
+export function highlightFromSearch($sanitize, DeviceSearchTranslator: SearchTranslator) {
   const theFilter = highlightFilter($sanitize);
-  const thisFilter = getThisFilter(theFilter);
-  return (input: string, search: SearchObject | null, restrictToField: string): string => {
+  const thisFilter = getThisFilter(theFilter, DeviceSearchTranslator);
+  return (input: string, search: SearchObject | null, restrictToField: string, inputIsLocalized: boolean): string => {
     const sanitizedInput = $sanitize(_.escape(input));
     const highlightMask = new HighlightMask(sanitizedInput);
     if (search) {
       const workingElement = search.lastGoodQuery;
       return highlightMask.highlight(
-        thisFilter(sanitizedInput, workingElement, highlightMask, false, restrictToField),
+        thisFilter(sanitizedInput, workingElement, highlightMask, false, restrictToField, inputIsLocalized),
       );
     }
     return sanitizedInput;
