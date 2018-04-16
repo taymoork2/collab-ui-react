@@ -39,13 +39,6 @@ describe('Partner flow', function () {
     });
   });
 
-  describe('Partner landing page reports', function () {
-    it('should show the reports', function () {
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-  });
-
   describe('Add Partner Trial', function () {
     it('should view all trials', function () {
       navigation.clickCustomers();

@@ -99,6 +99,7 @@
     require('modules/core/validation').default,
     require('modules/core/customerReports').default,
     require('modules/core/partnerReports').default,
+    require('modules/core/partner-home').default,
     require('modules/gemini/reports').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,

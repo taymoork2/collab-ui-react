@@ -2960,8 +2960,7 @@
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
-            template: require('modules/core/partnerHome/partnerHome.tpl.html'),
-            controller: 'PartnerHomeCtrl',
+            template: '<partner-home></partner-home>',
           })
           .state('partnerreports', {
             parent: 'partner',
