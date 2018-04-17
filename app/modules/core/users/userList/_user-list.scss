@@ -1,7 +1,7 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .user-list {
   @extend %grid-subheader;
@@ -9,6 +9,10 @@
 
   .user-list__content {
     position: relative;
+  }
+
+  .grid-contents {
+    height: inherit;
   }
 
   .ui-grid-cell:first-child,
@@ -91,33 +95,5 @@
     margin-top: 150px;
     text-align: center;
     color: $gray-darker;
-  }
-}
-
-.outer-details-div {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-  background-color: $body-bg;
-  box-shadow: 0 0 0 3px $brand-shadow;
-}
-
-.user-management {
-  top: 0px;
-  right: -110%;
-  display: inline-flex;
-  height: 100%;
-  position: absolute;
-  z-index: 1000;
-  width: 100%;
-  transition: all 500ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
-
-  &.preview {
-    right: calc(-100% + 350px);
-
-    &.details {
-      right: -15px;
-    }
   }
 }

@@ -29,8 +29,12 @@
           filter="true">
         </cs-select>
         <div class="esn-number-field" ng-class="{warningMargin: $ctrl.internalIsWarn}">
-          <p ng-if="$ctrl.showExtensions" class="cs-input__help-text">
+          <p ng-if="!$ctrl.isHI1484 && $ctrl.showExtensions" class="cs-input__help-text">
             <span translate="directoryNumberPanel.enterpriseSiteNumberLabel"></span>
+            <span ng-bind="$ctrl.esnPrefix"></span><strong class="esn-extension" ng-bind="$ctrl.internalSelected.label"></strong>
+          </p>
+          <p ng-if="$ctrl.isHI1484 && $ctrl.showExtensions && !$ctrl.compareInternalAndSiteToSiteNumber()" class="cs-input__help-text">
+            <span translate="directoryNumberPanel.locationSiteToSiteNumberLabel"></span>
             <span ng-bind="$ctrl.esnPrefix"></span><strong class="esn-extension" ng-bind="$ctrl.internalSelected.value"></strong>
           </p>
           <p ng-if="!$ctrl.showExtensions" class="cs-input__help-text">

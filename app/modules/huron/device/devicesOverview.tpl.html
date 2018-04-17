@@ -8,10 +8,11 @@
   </uc-device-list>
 </cs-sp-section>
 
-<cs-sp-section ng-if="ucDevices.showDeviceSettings">
+<cs-sp-section>
   <uc-device-settings
     owner-type="user"
     owner-id="ucDevices.currentUser.id"
+    owner-display-name="ucDevices.currentUser.displayName"
     device-list="ucDevices.devices">
   </uc-device-settings>
 </cs-sp-section>

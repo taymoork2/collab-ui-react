@@ -1,0 +1,46 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+hybrid-services-event-history-page {
+  display: block;
+
+  .loading-container-event-history {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $gray-light-3;
+  }
+
+  .spinner-event-history {
+    font-size: 4rem;
+
+    .icon-spinner {
+      display: block;
+    }
+  }
+
+  .page-sub-header {
+    flex-wrap: nowrap;
+    height: auto;
+    border-bottom: 0;
+  }
+
+  .cluster-filter-container,
+  .node-filter-container,
+  .service-filter-container,
+  .time-filter-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cluster-filter-container,
+  .node-filter-container,
+  .service-filter-container {
+    margin-right: 1rem;
+  }
+
+  form {
+    margin: 0;
+    width: 15.625rem;
+  }
+}

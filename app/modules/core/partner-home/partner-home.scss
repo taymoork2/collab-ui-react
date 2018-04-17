@@ -1,0 +1,39 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+/*** PARTNERS ***/
+
+.partner-container {
+  .cstabs > li {
+    > a {
+      @include vr-spacing(pt, 1, 2px);
+      border-color: $gray-light-2;
+      color: $gray-light-1;
+
+      [class*='ng-'] {
+        .total {
+          @include vr-spacing(pt, 0.5);
+        }
+      }
+    }
+
+    &.active > a {
+      color: $gray-dark-1;
+
+      &:hover {
+        border-color: $gray-light-2;
+      }
+    }
+  }
+
+  .side-info-card {
+    .monitoring-panel {
+      padding: 1.5rem 1.5rem 0;
+      overflow-y: hidden;
+    }
+    article {
+      padding-bottom: 1.5rem;
+    }
+  }
+}

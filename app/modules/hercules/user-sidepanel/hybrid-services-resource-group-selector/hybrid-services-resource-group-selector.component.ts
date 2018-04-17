@@ -9,6 +9,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   private userId: string;
   private resourceGroupId: string;
   private serviceId: HybridServiceId;
+  public userOwnedByCCC: boolean;
   private connectorType: ConnectorType | undefined;
 
   public localizedConnectorName: string;
@@ -24,6 +25,8 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   public saving = false;
   public showButtons = false;
   public loading = false;
+
+  private refreshCallback: Function;
 
   /* @ngInject */
   constructor(
@@ -42,7 +45,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, resourceGroupId, serviceId } = changes;
+    const { userId, resourceGroupId, serviceId, userOwnedByCCC, refreshCallback } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
     }
@@ -52,6 +55,12 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     if (serviceId && serviceId.currentValue) {
       this.serviceId = serviceId.currentValue;
       this.connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(this.serviceId);
+    }
+    if (userOwnedByCCC && userOwnedByCCC.currentValue) {
+      this.userOwnedByCCC = userOwnedByCCC.currentValue;
+    }
+    if (refreshCallback && refreshCallback.currentValue) {
+      this.refreshCallback = refreshCallback.currentValue;
     }
   }
 
@@ -69,6 +78,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
     this.ResourceGroupService.getAllAsOptions()
       .then((options: IResourceGroupOptionPair[]) => {
         if (options.length > 0) {
+          options = options.sort((a, b) => a.label.localeCompare(b.label));
           this.options = this.options.concat(options);
           if (this.resourceGroupId) {
             this.setSelectedResourceGroup(this.resourceGroupId);
@@ -126,6 +136,7 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
         this.setShouldShowButtons();
         this.cannotFindResourceGroup = false;
         this.Notification.success('hercules.resourceGroups.resourceGroupSaved');
+        this.refreshCallback();
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.resourceGroups.failedToSetGroup');
@@ -163,10 +174,12 @@ class HybridServicesResourceGroupSelectorCtrl implements ng.IComponentController
 
 export class HybridServicesResourceGroupSelectorComponent implements ng.IComponentOptions {
   public controller = HybridServicesResourceGroupSelectorCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-services-resource-group-selector/hybrid-services-resource-group-selector.component.html';
+  public template = require('./hybrid-services-resource-group-selector.component.html');
   public bindings = {
     userId: '<',
     resourceGroupId: '<',
     serviceId: '<',
+    userOwnedByCCC: '<',
+    refreshCallback: '&',
   };
 }

@@ -1,5 +1,6 @@
 import { CommonReportService } from '../../partnerReports/commonReportServices/commonReport.service';
 import { ReportConstants } from '../../partnerReports/commonReportServices/reportConstants.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 import {
   IActiveTableBase,
   IActiveUserData,
@@ -35,7 +36,6 @@ export class SparkLineReportService {
     private $q: ng.IQService,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
-    private chartColors,
   ) {}
 
   // Active User Data
@@ -302,20 +302,21 @@ export class SparkLineReportService {
         callCondition: this.$translate.instant('callMetrics.audioCalls'),
         numCalls: 0,
         percentage: 0,
-        color: this.chartColors.attentionBase,
+        color: ChartColors.attentionBase,
       }, {
         callCondition: this.$translate.instant('callMetrics.videoCalls'),
         numCalls: 0,
         percentage: 0,
-        color: this.chartColors.primaryBase,
+        color: ChartColors.primaryBase,
       }],
       displayData: undefined,
       dummy: false,
     };
 
+    const deferred: ng.IDeferred<IMetricsData[]> = this.$q.defer();
     const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callMetrics', this.SIMPLE_COUNT);
     options.cache = false;
-    return this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): IMetricsData[] => {
+    this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): void => {
       const data: any[] = _.get(response, 'data.data', []);
       _.forEach(data, (dataItem: any): void => {
         const returnItem: IMetricsData = _.cloneDeep(defaultMetrics);
@@ -344,8 +345,12 @@ export class SparkLineReportService {
         responseArray.unshift(returnItem);
       });
 
-      return responseArray;
+      deferred.resolve(responseArray);
+    }).catch((error: any): void => {
+      deferred.reject(this.CommonReportService.returnErrorCheck(error, 'callMetrics.customerError', responseArray));
     });
+
+    return deferred.promise;
   }
 
   // Registered Devices Data

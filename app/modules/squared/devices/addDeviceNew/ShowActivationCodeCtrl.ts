@@ -5,27 +5,24 @@ import * as jstz from 'jstimezonedetect';
 import IDeferred = angular.IDeferred;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import { ExternalLinkedAccountHelperService } from '../services/external-acct-helper.service';
+import { IWindowService } from 'angular';
 
 export class ShowActivationCodeCtrl extends WizardCtrl {
   private account: IAccountData;
-  private showATA: boolean;
-  private showPersonal: boolean;
-  private failure: boolean;
-  private showEmail: boolean;
-  private hideBackButton: boolean;
+  public failure: boolean;
+  public showEmail: boolean;
+  public hideBackButton: boolean;
   private selectedUser: IRecipientUser;
-  private qrCode: string | undefined;
-  private timeLeft: string;
-  private showPersonalText: boolean;
-  private showCloudberryText: boolean;
-  private showHuronWithATAText: boolean;
-  private showHuronWithoutATAText: boolean;
-  private friendlyActivationCode: string;
-  private isLoading: boolean;
+  public qrCode: string | undefined;
+  public timeLeft: string;
+  public codeOnlyForPhones: boolean;
+  public codeNotForPhones: boolean;
+  public friendlyActivationCode: string;
+  public isLoading: boolean;
   private activationCode: string;
   private expiryTime: any;
   private timezone: string;
-  private foundUser: string;
+  public foundUser: string;
 
   /* @ngInject */
   constructor($q: angular.IQService,
@@ -39,11 +36,10 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
               private Notification,
               private CsdmEmailService: CsdmEmailService,
               private USSService,
-              private ExtLinkHelperService: ExternalLinkedAccountHelperService) {
+              private ExtLinkHelperService: ExternalLinkedAccountHelperService,
+              private $window: IWindowService) {
     super($q, $stateParams);
 
-    this.showATA = this.wizardData.showATA;
-    this.showPersonal = this.wizardData.showPersonal;
     this.failure = false;
     this.account = {
       name: this.wizardData.account.name,
@@ -66,29 +62,11 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
     };
     this.qrCode = undefined;
     this.timeLeft = '';
-    if (this.account.type === 'personal') {
-      if (this.showPersonal) {
-        if (this.account.isEntitledToHuron) {
-          this.showPersonalText = true;
-        } else {
-          this.showCloudberryText = true;
-        }
-      } else {
-        if (this.showATA) {
-          this.showHuronWithATAText = true;
-        } else {
-          this.showHuronWithoutATAText = true;
-        }
-      }
-    } else {
+    if (this.account.type === 'shared') {
       if (this.account.deviceType === 'huron') {
-        if (this.showATA) {
-          this.showHuronWithATAText = true;
-        } else {
-          this.showHuronWithoutATAText = true;
-        }
+        this.codeOnlyForPhones = true;
       } else {
-        this.showCloudberryText = true;
+        this.codeNotForPhones = true;
       }
     }
 
@@ -233,7 +211,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
       .then((code) => {
         this.activationCode = code.code;
         this.friendlyActivationCode = this.formatActivationCode(this.activationCode);
-        this.expiryTime = code.friendlyExpiresOn;
+        this.expiryTime = code.expiresOn;
         this.generateQRCode();
       }, err => {
         this.onCodeCreationFailure(err);
@@ -282,6 +260,7 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
 
   public activateEmail() {
     this.showEmail = true;
+    this.$stateParams.wizard.scrollToBottom(this.$window);
   }
 
   public getExpiresOn() {

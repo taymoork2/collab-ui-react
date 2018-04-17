@@ -4,21 +4,11 @@
   </div>
 
   <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="huron-settings-main-container">
-    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p></p>
-      <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
-      <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.showSaveDialogs()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
-    </div>
-
     <!-- Media on Hold settings -->
-    <div
-    cr-feature-toggle feature-show="huron-moh-enable"
-    class="cs-form__section">
+    <div cr-feature-toggle feature-show="huron-moh-enable" class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.mediaOnHold"></h4>
-          <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.mohTitle"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.mohDesc"></h6>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -34,9 +24,7 @@
     <!-- regional settings -->
     <div class="cs-form__section" ng-if="$ctrl.showRegionAndVoicemail">
       <div class="section__info">
-        <div cs-sticky>
           <h4 class="section__title" translate="serviceSetupModal.regionalSettings"></h4>
-        </div>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -82,9 +70,7 @@
     <!-- internal dialing section -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.internalDialing"></h4>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -97,9 +83,8 @@
           <uc-extension-length
             first-time-setup="$ctrl.ftsw"
             extension-length="$ctrl.huronSettingsData.site.extensionLength"
-            huron-settings-data="$ctrl.huronSettingsData"
-            has-voicemail-service="$ctrl.huronSettingsData.customer.hasVoicemailService"
-            extensions-assigned="$ctrl.settingsOptions.extensionsAssigned"
+            settings-data="$ctrl.huronSettingsData"
+            extension-decrease-allowed="$ctrl.settingsOptions.extensionDecreaseAllowed"
             extension-length-saved-fn="$ctrl.onExtensionLengthSaved()"
             decrease-extension-length-fn="$ctrl.onDecreaseExtensionLength(extensionLength)"
             on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
@@ -120,9 +105,7 @@
     <!-- external dialing section -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.externalDialing"></h4>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.externalDialing"></h4>
       </div>
       <div class="section__content">
         <div class="sub-section">
@@ -152,10 +135,8 @@
     <!-- cos restrictions selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.cos.title"></h4>
-          <h6 class="section__description" translate="serviceSetupModal.cos.desc"></h6>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.cos.title"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.cos.desc"></h6>
       </div>
       <div class="section__content">
         <uc-cos-form
@@ -169,10 +150,8 @@
     <!-- emergency service address selection -->
     <div class="cs-form__section" ng-if="$ctrl.showEmergencyServiceAddress">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
-          <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
-        </div>
+        <h4 class="section__title" translate="settingsServiceAddress.label"></h4>
+        <h6 class="section__description" translate="serviceSetupModal.emergencyAddressDescription"></h6>
       </div>
       <div class="section__content">
         <uc-emergency-service-address></uc-emergency-service-address>
@@ -182,14 +161,12 @@
     <!-- emergency service number selection -->
     <div class="cs-form__section" ng-if="$ctrl.showEmergencyServiceAddress">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
-          <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
-        </div>
+        <h4 class="section__title" translate="settingsServiceNumber.label"></h4>
+        <h6 class="section__description" translate="settingsServiceNumber.description"></h6>
       </div>
       <div class="section__content">
         <uc-emergency-service-number
-          site="$ctrl.huronSettingsData.site"
+          voicemail-pilot-number="$ctrl.huronSettingsData.site.voicemailPilotNumber"
           emergency-callback-number="$ctrl.huronSettingsData.site.emergencyCallBackNumber"
           external-number-options="$ctrl.settingsOptions.emergencyServiceNumberOptions"
           on-number-filter-fn="$ctrl.onEmergencyServiceNumberFilter(filter)"
@@ -201,12 +178,11 @@
     <!-- external call transfer/conference selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="externalTransfer.title"></h4>
-        </div>
+        <h4 class="section__title" translate="externalTransfer.title"></h4>
       </div>
       <div class="section__content">
         <uc-ext-transfer-org
+          location="false"
           on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)"
           allow-external-transfer="$ctrl.huronSettingsData.site.allowExternalTransfer">
         </uc-ext-transfer-org>
@@ -216,14 +192,12 @@
     <!-- company caller id selection -->
     <div class="cs-form__section">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
-          <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
-        </div>
+        <h4 class="section__title" translate="companyCallerId.companyCallerId"></h4>
+        <h6 class="section__description" translate="companyCallerId.companyCallerIdDesc"></h6>
       </div>
       <div class="section__content">
         <uc-company-caller-id
-          site="$ctrl.huronSettingsData.site"
+          voicemail-pilot-number="$ctrl.huronSettingsData.site.voicemailPilotNumber"
           company-caller-id="$ctrl.huronSettingsData.companyCallerId"
           external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
           customer-name="$ctrl.huronSettingsData.customer.name"
@@ -236,34 +210,41 @@
     <!-- company voicemail selection -->
     <div class="cs-form__section" ng-if="$ctrl.showRegionAndVoicemail">
       <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
-        </div>
+        <h4 class="section__title" translate="serviceSetupModal.companyVoicemail"></h4>
       </div>
       <div class="section__content">
-        <uc-company-voicemail
-          ng-if="!$ctrl.supportsAvrilVoicemail && !$ctrl.supportsAvrilVoicemailMailbox"
-          site="$ctrl.huronSettingsData.site"
-          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
-          external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-          company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-          voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
-          on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
-          on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"
-          on-voicemail-to-email-changed-fn="$ctrl.onVoicemailToEmailChanged(voicemailToEmail)">
-        </uc-company-voicemail>
-        <uc-company-voicemail-avril
-          ng-if="$ctrl.supportsAvrilVoicemail || $ctrl.supportsAvrilVoicemailMailbox"
-          site="$ctrl.huronSettingsData.site"
-          features="$ctrl.huronSettingsData.avrilFeatures"
-          dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
-          external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-          company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-          voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
-          on-change-fn="$ctrl.onCompanyVoicemailAvrilChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled, features)"
-          on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
-        </uc-company-voicemail-avril>
+        <div ng-if="!$ctrl.avrilI1559">
+          <uc-company-voicemail-avril
+            ng-if="$ctrl.supportsAvrilVoicemail || $ctrl.supportsAvrilVoicemailMailbox"
+            site="$ctrl.huronSettingsData.site"
+            features="$ctrl.huronSettingsData.avrilFeatures"
+            dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+            external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
+            company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
+            voicemail-to-email="$ctrl.huronSettingsData.voicemailToEmailSettings.voicemailToEmail"
+            on-change-fn="$ctrl.onCompanyVoicemailAvrilChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled, features)"
+            on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
+          </uc-company-voicemail-avril>
+        </div>
+        <div ng-if="$ctrl.avrilI1559">
+          <uc-company-voicemail-avril-i1559
+            ng-if="$ctrl.supportsAvrilVoicemail || $ctrl.supportsAvrilVoicemailMailbox"
+            site="$ctrl.huronSettingsData.site"
+            features="$ctrl.huronSettingsData.avrilFeatures"
+            dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
+            external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
+            company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
+            on-change-fn="$ctrl.onCompanyVoicemailAvrilChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled, features)"
+            on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)">
+          </uc-company-voicemail-avril-i1559>
+        </div>
       </div>
+    </div>
+
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+      <p></p>
+      <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
+      <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.showSaveDialogs()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
     </div>
   </form>
 </div>

@@ -96,7 +96,7 @@ class ClassOfService implements ng.IComponentController {
 
 export class ClassOfServiceComponent implements ng.IComponentOptions {
   public controller = ClassOfService;
-  public templateUrl = 'modules/call/settings/settings-cos/settings-cos.component.html';
+  public template = require('modules/call/settings/settings-cos/settings-cos.component.html');
   public bindings = {
     env: '@',
     onChangeFn: '&',

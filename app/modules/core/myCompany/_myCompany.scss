@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .my-company-page {
   @extend %grid-subheader;
@@ -29,6 +29,10 @@
   .icon {
     position: static !important;
   }
+}
+
+.pro-badge {
+  margin: auto 0;
 }
 
 .my-company-order-history-actions {

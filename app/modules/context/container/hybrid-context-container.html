@@ -1,6 +1,11 @@
 <div class="expressway-service hercules hercules-fix-paragraphs">
-  <cs-page-header title-name="{{'hercules.hybridServiceNames.hybrid-context' | translate}}" tabs="hybridContextContainerController.tabs"
-                  back="true" back-url="hybridContextContainerController.backState"></cs-page-header>
+  <cs-page-header
+    title-name="{{'hercules.hybridServiceNames.hybrid-context' | translate}}"
+    tabs="$ctrl.tabs"
+    back="true"
+    back-url="$ctrl.backState"
+    back-aria-label="{{::'common.back' | translate}}">
+  </cs-page-header>
   <div ui-view="subHeader">
   </div>
 

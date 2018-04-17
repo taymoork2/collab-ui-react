@@ -1,33 +1,56 @@
-<div class="modal-header deregister-expressway-modal">
-  <span class="modal-title" translate="hercules.deactivateServiceSingleCluster.title" translate-values="{serviceName: deactivateServiceOnExpresswayModal.localizedServiceName}"></span>
+<div class="modal-header">
+  <h4 class="modal-title" translate="hercules.deactivateServiceSingleCluster.title" translate-values="{serviceName: vm.localizedServiceName}"></h4>
 </div>
 
 <div class="modal-body hercules-fix-paragraphs deregister-expressway-modal">
 
-  <p translate="hercules.deactivateServiceSingleCluster.intro"></p>
-
-  <p>
-    <i ng-class="deactivateServiceOnExpresswayModal.getIconClassForService() + ' icon-2x serviceicon'"></i>
-    <strong translate="{{deactivateServiceOnExpresswayModal.localizedServiceName}}" class="serviceicon"></strong>
+  <p class="row">
+    <span class="columns large-10"
+          translate="hercules.deactivateServiceSingleCluster.intro"
+          translate-values="{ serviceName: vm.localizedConnectorName , clusterName: vm.clusterName }">
+    </span>
   </p>
 
-  <p translate="hercules.deactivateServiceSingleCluster.fromCluster" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName}"></p>
-
-  <p>
-    <strong translate="hercules.deactivateServiceSingleCluster.wipeSettingsWarning" translate-values="{clusterName: deactivateServiceOnExpresswayModal.clusterName, connectorName: deactivateServiceOnExpresswayModal.localizedConnectorName}"></strong>
+  <p class="row">
+    <span class="columns large-10"
+          translate="hercules.deactivateServiceSingleCluster.settingsWillBeWiped"
+          translate-values="{ connectorName: vm.localizedConnectorName }">
+    </span>
   </p>
 
-  <p translate="hercules.deactivateServiceSingleCluster.notDeregistered" translate-values="{ clusterName: deactivateServiceOnExpresswayModal.clusterName }"></p>
+  <p class="row">
+    <span class="columns large-10"
+          translate="hercules.deactivateServiceSingleCluster.notDeregistered"
+          translate-values="{ clusterName: vm.clusterName }">
+    </span>
+  </p>
 
+  <div ng-if="vm.isLastClusterInOrg" class="lastClusterAcknowledgement">
+    <div class="hybrid-services-warning-message">
+      <i class="icon icon-warning"></i>
+      <p class="hybrid-services-message"
+         translate="hercules.deactivateServiceSingleCluster.lastClusterWarning"
+         translate-values="{ connectorName: vm.localizedConnectorName, serviceName: vm.localizedServiceName }">
+      </p>
+      <form name="lastClusterAcknowledgement">
+        <input cs-input
+               type="checkbox"
+               ng-model="vm.hasCheckedWarning"
+               id="hasCheckedWarning"
+               name="hasCheckedWarning"
+               cs-input-label="{{ 'common.iUnderstand' | translate }}">
+      </form>
+    </div>
+  </div>
 
 </div>
-<div class="modal-footer deregister-expressway-modal">
+<div class="modal-footer">
   <button class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
   <button cs-btn class="btn btn--negative"
-          ng-click="deactivateServiceOnExpresswayModal.deactivateService()"
-          ng-disabled="deactivateServiceOnExpresswayModal.loading"
-          loading="deactivateServiceOnExpresswayModal.loading"
+          ng-click="vm.deactivateService()"
+          ng-disabled="vm.loading || (vm.isLastClusterInOrg && !vm.hasCheckedWarning)"
+          loading="vm.loading"
           id="confirm" >
-    <span translate="hercules.deactivateServiceSingleCluster.confirmButton"></span>
+    <span translate="common.deactivate"></span>
   </button>
 </div>

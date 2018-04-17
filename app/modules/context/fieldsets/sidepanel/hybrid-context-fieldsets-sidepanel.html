@@ -3,76 +3,92 @@
   <div ui-view="header"></div>
 
   <!-- main side panel body -->
-  <cs-sp-container>
-    <cs-sp-section>
-      <div ng-show="$ctrl.isEditable()">
-        <section-title
-          title-key="context.dictionary.fieldsetPage.fieldsetAttributes"
-          action-list="$ctrl.actionList"
-          as-button="true">
-        </section-title>
-      </div>
-      <div ng-show="!$ctrl.isEditable()">
-        <section-title title-key="context.dictionary.fieldsetPage.fieldsetAttributes"></section-title>
-      </div>
+  <div class="side-panel-container-view" ui-view="side-panel-container">
+    <cs-sp-container>
+      <cs-sp-section>
+        <div ng-show="$ctrl.isEditable()">
+          <section-title
+            title-key="context.dictionary.fieldsetPage.fieldsetAttributes"
+            action-list="$ctrl.actionList"
+            as-button="true">
+          </section-title>
+        </div>
+        <div ng-show="!$ctrl.isEditable()">
+          <section-title title-key="context.dictionary.fieldsetPage.fieldsetAttributes"></section-title>
+        </div>
 
-      <!-- Content section -->
-      <div class="section-content">
-        <!-- Display status based on whether a fieldset is in use -->
-        <div ng-switch="$ctrl.inUse">
-          <div ng-switch-when="true">
-            <span class="feature">
-              <span class="feature-name" translate="context.dictionary.status"></span>
-              <span class="feature-details">
-                <i class="icon icon-circle status-indicator success"></i>
-                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.inUse"></span>
+        <!-- Content section -->
+        <div class="section-content">
+          <!-- Display status based on whether a fieldset is in use -->
+          <div ng-switch="$ctrl.inUse">
+            <div ng-switch-when="true">
+              <span class="feature">
+                <span class="feature-name" translate="context.dictionary.status"></span>
+                <span
+                  class="feature-details"
+                  tabindex="0"
+                  tooltip-class="context-tooltip"
+                  tooltip="{{$ctrl.inUseTooltipMessage}}"
+                  tooltip-placement="bottom"
+                  tooltip-trigger="mouseenter focus"
+                  aria-label="{{$ctrl.inUseTooltipMessage}}">
+                  <i class="icon icon-circle status-indicator success"></i>
+                  <span class="context-status-block" translate="context.dictionary.inUse"></span>
+                </span>
               </span>
-            </span>
-          </div>
-          <div ng-switch-when="false">
-            <span class="feature">
-              <span class="feature-name" translate="context.dictionary.status"></span>
-              <span class="feature-details">
-                <i class="icon icon-circle status-indicator"></i>
-                <span class="context-status-block" tooltip-class="context-tooltip" tooltip="{{$ctrl.inUseTooltipMessage}}" tooltip-placement="bottom" translate="context.dictionary.notInUse"></span>
+            </div>
+            <div ng-switch-when="false">
+              <span class="feature">
+                <span class="feature-name" translate="context.dictionary.status"></span>
+                <span
+                  class="feature-details"
+                  tabindex="0"
+                  tooltip-class="context-tooltip"
+                  tooltip="{{$ctrl.inUseTooltipMessage}}"
+                  tooltip-placement="bottom"
+                  tooltip-trigger="mouseenter focus"
+                  aria-label="{{$ctrl.inUseTooltipMessage}}">
+                  <i class="icon icon-circle status-indicator"></i>
+                  <span class="context-status-block" translate="context.dictionary.notInUse"></span>
+                </span>
               </span>
-            </span>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-name" translate="common.description"></span>
+            <span ng-if="!$ctrl.hasDescription" class="feature-details" translate="common.none"></span>
+          </div>
+          <div class="feature">
+            <label ng-if="$ctrl.hasDescription" class="context-padded-multi-line context-nocursor">{{$ctrl.fieldset.description}}</label>
+          </div>
+
+          <div class="feature">
+            <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
+            <span class="feature-details" ng-if="$ctrl.lastUpdated">{{$ctrl.fieldset.lastUpdated | momentDate : $ctrl.dateFormat }}</span>
+            <span class="feature-details" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></span>
+          </div>
+
+          <div class="feature">
+            <a ui-sref="context-fieldsets-sidepanel.fields({fields: $ctrl.fields})">
+              <span class="feature-name field-label" translate="context.dictionary.fieldsetPage.fields"></span>
+              <span class="feature-status" ng-if="$ctrl.fields.length === 0" translate="common.none"></span>
+              <span class="feature-status" ng-if="$ctrl.fields.length > 0" >{{$ctrl.fields.length}}</span>
+              <i class="feature-arrow"></i>
+            </a>
           </div>
         </div>
 
-        <div class="feature">
-          <span class="feature-name" translate="common.description"></span>
-          <span ng-if="!$ctrl.hasDescription" class="feature-details" translate="common.none"></span>
-        </div>
-        <div class="feature">
-          <label ng-if="$ctrl.hasDescription" class="context-padded-multi-line context-nocursor">{{$ctrl.fieldset.description}}</label>
-        </div>
+      </cs-sp-section>
 
-        <div class="feature">
-          <span class="feature-name"  translate="context.dictionary.dateUpdated"></span>
-          <span class="feature-details" ng-if="$ctrl.lastUpdated">{{$ctrl.fieldset.lastUpdatedUI}}</span>
-          <span class="feature-details" ng-if="!$ctrl.lastUpdated" translate="context.dictionary.unavailable"></span>
-        </div>
-
-        <div class="feature">
-          <a ui-sref="context-fieldsets-sidepanel.fields({fields: $ctrl.fields})">
-            <span class="feature-name field-label" translate="context.dictionary.fieldsetPage.fields"></span>
-            <span class="feature-status" ng-if="$ctrl.fields.length === 0" translate="common.none"></span>
-            <span class="feature-status" ng-if="$ctrl.fields.length > 0" >{{$ctrl.fields.length}}</span>
-            <i class="feature-arrow"></i>
-          </a>
-        </div>
-      </div>
-
-    </cs-sp-section>
-
-    <button
-      class="btn--delete"
-      cs-btn
-      ng-if="$ctrl.isDeletable()"
-      ng-click="$ctrl.openDeleteConfirmDialog()">
-      <i class="icon icon-trash"></i>
-      <span translate="context.dictionary.fieldsetPage.deleteFieldset"></span>
-    </button>
-  </cs-sp-container>
+      <button
+        class="btn--delete"
+        cs-btn
+        ng-if="$ctrl.isDeletable()"
+        ng-click="$ctrl.openDeleteConfirmDialog()">
+        <i class="icon icon-trash"></i>
+        <span translate="context.dictionary.fieldsetPage.deleteFieldset"></span>
+      </button>
+    </cs-sp-container>
+  </div>
 </div>

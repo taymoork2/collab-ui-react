@@ -4,6 +4,8 @@
   angular.module('uc.autoattendant')
     .controller('AAMediaUploadCtrl', AAMediaUploadCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function AAMediaUploadCtrl($scope, $translate, Upload, ModalService, AANotificationService, AACommonService, AAMediaUploadService, AAUiModelService, AutoAttendantCeMenuModelService, Analytics, CryptoJS, Authinfo, AAMetricNameService) {
     var vm = this;
@@ -30,6 +32,7 @@
     vm.progress = 0;
     vm.actionCopy = undefined;
     vm.isSquishable = isSquishable;
+    vm.uploadOnKeypress = uploadOnKeypress;
 
     var maxLanes = 3;
 
@@ -65,6 +68,15 @@
 
     //////////////////////////////////////////////////////
 
+    function uploadOnKeypress($event) {
+      switch ($event.keyCode) {
+        case KeyCodes.SPACE:
+        case KeyCodes.ENTER:
+          $event.target.click();
+          break;
+      }
+    }
+
     function upload(file) {
       if (file) {
         if (AAMediaUploadService.validateFile(file.name)) {
@@ -97,7 +109,9 @@
       var modalInstance = dialogModal(vm.dialogModalTypes.overwrite, vm.dialogModalTypes);
       modalInstance.result.then(function () {
         continueUpload(file);
-      }).finally(modalClosed);
+      })
+        .catch(_.noop)
+        .finally(modalClosed);
     }
 
     //upload set up ui model and state info
@@ -193,7 +207,9 @@
         } else {
           modalAction();
         }
-      }).finally(modalClosed);
+      })
+        .catch(_.noop)
+        .finally(modalClosed);
     }
 
     function dialogModal(type, types) {

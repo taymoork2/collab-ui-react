@@ -93,15 +93,17 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true,
         },
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: false,
       });
     });
 
@@ -114,15 +116,17 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: false,
         },
       };
+      $scope.showContractIncomplete = true;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: true,
       });
     });
 
@@ -132,15 +136,17 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
         customerName: 'ControllerTestOrg',
         customerEmail: 'customer@cisco.com',
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: true,
         customerRoomSystemsLicenseIsTrial: true,
+        showContractIncomplete: false,
       });
     });
 
@@ -154,15 +160,17 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
           isTrial: true,
         },
       };
+      $scope.showContractIncomplete = false;
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
         customerCommunicationLicenseIsTrial: false,
         customerRoomSystemsLicenseIsTrial: false,
+        showContractIncomplete: false,
       });
     });
   });

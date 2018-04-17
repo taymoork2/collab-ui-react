@@ -1,16 +1,8 @@
-import './settings-setup-init.component.scss';
-
-import { SettingSetupInitComponent } from 'modules/call/settings/settings-setup-init/settings-setup-init.component';
 import { SettingSetupInitService } from 'modules/call/settings/settings-setup-init/settings-setup-init.service';
 
-export { SettingSetupInitComponent };
 export { SettingSetupInitService };
 
 export default angular
-  .module('call.settings.settings-setup-init', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
-  ])
-  .component('ucSettingsInit', new SettingSetupInitComponent())
+  .module('call.settings.settings-setup-init', [])
   .service('SettingSetupInitService', SettingSetupInitService)
   .name;

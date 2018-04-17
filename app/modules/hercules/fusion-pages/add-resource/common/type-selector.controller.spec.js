@@ -1,11 +1,13 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('Controller: TypeSelectorController', function () {
-  var $controller, $q, $rootScope, $stateParams, Authinfo, HybridServicesClusterService;
+  var $controller, $q, $rootScope, $stateParams, Authinfo, ServiceDescriptorService;
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _Authinfo_, _HybridServicesClusterService_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _Authinfo_, _ServiceDescriptorService_) {
     $controller = _$controller_;
     $q = _$q_;
     $rootScope = _$rootScope_;
@@ -15,10 +17,10 @@ describe('Controller: TypeSelectorController', function () {
       },
     };
     Authinfo = _Authinfo_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
 
     spyOn(Authinfo, 'isEntitled');
-    spyOn(HybridServicesClusterService, 'serviceIsSetUp');
+    spyOn(ServiceDescriptorService, 'isServiceEnabled');
     spyOn($stateParams.wizard, 'next');
     spyOn(Authinfo, 'isCustomerLaunchedFromPartner');
     Authinfo.isEntitled.and.returnValue(true);
@@ -29,6 +31,7 @@ describe('Controller: TypeSelectorController', function () {
     return $controller('TypeSelectorController', {
       $stateParams: $stateParams,
       hasCucmSupportFeatureToggle: true,
+      hasImpSupportFeatureToggle: false,
     });
   }
 
@@ -83,16 +86,16 @@ describe('Controller: TypeSelectorController', function () {
       return $q.resolve(true);
     };
 
-    it('should call HybridServicesClusterService.serviceIsSetUp for each service', function () {
+    it('should call ServiceDescriptorService.isServiceEnabled for each service', function () {
       initController();
       $rootScope.$apply();
-      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledTimes(2);
-      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-mgmt');
-      expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalledWith('squared-fusion-media');
+      expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledTimes(2);
+      expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-mgmt');
+      expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-media');
     });
 
-    it('should populate hasSetup based on HybridServicesClusterService.serviceIsSetUp', function () {
-      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMock);
+    it('should populate hasSetup based on ServiceDescriptorService.isServiceEnabled', function () {
+      ServiceDescriptorService.isServiceEnabled.and.callFake(serviceIsSetUpMock);
       var controller = initController();
       expect(controller.hasSetup).toBe(undefined);
       $rootScope.$apply();
@@ -105,7 +108,7 @@ describe('Controller: TypeSelectorController', function () {
     });
 
     it('should autoselect the first service', function () {
-      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
+      ServiceDescriptorService.isServiceEnabled.and.callFake(serviceIsSetUpMockAlwaysTrue);
       var controller = initController();
       $rootScope.$apply();
       // context will be the selected type because services get sorted alphabetically
@@ -116,7 +119,7 @@ describe('Controller: TypeSelectorController', function () {
       Authinfo.isEntitled.and.callFake(function (entitlement) {
         return entitlement === 'squared-fusion-mgmt';
       });
-      HybridServicesClusterService.serviceIsSetUp.and.callFake(function (serviceId) {
+      ServiceDescriptorService.isServiceEnabled.and.callFake(function (serviceId) {
         return serviceId === 'squared-fusion-mgmt';
       });
       initController();
@@ -126,7 +129,7 @@ describe('Controller: TypeSelectorController', function () {
 
     it('should overwrite hasSetup to false and the help texts for media and context when partner admin', function () {
       Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
-      HybridServicesClusterService.serviceIsSetUp.and.callFake(serviceIsSetUpMockAlwaysTrue);
+      ServiceDescriptorService.isServiceEnabled.and.callFake(serviceIsSetUpMockAlwaysTrue);
       var controller = initController();
       expect(controller.hasSetup).toBe(undefined);
       $rootScope.$apply();

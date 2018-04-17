@@ -1,13 +1,12 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import 'app/modules/huron/features/featureLanding/_feature-landing';
 
 .huron-new-feature-modal {
   // The modal body.
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 
   @include vr-spacing(pt, 0);
   @include vr-spacing(pr, 2);

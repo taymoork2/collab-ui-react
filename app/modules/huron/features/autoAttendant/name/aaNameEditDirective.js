@@ -5,6 +5,8 @@
     .module('uc.autoattendant')
     .directive('aaBuilderNameEdit', aaBuilderNameEdit);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function aaBuilderNameEdit() {
     return {
@@ -16,17 +18,8 @@
       restrict: 'E',
       link: function (scope, element, attrs, ngModel) {
         var len;
-        var keyCode_backspace = 8;
-        var keyCode_delete = 46;
-        var keyCode_leftarrow = 37;
-        var keyCode_uparrow = 38;
-        var keyCode_rightarrow = 39;
-        var keyCode_downarrow = 49;
-        var keyCode_enter = 13;
-
-        var allowKeySet = [keyCode_backspace, keyCode_delete, keyCode_leftarrow, keyCode_uparrow, keyCode_rightarrow, keyCode_downarrow];
-
-        var notAllowKeySet = [keyCode_enter];
+        var allowKeySet = [KeyCodes.BACKSPACE, KeyCodes.DELETE, KeyCodes.LEFT, KeyCodes.UP, KeyCodes.RIGHT, KeyCodes.DOWN];
+        var notAllowKeySet = [KeyCodes.ENTER];
 
         /////////////////////
 

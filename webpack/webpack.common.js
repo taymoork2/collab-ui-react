@@ -3,8 +3,7 @@ const _ = require('lodash');
 const args = require('yargs').argv;
 const path = require('path');
 const loaders = require('./loaders');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const host = args.host || '127.0.0.1';
 const port = args.port || '8000';
@@ -17,7 +16,6 @@ function webpackConfig(env) {
     preload: ['scripts/preload'],
     bootstrap: ['polyfills', 'bootstrap'],
     styles: ['styles/app'],
-    newrelic: ['config/newrelic'],
   };
 
   config.output = {
@@ -49,11 +47,6 @@ function webpackConfig(env) {
     ],
   };
 
-  if (!env.nolint) {
-    config.module.rules.push(loaders.eslint);
-    config.module.rules.push(loaders.tslint);
-  }
-
   config.plugins = [
     new webpack.ProgressPlugin(),
     new webpack.ProvidePlugin({
@@ -67,7 +60,6 @@ function webpackConfig(env) {
       MessageFormat: 'messageformat',
       moment: 'moment',
       punycode: 'punycode',
-      X2JS: 'x2js',
     }),
   ];
 
@@ -78,14 +70,6 @@ function webpackConfig(env) {
 
   if (env.analyze) {
     config.plugins.push(new BundleAnalyzerPlugin());
-  }
-
-  // Activate once IntelliJ / WebStorm supports stylelint
-  if (!env.nolint) {
-    config.plugins.push(new StyleLintPlugin({
-      configFile: '.stylelintrc.js',
-      failOnError: true,
-    }));
   }
 
   config.resolve = {
@@ -100,7 +84,6 @@ function webpackConfig(env) {
       humanizeDuration: 'angular-timer/bower_components/humanize-duration/humanize-duration.js',
       jquery: 'jquery/dist/jquery',
       jstimezonedetect: 'jstimezonedetect/dist/jstz.js',
-      x2js: 'x2js/xml2json.js',
       // Test aliases
       sinon: 'sinon/pkg/sinon.js',
       imagesloaded: 'imagesloaded/imagesloaded.pkgd.js',

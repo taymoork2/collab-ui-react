@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     return 1

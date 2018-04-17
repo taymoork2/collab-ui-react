@@ -2,8 +2,7 @@
   <cs-page-header title-name="{{'usersPage.pageTitle' | translate}}"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count"
-                       search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}">
+      <cs-searchfilter filters="filters" set-filter-fn="setFilter(filter.filterValue)" ng-model="placeholder.count" search-item-fn="filterList(searchStr)" placeholder-text="{{placeholder.name}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
 
@@ -21,7 +20,7 @@
 
   </cs-page-sub-header>
   <div class="user-list__content">
-    <cs-grid grid-api="gridApi" grid-options="gridOptions" spinner="gridRefresh"></cs-grid>
+    <cs-grid grid-api="gridApi" grid-options="gridOptions" spinner="gridRefresh" state="users.list" state-change-function="deselectRow()"></cs-grid>
     <div class="too-many-users" ng-if="activeFilter === 'all' && tooManyUsers">
       <div class="too-many-users__content">
         <p class="h2" translate="usersPage.searchUser"></p>
@@ -29,7 +28,4 @@
       </div>
     </div>
   </div>
-</div>
-<div ng-class="{preview: userPreviewActive, details: userDetailsActive}" class="user-management">
-  <div ui-view class="outer-details-div" id="entire-slide"></div>
 </div>

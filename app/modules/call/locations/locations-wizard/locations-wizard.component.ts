@@ -1,224 +1,186 @@
-import { Location, LocationsService } from 'modules/call/locations/shared';
-
 import {
-  PstnModel, PstnService, PstnCarrier,
-  SWIVEL,
+  CallLocationSettingsService, LocationSettingsOptionsService,
+  CallLocationSettingsData, LocationSettingsOptions,
+  LocationCallerId, HIDDEN,
+} from '../shared';
+import { InternalNumberRange } from 'modules/call/shared/internal-number-range';
+import {
+  PstnModel, PstnService, PstnCarrier, SWIVEL,
 } from 'modules/huron/pstn';
 
-import {
-  HuronSettingsOptionsService, HuronSettingsOptions,
-  HuronSettingsService, HuronSettingsData,
-} from 'modules/call/settings/shared';
-import { IOption } from 'modules/huron/dialing';
-import { CompanyNumber } from 'modules/call/settings/settings-company-caller-id';
 import { Notification } from 'modules/core/notifications';
 
 export class LocationsWizardComponent {
   public controller = LocationsWizardController;
-  public templateUrl = 'modules/call/locations/locations-wizard/locations-wizard.component.html';
-  public bindings = {};
+  public template = require('modules/call/locations/locations-wizard/locations-wizard.component.html');
+  public bindings = {
+    onKeyPressFn: '&',
+  };
 }
 
-const PAGE_ESA: number = 6;
+const PAGE_ESA: number = 5;
+
+enum PageNumbers {
+  PAGE1 = 1,
+  PAGE2 = 2,
+  PAGE3 = 3,
+  PAGE4 = 4,
+  PAGE5 = 5,
+}
 
 class LocationsWizardController implements ng.IComponentController {
+  private static readonly PAGE_TRANSITION_TIMEOUT: number = 10;
+
   public ftsw: boolean = false; //Used for child components
-  public addressFound: boolean;
   public form: ng.IFormController;
-  public siteId: string;
   public index: number = 0;
   public animation: string;
-  public name: string;
-  public settingsOptions: HuronSettingsOptions = new HuronSettingsOptions();
-  public showRegionAndVoicemail: boolean;
-  public showEmergencyServiceAddress: boolean;
-  public showDialPlanChangedDialog: boolean;
-  public showVoiceMailDisableDialog: boolean;
-  public address = {};
-  public companyVoicemailOptions;
-  public addressValidated: boolean = false;
-  public addressValidating: boolean = false;
-  public validationMessages = {
-    required: this.$translate.instant('common.invalidRequired'),
-  };
   public namePlaceholder: string;
-  public huronSettingsData: HuronSettingsData;
+  public validationMessages: {required, uniqueAsyncValidator};
+  public callLocationSettingsData: CallLocationSettingsData;
+  public locationSettingsOptions: LocationSettingsOptions;
+  public showRoutingPrefix: boolean = true;
+  public loading: boolean = false;
+  public processing: boolean = false;
+  public isRoutingPrefixValid: boolean;
 
-  public locationDetail: Location;
-  public defaultCountry: string = 'US'; //TODO: KPC What is this for?
-  public voicemailToEmail: boolean = false;  //TODO: KPC What is this for?
-
-  private lastIndex = 6;
+  private lastIndex = 5;
+  public onKeyPressFn: Function;
 
   /* @ngInject */
-  constructor(private $timeout: ng.ITimeoutService,
-              private $element: ng.IRootElementService,
-              private $state: ng.ui.IStateService,
-              private $translate: ng.translate.ITranslateService,
-              private $modal,
-              private Authinfo,
-              private Config,
-              private Orgservice,
-              private PstnModel: PstnModel,
-              private PstnService: PstnService,
-              private $q: ng.IQService,
-              private HuronSettingsOptionsService: HuronSettingsOptionsService,
-              private HuronSettingsService: HuronSettingsService,
-              private LocationsService: LocationsService,
-              private PstnServiceAddressService,
-              private Notification: Notification) {
+  constructor(
+    private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
+    private $element: ng.IRootElementService,
+    private $scope: ng.IScope,
+    private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
+    private $modal,
+    private Authinfo,
+    private Orgservice,
+    private LocationSettingsOptionsService: LocationSettingsOptionsService,
+    private CallLocationSettingsService: CallLocationSettingsService,
+    private PstnService: PstnService,
+    private PstnModel: PstnModel,
+    private Notification: Notification,
+  ) {
     this.namePlaceholder = this.$translate.instant('locations.namePlaceholder');
+    this.validationMessages = {
+      required: this.$translate.instant('common.invalidRequired'),
+      uniqueAsyncValidator: this.$translate.instant('locations.usedLocation'),
+    };
   }
 
   public $onInit(): void {
-    this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
-      return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
-    }).length > 0;
+    this.$scope.$watch((): number => {
+      return this.index;
+    }, (newIndex: number, oldIndex: number) => {
+      if (newIndex !== oldIndex && (newIndex === PageNumbers.PAGE2 || newIndex === PageNumbers.PAGE4)) {
+        this.$timeout(() => {
+          this.$element.find('#selectMain').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE5) {
+        this.$timeout(() => {
+          this.$element.find('#emergencyServiceBtn').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE3) {
+        this.$timeout(() => {
+          this.$element.find('#dialingPrefix').focus();
+        }, 100);
+      } else if (newIndex !== oldIndex && newIndex === PageNumbers.PAGE1) {
+        this.$timeout(() => {
+          this.$element.find('#locationCallerIdToggleSwitch').focus();
+        }, 100);
+      }
+    });
 
-    this.Orgservice.getOrg(data => {
+    this.loading = true;
+    this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( data => {
       if (data.countryCode) {
         this.PstnModel.setCountryCode(data.countryCode);
       }
-    }, null, { basicInfo: true });
-
-    this.PstnService.getCustomer(this.Authinfo.getOrgId()).then(() => {
+    });
+    this.PstnService.getCustomerV2(this.Authinfo.getOrgId()).then(() => {
       this.PstnModel.setCustomerId(this.Authinfo.getOrgId());
       this.PstnModel.setCustomerExists(true);
 
       this.PstnService.listCustomerCarriers(this.Authinfo.getOrgId()).then(carriers => {
         if (_.get(carriers, '[0].apiImplementation') !== SWIVEL) {
           this.PstnModel.setProvider(_.get<PstnCarrier>(carriers, '[0]'));
-          this.showEmergencyServiceAddress = true;
         } else {
-          this.lastIndex = 5;
+          this.lastIndex = 4;
         }
-      }).catch(() => this.lastIndex = 5);
-    });
+      }).catch(() => this.lastIndex = 4);
+    }).catch(() => this.lastIndex = 4);
 
-    //Use default site for now
-    this.HuronSettingsService.get('')
-    .then((huronSettingsData: HuronSettingsData) => {
-      this.huronSettingsData = huronSettingsData;
-      this.locationDetail.preferredLanguage = this.huronSettingsData.site.preferredLanguage;
-    })
-    .catch(response => this.Notification.errorResponse(response));
-
-    this.locationDetail = new Location();
-    this.$q.resolve(this.initSettingsComponent());
+    this.$q.resolve(this.initComponent()).finally(() => this.loading = false);
   }
 
-  private initSettingsComponent(): ng.IPromise<void> {
-    return this.HuronSettingsOptionsService.getOptions()
-    .then((options: HuronSettingsOptions) => {
-      this.settingsOptions = options;
-    })
-    .catch(response => {
-      this.Notification.errorResponse(response);
-    });
-  }
-
-  public isExtensionLengthSet() {
-    if (_.isNumber(this.huronSettingsData.customerVoice.extensionLength)) {
-      return true;
-    }
-    return false;
-  }
-
-  public onTimeZoneChanged(timeZone) {
-    this.locationDetail.timeZone = timeZone;
-  }
-
-  public onDateFormatChanged(dateFormat: string): void {
-    this.locationDetail.dateFormat = dateFormat;
-  }
-
-  public onTimeFormatChanged(timeFormat: string): void {
-    this.locationDetail.timeFormat = timeFormat;
-  }
-
-  public onPreferredLanguageChanged(preferredLanguage: string): void {
-    this.locationDetail.preferredLanguage = preferredLanguage;
-  }
-
-  public onDefaultCountryChanged(defaultCountry: string): void {
-    this.defaultCountry = defaultCountry;
-  }
-
-  public onRoutingPrefixChanged(routingPrefix: string): void {
-    this.locationDetail.routingPrefix = routingPrefix;
-    this.setShowDialPlanChangedDialogFlag();
-  }
-
-  public onSteeringDigitChanged(steeringDigit: string): void {
-    this.locationDetail.steeringDigit = steeringDigit;
-    this.setShowDialPlanChangedDialogFlag();
-  }
-
-  public onRegionCodeChanged(regionCode: string, useSimplifiedNationalDialing: boolean): void {
-    this.locationDetail.regionCodeDialing.regionCode = regionCode;
-    this.locationDetail.regionCodeDialing.simplifiedNationalDialing = useSimplifiedNationalDialing;
-    this.setShowDialPlanChangedDialogFlag();
-  }
-
-  private setShowDialPlanChangedDialogFlag(): void {
-    //let originalConfig = this.HuronSettingsService.getOriginalConfig();
-    const originalConfig: any = {};
-    if (this.locationDetail.steeringDigit !== originalConfig.steeringDigit
-      || this.locationDetail.routingPrefix !== originalConfig.routingPrefix
-      || this.locationDetail.regionCodeDialing !== originalConfig.regionCodeDialing) {
-      this.showDialPlanChangedDialog = true;
-    } else {
-      this.showDialPlanChangedDialog = false;
-    }
-  }
-
-  public onCompanyVoicemailChanged(number: string, generated: boolean, enabled: boolean): void {
-    this.showVoiceMailDisableDialog = enabled;
-    this.locationDetail.voicemailPilotNumber.number = number;
-    this.locationDetail.voicemailPilotNumber.generated = generated;
-  }
-
-  public onVoicemailToEmailChanged(voicemailToEmail: boolean) {
-    this.voicemailToEmail = voicemailToEmail;
-  }
-
-  public onCompanyCallerIdChanged(companyNumber: CompanyNumber): void {
-    if (companyNumber) {
-      this.locationDetail.callerIdNumber = companyNumber.pattern;
-    } else {
-      if (this.locationDetail.callerIdNumber) {
-        delete this.locationDetail.callerIdNumber;
-      }
-    }
-  }
-
-  public onCompanyVoicemailFilter(filter: string): ng.IPromise<IOption[]> {
-    return this.HuronSettingsOptionsService.loadCompanyVoicemailNumbers(filter)
-      .then(numbers => this.settingsOptions.companyVoicemailOptions = numbers);
-  }
-
-  public validateAddress() {
-    this.addressValidating = true;
-    this.PstnServiceAddressService.lookupAddressV2(this.address, this.PstnModel.getProviderId())
-      .then(address => {
-        if (address) {
-          this.address = address;
-          this.addressValidated = true;
-          this.addressFound = true;
-        } else {
-          this.Notification.error('pstnSetup.serviceAddressNotFound');
-        }
+  private initComponent() {
+    return this.LocationSettingsOptionsService.getOptions()
+      .then(locationOptions => this.locationSettingsOptions = locationOptions)
+      .then(() => {
+        return this.CallLocationSettingsService.get(undefined, true) // Calling with parameter indicating new location to prevent default location ESA being populated.
+          .then(locationSettings => {
+            locationSettings.location.uuid = undefined;
+            locationSettings.location.name = '';
+            locationSettings.location.defaultLocation = false;
+            locationSettings.location.callerId = null;
+            this.callLocationSettingsData = locationSettings;
+            this.showRoutingPrefix = this.setShowRoutingPrefix(locationSettings.customerVoice.routingPrefixLength);
+          });
       })
-      .catch(error => this.Notification.errorResponse(error))
-      .finally(() => {
-        this.addressValidating = false;
+      .catch(response => {
+        this.Notification.errorResponse(response);
       });
   }
 
+  public onTimeZoneChanged(timeZone: string) {
+    this.callLocationSettingsData.location.timeZone = timeZone;
+  }
+
+  public onPreferredLanguageChanged(preferredLanguage: string): void {
+    this.callLocationSettingsData.location.preferredLanguage = preferredLanguage;
+  }
+
+  public onDefaultCountryChanged(defaultCountry: string): void {
+    this.callLocationSettingsData.location.tone = defaultCountry;
+  }
+
+  public onRoutingPrefixChanged(routingPrefix: string): void {
+    this.callLocationSettingsData.location.routingPrefix = routingPrefix;
+    if (!_.isNull(this.callLocationSettingsData.location.routingPrefix)) {
+      this.isRoutingPrefixValid = true;
+      this.filterExtensionRangesByRoutingPrefix(routingPrefix);
+    } else if (this.showRoutingPrefix) {
+      this.isRoutingPrefixValid = false;
+    }
+  }
+
+  public onExtensionRangeChanged(extensionRanges: InternalNumberRange[]): void {
+    this.callLocationSettingsData.internalNumberRanges = extensionRanges;
+  }
+
+  public onSteeringDigitChanged(steeringDigit: string): void {
+    this.callLocationSettingsData.location.steeringDigit = steeringDigit;
+  }
+
+  public onCallerIdChanged(callerId: LocationCallerId): void {
+    this.callLocationSettingsData.location.callerId = callerId;
+  }
+
+  public onRegionCodeChanged(regionCode: string, useSimplifiedNationalDialing: boolean): void {
+    this.callLocationSettingsData.location.regionCodeDialing.regionCode = regionCode;
+    this.callLocationSettingsData.location.regionCodeDialing.simplifiedNationalDialing = useSimplifiedNationalDialing;
+  }
+
+  public filterExtensionRangesByRoutingPrefix(routingPrefix) {
+    return this.CallLocationSettingsService.getLocationExtensionRanges(routingPrefix)
+      .then(numberRanges => this.callLocationSettingsData.internalNumberRanges = _.cloneDeep(numberRanges));
+  }
+
   public resetAddr() {
-    this.address = {};
-    this.addressValidated = false;
-    this.addressFound = false;
+    this.callLocationSettingsData.address.reset();
   }
 
   public getLastIndex(): number {
@@ -231,19 +193,52 @@ class LocationsWizardController implements ng.IComponentController {
 
   public previousButton(): any {
     if (this.index === 0) {
-      return 'hidden';
+      return HIDDEN;
     }
     return true;
   }
 
+  public evalEscKeyPress($event: KeyboardEvent): void {
+    const keycode = $event.which;
+    switch (keycode) {
+      case 27:
+      //escape key
+        this.cancelModal();
+        $event.preventDefault();
+        $event.stopPropagation();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public evalKeyPress($event: KeyboardEvent): void {
+    const keycode = $event.which;
+    switch (keycode) {
+      case 13:
+      case 39:
+      //right arrow
+        if (this.nextButton() === true) {
+          this.nextPage();
+        }
+        break;
+      case 37:
+      //left arrow
+        if (this.previousButton() === true) {
+          this.previousPage();
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   public nextButton(): any {
-    if (this.index === PAGE_ESA) {
-      //You may change your ESA, but it is not required to create a location
-      if (this.form && this.form.$valid) {
-        //Must be valid if ESA is being set/changed
-        return this.addressValidated;
+    if (this.form && this.form.$valid && (this.index === PAGE_ESA)) {
+      //Must be valid if ESA is being set/changed
+      if (this.PstnModel.isCustomerExists()) {
+        return this.callLocationSettingsData.address.validated;
       }
-      return true;
     }
     return this.form && this.form.$valid;
   }
@@ -261,41 +256,55 @@ class LocationsWizardController implements ng.IComponentController {
         helpText.removeClass('enabled');
       }
       this.index--;
-      if ((this.index === 2 && !this.showRegionAndVoicemail) ||
-          (this.index === 5 && !this.showRegionAndVoicemail)) {
-        this.index--;
-      }
-    });
+    }, LocationsWizardController.PAGE_TRANSITION_TIMEOUT);
   }
 
   public nextPage(): void {
     this.animation = 'slide-left';
-    this.index++;
-    if ((this.index === 2 && !this.showRegionAndVoicemail) ||
-        (this.index === 5 && !this.showRegionAndVoicemail)) {
+    this.$timeout(() => {
       this.index++;
-    }
-    if (this.index === this.getLastIndex()) {
-      //Change the blue arrow button to a green one
-      const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
-      arrowButton.addClass('btn--cta');
-    }
-    if (this.index === this.getLastIndex() + 1) {
-      this.saveLocation();
-      this.index--;
-    }
+      if (this.index === this.getLastIndex()) {
+        //Change the blue arrow button to a green one
+        const arrowButton = this.$element.find('button.btn--circle.btn--primary.btn--right');
+        arrowButton.addClass('btn--cta');
+        //Show helpText
+        const helpText = this.$element.find('div.btn-helptext.helptext-btn--right');
+        helpText.addClass('active');
+        helpText.addClass('enabled');
+      }
+      if (this.index === this.getLastIndex() + 1) {
+        this.saveLocation();
+        this.index--;
+      }
+    }, LocationsWizardController.PAGE_TRANSITION_TIMEOUT);
   }
 
-  private saveLocation(): void {
-    this.LocationsService.createLocation(this.locationDetail)
-    .then(() => this.$state.go('call-locations'))
-    .catch((error) => this.Notification.errorResponse(error, 'locations.createFailed'));
-    //TODO if ESA is valid, set the ESA
+  public nextText(): string {
+    return this.$translate.instant('common.create');
+  }
+
+  private saveLocation(): ng.IPromise<void> {
+    this.processing = true;
+    return this.CallLocationSettingsService.save(this.callLocationSettingsData)
+      .then(() => this.$state.go('call-locations'))
+      .finally(() => {
+        this.processing = false;
+      });
+  }
+
+  private setShowRoutingPrefix(routingPrefixLength: number | null): boolean {
+    if (_.isNull(routingPrefixLength) || routingPrefixLength === 0) {
+      this.isRoutingPrefixValid = true;
+      return false;
+    } else {
+      this.isRoutingPrefixValid = false;
+      return true;
+    }
   }
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/locations/locations-wizard/locations-wizard-cancel-modal.html',
+      template: require('modules/call/locations/locations-wizard/locations-wizard-cancel-modal.html'),
       type: 'dialog',
     });
   }

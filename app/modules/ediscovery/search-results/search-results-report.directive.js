@@ -6,7 +6,7 @@
   function searchResultsReport() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/ediscovery/search-results/search-results-report.tpl.html',
+      template: require('modules/ediscovery/search-results/search-results-report.tpl.html'),
     };
 
     return directive;

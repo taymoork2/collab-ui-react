@@ -3,7 +3,7 @@
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
+  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmSearchService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -11,8 +11,10 @@
       searchUsers: searchUsers,
       searchOrgs: searchOrgs,
       searchOrders: searchOrders,
+      filterOrders: filterOrders,
       resendAdminEmail: resendAdminEmail,
       editAdminEmail: editAdminEmail,
+      getOrderProcessingUrl: getOrderProcessingUrl,
       getUser: getUser,
       getOrg: getOrg,
       isEmailBlocked: isEmailBlocked,
@@ -38,6 +40,7 @@
       invokeInviteEmail: invokeInviteEmail,
       getAccount: getAccount,
       getOrder: getOrder,
+      getSubscription: getSubscription,
       getEmailStatus: getEmailStatus,
       hasBounceDetails: hasBounceDetails,
       clearBounceDetails: clearBounceDetails,
@@ -59,13 +62,6 @@
     if (!orgDisplayNameCache) {
       orgDisplayNameCache = new CacheFactory('helpdeskOrgDisplayNameCache', {
         maxAge: 10 * 60 * 1000,
-        deleteOnExpire: 'aggressive',
-      });
-    }
-    var devicesInOrgCache = CacheFactory.get('helpdeskDevicesInOrgCache');
-    if (!devicesInOrgCache) {
-      devicesInOrgCache = new CacheFactory('helpdeskDevicesInOrgCache', {
-        maxAge: 180 * 1000,
         deleteOnExpire: 'aggressive',
       });
     }
@@ -112,7 +108,15 @@
     }
 
     function extractDevice(res) {
-      return CsdmConverter.convertCloudberryDevice(res.data);
+      return convertCsdmDevice(res.data);
+    }
+
+    function convertCsdmDevice(device) {
+      var d = CsdmConverter.convertCloudberryDevice(device);
+      d.id = device.url.split('?')[0].split('/').pop();
+      d.encoded_id = encodeURIComponent(device.url.split('/').pop());
+      d.isHuronDevice = false; //We render devices from csdm as csdm devices until huron cards are fixed.
+      return d;
     }
 
     function extractOrg(res) {
@@ -204,9 +208,14 @@
         .then(extractData);
     }
 
-    function resendAdminEmail(orderUUID, toCustomer) {
+    function filterOrders(orders) {
+      var orderToolFilters = ['CCW', 'CCW-CSB'];
+      return _.filter(orders, function (el) { return _.includes(orderToolFilters, el.orderingTool); });
+    }
+
+    function resendAdminEmail(orderUUID, isCustomer) {
       var url;
-      if (toCustomer) {
+      if (isCustomer) {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendcustomeradminemail/invoke';
       } else {
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/actions/resendpartneradminemail/invoke';
@@ -235,6 +244,27 @@
         url = urlBase + 'helpdesk/orders/' + orderUUID + '/partnerAdminEmail';
       }
       return $http.post(url, payload).then(extractData);
+    }
+
+    function getOrderProcessingUrl(purchaseOrderId) {
+      return $http
+        .get(urlBase + 'ordersetup/' + encodeURIComponent(purchaseOrderId) + '/csmlink')
+        .then(function (response) {
+          return encodeOpcUrl(response.data);
+        });
+    }
+
+    function encodeOpcUrl(url) {
+      var encodedUrl = '';
+      _.forEach(url.split('&'), function (param) {
+        var paramSplit = param.split('=', 2);
+        if (paramSplit.length === 1) {
+          encodedUrl += param + '&';
+        } else {
+          encodedUrl += paramSplit[0] + '=' + encodeURIComponent(paramSplit[1]) + '&';
+        }
+      });
+      return encodedUrl.slice(0, -1);
     }
 
     function getUser(orgId, userId) {
@@ -303,17 +333,9 @@
       if (useMock()) {
         return deferredResolve(filterDevices(searchString, CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), limit));
       }
-      var devices = devicesInOrgCache.get(orgId);
-      if (devices) {
-        return deferredResolve(filterDevices(searchString, devices, limit));
-      }
-      return $http
-        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices?checkOnline=false&isHelpDesk=true')
-        .then(function (res) {
-          var devices = CsdmConverter.convertCloudberryDevices(res.data);
-          devicesInOrgCache.put(orgId, devices);
-          return filterDevices(searchString, devices, limit);
-        });
+      return CsdmSearchService.searchWithQueryString(searchString, orgId, limit, 'helpdesk').then(function (searchRes) {
+        return _.map(searchRes.data.hits.hits, convertCsdmDevice);
+      });
     }
 
     function getCloudberryDevice(orgId, deviceId) {
@@ -324,8 +346,9 @@
         });
         return deferredResolve(device);
       }
+
       return $http
-        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/devices/' + deviceId + '?isHelpDesk=true&checkOnline=true')
+        .get(UrlConfig.getCsdmServiceUrl() + '/organization/' + encodeURIComponent(orgId) + '/devices/' + deviceId + ((deviceId.indexOf('?') > 0) ? '&' : '?') + 'isHelpDesk=true&checkOnline=true')
         .then(extractDevice);
     }
 
@@ -496,9 +519,9 @@
     function elevateToReadonlyAdmin(orgId) {
       return $http
         .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/actions/elevatereadonlyadmin/invoke')
-        .then(USSService.notifyReadOnlyLaunch)
+        .then(USSService.invalidateHybridUserCache)
         .catch(angular.noop)
-        .then(HybridServicesExtrasService.notifyReadOnlyLaunch)
+        .then(HybridServicesExtrasService.invalidateHybridUserCache)
         .catch(angular.noop);
     }
 
@@ -532,6 +555,12 @@
     function getOrder(orderId) {
       return $http
         .get(urlBase + 'orders/' + encodeURIComponent(orderId))
+        .then(extractData);
+    }
+
+    function getSubscription(subscriptionId) {
+      return $http
+        .get(urlBase + 'subscriptions/' + encodeURIComponent(subscriptionId))
         .then(extractData);
     }
 

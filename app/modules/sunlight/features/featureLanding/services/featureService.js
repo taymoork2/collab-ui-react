@@ -7,6 +7,13 @@
 
   /* @ngInject */
   function CareFeatureList(Authinfo, ConfigTemplateService) {
+    var filterConstants = {
+      customerSupport: 'customerSupport',
+      virtualAssistant: 'virtualAssistant',
+      autoAttendant: 'AA',
+      appleBusinessChat: 'appleBusinessChat',
+      all: 'all',
+    };
     var service = {
       getChatTemplates: getChatTemplates,
       getCallbackTemplates: getCallbackTemplates,
@@ -15,6 +22,7 @@
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
       filterCards: filterCards,
+      filterConstants: filterConstants,
     };
 
     return service;
@@ -64,20 +72,38 @@
     function filterCards(list, filterValue, filterText) {
       var filterStringProperties = [
         'name',
+        'cardName',
       ];
+
       var filteredList = _.filter(list, function (feature) {
-        if (feature.mediaType !== filterValue && filterValue !== 'all') {
+        if (filterValue === filterConstants.all) {
+          return true;
+        }
+        if (feature.filterValue && filterValue === feature.filterValue) {
+          return true;
+        }
+        return false;
+      });
+
+      var newFilteredList = _.filter(filteredList, function (feature) {
+        if (filterValue !== filterConstants.customerSupport && filterValue !== filterConstants.virtualAssistant
+          && filterValue !== filterConstants.autoAttendant && filterValue !== filterConstants.appleBusinessChat
+          && filterValue !== filterConstants.all) {
+          //if the filter value is not any of the valid values, it should return false
           return false;
         }
         if (_.isEmpty(filterText)) {
           return true;
         }
         var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
-          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
+          return _.includes(_.get(feature, stringProperty, '').toLowerCase(), filterText.toLowerCase());
         });
-        return matchedStringProperty;
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
-      return filteredList;
+      return newFilteredList;
     }
 
     function formatTemplates(list, feature) {
@@ -85,6 +111,8 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
+        tpl.featureIcons = feature.featureIcons;
+        tpl.filterValue = filterConstants.customerSupport;
         return tpl;
       });
       return orderByCardName(formattedList);

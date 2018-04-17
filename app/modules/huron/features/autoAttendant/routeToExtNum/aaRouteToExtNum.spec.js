@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToExtNumCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, AutoAttendantHybridCareService;
   var $rootScope, $scope;
 
   var aaModel = {
@@ -46,7 +46,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantHybridCareService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -55,6 +55,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
 
     $scope.schedule = schedule;
     $scope.index = index;
@@ -77,8 +78,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
       });
 
       expect(controller).toBeDefined();
-      expect(controller.menuKeyEntry.actions[0].name).toEqual('route');
-      expect(controller.menuKeyEntry.actions[0].value).toEqual('');
+      expect(controller.menuKeyEntry.actions[0].name).toBe('route');
+      expect(controller.menuKeyEntry.actions[0].value).toBe('');
     });
 
     describe('activate', function () {
@@ -96,7 +97,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         $scope.$apply();
 
-        expect(controller.model.phoneNumberInput.phoneNumber).toEqual(phoneNumber);
+        expect(controller.model.phoneNumberInput.phoneNumber).toBe(phoneNumber);
       });
     });
 
@@ -112,7 +113,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         $scope.$apply();
 
-        expect(controller.menuKeyEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
+        expect(controller.menuKeyEntry.actions[0].value).toBe(phoneNumber.replace(/\D/g, ''));
       });
     });
 
@@ -134,7 +135,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
         });
 
         expect(controller.menuEntry.actions[0].then).toBeDefined();
-        expect(controller.menuEntry.actions[0].then.name).toEqual('route');
+        expect(controller.menuEntry.actions[0].then.name).toBe('route');
       });
 
       it('should create a condition action with then clause', function () {
@@ -144,9 +145,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
           $scope: $scope,
         });
 
-        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].name).toBe('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
-        expect(controller.menuEntry.actions[0].then.name).toEqual('route');
+        expect(controller.menuEntry.actions[0].then.name).toBe('route');
       });
 
       it('should change an action from routetoQueue to route', function () {
@@ -156,9 +157,9 @@ describe('Controller: AARouteToExtNumCtrl', function () {
           $scope: $scope,
         });
 
-        expect(controller.menuEntry.actions[0].name).toEqual('conditional');
+        expect(controller.menuEntry.actions[0].name).toBe('conditional');
         expect(controller.menuEntry.actions[0].then).toBeDefined();
-        expect(controller.menuEntry.actions[0].then.name).toEqual('route');
+        expect(controller.menuEntry.actions[0].then.name).toBe('route');
       });
     });
 
@@ -187,7 +188,7 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         $scope.$apply();
 
-        expect(controller.menuEntry.actions[0].value).toEqual(phoneNumber.replace(/\D/g, ''));
+        expect(controller.menuEntry.actions[0].value).toBe(phoneNumber.replace(/\D/g, ''));
       });
 
       it('should be able to create new AA entry from Route Call', function () {
@@ -195,8 +196,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
           $scope: $scope,
         });
 
-        expect(controller.menuEntry.actions[0].name).toEqual('route');
-        expect(controller.menuEntry.actions[0].value).toEqual('');
+        expect(controller.menuEntry.actions[0].name).toBe('route');
+        expect(controller.menuEntry.actions[0].value).toBe('');
       });
     });
 
@@ -215,8 +216,8 @@ describe('Controller: AARouteToExtNumCtrl', function () {
           $scope: $scope,
         });
 
-        expect(controller.menuEntry.actions[0].name).toEqual('route');
-        expect(controller.menuEntry.actions[0].value).toEqual('');
+        expect(controller.menuEntry.actions[0].name).toBe('route');
+        expect(controller.menuEntry.actions[0].value).toBe('');
       });
     });
 
@@ -241,8 +242,61 @@ describe('Controller: AARouteToExtNumCtrl', function () {
 
         var fallbackAction = _.get(controller.menuEntry, 'actions[0].queueSettings.fallback.actions[0]');
         $scope.$apply();
-        expect(fallbackAction.name).toEqual('route');
-        expect(fallbackAction.value).toEqual('');
+        expect(fallbackAction.name).toBe('route');
+        expect(fallbackAction.value).toBe('');
+      });
+    });
+
+    describe('should check for both phoneNumber and extension', function () {
+      beforeEach(function () {
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        $scope.fromRouteCall = true;
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(false);
+      });
+      it('should have phone number type extension', function () {
+        var phoneNumber = '5555';
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
+        aaUiModel[schedule].entries[0].addAction(action);
+
+        spyOn(AutoAttendantCeMenuModelService, 'checkIfEnteredValueIsPhoneNumber').and.returnValue(false);
+        var controller = $controller('AARouteToExtNumCtrl', {
+          $scope: $scope,
+        });
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'extension')).toBe(phoneNumber);
+      });
+
+      it('should have phone number type extension', function () {
+        var phoneNumber = '+91-95343221';
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
+        aaUiModel[schedule].entries[0].addAction(action);
+
+        spyOn(AutoAttendantCeMenuModelService, 'checkIfEnteredValueIsPhoneNumber').and.returnValue(true);
+        var controller = $controller('AARouteToExtNumCtrl', {
+          $scope: $scope,
+        });
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'phoneNumber')).toBe(phoneNumber);
+      });
+    });
+
+    describe('For Hybrid user', function () {
+      it('extension should be undefined in case the user is hybrid', function () {
+        aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenuEntry());
+        $scope.fromRouteCall = true;
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(true);
+
+        var phoneNumber = '+91-95343221';
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('route', phoneNumber);
+        aaUiModel[schedule].entries[0].addAction(action);
+
+        spyOn(AutoAttendantCeMenuModelService, 'checkIfEnteredValueIsPhoneNumber').and.returnValue(true);
+        var controller = $controller('AARouteToExtNumCtrl', {
+          $scope: $scope,
+        });
+        expect(_.get(controller.menuEntry.actions[0], 'name')).toBe('route');
+        expect(_.get(controller.model.phoneNumberInput, 'phoneNumber')).toBe(phoneNumber);
+        expect(_.get(controller.model.phoneNumberInput, 'extension')).toBe('');
       });
     });
   });

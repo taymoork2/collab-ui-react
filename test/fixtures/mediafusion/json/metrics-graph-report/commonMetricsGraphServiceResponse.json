@@ -183,7 +183,7 @@
     "valueScrollbar": {
       "autoGridCount": true,
       "color": "#AAAAAA",
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "#FFFFFF",
       "backgroundAlpha": 1
     },
     "chartCursor": {

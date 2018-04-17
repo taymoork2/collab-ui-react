@@ -1,12 +1,18 @@
 <div class="expressway-service hercules hercules-fix-paragraphs">
-  <cs-page-header title-name="{{'hercules.hybridServiceNames.spark-hybrid-impinterop' | translate}}" tabs="vm.tabs" back="true"
-                  back-url="vm.backState"></cs-page-header>
+  <cs-page-header
+    title-name="{{'hercules.hybridServiceNames.spark-hybrid-impinterop' | translate}}"
+    tabs="vm.tabs"
+    back="true"
+    back-url="vm.backState"
+    back-aria-label="{{::'common.back' | translate}}">
+  </cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <hybrid-services-notifications filter-tag="'squared-hybrid-impinterop'"></hybrid-services-notifications>
+      <hybrid-services-notifications filter-tag="'spark-hybrid-impinterop'"></hybrid-services-notifications>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <add-hybrid-resource-button modal-window-options="vm.addResourceModal"></add-hybrid-resource-button>
+      <user-status-report-button ng-if="!vm.hasCapacityFeatureToggle" user-statuses="vm.userStatusesSummary"></user-status-report-button>
+      <add-hybrid-resource-button ng-if="vm.displayAddResourceButton()" modal-window-options="vm.addResourceModal"></add-hybrid-resource-button>
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <div ui-view="impServiceView" class="content-container"></div>

@@ -1,0 +1,102 @@
+<div class="account-linking-side-panel-section">
+  <cs-sp-header>
+    <div class="header-image">
+      <div class="webex-header-image">
+        <i class="icon icon-webex"></i>
+      </div>
+    </div>
+    <div class="header-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <div class="webex-site-name">
+            {{$ctrl.selectedSiteInfo.linkedSiteUrl}}
+          </div>
+        </div>
+        <div class="header-subinfo">
+          <span translate="accountLinking.siteDetails.legacyWebexLicense"></span>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+
+  <div ng-hide="$ctrl.selectedSiteInfo.isSiteAdmin" class="read-only-site">
+    <span translate="accountLinking.siteDetails.dontHaveAdminRights"></span>
+  </div>
+  <div ng-if="$ctrl.selectedSiteInfo.accountInfoErrors.length > 0 || $ctrl.selectedSiteInfo.siteInfoErrors.length > 0" class="errors-in-data">
+    <span>{{$ctrl.selectedSiteInfo.siteInfoErrors[0]}}</span>
+  </div>
+
+  <cs-sp-container>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="accountLinking.siteDetails.siteInfo"></span>
+      </div>
+
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <span class="feature-name" translate="accountLinking.siteDetails.siteName"></span>
+            <span class="feature-details">{{$ctrl.selectedSiteInfo.linkedSiteUrl}}</span>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="accountLinking.name"></span>
+        <span>
+        <a class="as-button"
+           ng-show="$ctrl.selectedSiteInfo.isSiteAdmin"
+           ng-click="$ctrl.modifyLinkingMethod()"
+           translate="accountLinking.siteDetails.modify"></a>
+      </span>
+      </div>
+
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <span class="feature-name" translate="accountLinking.siteDetails.linkingMode"></span>
+            <span class="feature-details">
+              {{$ctrl.selectedSiteInfo.linkingModeDisplay}}
+            </span>
+          </li>
+          <li class="feature">
+            <span class="feature-name" translate="accountLinking.siteDetails.linkedAccounts"></span>
+            <span class="feature-details" ng-if="$ctrl.selectedSiteInfo.linkingStatus.accountsLinked !== undefined && $ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts !== undefined">
+              {{$ctrl.selectedSiteInfo.linkingStatus.accountsLinked}}/{{$ctrl.selectedSiteInfo.linkingStatus.totalWebExAccounts}}</span>
+          </li>
+          <li class="feature" ng-if="$ctrl.selectedSiteInfo.isSiteAdmin && $ctrl.isAutomaticMode()">
+            <span class="feature-name" translate="accountLinking.siteDetails.automaticLinking"
+              tooltip="{{::$ctrl.automaticLinkingTooltipText | translate}}" tooltip-placement="top-left">
+            </span>
+            <cs-toggle-switch ng-model="$ctrl.selectedSiteInfo.linkAllUsers"
+              size="small"
+              toggle-id="linkAllUsers"
+              name="linkAllUsers"
+              cs-change="$ctrl.linkAllUsersChange(toggleValue)">
+            </cs-toggle-switch>
+          </li>
+        </ul>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="accountLinking.siteDetails.siteUsageReports"></span>
+        <span class="actions-menu">
+        <a class="as-button" ng-click="$ctrl.showReports()" translate="accountLinking.siteDetails.viewReports"></a>
+      </span>
+      </div>
+    </cs-sp-section>
+
+    <cs-sp-section ng-show="$ctrl.selectedSiteInfo.isSiteAdmin">
+      <div class="section-title-row">
+        <a class="btn btn--people" ng-click="$ctrl.launchSiteAdmin($ctrl.selectedSiteInfo)" role="button" translate="accountLinking.siteDetails.launchWebexSiteAdmin"></a>
+      </div>
+    </cs-sp-section>
+
+  </cs-sp-container>
+
+</div>

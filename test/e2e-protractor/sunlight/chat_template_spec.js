@@ -3,6 +3,7 @@
 describe('Care admin should be able to', function () {
   var createSummaryMessage = 'You have configured the template. Click Finish to save the configuration and generate embed code so you can start using this template on your organization website.';
   var editSummaryMessage = 'You have edited the template. Click Finish to save the configuration so you can start using the new version of this template on your organization website.';
+  var virtualAssistantName = 'Sprk care test1-E2E test';
   beforeAll(function () {
     login.login('contactcenter-admin', '#/services');
   });
@@ -25,7 +26,6 @@ describe('Care admin should be able to', function () {
   });
 
   it('validate proactive prompt page', function () {
-    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfProactivePromptPage();
   });
@@ -33,6 +33,11 @@ describe('Care admin should be able to', function () {
   it('validate customer info page', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     validateContentsOfCustomerInfoPage();
+  });
+
+  it('validate virtual assistant page', function () {
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
+    validateContentsOfVirtualAssistantPage();
   });
 
   it('validate agent unavailable page', function () {
@@ -62,7 +67,7 @@ describe('Care admin should be able to', function () {
 
   it('validate create save', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + ' template has been created successfully.', createSummaryMessage);
+    validateContentsOfSummaryPage('You have successfully created ' + careChatTemplateSetupPage.randomChatTemplateName + '.', createSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
@@ -75,7 +80,7 @@ describe('Care admin should be able to', function () {
 
   it('validate edit save', function () {
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
-    validateContentsOfSummaryPage(careChatTemplateSetupPage.randomChatTemplateName + 'edit template has been updated successfully.', editSummaryMessage);
+    validateContentsOfSummaryPage('Changes to ' + careChatTemplateSetupPage.randomChatTemplateName + 'edit are successfully saved.', editSummaryMessage);
     validateDismissOfCTSetupWizard();
     validateDisplayEmbedCodeModal();
     validateDismissOfEmbedCodeModal();
@@ -90,7 +95,9 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careLandingPage.creatCTButton);
     utils.click(careLandingPage.creatCTButton);
     validateDisplayNewFeatureModal();
-    utils.click(careChatTemplateSetupPage.createChatTemplateButton);
+    utils.click(careFeatureLandingPage.createCustomerSupportTemplateButton);
+    validateDisplayCustomerSupportTemplateModal();
+    utils.click(careFeatureLandingPage.createChatTemplateButton);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
@@ -98,21 +105,29 @@ describe('Care admin should be able to', function () {
   }
 
   function validateDisplayNewFeatureModal() {
-    utils.expectIsDisplayed(careChatTemplateSetupPage.careNewFeatureModal);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.createChatTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careFeatureLandingPage.createCustomerSupportTemplateButton);
+  }
+
+  function validateDisplayCustomerSupportTemplateModal() {
+    utils.expectIsDisplayed(careFeatureLandingPage.careNewFeatureModal);
+    utils.expectIsDisplayed(careFeatureLandingPage.createChatTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.createCallbackTemplateButton);
+    utils.expectIsDisplayed(careFeatureLandingPage.createChatPlusCallbackTemplateButton);
   }
 
   function editTemplate(templateNameSuffix) {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, careChatTemplateSetupPage.randomChatTemplateName);
-    utils.click(careChatTemplateSetupPage.editChatTemplateBtnOnCard);
+    utils.waitForText(careLandingPage.foundCardName, careChatTemplateSetupPage.randomChatTemplateName);
+    utils.click(careLandingPage.editCardBtnOnCard);
     utils.expectIsDisplayed(careChatTemplateSetupPage.ctNameInput);
     utils.waitForText(careChatTemplateSetupPage.nameHint, 'Enter a name for you to identify this template');
     utils.expectIsNotDisplayed(careChatTemplateSetupPage.setUpLeftBtn);
     utils.sendKeys(careChatTemplateSetupPage.ctNameInput, templateNameSuffix);
 
+    utils.click(careChatTemplateSetupPage.setUpRightBtn);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
     utils.click(careChatTemplateSetupPage.setUpRightBtn);
@@ -157,27 +172,36 @@ describe('Care admin should be able to', function () {
 
 
   function validateContentsOfProfilePage() {
-    validateTitleAndDesc('Branding and Identity', 'Configure how you want the organization and user profile to be represented for your company');
-    utils.expectIsReadOnly(careChatTemplateSetupPage.OrgName);
+    validateTitleAndDesc('Branding and Identity', 'Configure how your company or your agent is visually represented');
+    utils.waitForText(careChatTemplateSetupPage.profileInfoMsg, 'You can change the organization logo on the Settings page');
+    utils.expectIsNotDisplayed(careChatTemplateSetupPage.botAgentToggle);
     utils.click(careChatTemplateSetupPage.agentProfile);
-    utils.expectIsDisplayed(careChatTemplateSetupPage.agentDisplayImage);
+    utils.waitForText(careChatTemplateSetupPage.namePreview, virtualAssistantName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botPreviewIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botAgentToggle);
     utils.click(careChatTemplateSetupPage.agentNameRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Agent');
+    utils.click(careChatTemplateSetupPage.agentToggle);
+    utils.waitForText(careChatTemplateSetupPage.namePreview, 'Agent display name');
     utils.click(careChatTemplateSetupPage.agentAliasRadio);
-    utils.waitForText(careChatTemplateSetupPage.agentNamePreview, 'Alias');
+    utils.waitForText(careChatTemplateSetupPage.namePreview, 'Agent alias');
+    utils.waitForText(careChatTemplateSetupPage.profileInfoMsg, 'You cannot change the default agent avatar seen in the Preview');
     utils.expectIsDisplayed(careChatTemplateSetupPage.agentPreviewIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
     utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
   }
 
   function validateContentsOfOverviewPage() {
-    var OVERVIEW_CARD_COUNT = 5;
+    var OVERVIEW_CARD_COUNT = 6;
     validateOverviewTitleAndDesc('Template Overview', 'Toggle cards to customize what screens you want your customer to see when requesting a chat from customer care');
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoDisabledCard);
     utils.click(careChatTemplateSetupPage.customerInfoToggle);
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfoEnabledCard);
+    utils.click(careChatTemplateSetupPage.proactivePromptToggle);
+    browser.sleep(1000)
+    utils.waitUntilEnabled(careChatTemplateSetupPage.vcaEnabled);
+    utils.click(careChatTemplateSetupPage.virtualAssistantToggle);
     utils.expectCount(careChatTemplateSetupPage.overviewCard, OVERVIEW_CARD_COUNT)
   }
 
@@ -256,6 +280,21 @@ describe('Care admin should be able to', function () {
     utils.expectIsDisplayed(careChatTemplateSetupPage.customerInfo_screen_optional2);
   }
 
+  function validateContentsOfVirtualAssistantPage() {
+    validateTitleAndDesc('Customer Virtual Assistant', 'Select a preconfigured Customer Virtual Assistant who provides initial automated support in your customer chat experience');
+    var defaultWelcomeMsg = 'Hello, how can I help you today?';
+    utils.expectValueToBeSet(careChatTemplateSetupPage.botWelcomeMessage, defaultWelcomeMsg);
+    utils.waitForText(careChatTemplateSetupPage.botWelcomeMessagePreview, defaultWelcomeMsg);
+    utils.clear(careChatTemplateSetupPage.botWelcomeMessage);
+    var testMsg = 'test welcome message';
+    utils.sendKeys(careChatTemplateSetupPage.botWelcomeMessage, testMsg);
+    utils.waitForText(careChatTemplateSetupPage.botWelcomeMessagePreview, testMsg);
+    utils.waitForText(careChatTemplateSetupPage.botNamePreview, virtualAssistantName);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.botPreviewIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewMinimizeIcon);
+    utils.expectIsDisplayed(careChatTemplateSetupPage.previewCloseIcon);
+  }
+
   function validateContentsOfFeedbackPage() {
     validateTitleAndDesc('Feedback', 'This screen is used to collect feedback from a customer after the chat ends');
     utils.expectIsDisabled(careChatTemplateSetupPage.templatePreviewTextField);
@@ -290,9 +329,15 @@ describe('Care admin should be able to', function () {
   }
 
   function validateContentsOfChatStatusMessagesPage() {
-    validateTitleAndDesc('Status Messages', 'Configure status messages which your customer sees during the chat');
+    validateTitleAndDesc('Status Messages', 'Configure the status message to display in the customer chat window');
     validateChatStatusMessagesDefaultPage();
     validateChatStatusMessagesChange();
+    /* TODO
+    Preview is currently part of new route.
+    Uncomment the below function call once we completely move to the new route and test the preview flow.
+    validateChatMessagePreviewPage();
+    validateChatMessagePreviewPageOnFocusChange();
+    */
   }
 
   function validateContentsOfSummaryPage(successMessage, expectedMessage) {
@@ -315,10 +360,10 @@ describe('Care admin should be able to', function () {
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, templateName);
-    utils.waitForText(careChatTemplateSetupPage.chatTemplateName, templateName);
-    utils.click(careChatTemplateSetupPage.deleteEmbedCodeBtnOnCard);
-    utils.click(careChatTemplateSetupPage.deleteChatTemplateonModal);
-    notifications.assertSuccess(templateName + ' template has been deleted successfully.');
+    utils.waitForText(careLandingPage.foundCardName, templateName);
+    utils.click(careLandingPage.deleteCardBtnOnCard);
+    utils.click(careLandingPage.deleteTemplateOnModal);
+    notifications.assertSuccess(templateName + ' has been deleted successfully.');
     utils.click(utils.searchbox);
     utils.clear(utils.searchField);
     utils.sendKeys(utils.searchField, templateName);
@@ -327,7 +372,7 @@ describe('Care admin should be able to', function () {
 
   function validateChatStatusMessagesDefaultPage() {
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(0), 'Waiting for an Agent...');
-    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chatting with an Agent');
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(1), 'Chat in progress...');
     utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusMessages.get(2), 'Agent has left the chat');
   }
 
@@ -336,4 +381,17 @@ describe('Care admin should be able to', function () {
       utils.expectIsEnabled(careChatTemplateSetupPage.chatStatusMessages.get(i));
     });
   }
+
+  /* TODO
+  Uncomment the below code once preview is included in the main route code and we completely move to it.
+  For now it's only there in new route.
+  function validateChatMessagePreviewPage() {
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusPreviewMessage, 'Waiting for an Agent...');
+  }
+
+  function validateChatMessagePreviewPageOnFocusChange() {
+    utils.click(careChatTemplateSetupPage.chatStatusMessages.get(1));
+    utils.expectValueToBeSet(careChatTemplateSetupPage.chatStatusPreviewMessage, 'Chat in progress...');
+  }
+  */
 });

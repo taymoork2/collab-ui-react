@@ -1,0 +1,71 @@
+<div>
+  <div class="ct-title">
+    <span class ="h3"> {{careSetupAssistant.getLocalisedText('careChatTpl.proactivePrompt')}}</span>
+  </div>
+  <div class="h5 ct-title-desc" translate="careChatTpl.proactivePromptDesc"></div>
+
+  <div class="cs-card-container ct-proactive-prompt ct-sa-content">
+    <cs-card-layout block-view="true" class="ct-card-center">
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.preview"></div>
+        <article class="ct-article proactive-prompt-preview">
+          <section class="prompt-details-preview">
+            <div class="h5 prompt-title-preview">{{careSetupAssistant.template.configuration.proactivePrompt.fields.promptTitle.displayText}}</div>
+            <div class="h5 prompt-message-preview">{{careSetupAssistant.template.configuration.proactivePrompt.fields.promptMessage.message}}</div>
+            <div class="buttons">
+              <span class="noclick not-now-btn" translate="careChatTpl.notNowBtn"/>
+              <span class="noclick chat-now-btn" translate="careChatTpl.chatNowBtn"/>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
+        <article class="ct-article attributes articleHeight">
+          <section>
+            <div class="proactive-prompt-attributes">
+              <div class="h4 proactive-prompt-attributes-label" translate="careChatTpl.promptTimeDesc"></div>
+              <cs-select
+                id="promptSelect"
+                class="prompt-time"
+                labelfield="label"
+                valuefield="value"
+                ng-model="careSetupAssistant.promptTime"
+                options="careSetupAssistant.promptTimeOptions"
+                placeholder="careChatTpl.promptTimeLabel"></cs-select>
+            </div>
+            <div class="proactive-prompt-attributes">
+              <div class="h4 proactive-prompt-attributes-label" translate="careChatTpl.title"></div>
+              <input cs-input type="text"
+                id="promptTitle"
+                name="promptTitle"
+                class="h5 prompt-title large-11"
+                cs-input-messages="careSetupAssistant.singleLineValidationMessage25"
+                ng-maxlength="careSetupAssistant.lengthConstants.singleLineMaxCharLimit25"
+                validate-characters="careSetupAssistant.InvalidCharacters"
+                ng-model="careSetupAssistant.template.configuration.proactivePrompt.fields.promptTitle.displayText"
+                ng-model-options="{ allowInvalid: true }"
+                placeholder="{{::'careChatTpl.title' | translate}}"
+                ng-keypress="careSetupAssistant.enterNextPage($event)"/>
+            </div>
+            <div class="proactive-prompt-attributes">
+              <div class="h4 proactive-prompt-attributes-label" translate="careChatTpl.message"></div>
+              <textarea cs-input type="text"
+                id="promptMessage"
+                name="promptMessage"
+                class="h6 prompt-message"
+                ng-model="careSetupAssistant.template.configuration.proactivePrompt.fields.promptMessage.message"
+                ng-model-options="{ allowInvalid: true }"
+                cs-input-messages="careSetupAssistant.multiLineValidationMessage100"
+                ng-maxlength="careSetupAssistant.lengthConstants.multiLineMaxCharLimit100"
+                validate-characters="careSetupAssistant.InvalidCharacters"
+                placeholder="{{::'careChatTpl.message' | translate}}">
+              </textarea>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

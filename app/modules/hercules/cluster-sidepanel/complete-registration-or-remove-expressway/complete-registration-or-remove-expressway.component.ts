@@ -1,14 +1,10 @@
-import { ICluster } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
-interface IClusterWithAllowedredirectTarget extends ICluster {
-  allowedRedirectTarget: any;
-}
-
 export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponentController {
 
-  private cluster: IClusterWithAllowedredirectTarget;
+  private cluster: IExtendedClusterFusion;
   private connectorType: string;
 
   /* @ngInject */
@@ -23,10 +19,11 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
   }
 
   public $onInit() {
+    // TODO: check if it doesn't already have the useful data
     if (this.cluster && _.size(this.cluster.connectors) === 0) {
       this.HybridServicesExtrasService.getPreregisteredClusterAllowList(this.cluster.id)
         .then(allowList => {
-          this.cluster.allowedRedirectTarget = allowList[0];
+          this.cluster.extendedProperties.allowedRedirectTarget = allowList[0];
         })
         .catch(error => {
           this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
@@ -43,7 +40,7 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
       },
       controller: 'ClusterDeregisterController',
       controllerAs: 'clusterDeregister',
-      templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
+      template: require('modules/hercules/hs-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     }).result
     .then(() => {
@@ -63,7 +60,7 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
 
 export class CompleteregistrationOrRemoveExpresswayComponent implements ng.IComponentOptions {
   public controller = CompleteregistrationOrRemoveExpresswayCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/complete-registration-or-remove-expressway/complete-registration-or-remove-expressway.html';
+  public template = require('modules/hercules/cluster-sidepanel/complete-registration-or-remove-expressway/complete-registration-or-remove-expressway.html');
   public bindings = {
     cluster: '<',
     connectorType: '<',

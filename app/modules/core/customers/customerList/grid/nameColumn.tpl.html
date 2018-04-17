@@ -1,6 +1,5 @@
-<div class="ui-grid-cell-contents" ng-class="{'selected' : row.isSelected}"
-  ng-click="grid.appScope.showCustomerDetails(row.entity, row)">
+<div class="ui-grid-cell-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
   <span ng-bind="row.entity.customerName"></span>
   <span ng-if="grid.appScope.isPartnerOrg(row.entity.customerOrgId)" id="partner" class="badge badge--managed" ng-class="row.isSelected ? 'orgselected' : 'orgnotselected'" translate="customerPage.myOrganization"></span>
-  <span ng-if="row.entity.isPremium" class="badge badge--outline primary badge--premium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true" translate="customerPage.pro"></span>
+  <cr-pro-pack-icon ng-if="row.entity.isPremium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::grid.appScope.premiumTooltip}}"></cr-pro-pack-icon>
 </div>

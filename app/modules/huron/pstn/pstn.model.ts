@@ -1,9 +1,21 @@
 import { PstnCarrier } from './pstnProviders/pstnCarrier';
+import { Address } from './shared/pstn-address';
+import { ContractStatus } from './pstn.const';
+import { BsftSettings } from 'modules/call/bsft/settings/shared';
+
+export interface IOrderData {
+  numbers: string | string[];
+  length?: number;
+  areaCode?: string;
+  consecutive?: boolean;
+  nxx?: string;
+}
+
 export interface IOrder {
   orderType: string;
-  data: any;
-  reservationId?: string;
-  numberType?: string;
+  data: IOrderData;
+  reservationId?: string; //Will exist based on orderType
+  numberType?: string;    //Will exist based on orderType
 }
 
 export interface IAuthLicense {
@@ -27,7 +39,8 @@ export class PstnModel {
   private customerFirstName: string;
   private customerLastName: string;
   private customerEmail: string;
-  private serviceAddress: Object;
+  private confirmCustomerEmail: string;
+  private serviceAddress: Address = new Address();
   private customerExists: boolean;
   private resellerExists: boolean;
   private carrierExists: boolean;
@@ -41,18 +54,30 @@ export class PstnModel {
   private countryCode: string;
   private esaSigned: boolean;
   private esaDisclaimerAgreed: boolean;
+  private contractStatus: ContractStatus;
+  private bsftCustomer: BsftSettings;
 
   public constructor() {
     this.clear();
   }
 
-  public clear(): void {
+  public clear(locations?): void {
     this.customerId = '';
     this.customerName = '';
     this.customerFirstName = '';
     this.customerLastName = '';
     this.customerEmail = '';
-    this.serviceAddress = {};
+    this.confirmCustomerEmail = '';
+    if (locations) {
+      this.serviceAddress.reset();
+    } else {
+      this.serviceAddress.streetAddress = null;
+      this.serviceAddress.unit = undefined;
+      this.serviceAddress.city = null;
+      this.serviceAddress.state = null;
+      this.serviceAddress.zip = null;
+      this.serviceAddress.validated = false;
+    }
     this.customerExists = false;
     this.resellerExists = false;
     this.carrierExists = false;
@@ -66,12 +91,14 @@ export class PstnModel {
     this.countryCode = 'US';
     this.esaSigned = false;
     this.esaDisclaimerAgreed = false;
+    this.contractStatus = ContractStatus.UnKnown;
+    this.bsftCustomer = new BsftSettings();
   }
 
   public clearProviderSpecificData(): void {
     this.customerFirstName = '';
     this.customerLastName = '';
-    this.serviceAddress = {};
+    this.serviceAddress.reset();
     this.siteExists = false;
     this.carrierExists = false;
     this.carrierExists = false;
@@ -85,7 +112,11 @@ export class PstnModel {
   }
 
   public setCustomerId(_customerId: string): void {
-    this.customerId = _customerId;
+    if (_.isString(_customerId)) {
+      this.customerId = _customerId;
+    } else {
+      this.customerId = '';
+    }
   }
 
   public getCustomerId(): string {
@@ -124,11 +155,19 @@ export class PstnModel {
     return this.customerEmail;
   }
 
-  public setServiceAddress(_serviceAddress: Object): void {
+  public setConfirmCustomerEmail(_confirmCustomerEmail: string): void {
+    this.confirmCustomerEmail = _confirmCustomerEmail;
+  }
+
+  public getConfirmCustomerEmail(): string {
+    return this.confirmCustomerEmail;
+  }
+
+  public setServiceAddress(_serviceAddress: Address) {
     this.serviceAddress = _serviceAddress;
   }
 
-  public getServiceAddress(): Object {
+  public getServiceAddress(): Address {
     return this.serviceAddress;
   }
 
@@ -244,6 +283,22 @@ export class PstnModel {
 
   public setEsaDisclaimerAgreed(_esaDisclaimerAgreed: boolean): void {
     this.esaDisclaimerAgreed = _esaDisclaimerAgreed;
+  }
+
+  public getContractStatus(): ContractStatus {
+    return this.contractStatus;
+  }
+
+  public setContractStatus(contractStatus: ContractStatus): void {
+    this.contractStatus = contractStatus;
+  }
+
+  public getBsftCustomer() {
+    return this.bsftCustomer;
+  }
+
+  public setBsftCustomer(_bsftCustomer: BsftSettings) {
+    this.bsftCustomer = _bsftCustomer;
   }
 }
 

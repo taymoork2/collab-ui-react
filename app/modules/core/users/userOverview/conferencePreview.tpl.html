@@ -6,7 +6,7 @@
     <div class="feature-list">
       <ul>
         <li class="feature" ng-repeat="site in userOverview.currentUser.trainSiteNames">
-          <a id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})" ng-if="isValidConferenceSerivce(site)">
+          <a href id="{{site}}" ui-sref="user-overview.conferencing.webex({site:site})" ng-if="isValidConferenceSerivce(site)">
             <span class="feature-name">{{site}}</span>
             <span class="feature-status">{{determineLicenseType(site)}}</span>
             <i class="feature-arrow"></i>

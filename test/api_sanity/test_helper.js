@@ -7,90 +7,30 @@ var request = require('request');
 var testConfig = require('../e2e-protractor/utils/test.config');
 
 var auth = {
-  'sqtest-admin': {
-    user: 'sqtest-admin@squared.example.com',
-    pass: 'P@ssword123',
-    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
+  'aa-admin': {
+    user: 'indigoAA02+1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '7e0f0f48-0582-444e-ac75-908a36b29539',
   },
-  'pbr-admin': {
-    user: 'pbr-org-admin@squared2webex.com',
-    pass: 'Atlas123!',
-    org: '4214d345-7caf-4e32-b015-34de878d1158',
-  },
-  'partner-admin': {
-    user: 'atlaspartneradmin@atlas.test.com',
-    pass: 'P@ssword123',
-    org: 'c054027f-c5bd-4598-8cd8-07c08163e8cd',
-  },
-  'partner-reports': {
-    user: 'admin@sparkucreports-testpartner.com',
-    pass: 'Cisco123!',
-    org: 'd71b4d69-721a-41b1-ae4b-6e0305eab12b',
-  },
-  'partner-sales-user': {
-    user: 'phtest77+salesadmin@gmail.com',
-    pass: 'P@ssword123',
-    org: '7e268021-dc11-4728-b39d-9ba0e0abb5e0',
-  },
-  'partner-reports-sales-admin': {
-    user: 'kingkuntauser4+1715@gmail.com',
-    pass: 'C1sco123!',
-    org: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
-  },
-  'pbr-admin-test': {
-    user: 'pbr-org-admin-test@wx2.example.com',
-    pass: 'C1sco123!',
-    org: '4214d345-7caf-4e32-b015-34de878d1158',
-  },
-  'test-user': {
-    user: 'atlasmapservice+ll1@gmail.com',
-    pass: 'P@ssword123',
-    org: '75653d2f-1675-415c-aa5d-c027233f68fe',
-  },
-  'huron-int1': {
-    user: 'admin@int1.huron-alpha.com',
-    pass: 'Cisco123!',
-    org: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-  },
-  'huron-e2e': {
-    user: 'admin@uc.e2e.huron-alpha.com',
-    pass: 'C1sco123!',
-    org: '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79',
-  },
-  'huron-e2e-partner': {
-    user: 'admin@ucpartner.e2e.huronalpha.com',
-    pass: 'C1sco123!',
-    org: '666a7b2f-f82e-4582-9672-7f22829e728d',
+  'aa-multisite-admin': {
+    user: 'AAIntPartner+Location1@gmail.com',
+    pass: 'Cisc0123!',
+    org: '82589e95-30c7-43de-94c5-04401747ebdd',
   },
   'account-admin': {
     user: 'phtest77+acc2@gmail.com',
     pass: 'Cisco123!!!',
     org: '58f01b76-2b3f-4c91-ad8a-e2af626fc7a5',
   },
-  'non-trial-admin': {
-    user: 'pbr-test-admin@squared2webex.com',
+  'contactcenter-admin': {
+    user: 'sunlight-atlas-test-admn@outlook.com',
+    pass: 'C1sco123!',
+    org: '36de4632-ccb9-4edf-8124-b74ce6943285',
+  },
+  'customer-regular-user': {
+    user: 'regUser2@csreptestdom.collaborate.com',
     pass: 'P@ssword123',
-    org: '4214d345-7caf-4e32-b015-34de878d1158',
-  },
-  'invite-admin': {
-    user: 'pbr-invite-user@squared2webex.com',
-    pass: 'P@ssword123',
-    org: '4214d345-7caf-4e32-b015-34de878d1158',
-  },
-  'support-admin': {
-    user: 'sqtest-admin-support@squared.example.com',
-    pass: 'C1sc0123!',
-    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
-  },
-  'media-super-admin': {
-    user: 'super-admin@mfusion1webex.com',
-    pass: 'C1sc01234!',
-    org: 'baab1ece-498c-452b-aea8-1a727413c818',
-  },
-  'media-fusion-admin': {
-    user: 'mediafusion54@yahoo.com',
-    pass: 'Cisco!23',
-    org: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+    org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
   'customer-support-admin': {
     user: 'admin@csreptestdom.collaborate.com',
@@ -102,24 +42,130 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
-  'customer-regular-user': {
-    user: 'regUser2@csreptestdom.collaborate.com',
+  'ft--atlas-f3745-auto-assign-licenses': {
+    user: 'atlaswebe2e+ft--atlas-f3745-auto-assign-licenses@gmail.com',
+    pass: 'Cisco123!',
+    org: '8078642f-ab1a-4740-bd0a-61738ea76bf0',
+  },
+  'gss-testAdmin': {
+    user: 'sjsite14-lhsieh@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15',
+  },
+  'huron-e2e': {
+    user: 'admin@uc.e2e.huron-alpha.com',
+    pass: 'C1sco123!',
+    org: '30fdb01e-0bb2-4ed4-97f4-84a2289bdc79',
+  },
+  'huron-e2e-partner': {
+    user: 'admin@ucpartner.e2e.huronalpha.com',
+    pass: 'C1sco123!',
+    org: '666a7b2f-f82e-4582-9672-7f22829e728d',
+  },
+  'huron-int1': {
+    user: 'admin@int1.huron-alpha.com',
+    pass: 'Cisco123!',
+    org: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
+  },
+  'huron-ui-test-partner': {
+    user: 'huron.ui.test.partner@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-i1238': {
+    user: 'huron.ui.test.partner+hi1238@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-i1484': {
+    user: 'huron.ui.test.partner+hi1484@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-cos-trial': {
+    user: 'huron.ui.test.partner+hcostrial@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-prod': {
+    user: 'huron.ui.test.partner+production@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'invite-admin': {
+    user: 'pbr-invite-user@squared2webex.com',
     pass: 'P@ssword123',
-    org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
+    org: '4214d345-7caf-4e32-b015-34de878d1158',
+  },
+  'media-fusion-admin': {
+    user: 'mediafusion54@yahoo.com',
+    pass: 'Cisco!23',
+    org: '2c3c9f9e-73d9-4460-a668-047162ff1bac',
+  },
+  'media-super-admin': {
+    user: 'super-admin@mfusion1webex.com',
+    pass: 'C1sc01234!',
+    org: 'baab1ece-498c-452b-aea8-1a727413c818',
+  },
+  'mockcisco-support-user': {
+    user: 'phtest77+testbilling@gmail.com',
+    pass: 'C1sc0123!',
+    org: 'd30a6828-dc35-4753-bab4-f9b468828688',
   },
   'multiple-subscription-user': {
     user: 'int-esub-1@mailinator.com',
     pass: 'P@ssword123',
     org: '9d173ec9-198e-430d-9363-688a333bdee7',
   },
+  'non-trial-admin': {
+    user: 'pbr-test-admin@squared2webex.com',
+    pass: 'P@ssword123',
+    org: '4214d345-7caf-4e32-b015-34de878d1158',
+  },
+  'partner-admin': {
+    // TODO: replace with original partner admin after more org cleanup
+    user: 'vivitron+atlaspartneradmin@gmail.com',
+    pass: 'P@ssword123',
+    org: 'c054027f-c5bd-4598-8cd8-07c08163e8cd',
+  },
+  'partner-reports': {
+    user: 'admin@sparkucreports-testpartner.com',
+    pass: 'P@ssword123',
+    org: 'd71b4d69-721a-41b1-ae4b-6e0305eab12b',
+  },
+  'partner-reports-sales-admin': {
+    user: 'kingkuntauser4+1715@gmail.com',
+    pass: 'C1sc0123!',
+    org: 'ce8d17f8-1734-4a54-8510-fae65acc505e',
+  },
+  'partner-sales-user': {
+    user: 'phtest77+salesadmin@gmail.com',
+    pass: 'P@ssword123',
+    org: '7e268021-dc11-4728-b39d-9ba0e0abb5e0',
+  },
+  'pbr-admin': {
+    user: 'pbr-org-admin@squared2webex.com',
+    pass: 'Atlas123!',
+    org: '4214d345-7caf-4e32-b015-34de878d1158',
+  },
+  'pbr-admin-test': {
+    user: 'pbr-org-admin-test@wx2.example.com',
+    pass: 'C1sco123!',
+    org: '4214d345-7caf-4e32-b015-34de878d1158',
+  },
   'selfsign-sso-admin': {
     user: 'phtest77+dontdeleteme@gmail.com',
     pass: 'C1sc0123!',
     org: 'e9e33cac-eb07-4c34-8240-d08a43d0adce',
   },
+  'sqtest-admin': {
+    user: 'sqtest-admin@squared.example.com',
+    pass: 'C1sco123!!',
+    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
+  },
   'sso-e2e-test-org': {
     user: 'fakegmuser+ssotestorg@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'C1sc01234!',
     org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8',
   },
   'sso-e2e-test-org-mailsac': {
@@ -129,52 +175,47 @@ var auth = {
     adId: 'atlasad\\abc',
     adPass: 'P@ssword123',
   },
-  'mockcisco-support-user': {
-    user: 'phtest77+testbilling@gmail.com',
+  'support-admin': {
+    user: 'sqtest-admin-support@squared.example.com',
     pass: 'C1sc0123!',
-    org: 'd30a6828-dc35-4753-bab4-f9b468828688',
+    org: '584cf4cd-eea7-4c8c-83ee-67d88fc6eab5',
   },
-  'contactcenter-admin': {
-    user: 'sunlight-atlas-test-admn@outlook.com',
-    pass: 'C1sco123!',
-    org: '36de4632-ccb9-4edf-8124-b74ce6943285',
+  'test-user': {
+    user: 'atlasmapservice+ll1@gmail.com',
+    pass: 'P@ssword123',
+    org: '75653d2f-1675-415c-aa5d-c027233f68fe',
   },
-  'aa-admin': {
-    user: 'indigoAA02+1@gmail.com',
-    pass: 'Cisc0123!',
-    org: '7e0f0f48-0582-444e-ac75-908a36b29539',
+  'virtualassistant-admin': {
+    user: 'sparkcarebot+admin@gmail.com',
+    pass: 'Cisco@123',
+    org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
-  'wbx-t31BTSTestAdmin-Reports-Configure': {
-    user: 'provteam+mc200@csgtrials.webex.com',
-    pass: 'Cisco!234',
-    org: '2039e7a3-6feb-4293-b87d-354ba68b0295',
+  'expertvirtualassistant-admin': {
+    user: 'sparkcareatlaseva+admin@gmail.com',
+    pass: 'C1sco@123',
+    org: '51a8b0f5-ba13-46c2-8ac1-c4b5b8b3f7ef',
   },
-  'wbx-t30BTSTestAdmin-Reports-Configure': {
-    user: 'provteam+mc25@csgtrials.webex.com',
-    pass: 'Cisco!234',
-    org: '52cd61a3-a950-47c3-8218-55429ff88eb7',
-  },
-  'wbx-t31BTSTestAdmin-UserSettings': {
-    user: 'T31-EE-lhsieh@mailinator.com',
-    pass: 'Cisco!23',
-    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad',
-  },
-  'wbx-t30BTSTestAdmin-UserSettings': {
-    user: 'provteam+ee@csgtrials.webex.com',
-    pass: 'Cisco!234',
-    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42',
-  },
-  'wbx-t31RegressionTestAdmin': {
+  'wbx-multipleCenterLicenseTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e',
   },
-  'wbx-t30RegressionTestAdmin': {
+  'wbx-singleCenterLicenseTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84',
   },
+  'wbx-siteCsvTestAdmin': {
+    user: 'dev-dmz-e2e@mailinator.com',
+    pass: 'Cisco!23',
+    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15',
+  },
   'wbx-t30BTSTestAdmin-MultiLicense': {
+    user: 'provteam+mc25@csgtrials.webex.com',
+    pass: 'Cisco!234',
+    org: '52cd61a3-a950-47c3-8218-55429ff88eb7',
+  },
+  'wbx-t30BTSTestAdmin-Reports-Configure': {
     user: 'provteam+mc25@csgtrials.webex.com',
     pass: 'Cisco!234',
     org: '52cd61a3-a950-47c3-8218-55429ff88eb7',
@@ -184,30 +225,35 @@ var auth = {
     pass: 'Cisco!234',
     org: '0988dcdc-af6e-4624-9387-b4b6fa7df4e3',
   },
-  'wbx-singleCenterLicenseTestAdmin': {
+  'wbx-t30BTSTestAdmin-UserSettings': {
+    user: 'provteam+ee@csgtrials.webex.com',
+    pass: 'Cisco!234',
+    org: 'fc3868a5-5bfd-47d5-b39f-52af4d6ede42',
+  },
+  'wbx-t30RegressionTestAdmin': {
     user: 't30sp6-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'a6c8fdc7-1b74-4d0c-9d24-bd8c20048a84',
   },
-  'wbx-multipleCenterLicenseTestAdmin': {
+  'wbx-t31BTSTestAdmin-Reports-Configure': {
+    user: 'provteam+mc200@csgtrials.webex.com',
+    pass: 'Cisco!234',
+    org: '2039e7a3-6feb-4293-b87d-354ba68b0295',
+  },
+  'wbx-t31BTSTestAdmin-UserSettings': {
+    user: 'T31-EE-lhsieh@mailinator.com',
+    pass: 'Cisco!23',
+    org: 'b98940d4-2985-46ef-8c1a-ae8c1ef723ad',
+  },
+  'wbx-t31RegressionTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e',
   },
-  'wbx-siteCsvTestAdmin': {
-    user: 'dev-dmz-e2e@mailinator.com',
-    pass: 'Cisco!23',
-    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15',
-  },
-  'gss-testAdmin': {
-    user: 'sjsite14-lhsieh@mailinator.com',
-    pass: 'Cisco!23',
-    org: '06db50d9-a129-4a1f-9ee9-bcff65246b15',
-  },
-  'huron-ui-test-partner': {
-    user: 'huron.ui.test.partner@gmail.com',
-    pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+  'hybrid-org': {
+    user: 'shivani.hybrid0712+a@gmail.com',
+    pass: 'Cisco123!',
+    org: '5abae65f-3157-4d09-ad29-7187b5cfbba2',
   },
 };
 
@@ -229,13 +275,13 @@ var getSSOToken = function (req, jar, creds) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch SSO token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var cookie = _.find(res.headers['set-cookie'], function (c) {
         return c.indexOf('cisPRODAMAuthCookie') !== -1;
       });
       if (!cookie) {
-        reject('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to retrieve a cookie with org credentials. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var token = cookie.match(/cisPRODAMAuthCookie=(.*); Domain/)[1];
       jar.setCookie('cisPRODiPlanetDirectoryPro=' + token + ' ; path=/; domain=.webex.com', 'https://idbroker.webex.com/');
@@ -269,12 +315,12 @@ var getAuthCode = function (req, creds) {
       var ref;
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch Auth Code from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var code = (ref = body.match(/<title>(.*)</)) != null ? ref[1] : undefined;
       if (!code) {
         console.error(body);
-        reject('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to extract Auth Code. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       resolve(code);
     });
@@ -301,27 +347,48 @@ var getAccessToken = function (req, code) {
     req.post(opts, function (err, res, body) {
       if (err) {
         console.error(err, body);
-        reject('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to fetch Access Token from CI. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       var obj = (function () {
         try {
           return JSON.parse(body);
         } catch (_error) {
           console.error(_error);
-          reject('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined));
+          reject(new Error('Failed to parse Access Token JSON. Status: ' + (res != null ? res.statusCode : undefined)));
         }
       })();
       if (!(obj != null ? obj.access_token : undefined)) {
         console.error(body);
-        reject('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined));
+        reject(new Error('Failed to extract Access Token. Status: ' + (res != null ? res.statusCode : undefined)));
       }
       resolve(obj.access_token);
     });
   });
 };
 
+var deleteThisOrgToken = function (req, token, user) {
+  return new Promise(function (resolve, reject) {
+    var orgId = auth[user].org
+    var options = {
+      url: `https://idbroker.webex.com/idb/oauth2/v1/tokens?orgid=${orgId}&clientid=${clientId}`,
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Host': 'idbroker.webex.com',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    };
+    req.delete(options, function (err, res, body) {
+      if (err) {
+        console.error(err, body);
+        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res ? res.statusCode : undefined)));
+      }
+      resolve();
+    });
+  });
+};
+
 module.exports = {
-  getBearerToken: function (user, callback) {
+  getBearerToken: function (user) {
     var creds = auth[user];
     if (!creds) {
       var message = 'Credentials for ' + user + ' not found';
@@ -340,7 +407,6 @@ module.exports = {
       .then(function (authCode) {
         return getAccessToken(req, authCode);
       })
-      .then(callback)
       .catch(function (error) {
         console.error('Unable to get bearer token.', error);
         return Promise.reject(error);
@@ -352,6 +418,19 @@ module.exports = {
     } catch (_error) {
       throw new Error('Unable to parse JSON: ' + data);
     }
+  },
+  deleteAllOrgTokens: function (token, user) {
+    var creds = auth[user];
+    if (!creds) {
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
+    }
+    return deleteThisOrgToken(request, token, user)
+      .catch(function (error) {
+        console.error('Unable to get remove token.', error);
+        return Promise.reject(error)
+      });
   },
   auth: auth,
 };

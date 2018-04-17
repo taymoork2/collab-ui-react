@@ -9,17 +9,17 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       '$scope',
       '$state',
       'HybridServicesClusterService',
-      'MediaClusterServiceV2');
+      'DeactivateMediaService');
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
     this.selectString = 'Select a cluster';
 
     spyOn(this.HybridServicesClusterService, 'deregisterEcpNode').and.returnValue(this.$q.resolve({}));
-    spyOn(this.MediaClusterServiceV2, 'get').and.returnValue({ then: _.noop });
-    spyOn(this.MediaClusterServiceV2, 'getAll').and.returnValue({ then: _.noop });
-    spyOn(this.MediaClusterServiceV2, 'moveV2Host').and.returnValue(this.$q.resolve({}));
-    spyOn(this.MediaClusterServiceV2, 'createClusterV2').and.returnValue(this.$q.resolve({}));
-    spyOn(this.MediaClusterServiceV2, 'deleteV2Cluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue({ then: _.noop });
+    spyOn(this.HybridServicesClusterService, 'moveEcpNode').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridServicesClusterService, 'preregisterCluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.DeactivateMediaService, 'deactivateHybridMediaService').and.returnValue(this.$q.resolve({}));
     spyOn(this.$state, 'go');
 
     this.$modalInstance = {
@@ -31,7 +31,6 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
         cluster: _.cloneDeep(this.jsonData.cluster),
         $modalInstance: this.$modalInstance,
         $filter: this.$filter,
-        MediaClusterServiceV2: this.MediaClusterServiceV2,
         $state: this.$state,
         $q: this.$q,
       });
@@ -40,7 +39,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.initController();
   });
 
-  it('check if the moveV2Host of MediaClusterServiceV2 is invoked', function () {
+  it('check if HybridServicesClusterService.moveEcpNode is invoked', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = _.cloneDeep(this.jsonData.hosts);
 
@@ -52,11 +51,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.controller.continue();
     expect(this.controller.isMove).toBe(true);
     this.$scope.$apply();
-    expect(this.MediaClusterServiceV2.moveV2Host).toHaveBeenCalled();
-    expect(this.MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(2);
+    expect(this.HybridServicesClusterService.moveEcpNode).toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.moveEcpNode.calls.count()).toEqual(2);
   });
 
-  it('check if the createClusterV2 of MediaClusterServiceV2 is invoked', function () {
+  it('check if the preregisterCluster of HybridServicesClusterService is invoked', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = _.cloneDeep(this.jsonData.hosts);
 
@@ -68,8 +67,8 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.controller.continue();
     expect(this.controller.isMove).toBe(true);
     this.$scope.$apply();
-    expect(this.MediaClusterServiceV2.createClusterV2).toHaveBeenCalled();
-    expect(this.MediaClusterServiceV2.createClusterV2.calls.count()).toEqual(2);
+    expect(this.HybridServicesClusterService.preregisterCluster).toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.preregisterCluster.calls.count()).toEqual(2);
   });
 
   it('should invoke HybridServicesClusterService.deregisterEcpNode when a node is being deregistered', function () {
@@ -87,7 +86,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     expect(this.HybridServicesClusterService.deregisterEcpNode.calls.count()).toEqual(2);
   });
 
-  it('check if the moveV2Host of MediaClusterServiceV2 is not invoked if the target cluster is not selected', function () {
+  it('check if HybridServicesClusterService.moveEcpNode is not invoked if the target cluster is not selected', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = _.cloneDeep(this.jsonData.hosts);
 
@@ -99,11 +98,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
     this.controller.continue();
     expect(this.controller.isMove).toBe(true);
-    expect(this.MediaClusterServiceV2.moveV2Host).not.toHaveBeenCalled();
-    expect(this.MediaClusterServiceV2.moveV2Host.calls.count()).toEqual(0);
+    expect(this.HybridServicesClusterService.moveEcpNode).not.toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.moveEcpNode.calls.count()).toEqual(0);
   });
 
-  it('check if the deleteV2Cluster of MediaClusterServiceV2 is invoked for empty cluster', function () {
+  it('check if the deregisterCluster of HybridServicesClusterService is invoked for empty cluster', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = [];
     this.controller.selectPlaceholder = this.selectString;
@@ -117,11 +116,11 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     this.controller.continue();
     this.$scope.$apply();
     expect(this.controller.isMove).toBe(true);
-    expect(this.MediaClusterServiceV2.deleteV2Cluster).toHaveBeenCalled();
-    expect(this.MediaClusterServiceV2.deleteV2Cluster.calls.count()).toEqual(1);
+    expect(this.HybridServicesClusterService.deregisterCluster).toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.deregisterCluster.calls.count()).toEqual(1);
   });
 
-  it('check if the deleteV2Cluster of MediaClusterServiceV2 is invoked when errorCount is present', function () {
+  it('check if the deregisterCluster of HybridServicesClusterService is invoked when errorCount is present', function () {
     this.controller.cluster = _.cloneDeep(this.jsonData.cluster);
     this.controller.hosts = [];
     this.controller.failedToDelete = false;
@@ -138,7 +137,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
 
     this.controller.continue();
     expect(this.controller.isMove).toBe(true);
-    expect(this.MediaClusterServiceV2.deleteV2Cluster).not.toHaveBeenCalled();
+    expect(this.HybridServicesClusterService.deregisterCluster).not.toHaveBeenCalled();
     expect(this.controller.failedToDelete).toBe(true);
   });
 

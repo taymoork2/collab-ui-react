@@ -1,0 +1,51 @@
+<div class="device-branding-modal">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+    <h3 class="modal-title" translate="globalSettings.deviceBranding.example.title"></h3>
+  </div>
+  <div class="modal-body trials">
+    <tabset>
+      <tab heading="{{'globalSettings.deviceBranding.example.wakeupTab' | translate}}">
+        <div class="tab-content">
+          <div class="section__description" translate="globalSettings.deviceBranding.example.wakeupDescription"></div>
+          <div class="imgflow">
+            <img src="/images/deviceBranding/osd1.png"/>
+            <img src="/images/deviceBranding/osd2.png"/>
+            <img src="/images/deviceBranding/touch.png"/>
+          </div>
+          <div class="section__description imgtitle"
+               translate="globalSettings.deviceBranding.example.defaultBrand"></div>
+          <div class="imgflow">
+            <img src="/images/deviceBranding/osd-branded1.png"/>
+            <img src="/images/deviceBranding/osd-branded2.png"/>
+            <img src="/images/deviceBranding/branded-touch10.png"/>
+          </div>
+          <div class="section__description imgtitle"
+               translate="globalSettings.deviceBranding.example.customBrandImageLogo"></div>
+        </div>
+      </tab>
+      <tab heading="{{'globalSettings.deviceBranding.example.awakeTab' | translate}}">
+        <div class="tab-content">
+          <div class="section__description" translate="globalSettings.deviceBranding.example.awakeDescription"></div>
+          <div class="imgflow">
+            <img ng-src="/images/deviceBranding/osd1-awake.png"/>
+            <img ng-src="/images/deviceBranding/touch-awake.png"/>
+          </div>
+          <div class="section__description imgtitle"
+               translate="globalSettings.deviceBranding.example.defaultBrand"></div>
+          <div class="imgflow">
+            <img ng-src="/images/deviceBranding/osd-awake-branded2.png"/>
+            <img ng-src="/images/deviceBranding/awake-branded-touch10.png"/>
+          </div>
+          <div class="section__description imgtitle"
+               translate="globalSettings.deviceBranding.example.customBrandLogo"></div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$dismiss()">
+      <span translate="common.done"></span>
+    </button>
+  </div>
+</div>

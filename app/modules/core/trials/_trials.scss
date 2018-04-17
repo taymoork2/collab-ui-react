@@ -1,7 +1,7 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .modal-footer.trials {
   display: flex;
@@ -18,7 +18,6 @@
 }
 
 .trials {
-
   //TODO: algendel need this until .message overwrite is fixed
   .message {
     font-size: inherit;
@@ -36,6 +35,16 @@
     position: relative;
     display: flex;
     align-items: center;
+  }
+
+  .cs-input-checkbox {
+    display: -ms-grid;
+    -ms-grid-columns: max-content;
+
+    .cs-checkbox {
+      width: max-content;
+      max-width: vr-adjust(440);
+    }
   }
 
   .cs-input-group .cs-input__secondary-label {
@@ -154,6 +163,12 @@
     &:hover {
       color: $color-primary-base;
     }
+  }
+
+  .cs-input__help-text {
+    margin-left: 2rem;
+    margin-bottom: 0.5rem;
+    margin-top: -0.5rem;
   }
 }
 
@@ -280,4 +295,7 @@
     color: $color-alerts-base;
     display: block;
   }
+
 }
+
+

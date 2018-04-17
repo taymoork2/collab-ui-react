@@ -8,12 +8,13 @@
     .factory('LineListService', LineListService);
 
   /* @ngInject */
-  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, Log, PstnService, UserLineAssociationService) {
+  function LineListService($q, $translate, Authinfo, Config, ExternalNumberService, FeatureToggleService, Log, PstnService, UserLineAssociationService) {
+    var vm = this;
     var customerId = Authinfo.getOrgId();
     var apiImplementation = undefined;
     var vendor = undefined;
     var carrierName = undefined;
-
+    vm.ishI1484 = false;
     // define functions available in this factory
     var service = {
       getLineList: getLineList,
@@ -24,7 +25,7 @@
     };
     return service;
 
-    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData) {
+    function getLineList(startIndex, count, sortBy, sortOrder, searchStr, filterType, gridData, isH1484) {
       var wildcard = '%';
 
       var queryString = {
@@ -33,9 +34,14 @@
 
       if (searchStr.length > 0) {
         queryString.userid = wildcard + searchStr + wildcard;
-        queryString.internalnumber = wildcard + searchStr + wildcard;
         queryString.externalnumber = wildcard + searchStr + wildcard;
 
+        if (isH1484) {
+          queryString.locationname = wildcard + searchStr + wildcard;
+          queryString.sitetositenumber = wildcard + searchStr + wildcard;
+        } else {
+          queryString.internalnumber = wildcard + searchStr + wildcard;
+        }
         queryString.predicatejoinoperator = 'or';
       }
 
@@ -152,6 +158,13 @@
       });
     }
 
+    function initToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          vm.ishI1484 = supported;
+        });
+    }
+
     function exportCSV() {
       // add export code here
 
@@ -165,7 +178,7 @@
       var page = 0;
       var exportedLines = [];
 
-      getLinesInBatches(0);
+      initToggle().finally(getLinesInBatches(0));
 
       function getLinesInBatches(startIndex) {
         getLineList(startIndex, linesPerPage, sortBy, sortOrder, searchStr, filterType)
@@ -173,7 +186,7 @@
             if (response.length > 0) {
               lines = lines.concat(response);
               page++;
-              getLinesInBatches((page * 100) + 1);
+              getLinesInBatches((page * 100));
             } else if (response.length <= 0) {
               Log.debug('No more lines returned. Exporting to file.');
 
@@ -183,17 +196,27 @@
               }
               // header line for CSV file
               var headerLine = {};
-              headerLine.internalNumber = 'internalNumber';
-              headerLine.externalNumber = 'externalNumber';
-              headerLine.userId = 'userId';
+              headerLine.internalNumber = $translate.instant('linesPage.headerLabelInternalNumber');
+              headerLine.externalNumber = $translate.instant('linesPage.headerLabelExternalNumber');
+              headerLine.userId = $translate.instant('linesPage.headerLabelUserId');
+              if (vm.ishI1484) {
+                headerLine.locationname = $translate.instant('linesPage.headerLabelLocation');
+              }
               exportedLines.push(headerLine);
 
               // data to export for CSV file
               for (var i = 0; i < lines.length; i++) {
                 var exportedLine = {};
-                exportedLine.internalNumber = lines[i].internalNumber;
+                if (vm.ishI1484) {
+                  exportedLine.internalNumber = lines[i].siteToSiteNumber;
+                } else {
+                  exportedLine.internalNumber = lines[i].internalNumber;
+                }
                 exportedLine.externalNumber = lines[i].externalNumber;
                 exportedLine.userId = lines[i].userId;
+                if (vm.ishI1484) {
+                  exportedLine.locationName = lines[i].locationName;
+                }
                 exportedLines.push(exportedLine);
               } // end of for-loop
               deferred.resolve(exportedLines);

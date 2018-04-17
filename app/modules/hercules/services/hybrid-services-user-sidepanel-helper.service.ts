@@ -1,8 +1,8 @@
-import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
-// import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import USSServiceModuleName, { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
+import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
 
 export interface IEntitlementNameAndState {
-  entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop';
+  entitlementName: 'squaredFusionUC' | 'squaredFusionEC' | 'sparkHybridImpInterop' | 'squaredFusionCal' | 'squaredFusionGCal';
   entitlementState: 'ACTIVE' | 'INACTIVE';
 }
 
@@ -10,6 +10,7 @@ export class HybridServiceUserSidepanelHelperService {
 
   /* @ngInject */
   constructor(
+    private Authinfo,
     private USSService: USSService,
     private Userservice,
   ) {}
@@ -44,10 +45,21 @@ export class HybridServiceUserSidepanelHelperService {
       });
   }
 
+  public getPreferredWebExSiteName(userObject, orgObject): string | undefined {
+    return this.Userservice.getPreferredWebExSiteForCalendaring(userObject) || _.get(orgObject, 'orgSettings.calSvcpreferredWebExSite', undefined);
+  }
+
+  public isPartnerAdminAndGot403Forbidden(response: ng.IHttpResponse<any>): boolean {
+    return this.Authinfo.isCustomerLaunchedFromPartner() && response.status === 403;
+  }
+
 
 }
 
 export default angular
-  .module('Hercules')
+  .module('hercules.services.user-sidepanel-helper-service', [
+    USSServiceModuleName,
+    userServiceModuleName,
+  ])
   .service('HybridServiceUserSidepanelHelperService', HybridServiceUserSidepanelHelperService)
   .name;

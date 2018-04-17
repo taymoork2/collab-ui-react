@@ -3,7 +3,7 @@
     <button cs-btn class="btn--primary" ng-click="$ctrl.save()" loading="$ctrl.isLoading">{{:: 'common.save' | translate }}</button>
     <button translate="common.cancel" ng-click="$ctrl.cancel()" ng-disabled="$ctrl.isLoading"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <div class="section-title-row"
       user-entitlements
       current-user="userOverview.currentUser"

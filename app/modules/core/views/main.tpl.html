@@ -1,56 +1,30 @@
-<div cr-feature-toggle feature-hide="atlas-2017-name-change" class="app-container">
-  <div ng-controller="HeaderCtrl as headerCtrl">
-    <cs-header ng-if="headerCtrl.headerTitle" navstyle="{{headerCtrl.navStyle}}" headertitle="{{headerCtrl.headerTitle}}" icon="{{headerCtrl.icon}}" show-read-only role="banner">
-      <cs-header-left>
-        <div class="top-bar-orgname" ng-controller="UserInfoController" ng-if="headerCtrl.showOrgName()">
-          <div class="top-bar-title" title="{{orgname}}">{{orgname}}</div>
-        </div>
-      </cs-header-left>
-      <cs-header-right>
-        <button ui-sref="my-company.info" ng-controller="UserInfoController" ng-if="headerCtrl.showMyCompany()" class="btn btn--header btn--myCompany">
-          <div>
-            <span class="header-label">{{orgname}}</span>
-            <i class="icon-settings icon"></i>
-          </div>
-        </button>
-        <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
-      </cs-header-right>
-    </cs-header>
-    <learn-more-overview-banner></learn-more-overview-banner>
-    <learn-more-report-banner></learn-more-report-banner>
-  </div>
+<div class="sidenav-app-container control-hub-container">
+  <read-only></read-only>
+  <learn-more-report-banner></learn-more-report-banner>
+  <learn-more-overview-banner></learn-more-overview-banner>
 
-  <div class="wrapper">
-    <div ng-controller="TabsCtrl as tCtrl">
-      <cs-left-nav pages="tCtrl.tabs"  ng-if="tCtrl.showLeftNav()"></cs-left-nav>
-    </div>
-    <div class="page-content-wrapper container-fluid" role="main">
-      <div class="row full collapse">
-        <div class="medium-12 columns content-view" ui-view="">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div cr-feature-toggle feature-show="atlas-2017-name-change" class="sidenav-app-container">
-  <div show-read-only></div>
-  <learn-more-overview-banner class="name-change"></learn-more-overview-banner>
-  <learn-more-report-banner class="name-change"></learn-more-report-banner>
+  <cr-banner></cr-banner>
   <div class="sidenav-admin-container">
     <div>
-    <div class="sidenav-admin-wrapper" ng-controller="TabsCtrl as tCtrl">
-      <cui-sidenav-admin image="{{tCtrl.image}}" headertitle="{{tCtrl.title}}" pages="tCtrl.tabs" ng-if="tCtrl.showLeftNav()" collapsed="tCtrl.isCollapsed">
-        <div ng-controller="HeaderCtrl as headerCtrl">
-          <cui-sidenav-admin-footer adminpages="headerCtrl.adminTabs" partner="{{headerCtrl.partnerInfo}}" collapsed="tCtrl.isCollapsed">
-            <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
-          </cui-sidenav-admin-footer>
-        </div>
-      </cui-sidenav-admin>
+      <div class="sidenav-admin-wrapper" ng-controller="TabsCtrl as tCtrl">
+        <cui-sidenav-admin image="{{tCtrl.image}}" ng-attr-icon="{{tCtrl.icon}}" pages="tCtrl.tabs" ng-if="tCtrl.showLeftNav()" collapsed="tCtrl.collapsed" on-resize-fn="tCtrl.onResize()">
+          <div ng-controller="HeaderCtrl as headerCtrl">
+            <cui-sidenav-admin-footer adminpages="headerCtrl.adminTabs" partner="{{headerCtrl.partnerInfo}}" collapsed="tCtrl.collapsed">
+              <cr-user-info ng-if="headerCtrl.showUserDropDown()"></cr-user-info>
+            </cui-sidenav-admin-footer>
+          </div>
+        </cui-sidenav-admin>
+      </div>
     </div>
-    </div>
-    <div class="sidenav-page-content-wrapper" role="main">
-      <div class="row full collapse">
-        <div class="content-view" ui-view="">
+    <div class="sidenav-page-wrapper">
+      <div class="sidenav-page-content-wrapper" role="main">
+        <user-task-status
+          cr-feature-toggle
+          feature-show="atlas-csv-import-task-manager">
+        </user-task-status>
+        <div class="row full collapse">
+          <div class="content-view" ui-view="">
+          </div>
         </div>
       </div>
     </div>

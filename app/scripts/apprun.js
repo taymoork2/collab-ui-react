@@ -4,9 +4,9 @@
   module.exports = wx2AdminWebClientApp;
 
   /* @ngInject */
-  function wx2AdminWebClientApp($animate, $interval, $location, $rootScope, $state, $translate, $window, Auth, Authinfo, Config,
-    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    StorageKeys, TokenService, TrackingId, Utils, TOSService) {
+  function wx2AdminWebClientApp($animate, $document, $interval, $location, $rootScope, $state, $timeout, $translate, $window, Auth, Authinfo, Config,
+    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, MetricsService, OnlineUpgradeService, PreviousState, SecurityPolicyViolationService, SessionStorage,
+    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowEventService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -14,7 +14,14 @@
     $rootScope.exporting = false;
     var LOGIN_STATE = 'login';
 
-    setNewRelicRouteName(LOGIN_STATE);
+    function timeoutReportLoadingMetrics() {
+      $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
+    }
+    if ($document.readyState === 'complete') {
+      timeoutReportLoadingMetrics();
+    } else {
+      WindowEventService.registerEventListener('load', timeoutReportLoadingMetrics);
+    }
 
     $rootScope.typeOfExport = {
       USER: 1,
@@ -28,6 +35,7 @@
     TokenService.setAuthorizationHeader();
 
     IdleTimeoutService.init();
+    SecurityPolicyViolationService.init();
 
     Config.setTestEnvConfig($location.search()['test-env-config']);
 
@@ -74,15 +82,14 @@
     $rootScope.status = 'init';
 
     if (!TokenService.getAccessToken()) {
-      var params;
-      if ($window.document.URL.indexOf('access_token') !== -1) {
-        params = getFromGetParams($window.document.URL);
+      var oauthCodeParams = Utils.getFromStandardGetParams($window.document.URL);
+      var accessTokenParams = Utils.getFromGetParams($window.document.URL);
+      if (_.has(accessTokenParams, 'access_token')) {
         $rootScope.status = 'loaded';
-        TokenService.setAccessToken(params.access_token);
-      } else if ($window.document.URL.indexOf('code') !== -1) {
-        params = getFromStandardGetParams($window.document.URL);
+        TokenService.setAccessToken(accessTokenParams.access_token);
+      } else if (_.has(oauthCodeParams, 'code')) {
         $rootScope.status = 'loading';
-        Auth.getNewAccessToken(params)
+        Auth.getNewAccessToken(oauthCodeParams)
           .then(function (token) {
             Log.debug('Got new access token: ' + token);
             $rootScope.status = 'loaded';
@@ -91,6 +98,15 @@
           }, function () {
             Auth.redirectToLogin();
           });
+      } else if (_.has(oauthCodeParams, 'error')) {
+        var error = oauthCodeParams.error;
+        if (error === Config.oauthError.unauthorizedClient || error === Config.oauthError.invalidScope || error === Config.oauthError.unsupportedResponseType) {
+          $state.go('login');
+        } else if (error === Config.oauthError.accessDenied) {
+          $state.go('unauthorized');
+        } else if (error === Config.oauthError.serverError || error === Config.oauthError.temporarilyUnavailable || error === Config.oauthError.serviceUnavailable) {
+          $state.go('backend-temp-unavailable');
+        }
       } else {
         Log.debug('No access code data.');
       }
@@ -116,8 +132,6 @@
     );
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-      setNewRelicRouteName(toState.name);
-
       // TrackingId is generated/incremented on each request
       // Clear the current TrackingId when a new state is loaded
       TrackingId.clear();
@@ -129,39 +143,5 @@
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || _.replace(toState.name, /\./g, '-') + '-state';
     });
-
-    function getFromStandardGetParams(url) {
-      var result = {};
-      var cleanUrlA = url.split('?');
-      var cleanUrl = cleanUrlA[1];
-      var params = cleanUrl.split('&');
-      for (var i = 0; i < params.length; i++) {
-        var param = params[i];
-        result[param.split('=')[0]] = param.split('=')[1];
-      }
-      return result;
-    }
-
-    function getFromGetParams(url) {
-      var result = {};
-      var cleanUrlA = url.split('#');
-      var cleanUrl = cleanUrlA[1];
-      for (var i = 2; i < cleanUrlA.length; i++) {
-        cleanUrl += '#' + cleanUrlA[i];
-      }
-      var params = cleanUrl.split('&');
-      for (i = 0; i < params.length; i++) {
-        var param = params[i];
-        result[param.split('=')[0]] = param.split('=')[1];
-      }
-      return result;
-    }
-
-    function setNewRelicRouteName(name) {
-      if (typeof newrelic !== 'undefined') {
-        /* global newrelic */
-        newrelic.setCurrentRouteName(name);
-      }
-    }
   }
 })();

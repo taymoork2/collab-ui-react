@@ -1,4 +1,5 @@
 import { CallForward, CallForwardAll, CallForwardBusy } from './callForward';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
 
 interface ITranslationMessages {
   placeholderText: string;
@@ -34,9 +35,13 @@ class CallForwardCtrl implements ng.IComponentController {
   public isError: boolean = false;
   public errorMsg: {};
 
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
+
  /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private Orgservice,
   ) {
     this.customTranslations = {
@@ -54,6 +59,8 @@ class CallForwardCtrl implements ng.IComponentController {
     this.Orgservice.getOrg(_.noop, null, params).then(response => {
       this.countryCode = response.data.countryCode;
     });
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -226,7 +233,7 @@ class CallForwardCtrl implements ng.IComponentController {
 
 export class CallForwardComponent implements ng.IComponentOptions {
   public controller = CallForwardCtrl;
-  public templateUrl = 'modules/huron/callForward/callForward.html';
+  public template = require('modules/huron/callForward/callForward.html');
   public bindings = {
     userVoicemailEnabled: '<',
     ownerType: '<',

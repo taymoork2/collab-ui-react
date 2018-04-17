@@ -2,22 +2,25 @@ import * as provisioner from '../../provisioner/provisioner';
 import { CustomerSetupPage } from '../pages/customerSetup.page';
 import * as os from 'os';
 import { CallSettingsPage } from '../pages/callSettings.page';
-import { AddUserPage } from '../pages/addUser.page';
+import { CallUserPage } from '../pages/callUser.page';
 import { AddPlacesPage } from '../pages/addPlaces.page';
+import * as featureToggle from '../../utils/featureToggle.utils';
 
 const addPlaces = new AddPlacesPage();
-const AddUser = new AddUserPage();
+const AddUser = new CallUserPage();
 const callSettings = new CallSettingsPage();
 const customerSetup = new CustomerSetupPage();
+const now = Date.now();
+
 /* globals partner, navigation, utils, LONG_TIMEOUT, wizard,manageUsersPage*/
 
 describe('Huron Functional: e2e-customer-setup', () => {
   const testPartner = 'huron-ui-test-partner';
   const CUSTOMER_NAME = `${os.userInfo().username}_e2e-customer-setup`;
   const CUSTOMER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}@gmail.com`;
-  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_captainphasma@gmail.com`;
-  const USER_FIRST_NAME = 'Captain';
-  const USER_LAST_NAME = 'Phasma';
+  const USER_EMAIL = `huron.ui.test.partner+${CUSTOMER_NAME}_darthvader_${now}@gmail.com`;
+  const USER_FIRST_NAME = 'Darth';
+  const USER_LAST_NAME = 'Vader';
   var partnerWindow;
 
   beforeAll(done => {
@@ -144,13 +147,20 @@ describe('Huron Functional: e2e-customer-setup', () => {
 
   describe('Add user flow', () => {
     describe('Create user flow', () => {
-      it('should navigate to Manage Users page and "Manualy add or modify users" radio button is selected', () => {
+      it('should navigate to Manage Users page', () => {
         utils.click(manageUsersPage.buttons.manageUsers);
-        utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-        utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
       });
       it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-        utils.click(manageUsersPage.buttons.next);
+        if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+          utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+        } else {
+          utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
+          utils.click(manageUsersPage.buttons.next);
+        }
+        if (featureToggle.features.atlasEmailSuppress) {
+          utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+          utils.click(manageUsersPage.buttons.next);
+        }
         utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
         utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
       });

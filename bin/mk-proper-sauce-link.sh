@@ -27,7 +27,7 @@ fi
 
 if ! is_ci; then
     echo "Warning: using limited-privilege Sauce creds (NOT compatible with urls from CI builds)."
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 mk_proper_sauce_link "$1"

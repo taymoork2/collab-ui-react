@@ -67,23 +67,23 @@ var ReportsPage = function () {
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 
   // Task Incoming
-  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Completed Tasks'));
-  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'The graph depicts the total number of tasks completed for today. Hover over the area chart for a breakdown of handled and abandoned tasks during a one hour time interval.'));
+  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Incoming Chats'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'This chart represents the total number of incoming chats for today. Hover over the chart to see the details.'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
   // Task Time
-  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Task Time Measure'));
-  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'The graph depicts the average time spent by a customer waiting for an agent and in getting their enquiries handled for yesterday. Hover over the area chart for a breakdown of average waiting time and average time taken to handle a customer enquiry during a one hour time interval.'));
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Chat Completion Time'));
+  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'This chart represents the average time taken to complete a chat for yesterday. Hover over the chart to see the details.'));
   this.taskTimeGraph = element(by.id('taskTimeDiv'));
 
   // Task Aggregate
-  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Tasks'));
-  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'The graph depicts the number of waiting and in-progress tasks aggregated for today. Hover over the area chart to view the count of waiting and in-progress tasks aggregated from the start of business hours.'));
+  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Chats'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'This chart represents the number of active and queued chats aggregated today. Hover over the chart to see the details.'));
   this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
 
   // Average CSAT
   this.averageCsatHeader = element(by.cssContainingText('.report-section-header', 'Customer Satisfaction'));
-  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'The graph depicts the customer satisfaction rating for today. Hover over the trend line to know the average customer satisfaction rating during a one hour time interval.'));
+  this.averageCsatDescription = element(by.cssContainingText('.report-description', 'This chart represents the average customer satisfaction rating for today. Hover over the chart to see the details.'));
   this.averageCsatGraph = element(by.id('averageCsatDiv'));
 
   this.showHideActiveVisibility = function (show, hide, partner) {

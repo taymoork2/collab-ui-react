@@ -1,6 +1,6 @@
-@import '~collab-amcharts/amcharts/plugins/export/export';
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-amcharts/amcharts/plugins/export/export';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .amcharts-export-menu .export-main > a,
 .amcharts-export-menu .export-delayed-capturing > a {

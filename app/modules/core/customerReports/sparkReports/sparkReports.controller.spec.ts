@@ -45,6 +45,7 @@ describe('Controller: Customer Reports Ctrl', function () {
     this.activeOptions.description = 'activeUsers.customerPortalDescription';
     this.secondaryActiveOptions = _.cloneDeep(this.ctrlData.activeUserSecondaryOptions);
     this.secondaryActiveOptions.description = 'activeUsers.customerMostActiveDescription';
+    this.secondaryActiveOptions.missingUsersErrorDescription = 'activeUsers.missingUsersError';
     this.secondaryActiveOptions.search = true;
     this.secondaryActiveOptions.sortOptions = _.cloneDeep(this.activeData.sortOptions);
     this.secondaryActiveOptions.table.headers = _.cloneDeep(this.activeData.headers);
@@ -538,6 +539,31 @@ describe('Controller: Customer Reports Ctrl', function () {
       expect(this.controller.QUALITY).toEqual(this.ctrlData.QUALITY);
       expect(this.controller.DETAILS).toEqual(this.ctrlData.DETAILS);
       expect(this.controller.filterArray.length).toEqual(4);
+    });
+
+    it('should have adjusted the startDate and endDate as time filter is Last 7 days', function() {
+      const sDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      const sTime = moment().subtract(7, 'days').format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
+    });
+
+    it('should have adjusted the startDate and endDate on time filter Changes', function() {
+      this.controller.timeSelected = this.defaults.timeFilter[1];
+      this.controller.timeUpdates.update();
+      this.$timeout.flush();
+      const sDate = moment().subtract(4, 'weeks').format('YYYY-MM-DD');
+      const sTime = moment().subtract(4, 'weeks').format('h:mm A');
+      const eDate = moment().format('YYYY-MM-DD');
+      const eTime = moment().format('h:mm A');
+      expect(this.controller.startDate).toEqual(sDate);
+      expect(this.controller.endDate).toEqual(eDate);
+      expect(this.controller.startTime).toEqual(sTime);
+      expect(this.controller.endTime).toEqual(eTime);
     });
 
     it('resetCards should alter the visible filterArray[x].toggle based on filters equals \'Details\'', function () {

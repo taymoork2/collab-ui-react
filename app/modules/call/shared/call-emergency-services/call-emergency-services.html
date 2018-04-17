@@ -1,0 +1,67 @@
+<div class="call-emergency-services">
+  <div ng-if="$ctrl.showES()">
+    <div ng-if="$ctrl.allowEcbnSetup">
+      <label class="sub-section__label" translate="spacesPage.ecn"></label>
+      <div ng-form="$ctrl.emergencyCallbackNumberForm">
+        <cs-select
+          ng-model="$ctrl.number"
+          options="$ctrl.numberOptions"
+          labelfield="label"
+          valuefield="value"
+          placeholder="$ctrl.selectHolder"
+          cs-required="$ctrl.isNumberRequired()"
+          is-disabled="$ctrl.isNumberDisabled"
+          filter="true"
+          on-change-fn="$ctrl.onEcbnChange(value)"
+          refresh-data-fn="$ctrl.getEmegencyCallBackNumbers(filter)"
+          wait-time="200">
+        </cs-select>
+      </div>
+      <div ng-if="$ctrl.showNumberMessage()">
+        <p class="ces-messages">
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_NO_NUMBERS">
+              <span><i class="icon icon-warning"></i></span>
+              <span translate="settingsServiceNumber.needEcbnNoOptions"></span>
+          </div>
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_NOT_SELECTED">
+              <span><i class="icon icon-error"></i></span>
+              <span translate="settingsServiceNumber.needEcbnOptions"></span>
+          </div>
+          <div ng-if="$ctrl.stateECBN === $ctrl.ECBN_MISSING_ASSIGN">
+            <span><i class="icon icon-error"></i></span>
+            <span translate="settingsServiceNumber.missingECBNError"></span>
+        </div>
+        </p>
+      </div>
+    </div>
+    <label class="sub-section__label ces-address-label" translate="spacesPage.esa"></label>
+    <div ng-if="!$ctrl.addressValidating && !$ctrl.address.validated">
+      <hr-service-address
+        ng-form="$ctrl.emergencyServiceAddressForm"
+        address="$ctrl.address"
+        hide-search="true"
+        hide-address="true"
+        read-only="$ctrl.addressReadOnly">
+      </hr-service-address>
+      <button class="btn--primary" ng-disabled="$ctrl.emergencyServiceAddressForm.$invalid" ng-click="$ctrl.onValidateAddress()">
+        <span translate="common.validate"></span>
+      </button>
+    </div>
+
+    <div class="text-center" ng-show="$ctrl.addressValidating">
+      <i class="icon icon-spinner icon-2x text-center"></i>
+    </div>
+    <div ng-if="$ctrl.address.validated === true">
+      <h6 translate="trialModal.pstn.addrFound"></h6>
+      <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
+      <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
+      <a href class="primary" ng-click="$ctrl.onResetAddress()" translate="trialModal.pstn.addrRetry" id="emergencyServiceBtn"></a>
+    </div>
+  </div>
+  <div ng-if="!$ctrl.showES()">
+    <p class="ces-messages ces-top-padding">
+      <span><i class="icon icon-warning warning"></i></span>
+      <span translate="emergencyServices.warnNoPstn"></span>
+    </p>
+  </div>
+</div>

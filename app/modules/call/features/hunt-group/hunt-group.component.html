@@ -1,6 +1,6 @@
 <div ng-if="!$ctrl.huntGroupId">
-  <ng-include src="'modules/call/features/hunt-group/hunt-group-add.html'"></ng-include>
+  <uc-hunt-group-add></uc-hunt-group-add>
 </div>
 <div ng-if="$ctrl.huntGroupId">
-  <ng-include src="'modules/call/features/hunt-group/hunt-group-edit.html'"></ng-include>
+  <uc-hunt-group-edit></uc-hunt-group-edit>
 </div>

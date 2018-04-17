@@ -1,0 +1,24 @@
+<p class="filetopdrop">{{$ctrl.header | translate}}</p>
+<div ngf-drop class="filearea"
+     ng-class="{filled: $ctrl.imgFile.hasImg}"
+     ngf-select
+     ng-model="$ctrl.imgFile.file"
+     ngf-drag-over-class="'dragover'"
+     ngf-pattern="'image/*'">
+  <div class="dropinfo "
+       ng-class="{imgpresent: $ctrl.imgFile.hasImg, imgbox: $ctrl.imgFile.hasImg}">
+                <span class="body-small span-text"
+                      translate="globalSettings.deviceBranding.dropFile"></span>
+    <i class="icon icon-upload large"></i>
+  </div>
+  <div class="tmb imgbox logo" ngf-background="$ctrl.imgFile.file"></div>
+  <div class="tmb imgbox logo" ng-if="$ctrl.imgFile.tempDownloadUrl && !$ctrl.imgFile.file" ng-style="{'background-image': 'url('+$ctrl.imgFile.tempDownloadUrl+')'}"></div>
+</div>
+<div class="fileinfo" ng-if="$ctrl.imgFile.hasImg">
+  <progressbar max="100" value="$ctrl.imgFile.uploadProgress" type="primary" animate="false" ng-show="$ctrl.imgFile.uploadProgress>=0"></progressbar>
+  <div class="name" ng-if="$ctrl.imgFile.uploadProgress<0">{{$ctrl.imgFile.file.name || ('globalSettings.deviceBranding.fileApplied' | translate)}}</div>
+  <div class="name" ng-if="$ctrl.imgFile.uploadProgress>=0">{{$ctrl.imgFile.status | translate}}</div>
+  <div ng-if="$ctrl.imgFile.uploadProgress<0">{{$ctrl.imgFile.fileSize | bytesFilter : 0 }}</div>
+  <div ng-if="$ctrl.imgFile.uploadProgress>=0">{{$ctrl.imgFile.uploadProgress}}%</div>
+  <a class="link" ng-click="$ctrl.imgFile.removeFile()" translate="globalSettings.deviceBranding.removeFile"></a>
+</div>

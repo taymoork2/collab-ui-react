@@ -20,7 +20,7 @@ describe('Component: mediaMgrModal', () => {
   const EMPTY_TRASH = '.mb-panel button.btn';
   const SEARCH_FILTER = 'cs-searchfilter';
   const FILE_UPLOAD = 'i.icon.icon-plus.icon-2x';
-  const DROPDOWN_OPTIONS = '.dropdown-menu li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu li';
 
   const mediaList: IMedia[] = [
     { mediaId : 'a16db6c1-08e8-4386-87c0-477917b03c27', mediaState : 'PROCESSING', filename : 'fall-ads-2017.mp3', description : '', displayName : 'fall-ads-2017', duration : '', lastModifyTime : { nano : 203000000, epochSecond : 1497548448 }, size : 1769392, errorInfo : '' },

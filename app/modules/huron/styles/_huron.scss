@@ -5,13 +5,12 @@
 @import '../features/_features';
 @import '../sharedLine/_shared-line';
 @import '../externalNumbers/_external-numbers';
-@import '../pstnSetup/_pstn-setup';
-@import '../pstnSetup/pstnToS/_pstn-tos';
 @import '../pstn/pstnNumberSearch/_pstn-number-search';
 @import '../details/_huron-details';
-@import '../snr/_snr';
 @import '../cdrLogs/cdrLadderDiagram/_cdr-diagram';
 @import '../speedDials/_speeddials';
 @import '../overview/_usercalloverview';
+@import '../overview/_carevoicefeatures';
 @import '../overview/directoryNumberList';
+@import '../phoneButtonLayout/_phoneButtonLayout';
 @import '../pstn/_pstn';

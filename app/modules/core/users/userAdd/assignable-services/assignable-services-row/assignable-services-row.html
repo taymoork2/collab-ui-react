@@ -1,0 +1,88 @@
+<cr-collapsible-row
+  header-class="column-subscription-header paid subscription__header"
+  content-class="row-licenses subscription__content"
+  row-id="$ctrl.subscription.subscriptionId"
+  row-title="$ctrl.subscriptionLabel"
+  on-update="$ctrl.recvUpdate($event)"
+  show-content="$ctrl.showContent"
+  >
+  <div class="small-4 columns column-paid column__messaging">
+    <div ng-if="$ctrl.messageLicenses.length">
+      <div translate="onboardModal.message" class="license__category"></div>
+
+      <!-- messaging -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
+        l10n-label="onboardModal.paidCiscoSparkMessaging"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
+      </assignable-license-checkbox>
+
+      <!-- messenger -->
+      <assignable-user-entitlement-checkbox ng-if="$ctrl.showJabberInteropCheckbox()"
+        item-id="'messengerInterop'"
+        l10n-label="onboardModal.ciscoSparkJabberInterop"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        auto-assign-template-data="$ctrl.autoAssignTemplateData"
+        >
+      </assignable-user-entitlement-checkbox>
+    </div>
+  </div>
+
+  <div class="small-4 columns column-paid column__meeting">
+    <!-- basic meeting (25 party) -->
+    <div ng-if="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)">
+      <div translate="firstTimeWizard.basicMeetings" class="license__category"></div>
+
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
+        l10n-label="firstTimeWizard.meetingsInSpark"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
+      </assignable-license-checkbox>
+    </div>
+
+    <!-- advanced meeting (webex variants) -->
+    <assignable-advanced-meetings
+      licenses="$ctrl.advancedMeetingLicenses"
+      site-urls="$ctrl.advancedMeetingSiteUrls"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      auto-assign-template-data="$ctrl.autoAssignTemplateData">
+    </assignable-advanced-meetings>
+  </div>
+
+  <div class="small-4 columns column-paid column__communication">
+    <div ng-if="$ctrl.callLicenses.length">
+      <div translate="onboardModal.call" class="license__category"></div>
+
+      <!-- call -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
+        l10n-label="onboardModal.paidSparkCall"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
+      </assignable-license-checkbox>
+    </div>
+  </div>
+
+  <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
+    <div ng-if="$ctrl.careLicenses.length">
+      <div class="license__category">
+        <span translate="onboardModal.contactCenter" class="license__category-text"></span><cr-icon-info
+          l10n-tooltip="userManage.autoAssignTemplate.edit.careDisabledTooltip"
+          tooltip-placement="bottom"
+          >
+        </cr-icon-info>
+      </div>
+
+      <!-- care - K1 -->
+      <assignable-license-checkbox
+        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        is-disabled="$ctrl.disableCareLicenseSelection()"
+        l10n-label="onboardModal.paidCDC"
+        on-update="$ctrl.onUpdate({ $event: $event })"
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
+      </assignable-license-checkbox>
+    </div>
+  </div>
+</cr-collapsible-row>

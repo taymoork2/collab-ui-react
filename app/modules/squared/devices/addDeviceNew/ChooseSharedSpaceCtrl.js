@@ -4,7 +4,7 @@
   angular.module('Core')
     .controller('ChooseSharedSpaceCtrl', ChooseSharedSpaceCtrl);
   /* @ngInject */
-  function ChooseSharedSpaceCtrl(CsdmFilteredViewFactory, $stateParams, $translate) {
+  function ChooseSharedSpaceCtrl(CsdmFilteredViewFactory, $stateParams, $translate, $window) {
     var vm = this;
     var wizardData = $stateParams.wizard.state().data;
     vm.title = wizardData.title;
@@ -93,11 +93,13 @@
     vm.existing = function () {
       vm.radioSelect = 'existing';
       vm.toggle();
+      $stateParams.wizard.scrollToBottom($window);
     };
 
     vm.create = function () {
       vm.radioSelect = 'create';
       vm.toggle();
+      $stateParams.wizard.scrollToBottom($window);
     };
 
     vm.toggle = function () {

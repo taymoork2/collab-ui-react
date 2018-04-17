@@ -6,8 +6,7 @@ import phoneNumberModule from 'modules/huron/phoneNumber';
 
 export default angular
   .module('call.settings.dialing', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     phoneNumberModule,
   ])

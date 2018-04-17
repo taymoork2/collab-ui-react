@@ -1,9 +1,14 @@
-<script type="text/ng-template" id="callFeatureMemberTemplate.html">
+<script type="text/ng-template" id="callFeatureMemberWithNumberTemplate.html">
   <a class="member__name">
     <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
   </a>
   <a class="member__line">
     <span ng-bind-html="match.label.number | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<script type="text/ng-template" id="callFeatureMemberWithUsernameTemplate.html">
+  <a class="member__name">
+    <span ng-if="match.label.showName" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="typeahead-large" ng-if="$ctrl.isNew">
@@ -12,7 +17,7 @@
     ng-class="{'error': $ctrl.errorMemberInput}"
     typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
     typeahead-on-select="$ctrl.selectMember($item)"
-    typeahead-template-url="callFeatureMemberTemplate.html"
+    typeahead-template-url="{{$ctrl.memberSearchTemplate}}"
     typeahead-min-length="3"
     typeahead-wait-ms="200"
     placeholder="{{:: 'common.searchAddMembers' | translate}}"
@@ -29,13 +34,13 @@
       ng-model="$ctrl.selectedMember"
       typeahead="member for member in $ctrl.getMemberList($viewValue) | limitTo:10"
       typeahead-on-select="$ctrl.selectMember($item)"
-      typeahead-template-url="callFeatureMemberTemplate.html"
+      typeahead-template-url="{{$ctrl.memberSearchTemplate}}"
       typeahead-min-length="3"
       typeahead-wait-ms="200"
       placeholder="{{::'common.selectMembers' | translate}}"
       cs-input-size="small-12"
       autocomplete="off"
-      ng-disabled="$ctrl.reordering"
+      ng-disabled="$ctrl.isReordering"
       no-dirty>
     <div class="search-member">
       <i class="icon icon-search"></i>
@@ -46,7 +51,7 @@
           placeholder="{{::'common.searchMembers' | translate}}"
           ng-model="$ctrl.searchStr"
           ng-change="$ctrl.filterDisplayedMembers()"
-          ng-disabled="$ctrl.reordering"
+          ng-disabled="$ctrl.isReordering"
           no-dirty>
     </div>
   </div>
@@ -55,9 +60,9 @@
   <div class="members-header">
     <span ng-if="$ctrl.dragAndDrop" translate="common.members"></span>
     <span ng-if="$ctrl.dragAndDrop" class="drag-and-drop pull-right">
-      <span ng-if="!$ctrl.reordering"><a class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
-      <span ng-if="$ctrl.reordering"><a class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
-      <span ng-if="$ctrl.reordering" class="apply-reorder"><a ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
+      <span ng-if="!$ctrl.isReordering"><a href class ng-click="$ctrl.onReorderClicked()" translate="common.reorder"></a></span>
+      <span ng-if="$ctrl.isReordering"><a href class="cancel-reorder" ng-click="$ctrl.onCancelReorderClicked()" translate="common.cancel"></a></span>
+      <span ng-if="$ctrl.isReordering" class="apply-reorder"><a href ng-click="$ctrl.onApplyReorderClicked()" translate="common.apply"></a></span>
     </span>
     <span
       ng-if="$ctrl.getMemberCount() > 6 && $ctrl.isNew"
@@ -67,13 +72,14 @@
     </span>
   </div>
   <cs-card-layout>
-    <div  id="membersContainer" class="members-container" ng-class="{'members-reorder': $ctrl.reordering, 'members-reorderable': $ctrl.dragAndDrop}">
+    <div  id="membersContainer" class="members-container" ng-class="{'members-reorder': $ctrl.isReordering, 'members-reorderable': $ctrl.dragAndDrop}" >
       <cs-card-member
         ng-repeat="member in $ctrl.displayedMembers track by member.uuid"
         cs-type="{{::member.cardType}}"
         cs-member-type="{{::member.type}}"
         cs-complex-card-type="{{::member.complexCardType}}"
         cs-id="member.uuid"
+        cs-index="$index"
         cs-title="member.name"
         cs-subtitle="member.number"
         cs-radios="member.memberItems"
@@ -81,10 +87,14 @@
         cs-checkboxes="member.memberItems"
         cs-items="member.memberItems"
         cs-image="member.thumbnailSrc"
-        cs-reordering="$ctrl.reordering"
+        cs-reordering="$ctrl.isReordering"
+        cs-reorder-keypress="$ctrl.itemKeypress($event, id)"
         on-update="$ctrl.onUpdateCardMember(id, data)"
         cs-remove-label="$ctrl.removeStr"
-        on-remove="$ctrl.unSelectMember(member)">
+        on-remove="$ctrl.unSelectMember(member)"
+        is-selected="$ctrl.isSelectedItem(member)"
+        delete-aria-label="{{::'common.delete' | translate}}"
+        toggle-aria-label="{{::'common.toggleData' | translate}}">
       </cs-card-member>
     </div>
   </cs-card-layout>
@@ -95,12 +105,10 @@
       translate="common.memberCount"
       translate-values="{count: $ctrl.getMemberCount()}">
     </span>
-    <a ng-click="$ctrl.onShowMoreClicked()"
-      ng-show="$ctrl.showMoreButton() && !$ctrl.reordering">
+    <a href ng-click="$ctrl.onShowMoreClicked()" ng-show="$ctrl.showMoreButton() && !$ctrl.isReordering">
       <span translate="common.showMore"></span>
     </a>
-    <a ng-click="$ctrl.onShowLessClicked()"
-      ng-show="$ctrl.showLessButton() && !$ctrl.reordering">
+    <a href ng-click="$ctrl.onShowLessClicked()" ng-show="$ctrl.showLessButton() && !$ctrl.isReordering">
       <span translate="common.showLess"></span>
     </a>
   </div>

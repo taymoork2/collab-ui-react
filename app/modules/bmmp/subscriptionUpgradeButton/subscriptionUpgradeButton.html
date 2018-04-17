@@ -1,9 +1,9 @@
 <span class="cisco-bmmp-cta-widget" data-changeplan-override="{{$ctrl.bmmpAttr.changeplanOverride}}" data-product-instance-id="{{$ctrl.bmmpAttr.productInstanceId}}" data-subscription-id="{{$ctrl.bmmpAttr.subscriptionId}}" data-styled="true" data-application-page="all" data-widget-location="{{::$ctrl.widgetLocation}}">
-  <button
+  <button cs-btn
     ng-if="$ctrl.showLoadingButton"
     class="loading-button"
-    cs-btn
     loading="true"
+    aria-label="{{:: 'common.loading' | translate}}"
     disabled>
   </button>
 </span>

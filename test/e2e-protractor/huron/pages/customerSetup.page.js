@@ -32,7 +32,7 @@ export class CustomerSetupPage {
       title: element(by.cssContainingText('.section__info', 'PSTN Contract Information')),
     };
     this.phoneNumbers = {
-      title: element.all(by.cssContainingText('.section__info> h4.ng-scope', 'Phone Numbers')).last(),
+      title: element.all(by.cssContainingText('.section__info> h4', 'Phone Numbers')).last(),
     };
     this.trialFinish = {
       title: element(by.cssContainingText('.splash-msg__title', 'Your trial is ready')),
@@ -45,16 +45,16 @@ export class CustomerSetupPage {
     };
     this.wizCallSetting = {
       companyVoiceMail: {
-        lable: element(by.cssContainingText('.control-label.ng-scope', 'Company Voicemail')),
+        lable: element(by.cssContainingText('.control-label', 'Company Voicemail')),
         toggle: element(by.css('[for="companyVoicemailToggle"]')),
       },
     };
     this.wizEnterpriseSetting = {
       subDomainInput: element(by.id('sipDomainInput')),
-      checkAvailabilityBtn: element(by.css('.btn.btn--cta.ng-isolate-scope')),
+      checkAvailabilityBtn: element(by.css('.btn.btn--cta')),
     };
     this.wizFinish = {
-      message: element.all(by.css('.finish-page.ng-scope>.ng-scope')).first(),
+      message: element.all(by.css('.finish-page>.ng-scope')).first(),
     };
     this.services = {
       title: element(by.css('.page-header__title')),

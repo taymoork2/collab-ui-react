@@ -1,0 +1,79 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button class="close" ng-click="$ctrl.dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
+    <h5 class="modal-title" translate="servicesOverview.cards.hybridCalendar.googlePrerequisites.title"></h5>
+  </div>
+  <div class="modal-body hybrid-service-prerequisites">
+
+    <div class="intro">
+      <p translate="servicesOverview.cards.hybridCalendar.googlePrerequisites.intro"></p>
+      <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+        <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+      </button>
+    </div>
+
+    <div class="steps-list">
+      <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.gSuiteOrganization"
+        id="checkboxGoogle1"
+        name="checkboxGoogle1"
+        ng-change="$ctrl.processChange('gSuiteOrganization', $ctrl.checkboxes.gSuiteOrganization)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.gSuiteOrganization' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.webExSite"
+        id="checkboxGoogle2"
+        name="checkboxGoogle2"
+        ng-change="$ctrl.processChange('webExSite', $ctrl.checkboxes.webExSite)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.webExSite' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.sparkOrganization"
+        id="checkboxGoogle3"
+        name="checkboxGoogle3"
+        ng-change="$ctrl.processChange('sparkOrganization', $ctrl.checkboxes.sparkOrganization)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.sparkOrganization' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.matchingEmails"
+        id="checkboxGoogle4"
+        name="checkboxGoogle4"
+        ng-change="$ctrl.processChange('matchingEmails', $ctrl.checkboxes.matchingEmails)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.matchingEmails' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.aclAdminAccount"
+        id="checkboxGoogle5"
+        name="checkboxGoogle5"
+        ng-change="$ctrl.processChange('aclAdminAccount', $ctrl.checkboxes.aclAdminAccount)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.aclAdminAccount' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.removeHangouts"
+        id="checkboxGoogle6"
+        name="checkboxGoogle6"
+        ng-change="$ctrl.processChange('removeHangouts', $ctrl.checkboxes.removeHangouts)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.googlePrerequisites.removeHangouts' | translate}}">
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$ctrl.close()">
+      <span translate="common.close"></span>
+    </button>
+  </div>
+</div>

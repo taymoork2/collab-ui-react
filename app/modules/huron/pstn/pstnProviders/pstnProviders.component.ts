@@ -6,7 +6,7 @@ import { PstnProvidersService } from './pstnProviders.service';
 
 export class PstnProvidersComponent implements ng.IComponentOptions {
   public controller = PstnProvidersCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnProviders/pstnProviders.html';
+  public template = require('modules/huron/pstn/pstnProviders/pstnProviders.html');
   public bindings = {
     onChangeFn: '&',
     onReadyFn: '&',

@@ -1,61 +1,75 @@
-import { OnlineUpgradeService } from './upgrade.service';
-import { Notification } from 'modules/core/notifications';
-import { IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr, IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { OrganizationDeleteService } from 'modules/core/organizations/organization-delete/organization-delete.service';
 
 class OnlineUpgrade {
-  public subscriptionId: string;
-  public cancelLoading: boolean = false;
-  public showCancelButton: boolean = false;
-  public nameChangeEnabled: boolean;
+  public showBmmpButton: boolean = false;
+  public showMoreOptionsButton: boolean = false;
+  public bodyText: string = '';
+  public titleText: string = '';
   public bmmpAttr: IBmmpAttr;
+  private accountExpiredModal: IToolkitModalServiceInstance;
 
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
+    private $translate: ng.translate.ITranslateService,
     private Auth,
     private Authinfo,
-    private Notification: Notification,
-    private OnlineUpgradeService: OnlineUpgradeService,
-    private FeatureToggleService,
+    private OnlineUpgradeService,
+    private OrganizationDeleteService: OrganizationDeleteService,
   ) {}
 
   public $onInit(): void {
-    this.FeatureToggleService.atlas2017NameChangeGetStatus().then((toggle: boolean): void => {
-      this.nameChangeEnabled = toggle;
-    });
-
-    this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
-      const productInstance = _.find(productInstances, (instance: any) => {
-        return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+    if (this.OnlineUpgradeService.isPending()) {
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.pendingBody');
+      this.titleText = this.$translate.instant('onlineUpgradeModal.pendingTitle');
+    } else if (this.OnlineUpgradeService.isFreemium()) {
+      this.titleText = this.$translate.instant('onlineUpgradeModal.freemiumTitle');
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.freemiumBody');
+      this.showBmmpButton = true;
+    } else {
+      this.titleText = this.$translate.instant('onlineUpgradeModal.expiredTitle');
+      this.bodyText = this.$translate.instant('onlineUpgradeModal.body');
+      this.showBmmpButton = true;
+      // allow customer to downgrade to Freemium
+      this.showMoreOptionsButton = !this.OnlineUpgradeService.hasCancelledSubscriptions() &&
+                                   !this.OnlineUpgradeService.hasOnlySparkSubscriptions() &&
+                                   !this.OnlineUpgradeService.hasFreemiumSubscription();
+    }
+    if (!this.showMoreOptionsButton) {
+      this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+      .then((result) => {
+        this.showMoreOptionsButton = result;
       });
+    }
+    if (this.showBmmpButton) {
+      this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
+        const productInstance = _.find(productInstances, (instance: any) => {
+          return instance.subscriptionId === this.OnlineUpgradeService.getSubscriptionId();
+        });
+        this.bmmpAttr = {
+          subscriptionId: productInstance.subscriptionId,
+          productInstanceId: productInstance.productInstanceId,
+          changeplanOverride: '',
+        };
+      });
+    }
+  }
 
-      const isFreemium = _.includes(productInstance.name, 'Free');
-
-      this.bmmpAttr = {
-        subscriptionId: productInstance.subscriptionId,
-        productInstanceId: productInstance.productInstanceId,
-        changeplanOverride: '',
-      };
-
-      this.showCancelButton = !isFreemium && !this.OnlineUpgradeService.hasCancelledSubscriptions();
+  public openAccountExpiredModal(): void {
+    this.dismissAccountExpiredModal();
+    this.accountExpiredModal = this.$modal.open({
+      template: '<account-expired-modal dismiss="$dismiss()"></account-expired-modal>',
+      backdrop: 'static',
+      keyboard: false,
     });
   }
 
-  public cancel(): void {
-    this.cancelLoading = true;
-    this.OnlineUpgradeService.cancelSubscriptions()
-      .then(() => {
-        this.Notification.success('onlineUpgradeModal.cancelSuccess');
-        this.OnlineUpgradeService.dismissModal();
-        this.$state.go('login', {
-          reauthorize: true,
-        }, {
-          reload: true,
-        });
-      })
-      .finally(() => {
-        this.cancelLoading = false;
-      });
+  public dismissAccountExpiredModal(): void {
+    if (this.accountExpiredModal) {
+      this.accountExpiredModal.dismiss();
+    }
   }
 
   public logout(): void {
@@ -65,5 +79,5 @@ class OnlineUpgrade {
 
 export class OnlineUpgradeComponent implements ng.IComponentOptions {
   public controller = OnlineUpgrade;
-  public templateUrl = 'modules/online/upgrade/upgradeModal.html';
+  public template = require('modules/online/upgrade/upgradeModal.html');
 }

@@ -34,7 +34,7 @@ class ConfirmAtaRebootModal {
       },
       controllerAs: 'car',
       controller: 'ConfirmAtaRebootController',
-      templateUrl: 'modules/squared/devices/confirm-ata-reboot/confirm-ata-reboot.tpl.html',
+      template: require('modules/squared/devices/confirm-ata-reboot/confirm-ata-reboot.tpl.html'),
       modalId: 'confirmAtaRebootModal',
       type: 'dialog',
     }).result;

@@ -10,7 +10,7 @@ import { Notification } from 'modules/core/notifications';
  *    - call this.downloadCsv()
  */
 export class CsvDownloadComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/csvDownload/csvDownload.component.html';
+  public template = require('modules/core/csvDownload/csvDownload.component.html');
   public controller = CsvDownloadCtrl;
   public bindings = {
     type: '@',                  // what type of file is being downloaded
@@ -121,7 +121,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
             // warn user this might take a while and get confirmation
             this.$modal.open({
               type: 'dialog',
-              templateUrl: 'modules/core/csvDownload/csvDownloadConfirm.tpl.html',
+              template: require('modules/core/csvDownload/csvDownloadConfirm.tpl.html'),
               controller: function () {
                 const vm = this;
                 vm.messageBody1 = this.CsvDownloadService.downloadInProgress ? this.$translate.instant('csvDownload.confirmCsvCancelMsg') : '';
@@ -179,6 +179,10 @@ class CsvDownloadCtrl implements ng.IComponentController {
     } else {
       this.Notification.error('csvDownload.unsupported');
     }
+  }
+
+  public getDownloadTranslation() {
+    return this.anchorText ? this.anchorText : this.$translate.instant('common.download');
   }
 
   public goToDownload() {

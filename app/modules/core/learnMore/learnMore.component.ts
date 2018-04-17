@@ -22,7 +22,7 @@ export class LearnMoreCtrl {
 }
 
 export class LearnMoreComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/learnMore/learnMore.tpl.html';
+  public template = require('modules/core/learnMore/learnMore.tpl.html');
   public controller = LearnMoreCtrl;
   public bindings = {
     location: '@',

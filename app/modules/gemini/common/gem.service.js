@@ -9,7 +9,7 @@
   function gemService($http, $translate, UrlConfig, Authinfo) {
     var URL = {
       spData: UrlConfig.getGeminiUrl() + 'servicepartner',
-      remedyTicket: UrlConfig.getGeminiUrl() + 'remedyTicket/customers/',
+      remedyTicket: UrlConfig.getGeminiUrl() + 'customers/',
       getCountries: UrlConfig.getGeminiUrl() + 'countries',
     };
     var data = {};
@@ -33,8 +33,8 @@
       return $http.get(URL.spData).then(extractData);
     }
 
-    function getRemedyTicket(customerId, type) {
-      var url = URL.remedyTicket + customerId + '/siteId/0/type/' + type;
+    function getRemedyTicket(customerId, entityId, type) {
+      var url = URL.remedyTicket + customerId + '/type/' + type + '/entities/' + entityId + '/remedy-ticket';
       return $http.get(url).then(extractData);
     }
 
@@ -73,7 +73,9 @@
     function getNumberStatus() {
       var number_status = getStorage('NUMBER_STATUS');
       if (!number_status) {
-        number_status = { NEW: 1, UPDATED: 2, DELETED: 3, NO_CHANGE: 4 };
+        number_status = {
+          NEW: 1, UPDATED: 2, DELETED: 3, NO_CHANGE: 4,
+        };
         setStorage('NUMBER_STATUS', number_status);
       }
 
@@ -83,7 +85,9 @@
     function getTdStatus() {
       var td_status = getStorage('TD_STATUS');
       if (!td_status) {
-        td_status = { EDITED: 'E', SUBMITTED: 'S', CANCELED: 'C', REJECTED: 'R', APPROVED: 'A', PROVISIONED: 'P', FAILED: 'L' };
+        td_status = {
+          EDITED: 'E', SUBMITTED: 'S', CANCELED: 'C', REJECTED: 'R', APPROVED: 'A', PROVISIONED: 'P', FAILED: 'L',
+        };
         setStorage('TD_STATUS', td_status);
       }
 
@@ -98,11 +102,11 @@
           var countryId2NameMapping = {};
           var countryOptions = [];
 
-          _.forEach(_.get(res, 'data.content.data'), function (item) {
-            var nameKey = item.countryName.replace(/,/g, '#@#');
-            countryName2IdMapping[nameKey] = item.countryId;
-            countryId2NameMapping[item.countryId] = item.countryName;
-            countryOptions.push({ label: item.countryName, value: item.countryId });
+          _.forEach(_.get(res, 'data'), function (item) {
+            var nameKey = item.name.replace(/,/g, '#@#');
+            countryName2IdMapping[nameKey] = item.id;
+            countryId2NameMapping[item.id] = item.name;
+            countryOptions.push({ label: item.name, value: item.id });
           });
 
           gmCountry = { countryName2IdMapping: countryName2IdMapping, countryId2NameMapping: countryId2NameMapping, countryOptions: countryOptions };

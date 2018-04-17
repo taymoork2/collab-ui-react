@@ -1,11 +1,9 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-  <h3 class="modal-title" translate="hercules.assignClustersModal.title" translate-values="{ groupName: vm.resourceGroup.name }"></h3>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h4 class="modal-title" translate="hercules.assignClustersModal.title" translate-values="{ groupName: vm.resourceGroup.name }"></h4>
 </div>
 <div class="modal-body">
-  <h4 translate="hercules.assignClustersModal.subtitle"></h4>
+  <h5 translate="hercules.assignClustersModal.subtitle"></h5>
   <p translate="hercules.assignClustersModal.description"></p>
   <div class="resource-columns">
     <div class="resource-column">
@@ -51,9 +49,9 @@
       </div>
     </div>
   </div>
-  <div class="warning-message" ng-if="vm.hasChanged()">
+  <div class="hybrid-services-warning-message" ng-if="vm.hasChanged()">
     <i class="icon icon-warning"></i>
-    <div class="message" translate="hercules.assignClustersModal.warning"></div>
+    <div class="hybrid-services-message" translate="hercules.assignClustersModal.warning"></div>
   </div>
 </div>
 <div class="modal-footer">

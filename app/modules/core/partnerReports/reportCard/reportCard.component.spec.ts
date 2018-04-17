@@ -295,6 +295,14 @@ describe('Component: reportCard', function () {
     expect(this.resizePage).toHaveBeenCalled();
   });
 
+  it('secondaryTableHasRows should return true only when the secondaryTable has data', function () {
+    this.initController();
+    expect(this.controller.secondaryTableHasRows()).toBeTruthy();
+
+    this.controller.secondaryOptions.table.data = [];
+    expect(this.controller.secondaryTableHasRows()).toBeFalsy();
+  });
+
   describe('changePage - ', function () {
     it('should change the pagingButtons', function () {
       this.initController();

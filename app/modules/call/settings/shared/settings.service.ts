@@ -1,10 +1,9 @@
-import {
-  Customer, CustomerVoice, Link, HuronCustomerService,
-} from 'modules/huron/customer';
+import { CustomerVoice, HuronCustomerService, ServicePackage } from 'modules/huron/customer';
+import { CustomerSettings } from './customer-settings';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
-import { AvrilService, IAvrilSite, AvrilSite, IAvrilFeatures, AvrilFeatures } from 'modules/huron/avril';
+import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/call/avril';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extension-length.service';
@@ -19,30 +18,7 @@ export class HuronSettingsData {
   public cosRestrictions: any;
   public companyCallerId: CompanyNumber;
   public voicemailToEmailSettings: IVoicemailToEmail;
-  public avrilFeatures: IAvrilFeatures;
-}
-
-export class CustomerSettings extends Customer {
-  public hasVoicemailService: boolean;
-  public hasVoiceService: boolean;
-
-  constructor(obj: {
-    uuid: string,
-    name: string,
-    servicePackage: string,
-    links: Link[],
-    hasVoicemailService: boolean,
-    hasVoiceService: boolean,
-  }) {
-    super({
-      uuid: obj.uuid,
-      name: obj.name,
-      servicePackage: obj.servicePackage,
-      links: obj.links,
-    });
-    this.hasVoicemailService = obj.hasVoicemailService;
-    this.hasVoiceService = obj.hasVoiceService;
-  }
+  public avrilFeatures: IAvrilSiteFeatures;
 }
 
 export interface IVoicemailUserTemplate {
@@ -59,10 +35,6 @@ export interface IVoicemailToEmail {
 export class HuronSettingsService {
   private huronSettingsDataCopy: HuronSettingsData;
   private errors: string[] = [];
-  private VOICE_ONLY = 'VOICE_ONLY';
-  private DEMO_STANDARD = 'DEMO_STANDARD'; // Unity only
-  private VOICE_VOICEMAIL = 'VOICE_VOICEMAIL'; // Avril Only
-  private VOICE_VOICEMAIL_AVRIL = 'VOICE_VOICEMAIL_AVRIL'; // Unity and Avril
   private supportsAvrilVoicemail: boolean = false;
   private supportsAvrilVoicemailMailbox: boolean = false;
   private supportsCompanyMoh: boolean = false;
@@ -124,7 +96,7 @@ export class HuronSettingsService {
               } else {
                 return this.$q.resolve()
                   .then(() => {
-                    huronSettingsData.avrilFeatures = new AvrilFeatures();
+                    huronSettingsData.avrilFeatures = new AvrilSiteFeatures();
                   });
               }
             });
@@ -200,7 +172,7 @@ export class HuronSettingsService {
     }
   }
 
-  public saveExtensionLengthIncrease(newExtensionLength: string, extensionPrefix: string): ng.IPromise<any> {
+  public saveExtensionLengthIncrease(newExtensionLength: number | null, extensionPrefix: number | null): ng.IPromise<any> {
     return this.ExtensionLengthService.saveExtensionLength(newExtensionLength, extensionPrefix)
       .then(() => {
         if (this.huronSettingsDataCopy.customer.hasVoicemailService && !this.supportsAvrilVoicemailMailbox) {
@@ -296,7 +268,7 @@ export class HuronSettingsService {
     if (this.supportsCompanyMoh) {
       return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
         return this.$q.reject();
       });
     }
@@ -323,14 +295,14 @@ export class HuronSettingsService {
   private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
   private unassignCompanyMediaOnHold(): ng.IPromise<void> {
     return this.MediaOnHoldService.unassignMediaOnHold()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
@@ -462,15 +434,15 @@ export class HuronSettingsService {
     const customer = {};
     if (customerData.hasVoicemailService) {
       if (this.supportsAvrilVoicemail && !this.supportsAvrilVoicemailMailbox) {
-        _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL_AVRIL);
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL_AVRIL);
       } else if (!this.supportsAvrilVoicemail && this.supportsAvrilVoicemailMailbox) {
-        _.set(customer, 'servicePackage', this.VOICE_VOICEMAIL);
+        _.set(customer, 'servicePackage', ServicePackage.VOICE_VOICEMAIL);
       } else {
-        _.set(customer, 'servicePackage', this.DEMO_STANDARD);
+        _.set(customer, 'servicePackage', ServicePackage.DEMO_STANDARD);
       }
       _.set(customer, 'voicemail', { pilotNumber: siteData.voicemailPilotNumber });
     } else {
-      _.set(customer, 'servicePackage', this.VOICE_ONLY);
+      _.set(customer, 'servicePackage', ServicePackage.VOICE_ONLY);
     }
     return this.ServiceSetup.updateCustomer(customer)
       .catch(error => {
@@ -478,7 +450,7 @@ export class HuronSettingsService {
       });
   }
 
-  private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilFeatures): ng.IPromise<any> {
+  private updateVoiceMailSettings(customerData: CustomerSettings, siteData: ISite, voicemailToEmailData: IVoicemailToEmail, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<any> {
     if (customerData.hasVoicemailService) {
       if (!this.supportsAvrilVoicemailMailbox) { // Do not update Unity if Avril only
         const promises: ng.IPromise<any>[] = [];
@@ -497,7 +469,7 @@ export class HuronSettingsService {
             if (!_.isEqual(this.huronSettingsDataCopy.site.routingPrefix, siteData.routingPrefix)
               || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
               || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)) {
-              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', siteData.extensionLength, '');
+              const vmaddress = this.deriveVoicemailAddress(siteData.routingPrefix || '', Number(siteData.extensionLength), null);
               promises.push(this.updateVoicemailAddress(userTemplate.objectId, vmaddress));
             }
             if (!_.isEqual(this.huronSettingsDataCopy.site.timeZone, siteData.timeZone)
@@ -517,7 +489,8 @@ export class HuronSettingsService {
           || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
+          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)
+          || !_.isEqual(this.huronSettingsDataCopy.site.voicemailPilotNumber, siteData.voicemailPilotNumber)) {
           return this.updateAvrilSite(siteData, avrilFeatures);
         } else {
           return this.$q.resolve();
@@ -578,8 +551,8 @@ export class HuronSettingsService {
       });
   }
 
-  private deriveVoicemailAddress(routingPrefix: string, extensionLength: string, extensionPrefix: string): string {
-    return [routingPrefix, extensionLength, extensionPrefix].join('-');
+  private deriveVoicemailAddress(routingPrefix: string, extensionLength: number | null, extensionPrefix: number | null): string {
+    return [routingPrefix, _.toString(extensionLength), _.toString(extensionPrefix)].join('-');
   }
 
   private saveAutoAttendantSite(site: ISite): ng.IPromise<void> {
@@ -609,11 +582,11 @@ export class HuronSettingsService {
     }
   }
 
-  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
+  private updateAvrilSite(site: ISite, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<string | void> {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,
@@ -629,11 +602,11 @@ export class HuronSettingsService {
     });
   }
 
-  private createAvrilSite(site: ISite, avrilFeatures: IAvrilFeatures): ng.IPromise<string | void> {
+  private createAvrilSite(site: ISite, avrilFeatures: IAvrilSiteFeatures): ng.IPromise<string | void> {
     return this.AvrilService.createAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,
@@ -659,7 +632,7 @@ export class HuronSettingsService {
 
   private rejectAndNotifyPossibleErrors(): void | ng.IPromise<any> {
     if (this.errors.length > 0) {
-      this.Notification.notify(this.errors, 'error');
+      this.Notification.notify(this.errors);
       return this.$q.reject();
     }
   }

@@ -19,7 +19,7 @@
       },
       controller: 'AARouteToExtNumCtrl',
       controllerAs: 'aaRouteToExtNum',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToExtNum/aaRouteToExtNum.tpl.html',
+      template: require('modules/huron/features/autoAttendant/routeToExtNum/aaRouteToExtNum.tpl.html'),
     };
   }
 })();

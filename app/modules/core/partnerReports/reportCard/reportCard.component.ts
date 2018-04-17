@@ -232,6 +232,10 @@ class ReportCardCtrl {
     this.resize();
   }
 
+  public secondaryTableHasRows(): boolean {
+    return this.secondaryOptions.table.data.length > 0;
+  }
+
   public secondaryIsEmpty(): boolean {
     return this.secondaryOptions.state === this.ReportConstants.EMPTY;
   }
@@ -260,6 +264,10 @@ class ReportCardCtrl {
     }
   }
 
+  public showTable(): boolean {
+    return this.secondaryIsSet() || (this.secondaryIsError() && this.secondaryTableHasRows());
+  }
+
   public pageBackward(): void {
     if (this.currentPage > 1) {
       this.changePage(this.currentPage - 1);
@@ -274,7 +282,7 @@ class ReportCardCtrl {
 }
 
 export class ReportCardComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/partnerReports/reportCard/reportCard.tpl.html';
+  public template = require('modules/core/partnerReports/reportCard/reportCard.tpl.html');
   public controller = ReportCardCtrl;
   public bindings = {
     dropdown: '<',

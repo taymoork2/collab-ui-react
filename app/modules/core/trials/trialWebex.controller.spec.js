@@ -16,6 +16,7 @@ describe('Controller: Trial Webex', function () {
       '$q',
       '$scope',
       'Analytics',
+      'Config',
       'Orgservice',
       'TrialTimeZoneService',
       'TrialWebexService'
@@ -61,6 +62,12 @@ describe('Controller: Trial Webex', function () {
     this.$scope.trialData = this.trialData.enabled;
     this.controller = this.$controller('TrialWebexCtrl', { $scope: this.$scope });
     this.$scope.$apply();
+  });
+
+  it('should specify the source when calling the service to validate', function () {
+    this.controller.validateSiteUrl('acmecorp.webex.com', 'acmecorp.webex.com');
+    this.$scope.$apply();
+    expect(this.TrialWebexService.validateSiteUrl).toHaveBeenCalledWith('acmecorp.webex.com', this.Config.shallowValidationSourceTypes.serviceSetup);
   });
 
   it('should resolve siteUrl validation when valid', function (done) {

@@ -8,7 +8,7 @@ export enum RETENTION_TYPES {
 export class RetentionSettingController {
   public dataLoaded = false;
   private orgId: string;
-  private proPackPurchased = false;
+  public proPackPurchased = false;
   public RETENTION_TYPES = RETENTION_TYPES;
 
   // default is to keep until storage is full => -1
@@ -73,6 +73,7 @@ export class RetentionSettingController {
         const sparkDataRetentionDays = response.retention.sparkDataRetentionDays || this.RETENTION_DEFAULT;
         this.populateRetention(sparkDataRetentionDays);
       })
+      .catch(_.noop)
       .finally(() => {
         this.dataLoaded = true;
       });
@@ -152,7 +153,7 @@ export class RetentionSettingController {
       if (this.isNewRetentionShorter()) {
         this.$modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/settings/retention/confirmLowerRetention.tpl.html',
+          template: require('modules/core/settings/retention/confirmLowerRetention.tpl.html'),
           controllerAs: 'ctrl',
         }).result
           .then(() => { this.updateRetentionValue(); })

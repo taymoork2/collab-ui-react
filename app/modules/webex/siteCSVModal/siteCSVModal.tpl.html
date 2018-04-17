@@ -1,70 +1,58 @@
-<div ng-if="siteCSVModalCtrl.viewReady"
-     class="modal-header"
-     id="webexCsv-modalHeader">
-     
-  <button id="webexCsv-closeModalButton" 
-          type="button" 
-          class="close"
-          ng-click="$dismiss()">
-                
-    <span class="sr-only" 
-          translate="siteCSVModalCtrl.common.close"></span>
-  </button>
-        
-  <h3 class="modal-title" 
-      translate='siteList.siteCsvColumnHeader'></h3>
+<div ng-if="siteCSVModalCtrl.viewReady" class="modal-header" id="webexCsv-modalHeader">
+  <button id="webexCsv-closeModalButton" type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate='siteList.siteCsvColumnHeader'></h3>
 </div>
 
 <div class="modal-body" id="webexCsv-modalBody">
   <h4>
     {{siteCSVModalCtrl.siteUrl}}
   </h4>
-        
+
   <p>
     <span translate='siteList.siteCsvModalText'></xpan>
   </p>
-		  
+
   <div class="cs-card-container">
     <cs-card-layout block-view="true">
       <!-- csv export card -->
-      <cs-card class="large" id="webexCsv-exportCard">
+      <cs-card class="cs-card--large" id="webexCsv-exportCard">
         <article class="csvModal">
           <div class="webex-csv-container center" for='download'>
-              <i ng-if="(!siteCSVModalCtrl.modal.file) && 
+              <i ng-if="(!siteCSVModalCtrl.modal.file) &&
                         (!siteCSVModalCtrl.requestingExport)"
                   class="icon icon-download  icon-export-import"
                   id="webexCsv-exportIcon"
                   ng-click="siteCSVModalCtrl.startExport()"></i>
-              
-              <i ng-if="(siteCSVModalCtrl.modal.file) || 
+
+              <i ng-if="(siteCSVModalCtrl.modal.file) ||
                         (siteCSVModalCtrl.requestingExport)"
                   class="icon icon-download icon-export-import-disabled"></i>
-            <div  ng-if="(!siteCSVModalCtrl.modal.file) && 
+            <div  ng-if="(!siteCSVModalCtrl.modal.file) &&
                               (!siteCSVModalCtrl.requestingExport)"><span translate='siteList.siteCsvExportLinkLabel'></span></div>
-            <div  ng-if="(siteCSVModalCtrl.modal.file) || 
+            <div  ng-if="(siteCSVModalCtrl.modal.file) ||
                               (siteCSVModalCtrl.requestingExport)"><span class="modal-disabled" translate='siteList.siteCsvExportLinkLabel'></span></div>
-            
-              <span class="import-text" ng-if="(!siteCSVModalCtrl.modal.file) && 
-                              (!siteCSVModalCtrl.requestingExport)" 
+
+              <span class="import-text" ng-if="(!siteCSVModalCtrl.modal.file) &&
+                              (!siteCSVModalCtrl.requestingExport)"
                     translate='siteList.siteCsvModalExportTextShort'></span>
-           
-              <span class="import-text" ng-if="(siteCSVModalCtrl.modal.file) || 
-                              (siteCSVModalCtrl.requestingExport)" class="modal-disabled" 
+
+              <span class="import-text" ng-if="(siteCSVModalCtrl.modal.file) ||
+                              (siteCSVModalCtrl.requestingExport)" class="modal-disabled"
                     translate='siteList.siteCsvModalExportTextShort'></span>
-            	  
+
 
           </div>
         </article>
       </cs-card>
       <!-- end of csv export card -->
-      
+
       <!-- start of csv import card -->
-      <cs-card class="large" id="webexCsv-importCard">
+      <cs-card class="cs-card--large" id="webexCsv-importCard">
         <article class="csvModal">
 		  <div class="webex-csv-container">
               <div ng-if="(siteCSVModalCtrl.requestingExport)">
                 <div class="file-drop">
-                    <div for='upload'> 
+                    <div for='upload'>
                       <i class="icon icon-upload icon-export-import-disabled"></i>
                     </div>
                     <div>
@@ -76,9 +64,9 @@
                 </div>
               </div>
               <div ng-if="(!siteCSVModalCtrl.requestingExport)">
-              <div ng-if="!siteCSVModalCtrl.modal.file" 
+              <div ng-if="!siteCSVModalCtrl.modal.file"
                   class="file-drop"
-                  cr-file-drop 
+                  cr-file-drop
                   file="siteCSVModalCtrl.modal.file"
                   file-name="siteCSVModalCtrl.modal.fileName"
                   file-type="text/csv, application/csv, application/vnd.ms-excel"
@@ -86,17 +74,17 @@
                   file-type-error="siteCSVModalCtrl.onFileTypeError()" >
 
                     <div align="center">
-                      <input id="upload" 
-                            name="upload" 
-                            type="file" 
+                      <input id="upload"
+                            name="upload"
+                            type="file"
                             cr-file-read
                             file="siteCSVModalCtrl.modal.file"
                             file-name="siteCSVModalCtrl.modal.fileName"
                             file-type="text/csv, application/csv, application/vnd.ms-excel"
                             file-suffix="csv"
-                            file-type-error="siteCSVModalCtrl.onFileTypeError()" /> 
-								   
-                      <div for='upload'> 
+                            file-type-error="siteCSVModalCtrl.onFileTypeError()" />
+
+                      <div for='upload'>
                         <i class="icon icon-upload icon-export-import" id="webexCsv-importIcon"></i>
                       </div>
 
@@ -106,12 +94,12 @@
                       <span class="import-text" translate='siteList.siteCsvModalImportText'></span>
                   </div>
 				      </div>
-				
+
             <div ng-if="siteCSVModalCtrl.modal.file">
               <p align="center">
-                    {{siteCSVModalCtrl.modal.fileName}}			      
+                    {{siteCSVModalCtrl.modal.fileName}}
                     <button cs-btn
-                            type="button" 
+                            type="button"
                         class="btn btn--primary"
                         loading="siteCSVModalCtrl.requestingImport"
                       ng-click="siteCSVModalCtrl.startImport()">

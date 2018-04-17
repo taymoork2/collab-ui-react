@@ -1,0 +1,84 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.call-feature-edit {
+  .typeahead .dropdown-menu {
+    .active > a {
+      background: $gray-light-2;
+    }
+    span {
+      font-size: $h4-font-size;
+      font-family: $brand-font-light;
+      color: $gray-dark-2;
+    }
+  }
+}
+
+.call-feature-locations {
+  .new-location {
+    margin-top: calc(32vh - 143px);
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .title {
+      color: $color-primary-base;
+      font-family: $brand-font-thin;
+      font-size: $h1-font-size;
+
+      @include vr-spacing(pt, 3);
+    }
+
+    .desc {
+      @include vr-spacing(pt, 1);
+      @include vr-spacing(pb, 2.5);
+      color: $gray-dark-1;
+      font-family: $brand-font-light;
+      font-size: $h4-font-size;
+    }
+  }
+  .search-add {
+    display: inline-flex;
+    align-items: inherit;
+    margin: auto;
+    width: 54.5rem;
+    .cs-input {
+      width: 19rem;
+      margin-left: 2px;
+    }
+    .search-location {
+      @include vr-spacing(ml, 2);
+      width: 18.3rem;
+      position: relative;
+      .icon-search {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+      input {
+        width: 100%;
+        text-indent: 20px;
+      }
+    }
+    .input-description {
+      width: 56rem;
+    }
+  }
+  .typeahead-large,
+  .typeahead {
+    &.no-margin {
+      margin-top: 0;
+    }
+    .dropdown-menu {
+      li a + a {
+        padding-top: 0;
+        margin-top: -.5rem;
+      }
+    }
+  }
+  .card-member {
+    margin: auto;
+  }
+}

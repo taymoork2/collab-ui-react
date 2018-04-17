@@ -1,0 +1,67 @@
+[
+  {
+    "siteUrl": "",
+    "billing": "",
+    "volume": 100,
+    "licenseId": "MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0",
+    "licenseModel": "",
+    "offerName": "TC",
+    "label": "Training Center 100",
+    "isTrial": true,
+    "status": "ACTIVE",
+    "confModel": false,
+    "cmrModel": false
+  },
+  {
+    "siteUrl": "",
+    "billing": "SubCt31test20161222112",
+    "volume": 5,
+    "licenseId": "CF_f60653e0-9093-45be-a647-7eebd25dba72",
+    "licenseModel": "",
+    "offerName": "CF",
+    "label": "Meeting 25 Party",
+    "isTrial": false,
+    "status": "PENDING",
+    "confModel": false,
+    "cmrModel": false
+  },
+  {
+    "siteUrl": "",
+    "billing": "Sub20161222111",
+    "volume": 5,
+    "licenseId": "CF_f6589ed6-74ea-4487-82fa-3d45a7b17f0e",
+    "licenseModel": "",
+    "offerName": "CF",
+    "label": "Meeting 25 Party",
+    "isTrial": false,
+    "status": "PENDING",
+    "confModel": false,
+    "cmrModel": false
+  },
+  {
+    "siteUrl": "",
+    "billing": "Sub20161222117",
+    "volume": 5,
+    "licenseId": "CF_45c18dc0-b13f-4f7d-b155-d800cc777e89",
+    "licenseModel": "",
+    "offerName": "CF",
+    "label": "Meeting 25 Party",
+    "isTrial": false,
+    "status": "PENDING",
+    "confModel": false,
+    "cmrModel": false
+  },
+  {
+    "siteUrl": "",
+    "billing": "SubCt31test20161222111",
+    "volume": 5,
+    "licenseId": "CF_419c7915-db11-4ca0-a03f-2fea95a46193",
+    "licenseModel": "",
+    "offerName": "CF",
+    "label": "Meeting 25 Party",
+    "isTrial": false,
+    "status": "ACTIVE",
+    "confModel": false,
+    "cmrModel": false
+  }
+]

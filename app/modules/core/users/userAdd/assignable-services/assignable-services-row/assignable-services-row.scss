@@ -1,0 +1,28 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+
+assignable-services-row {
+  display: block;
+
+  .subscription__content {
+    .license__category {
+      color: $gray-dark-2;
+      font-family: $brand-font-light;
+      font-weight: bold;
+      font-size: 0.875rem;
+      line-height: 1.625rem;
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+    }
+
+    .license__category-text {
+      margin-right: 0.5rem;
+    }
+
+    assignable-advanced-meetings {
+      .license__category {
+        margin-top: 0.625rem;
+      }
+    }
+  }
+}

@@ -1,11 +1,13 @@
 <div ng-form="externalTransferForm">
-  <label class="control-label" translate="externalTransfer.title"></label>
-  <p class="description-block" translate="externalTransfer.desc"></p>
+  <label class="sub-section__label" translate="externalTransfer.title"></label>
+  <p ng-if="!$ctrl.location" class="description-block" translate="externalTransfer.desc"></p>
+  <p ng-if="$ctrl.location" class="description-block" translate="externalTransfer.descLocation"></p>
   <cs-toggle-switch
     ng-model="$ctrl.allowExternalTransfer"
     toggle-id="externalTransferEnabledToggle"
     name="externalTransferEnabledToggle"
     size="small"
-    cs-change="$ctrl.onExternalTransferToggled(toggleValue)">
+    cs-change="$ctrl.onExternalTransferToggled(toggleValue)"
+    cs-aria-label="{{::'externalTransfer.title' | translate}}">
   </cs-toggle-switch>
 </div>

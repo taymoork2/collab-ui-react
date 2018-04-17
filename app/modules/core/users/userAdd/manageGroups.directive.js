@@ -7,7 +7,7 @@
   function crManageGroups() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/core/users/userAdd/manageGroups.tpl.html',
+      template: require('modules/core/users/userAdd/manageGroups.tpl.html'),
     };
   }
 })();

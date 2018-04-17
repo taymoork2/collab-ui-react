@@ -1,4 +1,4 @@
-import { EnterprisePrivateTrunkService } from './enterprise-private-trunk-service';
+import moduleName, { EnterprisePrivateTrunkService } from './enterprise-private-trunk-service';
 
 describe('EnterprisePrivateTrunkService ', () => {
 
@@ -44,7 +44,7 @@ describe('EnterprisePrivateTrunkService ', () => {
     ],
   };
 
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
 
   beforeEach(angular.mock.module(function ($provide) {
     const Authinfo = {

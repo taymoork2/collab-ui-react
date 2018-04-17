@@ -6,7 +6,7 @@
     .controller('AAInsertionElementCtrl', AAInsertionElementCtrl);
 
   /* @ngInject */
-  function AAInsertionElementCtrl($rootScope, $scope, $modal, $translate, AAUiModelService, AACommonService, AADynaAnnounceService) {
+  function AAInsertionElementCtrl($modal, $rootScope, $scope, $translate, AACommonService, AAUiModelService) {
     var vm = this;
 
     var ui;
@@ -35,32 +35,52 @@
 
     /////////////////////
 
+    function setResult(node, actionType, result, insertionElementID) {
+      if (!_.isEqual(vm.elementText, result.variable.label) || !_.isEqual(vm.readAs, result.readAs.value)) {
+        vm.elementText = result.variable.label;
+        actionType.value = result.variable.value;
+        if (!_.isEqual($scope.aaElementType, 'REST')) {
+          vm.readAs = result.readAs.value;
+          actionType.as = vm.readAs;
+        }
+        var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + insertionElementID + '"id="' + insertionElementID + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
+        node.htmlModel = encodeURIComponent(ele);
+        $rootScope.$broadcast('CE Updated');
+      }
+    }
+
     function mainClickFn() {
-      var id = $scope.elementId;
-      populateUiModel(id);
+      var insertionElementID = $scope.elementId;
+      populateUiModel(insertionElementID);
       var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
-        if (html.search(id) >= 0) {
-          openModal(node.say).result
-            .then(function (result) {
-              if (vm.elementText != result.variable.label || vm.readAs != result.readAs.value) {
-                vm.elementText = result.variable.label;
-                vm.readAs = result.readAs.value;
-                node.say.value = result.variable.value;
-                node.say.as = vm.readAs;
-                var ele = '<aa-insertion-element element-text="' + node.say.value + '" read-as="' + node.say.as + '" element-id="' + id + '"></aa-insertion-element>';
-                node.htmlModel = encodeURIComponent(ele);
-                AACommonService.setSayMessageStatus(true);
-              }
-            });
+        if (html.search(insertionElementID) >= 0) {
+          var actionType;
+          switch ($scope.aaElementType) {
+            case 'REST':
+              actionType = node.action.eval;
+              openModal(actionType).result
+                .then(function (result) {
+                  setResult(node, actionType, result, insertionElementID);
+                });
+              break;
+
+            default:
+              actionType = node.say;
+              openModal(actionType).result
+                .then(function (result) {
+                  setResult(node, actionType, result, insertionElementID);
+                  AACommonService.setSayMessageStatus(true);
+                });
+          }
         }
       });
     }
 
     function openModal(say) {
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',
@@ -71,31 +91,46 @@
           readAsSelection: function () {
             return say.as;
           },
+          aaElementType: function () {
+            return $scope.aaElementType;
+          },
         },
         modalClass: 'aa-dynamic-announcements-modal',
       });
     }
 
     function closeClickFn() {
-      var range = AADynaAnnounceService.getRange();
-      range.endContainer.parentElement.parentElement.parentElement.remove();
-
       var id = $scope.elementId;
+      var idSelectorPrefix = '#';
+      angular.element(idSelectorPrefix.concat(id)).remove();
+
       populateUiModel(id);
       var dynaList = actionEntry.actions[0].dynamicList;
       _.forEach(dynaList, function (node) {
         var html = decodeURIComponent(node.htmlModel);
         if (html.search(id) >= 0) {
+          switch ($scope.aaElementType) {
+            case 'REST':
+              node.action = {
+                eval: {
+                  value: '',
+                },
+              };
+              break;
+
+            default:
+              node.say = {
+                value: '',
+                voice: '',
+              };
+              AACommonService.setSayMessageStatus(true);
+          }
           vm.elementText = '';
           vm.readAs = '';
-          node.say = {
-            value: '',
-            voice: '',
-          };
           node.isDynamic = false;
           node.htmlModel = '';
-          AACommonService.setSayMessageStatus(true);
           $rootScope.$broadcast('CE Updated');
+          $rootScope.$broadcast('dynamicListUpdated');
         }
       });
     }
@@ -103,7 +138,7 @@
     function populateUiModelFromMenuEntry(menuEntry, elementId) {
       var action = _.get(menuEntry, 'actions[0]', '');
       if (action) {
-        if (action.name == 'routeToQueue') {
+        if (action.name === 'routeToQueue') {
           var hasInitialDynamicList = _.has(action.queueSettings.initialAnnouncement, 'actions[0].dynamicList');
           var hasPeriodicDynamicList = _.has(action.queueSettings.periodicAnnouncement, 'actions[0].dynamicList');
           if (hasInitialDynamicList && _.includes(elementId, 'initialAnnouncement')) {
@@ -116,6 +151,12 @@
               actionEntry = action.queueSettings.periodicAnnouncement;
               return true;
             }
+          }
+        } else if (action.name === 'doREST') {
+          if (checkForElementId(menuEntry.actions[0].url, elementId)) {
+            _.set(menuEntry.actions[0], 'dynamicList', menuEntry.actions[0].url);
+            actionEntry = menuEntry;
+            return true;
           }
         } else {
           if (checkForElementId(menuEntry.actions[0].dynamicList, elementId)) {

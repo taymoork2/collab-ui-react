@@ -3,7 +3,7 @@
 describe('controller: CbgsCtrl', function () {
   var $q, $scope, $state, $stateParams, filter, innerFilterSpy, $timeout, $controller, controller, cbgService, Notification, $httpBackend, UrlConfig;
   var callbackGroups = getJSONFixture('gemini/callbackGroups.json');
-  var preData = getJSONFixture('gemini/common.json');
+
   var currentCallbackGroup = {
     callbackGroupSites: [],
     ccaGroupId: 'ff808081552e92e101552efcdb750081',
@@ -13,6 +13,10 @@ describe('controller: CbgsCtrl', function () {
     status: 'P',
     totalSites: 0,
   };
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -55,7 +59,7 @@ describe('controller: CbgsCtrl', function () {
     $stateParams.customerId = $stateParams.customerId === '' ? $stateParams.customerId : 'ff808081552992ec0155299619cb0001';
 
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
 
     controller = $controller('CbgsCtrl', { $scope: $scope, $filter: filter, $stateParams: $stateParams });
   }
@@ -79,21 +83,21 @@ describe('controller: CbgsCtrl', function () {
     it('should return correct array data when invoked cbgService.getCallbackGroups', function () {
       controller.gridRefresh = true;
       cbgService.getCallbackGroups.and.returnValue($q.resolve(callbackGroups));
-      initController();
+      initController.call(this);
       $scope.$apply();
       expect(controller.gridRefresh).toBe(false);
     });
 
     it('should call Notification.errorResponse when invoked cbgService.getCallbackGroups return error response', function () {
       cbgService.getCallbackGroups.and.returnValue($q.reject({ status: 404 }));
-      initController();
+      initController.call(this);
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should call $state.go when customerId\'s length is zero', function () {
       $stateParams.customerId = '';
-      initController();
+      initController.call(this);
       $scope.$apply();
       expect($state.go).toHaveBeenCalled();
     });
@@ -108,7 +112,7 @@ describe('controller: CbgsCtrl', function () {
     });
 
     it('return correct data', function () {
-      var csvData = { content: { data: { body: {} } } };
+      var csvData = {};
       cbgService.cbgsExportCSV.and.returnValue($q.resolve(csvData));
       controller.exportCSV();
       $scope.$apply();
@@ -126,7 +130,7 @@ describe('controller: CbgsCtrl', function () {
     });
 
     it('gridData_ not empty', function () {
-      $scope.gridData_ = callbackGroups.content.data.body;
+      $scope.gridData_ = callbackGroups;
       controller.filterList('Test');
       $scope.$apply();
       $timeout.flush();

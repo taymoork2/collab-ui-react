@@ -13,7 +13,7 @@
     cs-input
     type="radio"
     id="alternate"
-    name="altFallbackRadio"
+    name="fallbackRadio"
     ng-model="$ctrl.destinationRule"
     ng-value="'TYPEFALLBACKRULE_ALTERNATE_DESTINATION'"
     ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_ALTERNATE_DESTINATION')"
@@ -23,7 +23,7 @@
     cs-input
     type="radio"
     id="automatic"
-    name="automaticRadio"
+    name="fallbackRadio"
     ng-model="$ctrl.destinationRule"
     ng-value="'TYPEFALLBACKRULE_AUTOMATIC'"
     ng-change="$ctrl.setHuntGroupDestinationRule('TYPEFALLBACKRULE_AUTOMATIC')"
@@ -34,6 +34,8 @@
     <p class="sub-section__description" translate="huronHuntGroup.fallbackNumberHint"></p>
     <uc-fallback-destination
       fallback-destination="$ctrl.fallbackDestination"
+      hunt-group-numbers="$ctrl.numbers"
+      hunt-group-method="$ctrl.method"
       on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
     </uc-fallback-destination>
   </div>

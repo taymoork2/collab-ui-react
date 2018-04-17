@@ -1,44 +1,46 @@
 'use strict';
 
-/*global TIMEOUT*/
+/*global TIMEOUT, ANIMATION_DURATION_MS*/
 
 var Navigation = function () {
   this.body = element(by.tagName('body'));
 
-  this.tabs = element(by.css('cs-left-nav'));
+  this.tabs = element(by.css('cui-sidenav-admin'));
+  this.ftswSidePanel = element(by.css('cr-wizard-nav'));
   this.tabCount = element.all(by.repeater('page in pages'));
   this.homeTab = element(by.css('li.overviewTab > a'));
+  this.placesTab = element(by.css('li.placeTab > a'))
   this.usersTab = element(by.css('li.userTab > a'));
   this.accountTab = element(by.css('li.accountTab > a'));
-  this.orgTab = element(by.css('a[href="#organizations"]'));
+  this.orgTab = element(by.css('a[href="organizations"]'));
   this.orgAddTab = element(by.css('#addOrganizations'));
-  this.callRoutingTab = element(by.css('a[href="#callrouting"]'));
-  this.autoAttendantPage = element(by.css('a[href="#/hurondetails/features"]'));
-  this.callSettings = element(by.css('a[href="#/services/call-settings"]'));
-  this.fusionTab = element(by.css('a[href="#fusion"]'));
+  this.callRoutingTab = element(by.css('a[href="callrouting"]'));
+  this.autoAttendantPage = element(by.css('a[href="/hurondetails/features"]'));
+  this.callSettings = element(by.css('a[href="/services/call-settings"]'));
+  this.fusionTab = element(by.css('a[href="fusion"]'));
   this.reportsTab = element(by.css('li.reportTab > a'));
   this.careReportsTab = element(by.cssContainingText('.nav-link', 'Care'));
   this.supportTab = element(by.css('li.supportTab > a'));
-  this.cdrTab = element(by.css('a[href="#cdrsupport"]'));
-  this.logsTab = element(by.css('a[href="#support"]'));
+  this.cdrTab = element(by.css('a[href="cdrsupport"]'));
+  this.logsTab = element(by.css('a[href="support"]'));
   this.logsPage = element(by.cssContainingText('.nav-link', 'Logs'));
 
-  this.billingTab = element(by.css('a[href="#orderprovisioning"]'));
+  this.billingTab = element(by.css('a[href="orderprovisioning"]'));
   this.devicesTab = element(by.css('li.deviceTab > a'));
   this.customersTab = element(by.css('li.customerTab > a'));
   this.developmentTab = element(by.css('li.developmentTab > a'));
   this.servicesTab = element(by.css('li.servicesTab > a'));
-  this.meetingsTab = element(by.css('a[href="#meetings"]'));
-  this.mediaServiceMgmtTab = element(by.css('a[href="#mediaservice"]'));
-  this.enterpriseResourcesTab = element(by.css('a[href="#vts"]'));
-  this.utilizationTab = element(by.css('a[href="#utilization"]'));
+  this.meetingsTab = element(by.css('a[href="meetings"]'));
+  this.mediaServiceMgmtTab = element(by.css('a[href="mediaservice"]'));
+  this.enterpriseResourcesTab = element(by.css('a[href="vts"]'));
+  this.utilizationTab = element(by.css('a[href="utilization"]'));
   this.gssTab = element(by.css('li.gssTab > a'));
 
   // hybrid services
   this.activateService = element(by.id('activateService'));
   this.deactivateService = element(by.id('deactivateService'));
-  this.calendarServicePage = element(by.css('a[href="#services/calendar"]'));
-  this.callServicePage = element(by.css('a[href="#services/call"]'));
+  this.calendarServicePage = element(by.css('a[href="services/calendar"]'));
+  this.callServicePage = element(by.css('a[href="services/call"]'));
   this.serviceResources = element(by.cssContainingText('.nav-link', 'Resources'));
   this.serviceSettings = element(by.cssContainingText('.nav-link', 'Settings'));
   this.ecToggler = element(by.id('squaredFusionEc-toggler'));
@@ -63,9 +65,10 @@ var Navigation = function () {
   this.messaging = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Message'));
   this.enterpriseSettings = element(by.cssContainingText('.settings-menu .dropdown-menu a', 'Enterprise Settings'));
   this.userInfo = element(by.css('.user-info'));
+  this.userInfoDropDownMenu = element(by.css('.user-info .dropdown-menu.visible'));
   this.launchPartnerButton = element(by.css('#launch-partner-btn a'));
 
-  this.partnerSupportUrl = 'https://help.webex.com/community/cisco-cloud-collab-mgmt-partners';
+  this.partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   this.clickDevelopmentTab = function () {
     utils.click(this.developmentTab);
@@ -207,11 +210,19 @@ var Navigation = function () {
     });
   };
 
+  // html5Mode - strip leading hashes
+  function removeUrlHash(urls) {
+    return _.map(urls, function (url) {
+      return (url[0] === '#') ? url.slice(1) : url;
+    });
+  }
+
   function doesCurrentUrlContainValues(urlArray) {
+    var urls = removeUrlHash(urlArray);
     return function (currentUrl) {
-      log('Expecting ' + currentUrl + ' to contain ' + urlArray.join(' or '));
-      // See if currentUrl contains one of the urlArray values
-      return _.some(urlArray, _.partial(_.includes, currentUrl));
+      log('Expecting ' + currentUrl + ' to contain ' + urls.join(' or '));
+      // See if currentUrl contains one of the url values
+      return _.some(urls, _.partial(_.includes, currentUrl));
     };
   }
 
@@ -244,6 +255,7 @@ var Navigation = function () {
 
   this.logout = function () {
     utils.click(this.userInfoButton);
+    browser.sleep(ANIMATION_DURATION_MS);
     utils.click(this.logoutButton);
     this.expectDriverCurrentUrl('/login', 'idbroker.webex.com');
     browser.get('data:,');
@@ -318,10 +330,16 @@ var Navigation = function () {
 
   this.launchSupportPage = function () {
     browser.getAllWindowHandles().then(function (handles) {
-      browser.switchTo().window(handles[1]).then(function () {
-        expect(browser.getCurrentUrl()).toMatch(navigation.partnerSupportUrl);
+      browser.switchTo().window(handles[1]);
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (currentUrl) {
+          return currentUrl.includes(navigation.partnerSupportUrl);
+        });
       });
+
       browser.close();
+
       // switch back to the main window
       browser.switchTo().window(handles[0]);
     });

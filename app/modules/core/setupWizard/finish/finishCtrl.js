@@ -5,15 +5,13 @@
     .controller('WizardFinishCtrl', WizardFinishCtrl);
 
   /* @ngInject */
-  function WizardFinishCtrl($q, $scope, $translate, Authinfo, Notification, SetupWizardService, TrialWebexService) {
+  function WizardFinishCtrl($q, $scope, $translate, Analytics, Authinfo, Notification, Orgservice, SetupWizardService, TrialWebexService, Utils) {
     $scope.hasPendingLicenses = SetupWizardService.hasPendingLicenses();
     $scope.sendEmailModel = false;
+    $scope.doNotProvision = false;
     $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
     $scope.setSendCustomerEmailFlag = setSendCustomerEmailFlag;
-    $scope.orderDetails = {
-      subscriptionId: formatSubscriptionId(SetupWizardService.getActingSubscriptionId()),
-      orderId: SetupWizardService.getCurrentOrderNumber(),
-    };
+    $scope.orderDetails = SetupWizardService.getOrderDetails();
     $scope.initNext = function () {
       var deferred = $q.defer();
       if (!_.isUndefined($scope.wizard) && _.isFunction($scope.wizard.getRequiredTabs)) {
@@ -33,10 +31,27 @@
       return deferred.promise;
     };
 
+    // wizard PromiseHook
+    $scope.provisionNext = function () {
+      Orgservice.clearOrgUsageCache();
+      if (SetupWizardService.getWillNotProvision()) {
+        $scope.doNotProvision = true;
+      } else {
+        $scope.wizard.isNextDisabled = true;
+        $scope.doNotProvision = false;
+        Orgservice.updateOrgUsageCacheAge(5);
+        return provision();
+      }
+    };
+
     init();
 
     function init() {
       pushBlankProvisioningCall();
+    }
+
+    function provision() {
+      return SetupWizardService.processCallbacks();
     }
 
     function setSendCustomerEmailFlag(flag) {
@@ -44,28 +59,31 @@
         return $q.reject('A boolean must be passed.');
       }
       TrialWebexService.setProvisioningWebexSendCustomerEmailFlag(flag);
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SEND_CUSTOMER_EMAIL, { customerEmailCheckboxSelected: flag });
     }
 
     function pushBlankProvisioningCall() {
       if (!_.has(SetupWizardService.provisioningCallbacks, 'meetingSettings') && $scope.hasPendingLicenses) {
         var emptyProvisioningCall = {
           meetingSettings: (function () {
-            return TrialWebexService.provisionSubscriptionWithoutWebexSites().then(function () {
+            return TrialWebexService.provisionSubscriptionWithoutWebexSites().then(function (response) {
               Notification.success('firstTimeWizard.webexProvisioningSuccess');
+              var properties = {
+                trackingId: Utils.extractTrackingIdFromResponse(response),
+              };
+              Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS, properties);
             }).catch(function (response) {
               Notification.errorWithTrackingId(response, 'firstTimeWizard.webexProvisioningError');
+              var properties = {
+                trackingId: Utils.extractTrackingIdFromResponse(response),
+              };
+              Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE, properties);
             });
           }),
         };
 
         SetupWizardService.addProvisioningCallbacks(emptyProvisioningCall);
       }
-    }
-    function formatSubscriptionId(id) {
-      if (id.lastIndexOf('/') !== -1) {
-        return id.slice(0, id.lastIndexOf('/'));
-      }
-      return id;
     }
   }
 })();

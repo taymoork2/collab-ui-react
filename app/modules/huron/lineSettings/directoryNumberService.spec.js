@@ -87,12 +87,6 @@ describe('Service: DirectoryNumber', function () {
     });
   });
 
-  describe('updateDirectoryNumber function', function () {
-    it('should exist', function () {
-      expect(DirectoryNumber.updateDirectoryNumber).toBeDefined();
-    });
-  });
-
   describe('changeInternalNumber function', function () {
     it('should exist', function () {
       expect(DirectoryNumber.changeInternalNumber).toBeDefined();

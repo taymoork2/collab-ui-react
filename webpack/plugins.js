@@ -1,6 +1,8 @@
+const _ = require('lodash');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const _ = require('lodash');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const stylelintFormatter = require('stylelint-formatter-pretty');
 
 const isVendor = module => module.context && module.context.includes('node_modules');
 
@@ -24,15 +26,23 @@ const commonsChunkPlugins = [
   }),
 ];
 
+const styleLintPlugin = new StyleLintPlugin({
+  configFile: '.stylelintrc.js',
+  failOnError: true,
+  formatter: stylelintFormatter,
+  syntax: 'scss',
+});
+
 function getHtmlWebpackPlugin(options) {
   return new HtmlWebpackPlugin(_.assignIn({
     template: 'index.html',
-    chunks: ['manifest', 'newrelic', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+    chunks: ['manifest', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
     inject: false,
-    headChunks: ['manifest', 'newrelic'],
+    headChunks: ['manifest'],
     bodyChunks: ['preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
   }, options));
 }
 
 exports.commonsChunkPlugins = commonsChunkPlugins;
 exports.getHtmlWebpackPlugin = getHtmlWebpackPlugin;
+exports.styleLintPlugin = styleLintPlugin;

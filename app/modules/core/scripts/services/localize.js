@@ -9,7 +9,7 @@
     .name;
 
   /* @ngInject */
-  function Localize($filter, Utils, Authinfo, SessionStorage) {
+  function Localize($translate, Utils, Authinfo, SessionStorage) {
     return {
       varTitle: function () {
         var customerOrgId = SessionStorage.get('customerOrgId');
@@ -18,9 +18,9 @@
         if (customerOrgId || partnerOrgId) {
           return Authinfo.getOrgName();
         } else if (Utils.isAdminPage()) {
-          return $filter('translate')('index.appTitle');
+          return $translate.instant('index.newAppTitle');
         } else {
-          return $filter('translate')('index.genericTitle');
+          return $translate.instant('index.genericTitle');
         }
       },
     };

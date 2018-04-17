@@ -1,8 +1,8 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
-@import '~collab-ui/scss/objects/labels';
+@import '~@collabui/collab-ui/scss/objects/labels';
 
 .customer-list {
   @extend %grid-subheader;
@@ -13,7 +13,7 @@
   }
 
   .filter-dropdown {
-    width: 16rem;
+    width: 20rem;
   }
 }
 
@@ -75,15 +75,6 @@
 
     .badge--managed {
       margin-left: 12px;
-    }
-
-    .badge--premium {
-      min-width: 0;
-    }
-
-    .badge--premium:hover {
-      background-color: $color-primary-base;
-      color: $brand-white;
     }
 
     .orgnotselected {
@@ -158,8 +149,7 @@
   }
 
   .status-column {
-    padding-left: 25%;
-    padding-right: 25%;
+    padding-left: 10%;
   }
 }
 

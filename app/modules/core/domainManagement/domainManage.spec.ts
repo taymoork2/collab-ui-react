@@ -2,11 +2,10 @@ import testModule from './index';
 
 describe('Constructor of', () => {
 
-  let Config, $q, $rootScope, DomainManagementService;
+  let $q, $rootScope, DomainManagementService;
 
   beforeEach(angular.mock.module(testModule));
-  beforeEach(inject((_$q_, _$rootScope_, _Config_, _DomainManagementService_) => {
-    Config = _Config_;
+  beforeEach(inject((_$q_, _$rootScope_, _DomainManagementService_) => {
     $q = _$q_;
     $rootScope = _$rootScope_;
     DomainManagementService = _DomainManagementService_;

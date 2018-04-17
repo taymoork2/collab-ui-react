@@ -1,0 +1,173 @@
+<cs-sp-buttons ng-if="$ctrl.showSaveButton()">
+  <button id="btn-save" class="btn--primary btn-save" cs-btn loading="$ctrl.savingPage" ng-click="$ctrl.save()"><span
+    translate="common.save"></span></button>
+  <button id="btn-cancel" ng-disabled="$ctrl.savingPage" translate="common.cancel" ng-click="$ctrl.reset()"></button>
+</cs-sp-buttons>
+
+<cs-sp-container cs-tabindex="$ctrl.showSaveButton() ? -1 : 0">
+
+  <cs-sp-section class="hybrid-services-user-sidepanel">
+    <div class="section-title-row">
+      <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
+      <cs-toggle-switch
+        ng-if="!$ctrl.loadingPage"
+        toggle-id="calendarServiceEntitledToggle"
+        ng-model="$ctrl.selectedEntitledToggle"
+        cs-change="$ctrl.changeEntitlement(toggleValue)"
+        size="small"
+        is-disabled="$ctrl.savingPage"
+        cs-aria-label="{{::'hercules.cloudExtensions.serviceNames.squared-fusion-cal' | translate}}">
+      </cs-toggle-switch>
+      <span cs-loader
+            class="hybrid-services-label loader-example--small"
+            ng-if="$ctrl.loadingPage"></span>
+    </div>
+    <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal"></p>
+
+    <div ng-if="!$ctrl.loadingPage">
+      <span class="hybrid-services-label" translate="hercules.cloudExtensions.calendarType"></span>
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.selectedCalendarType"
+        name="selectedType"
+        value="squared-fusion-cal"
+        id="selectedType_exchange"
+        cs-input-label="{{:: $ctrl.exchangeAndOffice365Name}}"
+        cs-input-help-text="{{:: $ctrl.exchangeAndOffice365HelpText}}">
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.selectedCalendarType"
+        name="selectedType"
+        value="squared-fusion-gcal"
+        id="selectedType_google"
+        cs-input-label="{{:: $ctrl.googleName}}"
+        cs-input-help-text="{{:: $ctrl.googleHelpText}}">
+    </div>
+    <div ng-if="!$ctrl.loadingPage && $ctrl.showSaveButton() && $ctrl.selectedCalendarTypeNotEnabledInOrg() && $ctrl.selectedEntitledToggle && !$ctrl.isInvitePending">
+      <hybrid-services-sidepanel-message severity="'warning'" translation-key="'hercules.cloudExtensions.serviceNotEnabledInCloud'"></hybrid-services-sidepanel-message>
+    </div>
+    <div ng-if="$ctrl.loadingPage">
+      <span cs-loader class="hybrid-services-label loader-example--small"></span>
+    </div>
+
+    <div class="row collapse">
+
+      <div class="columns small-3" ng-if="!$ctrl.userStatus || !$ctrl.hasChangedCalendarType()">
+        <span class="hybrid-services-label" translate="cloudExtensions.status"></span><span>:</span>
+      </div>
+
+      <div class="columns small-7 normal-line-height"
+           ng-if="!$ctrl.loadingPage">
+        <div ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus && !$ctrl.selectedCalendarTypeNotEnabledInOrg() && !$ctrl.hasChangedCalendarType()">
+          <span class="hybrid-services-label"
+                ng-class="'status-' + $ctrl.userStatus.state"
+                id="userStatus"
+                translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.userStatus)}}"></span>
+
+          <span class="hybrid-services-label last-state-change-timestamp"
+                ng-if="$ctrl.lastStateChangeText">
+              {{$ctrl.lastStateChangeText}}</span>
+        </div>
+
+        <span class="hybrid-services-label status-off"
+              ng-if="$ctrl.isInvitePending"
+              translate="hercules.activationStatus.accountNotActivated"></span>
+
+        <span class="hybrid-services-label status-off"
+              ng-if="$ctrl.userStatus && $ctrl.selectedCalendarTypeNotEnabledInOrg() && !$ctrl.hasChangedCalendarType()"
+              translate="hercules.activationStatus.pendingNotSetup"></span>
+
+        <span class="hybrid-services-label status-off"
+              ng-if="!$ctrl.originalEntitledToggle && !$ctrl.couldNotReadUser && !$ctrl.isInvitePending"
+              translate="common.off"></span>
+
+        <span class="hybrid-services-label status-off"
+              ng-if="!$ctrl.originalEntitledToggle && $ctrl.couldNotReadUser && !$ctrl.isInvitePending"
+              translate="common.unknown"></span>
+
+      </div>
+
+      <div class="columns small-7 normal-line-height"
+           ng-if="$ctrl.loadingPage">
+        <span cs-loader class="hybrid-services-label loader-example--small"></span>
+      </div>
+
+      <div class="columns small-2">
+            <span ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus && !$ctrl.hasChangedCalendarType()"
+                  class="hybrid-services-label right">
+              <a ui-sref="user-overview.hybrid-services-squared-fusion-cal.history"
+                 translate="hercules.userHistory.seeHistory"></a>
+            </span>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.userStatus.messages.length && !$ctrl.selectedCalendarTypeNotEnabledInOrg()">
+        <div class="columns small-3">
+          <span class="hybrid-services-label">{{'cloudExtensions.details' | translate}}:</span>
+        </div>
+        <div class="columns small-9" ng-if="!$ctrl.loadingPage" class="hybrid-services-label">
+
+
+          <user-status-messages messages="$ctrl.userStatus.messages"
+                                resource-group-id="$ctrl.resourceGroupId"
+                                human-readable="true"
+                                connector-type="'c_cal'"
+                                ng-if="!$ctrl.userOwnedByCCC && $ctrl.selectedCalendarType === 'squared-fusion-cal'">
+
+          </user-status-messages>
+          <user-status-messages messages="$ctrl.userStatus.messages"
+                                ng-if="$ctrl.userOwnedByCCC || $ctrl.selectedCalendarType === 'squared-fusion-gcal'">
+          </user-status-messages>
+        </div>
+        <div class="columns small-9" ng-if="$ctrl.loadingPage">
+          <span cs-loader class="hybrid-services-label loader-example--small"></span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.userOwnedByCCC && !$ctrl.hasChangedCalendarType()">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="cloudExtensions.cluster"></span><span>:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="hybrid-services-label" translate="common.ciscoCollaborationCloud"></span>
+        </div>
+      </div>
+
+      <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.originalEntitledToggle && $ctrl.connectorId && !$ctrl.userOwnedByCCC && !$ctrl.hasChangedCalendarType()"
+                                                       connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+
+      <hybrid-calendar-preferred-webex-site preferred-web-ex-site-name="$ctrl.preferredWebExSiteName" ng-if="$ctrl.originalEntitledToggle && !$ctrl.hasChangedCalendarType()"></hybrid-calendar-preferred-webex-site>
+
+    </div>
+
+    <hs-is-invite-pending-warning ng-if="$ctrl.isInvitePending"
+                                  is-entitled="$ctrl.selectedEntitledToggle"
+                                  was-entitled="$ctrl.originalEntitledToggle"
+                                  service-id="'squared-fusion-cal'">
+    </hs-is-invite-pending-warning>
+
+    <hybrid-services-sidepanel-message ng-if="$ctrl.userHasBothCalendarEntitlements"
+                                       severity="'error'"
+                                       translation-key="'hercules.cloudExtensions.entitledToBothCalendars'">
+    </hybrid-services-sidepanel-message>
+
+    <hybrid-services-sidepanel-message ng-if="$ctrl.couldNotReadOffice365Status"
+                                       severity="'error'"
+                                       translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
+    </hybrid-services-sidepanel-message>
+
+    <hybrid-services-sidepanel-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
+                                       severity="'error'"
+                                       translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
+    </hybrid-services-sidepanel-message>
+
+  </cs-sp-section>
+
+  <hybrid-services-resource-group-selector ng-if="$ctrl.selectedCalendarType !== 'squared-fusion-gcal' && !$ctrl.loading"
+                                           user-id="$ctrl.userId"
+                                           service-id="'squared-fusion-cal'"
+                                           refresh-callback="$ctrl.resourceGroupRefreshCallback()"
+                                           user-owned-by-c-c-c="$ctrl.userOwnedByCCC" ></hybrid-services-resource-group-selector>
+
+</cs-sp-container>

@@ -60,7 +60,7 @@ export class UserPreferencesService {
     body[KEY_SCHEMAS] = user.schemas;
     body[KEY_USER_PREF] = updateUserPreferences;
     return this.$http.patch<IUser>(user.meta.location, body)
-      .then(response => response.data as IUser);
+      .then(response => response.data);
   }
 
 }

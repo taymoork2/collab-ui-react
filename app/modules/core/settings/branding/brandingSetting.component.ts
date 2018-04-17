@@ -6,12 +6,17 @@ export class BrandingSetting extends SettingSection {
   public constructor() {
     super('branding');
     this.subsectionLabel = '';
-    this.subsectionDescription = ' ';
+    this.subsectionDescription = '';
   }
 }
 
 export class BrandingSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
   public controllerAs = 'bctrl';
-  public templateUrl = 'modules/core/partnerProfile/branding/branding.tpl.html';
+  public bindings = {
+    showVersion: '<',
+    showBranding: '<',
+  };
+  public template = require('modules/core/partnerProfile/branding/branding.tpl.html');
+  public transclude = true;
 }

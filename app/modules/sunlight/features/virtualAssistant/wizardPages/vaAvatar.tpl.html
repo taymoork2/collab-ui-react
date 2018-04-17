@@ -1,0 +1,62 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">
+    {{$ctrl.getText('avatar.title')}}
+    </span>
+  </div>
+  <h6 class="h6 ct-title-desc">
+    {{$ctrl.getAvatarDescText()}}
+  </h6>
+  <div ng-switch="$ctrl.avatarUploadState" block-view="true">
+
+    <div ng-switch-when="SELECT|PREVIEW" ng-switch-when-separator="|" class="va-dash-box" ngf-drop="$ctrl.uploadAvatar($file)" ngf-drag-over-class="'dragover'" ngf-multiple="false">
+        <span ng-if="$ctrl.avatarUploadState === 'SELECT'">
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" ngf-src="$ctrl.template.configuration.pages.vaAvatar.avatarImageSrc"></img>
+            </div>
+          </div>
+          <h3 id="avatarUpload" class="header3 ct-title">{{$ctrl.getText('avatar.upload')}}</h3>
+          <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
+        </span>
+
+        <span ng-if="$ctrl.avatarUploadState === 'PREVIEW'">
+          <div>
+            <div class="va-img-circle">
+              <img class="va-img" ngf-src="$ctrl.template.configuration.pages.vaAvatar.fileValue"></img>
+            </div>
+          </div>
+          <h3 id="avatarPreview" class="header3 ct-title">{{$ctrl.getText('avatar.preview')}}</h3>
+          <p class="va-upload-desc">{{$ctrl.getText('avatar.uploadDesc')}}</p>
+        </span>
+
+        <div class="file-browser-ctrl" ngf-select="$ctrl.uploadAvatar($file)" ngf-accept="'image/png'" ngf-multiple="false">
+          <p class="ct-title-desc va-input-messages">
+            {{$ctrl.getText('avatar.dragDropDesc')}}
+            <label class="va-input-label" ng-keypress="$ctrl.openFileBrowser($event)" tabindex="0" focus-on>{{$ctrl.getText('avatar.fileBrowser')}}</label>
+          </p>
+        </div>
+    </div>
+
+    <div ng-switch-when="LOADING" class="va-dash-box">
+      <span id="stopLoad" ng-click="$ctrl.avatarStopLoad()">
+        <i class="icon icon-close va-align-right"></i>
+      </span>
+      <div class="va-spinner-center">
+        <i class="icon icon-spinner icon-5x"></i>
+        <h3 class="header3 ct-title">{{$ctrl.getText('avatar.uploadingImage')}}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="va-center va-error" ng-if="$ctrl.isAvatarError()">
+    <div ng-switch="$ctrl.template.configuration.pages.vaAvatar.avatarError" block-view="true">
+      <i class="icon icon-error icon-lg"></i>
+      <span ng-switch-when="FileTypeError"> {{$ctrl.getText('avatar.errorUnsupportedFile')}}</span>
+      <span ng-switch-when="FileSizeError"> {{$ctrl.getText('avatar.errorOverMaxFileSizeLimit')}}</span>
+      <span ng-switch-when="FileUploadError"> {{$ctrl.getText('avatar.errorUploadFile')}}</span>
+      <span ng-switch-when="InvalidFile"> {{$ctrl.getText('avatar.errorInvalidIcon')}}</span>
+      <span ng-switch-when="InvalidIconDimensions"> {{$ctrl.getText('avatar.errorInvalidIconDimensions')}}</span>
+    </div>
+  </div>
+</div>

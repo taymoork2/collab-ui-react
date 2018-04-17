@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Squared')
-    .controller('HelpdeskExtendedInfoDialogController', HelpdeskExtendedInfoDialogController);
+  module.exports = HelpdeskExtendedInfoDialogController;
 
   /* @ngInject */
   function HelpdeskExtendedInfoDialogController(title, data, $timeout, $scope, $log, Notification) {
@@ -33,7 +31,7 @@
 
     vm.clipboardError = function (e) {
       $log.error('Unable to copy data to clipboard. Details:', e);
-      Notification.error('helpdesk.extended-data-dialog.unableToCopy');
+      Notification.error('common.unableToCopy');
       e.clearSelection();
     };
   }

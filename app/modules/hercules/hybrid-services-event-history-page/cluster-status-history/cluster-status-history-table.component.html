@@ -1,0 +1,39 @@
+<div ng-if="$ctrl.loadingPage" class="loading-container-event-history">
+  <span class="spinner-event-history">
+    <i class="icon icon-spinner"></i>
+  </span>
+</div>
+<div ng-if="$ctrl.allEvents.length === 0 && !$ctrl.loadingPage" class="no-events-found-container">
+  <p class="no-events-found" translate="hercules.eventHistory.noEventsFound"></p>
+</div>
+<table ng-if="$ctrl.allEvents.length > 1 && !$ctrl.loadingPage">
+  <thead>
+    <tr>
+      <th translate="hercules.eventHistory.table.event"></th>
+      <th translate="hercules.eventHistory.table.severity"></th>
+      <th translate="hercules.eventHistory.table.type"></th>
+      <th translate="hercules.eventHistory.table.service"></th>
+      <th translate="hercules.eventHistory.table.resource"></th>
+      <th translate="hercules.eventHistory.table.performedBy"></th>
+      <th translate="hercules.eventHistory.table.time"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="event in $ctrl.allEvents | orderBy:'timeStamp' track by $index" ng-click="$ctrl.openSidepanel(event)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
+      <td>{{::event.title}}</td>
+      <td ng-if="event.severity === 'critical'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.critical"></span></td>
+      <td ng-if="event.severity === 'error'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.error"></span></td>
+      <td ng-if="event.severity === 'warning'"><span class="badge badge--outline warning" translate="hercules.eventHistory.table.warning"></span></td>
+      <td ng-if="event.severity === 'alert'"><span class="badge badge--outline" translate="hercules.eventHistory.table.info"></span></td>
+      <td ng-if="event.severity === 'RESOLVED'"><span class="badge badge--outline success" translate="hercules.eventHistory.table.resolved"></span></td>
+      <td ng-if="event.severity === 'IGNORED'"><span class="badge badge--outline warning" translate="hercules.eventHistory.table.ignored"></span></td>
+      <td ng-if="event.severity === 'NONE'"><span translate="hercules.eventHistory.table.none"></span></td>
+      <td>{{::$ctrl.getEventType(event)}}</td>
+      <td>{{::$ctrl.parseServiceForCluster(event.connectorType)}}</td>
+      <td>{{::event.resourceName}}</td>
+      <td ng-if="event.username">{{::event.username}}</td>
+      <td ng-if="!event.username">{{::event.userId}}</td>
+      <td>{{::$ctrl.formatTime(event.timestamp)}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -10,24 +10,34 @@
 * Use test utils in your expect statements, don't reinvent the wheel.
 ## Running Tests
 * Locally
-  * To run the tests locally in development, you must start Atlas locally via `npm start`, then from another terminal window execute the protractor tests.
+  * To run the tests locally in development, you must start Atlas locally via `yarn start`, then from another terminal window execute the protractor tests.
 * Running a Single .spec File
   * To run a single test you can pass the --specs parameter:
-`npm run protractor-babel -- --specs <path to spec file>`
+`yarn protractor-babel --specs <path to spec file>`
+
 ```
-npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel --specs  ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+* Running with yarn:
+`yarn protractor-babel --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js`
+
 * Via Sauce Labs
+* Set following Environment variables to run the tests via Suaucelab.
+* Unset following Environment variables to run the tests locally
 ```
 export SAUCE__MAX_INSTANCES="2"
 export SAUCE__USERNAME="atlas-web-limited"
 export SAUCE__ACCESS_KEY="b99c8bc7-4a28-4d87-8cd8-eba7c688d48c"
-npm run protractor-babel -- --specs ./test/e2e-protractor/huron/functional/<test name>.js --sauce --int
+export SAUCE__ORG_NAME="huron-ui-test-partner"
+
+yarn protractor-babel --specs ./test/e2e-protractor/huron/functional/<test name>.js --int
+
 ```
 
 * Ruuning all files in a given directory change directory to huron and apply the cmd.
 ```
-npm run protractor-babel -- --suite huron --sauce --int
+yarn protractor-babel --suite huron --int
+
 ```
 
 * The VS code debug launch config is  as follows for running a given sepc file in debugger mode
@@ -90,7 +100,57 @@ fit('only I will run', () => {...});
 ```
 fdescribe('only I will run', () => {...});
 ```
-* To not have the provisioner delete your customer when done, use the `--provisionserKeepCustomer` flag when running protractor:
+* To not have the provisioner delete your customer when done, use the `--provisionerKeepCustomer` flag when running protractor:
 ```
-npm run protractor-babel -- --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
+yarn protractor-babel --provisionerKeepCustomer --specs ./test/e2e-protractor/huron/functional/call-settings_spec.js
 ```
+## Creating a customer:
+```
+const customer = huronCustomer({
+  test: 'name-of-test',
+  users: { noOfUsers: 5, noOfLines: 3 },
+  places: { noOfPlaces: 3, noOfLines: 1 },
+  numberRange: { beginNumber: '500', endNumber: '599' }
+  pstn: 4,
+  doHuntGroup: true,
+  doCallPickup: true,
+  doCallPark: true,
+  doCallPaging: true,
+  doAllFeatures: true,
+  doFtsw: true,
+  offers: 'CALL'
+});
+```
+### `test:` This is the name of your test. Use kabob case.
+### `users:` Define both the number of users and how many lines to provision for the test.
+- Example: `users: { noOfUsers: 5, noOfLines: 3 }` will create 5 users, giving pstn to the first 3 users (max 10 users)
+### `places:` Define both the number of places and how many lines to provision for the test.
+- Example: `places: { nofOfPlaces: 3, nofOfLines: 2 }` will create 3 places, with the first 2 places recieving a pstn (max 5 places)
+### `numberRange:` Defines the extension range, giving both a beginning number and and end number for the range.
+### `pstn:` how many unassigned numbers to provision for testing. These can be added to users or places during testing.
+* Note that if you create a group of users with 3 lines, a group of places with 1 line, and 4 pstns, you will provision a total of 8 lines, 3 assigned to users, 1 assigned to places, and 4 unassigned numbers.
+### `doHuntGroup:` Toggles the hunt group feature. True toggles it on. If this is not called, it will default to false.
+* This will create a hunt group with 2 users. Be sure there are at least 2 users created in the provisioner!
+### `doCallPickup:` Toggles the call pickup feature. True toggles it on. If this is not called, it will default to false.
+* This will create a call pickup group with 2 users. Be sure there are at least 2 users created in the provisioner!
+### `doCallPark:` Toggles the call park feature. True toggles it on. If this is not called, it will default to false.
+* This will create a call park group with 2 users. Be sure there are at least 2 users created in the provisioner!
+### `doCallPaging:` Toggles the call paging feature. True toggles it on. If this is not called, it will default to false.
+* This will create a call paging group with 1 user and 1 place. Be sure there are at least 1 of each created in the provisioner!
+### `doAllFeatures:` Toggles all call features above to allow for testing.
+* See the note on each of the above feature to see what gets implemented. This toggle will create 2 users and 2 places each with 2 dids. No need to add them via users and places toggle.
+### `doFtsw:` Toggles the ability to do first time setup wizard. True allows for ftsw, false will have provisioner skip it.
+### `offers:` Toggles different offers for customer.
+- `'CALL'`: Creates a customer with call feature only
+- `'ROOMSERVICES'`: Creates a customer with room services only
+- `'NONE'`: Creates a customer with messaging only
+- If not called, the customer will be created with call and roomservices.
+
+### Also note that extensions have been fixedly assigned to prevent conflicts. As of now extensions are as follows:
+- Places: 300-304
+- Users: 310-319
+- Hunt Group: 325
+- Call Park: 350-359
+- Call Paging: 375
+
+Obviously if number range is set, the extensions will adjust (ie extension range is 500-599, Hunt Group will be 525).

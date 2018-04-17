@@ -1,11 +1,21 @@
-<button type="button"
-        class="btn"
-        ng-class="{'btn--primary': !$ctrl.serviceIsEnabled}"
-        ng-disabled="$ctrl.saving"
-        ng-click="$ctrl.flipStatus()">
-  <span ng-if="!$ctrl.serviceIsEnabled" translate="common.activate"></span>
-  <span ng-if="$ctrl.serviceIsEnabled" translate="common.deactivate"></span>
-</button>
-<span ng-show="$ctrl.saving">
-  <i class="icon icon-spinner"/>
-</span>
+<div class="sub-section">
+  <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-ec"></p>
+  <p translate="hercules.settings.call.connect"></p>
+  <button type="button"
+          class="btn"
+          ng-class="{'btn--primary': !$ctrl.serviceIsEnabled}"
+          ng-disabled="$ctrl.saving"
+          ng-click="$ctrl.flipStatus()">
+    <span ng-if="!$ctrl.serviceIsEnabled" translate="common.activate"></span>
+    <span ng-if="$ctrl.serviceIsEnabled" translate="common.deactivate"></span>
+  </button>
+  <button ng-show="!$ctrl.serviceIsEnabled"
+          type="button"
+          class="btn"
+          ng-click="$ctrl.openPrerequisites()">
+    <span translate="servicesOverview.genericButtons.prereq"></span>
+  </button>
+  <span ng-show="$ctrl.saving">
+    <i class="icon icon-spinner"/>
+  </span>
+</div>

@@ -2,7 +2,7 @@ import outboundDialDigitModule from './index';
 
 describe('Component: outboundDialDigit', () => {
   const OUTBOUND_DIAL_DIGIT_SELECT = '.csSelect-container[name="steeringDigit"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const WARNING_MSG = '.msg-container span.text-wrap';
   const STEERING_DIGIT_NULL = 'null';
   const STEERING_DIGIT_FIVE = '5';

@@ -1,10 +1,6 @@
-<div class="ui-grid-cell-contents">
-  <i
-    class="icon icon-circle status-indicator user-status"
+<div class="ui-grid-cell-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
+  <i class="icon icon-circle status-indicator user-status"
     ng-class="{'success': !row.entity.userStatus || row.entity.userStatus === 'active', 'warning': row.entity.userStatus && row.entity.userStatus === 'pending', 'danger': row.entity.userStatus && row.entity.userStatus === 'error'}">
   </i>
-  <span>
-    {{row.entity.userStatus|userListFilter}}
-  </span>
+  <span>{{row.entity.userStatus|userListFilter}}</span>
 </div>
-

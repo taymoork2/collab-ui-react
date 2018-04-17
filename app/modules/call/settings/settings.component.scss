@@ -1,9 +1,13 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .huronsettings-state {
+  @extend %page-background-white;
+}
+
+.huronsettingslocation-state {
   @extend %page-background-white;
 }
 
@@ -43,20 +47,12 @@
       }
     }
 
-    .service-setup-container > .formly > .formly-field + .formly-field {
-      margin-top: 3rem;
-    }
-
     .max-width-form ng-form {
       width: 100%;
     }
 
     .service-address-buttons {
       margin-top: 1rem;
-    }
-
-    .control-label {
-      color: $gray-dark-4;
     }
 
     .description-block,
@@ -126,7 +122,8 @@
     }
 
     .display-flex {
-      display: inline-flex;
+      display: flex;
+      align-items: center;
     }
 
     .service-setup-extension-length,

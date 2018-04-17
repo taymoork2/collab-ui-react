@@ -1,4 +1,4 @@
-import './_partner-reports.scss';
+import './partner-reports.scss';
 import { ReportPrintService } from './commonReportServices/reportPrint.service';
 import { ReportConstants } from './commonReportServices/reportConstants.service';
 import { DummyReportService } from './dummyReport.service';

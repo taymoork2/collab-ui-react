@@ -1,53 +1,36 @@
 'use strict';
 
 describe('AddLinesCtrl: Ctrl', function () {
-  var controller, $stateParams, $state, $scope, Notification, $q, FeatureToggleService, CommonLineService, CsdmDataModelService, DialPlanService;
-  var $controller;
-  var $httpBackend;
-  var internalNumbers;
-  var externalNumbers;
-  var externalNumberPool;
-  var externalNumberPoolMap;
-  var sites;
-  var entitylist;
+  beforeEach(function () {
+    this.initModules('Core', 'Huron', 'Sunlight', 'Squared');
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$scope',
+      '$state',
+      '$stateParams',
+      'CommonLineService',
+      'CsdmDataModelService',
+      'DialPlanService',
+      'FeatureToggleService',
+      'Notification'
+    );
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('Squared'));
+    this.internalNumbers = getJSONFixture('huron/json/internalNumbers/numbersInternalNumbers.json');
+    this.externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
+    this.externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
+    this.externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
+    this.sites = getJSONFixture('huron/json/settings/sites.json');
 
-  beforeEach(inject(function (_$controller_, $rootScope, _$q_, _$state_, _$stateParams_, _Notification_, _FeatureToggleService_, _CsdmDataModelService_, _CommonLineService_, _DialPlanService_, _$httpBackend_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
-    $q = _$q_;
-    $state = _$state_;
-    $stateParams = _$stateParams_;
-    Notification = _Notification_;
-    FeatureToggleService = _FeatureToggleService_;
-    CommonLineService = _CommonLineService_;
-    CsdmDataModelService = _CsdmDataModelService_;
-    DialPlanService = _DialPlanService_;
-    var current = {
+    this.$scope.wizard = {};
+    this.$scope.wizard.current = {
       step: {
         name: 'fakeStep',
       },
     };
 
-    var data = {
-      data: {
-        deviceName: 'Red River',
-      },
-    };
-
-    $scope.entitylist = [{
-      name: 'Red River',
-    }];
-
-    $scope.wizard = {};
-    $scope.wizard.current = current;
-
-    $stateParams.wizard = {
+    this.$stateParams.wizard = {
       state: function () {
         return {
           data: {
@@ -58,156 +41,185 @@ describe('AddLinesCtrl: Ctrl', function () {
         };
       },
     };
-    $scope.wizardData = data;
 
-    function isLastStep() {
-      return false;
-    }
+    this.$scope.wizardData = {
+      data: {
+        deviceName: 'Red River',
+      },
+    };
 
-    $scope.wizard.isLastStep = isLastStep;
+    this.$scope.wizard.isLastStep = jasmine.createSpy('isLastStep').and.returnValue(false);
 
-    spyOn($state, 'go');
+    spyOn(this.$state, 'go');
+    spyOn(this.Notification, 'notify');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve());
 
-    internalNumbers = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
-    externalNumbers = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
-    externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
-    externalNumberPoolMap = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPoolMap.json');
-    entitylist = $scope.entitylist;
-    entitylist[0].externalNumber = externalNumberPool[0];
+    spyOn(this.CommonLineService, 'getInternalNumberPool').and.returnValue(this.internalNumbers);
+    spyOn(this.CommonLineService, 'loadInternalNumberPool').and.returnValue(this.$q.resolve(this.internalNumbers));
+    spyOn(this.CommonLineService, 'getExternalNumberPool').and.returnValue(this.externalNumbers);
 
-    sites = getJSONFixture('huron/json/settings/sites.json');
-
-    spyOn(Notification, 'notify');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve());
-
-    spyOn(CommonLineService, 'getInternalNumberPool').and.returnValue(internalNumbers);
-    spyOn(CommonLineService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumbers));
-    spyOn(CommonLineService, 'getExternalNumberPool').and.returnValue(externalNumbers);
-
-    spyOn(CommonLineService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumbers));
-    spyOn(CommonLineService, 'loadPrimarySiteInfo').and.returnValue($q.resolve(sites));
-    spyOn(CommonLineService, 'mapDidToDn').and.returnValue($q.resolve(externalNumberPoolMap));
-    spyOn(DialPlanService, 'getDialPlan').and.returnValue($q.resolve({
+    spyOn(this.CommonLineService, 'loadExternalNumberPool').and.returnValue(this.$q.resolve(this.externalNumbers));
+    spyOn(this.CommonLineService, 'loadPrimarySiteInfo').and.returnValue(this.$q.resolve(this.sites));
+    spyOn(this.CommonLineService, 'mapDidToDn').and.returnValue(this.$q.resolve(this.externalNumberPoolMap));
+    spyOn(this.DialPlanService, 'getDialPlan').and.returnValue(this.$q.resolve({
       extensionGenerated: 'false',
     }));
 
-    spyOn(CommonLineService, 'assignMapUserList').and.returnValue((entitylist));
+    spyOn(this.CommonLineService, 'assignMapUserList').and.returnValue([{
+      name: 'Red River',
+      externalNumber: this.externalNumberPool[0],
+    }]);
+    spyOn(this.CommonLineService, 'assignDNForUserList').and.callThrough();
 
-    entitylist[0].assignedDn = internalNumbers[0];
-    spyOn(CommonLineService, 'assignDNForUserList').and.callThrough();
-  }));
+    this.initController = function () {
+      this.controller = this.$controller('AddLinesCtrl', {
+        $scope: this.$scope,
+        $state: this.$state,
+        CommonLineService: this.CommonLineService,
+      });
+    };
 
-  function initController() {
-    controller = $controller('AddLinesCtrl', {
-      $scope: $scope,
-      $state: $state,
-      CommonLineService: CommonLineService,
-    });
-  }
+    installPromiseMatchers();
+  });
 
   afterEach(function () {
     jasmine.getJSONFixtures().clearCache();
   });
-  beforeEach(installPromiseMatchers);
 
   describe('Places Add DID and DN assignment', function () {
     beforeEach(function () {
-      $httpBackend
-        .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
-        .respond({});
-      initController();
-      $scope.entitylist = [{
+      this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
+      this.initController();
+      this.controller.addDnGridOptions.data = [{
         name: 'Red River',
       }];
 
-      $scope.$apply();
+      this.$scope.$apply();
+      this.phoneNumber = '+14084744532';
     });
 
     it('activateDID', function () {
-      controller.activateDID();
-      $scope.$apply();
+      this.controller.activateDID();
+      this.$scope.$apply();
 
-      expect($scope.externalNumber.pattern).toEqual('+14084744532');
-      expect(CommonLineService.assignDNForUserList).toHaveBeenCalled();
+      expect(this.$scope.externalNumber.pattern).toEqual(this.phoneNumber);
+      expect(this.CommonLineService.assignDNForUserList).toHaveBeenCalled();
     });
 
     it('mapDidToDn', function () {
-      initController();
-      $scope.showExtensions = false;
-      controller.mapDidToDn();
-      $scope.$apply();
-      expect($scope.externalNumber.pattern).toEqual('+14084744532');
+      this.initController();
+      this.$scope.showExtensions = false;
+      this.controller.mapDidToDn();
+      this.$scope.$apply();
+      expect(this.$scope.externalNumber.pattern).toEqual(this.phoneNumber);
     });
   });
 
   describe('wizard functions', function () {
-    var deviceCisUuid;
-    var locationUuid;
-    var directoryNumber;
-    var externalNumber;
-    var entitlements;
     beforeEach(function () {
-      deviceCisUuid = 'deviceId';
-      locationUuid = 'locationUuid';
-      directoryNumber = 'directoryNumber';
-      externalNumber = 'externalNumber';
-      entitlements = ['something', 'else'];
+      this.deviceCisUuid = 'deviceId';
+      this.locationUuid = 'locationUuid';
+      this.directoryNumber = 'directoryNumber';
+      this.externalNumber = 'externalNumber';
+      this.entitlements = ['something', 'else'];
     });
 
     describe('has next', function () {
       describe('with enableCalService', function () {
         beforeEach(function () {
-          $stateParams.wizard = {
+          this.$stateParams.wizard = {
             state: function () {
               return {
                 data: {
                   account: {
-                    cisUuid: deviceCisUuid,
+                    cisUuid: this.deviceCisUuid,
                     enableCalService: true,
                   },
                 },
               };
             },
-            next: function () {
-            },
+            next: _.noop,
           };
-          spyOn($stateParams.wizard, 'next');
-          initController();
+          this.initController();
         });
+
         it('should evaluate hasNext to true', function () {
-          expect(controller.hasNextStep()).toBe(true);
+          expect(this.controller.hasNextStep()).toBe(true);
         });
       });
+
       describe('with enableCalService false and it is editServices', function () {
         beforeEach(function () {
-          $stateParams.wizard = {
+          this.$stateParams.wizard = {
             state: function () {
               return {
                 data: {
                   function: 'editServices',
                   account: {
-                    cisUuid: deviceCisUuid,
+                    cisUuid: this.deviceCisUuid,
                     enableCalService: false,
                   },
                 },
               };
             },
-            next: function () {
-            },
+            next: _.noop,
           };
-          spyOn($stateParams.wizard, 'next');
-          initController();
+          this.initController();
         });
 
         it('should evaluate hasNext to false', function () {
-          expect(controller.hasNextStep()).toBe(false);
+          expect(this.controller.hasNextStep()).toBe(false);
         });
+      });
+    });
+
+    describe('isDisabled', function () {
+      beforeEach(function () {
+        this.initController();
+      });
+
+      it('with empty internal number pool should be disabled', function () {
+        this.CommonLineService.getInternalNumberPool.and.returnValue([]);
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('with empty external number pool should be disabled', function () {
+        this.CommonLineService.getExternalNumberPool.and.returnValue([]);
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('without directoryNumber selected should be disabled', function () {
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(true);
+      });
+
+      it('with filled pools and directoryNumber selected should be enabled', function () {
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
+        });
+        this.$scope.$apply();
+        expect(this.controller.isDisabled()).toBe(false);
       });
     });
 
     describe('next', function () {
       beforeEach(function () {
-        $stateParams.wizard = {
+        var deviceCisUuid = this.deviceCisUuid;
+        this.$stateParams.wizard = {
           state: function () {
             return {
               data: {
@@ -217,40 +229,41 @@ describe('AddLinesCtrl: Ctrl', function () {
               },
             };
           },
-          next: function () {
-          },
+          next: jasmine.createSpy('next'),
         };
-        spyOn($stateParams.wizard, 'next');
-        initController();
+        this.initController();
       });
 
       it('with only directoryNumber specified should set the wizardState with correct fields for show activation code modal', function () {
-        $scope.entitylist = [{
-          assignedDn: { pattern: directoryNumber },
+        this.controller.addDnGridOptions.data = [{
+          assignedDn: { number: this.directoryNumber },
           externalNumber: { pattern: 'Ingen', uuid: 'none' },
         }];
-        controller.next();
-        $scope.$apply();
-        expect($stateParams.wizard.next).toHaveBeenCalled();
-        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
-        expect(wizardState.account.directoryNumber).toBe(directoryNumber);
+        this.controller.next();
+        this.$scope.$apply();
+        expect(this.$stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = this.$stateParams.wizard.next.calls.mostRecent().args[0];
+        expect(wizardState.account.directoryNumber).toBe(this.directoryNumber);
         expect(wizardState.account.externalNumber).toBeUndefined();
       });
 
       it('with only externalNumber specified should set the wizardState with correct fields for show activation code modal', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({ externalNumber: externalNumber });
-        controller.next();
-        $scope.$apply();
-        expect($stateParams.wizard.next).toHaveBeenCalled();
-        var wizardState = $stateParams.wizard.next.calls.mostRecent().args[0];
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({ externalNumber: this.externalNumber });
+        this.controller.next();
+        this.$scope.$apply();
+        expect(this.$stateParams.wizard.next).toHaveBeenCalled();
+        var wizardState = this.$stateParams.wizard.next.calls.mostRecent().args[0];
         expect(wizardState.account.directoryNumber).toBeUndefined();
-        expect(wizardState.account.externalNumber).toBe(externalNumber);
+        expect(wizardState.account.externalNumber).toBe(this.externalNumber);
       });
     });
 
     describe('save', function () {
       beforeEach(function () {
-        $stateParams.wizard = {
+        var entitlements = this.entitlements;
+        var deviceCisUuid = this.deviceCisUuid;
+
+        this.$stateParams.wizard = {
           state: function () {
             return {
               data: {
@@ -261,83 +274,81 @@ describe('AddLinesCtrl: Ctrl', function () {
               },
             };
           },
-          save: function () {
-          },
+          save: _.noop,
         };
-        spyOn($stateParams.wizard, 'save');
-        initController();
-        $scope.$dismiss = function () {
-        };
-        spyOn($scope, '$dismiss');
-        spyOn(Notification, 'success');
-        spyOn(Notification, 'errorResponse');
-        spyOn(Notification, 'warning');
+        spyOn(this.$stateParams.wizard, 'save');
+        this.initController();
+        this.$scope.$dismiss = _.noop;
+        spyOn(this.$scope, '$dismiss');
+        spyOn(this.Notification, 'success');
+        spyOn(this.Notification, 'errorResponse');
+        spyOn(this.Notification, 'warning');
       });
 
       it('passes on the selected numbers to CsdmDataModeService', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({
-          locationUuid: locationUuid,
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber,
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          locationUuid: this.locationUuid,
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
         });
-        var place = { cisUuid: deviceCisUuid };
-        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve(place));
-        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.resolve());
-        controller.save();
-        $scope.$apply();
-        expect(CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
-          entitlements: entitlements,
-          locationUuid: locationUuid,
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber,
+        var place = { cisUuid: this.deviceCisUuid };
+        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve(place));
+        spyOn(this.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(this.$q.resolve());
+        this.controller.save();
+        this.$scope.$apply();
+        expect(this.CsdmDataModelService.updateCloudberryPlace).toHaveBeenCalledWith(place, {
+          entitlements: this.entitlements,
+          locationUuid: this.locationUuid,
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
         });
-        expect(Notification.success).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalled();
+        expect(this.Notification.success).toHaveBeenCalled();
+        expect(this.$scope.$dismiss).toHaveBeenCalled();
       });
 
       it('display warning when place not found', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber,
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
         });
-        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve());
-        controller.save();
-        $scope.$apply();
-        expect(Notification.warning).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve());
+        this.controller.save();
+        this.$scope.$apply();
+        expect(this.Notification.warning).toHaveBeenCalled();
+        expect(this.$scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
       it('display error when fetching place fails', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber,
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
         });
-        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.reject());
-        controller.save();
-        $scope.$apply();
-        expect(Notification.errorResponse).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.reject());
+        this.controller.save();
+        this.$scope.$apply();
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+        expect(this.$scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
       it('display error when update fails', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({
-          directoryNumber: directoryNumber,
-          externalNumber: externalNumber,
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({
+          directoryNumber: this.directoryNumber,
+          externalNumber: this.externalNumber,
         });
-        spyOn(CsdmDataModelService, 'reloadPlace').and.returnValue($q.resolve({ cisUuid: deviceCisUuid }));
-        spyOn(CsdmDataModelService, 'updateCloudberryPlace').and.returnValue($q.reject());
-        controller.save();
-        $scope.$apply();
-        expect(Notification.errorResponse).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve({ cisUuid: this.deviceCisUuid }));
+        spyOn(this.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(this.$q.reject());
+        this.controller.save();
+        this.$scope.$apply();
+        expect(this.Notification.errorResponse).toHaveBeenCalled();
+        expect(this.$scope.$dismiss).toHaveBeenCalledTimes(0);
       });
 
       it('display warning when no directoryNumber or externalNumber is set', function () {
-        spyOn(controller, 'getSelectedNumbers').and.returnValue({});
-        controller.save();
-        $scope.$apply();
-        expect(Notification.warning).toHaveBeenCalled();
-        expect($scope.$dismiss).toHaveBeenCalledTimes(0);
+        spyOn(this.controller, 'getSelectedNumbers').and.returnValue({});
+        this.controller.save();
+        this.$scope.$apply();
+        expect(this.Notification.warning).toHaveBeenCalled();
+        expect(this.$scope.$dismiss).toHaveBeenCalledTimes(0);
       });
     });
   });

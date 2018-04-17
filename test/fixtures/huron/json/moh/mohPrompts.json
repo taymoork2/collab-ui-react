@@ -18,7 +18,10 @@
 	"displayName": "filename2",
 	"rhesosId": "9cdd6f7b-5814-4edb-9697-a015d7f32b3g",
 	"markForDelete": false,
-	"assignments": []
+	"assignments": [{
+		"assignmentId": "abcd",
+		"idType": "LOCATION_ID"
+	}]
 }, {
 	"orgId": "12345",
 	"mediaId": "246c8179-fe86-4a97-88d6-8b1799156e3b",
@@ -28,7 +31,7 @@
 	"rhesosId": "f03276fe-3ffb-4e94-a3cb-8ef86752eecd",
 	"markForDelete": false,
 	"assignments": [{
-		"assignmentId": "abcd-1234",
+		"assignmentId": "abcd-12345",
 		"idType": "NUM_UUID"
 	  }]
 }]

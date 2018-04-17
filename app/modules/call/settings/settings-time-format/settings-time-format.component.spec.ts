@@ -2,7 +2,7 @@ import timeFormatModule from './index';
 
 describe('Component: timeFormat', () => {
   const TIME_FORMAT_SELECT = '.csSelect-container[name="timeFormatSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const TWELVE_HOUR_FORMAT = '12-hour';
   const TWENTY_FOUR_HOUR_FORMAT = '24-hour';
   const timeFormatOptions = getJSONFixture('huron/json/settings/timeFormats.json');

@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="callPickup.cancelHeader" ></h3>
+</div>
+<div class="modal-body">
+  <span translate="callPickup.cancelDialog"></span>
+</div>
+<div class="modal-footer">
+  <button class="btn btn--primary" id="continuecallPickup" ng-click="$dismiss()"
+          translate="callPickup.continueButton" focus-on></button>
+  <button class="btn btn--negative" id="cancelcallPickup" ng-click="$dismiss()" ui-sref="huronfeatures"
+          translate="callPickup.confirmButton"></button>
+</div>

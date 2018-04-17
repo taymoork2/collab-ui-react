@@ -1,0 +1,98 @@
+<cs-page-header
+  title-name="{{$ctrl.title}}"
+  back="true"
+  back-url="$ctrl.huronFeaturesUrl"
+  back-aria-label="{{::'common.back' | translate}}">
+</cs-page-header>
+<div class="call-feature-edit">
+  <div class="loading-container" ng-if="$ctrl.isLoading">
+    <i class='icon icon-spinner'></i>
+  </div>
+  <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="pagingGroup.pagingGroupSettings"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <label class="sub-section__label" translate="pagingGroup.pagingGroupName"></label>
+          <uc-call-feature-name
+            placeholder-key="pagingGroup.namePlaceholder"
+            name="$ctrl.pagingGroup.name"
+            is-required="true"
+            is-new="false"
+            validation-reg-ex="$ctrl.nameRegEx"
+            validation-reg-ex-message-key="pagingGroup.sayInvalidChar"
+            on-change-fn="$ctrl.setPagingGroupName(name)"
+            on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+            ng-class="$ctrl.animation">
+          </uc-call-feature-name>
+        </div>
+        <div class="sub-section">
+          <label class="sub-section__label" for="pagingGroupNumber" translate="pagingGroup.pagingGroupNumber"></label>
+          <p class="description-block" translate="pagingGroup.numberHint"></p>
+          <uc-paging-group-number
+            extension="$ctrl.pagingGroup.extension"
+            internal-number-options="$ctrl.internalNumberOptions"
+            on-number-filter="$ctrl.filterInternalNumbers(filter)"
+            on-change-fn="$ctrl.setPagingGroupExtension(extension)">
+          </uc-paging-group-number>
+        </div>
+      </div>
+    </div>
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="common.members"></h4>
+        <p class="section__description" translate="pagingGroup.memberEditHint"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="pagingGroup.pagingGroupMembers"></h5>
+          <uc-call-feature-members
+            members="$ctrl.pagingGroup.members"
+            member-item-type="member"
+            remove-key="common.remove"
+            component-type="$ctrl.componentType"
+            show-external-numbers="false"
+            filter-by="$ctrl.memberProperties"
+            drag-and-drop="false"
+            on-change-fn="$ctrl.setPagingGroupMembers(members)">
+          </uc-call-feature-members>
+        </div>
+      </div>
+    </div>
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="pagingGroup.intitiators"></h4>
+        <p class="section__description" translate="pagingGroup.initiatorEditHint"></p>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="pagingGroup.pagingGroupInitiator"></h5>
+          <uc-paging-group-initiator
+            initiators="$ctrl.pagingGroup.initiators"
+            initiator-type="$ctrl.pagingGroup.initiatorType"
+            on-change-fn="$ctrl.setPagingGroupInitiators(initiatorType, initiators)">
+          </uc-paging-group-initiator>
+        </div>
+      </div>
+    </div>
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+      <p translate="common.saveLabel"></p>
+      <button
+        cs-btn
+        name="pgCancelButton"
+        ng-click="$ctrl.onCancel()">
+        <span translate="common.cancel"></span>
+      </button>
+      <button
+        cs-btn
+        class="btn btn--primary"
+        loading="$ctrl.saveInProcess"
+        ng-click="$ctrl.save()"
+        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+        <span translate="common.save"></span>
+      </button>
+    </div>
+  </form>
+</div>

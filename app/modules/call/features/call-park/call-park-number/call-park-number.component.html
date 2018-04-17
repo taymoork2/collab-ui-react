@@ -15,11 +15,11 @@
     <div class="cs-input-group cs-input-radio'">
       <input
         type="radio"
+        name="rangeOrSingle"
         class="cs-input"
         id="radioTypeRange"
         ng-value="'range'"
-        ng-model="$ctrl.rangeType"
-        ng-focus="$ctrl.focusInput($event)">
+        ng-model="$ctrl.rangeType">
       <label class="cs-radio" for="radioTypeRange">
         <div class="cp-edit-range">
           <div class="range-input">
@@ -74,11 +74,11 @@
     <div class="cs-input-group cs-input-radio">
       <input
         type="radio"
+        name="rangeOrSingle"
         class="cs-input"
         id="radioTypeSingle"
         ng-value="'single'"
-        ng-model="$ctrl.rangeType"
-        ng-focus="$ctrl.focusInput($event)">
+        ng-model="$ctrl.rangeType">
       <label class="cs-radio" for="radioTypeSingle">
         <input
           cs-input
@@ -93,7 +93,8 @@
           maxlength="{{$ctrl.extensionLength}}"
           minlength="{{$ctrl.extensionLength}}"
           autocomplete="off"
-          validate-range>
+          validate-range
+          location="{{$ctrl.location}}">
       </label>
     </div>
   </div>

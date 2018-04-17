@@ -2,9 +2,7 @@
 
 <!-- header -->
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismissModal()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="trialModal.pstn.title"></h3>
 </div>
 
@@ -76,7 +74,7 @@
           <ul class="list-group">
              <li class="list-group-item list-token info" ng-repeat="order in $ctrl.trialData.details.pstnNumberInfo.numbers">
               <span>{{::order.data.numbers}}</span>
-              <button type="button" class="close" ng-click="$ctrl.removeOrder(order)"><span class="sr-only" translate="common.delete"></span></button>
+              <button type="button" class="close" ng-click="$ctrl.removeOrder(order)" aria-label="{{::'common.delete' | translate}}"></button>
             </li>
           </ul>
         </div>
@@ -92,7 +90,8 @@
           reset-address="$ctrl.resetAddress()"
           read-only="$ctrl.readOnly"
           validate-address="$ctrl.validateAddress()"
-          show-validation="true"></emergency-services>
+          show-validation="true">
+        </emergency-services>
       </div>
     </div>
 
@@ -110,9 +109,13 @@
     ng-disabled="$ctrl.trial.loading"
     translate="common.back">
   </button>
-  <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="$ctrl.trial.loading"
+  <button id="startTrialButton"
+    class="btn btn--primary"
+    type="button"
+    cs-btn
+    loading="$ctrl.trial.loading"
     ng-click="$ctrl.trialForm.$setPristine(true); $ctrl.trial.nextStep()"
-    ng-disabled="($ctrl.trialForm.$invalid && $ctrl.providerImplementation !== $ctrl.SWIVEL) || $ctrl.disableNextButton()">
+    ng-disabled="$ctrl.isDisabled()">
     <span ng-if="!$ctrl.trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
     <span ng-if="$ctrl.trial.hasNextStep()" translate="common.next"></span>
   </button>

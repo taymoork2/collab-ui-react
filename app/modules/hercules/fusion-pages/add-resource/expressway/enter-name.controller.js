@@ -4,6 +4,8 @@
   angular.module('Hercules')
     .controller('ExpresswayEnterNameController', ExpresswayEnterNameController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function ExpresswayEnterNameController($q, $stateParams, $translate, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, Notification) {
     var vm = this;
@@ -46,6 +48,9 @@
           if (data.selectedServices.calendar) {
             promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_cal'));
           }
+          if (data.selectedServices.imp) {
+            promises.push(HybridServicesClusterService.provisionConnector(vm.clusterId, 'c_imp'));
+          }
           return $q.all(promises);
         })
         .then(function () {
@@ -64,7 +69,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

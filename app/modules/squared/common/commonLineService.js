@@ -6,18 +6,19 @@
     .service('CommonLineService', CommonLineService);
 
   /* @ngInject */
-  function CommonLineService(TelephonyInfoService, Notification, $translate) {
+  function CommonLineService(TelephonyInfoService, NumberService, FeatureToggleService, Notification, $translate) {
     var entitylist = [];
     var internalNumberPool = [];
     var externalNumberPool = [];
     var telephonyInfo = {};
-    var PATTERN_LIMIT = 50;
     var nameTemplate;
+    var order = '';
 
     var service = {
       loadPrimarySiteInfo: loadPrimarySiteInfo,
       getTelephonyInfo: getTelephonyInfo,
       loadInternalNumberPool: loadInternalNumberPool,
+      loadLocationInternalNumberPool: loadLocationInternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
       returnInternalNumberList: returnInternalNumberList,
       returnExternalNumberList: returnExternalNumberList,
@@ -74,12 +75,25 @@
     }
 
     function loadInternalNumberPool(pattern) {
-      return TelephonyInfoService.loadInternalNumberPool(pattern, PATTERN_LIMIT).then(function (internalPool) {
-        internalNumberPool = internalPool;
-      }).catch(function (response) {
-        internalNumberPool = [];
-        Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
-      });
+      return NumberService.getNumberList(pattern, 'internal', false, null, null, null, null)
+        .then(function (internalPool) {
+          internalNumberPool = internalPool;
+        }).catch(function (response) {
+          internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
+    }
+
+    function loadLocationInternalNumberPool(pattern, locationId) {
+      order = 'SITETOSITE-ASC';
+      return NumberService.getNumberList(pattern, 'internal', false, order, null, null, locationId)
+        .then(function (internalPool) {
+          internalNumberPool = internalPool;
+          return _.cloneDeep(internalNumberPool);
+        }).catch(function (response) {
+          internalNumberPool = [];
+          Notification.errorResponse(response, 'directoryNumberPanel.internalNumberPoolError');
+        });
     }
 
     function loadExternalNumberPool(pattern) {
@@ -139,17 +153,20 @@
     }
 
     function getNameTemplate() {
-      nameTemplate = '<div class="ui-grid-cell-contents"><span class="name-display-style">{{row.entity.name}}</span>' +
+      nameTemplate = '<div class="ui-grid-cell-contents" ng-click=""><span class="name-display-style">{{row.entity.name}}</span>' +
         '<span class="email-display-style">{{row.entity.address}}</span></div>';
       return nameTemplate;
     }
 
-    function returnInternalNumberList(pattern) {
-      if (pattern) {
-        loadInternalNumberPool(pattern);
-      } else {
-        return internalNumberPool;
-      }
+    function returnInternalNumberList(pattern, locationId) {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          if (supported) {
+            loadLocationInternalNumberPool(pattern, locationId);
+          } else {
+            loadInternalNumberPool(pattern);
+          }
+        });
     }
 
     function returnExternalNumberList(pattern) {

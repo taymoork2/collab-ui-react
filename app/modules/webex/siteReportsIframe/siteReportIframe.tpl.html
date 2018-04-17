@@ -10,7 +10,7 @@
                    alt="{{'webexCommon.logoAltText' | translate}}" />
       <ul class="breadcrumbs webexPage" id="webexReportIFrameBreadCrumbs" title="{{'webexCommon.breadcrumbsAltText' | translate}}">
         <li>
-          <a id="webexReportIFrameCrumb2" ui-sref="reports.webex({siteUrl:siteUrl})">
+          <a id="webexReportIFrameCrumb2" ui-sref="{{classicLink}}"><!--reports.webex({siteUrl:siteUrl})-->
         {{('webexSiteReports.title' | translate) + ' ' + siteUrl}}
       </a>
         </li>
@@ -23,6 +23,6 @@
     </cs-page-sub-header-left>
   </cs-page-sub-header>
   <div class="content-container">
-    <div ng-include="'modules/webex/views/iframeContainer.tpl.html'"></div>
+    <webex-iframe-container></webex-iframe-container>
   </div>
 </div>

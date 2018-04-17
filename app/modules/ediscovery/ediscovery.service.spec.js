@@ -12,16 +12,17 @@ var ed = moment().subtract(30, 'days').format();
 describe('Service: EdiscoveryService', function () {
   beforeEach(angular.mock.module(ediscoveryModule));
 
-  var Service, httpBackend, Authinfo, UrlConfig, $q, $rootScope;
+  var Service, httpBackend, Authinfo, UrlConfig, $q, $rootScope, $state;
   var argonautUrlBase, responseUrl, urlBase;
 
-  beforeEach(inject(function (_EdiscoveryService_, $httpBackend, _$q_, _$rootScope_, _Authinfo_, _UrlConfig_) {
+  beforeEach(inject(function ($httpBackend, _$q_, _$rootScope_, _$state_, _Authinfo_, _EdiscoveryService_, _UrlConfig_) {
     Service = _EdiscoveryService_;
     httpBackend = $httpBackend;
-    UrlConfig = _UrlConfig_;
-    Authinfo = _Authinfo_;
     $q = _$q_;
     $rootScope = _$rootScope_;
+    $state = _$state_;
+    Authinfo = _Authinfo_;
+    UrlConfig = _UrlConfig_;
     argonautUrlBase = UrlConfig.getArgonautReportUrl();
     urlBase = UrlConfig.getAdminServiceUrl();
 
@@ -32,6 +33,7 @@ describe('Service: EdiscoveryService', function () {
       .respond({});
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
+    spyOn($state, 'go');
   }));
 
   afterEach(function () {

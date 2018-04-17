@@ -1,12 +1,14 @@
 <div ui-view="header"></div>
 
-<cs-sp-container class="hercules-fix-paragraphs">
+<div class="side-panel-container-view" ui-view="side-panel-container">
+  <cs-sp-container class="hercules-fix-paragraphs">
 
-  <alarm-list-section alarms="$ctrl.alarms"
-                      connector-type="'ept'"></alarm-list-section>
+    <alarm-list-section alarms="$ctrl.alarms"
+                        connector-type="'ept'"></alarm-list-section>
 
-  <private-trunk-addresses-status destination-list="$ctrl.destinations"></private-trunk-addresses-status>
+    <private-trunk-addresses-status destination-list="$ctrl.destinations"></private-trunk-addresses-status>
 
-  <cluster-settings-link cluster-type="'ept'" cluster-id="$ctrl.trunkId"></cluster-settings-link>
+    <cluster-settings-link cluster-type="'ept'" cluster-id="$ctrl.trunkId"></cluster-settings-link>
 
-</cs-sp-container>
+  </cs-sp-container>
+</div>

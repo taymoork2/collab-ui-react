@@ -1,13 +1,9 @@
-import { UCCService } from 'modules/hercules/services/ucc-service';
 import { HybridServiceUserSidepanelHelperService } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
-
-interface IOptions {
-  callServiceAware: any;
-  callServiceConnect: any;
-}
+import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController {
 
@@ -15,48 +11,53 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
 
   public userId: string;
   public userEmailAddress: string;
+  private allUserEntitlements: string[];
+  public isInvitePending: boolean;
   public callServiceAware: IUserStatusWithExtendedMessages | undefined;
   public callServiceConnect: IUserStatusWithExtendedMessages | undefined;
-  public voicemailEnabled = false;
+  public callServiceAwareEnabledForOrg: boolean;
   public callServiceConnectEnabledForOrg: boolean;
 
   public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
-    private $rootScope: ng.IRootScopeService,
-    private FeatureToggleService,
+    private $q: ng.IQService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private UserOverviewService: UserOverviewService,
     private USSService: USSService,
-    private UCCService: UCCService,
   ) { }
 
   public $onInit() {
-    this.getUserFromUSS(this.userId);
-    this.isConnectSetUp();
-    this.getOrgVoicemailStatus();
+    this.getUserData(this.userId);
+    this.getServicesStatusFromFMS();
   }
 
-  private isConnectSetUp() {
-    this.ServiceDescriptorService.isServiceEnabled('squared-fusion-ec')
-      .then((enabled: boolean) => {
-        this.callServiceConnectEnabledForOrg = enabled;
+  private getServicesStatusFromFMS() {
+    this.ServiceDescriptorService.getServices()
+      .then((services) => {
+        this.callServiceAwareEnabledForOrg = _.find(services, (service) => service.id === 'squared-fusion-uc').enabled;
+        this.callServiceConnectEnabledForOrg = _.find(services, (service) => service.id === 'squared-fusion-ec').enabled;
       })
       .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.couldNotReadConnectStatus');
+        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.couldNotReadStatus');
       });
   }
 
-  private getUserFromUSS(userId) {
+  private getUserData(userId) {
     this.loadingPage = true;
-    this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId)
-      .then(([userStatusAware, userStatusConnect]) => {
+    const promises: ng.IPromise<any>[] = [
+      this.UserOverviewService.getUser(userId),
+      this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId),
+    ];
+    this.$q.all(promises)
+      .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
+        this.allUserEntitlements = commonIdentityUserData.user.entitlements;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.callServiceAware = userStatusAware;
         this.callServiceConnect = userStatusConnect;
-      })
-      .then(() => {
         if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
           this.resourceGroupId = this.callServiceAware.resourceGroupId;
         }
@@ -73,32 +74,17 @@ class HybridCallServiceAggregatedSectionCtrl implements ng.IComponentController 
     return this.USSService.decorateWithStatus(status);
   }
 
-  public getOrgVoicemailStatus() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridVoicemail)
-      .then((supported: boolean) => {
-        if (supported) {
-          this.UCCService.getOrgVoicemailConfiguration()
-            .then((data) => {
-              this.voicemailEnabled = data.voicemailOrgEnableInfo.orgHybridVoicemailEnabled;
-            });
-        }
-      });
-  }
+  public userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
-  public onEntitlementChanges = (changes: IOptions) => {
-    this.callServiceAware = changes.callServiceAware;
-    this.callServiceConnect = changes.callServiceConnect;
-    if (this.callServiceAware && this.callServiceAware.resourceGroupId) {
-      this.resourceGroupId = this.callServiceAware.resourceGroupId;
-    }
-    this.$rootScope.$broadcast('entitlementsUpdated');
+  public resourceGroupRefreshCallback() {
+    this.getUserData(this.userId);
   }
 
 }
 
 export class HybridCallServiceAggregatedSectionComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceAggregatedSectionCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-aggregated-section/hybrid-call-service-aggregated-section.component.html';
+  public template = require('./hybrid-call-service-aggregated-section.component.html');
   public bindings = {
     userId: '<',
     userEmailAddress: '<',

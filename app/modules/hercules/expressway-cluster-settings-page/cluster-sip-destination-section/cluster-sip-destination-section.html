@@ -1,0 +1,57 @@
+<div class="sub-section">
+  <h5 class="sub-section__label" translate="hercules.clusterSipDestination.configSection.label"></h5>
+  <div ng-if="$ctrl.state === 'ok'">
+    <p class="sub-section__description" translate="hercules.clusterSipDestination.configSection.description" translate-compile></p>
+  </div>
+  <div ng-if="$ctrl.state === 'not_a_call_cluster'">
+    <p><i class="icon icon-info"></i><span translate="hercules.clusterSipDestination.configSection.warningNotCallCluster" translate-compile></span></p>
+  </div>
+  <div ng-if="$ctrl.state === 'connect_not_set_up'">
+    <p><i class="icon icon-info"></i><span translate="hercules.clusterSipDestination.configSection.warningCallConnectNotSetup" translate-compile></span></p>
+  </div>
+  <div ng-if="$ctrl.state === 'loading'" cs-loader class="loader-example--small"></div>
+  <div ng-if="$ctrl.state === 'ok'" ng-form="$ctrl.defaultSIPDestinationOverrideForm">
+    <div class="row">
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.override"
+        id="overrideInactive"
+        name="override"
+        value="inactive"
+        ng-change="$ctrl.changeOverride()"
+        cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelInactive' | translate}}">
+    </div>
+    <div class="row" ng-show="$ctrl.override === 'inactive'">
+      <input
+        cs-input
+        class="padded-element"
+        type="text"
+        cs-input-group-size="medium-7"
+        ng-model="$ctrl.sipDestination"
+        readonly>
+    </div>
+    <div class="row">
+      <input
+        cs-input
+        type="radio"
+        ng-model="$ctrl.override"
+        id="overrideActive"
+        name="override"
+        value="active"
+        ng-change="$ctrl.changeOverride()"
+        cs-input-label="{{::'hercules.clusterSipDestination.configSection.inputLabelActive' | translate}}">
+    </div>
+    <div class="row" ng-show="$ctrl.override === 'active'">
+      <sip-destination-input
+        class="padded-element"
+        cluster-id="$ctrl.cluster.id"
+        sip-destination="$ctrl.sipDestination"
+        on-destination-saved="$ctrl.destinationSaved(sipDestination)"
+      ></sip-destination-input>
+    </div>
+  </div>
+  <div ng-if="$ctrl.state === 'unknown'">
+    <p translate="hercules.clusterSipDestination.configSection.unknownState"></p>
+  </div>
+</div>

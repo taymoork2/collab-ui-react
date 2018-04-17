@@ -1,0 +1,34 @@
+<header>
+  <h4 class="size-{{card.cardType}}">
+    <i class="icon" ng-class="card.icon"></i>
+    {{::card.name | translate}}
+    <i ng-if= "card.infoIcon && !card.infoText" class="icon info-icon {{::card.infoIcon}}"></i>
+    <i ng-if= "card.infoIcon && card.infoText" class="icon info-icon has-tooltip {{::card.infoIcon}}" tooltip="{{::card.infoText| translate}}" tooltip-placement="bottom-right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::card.infoText| translate}}"></i>
+    <cr-pro-pack-icon ng-if="card.showProBadge" tooltip="{{::card.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tabindex="0" tooltip-trigger="focus mouseenter" aria-label="{{::card.infoText| translate}}"></cr-pro-pack-icon>
+  </h4>
+</header>
+<section ng-if="card.loading">
+  <i class="icon icon-spinner icon-2x"></i>
+</section>
+<section ng-if="!card.loading" ng-class="{'setup-mode': card.setupMode}">
+  <p class="description">{{::card.description | translate}}</p>
+  <div class="card-button">
+    <div ng-repeat="button in card.getButtons()">
+      <a ng-if="!button.routerState && !button.externalLink" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a ng-if="button.routerState && !button.onClick" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a href ng-if="button.routerState && button.onClick" ng-click="button.onClick()" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a ng-if="button.externalLink" href="{{button.externalLink}}" target="_blank" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+    </div>
+    <div ng-if="card.getShowMoreButton()">
+      <a ui-sref="{{card.getShowMoreButton().routerState}}" ng-class="button.buttonClass" class="btn-link">{{::card.getShowMoreButton().name | translate}}</a>
+    </div>
+  </div>
+</section>
+<footer ng-if="card.showStatus()">
+  <div>
+    <a class="status" ui-sref="{{card.status.routerState}}">
+      <cs-statusindicator ng-model="card.status.status"></cs-statusindicator>
+      <span>{{::card.status.text | translate}}</span>
+    </a>
+  </div>
+</footer>

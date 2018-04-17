@@ -6,13 +6,13 @@
       require('angular-translate'),
       require('angular-ui-router'),
       require('angular-sanitize'),
+      require('modules/core/account').default,
       require('modules/core/auth/token.service'),
       require('modules/core/config/oauthConfig'),
       require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/authinfo'),
       require('modules/core/scripts/services/log'),
       require('modules/core/scripts/services/utils'),
-      require('modules/core/window').default,
       require('modules/core/storage').default,
       require('modules/huron/compass').default,
     ])
@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, $window, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -35,7 +35,6 @@
       verifyOauthState: verifyOauthState,
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
-      isOnlineOrg: isOnlineOrg,
       revokeUserAuthTokens: revokeUserAuthTokens,
     };
 
@@ -69,7 +68,7 @@
         .then(function (responseArray) {
           return _.get(responseArray, '[0]');
         })
-        .catch(handleErrorAndResetAuthinfo);
+        .catch(resetAuthinfoAndRejectResponse);
 
       return deferredAll;
     }
@@ -81,25 +80,7 @@
         .then(initializeAuthinfo);
     }
 
-    var onlineOrg;
-
-    function isOnlineOrg() {
-      return $q(function (resolve) {
-        if (_.isNil(onlineOrg)) {
-          getCustomerAccount(Authinfo.getOrgId()).then(function (res) {
-            if (res.data.customers && !_.isEmpty(res.data.customers) && res.data.customers[0].customerType) {
-              onlineOrg = res.data.customers[0].customerType === 'Online';
-              resolve(onlineOrg);
-            } else {
-              resolve(false);
-            }
-          });
-        } else {
-          resolve(onlineOrg);
-        }
-      });
-    }
-
+    // TODO: remove this function and refactor others to use cached AccountService
     function getCustomerAccount(orgId) {
       if (!orgId || orgId === '') {
         return $q.reject('An Organization Id must be passed');
@@ -317,12 +298,10 @@
 
     function initializeAuthinfo(authData) {
       Authinfo.initialize(authData);
-      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin()) {
-        return getCustomerAccount(Authinfo.getOrgId())
-          .then(function (res) {
-            Authinfo.updateAccountInfo(res.data);
-            return authData;
-          });
+      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isUserAdminUser() || Authinfo.isDeviceAdminUser()) {
+        return AccountService.updateAuthinfoAccount().then(function () {
+          return authData;
+        });
       } else {
         return authData;
       }
@@ -338,15 +317,9 @@
       }
     }
 
-    function handleErrorAndResetAuthinfo(res) {
+    function resetAuthinfoAndRejectResponse(response) {
       Authinfo.clear();
-      if (res && res.status === 401) {
-        return $q.reject($translate.instant('errors.status401'));
-      }
-      if (res && res.status === 403) {
-        return $q.reject($translate.instant('errors.status403'));
-      }
-      return $q.reject($translate.instant('errors.serverDown'));
+      return $q.reject(response);
     }
 
     // helpers

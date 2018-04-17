@@ -1,0 +1,25 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.user-manage-dir-sync__text--margin {
+  margin-top: 1rem;
+}
+
+.user-manage-dir-sync__icon-refresh {
+  @include vr-spacing(m, 0.5);
+
+  font-weight: bolder;
+  top: 0.1rem;
+}
+
+.user-manage-dir-sync__grid {
+  border: 1px solid $gray-light-2;
+  > :nth-child(2) {
+    overflow-x: hidden;
+  }
+}
+
+// TODO decouple this override from the .user-csv implementation
+.user-csv.modal-body > .flex-container.user-manage-dir-sync__flex-container {
+  flex-shrink: 0;
+}

@@ -5,7 +5,7 @@
     .controller('UserInfoController', UserInfoController);
 
   /* @ngInject */
-  function UserInfoController($scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact) {
+  function UserInfoController($scope, $state, $timeout, $translate, $window, Authinfo, Auth, Config, FeedbackService, Log, Notification, Userservice, Utils, WebExUtilsFact, ControlHubService) {
     var getAuthinfoData = function () {
       $scope.username = Authinfo.getUserName();
       $scope.orgname = Authinfo.getOrgName();
@@ -17,7 +17,6 @@
       $scope.orgId = Authinfo.getOrgId();
       $scope.isPartner = Authinfo.isPartnerAdmin();
       $scope.isPartnerSales = Authinfo.isPartnerSalesAdmin();
-      $scope.isCustomerLaunchedFromPartner = Authinfo.isCustomerLaunchedFromPartner();
       $scope.roleList = _.map(roles, function (role) {
         return $translate.instant('atlasRoles.' + role);
       }).sort().join(', ');
@@ -94,6 +93,8 @@
       }
     });
 
-    $scope.supportUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
+    $scope.supportUrl = Config.helpUrl;
+
+    $scope.collapsed = ControlHubService.getCollapsed();
   }
 })();

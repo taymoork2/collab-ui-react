@@ -1,6 +1,6 @@
 'use strict';
 
-/* global LONG_TIMEOUT */
+/* globals LONG_TIMEOUT, ANIMATION_DURATION_MS */
 
 describe('Partner flow', function () {
   var appWindow;
@@ -26,15 +26,16 @@ describe('Partner flow', function () {
     });
 
     it('should display partner support page', function () {
+      // notes:
+      // - clicking the user info button causes an animation (0.3s)
+      // - so we must wait until appropriate CSS selector indicates that the animation is complete
+      // - TODO: work out alternative solution that doesn't require 'browser.sleep()'
       utils.click(navigation.userInfoButton);
-      utils.click(navigation.supportLink).then(navigation.launchSupportPage);
-    });
-  });
+      utils.wait(navigation.userInfoDropDownMenu);
+      browser.sleep(ANIMATION_DURATION_MS);
 
-  describe('Partner landing page reports', function () {
-    it('should show the reports', function () {
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
+      // - after animation is complete, allow click to fire
+      utils.click(navigation.supportLink).then(navigation.launchSupportPage);
     });
   });
 
@@ -50,9 +51,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
       utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
-      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
       utils.click(partner.careTrialCheckbox); // no care on this trial

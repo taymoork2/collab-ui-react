@@ -10,9 +10,14 @@ export class ResourceGroupCardController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesI18NService: HybridServicesI18NService,
   ) {}
+
+  public $onInit() {
+    this.group.statusCssClass = this.getStatusCssClass();
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     if (changes.forceOpen) {
@@ -20,12 +25,18 @@ export class ResourceGroupCardController implements ng.IComponentController {
     }
   }
 
+  public getResourceGroupSettingsAriaLabel(): string {
+    return this.$translate.instant('hercules.resourceGroupSettings.pageTitle', {
+      groupName: this.group.name,
+    });
+  }
+
   public getStatusCssClass() {
     const connectors = _.chain(this.group.clusters)
       .map('connectors')
       .flatten()
       .value();
-    return this.HybridServicesClusterStatesService.getMergedStateSeverity(connectors as IConnector[]).cssClass;
+    return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors as IConnector[]).cssClass;
   }
 
   public hasUsers() {
@@ -47,7 +58,7 @@ export class ResourceGroupCardController implements ng.IComponentController {
 
 export class ResourceGroupCardComponent implements ng.IComponentOptions {
   public controller = ResourceGroupCardController;
-  public templateUrl = 'modules/hercules/resource-group-card/hs-resource-group-card.component.html';
+  public template = require('modules/hercules/resource-group-card/hs-resource-group-card.component.html');
   public bindings = {
     group: '<resourceGroup',
     onChange: '&',

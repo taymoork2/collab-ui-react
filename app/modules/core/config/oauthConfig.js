@@ -5,7 +5,7 @@
 
   module.exports = angular
     .module('core.oauthconfig', [
-      require('modules/core/config/config'),
+      require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
     ])
     .factory('OAuthConfig', OAuthConfig)
@@ -23,7 +23,9 @@
       'cloudMeetings:login',
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
-      'cmc-controller:get_status',
+      'spark-compliance:rooms_read',
+      'spark-compliance:people_read',
+      'spark-compliance:organizations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
@@ -38,6 +40,11 @@
       // to onboard bot account
       'spark:applications_write',
       'spark:applications_read',
+      // for Care Virtual Assistant
+      'spark:messages_read',
+      'spark:memberships_read',
+      'spark:memberships_write',
+      'spark:rooms_read',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));
@@ -67,6 +74,7 @@
     };
 
     return {
+      getAdminPortalUrl: getAdminPortalUrl,
       getLogoutUrl: getLogoutUrl,
       getClientId: getClientId,
       getOauthLoginUrl: getOauthLoginUrl,

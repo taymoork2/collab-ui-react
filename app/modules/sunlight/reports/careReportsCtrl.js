@@ -3,13 +3,26 @@
 
   angular.module('Sunlight').controller('CareReportsController', CareReportsController);
   /* @ngInject */
-  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService) {
+  function CareReportsController($log, $q, $scope, $timeout, $translate, CardUtils, CareReportsService, DrillDownReportProps, DummyCareReportService, Notification, ReportConstants, SunlightReportService, FeatureToggleService, SunlightConfigService) {
     var vm = this;
     var REFRESH = 'refresh';
     var SET = 'set';
     var EMPTY = 'empty';
-    var RESIZE_DELAY_IN_MS = 100;
+    var RESIZE_DELAY_IN_MS = 600;
 
+    var MEDIA_TYPE_ALL_TASKS = 'all';
+    var MEDIA_TYPE_CHAT = 'chat';
+    var MEDIA_TYPE_CALLBACK = 'callback';
+    var MEDIA_TYPE_VOICE = 'voice';
+    var MEDIA_TYPE_WEBCALL = 'webcall';
+
+    vm.showChartWithoutBreakdown = {
+      taskIncoming: EMPTY,
+      taskTime: EMPTY,
+      avgCsat: EMPTY,
+    };
+    vm.isVideoCallEnabled = EMPTY;
+    vm.isVideoFeatureEnabled = EMPTY;
     vm.dataStatus = REFRESH;
     vm.tableDataStatus = EMPTY;
     vm.snapshotDataStatus = REFRESH;
@@ -17,6 +30,15 @@
     vm.taskOfferedDescription = '';
     vm.taskTimeDescription = '';
     vm.averageCsatDescription = '';
+    vm.taskAggregateDescription = '';
+    vm.taskIncomingBreakdownDescription = '';
+    vm.taskTimeBreakdownDescription = '';
+    vm.averageCsatBreakdownDescription = '';
+    vm.taskAggregateBreakdownDescription = '';
+    vm.taskIncomingTitle = '';
+    vm.taskOfferedTitle = '';
+    vm.taskTimeTitle = '';
+    vm.taskAggregateTitle = '';
 
     vm.tableData = [];
     vm.tableDataPromise = undefined;
@@ -56,51 +78,78 @@
       };
     });
 
+    vm.shouldDisplayBreakdown = function (webcallStats) {
+      var isVideoDisabledOrChatNotSelected = !vm.isVideoFeatureEnabled || vm.mediaTypeSelected.name !== 'chat';
+      vm.showChartWithoutBreakdown.taskIncoming = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isNumHandledTaskPresent === false);
+      vm.showChartWithoutBreakdown.avgCsat = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgCSATPresent === false);
+      vm.showChartWithoutBreakdown.taskTime = isVideoDisabledOrChatNotSelected || (vm.isVideoCallEnabled === false && webcallStats.isAvgHandleTimePresent === false);
+    };
+
+    vm.shouldVideoDrillDownBeDisplayed = function (isDataPresent) {
+      var selectedMediaType = vm.mediaTypeSelected.name;
+      return vm.isVideoFeatureEnabled && selectedMediaType === MEDIA_TYPE_CHAT && (vm.isVideoCallEnabled || isDataPresent);
+    };
+
+    vm.shouldWebcallDrillDownBeDisplayed = function (isDataPresent) {
+      var selectedMediaType = vm.mediaTypeSelected.name;
+      return selectedMediaType === MEDIA_TYPE_WEBCALL && isDataPresent;
+    };
+
     vm.timeSelected = vm.timeOptions[0];
 
     function timeSelected() {
       return vm.timeSelected;
     }
 
-    vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected);
-
-    vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected);
-
-    vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected);
-
-    vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected);
-
     vm.filtersUpdate = filtersUpdate;
+    var mediaTypes = [MEDIA_TYPE_ALL_TASKS, MEDIA_TYPE_CHAT, MEDIA_TYPE_CALLBACK, MEDIA_TYPE_VOICE];
+    setMediaTypeOptions(mediaTypes);
 
-    var mediaTypes = ['all', 'chat', 'callback', 'voice'];
-    vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
-      return {
-        value: i,
-        name: name,
-        label: $translate.instant('careReportsPage.media_type_' + name),
-      };
-    });
+    function setMediaTypeOptions(mediaTypes) {
+      vm.mediaTypeOptions = _.map(mediaTypes, function (name, i) {
+        return {
+          value: i,
+          name: name,
+          label: $translate.instant('careReportsPage.media_type_' + name),
+        };
+      });
+    }
 
     vm.mediaTypeSelected = vm.mediaTypeOptions[1];
     vm.callbackFeature = false;
+
+    function setDrillDownProps(webcallDataPresent, isDataEmpty) {
+      vm.taskIncomingDrilldownProps = DrillDownReportProps.taskIncomingDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+      vm.taskOfferedDrilldownProps = DrillDownReportProps.taskOfferedDrilldownProps(timeSelected, isDataEmpty);
+      vm.avgCsatDrilldownProps = DrillDownReportProps.avgCsatDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgCSATPresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+      vm.taskTimeDrilldownProps = DrillDownReportProps.taskTimeDrilldownProps(timeSelected,
+        vm.shouldVideoDrillDownBeDisplayed(webcallDataPresent.isAvgHandleTimePresent),
+        vm.shouldWebcallDrillDownBeDisplayed(webcallDataPresent.isTotalHandledPresent), isDataEmpty);
+    }
+
     function filtersUpdate() {
-      vm.dataStatus = REFRESH;
-      vm.snapshotDataStatus = REFRESH;
-      vm.tableDataStatus = EMPTY;
-      vm.tableData = [];
-      tableDataFor = _.pick(vm, ['mediaTypeSelected', 'timeSelected']);
-      if (vm.tableDataPromise) {
-        vm.tableDataPromise = undefined;
-      }
-      setFilterBasedTextForCare();
+      vm.shouldDisplayBreakdown({});
+      $timeout(function () {
+        vm.dataStatus = REFRESH;
+        vm.snapshotDataStatus = REFRESH;
+        vm.tableDataStatus = EMPTY;
+        vm.tableData = [];
+        tableDataFor = _.pick(vm, ['mediaTypeSelected', 'timeSelected']);
+        if (vm.tableDataPromise) {
+          vm.tableDataPromise = undefined;
+        }
 
-      showReportsWithDummyData();
-
-      collapseDrilldownReports();
-      var promise = showReportsWithRealData();
-      resizeCards();
-      delayedResize();
-      return promise;
+        setFilterBasedTextForCare();
+        showReportsWithDummyData();
+        collapseDrilldownReports();
+        showReportsWithRealData();
+        resizeCards();
+        delayedResize();
+      }, 0);
     }
 
     function saveReportingAndUserData(mediaTypeSelected, timeSelected) {
@@ -108,13 +157,13 @@
         if (!isTableDataClean(mediaTypeSelected, timeSelected)) {
           return $q.reject({ reason: 'filtersChanged' });
         }
-        if (_.get(mergedData, 'length')) {
+        if (_.get(mergedData.data, 'length')) {
           vm.tableDataStatus = SET;
         } else {
           vm.tableDataStatus = EMPTY;
         }
-        vm.tableData = mergedData;
-        return $q.resolve(vm.tableData);
+        vm.tableData = mergedData.data;
+        return $q.resolve(mergedData);
       };
     }
 
@@ -130,15 +179,26 @@
       return tableDataFor.mediaTypeSelected === mediaTypeSelected && tableDataFor.timeSelected === timeSelected;
     }
 
+    function isDataEmpty(data) {
+      if (!data || data.length === 0) {
+        return true;
+      }
+    }
+
     vm.showTable = function (onSuccess, onError, mediaTypeSelected, timeSelected) {
       if (vm.tableDataStatus === SET) {
         onSuccess(vm.tableData);
         return $q.resolve(vm.tableData);
       } else if (vm.tableDataPromise && isTableDataClean(mediaTypeSelected, timeSelected)) {
-        return vm.tableDataPromise.then(onSuccess, onError);
+        return vm.tableDataPromise.then(function (dataObj) {
+          onSuccess(dataObj.data);
+        }, onError);
       } else {
         vm.tableDataPromise = getTableData(mediaTypeSelected, timeSelected);
-        return vm.tableDataPromise.then(onSuccess, onError);
+        return vm.tableDataPromise.then(function (dataObj) {
+          setDrillDownProps(dataObj.isWebcallDataPresent, isDataEmpty(dataObj.data));
+          onSuccess(dataObj.data);
+        }, onError);
       }
     };
 
@@ -148,26 +208,66 @@
     }
 
     function setFilterBasedTextForCare() {
-      vm.taskIncomingDescription = $translate.instant('taskIncoming.description', {
+      var mediaDescription = (vm.mediaTypeSelected.name === 'all') ? _.split(vm.mediaTypeSelected.label, ' ')[1]
+        : vm.mediaTypeSelected.label;
+      var taskTimeMediaDesc = mediaDescription.substring(0, mediaDescription.length - 1);
+
+      vm.taskIncomingDescription = $translate.instant('taskIncoming.desc', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt,
-        taskStatus: vm.timeSelected.taskStatus,
+        mediaType: _.toLower(mediaDescription),
       });
 
-      vm.taskOfferedDescription = $translate.instant('taskOffered.description', {
+      vm.taskOfferedDescription = $translate.instant('taskOffered.desc', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt,
-        taskStatus: vm.timeSelected.taskStatus,
+        mediaType: _.toLower(mediaDescription),
       });
 
-      vm.taskTimeDescription = $translate.instant('taskTime.description', {
+      vm.taskTimeDescription = $translate.instant('taskTime.desc', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt,
+        mediaType: _.toLower(taskTimeMediaDesc),
       });
 
-      vm.averageCsatDescription = $translate.instant('averageCsat.description', {
+      vm.averageCsatDescription = $translate.instant('averageCsat.desc', {
         time: vm.timeSelected.description,
-        interval: vm.timeSelected.intervalTxt,
+      });
+
+      vm.taskAggregateDescription = $translate.instant('taskAggregate.desc', {
+        mediaType: _.toLower(mediaDescription),
+      });
+
+      vm.taskIncomingTitle = $translate.instant('taskIncoming.title', {
+        mediaType: mediaDescription,
+      });
+
+      vm.taskOfferedTitle = $translate.instant('taskOffered.title', {
+        mediaType: mediaDescription,
+      });
+
+      vm.taskTimeTitle = $translate.instant('taskTime.title', {
+        mediaType: taskTimeMediaDesc,
+      });
+
+      vm.taskAggregateTitle = $translate.instant('taskAggregate.title', {
+        mediaType: mediaDescription,
+      });
+
+      vm.taskIncomingBreakdownDescription = $translate.instant('taskIncoming.breakdownDescription', {
+        time: vm.timeSelected.description,
+        mediaType: _.toLower(mediaDescription),
+      });
+
+      vm.taskTimeBreakdownDescription = $translate.instant('taskTime.breakdownDescription', {
+        time: vm.timeSelected.description,
+        mediaType: _.toLower(taskTimeMediaDesc),
+      });
+
+      vm.taskAggregateBreakdownDescription = $translate.instant('taskAggregate.breakdownDescription', {
+        mediaType: _.toLower(mediaDescription),
+      });
+
+      vm.averageCsatBreakdownDescription = $translate.instant('averageCsat.breakdownDescription', {
+        time: vm.timeSelected.description,
+        mediaType: _.toLower(mediaDescription),
       });
     }
 
@@ -180,21 +280,24 @@
       var title = generateReportTitle();
       return SunlightReportService.getReportingData('org_stats', vm.timeSelected.value, vm.mediaTypeSelected.name)
         .then(function (data) {
+          var webcallStats = CareReportsService.getWebcallDataStats(data);
+          vm.shouldDisplayBreakdown(webcallStats);
+
           if (data.length === 0) {
             vm.dataStatus = EMPTY;
           } else {
             vm.dataStatus = SET;
-            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', data, categoryAxisTitle, title, isToday);
-            CareReportsService.showTaskOfferedGraph('taskOffereddiv', data, categoryAxisTitle, title, isToday);
-            CareReportsService.showTaskTimeGraph('taskTimeDiv', data, categoryAxisTitle, title, isToday);
-            CareReportsService.showAverageCsatGraph('averageCsatDiv', data, categoryAxisTitle, title, isToday);
+            CareReportsService.showTaskIncomingGraph('taskIncomingdiv', 'taskIncomingBreakdownDiv', data, categoryAxisTitle, title);
+            CareReportsService.showTaskOfferedGraph('taskOffereddiv', data, categoryAxisTitle, title);
+            CareReportsService.showTaskTimeGraph('taskTimeDiv', 'taskTimeBreakdownDiv', data, categoryAxisTitle, title);
+            CareReportsService.showAverageCsatGraph('averageCsatDiv', 'averageCsatBreakdownDiv', data, categoryAxisTitle, title);
             resizeCards();
           }
         }, function (data) {
           vm.dataStatus = EMPTY;
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Customer Satisfaction' }));
           if (!isToday) {
-            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Time Measure' }));
+            Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Task Completion Time' }));
           }
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Offered Tasks' }));
           Notification.errorResponse(data, $translate.instant('careReportsPage.taskDataGetError', { dataType: 'Total Completed Tasks' }));
@@ -203,13 +306,15 @@
 
     function showSnapshotReportWithRealData() {
       var isSnapshot = true;
+      var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
+      var title = generateReportTitle();
       SunlightReportService.getReportingData('org_snapshot_stats', vm.timeSelected.value, vm.mediaTypeSelected.name, isSnapshot)
         .then(function (data) {
           if (data.length === 0) {
             vm.snapshotDataStatus = EMPTY;
           } else {
             vm.snapshotDataStatus = SET;
-            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, vm.timeSelected.categoryAxisTitle, generateReportTitle());
+            CareReportsService.showTaskAggregateGraph('taskAggregateDiv', data, categoryAxisTitle, title);
             resizeCards();
           }
         }, function (data) {
@@ -231,11 +336,11 @@
       var dummyData = DummyCareReportService.dummyOrgStatsData(vm.timeSelected.value);
       var dummyTitle = undefined;
       var categoryAxisTitle = vm.timeSelected.categoryAxisTitle;
-      var isToday = (vm.timeSelected.value === 0);
-      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', dummyData, categoryAxisTitle, dummyTitle, isToday);
-      CareReportsService.showTaskOfferedDummy('taskOffereddiv', dummyData, categoryAxisTitle, dummyTitle, isToday);
-      CareReportsService.showTaskTimeDummy('taskTimeDiv', dummyData, categoryAxisTitle, dummyTitle);
-      CareReportsService.showAverageCsatDummy('averageCsatDiv', dummyData, categoryAxisTitle, dummyTitle);
+
+      CareReportsService.showTaskIncomingDummy('taskIncomingdiv', 'taskIncomingBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showTaskOfferedDummy('taskOffereddiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showTaskTimeDummy('taskTimeDiv', 'taskTimeBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
+      CareReportsService.showAverageCsatDummy('averageCsatDiv', 'averageCsatBreakdownDiv', dummyData, categoryAxisTitle, dummyTitle);
       CareReportsService.showTaskAggregateDummy('taskAggregateDiv', dummyData, categoryAxisTitle, dummyTitle);
       resizeCards();
     }
@@ -271,8 +376,27 @@
       resizeCards();
       delayedResize();
     }
-    $timeout(function () {
+
+    function renderCards(isVideoFeatureEnabled, isVideoCallEnabled) {
+      setDrillDownProps({});
+      vm.isVideoFeatureEnabled = isVideoFeatureEnabled;
+      vm.isVideoCallEnabled = isVideoCallEnabled;
       filtersUpdate();
-    }, 30);
+    }
+
+    FeatureToggleService.atlasCareWebcallReportTrialsGetStatus().then(function (result) {
+      if (result === true) {
+        mediaTypes.push(MEDIA_TYPE_WEBCALL);
+        setMediaTypeOptions(mediaTypes);
+      }
+    }).catch(function () {});
+
+    var featurePromise = $q.all([FeatureToggleService.atlasCareChatToVideoTrialsGetStatus(),
+      SunlightConfigService.getChatConfig()]);
+    featurePromise.then(function (result) {
+      renderCards(result[0], result[1].data.videoCallEnabled);
+    }).catch(function () {
+      renderCards(false, false);
+    });
   }
 })();

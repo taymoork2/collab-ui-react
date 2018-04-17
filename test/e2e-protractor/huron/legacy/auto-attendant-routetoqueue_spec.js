@@ -5,30 +5,29 @@
 
 describe('Huron Auto Attendant', function () {
   var remote = require('selenium-webdriver/remote');
+  deleteUtils.testAAName = deleteUtils.testAAName + '_' + Date.now();
+
+  var testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+  var testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
+  var testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
 
   beforeAll(function () {
     browser.setFileDetector(new remote.FileDetector());
 
-    //login.login('aa-admin', '#/hurondetails/features');
-    login.login('aa-admin', '#/services/call-features');
+    login.login('aa-admin', autoattendant.callFeature);
   }, 120000);
+
+  afterAll(function () {
+    var flow = protractor.promise.controlFlow();
+    return flow.execute(deleteUtils.findAndDeleteTestAA);
+  });
 
   describe('Create and Delete AA', function () {
     // TEST CASES
-    it('should navigate to AA landing page', function () {
-      // First ensure the test AA and queue is deleted (in case last test run failed for example)
-      //var flow = browser.controlFlow();
-      var flow = protractor.promise.controlFlow();
-      flow.execute(deleteUtils.findAndDeleteTestAA);
-      flow.execute(deleteUtils.deleteRouteToQueue);
-      flow.execute(deleteUtils.findAndDeleteTestAA);
-      // and navigate to the landing page
-      navigation.clickAutoAttendant();
-    }, 120000);
-
-    it('should create a new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    it('should navigate to AA landing page and create AA', function () {
       // click new feature
       utils.click(autoattendant.newFeatureButton);
+      browser.driver.sleep(1000);
 
       // select AA
 
@@ -88,10 +87,12 @@ describe('Huron Auto Attendant', function () {
     it('should add Phone Menu Say to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.scrollIntoView(autoattendant.phoneMenuSay);
       //Add Phone Menu Say Message
-      //utils.click(autoattendant.phoneMenuSay);
-      //utils.click(autoattendant.phonesayMessageInput);
-      //utils.sendKeys(autoattendant.phonesayMessageInput, 'Press a key at the menu');
-      //utils.expectIsEnabled(autoattendant.saveButton);
+      utils.click(autoattendant.phoneMenuMessageOptions);
+      utils.click(autoattendant.phoneMenuSayMessageOption);
+      utils.click(autoattendant.phoneMenuSay);
+      utils.click(autoattendant.phonesayMessageInput);
+      utils.sendKeys(autoattendant.phonesayMessageInput, 'Press a key at the menu');
+      utils.expectIsEnabled(autoattendant.saveButton);
 
       // language and voice
       utils.click(autoattendant.phonesayMessageLanguage);
@@ -117,7 +118,6 @@ describe('Huron Auto Attendant', function () {
     it('should click queue setting hyperlink and set and play periodic message and add dynamic text to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.repeatPlus);
-      //var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
       utils.scrollIntoView(autoattendant.repeatPlus);
@@ -140,14 +140,13 @@ describe('Huron Auto Attendant', function () {
 
       utils.wait(autoattendant.okQueueTreatment, 12000);
       utils.click(autoattendant.okQueueTreatment);
-      //utils.click(autoattendant.saveButton);
-      //autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
+      utils.click(autoattendant.saveButton);
+      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
     it('should click queue setting hyperlink and set and play initial message and add dynamic text to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.repeatPlus);
-      //var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
       utils.scrollIntoView(autoattendant.repeatPlus);
@@ -175,7 +174,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
-    it('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    xit('should click queue setting hyperlink and set and play periodic message and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.repeatPlus);
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
@@ -205,7 +204,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
-    it('should click queue setting hyperlink and set and play music on hold and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    xit('should click queue setting hyperlink and set and play music on hold and upload media to the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       var absolutePath = utils.resolvePath(autoattendant.mediaFileToUpload);
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
@@ -217,7 +216,7 @@ describe('Huron Auto Attendant', function () {
       autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
     });
 
-    it('should reopen queue setting hyperlink and see custom music on hold set, for the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
+    xit('should reopen queue setting hyperlink and see custom music on hold set, for the new auto attendant named "' + deleteUtils.testAAName + '"', function () {
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
       utils.expectIsEnabled(autoattendant.okQueueTreatment);
@@ -246,7 +245,8 @@ describe('Huron Auto Attendant', function () {
       // it is for selecting the queue for route to queue option
       utils.scrollIntoView(autoattendant.repeatPlus);
       utils.click(autoattendant.queueSetting);
-      utils.click(autoattendant.queueMin);
+      utils.scrollIntoView(autoattendant.fallbacktime);
+      utils.click(autoattendant.fallbacktime);
       utils.click(autoattendant.queueMinOption.get(3));
       utils.wait(autoattendant.okQueueTreatment, 12000);
       utils.click(autoattendant.okQueueTreatment);
@@ -255,8 +255,6 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should save AA and return to landing page', function () {
-      utils.click(autoattendant.saveButton);
-      autoattendant.assertUpdateSuccess(deleteUtils.testAAName);
       utils.expectIsDisabled(autoattendant.saveButton);
       utils.click(autoattendant.closeEditButton);
     });
@@ -268,18 +266,25 @@ describe('Huron Auto Attendant', function () {
     });
 
     it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
-      utils.expectIsEnabled(autoattendant.testCardName);
+      utils.expectIsEnabled(testAAName);
     });
 
     it('should be able to reopen the AA "' + deleteUtils.testAAName, function () {
+      utils.click(testCardClick);
+
+      /*
       utils.click(autoattendant.searchBox);
       utils.sendKeys(autoattendant.searchBox, deleteUtils.testAAName);
       utils.click(autoattendant.aaCard);
+      */
+
       utils.expectIsDisplayed(autoattendant.aaTitle);
       expect(autoattendant.aaTitle.getText()).toEqual(deleteUtils.testAAName);
     });
 
     it('should contain two route to queues previously created in AA "' + deleteUtils.testAAName, function () {
+      utils.scrollIntoView(autoattendant.phoneMenuSay);
+      utils.scrollIntoView(autoattendant.repeatPlus);
       expect(autoattendant.phoneMenuAction.count()).toBe(2);
       expect(autoattendant.phoneMenuKeyOptions.count()).toBe(2);
       expect(autoattendant.phoneMenuKeysContent.get(0).getInnerHtml()).toContain(autoattendant.key0);
@@ -295,7 +300,7 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
       // click delete X on the AA card for e2e test AA
-      utils.click(autoattendant.testCardDelete);
+      utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {

@@ -82,7 +82,7 @@ export class CsdmConverter {
 }
 
 class CloudberryDevice implements IDevice {
-  public state: { readableState: string };
+  public state: { key: string, readableState: string };
   public isATA: boolean;
   public serial: string;
   public isOnline: boolean;
@@ -102,7 +102,7 @@ class CloudberryDevice implements IDevice {
   public readonly type: string;
   public mac: string;
   public ip: any;
-  private createTime: string;
+  public createTime: string;
   public product: string;
   public productFamily: string;
   public hasIssues: boolean;
@@ -113,10 +113,10 @@ class CloudberryDevice implements IDevice {
   public upgradeChannel: { label: string; value: string };
   public readableActiveInterface: string;
   public diagnosticsEvents: { type: string; message: string }[];
-  private rsuKey: string;
-  private hasRemoteSupport: boolean;
-  private hasAdvancedSettings: boolean;
-  private update: (updated) => any;
+  public rsuKey: string;
+  public hasRemoteSupport: boolean;
+  public hasAdvancedSettings: boolean;
+  public update: (updated) => any;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -152,12 +152,12 @@ class CloudberryDevice implements IDevice {
     this.update = (updated) => {
       this.displayName = updated.displayName;
     };
-    this.image = 'images/devices-hi/' + (obj.imageFilename || 'unknown.png');
+    this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
 }
 
 class HuronDevice implements IDevice {
-  public state: { readableState: string };
+  public state: { key: string, readableState: string };
   public diagnosticsEvents: csdm.IDeviceDiagnosticEvent[];
   public upgradeChannel: csdm.IDeviceUpgradeChannel;
   public hasIssues: boolean;
@@ -184,8 +184,8 @@ class HuronDevice implements IDevice {
   public tags: string[];
   public readonly type: string;
   public isHuronDevice: boolean;
-  private huronId: string;
-  private addOnModuleCount: number;
+  public huronId: string;
+  public addOnModuleCount: number;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -274,7 +274,7 @@ class HuronHelper {
   }
 }
 
-class Helper {
+export class Helper {
 
   constructor(private $translate) {
   }
@@ -303,7 +303,8 @@ class Helper {
   }
 
   public static getIsOnline(obj) {
-    return (obj.status || {}).connectionStatus === 'CONNECTED';
+    const conStatus = (obj.status || {}).connectionStatus;
+    return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
   public static getLastConnectionTime(obj) {
@@ -347,8 +348,8 @@ class Helper {
   }
 
   public getActiveInterface(obj): string {
-    if (obj.status) {
-      const translationKey = 'CsdmStatus.activeInterface.' + (obj.status.activeInterface || '').toLowerCase();
+    if (obj.status && obj.status.activeInterface) {
+      const translationKey = 'CsdmStatus.activeInterface.' + obj.status.activeInterface.toLowerCase();
       if (this.isTranslatable(translationKey)) {
         return this.$translate.instant(translationKey);
       }
@@ -367,7 +368,7 @@ class Helper {
   }
 
   public static hasIssues(obj) {
-    return this.getIsOnline(obj) && obj.status && obj.status.level && obj.status.level !== 'OK';
+    return obj.status && obj.status.level && obj.status.level !== 'OK';
   }
 
   public getDiagnosticsEvents(obj) {
@@ -380,10 +381,11 @@ class Helper {
   }
 
   public diagnosticsEventTranslated(e) {
-    if (this.isTranslatable('CsdmStatus.errorCodes.' + e.type + '.type')) {
+    const type_lower = _.toLower(e.type);
+    if (this.isTranslatable('CsdmStatus.errorCodes.' + type_lower + '.type')) {
       return {
-        type: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.type', e.type),
-        message: this.translateOrDefault('CsdmStatus.errorCodes.' + e.type + '.message', e.description, e.references),
+        type: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.type', e.type),
+        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, e.references),
       };
     } else if (e.description) {
       return {
@@ -404,21 +406,39 @@ class Helper {
   }
 
   public getState(obj) {
-    switch ((obj.status || {}).connectionStatus) {
+    const state = (obj.status || {}).connectionStatus;
+    switch (state) {
+      case 'CONNECTED_WITH_ISSUES':
+        return {
+          key: state,
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
+          priority: '1',
+        };
       case 'CONNECTED':
         if (Helper.hasIssues(obj)) {
           return {
-            readableState: this.t('CsdmStatus.OnlineWithIssues'),
+            key: 'CONNECTED_WITH_ISSUES',
+            readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
           };
         }
         return {
-          readableState: this.t('CsdmStatus.Online'),
+          key: state,
+          readableState: this.t('CsdmStatus.connectionStatus.CONNECTED'),
           priority: '5',
         };
+      case 'OFFLINE_EXPIRED':
+        return {
+          key: 'OFFLINE_EXPIRED',
+          readableState: this.t('CsdmStatus.connectionStatus.OFFLINE_EXPIRED'),
+          priority: '3',
+        };
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return {
-          readableState: this.t('CsdmStatus.Offline'),
+          key: state,
+          readableState: this.t('CsdmStatus.connectionStatus.DISCONNECTED'),
           priority: '2',
         };
     }
@@ -431,6 +451,12 @@ class Helper {
           return 'warning';
         }
         return 'success';
+      case 'CONNECTED_WITH_ISSUES':
+        return 'warning';
+      case 'OFFLINE_EXPIRED':
+        return 'expired';
+      case 'DISCONNECTED':
+      case 'UNKNOWN':
       default:
         return 'danger';
     }
@@ -467,8 +493,8 @@ class Helper {
 }
 
 class Code implements ICode {
-  private expiryTime: any;
-  private activationCode: string;
+  public expiryTime: any;
+  public activationCode: string;
 
   constructor(obj) {
     this.expiryTime = obj.expiryTime;
@@ -488,11 +514,11 @@ class Place implements IPlaceExtended {
   public displayName: string;
   public externalLinkedAccounts: any[] | undefined;
   public tags: string[];
-  private numbers: string[];
-  private canDelete: boolean;
+  public numbers: string[];
+  public canDelete: boolean;
   public accountType: string;
   public image: string;
-  private codes: Map<string, Code>;
+  public codes: Map<string, Code>;
 
   constructor(helper: Helper, converter: CsdmConverter, obj) {
     this.updateFrom(helper, converter, obj);

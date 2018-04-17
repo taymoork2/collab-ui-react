@@ -2,7 +2,8 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService, AutoAttendantHybridCareService;
+
   var $rootScope, $scope, UrlConfig;
 
   var aaModel = {
@@ -16,13 +17,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     },
   };
 
-  var Authinfo = {
-    getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
-  };
-
-  beforeEach(angular.mock.module(function ($provide) {
-    $provide.value('Authinfo', Authinfo);
-  }));
+  var authinfo;
 
   var completeUserCisResponse = {
     userName: 'dudette@gmail.com',
@@ -128,120 +123,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     }],
   };
 
-  var userListCISResponse = {
-    totalResults: '3',
-    itemsPerPage: '2',
-    startIndex: '1',
-    schemas: [
-      'urn:scim:schemas:core:1.0',
-      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
-    ],
-    Resources: [{
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Super Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dude@gmail.com',
-      name: {
-        givenName: 'inferior',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Test Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'AA Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }],
-    success: true,
-  };
+  var userListCISResponse = getJSONFixture('huron/json/autoAttendant/userListCISResponse.json');
 
   var userListCISResponse2 = {
     totalResults: '3',
@@ -294,7 +176,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   };
 
   var listUsersProps = {
-    attributes: 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings',
+    attributes: 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences',
     filter: 'filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22',
     startIndex: 0,
     count: 10,
@@ -365,7 +247,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AutoAttendantHybridCareService_, _AACommonService_/* , _AAUserService_ */) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -374,9 +256,11 @@ describe('Controller: AARouteToUserCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    aaCommonService = _AACommonService_;
+    AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
 
     $httpBackend = _$httpBackend_;
-    Authinfo = _Authinfo_;
+    authinfo = _Authinfo_;
     UrlConfig = _UrlConfig_;
     HuronConfig = _HuronConfig_;
 
@@ -384,6 +268,8 @@ describe('Controller: AARouteToUserCtrl', function () {
     $scope.index = index;
     $scope.keyIndex = keyIndex;
     $scope.menuId = menuId;
+
+    spyOn(authinfo, 'getOrgId').and.returnValue('1');
 
     spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
     aaModel.ceInfos = raw2CeInfos(rawCeInfos);
@@ -393,7 +279,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     aaUiModel[schedule] = AutoAttendantCeMenuModelService.newCeMenu();
     aaUiModel[schedule].addEntryAt(index, AutoAttendantCeMenuModelService.newCeMenu());
 
-    var listUsersUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&count=' + listUsersProps.count +
@@ -401,7 +287,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
 
-    var listUsersUrl2 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl2 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -410,7 +296,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl2).respond(200, userListCISResponse2);
 
-    var listUsersUrl3 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl3 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=20' +
@@ -419,7 +305,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl3).respond(200, userListEmptyCISResponse);
 
-    var listUsersUrl4 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl4 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -428,7 +314,7 @@ describe('Controller: AARouteToUserCtrl', function () {
       '&sortOrder=' + listUsersProps.sortOrder;
     $httpBackend.whenGET(listUsersUrl4).respond(200, userListCISResponse2);
 
-    var listUsersUrl5 = UrlConfig.getScimUrl(Authinfo.getOrgId()) +
+    var listUsersUrl5 = UrlConfig.getScimUrl(authinfo.getOrgId()) +
       '?' + '&' + listUsersProps.attributes +
       '&' + listUsersProps.filter +
       '&startIndex=10' +
@@ -438,18 +324,18 @@ describe('Controller: AARouteToUserCtrl', function () {
     $httpBackend.whenGET(listUsersUrl5).respond(200, userListCISResponse2);
 
     // user with all props including display name and extension
-    var userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[0].id;
+    var userCisUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) + '/' + users[0].id;
     $httpBackend.whenGET(userCisUrl).respond(200, completeUserCisResponse);
-    cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[0].id);
+    cmiCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/users/' + users[0].id);
     cmiCompleteUserGet.respond(200, directoryCmiResponse);
 
     // user with missing displayname and without extension
-    userCisUrl = UrlConfig.getScimUrl(Authinfo.getOrgId()) + '/' + users[1].id;
+    userCisUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) + '/' + users[1].id;
     $httpBackend.whenGET(userCisUrl).respond(200, notSoCompleteUserCisResponse);
-    cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/users/' + users[1].id);
+    cmiNotSoCompleteUserGet = $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/users/' + users[1].id);
     cmiNotSoCompleteUserGet.respond(200, noDirectoryCmiResponse);
 
-    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + '/voice/customers/directorynumbers?order=pattern-asc&pattern=2252';
+    var cmiDirectoryNumberUrl = HuronConfig.getCmiUrl() + '/voice/customers/' + authinfo.getOrgId() + '/directorynumbers?order=pattern-asc&pattern=2252';
     var cmiExtensionInfo = [{
       pattern: '5801',
       description: '',
@@ -461,6 +347,31 @@ describe('Controller: AARouteToUserCtrl', function () {
     cmiExtensionInfoGet = $httpBackend.whenGET(cmiDirectoryNumberUrl);
     cmiExtensionInfoGet.respond(200, cmiExtensionInfo);
   }));
+
+  afterEach(function () {
+    cmiCompleteUserGet = null;
+    cmiNotSoCompleteUserGet = null;
+    cmiExtensionInfoGet = null;
+
+    $rootScope = null;
+    $scope = null;
+
+    $controller = null;
+    AAModelService = null;
+    AAUiModelService = null;
+    AutoAttendantCeInfoModelService = null;
+    AutoAttendantCeMenuModelService = null;
+    aaCommonService = null;
+
+    $httpBackend = null;
+    authinfo = null;
+    UrlConfig = null;
+    HuronConfig = null;
+
+    aaModel.ceInfos = null;
+
+    aaUiModel[schedule] = null;
+  });
 
   describe('AARouteToUser', function () {
     it('should be able to create new route to user entry', function () {
@@ -575,25 +486,136 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.users[1].description).toEqual(nameNumber);
+      expect(controller.users[3].description).toEqual(nameNumber);
     });
 
-    it('should omit user with 404 on extension', function () {
-      cmiCompleteUserGet.respond(404);
-
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+    describe('for hybrid user', function () {
+      beforeEach(function () {
+        var attributesForHybridOrg = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences,phoneNumbers,sipAddresses';
+        var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
+        '?' + '&' + attributesForHybridOrg +
+        '&' + listUsersProps.filter +
+        '&count=' + listUsersProps.count +
+        '&sortBy=' + listUsersProps.sortBy +
+        '&sortOrder=' + listUsersProps.sortOrder;
+        $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(true);
+        cmiCompleteUserGet.respond(404);
+        $scope.$apply();
       });
 
-      controller.sort.fullLoad = 0;
+      it('should show user with extension response as 404 for call free users', function () {
+        var result = 'Super Admin (Spark)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
+        controller.getUsers();
 
-      expect(controller.users.length).toEqual(0);
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].type).toBe('sparkOnlyUser');
+      });
+
+      it('should show user email id when dispalyName, firstname and lasname are empty', function () {
+        var result = 'user@gmail.com (Spark)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[2].description).toBe(result);
+      });
+
+      it('should show user lastname when dispalyName and firstName is empty', function () {
+        var result = 'Super Admin (Spark)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].sipUri).toBe('admin@webex.cisco.com');
+      });
+
+      it('should show hybrid user with extension when phoneNumbers exist in response', function () {
+        var result = 'AlanHybrid Geller (9999)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[3].description).toBe(result);
+        expect(controller.users[3].type).toBe('hybridUser');
+        expect(controller.users[3].sipUri).toBe('alanHybrid@webex.cisco.com');
+      });
+
+      it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
+        var result = 'user@gmail.com';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[4].description).toBe(result);
+        expect(controller.users[4].type).toBe('hybridUser');
+        expect(controller.users[4].sipUri).toBeUndefined();
+      });
+
+      it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
+        var result = 'Sam Will (user@gmail.com)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[5].description).toBe(result);
+        expect(controller.users[5].type).toBe('hybridUser');
+        expect(controller.users[5].sipUri).toBeUndefined();
+      });
     });
 
     describe('activate', function () {
@@ -650,7 +672,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
 
-        cmiCompleteUserGet.respond(404);
+        cmiCompleteUserGet.respond(500);
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,
@@ -685,6 +707,64 @@ describe('Controller: AARouteToUserCtrl', function () {
         expect(controller.userSelected.id).toEqual(users[0].id);
       });
     });
+
+    describe('Multi-Site', function () {
+      var response = {};
+      response.numbers = [{
+        siteToSite: '81001111',
+      }, {
+        siteToSite: '81002222',
+      }, {
+        siteToSite: '81003333',
+      }];
+      var userMultiSite;
+
+      beforeEach(function () {
+        userMultiSite = HuronConfig.getCmiV2Url() + '/customers/' + authinfo.getOrgId() + '/users/' + users[0].id;
+        spyOn(aaCommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      });
+
+      afterEach(function () {
+        userMultiSite = null;
+      });
+
+      it('should get extension from User Service', function () {
+        $httpBackend.whenGET(userMultiSite).respond(200, response);
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.getUsers('', undefined);
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+
+        expect(controller.users[0].description).toContain('81001111');
+        expect(controller.users[1].description).toContain('81002222');
+        expect(controller.users[2].description).toContain('81003333');
+      });
+      it('should not get extension from User Service', function () {
+        $httpBackend.whenGET(userMultiSite).respond(404, { error: 'error 404' });
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.getUsers('', undefined);
+        $httpBackend.flush();
+
+        $scope.$apply();
+        var descrips = _.chain(controller.users)
+          .map('description')
+          .filter(function (o) {
+            return o.includes('81001111');
+          })
+          .value();
+
+        expect(descrips.length).toBe(0);
+      });
+    });
+
     describe('fromDecision', function () {
       beforeEach(function () {
         $scope.fromDecision = true;

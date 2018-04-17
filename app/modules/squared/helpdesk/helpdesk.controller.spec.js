@@ -9,6 +9,7 @@ describe('Controller: HelpdeskController', function () {
       '$scope',
       '$state',
       '$translate',
+      'AccessibilityService',
       'Authinfo',
       'Config',
       'HelpdeskService',
@@ -27,13 +28,28 @@ describe('Controller: HelpdeskController', function () {
     this.orgSearchResult = _.cloneDeep(this.jsonData.orgSearchResult);
 
     spyOn(this.FeatureToggleService, 'atlasHelpDeskOrderSearchGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AccessibilityService, 'setFocus');
     spyOn(this.Authinfo, 'isInDelegatedAdministrationOrg').and.returnValue(true);
     spyOn(this.HelpdeskService, 'searchUsers');
     spyOn(this.HelpdeskService, 'searchOrgs');
 
+    this.$element = {
+      find: function () {
+        return {
+          blur: _.noop,
+          focus: function () {
+            return {
+              select: _.noop,
+            };
+          },
+        };
+      },
+    };
+
     this.initController = function () {
       this.controller = this.$controller('HelpdeskController', {
         HelpdeskService: this.HelpdeskService,
+        $element: this.$element,
         $translate: this.$translate,
         $scope: this.$scope,
         HelpdeskSearchHistoryService: this.HelpdeskSearchHistoryService,
@@ -238,45 +254,17 @@ describe('Controller: HelpdeskController', function () {
       expect(this.controller.currentSearch.orderSearchResults[0].externalOrderId).toEqual('67891234');
     });
 
-    it('simple search with Rejected order', function () {
-      this.HelpdeskService.searchOrders.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData.orderSearchResult2)));
+    it('simple search with multiple hits shows only latest for each subscriptionId', function () {
+      this.HelpdeskService.searchOrders.and.returnValue(this.$q.resolve(_.cloneDeep(this.jsonData.orderSearchMultiResults)));
       this.controller.isOrderSearchEnabled = true;
-
-      expect(this.controller.showOrdersResultPane()).toBeFalsy();
-      expect(this.controller.searchingForOrders).toBeFalsy();
       this.controller.searchString = '67891234';
       this.controller.search();
       this.$scope.$apply();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.noSearchHits');
-    });
-
-    it('simple search with less than eight characters shows search failure directly', function () {
-      this.controller.isOrderSearchEnabled = true;
-      // Search string is 7 numeric string, and should fail the lower limit of 8 digits.
-      this.controller.searchString = '6789123';
-      this.controller.search();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-      this.$scope.$apply();
-      expect(this.controller.showUsersResultPane()).toBeTruthy();
-      expect(this.controller.showOrgsResultPane()).toBeTruthy();
-      expect(this.controller.showOrdersResultPane()).toBeTruthy();
-      expect(this.controller.showDeviceResultPane()).toBeFalsy();
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.badOrderSearchInput');
-    });
-
-    it('simple search with prefix different from "ssw" shows search failure directly', function () {
-      this.controller.isOrderSearchEnabled = true;
-      this.controller.searchString = 'ssx67891234';
-      this.controller.search();
-      expect(this.controller.searchingForOrders).toBeFalsy();
-      this.$scope.$apply();
-      expect(this.controller.showUsersResultPane()).toBeTruthy();
-      expect(this.controller.showOrgsResultPane()).toBeTruthy();
-      expect(this.controller.showOrdersResultPane()).toBeTruthy();
-      expect(this.controller.showDeviceResultPane()).toBeFalsy();
-      expect(this.controller.currentSearch.orderSearchFailure).toEqual('helpdesk.badOrderSearchInput');
+      expect(this.controller.currentSearch.orderSearchResults.length).toBe(2);
+      expect(this.controller.currentSearch.orderSearchResults[0].lastModified).toBe('2017-09-19T22:58:28.959Z');
+      expect(this.controller.currentSearch.orderSearchResults[0].serviceId).toBe('Atlas_Test-testSearch002-dummy-sub');
+      expect(this.controller.currentSearch.orderSearchResults[1].serviceId).toBe('Atlas_Test-testSearch002-dummy-sub2');
+      expect(this.controller.currentSearch.orderSearchResults[1].lastModified).toBe('2017-08-24T22:58:28.959Z');
     });
   });
 

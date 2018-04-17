@@ -1,0 +1,16 @@
+@import 'styles/partials/mixins';
+
+account-expired-modal {
+  @include keep-flex-container(column);
+}
+
+.account-expired-modal {
+  &__header {
+    margin-bottom: 10px;
+  }
+
+  &__disable-button {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+}

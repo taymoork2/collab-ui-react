@@ -2,8 +2,7 @@ import { HuntGroupCallsToSparkAppComponent } from './hunt-group-calls-to-spark-a
 
 export default angular
   .module('huron.hunt-group-calls-to-spark-app', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucHuntGroupCallsToSparkApp', new HuntGroupCallsToSparkAppComponent())

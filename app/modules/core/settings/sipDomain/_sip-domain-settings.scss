@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .modal-body.subdomain-modal {
   .modal-space {
@@ -15,14 +15,6 @@
   .domain-header {
     @include vr-spacing(mt, 1.25);
     @include vr-spacing(mb, 0.5);
-  }
-  .domain-buttons {
-    display: flex;
-    width: 50%;
-    height: vr-adjust(36);
-    .btn {
-      @include vr-spacing(ml, 0.5);
-    }
   }
   .domain-description {
     position: relative;
@@ -42,24 +34,25 @@
     top: vr-adjust(4);
     @include vr-spacing(ml, 0.25);
   }
-  .domain-form {
-    display: flex;
-    width: 100%;
-    margin-bottom: 0;
-  }
-  .domain-input {
-    min-width: vr-adjust(200);
-    width: 50%;
-    input {
-      width: 100%;
-    }
-  }
   .domain-space {
     @include vr-spacing(mt, 1);
     height: vr-adjust(20);
   }
-  .domain-space-two {
-    @include vr-spacing(mt, 2.5);
-    height: vr-adjust(20);
+
+  .domain-form {
+    display: flex;
+    flex-wrap: wrap;
+    .domain-buttons {
+      flex-shrink: 0;
+      display: flex;
+    }
+    .domain-button {
+      flex-shrink: 0;
+    }
+    .domain-input {
+      flex-grow: 1;
+      min-width: vr-adjust(200);
+      @include vr-spacing(mr, 0.5);
+    }
   }
 }

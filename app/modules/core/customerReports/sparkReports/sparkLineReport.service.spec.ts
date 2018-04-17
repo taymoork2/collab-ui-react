@@ -86,7 +86,8 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
+      this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then(fail)
+      .catch((response: IActiveTableBase[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();
@@ -161,7 +162,8 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMetricsData', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then((response: IMetricsData[]): void => {
+      this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then(fail)
+      .catch((response: IMetricsData[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();

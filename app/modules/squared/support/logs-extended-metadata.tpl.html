@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <div class="modal-title" translate="supportPage.extendedMetadata"></div>
+</div>
+
+<div class="modal-body">
+  <pre class="json-metadata" id="log-extended-metadata-modal-content">{{::$ctrl.metadata}}</pre>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn--primary"
+    ngclipboard data-clipboard-target="#log-extended-metadata-modal-content"
+    ngclipboard-success="$ctrl.clipboardSuccess(e)"
+    ngclipboard-error="$ctrl.clipboardError(e)"
+    focus-on>
+    <span translate="common.copy"></span>
+  </button>
+</div>
+

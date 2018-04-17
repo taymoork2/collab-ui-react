@@ -1,4 +1,4 @@
-<div ng-form="lineLabelForm" class="cs-form" ng-if="$ctrl.lineLabelToggle">
+<div ng-form="lineLabelForm" class="cs-form">
   <div class="cs-form__section">
     <div class="section__info">
       <h4 class="section__title" translate="lineLabel.title"></h4>
@@ -19,7 +19,7 @@
           name="applyToAllSharedLinesBox"
           ng-model="$ctrl.applyToAllSharedLines"
           cs-input-label="{{'lineLabel.applyToAllSharedDescription'|translate}}"
-          ng-disabled="true">
+          ng-change="$ctrl.onLineLabelChange()">
         </div> 
     </div>
   </div>

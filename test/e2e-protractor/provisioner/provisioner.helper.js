@@ -1,10 +1,21 @@
 import * as helper from '../../api_sanity/test_helper';
 const rp = require('request-promise');
 // rp.debug = true;
+import * as featureToggle from '../utils/featureToggle.utils';
 
 export function getToken(userName) {
   return protractor.promise.controlFlow().execute(() => {
-    return helper.getBearerToken(userName);
+    var bearer;
+    return helper.getBearerToken(userName)
+      .then(function (_bearer) {
+        bearer = _bearer;
+      })
+      .then(function () {
+        return featureToggle.populateFeatureToggles(bearer);
+      })
+      .then(function () {
+        return bearer;
+      });
   });
 }
 

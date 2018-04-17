@@ -1,0 +1,40 @@
+<script type="text/ng-template" id="userTemplate.html">
+  <a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="paging-group-member-lookup">
+  <div class="typeahead-large">
+    <input id="memberInput" ng-model="$ctrl.memberName"
+           ng-class="{'error': $ctrl.errorMemberInput}"
+           typeahead="mem as $ctrl.getDisplayNameInDropdown(mem) for mem in $ctrl.fetchMembers($viewValue) | limitTo:10"
+           typeahead-on-select="$ctrl.selectMembers($item)"
+           typeahead-template-url="userTemplate.html"
+           placeholder="{{:: 'common.selectMembers' | translate}}"
+           typeahead-min-length="3" typeahead-wait-ms="300" focus-on/>
+    <p class="input-description" translate="pagingGroup.memberHint"></p>
+    <div class="warning">
+      <div class="cs-input__messages pg-cs-input__messages">
+        <div class="message member-warning" translate="pagingGroup.memberWarning"></div>
+      </div>
+    </div>
+  </div>
+  <div class="pg-header">
+    <span class="member-count" ng-show="$ctrl.showMemberCounts()">
+      {{$ctrl.selectedMembers.length + ('huronFeatureDetails.members' | translate)}}
+    </span>
+  </div>
+  <cs-card-layout>
+    <cs-card-member
+      ng-repeat="member in $ctrl.selectedMembers"
+      cs-type="simple"
+      cs-member-type="{{$ctrl.getMemberType(member.member)}}"
+      cs-id="member.member.uuid"
+      cs-title="$ctrl.getDisplayNameOnCard(member.member)"
+      cs-subtitle="$ctrl.getUserName(member.member)"
+      cs-image="$ctrl.getMembersPictures(member.member)"
+      on-remove="$ctrl.removeMembers(member)"
+      delete-aria-label="{{::'common.delete' | translate}}">
+    </cs-card-member>
+  </cs-card-layout>
+</div>

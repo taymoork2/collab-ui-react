@@ -1,6 +1,19 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
-.settingsWarning {
-  font-style: italic;
-  color: $gray-light-1;
+.device-settings-section {
+  .settingsWarning {
+    font-style: italic;
+    color: $gray-light-1;
+  }
+
+  .setting-with-tooltip {
+    display: flex;
+    i {
+      padding: 3px 0 0 5px ;
+    }
+  }
+
+  .tooltip[popup-class="setting-help-tooltip"] {
+    width: 100% !important;
+  }
 }

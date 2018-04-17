@@ -1,0 +1,74 @@
+<!-- TODO maximize reuse -->
+
+<div class="account-linking-wizard">
+  <div class="modal-header">
+    <button type="button"
+      class="close"
+      ng-click="$ctrl.cancelModal()"
+      aria-label="{{:: 'common.close' | translate}}">
+    </button>
+    <h4 class="modal-title wizard-title" translate="accountLinking.wizard.title"></h4>
+  </div>
+  <account-linking-wizard-entry
+    ng-show="$ctrl.fsmState === 'entry'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-entry>
+
+  <account-linking-wizard-verify
+    ng-show="$ctrl.fsmState === 'verify'"
+    site-info="$ctrl.siteInfo"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-verify>
+
+  <account-linking-wizard-fetchingdomains
+    ng-show="$ctrl.fsmState === 'fetchingDomains'"
+    state="$ctrl.fsmState"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-fetchingdomains>
+
+  <account-linking-wizard-domainslist
+    ng-show="$ctrl.fsmState === 'domainsList'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    domains-func="$ctrl.getDomains(from, to)"
+    public-domains-func="$ctrl.getPublicDomains(from, to)"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-domainslist>
+
+  <account-linking-wizard-showagreement
+    ng-show="$ctrl.fsmState === 'showAgreement'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-showagreement>
+
+  <account-linking-wizard-agreementaccepted
+    ng-show="$ctrl.fsmState === 'agreementAccepted'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-agreementaccepted>
+
+  <account-linking-wizard-verifydomain
+    ng-show="$ctrl.fsmState === 'verifyDomain'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-verifydomain>
+
+  <account-linking-wizard-receiveemail
+    ng-show="$ctrl.fsmState === 'receiveEmail'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-receiveemail>
+</div>

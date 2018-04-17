@@ -28,6 +28,7 @@ export class LineOverviewService {
   private callForwardBusyProperties: string[] = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: any[] = [];
+  private MAX_LABEL_LENGTH: number = 30;
 
   /* @ngInject */
   constructor(
@@ -57,6 +58,7 @@ export class LineOverviewService {
       getAutoAnswerSupportedDeviceAndMember: this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId),
       getUserServices: this.HuronUserService.getUserServices(ownerId),
       getLineMediaOnHold: this.getLineMediaOnHold(consumerType, numberId),
+      getUserV2LineLabel: this.HuronUserService.getUserV2LineLabel(ownerId),
     }).then(response => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -71,6 +73,11 @@ export class LineOverviewService {
       lineOverviewData.services = _.get<string[]>(response, 'getUserServices');
       lineOverviewData.lineMoh = _.get<string>(response, 'getLineMediaOnHold');
       lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
+      if (lineOverviewData.line.uuid === undefined) {
+        if (lineOverviewData.line.label != null) {
+          lineOverviewData.line.label.value = _.get<string>(response, 'getUserV2LineLabel');
+        }
+      }
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -112,25 +119,22 @@ export class LineOverviewService {
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then<any>(() => this.createSharedLineMembers(consumerType, ownerId, lineOverviewData, newSharedLineMembers))
         .then(() => this.rejectAndNotifyPossibleErrors())
+        // The following needs to come after createSharedLineMembers
+        .then(() => {
+          if (data.line.label != null) {
+            let tempLineLabel: string;
+            tempLineLabel = lineOverviewData.line.internal + ' - ' + _.get(this, 'lineOverviewDataCopy.line.label.value');
+            if (_.isEqual(data.line.label.value, tempLineLabel.substr(0, this.MAX_LABEL_LENGTH))) {
+              data.line.label = null;
+            }
+            return this.updateLine(consumerType, ownerId, lineOverviewData.line.uuid, data.line);
+          }
+        })
+        .then(() => this.rejectAndNotifyPossibleErrors())
         .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
       const promises: ng.IPromise<any>[] = [];
       let isLineUpdated: boolean = false;
-      if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
-        this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1485)
-          .then ((result) => {
-            if (result) {
-              // for line label, if unchanged not push anything
-              if (_.isEqual(data.line.label, _.get(this, 'lineOverviewDataCopy.line.label'))) {
-                data.line.label = null;
-              }
-            } else {
-              data.line.label = undefined;
-            }
-          });
-        promises.push(this.updateLine(consumerType, ownerId, numberId, data.line));
-        isLineUpdated = true;
-      }
 
       if (!_.isEqual(data.callForward, this.lineOverviewDataCopy.callForward)) {
         promises.push(this.updateCallForward(consumerType, ownerId, numberId, data.callForward));
@@ -163,19 +167,31 @@ export class LineOverviewService {
         }
       }
 
-      //update line media on hold
-      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh) && _.isEqual(consumerType, LineConsumerType.USERS)) {
+      // update line media on hold
+      if (!_.isEqual(data.lineMoh, this.lineOverviewDataCopy.lineMoh) &&
+         (_.isEqual(consumerType, LineConsumerType.USERS) || _.isEqual(consumerType, LineConsumerType.PLACES))) {
         const GENERIC_MEDIA_ID = '98765432-DBC2-01BB-476B-CFAF98765432';
         if (_.isEqual(data.lineMoh, GENERIC_MEDIA_ID)) {
           promises.push(this.MediaOnHoldService.unassignMediaOnHold('Line', numberId));
         } else {
-          promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, numberId));
+          promises.push(this.MediaOnHoldService.updateMediaOnHold(data.lineMoh, 'Line', numberId));
         }
       }
 
       return this.$q.all(promises)
         .then(() => this.rejectAndNotifyPossibleErrors())
-        .then<any>(() => {
+        .then(() => {
+          // update line needs to come after shared line updates
+          if (!_.isEqual(data.line, _.get(this, 'lineOverviewDataCopy.line'))) {
+            // if nothing changed in line label fields, do not send anything to backend
+            if (_.isEqual(data.line.label, _.get(this, 'lineOverviewDataCopy.line.label'))) {
+              data.line.label = null;
+            }
+            isLineUpdated = true;
+            return this.updateLine(consumerType, ownerId, numberId, data.line);
+          }
+        })
+        .then(() => {
           if (!_.isEqual(data.callerId, this.lineOverviewDataCopy.callerId)) {
             return this.updateCallerId(consumerType, ownerId, numberId, data.callerId);
           }
@@ -213,7 +229,7 @@ export class LineOverviewService {
     });
   }
 
-  private updateLine(consumerType: LineConsumerType, ownerId: string, numberId: string, data: Line): ng.IPromise<void> {
+  private updateLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Line): ng.IPromise<void> {
     return this.LineService.updateLine(consumerType, ownerId, numberId, data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateLineError'));
@@ -250,14 +266,14 @@ export class LineOverviewService {
   private getLineMediaOnHold(consumerType: LineConsumerType, numberId: string = ''): ng.IPromise<string> {
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.huronMOHEnable)
       .then(supportsLineMoh => {
-        if (supportsLineMoh && _.isEqual(consumerType, LineConsumerType.USERS)) {
+        if (supportsLineMoh && (_.isEqual(consumerType, LineConsumerType.USERS) || _.isEqual(consumerType, LineConsumerType.PLACES)))  {
           return this.MediaOnHoldService.getLineMedia(numberId);
         } else {
           return this.$q.resolve('');
         }
       })
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohLineError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
       });
   }
 

@@ -1,0 +1,120 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+    <h5 id="prereqTitle" class="modal-title" translate="servicesOverview.cards.privateTrunk.prerequisites.title"></h5>
+  </div>
+  <div class="modal-body hybrid-service-prerequisites">
+
+    <div class="intro">
+      <p translate="servicesOverview.cards.privateTrunk.prerequisites.intro" id="prereqDesc"></p>
+      <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()" translate="servicesOverview.commonPrerequisites.openDocumentation"></button>
+    </div>
+
+    <div class="steps-list">
+      <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.openPort5062"
+        id="checkboxEPT1"
+        name="checkboxEPT1"
+        ng-change="$ctrl.processChange('openPort5062', $ctrl.checkboxes.openPort5062)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.openPort5062' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.verifyDomains"
+        id="checkboxEPT2"
+        name="checkboxEPT2"
+        ng-change="$ctrl.processChange('verifyDomains', $ctrl.checkboxes.verifyDomains)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.verifyDomains' | translate}}">
+
+      <div class="checklist-help-text">
+        <span ng-if=!$ctrl.hasVerifiedDomain>
+          <i class="icon icon-warning domain-warning-icon"></i>
+          <span translate="servicesOverview.cards.privateTrunk.prerequisites.noDomains"></span>
+          <a href translate="servicesOverview.cards.privateTrunk.prerequisites.verifyDomain" ng-click="$ctrl.gotoSettings()"></a>
+        </span>
+        <span ng-if=$ctrl.hasVerifiedDomain>
+          <i class="icon icon-check domain-good-icon"></i>
+          <span ng-if="$ctrl.domains.length === 1">
+            {{$ctrl.domains[0]}}
+            <span translate="servicesOverview.cards.privateTrunk.prerequisites.singularDomains"></span>
+          </span>
+          <span ng-if="$ctrl.domains.length > 1">
+            <span ng-repeat="domain in $ctrl.domains">
+              {{::domain}}
+              <span ng-hide="$last">, </span>
+            </span>
+            <span translate="servicesOverview.cards.privateTrunk.prerequisites.pluralDomains" id="manyDomains"></span>
+          </span>
+        </span>
+      </div>
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.obtainCertificates"
+        id="checkboxEPT3"
+        name="checkboxEPT3"
+        ng-change="$ctrl.processChange('obtainCertificates', $ctrl.checkboxes.obtainCertificates)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.obtainCertificates' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.openRequiredPorts"
+        id="checkboxEPT4"
+        name="checkboxEPT4"
+        ng-change="$ctrl.processChange('openRequiredPorts', $ctrl.checkboxes.openRequiredPorts)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.openRequiredPorts' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.runSupportedSoftware"
+        id="checkboxEPT5"
+        name="checkboxEPT5"
+        ng-change="$ctrl.processChange('runSupportedSoftware', $ctrl.checkboxes.runSupportedSoftware)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.runSupportedSoftware' | translate}}">
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.determinePSTN"
+        id="checkboxEPT6"
+        name="checkboxEPT6"
+        ng-change="$ctrl.processChange('determinePSTN', $ctrl.checkboxes.determinePSTN)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.determinePSTN' | translate}}">
+      <ul class="checklist-help-text">
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.determinePSTNHelp1"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.determinePSTNHelp2"></li>
+      </ul>
+
+      <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.prepareExpressway"
+        id="checkboxEPT7"
+        name="checkboxEPT7"
+        ng-change="$ctrl.processChange('prepareExpressway', $ctrl.checkboxes.prepareExpressway)"
+        cs-input-label="{{:: 'servicesOverview.cards.privateTrunk.prerequisites.prepareExpressway' | translate}}">
+      <ul class="checklist-help-text">
+        <span translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp1"></span>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp2"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp3"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp4"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp5"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp6"></li>
+        <li translate="servicesOverview.cards.privateTrunk.prerequisites.prepareExpresswayHelp7"></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="modal-footer private-trunk">
+    <button class="btn btn-primary" ng-click="$ctrl.dismiss()" translate="common.close"></button>
+  </div>
+</div>

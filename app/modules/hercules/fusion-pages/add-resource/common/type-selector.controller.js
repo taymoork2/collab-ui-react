@@ -1,11 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Hercules')
-    .controller('TypeSelectorController', TypeSelectorController);
+  module.exports = TypeSelectorController;
+
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, hasCucmSupportFeatureToggle, hasImpSupportFeatureToggle, ServiceDescriptorService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -54,6 +55,11 @@
           contextHelpText: vm.hasSetup.context ? $translate.instant('hercules.fusion.add-resource.type.context-description') : $translate.instant('hercules.fusion.add-resource.type.context-not-setup'),
           cucmHelpText: $translate.instant('hercules.fusion.add-resource.type.cucm-description'),
         };
+
+        if (hasImpSupportFeatureToggle) {
+          vm._translation.expresswayHelpText = $translate.instant('hercules.fusion.add-resource.type.expressway-description-with-imp');
+        }
+
         // Only Expressway supports the partner registration
         if (Authinfo.isCustomerLaunchedFromPartner()) {
           vm.hasSetup.mediafusion = false;
@@ -71,9 +77,9 @@
       var promises = _.map(services, function (service) {
         switch (service) {
           case 'expressway':
-            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-mgmt');
+            return ServiceDescriptorService.isServiceEnabled('squared-fusion-mgmt');
           case 'mediafusion':
-            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-media');
+            return ServiceDescriptorService.isServiceEnabled('squared-fusion-media');
           default:
             return true;
         }
@@ -89,7 +95,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

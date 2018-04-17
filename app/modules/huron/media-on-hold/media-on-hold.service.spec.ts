@@ -6,17 +6,21 @@ describe('Service: MediaOnHoldService', () => {
     this.initModules(mediaOnHoldModule);
     this.injectDependencies(
       '$httpBackend',
+      '$q',
       'Authinfo',
       '$translate',
       'HuronConfig',
       'MediaOnHoldService',
+      'FeatureToggleService',
     );
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
     this.MEDIA_FILE_ID_1 = '998725e5-a8df-441a-b707-f00e7d7b6501';
     this.MEDIA_FILE_ID_2 = '9cdd6f7b-5814-4edb-9697-a015d7f32b3g';
     this.MEDIA_FILE_ID_3 = 'f03276fe-3ffb-4e94-a3cb-8ef86752eecd';
     this.MEDIA_FILE_NAME_2 = 'filename2';
-    this.LINE_NUM_UUID = 'abcd-1234';
+    this.LOCATION_ID = 'abcd';
+    this.LINE_NUM_UUID = 'abcd-12345';
   });
 
   afterEach(function () {
@@ -61,15 +65,44 @@ describe('Service: MediaOnHoldService', () => {
     });
   });
 
+  describe('Location Media on Hold', function() {
+    beforeEach(function() {
+      this.locationMediaOnHoldResponse = getJSONFixture('huron/json/moh/mohPrompts.json');
+      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
+        .respond(this.locationMediaOnHoldResponse);
+      this.LOCATION_GENERIC_MEDIA = <IOption> {
+        label: 'Company MOH (filename1)',
+        value: '98765432-DBC2-01BB-476B-CFAF98765432',
+      };
+      spyOn(this.$translate, 'instant').and.returnValue('Company MOH');
+    });
+
+    it('getLocationMedia should return assigned Location Media', function() {
+      this.MediaOnHoldService.getLocationMedia(this.LOCATION_ID)
+        .then(response => {
+          expect(response).toEqual(this.MEDIA_FILE_ID_2);
+        });
+    });
+
+    it('getLocationMohOptions should return Location level Media on Hold Options', function() {
+      this.MediaOnHoldService.getLocationMohOptions()
+        .then(response => {
+          expect(response.length).toBe(4);
+          expect(response).toContain(this.LOCATION_GENERIC_MEDIA);
+        });
+    });
+  });
+
   describe('Line Media on Hold', function() {
     beforeEach(function() {
       this.lineMediaOnHoldResponse = getJSONFixture('huron/json/moh/mohPrompts.json');
       this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/12345/mohPrompts')
         .respond(this.lineMediaOnHoldResponse);
       this.LINE_GENERIC_MEDIA = <IOption> {
-        label: 'Company MOH (filename1)',
+        label: 'Location MOH (filename2)',
         value: '98765432-DBC2-01BB-476B-CFAF98765432',
       };
+      spyOn(this.$translate, 'instant').and.returnValue('Location MOH');
     });
 
     it('getLineMedia should return assigned Line Media', function() {
@@ -104,6 +137,13 @@ describe('Service: MediaOnHoldService', () => {
         });
     });
 
+    it('should perform Location level assignment', function() {
+      this.MediaOnHoldService.updateMediaOnHold(this.MEDIA_FILE_ID_2, this.LOCATION_ID)
+        .then(response => {
+          expect(response.promptId).toEqual(this.PROMPT_ID);
+        });
+    });
+
     it('should perform Line level assignment', function() {
       this.MediaOnHoldService.updateMediaOnHold(this.MEDIA_FILE_ID_2, this.LINE_NUM_UUID)
         .then(response => {
@@ -123,6 +163,13 @@ describe('Service: MediaOnHoldService', () => {
 
     it('should perform Company level unassignment', function() {
       this.MediaOnHoldService.unassignMediaOnHold()
+        .then(response => {
+          expect(response.promptId).toBe(this.PROMPT_ID);
+        });
+    });
+
+    it('should perform Location level unassignment', function() {
+      this.MediaOnHoldService.unassignMediaOnHold('Location', this.LOCATION_ID)
         .then(response => {
           expect(response.promptId).toBe(this.PROMPT_ID);
         });

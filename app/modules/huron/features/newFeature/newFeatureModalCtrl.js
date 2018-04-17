@@ -62,7 +62,7 @@ require('./_new-feature.scss');
         $state.go('huronCallPickup');
       } else if (featureId === 'AA') {
         $modal.open({
-          templateUrl: 'modules/huron/features/newFeature/aatype-select-modal.html',
+          template: require('modules/huron/features/newFeature/aatype-select-modal.html'),
           controller: 'AATypeSelectCtrl',
           size: 'lg',
         });

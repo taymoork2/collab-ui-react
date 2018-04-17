@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 hybrid-call-service-test-call-tool {
   display: block;
@@ -8,24 +8,21 @@ hybrid-call-service-test-call-tool {
 
   .picture-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
   }
 
   .from-and-to-container {
     margin-top: 10px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     height: 30px;
   }
 
   .warning-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     height: 20px;
     margin-top: 65px;
@@ -38,8 +35,7 @@ hybrid-call-service-test-call-tool {
 
   .change-user-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     height: 20px;
   }

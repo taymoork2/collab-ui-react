@@ -1,0 +1,42 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('dialogIntegration.title')}}</span>
+  </div>
+  <h6 class="ct-title-desc">{{$ctrl.getText('dialogIntegration.desc')}}</h6>
+  <div class="cs-card-container ct-sa-content">
+    <cs-card-layout block-view="true" class="va-card-center">
+      <cs-card class="va-box cva-dialog-integration-box va-card">
+        <div class="instruction-row">
+          <img class="icon-circle" src="/images/icon-circle-one.svg" />
+          <h4>{{$ctrl.getText('dialogIntegration.boxStepOne')}}</h4>
+        </div>
+        <p>{{$ctrl.getText('dialogIntegration.boxStepOneDesc')}}</p>
+        <a class="btn download-button"
+          target="_self"
+          ng-href="{{$ctrl.escalationIntentUrl}}"
+          download="escalation.json"
+          focus-on>
+          {{$ctrl.getText('dialogIntegration.downloadButtonText')}}
+        </a>
+        <div class="instruction-row">
+          <img class="icon-circle" src="/images/icon-circle-two.svg" />
+          <h4>{{$ctrl.getText('dialogIntegration.boxStepTwo')}}</h4>
+        </div>
+        <p>{{$ctrl.getText('dialogIntegration.boxStepTwoDesc')}}</p>
+        <div class="instruction-row">
+          <img class="icon-circle" src="/images/icon-circle-three.svg" />
+          <h4>{{$ctrl.getText('dialogIntegration.boxStepThree')}}</h4>
+        </div>
+        <p>{{$ctrl.getText('dialogIntegration.boxStepThreeDesc')}}</p>
+        <ul>
+          <li>{{$ctrl.getText('dialogIntegration.boxBulletOne')}}</li>
+          <li>{{$ctrl.getText('dialogIntegration.boxBulletTwo')}}</li>
+        </ul>
+        <p class="h6">{{$ctrl.getText('dialogIntegration.boxStepThreeDescCont')}}</p>
+        <div class="learn-more-row">
+          <a href="http://www.cisco.com/go/cva-integrate" target="_blank">{{$ctrl.getText('dialogIntegration.learnMoreLink')}}</a>
+          <span>{{$ctrl.getText('dialogIntegration.finalNote')}}</span>
+        </div>
+      </cs-card>
+    </cs-card-layout>
+  </div>

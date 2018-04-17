@@ -1,0 +1,18 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+user-task-list-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+
+  button.btn.task-list-filter {
+    + button.btn.task-list-filter {
+      margin-left: 0;
+    }
+
+    &--active {
+      background: $gray-dark-2;
+    }
+  }
+}

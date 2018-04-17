@@ -20,13 +20,17 @@
       <div class="columns medium-7">
         <label for="state">{{$ctrl.stateLabel}}</label>
         <cs-select
+          aria-text="{{::$ctrl.stateLabel}}"
           ng-model="$ctrl.locationModel"
           options="$ctrl.stateOptions"
+          placeholder="::'common.select' | translate"
           labelfield="name"
           valuefield="abbreviation"
           required="true"
           on-change-fn="$ctrl.onLocationSelect()"
-          is-disabled="$ctrl.readOnly">
+          is-disabled="$ctrl.readOnly"
+          filter="true">
+        </cs-select>
       </div>
       <div class="columns medium-5">
         <label for="zip">{{$ctrl.zipLabel}}</label>
@@ -36,10 +40,26 @@
     <div class="row full" ng-if="$ctrl.countryCode">
       <div class="columns medium-12">
         <label for="country" translate="serviceAddress.country"></label>
-        <cs-select ng-model="$ctrl.countryCode" options="$ctrl.countryOptions" labelfield="name" valuefield="id" required="true" is-disabled="true"></cs-select>
+        <cs-select
+          aria-text="{{::'serviceAddress.country' |  translate}}"
+          ng-model="$ctrl.countryCode"
+          options="$ctrl.countryOptions"
+          placeholder="::'common.select' | translate"
+          labelfield="name"
+          valuefield="id"
+          required="true"
+          is-disabled="true">
+        </cs-select>
       </div>
     </div>
-      <button class="btn--primary search-custom" type="submit" ng-click="$ctrl.addressValidate()" translate="organizationsPage.search" ng-disabled="$ctrl.formName.$invalid || $ctrl.readOnly" ng-hide="$ctrl.hideSearch" ></button>
+    <button
+      class="btn--primary search-custom"
+      type="submit"
+      ng-click="$ctrl.addressValidate()"
+      translate="organizationsPage.search"
+      ng-disabled="$ctrl.formName.$invalid || $ctrl.readOnly"
+      ng-hide="$ctrl.hideSearch" >
+    </button>
   </div>
   <div class="flex-address validation-padding text-center">
     <div ng-if="$ctrl.readOnly && !$ctrl.hideAddress">

@@ -20,7 +20,7 @@
       },
       controller: 'AAMessageTypeCtrl',
       controllerAs: 'aaMessageType',
-      templateUrl: 'modules/huron/features/autoAttendant/messageType/aaMessageType.tpl.html',
+      template: require('modules/huron/features/autoAttendant/messageType/aaMessageType.tpl.html'),
     };
   }
 })();

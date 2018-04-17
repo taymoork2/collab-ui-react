@@ -12,7 +12,7 @@ var MediaServicePage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.hostDetails = element(by.binding('ecp.hosts[0].host_name'));
   this.hostTitle = element(by.binding('hostDetails.connector.host.host_name'));
-  this.mediaserviceTab = element(by.css('a[href="#/reports/mediaservice"]'));
+  this.mediaserviceTab = element(by.css('a[href="/reports/mediaservice"]'));
   this.total_calls = element(by.cssContainingText('.metrics-header', 'Total Calls'));
   this.averageutilization = element(by.cssContainingText('.metrics-header', 'Average Utilization'));
   this.clusteravailability = element(by.cssContainingText('.metrics-header', 'Clusters in Service'));
@@ -25,10 +25,10 @@ var MediaServicePage = function () {
   this.utilizationTitle = element(by.cssContainingText('.report-section-header', 'Resource Utilization'));
   this.callVolumes = element(by.cssContainingText('.report-section-header', 'Total Calls'));
   this.availabilityOfCluster = element(by.cssContainingText('.report-section-header', 'Clusters in Service'));
-  this.resourceButton = element(by.css('section a[href="#/mediaserviceV2"]'));
-  this.settingsButton = element(by.css('section a[href="#/mediaserviceV2/settings"]'));
-  this.resourceTab = element(by.css('li a[href="#/mediaserviceV2"]'));
-  this.settingsTab = element(by.css('li a[href="#/mediaserviceV2/settings"]'));
+  this.resourceButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2"]'));
+  this.settingsButton = element(by.css('hybrid-media-active-card a[href="/mediaserviceV2/settings"]'));
+  this.resourceTab = element(by.css('li a[href="/mediaserviceV2"]'));
+  this.settingsTab = element(by.css('li a[href="/mediaserviceV2/settings"]'));
   this.addResourceButton = element(by.cssContainingText('button', 'Add Resource'));
   this.mediaCluster = element(by.cssContainingText('.ui-grid-header-cell-label', 'Media Clusters'));
   this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));
@@ -50,8 +50,8 @@ var MediaServicePage = function () {
   this.releaseChannelTitle = element(by.cssContainingText('.section-title-row', 'Release Channel'));
   this.softwareUpgradeTitle = element(by.cssContainingText('.section-title-row', 'Software Upgrade'));
   this.nodesTitle = element(by.cssContainingText('.section-title-row', 'Nodes'));
-  this.moveNodeLink = element(by.css('a[ng-click="$ctrl.openMoveNodeModal(node)"]'));
-  this.deregisterMoveNodeLink = element(by.css('a[ng-click="$ctrl.openDeregisterNodeModal(node)"]'));
+  this.moveNodeLink = element(by.id('move-ecp'));
+  this.deregisterMoveNodeLink = element(by.id('deregister-ecp'));
   this.moveNodeModalHeader = element(by.cssContainingText('.modal-title', 'Move Node'));
   this.deregisterMoveNodeHeader = element(by.cssContainingText('.modal-title', 'Deregister Node'));
   this.moveNodeModalCancelButton = element(by.css('button[ng-click="$dismiss()"]'));
@@ -76,7 +76,7 @@ var MediaServicePage = function () {
   this.meetLocationCardDiv = element(by.css('#meeting-location-card'));
   this.totMeetsByHostHeader = element(by.cssContainingText('.report-section-header', 'Total Meetings by Host Type'));
   this.clientTypeHeader = element(by.cssContainingText('.report-section-header', 'Client Type Distribution'));
-  this.performActionsOnNodeBtn = element(by.cssContainingText('.btn--white', 'Perform actions on Node'));
+  this.performActionsOnNodeBtn = element(by.cssContainingText('.btn--primary', 'Perform actions on Node'));
   this.actionsBtn = element(by.cssContainingText('.actions-button', 'Actions'));
 
   this.totalmeetsFlip = element(by.css('i[ng-click="isFlipped=true"]'));

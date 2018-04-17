@@ -1,32 +1,45 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="cancel()">
-    <span class="sr-only">Close</span>
-  </button>
-  <h3 class="modal-title" translate="sunlightDetails.newFeatures.newCareTemplateModalTitle"></h3>
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="{{$ctrl.title}}"></h3>
 </div>
 <div class="modal-body">
-  <div class="care-new-feature-modal" ng-if="!loading">
-    <div class="feature-card-container" ng-repeat="feature in features" ng-click="feature.disabled || ok((feature.id))"
-            ng-disabled="{{feature.disabled}}" ng-if="features.length !== 0">
+  <div class="care-new-feature-modal" ng-if="!$ctrl.loading">
+    <div class="feature-card-container"
+      ng-repeat="feature in $ctrl.features"
+      ng-click="feature.disabled || $ctrl.ok((feature.id))"
+      ng-disabled="{{feature.disabled}}"
+      ng-if="$ctrl.features.length !== 0"
+      tooltip="{{feature.disabledTooltip | translate}}"
+      tooltip-placement="right"
+      tooltip-enable="{{feature.disabled}}"
+      tooltip-trigger="mouseenter focus"
+      aria-label="{{feature.disabledTooltip | translate}}">
         <div class="feature-icon-container">
-          <label class="feature-icon-circle feature-icon-color-care"
+          <label class="feature-icon-circle {{feature.color}}" ng-if="feature.icons.length !== 0"
                  ng-class="{'feature-icon-disabled': feature.disabled}" ng-repeat="ftIcon in feature.icons">
-              <i class="icon {{ftIcon}}"></i>
+              <i class="icon {{ftIcon}} {{feature.style}}" ng-if="ftIcon"></i>
+          </label>
+          <label class="feature-icon-circle {{feature.color}}" ng-if="feature.id === 'AA'">
+            {{feature.code | translate}}
           </label>
         </div>
-      <h4 class="feature-label-container" ng-class="{'feature-label-disabled': feature.disabled}">
-        <strong>{{feature.label | translate}}</strong>
+      <h4 class="feature-label-container {{feature.color}}" ng-class="{'feature-label-disabled': feature.disabled}">
+        <strong translate="{{feature.label}}"></strong>
       </h4>
 
-      <p class="feature-description-container text-left">
-        <span translate="{{feature.description}}" translate-value-onclick="purchaseLink()" translate-compile />
+      <p class="feature-description-container" ng-class="{'feature-label-disabled': feature.disabled}">
+        <span translate="{{feature.description}}" translate-value-onclick="$ctrl.purchaseLink()" translate-compile />
       </p>
+      <div class= "feature-warning-container" ng-if= "feature.showWarning">
+        <i class="icon {{feature.warningIcon}} feature-icon-color"></i>
+        <span translate="{{feature.warning}}" translate-value-onclick="$ctrl.learnMoreLink()" translate-compile />
+      </div>
     </div>
-    <div ng-if="features.length === 0">
+    <div ng-if="$ctrl.features.length === 0">
       <h4 translate="sunlightDetails.newFeatures.noCareFeatures"></h4>
     </div>
   </div>
 </div>
-<div class="feature-modal-loading" ng-if="loading">
+<div class="feature-modal-loading" ng-if="$ctrl.loading">
   <i class="icon icon-spinner"></i>
 </div>

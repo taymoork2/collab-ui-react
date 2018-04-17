@@ -1,8 +1,8 @@
 <span class="row small-12 aa-insertion-element" contentEditable="false">
-  <span class="columns small-9 insertion-element" ng-click="aaInsertionElement.mainClickFn()">
+  <span class="columns small-12 insertion-element" ng-click="aaInsertionElement.mainClickFn()">
     {{ aaInsertionElement.elementText }}
   </span>
-  <span class="columns small-3 aa-cancel-span">
-  <i ng-if="aaInsertionElement.elementText" class="cancel-dynamic icon icon-close cancel-dynamic-option" aria-label="common.delete" ng-click="aaInsertionElement.closeClickFn()"></i>
+  <span class="columns small-2 aa-cancel-span">
+  <i ng-if="aaInsertionElement.elementText" class="cancel-dynamic icon icon-close cancel-dynamic-option" aria-label="{{::'common.delete' | translate}}" ng-click="aaInsertionElement.closeClickFn()"></i>
   </span>
 </span>

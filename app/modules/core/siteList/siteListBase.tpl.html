@@ -1,0 +1,14 @@
+<div class="site-list">
+  <cs-page-header title-name="{{'siteList.conferencing' | translate}}"></cs-page-header>
+  <div ng-if="siteList.tabs.length > 0" class="tabs-container">
+    <ul class="menu">
+      <li class="link" ng-repeat="tab in siteList.tabs">
+        <span ui-sref="{{tab.state}}" ui-sref-active="{'active':tab.state + '.**'}" translate="{{tab.title}}"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <div ui-view="tabContent"></div>
+  </div>
+</div>

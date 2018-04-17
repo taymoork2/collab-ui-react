@@ -1,4 +1,5 @@
 import { CommonGraphService } from './commonReportServices/commonGraph.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 import {
   IActiveUserData,
   ICallMetricsData,
@@ -24,7 +25,6 @@ export class GraphService {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private CommonGraphService: CommonGraphService,
-    private chartColors,
   ) {}
 
   // Active User Graph functions
@@ -69,9 +69,9 @@ export class GraphService {
     const balloonText = '<span class="graph-text">' + this.$translate.instant('activeUsers.registeredUsers') + ' <span class="graph-number">[[totalRegisteredUsers]]</span></span><br><span class="graph-text">' + this.$translate.instant('activeUsers.active') + ' <span class="graph-number">[[percentage]]%</span></span>';
     const values = ['totalRegisteredUsers', 'activeUsers'];
     const titles = [this.$translate.instant('activeUsers.users'), this.$translate.instant('activeUsers.activeUsers')];
-    let colors = [this.chartColors.ctaLight, this.chartColors.ctaBase];
+    let colors = [ChartColors.ctaLight, ChartColors.ctaBase];
     if (!data[0].balloon) {
-      colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree];
+      colors = [ChartColors.grayLightFour, ChartColors.grayLightThree];
     }
     const graphs: any[] = [];
 
@@ -112,7 +112,7 @@ export class GraphService {
     catAxis.gridPosition = this.CommonGraphService.START;
 
     const valueAxes = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
-    valueAxes[0].totalColor = this.chartColors.brandWhite;
+    valueAxes[0].totalColor = ChartColors.brandWhite;
     valueAxes[0].integersOnly = true;
     valueAxes[0].minimum = 0;
     valueAxes[0].title = this.$translate.instant('mediaQuality.minutes');
@@ -134,9 +134,9 @@ export class GraphService {
     const totalCalls = this.$translate.instant('mediaQuality.totalCalls');
     const values = ['totalDurationSum', 'partialSum', 'poorQualityDurationSum'];
     const titles = ['mediaQuality.good', 'mediaQuality.fair', 'mediaQuality.poor'];
-    let colors = [this.chartColors.primaryBase, this.chartColors.primaryBase, this.chartColors.negativeBase];
+    let colors = [ChartColors.primaryBase, ChartColors.primaryBase, ChartColors.negativeBase];
     if (!data[0].balloon) {
-      colors = [this.chartColors.grayLightFour, this.chartColors.grayLightThree, this.chartColors.grayLightTwo];
+      colors = [ChartColors.grayLightFour, ChartColors.grayLightThree, ChartColors.grayLightTwo];
     }
     const graphs: any[] = [];
 
@@ -217,9 +217,9 @@ export class GraphService {
   private populationGraphs(data: IPopulationData[]) {
     const balloonTextOne = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '</span><br><span class="percent-large">[[percentage]]%</span>';
     const balloonTextTwo = '<span class="percent-label">' + this.$translate.instant('activeUserPopulation.averageLabel') + '<br>' + this.$translate.instant('activeUserPopulation.acrossCustomers') + '</span><br><span class="percent-large">[[overallPopulation]]%</span>';
-    let color = this.chartColors.primaryBase;
+    let color = ChartColors.primaryBase;
     if (!data[0].balloon) {
-      color = this.chartColors.grayLightThree;
+      color = ChartColors.grayLightThree;
     }
 
     const graph: any = this.CommonGraphService.getBaseVariable(this.CommonGraphService.COLUMN);
@@ -236,7 +236,7 @@ export class GraphService {
       valueField: 'overallPopulation',
       lineThickness: 2,
       lineColor: color,
-      balloonColor: this.chartColors.grayLightTwo,
+      balloonColor: ChartColors.grayLightTwo,
       balloonText: balloonTextTwo,
       showBalloon: data[0].balloon,
       animationPlayed: true,
@@ -250,9 +250,9 @@ export class GraphService {
       _.forEach(data, (item: IPopulationData) => {
         if (item.balloon) {
           if (_.isNumber(item.percentage) && (item.percentage - item.overallPopulation) >= 0) {
-            item.color = this.chartColors.peopleLight;
+            item.color = ChartColors.peopleLight;
           } else {
-            item.color = this.chartColors.negativeBase;
+            item.color = ChartColors.negativeBase;
           }
         }
       });
@@ -263,8 +263,8 @@ export class GraphService {
           percentage: 0,
           overallPopulation: data[0].overallPopulation,
           balloon: data[0].balloon,
-          labelColorField: this.chartColors.brandWhite,
-          color: this.chartColors.brandWhite,
+          labelColorField: ChartColors.brandWhite,
+          color: ChartColors.brandWhite,
         };
         data.unshift(_.clone(dummy));
         data.push(_.clone(dummy));
@@ -282,10 +282,10 @@ export class GraphService {
   public getCallMetricsDonutChart(data: ICallMetricsData, chart) {
     if (data && chart) {
       chart.balloonText = this.getCallMetricsBallonText();
-      chart.textColor = this.chartColors.grayDarkThree;
+      chart.textColor = ChartColors.grayDarkThree;
       if (data.dummy) {
         chart.balloonText = '';
-        chart.textColor = this.chartColors.brandWhite;
+        chart.textColor = ChartColors.brandWhite;
       }
 
       chart.dataProvider = data.dataProvider;
@@ -300,10 +300,10 @@ export class GraphService {
 
   private createCallMetricsDonutChart(data: ICallMetricsData) {
     let balloonText = this.getCallMetricsBallonText();
-    let textColor = this.chartColors.grayDarkThree;
+    let textColor = ChartColors.grayDarkThree;
     if (data.dummy) {
       balloonText = '';
-      textColor = this.chartColors.brandWhite;
+      textColor = ChartColors.brandWhite;
     }
 
     const chartData = this.CommonGraphService.getBasePieChart(data.dataProvider, balloonText, '75%', '30%', '[[percents]]%<br>[[label]]', true, 'label', 'value', this.CommonGraphService.COLOR, textColor);

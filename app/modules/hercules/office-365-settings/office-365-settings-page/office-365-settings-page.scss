@@ -1,0 +1,10 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+office-365-settings-page {
+  display: block;
+  background: $white;
+
+  .needs-border-top {
+    border-top: 1px solid $gray-light-2;
+  }
+}

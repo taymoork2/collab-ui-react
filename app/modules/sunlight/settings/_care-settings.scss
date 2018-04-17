@@ -7,11 +7,13 @@
     align-items: center;
     width: 100%;
     @include vr-spacing(pt, 1.25);
-    @include vr-spacing(pr,8.25);
+    @include vr-spacing(pr,2);
     @include vr-spacing(pb, 1.25);
-    @include vr-spacing(pl,4);
+    @include vr-spacing(pl,2);
     z-index: $zindex-popover;
     background-color: $gray-light-4;
+    right: 0;
+    justify-content: flex-end;
 
     p {
       flex: 1;
@@ -19,7 +21,6 @@
   }
 
   .care-warning-message {
-    font-family: CiscoSans;
     color: $color-attention-darker;
     line-height: initial;
     display: flex;

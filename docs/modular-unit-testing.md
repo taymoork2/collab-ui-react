@@ -9,7 +9,7 @@ Self-contained angular modules can be unit tested by only loading themselves. Th
 ```bash
 export KTEST__MODULAR=true
 # only loads the spec file and its dependencies
-npm test -- ./example-feature/example-feature.service.spec.ts
+yarn test ./example-feature/example-feature.service.spec.ts
 ```
 
 #### ./example-feature/index.ts

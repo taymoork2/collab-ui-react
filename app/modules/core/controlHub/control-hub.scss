@@ -1,0 +1,45 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+$admin-orgname-only-color: $gray-base;
+
+.control-hub-container {
+  .overview-bmmp-banner,
+  .reports-bmmp-banner {
+    top: auto;
+
+    &.readonly {
+      top: auto;
+    }
+  }
+
+  .admin-orgname-only {
+    a {
+      cursor: default;
+      .title {
+        color: $admin-orgname-only-color;
+      }
+      > .icon {
+        width: auto;
+      }
+    }
+    &:hover,
+    &:focus {
+      color: $admin-orgname-only-color;
+      background-color: transparent;
+      a {
+        color: $admin-orgname-only-color;
+        background-color: transparent;
+      }
+    }
+
+    .active,
+    .selected {
+      a {
+        background-color: transparent;
+        .title {
+          color: $admin-orgname-only-color;
+        }
+      }
+    }
+  }
+}

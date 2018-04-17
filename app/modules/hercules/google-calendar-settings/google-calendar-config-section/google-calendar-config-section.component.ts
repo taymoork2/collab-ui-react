@@ -29,7 +29,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
   public $onInit() {
     this.$q.all([
       this.CloudConnectorService.getApiKey(),
-      this.CloudConnectorService.getService(),
+      this.CloudConnectorService.getService('squared-fusion-gcal'),
     ])
       .then(([ apiKey, service]) => {
         const aclAdminAccount = service.aclAdminAccount || '';
@@ -58,6 +58,7 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
     })
       .then(() => {
         this.saving = false;
+        this.Notification.success('hercules.gcalSetupModal.testAccount.success');
       })
       .catch((err) => {
         this.Notification.errorWithTrackingId(err, 'hercules.gcalSetupModal.testAccount.error');
@@ -70,5 +71,5 @@ class GoogleCalendarConfigSectionCtrl implements ng.IComponentController {
 
 export class GoogleCalendarConfigSectionComponent implements ng.IComponentOptions {
   public controller = GoogleCalendarConfigSectionCtrl;
-  public templateUrl = 'modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-config-section.html';
+  public template = require('modules/hercules/google-calendar-settings/google-calendar-config-section/google-calendar-config-section.html');
 }

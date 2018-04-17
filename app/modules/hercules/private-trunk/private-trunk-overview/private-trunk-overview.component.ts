@@ -6,7 +6,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
   public back: boolean = true;
   public backState: string;
   public hasPrivateTrunkFeatureToggle: boolean;
-  public tabs: [{ 'title': String, 'state': String }];
+  public tabs: { title: string, state: string }[];
   public modalOptions: any = {
     template: '<private-trunk-setup class="modal-content" dismiss="$dismiss()"></private-trunk-setup>',
     type: 'full',
@@ -37,7 +37,7 @@ export class PrivateTrunkOverviewCtrl implements ng.IComponentController {
 
 export class PrivateTrunkOverviewComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-overview/private-trunk-overview.html');
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

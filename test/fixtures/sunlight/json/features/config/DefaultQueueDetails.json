@@ -1,0 +1,11 @@
+{
+    "notificationUrls": [],
+    "url": "qnr/v1/organization/deba1221-ab12-cd34-de56-abcdef123456/queue/deba1221-ab12-cd34-de56-abcdef123456",
+    "lastUpdateTime": "2017-09-27T06:56:37.063Z",
+    "queueId": "deba1221-ab12-cd34-de56-abcdef123456",
+    "orgId": "deba1221-ab12-cd34-de56-abcdef123456",
+    "routingType": "pick",
+    "createdTime": "2017-09-27T06:56:37.063Z",
+    "lastUpdatedBy": "88b2c101-5ecc-4c61-9fc6-3295274c01b6",
+    "queueName": "DEFAULT"
+}

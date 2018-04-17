@@ -1,14 +1,18 @@
 import { Notification } from 'modules/core/notifications';
+import { CsdmConfigurationService } from '../../../squared/devices/services/CsdmConfigurationService';
 
 export class SupportSettingsController {
   private proPackEnabled: boolean = false;
-  public nameChangeEnabled: boolean = false;
+  public csdmShowSupportSectionToggle = false;
 
   private customSupport = { enable: false, url: '', text: '' };
   private oldCustomSupport = { enable: false, url: '', text: '' };
 
   private customHelpSite = { enable: false, url: '' };
   private oldCustomHelpSite = { enable: false, url: '' };
+
+  private customDeviceSupportText = { enable: false, text: '' };
+  private oldCustomDeviceSupportText = { enable: false, text: '' };
 
   public placeHolder = {};
   private isCiscoSupport = false;
@@ -70,6 +74,30 @@ export class SupportSettingsController {
       || ( this.customSupport.enable && !!this.customSupport.url && (this.customSupport.url !== this.oldCustomSupport.url || this.oldCustomSupport.text !== this.customSupport.text));
   }
 
+  get enableDeviceSupport() {
+    return this.customDeviceSupportText.enable;
+  }
+
+  set enableDeviceSupport(value: boolean) {
+    this.customDeviceSupportText.enable = value;
+  }
+
+  get deviceSupportText() {
+    return this.customDeviceSupportText.text;
+  }
+
+  set deviceSupportText(value: string) {
+    this.customDeviceSupportText.text = value;
+  }
+
+  get showSaveCustomDeviceSupportText() {
+    return this.customDeviceSupportText.enable !== this.oldCustomDeviceSupportText.enable
+      && (!this.customDeviceSupportText.enable || this.customDeviceSupportText.text)
+      || (this.customDeviceSupportText.enable
+        && this.customDeviceSupportText.text
+        && this.customDeviceSupportText.text !== this.oldCustomDeviceSupportText.text);
+  }
+
   get isPartner(): boolean {
     return this.Authinfo.isPartner();
   }
@@ -89,18 +117,20 @@ export class SupportSettingsController {
     private Notification: Notification,
     private Orgservice,
     private UserListService,
+    private CsdmConfigurationService: CsdmConfigurationService,
   ) {
     this.$q.all({
       proPackEnabled: this.ProPackService.hasProPackPurchased(),
-      nameChangeEnabled: this.FeatureToggleService.atlas2017NameChangeGetStatus(),
+      csdmDeviceSupport: this.FeatureToggleService.csdmDeviceSupportGetStatus(),
     }).then((toggles: any): void => {
       this.proPackEnabled = toggles.proPackEnabled;
-      this.nameChangeEnabled = toggles.nameChangeEnabled;
+      this.csdmShowSupportSectionToggle = toggles.csdmDeviceSupport;
     });
 
     this.orgId = Authinfo.getOrgId();
     this.initTexts();
     this.initOrgInfo();
+    this.initDeviceSupportText();
   }
 
   private initTexts() {
@@ -243,6 +273,55 @@ export class SupportSettingsController {
       .then(this.notifySuccess.bind(this))
       .catch(this.notifyError.bind(this))
       .finally(this.stopLoading.bind(this));
+  }
+
+  private initDeviceSupportText() {
+    this.CsdmConfigurationService.getRuleForOrg('userinterface.custommessage')
+      .then((supportSetting) => {
+        this.setDeviceSupportTextFromSetting(supportSetting);
+      })
+      .catch((response) => {
+        if (response && response.status === 404) {
+          this.setDeviceSupportTextFromSetting({});
+        }
+      });
+  }
+
+  public showDeviceSupportSection() {
+    return this.csdmShowSupportSectionToggle && !this.Authinfo.isPartner();
+  }
+
+  private setDeviceSupportTextFromSetting(supportSetting) {
+    if (supportSetting && supportSetting.value) {
+      this.customDeviceSupportText.text = supportSetting.value.deviceSupportText;
+      this.customDeviceSupportText.enable = !!this.customDeviceSupportText.text;
+    } else {
+      this.customDeviceSupportText.text = '';
+      this.customDeviceSupportText.enable = false;
+    }
+    this.oldCustomDeviceSupportText.text = this.customDeviceSupportText.text;
+    this.oldCustomDeviceSupportText.enable = this.customDeviceSupportText.enable;
+  }
+
+  public saveDeviceSupportText() {
+    this.savingProgress = true;
+    if (!this.customDeviceSupportText.enable || !this.customDeviceSupportText.text) {
+      this.CsdmConfigurationService.deleteRuleForOrg('userinterface.custommessage')
+        .then(() => {
+          this.setDeviceSupportTextFromSetting({});
+        })
+        .then(this.notifySuccess.bind(this))
+        .catch(this.notifyError.bind(this))
+        .finally(this.stopLoading.bind(this));
+    } else {
+      this.CsdmConfigurationService.updateRuleForOrg('userinterface.custommessage', { deviceSupportText: this.customDeviceSupportText.text })
+        .then((result) => {
+          this.setDeviceSupportTextFromSetting(_.get(result, 'data'));
+        })
+        .then(this.notifySuccess.bind(this))
+        .catch(this.notifyError.bind(this))
+        .finally(this.stopLoading.bind(this));
+    }
   }
 
   public stopLoading() {

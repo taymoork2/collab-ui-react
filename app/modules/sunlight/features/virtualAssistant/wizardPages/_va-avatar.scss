@@ -1,0 +1,86 @@
+.va-dash-box {
+  @include vr-spacing(p, 2.1875);
+
+  height: rem-calc(350px);
+  width: rem-calc(730px);
+  margin: 75px auto auto;
+  border: 2px dashed $gray-light-2;
+  border-radius: 3px;
+
+  justify-content: center;
+
+  &.dragover {
+    border-color: $color-blue-light;
+    background: $gray-light-4;
+  }
+
+  .va-input-messages {
+    @include vr-spacing(mt, 1.0);
+    color: $gray-dark-2;
+  }
+
+  .va-upload-desc {
+    text-align: center;
+    @include vr-spacing(ml, 6.5);
+    @include vr-spacing(mr, 6.5);
+  }
+
+  .header3 {
+    @include vr-spacing(mt, 1.75);
+    @include vr-spacing(mb, 1.75);
+  }
+
+  .va-align-right {
+    float: right;
+    right: 0px;
+  }
+}
+
+.va-img-circle {
+  margin: auto;
+  height:100px;
+  width:100px;
+  border-radius: 50%;
+  border: 1px solid $gray-light-1;
+  position: relative;
+  overflow: hidden;
+}
+
+.va-img {
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  margin: auto;
+}
+
+.va-input-label {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  color: $color-blue-base;
+}
+
+.va-spinner-center {
+  @include vr-spacing(mt, 3);
+  display: block;
+  align-items: center;
+  vertical-align: bottom;
+  text-align: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.va-error {
+  @include vr-spacing(mt, 0.75);
+  text-align: center;
+  color: $color-red-base;
+
+  .icon {
+    vertical-align: middle;
+  }
+}
+

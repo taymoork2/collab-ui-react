@@ -21,6 +21,6 @@ describe('Directive: aaInsertionElement', function () {
   it('creates the appropriate content as element', function () {
     element = $compile('<aa-insertion-element element-text="DynamicText"></aa-insertion-element>')($rootScope);
     $rootScope.$digest();
-    expect(element.html()).toContain('<span class="columns small-9 insertion-element');
+    expect(element.html()).toContain('<span class="columns small-12 insertion-element');
   });
 });

@@ -1,0 +1,31 @@
+<multi-step-modal
+  l10n-title="ssoCertificateModal.updateCertificate"
+  dismiss="$ctrl.dismissModal()"
+  custom-finish="$ctrl.close()"
+  custom-finish-l10n-label="common.close"
+  >
+
+  <div class="sso-certificate-content sso-certificate-content-test">
+    <i class="icon icon-diagnostics-circle_100 sso-certificate-content__icon sso-certificate-content__icon--size100"></i>
+    <p class="sso-certificate-content__paragraph-title h4"
+      translate="ssoCertificateModal.testSsoUpdateMessage">
+    </p>
+    <div class="sso-certificate-content__button">
+      <button type="button" class="btn btn--cta"
+        ng-click="$ctrl.testSso()"
+        cs-btn
+        ><span translate="ssoCertificateModal.testSsoUpdate"></span>
+      </button>
+    </div>
+    <p ng-if="$ctrl.ssoTested" class="sso-certificate-content__paragraph-action1 text-center h5"
+      translate="ssoCertificateModal.switchMetadataMessage">
+    </p>
+    <div ng-if="$ctrl.ssoTested" class="sso-certificate-content__button">
+      <button type="button" class="btn btn--primary"
+        ng-click="$ctrl.switchMetadata()"
+        cs-btn
+        ><span translate="ssoCertificateModal.switchMetadata"></span>
+      </button>
+    </div>
+  </div>
+</multi-step-modal>

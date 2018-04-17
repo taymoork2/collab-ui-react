@@ -1,158 +1,184 @@
-'use strict';
-
 describe('Controller: PlacesCtrl', function () {
-  var $scope, $controller, $state, $timeout, $q, controller, $httpBackend;
-  var CsdmDataModelService, Userservice, Authinfo, FeatureToggleService, ServiceDescriptorService;
-  var accounts = getJSONFixture('squared/json/accounts.json');
+  beforeEach(function () {
+    this.initModules('Core', 'Squared');
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$scope',
+      '$state',
+      '$timeout',
+      'Authinfo',
+      'CsdmDataModelService',
+      'FeatureToggleService',
+      'GridCellService',
+      'RemPlaceModal',
+      'ServiceDescriptorService',
+      'Userservice'
+    );
 
-  beforeEach(angular.mock.module('Squared'));
-  beforeEach(angular.mock.module('Core'));
-  // beforeEach(angular.mock.module(require('modules/hercules/services/service-descriptor.service').default));
+    this.accounts = getJSONFixture('squared/json/accounts.json');
+    this.url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy';
 
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
+    spyOn(this.GridCellService, 'selectRow');
+    spyOn(this.Userservice, 'getUser');
+    spyOn(this.$state, 'go');
+    spyOn(this.RemPlaceModal, 'open');
+    spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([]));
+    spyOn(this.CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
 
-  function dependencies($rootScope, _$controller_, _$httpBackend_, _$state_, _$timeout_, _$q_, _CsdmDataModelService_, _Userservice_, _Authinfo_, _FeatureToggleService_, _ServiceDescriptorService_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $state = _$state_;
-    $timeout = _$timeout_;
-    $q = _$q_;
-    CsdmDataModelService = _CsdmDataModelService_;
-    Userservice = _Userservice_;
-    Authinfo = _Authinfo_;
-    FeatureToggleService = _FeatureToggleService_;
-    ServiceDescriptorService = _ServiceDescriptorService_;
-    $httpBackend = _$httpBackend_;
-  }
-
-  function initSpies() {
-    spyOn(Userservice, 'getUser');
-    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve());
-    spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue($q.resolve(true));
-    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
-    spyOn(CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
-  }
-
-  function initController() {
-    controller = $controller('PlacesCtrl', {
-      $scope: $scope,
-      $state: $state,
-      $timeout: $timeout,
-      CsdmDataModelService: CsdmDataModelService,
-    });
-  }
+    this.initController = function () {
+      this.controller = this.$controller('PlacesCtrl', {
+        $scope: this.$scope,
+        $state: this.$state,
+        $timeout: this.$timeout,
+        CsdmDataModelService: this.CsdmDataModelService,
+      });
+    };
+  });
 
   describe('bigOrg', function () {
     beforeEach(function () {
-      spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(true));
-
-      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy')
-        .respond($q.reject({ status: 502 }));
+      spyOn(this.CsdmDataModelService, 'isBigOrg').and.returnValue(this.$q.resolve(true));
+      this.$httpBackend.whenGET(this.url).respond(this.$q.reject({ status: 502 }));
+      this.initController();
     });
-
-    beforeEach(initController);
 
     describe('init', function () {
       it('should init controller', function () {
-        expect(controller).toBeDefined();
-        expect(controller.filteredView).toBeDefined();
+        expect(this.controller).toBeDefined();
+        expect(this.controller.filteredView).toBeDefined();
       });
 
       it('should be in initializing state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.initializing);
       });
     });
 
     describe('initialized', function () {
       beforeEach(function () {
-        $scope.$apply();
+        this.$scope.$apply();
+      });
+
+      describe('grid functions', function () {
+        beforeEach(function () {
+          this.entity = { place: 'place' };
+          this.placeOverview = 'place-overview';
+          this.event = {
+            keyCode: this.GridCellService.ENTER,
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+          };
+        });
+
+        it('deletePlace should call RemPlaceModal.open', function () {
+          this.controller.deletePlace(this.event, this.entity);
+          expect(this.event.stopPropagation).toHaveBeenCalled();
+          expect(this.RemPlaceModal.open).toHaveBeenCalledWith(this.entity);
+        });
+
+        it('keyboardDeletePlace should call deletePlace when keyCode is Enter or Space', function () {
+          this.controller.keyboardDeletePlace(this.event, this.entity);
+          expect(this.event.stopPropagation).toHaveBeenCalled();
+          expect(this.RemPlaceModal.open).toHaveBeenCalledWith(this.entity);
+        });
+
+        it('keyboardDeletePlace should not call deletePlace when keyCode is not Enter or Space', function () {
+          this.event.keyCode = 0;
+          this.controller.keyboardDeletePlace(this.event, this.entity);
+          expect(this.event.stopPropagation).toHaveBeenCalled();
+          expect(this.RemPlaceModal.open).not.toHaveBeenCalled();
+        });
+
+        it('showPlaceDetails should set the currentPlace', function () {
+          this.controller.showPlaceDetails(this.entity);
+          expect(this.controller.currentPlace).toEqual(this.entity);
+          expect(this.$state.go).toHaveBeenCalledWith(this.placeOverview, {
+            currentPlace: this.entity,
+          });
+        });
+
+        it('selectRow should call showPlaceDetails and GridCellService.selectRow', function () {
+          this.controller.selectRow({}, { entity: this.entity });
+          expect(this.GridCellService.selectRow).toHaveBeenCalled();
+          expect(this.controller.currentPlace).toEqual(this.entity);
+          expect(this.$state.go).toHaveBeenCalledWith(this.placeOverview, {
+            currentPlace: this.entity,
+          });
+        });
       });
 
       describe('listState', function () {
-        it('should be in searchonly state', function () {
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-        });
-
         beforeEach(function () {
-          $scope.$apply();
-          $timeout.flush(10000);
+          this.$scope.$apply();
+          this.$timeout.flush(10000);
         });
 
-        describe('searched with short string', function () {
-          it('should not search', function () {
-            expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-            controller.filteredView.setCurrentSearch('a');
-            $timeout.flush(10000);
-            expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-          });
+        it('should be in searchonly state', function () {
+          expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.searchonly);
+        });
+
+        it('with short string should not search', function () {
+          expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.searchonly);
+          this.controller.filteredView.setCurrentSearch('a');
+          this.$timeout.flush(10000);
+          expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.searchonly);
         });
 
         describe('searched with long string', function () {
-          var searchPart1 = accounts[Object.keys(accounts)[1]].displayName.substr(0, 3);
-          var searchPart2 = accounts[Object.keys(accounts)[1]].displayName.substr(3, 2);
-
           beforeEach(function () {
-            controller.filteredView.setCurrentSearch(searchPart1);
+            this.searchPart1 = this.accounts[Object.keys(this.accounts)[1]].displayName.substr(0, 3);
+            this.searchPart2 = this.accounts[Object.keys(this.accounts)[1]].displayName.substr(3, 2);
+
+            this.controller.filteredView.setCurrentSearch(this.searchPart1);
           });
 
-          describe('searching', function () {
-            beforeEach(function () {
-              spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue({
-                then: function () {
-                },
-              });
-            });
-
-            it('should search', function () {
-              $timeout.flush(10000);
-              expect(controller.filteredView.listState).toEqual(controller.filteredView.searching);
-            });
+          it('should search', function () {
+            spyOn(this.CsdmDataModelService, 'getSearchPlacesMap').and.returnValue({ then: _.noop });
+            this.$timeout.flush(10000);
+            expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.searching);
           });
 
-          describe('with places', function () {
+          describe('listState', function () {
             beforeEach(function () {
-              spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue($q.resolve(accounts));
-              $scope.$apply();
-              $timeout.flush(10000);
+              spyOn(this.CsdmDataModelService, 'getSearchPlacesMap').and.returnValue(this.$q.resolve(this.accounts));
+              this.$scope.$apply();
+              this.$timeout.flush(10000);
             });
 
-            describe('listState', function () {
-              it('should be in showresult state', function () {
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
-              });
+            it('should be in showresult state', function () {
+              expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.showresult);
+            });
 
-              it('should be in emptysearchresult state if next search is client-side with no matches', function () {
-                controller.filteredView.setCurrentSearch(searchPart1 + 'sdfdsfds');
-                $timeout.flush(10000);
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
-              });
+            it('should be in emptysearchresult state if next search is client-side with no matches', function () {
+              this.controller.filteredView.setCurrentSearch(this.searchPart1 + 'sdfdsfds');
+              this.$timeout.flush(10000);
+              expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.emptysearchresult);
+            });
 
-              it('should be in showresult state if next search is client-side with matches', function () {
-                controller.filteredView.setCurrentSearch(searchPart1 + searchPart2);
-                $timeout.flush(10000);
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
-              });
+            it('should be in showresult state if next search is client-side with matches', function () {
+              this.controller.filteredView.setCurrentSearch(this.searchPart1 + this.searchPart2);
+              this.$timeout.flush(10000);
+              expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.showresult);
+            });
 
-              it('should be in searchonly state if next search is too narrow', function () {
-                controller.filteredView.setCurrentSearch('a');
-                $timeout.flush(10000);
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.searchonly);
-              });
+            it('should be in searchonly state if next search is too narrow', function () {
+              this.controller.filteredView.setCurrentSearch('a');
+              this.$timeout.flush(10000);
+              expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.searchonly);
             });
           });
 
           describe('without places', function () {
             beforeEach(function () {
-              spyOn(CsdmDataModelService, 'getSearchPlacesMap').and.returnValue($q.resolve({}));
-              $scope.$apply();
-              $timeout.flush(10000);
+              spyOn(this.CsdmDataModelService, 'getSearchPlacesMap').and.returnValue(this.$q.resolve({}));
+              this.$scope.$apply();
+              this.$timeout.flush(10000);
             });
 
             describe('listState', function () {
               it('should be in emptysearchresult state', function () {
-                expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
+                expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.emptysearchresult);
               });
             });
           });
@@ -163,128 +189,107 @@ describe('Controller: PlacesCtrl', function () {
 
   describe('not bigOrg', function () {
     beforeEach(function () {
-      spyOn(CsdmDataModelService, 'isBigOrg').and.returnValue($q.resolve(false));
-      $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy')
-        .respond($q.resolve({}));
+      spyOn(this.CsdmDataModelService, 'isBigOrg').and.returnValue(this.$q.resolve(false));
+      this.$httpBackend.whenGET(this.url).respond(this.$q.resolve({}));
+      this.initController();
     });
-
-    beforeEach(initController);
 
     describe('init', function () {
       it('should init controller', function () {
-        expect(controller).toBeDefined();
-        expect(controller.filteredView).toBeDefined();
+        expect(this.controller).toBeDefined();
+        expect(this.controller.filteredView).toBeDefined();
       });
 
       it('should be in searching state', function () {
-        expect(controller.filteredView.listState).toEqual(controller.filteredView.initializing);
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.initializing);
       });
     });
 
-    describe('initialized with places', function () {
+    describe('listState', function () {
       beforeEach(function () {
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve(accounts));
-        $scope.$apply();
-        $timeout.flush(10000);
+        spyOn(this.CsdmDataModelService, 'getPlacesMap').and.returnValue(this.$q.resolve(this.accounts));
+        this.$scope.$apply();
+        this.$timeout.flush(10000);
       });
 
-      describe('listState', function () {
-        it('should be in showresult state', function () {
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
-        });
+      it('should be in showresult state', function () {
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.showresult);
+      });
 
-        it('should be in emptysearchresult state if search with no matches', function () {
-          controller.filteredView.setCurrentSearch('aasdfefsdfdsf');
-          $timeout.flush(10000);
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptysearchresult);
-        });
+      it('should be in emptysearchresult state if search with no matches', function () {
+        this.controller.filteredView.setCurrentSearch('aasdfefsdfdsf');
+        this.$timeout.flush(10000);
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.emptysearchresult);
+      });
 
-        it('should be in showresult state if search with matches', function () {
-          controller.filteredView.setCurrentSearch(accounts[Object.keys(accounts)[1]].displayName);
-          $timeout.flush(10000);
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.showresult);
-        });
+      it('should be in showresult state if search with matches', function () {
+        this.controller.filteredView.setCurrentSearch(this.accounts[Object.keys(this.accounts)[1]].displayName);
+        this.$timeout.flush(10000);
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.showresult);
       });
     });
 
     describe('initialized without places', function () {
       beforeEach(function () {
-        spyOn(CsdmDataModelService, 'getPlacesMap').and.returnValue($q.resolve({}));
-        $scope.$apply();
-        $timeout.flush(10000);
+        spyOn(this.CsdmDataModelService, 'getPlacesMap').and.returnValue(this.$q.resolve({}));
+        this.$scope.$apply();
+        this.$timeout.flush(10000);
       });
 
-      describe('listState', function () {
-        it('should be in emptydatasource state', function () {
-          expect(controller.filteredView.listState).toEqual(controller.filteredView.emptydatasource);
-        });
+      it('listState should be in emptydatasource state', function () {
+        expect(this.controller.filteredView.listState).toEqual(this.controller.filteredView.emptydatasource);
       });
 
       describe('startAddPlaceFlow function', function () {
-        var userCisUuid;
-        var email;
-        var orgId;
-        var adminFirstName;
-        var adminLastName;
-        var adminDisplayName;
-        var adminUserName;
-        var adminCisUuid;
-        var adminOrgId;
-        var isEntitledToHuron;
-        var isEntitledToRoomSystem;
         beforeEach(function () {
-          isEntitledToHuron = true;
-          isEntitledToRoomSystem = true;
-          userCisUuid = 'userCisUuid';
-          email = 'email@address.com';
-          orgId = 'orgId';
-          adminFirstName = 'adminFirstName';
-          adminLastName = 'adminLastName';
-          adminDisplayName = 'adminDisplayName';
-          adminUserName = 'adminUserName';
-          adminCisUuid = 'adminCisUuid';
-          adminOrgId = 'adminOrgId';
-          controller.showATA = true;
-          controller.adminUserDetails = {
-            firstName: adminFirstName,
-            lastName: adminLastName,
-            displayName: adminDisplayName,
-            userName: adminUserName,
-            cisUuid: adminCisUuid,
-            organizationId: adminOrgId,
+          this.isEntitledToHuron = true;
+          this.isEntitledToRoomSystem = true;
+          this.userCisUuid = 'userCisUuid';
+          this.email = 'email@address.com';
+          this.orgId = 'orgId';
+          this.adminFirstName = 'adminFirstName';
+          this.adminLastName = 'adminLastName';
+          this.adminDisplayName = 'adminDisplayName';
+          this.adminUserName = 'adminUserName';
+          this.adminCisUuid = 'adminCisUuid';
+          this.adminOrgId = 'adminOrgId';
+          this.controller.adminUserDetails = {
+            firstName: this.adminFirstName,
+            lastName: this.adminLastName,
+            displayName: this.adminDisplayName,
+            userName: this.adminUserName,
+            cisUuid: this.adminCisUuid,
+            organizationId: this.adminOrgId,
           };
-          spyOn(controller, 'isOrgEntitledToHuron').and.returnValue(isEntitledToHuron);
-          spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(isEntitledToRoomSystem);
-          spyOn(Authinfo, 'getUserId').and.returnValue(userCisUuid);
-          spyOn(Authinfo, 'getPrimaryEmail').and.returnValue(email);
-          spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
-          spyOn($state, 'go');
-          controller.startAddPlaceFlow();
-          $scope.$apply();
+          spyOn(this.controller, 'isOrgEntitledToHuron').and.returnValue(this.isEntitledToHuron);
+          spyOn(this.Authinfo, 'isDeviceMgmt').and.returnValue(this.isEntitledToRoomSystem);
+          spyOn(this.Authinfo, 'getUserId').and.returnValue(this.userCisUuid);
+          spyOn(this.Authinfo, 'getPrimaryEmail').and.returnValue(this.email);
+          spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.orgId);
+          this.controller.startAddPlaceFlow();
+          this.$scope.$apply();
         });
 
         it('should set the wizardState with correct fields for the wizard', function () {
-          expect($state.go).toHaveBeenCalled();
-          var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
+          expect(this.$state.go).toHaveBeenCalled();
+          var wizardState = this.$state.go.calls.mostRecent().args[1].wizard.state().data;
           expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
           expect(wizardState.function).toBe('addPlace');
-          expect(wizardState.showATA).toBe(true);
-          expect(wizardState.csdmHybridCalendarFeature).toBe(true);
           expect(wizardState.csdmHybridCallFeature).toBe(true);
-          expect(wizardState.admin.firstName).toBe(adminFirstName);
-          expect(wizardState.admin.lastName).toBe(adminLastName);
-          expect(wizardState.admin.displayName).toBe(adminDisplayName);
-          expect(wizardState.admin.userName).toBe(adminUserName);
-          expect(wizardState.admin.cisUuid).toBe(adminCisUuid);
-          expect(wizardState.admin.organizationId).toBe(adminOrgId);
-          expect(wizardState.isEntitledToHuron).toBe(isEntitledToHuron);
-          expect(wizardState.isEntitledToRoomSystem).toBe(isEntitledToRoomSystem);
+          expect(wizardState.admin.firstName).toBe(this.adminFirstName);
+          expect(wizardState.admin.lastName).toBe(this.adminLastName);
+          expect(wizardState.admin.displayName).toBe(this.adminDisplayName);
+          expect(wizardState.admin.userName).toBe(this.adminUserName);
+          expect(wizardState.admin.cisUuid).toBe(this.adminCisUuid);
+          expect(wizardState.admin.organizationId).toBe(this.adminOrgId);
+          expect(wizardState.isEntitledToHuron).toBe(this.isEntitledToHuron);
+          expect(wizardState.isEntitledToRoomSystem).toBe(this.isEntitledToRoomSystem);
           expect(wizardState.account.type).toBe('shared');
-          expect(wizardState.account.organizationId).toBe(orgId);
-          expect(wizardState.recipient.displayName).toBe(adminDisplayName);
-          expect(wizardState.recipient.cisUuid).toBe(userCisUuid);
-          expect(wizardState.recipient.email).toBe(email);
-          expect(wizardState.recipient.organizationId).toBe(adminOrgId);
+          expect(wizardState.account.organizationId).toBe(this.orgId);
+          expect(wizardState.recipient.displayName).toBe(this.adminDisplayName);
+          expect(wizardState.recipient.cisUuid).toBe(this.userCisUuid);
+          expect(wizardState.recipient.email).toBe(this.email);
+          expect(wizardState.recipient.organizationId).toBe(this.adminOrgId);
         });
       });
     });

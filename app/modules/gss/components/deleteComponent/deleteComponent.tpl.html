@@ -10,7 +10,7 @@
   <p translate="gss.deleteConfirmation"></p>
 
   <input class="cs-input" ng-model="delComponentCtrl.delText" placeholder="" type="text"
-         ng-pattern="delComponentCtrl.delConfirmText">
+         ng-pattern="delComponentCtrl.delConfirmText"> <!-- TODO: Requires either placeholder or aria-label for screenreader -->
 
   <button cs-btn class="btn activate-button btn--negative" ng-disabled="!delComponentCtrl.isValid()"
           loading="delComponentCtrl.isDeleting"

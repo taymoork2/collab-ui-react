@@ -1,0 +1,33 @@
+@import 'styles/partials/mixins';
+
+csv-upload-results {
+
+  @include keep-flex-container(column);
+
+  .csv-upload-results {
+    @include keep-flex-container(column);
+    padding: 1rem;
+
+    &__title {
+      margin-top: 0.25rem;
+    }
+
+    &__description {
+      margin-top: 0.5rem;
+    }
+
+    &__line-break {
+      margin-top: 2.25rem;
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  cr-progressbar {
+    margin: 2.25rem 2.25rem 0;
+  }
+
+  cr-users-tile-totals {
+    margin-top: 2.25rem;
+  }
+
+}

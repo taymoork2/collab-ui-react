@@ -1,18 +1,28 @@
 <form name="$ctrl.form" novalidate role="form" class="cs-form">
   <cs-sp-buttons ng-if="$ctrl.form.$dirty">
-    <button cs-btn loading="$ctrl.saveInProcess" class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess" type="submit || "$ctrl.enableVoicemail != "$ctrl.enableVoicemail") >
+    <button cs-btn type="submit"
+      loading="$ctrl.saveInProcess"
+      class="btn btn--primary"
+      ng-click="$ctrl.save()"
+      ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
       <span translate="common.save"></span>
     </button>
     <button cs-btn ng-click="$ctrl.reset()">
       <span translate="common.cancel"></span>
     </button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="voicemailPanel.title"></span>
       </div>
-      <cs-toggle-switch ng-model="$ctrl.enableVoicemail" toggle-id="enableVoicemail" name="enableVoicemail" size="small"></cs-toggle-switch>
+      <cs-toggle-switch
+        ng-model="$ctrl.enableVoicemail"
+        toggle-id="enableVoicemail"
+        name="enableVoicemail"
+        size="small"
+        cs-aria-label="{{::'voicemailPanel.title' | translate}}">
+      </cs-toggle-switch>
       <br>
       <br>
       <p><small translate='voicemailPanel.voicemailNote'></small></p>

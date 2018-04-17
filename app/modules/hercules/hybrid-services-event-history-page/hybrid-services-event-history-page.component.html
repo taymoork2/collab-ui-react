@@ -1,0 +1,69 @@
+<div class="hercules hercules-fix-paragraphs">
+  <cs-page-header title-name="{{:: 'hercules.eventHistory.pageTitle' | translate}}"
+                  back="true"
+                  js-back="true"></cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <div class="cluster-filter-container">
+        <span>Cluster</span>
+        <form>
+          <div class="filter-dropdown">
+            <cs-select
+              ng-model="$ctrl.clusterSelected"
+              options="$ctrl.clusterOptions"
+              on-change-fn="$ctrl.clusterSelectedUpdate()"
+              nested="true"
+              icon="icon-chevron-down"
+              iconnested="icon-chevron-right"
+              >
+            </cs-select>
+          </div>
+        </form>
+      </div>
+      <div class="node-filter-container">
+        <span>Node</span>
+        <form>
+          <div class="filter-dropdown">
+            <cs-select
+              ng-model="$ctrl.nodeSelected"
+              options="$ctrl.nodeOptions"
+              on-change-fn="$ctrl.nodeSelectedUpdate()"
+              >
+            </cs-select>
+          </div>
+        </form>
+      </div>
+      <div class="service-filter-container">
+        <span>Service (on selected resource)</span>
+        <form>
+          <div class="filter-dropdown">
+            <cs-select
+              ng-model="$ctrl.serviceSelected"
+              is-disabled="$ctrl.disableServiceSelect()"
+              options="$ctrl.serviceOptions"
+              >
+            </cs-select>
+          </div>
+        </form>
+      </div>
+      <div class="time-filter-container">
+        <span translate="hercules.eventHistory.dataSince"></span>
+        <form>
+          <div class="filter-dropdown">
+            <cs-select
+              ng-model="$ctrl.timeSelected"
+              options="$ctrl.timeOptions"></cs-select>
+            </cs-select>
+          </div>
+        </form>
+      </div>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <hybrid-services-cluster-status-history-table
+    cluster-filter="$ctrl.clusterSelected.selectedChild.value"
+    node-filter="$ctrl.nodeSelected.value"
+    service-filter="$ctrl.serviceSelected.value"
+    time-filter="$ctrl.timeSelected.value"
+  >
+  </hybrid-services-cluster-status-history-table>
+</div>

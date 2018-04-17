@@ -1,6 +1,6 @@
 describe('component: callerId', () => {
   const CALLERID_SELECT = '.csSelect-container[name="callerIdSelection"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const CALLERIDNAME_INPUT = 'input[name="callerIdName"]';
   const CALLERIDNUMBER_INPUT = 'phone-number input';
 

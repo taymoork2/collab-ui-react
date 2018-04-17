@@ -1,6 +1,6 @@
 <div class="cos-style" ng-repeat="restriction in $ctrl.locationRestrictions track by restriction.restriction">
   <label
-    class="control-label title-margin-bottom"
+    class="sub-section__label title-margin-bottom"
     ng-class="{'h5': $ctrl.env === 'ftsw'}"
     for="{{restriction.restriction}}"
     translate="{{$ctrl.getTitle(restriction.restriction)}}">
@@ -15,6 +15,7 @@
     cs-change="$ctrl.onChange({restriction: restriction.restriction, blocked:!restriction.blocked})"
     cs-true-value="false"
     cs-false-value="true"
-    is-disabled="{{$ctrl.disableControl}}">
+    cs-aria-label="{{::$ctrl.getTitle(restriction.restriction) | translate}}"
+    is-disabled="$ctrl.disableControl">
   </cs-toggle-switch>
 </div>

@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { LocationsService, ILocationListItem } from 'modules/call/locations/shared';
+import { LocationsService, ILocationListItem } from './shared';
 import { CardUtils } from 'modules/core/cards';
 const STATE_LOADING: string = 'STATE_LOADING';
 const STATE_SHOW_LOCATIONS: string = 'STATE_SHOW_LOCATIONS';
@@ -110,6 +110,6 @@ class CallLocationsCtrl implements ng.IComponentController {
 
 export class CallLocationsComponent implements ng.IComponentOptions {
   public controller = CallLocationsCtrl;
-  public templateUrl = 'modules/call/locations/locations.component.html';
+  public template = require('modules/call/locations/locations.component.html');
   public bindings = {};
 }

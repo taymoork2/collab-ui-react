@@ -96,5 +96,69 @@
     "orderingTool": "CCW",
     "serviceId": "Sub1234-5678",
     "serviceProvisioningId": "SPID-Atlas_Test_int_001"
-  }]
+  }],
+  "orderSearchMultiResults": [{
+    "orderStatus":"PROVISIONED",
+    "externalOrderId": "67891234",
+    "orderingTool":"CCW",
+    "orderReceived":"2017-09-19T22:58:27.998Z",
+    "serviceId":"Atlas_Test-testSearch002-dummy-sub",
+    "accountId":"5ff968bc-b609-4746-8547-19667d3eb773",
+    "lastModified":"2017-09-19T22:58:28.959Z"
+    },
+    {
+    "orderStatus":"PROVISIONED",
+    "externalOrderId": "67891234",
+    "orderingTool":"CCW",
+    "orderReceived":"2017-08-29T04:22:06.457Z",
+    "serviceId":"Atlas_Test-testSearch002-dummy-sub",
+    "accountId":"5ff968bc-b609-4746-8547-19667d3eb773",
+    "lastModified":"2017-09-12T19:46:59.482Z"
+  },
+  {
+    "orderStatus":"PROVISIONED",
+    "orderingTool":"CCW",
+    "externalOrderId": "67891234",
+    "orderReceived":"2017-08-24T22:58:27.998Z",
+    "serviceId":"Atlas_Test-testSearch002-dummy-sub2",
+    "accountId":"5ff968bc-b609-4746-8547-19667d3eb773",
+    "lastModified":"2017-08-24T22:58:28.959Z"
+    },
+    {
+    "orderStatus":"PROVISIONED",
+    "orderingTool":"CCW",
+    "externalOrderId": "67891234",
+    "orderReceived":"2017-08-21T04:22:06.457Z",
+    "serviceId":"Atlas_Test-testSearch002-dummy-sub2",
+    "accountId":"5ff968bc-b609-4746-8547-19667d3eb773",
+    "lastModified":"2017-08-21T19:46:59.482Z"
+  }],
+  "orderSearchPendingWithProvService": [
+    {
+       "orderStatus":"PENDING_PARM",
+       "externalOrderId": "67891234",
+       "orderingTool":"CCW",
+       "subscriptionUuid":"64df4489-b611-4741-b0a5-43f03a9ac986",
+       "productProvisionStatus":{
+          "serviceStatus":[
+             {
+                "orderItemUuid":"06d325f6-abd0-4967-bcab-3f163155d7bb",
+                "offerCode":"EE",
+                "status":"PROVISIONED"
+             },
+             {
+                "orderItemUuid":"aa10351c-2ae1-4427-a69e-e0d6c4e0b48b",
+                "offerCode":"CMR",
+                "status":"PENDING_PARM"
+             }
+          ]
+       },
+       "orderReceived":"2017-09-07T20:46:39.920Z",
+       "serviceId":"Sub-sslocal002",
+       "purchaseOrderId":"bb9c981b-15e5-431b-859c-bd5ba8ada691",
+       "lastProvisioningContact":"migmaxwe@cisco.com",
+       "lastProvisioningEmailTimestamp":"2017-09-14T20:18:35.328Z",
+       "lastModified":"2017-09-14T20:08:18.749Z"
+    }
+ ]
 }

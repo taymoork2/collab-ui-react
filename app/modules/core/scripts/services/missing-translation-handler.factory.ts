@@ -12,7 +12,7 @@ const missingTranslationHandler = ($log: ng.ILogService, Config) => {
 
 export default angular
   .module('core.missing-translation-handler', [
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
   ])
   .factory('missingTranslationHandler', missingTranslationHandler)
   .name;

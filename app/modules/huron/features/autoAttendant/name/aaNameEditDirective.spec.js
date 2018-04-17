@@ -1,5 +1,7 @@
 'use strict';
 
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Directive: aaBuilderLane', function () {
   var $compile, $rootScope, scope;
   var element;
@@ -33,10 +35,9 @@ describe('Directive: aaBuilderLane', function () {
   });
 
   it('should filter out enter key on name input', function () {
-    var keyCode_enter = 13;
     var event = {
       type: 'keydown',
-      keyCode: keyCode_enter,
+      keyCode: KeyCodes.ENTER,
       preventDefault: function () {},
     };
 
@@ -74,12 +75,6 @@ describe('Directive: aaBuilderLane', function () {
   });
 
   it('should still accept arrow keys and delete key when aa-max-length is reached', function () {
-    var keyCode_backspace = 8;
-    var keyCode_delete = 46;
-    var keyCode_leftarrow = 37;
-    var keyCode_uparrow = 38;
-    var keyCode_rightarrow = 39;
-    var keyCode_downarrow = 49;
     var event = {
       type: 'keydown',
       keyCode: 65,
@@ -92,28 +87,28 @@ describe('Directive: aaBuilderLane', function () {
     spyOn(event, 'preventDefault');
     scope.$digest();
 
-    event.keyCode = keyCode_backspace;
+    event.keyCode = KeyCodes.BACKSPACE;
     element.triggerHandler(event);
     scope.$digest();
     expect(event.preventDefault).not.toHaveBeenCalled();
 
-    event.keyCode = keyCode_delete;
+    event.keyCode = KeyCodes.DELETE;
     element.triggerHandler(event);
     expect(event.preventDefault).not.toHaveBeenCalled();
 
-    event.keyCode = keyCode_leftarrow;
+    event.keyCode = KeyCodes.LEFT;
     element.triggerHandler(event);
     expect(event.preventDefault).not.toHaveBeenCalled();
 
-    event.keyCode = keyCode_uparrow;
+    event.keyCode = KeyCodes.UP;
     element.triggerHandler(event);
     expect(event.preventDefault).not.toHaveBeenCalled();
 
-    event.keyCode = keyCode_rightarrow;
+    event.keyCode = KeyCodes.RIGHT;
     element.triggerHandler(event);
     expect(event.preventDefault).not.toHaveBeenCalled();
 
-    event.keyCode = keyCode_downarrow;
+    event.keyCode = KeyCodes.DOWN;
     element.triggerHandler(event);
     expect(event.preventDefault).not.toHaveBeenCalled();
   });

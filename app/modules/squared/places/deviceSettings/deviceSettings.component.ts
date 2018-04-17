@@ -1,32 +1,47 @@
 import './deviceSettings.scss';
+import { CsdmConfigurationService } from '../../devices/services/CsdmConfigurationService';
+import { CsdmUpgradeChannelService } from '../../devices/services/CsdmUpgradeChannelService';
 
 class DeviceSettings implements ng.IComponentController {
   public ownerType: string;
   public ownerId: string;
+  public ownerDisplayName: string;
   public deviceList: any;
 
-  private upgradeChannelOptions;
+  public upgradeChannelOptions;
   private shouldShowUpgradeChannel;
   private selectedUpgradeChannel;
-  private updatingUpgradeChannel;
-  private unsupportedDeviceTypeForUpgradeChannel: string;
+  public updatingUpgradeChannel;
+  public unsupportedDeviceTypeForUpgradeChannel: string;
 
-  private shouldShowGuiSettings;
-  private _guiSettingsEnabled;
-  private updatingGuiSettings;
-  private unsupportedDeviceTypeForGuiSettings: string;
+  private _settingsLockedDown;
+  public updatingSettingsLockDown;
+  public unsupportedDeviceTypeForSettingsLockDown: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
-    private CsdmUpgradeChannelService,
-    private CsdmConfigurationService,
+    private CsdmUpgradeChannelService: CsdmUpgradeChannelService,
+    private CsdmConfigurationService: CsdmConfigurationService,
     private Notification,
+    private BotAuthorizationsModal,
   ) {}
 
   public $onInit(): void {
     this.fetchAsyncSettings();
+
+    const firstUnsupportedDeviceUpgradeChannel = _.find(this.deviceList || [], (d: any) =>
+      d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
+    if (firstUnsupportedDeviceUpgradeChannel) {
+      this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDeviceUpgradeChannel.product;
+    }
+
+    const firstUnsupportedDeviceLockDown = _.find(this.deviceList || [], (d: any) =>
+      d.productFamily !== 'Cloudberry' && d.productFamily !== 'Novum');
+    if (firstUnsupportedDeviceLockDown) {
+      this.unsupportedDeviceTypeForSettingsLockDown = firstUnsupportedDeviceLockDown.product;
+    }
+    this.resetSettingsLockedDown();
   }
 
   public onSaveUpgradeChannel() {
@@ -44,53 +59,36 @@ class DeviceSettings implements ng.IComponentController {
       });
   }
 
-  get guiSettingsEnabled(): boolean {
-    return this._guiSettingsEnabled;
+  get settingsLockedDown(): boolean {
+    return this._settingsLockedDown;
   }
 
-  set guiSettingsEnabled(newSetting: boolean) {
-    this.updatingGuiSettings = true;
-    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', newSetting)
+  set settingsLockedDown(newSetting: boolean) {
+    this.updatingSettingsLockDown = true;
+    this.CsdmConfigurationService.updateRuleForPlace(this.ownerId, 'gui_settings_enabled', !newSetting)
       .then(() => {
-        this.Notification.success('deviceSettings.guiSettingsUpdated');
-        this._guiSettingsEnabled = newSetting;
+        this.Notification.success('deviceSettings.settingsLockUpdated');
+        this._settingsLockedDown = newSetting;
       })
       .catch(error => {
         this.Notification.errorResponse(error, 'deviceOverviewPage.failedToSaveChanges');
-        this.resetGuiSettingsEnabled();
+        this.resetSettingsLockedDown();
       })
       .finally(() => {
-        this.updatingGuiSettings = false;
+        this.updatingSettingsLockDown = false;
       });
   }
-
+  public startManageApiAccessFlow() {
+    this.BotAuthorizationsModal.open(this.ownerId, this.ownerDisplayName, this.ownerType);
+  }
   private fetchAsyncSettings(): void {
-    this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(placeUpgradeChannel => {
-      if (placeUpgradeChannel) {
-        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
-        if (firstUnsupportedDevice) {
-          this.unsupportedDeviceTypeForUpgradeChannel = firstUnsupportedDevice.product;
-        }
-        this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-          this.shouldShowUpgradeChannel = channels.length > 1;
-          if (this.shouldShowUpgradeChannel) {
-            this.upgradeChannelOptions = _.map(channels, (channel: string) => {
-              return this.getUpgradeChannelObject(channel);
-            });
-            this.resetSelectedUpgradeChannel();
-          }
+    this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
+      this.shouldShowUpgradeChannel = channels.length > 1;
+      if (this.shouldShowUpgradeChannel) {
+        this.upgradeChannelOptions = _.map(channels, (channel: string) => {
+          return this.getUpgradeChannelObject(channel);
         });
-      }
-    });
-
-    this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus().then(placeGuiSettings => {
-      if (placeGuiSettings) {
-        const firstUnsupportedDevice = _.find(this.deviceList || [], (d: any) => d.productFamily !== 'Cloudberry');
-        if (firstUnsupportedDevice) {
-          this.unsupportedDeviceTypeForGuiSettings = firstUnsupportedDevice.product;
-        }
-        this.shouldShowGuiSettings = true;
-        this.resetGuiSettingsEnabled();
+        this.resetSelectedUpgradeChannel();
       }
     });
   }
@@ -105,11 +103,11 @@ class DeviceSettings implements ng.IComponentController {
     });
   }
 
-  private resetGuiSettingsEnabled() {
+  private resetSettingsLockedDown() {
     this.CsdmConfigurationService.getRuleForPlace(this.ownerId, 'gui_settings_enabled').then(rule => {
-      this._guiSettingsEnabled = rule.value;
+      this._settingsLockedDown = !rule.value;
     }).catch(() => {
-      this._guiSettingsEnabled = true;
+      this._settingsLockedDown = false;
     });
   }
 
@@ -128,10 +126,11 @@ class DeviceSettings implements ng.IComponentController {
 
 export class DeviceSettingsComponent implements ng.IComponentOptions {
   public controller = DeviceSettings;
-  public templateUrl = 'modules/squared/places/deviceSettings/deviceSettings.html';
+  public template = require('modules/squared/places/deviceSettings/deviceSettings.html');
   public bindings = <{ [binding: string]: string }>{
-    ownerType: '@',
     ownerId: '<',
+    ownerDisplayName: '<',
+    ownerType: '<',
     deviceList: '<',
   };
 }

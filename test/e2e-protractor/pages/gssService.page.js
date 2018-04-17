@@ -5,7 +5,7 @@ var GSSServicePage = function () {
   this.serviceNameEditText = 'edit service';
   this.serviceDescText = 'new service description'
   this.serviceSelector = element(by.css('#serviceSelector'));
-  this.tabLink = element(by.css('a[href="#/gss/services"]'));
+  this.tabLink = element(by.css('a[href="/gss/services"]'));
   this.serviceSelectorFirstChild = element(by.css('.gss-iframe .select-options li a'));
   this.serviceSelectorLastChild = element(by.css('.select-list .dropdown-menu ul li:last-child'));
 

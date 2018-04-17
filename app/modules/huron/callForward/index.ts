@@ -7,12 +7,12 @@ export * from './callForward.service';
 
 export default angular
   .module('huron.call-forward', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),
     require('modules/huron/telephony/telephonyConfig'),
+    'call.shared.call-destination-translate',
     featureToggleModule,
   ])
   .component('ucCallForward', new CallForwardComponent())

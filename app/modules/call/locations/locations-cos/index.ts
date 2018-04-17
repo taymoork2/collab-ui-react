@@ -6,8 +6,7 @@ export { LocationClassOfServiceComponent };
 
 export default angular
   .module('call.locations.class-of-service', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucLocationCos', new LocationClassOfServiceComponent())

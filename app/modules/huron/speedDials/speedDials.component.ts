@@ -1,6 +1,9 @@
 import { SpeedDialService, ISpeedDial } from './speedDial.service';
 import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Notification } from 'modules/core/notifications';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+import { IToolkitModalService } from 'modules/core/modal';
 
 interface IValidationMessages {
   required: string;
@@ -18,20 +21,21 @@ const inputs: string[] = ['external', 'uri', 'custom'];
 class SpeedDialCtrl implements ng.IComponentController {
   private ownerId: string;
   private ownerType: string;
-  private firstReordering: boolean = true;
   private editing: boolean;
-  private reordering: boolean;
   private speedDialList: ISpeedDial[] = [];
   private copyList: ISpeedDial[] | undefined;
   private newLabel: string;
   private newNumber: string;
-  private labelMessages: IValidationMessages;
-  private numberMessages: IValidationMessages;
-  private customTranslations: ITranslationMessages;
-  private actionList: IActionItem[];
+  public labelMessages: IValidationMessages;
+  public numberMessages: IValidationMessages;
+  public customTranslations: ITranslationMessages;
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
+  public actionList: IActionItem[];
   private actionListCopy: IActionItem[] = [];
-  private callDestInputs: string[];
+  public callDestInputs: string[];
   private optionSelected: string = '';
+  private draggableInstance: DraggableInstance;
 
   public ownerName: string = '';
   public isValid: boolean = false;
@@ -43,17 +47,19 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $modal,
-    private $translate: ng.translate.ITranslateService,
-    private dragularService,
-    private Notification: Notification,
-    private SpeedDialService: SpeedDialService,
+    private $element: ng.IRootElementService,
+    private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
-    private BlfInternalExtValidation,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private FeatureMemberService,
+    private BlfInternalExtValidation,
     private BlfURIValidation,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
+    private DraggableService: DraggableService,
+    private FeatureMemberService,
+    private Notification: Notification,
     private Orgservice,
+    private SpeedDialService: SpeedDialService,
   ) {
     const params = {
       basicInfo: true,
@@ -62,9 +68,7 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.countryCode = response.data.countryCode;
     });
     this.callDestInputs = inputs;
-    this.firstReordering = true;
     this.editing = false;
-    this.reordering = false;
     this.FeatureMemberService.getUser(this.ownerId).then((user) => {
       this.ownerName = this.FeatureMemberService.getFullNameFromUser(user);
     });
@@ -97,6 +101,8 @@ class SpeedDialCtrl implements ng.IComponentController {
       actionFunction: this.setReorder.bind(this),
     });
     this.actionList = _.cloneDeep(this.actionListCopy);
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
   public extensionOwned(number: string): void {
@@ -162,16 +168,17 @@ class SpeedDialCtrl implements ng.IComponentController {
       sd.label = this.newLabel;
       sd.callPickupEnabled = this.callPickupEnabled;
       sd.number = _.replace(this.newNumber, / /g, '');
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.updateIndex();
       this.copyList = undefined;
+      this.deactivateDraggable();
     }
 
     this.SpeedDialService.updateSpeedDials(this.ownerType, this.ownerId, this.speedDialList).then(() => {
       this.isValid = false;
-      this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
+      this.deactivateDraggable();
     }, () => {
       this.Notification.error('speedDials.speedDialChangesFailed');
       if (_.has(this, 'ownerId')) {
@@ -181,9 +188,9 @@ class SpeedDialCtrl implements ng.IComponentController {
           this.Notification.error('speedDials.retrieveSpeedDialsFail');
         });
       }
-      this.reordering = false;
       this.editing = false;
       this.actionList = _.cloneDeep(this.actionListCopy);
+      this.deactivateDraggable();
     });
   }
 
@@ -203,31 +210,46 @@ class SpeedDialCtrl implements ng.IComponentController {
       this.newNumber = '';
       this.callPickupEnabled = false;
       this.isValid = false;
-    } else if (this.reordering) {
+    } else if (this.isReordering()) {
       this.speedDialList.length = 0;
       Array.prototype.push.apply(this.speedDialList, _.cloneDeep(this.copyList));
     }
     this.editing = false;
-    this.reordering = false;
     this.actionList = _.cloneDeep(this.actionListCopy);
+    this.deactivateDraggable();
   }
 
   public setReorder(): void {
-    this.reordering = true;
     this.actionList = [];
     this.copyList = _.cloneDeep(this.speedDialList);
-    if (this.firstReordering) {
-      this.firstReordering = false;
-      this.dragularService('#speedDialsContainer', {
-        classes: {
-          transit: 'sd-reorder-transit',
-        },
-        containersModel: [this.speedDialList],
-        moves: () => {
-          return this.reordering;
-        },
+    if (_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance = this.DraggableService.createDraggableInstance({
+        elem: this.$element,
+        identifier: '#speedDialsContainer',
+        transitClass: 'sd-reorder',
+        itemIdentifier: '#speedDial',
+        list: this.speedDialList,
       });
+    } else {
+      this.draggableInstance.reordering = true;
     }
+  }
+
+  public speedDialKeypress($event: KeyboardEvent, sd: ISpeedDial) {
+    if (!this.isReordering()) {
+      return;
+    } else if (_.get(this.draggableInstance, 'keyPress')) {
+      this.draggableInstance.keyPress($event, sd);
+      this.speedDialList = this.draggableInstance.list;
+    }
+  }
+
+  public isReordering() {
+    return _.get(this.draggableInstance, 'reordering', false);
+  }
+
+  public isSelectedSpeedDial(sd: ISpeedDial) {
+    return sd === _.get(this.draggableInstance, 'selectedItem');
   }
 
   public setEdit(sd: ISpeedDial): void {
@@ -245,7 +267,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
   public delete(sd): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/speedDials/deleteConfirmation.tpl.html',
+      template: require('modules/huron/speedDials/deleteConfirmation.tpl.html'),
       type: 'dialog',
     }).result.then(() => {
       _.pull(this.speedDialList, sd);
@@ -261,6 +283,13 @@ class SpeedDialCtrl implements ng.IComponentController {
     return tooltipText;
   }
 
+  private deactivateDraggable() {
+    if (!_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance.selectedItem = undefined;
+      this.draggableInstance.reordering = false;
+    }
+  }
+
   private updateIndex(): void {
     _.each(this.speedDialList, (sd, index) => {
       sd.index = index + 1;
@@ -270,7 +299,7 @@ class SpeedDialCtrl implements ng.IComponentController {
 
 export class SpeedDialComponent implements ng.IComponentOptions {
   public controller = SpeedDialCtrl;
-  public templateUrl = 'modules/huron/speedDials/speedDials.html';
+  public template = require('modules/huron/speedDials/speedDials.html');
   public bindings = {
     ownerId: '<',
     ownerType: '@',

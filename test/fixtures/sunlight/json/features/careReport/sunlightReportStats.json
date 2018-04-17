@@ -18,21 +18,21 @@
       "tasksOffered": 20,
       "tasksMissed": 7
     }, {
-      "mediaType": "chat",
-      "numTasksAssignedState": 4,
+      "mediaType": "webcall",
+      "numTasksAssignedState": 0,
       "avgCsatScores": 3.0,
       "numWorkingTasks": 0,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-01T00:15:00.000Z",
       "numTasksHandledState": 3,
-      "numTasksQueuedState": 6,
-      "numTasksAbandonedState": 2,
+      "numTasksQueuedState": 0,
+      "numTasksAbandonedState": 0,
       "numTasksAssignedToAbandonedState": 0,
       "avgTaskCloseTime": 67463,
-      "avgTaskWaitTime": 15405,
-      "numCsatScores": 100,
+      "avgTaskWaitTime": 0,
+      "numCsatScores": 3,
       "numPendingTasks": 0,
-      "tasksOffered": 15,
+      "tasksOffered": 1,
       "tasksMissed": 4
     }],
     "metadata": {
@@ -60,11 +60,11 @@
       "createdTime": "2016-07-01T00:30:00.000Z",
       "numPendingTasks": 6
     }, {
-      "mediaType": "chat",
-      "numWorkingTasks": 7,
+      "mediaType": "webcall",
+      "numWorkingTasks": 1,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-01T00:45:00.000Z",
-      "numPendingTasks": 8
+      "numPendingTasks": 0
     }],
     "metadata": {
       "jobName": "org_snapshot_stats_15min",
@@ -107,22 +107,22 @@
       "tasksOffered": 30,
       "tasksMissed": 19
     }, {
-      "mediaType": "chat",
+      "mediaType": "webcall",
       "numTasksAssignedState": 1,
-      "avgCsatScores": 0.0,
+      "avgCsatScores": 4.0,
       "numWorkingTasks": 0,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-01T13:00:00.000Z",
-      "numTasksHandledState": 1,
-      "numTasksQueuedState": 6,
-      "numTasksAbandonedState": 1,
+      "numTasksHandledState": 4,
+      "numTasksQueuedState": 0,
+      "numTasksAbandonedState": 0,
       "numTasksAssignedToAbandonedState": 0,
       "avgTaskCloseTime": 17417,
-      "avgTaskWaitTime": 19263,
-      "numCsatScores": 0,
+      "avgTaskWaitTime": 0,
+      "numCsatScores": 4,
       "numPendingTasks": 0,
-      "tasksOffered": 70,
-      "tasksMissed": 47
+      "tasksOffered": 10,
+      "tasksMissed": 6
     }],
     "metadata": {
       "jobName": "org_stats_hourly",
@@ -148,22 +148,22 @@
       "tasksOffered": 19,
       "tasksMissed": 17
     }, {
-      "mediaType": "chat",
-      "numTasksAssignedState": 4,
+      "mediaType": "webcall",
+      "numTasksAssignedState": 1,
       "avgCsatScores": 4.0,
-      "numWorkingTasks": 13,
+      "numWorkingTasks": 0,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-03T00:00:00.000Z",
       "numTasksHandledState": 5,
-      "numTasksQueuedState": 3,
-      "numTasksAbandonedState": 6,
+      "numTasksQueuedState": 0,
+      "numTasksAbandonedState": 0,
       "numTasksAssignedToAbandonedState": 1,
       "avgTaskCloseTime": 100,
-      "avgTaskWaitTime": 100,
-      "numCsatScores": 200,
-      "numPendingTasks": 10,
-      "tasksOffered": 43,
-      "tasksMissed": 23
+      "avgTaskWaitTime": 0,
+      "numCsatScores": 5,
+      "numPendingTasks": 0,
+      "tasksOffered": 10,
+      "tasksMissed": 5
     }],
     "metadata": {
       "jobName": "org_stats_daily",
@@ -189,20 +189,20 @@
       "tasksOffered": 28,
       "tasksMissed": 9
     }, {
-      "mediaType": "chat",
-      "numTasksAssignedState": 4,
+      "mediaType": "webcall",
+      "numTasksAssignedState": 1,
       "avgCsatScores": 4.0,
-      "numWorkingTasks": 13,
+      "numWorkingTasks": 0,
       "orgId": "676a82cd-64e9-4ebd-933c-4dce087a02bd",
       "createdTime": "2016-07-03T00:00:00.000Z",
-      "numTasksHandledState": 5,
-      "numTasksQueuedState": 3,
-      "numTasksAbandonedState": 6,
+      "numTasksHandledState": 11,
+      "numTasksQueuedState": 0,
+      "numTasksAbandonedState": 0,
       "numTasksAssignedToAbandonedState": 1,
       "avgTaskCloseTime": 100,
-      "avgTaskWaitTime": 100,
-      "numCsatScores": 200,
-      "numPendingTasks": 10,
+      "avgTaskWaitTime": 0,
+      "numCsatScores": 11,
+      "numPendingTasks": 0,
       "tasksOffered": 34,
       "tasksMissed": 23
     }],
@@ -216,7 +216,7 @@
       "success": true,
       "values": [
         {
-          "count": 6,
+          "count": 3,
           "interval": 1,
           "viewType": "daily",
           "mediaType": "chat",
@@ -224,7 +224,7 @@
           "endTime": 1472515200000
         },
         {
-          "count": 6,
+          "count": 3,
           "interval": 2,
           "viewType": "daily",
           "mediaType": "chat",
@@ -241,30 +241,54 @@
   "reportUsersFifteenMinutesStats": {
     "data": [{
       "avgCsatScore":5,
-      "tasksAssigned":0,
-      "tasksHandled":0,
+      "tasksAssigned":2,
+      "tasksHandled":2,
       "createdTime":"2017-01-09T19:00:00.000Z",
-      "handleTime":0,
+      "handleTime":20000,
       "mediaType":"chat",
-      "numCsatScores":0,
+      "numCsatScores":2,
       "tasksOffered": 5,
       "tasksMissed": 7,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
       "avgCsatScore":2,
-      "tasksAssigned":0,
-      "tasksHandled":1,
+      "tasksAssigned":3,
+      "tasksHandled":3,
       "createdTime":"2017-01-09T20:00:00.000Z",
-      "handleTime":0,
+      "handleTime":15000,
       "mediaType":"chat",
-      "numCsatScores":0,
+      "numCsatScores":3,
       "tasksOffered": 15,
       "tasksMissed": 17,
       "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
       "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
     }, {
-      "avgCsatScore":3.6666666666666665,
+      "avgCsatScore":3,
+      "tasksAssigned":3,
+      "tasksHandled":3,
+      "createdTime":"2017-01-09T20:00:00.000Z",
+      "handleTime":15000,
+      "mediaType":"webcall",
+      "numCsatScores":3,
+      "tasksOffered": 0,
+      "tasksMissed": 0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
+    }, {
+      "avgCsatScore":4,
+      "tasksAssigned":2,
+      "tasksHandled":2,
+      "createdTime":"2017-01-09T20:00:00.000Z",
+      "handleTime":10000,
+      "mediaType":"webcall",
+      "numCsatScores":2,
+      "tasksOffered": 0,
+      "tasksMissed": 0,
+      "orgId":"b1de2d84-c9b1-485b-9698-b35e95c6107f",
+      "userId":"7d1d3d8c-3a9c-4317-a567-db678d24b24f"
+    }, {
+      "avgCsatScore":3.67,
       "tasksAssigned":4,
       "tasksHandled":3,
       "createdTime":"2017-01-10T04:30:00.000Z",

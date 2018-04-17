@@ -1,0 +1,204 @@
+[
+  {
+    "subscriptionId": "235235-2352532-42352311d-87235221-d05b7c3523596f577",
+    "externalSubscriptionId": "Sub-os090825",
+    "partnerAdminId": "d6325310dde8-63538b-4359b4-be3593-9a0cce3253288aaf4",
+    "trialDuration": 0,
+    "status": "ACTIVE",
+    "licenses": [
+      {
+        "licenseId": "CMR_b60dfdfg448d0-633c-40ab-88c8-5c0rgerhada119b58_frankSinatraTest.dmz.webex.com",
+        "offerName": "CMR",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CMR",
+        "billingServiceId": "Sub-os090825",
+        "features": [],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "57923322"
+      },
+      {
+        "licenseId": "MC_acdfeg09c691-06t4t46-4171-a697-bc8f43rt43cc881911_frankSinatraTest.dmz.webex.com",
+        "offerName": "MC",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 200,
+        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "57493322",
+        "isCI": true,
+        "siteAdminUrl": "https://frankSinatraTest.dmz.webex.com/wbxadmin/default.do?siteurl=frankSinatraTest"
+      },
+      {
+        "licenseId": "CMR_0da6fgfd7c7d-f0fg8b-4097-5b29a-64fdgd62111995c4_frankSinatraTest.dmz.webex.com",
+        "offerName": "CMR",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CMR",
+        "billingServiceId": "Sub-os090825",
+        "features": [],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "5794f327"
+      },
+      {
+        "licenseId": "MC_0da6fgfd7c7d-f0fg8b-4097-5b29a-64fdgd62111995c4_frankSinatraTestWX.dmz.webex.com",
+        "offerName": "MC",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTestWX.dmz.webex.com",
+        "isCIUnifiedSite": false,
+        "siteId": "5794f328"
+      },
+      {
+        "licenseId": "MS_30ae927d-11af-42bb-982a-d7784bc8145f",
+        "offerName": "MS",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "MESSAGING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "squared-room-moderation"
+        ],
+        "volume": 50,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 0
+      },
+      {
+        "licenseId": "CF_e70a9360-96a8-4498-87b6-edd8a2c531ac",
+        "offerName": "CF",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "squared-syncup"
+        ],
+        "volume": 50,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "isCI": true
+      }
+    ],
+    "startDate": "2017-08-16T21:25:03.596Z",
+    "endDate": "2065-08-02T07:00:00.000Z",
+    "duration": -1,
+    "gracePeriod": 0,
+    "orderingTool": "CCW"
+  },
+  {
+    "subscriptionId": "2675675-2365756-42365756-8767575-d05b7c67657",
+    "externalSubscriptionId": "Sub-os090835",
+    "partnerAdminId": "d6332r3fsdfde8-6353238b-43r9b4-besfas3-9a0ccewgg2gweg3aaf4",
+    "trialDuration": 0,
+    "status": "ACTIVE",
+    "licenses": [
+      {
+        "licenseId": "CMR_b60ef3r33448d0-633c-40ab-88c8-5c0rgerhada119b58_shafiTest.dmz.webex.com",
+        "offerName": "CMR",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CMR",
+        "billingServiceId": "Sub-os090835",
+        "features": [],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "shafiTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "57923322"
+      },
+      {
+        "licenseId": "MC_acdfeg09c691-06t4t46-4171-a697-bc8f43rt43cc881911_shafiTest.dmz.webex.com",
+        "offerName": "MC",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090835",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 200,
+        "siteUrl": "shafiTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "57493322",
+        "isCI": true,
+        "siteAdminUrl": "https://shafiTest.dmz.webex.com/wbxadmin/default.do?siteurl=shafiTest"
+      },
+      {
+        "licenseId": "CMR_0dsdfsfdg7c7d-f0fdgsb-3497-5f59a-64fddsf32r31995c4_shafiTest.dmz.webex.com",
+        "offerName": "CMR",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CMR",
+        "billingServiceId": "Sub-os090835",
+        "features": [],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "isCIUnifiedSite": true,
+        "siteId": "5794f327"
+      },
+      {
+        "licenseId": "MS_30ae927d-11af-42bb-982a-d7784bc8145f",
+        "offerName": "MS",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "MESSAGING",
+        "billingServiceId": "Sub-os090835",
+        "features": [
+          "squared-room-moderation"
+        ],
+        "volume": 50,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 0
+      },
+      {
+        "licenseId": "CF_e70a9360-96a8-4498-87b6-edd8a2c531ac",
+        "offerName": "CF",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090835",
+        "features": [
+          "squared-syncup"
+        ],
+        "volume": 50,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "isCI": true
+      }
+    ],
+    "startDate": "2017-08-16T21:25:03.596Z",
+    "endDate": "2065-08-02T07:00:00.000Z",
+    "duration": -1,
+    "gracePeriod": 0,
+    "orderingTool": "CCW",
+    "pendingServiceOrderUUID": "1a35a909-1688-4353-a558-d4ea85e1c948"
+  }
+]

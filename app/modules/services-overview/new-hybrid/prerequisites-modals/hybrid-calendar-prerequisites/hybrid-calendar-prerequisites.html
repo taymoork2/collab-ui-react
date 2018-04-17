@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
+  <h5 class="modal-title" translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.title"></h5>
+</div>
+<div class="modal-body hybrid-service-prerequisites">
+  <tabset justified="true">
+    <tab heading="{{vm.expresswayTabHeading}}">
+      <div class="tab-content">
+        <basic-expressway-prerequisites on-change="vm.expresswayData(options)"></basic-expressway-prerequisites>
+      </div>
+    </tab>
+    <tab heading="{{vm.calendarTabHeading}}">
+      <div class="tab-content">
+        <on-premises-exchange-prerequisites on-change="vm.calendarData(options)"></on-premises-exchange-prerequisites>
+      </div>
+    </tab>
+  </tabset>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="$close()">
+    <span translate="common.close"></span>
+  </button>
+</div>

@@ -12,10 +12,11 @@
         textValue: '@elementText',
         readAs: '@readAs',
         elementId: '@elementId',
+        aaElementType: '@aaElementType',
       },
       controller: 'AAInsertionElementCtrl',
       controllerAs: 'aaInsertionElement',
-      templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaInsertionElement.tpl.html',
+      template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaInsertionElement.tpl.html'),
     };
   }
 })();

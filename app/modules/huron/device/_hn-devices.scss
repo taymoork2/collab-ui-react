@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .device-header-icon {
   img {
@@ -49,6 +49,12 @@
 
 .device-log-button {
   margin-top: 10px;
+}
+
+.device-list {
+  .status-indicator {
+    padding-right: 8px;
+  }
 }
 
 .section-content {
@@ -121,7 +127,7 @@
   }
 
   .expiration {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     font-size: 12px;
   }
 

@@ -23,9 +23,7 @@
           <small ng-if="item.moveSiteMsg">{{item.moveSiteMsg}}</small>
         </p>
       </li>
+      <li><div ng-if="$ctrl.displayCount < $ctrl.model.length"><a href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a></div></li>
     </ul>
-    <p ng-if="$ctrl.displayCount < $ctrl.model.length" class="show-more">
-      <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
-    </p>
   </div>
 </cs-sp-section>

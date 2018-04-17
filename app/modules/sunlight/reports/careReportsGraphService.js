@@ -4,13 +4,15 @@
   angular.module('Sunlight')
     .service('CareReportsGraphService', careReportsGraphService);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function careReportsGraphService($translate, chartColors) {
+  function careReportsGraphService($translate) {
     // Base variables for building grids and charts
     var baseVariables = [];
     baseVariables['graph'] = {
       lineAlpha: 1,
-      balloonColor: '#AEAEAF',
+      balloonColor: ChartColors.grayLightOne,
       lineThickness: 1,
       marginTop: 10,
       marginLeft: 0,
@@ -21,20 +23,20 @@
     };
 
     baseVariables['axis'] = {
-      axisColor: '#D7D7D8',
-      gridColor: chartColors.grayLightTwo,
-      color: '#6A6B6C',
+      axisColor: ChartColors.grayLightTwo,
+      gridColor: ChartColors.grayLightTwo,
+      color: ChartColors.grayDarkOne,
       fontFamily: 'CiscoSansTT Light',
       fontSize: 12,
       titleBold: false,
-      titleColor: '#6A6B6C',
+      titleColor: ChartColors.grayDarkOne,
       gridAlpha: 0,
       axisAlpha: 1,
       stackType: 'regular',
     };
 
     baseVariables['legend'] = {
-      color: chartColors.grayDarkThree,
+      color: ChartColors.grayDarkThree,
       align: 'center',
       autoMargins: false,
       switchable: false,
@@ -55,7 +57,7 @@
       borderThickness: 1,
       borderAlpha: 1,
       fillAlpha: 1,
-      fillColor: chartColors.brandWhite,
+      fillColor: ChartColors.brandWhite,
       fixedPosition: true,
       shadowAlpha: 0,
     };
@@ -63,18 +65,19 @@
     baseVariables['chartCursor'] = {
       valueLineAlpha: 0,
       balloonPointerOrientation: 'vertical',
-      cursorColor: '#AEAEAF',
+      cursorColor: ChartColors.grayLightOne,
       categoryBalloonEnabled: false,
       valueLineBalloonEnabled: false,
       cursorAlpha: 1,
       graphBulletAlpha: 1,
     };
 
-    baseVariables['title'] = [{ 'text': '',
+    baseVariables['title'] = [{
+      'text': '',
       'bold': false,
       'font-family': 'Verdana',
       'size': 12,
-      'color': '#6A6B6C',
+      'color': ChartColors.grayDarkOne,
       'class': 'amcharts-axis-title',
       'enabled': false,
     }];

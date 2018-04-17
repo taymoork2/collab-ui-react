@@ -5,8 +5,10 @@
     .module('Core')
     .service('DeviceUsageGraphService', DeviceUsageGraphService);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function DeviceUsageGraphService($translate, chartColors) {
+  function DeviceUsageGraphService($translate) {
     function makeChart(id, chart) {
       var amChart = AmCharts.makeChart(id, chart);
       _.each(amChart.graphs, function (graph) {
@@ -66,7 +68,7 @@
         chartCursor: {
           enabled: true,
           categoryBalloonDateFormat: 'YYYY-MM-DD',
-          cursorColor: chartColors.primaryDarker,
+          cursorColor: ChartColors.primaryDarker,
           cursorAlpha: 0.5,
           valueLineAlpha: 0.5,
         },
@@ -84,8 +86,8 @@
             lineThickness: 2,
             fillAlphas: 0.6,
             lineAlpha: 0.0,
-            lineColor: chartColors.primaryDarker,
-            bulletColor: '#ffffff',
+            lineColor: ChartColors.primaryDarker,
+            bulletColor: ChartColors.brandWhite,
             bulletBorderAlpha: 1,
             useLineColorForBulletBorder: true,
             labelFunction: getLabel,

@@ -1,16 +1,17 @@
 <div ng-if="!row.entity.timeoutDetected" class="ui-grid-cell-contents">
   <div ng-if="!row.entity.isDone">
-     <div>
-       <span>{{'ediscovery.reportStates.' + row.entity.state | translate}}...</span>
-       <span class="progressbar-progress">{{row.entity.progress}}%</span>
-     </div>
-     <progressbar class="progress-striped" value="row.entity.progress"></progressbar>
+    <div>
+      <span translate="ediscovery.reportsList.generating"></span>
+    </div>
   </div>
   <div ng-if="row.entity.isDone" ng-switch on="row.entity.state">
     <div ng-switch-when="FAILED"
-         class="fit-in-cell"
-         tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-         cs-tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
+      tabindex="0"
+      class="fit-in-cell"
+      tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+      tooltip="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}"
+      tooltip-trigger="focus mouseenter"
+      aria-label="{{'ediscovery.reportFailureReasons.' + row.entity.failureReason | translate}}">
       <i class="icon icon-warning"></i> <span translate="ediscovery.reportsList.failed"></span>
     </div>
     <span ng-switch-default class="fit-in-cell">
@@ -20,9 +21,12 @@
 </div>
 
 <div ng-if="row.entity.timeoutDetected"
-     class="ui-grid-cell-contents"
-     tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
-     cs-tooltip="{{'ediscovery.searchResults.reportTimeout' | translate}}">
+  class="ui-grid-cell-contents"
+  tabindex="0"
+  tooltip-placement="{{grid.renderContainers.body.visibleRowCache.indexOf(row) === 0 ? 'left' : 'top'}}"
+  tooltip="{{::'ediscovery.searchResults.reportTimeout' | translate}}"
+  tooltip-trigger="focus mouseenter"
+  aria-label="{{::'ediscovery.searchResults.reportTimeout' | translate}}">
   <div>
     <i class="icon icon-warning"></i> <span>{{'ediscovery.timeout' | translate}}</span>
     <span class="progressbar-progress">{{row.entity.progress}}%</span>

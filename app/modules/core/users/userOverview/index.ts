@@ -6,17 +6,18 @@ import featureToggleServiceModule from 'modules/core/featureToggle';
 import notifictionModule from 'modules/core/notifications';
 import sunlightServiceModule from 'modules/sunlight/services';
 import webExUtilsModule from 'modules/webex/utils';
+import onboardModule from 'modules/core/users/userAdd';
 
 const coreAuthModule = require('modules/core/auth/auth');
 const ngResourceModule = require('angular-resource');
-const onboardModule = require('modules/core/users/userAdd/onboard.module');
+
+import serviceSetupModuleName from 'modules/huron/serviceSetup';
 
 import './_user-overview.scss';
 export * from './userOverview.service';
 export default angular
   .module('core.users.userOverview', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     messagingPreviewModule,
     sunlightServiceModule,
     ngResourceModule,
@@ -25,6 +26,7 @@ export default angular
     featureToggleServiceModule,
     webExUtilsModule,
     onboardModule,
+    serviceSetupModuleName,
   ])
   .service('UserOverviewService', UserOverviewService)
   .controller('UserOverviewCtrl', UserOverviewCtrl)

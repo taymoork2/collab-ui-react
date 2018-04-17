@@ -3,15 +3,14 @@
     <input id="adminEmail" type="hidden" name="adminEmail" ng-model="advancedSettings.adminEmail" value="{{adminEmailParam}}" />
 
     <div>
-      <a href="" ng-click="submitForm()">
+      <a href ng-click="submitForm()" aria-label="{{::'common.submit' | translate}}">
         <p class="ngCellText">
-          <span id="webexSiteAdminLink"
-                name="webexSiteAdminLink">
+          <span id="webexSiteAdminLink" name="webexSiteAdminLink">
             <i class="icon icon-link icon-lg"></i>
           </span>
         </p>
       </a>
-      <button id='hiddenButton-{{getId(webexAdvancedUrl)}}' type="submit" class="hidden-button">Submit</button>
+      <button id='hiddenButton-{{getId(webexAdvancedUrl)}}' type="submit" class="hidden-button" translate="common.submit"></button>
     </div>
   </form>
 </div>

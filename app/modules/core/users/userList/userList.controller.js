@@ -9,7 +9,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Auth, Config, FeatureToggleService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -37,14 +37,12 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.currentUser = null;
     $scope.popup = Notification.popup;
     $scope.filterByAdmin = false;
-    $scope.userPreviewActive = false;
-    $scope.userDetailsActive = false;
     $scope.sort = {
       by: 'name',
       order: 'ascending',
     };
     $scope.placeholder = {
-      name: $translate.instant('usersPage.all'),
+      name: $translate.instant('common.all'),
       filterValue: '',
       count: 0,
     };
@@ -79,24 +77,29 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.isOnlineBuyer = isOnlineBuyer;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
-    $scope.showUserDetails = showUserDetails;
     $scope.getUserLicenses = getUserLicenses;
 
     // graph appScope data and functions
     vm.userName = Authinfo.getUserName();
     vm.isHuronUser = Userservice.isHuronUser;
     vm.canShowActionsMenu = canShowActionsMenu;
+    vm.keypressResendInvitation = keypressResendInvitation;
     vm.resendInvitation = resendInvitation;
     vm.canShowUserDelete = canShowUserDelete;
     vm.canShowResendInvite = canShowResendInvite;
+    vm.keypressHandleDeleteUser = keypressHandleDeleteUser;
     vm.handleDeleteUser = handleDeleteUser;
     vm.firstOfType = firstOfType;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.getImageAria = getImageAria;
+    vm.showUserDetails = showUserDetails;
+    vm.selectRow = selectRow;
 
     $scope.getUserList = getUserList;
     $scope.onManageUsers = onManageUsers;
     $scope.sortDirection = sortDirection;
+    $scope.deselectRow = deselectRow;
 
     ////////////////
     var eventListeners = [];
@@ -105,7 +108,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
-        isOnlineOrg: Auth.isOnlineOrg(),
       };
 
       $q.all(promises).then(function (results) {
@@ -114,6 +116,16 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         bind();
         getUserList();
       });
+
+      if ($state.params.preSelectedUserId) {
+        UserOverviewService.getUser($state.params.preSelectedUserId)
+          .then(function (response) {
+            if (response && response.user) {
+              $scope.currentUser = response.user;
+              showUserDetails(response.user);
+            }
+          });
+      }
     }
 
     function onDestroy() {
@@ -125,19 +137,9 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function bind() {
       $timeout(function () {
         if ($state.params.showAddUsers === 'add') {
-          $state.go('users.add');
+          $state.go('users.add.manual');
         }
       }, 0);
-
-      // if the side panel is closing unselect the user
-      eventListeners.push($rootScope.$on('$stateChangeSuccess', function () {
-        if ($state.includes('users.list')) {
-          $scope.currentUser = null;
-          if ($scope.gridApi && $scope.gridApi.selection) {
-            $scope.gridApi.selection.clearSelectedRows();
-          }
-        }
-      }));
 
       // list users when we have authinfo data back, or new users have been added/activated
       $scope.$on('AuthinfoUpdated', function () {
@@ -155,10 +157,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           getUserList();
         }
       });
-    }
-
-    function getTemplate(name) {
-      return $templateCache.get('modules/core/users/userList/templates/' + name + '.html');
     }
 
     function getUserList(startAt) {
@@ -250,7 +248,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       } else {
         //get the users I am searching for
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
-          function (data, status, searchStr) {
+          function (data, status, searchStr, fullResponse) {
             $scope.tooManyUsers = false;
             if (data.success) {
               if ($scope.searchStr === searchStr) {
@@ -311,10 +309,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 $scope.tooManyUsers = tooManyUsers;
               } else if (tooManyResults) {
                 Log.debug('Query existing users yielded too many search results. Status: ' + status);
-                Notification.error('usersPage.tooManyResultsError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.tooManyResultsError');
               } else {
                 Log.debug('Query existing users failed. Status: ' + status);
-                Notification.error('usersPage.userListError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.userListError');
               }
               deferred.reject(data);
             }
@@ -422,6 +420,14 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         !$scope.isOnlineBuyer(user);
     }
 
+    function keypressHandleDeleteUser($event, user, isSelf) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+        vm.handleDeleteUser($event, user, isSelf);
+      } else {
+        $event.stopPropagation();
+      }
+    }
+
     function handleDeleteUser($event, user, isSelf) {
       $event.stopPropagation();
       if (isSelf) {
@@ -491,11 +497,24 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function canShowResendInvite(user) {
-      var isHuronUser = Userservice.isHuronUser(user.entitlements);
-      return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser) && !$scope.isCSB;
+      if ($scope.isCSB || $scope.dirsyncEnabled) {
+        return false;
+      } else {
+        var isHuronUser = Userservice.isHuronUser(user.entitlements);
+        return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser);
+      }
     }
 
-    function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+    function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+        vm.resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
+      } else {
+        $event.stopPropagation();
+      }
+    }
+
+    function resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
+      $event.stopPropagation();
       Userservice.resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements)
         .then(function () {
           Notification.success('usersPage.emailSuccess');
@@ -525,59 +544,46 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function configureGrid() {
       var deferred = $q.defer();
 
-      var photoCellTemplate = '<img ng-if="grid.appScope.isValidThumbnail(row.entity)" class="user-img" ng-src="{{grid.appScope.getUserPhoto(row.entity)}}"/>' +
-        '<span ng-if="!grid.appScope.isValidThumbnail(row.entity)" class="user-img">' +
-        '<i class="icon icon-user"></i>' +
-        '</span>';
-
-      var columnDefs = [
-        {
-          field: 'photos',
-          displayName: '',
-          sortable: false,
-          cellTemplate: photoCellTemplate,
-          width: 70,
-        }, {
-          field: 'name.givenName',
-          id: 'givenName',
-          displayName: $translate.instant('usersPage.firstnameHeader'),
-          sortable: true,
-        }, {
-          field: 'name.familyName',
-          id: 'familyName',
-          displayName: $translate.instant('usersPage.lastnameHeader'),
-          sortable: true,
-        }, {
-          field: 'displayName',
-          id: 'displayName',
-          displayName: $translate.instant('usersPage.displayNameHeader'),
-          sortable: true,
-        }, {
-          field: 'userName',
-          id: 'userName',
-          displayName: $translate.instant('usersPage.emailHeader'),
-          sortable: true,
-        }, {
-          field: 'userStatus',
-          id: 'userStatus',
-          cellFilter: 'userListFilter',
-          sortable: false,
-          cellTemplate: getTemplate('status.tpl'),
-          displayName: $translate.instant('usersPage.status'),
-        }, {
-          field: 'action',
-          displayName: $translate.instant('usersPage.actionHeader'),
-          sortable: false,
-          cellTemplate: getTemplate('actions.tpl'),
-        },
-      ];
+      var columnDefs = [{
+        field: 'photos',
+        displayName: '',
+        cellTemplate: require('./templates/photoCell.tpl.html'),
+        headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
+        width: 70,
+      }, {
+        field: 'name.givenName',
+        id: 'givenName',
+        displayName: $translate.instant('usersPage.firstnameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
+      }, {
+        field: 'name.familyName',
+        id: 'familyName',
+        displayName: $translate.instant('usersPage.lastnameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
+      }, {
+        field: 'displayName',
+        id: 'displayName',
+        displayName: $translate.instant('usersPage.displayNameHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+      }, {
+        field: 'userName',
+        id: 'userName',
+        displayName: $translate.instant('usersPage.emailHeader'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
+      }, {
+        field: 'userStatus',
+        id: 'userStatus',
+        cellFilter: 'userListFilter',
+        displayName: $translate.instant('usersPage.status'),
+        cellTemplate: require('./templates/status.tpl.html'),
+      }, {
+        field: 'action',
+        displayName: $translate.instant('usersPage.actionHeader'),
+        cellTemplate: require('./templates/actions.tpl.html'),
+      }];
 
       function onRegisterApi(gridApi) {
         $scope.gridApi = gridApi;
-
-        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-          $scope.showUserDetails(row.entity);
-        });
 
         gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
           // only load more data if we are allowed to
@@ -601,6 +607,19 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       };
 
       return deferred.promise;
+    }
+
+    function deselectRow() {
+      $scope.currentUser = null;
+    }
+
+    function getImageAria(user) {
+      return user.displayName + ' ' + $translate.instant('usersPage.userImage');
+    }
+
+    function selectRow(grid, row) {
+      GridCellService.selectRow(grid, row);
+      vm.showUserDetails(row.entity);
     }
 
     function showUserDetails(user) {

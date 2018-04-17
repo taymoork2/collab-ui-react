@@ -1,98 +1,56 @@
 'use strict';
 
 describe('Controller: AABuilderMainCtrl', function () {
-  var controller, $controller, AANotificationService, AutoAttendantCeService;
-  var AAUiModelService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAValidationService, AANumberAssignmentService, HuronConfig, $httpBackend;
-  var $state, $rootScope, $scope, $q, $stateParams, $compile, $modalStack;
-  var AAUiScheduleService, AACalendarService;
-  var AATrackChangeService, AADependencyService;
-  var FeatureToggleService;
-  var ServiceSetup, timeZone, translatedTimeZone, sysModel;
-  var element;
+  beforeEach(function () {
+    this.initModules('uc.autoattendant', 'Huron', 'Sunlight');
+    this.injectDependencies(
+      '$compile',
+      '$controller',
+      '$httpBackend',
+      '$modalStack',
+      '$q',
+      '$rootScope',
+      '$scope',
+      '$state',
+      '$stateParams',
+      'AACalendarService',
+      'AACommonService',
+      'AADependencyService',
+      'AAModelService',
+      'AANotificationService',
+      'AANumberAssignmentService',
+      'AARestModelService',
+      'AATrackChangeService',
+      'AAUiModelService',
+      'AAUiScheduleService',
+      'AAValidationService',
+      'Authinfo',
+      'AutoAttendantCeInfoModelService',
+      'AutoAttendantCeMenuModelService',
+      'AutoAttendantLocationService',
+      'AutoAttendantCeService',
+      'DoRestService',
+      'FeatureToggleService',
+      'HuronConfig',
+      'ServiceSetup',
+      'AutoAttendantHybridCareService'
+    );
 
-  var ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
-  var aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
-  var a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
-  var combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
-  var menuWithNewStep = combinedMenus['menuWithNewStep'];
-  var rawCeInfo = {
-    callExperienceName: 'AAA2',
-    callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
-    assignedResources: [{
-      id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
-      type: 'directoryNumber',
-      trigger: 'incomingCall',
-      uuid: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
-    }],
-  };
+    // JSON Files
+    this.ces = getJSONFixture('huron/json/autoAttendant/callExperiences.json');
+    this.aCe = getJSONFixture('huron/json/autoAttendant/aCallExperience.json');
+    this.doRest = getJSONFixture('huron/json/autoAttendant/doRest.json');
+    this.doRestWithoutCredentials = getJSONFixture('huron/json/autoAttendant/doRestWithoutCredentials.json');
+    this.a3LaneCe = getJSONFixture('huron/json/autoAttendant/a3LaneCe.json');
+    this.combinedMenus = getJSONFixture('huron/json/autoAttendant/combinedMenu.json');
 
-  var aaModel = {};
-
-  function ce2CeInfo(rawCeInfo) {
-    var _ceInfo = AutoAttendantCeInfoModelService.newCeInfo();
-    for (var j = 0; j < rawCeInfo.assignedResources.length; j++) {
-      var _resource = AutoAttendantCeInfoModelService.newResource();
-      _resource.setId(rawCeInfo.assignedResources[j].id);
-      _resource.setTrigger(rawCeInfo.assignedResources[j].trigger);
-      _resource.setType(rawCeInfo.assignedResources[j].type);
-      _resource.setUUID(rawCeInfo.assignedResources[j].uuid);
-      if (!_.isUndefined(rawCeInfo.assignedResources[j].number)) {
-        _resource.setNumber(rawCeInfo.assignedResources[j].number);
-      }
-      _ceInfo.addResource(_resource);
-    }
-    _ceInfo.setName(rawCeInfo.callExperienceName);
-    _ceInfo.setCeUrl(rawCeInfo.callExperienceURL);
-    return _ceInfo;
-  }
-
-  afterEach(function () {
-    if (element) {
-      element.remove();
-    }
-    element = undefined;
-  });
-
-  beforeEach(angular.mock.module('uc.autoattendant'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-
-  beforeEach(inject(function (_$state_, _$rootScope_, _$q_, _$compile_, _$stateParams_, _$controller_, _AANotificationService_,
-    _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_, _AAModelService_, _AANumberAssignmentService_,
-    _AutoAttendantCeService_, _AAValidationService_, _HuronConfig_, _$httpBackend_, _AAUiScheduleService_,
-    _AACalendarService_, _AATrackChangeService_, _AADependencyService_, _FeatureToggleService_, _ServiceSetup_, _$modalStack_) {
-    $state = _$state_;
-    $rootScope = _$rootScope_;
-    $modalStack = _$modalStack_;
-    $q = _$q_;
-    $compile = _$compile_;
-    $scope = $rootScope.$new();
-    $scope.$dismiss = function () {
+    // setting service data/variables
+    this.$stateParams.aaName = '';
+    this.$scope.$dismiss = function () {
       return true;
     };
-    $stateParams = _$stateParams_;
-    $controller = _$controller_;
-    AAUiModelService = _AAUiModelService_;
-    AAModelService = _AAModelService_;
-    AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
-    AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
-    AAValidationService = _AAValidationService_;
-    AutoAttendantCeService = _AutoAttendantCeService_;
-    AANumberAssignmentService = _AANumberAssignmentService_;
-    AANotificationService = _AANotificationService_;
-    HuronConfig = _HuronConfig_;
-    $httpBackend = _$httpBackend_;
-    AAUiScheduleService = _AAUiScheduleService_;
-    AACalendarService = _AACalendarService_;
-    AATrackChangeService = _AATrackChangeService_;
-    AADependencyService = _AADependencyService_;
-    FeatureToggleService = _FeatureToggleService_;
-    ServiceSetup = _ServiceSetup_;
 
-    // aaModel.dataReadyPromise = $q(function () {});
-    $stateParams.aaName = '';
-
-    sysModel = {
+    this.sysModel = {
       site: {
         uuid: '777-888-666',
         steeringDigit: '5',
@@ -102,130 +60,283 @@ describe('Controller: AABuilderMainCtrl', function () {
         timeZone: 'America/Los_Angeles',
       },
     };
-    timeZone = [{
+    this.timeZone = [{
       id: 'America/Los_Angeles',
       label: 'America/Los_Angeles',
     }];
-    translatedTimeZone = [{
+    this.translatedTimeZone = [{
       id: 'America/Los_Angeles',
       label: 'timeZones.America/Los_Angeles',
     }];
 
-    spyOn($state, 'go');
-    spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
-    spyOn(AAUiModelService, 'initUiModel');
-    spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve($stateParams.aaName));
-    spyOn(AutoAttendantCeMenuModelService, 'clearCeMenuMap');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(ServiceSetup, 'getTimeZones').and.returnValue($q.resolve(timeZone));
-    spyOn(ServiceSetup, 'listSites').and.callFake(function () {
-      ServiceSetup.sites = [sysModel.site];
-      return $q.resolve();
+    this.aaModel = {};
+    this.restId = 'fca066b1-4938-4b5f-9870-9e66ad17e0a2';
+    this.uiRestBlocks = {};
+    this.uiRestBlocks[this.restId] = {
+      method: 'GET',
+      url: 'test URL',
+      responseActions: [{
+        assignVar: {
+          variableName: 'test var3',
+          value: 'res3',
+        },
+      }],
+    };
+    this.uiRestBlocks['TEMP_0'] = {
+      method: 'GET',
+      url: 'test URL3',
+      username: 'testUser',
+      password: 'testPassword',
+      responseActions: [{
+        assignVar: {
+          variableName: 'test var',
+          value: 'res',
+        },
+      }],
+    };
+
+    this.rawCeInfo = {
+      callExperienceName: 'AAA2',
+      callExperienceURL: 'https://ces.hitest.huron-dev.com/api/v1/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/callExperiences/c16a6027-caef-4429-b3af-9d61ddc7964b',
+      assignedResources: [{
+        id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+        number: '1111111',
+        type: 'directoryNumber',
+        trigger: 'incomingCall',
+        uuid: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b',
+      }],
+    };
+    this.restBlock = {
+      restConfigUrl: 'https://ces.hitest.huron-dev.com/api/v1/rest/customers/6662df48-b367-4c1e-9c3c-aa408aaa79a1/restConfigs/89c76add-0e5d-48fe-9a4c-36aa201ec8ae',
+    };
+
+    this.restBlocks = {};
+    this.restBlocks['abc066b1-4938-4b5f-9870-9e66ad17edef'] = {
+      method: 'GET',
+      url: 'test URL2',
+      responseActions: [{
+        assignVar: {
+          variableName: 'test var2',
+          value: 'res2',
+        },
+      }],
+    };
+    this.restBlocks['abc066b2-3938-445f-9870-9e66ad17edef'] = {
+      method: 'GET',
+      url: 'test URL23',
+      responseActions: [{
+        assignVar: {
+          variableName: 'test var23',
+          value: 'res23',
+        },
+      }],
+    };
+
+    // Spies
+    spyOn(this.$state, 'go');
+    spyOn(this.AAModelService, 'getAAModel').and.returnValue(this.aaModel);
+    spyOn(this.AAUiModelService, 'initUiModel');
+    spyOn(this.AARestModelService, 'getRestBlocks').and.returnValue(this.restBlocks);
+    spyOn(this.AARestModelService, 'getUiRestBlocks').and.returnValue(this.uiRestBlocks);
+    spyOn(this.AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue(this.$q.resolve(this.$stateParams.aaName));
+    spyOn(this.AutoAttendantCeMenuModelService, 'clearCeMenuMap');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ServiceSetup, 'getTimeZones').and.returnValue(this.$q.resolve(this.timeZone));
+    spyOn(this.ServiceSetup, 'listSites').and.callFake(function () {
+      this.ServiceSetup.sites = [this.sysModel.site];
+      return this.$q.resolve();
     });
-    spyOn(ServiceSetup, 'getSite').and.returnValue($q.resolve(sysModel.site));
-    spyOn($rootScope, '$broadcast').and.callThrough();
-    spyOn($modalStack, 'getTop').and.returnValue({});
-    spyOn($modalStack, 'dismiss');
+    spyOn(this.ServiceSetup, 'getSite').and.returnValue(this.$q.resolve(this.sysModel.site));
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
+    spyOn(this.$modalStack, 'getTop').and.returnValue({});
+    spyOn(this.$modalStack, 'dismiss');
+    spyOn(this.AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+    spyOn(this.AutoAttendantHybridCareService, 'isHybridAndEPTConfigured').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAttendantLocationService, 'getDefaultLocation').and.returnValue(
+      this.$q.resolve({
+        url: 'https://cmi.huron-int.com/api/v2/customers/9b82a3fa-de82-4ced-a3dd-0989081bd6df/locations/108655a5-899a-4885-9f65-f583b0a76132',
+        uuid: '108655a5-899a-4885-9f65-f583b0a76132',
+        name: 'Default Location',
+        timeZone: 'Twilight/Zone',
+        preferredLanguage: 'en_US',
+        defaultLocation: true,
+        regionCodeDialing: {
+          regionCode: null,
+          simplifiedNationalDialing: false,
+        },
+        callerIdNumber: null,
+        callerId: null,
+      }));
 
-    controller = $controller('AABuilderMainCtrl as vm', {
-      $scope: $scope,
-      $stateParams: $stateParams,
-      AANotificationService: AANotificationService,
+    spyOn(this.AutoAttendantLocationService, 'listLocations').and.returnValue(
+      this.$q.resolve({
+        uuid: 'abc',
+        name: 'testLocation1',
+        locations: [{ routingPrefix: '6100' }],
+        defaultLocation: 'false',
+        userCount: 'null',
+        placeCount: 'null',
+        url: 'https://cmi.huron-int.com/api/v2/customers/abc/locations/abc',
+      }));
+
+    // mock element
+    this.elem = {
+      find: jasmine.createSpy('find').and.returnValue({ focus: _.noop }),
+    };
+
+    this.controller = this.$controller('AABuilderMainCtrl as vm', {
+      $element: this.elem,
+      $scope: this.$scope,
+      $stateParams: this.$stateParams,
+      AANotificationService: this.AANotificationService,
     });
-    $scope.$apply();
-  }));
+    this.$scope.$apply();
 
-  afterEach(function () {
-
+    // Functions
+    this.ce2CeInfo = function () {
+      var _ceInfo = this.AutoAttendantCeInfoModelService.newCeInfo();
+      for (var j = 0; j < this.rawCeInfo.assignedResources.length; j++) {
+        var _resource = this.AutoAttendantCeInfoModelService.newResource();
+        _resource.setId(this.rawCeInfo.assignedResources[j].id);
+        _resource.setTrigger(this.rawCeInfo.assignedResources[j].trigger);
+        _resource.setType(this.rawCeInfo.assignedResources[j].type);
+        _resource.setUUID(this.rawCeInfo.assignedResources[j].uuid);
+        if (!_.isUndefined(this.rawCeInfo.assignedResources[j].number)) {
+          _resource.setNumber(this.rawCeInfo.assignedResources[j].number);
+        }
+        _ceInfo.addResource(_resource);
+      }
+      _ceInfo.setName(this.rawCeInfo.callExperienceName);
+      _ceInfo.setCeUrl(this.rawCeInfo.callExperienceURL);
+      return _ceInfo;
+    };
   });
 
   describe('$locationChangeStart', function () {
     it('should dismiss the modal on click of browser back button', function () {
-      $scope.$broadcast('$locationChangeStart');
-      $scope.$apply();
-      expect($modalStack.getTop).toHaveBeenCalled();
-      expect($modalStack.dismiss).toHaveBeenCalled();
+      this.$scope.$broadcast('$locationChangeStart');
+      this.$scope.$apply();
+      expect(this.$modalStack.getTop).toHaveBeenCalled();
+      expect(this.$modalStack.dismiss).toHaveBeenCalled();
     });
   });
 
   describe('getTimeZoneOptions', function () {
-    it('should retreive the the list of system timezone options', function () {
-      controller.ui.timeZoneOptions = undefined;
-      controller.getTimeZoneOptions();
-      $scope.$apply();
-      expect(angular.equals(controller.ui.timeZoneOptions, translatedTimeZone)).toBe(true);
+    it('should retrieve the the list of system timezone options', function () {
+      this.controller.ui.timeZoneOptions = undefined;
+      this.controller.getTimeZoneOptions();
+      this.$scope.$apply();
+      expect(this.controller.ui.timeZoneOptions).toEqual(this.translatedTimeZone);
     });
   });
 
   describe('getSystemTimeZone', function () {
-    it('should retreive the system timezone', function () {
-      controller.ui.systemTimeZone = undefined;
-      controller.getSystemTimeZone();
-      $scope.$apply();
-      expect(angular.equals(controller.ui.systemTimeZone, translatedTimeZone[0])).toBe(true);
+    it('should retrieve the system timezone', function () {
+      this.controller.ui.systemTimeZone = undefined;
+      this.controller.getSystemTimeZone();
+      this.$scope.$apply();
+      expect(this.controller.ui.systemTimeZone).toEqual(this.translatedTimeZone[0]);
+    });
+  });
+
+  describe('getSystemTimeZone - multi site', function () {
+    it('should retrieve the system timezone', function () {
+      // As of this JIRA - AUTOATTN-1257
+      this.sysModel.site.timeZone = null;
+
+      this.controller.ui.systemTimeZone = undefined;
+      this.controller.getSystemTimeZone();
+      this.$scope.$apply();
+      expect(this.controller.ui.systemTimeZone).toEqual(this.translatedTimeZone[0]);
+    });
+  });
+
+  describe('getSystemDefaultTimeZone - multi site', function () {
+    it('should retrieve the default system timezone', function () {
+      var successSpy = jasmine.createSpy('success');
+
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      this.AutoAttendantLocationService.getDefaultLocation().then(successSpy);
+      this.AANotificationService.error = jasmine.createSpy('error');
+
+      this.controller.getSystemTimeZone();
+      this.$scope.$apply();
+
+      var args = successSpy.calls.mostRecent().args;
+      expect(args[0].timeZone).toBe('Twilight/Zone');
+    });
+
+    it('populateRouitngPrefix', function () {
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      this.controller.populateRoutingLocation();
+      this.$scope.$apply();
+      expect(this.controller.ui.routingPrefixOptions).toEqual(['6100', '6100']);
+    });
+  });
+
+  describe('Error Notification for while populating routing locations', function () {
+    it('populateRoutingLocation', function () {
+      spyOn(this.AACommonService, 'isMultiSiteEnabled').and.returnValue(true);
+      this.AutoAttendantLocationService.listLocations.and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      this.AutoAttendantLocationService.getDefaultLocation().catch(function (response) {
+        expect(response.status).toBe(500);
+      });
+      this.AANotificationService.error = jasmine.createSpy('error');
+
+      this.controller.populateRoutingLocation().catch(function (response) {
+        expect(response).toBe(undefined);
+      });
+      this.$scope.$apply();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
     });
   });
 
   describe('areAssignedResourcesDifferent', function () {
-    it('should show no differences', function () {
-      var a1 = [{
+    beforeEach(function () {
+      this.a1 = [{
         id: '408792221',
       }, {
         id: '4087963542',
       }, {
         id: '40872655',
       }];
-      var a2 = [{
-        id: '408792221',
-      }, {
-        id: '4087963542',
-      }, {
-        id: '40872655',
-      }];
-
-      var ret = controller.areAssignedResourcesDifferent(a1, a2, 'id');
-
-      $scope.$apply();
-
-      expect(ret).toBe(false);
-    });
-
-    it('should show a difference', function () {
-      var a1 = [{
+      this.a2 = [{
         id: '40892221',
       }, {
         id: '4087963542',
       }, {
         id: '40872655',
       }];
-      var a2 = [{
-        id: '408792221',
-      }, {
-        id: '4087963542',
-      }, {
-        id: '40872655',
-      }];
+    });
 
-      var ret = controller.areAssignedResourcesDifferent(a1, a2, 'id');
+    it('should show no differences', function () {
+      var ret = this.controller.areAssignedResourcesDifferent(this.a1, this.a1, 'id');
+      this.$scope.$apply();
+      expect(ret).toBeFalsy();
+    });
 
-      $scope.$apply();
-
-      expect(ret).toBe(true);
+    it('should show a difference', function () {
+      var ret = this.controller.areAssignedResourcesDifferent(this.a1, this.a2, 'id');
+      this.$scope.$apply();
+      expect(ret).toBeTruthy();
     });
   });
 
   describe('close', function () {
     it('should invoke clearCeMenuMap to release the associated storage', function () {
-      aaModel.aaRecord = undefined;
-      controller.close();
-      $scope.$apply();
-      expect($state.go).toHaveBeenCalled();
-      expect(AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
+      this.aaModel.aaRecord = undefined;
+      this.controller.close();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalled();
+      expect(this.AutoAttendantCeMenuModelService.clearCeMenuMap).toHaveBeenCalled();
     });
 
     it('should warn on CMI assignment failure on close', function () {
       // CMI assignment will fail when there is any bad number in the list
-      $httpBackend.when('PUT', HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data) {
+      this.$httpBackend.when('PUT', this.HuronConfig.getCmiV2Url() + '/customers/features/autoattendants/uuid/numbers').respond(function (method, url, data) {
         if (JSON.stringify(data).indexOf('bad') > -1) {
           return [500, 'bad'];
         } else {
@@ -233,25 +344,82 @@ describe('Controller: AABuilderMainCtrl', function () {
         }
       });
 
-      var resource = AutoAttendantCeInfoModelService.newResource();
-      resource.setType(aCe.assignedResources.type);
+      var resource = this.AutoAttendantCeInfoModelService.newResource();
+      resource.setType(this.aCe.assignedResources.type);
       resource.setId('bad');
       resource.setNumber('bad');
 
-      aaModel.aaRecord = _.cloneDeep(aCe);
-      aaModel.aaRecord.assignedResources.push(resource);
-      aaModel.aaRecordUUID = 'uuid';
+      this.aaModel.aaRecord = _.cloneDeep(this.aCe);
+      this.aaModel.aaRecord.assignedResources.push(resource);
+      this.aaModel.aaRecordUUID = 'uuid';
 
-      var errorSpy = jasmine.createSpy('error');
-      AANotificationService.error = errorSpy;
+      this.AANotificationService.error = jasmine.createSpy('error');
 
-      controller.close();
+      this.controller.close();
+      this.$httpBackend.flush();
+      this.$scope.$apply();
 
-      $httpBackend.flush();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
+    });
+    it('should unassign Assigned and reAssign with new uuid', function () {
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('cuid');
 
-      $scope.$apply();
+      this.$httpBackend.when('PUT', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, 'good'];
+      });
 
-      expect(errorSpy).toHaveBeenCalled();
+      this.$httpBackend.when('GET', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, { numbers: [{ number: '1111111', uuid: 'newUUID' }] }];
+      });
+
+      var resource = this.AutoAttendantCeInfoModelService.newResource();
+      resource.setType(this.aCe.assignedResources.type);
+      resource.setId('1111111');
+      resource.setNumber('1111111');
+
+      this.aaModel.aaRecord = _.cloneDeep(this.aCe);
+
+      this.aaModel.aaRecordUUID = 'uuid';
+
+      this.controller.ui.ceInfo.addResource({ id: '33333333' });
+      this.controller.close();
+
+      this.$httpBackend.flush();
+
+      this.$scope.$apply();
+
+      expect(this.aaModel.aaRecord.assignedResources[0].uuid).toEqual('newUUID');
+    });
+    it('should unassign Assigned and reAssign same number with new uuid', function () {
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('cuid');
+
+      this.$httpBackend.when('PUT', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, 'good'];
+      });
+
+      this.$httpBackend.when('GET', this.HuronConfig.getCmiV2Url() + '/customers/cuid/features/autoattendants/uuid/numbers').respond(function () {
+        return [200, { numbers: [{ number: '1111111', uuid: '21799279-2529-4358-ab2f-1e46bfc3684b' }] }];
+      });
+
+      var resource = this.AutoAttendantCeInfoModelService.newResource();
+      resource.setType(this.aCe.assignedResources.type);
+      resource.setUUID('00097a86-45ef-44a7-aa78-6d32a0ca1d3b');
+      resource.setId('1111111');
+      resource.setNumber('1111111');
+
+      this.aaModel.aaRecord = _.cloneDeep(this.aCe);
+
+      this.aaModel.aaRecordUUID = 'uuid';
+
+      this.controller.ui.ceInfo.addResource({ id: '00097a86-45ef-44a7-aa78-6d32a0ca1d3b', uuid: '21799279-2529-4358-ab2f-1e46bfc3684b' });
+      this.controller.close();
+
+      this.$httpBackend.flush();
+
+      this.$scope.$apply();
+
+      expect(_.get(this.aaModel.aaRecord, 'assignedResources[0].uuid')).toBe('21799279-2529-4358-ab2f-1e46bfc3684b');
+      expect(resource.getUUID()).toBe('00097a86-45ef-44a7-aa78-6d32a0ca1d3b');
     });
   });
 
@@ -259,7 +427,7 @@ describe('Controller: AABuilderMainCtrl', function () {
     it('should show error message when assigning number', function () {
       // for an external number query, return the number formatted with a +
       var externalNumberQueryUri = /\/externalnumberpools\?directorynumber=&order=pattern&pattern=(.+)/;
-      $httpBackend.whenGET(externalNumberQueryUri)
+      this.$httpBackend.whenGET(externalNumberQueryUri)
         .respond(function (method, url) {
           var pattern = decodeURI(url).match(new RegExp(externalNumberQueryUri))[1];
 
@@ -271,299 +439,551 @@ describe('Controller: AABuilderMainCtrl', function () {
           return [200, response];
         });
 
-      spyOn(AANotificationService, 'errorResponse');
+      spyOn(this.AANotificationService, 'errorResponse');
       var resources = {
         workingResources: [],
         failedResources: ['9999999991'],
       };
-      spyOn(AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue($q.resolve(resources));
+      spyOn(this.AANumberAssignmentService, 'setAANumberAssignmentWithErrorDetail').and.returnValue(this.$q.resolve(resources));
 
-      controller.saveAANumberAssignmentWithErrorDetail();
+      this.controller.saveAANumberAssignmentWithErrorDetail();
+      this.$scope.$apply();
 
-      $scope.$apply();
-
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
     });
   });
 
   describe('saveAARecords', function () {
-    var createCeSpy;
-    var updateCeSpy;
-    var nameValidationSpy;
-    var aaNameChangedSpy;
-
     beforeEach(function () {
-      createCeSpy = spyOn(AutoAttendantCeService, 'createCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
-      updateCeSpy = spyOn(AutoAttendantCeService, 'updateCe').and.returnValue($q.resolve(_.cloneDeep(rawCeInfo)));
-      spyOn(AANotificationService, 'success');
-      spyOn(AANotificationService, 'error');
-      spyOn(AANotificationService, 'errorResponse');
-      spyOn($scope.vm, 'saveUiModel');
-      spyOn(AANumberAssignmentService, 'setAANumberAssignment').and.returnValue($q.resolve());
+      this.createCeSpy = spyOn(this.AutoAttendantCeService, 'createCe').and.returnValue(this.$q.resolve(_.cloneDeep(this.rawCeInfo)));
+      this.updateCeSpy = spyOn(this.AutoAttendantCeService, 'updateCe').and.returnValue(this.$q.resolve(_.cloneDeep(this.rawCeInfo)));
+      this.updateDoRestSpy = spyOn(this.DoRestService, 'updateDoRest').and.returnValue(this.$q.resolve(this.rawCeInfo));
+      this.deleteDoRestSpy = spyOn(this.DoRestService, 'deleteDoRest').and.returnValue(this.$q.resolve(this.rawCeInfo));
+      spyOn(this.DoRestService, 'createDoRest').and.returnValue(this.$q.resolve(this.restBlock));
+      spyOn(this.AANotificationService, 'success');
+      spyOn(this.AANotificationService, 'error');
+      spyOn(this.AANotificationService, 'errorResponse');
+      spyOn(this.$scope.vm, 'saveUiModel');
+      spyOn(this.AANumberAssignmentService, 'setAANumberAssignment').and.returnValue(this.$q.resolve());
 
-      spyOn(AADependencyService, 'notifyAANameChange');
-      aaNameChangedSpy = spyOn(AATrackChangeService, 'isChanged').and.returnValue(false);
-      spyOn(AATrackChangeService, 'track');
+      spyOn(this.AADependencyService, 'notifyAANameChange');
+      this.aaNameChangedSpy = spyOn(this.AATrackChangeService, 'isChanged').and.returnValue(false);
+      spyOn(this.AATrackChangeService, 'track');
 
-      nameValidationSpy = spyOn(AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
-      aaModel.ceInfos = [];
-      aaModel.aaRecords = [];
-      aaModel.aaRecord = aCe;
+      this.nameValidationSpy = spyOn(this.AAValidationService, 'isNameValidationSuccess').and.returnValue(true);
+      this.aaModel.ceInfos = [];
+      this.aaModel.aaRecords = [];
+      //We don't want a modified copy of aCe from one test to be used in other
+      this.aaModel.aaRecord = _.cloneDeep(this.aCe);
+
+      this.errorNotificationParams = { name: 'AAA2', statusText: 'server error', status: 500 };
+
+      this.openHourEntries = [{
+        actions: [{
+          id: '',
+          name: 'foo',
+        }],
+      }, {
+        actions: [{
+          id: '',
+          name: 'bar',
+        }],
+      }, {
+        actions: [{
+          id: '',
+          name: 'bat',
+        }],
+      }];
     });
 
     it('should save a new aaRecord successfully', function () {
-      aaModel.aaRecordUUID = '';
-      controller.saveAARecords();
-      $scope.$apply();
+      this.aaModel.aaRecordUUID = '';
+      this.controller.saveAARecords();
+      this.$scope.$apply();
 
-      expect(AutoAttendantCeService.createCe).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.createCe).toHaveBeenCalled();
 
       // check that aaRecord is saved successfully into model
-      expect(angular.equals(aaModel.aaRecords[0], rawCeInfo)).toEqual(true);
+      expect(this.aaModel.aaRecords[0]).toEqual(this.rawCeInfo);
 
       // check that ceInfos is updated successfully too because it is required on the landing page
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+      var ceInfo = this.ce2CeInfo();
+      expect(this.aaModel.ceInfos[0]).toEqual(ceInfo);
 
-      expect(AATrackChangeService.track).toHaveBeenCalled();
-      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).not.toHaveBeenCalled();
 
-      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
+      expect(this.AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successCreateCe', jasmine.any(Object));
+    });
+
+    it('should update an existing aaRecord with one REST block modified and one new REST block (PUT and POST)', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.updateDoRest).toHaveBeenCalled();
+      expect(this.DoRestService.createDoRest).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
+
+      //Check if the REST block id gets updated well in the CE.
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
+
+    it('should report failure if an existing aaRecord with REST block modified fails', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      //Explicitly make updateDoRest fail
+      this.updateDoRestSpy.and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.updateDoRest).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), this.errorNotificationParams);
+      expect(this.AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+    });
+
+    it('should report failure if an existing aaRecord with one REST block modified fails but other gets passed', function () {
+      var count = 0;
+      var ngq = this.$q;
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.updateDoRestSpy.and.callFake(function () {
+        if (count === 0) {
+          count++;
+          return ngq.resolve(this.rawCeInfo);
+        }
+        return ngq.reject({
+          statusText: 'server error',
+          status: 500,
+        });
+      });
+
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.updateDoRest).toHaveBeenCalled();
+      //We will also see if Save button POSTs the newly created REST block.
+      this.aaModel.ceInfos = [];
+      this.aaModel.aaRecords = [];
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.createDoRest.calls.count()).toBe(2);
+      expect(this.DoRestService.updateDoRest.calls.count()).toBe(2);
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), this.errorNotificationParams);
+    });
+
+    it('should update an existing aaRecord with REST block deleted', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.controller.ui.openHours.entries = this.openHourEntries;
+
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
+    });
+
+    it('should report failure if REST block does not get deleted successfully', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.controller.ui.openHours.entries = this.openHourEntries;
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.DoRestService.deleteDoRest.and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), this.errorNotificationParams);
+    });
+
+    it('should report failure if one of the REST blocks does not get deleted successfully but the other does', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.controller.ui.openHours.entries = this.openHourEntries;
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+
+      this.deleteDoRestSpy.and.returnValues(this.$q.resolve(this.rawCeInfo), this.$q.reject({
+        statusText: 'server error',
+        status: 500,
+      }));
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(String), this.errorNotificationParams);
+    });
+
+    it('should not report failure if REST block does not get deleted successfully with a 404', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.controller.ui.openHours.entries = this.openHourEntries;
+
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.deleteDoRestSpy.and.returnValue(this.$q.reject({
+        statusText: 'server error',
+        status: 404,
+      }));
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+      expect(this.DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should report failure if AutoAttendantCeService.createCe() failed', function () {
-      aaModel.aaRecordUUID = '';
-      createCeSpy.and.returnValue($q.reject({
+      spyOn(this.AANumberAssignmentService, 'getAANumberAssignments').and.returnValue(this.$q.resolve(''));
+      this.aaModel.aaRecordUUID = '';
+      this.createCeSpy.and.returnValue(this.$q.reject({
         statusText: 'server error',
         status: 500,
       }));
-      controller.saveAARecords();
-      $scope.$apply();
+      this.controller.saveAARecords();
+      this.$scope.$apply();
 
-      expect(AATrackChangeService.track).not.toHaveBeenCalled();
-      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).not.toHaveBeenCalled();
 
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should update an existing aaRecord successfully', function () {
-      aaModel.aaRecords.push(rawCeInfo);
-      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
 
-      controller.saveAARecords();
-      $scope.$apply();
+      this.controller.saveAARecords();
+      this.$scope.$apply();
 
-      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
 
       // check that aaRecord is saved successfully into model
-      expect(angular.equals(aaModel.aaRecords[0], rawCeInfo)).toEqual(true);
+      expect(this.aaModel.aaRecords[0]).toEqual(this.rawCeInfo);
 
       // check that ceInfos is updated successfully too because it is required on the landing page
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+      var ceInfo = this.ce2CeInfo();
+      expect(this.aaModel.ceInfos[0]).toEqual(ceInfo);
 
       // if AA Name is not changed, don't call AADependencyService.notifyAANameChange()
-      expect(AATrackChangeService.isChanged).toHaveBeenCalled();
-      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
-      expect(AATrackChangeService.track).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).not.toHaveBeenCalled();
 
-      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+      expect(this.AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+    });
+
+    it('should update an existing aaRecord successfully in non-REST api toggled tenants too', function () {
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      spyOn(this.AACommonService, 'isRestApiToggle').and.returnValue(false);
+
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
+
+      // check that aaRecord is saved successfully into model
+      expect(this.aaModel.aaRecords[0]).toEqual(this.rawCeInfo);
+
+      // check that ceInfos is updated successfully too because it is required on the landing page
+      var ceInfo = this.ce2CeInfo();
+      expect(this.aaModel.ceInfos[0]).toEqual(ceInfo);
+
+      // if AA Name is not changed, don't call AADependencyService.notifyAANameChange()
+      expect(this.AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).not.toHaveBeenCalled();
+
+      expect(this.AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
 
     it('should update an existing aaRecord with AA Name changed successfully', function () {
-      aaModel.aaRecords.push(rawCeInfo);
-      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
 
       // Assume aaName is changed.
-      aaNameChangedSpy.and.returnValue(true);
-
-      controller.saveAARecords();
-      $scope.$apply();
-
-      expect(AutoAttendantCeService.updateCe).toHaveBeenCalled();
+      this.aaNameChangedSpy.and.returnValue(true);
+      this.controller.saveAARecords();
+      this.$scope.$apply();
+      expect(this.AutoAttendantCeService.updateCe).toHaveBeenCalled();
 
       // check that aaRecord is saved successfully into model
-      expect(angular.equals(aaModel.aaRecords[0], rawCeInfo)).toEqual(true);
+      expect(this.aaModel.aaRecords[0]).toEqual(this.rawCeInfo);
 
       // check that ceInfos is updated successfully too because it is required on the landing page
-      var ceInfo = ce2CeInfo(rawCeInfo);
-      expect(angular.equals(aaModel.ceInfos[0], ceInfo)).toEqual(true);
+      var ceInfo = this.ce2CeInfo();
+      expect(this.aaModel.ceInfos[0]).toEqual(ceInfo);
 
       // if AA Name is changed, call AADependencyService.notifyAANameChange()
-      expect(AATrackChangeService.isChanged).toHaveBeenCalled();
-      expect(AADependencyService.notifyAANameChange).toHaveBeenCalled();
-      expect(AATrackChangeService.track).toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).toHaveBeenCalled();
 
-      expect(AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
+      expect(this.AANotificationService.success).toHaveBeenCalledWith('autoAttendant.successUpdateCe', jasmine.any(Object));
     });
 
     it('should report failure if AutoAttendantCeService.updateCe() failed', function () {
-      aaModel.aaRecords.push(rawCeInfo);
-      aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
-      updateCeSpy.and.returnValue($q.reject({
+      spyOn(this.AANumberAssignmentService, 'getAANumberAssignments').and.returnValue(this.$q.resolve(''));
+      this.aaModel.aaRecords.push(this.rawCeInfo);
+      this.aaModel.aaRecordUUID = 'c16a6027-caef-4429-b3af-9d61ddc7964b';
+      this.updateCeSpy.and.returnValue(this.$q.reject({
         statusText: 'server error',
         status: 500,
       }));
-      controller.saveAARecords();
-      $scope.$apply();
+      this.controller.saveAARecords();
+      this.$scope.$apply();
 
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should not save when there is a name validation error', function () {
-      nameValidationSpy.and.returnValue(false);
-
-      controller.saveAARecords();
-
-      expect($scope.vm.saveUiModel).not.toHaveBeenCalled();
+      this.nameValidationSpy.and.returnValue(false);
+      this.controller.saveAARecords();
+      expect(this.$scope.vm.saveUiModel).not.toHaveBeenCalled();
     });
   });
 
   describe('selectAA', function () {
-    var readCe;
-
     beforeEach(function () {
-      readCe = spyOn(AutoAttendantCeService, 'readCe').and.returnValue($q.resolve(_.cloneDeep(aCe)));
-      spyOn($scope.vm, 'populateUiModel');
-      spyOn(AANotificationService, 'error');
-      spyOn(AANotificationService, 'errorResponse');
-      spyOn(AAModelService, 'getNewAARecord').and.callThrough();
-      spyOn(AADependencyService, 'notifyAANameChange');
-      spyOn(AATrackChangeService, 'isChanged');
-      spyOn(AATrackChangeService, 'track');
+      this.readCe = spyOn(this.AutoAttendantCeService, 'readCe').and.returnValue(this.$q.resolve(_.cloneDeep(this.aCe)));
+      this.readDoRestSpy = spyOn(this.DoRestService, 'readDoRest').and.returnValue(this.$q.resolve(this.doRest));
+      spyOn(this.$scope.vm, 'populateUiModel');
+      spyOn(this.AANotificationService, 'error');
+      spyOn(this.AANotificationService, 'errorResponse');
+      spyOn(this.AAModelService, 'getNewAARecord').and.callThrough();
+      spyOn(this.AADependencyService, 'notifyAANameChange');
+      spyOn(this.AATrackChangeService, 'isChanged');
+      spyOn(this.AATrackChangeService, 'track');
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined', function () {
-      $scope.vm.aaModel = {};
-      controller.selectAA('');
-      $scope.$apply();
+      this.$scope.vm.aaModel = {};
+      this.controller.selectAA('');
+      this.$scope.$apply();
 
-      expect(AAModelService.getNewAARecord).toHaveBeenCalled();
-      expect($scope.vm.populateUiModel).toHaveBeenCalled();
-      expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.AAModelService.getNewAARecord).toHaveBeenCalled();
+      expect(this.$scope.vm.populateUiModel).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.readCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
 
       // AAName is not tracked yet when opening new AA
-      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
-      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
-      expect(AATrackChangeService.track).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).not.toHaveBeenCalled();
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is empty', function () {
-      $scope.vm.aaModel = {};
-      $scope.vm.templateName = '';
-      controller.selectAA('');
-      $scope.$apply();
-      expect(AAModelService.getNewAARecord).toHaveBeenCalled();
-      expect($scope.vm.populateUiModel).toHaveBeenCalled();
-      expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.templateName = '';
+      this.controller.selectAA('');
+      this.$scope.$apply();
+      expect(this.AAModelService.getNewAARecord).toHaveBeenCalled();
+      expect(this.$scope.vm.populateUiModel).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.readCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('should create a new aaRecord successfully when no name is given and vm.aaModel.aaRecord is undefined and a template name is set', function () {
-      $scope.vm.aaModel = {};
+      this.$scope.vm.aaModel = {};
 
-      controller.selectAA('');
-      $scope.$apply();
+      this.controller.selectAA('');
+      this.$scope.$apply();
 
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect(AAModelService.getNewAARecord).toHaveBeenCalled();
-      expect($scope.vm.populateUiModel).toHaveBeenCalled();
-      expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
+      expect(this.AAModelService.getNewAARecord).toHaveBeenCalled();
+      expect(this.$scope.vm.populateUiModel).toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.readCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('should be able to read an existing new aaRecord successfully when no name is given', function () {
       // when aaModel.aaRecord is defined
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = {};
-      controller.selectAA('');
-      $scope.$apply();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecord = {};
+      this.controller.selectAA('');
+      this.$scope.$apply();
 
       // $scope.vm.aaModel should not be initialized again with a new AARecord
-      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
-      expect(AutoAttendantCeService.readCe).not.toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AutoAttendantCeService.readCe).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
 
-      expect($scope.vm.populateUiModel).toHaveBeenCalled();
+      expect(this.$scope.vm.populateUiModel).toHaveBeenCalled();
     });
 
     it('should be able to read an existing aaRecord successfully when a name is given', function () {
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecords = ces;
-      controller.selectAA('AA2');
-      $scope.$apply();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AA2');
+      this.$scope.$apply();
 
-      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
 
-      expect($scope.vm.aaModel.aaRecord.callExperienceName).toEqual(aCe.callExperienceName);
-      expect($scope.vm.populateUiModel).toHaveBeenCalled();
+      expect(this.$scope.vm.aaModel.aaRecord.callExperienceName).toEqual(this.aCe.callExperienceName);
+      expect(this.$scope.vm.populateUiModel).toHaveBeenCalled();
 
       // start tracking AAName when reading an existing aaRecord
-      expect(AATrackChangeService.isChanged).not.toHaveBeenCalled();
-      expect(AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
-      expect(AATrackChangeService.track).toHaveBeenCalled();
+      expect(this.AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).toHaveBeenCalled();
+    });
+
+    it('should be able to read an existing aaRecord successfully on a non-RESTAPI toggled tenant when a name is given', function () {
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      spyOn(this.AACommonService, 'isRestApiToggle').and.returnValue(false);
+      this.controller.selectAA('AA2');
+      this.$scope.$apply();
+
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
+
+      expect(_.get(this.controller.aaModel.aaRecord, 'callExperienceName')).toBe(this.aCe.callExperienceName);
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+
+      // start tracking AAName when reading an existing aaRecord
+      expect(_.get(this.controller.aaModel, 'aaRecords').length).toBe(3);
+      expect(this.AATrackChangeService.isChanged).not.toHaveBeenCalled();
+      expect(this.AADependencyService.notifyAANameChange).not.toHaveBeenCalled();
+      expect(this.AATrackChangeService.track).toHaveBeenCalled();
     });
 
     it('should return error when the backend return 500 error', function () {
-      readCe.and.returnValue(
-        $q.reject({
+      this.readCe.and.returnValue(this.$q.reject({ status: 500 }));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AA2');
+      this.$scope.$apply();
+
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.controller.populateUiModel).not.toHaveBeenCalled();
+    });
+
+    it('should be able to read an existing aaRecord successfully when a REST block is already there', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      expect(_.get(this.controller.aaModel, 'aaRecords').length).toBe(3);
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.DoRestService.readDoRest).toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
+
+    it('should return an error when an existing REST block read gets errored', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.readDoRestSpy.and.returnValue(this.$q.reject({ status: 500 }));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+    });
+
+    it('should return an error when one REST block gets successfully read but other REST block read gets errored', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.readDoRestSpy.and.returnValues(this.$q.resolve(this.doRest),
+        this.$q.reject({
           status: 500,
         })
       );
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecords = ces;
-      controller.selectAA('AA2');
-      $scope.$apply();
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
 
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
-      expect(AAModelService.getNewAARecord).not.toHaveBeenCalled();
-      expect($scope.vm.populateUiModel).not.toHaveBeenCalled();
+    it('should return an error when one REST block gets successfully read but other REST block read doesnot get username in authentication block', function () {
+      this.readCe.and.returnValue(this.$q.resolve(this.aCe));
+      this.readDoRestSpy.and.returnValue(this.$q.resolve(this.doRestWithoutCredentials));
+      this.controller.aaModel = {};
+      this.controller.aaModel.aaRecords = this.ces;
+      this.controller.selectAA('AAA3');
+      this.$scope.$apply();
+      expect(this.AAModelService.getNewAARecord).not.toHaveBeenCalled();
+      expect(this.AANotificationService.error).toHaveBeenCalled();
+      expect(this.controller.populateUiModel).toHaveBeenCalled();
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions').length).toBe(4);
+      expect(_.get(this.controller.aaModel.aaRecord.actionSets[0], 'actions[1].doREST.id')).toBe(this.restId);
+    });
+
+    it('should return an error when uuid of a number is different on CMI and CES', function () {
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecords = this.ces;
+      this.$scope.vm.aaModel.aaRecords[1].assignedResources.uuid = '00097a86-45ef-44a7-aa78-6d32a0ca1d3c';
+      this.controller.selectAA('AAA2');
+      this.$scope.$apply();
+      this.$scope.vm.aaModel.aaRecords[1].assignedResources.uuid = '00097a86-45ef-44a7-aa78-6d32a0ca1d3b';
+      expect(this.AANotificationService.error).toHaveBeenCalled();
     });
   });
 
   describe('setupTemplate', function () {
     beforeEach(function () {
-      spyOn(AANotificationService, 'success');
-      spyOn(AANotificationService, 'error');
+      spyOn(this.AANotificationService, 'success');
+      spyOn(this.AANotificationService, 'error');
     });
 
     it('should set up a say PhoneMenu open hours template using real template1', function () {
-      $scope.vm.templateName = 'Basic';
-      controller.setupTemplate();
+      this.$scope.vm.templateName = 'Basic';
+      this.controller.setupTemplate();
 
-      expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
-      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play');
-      expect($scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
+      expect(this.$scope.vm.ui.openHours['entries'].length).toEqual(2);
+      expect(this.$scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play');
+      expect(this.$scope.vm.ui.openHours['entries'][1]['type']).toEqual('MENU_OPTION');
 
-      expect($scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);
-      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['type']).toEqual('MENU_OPTION');
-      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['key']).toEqual('0');
-      expect($scope.vm.ui.openHours['entries'][1]['entries'][0]['actions'].length).toEqual(1);
+      expect(this.$scope.vm.ui.openHours['entries'][1]['entries'].length).toEqual(1);
+      expect(this.$scope.vm.ui.openHours['entries'][1]['entries'][0]['type']).toEqual('MENU_OPTION');
+      expect(this.$scope.vm.ui.openHours['entries'][1]['entries'][0]['key']).toEqual('0');
+      expect(this.$scope.vm.ui.openHours['entries'][1]['entries'][0]['actions'].length).toEqual(1);
 
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
     });
 
     it('should set up a say say say open hours template using test template', function () {
-      $scope.vm.templateDefinitions = [{
+      this.$scope.vm.templateDefinitions = [{
         tname: 'template2',
         actions: [{
           lane: 'openHours',
           actionset: ['play3', 'play4', 'play5'],
         }],
       }];
-      $scope.vm.templateName = 'template2';
-      controller.setupTemplate();
-      expect($scope.vm.ui.openHours['entries'].length).toEqual(3);
-      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play3');
-      expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('play4');
-      expect($scope.vm.ui.openHours['entries'][2]['actions'][0]['name']).toEqual('play5');
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
+      this.$scope.vm.templateName = 'template2';
+      this.controller.setupTemplate();
+      expect(this.$scope.vm.ui.openHours['entries'].length).toEqual(3);
+      expect(this.$scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('play3');
+      expect(this.$scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('play4');
+      expect(this.$scope.vm.ui.openHours['entries'][2]['actions'][0]['name']).toEqual('play5');
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
     });
 
     it('should set up a say say open hours - say closed hours template', function () {
-      $scope.vm.templateDefinitions = [{
+      this.$scope.vm.templateDefinitions = [{
         tname: 'template3',
         actions: [{
           lane: 'openHours',
@@ -573,43 +993,39 @@ describe('Controller: AABuilderMainCtrl', function () {
           actionset: ['playClosed1'],
         }],
       }];
-      $scope.vm.templateName = 'template3';
-      controller.setupTemplate();
+      this.$scope.vm.templateName = 'template3';
+      this.controller.setupTemplate();
 
-      expect($scope.vm.ui.openHours['entries'].length).toEqual(2);
-      expect($scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('playOpen1');
-      expect($scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('playOpen2');
-      expect($scope.vm.ui.closedHours['entries'].length).toEqual(1);
-      expect($scope.vm.ui.closedHours['entries'][0]['actions'][0]['name']).toEqual('playClosed1');
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(true);
-      expect($scope.vm.ui.isHolidays).toEqual(false);
+      expect(this.$scope.vm.ui.openHours['entries'].length).toEqual(2);
+      expect(this.$scope.vm.ui.openHours['entries'][0]['actions'][0]['name']).toEqual('playOpen1');
+      expect(this.$scope.vm.ui.openHours['entries'][1]['actions'][0]['name']).toEqual('playOpen2');
+      expect(this.$scope.vm.ui.closedHours['entries'].length).toEqual(1);
+      expect(this.$scope.vm.ui.closedHours['entries'][0]['actions'][0]['name']).toEqual('playClosed1');
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isClosedHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isHolidays).toBeFalsy();
     });
 
     it('should fail to create template since template name is not valid', function () {
-      $scope.vm.templateName = 'templateDoesNotExist';
-      controller.setupTemplate();
+      this.$scope.vm.templateName = 'templateDoesNotExist';
+      this.controller.setupTemplate();
 
-      expect(AANotificationService.error).toHaveBeenCalledWith(
-        'autoAttendant.errorInvalidTemplate', jasmine.any(Object)
-      );
+      expect(this.AANotificationService.error).toHaveBeenCalledWith('autoAttendant.errorInvalidTemplate', jasmine.any(Object));
     });
 
     it('should fail to create template since template has no actions', function () {
-      $scope.vm.templateDefinitions = [{
+      this.$scope.vm.templateDefinitions = [{
         tname: 'templateNoActions',
       }];
 
-      $scope.vm.templateName = 'templateNoActions';
-      controller.setupTemplate();
+      this.$scope.vm.templateName = 'templateNoActions';
+      this.controller.setupTemplate();
 
-      expect(AANotificationService.error).toHaveBeenCalledWith(
-        'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
-      );
+      expect(this.AANotificationService.error).toHaveBeenCalledWith('autoAttendant.errorInvalidTemplateDef', jasmine.any(Object));
     });
 
     it('should fail to create template since template has no action set in closedHours lane', function () {
-      $scope.vm.templateDefinitions = [{
+      this.$scope.vm.templateDefinitions = [{
         tname: 'templateMissingActionSet',
         actions: [{
           lane: 'openHours',
@@ -619,33 +1035,31 @@ describe('Controller: AABuilderMainCtrl', function () {
         }],
       }];
 
-      $scope.vm.templateName = 'templateMissingActionSet';
-      controller.setupTemplate();
+      this.$scope.vm.templateName = 'templateMissingActionSet';
+      this.controller.setupTemplate();
 
-      expect(AANotificationService.error).toHaveBeenCalledWith(
-        'autoAttendant.errorInvalidTemplateDef', jasmine.any(Object)
-      );
+      expect(this.AANotificationService.error).toHaveBeenCalledWith('autoAttendant.errorInvalidTemplateDef', jasmine.any(Object));
     });
 
     it('should NOT display add step icons on aa-builder-lane', function () {
-      $rootScope.schedule = 'openHours';
-      $rootScope.index = 0;
-      element = $compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")($rootScope);
+      this.$rootScope.schedule = 'openHours';
+      this.$rootScope.index = 0;
+      this.view = this.$compile("<aa-builder-lane aa-schedule='openHours'></aa-builder-lane>")(this.$rootScope);
 
-      $rootScope.$digest();
-      expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
-      expect(element.find('aa-new-step-info').hasClass('ng-show')).toBe(false);
+      this.$rootScope.$digest();
+      expect(this.view.find('aa-panel').hasClass('ng-show')).toBeFalsy();
+      expect(this.view.find('aa-new-step-info').hasClass('ng-show')).toBeFalsy();
     });
 
     it('should NOT display add step icons on aa-builder-actions', function () {
-      $rootScope.schedule = 'openHours';
-      $rootScope.index = 0;
-      element = $compile('<aa-builder-actions></aa-builder-actions>')($rootScope);
+      this.$rootScope.schedule = 'openHours';
+      this.$rootScope.index = 0;
+      this.view = this.$compile('<aa-builder-actions></aa-builder-actions>')(this.$rootScope);
 
-      $rootScope.$digest();
-      expect(element.find('aa-panel').hasClass('ng-show')).toBe(false);
-      expect(element.find('aa-panel-body').hasClass('ng-show')).toBe(false);
-      expect(element.find('aa-action-delete').hasClass('ng-show')).toBe(false);
+      this.$rootScope.$digest();
+      expect(this.view.find('aa-panel').hasClass('ng-show')).toBeFalsy();
+      expect(this.view.find('aa-panel-body').hasClass('ng-show')).toBeFalsy();
+      expect(this.view.find('aa-action-delete').hasClass('ng-show')).toBeFalsy();
     });
 
     // TODO:SIMPLETEMPLATE Should also verify that delete steps are not shown
@@ -653,144 +1067,146 @@ describe('Controller: AABuilderMainCtrl', function () {
 
   describe('populateUiModel', function () {
     it('should initialize new openHours, closedHours and holidays menus successfully if they do not exist', function () {
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = aCe;
-      $scope.vm.ui = {};
-      controller.populateUiModel();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecord = this.aCe;
+      this.$scope.vm.ui = {};
+      this.controller.populateUiModel();
 
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(true);
-      expect($scope.vm.ui.isHolidays).toEqual(true);
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isClosedHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isHolidays).toBeTruthy();
     });
 
     it('should build openHours, closedHours and holidays menus successfully from model', function () {
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = a3LaneCe;
-      $scope.vm.ui = {};
-      controller.populateUiModel();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecord = this.a3LaneCe;
+      this.$scope.vm.ui = {};
+      this.controller.populateUiModel();
 
-      expect($scope.vm.ui.isOpenHours).toEqual(true);
-      expect($scope.vm.ui.isClosedHours).toEqual(true);
-      expect($scope.vm.ui.isHolidays).toEqual(true);
+      expect(this.$scope.vm.ui.isOpenHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isClosedHours).toBeTruthy();
+      expect(this.$scope.vm.ui.isHolidays).toBeTruthy();
     });
   });
 
   describe('saveUiModel', function () {
     beforeEach(function () {
-      spyOn(AutoAttendantCeInfoModelService, 'setCeInfo');
-      spyOn(AutoAttendantCeMenuModelService, 'updateCombinedMenu');
-      spyOn(AutoAttendantCeMenuModelService, 'deleteCombinedMenu');
-      spyOn(AutoAttendantCeMenuModelService, 'newCeMenu').and.callThrough();
-      $scope.vm.aaModel = {};
-      $scope.vm.aaModel.aaRecord = {};
-      $scope.vm.ui = {};
-      $scope.vm.ui.ceInfo = ce2CeInfo(rawCeInfo);
-      $scope.vm.ui.builder = {};
-      $scope.vm.ui.builder.ceInfo_name = 'AAA2';
+      spyOn(this.AutoAttendantCeInfoModelService, 'setCeInfo');
+      spyOn(this.AutoAttendantCeMenuModelService, 'updateCombinedMenu');
+      spyOn(this.AutoAttendantCeMenuModelService, 'deleteCombinedMenu');
+      spyOn(this.AutoAttendantCeMenuModelService, 'newCeMenu').and.callThrough();
+      this.$scope.vm.aaModel = {};
+      this.$scope.vm.aaModel.aaRecord = {};
+      this.$scope.vm.ui = {};
+      this.$scope.vm.ui.ceInfo = this.ce2CeInfo();
+      this.$scope.vm.ui.builder = {};
+      this.$scope.vm.ui.builder.ceInfo_name = 'AAA2';
+      this.$scope.vm.ui.timeZone = this.timeZone;
     });
 
     it('should write UI CeInfo into model', function () {
-      controller.saveUiModel();
-
-      expect(AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, $scope.vm.ui.ceInfo);
+      this.controller.saveUiModel();
+      expect(this.AutoAttendantCeInfoModelService.setCeInfo).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, this.$scope.vm.ui.ceInfo);
     });
 
     it('should write openHours menu into model', function () {
-      $scope.vm.ui.isOpenHours = true;
-      $scope.vm.ui.isClosedHours = false;
-      $scope.vm.ui.isHolidayss = false;
-      $scope.vm.ui.openHours = {};
-      controller.saveUiModel();
+      this.$scope.vm.ui.isOpenHours = true;
+      this.$scope.vm.ui.isClosedHours = false;
+      this.$scope.vm.ui.isHolidayss = false;
+      this.$scope.vm.ui.openHours = {};
+      this.controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'openHours', $scope.vm.ui.openHours);
-      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
-      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'openHours', this.$scope.vm.ui.openHours);
+      expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours');
+      expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
 
     it('should write closedHours menu into model', function () {
-      $scope.vm.ui.isOpenHours = false;
-      $scope.vm.ui.isClosedHours = true;
-      $scope.vm.ui.isHolidays = false;
-      $scope.vm.ui.closedHours = {};
-      controller.saveUiModel();
+      this.$scope.vm.ui.isOpenHours = false;
+      this.$scope.vm.ui.isClosedHours = true;
+      this.$scope.vm.ui.isHolidays = false;
+      this.$scope.vm.ui.closedHours = {};
+      this.controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours', $scope.vm.ui.closedHours);
-      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours', this.$scope.vm.ui.closedHours);
+      expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
 
     it('should write holidays menu into model', function () {
-      $scope.vm.ui.isOpenHours = false;
-      $scope.vm.ui.isClosedHours = false;
-      $scope.vm.ui.isHolidays = true;
-      $scope.vm.ui.holidays = {};
-      $scope.vm.ui.holidaysValue = 'closedHours';
-      controller.saveUiModel();
+      this.$scope.vm.ui.isOpenHours = false;
+      this.$scope.vm.ui.isClosedHours = false;
+      this.$scope.vm.ui.isHolidays = true;
+      this.$scope.vm.ui.holidays = {};
+      this.$scope.vm.ui.holidaysValue = 'closedHours';
+      this.controller.saveUiModel();
 
-      expect(AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'holidays', $scope.vm.ui.holidays, $scope.vm.ui.holidaysValue);
-      expect(AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith($scope.vm.aaModel.aaRecord, 'closedHours');
+      expect(this.AutoAttendantCeMenuModelService.updateCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'holidays', this.$scope.vm.ui.holidays, this.$scope.vm.ui.holidaysValue);
+      expect(this.AutoAttendantCeMenuModelService.deleteCombinedMenu).toHaveBeenCalledWith(this.$scope.vm.aaModel.aaRecord, 'closedHours');
+      expect(this.$scope.vm.aaModel.aaRecord.assignedTimeZone).toEqual(this.$scope.vm.ui.timeZone.id);
     });
   });
 
   describe('setAANameFocus', function () {
     it('should set model aaNameFocus variable to true', function () {
-      $scope.vm.aaNameFocus = 'false';
-      controller.setAANameFocus();
+      this.$scope.vm.aaNameFocus = 'false';
+      this.controller.setAANameFocus();
 
-      expect($scope.vm.aaNameFocus).toEqual(true);
+      expect(this.$scope.vm.aaNameFocus).toBeTruthy();
     });
   });
 
   describe('removeNewStep', function () {
     it('should remove all New Step placeholders from a menu', function () {
+      var menuWithNewStep = this.combinedMenus['menuWithNewStep'];
+
       expect(menuWithNewStep.entries.length).toEqual(4);
-      controller.removeNewStep(menuWithNewStep);
+      this.controller.removeNewStep(menuWithNewStep);
       expect(menuWithNewStep.entries.length).toEqual(2);
     });
   });
 
   describe('save8To5Schedule', function () {
-    var createScheduleDefer;
-    var saveAARecordDefer;
-
     beforeEach(function () {
-      $scope.vm.ui = {};
-      $scope.vm.ui.ceInfo = {};
-      $scope.vm.ui.builder = {};
-      $scope.vm.ui.builder.ceInfo_name = 'AA';
+      this.$scope.vm.ui = {};
+      this.$scope.vm.ui.ceInfo = {};
+      this.$scope.vm.ui.builder = {};
+      this.$scope.vm.ui.builder.ceInfo_name = 'AA';
 
-      createScheduleDefer = $q.defer();
-      saveAARecordDefer = $q.defer();
-      spyOn(AAUiScheduleService, 'create8To5Schedule').and.returnValue(createScheduleDefer.promise);
-      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
-      spyOn(AANotificationService, 'errorResponse');
+      this.createScheduleDefer = this.$q.defer();
+      this.saveAARecordDefer = this.$q.defer();
+      spyOn(this.AAUiScheduleService, 'create8To5Schedule').and.returnValue(this.createScheduleDefer.promise);
+      spyOn(this.controller, 'saveAARecords').and.returnValue(this.saveAARecordDefer.promise);
+      spyOn(this.AANotificationService, 'errorResponse');
     });
 
     it('should return and resolve a promise when successfully save a 8to5 schedule', function () {
-      var saveSchedulePromise = controller.save8To5Schedule('AA');
+      var saveSchedulePromise = this.controller.save8To5Schedule('AA');
 
       var promiseResolved = false;
       saveSchedulePromise.then(function () {
         promiseResolved = true;
       });
-      createScheduleDefer.resolve('12345');
+      this.createScheduleDefer.resolve('12345');
 
-      expect(promiseResolved).toBe(false);
-      expect($scope.vm.ui.ceInfo.scheduleId).toBeUndefined();
+      expect(promiseResolved).toBeFalsy();
+      expect(this.$scope.vm.ui.ceInfo.scheduleId).toBeUndefined();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(promiseResolved).toBe(true);
-      expect($scope.vm.ui.ceInfo.scheduleId).toBe('12345');
+      expect(promiseResolved).toBeTruthy();
+      expect(this.$scope.vm.ui.ceInfo.scheduleId).toBe('12345');
     });
 
     it('should return and reject a promise when failed to save a 8to5 schedule', function () {
-      var saveSchedulePromise = controller.save8To5Schedule('AA');
+      var saveSchedulePromise = this.controller.save8To5Schedule('AA');
 
       var errorText = '';
       saveSchedulePromise.catch(function (error) {
         errorText = error;
       });
-      createScheduleDefer.reject({
+      this.createScheduleDefer.reject({
         name: 'AA',
         statusText: 'Server Error',
         status: '500',
@@ -798,184 +1214,172 @@ describe('Controller: AABuilderMainCtrl', function () {
 
       expect(errorText).toBe('');
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
       expect(errorText).toBe('SAVE_SCHEDULE_FAILURE');
     });
   });
 
   describe('saveCeDefinition', function () {
-    var saveAARecordDefer;
-
     beforeEach(function () {
-      $scope.vm.ui = {};
-      $scope.vm.ui.ceInfo = {};
-      $scope.vm.ui.builder = {};
-      $scope.vm.isAANameDefined = false;
+      this.$scope.vm.ui = {};
+      this.$scope.vm.ui.ceInfo = {};
+      this.$scope.vm.ui.builder = {};
+      this.$scope.vm.isAANameDefined = false;
 
-      saveAARecordDefer = $q.defer();
-      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
+      this.saveAARecordDefer = this.$q.defer();
+      spyOn(this.controller, 'saveAARecords').and.returnValue(this.saveAARecordDefer.promise);
     });
 
     it('should return and resolve a promise when successfully save a CE Definition', function () {
-      var saveCeDefinitionPromise = controller.saveCeDefinition();
+      var saveCeDefinitionPromise = this.controller.saveCeDefinition();
 
       var promiseResolved = false;
       saveCeDefinitionPromise.then(function () {
         promiseResolved = true;
       });
-      saveAARecordDefer.resolve();
+      this.saveAARecordDefer.resolve();
 
-      expect(promiseResolved).toBe(false);
-      expect($scope.vm.isAANameDefined).toBe(false);
+      expect(promiseResolved).toBeFalsy();
+      expect(this.$scope.vm.isAANameDefined).toBeFalsy();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(promiseResolved).toBe(true);
-      expect($scope.vm.isAANameDefined).toBe(true);
+      expect(promiseResolved).toBeTruthy();
+      expect(this.$scope.vm.isAANameDefined).toBeTruthy();
     });
 
     it('should return and reject a promise when failed to save a CE Definition', function () {
-      var saveCeDefinitionPromise = controller.saveCeDefinition();
+      var saveCeDefinitionPromise = this.controller.saveCeDefinition();
 
       var errorText = '';
       saveCeDefinitionPromise.catch(function (error) {
         errorText = error;
       });
-      saveAARecordDefer.reject();
+      this.saveAARecordDefer.reject();
 
       expect(errorText).toBe('');
-
-      $rootScope.$apply();
-
+      this.$rootScope.$apply();
       expect(errorText).toBe('CE_SAVE_FAILURE');
     });
   });
 
   describe('delete9To5Schedule', function () {
-    var deleteCalendarDefer;
-
     beforeEach(function () {
-      $scope.vm.ui = {};
-      $scope.vm.ui.ceInfo = {};
-      $scope.vm.ui.builder = {};
-      $scope.vm.isAANameDefined = false;
+      this.$scope.vm.ui = {};
+      this.$scope.vm.ui.ceInfo = {};
+      this.$scope.vm.ui.builder = {};
+      this.$scope.vm.isAANameDefined = false;
 
-      deleteCalendarDefer = $q.defer();
-      spyOn(AACalendarService, 'deleteCalendar').and.returnValue(deleteCalendarDefer.promise);
-      spyOn(AANotificationService, 'error');
-      spyOn(AANotificationService, 'errorResponse');
+      this.deleteCalendarDefer = this.$q.defer();
+      spyOn(this.AACalendarService, 'deleteCalendar').and.returnValue(this.deleteCalendarDefer.promise);
+      spyOn(this.AANotificationService, 'error');
+      spyOn(this.AANotificationService, 'errorResponse');
     });
 
     it('should delete the predefined 9 to 5 schedule when there is a CE_SAVE_FAILURE', function () {
-      controller.delete8To5Schedule('CE_SAVE_FAILURE');
-      deleteCalendarDefer.resolve();
+      this.controller.delete8To5Schedule('CE_SAVE_FAILURE');
+      this.deleteCalendarDefer.resolve();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(AANotificationService.error).not.toHaveBeenCalled();
+      expect(this.AACalendarService.deleteCalendar).toHaveBeenCalled();
+      expect(this.AANotificationService.error).not.toHaveBeenCalled();
     });
 
     it('should display an error info when failed to delete a calendar', function () {
-      controller.delete8To5Schedule('CE_SAVE_FAILURE');
-      deleteCalendarDefer.reject();
+      this.controller.delete8To5Schedule('CE_SAVE_FAILURE');
+      this.deleteCalendarDefer.reject();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(AACalendarService.deleteCalendar).toHaveBeenCalled();
-      expect(AANotificationService.errorResponse).toHaveBeenCalled();
+      expect(this.AACalendarService.deleteCalendar).toHaveBeenCalled();
+      expect(this.AANotificationService.errorResponse).toHaveBeenCalled();
     });
 
     it('should do nothing when there is a SAVE_SCHEDULE_FAILURE', function () {
-      controller.delete8To5Schedule('SAVE_SCHEDULE_FAILURE');
-
-      $rootScope.$apply();
-
-      expect(AACalendarService.deleteCalendar).not.toHaveBeenCalled();
+      this.controller.delete8To5Schedule('SAVE_SCHEDULE_FAILURE');
+      this.$rootScope.$apply();
+      expect(this.AACalendarService.deleteCalendar).not.toHaveBeenCalled();
     });
   });
 
   describe('Received AANameCreated Event', function () {
-    var saveAARecordDefer;
-    var save8To5ScheduleDefer;
-    var saveCeDefinitionDefer;
-
     beforeEach(function () {
-      $scope.vm.ui = {};
-      $scope.vm.ui.ceInfo = {};
-      $scope.vm.ui.builder = {};
-      $scope.vm.ui.aaTemplate = 'BusinessHours';
-      $scope.vm.ui.builder.ceInfo_name = 'AA';
-      $scope.vm.isAANameDefined = false;
+      this.$scope.vm.ui = {};
+      this.$scope.vm.ui.ceInfo = {};
+      this.$scope.vm.ui.builder = {};
+      this.$scope.vm.ui.aaTemplate = 'BusinessHours';
+      this.$scope.vm.ui.builder.ceInfo_name = 'AA';
+      this.$scope.vm.isAANameDefined = false;
 
-      saveAARecordDefer = $q.defer();
-      save8To5ScheduleDefer = $q.defer();
-      saveCeDefinitionDefer = $q.defer();
+      this.saveAARecordDefer = this.$q.defer();
+      this.save8To5ScheduleDefer = this.$q.defer();
+      this.saveCeDefinitionDefer = this.$q.defer();
 
-      spyOn(controller, 'saveAARecords').and.returnValue(saveAARecordDefer.promise);
+      spyOn(this.controller, 'saveAARecords').and.returnValue(this.saveAARecordDefer.promise);
 
-      spyOn(controller, 'save8To5Schedule').and.returnValue(save8To5ScheduleDefer.promise);
-      spyOn(controller, 'saveCeDefinition').and.returnValue(saveCeDefinitionDefer.promise);
-      spyOn(controller, 'delete8To5Schedule');
+      spyOn(this.controller, 'save8To5Schedule').and.returnValue(this.save8To5ScheduleDefer.promise);
+      spyOn(this.controller, 'saveCeDefinition').and.returnValue(this.saveCeDefinitionDefer.promise);
+      spyOn(this.controller, 'delete8To5Schedule');
     });
 
     it('should save a 8to5 schedule and save current CE definition for BusinessHours creation.', function () {
-      $rootScope.$broadcast('AANameCreated');
-      save8To5ScheduleDefer.resolve();
-      saveCeDefinitionDefer.resolve();
+      this.$rootScope.$broadcast('AANameCreated');
+      this.save8To5ScheduleDefer.resolve();
+      this.saveCeDefinitionDefer.resolve();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(controller.save8To5Schedule).toHaveBeenCalled();
-      expect(controller.saveCeDefinition).toHaveBeenCalled();
-      expect(controller.delete8To5Schedule).not.toHaveBeenCalled();
+      expect(this.controller.save8To5Schedule).toHaveBeenCalled();
+      expect(this.controller.saveCeDefinition).toHaveBeenCalled();
+      expect(this.controller.delete8To5Schedule).not.toHaveBeenCalled();
     });
 
     it('should invoke saveAARecords for Basic template creation', function () {
-      $scope.vm.ui.aaTemplate = 'Basic';
-      $rootScope.$broadcast('AANameCreated');
-      saveAARecordDefer.resolve();
+      this.$scope.vm.ui.aaTemplate = 'Basic';
+      this.$rootScope.$broadcast('AANameCreated');
+      this.saveAARecordDefer.resolve();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(controller.saveAARecords).toHaveBeenCalled();
-      expect($scope.vm.isAANameDefined).toBe(true);
+      expect(this.controller.saveAARecords).toHaveBeenCalled();
+      expect(this.$scope.vm.isAANameDefined).toBeTruthy();
     });
 
     it('should invoke saveAARecords for Custom template creation', function () {
-      $scope.vm.ui.aaTemplate = '';
-      $rootScope.$broadcast('AANameCreated');
-      saveAARecordDefer.resolve();
+      this.$scope.vm.ui.aaTemplate = '';
+      this.$rootScope.$broadcast('AANameCreated');
+      this.saveAARecordDefer.resolve();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(controller.saveAARecords).toHaveBeenCalled();
-      expect($scope.vm.isAANameDefined).toBe(true);
+      expect(this.controller.saveAARecords).toHaveBeenCalled();
+      expect(this.$scope.vm.isAANameDefined).toBeTruthy();
     });
 
     it('should undo the 8to5 schedule save if save current CE definition failed.', function () {
-      $rootScope.$broadcast('AANameCreated');
-      save8To5ScheduleDefer.resolve();
-      saveCeDefinitionDefer.reject();
+      this.$rootScope.$broadcast('AANameCreated');
+      this.save8To5ScheduleDefer.resolve();
+      this.saveCeDefinitionDefer.reject();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(controller.save8To5Schedule).toHaveBeenCalled();
-      expect(controller.saveCeDefinition).toHaveBeenCalled();
-      expect(controller.delete8To5Schedule).toHaveBeenCalled();
+      expect(this.controller.save8To5Schedule).toHaveBeenCalled();
+      expect(this.controller.saveCeDefinition).toHaveBeenCalled();
+      expect(this.controller.delete8To5Schedule).toHaveBeenCalled();
     });
 
     it('should invoke delete8To5Schedule but do nothing if fail to save the 9 to 5 schedule.', function () {
-      $rootScope.$broadcast('AANameCreated');
-      save8To5ScheduleDefer.reject();
+      this.$rootScope.$broadcast('AANameCreated');
+      this.save8To5ScheduleDefer.reject();
 
-      $rootScope.$apply();
+      this.$rootScope.$apply();
 
-      expect(controller.save8To5Schedule).toHaveBeenCalled();
-      expect(controller.saveCeDefinition).not.toHaveBeenCalled();
-      expect(controller.delete8To5Schedule).toHaveBeenCalled();
+      expect(this.controller.save8To5Schedule).toHaveBeenCalled();
+      expect(this.controller.saveCeDefinition).not.toHaveBeenCalled();
+      expect(this.controller.delete8To5Schedule).toHaveBeenCalled();
     });
   });
 });

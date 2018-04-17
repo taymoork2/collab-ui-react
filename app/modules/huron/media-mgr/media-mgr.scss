@@ -1,7 +1,8 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 media-mgr {
 
@@ -27,13 +28,22 @@ media-mgr {
     min-height: 0;
   }
 
-  .cs-card.large {
-    width: 80%;
-    margin-top: 6rem;
-    border: 1px dashed $gray-light-1;
-    border-radius: 8px;
+  .download-media-card {
     background-color: $gray-light-4;
     align-self: center;
+    margin: 0;
+    padding: 0.5rem;
+
+    .label-download {
+      font-family: $brand-font-light;
+      font-size: 16px;
+      color: $gray-dark-3;
+      align-self: center;
+    }
+
+    .icon {
+      vertical-align: middle;
+    }
   }
 
   .mb-nav {
@@ -88,6 +98,19 @@ media-mgr {
     padding-right: 0;
     overflow-y: auto;
     min-height: 0;
+
+    .cs-card.cs-card--large {
+      width: 80%;
+      margin-top: 6rem;
+      border: 1px dashed $gray-light-1;
+      border-radius: 8px;
+      background-color: $gray-light-4;
+      align-self: center;
+    }
+
+    .icon-spinner {
+      color: $color-primary-base;
+    }
   }
 
   .mb-panel-left {
@@ -103,10 +126,9 @@ media-mgr {
 
     .mb-panel-header {
       display: flex;
-      justify-content: space-between;
-      font-family: 'CiscoSansTT Extra Light';
-      text-align: end;
-      margin: .75rem .75rem .5rem .5rem;
+      flex-direction: column;
+      vertical-align: middle;
+      margin: .5rem .75rem 1rem .5rem;
     }
 
     .nowrap {
@@ -115,6 +137,23 @@ media-mgr {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+  }
+
+  .searchbox .searchinput {
+    border: none;
+    background: none;
+    height: 1.5rem;
+  }
+
+  .searchfilter {
+    border: none;
+    background: none;
+    width: 100%;
+  }
+
+  .icon-search {
+    border: none;
+    top: .25rem;
   }
 
   .mb-panel-right {
@@ -154,7 +193,7 @@ media-mgr {
 
   .mb-panel-header {
     display: flex;
-    margin: 1.5rem auto 1.75rem;
+    margin: 1.5rem auto 2rem;
     justify-content: center;
   }
 
@@ -173,13 +212,13 @@ media-mgr {
   }
 
   .mb-title {
-    font-family: 'CiscoSansTT Extra Light';
+    font-family: $brand-font-extra-light;
     font-size: 26px;
     color: $gray-dark-2;
   }
 
   .mb-desc {
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-dark-1;
     margin-bottom: 1.5rem;
@@ -218,28 +257,22 @@ media-mgr {
       outline: none !important;
       box-shadow: none !important;
     }
-  }
 
-  .searchbox .searchinput {
-    margin: 0;
-    border: none;
-  }
+    .icon-spinner {
+      color: $color-primary-base;
+    }
 
-  .searchfilter {
-    margin: 0;
-    border: none;
-    width: 100%;
   }
 
   .media-text {
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-dark-2;
     margin: 0;
   }
 
   .media-subtext {
-    font-family: 'CiscoSansTT';
+    font-family: $brand-font-regular;
     font-size: 12px;
     color: $gray-light-1;
     margin: 0;
@@ -248,8 +281,7 @@ media-mgr {
 
   .icon-msg-alignment {
     vertical-align: middle;
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
+    margin: 0rem 0.25rem 0rem 0rem;
   }
 
   .icon-trash {
@@ -264,9 +296,27 @@ media-mgr {
     color: $gray-light-1;
   }
 
-  .icon-spinner {
-    color: $color-primary-base;
-    margin: 0;
+  .icon-download {
+    background: none;
+    color: $gray-base;
+    &:disabled {
+      background: none;
+      color: $gray-light-2;
+    }
+  }
+
+  .btn--none {
+    background: none;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    &:disabled {
+      background: none;
+    }
+  }
+
+  .btn--none.ng-animate {
+    transition: 0s none;
+    animation: 0s none;
   }
 
   .icon-error {
@@ -278,42 +328,44 @@ media-mgr {
     color: $color-primary-base;
     text-align: right;
     margin: 0;
+    padding: 0;
     &:disabled {
       color: $color-primary-lighter;
       margin: 0;
     }
   }
 
-  .progressbar-label {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-progress {
-    font-family: 'CiscoSansTT Light';
-    font-size: 14px;
-    color: $gray-dark-2;
-  }
-
-  .progressbar-sublabel {
-    color: $gray-base;
-  }
-
   .progress-bar {
     margin: 6rem;
+
+    .progressbar-icon-alignment {
+      display: flex;
+    }
+
+    .progressbar-content-alignment {
+      flex-grow: 1;
+    }
+
+    .progressbar-label {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-progress {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-dark-2;
+    }
+
+    .progressbar-sublabel {
+      color: $gray-base;
+    }
+
     .icon-exit {
-      align-self: center;
+      align-self: flex-end;
       margin-left: 0.5rem;
     }
-  }
-
-  .progressbar-icon-alignment {
-    display: flex;
-  }
-
-  .progressbar-content-alignment {
-    flex-grow: 1;
   }
 
   .centered {
@@ -323,5 +375,15 @@ media-mgr {
 
   .btn {
     height: 2.25rem;
+  }
+
+  .text-right.nowrap {
+    padding-left: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .text-left.nowrap {
+    padding-right: 0.25rem;
+    white-space: nowrap;
   }
 }

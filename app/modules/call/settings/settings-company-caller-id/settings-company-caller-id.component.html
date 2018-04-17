@@ -1,16 +1,15 @@
 <div ng-form="companyCallerIdForm">
-  <label class="control-label">{{$ctrl.label}}</label>
+  <label class="sub-section__label" translate="companyCallerId.companyCallerId"></label>
   <cs-toggle-switch
     ng-model="$ctrl.companyCallerIdEnabled"
     toggle-id="companyCallerIdToggle"
     name="companyCallerIdToggle"
     size="small"
-    cs-change="$ctrl.onCompanyCallerIdToggled(toggleValue)">
+    cs-change="$ctrl.onCompanyCallerIdToggled(toggleValue)"
+    cs-aria-label="{{::'companyCallerId.companyCallerId' | translate}}">
   </cs-toggle-switch>
   <div ng-if="$ctrl.companyCallerIdEnabled">
-    <input
-      cs-input
-      type="text"
+    <input cs-input type="text"
       id="callerIdName"
       name="callerIdName"
       ng-model="$ctrl.companyCallerId.name"

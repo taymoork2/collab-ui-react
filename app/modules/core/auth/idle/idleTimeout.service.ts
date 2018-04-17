@@ -1,5 +1,6 @@
-import { WindowService } from 'modules/core/window';
+import { WindowEventService } from 'modules/core/window';
 import { StorageKeys } from 'modules/core/storage/storage.keys';
+import { Config } from 'modules/core/config/config';
 
 export class IdleTimeoutService {
     //events that set user as active
@@ -9,8 +10,7 @@ export class IdleTimeoutService {
   private static readonly LOCAL_STORAGE_DEBOUNCE_INTERVAL = 60; //seconds
   private idleSetter;
   private logoutEvent = '';
-  private static readonly LOGIN_EVENT = 'LOGIN';
-  private keepAliveEvent = '';
+  private static readonly LOGIN_EVENT = 'Core::loginCompleted';
   private keepAliveDeregistrer;
   private isInitialized = false;
 
@@ -21,13 +21,12 @@ export class IdleTimeoutService {
     private $rootScope: ng.IRootScopeService,
     private $window: ng.IWindowService,
     private Auth,
-    private Config,
+    private Config: Config,
     private Log,
     private LocalStorage,
-    private WindowService: WindowService,
+    private WindowEventService: WindowEventService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
-    this.keepAliveEvent = this.Config.idleTabKeepAliveEvent;
 
   }
 
@@ -104,6 +103,7 @@ export class IdleTimeoutService {
       this.LocalStorage.remove(StorageKeys.LOGIN_MESSAGE);
 
       if (!this.isInitialized) {
+        this.isInitialized = true;
 
         this.Log.debug('IDLE TIMEOUT SERVICE: Wiring up events');
         /* This is for long running  import and export operations to keep from timing out this event is emitted by:
@@ -121,7 +121,7 @@ export class IdleTimeoutService {
           angular.element(this.$document).bind(EventName, throttled);
         });
         //listen to storage
-        this.WindowService.registerEventListener('storage', this.checkActive.bind(this));
+        this.WindowEventService.registerEventListener('storage', this.checkActive.bind(this));
       }
 
     });

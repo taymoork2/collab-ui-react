@@ -1,13 +1,16 @@
 require('./_fieldsets-sidepanel.scss');
 
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
+
 (function () {
   'use strict';
 
   angular.module('Context')
     .component('contextFieldsetsSidepanel', {
       controller: ContextFieldsetsSidepanelCtrl,
-      templateUrl: 'modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel.html',
+      template: require('modules/context/fieldsets/sidepanel/hybrid-context-fieldsets-sidepanel.html'),
       bindings: {
+        adminAuthorizationStatus: '<',
         fieldset: '<',
         process: '<',
         callback: '<',
@@ -17,6 +20,7 @@ require('./_fieldsets-sidepanel.scss');
   /* @ngInject */
   function ContextFieldsetsSidepanelCtrl(Analytics, ContextFieldsetsService, Notification, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.inUse = true;
     vm.inUseTooltipMessage = $translate.instant('context.dictionary.fieldsetPage.notInUseTooltip');
     vm.hasDescription = false;
@@ -69,11 +73,11 @@ require('./_fieldsets-sidepanel.scss');
     };
 
     vm.isEditable = function () {
-      return (!vm.publiclyAccessible);
+      return (!vm.publiclyAccessible && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.isDeletable = function () {
-      return (!vm.publiclyAccessible && !vm.inUse);
+      return (!vm.publiclyAccessible && !vm.inUse && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.openDeleteConfirmDialog = function () {
@@ -93,6 +97,8 @@ require('./_fieldsets-sidepanel.scss');
           Notification.error('context.dictionary.fieldsetPage.fieldsetDeleteFailure');
           Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELDSET_FAILURE);
         });
+      }).catch(function () {
+        Notification.error('notifications.genericError');
       });
     };
   }

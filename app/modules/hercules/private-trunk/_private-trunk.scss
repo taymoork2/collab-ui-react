@@ -1,14 +1,8 @@
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/functions/core';
 @import './private-trunk-setup/_private-trunk-setup';
 .private-trunk {
-  .padding-p {
-    padding-right: 4.5rem;
-  }
-  .padding-p-done {
-    padding-right: 6rem;
-  }
   .li-margin-left {
     margin-left: 3rem;
   }
@@ -18,6 +12,16 @@
 
   .padding-labels {
     padding-left: 1.5rem;
+  }
+
+  .sip-details {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    margin-top: -0.75rem;
+
+    p, ul {
+      font-size: 0.75rem;
+    }
   }
 
   .cert-word-wrap {
@@ -131,7 +135,6 @@
     color: $gray-base;
     display: flex;
     flex-direction: column;
-    flex-grow: column;
     flex: 1 1 auto;
 
     &.multibox-margin {

@@ -196,7 +196,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should clear numbers on pending error', function () {
     PstnService.listPendingNumbers.and.returnValue($q.reject({}));
-    ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers().catch(_.noop);
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual([]);
@@ -218,7 +218,7 @@ describe('Service: ExternalNumberService', function () {
 
   it('should clear numbers on external number error', function () {
     ExternalNumberPool.getExternalNumbers.and.returnValue($q.reject({}));
-    ExternalNumberService.refreshNumbers();
+    ExternalNumberService.refreshNumbers().catch(_.noop);
 
     $rootScope.$apply();
     expect(ExternalNumberService.getAllNumbers()).toEqual([]);

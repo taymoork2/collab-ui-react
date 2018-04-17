@@ -1,0 +1,17 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.pro-pack-icon {
+  .pro-pack {
+    fill: $color-blue;
+     :hover>& {
+      display: none;
+    }
+  }
+  .pro-pack-active {
+    fill: $color-blue;
+    display: none;
+     :hover>& {
+      display: block;
+    }
+  }
+}

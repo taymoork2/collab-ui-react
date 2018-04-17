@@ -1,0 +1,8 @@
+@import '~@collabui/collab-ui/scss/tools/functions/core';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.settings-voicemail-attachment {
+  .indent {
+    padding-left: vr-adjust(32px);
+  }
+}

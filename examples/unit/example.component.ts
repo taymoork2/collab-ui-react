@@ -3,9 +3,9 @@ import { ExampleService } from './example.service';
 class Example implements ng.IComponentController {
   public count: number = 0;
 
-  private error: boolean = false;
-  private loading: boolean = false;
-  private doneSomething: boolean = false;
+  public error: boolean = false;
+  public loading: boolean = false;
+  public doneSomething: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -37,12 +37,7 @@ class Example implements ng.IComponentController {
   }
 }
 
-// This is for example only - this is already dynamically required in atlas modules
-// templateUrl can be set to string path to html
-// eg. public templateUrl = 'modules/<path>/<to>/<file>.html';
-const templateUrl = require('!ngtemplate?module=atlas.templates!raw!./example.html');
-
 export class ExampleComponent implements ng.IComponentOptions {
   public controller = Example;
-  public templateUrl = templateUrl;
+  public template = require('./example.html');
 }

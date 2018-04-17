@@ -1,16 +1,30 @@
-<div class="meeting-settings">
-  <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
-  <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
-  <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingSites">
-    <p class="existing-sites">{{site.name}}.webex.com</p>
-    <input
-      cs-input
-      type="checkbox"
-      id="existing-trial{{$index}}"
-      name="existing-trial{{$index}}"
-      ng-model="site.keepExistingSite"
-      ng-init="meetingCtrl.addOrRemoveExistingWebExSite(site)"
-      ng-change="meetingCtrl.addOrRemoveExistingWebExSite(site)"
-      cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
+<div class="meeting-settings add-webex-site">
+  <p translate="firstTimeWizard.meetingSettingsDescription"></p>
+  <div ng-if="!meetingCtrl.hasTrialSites">
+    <h4 class="element-spacing" translate="firstTimeWizard.haveExistingWebExSite"></h4>
+    <p class="element-spacing" translate="firstTimeWizard.existingWebExSiteDescription"></p>
   </div>
+  <div ng-if="meetingCtrl.hasTrialSites">
+    <h4 class="element-spacing" translate="firstTimeWizard.keepExistingWebexSites"></h4>
+    <p class="element-spacing" translate="firstTimeWizard.existingWebExTrialSites"></p>
+    <div class="keep-existing-trials element-spacing" ng-repeat="site in meetingCtrl.existingTrialSites">
+      <p class="existing-sites">{{site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></p>
+      <input
+        cs-input
+        type="checkbox"
+        id="existing-trial{{$index}}"
+        name="existing-trial{{$index}}"
+        ng-model="site.keepExistingSite"
+        ng-init="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+        ng-change="meetingCtrl.addOrRemoveExistingWebExSite(site)"
+        cs-input-label="{{::'firstTimeWizard.yesKeepSite' | translate}}">
+    </div>
+  </div>
+  <webex-site-transfer
+    transfer-site-url="meetingCtrl.transferSiteUrl"
+    transfer-site-code="meetingCtrl.transferSiteCode"
+    on-sites-received="meetingCtrl.addTransferredSites(sites, transferCode, isValid, transferSiteUrl)"
+    on-validation-status-change="meetingCtrl.setNextDisableStatus(!isValid)"
+    on-send-tracking="meetingCtrl.onSendTracking(event, properties)">
+  </webex-site-transfer>
 </div>

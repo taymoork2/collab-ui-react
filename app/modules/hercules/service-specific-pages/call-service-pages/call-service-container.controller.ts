@@ -3,7 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class CallServiceContainerController extends ExpresswayContainerController {
-  public tabs: any = [{
+  public tabs = [{
     title: this.$translate.instant('common.resources'),
     state: 'call-service.list',
   }, {
@@ -15,11 +15,14 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
     resolve: {
       connectorType: () => 'c_ucmc',
       serviceId: () => 'squared-fusion-uc',
-      firstTimeSetup: false,
+      options: {
+        firstTimeSetup: false,
+        hasCapacityFeatureToggle: this.hasCapacityFeatureToggle,
+      },
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
-    templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+    template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     type: 'small',
   };
 
@@ -28,22 +31,27 @@ export class CallServiceContainerController extends ExpresswayContainerControlle
   /* @ngInject */
   constructor(
     $modal,
-    $scope: ng.IScope,
     $state: ng.ui.IStateService,
+    $timeout: ng.ITimeoutService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
-    ClusterService,
-    hasNodesViewFeatureToggle,
     Notification: Notification,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
+    private hasCapacityFeatureToggle,
   ) {
-    super($modal, $scope, $state, ClusterService, hasNodesViewFeatureToggle, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
+    super($modal, $state, $timeout, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['squared-fusion-uc'], 'c_ucmc');
     this.addConnectIfEnabled();
     this.clusterId = this.$stateParams['clusterId'];
     if (this.$stateParams['backState']) {
       this.backState = this.$stateParams['backState'];
+    }
+    if (this.hasCapacityFeatureToggle) {
+      this.tabs.push({
+        title: this.$translate.instant('common.users'),
+        state: 'call-service.users',
+      });
     }
   }
 

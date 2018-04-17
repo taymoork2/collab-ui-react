@@ -1,0 +1,15 @@
+## Notice to all contributors:
+
+There have been a couple changes to unit test execution:
+
+- code coverage is disabled by default
+  - can be enabled with the `--env.coverage` flag
+  - coverage instrumentation is resource-intensive
+  - most users don't check coverage on every test run, but can still enable when desired
+  - coverage is still generated and calculated for Jenkins builds
+
+- karma default browser changed to headless Chrome
+  - behavior more aligned with full Chrome browser used in debug mode
+  - executes tests faster and is more responsive
+  - can be remotely debugged with chrome://inspect
+  - if needed, can fallback to PhantomJS with `--phantomjs` flag

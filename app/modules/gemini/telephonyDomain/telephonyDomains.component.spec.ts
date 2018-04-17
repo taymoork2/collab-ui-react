@@ -1,8 +1,8 @@
 import testModule from './index';
 
 describe('Component: gmTelephonyDomains', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
     this.telephonyDomains = [
       {
         domainName: 'Test12',
@@ -11,7 +11,6 @@ describe('Component: gmTelephonyDomains', () => {
         backupBridgeName: null,
         telephonyDomainSites: [],
         status: '',
-        webDomainName: 'TestWebDomaindHQrq',
       },
       {
         domainName: 'CCA_Atlas-Test1_hmwd98_case9',
@@ -20,7 +19,6 @@ describe('Component: gmTelephonyDomains', () => {
         backupBridgeName: 'thm99',
         telephonyDomainSites: [],
         status: 'P',
-        webDomainName: 'TestWebDomainghtUJ',
       },
       {
         domainName: 'CCA_Atlas-Test1_ws_test112233',
@@ -29,7 +27,6 @@ describe('Component: gmTelephonyDomains', () => {
         backupBridgeName: null,
         telephonyDomainSites: [],
         status: 'A',
-        webDomainName: 'TestWebDomainlrwcx',
       },
     ];
 
@@ -61,7 +58,6 @@ describe('Component: gmTelephonyDomains', () => {
   function initSpies() {
     spyOn(this.$state, 'go');
     spyOn(this.Notification, 'success');
-    spyOn(this.Notification, 'error');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
     spyOn(this.TelephonyDomainService, 'getTelephonyDomains').and.returnValue(this.$q.resolve());
@@ -79,26 +75,18 @@ describe('Component: gmTelephonyDomains', () => {
 
   describe('$onInit', () => {
     it('should render ui-grid from gridOptions', function () {
-      const mockData = this.preData.common;
-      mockData.content.data.body = this.telephonyDomains;
-      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
+      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(this.telephonyDomains));
       initComponent.call(this);
       this.$scope.$emit('tdUpdated', true);
       expect(this.controller.gridOptions).toBeDefined();
     });
 
     it('should notify in message for non 200 http status', function() {
-      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomains.and.callFake(() => {
+        return this.$q.reject({ status: 404 });
+      });
       initComponent.call(this);
       expect(this.Notification.errorResponse).toHaveBeenCalled();
-    });
-
-    it('should notify in message for non 0 error returnCode', function() {
-      const mockData = this.preData.common;
-      mockData.content.data.returnCode = 100;
-      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
-      initComponent.call(this);
-      expect(this.Notification.error).toHaveBeenCalled();
     });
 
     it('should call $state.go', function () {
@@ -124,10 +112,7 @@ describe('Component: gmTelephonyDomains', () => {
 
   describe('filter', () => {
     it('should filter for search', function() {
-      const mockData = this.preData.common;
-      mockData.content.data.returnCode = 0;
-      mockData.content.data.body = this.telephonyDomains;
-      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(mockData));
+      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.resolve(this.telephonyDomains));
 
       initComponent.call(this);
       this.controller.filterList('Test12');
@@ -139,10 +124,8 @@ describe('Component: gmTelephonyDomains', () => {
   describe('export telephony Domains list', () => {
     it('should show notification when export TD list successfully', function() {
       initComponent.call(this);
-      const mockData = this.preData.common;
 
-      mockData.content.data.body = this.telephonyDomains;
-      this.TelephonyDomainService.telephonyDomainsExportCSV.and.returnValue(this.$q.resolve(mockData));
+      this.TelephonyDomainService.telephonyDomainsExportCSV.and.returnValue(this.$q.resolve(this.telephonyDomains));
       this.controller.exportCSV();
       this.$scope.$apply();
       this.$timeout.flush();

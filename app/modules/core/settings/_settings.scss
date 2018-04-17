@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 @import 'sipDomain/_sip-domain-settings';
 @import 'dirsync/_dirSync';
@@ -46,6 +46,14 @@
       margin-top: -1.25rem;
     }
 
+    .sparkAssistant-subsection {
+      margin-top: -1.5rem;
+    }
+
+    .margin-set {
+      margin-top: 1.5rem;
+    }
+
     #domainManagement {
       .verify-btn {
         top: 0;
@@ -72,9 +80,10 @@
   }
 
   .save-cancel-footer {
-    width: calc(100% - 100px);
+    width: 100%;
     position: fixed;
-    top: calc(100vh - 60px);
+    bottom: 0;
+    left: 0;
     background-color: $gray-light-4;
     @include vr-spacing(ph, 2);
     @include vr-spacing(pv, 1);

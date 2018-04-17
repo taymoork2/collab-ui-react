@@ -1,20 +1,21 @@
 describe('HybridServicesHostDetailsController: ', function () {
-  var $controller, $modal, $rootScope, $scope, $stateParams, controller, ClusterService, HybridServicesClusterStatesService;
+  var $controller, $modal, $q, $rootScope, $scope, $stateParams, controller, HybridServicesClusterService, HybridServicesClusterStatesService;
 
   beforeEach(angular.mock.module('Hercules'));
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$modal_, _$stateParams_, _ClusterService_, _HybridServicesClusterStatesService_) {
+  beforeEach(inject(function (_$rootScope_, _$q_, _$controller_, _$modal_, _$stateParams_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_) {
     $rootScope = _$rootScope_;
+    $q = _$q_;
     $scope = $rootScope.$new();
     $stateParams = _$stateParams_;
     $controller = _$controller_;
     $modal = _$modal_;
-    ClusterService = _ClusterService_;
+    HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
 
     var mockResult = {
+      id: 'abc123',
       connectors: [
         {
-          clusterId: 'abc123',
           hostSerial: '123456',
           connectorType: 'hds_app',
           hostname: 'hds.abc.com',
@@ -23,7 +24,7 @@ describe('HybridServicesHostDetailsController: ', function () {
       ],
       name: 'testCluster',
     };
-    spyOn(ClusterService, 'getCluster').and.returnValue(mockResult);
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([mockResult]));
     spyOn($rootScope, '$broadcast').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
       result: {
@@ -50,9 +51,8 @@ describe('HybridServicesHostDetailsController: ', function () {
         },
       },
       $stateParams: $stateParams,
-      ClusterService: ClusterService,
+      HybridServicesClusterService: HybridServicesClusterService,
       HybridServicesClusterStatesService: HybridServicesClusterStatesService,
-      hasNodesViewFeatureToggle: false,
     });
     $scope.$apply();
   }));
@@ -61,7 +61,7 @@ describe('HybridServicesHostDetailsController: ', function () {
     var correctReassignHostDialogOptions = {
       controller: 'ReassignClusterControllerV2',
       controllerAs: 'reassignCluster',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/reassign-node-to-different-cluster/reassign-cluster-dialog.html'),
     };
     controller.showReassignHostDialog();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctReassignHostDialogOptions));
@@ -71,7 +71,7 @@ describe('HybridServicesHostDetailsController: ', function () {
     var correctDeregisterHostDialogOptions = {
       controller: 'HostDeregisterControllerV2',
       controllerAs: 'hostDeregister',
-      templateUrl: 'modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html',
+      template: require('modules/mediafusion/media-service-v2/side-panel/deregister-node/host-deregister-dialog.html'),
     };
     controller.showDeregisterHostDialog();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeregisterHostDialogOptions));
@@ -79,24 +79,11 @@ describe('HybridServicesHostDetailsController: ', function () {
 
   it('should open the correct modal window when deleteExpressway() is called', function () {
     var correctDeleteExpresswayNodeDialogOptions = {
-      templateUrl: 'modules/hercules/cluster-sidepanel/host-details/confirm-deleteHost-dialog.html',
+      template: require('modules/hercules/hybrid-services-nodes-page/delete-expressway-host-modal/confirm-deleteHost-dialog.html'),
       controller: 'ConfirmDeleteHostController',
       controllerAs: 'confirmDeleteHostDialog',
     };
     controller.deleteExpressway();
     expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining(correctDeleteExpresswayNodeDialogOptions));
-  });
-
-  it('should support HDS connector parsing', function () {
-    expect(controller.host.connectorType).toBe('hds_app');
-    expect(controller.host.state).toBe('running');
-    expect(controller.actions.length).toBe(2);
-  });
-
-  it('should support HDS connector offline function', function () {
-    controller.host = {};
-    controller.host.state = 'offline';
-    controller.host.connectorType = 'hds_app';
-    expect(controller.actions.length).toBe(2);
   });
 });

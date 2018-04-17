@@ -32,7 +32,7 @@ class DialingCtrl implements ng.IComponentController {
 
 export class DialingComponent implements ng.IComponentOptions {
   public controller = DialingCtrl;
-  public templateUrl = 'modules/huron/dialing/dialing.html';
+  public template = require('modules/huron/dialing/dialing.html');
   public bindings = {
     watcher: '<',
     selected: '<',

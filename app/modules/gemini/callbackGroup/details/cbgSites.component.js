@@ -5,11 +5,11 @@
     .module('Gemini')
     .component('cbgSites', {
       controller: cbgSitesCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgSites.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgSites.tpl.html'),
     });
 
   /* @ngInject */
-  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, Notification, PreviousState, gemService) {
+  function cbgSitesCtrl($state, $modal, $rootScope, $stateParams, $translate, cbgService, PreviousState, Notification) {
     var vm = this;
     vm.onClick = onClick;
     vm.$onInit = $onInit;
@@ -26,6 +26,11 @@
           var isSelf = (obj.ccaGroupId === vm.currCbg.ccaGroupId); // don't move to self
           return isSelf || !obj.groupId;
         });
+
+        _.forEach(vm.sites, function (item) {
+          var resArr = _.words(item.siteUrl, /^[a-z][\w]+/g);
+          item.globalSite = 'https://' + _.trim(item.siteUrl) + '/' + _.trim(resArr[0]) + '/globalcallin.php';
+        });
       }
       $state.current.data.displayName = $translate.instant('gemini.cbgs.field.totalSites');
     }
@@ -33,13 +38,15 @@
     function onClick(site, toCbg) {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html',
+        template: require('modules/gemini/callbackGroup/details/moveSiteConfirm.tpl.html'),
       }).result.then(function () {
         moveSite(site, toCbg);
       });
     }
 
     function moveSite(site, toCbg) {
+      vm.showLoading = true;
+
       var data = {
         siteId: site.siteId,
         siteUrl: site.siteUrl,
@@ -49,16 +56,16 @@
         sourceGroupId: vm.currCbg.ccaGroupId,
         sourceGroupName: vm.currCbg.groupName, // From, DB: Object_Name
       };
-      cbgService.moveSite(data).then(function (res) {
-        var resJson = _.get(res.content, 'data');
-        if (resJson.returnCode) {
-          Notification.notify(gemService.showError(resJson.returnCode));
-          return;
-        }
-        $rootScope.$emit('cbgsUpdate', true);
+
+      cbgService.moveSite(data).then(function () {
         _.remove(vm.sites, function (obj) {
           return obj.siteId === site.siteId;
         });
+        $rootScope.$emit('cbgsUpdate', true);
+      }).catch(function (err) {
+        Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      }).finally(function () {
+        vm.showLoading = false;
       });
     }
 

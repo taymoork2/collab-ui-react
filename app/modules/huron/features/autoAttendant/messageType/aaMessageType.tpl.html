@@ -8,18 +8,16 @@
     <aa-media-upload ng-switch-when="uploadFile" id="mediaUploadInput{{ schedule + index + menuKeyIndex }}" name="mediaUploadInput" ng-model="aaMessageType.actionEntry" aa-from-sub-menu={{fromSubMenu}} aa-media-type="{{ type }}" aa-index="index" aa-schedule="{{schedule}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-menu-id="{{menuId}}" aa-media-upload-size="{{ :: aaMessageType.MAX_FILE_SIZE_IN_BYTES }}" aa-media-state="aaMessageType.mediaState"></aa-media-upload>
     <div ng-switch-when="sayMessage">
       <div ng-if="aaMessageType.isDynamicToggle()" class="aa-dynamic-prompt aa-message-width aa-message-only-type large-12 small-12 columns">
-        <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" dynamic-tags="aaMessageType.dynamicTags" model-values="aaMessageType.dynamicValues" insert-element="insertElement" aa-keypress ng-change = "aaMessageType.saveDynamicUi()" ng-model="aaMessageType.messageInput" id="messageType{{schedule + index + menuKeyIndex + menuId + type}}" name="messageInput" data-placeholder="{{:: aaMessageType.messageInputPlaceholder}}"></dynamic-prompt>
+        <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" dynamic-tags="aaMessageType.dynamicTags" model-values="aaMessageType.dynamicValues" insert-element="insertElement" aa-keypress ng-keyup = "aaMessageType.saveDynamicUi($event)" ng-model="aaMessageType.messageInput" id="messageType{{schedule + index + menuKeyIndex + menuId + type}}" name="messageInput" data-placeholder="{{:: aaMessageType.messageInputPlaceholder}}"></dynamic-prompt>
         <div ng-if="aaMessageType.getWarning()">
           <br></br>
-          <div class="columns small-1">
-            <i class="ellipsis icon icon-warning warning aa-icon-font-size"></i>
-          </div>
-          <div class="columns small-11 aa-padding" ng-click="aaMessageType.fullWarningMsg()" role="button">
-            <p class="aa-text-overflow" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning" contentEditable="false"></p>
-            <div ng-if = "aaMessageType.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning" contentEditable="false"></div>
+          <div class="columns small-12 aa-div-click" ng-click="aaMessageType.togglefullWarningMsg()" ng-blur="aaMessageType.closeFullWarningMsg()"> 
+            <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
+            <span class="aa-text-overflow" data-ng-bind="aaMessageType.deletedSessionVariablesListAlongWithWarning"></span>
+            <div ng-if = "aaMessageType.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaMessageType.deletedSessionVariablesListAlongWithWarning"></div>
           </div>
         </div>
-        <aa-add-variable  aa-announcement-type="{{type}}" dynamic-prompt-id="messageType{{schedule + index + menuKeyIndex + menuId + type}}" aa-menu-id="{{menuId}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaMessageType.addElement"></aa-add-variable>
+        <aa-add-variable aa-announcement-type="{{type}}" dynamic-prompt-id="messageType{{schedule + index + menuKeyIndex + menuId + type}}" aa-menu-id="{{menuId}}" aa-key-index="{{menuKeyIndex}}" aa-menu-header="{{isMenuHeader}}" aa-element-type="SayMessage" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaMessageType.addElement"></aa-add-variable>
       </div>
       <div ng-if="!aaMessageType.isDynamicToggle()" class="aa-message-only-type large-12 small-12 columns">
         <textarea class="aa-message-type-textarea" aa-keypress ng-change="aaMessageType.saveUiModel()" ng-model="aaMessageType.messageInput" type="text" id="messageType{{ schedule + index + menuKeyIndex }}" name="messageInput" placeholder="{{ :: aaMessageType.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>

@@ -1,0 +1,50 @@
+ <script type="text/ng-template" id="callFeatureLocationTemplate.html">
+  <a class="location__name">
+    <span ng-if="match.label.name" ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.routingPrefix">(<span ng-bind-html="match.label.routingPrefix | typeaheadHighlight:query"></span>)</span>
+  </a>
+</script>
+<div class="call-feature-locations">
+  <div class="new-location" ng-if="$ctrl.isNew">
+    <div class="title" translate="sharedFeature.identifyLocation"></div>
+    <div class="desc" translate="sharedFeature.identifyLocationDesc" translate-values="{feature: $ctrl.featureType}"></div>
+    <div class="typeahead-large no-margin search-add">
+      <input
+        ng-model="$ctrl.searchLocation"
+        ng-class="{'error': $ctrl.errorLocationInput}"
+        typeahead="location for location in $ctrl.searchLocations($viewValue) | limitTo:10"
+        typeahead-on-select="$ctrl.selectLocation($item)"
+        typeahead-template-url="callFeatureLocationTemplate.html"
+        typeahead-min-length="2"
+        typeahead-wait-ms="200"
+        placeholder="{{:: 'common.selectLocation' | translate}}"
+        ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+        autocomplete="off"
+        focus-on>
+        <p class="input-description"></p>
+    </div>
+  </div>
+  <div ng-if="$ctrl.isNew">
+    <cs-card-layout>
+      <cs-card-member
+        ng-if="$ctrl.location"
+        cs-id="$ctrl.location.uuid"
+        cs-title="$ctrl.location.name"
+        cs-subtitle="$ctrl.location.routingPrefix"
+        cs-type="simple"
+        cs-image="null"
+        cs-member-type="place"
+        on-remove="$ctrl.removeLocation()"
+        delete-aria-label="{{::'common.delete' | translate}}">
+      </cs-card-member>
+    </cs-card-layout>
+  </div>
+  <div ng-if="!$ctrl.isNew">
+    <cs-select
+      ng-model="$ctrl.location"
+      labelfield="name"
+      valuefield="uuid"
+      options="$ctrl.customerLocations"
+      is-disabled="true">
+  </div>
+</div>

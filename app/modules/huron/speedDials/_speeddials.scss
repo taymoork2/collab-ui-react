@@ -41,8 +41,7 @@
 
   .sd-edit-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    flex-flow: wrap row;
     padding-left: 2rem;
     padding-right: 2rem;
     @include vr-spacing(pt, 1.5);
@@ -57,6 +56,10 @@
     cursor: move;
     cursor: grab;
     font-size: 1.5rem;
+
+    &.selected {
+      color: $color-blue-base;
+    }
   }
 
   .sd-container {

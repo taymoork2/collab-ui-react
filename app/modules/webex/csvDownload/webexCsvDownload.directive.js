@@ -44,11 +44,12 @@
   /* @ngInject */
   function webexCsvDownload(
     $timeout,
+    $window,
     WebExCsvDownloadService
   ) {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/webex/csvDownload/webexCsvDownload.tpl.html',
+      template: require('modules/webex/csvDownload/webexCsvDownload.tpl.html'),
       scope: {
         type: '@',
         filedownloadurl: '@',
@@ -81,12 +82,14 @@
       scope.$on('downloaded', function (event, url) {
         scope.webexCsvDownload.downloading = false;
 
-        var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
-
         changeAnchorAttrToDownload(url);
 
         $timeout(function () {
-          downloadAnchor[0].click();
+          // skip the click in IE, because the click causes the page to refresh
+          if (_.isUndefined($window.navigator.msSaveOrOpenBlob)) {
+            var downloadAnchor = angular.element('#download-csv-' + scope.webexCsvDownload.type);
+            downloadAnchor[0].click();
+          }
         });
 
         $timeout(

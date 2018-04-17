@@ -1,6 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight');
+    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
       '$controller',
       '$filter',
@@ -9,20 +9,30 @@ describe('Controller: OverviewCtrl', function () {
       '$rootScope',
       '$scope',
       '$state',
+      '$location',
       '$translate',
       'Authinfo',
+      'AutoAssignTemplateService',
       'Config',
       'FeatureToggleService',
       'HybridServicesClusterService',
       'HybridServicesFlagService',
+      'PrivateTrunkService',
       'ProPackService',
       'LearnMoreBannerService',
       'Orgservice',
       'OverviewNotificationFactory',
       'PstnService',
       'ReportsService',
+      'ServiceDescriptorService',
+      'SetupWizardService',
       'SunlightReportService',
-      'TrialService'
+      'SunlightUtilitiesService',
+      'LocalStorage',
+      'TrialService',
+      'LinkedSitesService',
+      'EvaService',
+      'SsoCertificateService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -31,6 +41,7 @@ describe('Controller: OverviewCtrl', function () {
     this.usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
     this.services = getJSONFixture('squared/json/services.json');
     this.PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+    this.certificateTestData = _.cloneDeep(getJSONFixture('core/json/sso/test-certificates.json'));
 
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
@@ -71,19 +82,18 @@ describe('Controller: OverviewCtrl', function () {
     }]));
 
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasPMRonM2GetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
+    spyOn(this.FeatureToggleService, 'atlasSsoCertificateUpdateGetStatus').and.returnValue(this.$q.resolve(true));
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve({
-      data: this.orgServiceJSONFixture.getLicensesUsage.singleSub,
-    }));
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
-      callback(getOrgNoSip, 200);
-    });
+    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: getOrgNoSip }));
 
     spyOn(this.PstnService, 'isSwivelCustomerAndEsaUnsigned').and.returnValue(this.$q.resolve(true));
     spyOn(this.PstnService, 'getCustomerTrialV2').and.returnValue(this.$q.resolve({ acceptedDate: 'today' }));
@@ -92,41 +102,69 @@ describe('Controller: OverviewCtrl', function () {
       pstnCarrierId: '111-222-333',
     }));
 
+    spyOn(this.SunlightUtilitiesService, 'isCareSetup').and.returnValue(this.$q.resolve(true));
+
     spyOn(this.ReportsService, 'getOverviewMetrics').and.callFake(_.noop);
     spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
+    spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'hasPendingCCWSubscriptions').and.returnValue(true);
+    spyOn(this.SetupWizardService, 'getActingSubscriptionServiceOrderUUID').and.returnValue('someServiceOrderUUID');
+    spyOn(this.SetupWizardService, 'populatePendingSubscriptions').and.callThrough();
+    spyOn(this.SetupWizardService, 'getPendingOrderStatusDetails').and.returnValue(this.$q.resolve());
     spyOn(this.TrialService, 'getDaysLeftForCurrentUser').and.returnValue(this.$q.resolve(1));
 
+    spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
+    spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
         $rootScope: this.$rootScope,
         $scope: this.$scope,
         $state: this.$state,
+        $location: this.$location,
         $translate: this.$translate,
         Authinfo: this.Authinfo,
         Config: this.Config,
         FeatureToggleService: this.FeatureToggleService,
         HybridServicesClusterService: this.HybridServicesClusterService,
         HybridServicesFlagService: this.HybridServicesFlagService,
+        PrivateTrunkService: this.PrivateTrunkService,
         ProPackService: this.ProPackService,
         LearnMoreBannerService: this.LearnMoreBannerService,
         Orgservice: this.Orgservice,
         OverviewNotificationFactory: this.OverviewNotificationFactory,
         PstnService: this.PstnService,
         ReportsService: this.ReportsService,
+        ServiceDescriptorService: this.ServiceDescriptorService,
         SunlightReportService: this.SunlightReportService,
+        SunlightUtilitiesService: this.SunlightUtilitiesService,
+        SunlightConfigService: this.SunlightConfigService,
+        LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
+        LinkedSitesService: this.LinkedSitesService,
+        EvaService: this.EvaService,
+        SsoCertificateService: this.SsoCertificateService,
       });
       this.$scope.$apply();
     };
 
     this.getCard = function (filter) {
       return _(this.controller.cards).filter(function (card) {
-        return card.name == filter;
+        return card.name === filter;
       }).head();
     };
   });
+
+  function checkForCareNotification(notifications) {
+    var careNotificationExists = false;
+    _.forEach(notifications, function (notif) {
+      if (notif.name === 'careSetupNotification') {
+        careNotificationExists = true;
+      }
+    });
+    return careNotificationExists;
+  }
 
   describe('Wire up', function () {
     beforeEach(function () {
@@ -156,7 +194,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Enable Devices', function () {
     beforeEach(function () {
-      this.Orgservice.getAdminOrgUsage.and.returnValue(this.$q.resolve({ data: this.usageOnlySharedDevicesFixture }));
+      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
       this.initController();
     });
 
@@ -186,9 +224,42 @@ describe('Controller: OverviewCtrl', function () {
     });
   });
 
+  describe('Meeting Card with provisioning Event: If setup-wizard-service data has been intialized, ', function () {
+    beforeEach(function () {
+      _.set(this.SetupWizardService, 'serviceDataHasBeenInitialized', true);
+      this.initController();
+    });
+
+    it('should call forwardEvent function with productProvisioningStatus', function () {
+      expect(this.SetupWizardService.getPendingOrderStatusDetails).toHaveBeenCalledWith('someServiceOrderUUID');
+    });
+  });
+
+  describe('Meeting Card with provisioning Event: If setup-wizard-service data has not been intialized, ', function () {
+    beforeEach(function () {
+      _.set(this.SetupWizardService, 'serviceDataHasBeenInitialized', false);
+      this.initController();
+    });
+
+    it('should call populatePendingSubscriptions function', function () {
+      expect(this.SetupWizardService.populatePendingSubscriptions).toHaveBeenCalled();
+    });
+  });
+
+  describe('Meeting Card with provisioning Event: If no pending subscriptions have CCW ordering tool, ', function () {
+    beforeEach(function () {
+      this.SetupWizardService.hasPendingCCWSubscriptions.and.returnValue(false);
+      this.initController();
+    });
+
+    it('should not initialize provisioning event handler', function () {
+      expect(this.SetupWizardService.getActingSubscriptionServiceOrderUUID).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Notifications', function () {
     beforeEach(function () {
-      this.TOTAL_NOTIFICATIONS = 9;
+      this.TOTAL_NOTIFICATIONS = 8;
       this.initController();
     });
 
@@ -200,14 +271,6 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
 
       var notification = this.OverviewNotificationFactory.createCrashLogNotification();
-      this.controller.dismissNotification(notification);
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
-    });
-
-    it('should dismiss the PMR notification', function () {
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
-
-      var notification = this.OverviewNotificationFactory.createPMRNotification();
       this.controller.dismissNotification(notification);
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
     });
@@ -224,14 +287,6 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
 
       var notification = this.OverviewNotificationFactory.createSetupNotification();
-      this.controller.dismissNotification(notification);
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
-    });
-
-    it('should dismiss the Calendar notification', function () {
-      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
-
-      var notification = this.OverviewNotificationFactory.createCalendarNotification();
       this.controller.dismissNotification(notification);
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
     });
@@ -260,11 +315,70 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
     });
 
+    it('should dismiss the Auto Assign Notification', function () {
+      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
+
+      var notification = this.OverviewNotificationFactory.createAutoAssignNotification();
+      this.controller.dismissNotification(notification);
+      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
+    });
+
     it('should dismiss the Cloud SIP URI Notification using a rootScope broadcast', function () {
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS);
 
       this.$rootScope.$broadcast('DISMISS_SIP_NOTIFICATION');
       expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS - 1);
+    });
+  });
+
+  describe('Notifications - Login as Full-Admin, create CareNotSetup notification ', function () {
+    beforeEach(function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(false));
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isCustomerAdmin.and.returnValue(true);
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.initController();
+    });
+
+    it('should show CareNotSetup notification and dismiss it', function () {
+      //dismiss the notification
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(true);
+      var notification = this.OverviewNotificationFactory.createCareNotSetupNotification();
+      this.controller.dismissNotification(notification);
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+      this.SunlightUtilitiesService.removeCareSetupKey();
+    });
+
+    it('should not show notification if care is onboarded', function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if care not enabled', function () {
+      this.Authinfo.isCare.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if not full admin', function () {
+      this.Authinfo.isCustomerAdmin.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should show notification if snooze time is up', function () {
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().subtract(49, 'hours').toISOString());
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(true);
+    });
+
+    it('should not show createCareNotSetupNotification if snooze time is not up ', function () {
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().add(4, 'hours').toISOString());
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
     });
   });
 
@@ -287,7 +401,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should call ESA check if logged in as a Partner', function () {
-      var TOTAL_NOTIFICATIONS = 10;
+      var TOTAL_NOTIFICATIONS = 9;
       expect(this.PstnService.isSwivelCustomerAndEsaUnsigned).toHaveBeenCalled();
       expect(this.controller.esaDisclaimerNotification).toBeTruthy();
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
@@ -305,7 +419,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 8;
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(this.controller.esaDisclaimerNotification).toBeFalsy();
     });
@@ -337,6 +451,10 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Premium Pro Pack Notification - showLearnMoreNotification', function () {
+    beforeEach(function () {
+      spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(true);
+    });
+
     it('should default to false', function () {
       this.initController();
       expect(this.controller.showLearnMoreNotification).toBeFalsy();
@@ -350,6 +468,79 @@ describe('Controller: OverviewCtrl', function () {
       this.LearnMoreBannerService.isElementVisible.and.returnValue(false);
       this.$scope.$apply();
       expect(this.controller.showLearnMoreNotification).toBeTruthy();
+    });
+  });
+
+  describe('Auto Assign Notification - set up now', function () {
+    it('should not display if atlasF3745AutoAssignLicenses is false', function () {
+      var TOTAL_NOTIFICATIONS = 7;
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false)); // not relevant, just the original scenario
+      this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(false));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('AccountLinking20 notification', function () {
+    it('should not be displayed if no sites need configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should be displayed if one or several sites needs configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+  });
+
+  describe('Expert Virtual Assistant notification', function () {
+    var TOTAL_NOTIFICATIONS = 8;
+    it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve({ name: 'evaTest' }));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+
+    it('should not display the Expert Virtual Assistant Notification', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('updateSsoCertificateNow search param', function () {
+    it('should be removed if present', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      this.initController();
+      expect(this.$location.search).toHaveBeenCalledWith('updateSsoCertificateNow', null);
+    });
+
+    it('should open sso-certificate.sso-certificate-check dialog', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      var orgData = _.cloneDeep(this.orgServiceJSONFixture.getOrgNoSip);
+      orgData.ssoEnabled = true;
+      this.Orgservice.getOrg.and.returnValue(this.$q.resolve({ data: orgData }));
+
+      var orgCertificates = _.cloneDeep(this.certificateTestData.orgCertificates);
+      orgCertificates.expirationDate = moment().format(); // make sure the expiration date is today
+
+      spyOn(this.SsoCertificateService, 'getOrgCertificates').and.returnValue(this.$q.resolve(orgCertificates));
+      spyOn(this.$state, 'go').and.callFake(_.noop);
+
+      this.initController();
+      expect(this.$state.go).toHaveBeenCalledWith('sso-certificate.sso-certificate-check');
     });
   });
 });

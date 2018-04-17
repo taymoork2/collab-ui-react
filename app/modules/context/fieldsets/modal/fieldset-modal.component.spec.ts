@@ -1,9 +1,8 @@
-import fieldsetModule from './fieldset-modal.component';
 import { PropertyConstants } from 'modules/context/services/context-property-service';
 
 describe('Component: context fieldset modal', () => {
 
-  let fieldsetServiceCreateSpy, fieldServiceSpy, fieldsetServiceUpdateSpy;
+  let fieldsetServiceCreateSpy, fieldsetServiceUpdateSpy;
   let formIsSetDirty;
 
   const MOCK_ORG_ID: string = 'mock-org-id';
@@ -53,7 +52,7 @@ describe('Component: context fieldset modal', () => {
   }];
 
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Context', fieldsetModule);
+    this.initModules('Context');
     this.injectDependencies(
       '$q',
       '$scope',
@@ -72,7 +71,7 @@ describe('Component: context fieldset modal', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
     spyOn(this.PropertyService, 'getProperty').and.returnValue(this.$q.reject( { status: 404, statusText: 'mocked error' } ));
     fieldsetServiceCreateSpy = spyOn(this.ContextFieldsetsService, 'createAndGetFieldset').and.returnValue(this.$q.resolve(mockedFieldset));
-    fieldServiceSpy = spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
+    spyOn(this.ContextFieldsService, 'getFields').and.returnValue(this.$q.resolve(mockedFields));
     fieldsetServiceUpdateSpy = spyOn(this.ContextFieldsetsService, 'updateAndGetFieldset').and.returnValue(this.$q.resolve(mockedUpdateFieldset));
 
     this.$scope.callback = jasmine.createSpy('callback');
@@ -210,7 +209,9 @@ describe('Component: context fieldset modal', () => {
       }];
       const processedFields = this.controller.processedFields(unprocessedFields);
       expect(processedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(processedFields[0].fieldInfo).toBe('context.dictionary.fieldPage.unencrypted, String');
+      const fieldInfo = processedFields[0].fieldInfo;
+      expect(fieldInfo).toContain('context.dictionary.fieldPage.unencrypted');
+      expect(fieldInfo).toContain('context.dictionary.dataTypes.string');
     });
     it('should return empty list when empty list is provided', function () {
       expect(this.controller.processedFields([]).length).toBe(0);
@@ -222,7 +223,9 @@ describe('Component: context fieldset modal', () => {
       this.controller.loadFields();
       expect(this.controller.allSelectableFields.length).toBe(3);
       expect(this.controller.allSelectableFields[0].classification).toEqual('context.dictionary.fieldPage.unencrypted');
-      expect(this.controller.allSelectableFields[0].fieldInfo).toEqual('context.dictionary.fieldPage.unencrypted, String');
+      const fieldInfo = this.controller.allSelectableFields[0].fieldInfo;
+      expect(fieldInfo).toContain('context.dictionary.fieldPage.unencrypted');
+      expect(fieldInfo).toContain('context.dictionary.dataTypes.string');
     });
 
     it('should set the selected and inactive fields of the fieldset correctly', function (done) {
@@ -259,14 +262,14 @@ describe('Component: context fieldset modal', () => {
       expect(selectedFields[0].id).toBe('field2');
       expect(selectedFields[0].description).toBe('desc2');
       expect(selectedFields[0].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(selectedFields[0].dataType).toBe('String');
+      expect(selectedFields[0].dataType).toBe('string');
       expect(selectedFields[0].publiclyAccessible).toBe(true);
       expect(selectedFields[0].searchable).toBe(true);
 
       expect(selectedFields[1].id).toBe('field3');
       expect(selectedFields[1].description).toBe('desc3');
       expect(selectedFields[1].classification).toBe('context.dictionary.fieldPage.unencrypted');
-      expect(selectedFields[1].dataType).toBe('Boolean');
+      expect(selectedFields[1].dataType).toBe('boolean');
       expect(selectedFields[1].publiclyAccessible).toBe(true);
       expect(selectedFields[1].searchable).toBe(true);
     });

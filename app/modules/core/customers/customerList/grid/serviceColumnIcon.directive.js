@@ -5,14 +5,14 @@
     .module('Core')
     .directive('crServiceColumnIcon', serviceColumnIcon);
 
-  function serviceColumnIcon($interpolate, $sanitize, $templateCache, $translate, Config, PartnerService) {
+  function serviceColumnIcon($interpolate, $sanitize, $translate, Config, PartnerService) {
     var directive = {
       restrict: 'E',
       scope: {
         type: '@',
         row: '=',
       },
-      templateUrl: 'modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html',
+      template: require('modules/core/customers/customerList/grid/serviceColumnIcon.tpl.html'),
       link: link,
     };
 
@@ -26,9 +26,9 @@
         _setVisibility(scope);
       }, 25));
       // caching some of the expensive and repeated operations
-      scope.TOOLTIP_TEMPLATE = $($templateCache.get('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
+      scope.TOOLTIP_TEMPLATE = $(require('modules/core/customers/customerList/grid/serviceIconTooltip.tpl.html'));
       scope.WEBEX_TRANSLATION = $translate.instant('customerPage.webex');
-      scope.TOOLTIP_TEMPLATE_BLOCK = $($templateCache.get('modules/core/customers/customerList/grid/webexTooltipBlock.tpl.html'));
+      scope.TOOLTIP_TEMPLATE_BLOCK = $(require('modules/core/customers/customerList/grid/webexTooltipBlock.tpl.html'));
       var MAX_SITES_DISPLAYED = 2;
       var WEBEX_TYPE = 'webex'; // use this to stand for all types of webex products
       var POSSIBLE_SERVICE_STATUSES = {
@@ -57,10 +57,20 @@
         }
       }
 
+      // setTooltipText - sets the 'obj.anotherPartner' property if necessary
+      function setTooltipText(serviceStatus, rowData, obj) {
+        if (serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData.volume) {
+          if (PartnerService.isServiceManagedByCustomer(rowData)) {
+            obj.anotherPartner = $translate.instant('customerPage.customerOrdered');
+          } else if (!PartnerService.isServiceManagedByCurrentPartner(rowData)) {
+            obj.anotherPartner = $translate.instant('customerPage.anotherPartner');
+          }
+        }
+      }
+
       function getNonWebexTooltip(rowData, type) {
         var tooltip = scope.TOOLTIP_TEMPLATE.clone();
         var serviceStatus = getServiceStatus(rowData, type);
-        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[type]);
         var tooltipDataObj = {
           statusClass: serviceStatus,
         };
@@ -80,16 +90,15 @@
         }
 
         tooltipDataObj.status = $translate.instant('customerPage.' + serviceStatus);
-        if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[type].volume) {
-          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
-        }
+        setTooltipText(serviceStatus, rowData[type], tooltipDataObj);
+
         // Note that the tooltip displays raw html, which can contain unsecure code!
         // In this case all input is put through $translate, sanitized, or changed to a constant
         scope.ariaLabel = _.join([
           $translate.instant('customerPage.ariaTooltips.service', tooltipDataObj),
           $translate.instant('customerPage.ariaTooltips.quantity', tooltipDataObj),
           $translate.instant('customerPage.ariaTooltips.status', tooltipDataObj),
-        ], ' ,');
+        ], ', ');
         return $interpolate(tooltip[0].outerHTML)(tooltipDataObj);
       }
 
@@ -138,9 +147,8 @@
         return $interpolate(tooltip[0].outerHTML)();
       }
 
-      function createWebexTooltipBlock(rowData, licenseType, licenseData, sitesFound, serviceStatus) {
+      function createWebexTooltipBlock(rowData, type, licenseData, sitesFound, serviceStatus) {
         var tooltipBlock = scope.TOOLTIP_TEMPLATE_BLOCK.clone();
-        var serviceManagedByAnotherPartner = !PartnerService.isServiceManagedByCurrentPartner(rowData[licenseType]);
         var tooltipDataObj = {
           url: licenseData.siteUrl,
           qty: $translate.instant('customerPage.quantityWithValue', {
@@ -150,41 +158,40 @@
           status: $translate.instant('customerPage.' + serviceStatus),
         };
 
-        if (serviceManagedByAnotherPartner && serviceStatus !== POSSIBLE_SERVICE_STATUSES.free && rowData[licenseType].volume) {
-          tooltipDataObj.anotherPartner = $translate.instant('customerPage.anotherPartner');
-        }
+        setTooltipText(serviceStatus, rowData[type], tooltipDataObj);
         return $interpolate(tooltipBlock[0].outerHTML)(tooltipDataObj);
       }
 
       function getServiceStatus(rowData, type) {
-        // note that this logic is slightly different than the logic in getAccountStatus within CustomerListCtrl
+        // note that this logic is slightly different than the logic in getAccountStatus within PartnerService
         // This service status can include free, whereas account status cannot
-        var licenseList = rowData.licenseList;
         var serviceData = rowData[type];
-        if (serviceData.daysLeft < 0) {
-          return POSSIBLE_SERVICE_STATUSES.expired;
-        }
-        if (checkForLicenseStatus(PartnerService.isLicenseATrial, licenseList, serviceData)) {
-          return POSSIBLE_SERVICE_STATUSES.trial;
-        } else if (checkForLicenseStatus(PartnerService.isLicenseActive, licenseList, serviceData)) {
+
+        if (checkForLicenseStatus(PartnerService.isLicenseActive, rowData, serviceData)) {
           return POSSIBLE_SERVICE_STATUSES.purchased;
-        } else if (checkForLicenseStatus(PartnerService.isLicenseFree, licenseList, serviceData)) {
+        } else if (checkForLicenseStatus(PartnerService.isLicenseFree, rowData, serviceData)) {
           return POSSIBLE_SERVICE_STATUSES.free;
+        } else if (serviceData.daysLeft < 0) {
+          return POSSIBLE_SERVICE_STATUSES.expired;
+        } else if (checkForLicenseStatus(PartnerService.isLicenseATrial, rowData, serviceData)) {
+          return POSSIBLE_SERVICE_STATUSES.trial;
         }
         return POSSIBLE_SERVICE_STATUSES.noInfo;
       }
 
-      function checkForLicenseStatus(licenseStatusFunction, licenseList, serviceData) {
-        return PartnerService.isLicenseInfoAvailable(licenseList) && licenseStatusFunction(serviceData);
+      function checkForLicenseStatus(licenseStatusFunction, rowData, serviceData) {
+        return PartnerService.isLicenseInfoAvailable(rowData) && licenseStatusFunction(serviceData);
       }
 
       function isServiceManaged() {
-        return (scope.showServiceManagedByAnotherPartner || scope.showServiceManagedByCurrentPartner);
+        return scope.showServiceManagedByAnotherPartner ||
+          scope.showServiceManagedByCurrentPartner ||
+          scope.showServiceManagedByCustomer;
       }
 
       function translateTypeToIcon(type) {
         var classType = '';
-        if (scope.showServiceManagedByAnotherPartner) {
+        if (scope.showServiceManagedByAnotherPartner || scope.showServiceManagedByCustomer) {
           classType = 'service-icon-managed-by-others ';
         } else if (scope.showServiceManagedByCurrentPartner) {
           classType = 'service-icon ';
@@ -219,6 +226,8 @@
           scope.row.orderedServices.servicesManagedByCurrentPartner);
         scope.showServiceManagedByAnotherPartner = _isVisible(scope.row, scope.type,
           scope.row.orderedServices.servicesManagedByAnotherPartner);
+        scope.showServiceManagedByCustomer = _isVisible(scope.row, scope.type,
+          scope.row.orderedServices.servicesManagedByCustomer);
       }
     }
 

@@ -1,10 +1,11 @@
 'use strict';
 
-/* global Promise */
+/* global exports, helper, Promise, protractor, require */
 
-var config = require('./test.config.js');
-var utils = require('./test.utils.js');
-var request = require('request');
+const config = require('./test.config.js');
+const utils = require('./test.utils.js');
+const request = require('request');
+const _ = require('lodash');
 
 exports.deleteUser = function (email, token) {
   return new Promise(function (resolve) {
@@ -13,10 +14,10 @@ exports.deleteUser = function (email, token) {
     .then(function (token) {
       var options = {
         method: 'delete',
-        url: config.getAdminServiceUrl() + 'user?email=' + encodeURIComponent(email),
+        url: `${config.getAdminServiceUrl()}user?email=${encodeURIComponent(email)}`,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
+          'Authorization': `Bearer ${token}`,
         },
       };
 
@@ -30,10 +31,10 @@ exports.deleteUser = function (email, token) {
 exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
   var options = {
     method: 'delete',
-    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid + '/users/' + userUuid,
+    url: `${config.getCmiServiceUrl()}common/customers/${customerUuid}/users/${userUuid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -45,10 +46,10 @@ exports.deleteSquaredUCUser = function (customerUuid, userUuid, token) {
 exports.deleteSquaredUCCustomer = function (customerUuid, token) {
   var options = {
     method: 'delete',
-    url: config.getCmiServiceUrl() + 'common/customers/' + customerUuid,
+    url: `${config.getCmiServiceUrl()}common/customers/${customerUuid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
   return utils.sendRequest(options).then(function () {
@@ -65,7 +66,7 @@ exports.deleteAutoAttendant = function (aaUrl, token) {
     url: aaUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -88,14 +89,14 @@ exports.extractUUID = function (ceURL) {
 exports.deleteNumberAssignments = function (aaUrl, token) {
   var ceId = exports.extractUUID(aaUrl);
 
-  var cmiUrl = config.getCmiV2ServiceUrl() + 'customers/' + helper.auth['aa-admin'].org + '/features/autoattendants/' + ceId + '/numbers';
+  var cmiUrl = `${config.getCmiV2ServiceUrl()}customers/${helper.auth['aa-admin'].org}/features/autoattendants/${ceId}/numbers`;
 
   var options = {
     method: 'delete',
     url: cmiUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
 
@@ -120,7 +121,7 @@ exports.deleteTestAA = function (bearer, aaUrl) {
   aaDeleteTasks.push(exports.deleteNumberAssignments(aaUrl, bearer));
   aaDeleteTasks.push(exports.deleteTestSchedule(aaUrl, bearer));
   return Promise.all(aaDeleteTasks);
-}
+};
 
 // deleteTestAAs - Delete the Test AAs via the CES API
 //
@@ -134,14 +135,13 @@ exports.deleteTestAA = function (bearer, aaUrl) {
 // data - query results from our CES GET API
 exports.deleteTestAAs = function (bearer, data) {
   var test = [this.testAAName, this.testAAImportName];
+
   for (var i = 0; i < data.length; i++) {
     var AAsToDelete = [];
-
     if (data[i].callExperienceName === test[0] || data[i].callExperienceName === test[1]) {
       AAsToDelete.push(exports.deleteTestAA(bearer, data[i].callExperienceURL));
     }
   }
-
   return Promise.all(AAsToDelete);
 };
 
@@ -158,7 +158,7 @@ exports.deleteRouteToQueue = function () {
         url: config.getAutoAttendantQueueUrl(helper.auth['aa-admin'].org),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + bearer,
+          'Authorization': `Bearer ${bearer}`,
         },
       };
 
@@ -181,12 +181,12 @@ exports.deleteRouteToQueue = function () {
 //
 // Used to cleanup AA created in the test
 exports.findAndDeleteTestAA = function () {
-  helper.getBearerToken('aa-admin')
+  return helper.getBearerToken('aa-admin')
     .then(function (bearer) {
       var options = {
         url: config.getAutoAttendantsUrl(helper.auth['aa-admin'].org),
         headers: {
-          Authorization: 'Bearer ' + bearer,
+          Authorization: `Bearer ${bearer}`,
         },
       };
 
@@ -216,7 +216,7 @@ exports.deleteSchedules = function (scheduleUrl, token) {
     url: scheduleUrl,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
+      'Authorization': `Bearer ${token}`,
     },
   };
   return utils.sendRequest(options).then(function () {
@@ -232,7 +232,7 @@ exports.deleteTestSchedule = function (aaUrl, token) {
     method: 'get',
     url: aaUrl,
     headers: {
-      Authorization: 'Bearer ' + token,
+      Authorization: `Bearer ${token}`,
     },
   };
   request(options,
@@ -245,4 +245,42 @@ exports.deleteTestSchedule = function (aaUrl, token) {
         }
       }
     });
+};
+
+function getAutoAssignTemplates(orgId, token) {
+  const options = {
+    method: 'get',
+    url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+  return utils.sendRequest(options).then(response => JSON.parse(response));
+}
+
+exports.deleteAllAutoAssignTemplates = function (orgId, token) {
+  return getAutoAssignTemplates(orgId, token)
+    .then(function (templates) {
+      function mkDeleteOptions(templateId) {
+        return {
+          method: 'delete',
+          url: `${config.getAdminServiceUrl()}organizations/${orgId}/templates/${templateId}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        };
+      }
+
+      const templateIds = _.map(templates, 'templateId');
+      const promises = _.map(templateIds, (templateId) => {
+        const deleteOptions = mkDeleteOptions(templateId);
+        return utils.sendRequest(deleteOptions);
+      });
+      return Promise.all(promises);
+    })
+    // This is primarily used for jasmine cleanup
+    // We don't want rejected promises to blowup the promise control flow
+    .catch(_.noop);
 };

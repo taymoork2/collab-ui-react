@@ -8,7 +8,7 @@
   function crTrialNoticeBanner() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/core/trials/trialNoticeBanner.tpl.html',
+      template: require('modules/core/trials/trialNoticeBanner.tpl.html'),
       controller: 'TrialNoticeBannerCtrl',
       controllerAs: 'bannerCtrl',
       bindToController: true,

@@ -3,8 +3,11 @@
 describe('component: cbgCountry', function () {
   var $q, $scope, $timeout, $componentCtrl;
   var ctrl, cbgService, Notification, WindowLocation;
-  var preData = getJSONFixture('gemini/common.json');
   var csvFile = 'COUNTRY\r\nAlbania\r\nAlgeria\r\nAmerican Samoa';
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -16,7 +19,7 @@ describe('component: cbgCountry', function () {
     $q = $scope = $timeout = $componentCtrl = ctrl = cbgService = Notification = WindowLocation = undefined;
   });
   afterAll(function () {
-    preData = csvFile = undefined;
+    csvFile = undefined;
   });
 
   function dependencies(_$q_, _$timeout_, _cbgService_, _$rootScope_, _Notification_, _WindowLocation_, _$componentController_) {
@@ -43,19 +46,19 @@ describe('component: cbgCountry', function () {
 
   describe('$onInit', function () {
     function initParams() {
-      var mockCountry = preData.getCountries;
+      var mockCountry = this.preData.getCountries;
       cbgService.getCountries.and.returnValue($q.resolve(mockCountry));
     }
 
     it('should initialization', function () {
-      initParams();
+      initParams.call(this);
       ctrl.$onInit();
       $scope.$apply();
       expect(ctrl.options.length).toBe(4);
     });
 
     it('should isCsvValid to be true', function () {
-      initParams();
+      initParams.call(this);
       ctrl.model = {
         file: csvFile,
         fileName: 'MustShowThreeDotAtTheEndOfTheFileNameWhenFileNameIsTooLong.csv', // when the filename is too long
@@ -71,7 +74,7 @@ describe('component: cbgCountry', function () {
         file: 'COUNTRY\r\nInvalidCountryName\r\nInvalidCountryName2',
         fileName: 'shortFileName.csv',
       };
-      initParams();
+      initParams.call(this);
       ctrl.$onInit();
       $scope.$apply();
       $timeout.flush();
@@ -80,7 +83,7 @@ describe('component: cbgCountry', function () {
 
     it('should be zero when the bindings of selected is null', function () {
       ctrl = $componentCtrl('cbgCountry', { $scope: $scope });
-      initParams();
+      initParams.call(this);
       ctrl.$onInit();
       $scope.$apply();
       expect(ctrl.selected.length).toBe(0);
@@ -89,10 +92,10 @@ describe('component: cbgCountry', function () {
 
   describe('click event', function () {
     it('onDelSelected', function () {
-      var countries = preData.getCountries.content.data;
+      var countries = this.preData.getCountries;
       ctrl.selected = [];
       _.forEach(countries, function (item) {
-        ctrl.selected.push({ value: item.countryId, label: item.countryName });
+        ctrl.selected.push({ value: item.id, label: item.name });
       });
 
       ctrl.onDelSelected('American Samoa');

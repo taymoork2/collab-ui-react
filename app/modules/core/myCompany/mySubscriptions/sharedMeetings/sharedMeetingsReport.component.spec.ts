@@ -73,9 +73,7 @@ describe('Component: sharedMeetingReport', function () {
           StartTime: 'StartTime',
           EndTime: 'EndTime',
           ConfId: 'ConfId',
-          Duration: i,
-          MeetingType: i,
-          HostId: i,
+          SiteName: 'SiteName',
           HostName: 'HostName',
         });
       }
@@ -121,7 +119,7 @@ describe('Component: sharedMeetingReport', function () {
       expect(this.controller.csvDownload).toBeFalsy();
       expect(this.controller.csvHref).toContain(this.siteUrl);
       expect(this.controller.csvFilename).toEqual('shared_meeting.csv');
-
+      expect(this.controller.csvFilename2).toEqual('concurrent_meetings.csv');
       expect(this.controller.isRefresh()).toBeFalsy();
       expect(this.controller.isEmpty()).toBeFalsy();
       expect(this.controller.isSet()).toBeTruthy();
@@ -191,7 +189,9 @@ describe('Component: sharedMeetingReport', function () {
 
   describe('When the graph API returns an error', function () {
     it('should start with expected defaults', function () {
-      spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.returnValue(this.$q.reject(this.error));
+      spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake(() => {
+        return this.$q.reject(this.error);
+      });
       spyOn(this.SharedMeetingsReportService, 'getDetailedReportData');
       this.initController();
 
@@ -222,7 +222,9 @@ describe('Component: sharedMeetingReport', function () {
 
   describe('When detailed API returns an error', function () {
     it('should start with expected defaults', function () {
-      spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.returnValue(this.$q.reject(this.error));
+      spyOn(this.SharedMeetingsReportService, 'getDetailedReportData').and.callFake(() => {
+        return this.$q.reject(this.error);
+      });
       spyOn(this.SharedMeetingsReportService, 'getMaxConcurrentMeetingsData').and.callFake((): any => {
         const APIResponse: any = _.cloneDeep(this.data.APIResponse);
         APIResponse.MaxConcurrentMeetings = this.createMaxMeetings(this.controller.timeSelected.value);

@@ -48,4 +48,23 @@
       </div>
     </div>
   </div>
+
+  <div class="cs-form__section" ng-if="mcpInfo.showDeleteOrg">
+    <!-- close account -->
+    <div class="section__info">
+      <h4 class="section__title" translate="my-company.closeAccount"></h4>
+    </div>
+    <div class="section__content">
+      <div class="sub-section__description" translate="my-company.closeAccountNote"></div>
+      <div class="sub-section__description" translate="my-company.closeAccountWarning"></div>
+      <div>
+        <button
+          class="btn btn--default"
+          ng-click="mcpInfo.deleteOrg()">
+          <span translate="organizationDeleteModal.deleteButton"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
 </form>

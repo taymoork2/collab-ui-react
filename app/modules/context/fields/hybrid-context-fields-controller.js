@@ -1,15 +1,18 @@
 require('./_fields-list.scss');
+var momentFilter = require('../filters/momentFilter').Moment;
+
 (function () {
   'use strict';
 
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
-
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
   angular
     .module('Context')
     .controller('HybridContextFieldsCtrl', HybridContextFieldsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo) {
+  function HybridContextFieldsCtrl($scope, $rootScope, $state, $translate, Log, LogMetricsService, $q, ContextFieldsService, Notification, PropertyService, Authinfo, FieldUtils, ContextAdminAuthorizationService) {
+    var dateTimeFormatString = 'LL';
     var vm = this;
     var eventListeners = [];
 
@@ -24,7 +27,7 @@ require('./_fields-list.scss');
     };
     vm.showNew = false;
     vm.maxFieldsAllowed = PropertyConstants.MAX_FIELDS_DEFAULT_VALUE;
-    vm.maxLimitReachedTooltip = $translate.instant('context.dictionary.fieldPage.limitReached');
+    vm.newButtonTooltip = '';
 
     vm.filterBySearchStr = filterBySearchStr;
     vm.filterList = filterList;
@@ -46,11 +49,13 @@ require('./_fields-list.scss');
         callback: function (newField) {
           var fieldCopy = _.cloneDeep(newField);
           vm.fieldsList.allFields.unshift(processField(fieldCopy));
-          checkFieldsLimit();
+          checkFieldsLimitAndSetTooltip();
           filterList(vm.searchStr);
         },
       });
     };
+
+    vm.adminAuthorizationStatus = AdminAuthorizationStatus.UNKNOWN;
 
     $scope.$on('$destroy', onDestroy);
 
@@ -97,14 +102,6 @@ require('./_fields-list.scss');
         PII: $translate.instant('context.dictionary.fieldPage.piiEncrypted'),
       };
 
-      var dataTypeApiMap = {
-        boolean: $translate.instant('context.dictionary.dataTypes.boolean'),
-        date: $translate.instant('context.dictionary.dataTypes.date'),
-        double: $translate.instant('context.dictionary.dataTypes.double'),
-        integer: $translate.instant('context.dictionary.dataTypes.integer'),
-        string: $translate.instant('context.dictionary.dataTypes.string'),
-      };
-
       // searchable is a string, so even "false" is truthy. if searchable has a value already, get boolean value
       // default to true if not provided
       if (_.isString(field.searchable)) {
@@ -116,20 +113,9 @@ require('./_fields-list.scss');
       }
       field.searchableUI = searchableMap[field.searchable] || $translate.instant('common.yes');
 
-      if (field.dataType) {
-        field.dataTypeUI = dataTypeApiMap[field.dataType.trim()];
-
-        //for custom type
-        if (field.dataTypeDefinition && field.dataTypeDefinition.type === 'enum') {
-          field.dataTypeUI = $translate.instant('context.dictionary.dataTypes.enumString');
-        }
-      }
+      field.dataTypeUI = FieldUtils.getDataType(field);
 
       field.classificationUI = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
-
-      if (field.lastUpdated) {
-        field.lastUpdatedUI = moment(field.lastUpdated).format('LL');
-      }
 
       var accessibleMap = {
         true: $translate.instant('context.dictionary.base'),
@@ -158,23 +144,24 @@ require('./_fields-list.scss');
           vm.gridOptions.data = processedFields;
           vm.fieldsList.allFields = processedFields;
           vm.noSearchResults = processedFields.length === 0;
+          return $q.resolve();
         })
         .catch(function (err) {
           Log.debug('CS fields search failed. Status: ' + err);
           Notification.error('context.dictionary.fieldPage.fieldReadFailed');
           vm.fetchFailed = true;
-          return $q.reject(err);
         });
 
       var promises = {
         getAndProcessFieldsPromise: getAndProcessFieldsPromise,
         getMaxFieldsAllowed: getMaxFieldsAllowed(),
+        getAdminAuthorizationStatus: getAdminAuthorizationStatus(),
       };
 
       return $q.all(promises)
         .then(function () {
           vm.gridApi.infiniteScroll.dataLoaded();
-          checkFieldsLimit();
+          checkFieldsLimitAndSetTooltip();
         })
         .finally(function () {
           vm.gridRefresh = false;
@@ -182,12 +169,31 @@ require('./_fields-list.scss');
         });
     }
 
-    function checkFieldsLimit() {
+    function checkFieldsLimitAndSetTooltip() {
       var customFields = vm.fieldsList.allFields.filter(function (field) {
         return _.get(field, 'publiclyAccessibleUI', '').toLowerCase() !== 'cisco';
       });
 
-      vm.showNew = customFields.length < vm.maxFieldsAllowed;
+      vm.showNew = customFields.length < vm.maxFieldsAllowed && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED);
+
+      if (!vm.showNew) {
+        switch (vm.adminAuthorizationStatus) {
+          case AdminAuthorizationStatus.AUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.limitReached');
+            break;
+          case AdminAuthorizationStatus.UNAUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.notAuthorized');
+            break;
+          case AdminAuthorizationStatus.UNKNOWN:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.unknownAdminAuthorizationStatus');
+            break;
+          case AdminAuthorizationStatus.NEEDS_MIGRATION:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldPage.needsMigration');
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     function initializeGrid() {
@@ -197,6 +203,7 @@ require('./_fields-list.scss');
         vm.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fields-sidepanel', {
+            adminAuthorizationStatus: vm.adminAuthorizationStatus,
             field: row.entity,
             process: processField,
             callback: function (updatedField) {
@@ -261,8 +268,10 @@ require('./_fields-list.scss');
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdatedUI',
+          field: 'lastUpdated',
           displayName: $translate.instant('context.dictionary.dateUpdated'),
+          type: 'date',
+          cellFilter: momentFilter.getDateFilter(dateTimeFormatString),
           maxWidth: 300,
         }],
       };
@@ -288,9 +297,22 @@ require('./_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchString = function (field) {
-        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdatedUI', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'dataTypeUI', 'searchableUI', 'classificationUI', 'lastUpdated', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
-          var value = _.get(field, property, '').toLowerCase();
+          var value = field[property];
+          if (value === undefined) {
+            return false;
+          }
+
+          if (property === 'lastUpdated') {
+            value = value.trim();
+            if (value === '') {
+              // can't match against empty string because that will create a date based on "now"
+              return false;
+            }
+            value = moment(value).format(dateTimeFormatString).toLowerCase();
+          }
+          value = value.toLowerCase();
           return _.includes(value, lowerStr);
         });
       };
@@ -306,7 +328,17 @@ require('./_fields-list.scss');
           Log.error('unable to get max fields allowed property', err);
         })
         .then(function () {
-          return vm.maxFieldsetsAllowed;
+          return vm.maxFieldsAllowed;
+        });
+    }
+
+    function getAdminAuthorizationStatus() {
+      return ContextAdminAuthorizationService.getAdminAuthorizationStatus()
+        .then(function (status) {
+          vm.adminAuthorizationStatus = status;
+        })
+        .catch(function (err) {
+          Log.error('unable to get admin authorization status', err);
         });
     }
   }

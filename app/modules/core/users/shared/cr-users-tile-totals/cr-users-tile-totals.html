@@ -1,0 +1,20 @@
+<div class="user-tile-totals">
+  <div class="user-tile-total" ng-if="!$ctrl.hideNew">
+    <h2 class="user-tile-total__value user-tile-total__value--new"
+      ng-class="{'user-tile-total__value--disabled': $ctrl.newTotal === 0}"
+      ng-bind="$ctrl.newTotal"></h2>
+    <h5 class="user-tile-total__label" ng-bind="::$ctrl.newTileLabel"></h5>
+  </div>
+  <div class="user-tile-total">
+    <h2 class="user-tile-total__value user-tile-total__value--updated"
+      ng-class="{'user-tile-total__value--disabled': $ctrl.updatedTotal === 0}"
+      ng-bind="$ctrl.updatedTotal"></h2>
+    <h5 class="user-tile-total__label" ng-bind="::$ctrl.updatedTileLabel"></h5>
+  </div>
+  <div class="user-tile-total" ng-hide="$ctrl.hideErrorsIfNone && $ctrl.errorTotal === 0">
+    <h2 class="user-tile-total__value user-tile-total__value--error"
+      ng-class="{'user-tile-total__value--disabled': $ctrl.errorTotal === 0}"
+      ng-bind="$ctrl.errorTotal"></h2>
+    <h5 class="user-tile-total__label" ng-bind="::$ctrl.errorTileLabel"></h5>
+  </div>
+</div>

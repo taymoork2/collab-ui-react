@@ -1,6 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-  </button>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="{{choosePersonal.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-personal">
@@ -29,7 +28,6 @@
           <span translate="addDeviceWizard.confirmRoomDeviceOnly.noSparkCallWarning"></span>
         </div>
       </div>
-      <div class="scrollSpace"></div>
     </form>
   </div>
 </div>

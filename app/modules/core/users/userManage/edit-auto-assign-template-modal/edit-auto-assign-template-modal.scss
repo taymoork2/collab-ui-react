@@ -1,0 +1,9 @@
+@import 'styles/partials/mixins';
+
+edit-auto-assign-template-modal {
+  @include keep-flex-container(column);
+}
+
+.modal-content__assignable-services {
+  margin-top: 1.5rem;
+}

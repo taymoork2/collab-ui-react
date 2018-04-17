@@ -1,9 +1,11 @@
 import { Member } from 'modules/huron/members';
 
 interface IDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
+interface IUserDirectoryNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {}
 
 export class CallFeatureFallbackDestinationService {
   private directoryNumberResource: IDirectoryNumberResource;
+  private userDirectoryNumberResource: IUserDirectoryNumberResource;
 
     /* @ngInject */
   constructor(
@@ -11,8 +13,8 @@ export class CallFeatureFallbackDestinationService {
     private Authinfo,
     private HuronConfig,
   ) {
-
     this.directoryNumberResource = <IDirectoryNumberResource>this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId');
+    this.userDirectoryNumberResource = <IUserDirectoryNumberResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/users/:userId/numbers/:numberId');
   }
 
   // TODO (jlowery): rename this
@@ -20,6 +22,14 @@ export class CallFeatureFallbackDestinationService {
     return this.directoryNumberResource.get({
       customerId: this.Authinfo.getOrgId(),
       directoryNumberId: numberUuid,
+    }).$promise;
+  }
+
+  public getUserDirectoryNumber(userId, numberId): ng.IPromise<any> {
+    return this.userDirectoryNumberResource.get({
+      customerId: this.Authinfo.getOrgId(),
+      userId: userId,
+      numberId: numberId,
     }).$promise;
   }
 

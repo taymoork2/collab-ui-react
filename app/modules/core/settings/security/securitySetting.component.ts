@@ -14,5 +14,5 @@ export class SecuritySetting extends ProPackSettingSection {
 export class SecuritySettingComponent implements ng.IComponentOptions {
   public controller = SecuritySettingController;
   public controllerAs = 'secCtrl';
-  public templateUrl = 'modules/core/settings/security/securitySetting.tpl.html';
+  public template = require('modules/core/settings/security/securitySetting.tpl.html');
 }

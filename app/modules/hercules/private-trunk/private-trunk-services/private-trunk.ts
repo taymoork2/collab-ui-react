@@ -1,8 +1,8 @@
 export interface IPrivateTrunkResource {
-  uuid?: string | undefined;
+  uuid?: string;
   name: string;
   address: string;
-  port?: number | undefined | 0;
+  port?: number;
 }
 
 export interface IPrivateTrunkDomain {

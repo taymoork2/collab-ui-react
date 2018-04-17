@@ -5,15 +5,28 @@
     .controller('EnterpriseSettingsCtrl', EnterpriseSettingsCtrl);
 
   /* @ngInject */
-  function EnterpriseSettingsCtrl($q, $rootScope, $scope, $timeout, $translate, $window, Authinfo, Config, Log, Notification, ServiceSetup, PersonalMeetingRoomManagementService, SSOService, Orgservice, UrlConfig, FeatureToggleService) {
+  function EnterpriseSettingsCtrl(
+    $modal,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    $translate,
+    $window,
+    Authinfo,
+    Config,
+    FeatureToggleService,
+    Log,
+    Notification,
+    Orgservice,
+    PersonalMeetingRoomManagementService,
+    ServiceSetup,
+    SSOService,
+    SsoCertificateService,
+    UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
-    var strSignOn = 'SingleSignOnService';
-    var strLocation = 'Location';
-    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
-    var bindingStr = 'Binding="' + _BINDINGS;
-    var strBindingEnd = '" ';
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -30,6 +43,7 @@
     };
     var vm = this;
     vm.sipUpdateToggle = false;
+    vm.sparkAssistantToggle = false;
 
     vm.pmrField = {
       inputValue: '',
@@ -76,10 +90,10 @@
     function init() {
       $q.all({
         sipUpdateToggle: FeatureToggleService.atlasSubdomainUpdateGetStatus(),
-        nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
+        sparkAssistantToggle: FeatureToggleService.atlasSparkAssistantGetStatus(),
       }).then(function (toggles) {
         vm.sipUpdateToggle = toggles.sipUpdateToggle;
-        $scope.nameChangeEnabled = toggles.nameChangeEnabled;
+        vm.sparkAssistantToggle = toggles.sparkAssistantToggle;
       });
 
       setPMRSiteUrlFromSipDomain();
@@ -136,7 +150,7 @@
             pmrField.errorMsg = $translate.instant('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
             pmrField.isError = true;
           } else {
-            Notification.error('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
+            Notification.errorWithTrackingId(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
           }
           pmrField.isLoading = false;
           pmrField.isButtonDisabled = false;
@@ -232,19 +246,43 @@
     }];
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
-      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
-        var r = $window.confirm($translate.instant('ssoModal.disableSSOByRadioWarning'));
-        if (r === true) {
-          $scope.options.configureSSO = 1;
-          $scope.options.deleteSSOBySwitchingRadio = true;
-          deleteSSO();
-        } else {
-          $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
-          $scope.options.configureSSO = 0;
-          $scope.options.deleteSSOBySwitchingRadio = false;
-        }
-      }
+      vm.changeSSO(updatedConfigureSSOValue);
     });
+
+    vm.changeSSO = function (updatedConfigureSSOValue) {
+      if ($rootScope.ssoEnabled && updatedConfigureSSOValue === 1) {
+        // Check if emails are suppressed or not
+        var params = {
+          basicInfo: true,
+          disableCache: false,
+        };
+        Orgservice.getAdminOrgAsPromise(null, params).then(function (response) {
+          var isOnBoardingEmailSuppressed = response.data.isOnBoardingEmailSuppressed || false;
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = isOnBoardingEmailSuppressed
+                ? $translate.instant('ssoModal.disableSSOByRadioWarningWhenEmailsSuppressed')
+                : $translate.instant('ssoModal.disableSSOByRadioWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
+            $scope.options.configureSSO = 1;
+            $scope.options.deleteSSOBySwitchingRadio = true;
+            // Set the email suppress state to FALSE when the SSO is disabled
+            Orgservice.setOrgEmailSuppress(false).then(function () {
+              deleteSSO();
+            }).catch(_.noop);
+          }).catch(function () {
+            $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
+            $scope.options.configureSSO = 0;
+            $scope.options.deleteSSOBySwitchingRadio = false;
+          });
+        });
+      }
+    };
 
     $scope.$watch('options.enableSSORadioOption', function () {
       var ssoValue = $scope.options.enableSSORadioOption;
@@ -300,12 +338,20 @@
     $scope.$watch('idpFile.file', function () {
       if ($scope.idpFile.file) {
         if ($rootScope.ssoEnabled) {
-          if ($window.confirm($translate.instant('ssoModal.idpOverwriteWarning'))) {
+          $modal.open({
+            template: require('modules/core/setupWizard/enterpriseSettings/ssoDisableConfirm.tpl.html'),
+            type: 'dialog',
+            controller: function () {
+              var vm = this;
+              vm.message = $translate.instant('ssoModal.idpOverwriteWarning');
+            },
+            controllerAs: 'vm',
+          }).result.then(function () {
             $timeout($scope.importRemoteIdp);
-          } else {
+          }).catch(function () {
             //reset
             resetFile();
-          }
+          });
         } else {
           //sso is not enabled.Import the idp file
           $timeout($scope.importRemoteIdp);
@@ -330,7 +376,8 @@
             if (metaData.entityId === newEntityId) {
               patchRemoteIdp(metaData.url);
             } else {
-              SSOService.deleteMeta(metaData.url, function (status) {
+              SSOService.deleteMeta(metaData.url, function (response) {
+                var status = response.status;
                 if (status === 204) {
                   postRemoteIdp();
                 }
@@ -353,17 +400,18 @@
       var selfSigned = !!$scope.options.SSOSelfSigned;
       var metaUrl = null;
       var success = true;
-      SSOService.getMetaInfo(function (data, status) {
+      SSOService.getMetaInfo(function (data, status, response) {
         $scope.wizard.wizardNextLoad = true;
         if (data.success && data.data.length > 0) {
           //check if data already exists for this entityId
           metaUrl = _.get(data, 'data[0].url');
           if (metaUrl) {
             //call patch with sso false
-            SSOService.patchRemoteIdp(metaUrl, null, selfSigned, false, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, null, selfSigned, false, function (data, status, response) {
               if (data.success) {
                 //patch success so delete metadata
-                SSOService.deleteMeta(metaUrl, function (status) {
+                SSOService.deleteMeta(metaUrl, function (response) {
+                  var status = response.status;
                   if (status !== 204) {
                     success = false;
                   }
@@ -378,14 +426,14 @@
                     $rootScope.ssoEnabled = false;
                   } else {
                     Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-                    Notification.error('ssoModal.disableFailed', {
+                    Notification.errorWithTrackingId(response, 'ssoModal.disableFailed', {
                       status: status,
                     });
                   }
                 });
               } else {
                 Log.debug('Failed to Patch On-premise IdP Metadata. Status: ' + status);
-                Notification.error('ssoModal.disableFailed', {
+                Notification.errorWithTrackingId(response, 'ssoModal.disableFailed', {
                   status: status,
                 });
               }
@@ -393,7 +441,7 @@
           }
         } else {
           Log.debug('Failed to retrieve meta url. Status: ' + status);
-          Notification.error('ssoModal.disableFailed', {
+          Notification.errorWithTrackingId(response, 'ssoModal.disableFailed', {
             status: status,
           });
         }
@@ -428,7 +476,7 @@
             entityId: newEntityId,
           }), 'url');
           if (metaUrl) {
-            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status) {
+            SSOService.patchRemoteIdp(metaUrl, $rootScope.fileContents, selfSigned, true, function (data, status, response) {
               if (data.success) {
                 Log.debug('Single Sign-On (SSO) successfully enabled for all users');
                 $scope.ssoEnabled = true;
@@ -436,14 +484,14 @@
                 $scope.wizard.nextTab();
               } else {
                 Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
-                Notification.error('ssoModal.enableSSOFailure', {
+                Notification.errorWithTrackingId(response, 'ssoModal.enableSSOFailure', {
                   status: status,
                 });
               }
             });
           }
         } else {
-          SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, true, function (data, status) {
+          SSOService.importRemoteIdp($scope.idpFile.file, selfSigned, true, function (data, status, response) {
             if (data.success) {
               Log.debug('Single Sign-On (SSO) successfully enabled for all users');
               $rootScope.ssoEnabled = true;
@@ -451,7 +499,7 @@
               $scope.wizard.nextTab();
             } else {
               Log.debug('Failed to enable Single Sign-On (SSO). Status: ' + status);
-              Notification.error('ssoModal.enableSSOFailure', {
+              Notification.errorWithTrackingId(response, 'ssoModal.enableSSOFailure', {
                 status: status,
               });
             }
@@ -505,37 +553,35 @@
 
     function checkReqBinding() {
       var file = _.get($scope, 'idpFile.file');
-      if (_.isString(file)) {
-        var start = file.indexOf(strSignOn);
-        start = file.indexOf(bindingStr, start);
-        var end = file.indexOf(strLocation, start) - strBindingEnd.length;
-        var reqBinding = file.substring(start + bindingStr.length, end);
-        return reqBinding;
+      if (!_.isString(file)) {
+        return '';
       }
+
+      return SsoCertificateService.getReqBinding(file);
     }
 
     $scope.openTest = function () {
       var entityId;
       var reqBinding;
       $scope.testOpened = true;
-      SSOService.getMetaInfo(function (data, status) {
+      SSOService.getMetaInfo(function (data, status, response) {
         if (data.success) {
           if (data.data.length > 0) {
             entityId = data.data[0].entityId;
-            reqBinding = checkReqBinding(data);
+            reqBinding = checkReqBinding();
           }
-          if (entityId && reqBinding) {
-            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
+          if (entityId) {
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + SsoCertificateService.HTTP_POST_BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);
-            Notification.error('ssoModal.retrieveEntityIdFailed', {
+            Notification.errorWithTrackingId(response, 'ssoModal.retrieveEntityIdFailed', {
               status: status,
             });
           }
         } else {
           Log.debug('Failed to retrieve entity id. Status: ' + status);
-          Notification.error('ssoModal.retrieveEntityIdFailed', {
+          Notification.errorWithTrackingId(response, 'ssoModal.retrieveEntityIdFailed', {
             status: status,
           });
         }

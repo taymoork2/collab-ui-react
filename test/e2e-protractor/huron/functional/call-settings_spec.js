@@ -1,13 +1,13 @@
 import * as provisioner from '../../provisioner/provisioner';
-import { huronCustomer } from '../../provisioner/huron-customer-config';
+import { huronCustomer } from '../../provisioner/huron/huron-customer-config';
 import { CallSettingsPage } from '../pages/callSettings.page';
 
 const callSettings = new CallSettingsPage();
-
 /* global LONG_TIMEOUT */
 
 describe('Huron Functional: call-settings', () => {
-  const customer = huronCustomer('call-settings');
+  const customer = huronCustomer({ test: 'call-settings' });
+
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -36,7 +36,7 @@ describe('Huron Functional: call-settings', () => {
     it('click on preferred  language drop down', () => {
       utils.selectDropdown('.csSelect-container[name="preferredLanguage"]', newPreferredLanguage);
     });
-    
+
     it('click on time zone drop down', () => {
       utils.selectDropdown('.csSelect-container[name="timeZone"]', newTimeZone);
     });
@@ -56,9 +56,9 @@ describe('Huron Functional: call-settings', () => {
     it('click on time format drop down', () => {
       utils.selectDropdown('.csSelect-container[name="timeFormatSelect"]', newTimeFormat);
     });
-    
+
     it('click on save button', () => {
-      utils.click(callSettings.saveButton).then(()=> {
+      utils.click(callSettings.saveButton).then(() => {
         notifications.assertSuccess();
       });
     });
@@ -74,7 +74,7 @@ describe('Huron Functional: call-settings', () => {
     it('saved time format is displayed', () => {
       utils.expectText(callSettings.timeFormat, newTimeFormat);
     });
-      
+
     it('saved preferred language is displayed', () => {
       utils.expectText(callSettings.preferredLanguage, newPreferredLanguage);
     });
@@ -175,7 +175,7 @@ describe('Huron Functional: call-settings', () => {
     });
   });
 
-  describe('Voicemail', () => {
+  xdescribe('Voicemail', () => {
     describe('Activate voicemail', () => {
       it('should default to inactive', () => {
         utils.expectSwitchState(callSettings.voicemailSwitch, false);
@@ -199,7 +199,7 @@ describe('Huron Functional: call-settings', () => {
       });
     });
 
-    describe('Voicemail settings', () => {
+    xdescribe('Voicemail settings', () => {
       it('should default to not having External Voicemail Access', () => {
         utils.scrollIntoView(callSettings.externalVoicemailCheckBox);
         expect(utils.getCheckboxVal(callSettings.externalVoicemailCheckBox)).toBeFalsy();
@@ -228,7 +228,7 @@ describe('Huron Functional: call-settings', () => {
       });
     });
 
-    describe('Turn off Voicemail settings', () => {
+    xdescribe('Turn off Voicemail settings', () => {
       it('should switch to inactive on click', () => {
         utils.click(callSettings.voicemailSwitch);
       });

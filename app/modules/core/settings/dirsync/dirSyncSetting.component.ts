@@ -5,11 +5,12 @@ export class DirSyncSetting extends SettingSection {
   /* @ngInject */
   public constructor() {
     super('dirsync');
-    this.subsectionLabel = '';    // dont display a subsection label
+    this.subsectionLabel = '';
+    this.subsectionDescription = '';
   }
 }
 
 export class DirSyncSettingComponent implements ng.IComponentOptions {
   public controller = DirSyncSettingController;
-  public templateUrl = 'modules/core/settings/dirsync/dirsyncSetting.tpl.html';
+  public template = require('modules/core/settings/dirsync/dirsyncSetting.tpl.html');
 }

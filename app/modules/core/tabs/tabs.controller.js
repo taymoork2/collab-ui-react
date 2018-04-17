@@ -4,17 +4,17 @@
   angular.module('Core')
     .controller('TabsCtrl', TabsCtrl);
 
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig, tabConfigAtlas2017NameChange) {
+  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, ControlHubService) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
-    vm.isShowAtlas2017NameChange = false;
-    vm.image = '/images/control-hub-logo.svg';
-    vm.isCollapsed = {
-      value: false,
-      image: '/images/spark-logo.svg',
-    };
+    vm.image = null;
+    vm.collapsed = null;
+    vm.icon = null;
+    vm.onResize = onResize;
 
     initTabs();
 
@@ -74,17 +74,17 @@
     }
 
     function initTabs() {
-      FeatureToggleService.atlas2017NameChangeGetStatus().then(function (result) {
-        vm.isShowAtlas2017NameChange = result;
-        vm.unfilteredTabs = initializeTabs();
-        vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
-        getFeatureToggles(vm.features);
-        filterTabsOnFeaturesAndSetActiveTab();
-      });
+      vm.image = ControlHubService.getImage();
+      vm.icon = ControlHubService.getIcon();
+      vm.collapsed = ControlHubService.getCollapsed();
+      vm.unfilteredTabs = initializeTabs();
+      vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
+      getFeatureToggles(vm.features);
+      filterTabsOnFeaturesAndSetActiveTab();
     }
 
     function initializeTabs() {
-      var tabs = _.cloneDeep(vm.isShowAtlas2017NameChange ? tabConfigAtlas2017NameChange : tabConfig);
+      var tabs = _.cloneDeep(ControlHubService.getTabs());
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed
@@ -109,12 +109,6 @@
     }
 
     function isAllowedTab(tab) {
-      // partner settings moved to new location under FeatureToggleService.atlas2017NameChange
-      // once feature toggle removed, updated Config to restrict 'settings' in partner view
-      if (tab.state === 'settings' && Authinfo.isPartner() && vm.isShowAtlas2017NameChange) {
-        return false;
-      }
-
       return Authinfo.isAllowedState(tab.state) && !isHideProdTab(tab);
     }
 
@@ -161,6 +155,10 @@
       $q.all(toggles).then(function () {
         filterTabsOnFeaturesAndSetActiveTab();
       });
+    }
+
+    function onResize() {
+      $rootScope.$emit(CoreEvent.SIDENAV_RESIZED);
     }
   }
 })();

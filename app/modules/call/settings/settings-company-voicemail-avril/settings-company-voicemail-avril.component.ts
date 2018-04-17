@@ -1,6 +1,6 @@
 import { Site } from 'modules/huron/sites';
 import { IOption } from 'modules/huron/dialing/dialing.service';
-import { IAvrilFeatures } from 'modules/huron/avril';
+import { IAvrilSiteFeatures } from 'modules/call/avril';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 const VM_TO_EMAIL_WITH_ATTACH: string = 'withAttachment';
@@ -8,7 +8,7 @@ const VM_TO_EMAIL_WITHOUT_ATTACH: string = 'withoutAttachment';
 
 class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   public site: Site;
-  public features: IAvrilFeatures;
+  public features: IAvrilSiteFeatures;
   public selectedNumber: IOption;
   public missingDirectNumbers: boolean;
   public filterPlaceholder: string;
@@ -105,7 +105,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
   }
 
   public onVoicemailToEmailChanged(): void {
-    if (this.voicemailToEmail) {
+    if (this.voicemailToEmail && !_.isUndefined(this.features)) {
       this.features.VM2E = true;
       this.features.VM2E_PT = false;
       this.attachmentPref = VM_TO_EMAIL_WITH_ATTACH;
@@ -137,6 +137,9 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
       let pilotNumber: string = '';
       if (setOTP && this.isMessage) {
         this.enableOTP = this.features.VMOTP = true;
+      }
+      if (this.features && _.isUndefined(this.features.VM2E_PT)) {
+        this.features.VM2E_PT = false;
       }
       if (this.selectedNumber && this.selectedNumber.value) {
         this.onCompanyVoicemailNumberChanged();
@@ -192,7 +195,7 @@ class CompanyVoicemailAvrilComponentCtrl implements ng.IComponentController {
 
 export class CompanyVoicemailAvrilComponent implements ng.IComponentOptions {
   public controller = CompanyVoicemailAvrilComponentCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-voicemail-avril/settings-company-voicemail-avril.component.html';
+  public template = require('modules/call/settings/settings-company-voicemail-avril/settings-company-voicemail-avril.component.html');
   public bindings = {
     site: '<',
     features: '<',

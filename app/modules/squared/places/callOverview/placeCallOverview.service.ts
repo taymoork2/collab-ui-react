@@ -1,9 +1,11 @@
+import { PrimaryNumber } from 'modules/huron/primaryLine';
 export class PlaceCallOverviewData {
   public preferredLanguageOptions: any[];
   public preferredLanguage: any;
   public placesPreferredLanguage: string;
   public defaultPreferredLanugage: any;
   public siteLevelPreferredLanguage: string;
+  public primaryNumber: PrimaryNumber;
 }
 
 export class PlaceCallOverviewService {
@@ -43,6 +45,7 @@ export class PlaceCallOverviewService {
     const queryString = {
       customerId: this.Authinfo.getOrgId(),
       placesId: placesId,
+      wide: true,
     };
     return this.PlacesService.get(queryString).$promise;
   }
@@ -56,6 +59,14 @@ export class PlaceCallOverviewService {
       preferredLanguage: placePreferredLanguage,
     };
     return this.PlacesService.update(queryString, requestBody).$promise;
+  }
+
+  public updateCmiPlacePrimaryNumber(placesId, lineSelection) {
+    const queryString = {
+      customerId: this.Authinfo.getOrgId(),
+      placesId: placesId,
+    };
+    return this.PlacesService.update(queryString, lineSelection).$promise;
   }
 
   public getPlaceCallOverviewData(placesId): ng.IPromise<PlaceCallOverviewData> {
@@ -82,6 +93,7 @@ export class PlaceCallOverviewService {
       placeCallOverviewData.preferredLanguage = placesPreferredLanguage ?
                                                   this.findPreferredLanguageByCode(languages, placesPreferredLanguage) :
                                                   defaultPreferredLanugage;
+      placeCallOverviewData.primaryNumber = _.get(data[2], 'primaryNumber');
       this.placeCallOverviewDataCopy = this.clonePlaceCallOverviewData(placeCallOverviewData);
       return placeCallOverviewData;
     });

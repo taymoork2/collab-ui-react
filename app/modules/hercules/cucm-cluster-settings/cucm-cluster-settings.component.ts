@@ -24,7 +24,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
       });
   }
 
-  /* Callback function used by <hs-rename-and-deregister-cluster-section>  */
+  /* Callback function used by <hs-cluster-section> */
   public nameUpdated(name) {
     this.$rootScope.$emit('cluster-name-update', name);
   }
@@ -32,7 +32,7 @@ class CucmClusterSettingsPageCtrl implements ng.IComponentController {
 
 export class CucmClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = CucmClusterSettingsPageCtrl;
-  public templateUrl = 'modules/hercules/cucm-cluster-settings/cucm-cluster-settings.component.html';
+  public template = require('modules/hercules/cucm-cluster-settings/cucm-cluster-settings.component.html');
   public bindings = {
     clusterId: '<',
   };

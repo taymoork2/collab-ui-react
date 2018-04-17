@@ -65,12 +65,19 @@
 
   "carevoice_user_patch_payload": {
     "schemas":["urn:scim:schemas:core:1.0","urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-    "roles":["spark.synckms", "ciscouc.ces"],"entitlements":["contact-center-context"]
+    "roles":["spark.synckms"],"entitlements":["contact-center-context"]
   },
 
   "carevoice_user_license_payload": [
       {"id":"MS_f41bc544-e633-4c37-86b7-b8b120d8a278","idOperation":"ADD","properties":{}},
       {"id":"CO_04ae5016-9477-4c10-8c79-4f8546aa6f98","idOperation":"ADD","properties":{"internalExtension":"5031"}},
       {"id":"CVC_7a6b498b-e699-4e12-bd74-8a0b156ede38","idOperation":"ADD","properties":{}},
+      {"id":"CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32","idOperation":"REMOVE","properties":{}}],
+
+  "non_sunlight_license_payload": [
+      {"id":"MS_f41bc544-e633-4c37-86b7-b8b120d8a278","idOperation":"ADD","properties":{}},
+      {"id":"CO_04ae5016-9477-4c10-8c79-4f8546aa6f98","idOperation":"ADD","properties":{"internalExtension":"5031"}},
+      {"id":"CVC_7a6b498b-e699-4e12-bd74-8a0b156ede38","idOperation":"REMOVE","properties":{}},
       {"id":"CDC_ff9406ba-c9e1-4def-b4e3-e33fdcadea32","idOperation":"REMOVE","properties":{}}]
+
 }

@@ -65,6 +65,9 @@ class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
   }
 
   private getAlarms() {
+    if (this.serviceId === 'squared-fusion-o365') {
+      this.serviceId = 'squared-fusion-cal';
+    }
     this.HybridServicesExtrasService.getAlarms(this.serviceId)
       .then((alarms) => {
         this.alarms = alarms;
@@ -114,7 +117,7 @@ class HsCloudAlarmsDropdownComponentCtrl implements ng.IComponentController {
 
 export class HsCloudAlarmsDropdownComponent implements ng.IComponentOptions {
   public controller = HsCloudAlarmsDropdownComponentCtrl;
-  public templateUrl = 'modules/hercules/notifications/cloud-alarms-dropdown/hs-cloud-alarms-dropdown.component.html';
+  public template = require('modules/hercules/notifications/cloud-alarms-dropdown/hs-cloud-alarms-dropdown.component.html');
   public bindings = {
     serviceId: '<',
   };

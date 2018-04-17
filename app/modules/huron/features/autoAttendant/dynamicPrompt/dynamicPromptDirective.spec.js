@@ -5,6 +5,7 @@ describe('Directive: dynamicPromptDirective', function () {
   var $compile;
   var $rootScope;
   var $scope;
+  var $timeout;
   var element;
   var CONSTANTS = {};
   CONSTANTS.read = 'blur keyup change';
@@ -19,39 +20,56 @@ describe('Directive: dynamicPromptDirective', function () {
       element.remove();
     }
     element = undefined;
+    $window = $compile = $rootScope = $timeout = undefined;
   });
 
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$window_, _$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_, _$window_) {
     $window = _$window_;
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $timeout = _$timeout_;
   }));
 
   describe('basic', function () {
+    beforeEach(function () {
+      jasmine.clock().uninstall();
+      jasmine.clock().install();
+    });
+
     it('should set up the basic dynamic prompt without ngModel and fail', function () {
-      $scope = $rootScope.$new();
-      $scope.mock = {};
-      $scope.mock.modelValues = [];
-      $scope.mock.dynamicTags = [];
-      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" spellcheck="false"></dynamic-prompt>');
-      $compile(element)($scope);
-      $scope.$digest();
+      setTimeout(function () {
+        $scope = $rootScope.$new();
+        $scope.mock = {};
+        $scope.mock.modelValues = [];
+        $scope.mock.dynamicTags = [];
+        element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" spellcheck="false"></dynamic-prompt>');
+        $compile(element)($scope);
+        $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
+      }, 100);
+      jasmine.clock().tick(101);
       expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe(undefined);
     });
 
     it('should set up the basic dynamic prompt', function () {
-      $scope = $rootScope.$new();
-      $scope.mock = {};
-      $scope.mock.ngModel = {};
-      $scope.mock.modelValues = [];
-      $scope.mock.dynamicTags = [];
-      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
-      $('body').append(element); // attach to DOM for range manipulation
-      $compile(element)($scope);
-      $scope.$digest();
+      setTimeout(function () {
+        $scope = $rootScope.$new();
+        $scope.mock = {};
+        $scope.mock.ngModel = {};
+        $scope.mock.modelValues = [];
+        $scope.mock.dynamicTags = [];
+        element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+        $('body').append(element); // attach to DOM for range manipulation
+        $compile(element)($scope);
+        $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
+      }, 100);
+      jasmine.clock().tick(101);
       expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
       expect(element.attr('spellcheck')).toBe('false');
       expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe('true');
@@ -62,14 +80,19 @@ describe('Directive: dynamicPromptDirective', function () {
     });
 
     it('should set up the basic dynamic prompt without prepopulation', function () {
-      $scope = $rootScope.$new();
-      $scope.mock = {};
-      $scope.mock.ngModel = {};
-      $scope.mock.dynamicTags = [];
-      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
-      $('body').append(element); // attach to DOM for range manipulation
-      $compile(element)($scope);
-      $scope.$digest();
+      setTimeout(function () {
+        $scope = $rootScope.$new();
+        $scope.mock = {};
+        $scope.mock.ngModel = {};
+        $scope.mock.dynamicTags = [];
+        element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+        $('body').append(element); // attach to DOM for range manipulation
+        $compile(element)($scope);
+        $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
+      }, 100);
+      jasmine.clock().tick(101);
       expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
       expect(element.attr('spellcheck')).toBe('false');
       expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe('true');
@@ -80,18 +103,23 @@ describe('Directive: dynamicPromptDirective', function () {
     });
 
     it('should set up the basic dynamic prompt with modelValue data', function () {
-      $scope = $rootScope.$new();
-      $scope.mock = {};
-      $scope.mock.ngModel = {};
-      $scope.mock.modelValues = [{
-        html: 'test-value',
-        model: 'test-value',
-      }];
-      $scope.mock.dynamicTags = [];
-      element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
-      $('body').append(element); // attach to DOM for range manipulation
-      $compile(element)($scope);
-      $scope.$digest();
+      setTimeout(function () {
+        $scope = $rootScope.$new();
+        $scope.mock = {};
+        $scope.mock.ngModel = {};
+        $scope.mock.modelValues = [{
+          html: 'test-value',
+          model: 'test-value',
+        }];
+        $scope.mock.dynamicTags = [];
+        element = angular.element('<dynamic-prompt dynamic-tags="mock.dynamicTags" model-values="mock.modelValues" insert-element="insertElement" ng-model="mock.ngModel" spellcheck="false"></dynamic-prompt>');
+        $('body').append(element); // attach to DOM for range manipulation
+        $compile(element)($scope);
+        $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
+      }, 100);
+      jasmine.clock().tick(101);
       expect(element.attr(CONSTANTS.contentEditable)).toBe('true');
       expect(element.attr('spellcheck')).toBe('false');
       expect(element.attr(CONSTANTS.placeHolderDataDiv)).toBe(undefined);
@@ -146,6 +174,8 @@ describe('Directive: dynamicPromptDirective', function () {
         $scope.mock.dynamicTags.push('DIV');
         $compile(element)($scope);
         $scope.$digest();
+        $timeout.flush();
+        $scope.$apply();
       });
 
       it('should test the basic formatted insert on function call', function () {
@@ -172,6 +202,8 @@ describe('Directive: dynamicPromptDirective', function () {
       beforeEach(function () {
         $compile(element)($scope);
         $scope.$digest();
+        $scope.$apply();
+        $timeout.flush();
       });
 
       it('should test the basic plain text read on change', function () {

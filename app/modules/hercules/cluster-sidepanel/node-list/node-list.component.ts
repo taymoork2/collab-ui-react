@@ -1,6 +1,5 @@
-import { ICluster, ConnectorType, IConnector } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications/notification.service';
-import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
 interface INodes {
@@ -10,10 +9,9 @@ interface INodes {
 
 export class NodeListComponentCtrl implements ng.IComponentController {
 
-  public cluster: ICluster;
-  public hosts;
-  public connectorType;
-  public getSeverity = this.HybridServicesClusterStatesService.getSeverity;
+  public cluster: IExtendedClusterFusion;
+  public hosts: INodes[];
+  public connectorType: ConnectorType;
   public localizedManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
   public localizedConnectorName = this.$translate.instant(`hercules.connectorNameFromConnectorType.${this.connectorType}`);
   public localizedContextManagementConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.cs_mgmt');
@@ -24,7 +22,6 @@ export class NodeListComponentCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HybridServicesClusterService: HybridServicesClusterService,
-    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private Notification: Notification,
   ) {}
 
@@ -55,7 +52,7 @@ export class NodeListComponentCtrl implements ng.IComponentController {
     return this.cluster && this.cluster.connectors.length > 0;
   }
 
-  private buildSidepanelConnectorList(cluster: ICluster, connectorTypeToKeep: ConnectorType): INodes[] {
+  private buildSidepanelConnectorList(cluster: IExtendedClusterFusion, connectorTypeToKeep: ConnectorType): INodes[] {
     // Find and populate hostnames only, and make sure that they are only there once
     const nodes: INodes[] = _.chain(cluster.connectors)
       .map(connector => {
@@ -74,6 +71,9 @@ export class NodeListComponentCtrl implements ng.IComponentController {
         const node = _.find(nodes, node => {
           return node.hostname === connector.hostname;
         });
+        if (node.hostname === '') {
+          node.hostname = this.$translate.instant('hercules.connectors.no_name');
+        }
         node.connectors.push(connector);
       }
     });
@@ -83,7 +83,7 @@ export class NodeListComponentCtrl implements ng.IComponentController {
 
 export class NodeListComponent implements ng.IComponentOptions {
   public controller = NodeListComponentCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/node-list/node-list.html';
+  public template = require('modules/hercules/cluster-sidepanel/node-list/node-list.html');
   public bindings = {
     cluster: '<',
     connectorType: '<',

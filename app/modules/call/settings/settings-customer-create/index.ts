@@ -4,8 +4,7 @@ export { HuronCustomerCreateComponent };
 
 export default angular
   .module('call.settings.customer-create', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .component('ucHuronCustomerCreate', new HuronCustomerCreateComponent())
   .name;

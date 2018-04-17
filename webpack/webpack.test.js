@@ -7,8 +7,17 @@ const _ = require('lodash');
 function webpackConfig(env) {
   const commonWebpackConfig = commonWebpack(env);
 
+  // option to opt-in to lint in test env
+  if (env.lint) {
+    commonWebpackConfig.module.rules.push(loaders.eslint);
+    commonWebpackConfig.module.rules.push(loaders.tslint);
+  }
+
   // include instrumentation loader
-  commonWebpackConfig.module.rules.push(loaders.instrument);
+  if (env.coverage) {
+    commonWebpackConfig.module.rules.push(loaders.instrumentJs);
+    commonWebpackConfig.module.rules.push(loaders.instrumentTs);
+  }
 
   const tsLoaderRule = _.find(commonWebpackConfig.module.rules, loaders.ts);
   const tsLoader = _.find(tsLoaderRule.use, {
@@ -21,12 +30,12 @@ function webpackConfig(env) {
 
   const testConfig = merge.smart(commonWebpackConfig, {
     devtool: 'inline-source-map',
-    output: {},
     plugins: [
       new webpack.NormalModuleReplacementPlugin(/\.(svg|png|jpg|jpeg|gif|ico|scss|css|woff|woff2|ttf|eot|pdf)$/, 'node-noop'),
     ],
   });
-
+  // replace `output` with empty object
+  testConfig.output = {};
   // remove `entry` for karma-webpack
   delete testConfig.entry;
 

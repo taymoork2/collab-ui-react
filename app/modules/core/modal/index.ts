@@ -6,12 +6,13 @@ const ModalCtrl = require('./modal.controller');
  * Add a type to the default Modal settings (used by $modal)
  */
 interface IToolkitModalSettings extends ng.ui.bootstrap.IModalSettings {
-  hideDismiss?: boolean;
-  hideTitle?: boolean;
-  title?: string;
-  message?: string;
   close?: string;
   dismiss?: string;
+  hideDismiss?: boolean;
+  hideTitle?: boolean;
+  message?: string;
+  modalClass?: string;
+  title?: string;
   type?: string;
 }
 
@@ -32,7 +33,7 @@ export { IToolkitModalService, IToolkitModalSettings, IToolkitModalServiceInstan
 
 export default angular
   .module('core.modal', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('angular-sanitize'),
   ])

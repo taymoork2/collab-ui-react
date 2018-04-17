@@ -1,37 +1,41 @@
+import { KeyCodes } from 'modules/core/accessibility';
+
 describe('component: speedDial', () => {
   const DROPDOWN_LIST = 'button[cs-dropdown-toggle]';
-  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1) a';
+  const DROPDOWN_LIST_ADD = '.actions-services li:nth-child(1)';
 
   const INPUT_NAME = 'input[name="label"]';
   const INPUT_NUMBER = 'input[name="phoneinput"]';
   const SAVE_BUTTON = 'button.btn--primary';
   const READ_ONLY = '.sd-readonly-wrapper .sd-label';
-  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2) a';
+  const DROPDOWN_LIST_REORDER = '.actions-services li:nth-child(2)';
   const REORDER = '.sd-reorder';
 
   beforeEach(function() {
     this.initModules('huron.speed-dial');
     this.injectDependencies(
+      '$q',
       '$scope',
       '$timeout',
-      'SpeedDialService',
-      '$q',
-      'HuronCustomerService',
-      'BlfInternalExtValidation',
+      '$httpBackend',
       'Authinfo',
+      'BlfInternalExtValidation',
       'BlfURIValidation',
       'HuronConfig',
-      'UrlConfig',
-      '$httpBackend',
+      'HuronCustomerService',
       'FeatureMemberService',
+      'DraggableService',
+      'SpeedDialService',
+      'UrlConfig',
     );
+
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.callDestInputs = ['external', 'uri', 'custom'];
     this.firstReordering = true;
     this.editing = false;
     this.reordering = false;
     this.callDest = { phonenumber: '1234' };
-    // spyOn(this.SpeedDialService, 'updateSpeedDials').and.returnValue(this.$q.resolve(true));
+
     spyOn(this.SpeedDialService, 'getSpeedDials').and.returnValue(this.$q.resolve({
       speedDials: [],
     }));
@@ -56,7 +60,6 @@ describe('component: speedDial', () => {
   }
 
   describe('should have speeddial functionality', function () {
-
     beforeEach(initComponent);
     it('should have speed dial add functionality', function () {
       this.view.find(DROPDOWN_LIST).click();
@@ -134,6 +137,47 @@ describe('component: speedDial', () => {
       this.$timeout.flush();
       this.$httpBackend.flush();
       expect(this.controller.isValid).toBeFalsy();
+    });
+  });
+
+  describe(' - keyboard navigation functionality', function () {
+    beforeEach(initComponent);
+    beforeEach(function () {
+      this.$httpBackend.flush();
+      this.list = [{
+        id: 'speedDial1',
+        index: 1,
+      }, {
+        id: 'speedDial2',
+        index: 2,
+      }, {
+        id: 'speedDial3',
+        index: 3,
+      }];
+
+      this.controller.speedDialList = this.list;
+    });
+
+    it('should call DraggableService functions createDraggableInstance', function () {
+      spyOn(this.DraggableService, 'createDraggableInstance').and.callThrough();
+      this.controller.setReorder();
+      expect(this.DraggableService.createDraggableInstance).toHaveBeenCalledWith({
+        elem: this.controller.$element,
+        list: this.list,
+        identifier: '#speedDialsContainer',
+        transitClass: 'sd-reorder',
+        itemIdentifier: '#speedDial',
+      });
+    });
+
+    it('should return true or false for isSelectedSpeedDial', function () {
+      this.controller.setReorder();
+      spyOn(this.controller.draggableInstance, 'keyPress').and.callThrough();
+
+      this.controller.speedDialKeypress({ which: KeyCodes.ENTER }, this.list[1]);
+      expect(this.controller.isSelectedSpeedDial(this.list[1])).toBeTruthy();
+      expect(this.controller.isSelectedSpeedDial(this.list[0])).toBeFalsy();
+      expect(this.controller.draggableInstance.keyPress).toHaveBeenCalledWith({ which: KeyCodes.ENTER }, this.list[1]);
     });
   });
 });

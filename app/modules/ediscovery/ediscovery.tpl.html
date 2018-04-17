@@ -1,6 +1,6 @@
 <div class="ediscovery-app-container">
   <cs-header navstyle="" headertitle="{{'ediscovery.browserTabHeaderTitle' | translate}}">
-    <img class="ediscovery-logo" src="../images/spark-logo.svg">
+    <img class="ediscovery-logo" src="/images/spark-logo.svg">
     <cs-header-left></cs-header-left>
 
     <cs-header-right>
@@ -13,6 +13,9 @@
         <ul class="menu">
           <li>
             <a ui-sref="ediscovery.search" ui-sref-active="active" translate="ediscovery.tabs.search"></a>
+          </li>
+          <li cr-feature-toggle feature-show="atlas-f5955-legal-hold">
+            <a ui-sref="legalhold.landing" ui-sref-active="active" translate="legalHold.title"></a>
           </li>
           <li ui-sref-active="current active">
             <a ui-sref="ediscovery.reports" ui-sref-active="active" translate="ediscovery.tabs.reports"></a>

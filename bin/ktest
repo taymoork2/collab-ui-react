@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export WX2_ADMIN_WEB_CLIENT_HOME="${WX2_ADMIN_WEB_CLIENT_HOME:-$(pwd)}"
+
 if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
@@ -53,6 +55,9 @@ source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/ktest-helpers"
 
 # always use physical path (vs. a symlinked path)
 WX2_ADMIN_WEB_CLIENT_HOME="$(get_physical_path "$WX2_ADMIN_WEB_CLIENT_HOME")"
+# set old generation heap limit to 3GB
+# append --max-old-space-size with any provided arguments
+KTEST__NODE_ARGS="${KTEST__NODE_ARGS} --max-old-space-size=3072"
 
 # ----------
 # otherwise collect '--*' args for passing through to gulp
@@ -162,8 +167,7 @@ export npm_lifecycle_event=${npm_lifecycle_event:-test}
 
 # run 'karma' at the project root dir
 pushd "${WX2_ADMIN_WEB_CLIENT_HOME}" > /dev/null
-# set old generation heap limit to 3GB
-karma_process="node --max-old-space-size=3072 ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
+karma_process="node ${KTEST__NODE_ARGS} ${WX2_ADMIN_WEB_CLIENT_HOME}/node_modules/karma/bin/karma start"
 
 set -x
 # shellcheck disable=SC2086

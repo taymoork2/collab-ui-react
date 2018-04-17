@@ -34,6 +34,8 @@
             country-code="$ctrl.countryCode"
             select-type="select"
             custom-number-translations="$ctrl.customTranslations"
+            custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+            input-translations="$ctrl.inputTranslations"
             on-change-fn="$ctrl.onCallFwdAllChange(model)">
           </cs-call-destination>
         </div>
@@ -85,6 +87,8 @@
               inputs="$ctrl.forwardOptions"
               select-type="select"
               custom-number-translations="$ctrl.customTranslations"
+              custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+              input-translations="$ctrl.inputTranslations"
               on-change-fn="$ctrl.onCallFwdBusyChange(model)">
             </cs-call-destination>
           </div>
@@ -117,6 +121,8 @@
                 inputs="$ctrl.forwardOptions"
                 select-type="select"
                 custom-number-translations="$ctrl.customTranslations"
+                custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+                input-translations="$ctrl.inputTranslations"
                 on-change-fn="$ctrl.onCallFwdBusyExternalChange(model)">
               </cs-call-destination>
             </div>

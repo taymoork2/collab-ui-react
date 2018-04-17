@@ -1,13 +1,21 @@
-<div class="order-and-subscription-numbers">
-  <div ng-if="hasPendingLicenses">
+<div class="order-and-subscription-numbers" ng-if="hasPendingLicenses">
+  <div>
     <span translate="firstTimeWizard.orderNumber"></span><span>{{orderDetails.orderId}}</span>
   </div>
   <div>
     <span translate="firstTimeWizard.subscriptionID"></span><span>{{orderDetails.subscriptionId}}</span>
   </div>
+  <div>
+    <span translate="firstTimeWizard.endCustomer"></span><span>{{orderDetails.endCustomer}}</span>
+  </div>
 </div>
-<div class="finish-page">
+<div ng-if="!doNotProvision" class="finish-page">
   <i class="icon icon-circle-check" />
   <h3 translate="firstTimeWizard.readyToGo"></h3>
   <p translate="firstTimeWizard.finishDesc"></p>
+</div>
+<div ng-if="doNotProvision" class="finish-page">
+  <h3 translate="firstTimeWizard.servicesNotProvisioned"></h3>
+  <p translate="firstTimeWizard.electedNotToProvision"></p>
+  <p translate="firstTimeWizard.getBack"></p>
 </div>

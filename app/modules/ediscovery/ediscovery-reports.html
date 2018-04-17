@@ -1,14 +1,19 @@
 <div class="ediscovery-reports">
-  <div class="center" ng-if="ediscoveryCtrl.readingReports">
-    <span class="search-spinner">
-      <i class="icon icon-spinner"></i>
-    </span>
-  </div>
-  <div ng-if="!ediscoveryCtrl.readingReports" class="column-air">
-    <div ng-if="ediscoveryCtrl.reports.length > 0" ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns class="gridStyle with-scroll" ui-grid="ediscoveryCtrl.gridOptions"></div>
-    <div class="center" ng-if="ediscoveryCtrl.reports.length == 0" style="padding-top: 1rem;">
-      <h3 translate="ediscovery.reportsList.noReportsFound"></h3>
-      <p translate="ediscovery.reportsList.noReportsTip"></p>
+  <div ng-class="{'report-banner': ediscoverySearchCtrl.reportStillGenerating, 'report-banner--generating': !ediscoverySearchCtrl.reportStillGenerating}">
+    <cs-alert-banner ng-if="ediscoveryCtrl.isReportGenerating" class="banner-padding" type="info" closeable="true">
+      <span translate="ediscovery.reportsList.reportsBanner" translate-value-sref="ediscovery.search" translate-compile></span>
+    </cs-alert-banner>
+    <div class="center" ng-if="ediscoveryCtrl.readingReports">
+      <span class="search-spinner">
+        <i class="icon icon-spinner"></i>
+      </span>
+    </div>
+    <div ng-if="!ediscoveryCtrl.readingReports" class="column-air">
+      <div ng-if="ediscoveryCtrl.reports.length > 0" ui-grid-selection ui-grid-infinite-scroll ui-grid-resize-columns class="gridStyle with-scroll" ui-grid="ediscoveryCtrl.gridOptions"></div>
+      <div class="center" ng-if="ediscoveryCtrl.reports.length === 0" style="padding-top: 1rem;">
+        <h3 translate="ediscovery.reportsList.noReportsFound"></h3>
+        <p translate="ediscovery.reportsList.noReportsTip"></p>
+      </div>
     </div>
   </div>
 </div>

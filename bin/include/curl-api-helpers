@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ -z "$WX2_ADMIN_WEB_CLIENT_HOME" ]; then
     echo "Error: no env var 'WX2_ADMIN_WEB_CLIENT_HOME' defined, please run './setup.sh'"
     return 1

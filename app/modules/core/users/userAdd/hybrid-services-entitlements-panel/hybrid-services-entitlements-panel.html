@@ -1,0 +1,92 @@
+<div class="hs-section" ng-if="$ctrl.isEnabled">
+  <div class="hs-header">
+    <div class="column-header">
+      <i class="icon icon-circle-data"></i>
+      <h3 translate="onboardModal.hybridServices"></h3>
+    </div>
+  </div>
+</div>
+<div class="hs-section" ng-if="$ctrl.isEnabled">
+
+  <div class="row full flex-row">
+    <div class="small-4 columns column-padded end" ng-if="$ctrl.services.hasHybridMessageService()">
+      <div class="item-mtg-license" translate="servicesOverview.cards.hybridImp.title"></div>
+      <div>
+        <input type="checkbox"
+               ng-model="$ctrl.services.hybridMessage.entitled"
+               id="spark-hybrid-impinterop"
+               ng-disabled="!$ctrl.hasLicenseSelections"
+               ng-change="$ctrl.setEntitlements()"/>
+        <label class="cs-checkbox" for="spark-hybrid-impinterop">
+          <span translate="hercules.serviceNames.spark-hybrid-impinterop"></span>
+        </label>
+      </div>
+    </div>
+    <div class="small-4 columns column-padded end" ng-if="$ctrl.services.hasCalendarService()">
+      <div class="item-mtg-license" translate="servicesOverview.cards.hybridCalendar.title"></div>
+      <div>
+        <input type="checkbox"
+               ng-model="$ctrl.services.calendarEntitled"
+               id="squared-fusion-cal"
+               ng-disabled="!$ctrl.hasLicenseSelections"
+               ng-change="$ctrl.setEntitlements()"/>
+        <label class="cs-checkbox" for="squared-fusion-cal">
+          <span translate="hercules.serviceNames.squared-fusion-cal"></span>
+        </label>
+        <div class="indented" ng-if="$ctrl.showCalendarChoice">
+          <input
+            cs-input
+            type="radio"
+            ng-model="$ctrl.services.selectedCalendarType"
+            name="selectedType"
+            value="squared-fusion-cal"
+            id="selectedType_exchange"
+            ng-disabled="!$ctrl.services.calendarEntitled || !$ctrl.services.calendarExchangeOrOffice365"
+            ng-change="$ctrl.setEntitlements()"
+            cs-input-label="{{::'hercules.cloudExtensions.exchange' | translate}}"
+            cs-input-help-text="{{$ctrl.services.calendarExchangeOrOffice365 ? '' : $ctrl.services.notSetupText}}">
+          <input
+            cs-input
+            type="radio"
+            ng-model="$ctrl.services.selectedCalendarType"
+            name="selectedType"
+            value="squared-fusion-gcal"
+            id="selectedType_google"
+            ng-disabled="!$ctrl.services.calendarEntitled || !$ctrl.services.calendarGoogle"
+            ng-change="$ctrl.setEntitlements()"
+            cs-input-label="{{::'hercules.cloudExtensions.google' | translate}}"
+            cs-input-help-text="{{$ctrl.services.calendarGoogle ? '' : $ctrl.services.notSetupText}}">
+        </div>
+      </div>
+    </div>
+    <div class="small-4 columns column-padded end" ng-if="$ctrl.services.hasCallService()">
+      <div class="item-mtg-license" translate="servicesOverview.cards.hybridCall.title"></div>
+      <div>
+        <input type="checkbox"
+               ng-model="$ctrl.services.callServiceAware.entitled"
+               id="squared-fusion-uc"
+               ng-disabled="$ctrl.hasHuronCallEntitlement() || !$ctrl.hasLicenseSelections"
+               ng-change="$ctrl.setEntitlements()"/>
+        <label class="cs-checkbox" for="squared-fusion-uc">
+          <span translate="hercules.serviceNames.squared-fusion-uc.full"></span>
+        </label>
+
+        <div ng-if="$ctrl.services.callServiceConnect" class="indented">
+          <input type="checkbox"
+                 ng-model="$ctrl.services.callServiceConnect.entitled"
+                 id="squared-fusion-ec"
+                 ng-change="$ctrl.setEntitlements()"
+                 ng-disabled="$ctrl.hasHuronCallEntitlement() || !$ctrl.services.callServiceAware.entitled || !$ctrl.hasLicenseSelections"/>
+          <label class="cs-checkbox" for="squared-fusion-ec">
+            <span translate="hercules.serviceNames.squared-fusion-ec"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row full flex-row">
+    <span class="hybrid-service-warning"
+          ng-hide="$ctrl.hasLicenseSelections"
+          translate="onboardModal.hybridServicesWarning"></span>
+  </div>
+</div>

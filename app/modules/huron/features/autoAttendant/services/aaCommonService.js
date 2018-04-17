@@ -5,7 +5,7 @@
     .module('uc.autoattendant')
     .factory('AACommonService', AACommonService);
 
-  function AACommonService(AutoAttendantCeMenuModelService) {
+  function AACommonService($translate, AutoAttendantCeMenuModelService) {
     var aaSayMessageForm = false;
     var aaPhoneMenuOptions = false;
     var aaCallerInputStatus = false;
@@ -16,16 +16,38 @@
     var aaMediaUploadStatus = false;
     var aaQueueSettingsStatus = false;
     var mediaUploadToggle = false;
-    var callerInputToggle = false;
     var routeSIPAddressToggle = false;
     var dynAnnounceToggle = false;
     var returnedCallerToggle = false;
+    var multiSiteToggle = false;
     var uniqueId = 0;
     var restApiToggle = false;
     var aaRestApiStatus = false;
+    var restApiTogglePhase2 = false;
+    var hybridToggle = false;
 
     var invalidList = {};
     var schedules = ['openHours', 'closedHours', 'Holidays'];
+
+    var varOptions = {
+      'Original-Called-Number': $translate.instant('autoAttendant.decisionNumberDialed'),
+      'Original-Caller-Number': $translate.instant('autoAttendant.decisionCallerNumber'),
+      'Original-Remote-Party-ID': $translate.instant('autoAttendant.decisionCallerName'),
+      'Original-Caller-Country-Code': $translate.instant('autoAttendant.decisionCallerCountryCode'),
+      'Original-Caller-Area-Code': $translate.instant('autoAttendant.decisionCallerAreaCode'),
+    };
+
+    /* We have intentionally added the blank space in the following list.
+     * Because isDynamic flag gets true in case of BR or new lines
+     * and we are using this list to not show warning in case of pre-populated
+     * variables and BR or new lines in a say message.*/
+
+    var prePopulatedSessionVariablesList = ['Original-Called-Number',
+      'Original-Caller-Number',
+      'Original-Remote-Party-ID',
+      'Original-Caller-Country-Code',
+      'Original-Caller-Area-Code',
+      ''];
 
     var service = {
       isFormDirty: isFormDirty,
@@ -40,14 +62,16 @@
       setMediaUploadStatus: setMediaUploadStatus,
       setQueueSettingsStatus: setQueueSettingsStatus,
       setMediaUploadToggle: setMediaUploadToggle,
-      setCallerInputToggle: setCallerInputToggle,
       setRouteSIPAddressToggle: setRouteSIPAddressToggle,
       setRestApiToggle: setRestApiToggle,
       isRestApiToggle: isRestApiToggle,
       setDynAnnounceToggle: setDynAnnounceToggle,
       setReturnedCallerToggle: setReturnedCallerToggle,
+      setMultiSiteEnabledToggle: setMultiSiteEnabledToggle,
+      isMultiSiteEnabled: isMultiSiteEnabled,
+      setRestApiTogglePhase2: setRestApiTogglePhase2,
+      isRestApiTogglePhase2: isRestApiTogglePhase2,
       isDynAnnounceToggle: isDynAnnounceToggle,
-      isCallerInputToggle: isCallerInputToggle,
       isMediaUploadToggle: isMediaUploadToggle,
       isRouteSIPAddressToggle: isRouteSIPAddressToggle,
       isReturnedCallerToggle: isReturnedCallerToggle,
@@ -64,11 +88,23 @@
       DIGITS_DIAL_BY: 2,
       DIGITS_RAW: 3,
       DIGITS_CHOICE: 4,
+      getprePopulatedSessionVariablesList: getprePopulatedSessionVariablesList,
+      getVarOption: getVarOption,
+      setHybridToggle: setHybridToggle,
+      isHybridEnabledOnOrg: isHybridEnabledOnOrg,
     };
 
     return service;
 
     /////////////////////
+
+    function getprePopulatedSessionVariablesList() {
+      return prePopulatedSessionVariablesList;
+    }
+
+    function getVarOption(value) {
+      return varOptions[value];
+    }
 
     function isFormDirty() {
       return aaQueueSettingsStatus || aaRestApiStatus || aaMediaUploadStatus || aaSayMessageForm || aaPhoneMenuOptions || aaCallerInputStatus || aaActionStatus || aaDialByExtensionStatus || aaCENumberStatus || aaDecisionStatus;
@@ -158,10 +194,6 @@
       mediaUploadToggle = status;
     }
 
-    function setCallerInputToggle(status) {
-      callerInputToggle = status;
-    }
-
     function setRouteSIPAddressToggle(status) {
       routeSIPAddressToggle = status;
     }
@@ -170,12 +202,35 @@
       returnedCallerToggle = status;
     }
 
+    function setHybridToggle(status) {
+      hybridToggle = status;
+    }
+
+    function isHybridEnabledOnOrg() {
+      return hybridToggle;
+    }
+
+    function setMultiSiteEnabledToggle(status) {
+      multiSiteToggle = status;
+    }
+    function isMultiSiteEnabled() {
+      return multiSiteToggle;
+    }
+
     function isReturnedCallerToggle() {
       return returnedCallerToggle;
     }
 
     function setRestApiToggle(status) {
       restApiToggle = status;
+    }
+
+    function setRestApiTogglePhase2(status) {
+      restApiTogglePhase2 = status;
+    }
+
+    function isRestApiTogglePhase2() {
+      return restApiTogglePhase2;
     }
 
     function isDynAnnounceToggle() {
@@ -188,10 +243,6 @@
 
     function isMediaUploadToggle() {
       return mediaUploadToggle;
-    }
-
-    function isCallerInputToggle() {
-      return callerInputToggle;
     }
 
     function isRouteSIPAddressToggle() {

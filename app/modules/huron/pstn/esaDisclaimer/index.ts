@@ -5,8 +5,7 @@ import notifications from 'modules/core/notifications';
 
 export default angular
   .module('huron.pstn.esa-disclaimer', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     EsaDisclaimerMsg,
     terminusService,

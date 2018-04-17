@@ -1,4 +1,4 @@
-import { IOption } from 'modules/huron/dialing/dialing.service';
+import { IOption } from 'modules/huron/dialing';
 
 class CompanyMediaOnHoldCtrl implements ng.IComponentController {
   public companyMoh: string;
@@ -41,7 +41,7 @@ class CompanyMediaOnHoldCtrl implements ng.IComponentController {
 
 export class CompanyMediaOnHoldComponent implements ng.IComponentOptions {
   public controller = CompanyMediaOnHoldCtrl;
-  public templateUrl = 'modules/call/settings/settings-company-moh/settings-company-moh.component.html';
+  public template = require('modules/call/settings/settings-company-moh/settings-company-moh.component.html');
   public bindings = {
     companyMoh: '<',
     companyMohOptions: '<',

@@ -1,0 +1,109 @@
+.eva-email {
+
+  .email-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 40px);
+
+    .extension {
+      font-family: $brand-font-thin;
+      margin-left: 1rem;
+      margin-top: -3.5rem;
+
+      &.valid-extension {
+          color: $color-green-darker;
+      }
+
+      &.invalid-extension {
+          color: $color-red-base;
+      }
+
+      &.disabled-extension {
+          color: $gray-light-1;
+      }
+    }
+
+    .icon-check {
+      color: $color-green-darker;
+      @include vr-spacing(mt, 4, 0px, true);
+      @include vr-spacing(ml,0.5);
+      order: 3;
+    }
+
+    .icon-check.invisible {
+      visibility: hidden;
+    }
+
+    .icon-check.visibe {
+      visibility: visible;
+    }
+
+    .input-section {
+      min-height: 10rem;
+      @include vr-spacing(mt, 3.5);
+    }
+  }
+
+  .ct-input-hint {
+    @include vr-spacing(p, 1);
+
+    border: 0;
+    width: 100%;
+    text-align: center;
+    color: $gray;
+    font-style: italic;
+  }
+
+  .ct-input-no-border {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    outline-width: 0;
+  }
+  .ct-input-valid-border {
+    border-top: solid 1px $gray-light;
+  }
+
+  .ct-input-invalid-border {
+    border-top: solid 1px $color-negative-dark !important;
+  }
+
+  .ct-input-error {
+    color: $color-alerts-base;
+    padding: rem-calc(5px);
+    text-align: center;
+  }
+
+  .ct-input-pending {
+    color: $color-blue-base;
+    padding: rem-calc(5px);
+    text-align: center;
+  }
+
+  .ct-input-no-focus:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  // Input control.
+  .ct-input {
+    width: 100%;
+    text-align: center;
+    border-bottom: 0;
+    height: rem-calc(44); // prevents Firefox from clipping top of text
+    &:focus ~ .ct-input-hint {
+      border-top: solid rem(1px) $brand-primary;
+    }
+  }
+
+  .message {
+    margin: 0;
+  }
+
+  #disabledEmailInput {
+    color: $gray-light-1;
+    background: white; //need this for firefox
+  }
+}

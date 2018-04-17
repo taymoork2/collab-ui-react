@@ -1,4 +1,4 @@
-import { LocationsService } from 'modules/call/locations/shared';
+import { LocationsService, MEMBER_TYPE_USER } from 'modules/call/locations';
 
 interface IUserDetailsFeature {
   detail?: string | undefined;
@@ -30,7 +30,7 @@ class UserDetails implements ng.IComponentController {
   ) { }
 
   public openPanel(): void {
-    this.$state.go('user-overview.userLocationDetails');
+    this.$state.go('user-overview.userLocationDetails', { memberType: MEMBER_TYPE_USER });
   }
 
   public getUserLocation(): void {
@@ -95,7 +95,7 @@ class UserDetails implements ng.IComponentController {
 
 export class UserDetailsComponent implements ng.IComponentOptions {
   public controller = UserDetails;
-  public templateUrl = 'modules/huron/users/userDetails.html';
+  public template = require('modules/huron/users/userDetails.html');
   public bindings = {
     details: '<',
     onUserDetailClick: '&',

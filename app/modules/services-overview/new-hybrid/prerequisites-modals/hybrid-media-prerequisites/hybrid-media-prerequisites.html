@@ -1,0 +1,88 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
+  <h5 class="modal-title" translate="servicesOverview.cards.hybridMedia.prerequisites.title"></h5>
+</div>
+<div class="modal-body hybrid-service-prerequisites">
+  <div class="intro">
+    <p translate="servicesOverview.cards.hybridMedia.prerequisites.intro"></p>
+    <button class="btn btn--primary" ng-click="vm.openDocumentation()">
+      <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+    </button>
+  </div>
+  <div class="steps-list">
+    <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+    <div class="cs-checkbox-group">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.meetMinimumSystemRequirements"
+          id="checkboxMedia1"
+          name="checkboxMedia1"
+          ng-change="vm.processChange('meetMinimumSystemRequirements', vm.checkboxes.meetMinimumSystemRequirements)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.meetMinimumSystemRequirements' | translate}}">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.verifyDeploymentModels"
+          id="checkboxMedia2"
+          name="checkboxMedia2"
+          ng-change="vm.processChange('verifyDeploymentModels', vm.checkboxes.verifyDeploymentModels)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.verifyDeploymentModels' | translate}}">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.ensureNetworkConnectivity"
+          id="checkboxMedia3"
+          name="checkboxMedia3"
+          ng-change="vm.processChange('ensureNetworkConnectivity', vm.checkboxes.ensureNetworkConnectivity)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.ensureNetworkConnectivity' | translate}}">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.ensureBandwidth"
+          id="checkboxMedia4"
+          name="checkboxMedia4"
+          ng-change="vm.processChange('ensureBandwidth', vm.checkboxes.ensureBandwidth)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.ensureBandwidth' | translate}}">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.acquireInformation"
+          id="checkboxMedia5"
+          name="checkboxMedia5"
+          ng-change="vm.processChange('acquireInformation', vm.checkboxes.acquireInformation)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.acquireInformation' | translate}}">
+      <ul class="checklist-help-text">
+        <li translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp1"></li>
+        <li translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp2"></li>
+        <li translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp3"></li>
+        <li translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp4"></li>
+        <li translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp5"></li>
+        <span translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp6"></span>
+        <span translate="servicesOverview.cards.hybridMedia.prerequisites.acquireInformationHelp7"></span>
+      </ul>
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.chooseSupportedHardware"
+          id="checkboxMedia6"
+          name="checkboxMedia6"
+          ng-change="vm.processChange('chooseSupportedHardware', vm.checkboxes.chooseSupportedHardware)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.chooseSupportedHardware' | translate}}">
+      <input
+          cs-input
+          type="checkbox"
+          ng-model="vm.checkboxes.verifyHypervisor"
+          id="checkboxMedia7"
+          name="checkboxMedia7"
+          ng-change="vm.processChange('verifyHypervisor', vm.checkboxes.verifyHypervisor)"
+          cs-input-label="{{:: 'servicesOverview.cards.hybridMedia.prerequisites.verifyHypervisor' | translate}}">
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="$close()">
+    <span translate="common.close"></span>
+  </button>
+</div>

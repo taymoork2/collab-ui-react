@@ -5,7 +5,7 @@
       <span ng-if="!vm.isSSAReserved" translate="firstTimeWizard.subdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></span>
     </p>
     <span>
-      <a class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
+      <a href class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
     </span>
   </div>
   <div class="row-fluid">
@@ -13,12 +13,12 @@
       <div class="row">
         <p translate="firstTimeWizard.setSipDomainMsg"></p>
         <div class="cs-input-group medium-3 columns" ng-class="{'error': vm.validateSipDomain()}">
-          <input class="sip-domain-input col-lg-5"
-                 name="sipDomainInput"
-                 type="text"
-                 placeholder="{{'firstTimeWizard.setSipDomainPlaceholder' | translate}}"
-                 ng-model="vm.inputValue"
-                 ng-disabled="vm.isDisabled">
+          <input cs-input type="text"
+            class="sip-domain-input col-lg-5"
+            name="sipDomainInput"
+            placeholder="{{::'firstTimeWizard.setSipDomainPlaceholder' | translate}}"
+            ng-model="vm.inputValue"
+            ng-disabled="vm.isDisabled">
           <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="vm.validateSipDomain()">
             <div class="message">{{vm.errorMsg}}</div>
           </div>
@@ -47,16 +47,20 @@
   </div>
   <div class="row-fluid" ng-if="vm.isUrlAvailable">
     <div class="confirm-box">
-      <cs-checkbox ckid="confirmSaveCheckBox" ng-model="vm.isConfirmed" ng-click ="vm.checkSSAReservation()" label="{{:: 'firstTimeWizard.setSipDomainConfirmText' | translate}}"></cs-checkbox>
+      <input cs-input type="checkbox"
+        id="confirmSaveCheckBox"
+        cs-input-label="{{::'firstTimeWizard.setSipDomainConfirmText' | translate}}"
+        ng-model="vm.isConfirmed"
+        ng-click="vm.checkSSAReservation()">
     </div>
   </div>
   <div class="row-fluid" ng-if="vm.showSaveButton && vm.isUrlAvailable && vm.isConfirmed">
     <div class="save-box">
       <button id="save"
-              ng-disabled="!vm.isConfirmed"
-              class="space btn--primary"
-              ng-click="vm.saveDomain()"
-              translate="common.save"></button>
+        ng-disabled="!vm.isConfirmed"
+        class="space btn--primary"
+        ng-click="vm.saveDomain()"
+        translate="common.save"></button>
     </div>
   </div>
 </div>
@@ -71,10 +75,10 @@
     <p ng-if="!vm.isSSAReserved" translate="firstTimeWizard.subdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
 
     <p ng-class="{'domain-space': !vm.showSaveButton}">
-      <a class="redirect-link" href translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
+      <a href class="redirect-link" translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
     </p>
-
-    <p class="domain domain-space-two" translate="firstTimeWizard.reservedSubdomains"></p>
+    <br>
+    <p class="domain" translate="firstTimeWizard.reservedSubdomains"></p>
     <div class="domain-space">
       <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
       <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
@@ -87,33 +91,36 @@
     </div>
 
     <p ng-if="!vm.sipForm && vm.isSSAReserved && !vm.isCsc" class="domain-space">
-      <a class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
+      <a href id="editSubdomainLink" class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
     </p>
+    <br>
+    <p class="domain" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
 
-    <p class="domain domain-space-two" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
     <form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
       <div class="domain-input" ng-if="vm.sipForm || !vm.isSSAReserved">
-        <input cs-input
+        <input cs-input type="text"
           id="sipDomainInput"
           name="sipDomainInput"
-          type="text"
           cs-input-messages="vm.messages"
           ng-change="vm.notVerified()"
           ng-required="true"
           ng-maxlength="40"
           ng-model="vm.inputValue">
       </div>
-      <div ng-if="vm.sipForm || !vm.isSSAReserved" class="domain-buttons">
-        <button
-          type="button"
-          class="btn btn--cta"
-          cs-btn
+      <div class="domain-buttons" ng-if="vm.sipForm || !vm.isSSAReserved">
+        <button cs-btn type="button"
+          class="btn btn--cta domain-button"
           loading="vm.isSubdomainLoading"
           ng-click="vm.verifyAvailabilityAndValidity()"
           ng-disabled="vm.emptyOrUnchangedInput() || this.saving">
           <span translate="firstTimeWizard.setSipDomainCheckAvailability"></span>
         </button>
-        <button type="button" class="btn" translate="common.cancel" ng-click="vm.toggleSipForm()" ng-disabled="this.saving"></button>
+        <button type="button"
+          class="btn"
+          translate="common.cancel"
+          ng-click="vm.toggleSipForm(); vm.resetFocus();"
+          ng-disabled="this.saving">
+        </button>
       </div>
     </form>
   </p></div>

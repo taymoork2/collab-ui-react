@@ -1,3 +1,5 @@
+export const HIDDEN: string = 'hidden';
+
 const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
 const DEFAULT_TIME_FORMAT: string = '24-hour';
 const DEFAULT_DATE_FORMAT: string = 'M-D-Y';
@@ -50,9 +52,9 @@ interface IBaseLocationDetails extends IBaseLocation {
   dateFormat: string;
   timeFormat: string;
   allowExternalTransfer: boolean;
-  voicemailPilotNumber: IVoicemailPilotNumber;
+  voicemailPilotNumber: IVoicemailPilotNumber | null;
   regionCodeDialing: IRegionCodeDialing;
-  callerIdNumber?: string;
+  callerId: ILocationCallerId | null;
 }
 
 export interface IRLocation extends IBaseLocationDetails {
@@ -77,9 +79,9 @@ export class Location implements ILocation {
   public timeFormat: string;
   public steeringDigit: string;
   public allowExternalTransfer: boolean;
-  public voicemailPilotNumber: IVoicemailPilotNumber;
+  public voicemailPilotNumber: IVoicemailPilotNumber | null;
   public regionCodeDialing: IRegionCodeDialing;
-  public callerIdNumber?: string;
+  public callerId: ILocationCallerId | null;
 
   constructor (location: IRLocation = {
     uuid: undefined,
@@ -93,9 +95,9 @@ export class Location implements ILocation {
     steeringDigit: null,
     defaultLocation: false,
     allowExternalTransfer: false,
-    voicemailPilotNumber: new VoicemailPilotNumber(),
+    voicemailPilotNumber: null,
     regionCodeDialing: new RegionCodeDialing(),
-    callerIdNumber: undefined,
+    callerId: null,
   }) {
     this.uuid = location.uuid;
     this.name = location.name;
@@ -108,9 +110,16 @@ export class Location implements ILocation {
     this.steeringDigit = _.isNull(location.steeringDigit) ? NULL : _.toString(location.steeringDigit);
     this.defaultLocation = location.defaultLocation;
     this.allowExternalTransfer = location.allowExternalTransfer;
-    this.voicemailPilotNumber = location.voicemailPilotNumber;
+    this.voicemailPilotNumber = new VoicemailPilotNumber({
+      number: _.get(location.voicemailPilotNumber, 'number'),
+      generated: _.get(location.voicemailPilotNumber, 'generated'),
+    });
     this.regionCodeDialing = location.regionCodeDialing;
-    this.callerIdNumber = location.callerIdNumber;
+    this.callerId = _.isNull(location.callerId) ? location.callerId : new LocationCallerId({
+      name: _.get(location.callerId, 'name'),
+      number: _.get(location.callerId, 'number'),
+      uuid: _.get(location.callerId, 'uuid'),
+    });
   }
 }
 
@@ -147,5 +156,112 @@ export class RegionCodeDialing implements IRegionCodeDialing {
   }) {
     this.regionCode = regionalCodeDialing.regionCode;
     this.simplifiedNationalDialing = regionalCodeDialing.simplifiedNationalDialing;
+  }
+}
+
+export interface ILocationCallerId {
+  name: string;
+  number: string;
+  uuid?: string;
+}
+
+export class LocationCallerId implements ILocationCallerId {
+  public name: string;
+  public number: string;
+  public uuid?: string;
+
+  constructor(locationCallerId: ILocationCallerId = {
+    name: '',
+    number: '',
+  }) {
+    this.name = locationCallerId.name;
+    this.number = locationCallerId.number;
+    this.uuid = locationCallerId.uuid;
+  }
+}
+
+export interface IRLocationInternalNumberPoolList {
+  pattern: string;
+  directoryNumber: IDirectoryNumber;
+  range: IRange;
+  uuid?: string;
+}
+
+export interface ILocationInternalNumberPoolList extends IRLocationInternalNumberPoolList {}
+
+export class LocationInternalNumberPoolList implements ILocationInternalNumberPoolList {
+  public pattern: string;
+  public directoryNumber: IDirectoryNumber;
+  public range: IRange;
+  public uuid?: string;
+
+  constructor(locationInternalNumberPoolList: IRLocationInternalNumberPoolList = {
+    pattern: '',
+    directoryNumber: new DirectoryNumber(),
+    range: new Range(),
+    uuid: undefined,
+  }) {
+    this.pattern = locationInternalNumberPoolList.pattern;
+    this.directoryNumber = locationInternalNumberPoolList.directoryNumber;
+    this.range = locationInternalNumberPoolList.range;
+    this.uuid = locationInternalNumberPoolList.uuid;
+  }
+}
+
+export interface IDirectoryNumber {
+  uuid: string;
+  pattern: string;
+}
+
+export class DirectoryNumber implements IDirectoryNumber {
+  public uuid: string;
+  public pattern: string;
+
+  constructor(directoryNumber: IDirectoryNumber = {
+    uuid: '',
+    pattern: '',
+  }) {
+    this.uuid = directoryNumber.uuid;
+    this.pattern = directoryNumber.pattern;
+  }
+}
+
+export interface IRange {
+  uuid?: string;
+  name: string;
+  customer: ICustomer;
+}
+
+export class Range implements IRange {
+  public uuid?: string;
+  public name: string;
+  public customer: ICustomer;
+
+  constructor(range: IRange = {
+    uuid: undefined,
+    name: '',
+    customer: new Customer(),
+  }) {
+    this.uuid = range.uuid;
+    this.name = range.name;
+    this.customer = range.customer;
+  }
+}
+
+export interface ICustomer {
+  uuid: string;
+  name: string;
+}
+
+export class Customer implements ICustomer {
+  public uuid: string;
+  public name: string;
+
+  constructor(customer: ICustomer = {
+    uuid: '',
+    name: '',
+  }) {
+    this.uuid = customer.uuid;
+    this.name = customer.name;
   }
 }

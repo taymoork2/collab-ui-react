@@ -1,0 +1,28 @@
+<cs-sp-container class="hercules-fix-paragraphs">
+
+  <alarm-list-section alarms="$ctrl.cluster.extendedProperties.aggregatedAlarms"
+                      connector-type="$ctrl.connectorType"
+                      ng-if="$ctrl.isMediaCluster() && $ctrl.hasConnectors()"></alarm-list-section>
+
+  <schedule-info-section cluster="$ctrl.cluster"
+                        cluster-type="$ctrl.clusterType"
+                        ng-if="!($ctrl.isExpresswayCluster() && !$ctrl.hasConnectors())">></schedule-info-section>
+
+  <hybrid-services-node-list cluster="$ctrl.cluster"
+                            connector-type="$ctrl.connectorType"
+                            ng-if="$ctrl.isMediaCluster()"></hybrid-services-node-list>
+
+  <cs-sp-section ng-if="$ctrl.showButtonToNodesPage()">
+    <div class="section-title-row">
+      <div class="section-name" translate="hercules.connectors.hosts"></div>
+    </div>
+    <a href class="btn btn--primary" translate="hercules.nodesPage.viewList" ng-click="$ctrl.goToNodesPage()"></a>
+    <p class="cs-input__help-text" translate="hercules.nodesPage.viewListDescription"></p>
+  </cs-sp-section>
+
+  <complete-registration-or-remove-expressway
+                        cluster="$ctrl.cluster"
+                        connector-type="$ctrl.connectorType"
+                        ng-if="$ctrl.isExpresswayCluster() && !$ctrl.hasConnectors()"></complete-registration-or-remove-expressway>
+
+</cs-sp-container>

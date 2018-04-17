@@ -18,8 +18,9 @@ describe('Partner Service -', function () {
     PartnerService = _PartnerService_;
     UrlConfig = _UrlConfig_;
 
-    testData = getJSONFixture('core/json/partner/partner.service.json');
+    testData = _.cloneDeep(getJSONFixture('core/json/partner/partner.service.json'));
     spyOn(Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(Authinfo, 'getUserId').and.returnValue('123');
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('fake-primaryEmail');
     spyOn(Authinfo, 'getManagedOrgs').and.returnValue([]);
     spyOn(Analytics, 'trackPartnerActions');
@@ -28,19 +29,6 @@ describe('Partner Service -', function () {
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should successfully match the values of all the properties in customerStatus', function () {
-    expect(PartnerService.customerStatus.FREE).toBe(0);
-    expect(PartnerService.customerStatus.TRIAL).toBe(1);
-    expect(PartnerService.customerStatus.ACTIVE).toBe(2);
-    expect(PartnerService.customerStatus.CANCELED).toBe(99);
-    expect(PartnerService.customerStatus.NO_LICENSE).toBe(-1);
-    expect(PartnerService.customerStatus.NOTE_EXPIRED).toBe(0);
-    expect(PartnerService.customerStatus.NOTE_EXPIRE_TODAY).toBe(0);
-    expect(PartnerService.customerStatus.NOTE_NO_LICENSE).toBe(0);
-    expect(PartnerService.customerStatus.NOTE_CANCELED).toBe(0);
-    expect(PartnerService.customerStatus.NOTE_NOT_EXPIRED).toBe(99);
   });
 
   it('should successfully return an array of 5 customers from calling getManagedOrgsList with customerName search', function () {
@@ -80,9 +68,11 @@ describe('Partner Service -', function () {
   });
 
   it('should successfully return a boolean on whether or not a license is available from calling isLicenseInfoAvailable', function () {
-    var licenses = [];
-    expect(PartnerService.isLicenseInfoAvailable(licenses)).toBe(true);
-    expect(PartnerService.isLicenseInfoAvailable(testData.licenses)).toBe(true);
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(true);
+    testData.customers[0].licenseList = [];
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(true);
+    delete testData.customers[0].licenseList;
+    expect(PartnerService.isLicenseInfoAvailable(testData.customers[0])).toBe(false);
   });
 
   it('should successfully add sortOrder property to license from calling setServiceSortOrder', function () {
@@ -115,40 +105,40 @@ describe('Partner Service -', function () {
     // Customer's status and daysLeft properties are "ACTIVE" and 45.
     var customerActive = testData.customers[0];
     PartnerService.setNotesSortOrder(customerActive);
-    expect(customerActive.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NOT_EXPIRED);
+    expect(customerActive.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_DAYS_LEFT);
     expect(customerActive.notes.daysLeft).toBe(45);
     expect(customerActive.notes.text).toBe('customerPage.daysLeftToPurchase');
 
     // Customer's isTrial, status, and daysLeft properties are true, "ACTIVE", and 0.
     var customerExpireToday = testData.customers[1];
     PartnerService.setNotesSortOrder(customerExpireToday);
-    expect(customerExpireToday.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRE_TODAY);
+    expect(customerExpireToday.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_DAYS_LEFT);
     expect(customerExpireToday.notes.daysLeft).toBe(0);
     expect(customerExpireToday.notes.text).toBe('customerPage.expiringToday');
 
     // Customer's status and daysLeft properties are "ACTIVE" and -30
     var customerExpired = testData.customers[2];
     PartnerService.setNotesSortOrder(customerExpired);
-    expect(customerExpired.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_EXPIRED);
+    expect(customerExpired.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_DAYS_LEFT);
     expect(customerExpired.notes.daysLeft).toBe(-25);
     expect(customerExpired.notes.text).toBe('customerPage.expiredWithGracePeriod');
 
     // Customer's status property is "PENDING"
     var customerNoLicense = testData.customers[3];
     PartnerService.setNotesSortOrder(customerNoLicense);
-    expect(customerNoLicense.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NO_LICENSE);
+    expect(customerNoLicense.notes.sortOrder).toBe(undefined);
     expect(customerNoLicense.notes.text).toBe('customerPage.licenseInfoNotAvailable');
 
     // Customer does not have a licenseList property
     customerNoLicense = testData.customers[4];
     PartnerService.setNotesSortOrder(customerNoLicense);
-    expect(customerNoLicense.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_NO_LICENSE);
+    expect(customerNoLicense.notes.sortOrder).toBe(undefined);
     expect(customerNoLicense.notes.text).toBe('customerPage.licenseInfoNotAvailable');
 
     // Customer status property is "CANCELED"
     var customerCanceled = testData.customers[5];
     PartnerService.setNotesSortOrder(customerCanceled);
-    expect(customerCanceled.notes.sortOrder).toBe(PartnerService.customerStatus.NOTE_CANCELED);
+    expect(customerCanceled.notes.sortOrder).toBe(undefined);
     expect(customerCanceled.notes.text).toBe('customerPage.suspended');
   });
 
@@ -217,24 +207,32 @@ describe('Partner Service -', function () {
     expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
+    // accountStatus should reflect value returned by getAccountStatus()
+    expect(returnList[0].accountStatus).toBe('trial');
   });
 
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
     Authinfo.getPrimaryEmail.and.returnValue('partner@company.com');
+
+    // Make the messaging service appear to have been provisiond by the customer
+    delete testData.managedOrgsResponse.data.organizations[0].licenses[0].partnerEmail;
 
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
       isTrialData: true,
       isCareEnabled: false,
       isAdvanceCareEnabled: false,
     });
-    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
+    var expectedServices = ['communications', 'webex', 'roomSystems', 'sparkBoard'];
     var expectedServicesManagedByOthers = ['conferencing'];
+    var expectedServicesManagedByCustomer = ['messaging'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(5);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(4);
     expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
+    expect(returnList[0].orderedServices.servicesManagedByCustomer.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByCustomer).toEqual(expectedServicesManagedByCustomer);
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {
@@ -255,6 +253,18 @@ describe('Partner Service -', function () {
       expect(customers).toEqual(testData.exportCSVResultWithCare);
     });
     $httpBackend.flush();
+  });
+
+  describe('updateOrgForCustomerView function', function () {
+    beforeEach(installPromiseMatchers);
+    it('should execute and call the appropriate back end url', function () {
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/12345/users/123/actions/configureCustomerAdmin/invoke?customerOrgId=1a1';
+      $httpBackend.expectPOST(url).respond(200);
+      var promise = PartnerService.updateOrgForCustomerView('1a1');
+      $scope.$apply();
+      $httpBackend.flush();
+      expect(promise).toBeResolved();
+    });
   });
 
   describe('modifyManagedOrgs function', function () {
@@ -721,7 +731,7 @@ describe('Partner Service -', function () {
       });
     });
 
-    describe('Helper functions related to getFreeOrActiveServices ', function () {
+    describe('related to getFreeOrActiveServices ', function () {
       it('should createConferenceMapping with conferencing license type', function () {
         var result = PartnerService.helpers.createConferenceMapping();
         expect(result[Config.offerCodes.CF].licenseType).toBe(Config.licenseTypes.CONFERENCING);
@@ -768,6 +778,15 @@ describe('Partner Service -', function () {
       it('should return FALSE from isDisplayableService for storage license', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.STORAGE,
+          volume: 10,
+        };
+        var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+      });
+
+      it('should return FALSE from isDisplayableService for audio license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.AUDIO,
           volume: 10,
         };
         var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
@@ -978,17 +997,20 @@ describe('Partner Service -', function () {
       });
     });
 
-    describe('massage data helpers', function () {
+    describe('massage data', function () {
       it('should set the correct purchase status', function () {
-        // purchased
-        var dataPurchased = testData.customers[6];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataPurchased)).toBe(true);
-        // active, but on trial
-        var dataNotPurchased1 = testData.customers[0];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased1)).toBe(false);
-        // not active
-        var dataNotPurchased2 = testData.customers[3];
-        expect(PartnerService.helpers.calculatePurchaseStatus(dataNotPurchased2)).toBe(false);
+        // ACTIVE
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[6])).toBe(true);
+        // ACTIVE, all licenses trials
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[0])).toBe(false);
+        // ACTIVE, mixture of purchased and trial licenses
+        testData.customers[0].licenseList[0].isTrial = false;
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[0])).toBe(true);
+        // PENDING, all licenses trials
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[3])).toBe(false);
+        // PENDING, mixture of purchased and trial licenses
+        testData.customers[3].licenseList[0].isTrial = false;
+        expect(PartnerService.helpers.calculatePurchaseStatus(testData.customers[3])).toBe(false);
       });
 
       it('should set the service count properly', function () {
@@ -1007,6 +1029,27 @@ describe('Partner Service -', function () {
 
         var dataWithWebex = testData.customers[8];// This has 2 webex's in it, should only count 1
         expect(PartnerService.helpers.countUniqueServices(dataWithWebex)).toBe(2);
+      });
+
+      it('should return the correct account status', function () {
+        var data = testData.customers[7];
+
+        // daysLeft < 0 means expired
+        data.daysLeft = -1;
+        expect(PartnerService.getAccountStatus(data)).toBe('expired');
+
+        // daysLeft >= 0 means active trial
+        data.daysLeft = 0;
+        expect(PartnerService.getAccountStatus(data)).toBe('trial');
+
+        // No 'named' licenses marked as 'isTrial' means 'active' (purchased)
+        data.daysLeft = -1;
+        data.communications.isTrial = false;
+        expect(PartnerService.getAccountStatus(data)).toBe('active');
+
+        // Purchased set when some
+        data.purchased = true;
+        expect(PartnerService.getAccountStatus(data)).toBe('active');
       });
     });
 

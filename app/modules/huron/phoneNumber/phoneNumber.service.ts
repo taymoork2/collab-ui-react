@@ -1,11 +1,117 @@
 import { PhoneNumberUtil, PhoneNumberType, PhoneNumber, PhoneNumberFormat } from 'google-libphonenumber';
 
+
+export interface IREmergencyNumber {
+  uuid?: string;
+  name: string;
+  pattern: string;
+  default: boolean;
+}
+
+export interface IREmergencyNumberData {
+  url: string;
+  emergencyNumbers: IREmergencyNumber[];
+}
+
+export class EmergencyNumber implements IREmergencyNumber {
+  public uuid?: string;
+  public name: string;
+  public pattern: string;
+  public default: boolean;
+
+  constructor(emergencyNumber: IREmergencyNumber = {
+    name: '',
+    pattern: '',
+    default: false,
+  }) {
+    this.uuid = emergencyNumber.uuid;
+    this.name = emergencyNumber.name;
+    this.pattern = emergencyNumber.pattern;
+    this.default = emergencyNumber.default;
+  }
+
+  public getREmergencyNumber(): IREmergencyNumber {
+    return {
+      name: this.name,
+      pattern: this.pattern,
+      default: this.default,
+    };
+  }
+}
+
 export interface ICallDestination {
   name?: string;
   code?: string;
   number?: string;
   phoneNumber: string;
 }
+
+export interface IRDirectoryNumber {
+  url: string;
+  uuid: string;
+}
+
+export interface IRCallPhoneNumber {
+  uuid: string | null;
+  url: string | null;
+  type: string | null;
+  directoryNumber: IRDirectoryNumber | null;
+  assigned: boolean | null;
+  internal: string | null;
+  external: string | null;
+  siteToSite: string | null;
+  locationUuid: string | null;
+}
+
+export interface IRCallPhoneNumberData {
+  numbers: IRCallPhoneNumber[];
+}
+
+export class CallPhoneNumber implements IRCallPhoneNumber {
+  public uuid: string | null;
+  public url: string | null;
+  public type: string | null;
+  public directoryNumber: IRDirectoryNumber | null;
+  public assigned: boolean | null;
+  public internal: string | null;
+  public external: string | null;
+  public siteToSite: string | null;
+  public locationUuid: string | null;
+  public externalLabel: string = '';
+
+  constructor(rPhoneNumber: IRCallPhoneNumber = {
+    uuid: null,
+    url: null,
+    type: null,
+    directoryNumber: null,
+    assigned: null,
+    internal: null,
+    external: null,
+    siteToSite: null,
+    locationUuid: null,
+  }) {
+    this.assigned = rPhoneNumber.assigned;
+    this.directoryNumber = rPhoneNumber.directoryNumber;
+    this.external = rPhoneNumber.external;
+    this.internal = rPhoneNumber.internal;
+    this.locationUuid = rPhoneNumber.locationUuid;
+    this.siteToSite = rPhoneNumber.siteToSite;
+    this.type = rPhoneNumber.type;
+    this.url = rPhoneNumber.url;
+    this.uuid = rPhoneNumber.uuid;
+    this.externalLabel = this.makeExternalLabel(this.external);
+  }
+
+  public makeExternalLabel(external: string | null): string {
+    if (_.isString(external)) {
+      //strip invalid characters
+      const number: string = external.replace(/[^\d+]/g, '');
+      return (new PhoneNumberService()).getNationalFormat(number);
+    }
+    return '';
+  }
+}
+
 
 /**
  * Class containing helper functions for validating and formatting phone numbers.
@@ -19,7 +125,7 @@ export class PhoneNumberService {
   private filterRegex = /[^+\d]/g;
   private readonly REGION_CODE_BLANK: string = '';
   private readonly REGION_CODE_US: string = 'us';
-
+  private readonly REGION_CODE_CANADA: string = 'CA';
   private readonly exampleNumbers = {
     us: '15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777',
     au: '61255566777, +61255566777, +61 2 5556 6777',
@@ -163,6 +269,23 @@ export class PhoneNumberService {
     try {
       const parsedNumber: PhoneNumber = this.phoneUtil.parseAndKeepRawInput(e164Number, this.REGION_CODE_BLANK);
       return this.phoneUtil.isValidNumberForRegion(parsedNumber, this.phoneUtil.getRegionCodeForNumber(parsedNumber));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks if the number is only US/Canada number
+   *
+   * @param {string} e164Number
+   * @returns {boolean}
+   *
+   * @memberOf PhoneNumberService
+   */
+  public numberNANPValidator(e164Number: string): boolean {
+    try {
+      const parsedNumber: PhoneNumber = this.phoneUtil.parseAndKeepRawInput(e164Number, this.REGION_CODE_BLANK);
+      return (this.phoneUtil.getRegionCodeForNumber(parsedNumber) === _.upperCase(this.REGION_CODE_US) || this.phoneUtil.getRegionCodeForNumber(parsedNumber) === this.REGION_CODE_CANADA);
     } catch (e) {
       return false;
     }

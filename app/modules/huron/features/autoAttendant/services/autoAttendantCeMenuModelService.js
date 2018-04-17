@@ -285,15 +285,23 @@
 
 
   /* @ngInject */
-  function AutoAttendantCeMenuModelService(AAUtilityService, $translate) {
+  function AutoAttendantCeMenuModelService($translate, AARestModelService, AAUtilityService) {
     // cannot use aaCommon's defined variables because of circular dependency.
-    // aaCommonService shou not have this service, need to refactor it out.
+    // aaCommonService should not have this service, need to refactor it out.
 
     var DIGITS_DIAL_BY = 2;
     var DIGITS_RAW = 3;
     var DIGITS_CHOICE = 4;
+    var DIGITS_DIAL_BY_ESN = 5;
+
+    var CLOSED_HOURS_ACTION_SET_NAME = 'closedHours';
+    var HOLIDAYS_ACTION_SET_NAME = 'holidays';
+    var HOLIDAYS_SCHEDULE_EVENT = 'holiday';
 
     var dynAnnounceToggle = false;
+    var CONSTANTS = {};
+    CONSTANTS.phoneNumber = 'phoneNumber';
+    CONSTANTS.extension = 'extension';
 
     var service = {
       getWelcomeMenu: getWelcomeMenu,
@@ -313,6 +321,7 @@
       isCeMenu: isCeMenu,
       isCeMenuEntry: isCeMenuEntry,
       setDynAnnounceToggle: setDynAnnounceToggle,
+      checkIfEnteredValueIsPhoneNumber: checkIfEnteredValueIsPhoneNumber,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -370,7 +379,7 @@
 
     function parseSayObject(menuEntry, inObject) {
       var action;
-      if (isDynAnnounceToggle()) {
+      if (isDynAnnounceToggle() && decodeUtf8(inObject.value)) {
         action = new Action('dynamic', '');
         var dynaList = [{
           say: {
@@ -416,7 +425,7 @@
       var action;
       action = new Action('dynamic', '');
       action.dynamicList = inObject;
-      if (!_.isUndefined(inObject[0].say.voice)) {
+      if (_.has(inObject[0], ['say', 'voice'])) {
         action.setVoice(inObject[0].say.voice);
       }
       menuEntry.addAction(action);
@@ -441,9 +450,18 @@
     function createAnnouncements(menuEntry) {
       var actions = menuEntry.actions;
       var newActionArray = [];
+      if (actions.length === 0) {
+        // if save is from the schedule modal, no actions when AA is 1st created
+        newActionArray[0] = {};
+        newActionArray[0].value = '';
+        newActionArray[0].voice = '';
+        return newActionArray;
+      }
       for (var i = 0; i < actions.length; i++) {
         newActionArray[i] = {};
-        menuEntry.description = actions[i].description;
+        if (!_.isEmpty(actions[i].description)) {
+          menuEntry.description = actions[i].description;
+        }
         if (actions[i].deleteUrl && _.startsWith(actions[i].getValue(), 'http')) {
           newActionArray[i].url = (actions[i].getValue() ? encodeUtf8(actions[i].getValue()) : '');
           newActionArray[i].deleteUrl = actions[i].deleteUrl;
@@ -486,6 +504,18 @@
       return action;
     }
 
+    function updateActionFromRestBlock(action, restBlock) {
+      action.method = restBlock.method;
+      action.url = restBlock.url;
+      action.variableSet = parseResponseBlock(restBlock);
+      action.restApiRequest = restBlock.testResponse.request;
+      action.restApiResponse = restBlock.testResponse.response;
+      action.dynamics = restBlock.testResponse.preTestActions;
+      action.username = restBlock.username;
+      action.password = '';
+      action.credentialId = action.value;
+    }
+
     function parseAction(menuEntry, inAction) {
       //read from db
       var action;
@@ -494,7 +524,9 @@
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
         action.dynamicList = dynamicList;
-        action.voice = dynamicList[0].say.voice;
+        if (_.has(dynamicList, [0, 'say', 'voice'])) {
+          action.voice = dynamicList[0].say.voice;
+        }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
         action = new Action('play', decodeUtf8(inAction.play.url));
@@ -531,12 +563,18 @@
         action = new Action('routeToExtension', inAction.routeToExtension.destination);
         setDescription(action, inAction.routeToExtension);
         menuEntry.addAction(action);
+      } else if (!_.isUndefined(inAction.routeToEsn)) {
+        action = new Action('routeToEsn', inAction.routeToEsn.destination);
+        setDescription(action, inAction.routeToEsn);
+        menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToHuntGroup)) {
         action = new Action('routeToHuntGroup', inAction.routeToHuntGroup.id);
         setDescription(action, inAction.routeToHuntGroup);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToUser)) {
         action = new Action('routeToUser', inAction.routeToUser.id);
+        _.set(action, 'type', _.get(inAction, 'routeToUser.userType'));
+        _.set(action, 'sipURI', _.get(inAction, 'routeToUser.sipURI'));
         setDescription(action, inAction.routeToUser);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToVoiceMail)) {
@@ -568,7 +606,7 @@
         if (_.has(inAction.runActionsOnInput, 'inputType')) {
           action.inputType = inAction.runActionsOnInput.inputType;
           // check if this dial-by-extension
-          if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], action.inputType) &&
+          if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE, DIGITS_DIAL_BY_ESN], action.inputType) &&
             (_.has(inAction, 'runActionsOnInput.prompts.sayList') ||
             _.has(inAction, 'runActionsOnInput.prompts.announcements') ||
             _.has(inAction, 'runActionsOnInput.prompts.playList'))) {
@@ -595,9 +633,11 @@
             if (announcements && announcements.length > 0 && !_.isUndefined(announcements[0].play)) {
               action.url = decodeUtf8(announcements[0].play.url);
               action.deleteUrl = decodeUtf8(announcements[0].play.deleteUrl);
+              action.value = decodeUtf8(announcements[0].play.url);
             } else {
               if (announcements.length > 0 && _.has(announcements[0], 'say')) {
-                if (isDynAnnounceToggle()) {
+                //second check is needed to maintain the upload in case of no file uploaded but upload file is selected
+                if (isDynAnnounceToggle() && decodeUtf8(announcements[0].say.value)) {
                   var list = [{
                     say: {
                       value: decodeUtf8(announcements[0].say.value),
@@ -623,6 +663,8 @@
             menuEntry.attempts = inAction.runActionsOnInput.attempts;
             if (_.includes([3, 4], action.inputType)) {
               action.variableName = inAction.runActionsOnInput.rawInputActions[0].assignVar.variableName;
+            } else if (_.includes([5], action.inputType)) {
+              action.routingPrefix = inAction.runActionsOnInput.rawInputActions[0].routeToEsn.routingPrefix;
             }
             if (_.has(inAction.runActionsOnInput, 'inputs') && inAction.runActionsOnInput.inputs.length > 0) {
               action.inputActions = [];
@@ -657,10 +699,10 @@
         }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.doREST)) {
-        action = new Action('doREST', '');
-        action.url = inAction.doREST.url;
-        action.method = inAction.doREST.method;
-        action.variableSet = parseResponseBlock(inAction.doREST);
+        action = new Action('doREST', inAction.doREST.id);
+        var restBlocks = AARestModelService.getRestBlocks();
+        var restBlock = restBlocks[action.value];
+        updateActionFromRestBlock(action, restBlock);
         menuEntry.addAction(action);
       } else if (inAction.conditional) {
         var exp;
@@ -683,6 +725,8 @@
         }
         if (inAction.conditional.true[0].routeToUser) {
           action.then = new Action('routeToUser', inAction.conditional.true[0].routeToUser.id);
+          _.set(action, 'then.type', _.get(inAction, 'conditional.true[0].routeToUser.userType'));
+          _.set(action, 'then.sipURI', _.get(inAction, 'conditional.true[0].routeToUser.sipURI'));
         }
         if (inAction.conditional.true[0].routeToVoiceMail) {
           action.then = new Action('routeToVoiceMail', inAction.conditional.true[0].routeToVoiceMail.id);
@@ -845,7 +889,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(iaType, initialAnnouncementObject.value);
+            action = new Action(iaType, initialAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(iaType, '');
@@ -929,7 +973,7 @@
               htmlModel: '',
             }];
           } else {
-            action = new Action(paType, periodicAnnouncementObject.value);
+            action = new Action(paType, periodicAnnouncementObject.deleteUrl);
           }
         } else {
           action = new Action(paType, '');
@@ -1267,16 +1311,17 @@
     /*
      * Walk the ceRecord and return the actionSet actionSetName.
      */
-    function getActionSet(ceRecord, actionSetName) {
-      if (!_.isArray(ceRecord.actionSets)) {
-        return undefined;
-      }
-      for (var i = 0; i < ceRecord.actionSets.length; i++) {
-        if (!_.isUndefined(ceRecord.actionSets[i].name) && ceRecord.actionSets[i].name === actionSetName) {
-          return ceRecord.actionSets[i];
+    function getActionSet(ceRecord, _actionSetName) {
+      var holidayEventType = undefined;
+      if ((_actionSetName === HOLIDAYS_ACTION_SET_NAME) && (!_.isUndefined(ceRecord.scheduleEventTypeMap))) {
+        if (_.isEqual(ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT], CLOSED_HOURS_ACTION_SET_NAME)) {
+          holidayEventType = ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT];
         }
       }
-      return undefined;
+      return _.find(ceRecord.actionSets, function (actionSet) {
+        var actionSetName = _.get(actionSet, 'name');
+        return actionSetName === _actionSetName || actionSetName === holidayEventType;
+      });
     }
 
     /*
@@ -1334,8 +1379,13 @@
       });
     }
 
+    function getRestVariableSet(varSet) {
+      return (_.has(varSet, 'newVariableValue')) ? varSet.newVariableValue : varSet.variableName;
+    }
+
     function createWelcomeMenu(aaMenu) {
       var newActionArray = [];
+      var uiRestBlocks = AARestModelService.getUiRestBlocks();
       for (var i = 0; i < aaMenu.entries.length; i++) {
         var menuEntry = aaMenu.entries[i];
         newActionArray[i] = {};
@@ -1364,10 +1414,17 @@
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
+              if (checkIfEnteredValueIsPhoneNumber(menuEntry.actions[0].getValue())) {
+                newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+              } else {
+                newActionArray[i][actionName].destType = CONSTANTS.extension;
+              }
             } else if (actionName === 'routeToVoiceMail') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToUser') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+              _.set(newActionArray[i][actionName], 'userType', _.get(menuEntry, 'actions[0].type'));
+              _.set(newActionArray[i][actionName], 'sipURI', _.get(menuEntry, 'actions[0].sipURI'));
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
@@ -1381,7 +1438,7 @@
             } else if (actionName === 'routeToQueue') {
               newActionArray[i][actionName] = populateRouteToQueue(menuEntry.actions[0]);
             } else if (actionName === 'runActionsOnInput') {
-              if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE], menuEntry.actions[0].inputType)) {
+              if (_.includes([DIGITS_DIAL_BY, DIGITS_RAW, DIGITS_CHOICE, DIGITS_DIAL_BY_ESN], menuEntry.actions[0].inputType)) {
                 // dial by extension of caller input
                 newActionArray[i][actionName] = populateRunActionsOnInput(menuEntry.actions[0]);
                 newActionArray[i][actionName].attempts = menuEntry.attempts;
@@ -1391,14 +1448,38 @@
             } else if (actionName === 'conditional') {
               newActionArray[i][actionName] = createConditional(menuEntry.actions[0]);
             } else if (actionName === 'doREST') {
-              newActionArray[i][actionName].url = menuEntry.actions[0].url;
-              newActionArray[i][actionName].method = menuEntry.actions[0].method;
-              newActionArray[i][actionName].responseActions = createResponseBlock(menuEntry.actions[0]);
+              var restBlockId = menuEntry.actions[0].value;
+              var testResponse = {};
+              testResponse.request = menuEntry.actions[0].restApiRequest;
+              testResponse.response = menuEntry.actions[0].restApiResponse;
+              testResponse.preTestActions = [];
+              testResponse.preTestActions = menuEntry.actions[0].dynamics;
+              if (_.isEmpty(restBlockId)) {
+                restBlockId = AARestModelService.getRestTempId();
+              }
+              newActionArray[i][actionName].varList = _.map(menuEntry.actions[0].variableSet, getRestVariableSet);
+              newActionArray[i][actionName].id = restBlockId;
+              var overrideProps = {
+                url: menuEntry.actions[0].url,
+                method: menuEntry.actions[0].method,
+                testResponse: testResponse,
+                responseActions: createResponseBlock(menuEntry.actions[0]),
+                username: menuEntry.actions[0].username,
+                password: menuEntry.actions[0].password,
+                credentialId: menuEntry.actions[0].credentialId,
+              };
+              _.set(uiRestBlocks, restBlockId, overrideProps);
             }
           }
         }
       }
+      AARestModelService.setUiRestBlocks(uiRestBlocks);
       return newActionArray;
+    }
+
+    function checkIfEnteredValueIsPhoneNumber(number) {
+      // returns true when entered value is phonenumber starting with +. Returns false in case entered value is an extension
+      return (_.startsWith(number, '+'));
     }
 
     function createResponseBlock(action) {
@@ -1423,9 +1504,9 @@
       return responseActions;
     }
 
-    function parseResponseBlock(inAction) {
+    function parseResponseBlock(action) {
       var variableSet = [];
-      _.forEach(inAction.responseActions, function (responseAction) {
+      _.forEach(action.responseActions, function (responseAction) {
         var varSetItem = {};
         varSetItem.value = responseAction.assignVar.value;
         varSetItem.variableName = responseAction.assignVar.variableName;
@@ -1450,6 +1531,17 @@
       /* special case routeToQueue */
       if (_.get(action.then, 'name') === 'routeToQueue') {
         destObj = populateRouteToQueue(action.then);
+      } else if (_.get(action.then, 'name') === 'routeToUser') {
+        destObj[tag] = action.then.value;
+        destObj['userType'] = _.get(action, 'then.type');
+        destObj['sipURI'] = _.get(action, 'then.sipURI');
+      } else if (_.get(action.then, 'name') === 'route') {
+        destObj[tag] = action.then.value;
+        if (checkIfEnteredValueIsPhoneNumber(destObj[tag])) {
+          destObj.destType = CONSTANTS.phoneNumber;
+        } else {
+          destObj.destType = CONSTANTS.extension;
+        }
       } else {
         destObj[tag] = action.then.value;
       }
@@ -1504,8 +1596,10 @@
       if (_.isUndefined(ceRecord.actionSets)) {
         ceRecord.actionSets = [];
       }
-
       var actionSet = getAndCreateActionSet(ceRecord, actionSetName);
+      if (actionSetName === HOLIDAYS_ACTION_SET_NAME && ceRecord.scheduleEventTypeMap[HOLIDAYS_SCHEDULE_EVENT] === CLOSED_HOURS_ACTION_SET_NAME) {
+        return true;
+      }
       actionSet.actions = createWelcomeMenu(aaMenu);
 
       return true;
@@ -1534,7 +1628,14 @@
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
+          if (checkIfEnteredValueIsPhoneNumber(val)) {
+            newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+          } else {
+            newActionArray[i][actionName].destType = CONSTANTS.extension;
+          }
         } else if (actionName === 'routeToExtension') {
+          newActionArray[i][actionName].destination = val;
+        } else if (actionName === 'routeToEsn') {
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToVoiceMail') {
           newActionArray[i][actionName].id = val;
@@ -1542,12 +1643,16 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToUser') {
           newActionArray[i][actionName].id = val;
+          _.set(newActionArray[i][actionName], 'userType', actions[i].type);
+          _.set(newActionArray[i][actionName], 'sipURI', actions[i].sipURI);
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToSipEndpoint') {
           newActionArray[i][actionName].url = val;
         } else if (actionName === 'routeToQueue') {
           newActionArray[i][actionName] = populateRouteToQueue(actions[i]);
+        } else if (actionName === 'doREST') {
+          newActionArray[i][actionName].id = val;
         } else if (actionName === 'disconnect') {
           if (val && val !== 'none') {
             newActionArray[i][actionName].treatment = val;
@@ -1703,6 +1808,7 @@
       var announcementsArr = [];
       var announcements = {};
       var rawInputAction = {};
+      var routeToEsn = {};
       var routeToExtension = {};
       var assignVar = {};
       if (!_.isUndefined(action.inputType)) {
@@ -1733,11 +1839,19 @@
         announcementsArr[0] = announcements;
         prompts.announcements = announcementsArr;
         newAction.prompts = prompts;
-        if (newAction.inputType == 2 && !_.isUndefined(action.value)) {
-          newAction.description = action.description;
-          routeToExtension.destination = '$Input';
-          routeToExtension.description = action.description;
-          rawInputAction.routeToExtension = routeToExtension;
+        if (_.includes([2, 5], newAction.inputType) && !_.isUndefined(action.value)) {
+          if (newAction.inputType === 2) {
+            newAction.description = action.description;
+            routeToExtension.destination = '$Input';
+            routeToExtension.description = action.description;
+            rawInputAction.routeToExtension = routeToExtension;
+          } else if (newAction.inputType === 5) {
+            routeToEsn.destination = '$Input';
+            if (!_.isEmpty(action.routingPrefix)) {
+              routeToEsn.routingPrefix = action.routingPrefix;
+            }
+            rawInputAction.routeToEsn = routeToEsn;
+          }
           newAction.rawInputActions = [];
           newAction.rawInputActions[0] = rawInputAction;
           newAction.minNumberOfCharacters = action.minNumberOfCharacters;

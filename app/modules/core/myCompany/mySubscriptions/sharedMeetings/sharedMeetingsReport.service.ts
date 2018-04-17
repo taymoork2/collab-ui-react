@@ -2,13 +2,14 @@ import { ISharedMeetingData, ISharedMeetingTimeFilter } from './sharedMeetingsRe
 import { CommonGraphService } from '../../../partnerReports/commonReportServices/commonGraph.service';
 import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
 import { Notification } from '../../../notifications/notification.service';
+import { ChartColors } from 'modules/core/config/chartColors';
 
 interface IWindowService extends ng.IWindowService {
   webkitURL: any;
 }
 
 export class SharedMeetingsReportService {
-  public readonly FILENAME: string = 'shared_meeting.csv';
+  public readonly FILENAMES: string[] = ['shared_meeting.csv', 'concurrent_meetings.csv'];
   private readonly CHART_DIV: string = 'sharedMeetingsChart';
   private readonly ONE_MONTH: number = 1;
   private meetingModal: IToolkitModalServiceInstance |  undefined;
@@ -23,7 +24,6 @@ export class SharedMeetingsReportService {
     private CommonGraphService: CommonGraphService,
     private Notification: Notification,
     private UrlConfig,
-    private chartColors,
   ) {}
 
   public openModal(siteUrl: string): void {
@@ -71,19 +71,19 @@ export class SharedMeetingsReportService {
 
   public downloadInternetExplorer(): void {
     if (_.get(this.$window, 'navigator.msSaveOrOpenBlob', false)) {
-      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAME);
+      this.$window.navigator.msSaveOrOpenBlob(this.blob, this.FILENAMES[0]);
     }
   }
 
   public setChartData(data: ISharedMeetingData[], chart: any, filter: ISharedMeetingTimeFilter): any {
     if (chart) {
       chart.categoryAxis.showFirstLabel = true;
-      chart.categoryAxis.gridColor = this.chartColors.grayLightTwo;
+      chart.categoryAxis.gridColor = ChartColors.grayLightTwo;
       if (!_.isUndefined(filter) && filter.value === this.ONE_MONTH) {
         chart.categoryAxis.showFirstLabel = false;
       }
       if (!data[0].balloon) {
-        chart.categoryAxis.gridColor = this.chartColors.grayLightThree;
+        chart.categoryAxis.gridColor = ChartColors.grayLightThree;
       }
 
       chart.dataProvider = data;
@@ -101,7 +101,7 @@ export class SharedMeetingsReportService {
       catAxis.showFirstLabel = false;
     }
     if (!data[0].balloon) {
-      catAxis.gridColor = this.chartColors.grayLightThree;
+      catAxis.gridColor = ChartColors.grayLightThree;
     }
 
     const valueAxes: any = [this.CommonGraphService.getBaseVariable(this.CommonGraphService.AXIS)];
@@ -111,7 +111,7 @@ export class SharedMeetingsReportService {
     chartCursor.valueLineAlpha = 1;
     chartCursor.valueLineEnabled = true;
     chartCursor.valueLineBalloonEnabled = true;
-    chartCursor.cursorColor = this.chartColors.grayLightTwo;
+    chartCursor.cursorColor = ChartColors.grayLightTwo;
 
     const chartData: any = this.CommonGraphService.getBaseSerialGraph(data, 0, valueAxes, this.createGraphs(data), this.CommonGraphService.DATE, catAxis);
     chartData.numberFormatter = this.CommonGraphService.getBaseVariable(this.CommonGraphService.NUMFORMAT);
@@ -125,9 +125,9 @@ export class SharedMeetingsReportService {
   }
 
   private createGraphs(data: ISharedMeetingData[]): any[] {
-    let colors: string[] = [this.chartColors.primaryBase, this.chartColors.negativeBase];
+    let colors: string[] = [ChartColors.primaryBase, ChartColors.negativeBase];
     if (!data[0].balloon) {
-      colors = [this.chartColors.grayLightThree, this.chartColors.grayLightOne];
+      colors = [ChartColors.grayLightThree, ChartColors.grayLightOne];
     }
 
     const graphs: any[] = [];

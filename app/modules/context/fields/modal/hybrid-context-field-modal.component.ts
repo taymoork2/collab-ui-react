@@ -1,6 +1,10 @@
 import { Notification } from 'modules/core/notifications';
 import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
+import IDataTypeDefinition, { ITranslationDictionary } from 'modules/context/fields/dataTypeDefinition';
+import { FieldUtils } from 'modules/context/services/fieldUtils';
+
+type DataDisplay = { label: string, value: string };
 
 interface IFieldData {
   id: string;
@@ -10,19 +14,13 @@ interface IFieldData {
   dataType: string;
   dataTypeDefinition?: IDataTypeDefinition;
   defaultValue?: any;
-  dataTypeUI: string;
+  dataTypeUI: string; // use is deprecated in this controller
+  dataTypeValue: DataDisplay;
   translations: any;
   searchable: Boolean;
   lastUpdated?: string;
   publiclyAccessibleUI: string;
   publiclyAccessible: Boolean;
-}
-
-interface IDataTypeDefinition {
-  type: string;
-  enumerations?: string[];
-  translations?: any;
-  inactiveEnumerations?: string[];
 }
 
 interface IOption {
@@ -38,11 +36,10 @@ class FieldModalCtrl implements ng.IComponentController {
 
   private defaultClassification: string;
 
-  private dataTypeApiMap: Object;
   private classificationApiMap: Object;
   private classificationHelpTextMap: Object;
 
-  public dataTypeOptions: string[];
+  public dataTypeOptions: DataDisplay[];
   public dataTypePlaceholder: string;
   public classificationOptions: string[];
   public classificationHelpText: string;
@@ -57,7 +54,7 @@ class FieldModalCtrl implements ng.IComponentController {
   public dismiss: Function;
   public createMode: Boolean;
   public fieldData: IFieldData;
-  public dataTypeDefinition: Object;
+  public dataTypeDefinition: IDataTypeDefinition;
 
   public optionsList: IOption[] = [];
   public optionsListCopy: IOption[] = [];
@@ -73,7 +70,6 @@ class FieldModalCtrl implements ng.IComponentController {
   public optionRadios: Object[];
   public uniqueOptionCheckPassed: boolean = true;
   public nonEmptyOptionCheckPassed: boolean = true;
-  public hasContextExpandedTypesToggle: boolean;
   public inactiveOptionsList: IOption[] = [];
   public existingFieldOptionsList: IOption[] = [];
   public firstReordering: boolean = true;
@@ -89,6 +85,7 @@ class FieldModalCtrl implements ng.IComponentController {
     private Analytics,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
+    private FieldUtils: FieldUtils,
     protected Notification: Notification,
     protected ContextFieldsService: ContextFieldsService,
     protected dragularService,
@@ -103,16 +100,6 @@ class FieldModalCtrl implements ng.IComponentController {
 
     this.defaultClassification = this.encrypted;
 
-    // map datatype to value that is accepted by api
-    this.dataTypeApiMap = {};
-    this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.boolean')] = 'boolean';
-    this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.double')] = 'double';
-    this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.integer')] = 'integer';
-    this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.string')] = 'string';
-    if (this.hasContextExpandedTypesToggle) {
-      this.dataTypeApiMap[this.$translate.instant('context.dictionary.dataTypes.enumString')] = 'string';
-    }
-
     // map encrypted type to value that is accepted by api
     this.classificationApiMap = {};
     this.classificationApiMap[this.unencrypted] = 'UNENCRYPTED';
@@ -125,8 +112,17 @@ class FieldModalCtrl implements ng.IComponentController {
     this.classificationHelpTextMap[this.encrypted] = this.$translate.instant('context.dictionary.fieldPage.encryptedHelpText');
     this.classificationHelpTextMap[this.pii] = this.$translate.instant('context.dictionary.fieldPage.PiiEncryptedHelpText');
 
+    const selectionTypes = this.FieldUtils.supportedUiTypes();
+
     // set up the options and placeholder for dataType
-    this.dataTypeOptions = _.keys(this.dataTypeApiMap).sort();
+    this.dataTypeOptions = _.map(selectionTypes,
+      (selectionType) => {
+        return {
+          label: this.$translate.instant(this.FieldUtils.getTypeConstant(selectionType)),
+          value: selectionType,
+        };
+      });
+
     this.dataTypePlaceholder = this.$translate.instant('context.dictionary.fieldPage.dataTypePlaceholder');
 
     // set up the options and help test for classification (data privacy)
@@ -148,24 +144,33 @@ class FieldModalCtrl implements ng.IComponentController {
     this.createMode = !Boolean(_.get(this.existingFieldData, 'id'));
     this.inUse = this.inUse && !this.createMode; // just in case somebody passes in-use=true _and_ create-mode=true
 
-    this.fieldData = this.createMode
-      ? {
+    if (this.createMode) {
+      this.fieldData = {
         id: '',
         description: '',
         classification: '',
         classificationUI: this.defaultClassification,
         dataType: '',
         dataTypeUI: '',
+        dataTypeValue: { label: '', value: '' },
         translations: {
           en_US: '',
         },
         searchable: false,
         publiclyAccessible: false,
         publiclyAccessibleUI: '',
-      }
+      };
+    } else {
       // make a copy to that changes to data isn't reflected in side panel as
       // new data is entered by user
-      : _.cloneDeep(this.existingFieldData);
+      this.fieldData = _.cloneDeep(this.existingFieldData);
+
+      // then update the dataTypeValue
+      this.fieldData.dataTypeValue = {
+        label: this.FieldUtils.getDataType(this.fieldData),
+        value: this.FieldUtils.getDataTypeBase(this.fieldData),
+      };
+    }
 
     //copy the enum field options to the optionsList
     if (this.fieldData.dataTypeDefinition) {
@@ -510,13 +515,21 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   private isNotInSingleSelectEditingMode(): boolean {
-    return !this.addEnumOption && !this.editingOption && !this.reorderEnumOptions && !this.setDefaultEnumOption;
+    return !this.addEnumOption
+      && !this.editingOption
+      && !this.reorderEnumOptions
+      && !this.setDefaultEnumOption;
+  }
+
+  private isEnum(): boolean {
+    return this.fieldData.dataTypeValue.value === 'enumString';
   }
 
   public isSingleSelectCheckPassed(): boolean {
-    if (this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+    if (this.isEnum()) {
       return this.isMinimumOptionsSet() && this.uniqueOptionCheckPassed && this.nonEmptyOptionCheckPassed && this.isNotInSingleSelectEditingMode();
     }
+
     return true;
   }
 
@@ -564,7 +577,7 @@ class FieldModalCtrl implements ng.IComponentController {
       this.uniqueIdValidation(this.fieldData.id) &&
       this.fieldData.translations &&
       this.fieldData.translations.en_US &&
-      this.fieldData.dataTypeUI &&
+      this.fieldData.dataTypeValue.value &&
       this.fieldData.classificationUI &&
       this.isSingleSelectCheckPassed());
   }
@@ -598,11 +611,11 @@ class FieldModalCtrl implements ng.IComponentController {
       // get this one's index in the array
       const index = enumerations.indexOf(inactive);
       // remove this one from all translations
-      const translations = definition.translations;
+      const translations: ITranslationDictionary = _.get(definition, 'translations', {});
 
       // iterate over all translation languages
       _.forEach(_.keys(translations), language => {
-        const translationStrings = <string[]> translations[language];
+        const translationStrings = translations[language];
         if (translationStrings !== enumerations) { // en_US actually points to enumerations for now!
           // remove the transation at this index. THIS WILL PROBABLY BREAK IF TRANSLATIONS AREN'T BEING MAINTAINED PROPERLY!
           translationStrings.splice(index, 1);
@@ -615,10 +628,13 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public fixDataForApi() {
-    this.fieldData.dataType = this.dataTypeApiMap[this.fieldData.dataTypeUI];
+    this.fieldData.dataType = this
+      .FieldUtils
+      .getApiDataTypeFromSelection(this.fieldData.dataTypeValue.value);
+
     this.fieldData.classification = this.classificationApiMap[this.fieldData.classificationUI];
 
-    if (this.fieldData.dataTypeUI !== this.$translate.instant('context.dictionary.dataTypes.enumString')) {
+    if (!this.isEnum()) {
       this.fieldData.dataTypeDefinition = undefined;
       this.fieldData.defaultValue = undefined;
     } else {
@@ -677,7 +693,7 @@ class FieldModalCtrl implements ng.IComponentController {
   }
 
   public displaySingleSelectOptions() {
-    return this.fieldData.dataTypeUI === this.$translate.instant('context.dictionary.dataTypes.enumString');
+    return this.isEnum();
   }
 
   public isDisabledWhenInUse() {
@@ -687,13 +703,12 @@ class FieldModalCtrl implements ng.IComponentController {
 
 export class FieldModalComponent implements ng.IComponentOptions {
   public controller = FieldModalCtrl;
-  public templateUrl = 'modules/context/fields/modal/hybrid-context-field-modal.component.html';
+  public template = require('modules/context/fields/modal/hybrid-context-field-modal.component.html');
   public bindings = {
     existingFieldIds: '<',
     existingFieldData: '<',
     callback: '<',
     dismiss: '&',
-    hasContextExpandedTypesToggle: '<',
     inUse: '<',
   };
 }
@@ -701,3 +716,4 @@ export class FieldModalComponent implements ng.IComponentOptions {
 export default angular
   .module('Context')
   .component('contextFieldModal', new FieldModalComponent());
+

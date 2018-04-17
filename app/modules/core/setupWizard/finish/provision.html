@@ -1,0 +1,29 @@
+<div class="order-and-subscription-numbers">
+  <div ng-if="hasPendingLicenses">
+    <p><span translate="firstTimeWizard.orderNumber"></span><span>{{orderDetails.orderId}}</span></p>
+  </div>
+  <div>
+    <p><span translate="firstTimeWizard.subscriptionID"></span><span>{{orderDetails.subscriptionId}}</span></p>
+  </div>
+  <div>
+    <span translate="firstTimeWizard.endCustomer"></span><span>{{orderDetails.endCustomer}}</span>
+  </div>
+</div>
+<div class="provision-page">
+  <div class="provision-page__section">
+    <p class="provision-page__header" translate="firstTimeWizard.provisionAndBeginBilling"></p>
+    <p translate="firstTimeWizard.provisionBillingDescription"></p>
+  </div>
+  <div class="provision-page__section">
+    <p translate="firstTimeWizard.provisionBillingWarning"></p>
+  </div>
+  <div ng-if="isCustomerLaunchedFromPartner" class="provision-page__section">
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="sendEmailModel"
+      id="sendEmailToCustomer"
+      ng-change="setSendCustomerEmailFlag(sendEmailModel)"
+      cs-input-label="{{::'firstTimeWizard.sendEmailToCustomer' | translate}}">
+  </div>
+</div>

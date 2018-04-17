@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.cancel()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate= {{$ctrl.modalTitle}}></h3>
+</div>
+<div class="modal-body">
+  <div ng-if="!$ctrl.isResult()">
+    <h4 translate="common.stepCurrentOfTotal"
+      ng-if="$ctrl.totalSteps > 1"
+      translate-values="{current: $ctrl.getCurrentStep(), total: $ctrl.getTotalSteps()}">
+    </h4>
+    <p ng-if="$ctrl.currentStep > 0" translate="helpdesk.subscriptionIdDisplay" translate-values="{subId: $ctrl.currentSubscriptionId}"></p>
+  </div>
+  <webex-site-subscription subscriptions="$ctrl.subscriptionList"
+    current-subscription-id="$ctrl.currentSubscriptionId"
+    on-subscription-change="$ctrl.changeCurrentSubscription(subId, needsSetup)"
+    on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    ng-if="$ctrl.currentStep===0">
+  </webex-site-subscription>
+  <webex-site-transfer current-subscription="$ctrl.currentSubscriptionId"
+    on-sites-received="$ctrl.addTransferredSites(sites, transferCode, isValid)"
+    on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
+    intro-copy="'webexSiteManagement.transferSitesCopy'"
+    ng-if="$ctrl.currentStep===1">
+  </webex-site-transfer>
+  <webex-site-new sites-array="$ctrl.sitesArray"
+    audio-package="$ctrl.audioPackage"
+    audio-partner-name="$ctrl.audioPartnerName"
+    on-sites-add="$ctrl.addNewSites(sites, isValid)"
+    on-validation-status-change="$ctrl.setNextEnabled(isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
+    ng-if="$ctrl.currentStep===2">
+  </webex-site-new>
+  <webex-site-licenses sites-array="$ctrl.sitesArray"
+    existing-webex-sites="$ctrl.existingWebexSites"
+    center-details="$ctrl.currentCenterDetails"
+    conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
+    on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid)"
+    on-send-tracking="$ctrl.sendMetrics(event, properties)"
+    ng-if="$ctrl.currentStep===3">
+  </webex-site-licenses>
+  <webex-site-result-display  ng-if="$ctrl.isResult()" action="$ctrl.isLicenseRedistribution() ? 'redistribute' : 'addSite'" is-success="$ctrl.isSuccess"></webex-site-result-display>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default"  ng-click="$ctrl.cancel()" ng-if="!$ctrl.isResult()" translate="common.cancel"></button>
+  <button class="btn btn-primary"
+    cs-btn
+    loading="$ctrl.isLoading"
+    ng-click="$ctrl.next()"
+    ng-disabled="$ctrl.isNextDisabled()">
+    <span>{{ $ctrl.getPrimaryButtonText() | translate }}</span>
+  </button>
+</div>

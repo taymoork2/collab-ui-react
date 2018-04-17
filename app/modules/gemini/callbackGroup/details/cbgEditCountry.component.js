@@ -5,31 +5,39 @@
     .module('Gemini')
     .component('cbgEditCountry', {
       controller: cbgEditCountry,
-      templateUrl: 'modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html',
+      template: require('modules/gemini/callbackGroup/details/cbgEditCountry.tpl.html'),
     });
 
   /* @ngInject */
-  function cbgEditCountry($scope, $state, $element, $rootScope, $stateParams, $translate, PreviousState, Notification, cbgService, gemService, $log) {
+  function cbgEditCountry($scope, $state, $element, $rootScope, $stateParams, $translate, PreviousState, Notification, cbgService) {
     var vm = this;
     var info = _.get($stateParams, 'obj.info', {});
 
     vm.countries = [];
     vm.btnDisable = true;
     vm.model = {
-      groupName: _.get(info, 'groupName'),
+      groupId: _.get(info, 'groupId'),
+      groupName: _.get(info, 'groupName') || _.get(info, 'customerName'),
       customerAttribute: _.get(info, 'customerAttribute'),
     };
+    vm.groupNameLabel = vm.model.groupId ? $translate.instant('gemini.cbgs.field.cbgName') : $translate.instant('gemini.cbgs.request.labelCustomer');
     vm.customerId = _.get($stateParams, 'obj.customerId', '');
 
     vm.onSave = onSave;
     vm.$onInit = $onInit;
     vm.onCancel = onCancel;
     vm.onSetBtnDisable = setBtnDisable;
+    vm.messages = {
+      groupName: {
+        required: $translate.instant('common.invalidRequired'),
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 64, field: vm.groupNameLabel }),
+      },
+      customerAttribute: {
+        maxlength: $translate.instant('gemini.inputLengthError', { length: 200, field: $translate.instant('gemini.cbgs.field.alias') }),
+      },
+    };
 
     function $onInit() {
-      $log.info(info);
-      vm.isReadonly = _.includes(['S', 'A'], info.status);
-
       $scope.$watchCollection(function () {
         return vm.countries;
       }, function () {
@@ -37,7 +45,7 @@
       });
 
       vm.countries = _.map(info.countries, function (item) {
-        return { value: item.countryId, label: item.countryName };
+        return { value: item.id, label: item.name };
       });
 
       $state.current.data.displayName = $translate.instant('gemini.cbgs.editCountry');
@@ -60,12 +68,7 @@
       $element.find('input').attr('readonly', true);
       $element.find('a.select-toggle').addClass('disabled');
       cbgService.updateCallbackGroup(data)
-        .then(function (res) {
-          var returnCode = _.get(res.content, 'data.returnCode');
-          if (returnCode) {
-            Notification.notify(gemService.showError(returnCode));
-            return;
-          }
+        .then(function () {
           $rootScope.$emit('cbgsUpdate', true);
           $state.go(PreviousState.get(), PreviousState.getParams(), { reload: true });
         })
@@ -79,15 +82,13 @@
     }
 
     function formateCountry() {
-      var countries = [];
-      _.forEach(vm.countries, function (item) {
-        countries.push({ countryId: item.value, countryName: item.label });
+      return _.map(vm.countries, function (item) {
+        return { id: item.value, name: item.label };
       });
-      return countries;
     }
 
     function setBtnDisable(flag) {
-      if (!vm.countries.length || (!vm.isReadonly && !vm.model.groupName)) {
+      if (!vm.countries.length || !vm.model.groupName) {
         vm.btnDisable = true;
         return;
       }

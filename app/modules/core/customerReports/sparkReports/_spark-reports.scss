@@ -1,15 +1,31 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import 'modules/sunlight/reports/_care-task';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '../../../../styles/variables';
 
 .customer-reports {
-  @extend %content-subheader;
   @extend %page-content-padding;
+
+  .sparkMetricsContent {
+    height: calc(100vh - (#{$page-header-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sparkMetricsContentWithReadOnly {
+    height: calc(100vh - (#{$page-header-height} + #{$read-only-banner-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 
   .customer-report-filter {
     width: vr-adjust(200);
     @include vr-spacing(pl, 1.25);
+  }
+
+  .report-filter {
+    width: 380px;
   }
 
   .cs-card-layout {
@@ -53,5 +69,40 @@
   .ui-grid-row {
     text-align: left;
     top: rem-calc(30);
+  }
+
+  .cs-timepicker-container {
+    width: 100px;
+    height: 36px;
+    padding-left: 12px;
+  }
+
+  #startTime,
+  #endTime {
+    width: 100px;
+  }
+
+  .cs-datepicker,
+  #startDate,
+  #endDate {
+    width: 183px;
+  }
+
+  .data-span {
+    padding-left: 20px;
+    padding-right: 6px;
+  }
+
+  .cs-datepicker-normal {
+    width: 183px;
+  }
+
+  .searchfilter {
+    padding-right: 20px;
+  }
+
+  .searchbox,
+  .searchinput {
+    width: 240px;
   }
 }

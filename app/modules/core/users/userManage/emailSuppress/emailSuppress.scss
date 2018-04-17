@@ -1,0 +1,68 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+user-manage-email-suppress {
+  .modal-content & {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .email-suppress {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      &.larger {
+        font-size: 7em;
+        @include vr-spacing(mb, 3);
+      }
+    }
+
+    .align-center {
+      @include vr-spacing(mv, 0.5);
+      display: inline-flex;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      @media screen and (max-width: 700px) {
+        width: 90%;
+      }
+      .can-change {
+        color: $gray-base;
+      }
+      .spark-call {
+        color: $gray-light-1;
+        font-style: italic;
+      }
+      .icon-warning {
+        color: $color-attention-base;
+        font-size: 1.5rem;
+        top: 0.5rem;
+        right: 0.65rem;
+      }
+      .icon-info {
+        color: $color-blue-base;
+        top: 1.25rem;
+        right: 0.65rem;
+      }
+      p {
+        font-family: $brand-font-light;
+        font-size: 1.625em;
+      }
+    }
+
+    .block {
+      display: inline-flex;
+      div {
+        padding-top: 1rem;
+      }
+    }
+  }
+}

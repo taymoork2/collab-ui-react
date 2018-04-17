@@ -4,6 +4,8 @@ class MediaOnHoldCtrl implements ng.IComponentController {
   public lineMoh: string;
   public selected: IOption;
   public lineMohOptions: IOption[];
+  public panelTitle: string;
+  public panelDesc: string;
   public onChangeFn: Function;
   public mediaMgrModal;
 
@@ -39,10 +41,12 @@ class MediaOnHoldCtrl implements ng.IComponentController {
 
 export class MediaOnHoldComponent implements ng.IComponentOptions {
   public controller = MediaOnHoldCtrl;
-  public templateUrl = 'modules/huron/media-on-hold/media-on-hold.html';
+  public template = require('modules/huron/media-on-hold/media-on-hold.html');
   public bindings = {
     lineMoh: '<',
     lineMohOptions: '<',
+    panelTitle: '<',
+    panelDesc: '<',
     onChangeFn: '&',
   };
 }

@@ -1,0 +1,51 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+user-task-list-item {
+  display: block;
+
+  .task {
+    padding: 1rem;
+
+    &--active {
+      background: $gray-light-3;
+    }
+
+    &__row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__text,
+    &__subtext {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &-icon {
+        vertical-align: middle;
+      }
+    }
+
+    &__text {
+      font-family: $brand-font-light;
+      font-size: 14px;
+      color: $gray-dark-2;
+      &--right {
+        text-align: right;
+      }
+    }
+
+    &__subtext {
+      font-family: $brand-font-regular;
+      font-size: 12px;
+      color: $gray-light-1;
+      &--right {
+        text-align: right;
+      }
+      &--icon {
+        vertical-align: middle;
+        @include vr-spacing(mr, 0.15);
+      }
+    }
+  }
+}

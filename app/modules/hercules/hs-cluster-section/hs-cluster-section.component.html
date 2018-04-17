@@ -1,0 +1,57 @@
+<setting-section setting="$ctrl.clusterSection" class="needs-border-top">
+
+  <cluster-sip-destination-section ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature && $ctrl.cluster && $ctrl.showSipDestinationSection" cluster="$ctrl.cluster"></cluster-sip-destination-section>
+
+  <div class="sub-section" ng-if="$ctrl.showRenameSection" id="renameSection">
+    <h5 class="sub-section__label" translate="common.rename"></h5>
+    <p ng-if="$ctrl.cluster.targetType !== 'ept'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.renameClusterParagraph"></p>
+    <p ng-if="$ctrl.cluster.targetType === 'ept'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.renameSipDestinationParagraph"></p>
+
+    <div class="row">
+      <input
+        cs-input
+        type="text"
+        placeholder={{$ctrl.localizedClusterNameWatermark}}
+        ng-model="$ctrl.clusterName"
+        ng-keypress="$event.which === 13 && $ctrl.saveClusterName($ctrl.clusterName)"
+        cs-input-group-size="medium-8"
+        cs-input-help-text="{{'hercules.renameAndDeregisterComponent.renameClusterDescription' | translate}}" >
+      <button
+        cs-btn
+        class="btn btn--primary btn-save-new-name"
+        ng-click="$ctrl.saveClusterName($ctrl.clusterName)"
+        loading="$ctrl.savingNameState">
+        <span translate="common.save"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sub-section">
+    <h5 class="sub-section__label cap-long-names" translate="common.remove"></h5>
+    <p ng-if="!$ctrl.blockDeregistration() && $ctrl.cluster.targetType !== 'mf_mgmt' && $ctrl.cluster.targetType !== 'ept' "
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanation"
+       translate-values="{clusterType: $ctrl.clusterType}"></p>
+    <p ng-if="$ctrl.blockDeregistration() && $ctrl.cluster.targetType !== 'mf_mgmt' && $ctrl.cluster.targetType !== 'ept'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterClusterExplanationBlocked"></p>
+    <p ng-if="$ctrl.cluster.targetType === 'mf_mgmt'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterMediaClusterExplanation"></p>
+    <p ng-if="$ctrl.cluster.targetType === 'ept'"
+       class="sub-section__description"
+       translate="hercules.renameAndDeregisterComponent.deregisterSipDestinationExplanation"></p>
+
+
+      <button type="button"
+              class="btn"
+              ng-click="$ctrl.deregisterCluster()"
+              translate="common.remove"
+              ng-disabled="$ctrl.blockDeregistration()"></button>
+  </div>
+
+</setting-section>

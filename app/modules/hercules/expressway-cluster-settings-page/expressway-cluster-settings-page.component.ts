@@ -1,5 +1,8 @@
 import { Notification } from 'modules/core/notifications';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 interface IResourceGroupOptions {
   label: string;
@@ -12,6 +15,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
   public enabledServices: string[] = [];
   public cluster: any;
   public clusterId: string;
+  public hasHybridGlobalCallServiceConnectFeature: boolean;
   public resourceGroupOptions: IResourceGroupOptions[];
   public originalResourceGroup: IResourceGroupOptions;
   public selectedResourceGroup: IResourceGroupOptions;
@@ -30,12 +34,20 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private Notification: Notification,
-    private ResourceGroupService,
+    private ResourceGroupService: ResourceGroupService,
   ) {
     this.buildResourceOptions = this.buildResourceOptions.bind(this);
     this.getCurrentResourceGroup = this.getCurrentResourceGroup.bind(this);
+  }
+
+  public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridGlobalCallServiceConnect)
+      .then(support => {
+        this.hasHybridGlobalCallServiceConnectFeature = support;
+      });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -80,7 +92,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     const component = this;
     if (this.selectedResourceGroup.value === '') { // user is removing resource group
       this.$modal.open({
-        templateUrl: 'modules/hercules/fusion-pages/remove-from-resource-group-dialog.html',
+        template: require('modules/hercules/fusion-pages/remove-from-resource-group-dialog.html'),
         type: 'dialog',
         controller: function () {
           const ctrl = this;
@@ -118,7 +130,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
         });
     } else { // user is setting a new resource group
       this.$modal.open({
-        templateUrl: 'modules/hercules/fusion-pages/assign-new-resource-group-dialog.html',
+        template: require('modules/hercules/fusion-pages/assign-new-resource-group-dialog.html'),
         type: 'dialog',
         controller: function () {
           const ctrl = this;
@@ -205,14 +217,13 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     });
   }
 
-  public deactivateService(serviceId, cluster) {
+  public deactivateService(connectorType: ConnectorType, cluster) {
     this.$modal.open({
-      templateUrl: 'modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html',
+      template: require('modules/hercules/resource-settings/deactivate-service-on-expressway-modal.html'),
       controller: 'DeactivateServiceOnExpresswayModalController',
-      controllerAs: 'deactivateServiceOnExpresswayModal',
-      type: 'small',
+      controllerAs: 'vm',
       resolve: {
-        serviceId: () => serviceId,
+        connectorType: () => connectorType,
         clusterName: () => cluster.name,
         clusterId: () => cluster.id,
       },
@@ -231,7 +242,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
     return this.$translate.instant('hercules.serviceNameFromConnectorType.' + connector);
   }
 
-  /* Callback function used by <hs-rename-and-deregister-cluster-section>  */
+  /* Callback function used by <hs-cluster-section> */
   public nameUpdated(name) {
     this.$rootScope.$emit('cluster-name-update', name);
   }
@@ -239,7 +250,7 @@ class ExpresswayClusterSettingsPageCtrl implements ng.IComponentController {
 
 export class ExpresswayClusterSettingsPageComponent implements ng.IComponentOptions {
   public controller = ExpresswayClusterSettingsPageCtrl;
-  public templateUrl = 'modules/hercules/expressway-cluster-settings-page/expressway-cluster-settings-page.html';
+  public template = require('./expressway-cluster-settings-page.html');
   public bindings = {
     clusterId: '<',
   };

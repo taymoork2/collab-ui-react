@@ -11,6 +11,7 @@ Learn more about project specifics:
 * [structure](docs/structure.md)
 * [technologies](docs/technology.md)
 * [webpack](docs/webpack.md)
+* [security](docs/security.md)
 
 Post any questions to the 'Atlas UI Dev Team' Spark room. Contributors are expected to be actively engaged on Spark. If you need more help or access to a Spark room, please reach out to a [core team member](http://cs.co/atlas-triage#im-still-stuck-who-can-i-contact).
 
@@ -24,7 +25,7 @@ Adherence is mandatory. Please refactor non-compliant code.
 * **Unit tests are mandatory**.  Unit tests are the foundation of our testing strategy.
   They provide a way to test business logic and components in isolation while controlling all conditions and expectations.
   See the [examples](examples/unit) module for examples of different types of unit tests.
-* **Code reviews are mandatory**. Code reviews are performend through GitHub's [Pull Requests](https://help.github.com/articles/using-pull-requests/).
+* **Code reviews are mandatory**. Code reviews are performed through GitHub's [Pull Requests](https://help.github.com/articles/using-pull-requests/).
   GitHub provides an easy-to-use tool for reviewing and maintaining commit history by linking commits
   with their associated pull requests.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.
@@ -108,15 +109,15 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
 
 ##### 1. Refresh npm dependencies
 
-  * `npm install` to install project dependencies
+  * `yarn` to install project dependencies
 
 ##### 2. Run the application
-  * `npm start` to run the development server
+  * `yarn start` to run the development server
   * See [npm scripts](docs/npm-scripts.md) for more build commands
 
 ##### 3. Make your feature change or bug fix
-  * Create a local branch (tracking origin/master) to implement your work
-    * `git checkout -b <local-branch> origin/master`
+  * Create a local feature branch (tracking origin/master) to implement your work
+    * `git checkout -b <feature-branch> origin/master`
   * Example [Hello World module](docs/hello-world.md)
   * Example components
     * [index.ts](examples/unit/index.ts)
@@ -125,43 +126,63 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
     * [example.service.ts](examples/unit/example.service.ts)
 
 ##### 4. Create your unit tests
-  * `npm test` or `npm run test` to run unit tests
-  * Example components - `npm run ktest-watch -- examples/unit/*.spec.ts`
+  * `yarn test` to run all unit tests
+    * `yarn test <tests>` for specific tests
+    * `yarn ktest-watch <tests>` to watch specific tests
+    * `yarn ktest-debug <tests>` to debug specific tests
+  * Example tests - `yarn test examples/unit/*.spec.ts`
     * [example.component.spec.ts](examples/unit/example.component.spec.ts)
     * [example.service.spec.ts](examples/unit/example.service.spec.ts)
 
 ##### 5. Create End-to-End test
   * **Important:** *Our functional e2e tests are only intended for the few, happy-path, critical workflows in Atlas. The majority of these deal with creating trials and users for particular services.  There should be a valid critical reason for adding a new e2e test. If you want to any advice, we do have a (rarely used) "Atlas UI E2E Tests" space in the Atlas Team.*
-  * `npm run protractor` to run protractor e2e tests
+  * `yarn protractor` to run protractor e2e tests
+  * `yarn protractor --specs test/e2e-protractor/examples/failed_test_retry_spec.js` to run a specific e2e test
   * e2e tests are organized by [modules](test/e2e-protractor)
   * Protractor elements are abstracted into [Page Objects](test/e2e-protractor/pages)
   * All element interactions are implemented through [Util functions](test/e2e-protractor/utils/test.utils.js)
 
 ##### 6. Create Pull Request code review
-  * `git checkout <local-branch>` (if not already on your local branch)
-  * Before creating a pull request, update your local branch (tracking origin/master) to the latest remote code
-  * `git pull --rebase`
-  * Push your updated local branch to your fork
-  * `git push <fork> <local-branch>`
+  * Switch to your local feature branch if not already
+    * `git checkout <feature-branch>`
+  * Rebase your local feature branch (tracking origin/master) with the latest remote code and push to your fork
+  * (recommended) Use our script to rebase your branch and update your fork
+    * `yarn rebase-branch-and-update-fork` (or directly with `./bin/rebase-branch-and-update-fork.sh`)
+  * (alternative) Do it yourself
+    * Rebase your commits onto the latest from origin/master
+      * `git pull --rebase` (resolve conflicts if necessary)
+    * Push your updated local feature branch to your fork
+      * `git push <fork> <feature-branch>`
   * On your fork, select your branch and click `Pull request` to create a new PR
   * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
     * Add appropriate reviewers using [@mention](https://github.com/blog/821-mention-somebody-they-re-notified)
     * Add `@WebExSquared/atlas-web-core-team` for core team members
     * *(Note: your PR may automatically be picked up by @atlas-ui-bot-gen, who will @mention other contributors when feasible)*
   * **Important:** *Please allow a reasonable time for a response before pushing your code.  Large commits will take longer to review.  Smaller commits can be reviewed quicker and make it easier for adjustments to the comments.*
-  * Respond to feedback requests and push changes as new commits
-  * `git push <fork> <local-branch>`
+  * Respond to feedback requests and push changes as *new* commits
+    * `git push <fork> <feature-branch>`
+  * You can continue to rebase your branch and update your fork over the course of the review
+    * `yarn rebase-branch-and-update-fork` (or directly with `./bin/rebase-branch-and-update-fork.sh`)
 
 ##### 7. Push to Gauntlet (build queue-ing tool) for validated merge (after approved review)
-  * `git checkout master`
-  * Your master branch should have no local commits. Reset your HEAD if need be with `git reset --hard HEAD`.
-  * `git pull --rebase` to update your master branch with the latest from github
-  * `git merge <local-branch>` (resolve conflicts if necessary)
-  * `git push -f <fork> master:<local-branch>` to update your fork's branch so your PR is properly reflected
-  * `git push gauntlet master`
+  * Switch to your local feature branch if not already
+    * `git checkout <feature-branch>`
+  * Push your local feature branch to Gauntlet's master branch
+  * (recommended) Use our script to rebase your branch, update your fork, and push to Gauntlet
+    * `yarn gauntlet-push` (or directly with `./bin/gauntlet-push.sh`)
+  * (alternative) Do it yourself
+    * Rebase your commits onto the latest from origin/master
+      * `git pull --rebase` (resolve conflicts if necessary)
+    * Push your updated local feature branch to your fork (this will need to be forced if you already have the feature branch on your fork)
+      * `git push <fork> <feature-branch> -f`
+    * Push your local feature branch to Gauntlet's master
+      * `git push gauntlet <feature-branch>:master`
+  * Gauntlet Information
     * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/) (**:warning: it is not the same password as your CEC password :warning:**).
     * Consider putting your internal password into ~/.netrc
     * You can [monitor the gauntlet queue here](https://gauntlet.wbx2.com/queue.html?queue=atlas-web)
+    * You can [force fail stuck gauntlet queue here](https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web--gauntlet--fail-build/) (note: trigger it with the **full SHA** of your feature branch's HEAD commit). You can alternatively force fail it using the following curl command: `curl --insecure --user <username> -X PUT "https://gauntlet.wbx2.com/api/queues/atlas-web/master?commitId=<commitId>&componentTestStatus=failure"
+`, use your internal password when prompted.
 
 ##### 8. Jenkins Build Triage
   * Build failures happen - sometimes they are related to your work and sometimes they aren't

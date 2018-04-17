@@ -3,8 +3,23 @@
 describe('UserListCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
-    this.injectDependencies('$rootScope', '$scope', '$state', '$controller', '$q', '$httpBackend', 'Userservice', 'UserListService',
-      'Orgservice', 'Authinfo', 'Auth', 'Config', 'Notification', 'FeatureToggleService', 'DirSyncService');
+    this.injectDependencies(
+      '$controller',
+      '$httpBackend',
+      '$q',
+      '$rootScope',
+      '$scope',
+      '$state',
+      'Authinfo',
+      'Config',
+      'DirSyncService',
+      'FeatureToggleService',
+      'GridCellService',
+      'Notification',
+      'Orgservice',
+      'UserListService',
+      'Userservice'
+    );
     initFixtures.apply(this);
     initDependencySpies.apply(this);
   }
@@ -13,6 +28,10 @@ describe('UserListCtrl: Ctrl', function () {
     this.$rootScope.typeOfExport = {
       USER: 1,
       CUSTOMER: 2,
+    };
+
+    this.event = {
+      stopPropagation: jasmine.createSpy('stopPropagation'),
     };
 
     this.photoUsers = _.clone(getJSONFixture('core/json/users/userlist.controller.json'));
@@ -32,7 +51,9 @@ describe('UserListCtrl: Ctrl', function () {
       success: true,
     };
 
+    spyOn(this.$state, 'go');
     spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'errorResponse');
     spyOn(this.Userservice, 'resendInvitation').and.returnValue(this.$q.resolve({}));
     spyOn(this.UserListService, 'listUsers').and.callFake(function (startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins) {
       var response;
@@ -53,7 +74,6 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.currentUser.meta.organizationID);
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
-    spyOn(this.Auth, 'isOnlineOrg').and.returnValue(this.$q.resolve(false));
 
     spyOn(this.FeatureToggleService, 'atlasEmailStatusGetStatus').and.returnValue(this.$q.resolve(false));
 
@@ -193,6 +213,62 @@ describe('UserListCtrl: Ctrl', function () {
     });
   });
 
+  describe('handleDeleteUser', function () {
+    beforeEach(function () {
+      initController.apply(this);
+
+      this.user = {
+        userName: 'userName',
+        id: 'id',
+        meta: {
+          organizationID: 'organizationID',
+        },
+      };
+
+      this.userDetails = {
+        deleteUserOrgId: this.user.meta.organizationID,
+        deleteUserUuId: this.user.id,
+        deleteUsername: this.user.userName,
+      };
+
+      this.userDelete = 'users.delete';
+      this.selfDelete = 'users.deleteSelf';
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is enter', function () {
+      this.event.keyCode = this.GridCellService.ENTER;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is space', function () {
+      this.event.keyCode = this.GridCellService.SPACE;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call keypressHandleDeleteUser, but not handleDeleteUser, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressHandleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).not.toHaveBeenCalled();
+    });
+
+    it('should call handleDeleteUser and call the delete self modal when self is true', function () {
+      this.controller.handleDeleteUser(this.event, this.user, true);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
+    });
+
+    it('should call handleDeleteUser and call the delete user modal when self is false', function () {
+      this.controller.handleDeleteUser(this.event, this.user, false);
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith(this.userDelete, this.userDetails);
+    });
+  });
+
   describe('resendInvitation', function () {
     beforeEach(function () {
       initController.apply(this);
@@ -205,10 +281,44 @@ describe('UserListCtrl: Ctrl', function () {
       this.entitlements = ['squared-call-initiation', 'spark', 'webex-squared'];
     });
 
-    it('should call resendInvitation successfully', function () {
-      this.controller.resendInvitation(this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is enter', function () {
+      this.event.keyCode = this.GridCellService.ENTER;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation and resendInvitation successfully when keypress event is space', function () {
+      this.event.keyCode = this.GridCellService.SPACE;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call keypressResendInvitation, but not resendInvitation, when keypress event is neither enter nor space', function () {
+      this.event.keyCode = 0;
+      this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).not.toHaveBeenCalled();
+      expect(this.Notification.errorResponse).not.toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation successfully', function () {
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.success).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should call resendInvitation error notification on failure', function () {
+      this.Userservice.resendInvitation.and.returnValue(this.$q.reject({}));
+      this.controller.resendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+      expect(this.event.stopPropagation).toHaveBeenCalled();
     });
   });
 
@@ -376,6 +486,11 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'error';
       expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return false if org is dirsynch', function () {
+      this.$scope.dirsyncEnabled = true;
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
     });
 
     it('should return false if userStatus is neither pending nor error', function () {

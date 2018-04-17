@@ -1,0 +1,14 @@
+<div class="site-description">
+  <div class="col-lg-1">
+    <i class="icon icon-check verified-check"></i>
+  </div>
+  <div class="col-lg-5">
+    <b><div>{{$ctrl.site.siteUrl}}<span translate="firstTimeWizard.pmrSiteURLDomain"></span></div></b>
+    <div ng-if="$ctrl.site.timezone" class="time-zone" translate-values="{label: $ctrl.site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></div>
+    <div ng-if="!$ctrl.site.isCIUnifiedSite && $ctrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
+    <div ng-if="$ctrl.site.isCIUnifiedSite && $ctrl.isShowUserManagement" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
+  </div>
+  <div class="col-lg-1" ng-if="$ctrl.canRemoveSite">
+    <i class="icon icon-delete delete-site" ng-click="$ctrl.removeSite()"></i>
+  </div>
+</div>

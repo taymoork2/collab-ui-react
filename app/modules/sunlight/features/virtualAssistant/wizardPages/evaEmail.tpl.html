@@ -1,0 +1,52 @@
+<div class="eva-email">
+  <div class="email-form" ng-form="$ctrl.emailForm">
+    <div class="input-section">
+      <input ng-if="!($ctrl.isEditFeature)" class="h3 ct-input ct-input-no-border ct-input-no-focus"
+        name="input"
+        placeholder="{{$ctrl.getText('email.namePlaceholder')}}"
+        ng-model="$ctrl.template.configuration.pages.evaEmail.value"
+        autocomplete="off"
+        focus-on
+        unique-email
+        ng-model-options="{ debounce: 500 }"
+        ng-maxlength="$ctrl.maxEmailLength"
+        ng-pattern="$ctrl.validateEmailChars">
+      <span ng-if="$ctrl.isEditFeature" id="disabled-input-wrapper"
+        tabindex="0"
+        tooltip="{{$ctrl.getText('email.disabledTooltip')}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{$ctrl.getText('email.disabledTooltip')}}">
+        <input id="disabledEmailInput" class="h3 ct-input ct-input-no-border ct-input-no-focus ct-input-disabled"
+          name="input"
+          ng-model="$ctrl.template.configuration.pages.evaEmail.value"
+          ng-disabled="true">
+      </span>
+      <p class="ct-input-hint" ng-class="$ctrl.emailForm.input.$valid || $ctrl.emailForm.input.$pending ? 'ct-input-valid-border' : 'ct-input-invalid-border'">
+        {{$ctrl.getText('email.nameHint')}}
+      </p>
+      <div class="ct-input-error-wrapper">
+        <div class="message small ct-input-error" ng-show="$ctrl.emailForm.input.$error.pattern">
+          <i class="icon icon-error icon-lg"></i>
+          {{$ctrl.getText('email.badCharError')}}
+        </div>
+        <div class="message small ct-input-error" ng-show="$ctrl.emailForm.input.$error.maxlength">
+          <i class="icon icon-error icon-lg"></i>
+          {{$ctrl.getText('email.errorChar63')}}
+        </div>
+        <div class="message small ct-input-error" ng-show="$ctrl.emailForm.input.$error.uniqueEmailValidator">
+          <i class="icon icon-error icon-lg"></i>
+          {{$ctrl.getText('email.duplicateError')}}
+        </div>
+        <div class="message small ct-input-pending" ng-show="$ctrl.emailForm.input.$pending">
+          {{$ctrl.getText('email.pending')}}
+        </div>
+      </div>
+    </div>
+    <h2  class="extension" ng-class="{
+      'valid-extension': $ctrl.isEmailPageValid(),
+      'invalid-extension': $ctrl.emailForm.input.$invalid,
+      'disabled-extension': $ctrl.isEditFeature}">@sparkbot.io</h2>
+    <i class="icon icon-check icon-2x" ng-class="$ctrl.isEmailPageValid() && !($ctrl.isEditFeature) ? 'visible' : 'invisible'"/>
+  </div>
+</div>

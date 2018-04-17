@@ -1,0 +1,41 @@
+<div ng-form="locationCallerIdForm">
+  <label ng-if="$ctrl.showLabel"
+    class="sub-section__label"
+    translate="locations.locationCallerId">
+  </label>
+  <cs-toggle-switch
+    id="locationCallerIdToggleSwitch"
+    ng-model="$ctrl.locationCallerIdEnabled"
+    toggle-id="locationCallerIdToggle"
+    name="locationCallerIdToggle"
+    size="$ctrl.size"
+    cs-change="$ctrl.onLocationCallerIdToggled(toggleValue)"
+    cs-aria-label="{{::'locations.locationCallerId' | translate}}"
+    ng-keypress="$ctrl.evalKeyPress($event)">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.locationCallerIdEnabled">
+    <input cs-input type="text"
+      id="callerIdName"
+      name="callerIdName"
+      placeholder="{{$ctrl.companyName}}"
+      ng-model="$ctrl.callerId.name"
+      ng-change="$ctrl.onLocationCallerIdNameChanged()"
+      cs-input-label="{{::'locations.callerIdName'|translate}}"
+      cs-input-group-size="medium-5">
+    <div class="medium-5">
+      <label class="control-label" translate="locations.callerIdNumber"></label>
+      <cs-select
+        name="locationCallerIdNumber"
+        ng-model="$ctrl.selectedNumber"
+        options="$ctrl.externalNumberOptions"
+        input-placeholder="$ctrl.filterPlaceholder"
+        on-change-fn="$ctrl.onLocationCallerIdNumberChanged(value)"
+        required="true"
+        combo="true"
+        country-code="{{$ctrl.countryCode}}"
+        searchable-combo="true"
+        validate-caller-id-phone-number>
+      </cs-select>
+    </div>
+  </div>
+</div>

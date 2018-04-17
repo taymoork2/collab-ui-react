@@ -1,0 +1,45 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.groupName && $ctrl.groupName || ('common.unassigned' | translate)}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="cs-card-container cluster-list-container">
+  <cs-card-layout>
+    <cs-card class="cs-card--small header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
+      <article  ng-click="$ctrl.cardSelected(cluster)" hover-delay>
+        <header>
+          <div class="header-with-right-icon">
+            <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
+            <div class="right card-icon-div ">
+              <button type="button" class="close"
+                ng-click="$ctrl.closeCard((cluster), $event)"
+                ng-keydown=""
+                aria-label="{{::'common.delete' | translate}}"></button>
+            </div>
+          </div>
+        </header>
+        <section class="card-body">
+          <div class="card-section">
+            <div  ng-repeat="application in cluster.applications">
+              <span class="application-name h5">{{application.name}}</span>
+              <span class="application-node-count h5">{{application.count}} nodes</span>
+            </div>
+          </div>
+        </section>
+        <footer class="cluster-list-footer">
+          <span ng-switch="cluster.status" class="cluster-status">
+              <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
+              <i ng-switch-when="Nodes need Accepted" class="icon icon-circle status-indicator warning"></i>
+              <i ng-switch-when="Needs Software update" class="icon icon-circle status-indicator warning"></i>
+              <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
+              <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
+              {{cluster.status}}
+          </span>
+        </footer>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

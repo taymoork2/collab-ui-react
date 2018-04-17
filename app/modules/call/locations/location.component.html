@@ -1,163 +1,336 @@
-<cs-page-header
-  title-name="{{$ctrl.name}}"
-  back="true"
-  back-url="$ctrl.huronFeaturesUrl">
-</cs-page-header>
-<div class="location-content">
-  <div class="loading-container" ng-if="$ctrl.loading">
+<div ng-if="$ctrl.ftsw">
+  <!-- FTSW LOCATION STARTS -->
+  <div class="loading" ng-if="$ctrl.loading">
     <i class="icon icon-spinner"></i>
   </div>
-  <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.loading">
-    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p></p>
-      <button ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
-      <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.saveLocation()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
-    </div>
-    <!--Location Details -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="locations.locationDetailTitle"></h4>
-          <h6 class="section__description" translate="locations.locationDetailDesc"></h6>
-        </div>
-      </div>
-      <div class="section__content">
-        <div class="sub-section">
-          <uc-call-location-name
-            name="$ctrl.callLocationSettingsData.location.name"
-            on-change-fn="$ctrl.onNameChanged(name)">
-          </uc-call-location-name>
-        </div>
-      </div>
-    </div>
 
-    <!--Regional Settings -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="locations.regionalSettingsTitle"></h4>
-          <h6 class="section__description" translate="locations.regionalSettingsDesc"></h6>
-        </div>
+  <form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
+    <div class="container-fluid service-setup-container">
+      <div class="row full service-setup">
+        <uc-call-location-name
+          name="$ctrl.callLocationSettingsData.location.name"
+          on-change-fn="$ctrl.onNameChanged(name)">
+        </uc-call-location-name>
       </div>
-      <div class="section__content">
-        <div class="sub-section">
-          <uc-time-zone
-            time-zone="$ctrl.callLocationSettingsData.location.timeZone"
-            time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
-            on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
-          </uc-time-zone>
-        </div>
-        <div class="sub-section">
-          <uc-settings-preferred-language
-            preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
-            preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
-            on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
-          </uc-settings-preferred-language>
-        </div>
-        <div
-          cr-feature-toggle feature-show="h-regional-tones"
-          class="sub-section">
-          <uc-default-country
-            default-country="$ctrl.callLocationSettingsData.location.tone"
-            default-country-options="$ctrl.locationSettingsOptions.defaultToneOptions"
-            on-change-fn="$ctrl.onDefaultToneChanged(defaultCountry)">
-          </uc-default-country>
-        </div>
+      <h4 class="title-margin-bottom"translate="locations.regionalSettingsTitle"></h4>
+      <div class="row full service-setup bottom-margin">
+        <uc-time-zone
+          time-zone="$ctrl.callLocationSettingsData.location.timeZone"
+          time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
+          on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+        </uc-time-zone>
       </div>
-    </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-date-format
+          date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+          date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+          on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+        </uc-date-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-time-format
+          time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+          time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+          on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+        </uc-time-format>
+      </div>
+      <div class="row full service-setup bottom-margin">
+        <uc-settings-preferred-language
+          preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
+          preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
+          on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
+        </uc-settings-preferred-language>
+      </div>
+      <div
+        cr-feature-toggle feature-show="h-regional-tones"
+        class="row full service-setup bottom-margin">
+        <uc-default-country
+          default-country="$ctrl.callLocationSettingsData.location.tone"
+          default-country-options="$ctrl.locationSettingsOptions.defaultToneOptions"
+          on-change-fn="$ctrl.onDefaultToneChanged(defaultCountry)">
+        </uc-default-country>
+      </div>
 
-    <!--Internal Dialing -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="locations.internalDialingTitle"></h4>
-          <h6 class="section__description" translate="locations.internalDialingDesc"></h6>
-        </div>
-      </div>
-      <div class="section__content">
-        <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
+      <div ng-if="!$ctrl.secondFirstTimeSetup">
+        <h4 class="title-margin-bottom"translate="locations.internalDialingTitle"></h4>
+        <div class="row full service-setup bottom-margin">
           <uc-location-routing-prefix
+            ftsw="true"
             routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+            routing-prefix-length="7"
             on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
           </uc-location-routing-prefix>
         </div>
-        <div class="sub-section">
+        <div class="row full service-setup bottom-margin">
+          <uc-extension-length
+            first-time-setup="$ctrl.ftsw"
+            extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+            on-change-fn="$ctrl.onExtensionLengthChanged(extensionLength)">
+          </uc-extension-length>
+        </div>
+        <div class="row full service-setup bottom-margin">
           <uc-extension-range
             number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
             extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
             steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
-            first-time-setup="false"
+            first-time-setup="$ctrl.ftsw"
             on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
           </uc-extension-range>
         </div>
-      </div>
-    </div>
 
-    <!--External Dialing -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
-          <h4 class="section__title" translate="locations.externalDialingTitle"></h4>
-          <h6 class="section__description" translate="locations.externalDialingDesc"></h6>
-        </div>
-      </div>
-      <div class="section__content">
-        <div class="sub-section">
+        <h4 class="title-margin-bottom"translate="locations.externalDialingTitle"></h4>
+        <div class="row full service-setup bottom-margin">
           <uc-outbound-dial-digit
             steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
             internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
-            is-terminus-customer="$ctrl.isTerminusCustomer"
+            is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
             on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
           </uc-outbound-dial-digit>
         </div>
-        <div
-          class="sub-section"
-          ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
-          <uc-dialing-setup
-            steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
-            use-simplified-national-dialing="$ctrl.callLocationSettingsData.location.regionCodeDialing.useSimplifiedNationalDialing"
-            supports-simplified-national-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing"
-            supports-local-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing"
-            region-code="$ctrl.callLocationSettingsData.location.regionCodeDialing.regionCode"
-            is-terminus-customer="$ctrl.isTerminusCustomer"
-            on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
-          </uc-dialing-setup>
+        <div class="row full service-setup bottom-margin">
+          <uc-location-company-voicemail
+            ftsw="true"
+            company-voicemail-enabled="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+            on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)">
+          </uc-location-company-voicemail>
         </div>
       </div>
     </div>
+  </form>
+  <!-- FTSW LOCATION ENDS -->
+</div>
+<div ng-if="!$ctrl.ftsw">
+  <!-- EDIT LOCATION STARTS -->
+  <cs-page-header
+    title-name="{{$ctrl.name}}"
+    back="true"
+    back-url="$ctrl.huronFeaturesUrl"
+    back-aria-label="{{::'common.back' | translate}}">
+  </cs-page-header>
+  <div class="location-content">
+    <div class="loading-container" ng-if="$ctrl.loading">
+      <i class="icon icon-spinner"></i>
+    </div>
+    <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.loading">
+      <!--Location Details -->
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="locations.locationDetailTitle"></h4>
+          <h6 class="section__description" translate="locations.locationDetailDesc"></h6>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-call-location-name
+              name="$ctrl.callLocationSettingsData.location.name"
+              on-change-fn="$ctrl.onNameChanged(name)">
+            </uc-call-location-name>
+          </div>
+          <div class="sub-section">
+            <uc-location-caller-id
+              caller-id="$ctrl.callLocationSettingsData.location.callerId"
+              show-label="true"
+              region-code="$ctrl.callLocationSettingsData.customerVoice.regionCode"
+              external-number-options="$ctrl.locationSettingsOptions.locationCallerIdOptions"
+              voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+              company-name="$ctrl.callLocationSettingsData.customerVoice.name"
+              on-change-fn="$ctrl.onCallerIdChanged(callerId)">
+            </uc-location-caller-id>
+          </div>
+        </div>
+      </div>
 
-    <!--Dialing Resrictions -->
-    <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
+      <!-- Media on Hold Settings -->
+      <div cr-feature-toggle feature-show="huron-moh-enable" class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="locations.mohTitle"></h4>
+          <h6 class="section__description" translate="locations.mohDesc"></h6>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-company-media-on-hold
+              company-moh="$ctrl.callLocationSettingsData.mediaId"
+              company-moh-options="$ctrl.locationSettingsOptions.mediaOnHoldOptions"
+              on-change-fn="$ctrl.onMoHChanged(companyMoh)">
+            </uc-company-media-on-hold>
+          </div>
+        </div>
+      </div>
+
+      <!--Regional Settings -->
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="locations.regionalSettingsTitle"></h4>
+          <h6 class="section__description" translate="locations.regionalSettingsDesc"></h6>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-time-zone
+              time-zone="$ctrl.callLocationSettingsData.location.timeZone"
+              time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
+              on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+            </uc-time-zone>
+          </div>
+          <div class="sub-section">
+            <uc-date-format
+              date-format="$ctrl.callLocationSettingsData.location.dateFormat"
+              date-format-options="$ctrl.locationSettingsOptions.dateFormatOptions"
+              on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
+            </uc-date-format>
+          </div>
+          <div class="sub-section">
+            <uc-time-format
+              time-format="$ctrl.callLocationSettingsData.location.timeFormat"
+              time-format-options="$ctrl.locationSettingsOptions.timeFormatOptions"
+              on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
+            </uc-time-format>
+          </div>
+          <div class="sub-section">
+            <uc-settings-preferred-language
+              preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
+              preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
+              on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
+            </uc-settings-preferred-language>
+          </div>
+          <div
+            cr-feature-toggle feature-show="h-regional-tones"
+            class="sub-section">
+            <uc-default-country
+              default-country="$ctrl.callLocationSettingsData.location.tone"
+              default-country-options="$ctrl.locationSettingsOptions.defaultToneOptions"
+              on-change-fn="$ctrl.onDefaultToneChanged(defaultCountry)">
+            </uc-default-country>
+          </div>
+        </div>
+      </div>
+
+      <!--Internal Dialing -->
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="locations.internalDialingTitle"></h4>
+          <h6 class="section__description" translate="locations.internalDialingDesc"></h6>
+        </div>
+        <div class="section__content">
+          <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
+            <uc-location-routing-prefix
+              ftsw="false"
+              routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+              routing-prefix-length="$ctrl.callLocationSettingsData.customerVoice.routingPrefixLength"
+              on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
+            </uc-location-routing-prefix>
+          </div>
+          <div class="sub-section">
+            <uc-extension-range
+              number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
+              extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+              steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+              first-time-setup="false"
+              on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
+            </uc-extension-range>
+          </div>
+        </div>
+      </div>
+
+      <!--External Dialing -->
+      <div class="cs-form__section">
+        <div class="section__info">
+          <h4 class="section__title" translate="locations.externalDialingTitle"></h4>
+          <h6 class="section__description" translate="locations.externalDialingDesc"></h6>
+        </div>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-outbound-dial-digit
+              steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+              internal-number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
+              is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
+              on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
+            </uc-outbound-dial-digit>
+          </div>
+          <div class="sub-section"
+            ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
+            <uc-dialing-setup
+              steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+              use-simplified-national-dialing="$ctrl.callLocationSettingsData.location.regionCodeDialing.simplifiedNationalDialing"
+              supports-simplified-national-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+              supports-local-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing"
+              region-code="$ctrl.callLocationSettingsData.location.regionCodeDialing.regionCode"
+              is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
+              on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
+            </uc-dialing-setup>
+          </div>
+          <!-- Voicemail disabled at location level for phase 1.
+          <div class="sub-section">
+            <uc-location-voicemail
+              ng-if="$ctrl.callLocationSettingsData.customer.hasVoicemailService"
+              display-label="true"
+              dial-plan-country-code="$ctrl.locationSettingsOptions.dialPlan.countryCode"
+              voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+              voicemail-to-email-enabled="$ctrl.callLocationSettingsData.avrilCustomer.features.VM2E_Attachment"
+              external-number-options="$ctrl.locationSettingsOptions.companyVoicemailOptions"
+              number-filter-fn="$ctrl.onNumberFilter(filter)"
+              change-fn="$ctrl.onLocationVoicemailChanged(voicemailPilotNumber)">
+            </uc-location-voicemail>
+          </div> -->
+          <div class="sub-section">
+            <uc-ext-transfer-org
+              location="true"
+              allow-external-transfer="$ctrl.callLocationSettingsData.location.allowExternalTransfer"
+              on-change-fn="$ctrl.onExtTransferChanged(allowExternalTransfer)">
+            </uc-ext-transfer-org>
+          </div>
+        </div>
+      </div>
+
+      <!--Dialing Resrictions -->
+      <div class="cs-form__section">
+        <div class="section__info">
           <h4 class="section__title" translate="locations.dialingRestrictionsTitle"></h4>
           <h6 class="section__description" translate="locations.dialingRestrictionsDesc"></h6>
         </div>
-      </div>
-      <div class="section__content">
-        <div class="sub-section">
-          <uc-location-cos
-            cos-restrictions="$ctrl.callLocationSettingsData.cosRestrictions"
-            premium-numbers="$ctrl.locationSettingsOptions.dialPlan.premiumNumbers"
-            on-change-fn="$ctrl.onLocationCosRestrictionsChanged(restrictions)">
-          </uc-location-cos>
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-location-cos
+              cos-restrictions="$ctrl.callLocationSettingsData.cosRestrictions"
+              premium-numbers="$ctrl.locationSettingsOptions.dialPlan.premiumNumbers"
+              on-change-fn="$ctrl.onLocationCosRestrictionsChanged(restrictions)">
+            </uc-location-cos>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- TODO: (jlowery) Emergency Services -->
-    <!-- <div class="cs-form__section">
-      <div class="section__info">
-        <div cs-sticky>
+      <!-- Emergency Services -->
+      <div class="cs-form__section bottom-pdding" ng-if="$ctrl.showES()">
+        <div class="section__info">
           <h4 class="section__title" translate="locations.emergencyServicesTitle"></h4>
           <h6 class="section__description" translate="locations.emergencyServicesDesc"></h6>
         </div>
-      </div>
-      <div class="section__content">
-        <div class="sub-section">
-
+        <div class="section__content">
+          <div class="sub-section">
+            <uc-call-emergency-services
+              number="$ctrl.number"
+              number-options="$ctrl.locationSettingsOptions.emergencyNumbersOptions"
+              address="$ctrl.callLocationSettingsData.address"
+              is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
+              allow-ecbn-setup="true"
+              ecbn-change-fn="$ctrl.onEcbnChange(value)">
+            </uc-call-emergency-services>
+          </div>
         </div>
       </div>
-    </div> -->
-  </form>
+
+      <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+        <p></p>
+        <button ng-click="$ctrl.onCancel()"
+          translate="common.cancel">
+        </button>
+        <button
+          class="btn btn--primary"
+          cs-btn loading="$ctrl.processing"
+          ng-click="$ctrl.saveLocation()"
+          ng-disabled="$ctrl.saveDisabled()">
+          <span translate="common.save"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- EDIT LOCATION ENDS -->
 </div>

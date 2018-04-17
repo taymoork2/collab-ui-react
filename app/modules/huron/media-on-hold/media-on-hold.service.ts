@@ -7,7 +7,7 @@ const GENERIC_MEDIA_ID: string = '98765432-DBC2-01BB-476B-CFAF98765432';
 
 export class MediaOnHoldService {
   private mediaOnHoldResource: IMediaOnHoldResource;
-  private lineMediaOnHoldResource: IMediaOnHoldResource;
+  private supportsLocation: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -15,9 +15,11 @@ export class MediaOnHoldService {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private HuronConfig,
+    private FeatureToggleService,
   ) {
     this.mediaOnHoldResource = this.$resource(this.HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts');
-    this.lineMediaOnHoldResource = this.$resource(this.HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts/lines/:lineId');
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(result => this.supportsLocation = result);
   }
 
   public getMediaOnHold(): ng.IPromise<IMediaOnHold[]> {
@@ -44,11 +46,10 @@ export class MediaOnHoldService {
     return this.getMediaOnHold()
       .then(mediaList => {
         let mediaOnHold = GENERIC_MEDIA_ID;
-        _.forEach(mediaList, media => {
-          if (media.assignments && _.find(media.assignments, ['idType', 'ORG_ID'])) {
-            mediaOnHold = media.rhesosId;
-          }
-        });
+        const media = _.find(mediaList, media => _.some(media.assignments, ['idType', 'ORG_ID']));
+        if (media) {
+          mediaOnHold = media.rhesosId;
+        }
         return mediaOnHold;
       });
   }
@@ -62,11 +63,56 @@ export class MediaOnHoldService {
             value: media.rhesosId,
           };
         }), 'label');
-        mediaOptions.push(<IOption>{
-          label: this.$translate.instant('mediaOnHold.systemDefault'),
-          value: GENERIC_MEDIA_ID,
-        });
+        mediaOptions.unshift(this.createGenericMediaOption('Company'));
         return mediaOptions;
+      });
+  }
+
+  public createGenericMediaOption(level: string, fileName?: string): IOption {
+    let label: string;
+    if ( _.isEqual(level, 'Line')) {
+      label = (this.supportsLocation ? this.$translate.instant('mediaOnHold.locationDefaultMedia') : this.$translate.instant('mediaOnHold.companyDefaultMedia'))
+        + ' ' + '(' + fileName + ')';
+    } else if ( _.isEqual(level, 'Location')) {
+      label = this.$translate.instant('mediaOnHold.companyDefaultMedia') + ' ' + '(' + fileName + ')';
+    } else { // Company
+      label = this.$translate.instant('mediaOnHold.systemDefaultMedia');
+    }
+
+    return <IOption> {
+      label: label,
+      value: GENERIC_MEDIA_ID,
+    };
+  }
+
+  public getLocationMohOptions(): ng.IPromise<IOption[]> {
+    return this.getMediaOnHold()
+      .then(mediaList => {
+        const mediaOptions = _.sortBy(_.map(mediaList, media => {
+          return <IOption> {
+            label: media.displayName,
+            value: media.rhesosId,
+          };
+        }), 'label');
+        const orgMedia = _.find(mediaList, media => _.some(media.assignments, ['idType', 'ORG_ID']));
+        if (orgMedia) {
+          mediaOptions.unshift(this.createGenericMediaOption('Location', orgMedia.displayName));
+        } else {
+          mediaOptions.unshift(this.createGenericMediaOption('Location', this.$translate.instant('mediaOnHold.systemDefaultMedia')));
+        }
+        return mediaOptions;
+      });
+  }
+
+  public getLocationMedia(locationId: string): ng.IPromise<string> {
+    return this.getMediaOnHold()
+      .then(mediaList => {
+        let mediaOnHold = GENERIC_MEDIA_ID;
+        const locationMedia = _.find(mediaList, media => _.some(media.assignments, ['assignmentId', locationId]));
+        if (locationMedia) {
+          mediaOnHold = locationMedia.rhesosId;
+        }
+        return mediaOnHold;
       });
   }
 
@@ -79,26 +125,16 @@ export class MediaOnHoldService {
             value: media.rhesosId,
           };
         }), 'label');
-        if (!_.isEmpty(mediaList)) {
-          _.forEach(mediaList, media => {
-            if (media.assignments && _.some(media.assignments, ['idType', 'ORG_ID'])) {
-              mediaOptions.push(<IOption>{
-                label: `Company MOH (${media.displayName})`,
-                value: GENERIC_MEDIA_ID,
-              });
-            }
-          });
-          if (!_.isEqual(_.last(mediaOptions).value, GENERIC_MEDIA_ID)) {
-            mediaOptions.push(<IOption>{
-              label: this.$translate.instant('mediaOnHold.companyMOHDefaultMedia'),
-              value: GENERIC_MEDIA_ID,
-            });
-          }
+        const locationMedia = _.find(mediaList, media => _.some(media.assignments, ['idType', 'LOCATION_ID']));
+        if (locationMedia) {
+          mediaOptions.unshift(this.createGenericMediaOption('Line', locationMedia.displayName));
         } else {
-          mediaOptions.push(<IOption>{
-            label: this.$translate.instant('mediaOnHold.companyMOHDefaultMedia'),
-            value: GENERIC_MEDIA_ID,
-          });
+          const orgMedia = _.find(mediaList, media => _.some(media.assignments, ['idType', 'ORG_ID']));
+          if (orgMedia) {
+            mediaOptions.unshift(this.createGenericMediaOption('Line', orgMedia.displayName));
+          } else {
+            mediaOptions.unshift(this.createGenericMediaOption('Line', this.$translate.instant('mediaOnHold.systemDefaultMedia')));
+          }
         }
         return mediaOptions;
       });
@@ -108,26 +144,30 @@ export class MediaOnHoldService {
     return this.getMediaOnHold()
       .then(mediaList => {
         let mediaOnHold = GENERIC_MEDIA_ID;
-        _.forEach(mediaList, media => {
-          if (media.assignments && _.some(media.assignments, ['assignmentId', lineId])) {
-            mediaOnHold = media.rhesosId;
-          }
-        });
+        const lineMedia = _.find(mediaList, media => _.some(media.assignments, ['assignmentId', lineId]));
+        if (lineMedia) {
+          mediaOnHold = lineMedia.rhesosId;
+        }
         return mediaOnHold;
       });
   }
 
-  public updateMediaOnHold(media: string, assignmentId?: string): ng.IPromise<any> {
+  public updateMediaOnHold(media: string, mediaLevel?: string, assignmentId?: string): ng.IPromise<any> {
     const saveAssignment: any[] = [];
-    if (assignmentId) {
-      saveAssignment.push({
-        assignmentId: assignmentId,
-        idType: 'NUM_UUID',
-      });
-    } else {
+    if (!assignmentId) {
       saveAssignment.push({
         assignmentId: this.Authinfo.getOrgId(),
         idType: 'ORG_ID',
+      });
+    } else if (_.isEqual(mediaLevel, 'Location')) {
+      saveAssignment.push({
+        assignmentId: assignmentId,
+        idType: 'LOCATION_ID',
+      });
+    } else if (_.isEqual(mediaLevel, 'Line')) {
+      saveAssignment.push({
+        assignmentId: assignmentId,
+        idType: 'NUM_UUID',
       });
     }
     return this.mediaOnHoldResource.save({
@@ -142,18 +182,22 @@ export class MediaOnHoldService {
   public unassignMediaOnHold(mediaLevel?: string, assignmentId?: string): ng.IPromise<any> {
     const saveAssignment: any[] = [];
     const UNASSIGN_PROMPT_ID = '06691d80-01e7-4e05-b869-8fa680822c51';
-    if (!mediaLevel) {
-      saveAssignment.push({
+    if (!assignmentId) {
+      saveAssignment.unshift({
         assignmentId: this.Authinfo.getOrgId(),
         idType: 'ORG_ID',
       });
+    } else if (_.isEqual(mediaLevel, 'Location')) {
+      saveAssignment.unshift({
+        assignmentId: assignmentId,
+        idType: 'LOCATION_ID',
+      });
     } else if (_.isEqual(mediaLevel, 'Line')) {
-      saveAssignment.push({
+      saveAssignment.unshift({
         assignmentId: assignmentId,
         idType: 'NUM_UUID',
       });
     }
-
     return this.mediaOnHoldResource.save({
       orgId: this.Authinfo.getOrgId(),
     }, {

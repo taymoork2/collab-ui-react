@@ -1,8 +1,11 @@
 require('../fields/_fields-list.scss');
+var momentFilter = require('../filters/momentFilter').Moment;
 
 (function () {
   'use strict';
 
+  var dateTimeFormatString = 'LL';
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
 
   angular
@@ -10,7 +13,7 @@ require('../fields/_fields-list.scss');
     .controller('HybridContextFieldsetsCtrl', HybridContextFieldsetsCtrl);
 
   /* @ngInject */
-  function HybridContextFieldsetsCtrl($scope, $rootScope, $state, $translate, Log, $q, ContextFieldsetsService, Notification, PropertyService, Authinfo) {
+  function HybridContextFieldsetsCtrl($scope, $rootScope, $state, $translate, Log, $q, ContextFieldsetsService, Notification, PropertyService, Authinfo, ContextAdminAuthorizationService) {
     //Initialize variables
     var vm = this;
     var eventListeners = [];
@@ -27,7 +30,7 @@ require('../fields/_fields-list.scss');
 
     vm.showNew = false;
     vm.maxFieldsetsAllowed = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
-    vm.maxLimitReachedTooltip = $translate.instant('context.dictionary.fieldsetPage.limitReached');
+    vm.newButtonTooltip = '';
 
     vm.filterBySearchStr = filterBySearchStr;
     vm.filterList = filterList;
@@ -48,11 +51,13 @@ require('../fields/_fields-list.scss');
         callback: function (newFieldset) {
           var fieldsetCopy = _.cloneDeep(newFieldset);
           vm.fieldsetsList.allFieldsets.unshift(processFieldset(fieldsetCopy));
-          checkFieldsetsLimit();
+          checkFieldsetsLimitAndSetTooltip();
           filterList(vm.searchStr);
         },
       });
     };
+
+    vm.adminAuthorizationStatus = AdminAuthorizationStatus.UNKNOWN;
 
     $scope.$on('$destroy', onDestroy);
 
@@ -65,7 +70,7 @@ require('../fields/_fields-list.scss');
 
       $q.all(promises).then(function () {
         initializeListeners();
-        return getFieldsetsList();
+        getFieldsetsList().catch(_.noop);
       });
     }
 
@@ -87,10 +92,6 @@ require('../fields/_fields-list.scss');
     }
 
     function processFieldset(fieldset) {
-      if (fieldset.lastUpdated) {
-        fieldset.lastUpdatedUI = moment(fieldset.lastUpdated).format('LL');
-      }
-
       // Find total number of fields and then subtract the inactive fields, to get the number of active fields.
       var totalNumberOfFields = (fieldset.fields) ? fieldset.fields.length : 0;
       fieldset.numOfFields = totalNumberOfFields - ((fieldset.inactiveFields) ? fieldset.inactiveFields.length : 0);
@@ -129,18 +130,18 @@ require('../fields/_fields-list.scss');
           Log.debug('CS fieldsets search failed. Status: ' + err);
           Notification.error('context.dictionary.fieldsetPage.fieldsetReadFailed');
           vm.fetchFailed = true;
-          return $q.reject(err);
         });
 
       var promises = {
         getAndProcessFieldsetsPromise: getAndProcessFieldsetsPromise,
         getMaxFieldsetsAllowed: getMaxFieldsetsAllowed(),
+        getAdminAuthorizationStatus: getAdminAuthorizationStatus(),
       };
 
       return $q.all(promises)
         .then(function () {
           vm.gridApi.infiniteScroll.dataLoaded();
-          checkFieldsetsLimit();
+          checkFieldsetsLimitAndSetTooltip();
         })
         .finally(function () {
           vm.gridRefresh = false;
@@ -148,11 +149,31 @@ require('../fields/_fields-list.scss');
         });
     }
 
-    function checkFieldsetsLimit() {
+    function checkFieldsetsLimitAndSetTooltip() {
       var customFieldsets = vm.fieldsetsList.allFieldsets.filter(function (fieldset) {
         return _.get(fieldset, 'publiclyAccessibleUI', '').toLowerCase() !== 'cisco';
       });
-      vm.showNew = customFieldsets.length < vm.maxFieldsetsAllowed;
+
+      vm.showNew = customFieldsets.length < vm.maxFieldsetsAllowed && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED);
+
+      if (!vm.showNew) {
+        switch (vm.adminAuthorizationStatus) {
+          case AdminAuthorizationStatus.AUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldsetPage.limitReached');
+            break;
+          case AdminAuthorizationStatus.UNAUTHORIZED:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldsetPage.notAuthorized');
+            break;
+          case AdminAuthorizationStatus.UNKNOWN:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.unknownAdminAuthorizationStatus');
+            break;
+          case AdminAuthorizationStatus.NEEDS_MIGRATION:
+            vm.newButtonTooltip = $translate.instant('context.dictionary.fieldsetPage.needsMigration');
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     function initializeGrid() {
@@ -162,6 +183,7 @@ require('../fields/_fields-list.scss');
         vm.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function (row) {
           $state.go('context-fieldsets-sidepanel', {
+            adminAuthorizationStatus: vm.adminAuthorizationStatus,
             fieldset: row.entity,
             process: processFieldset,
             callback: function (updatedFieldset) {
@@ -218,8 +240,10 @@ require('../fields/_fields-list.scss');
           displayName: $translate.instant('context.dictionary.access'),
           maxWidth: 200,
         }, {
-          field: 'lastUpdatedUI',
+          field: 'lastUpdated',
           displayName: $translate.instant('context.dictionary.dateUpdated'),
+          type: 'date',
+          cellFilter: momentFilter.getDateFilter(dateTimeFormatString),
           maxWidth: 300,
         }],
       };
@@ -245,14 +269,28 @@ require('../fields/_fields-list.scss');
 
       var lowerStr = str.toLowerCase();
       var containSearchStr = function (fieldset) {
-        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdatedUI', 'publiclyAccessibleUI'];
+        var propertiesToCheck = ['id', 'description', 'numOfFields', 'lastUpdated', 'publiclyAccessibleUI'];
         return _.some(propertiesToCheck, function (property) {
-          var value;
-          if (property === 'numOfFields') {
-            value = (_.has(fieldset, 'numOfFields') ? (fieldset.numOfFields.toString()) : undefined);
-          } else {
-            value = _.get(fieldset, property, '').toLowerCase();
+          var value = _.get(fieldset, property);
+          if (value === undefined) {
+            return false;
           }
+          switch (property) {
+            case 'numOfFields':
+              value = value.toString();
+              break;
+            case 'lastUpdated':
+              value = value.trim();
+              if (value === '') {
+                // can't match against empty string because that will create a date based on "now"
+                return false;
+              }
+              value = moment(value).format(dateTimeFormatString);
+              break;
+            default:
+              break;
+          }
+          value = value.toLowerCase();
           return _.includes(value, lowerStr);
         });
       };
@@ -269,6 +307,16 @@ require('../fields/_fields-list.scss');
         })
         .then(function () {
           return vm.maxFieldsetsAllowed;
+        });
+    }
+
+    function getAdminAuthorizationStatus() {
+      return ContextAdminAuthorizationService.getAdminAuthorizationStatus()
+        .then(function (value) {
+          vm.adminAuthorizationStatus = value;
+        })
+        .catch(function (err) {
+          Log.error('unable to get admin authorization status', err);
         });
     }
   }

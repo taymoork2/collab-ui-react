@@ -33,11 +33,10 @@ export class SecuritySettingController {
       .then((response) => {
         this.appSecuritySettingLoaded(response.security);
         this.isProPackPurchased = response.proPackPurchased;
-
-      });
+      }).catch(_.noop);
   }
 
-  private appSecuritySettingLoaded(response: ng.IHttpPromiseCallbackArg<IGetAppSecurityResponse>) {
+  private appSecuritySettingLoaded(response: ng.IHttpResponse<IGetAppSecurityResponse>) {
     if (_.has(response, 'data.clientSecurityPolicy')) {
       this._isSparkClientSecurityEnabled = _.get<boolean>(response, 'data.clientSecurityPolicy');
       this.isSparkClientSecurityLoaded = true;

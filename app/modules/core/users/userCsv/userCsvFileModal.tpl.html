@@ -1,17 +1,22 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="csv.onCancelModal()" id="closeUserCsvFile">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="csv.onCancelModal()" id="closeUserCsvFile" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
-<div class="modal-body user-csv-bulk">
+<div class="modal-body" ng-if="csv.isLoading">
+  <div class="user-csv-bulk--center text-center">
+    <i class="icon icon-spinner icon-5x"></i>
+  </div>
+</div>
+<div class="modal-body user-csv-bulk" ng-if="!csv.isLoading">
   <div ng-if="csv.isDirSyncEnabled">
     <h4 translate="userManage.bulk.ad.title"></h4>
-    <p translate="userManage.bulk.ad.instructions"></p>
+    <p cr-feature-toggle feature-hide="atlas-user-csv-subscription-enable" translate="userManage.bulk.ad.instructions"></p>
+    <p cr-feature-toggle feature-show="atlas-user-csv-subscription-enable" translate="userManage.bulk.ad.subscriptionReminder"></p>
   </div>
   <div ng-if="!csv.isDirSyncEnabled">
     <h4 translate="userManage.bulk.org.title"></h4>
-    <p translate="userManage.bulk.org.instructions"></p>
+    <p cr-feature-toggle feature-hide="atlas-user-csv-subscription-enable" translate="userManage.bulk.org.instructions"></p>
+    <p cr-feature-toggle feature-show="atlas-user-csv-subscription-enable" translate="userManage.bulk.org.subscriptionReminder"></p>
   </div>
 
   <div class="row text-center">

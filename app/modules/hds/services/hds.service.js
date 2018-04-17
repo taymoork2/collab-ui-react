@@ -1,9 +1,14 @@
 (function () {
   'use strict';
 
-  angular
-    .module('HDS')
-    .service('HDSService', HDSService);
+  module.exports = angular
+    .module('hds.hds-service', [
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/accountorgservice'),
+      require('modules/core/config/urlConfig'),
+    ])
+    .service('HDSService', HDSService)
+    .name;
 
   /* @ngInject */
   function HDSService($http, $q, $timeout, Authinfo, Orgservice, UrlConfig) {

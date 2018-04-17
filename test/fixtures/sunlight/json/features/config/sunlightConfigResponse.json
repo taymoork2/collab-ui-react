@@ -1,0 +1,38 @@
+{
+  "SuccessStatusResponse": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Success"
+      }
+  },
+  "appOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Unknown",
+      "jwtAppOnboardingStatus" : "Success"
+      }
+  },
+  "jwtAppOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Success",
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Unknown"
+    }
+  },
+  "csOnboardUnknown": {
+    "data": {
+      "orgName": "testOrg",
+      "aaOnboardingStatus": "Success",
+      "csOnboardingStatus": "Unknown",
+      "appOnboardStatus": "Success",
+      "jwtAppOnboardingStatus" : "Success"
+      }
+  }
+}

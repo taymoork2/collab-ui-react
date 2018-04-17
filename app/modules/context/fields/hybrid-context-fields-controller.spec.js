@@ -1,9 +1,10 @@
 'use strict';
 
 var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
 describe('HybridContextFieldsCtrl', function () {
-  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService;
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsService, Log, Notification, LogMetricsService, PropertyService, ContextAdminAuthorizationService, $translate;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -18,17 +19,16 @@ describe('HybridContextFieldsCtrl', function () {
     },
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Context'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsService = Log = Notification = PropertyService = fakeGridApi = LogMetricsService = undefined;
+    $controller = $scope = $state = $q = $translate = Authinfo = controller = ContextFieldsService = Log = Notification = PropertyService = fakeGridApi = LogMetricsService = ContextAdminAuthorizationService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_, _PropertyService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$translate_, _$state_, _Authinfo_, _ContextFieldsService_, _Log_, _Notification_, _LogMetricsService_, _PropertyService_, _ContextAdminAuthorizationService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -40,6 +40,8 @@ describe('HybridContextFieldsCtrl', function () {
     LogMetricsService = _LogMetricsService_;
     Authinfo = _Authinfo_;
     PropertyService = _PropertyService_;
+    ContextAdminAuthorizationService = _ContextAdminAuthorizationService_;
+    $translate = _$translate_;
   }
 
   function initSpies() {
@@ -49,7 +51,8 @@ describe('HybridContextFieldsCtrl', function () {
     spyOn(Notification, 'error');
     spyOn(LogMetricsService, 'logMetrics');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
-    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE));
+    spyOn(ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
   }
 
   function initController() {
@@ -90,6 +93,7 @@ describe('HybridContextFieldsCtrl', function () {
         id: 'Agent_ID',
         lastUpdated: '01/23/2017',
       }]));
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       controller = initController();
       $scope.$apply();
 
@@ -125,7 +129,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('false');
       expect(controller.fieldsList.allFields[0].publiclyAccessibleUI).toEqual('orgName');
       expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toBeNull();
     });
 
     it('should process field data when data returned and publiclyAccessible', function () {
@@ -144,7 +148,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].publiclyAccessible).toEqual('true');
       expect(controller.fieldsList.allFields[0].publiclyAccessibleUI).toEqual('context.dictionary.base');
       expect(controller.fieldsList.allFields[0].dataTypeUI).not.toExist();
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toBeNull();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toBeNull();
     });
 
     it('should process field data when data returned is missing lastUpdated', function () {
@@ -161,7 +165,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.integer');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process field data when dataType is date time', function () {
@@ -178,7 +182,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.date');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is encrypted, integer, searchable', function () {
@@ -198,7 +202,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.encrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.integer');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is unencrypted, boolean, missing searchable', function () {
@@ -218,7 +222,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.boolean');
       expect(controller.fieldsList.allFields[0].description).toEqual('Field for TestBoolean');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is PII, double', function () {
@@ -238,7 +242,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.piiEncrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.no');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.double');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
 
     it('should process when data is missing classification, boolean, missing searchable', function () {
@@ -256,7 +260,7 @@ describe('HybridContextFieldsCtrl', function () {
       expect(controller.fieldsList.allFields[0].classificationUI).toEqual('context.dictionary.fieldPage.unencrypted');
       expect(controller.fieldsList.allFields[0].searchableUI).toEqual('common.yes');
       expect(controller.fieldsList.allFields[0].dataTypeUI).toEqual('context.dictionary.dataTypes.boolean');
-      expect(controller.fieldsList.allFields[0].lastUpdatedUI).not.toExist();
+      expect(controller.fieldsList.allFields[0].lastUpdated).not.toExist();
     });
   });
 
@@ -314,35 +318,37 @@ describe('HybridContextFieldsCtrl', function () {
         translations: { english: 'First Name', french: 'Prénom' },
         id: '2017Field',
         dataTypeUI: 'boolean',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         description: 'Field for NoClassification',
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: '2016Field',
         dataTypeUI: 'boolean',
-        lastUpdatedUI: '2016-01-26T18:42:42.124Z',
+        lastUpdated: '2016-01-26T18:42:42.124Z',
       }, {
         description: 'Field for NoClassification',
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: '2015Field',
         dataTypeUI: 'boolean',
-        lastUpdatedUI: '2015-01-26T18:42:42.124Z',
+        lastUpdated: '2015-01-26T18:42:42.124Z',
       }, {
         description: 'Field for abc3',
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: '2014FieldWithDateMatch',
         dataTypeUI: 'boolean',
-        lastUpdatedUI: '2014-02-15T18:42:42.124Z',
+        lastUpdated: '2014-02-15T18:42:42.124Z',
       }];
 
       controller.filterBySearchStr(fieldList, '15')
         .then(function (filteredList) {
-          expect(filteredList.length).toBe(2);
+          expect(filteredList.length).toBeGreaterThanOrEqual(1);
           expect(filteredList[0].id).toEqual('2015Field');
+          expect(filteredList.length).toBeGreaterThanOrEqual(2);
           expect(filteredList[1].id).toEqual('2014FieldWithDateMatch');
+          expect(filteredList.length).toBe(2);
           done();
         });
       $scope.$apply();
@@ -356,50 +362,52 @@ describe('HybridContextFieldsCtrl', function () {
       var fieldList = [{
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
-        id: 'First',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        id: 'August',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
-        translations: { english: 'First Name', french: 'Prénom' },
+        translations: { english: 'August', french: 'Prénom' },
         id: 'SearchStrInTranslation',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrInClassification',
-        classificationUI: 'first',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        classificationUI: 'August',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrInDescription',
-        description: 'First in description',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        description: 'August in description',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrLowerCaseInLastUpdatedDate',
-        lastUpdatedUI: 'first in date',
+        lastUpdated: '2017-08-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrInDataType',
-        dataTypeUI: '$$first in datatype',
+        dataTypeUI: '$$August in datatype',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
-        otherKey1: 'First',
-        OhterKey2: 'first',
-        otherKey3: 'anyOtherFirst',
+        otherKey1: 'August',
+        OhterKey2: 'august',
+        otherKey3: 'anyOtherAugust',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrInSearchable',
         dataTypeUI: 'String',
-        searchableUI: 'somethingfirstabce',
+        searchableUI: 'somethingaugustabce',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }];
-      controller.filterBySearchStr(fieldList, 'first')
+      controller.filterBySearchStr(fieldList, 'august')
         .then(function (filteredList) {
           expect(filteredList.length).toBe(6);
-          expect(filteredList[0].id).toEqual('First');
+          expect(filteredList[0].id).toEqual('August');
           expect(filteredList[1].id).toEqual('SearchStrInClassification');
           expect(filteredList[2].id).toEqual('SearchStrInDescription');
           expect(filteredList[3].id).toEqual('SearchStrLowerCaseInLastUpdatedDate');
@@ -419,29 +427,29 @@ describe('HybridContextFieldsCtrl', function () {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'aaa_test',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'aaa.test',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'SearchStrInClassificationUpperCase',
         classificationUI: 'ContainsAAA_Test',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'aaa test',
         description: 'First in description',
-        lastUpdatedUI: '2017-01-26T18:42:42.124Z',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
         id: 'AAA test!',
-        lastUpdatedUI: 'first in date',
+        lastUpdated: '2017-01-26T18:42:42.124Z',
       }, {
         publiclyAccessibleUI: 'false',
         translations: { english: 'First Name', french: 'Prénom' },
@@ -504,6 +512,7 @@ describe('HybridContextFieldsCtrl', function () {
           id: 'FieldNotContainSearchStr',
           dataType: 'double',
         }]));
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
         controller = initController();
         spyOn(Authinfo, 'getOrgId').and.returnValue(ORG_ID);
       });
@@ -514,16 +523,54 @@ describe('HybridContextFieldsCtrl', function () {
 
       it('should have the default max fields', function () {
         $scope.$apply();
+
         expect(controller.maxFieldsAllowed).toBe(DEFAULT_MAX_FIELDS);
         expect(controller.showNew).toBe(true);
+        expect(controller.newButtonTooltip).toBe('');
       });
 
       it('should overrides the max fields property and new is disabled', function () {
         var maxFields = 2;
         PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
         $scope.$apply();
+
         expect(controller.maxFieldsAllowed).toBe(maxFields);
         expect(controller.showNew).toBe(false);
+      });
+
+      it('should use default max fields allowed on reject', function () {
+        PropertyService.getProperty.and.returnValue($q.reject());
+        $scope.$apply();
+
+        expect(controller.maxFieldsAllowed).toBe(PropertyConstants.MAX_FIELDS_DEFAULT_VALUE);
+        expect(controller.showNew).toBe(true);
+      });
+
+      it('should set the tooltip if admin not authorized', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNAUTHORIZED));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNAUTHORIZED);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldPage.notAuthorized'));
+      });
+
+      it('should set the tooltip if admin authorization is unknown ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNKNOWN));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNKNOWN);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
+      });
+
+      it('should set the tooltip if admin needs migration', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.NEEDS_MIGRATION));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.NEEDS_MIGRATION);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldPage.needsMigration'));
       });
     });
   });
@@ -549,7 +596,7 @@ describe('HybridContextFieldsCtrl', function () {
     it('should show field-edit elements even if feature toggle is false', function () {
       // set default result, just in case it's called
       this.featureSupportSpy.and.returnValue($q.resolve(false));
-      this.compileView('HybridContextFieldsCtrl', 'modules/context/fields/hybrid-context-fields.html', { controllerAs: 'contextFields' });
+      this.compileViewTemplate('HybridContextFieldsCtrl', require('modules/context/fields/hybrid-context-fields.html'), { controllerAs: 'contextFields' });
       var button = this.view.find('button'); // there's only one button for now
       expect(button).toExist();
       expect(button).toHaveClass('btn');

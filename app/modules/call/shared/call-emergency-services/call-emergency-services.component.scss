@@ -1,0 +1,50 @@
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.call-emergency-services {
+  .ces-messages {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: .5rem;
+
+    i {
+      padding-right: .5rem;
+    }
+  }
+
+  .icon-warning {
+    color: $color-yellow-base;
+  }
+
+  .icon-error {
+    color: $color-red-base;
+  }
+
+  .ces-top-padding {
+    padding-top: 3rem;
+  }
+
+  button {
+    margin-top: 1rem;
+  }
+
+  .ces-address-label {
+    padding-top: 1.75rem;
+  }
+
+  .flex-address {
+    label {
+      padding: 0;
+    }
+  }
+
+  .columns {
+    padding: 0;
+    width: 100%;
+  }
+
+  .validation-padding {
+    display: none;
+  }
+}

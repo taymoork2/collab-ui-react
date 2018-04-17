@@ -1,15 +1,15 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/settings/forms';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/forms';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .cs-setupassistant--content {
   .typeahead-large {
     &.cpselect {
       margin-top: calc(32vh - 143px);
       text-align: center;
-      flex-direction: column;
-      flex-wrap: nowrap;
+      flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
 
@@ -40,7 +40,7 @@
         border-right: 0;
         border-top: 0;
         border-bottom: 1px solid $gray-light-2;
-        font-family: 'CiscoSansTT Thin';
+        font-family: $brand-font-thin;
         border-radius: 0;
         padding-bottom: rem(11);
 
@@ -74,7 +74,7 @@
 
       .cp-edit-range .range-to {
         line-height: 2.8rem;
-        font-family: 'CiscoSansTT Thin';
+        font-family: $brand-font-thin;
 
         span {
           font-size: $h2-font-size;

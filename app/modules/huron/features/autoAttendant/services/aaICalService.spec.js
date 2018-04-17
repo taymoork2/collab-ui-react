@@ -2,7 +2,6 @@
 
 describe('Service: AACalendarService', function () {
   var AAICalService, ical;
-  // require('jasmine-collection-matchers');
   var starttime, endtime;
   var defaultRange = {
     days: [{

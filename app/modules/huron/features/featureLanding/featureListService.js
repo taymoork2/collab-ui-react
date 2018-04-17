@@ -96,7 +96,6 @@
       var formattedList = [];
       _.forEach(data, function (huntGroup) {
         formattedCard.cardName = huntGroup.name;
-        _.remove(huntGroup.numbers, { type: 'NUMBER_FORMAT_ENTERPRISE_LINE' });
         formattedCard.numbers = _.map(huntGroup.numbers, 'number');
         formattedCard.memberCount = huntGroup.memberCount;
         formattedCard.id = huntGroup.uuid;
@@ -112,7 +111,7 @@
       var formattedList = [];
       _.forEach(data, function (pagingGroup) {
         formattedCard.cardName = pagingGroup.name;
-        formattedCard.pgNumber = pagingGroup.extension;
+        formattedCard.pgNumber = _.get(pagingGroup, 'extension.number', '');
         formattedCard.memberCount = pagingGroup.memberCount;
         formattedCard.id = pagingGroup.groupId;
         formattedCard.featureName = 'huronFeatureDetails.pg';

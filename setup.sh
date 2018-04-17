@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
 source ./bin/include/setup-helpers
 quick="false"
 
@@ -7,16 +8,16 @@ quick="false"
 if [ -n "$1" ]; then
     case "$1" in
         "-h"|"--help" )
-            echo "useage: `basename $0` [--restore|--restore-soft] [--quick]"
+            echo "useage: $(basename "$0") [--restore|--restore-soft] [--quick]"
             echo ""
             echo "ex. Run with no args to build dependencies"
-            echo "  `basename $0`"
+            echo "  $(basename "$0")"
             echo ""
             echo "ex. Use '--restore' to restore the most recently built dependencies (if available)"
-            echo "  `basename $0` --restore"
+            echo "  $(basename "$0") --restore"
             echo ""
             echo "  Same as above, but prevent overwriting manifest files"
-            echo "  `basename $0` --restore-soft"
+            echo "  $(basename "$0") --restore-soft"
             echo ""
             echo "ex. Run with '--quick' to skip removing component directores"
             echo ""
@@ -42,77 +43,57 @@ if [ -n "$1" ]; then
     esac
 fi
 
-# Check if rvm is installed, otherwise install it
-# rvm --version > /dev/null 2>&1
-# RVM_RET=$?
-# if [ $RVM_RET -ne 0 ]; then
-#     echo "RVM not found, installing:"
-#     \curl -sSL https://get.rvm.io | bash -s stable --ruby
-# else
-#     echo "RVM is already installed"
-# fi
-
-# Check if brew is installed, otherwise install it
-if [ "`uname`" = "Darwin" ]; then
-  brew --version > /dev/null 2>&1
-  BREW_RET=$?
-  if [ $BREW_RET -ne 0 ]; then
-      echo "BREW not found, installing:"
-      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  else
-      echo "BREW is already installed"
-  fi
-fi
-
-# Check and install npm
-npm --version > /dev/null 2>&1
-NPM_RET=$?
-if [ $NPM_RET -ne 0 ]; then
-    echo "npm not found, installing:"
-    if [ "`uname`" = "Darwin" ]; then
-      brew install npm
-    else
-      echo "Please install npm (for CentOS, see: http://serverfault.com/questions/299288/how-do-you-install-node-js-on-centos )."
+# install brew as-needed
+if [ "$(uname)" = "Darwin" ]; then
+    if ! is_installed "brew"; then
+        # shellcheck disable=SC2086
+        echo "\`brew\` not found, installing:"
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
-else
-    echo "NPM is already installed"
 fi
 
-# Remove component directories
+# install nvm as-needed
+# - because 'nvm' is installed as a bash function, need to source it in before using it
+# shellcheck disable=SC1090
+[ -s "$HOME/$(get_bash_conf_file)" ] && source "$HOME/$(get_bash_conf_file)"
+if ! is_installed "nvm"; then
+    echo "[INFO] \`nvm\` not found, installing:"
+    curl -o- "https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh" | bash
+fi
+
+# install nodejs as-needed
+if ! is_installed "node"; then
+    echo "[INFO] \`node\` not found, installing:"
+    nvm install 6
+fi
+
+# install yarn as-needed
+if ! is_installed "yarn"; then
+    echo "[INFO] \`yarn\` not found, installing:"
+    install_yarn || exit 1
+fi
+
+# remove component directories
 if [ $quick = "false" ]; then
-  echo "Removing component directories..."
-  # remove deprecated bower_components to clean up workspace
-  rm -rf bower_components
-  rm -rf node_modules
+    echo "[INFO] Removing component directories..."
+    # remove deprecated bower_components to clean up workspace
+    rm -rf bower_components
+    rm -rf node_modules
 fi
 
 # check for and install GNU Parallel as-appropriate
-install_parallel_as_needed || exit 1
-
-# # Check for cleanup script and run
-# ls -al ./cleanUpManagedOrgs.sh > /dev/null 2>&1
-# CLEANUP_RET=$?
-# if [ $CLEANUP_RET -ne 0 ]; then
-#   echo "cleanup script not found, ignoring cleanup..."
-# else
-#   echo "cleanup script found, running cleanup"
-#   ./cleanUpManagedOrgs.sh
-# fi
-
-time_start=$(date +"%s")
-
-# Install dependecies
-echo "Install all dependencies..."
-if [ "${NPM__VERBOSE}" = "true" ]; then
-  npm_install_options="--loglevel=verbose"
+if ! is_installed "parallel"; then
+    echo "[INFO] GNU \`parallel\` not found, installing:"
+    install_gnu_parallel || exit 1
 fi
-npm install "${npm_install_options}" || exit $?
 
-# npm install succeeded
+# install npm deps
+echo "[INFO] Install npm dependencies..."
+yarn
+
 # - make a tar archive of the npm deps, and rm older versions
+echo "[INFO] Generating backup archive of npm dependencies..."
 mk_npm_deps_tar
 rm_all_but_last 1 .cache/npm-deps-for-*.tar.gz
 
-time_npm=$(date +"%s")
-npm_duration=$(($time_npm-$time_start))
-echo "npm completed after $(($npm_duration / 60)) minutes and $(($npm_duration % 60)) seconds."
+echo "[INFO] Done ($(basename "$0"))"

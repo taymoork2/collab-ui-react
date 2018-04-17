@@ -34,6 +34,7 @@ import {
   IMetricsData,
   IMetricsLabel,
   IMinMax,
+  IPlaceHolder,
 } from './sparkReportInterfaces';
 
 import { CardUtils } from 'modules/core/cards';
@@ -158,6 +159,16 @@ export class SparkReportCtrl {
         }
       }, 30);
     });
+    this.initDatePicker();
+  }
+
+  private initDatePicker(): void {
+    if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      this.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      this.endDate =  moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract(7, 'days').format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    }
   }
 
   public onInit(): void {
@@ -262,6 +273,20 @@ export class SparkReportCtrl {
     });
   }
 
+  //Call details reports header controls
+  public placeHolder: IPlaceHolder = {
+    searchbox: this.$translate.instant('reportsPage.placeholder.searchbox'),
+    startDate: this.$translate.instant('reportsPage.placeholder.startDate'),
+    endDate: this.$translate.instant('reportsPage.placeholder.endDate'),
+    startTime: this.$translate.instant('reportsPage.placeholder.startTime'),
+    endTime: this.$translate.instant('reportsPage.placeholder.endTime'),
+    to: this.$translate.instant('reportsPage.placeholder.to'),
+  };
+  public startDate: string = moment().format('YYYY-MM-DD');
+  public startTime: string = moment().format('h:mm a');
+  public endDate: string = moment().format('YYYY-MM-DD');
+  public endTime: string = '10:00 PM';
+
   // report display filter controls
   public readonly ALL: string = this.ReportConstants.ALL;
   public readonly ENGAGEMENT: string = this.ReportConstants.ENGAGEMENT;
@@ -290,10 +315,30 @@ export class SparkReportCtrl {
           this.sliderUpdate(this.timeSelected.min, this.timeSelected.max);
         } else {
           this.timeUpdate();
+          this.dateChangeHandler();
         }
       });
     },
   };
+
+  private dateChangeHandler(): void {
+    if (this.timeSelected.value === this.ReportConstants.MONTH_FILTER.value) {
+      this.startDate = moment().subtract(4, 'weeks').format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract(4, 'weeks').format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    } else if (this.timeSelected.value === this.ReportConstants.THREE_MONTH_FILTER.value) {
+      this.startDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract(3, 'months').format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    } else if (this.timeSelected.value === this.ReportConstants.WEEK_FILTER.value) {
+      this.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      this.endDate = moment().format('YYYY-MM-DD');
+      this.startTime = moment().subtract(7, 'days').format('h:mm A');
+      this.endTime = moment().format('h:mm A');
+    }
+  }
 
   private sliderUpdate(min: number, max: number): void {
     this.minMax.min = min;
@@ -347,6 +392,7 @@ export class SparkReportCtrl {
     display: true,
     emptyDescription: 'activeUsers.noActiveUsers',
     errorDescription: 'activeUsers.errorActiveUsers',
+    missingUsersErrorDescription: 'activeUsers.missingUsersError',
     search: true,
     state: this.ReportConstants.REFRESH,
     sortOptions: [{
@@ -419,7 +465,10 @@ export class SparkReportCtrl {
       }
       this.secondaryActiveOptions.table.data = response;
       this.$rootScope.$broadcast(this.secondaryActiveOptions.broadcast);
-    }, (): void => {
+    }).catch((response?: IActiveTableBase[]): void => {
+      if (response) {
+        this.secondaryActiveOptions.table.data = response;
+      }
       this.secondaryActiveOptions.state = this.ReportConstants.ERROR;
     });
   }

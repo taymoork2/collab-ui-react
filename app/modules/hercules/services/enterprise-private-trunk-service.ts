@@ -33,7 +33,7 @@ type StatusEnum = 'operational' | 'impaired' | 'outage' | 'unknown';
 
 export class EnterprisePrivateTrunkService {
 
-  private trunkCache = [];
+  private trunkCache: IPrivateTrunkResourceWithStatus[] = [];
   private hub = this.CsdmHubFactory.create();
   public poller = this.CsdmPoller.create(this.fetch.bind(this), this.hub);
   public subscribe = this.hub.on;
@@ -50,6 +50,7 @@ export class EnterprisePrivateTrunkService {
   }
 
   public fetch() {
+    // TODO: handle 404 to say that setup === false
     const promises: ng.IPromise<any>[] = [
       this.PrivateTrunkService.getPrivateTrunk(),
       this.ServiceDescriptorService.getServiceStatus('ept'),
@@ -58,16 +59,18 @@ export class EnterprisePrivateTrunkService {
       .then((results: [IPrivateTrunkInfo, IServiceStatus]) => {
         const trunks: IPrivateTrunkResource[] = results[0].resources;
         const serviceStatus: IServiceStatus = results[1];
-        return _.map(trunks, (trunk: IPrivateTrunkResourceWithStatus) => {
+        return _.map(trunks, (trunk) => {
           const resource = _.find(serviceStatus.resources, (resource: ITrunkStatus) => resource.id === trunk.uuid);
-          trunk.status = resource || { id: trunk.uuid, state: 'unknown', type: 'trunk', destinations: [], alarms: [] };
-          return trunk;
+          const updatedTrunk: IPrivateTrunkResourceWithStatus = _.extend({}, trunk, {
+            status: resource || <ITrunkStatus>{ id: trunk.uuid, state: 'unknown', type: 'trunk', destinations: [], alarms: [] },
+          });
+          return updatedTrunk;
         });
       })
-      .then((trunksWithStatus: IPrivateTrunkResourceWithStatus[]) => {
-        return _.sortBy(trunksWithStatus, (trunk: { name: string }) => trunk.name);
+      .then((trunksWithStatus) => {
+        return _.sortBy(trunksWithStatus, (trunk) => trunk.name);
       })
-      .then((sortedTrunks: IPrivateTrunkResourceWithStatus[]) => {
+      .then((sortedTrunks) => {
         this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
         return sortedTrunks;
       });
@@ -93,6 +96,12 @@ export class EnterprisePrivateTrunkService {
   }
 
 }
-angular
-  .module('Hercules')
-  .service('EnterprisePrivateTrunkService', EnterprisePrivateTrunkService);
+export default angular
+  .module('hercules.enterprise-private-trunk-service', [
+    require('modules/squared/devices/services/CsdmCacheUpdater'),
+    require('modules/squared/devices/services/CsdmPoller'),
+    require('modules/hercules/private-trunk/private-trunk-services').default,
+    require('modules/hercules/services/service-descriptor.service').default,
+  ])
+  .service('EnterprisePrivateTrunkService', EnterprisePrivateTrunkService)
+  .name;

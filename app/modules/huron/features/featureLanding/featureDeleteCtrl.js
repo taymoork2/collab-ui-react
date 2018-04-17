@@ -9,7 +9,7 @@
     .controller('HuronFeatureDeleteCtrl', HuronFeatureDeleteCtrl);
 
   /* @ngInject */
-  function HuronFeatureDeleteCtrl($rootScope, $scope, $stateParams, $timeout, $translate, AAModelService, CallPickupGroupService, HuntGroupService, CallParkService, PagingGroupService, AutoAttendantCeService, AutoAttendantCeInfoModelService, Notification, Log, AACalendarService, CardUtils) {
+  function HuronFeatureDeleteCtrl($q, $rootScope, $scope, $stateParams, $timeout, $translate, AACalendarService, AACommonService, AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeService, CallParkService, CallPickupGroupService, CardUtils, DoRestService, HuntGroupService, Log, Notification, PagingGroupService) {
     var vm = this;
     vm.deleteBtnDisabled = false;
     vm.deleteFeature = deleteFeature;
@@ -39,6 +39,78 @@
       CardUtils.resize();
     }
 
+    function deleteDoRest(doRestIdsList) {
+      var promiseList = [];
+      _.forEach(doRestIdsList, function (doRestIds) {
+        _.forEach(doRestIds, function (doRest) {
+          promiseList.push(DoRestService.deleteDoRest(doRest)
+            .then(function (response) {
+              return response;
+            })
+            .catch(function (response) {
+              // bail out even if the response is 404
+              if (response.status === 404) {
+                return response;
+              } else {
+                return $q.reject(response);
+              }
+            })
+          );
+        });
+      });
+      return $q.all(promiseList);
+    }
+
+    function deleteCeWrapper(ceUrl, delPosition, ceInfoToDelete, scheduleId) {
+      var aaModel = AAModelService.getAAModel();
+      AutoAttendantCeService.deleteCe(ceUrl)
+        .then(function () {
+          //Important: We are splicing aaModel.ceInfos list, as aaModel.ceInfo is global object
+          //and if concurrently modified could lead to unwanted/error condition.
+          //Currently, our UI flow is preventing it to delete more than one AA at a time, so
+          //there are no parallel execution of this code.
+          //If you are modifying that behavior, please take care of splicing in parallel deletion.
+
+          aaModel.ceInfos.splice(delPosition, 1);
+          AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
+          if (!_.isUndefined(scheduleId)) {
+            AACalendarService.deleteCalendar(scheduleId);
+          }
+          deleteSuccess();
+        })
+        .catch(function (response) {
+          deleteError(response);
+        });
+    }
+
+    function deleteCeFromDb(data, ceInfoToDelete, delPosition) {
+      var scheduleId = data.scheduleId;
+      var doRestIdsList = [];
+      if (AACommonService.isRestApiToggle()) {
+        var actionSets = _.get(data, 'actionSets', []);
+        _.forEach(actionSets, function (actionSet) {
+          var actions = actionSet.actions;
+          var doRestList = _.filter(actions, 'doREST');
+          if (doRestList.length) {
+            doRestIdsList.push(_.map(doRestList, 'doREST.id'));
+          }
+        });
+        if (!_.isEmpty(doRestIdsList)) {
+          deleteDoRest(doRestIdsList)
+            .then(function () {
+              deleteCeWrapper(ceInfoToDelete.getCeUrl(), delPosition, ceInfoToDelete, scheduleId);
+            })
+            .catch(function (response) {
+              deleteError(response);
+            });
+        } else {
+          deleteCeWrapper(ceInfoToDelete.getCeUrl(), delPosition, ceInfoToDelete, scheduleId);
+        }
+      } else {
+        deleteCeWrapper(ceInfoToDelete.getCeUrl(), delPosition, ceInfoToDelete, scheduleId);
+      }
+    }
+
     function deleteFeature() {
       vm.deleteBtnDisabled = true;
 
@@ -64,19 +136,10 @@
 
         AutoAttendantCeService.readCe(ceInfoToDelete.getCeUrl())
           .then(function (data) {
-            var scheduleId = data.scheduleId;
-            AutoAttendantCeService.deleteCe(ceInfoToDelete.getCeUrl())
-              .then(function () {
-                aaModel.ceInfos.splice(delPosition, 1);
-                AutoAttendantCeInfoModelService.deleteCeInfo(aaModel.aaRecords, ceInfoToDelete);
-                if (!_.isUndefined(scheduleId)) {
-                  AACalendarService.deleteCalendar(scheduleId);
-                }
-                deleteSuccess();
-              },
-              function (response) {
-                deleteError(response);
-              });
+            deleteCeFromDb(data, ceInfoToDelete, delPosition);
+          })
+          .catch(function (response) {
+            deleteError(response);
           });
       } else if (vm.featureFilter === 'HG') {
         HuntGroupService.deleteHuntGroup(vm.featureId).then(

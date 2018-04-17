@@ -43,7 +43,7 @@ source ./bin/include/env-var-helpers
 #   in a Jenkins build env, as env vars are injected via other means)
 if ! is_ci; then
     echo "[INFO] detected running in local dev environment, injecting build env vars for \"dev\"."
-    inj_build_env_vars_for "dev"
+    inj_build_env_vars_for "dev" >/dev/null
 fi
 
 
@@ -56,68 +56,32 @@ function phase_1 {
         tar --keep-newer-files -xf "$BUILD_DEPS_ARCHIVE"
     fi
 
+    # checksums still good, just restore and early out
     # shellcheck disable=SC2154
     echo "[INFO] Inspecting checksums of $manifest_files from last successful build... "
     # shellcheck disable=SC2154
-    checksums_ok=$(is_checksums_ok "$manifest_checksums_file" && echo "true" || echo "false")
-
-    echo "[INFO] Checking if it is time to refresh..."
-    min_refresh_period=$(( 60 * 60 * 24 ))  # 24 hours
-    # shellcheck disable=SC2154
-    time_to_refresh=$(is_time_to_refresh $min_refresh_period "$last_refreshed_file" \
-        && echo "true" || echo "false")
-
-    echo "[INFO] checksums_ok: $checksums_ok"
-    echo "[INFO] time_to_refresh: $time_to_refresh"
-    if [ "$checksums_ok" = "true" ] && [ "$time_to_refresh" = "false" ]; then
-        echo "[INFO] Install manifests haven't changed and not yet time to refresh, restore soft " \
-            "dependencies..."
-        ./setup.sh --restore
-    else
-        # we want to fresh install npm dependencies
-        echo "[INFO] Running 'setup'..."
-        ./setup.sh
-
-        # setup succeeded
-        # shellcheck disable=SC2181
-        if [ $? -eq 0 ]; then
-            # - regenerate .manifest-checksums
-            echo "[INFO] Generating new manifest checksums file..."
-            mk_checksum_file "$manifest_checksums_file" "$manifest_files"
-
-            # - regenerate .last-refreshed
-            echo "[INFO] Generating new last-refreshed file..."
-            mk_last_refreshed_file "$last_refreshed_file"
-
-            # archive dependencies
-            echo "[INFO] Generating new build deps archive for later re-use..."
-            tar -cpf "$BUILD_DEPS_ARCHIVE" \
-                "$last_refreshed_file" \
-                "$manifest_checksums_file" \
-                .cache/npm-deps-for-*.tar.gz
-
-        # setup failed
-        else
-            # setup was triggered because one of the manifest files changed
-            if [ "$checksums_ok" = "false" ]; then
-                exit 1
-            fi
-
-            # setup was triggered only because refresh window has expired
-            if [ "$time_to_refresh" = "true" ]; then
-                echo "[INFO] 'setup.sh' failed, but was triggered only because the refresh window " \
-                    "expired, falling back to recent successfully built dependencies..."
-                # re-use deps from previous successful build (if possible)
-                ./setup.sh --restore
-            else
-                # refresh window hasn't expired
-                exit 1
-            fi
-        fi
+    if is_checksums_ok "$manifest_checksums_file"; then
+        echo "[INFO] Install manifests haven't changed, restore dependencies (keeping all newer files)..."
+        ./setup.sh --restore-soft || exit $?  # <= use 'exit' for errors (ie. terminate the script)
+        return 0                              # <= use 'return' to early out of this function
     fi
 
-    # print top-level node module versions
-    npm ls --depth=1
+    # otherwise fresh install npm dependencies
+    echo "[INFO] Running 'setup'..."
+    ./setup.sh || exit 1
+
+    # regenerate .manifest-checksums
+    echo "[INFO] Generating new manifest checksums file..."
+    mk_checksum_file "$manifest_checksums_file" "$manifest_files"
+
+    # archive dependencies
+    echo "[INFO] Generating new build deps archive for later re-use..."
+    tar -cpf "$BUILD_DEPS_ARCHIVE" \
+        "$manifest_checksums_file" \
+        ./.cache/npm-deps-for-*.tar.gz
+
+    # dump top-level node module versions for build record
+    yarn list --depth=1 > ./.cache/yarn-list-log
 }
 
 
@@ -126,35 +90,21 @@ function phase_1 {
 function phase_2 {
     set -e
 
-    # notes:
-    # - building the prod-version of webpack takes 5+ min.
-    # - start it in the background at the beginning to leverage concurrency
-    #   - it is single-threaded, so will not monopolize all the available cpu
-    #   - capture the pid, so we can wait on it before proceeding to e2e tests
-    (
-        set +e
-        # - 'typings' seems to be required for webpack to succeed
-        npm run typings
-        time nice -10 npm run build -- --env.nolint --env.noprogress --devtool source-map
-        echo $? > ./.cache/webpack_exit_code
-        set -e
-    ) &
-    webpack_pid=$!
+    # run linting tasks in parallel
+    parallel yarn ::: eslint tslint stylelint
 
-    npm run lint
-    npm run json-verify
-    npm run languages-verify
-    nice -15 npm run test -- --env.noprogress
+    yarn json-verify
+    yarn languages-verify
+
+    # generate a plain-text file defining custom HTTP headers for use by nginx (CSP-related headers currently)
+    node ./utils/printCustomHttpHeaders.js --env int | tee ./int-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env cfe | tee ./cfe-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env prod | tee ./prod-headers.txt
+
+    time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
+
+    nice -15 yarn test --phantomjs --env.noprogress --env.coverage
     set +e
-
-
-    # webpack must complete before running e2e tests
-    set -x
-    wait "$webpack_pid"
-    read -r webpack_exit_code < ./.cache/webpack_exit_code
-    [ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
-    set +x
-
 
     # e2e tests
     ./e2e.sh | tee ./.cache/e2e-sauce-logs

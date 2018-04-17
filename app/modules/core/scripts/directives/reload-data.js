@@ -10,7 +10,7 @@
       scope: {
         lastUpdatedTime: '=',
       },
-      templateUrl: 'modules/core/scripts/directives/views/reload-data.html',
+      template: require('modules/core/scripts/directives/views/reload-data.html'),
       link: function (scope) {
         scope.currentTime = scope.lastUpdatedTime;
         scope.$watch('lastUpdatedTime', function (newVal) {

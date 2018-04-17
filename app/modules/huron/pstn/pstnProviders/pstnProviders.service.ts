@@ -14,7 +14,6 @@ export class PstnProvidersService {
     private PstnService: PstnService,
     private PstnModel: PstnModel,
     private $q: ng.IQService,
-    private $resource: ng.resource.IResourceService,
     private $translate: ng.translate.ITranslateService,
   ) {}
 
@@ -33,29 +32,23 @@ export class PstnProvidersService {
 
   //Get all static carrier informantion
   public getCarriersStatic(): ng.IPromise<any[]> {
-    return this.getCarriersJson().query().$promise.then(carriers => {
-      const pstnCarrierStatics: IPstnCarrierStatic[] = new Array<IPstnCarrierStatic>();
-      carriers.forEach((carrier: IPstnCarrierStatic) => {
-        //translate the feature strings
-        for (let i: number = 0; i < carrier.features.length; i++) {
-          carrier.features[i] = this.$translate.instant(carrier.features[i]);
+    return this.getCarriersJson().then(carriers => {
+      const pstnCarrierStatics: IPstnCarrierStatic[] = _.map(carriers, (carrier: IPstnCarrierStatic) => {
+        const carrierObject = _.cloneDeep(carrier);
+        for (let i: number = 0; i < carrierObject .features.length; i++) {
+          //translate the feature strings
+          carrierObject.features[i] = this.$translate.instant(carrierObject.features[i]);
         }
-        carrier.note = this.$translate.instant(carrier.note);
-        pstnCarrierStatics.push(carrier);
+        carrierObject.note = this.$translate.instant(carrierObject.note);
+        return carrierObject;
       });
       return pstnCarrierStatics;
     });
   }
 
   //Reading static carrier information from status JSON file
-  private getCarriersJson(): any {
-    return this.$resource('modules/huron/pstn/pstnProviders/pstnProviders.json', {}, {
-      query: {
-        method: 'GET',
-        isArray: true,
-        cache: true,
-      },
-    });
+  private getCarriersJson(): ng.IPromise<any> {
+    return this.$q.resolve(require('./pstnProviders.json'));
   }
 
   //Get array of carriers from Terminus service

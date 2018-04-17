@@ -20,7 +20,6 @@ describe('Controller: Finish - Activate and Start Billing', function () {
     spyOn(this.SetupWizardService, 'provisioningCallbacks').and.returnValue({});
     spyOn(this.SetupWizardService, 'addProvisioningCallbacks').and.callThrough();
     spyOn(this.TrialWebexService, 'setProvisioningWebexSendCustomerEmailFlag').and.callThrough();
-    spyOn(this.SetupWizardService, 'getActingSubscriptionId').and.returnValue('abc/def/ghi/12345');
 
     installPromiseMatchers();
 
@@ -51,24 +50,17 @@ describe('Controller: Finish - Activate and Start Billing', function () {
     });
 
     it('should reject and should not call TrialWebexService.setProvisioningWebexSendCustomerEmailFlag', function () {
-      var promise = this.$scope.setSendCustomerEmailFlag();
+      var err;
+      this.$scope.setSendCustomerEmailFlag().catch(function (response) {
+        err = response;
+      });
       this.$scope.$apply();
-      expect(promise).toBeRejectedWith('A boolean must be passed.');
+      expect(err).toBe('A boolean must be passed.');
     });
 
     it('should call TrialWebexService.setProvisioningWebexSendCustomerEmailFlag', function () {
       this.$scope.setSendCustomerEmailFlag(true);
       expect(this.TrialWebexService.setProvisioningWebexSendCustomerEmailFlag).toHaveBeenCalled();
-    });
-  });
-
-  describe('test order details data', function () {
-    beforeEach(function () {
-      this.initController();
-    });
-
-    it('should format the subscription id string', function () {
-      expect(this.$scope.orderDetails.subscriptionId).toBe('abc/def/ghi');
     });
   });
 });

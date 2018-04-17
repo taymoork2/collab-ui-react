@@ -6,25 +6,26 @@ export class HybridServicesUtilsService {
     'c_mgmt',
     'c_cal',
     'c_ucmc',
+    'cs_mgmt',
+    'cs_context',
     'c_imp',
     'mf_mgmt',
     'hds_app',
-    'cs_mgmt',
-    'cs_context',
     'ucm_mgmt',
     'c_serab',
   ];
   private static readonly orderedServices: HybridServiceId[] = [
     'squared-fusion-mgmt',
     'squared-fusion-cal',
+    'squared-fusion-o365',
     'squared-fusion-gcal',
     'squared-fusion-uc',
     'squared-fusion-ec',
+    'contact-center-context',
     'spark-hybrid-impinterop',
     'ept',
     'squared-fusion-media',
     'spark-hybrid-datasecurity',
-    'contact-center-context',
     'squared-fusion-khaos',
     'squared-fusion-servicability',
   ];
@@ -55,7 +56,7 @@ export class HybridServicesUtilsService {
     }
   }
 
-  public serviceId2ConnectorType(serviceId: HybridServiceId): ConnectorType | undefined {
+  public serviceId2ConnectorType(serviceId: HybridServiceId): ConnectorType {
     switch (serviceId) {
       case 'squared-fusion-cal':
         return 'c_cal';
@@ -71,12 +72,12 @@ export class HybridServicesUtilsService {
       case 'spark-hybrid-datasecurity':
         return 'hds_app';
       case 'contact-center-context':
-        // Will it become ['cs_mgmt', 'cs_context']?
         return 'cs_mgmt';
     }
+    throw new Error(`Unknown Service ID: ${serviceId}`);
   }
 
-  public serviceId2Icon(serviceId): string {
+  public serviceId2Icon(serviceId: HybridServiceId): string {
     switch (serviceId) {
       case 'squared-fusion-cal':
       case 'squared-fusion-gcal':
@@ -84,6 +85,8 @@ export class HybridServicesUtilsService {
       case 'squared-fusion-uc':
       case 'ept':
         return 'icon icon-circle-call';
+      case 'spark-hybrid-impinterop':
+        return 'icon icon-circle-message';
       case 'squared-fusion-media':
         return 'icon icon-circle-telepresence';
       case 'spark-hybrid-datasecurity':
@@ -101,11 +104,11 @@ export class HybridServicesUtilsService {
    * @param serviceType1 service id
    * @param serviceType2 service id
    */
-  public hybridServicesComparator = (serviceType1: HybridServiceId, serviceType2: HybridServiceId): -1 | 0 | 1 => {
-    if (serviceType1 === serviceType2) {
+  public hybridServicesComparator = (serviceType1: { value: HybridServiceId }, serviceType2: { value: HybridServiceId }): -1 | 0 | 1 => {
+    if (serviceType1.value === serviceType2.value) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtilsService.orderedServices, serviceType1) < _.indexOf(HybridServicesUtilsService.orderedServices, serviceType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedServices, serviceType1.value) < _.indexOf(HybridServicesUtilsService.orderedServices, serviceType2.value)) {
       return -1;
     } else {
       return 1;
@@ -118,11 +121,11 @@ export class HybridServicesUtilsService {
    * @param connectorType1 connector type
    * @param connectorType2 connector type
    */
-  public hybridConnectorsComparator(connectorType1: ConnectorType, connectorType2: ConnectorType): -1 | 0 | 1 {
-    if (connectorType1 === connectorType2) {
+  public hybridConnectorsComparator(connectorType1: { value: ConnectorType }, connectorType2: { value: ConnectorType }): -1 | 0 | 1 {
+    if (connectorType1.value === connectorType2.value) {
       return 0;
     }
-    if (_.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType1) < _.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType2)) {
+    if (_.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType1.value) < _.indexOf(HybridServicesUtilsService.orderedConnectors, connectorType2.value)) {
       return -1;
     } else {
       return 1;

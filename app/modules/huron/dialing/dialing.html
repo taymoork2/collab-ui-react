@@ -5,7 +5,7 @@
     </button>
     <button class="btn-default" translate="common.cancel" ng-click="$ctrl.reset()"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <div class="section-title-row">
         <span class="section-name" translate="{{$ctrl.title}}"></span>

@@ -1,27 +1,45 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var notificationsNoDomainsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no-domains.html');
+  var notificationsFuseNotPerformedTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/fuse-not-performed.html');
+  var notificationsNoUsersActivatedForCalendarTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no_users_activated_for_calendar.html');
+  var notificationsNoUsersActivatedForCallConnectTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no_users_activated_for_call_connect.html');
+  var notificationsNoUsersActivatedForCallAwareTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/no_users_activated_for_call_aware.html');
+  var notificationsCallUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/call-user-errors.html');
+  var notificationsHybridMessageUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/hybrid-message-user-errors.html');
+  var notificationsCalendarUserErrorsTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/calendar-user-errors.html');
+  var notificationsSipUriDomainEnterpriseNotSetTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
+  var notificationsSipDomainNotConfiguredTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/sip_domain_not_configured.html');
+  var notificationsConnectAvailableTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/connect_available.html');
+  var notificationsReleaseChannelTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/release_channel.html');
+  var notificationsServiceAlarmTemplatePath = require('ngtemplate-loader?module=Hercules!modules/hercules/notifications/service-alarm.html');
+
   angular
     .module('Hercules')
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptorService, USSService, Notification) {
+  function ServiceStateChecker($q, $translate, Authinfo, DomainManagementService, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptorService, USSService, Notification) {
     var isSipUriAcknowledged = false;
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
     var allExpresswayServices = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-mgmt'];
-    var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'squared-fusion-gcal'];
+    var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'spark-hybrid-impinterop', 'squared-fusion-gcal'];
 
     function checkState(serviceId) {
-      if (checkIfFusePerformed()) {
-        checkDomainVerified(serviceId);
-        checkUserStatuses(serviceId);
-        checkCallServiceConnect(serviceId);
-        checkUnassignedClusterReleaseChannels();
-      } else {
-        removeAllServiceAndUserNotifications();
-      }
+      checkIfFusePerformed()
+        .then(function (performed) {
+          if (performed) {
+            checkDomainVerified(serviceId);
+            checkUserStatuses(serviceId);
+            checkCallServiceConnect(serviceId);
+            checkUnassignedClusterReleaseChannels();
+          } else {
+            removeAllServiceAndUserNotifications();
+          }
+        });
       checkServiceAlarms(serviceId);
     }
 
@@ -39,7 +57,7 @@
               NotificationService.types.TODO,
               'noDomains',
               1,
-              'modules/hercules/notifications/no-domains.html', [serviceId]
+              notificationsNoDomainsTemplatePath, [serviceId]
             );
           } else {
             NotificationService.removeNotification('noDomains');
@@ -61,18 +79,20 @@
     }
 
     function checkIfFusePerformed() {
-      var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
-      if (_.size(clusters) === 0) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          'fuseNotPerformed',
-          1,
-          'modules/hercules/notifications/fuse-not-performed.html', allExpresswayServices);
-        return false;
-      } else {
-        NotificationService.removeNotification('fuseNotPerformed');
-        return true;
-      }
+      return HybridServicesClusterService.getAll().then(function (response) {
+        var clusters = _.filter(response, { targetType: 'c_mgmt' });
+        if (_.size(clusters) === 0) {
+          NotificationService.addNotification(
+            NotificationService.types.TODO,
+            'fuseNotPerformed',
+            1,
+            notificationsFuseNotPerformedTemplatePath, allExpresswayServices);
+          return false;
+        } else {
+          NotificationService.removeNotification('fuseNotPerformed');
+          return true;
+        }
+      });
     }
 
     function setSipUriNotificationAcknowledgedAndRemoveNotification() {
@@ -92,22 +112,20 @@
       if (!_.includes(servicesWithUserAssignments, serviceId)) {
         return;
       }
-      var summaryForService = _.find(USSService.getStatusesSummary(), {
-        serviceId: serviceId,
-      });
+      var summaryForService = USSService.getStatusesSummary()[serviceId];
       var noUsersActivatedId = serviceId + ':noUsersActivated';
       var needsUserActivation = summaryForService && summaryForService.activated === 0 && summaryForService.error === 0 && summaryForService.notActivated === 0;
       if (needsUserActivation) {
         switch (serviceId) {
           case 'squared-fusion-cal':
-            addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_calendar.html');
+            addNotification(noUsersActivatedId, serviceId, notificationsNoUsersActivatedForCalendarTemplatePath);
             break;
           case 'squared-fusion-uc':
             ServiceDescriptorService.isServiceEnabled('squared-fusion-ec').then(function (enabled) {
               if (enabled) {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_connect.html');
+                addNotification(noUsersActivatedId, serviceId, notificationsNoUsersActivatedForCallConnectTemplatePath);
               } else {
-                addNotification(noUsersActivatedId, serviceId, 'modules/hercules/notifications/no_users_activated_for_call_aware.html');
+                addNotification(noUsersActivatedId, serviceId, notificationsNoUsersActivatedForCallAwareTemplatePath);
               }
             });
             break;
@@ -135,18 +153,27 @@
               NotificationService.types.ALERT,
               userErrorsId,
               4,
-              'modules/hercules/notifications/call-user-errors.html', ['squared-fusion-uc'], data);
+              notificationsCallUserErrorsTemplatePath, ['squared-fusion-uc'], data);
           } else {
             NotificationService.removeNotification(userErrorsId);
           }
-        } else {
-          // if we are not in the Call Service page, we must be in the Calendar Service page
+        } else if (serviceId === 'squared-fusion-cal') {
           if (summaryForService && summaryForService.error > 0) {
             NotificationService.addNotification(
               NotificationService.types.ALERT,
               userErrorsId,
               4,
-              'modules/hercules/notifications/calendar-user-errors.html', ['squared-fusion-cal'], summaryForService);
+              notificationsCalendarUserErrorsTemplatePath, ['squared-fusion-cal'], summaryForService);
+          } else {
+            NotificationService.removeNotification(userErrorsId);
+          }
+        } else if (serviceId === 'spark-hybrid-impinterop') {
+          if (summaryForService && summaryForService.error > 0) {
+            NotificationService.addNotification(
+              NotificationService.types.ALERT,
+              userErrorsId,
+              4,
+              notificationsHybridMessageUserErrorsTemplatePath, ['spark-hybrid-impinterop'], summaryForService);
           } else {
             NotificationService.removeNotification(userErrorsId);
           }
@@ -168,7 +195,7 @@
               NotificationService.removeNotification('sipUriDomainEnterpriseNotConfigured');
               hasSipUriDomainConfigured = true;
             } else {
-              addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], 'modules/hercules/notifications/sip_uri_domain_enterprise_not_set.html');
+              addNotification('sipUriDomainEnterpriseNotConfigured', [serviceId], notificationsSipUriDomainEnterpriseNotSetTemplatePath);
             }
           }
         }, null, params);
@@ -194,7 +221,7 @@
                 NotificationService.types.TODO,
                 'sipDomainNotConfigured',
                 5,
-                'modules/hercules/notifications/sip_domain_not_configured.html', [serviceId]);
+                notificationsSipDomainNotConfiguredTemplatePath, [serviceId]);
             } else {
               NotificationService.removeNotification('sipDomainNotConfigured');
             }
@@ -206,23 +233,24 @@
               NotificationService.types.NEW,
               'callServiceConnectAvailable',
               5,
-              'modules/hercules/notifications/connect_available.html', [serviceId]);
+              notificationsConnectAvailableTemplatePath, [serviceId]);
           } else {
             NotificationService.removeNotification('callServiceConnectAvailable');
           }
         }
       }).catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
+        Notification.errorWithTrackingId(error, 'hercules.errors.couldNotGetServices');
       });
     }
 
     function checkUnassignedClusterReleaseChannels() {
-      FmsOrgSettings.get()
-        .then(function (data) {
-          return data.expresswayClusterReleaseChannel;
-        })
-        .then(function (defaultReleaseChannel) {
-          var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
+      $q.all({
+        clusters: HybridServicesClusterService.getAll(),
+        settings: FmsOrgSettings.get(),
+      })
+        .then(function (results) {
+          var defaultReleaseChannel = results.settings.expresswayClusterReleaseChannel;
+          var clusters = _.filter(results.clusters, { targetType: 'c_mgmt' });
           var anomalies = _.filter(clusters, function (cluster) {
             return !cluster.resourceGroupId && cluster.releaseChannel !== defaultReleaseChannel;
           });
@@ -239,13 +267,13 @@
                 NotificationService.types.ALERT,
                 'defaultReleaseChannel' + cluster.id,
                 5,
-                'modules/hercules/notifications/release_channel.html',
+                notificationsReleaseChannelTemplatePath,
                 serviceIds,
                 {
                   clusterId: cluster.id,
                   clusterName: cluster.name,
                   currentReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.releaseChannel),
-                  defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.defaultReleaseChannel),
+                  defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + defaultReleaseChannel),
                 }
               );
             });
@@ -280,7 +308,7 @@
               alarm.severity,
               notificationId,
               alarm.severity === 'error' ? 1 : 4,
-              'modules/hercules/notifications/service-alarm.html',
+              notificationsServiceAlarmTemplatePath,
               [serviceId],
               alarm
             );

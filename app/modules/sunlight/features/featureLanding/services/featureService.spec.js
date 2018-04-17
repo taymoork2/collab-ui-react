@@ -61,7 +61,8 @@ describe('Care Feature Service', function () {
 
   it('should fail to get list of templates when server gives an error', function (done) {
     $httpBackend.expectGET(getTemplatesUrl).respond(500);
-    careFeatureService.getChatTemplates().then(function () {}, function (response) {
+    careFeatureService.getChatTemplates().then(function () {
+    }, function (response) {
       expect(response.status).toEqual(500);
     });
     done();
@@ -78,7 +79,8 @@ describe('Care Feature Service', function () {
 
   it('should fail to delete a given template when server gives an error', function (done) {
     $httpBackend.expectDELETE(deleteTemplateUrl).respond(500);
-    careFeatureService.deleteTemplate(templateId).then(function () {}, function (response) {
+    careFeatureService.deleteTemplate(templateId).then(function () {
+    }, function (response) {
       expect(response.status).toEqual(500);
     });
     done();

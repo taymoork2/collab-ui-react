@@ -14,8 +14,8 @@ import {
 } from './partnerReportInterfaces';
 import { CommonReportService } from './commonReportServices/commonReport.service';
 import { ReportConstants } from './commonReportServices/reportConstants.service';
-import { ChartColors } from '../config/chartColors';
-import { Notification } from '../notifications';
+import { ChartColors } from 'modules/core/config/chartColors';
+import { Notification } from 'modules/core/notifications';
 
 export class ReportService {
   private readonly ACTIVE_USERS: string = 'activeUsers';
@@ -40,7 +40,6 @@ export class ReportService {
     private $translate: ng.translate.ITranslateService,
     private $q: ng.IQService,
     private CommonReportService: CommonReportService,
-    private chartColors: ChartColors,
     private Notification: Notification,
     private ReportConstants: ReportConstants,
     private PartnerService,
@@ -58,7 +57,7 @@ export class ReportService {
   }
 
   // Active User Functions
-  public getOverallActiveUserData(filter: ITimespan): ng.IHttpPromise<any> {
+  public getOverallActiveUserData(filter: ITimespan): void {
     this.timeFilter = filter.value;
     this.activeUserCustomerGraphs = {};
     this.overallPopulation = 0;
@@ -86,14 +85,12 @@ export class ReportService {
         this.overallPopulation = this.CommonReportService.getPercentage(overallActive, overallRegistered);
       }
       return;
-    }).catch((error: any) => {
+    }).catch((error: any): string => {
       if (error.status && (error.status !== 0 || error.config.timeout.$$state.status === 0)) {
         this.timeFilter = undefined;
       }
       return this.CommonReportService.returnErrorCheck(error, 'activeUsers.overallActiveUserGraphError', this.TIMEOUT);
     });
-
-    return this.activeUserDetailedPromise;
   }
 
   private formatActiveUserOrgData(org): IActiveUserCustomerData {
@@ -103,7 +100,7 @@ export class ReportService {
       percentage: undefined,
       overallPopulation: this.overallPopulation,
       color: undefined,
-      labelColorField: this.chartColors.grayDarkThree,
+      labelColorField: ChartColors.grayDarkThree,
       balloon: true,
     };
     let totalActive = 0;
@@ -145,30 +142,12 @@ export class ReportService {
   }
 
   public getActiveUserData(customers: IReportsCustomer[], filter: ITimespan): ng.IPromise<IActiveUserReturnData> {
-    let overallStatus = true;
-    let promise: ng.IPromise<any>;
-
     if (_.isUndefined(this.timeFilter) || filter.value !== this.timeFilter || _.isUndefined(this.activeUserDetailedPromise)) {
-      promise = this.getOverallActiveUserData(filter).then((response) => {
-        if (response === this.ABORT) {
-          overallStatus = false;
-        }
-        return;
-      });
-    } else {
-      promise = this.activeUserDetailedPromise;
+      this.getOverallActiveUserData(filter);
     }
 
-    return promise.then(() => {
-      if (overallStatus) {
-        return this.getActiveGraphData(customers, filter);
-      } else {
-        return {
-          graphData: [],
-          isActiveUsers: false,
-          popData: [],
-        };
-      }
+    return this.activeUserDetailedPromise.then(() => {
+      return this.getActiveGraphData(customers, filter);
     });
   }
 
@@ -189,7 +168,7 @@ export class ReportService {
         overallPopulation: this.overallPopulation,
         balloon: true,
         color: undefined,
-        labelColorField: this.chartColors.grayDarkThree,
+        labelColorField: ChartColors.grayDarkThree,
       };
       const orgData: IActiveUserCustomerData = this.activeUserCustomerGraphs[org.value];
 
@@ -415,11 +394,11 @@ export class ReportService {
           dataProvider: [{
             label: this.$translate.instant('callMetrics.callConditionFail'),
             value: 0,
-            color: this.chartColors.grayDarkThree,
+            color: ChartColors.grayDarkThree,
           }, {
             label: this.$translate.instant('callMetrics.callConditionSuccessful'),
             value: 0,
-            color: this.chartColors.peopleLight,
+            color: ChartColors.peopleLight,
           }],
           labelData: {
             numTotalCalls: 0,

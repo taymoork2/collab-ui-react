@@ -3,11 +3,15 @@
 var manageUsersPage = function () {
   this.modal = element(by.css('.modal-content > div > div'));
 
-  //this.usersListEmails = element.all(by.css('.ui-grid-canvas .ui-grid-cell.ui-grid-coluiGrid-0009 .ui-grid-cell-contents'));
+  this.actionCards = {
+    manualAddOrModifyUsers: element(by.cssContainingText('cr-action-card h4', 'Manually Add or Modify Users')),
+    manualAddUsers: element(by.cssContainingText('cr-action-card h4', 'Manually Add Users')),
+    csvAddOrModifyUsers: element(by.cssContainingText('cr-action-card h4', 'CSV Add or Modify Users')),
+  };
 
   this.buttons = {
     manageUsers: element(by.id('manageUsers')),
-    modalCloseButton: element(by.id('closeManageUsers')),
+    modalCloseButton: element(by.css('.modal-header .close[aria-label="Close"]')),
 
     next: element(by.buttonText('Next')),
     save: element(by.buttonText('Save')),
@@ -15,6 +19,10 @@ var manageUsersPage = function () {
     submit: element(by.buttonText('Submit')),
     done: element(by.buttonText('Done')),
     finish: element(by.buttonText('Finish')),
+  };
+
+  this.links = {
+    setupAutoAssignTemplate: element(by.cssContainingText('.auto-assign .auto-assign__setup-link', 'Set up Auto-Assign Template')),
   };
 
   this.modalDialog = {
@@ -30,8 +38,12 @@ var manageUsersPage = function () {
     radio: {
       orgManual: element(by.css('label[for=org-manual]')),
       orgBulk: element(by.css('label[for=org-bulk]')),
-      orgAdvanced: element(by.css('label[for=org-advanced]')),
     },
+  };
+
+  // email suppress
+  this.emailSuppress = {
+    emailSuppressIcon: element(by.css('.icon-circle-email')),
   };
 
   // Manually add or Modify Users
@@ -57,6 +69,10 @@ var manageUsersPage = function () {
       emailAddress: element(by.id('emailAddress')),
       plusIcon: element(by.css('.plus-icon-active')),
       tokenField: element(by.id('usersfield')),
+    },
+
+    errors: {
+      autoAssignTemplateEnabledCannotOnboardExistingUser: element(by.cssContainingText('.error-msg p', 'The Auto-Assign Template is enabled. You can only modify existing users')),
     },
   };
 
@@ -89,6 +105,36 @@ var manageUsersPage = function () {
     updatedUsers: element(by.css('.updated-users .total')),
     errorUsers: element(by.css('.error-users .total')),
     uploadComplete: element(by.css('.user-csv-results .upload-complete .progressbar-label span.progressbar-label:first-child')),
+  };
+
+  this.autoAssignTemplate = {
+    optionsMenu: {
+      toggleButton: element(by.css('auto-assign-template-manage-options .actions-menu')),
+      modify: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Modify Auto-Assign Template')),
+      delete: element(by.cssContainingText('auto-assign-template-manage-options .actions-menu li', 'Delete Auto-Assign Template')),
+      deleteConfirm: element(by.cssContainingText('.modal-footer .btn', 'Delete')),
+    },
+    createTemplate: {
+      title: element(by.cssContainingText('.modal-header > h3', 'Set Up Auto-Assign Template')),
+      subtitle: element(by.cssContainingText('.modal-body > h4', 'Add Services for Users')),
+    },
+    assignableServices: {
+      licenses: {
+        messaging: {
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Spark Messaging')).first(),
+          firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="MS_"]')).first(),
+        },
+        meeting: {
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="CF_"]', 'Cisco Spark 25 party Meetings')).first(),
+          firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="CF_"]')).first(),
+        },
+      },
+    },
+    templateSummary: {
+      summary: element(by.css('auto-assign-template-summary')),
+      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark Messaging')),
+      meetingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark 25 party Meetings')),
+    },
   };
 };
 

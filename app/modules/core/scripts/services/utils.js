@@ -36,9 +36,9 @@
           enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
           enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
           enc4 = chr3 & 63;
-          if (isNaN(chr2)) {
+          if (_.isNaN(chr2)) {
             enc3 = enc4 = 64;
-          } else if (isNaN(chr3)) {
+          } else if (_.isNaN(chr3)) {
             enc4 = 64;
           }
           output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
@@ -114,22 +114,8 @@
       },
     };
 
-    var getDeepKeyValues = function (obj, key) {
-      if (_.has(obj, key)) {
-        return [obj[key]];
-      }
-      var res = [];
-      _.forEach(obj, function (val) {
-        if (_.isObject(val) && (val = getDeepKeyValues(val, key)).length) {
-          res.push.apply(res, val);
-        }
-      });
-      return res;
-    };
-
     var service = {
       Base64: Base64,
-      getDeepKeyValues: getDeepKeyValues,
 
       sprintf: function (template, params) {
         var values = _.clone(params);
@@ -249,6 +235,44 @@
       isUUID: function (string) {
         var regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         return regex.test(string);
+      },
+
+      // TODO: update this function to apply idiomatic style, and add unit-tests
+      getFromStandardGetParams: function (url) {
+        var result = {};
+        var cleanUrlA = url.split('?');
+        if (cleanUrlA.length >= 2) {
+          var cleanUrl = cleanUrlA[1];
+          var params = cleanUrl.split('&');
+          for (var i = 0; i < params.length; i++) {
+            var param = params[i];
+            result[param.split('=')[0]] = param.split('=')[1];
+          }
+        }
+        return result;
+      },
+
+      // TODO: update this function to apply idiomatic style, and add unit-tests
+      getFromGetParams: function (url) {
+        var result = {};
+        var cleanUrlA = url.split('#');
+        if (cleanUrlA.length >= 2) {
+          var cleanUrl = cleanUrlA[1];
+          for (var i = 2; i < cleanUrlA.length; i++) {
+            cleanUrl += '#' + cleanUrlA[i];
+          }
+          var params = cleanUrl.split('&');
+          for (i = 0; i < params.length; i++) {
+            var param = params[i];
+            result[param.split('=')[0]] = param.split('=')[1];
+          }
+        }
+        return result;
+      },
+
+      extractTrackingIdFromResponse: function (response) {
+        var headers = _.get(response, 'headers');
+        return _.isFunction(headers) ? headers('TrackingID') : undefined;
       },
 
       getSqEntitlements: function (user) {

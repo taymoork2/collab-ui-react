@@ -1,5 +1,5 @@
 <div ng-form="dialingForm" class="settings-dialing">
-  <h5 class="title-margin-bottom" translate="serviceSetupModal.dialing"></h5>
+  <label class="sub-section__label" translate="serviceSetupModal.dialing"></label>
   <div class="cs-radio-group">
     <input
       type="radio"
@@ -36,7 +36,7 @@
         {{:: 'serviceSetupModal.multipleAreaCodeText' | translate}}
       </p>
   </div>
-  <div class="indent-area-code" ng-if="$ctrl.isTerminusCustomer && $ctrl.supportsLocalDialing">
+  <div class="row indent area-code" ng-if="$ctrl.isTerminusCustomer && $ctrl.supportsLocalDialing">
     <input
       cs-input
       type="text"
@@ -53,5 +53,5 @@
       cs-input-messages="$ctrl.messages"
       validate-dialing-area-code>
   </div>
-  <p class="row full columns warning terminus-warning indent-area-code" ng-if="!$ctrl.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
+  <p class="row full columns warning terminus-warning indent" ng-if="!$ctrl.isTerminusCustomer"><i class="icon icon-warning"></i>{{::'serviceSetupModal.warning.localDialing' | translate}}</p>
 </div>

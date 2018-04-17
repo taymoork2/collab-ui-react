@@ -1,0 +1,12 @@
+<div ng-form="pagingGroupNumber">
+  <cs-select
+    name="pagingGroupNumber"
+    ng-model="$ctrl.selected"
+    options="$ctrl.internalNumberOptions"
+    filter="true"
+    input-placeholder="$ctrl.filterPlaceholder"
+    refresh-data-fn="$ctrl.fetchNumbers(filter)"
+    ng-change="$ctrl.onNumberChanged()"
+    no-dirty>
+  </cs-select>
+</div>

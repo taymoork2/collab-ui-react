@@ -1,6 +1,7 @@
 import pstnTrialSetup from './index';
 import { PstnModel } from '../pstn.model';
 import { PstnCarrier } from '../pstnProviders';
+import { SWIVEL, INTELEPEER } from '../pstn.const';
 
 describe('Component: PstnTrialSetupComponent', () => {
   beforeEach(function () {
@@ -25,6 +26,7 @@ describe('Component: PstnTrialSetupComponent', () => {
     spyOn(this.PstnService, 'listResellerCarriersV2');
     spyOn(this.PstnService, 'listDefaultCarriersV2');
     spyOn(this.PstnService, 'getCarrierCapabilities');
+    spyOn(this.controller, 'disableNextButton').and.callThrough();
   }
 
   describe('init', () => {
@@ -111,6 +113,50 @@ describe('Component: PstnTrialSetupComponent', () => {
         expect(this.controller.disableNextButton()).toBeFalsy();
       });
 
+    });
+
+    describe('Start Trial button with API is SWIVEL', function () {
+      beforeEach(function () {
+        this.controller.trialForm.$invalid = false;
+        this.controller.providerImplementation = SWIVEL;
+        this.controller.addressFound = true;
+        this.controller.disableNextButton.and.returnValue(false);
+      });
+
+      it ('should NOT be disabled if the form is invalid and disableNextButton is false', function () {
+        this.controller.trialForm.$invalid = true;
+        expect(this.controller.isDisabled()).toEqual(false);
+      });
+
+      it ('should be disabled if the form is invalid and disableNextButton is true', function () {
+        this.controller.trialForm.$invalid = true;
+        this.controller.disableNextButton.and.returnValue(true);
+        expect(this.controller.isDisabled()).toEqual(true);
+      });
+
+      it ('should NOT be disabled if the address wasn\'t validated', function () {
+        this.controller.addressFound = false;
+        expect(this.controller.isDisabled()).toEqual(false);
+      });
+    });
+
+    describe('Start Trial button with API is NOT SWIVEL', function () {
+      beforeEach(function () {
+        this.controller.trialForm.$invalid = false;
+        this.controller.providerImplementation = INTELEPEER;
+        this.controller.addressFound = true;
+        this.controller.disableNextButton.and.returnValue(false);
+      });
+
+      it ('should be disabled if the form is invalid', function () {
+        this.controller.trialForm.$invalid = true;
+        expect(this.controller.isDisabled()).toEqual(true);
+      });
+
+      it ('should be disabled if the address wasn\'t validated', function () {
+        this.controller.addressFound = false;
+        expect(this.controller.isDisabled()).toEqual(true);
+      });
     });
 
   });

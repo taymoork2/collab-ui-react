@@ -7,7 +7,7 @@
   function sunlightUserProfile() {
     return {
       restrict: 'EA',
-      templateUrl: 'modules/sunlight/users/userOverview/sunlightUserProfile.tpl.html',
+      template: require('modules/sunlight/users/userOverview/sunlightUserProfile.tpl.html'),
     };
   }
 })();

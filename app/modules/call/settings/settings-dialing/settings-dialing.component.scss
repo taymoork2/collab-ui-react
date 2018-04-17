@@ -1,8 +1,22 @@
-@import '~collab-ui/scss/tools/functions/core';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/functions/core';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .settings-dialing {
   .indent {
     padding-left: vr-adjust(32px);
+  }
+
+  .area-code {
+    min-width: 50rem;
+  }
+
+  .terminus-warning {
+    font-size: 0.75rem;
+
+    .icon-warning {
+      margin-right: 0.25rem;
+    }
+
+    margin-bottom: 1rem;
   }
 }

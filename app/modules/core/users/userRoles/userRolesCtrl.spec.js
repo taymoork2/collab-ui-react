@@ -4,14 +4,14 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Controller: UserRolesCtrl', function () {
-  var controller, $q, $scope, $state, $rootScope, $stateParams, $translate, Analytics, Auth, Config, Authinfo, Orgservice, $controller, Userservice, FeatureToggleService, Log, Notification, ProPackService, SessionStorage, EdiscoveryService;
+  var $q, $rootScope, $scope, $state, $stateParams, $translate, Analytics, Auth, Authinfo, Config, $controller, controller, EdiscoveryService, FeatureToggleService, Log, Notification, Orgservice, ProPackService, SessionStorage, UserRoleService, Userservice;
   var fakeUserJSONFixture = getJSONFixture('core/json/sipTestFakeUser.json');
   var careUserJSONFixture = getJSONFixture('core/json/users/careTestFakeUser.json');
   var currentUser = fakeUserJSONFixture.fakeUser1;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$state_, _$stateParams_, _$translate_, _Analytics_, _Auth_, _Authinfo_, _Config_, _FeatureToggleService_, _Log_, _Notification_, _ProPackService_, _SessionStorage_, _UserRoleService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -30,6 +30,7 @@ describe('Controller: UserRolesCtrl', function () {
     Notification = _Notification_;
     ProPackService = _ProPackService_;
     SessionStorage = _SessionStorage_;
+    UserRoleService = _UserRoleService_;
 
     Userservice = {
       patchUserRoles: _.noop,
@@ -46,6 +47,14 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn(Analytics, 'trackPremiumEvent').and.returnValue($q.resolve({}));
     spyOn(Authinfo, 'getOrgId').and.returnValue('we23f24-4f3f4f-cc7af705-6583-32r3r23r');
     spyOn(Authinfo, 'getUserId').and.returnValue('cc7af705-6583-4f58-b0b6-ea75df64da7e');
+
+    spyOn(UserRoleService, 'getCCARoles').and.returnValue($q.resolve([
+      {
+        key: 'CCA_Configuration_Write',
+        name: 'cca-portal.configuration_write',
+        displayName: 'Configuration (Full Privilege)',
+      },
+    ]));
 
     Orgservice = {
       getOrgCacheOption: _.noop,
@@ -87,6 +96,7 @@ describe('Controller: UserRolesCtrl', function () {
       Orgservice: Orgservice,
       SessionStorage: SessionStorage,
       Userservice: Userservice,
+      UserRoleService: UserRoleService,
     });
 
     $scope.$apply();
@@ -97,7 +107,7 @@ describe('Controller: UserRolesCtrl', function () {
         displayName: {
           $setValidity: _.noop,
         },
-        partialAdmin: {
+        adminRoles: {
           $setValidity: _.noop,
         },
       },
@@ -105,7 +115,7 @@ describe('Controller: UserRolesCtrl', function () {
     spyOn($scope.rolesEdit.form, '$setPristine').and.callFake(_.noop);
     spyOn($scope.rolesEdit.form, '$setUntouched').and.callFake(_.noop);
     spyOn($scope.rolesEdit.form.displayName, '$setValidity').and.callFake(_.noop);
-    spyOn($scope.rolesEdit.form.partialAdmin, '$setValidity').and.callFake(_.noop);
+    spyOn($scope.rolesEdit.form.adminRoles, '$setValidity').and.callFake(_.noop);
   }
 
   describe('UserRolesCtrl Initialization: ', function () {
@@ -127,13 +137,30 @@ describe('Controller: UserRolesCtrl', function () {
       expect($scope.rolesObj.adminRadioValue).toBeDefined();
       expect($scope.rolesObj.adminRadioValue).toEqual(1);
       expect($scope.rolesObj.complianceValue).toBeDefined();
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
+    });
+
+    it('should match Device Admin to User Admin settings when partialCheckboxesUserAdmin is called', function () {
+      initController();
+      spyOn($scope, 'partialCheckboxes').and.callThrough();
+
+      $scope.rolesObj.userAdminValue = true;
+      $scope.partialCheckboxesUserAdmin();
+      expect($scope.rolesObj.deviceAdminValue).toEqual(true);
+      expect($scope.partialCheckboxes).toHaveBeenCalledTimes(1);
+      expect($scope.isDeviceCheckboxDisabled()).toEqual(true);
+
+      $scope.rolesObj.userAdminValue = false;
+      $scope.partialCheckboxesUserAdmin();
+      expect($scope.rolesObj.deviceAdminValue).toEqual(false);
+      expect($scope.partialCheckboxes).toHaveBeenCalledTimes(2);
+      expect($scope.isDeviceCheckboxDisabled()).toEqual(false);
     });
   });
 
   describe('Initialize isPartner from current org response', function () {
     beforeEach(function () {
-      expect($scope.isPartner).toBeFalsy();
+      expect($scope.isPartner).toBe(undefined);
     });
     afterEach(function () {
       initController();
@@ -212,14 +239,14 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', false);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
 
       it('should invalidate display name if not first name, last name and display name are all blank', function () {
         $scope.formUserData.displayName = 'DN';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', false);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', false);
       });
     });
 
@@ -235,7 +262,7 @@ describe('Controller: UserRolesCtrl', function () {
         $scope.formUserData.displayName = '';
         $scope.checkAdminDisplayName();
         expect($scope.rolesEdit.form.displayName.$setValidity).toHaveBeenCalledWith('notblank', true);
-        expect($scope.rolesEdit.form.partialAdmin.$setValidity).toHaveBeenCalledWith('noSelection', true);
+        expect($scope.rolesEdit.form.adminRoles.$setValidity).toHaveBeenCalledWith('noSelection', true);
       });
     });
 
@@ -262,7 +289,7 @@ describe('Controller: UserRolesCtrl', function () {
       });
 
       afterEach(function () {
-        expect($scope.updatingUser).toBeFalsy();
+        expect($scope.updatingUser).toBe(false);
       });
 
       ///////////
@@ -418,32 +445,32 @@ describe('Controller: UserRolesCtrl', function () {
     it('should update Compliance Officer setting', function () {
       spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.resolve(true));
 
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       $scope.rolesObj.complianceValue = true;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      expect($scope.rolesObj.complianceValue).toBe(true);
       $scope.rolesObj.complianceValue = false;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).not.toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       expect(Notification.errorResponse).not.toHaveBeenCalled();
     });
 
     it('should not update on error', function () {
       spyOn(EdiscoveryService, 'setEntitledForCompliance').and.returnValue($q.reject({}));
 
-      expect($scope.rolesObj.complianceValue).toBeFalsy();
+      expect($scope.rolesObj.complianceValue).toBe(false);
       $scope.rolesObj.complianceValue = true;
       $scope.updateRoles();
       $scope.$digest();
 
       expect($scope.currentUser.entitlements).not.toContain('compliance');
-      expect($scope.rolesObj.complianceValue).toBeTruthy();
+      expect($scope.rolesObj.complianceValue).toBe(true);
       expect(Notification.errorResponse).toHaveBeenCalledWith(jasmine.any(Object), 'profilePage.complianceError');
     });
   });
@@ -479,6 +506,14 @@ describe('Controller: UserRolesCtrl', function () {
           },
           {
             roleName: 'Reports',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
             roleState: 'INACTIVE',
           },
           {
@@ -540,6 +575,14 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE',
           },
           {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'INACTIVE',
           },
@@ -598,6 +641,14 @@ describe('Controller: UserRolesCtrl', function () {
             roleState: 'INACTIVE',
           },
           {
+            roleName: 'User_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
+            roleName: 'Device_Admin',
+            roleState: 'INACTIVE',
+          },
+          {
             roleName: 'Help_Desk',
             roleState: 'ACTIVE',
           },
@@ -636,6 +687,81 @@ describe('Controller: UserRolesCtrl', function () {
         expect(controller).toBeDefined();
         $scope.resetAccess();
         expect(Auth.revokeUserAuthTokens).toHaveBeenCalled();
+      });
+    });
+
+    describe('Editing Roles should be', function () {
+      it('disallowed when it is editing self', function () {
+        Authinfo.getUserId.and.returnValue(currentUser.id);
+        initController();
+
+        expect($scope.isNotEditable).toBe(true);
+      });
+
+      it('disallowed when the logged in user is a User Admin', function () {
+        spyOn(Authinfo, 'isUserAdminUser').and.returnValue(true);
+        currentUser.roles = [];
+        initController();
+
+        expect($scope.isNotEditable).toBe(true);
+      });
+
+      it('allowed when the logged in user is not a User Admin and is not editing self', function () {
+        currentUser.roles = [];
+        initController();
+
+        expect($scope.isNotEditable).toBe(false);
+      });
+    });
+  });
+
+  describe('CCA Roles Block', function () {
+    it('should NOT show CCA roles by default', function () {
+      initController();
+
+      expect($scope.showCCARoles).toBe(false);
+      expect($scope.showCCAAdminRole).toBe(false);
+    });
+
+    describe('should show CCA admin roles if user is Cisco org', function () {
+      it('and customer admin', function () {
+        spyOn(Authinfo, 'isCisco').and.returnValue(true);
+        spyOn(Authinfo, 'isCustomerAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCAAdminRole).toBe(true);
+      });
+
+      it('and readonly admin', function () {
+        spyOn(Authinfo, 'isCisco').and.returnValue(true);
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCAAdminRole).toBe(true);
+      });
+    });
+
+    describe('should show CCA if user is Partner', function () {
+      beforeEach(function () {
+        SessionStorage.put('partnerOrgId', 'fakePartner');
+      });
+
+      afterEach(function () {
+        SessionStorage.pop('partnerOrgId');
+      });
+
+      it('and admin', function () {
+        spyOn(Authinfo, 'isAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCARoles).toBe(true);
+      });
+
+      it('and readonly admin', function () {
+        spyOn(Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+        initController();
+
+        expect($scope.showCCARoles).toBe(true);
       });
     });
   });

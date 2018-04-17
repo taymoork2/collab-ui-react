@@ -35,6 +35,10 @@ describe('Service: LineService', () => {
       internal: '54321',
       external: '+98765',
       incomingCallMaximum: 8,
+      label: {
+        value: 'someuser@some.com',
+        appliesToAllSharedLines: false,
+      },
     };
 
     this.getLineResponse = getLineResponse;

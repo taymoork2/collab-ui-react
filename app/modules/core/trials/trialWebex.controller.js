@@ -7,9 +7,10 @@
 
 
   /* @ngInject */
-  function TrialWebexCtrl($q, $scope, $translate, Analytics, TrialWebexService, TrialTimeZoneService) {
+  function TrialWebexCtrl($q, $scope, $translate, Analytics, Config, TrialWebexService, TrialTimeZoneService) {
     var vm = this;
     var _trialData = TrialWebexService.getData();
+    var webexSiteValidationSource = Config.shallowValidationSourceTypes.serviceSetup;
 
     vm.details = _trialData.details;
     vm.validatingUrl = false;
@@ -73,7 +74,7 @@
 
       return $q(function (resolve, reject) {
         vm.validatingUrl = true;
-        TrialWebexService.validateSiteUrl(viewValue)
+        TrialWebexService.validateSiteUrl(viewValue, webexSiteValidationSource)
           .then(function (result) {
             if (result.isValid) {
               resolve();

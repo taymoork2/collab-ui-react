@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="{{ chooseDeviceType.title }}"></h3>
 </div>
@@ -10,18 +10,21 @@
     <h4 ng-show="chooseDeviceType.isNewPlaceFlow() || chooseDeviceType.showPersonal"
         translate="addDeviceWizard.chooseDeviceType.deviceTypeNewPlace"></h4>
     <p class="wizardDescription" translate="addDeviceWizard.chooseDeviceType.deviceTypeInstructions"></p>
+
+
     <div class="typeChoice">
       <div class="typeButtonWrapper typeButtonWrapperLeft">
         <div class="typeButton"
+             id="huronTypeButton"
+             focus-on
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'huron'}"
              ng-click="chooseDeviceType.huron()"
              ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/desk-phone-system.png"/>
+            <img class="typeImage" type="image" src="/images/devices/cisco-phone.svg"/>
           </div>
-          <h4 translate="addDeviceWizard.chooseDeviceType.deskPhone"></h4>
-          <span ng-if="!chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamples"></span>
-          <span ng-if="chooseDeviceType.showATA" translate="addDeviceWizard.chooseDeviceType.deskPhoneExamplesExtra"></span>
+          <h4 translate="addDeviceWizard.chooseDeviceType.ciscoPhone"></h4>
+          <span translate="addDeviceWizard.chooseDeviceType.deskPhoneExamplesExtra"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.huronError">
           <i class="icon icon-warning"></i>
@@ -30,13 +33,14 @@
       </div>
       <div class="typeButtonWrapper">
         <div class="typeButton"
+             id="cloudberryTypeButton"
              ng-class="{'typeButtonClicked':chooseDeviceType.selectedDeviceType === 'cloudberry'}"
              ng-click="chooseDeviceType.cloudberry()"
              ng-dblclick="chooseDeviceType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/room-system.png"/>
+            <img class="typeImage" type="image" src="/images/devices/other-cisco-device.svg"/>
           </div>
-          <h4 translate="addDeviceWizard.chooseDeviceType.roomSystem"></h4>
+          <h4 translate="addDeviceWizard.chooseDeviceType.otherCiscoDevice"></h4>
           <span translate="addDeviceWizard.chooseDeviceType.roomSystemExamplesExpanded"></span>
         </div>
         <div class="errorBox" ng-if="chooseDeviceType.cloudberryError">

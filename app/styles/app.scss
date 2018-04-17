@@ -1,5 +1,5 @@
 @import './variables';
-@import '~collab-ui/scss/collab-ui';
+@import '~@collabui/collab-ui/scss/collab-ui';
 @import '~angularjs-slider/dist/rzslider.css';
 @import '~ng-tags-input/build/ng-tags-input.css';
 
@@ -26,7 +26,6 @@
 @import '../modules/hercules/styles/hercules';
 @import '../modules/mediafusion/styles/mediafusion';
 @import '../modules/hds/hds';
-@import '../modules/services-overview/services-overview';
 @import '../modules/webex/styles/webex';
 @import '../modules/sunlight/styles/sunlight';
 @import '../modules/messenger/styles/messenger';

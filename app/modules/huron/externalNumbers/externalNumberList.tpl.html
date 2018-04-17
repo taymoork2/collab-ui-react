@@ -1,8 +1,9 @@
 <div class="tab-content center">
   <div class="total-count">
     <span translate="{{::countTranslateKey}}" translate-values="{count: quantity}" translate-interpolation="messageformat"></span>
-    <i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i><i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
-    <i tabindex="0" class="icon" ng-class="::tooltipClass" ng-if="::tooltipText" tooltip-trigger="focus mouseenter" tooltip="{{::tooltipText}}"></i>
+    <i class="icon icon-refresh" ng-click="externalNumbers.listPhoneNumbers()" ng-if="!externalNumbers.refresh"></i>
+    <i class="icon icon-spinner" ng-if="externalNumbers.refresh"></i>
+    <i tabindex="0" class="icon" ng-class="::tooltipClass" ng-if="::tooltipText" tooltip-trigger="focus mouseenter" tooltip="{{::tooltipText}}" aria-label="{{::tooltipText}}"></i>
   </div>
   <div class="filter">
     <input type="text" class="form-control" ng-model="externalNumbers.filter" ng-model-options="{ debounce: 250 }">
@@ -13,9 +14,7 @@
   <ul class="list-group">
     <li class="list-group-item list-token" ng-repeat="number in filteredNumbers = (numbers | externalNumberList: externalNumbers.filter) | orderBy:'pattern'">
       <span ng-bind="::number.label"></span>
-      <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
-        <span class="sr-only" translate="common.delete"></span>
-      </button>
+      <button ng-if="number.uuid && !number.directoryNumber" type="button" class="close" ng-click="externalNumbers.deleteNumber(number)" aria-label="{{::'common.delete' | translate}}"></button>
     </li>
   </ul>
 </div>

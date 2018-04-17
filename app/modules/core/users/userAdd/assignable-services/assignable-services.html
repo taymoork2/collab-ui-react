@@ -1,0 +1,53 @@
+<div class="license-wrapper">
+  <div class="row full flex-row">
+    <div class="small-4 columns column-title">
+      <div class="column-header">
+        <i class="icon icon-circle-message modal-icon-flex-row"></i>
+        <h3 translate="onboardModal.message"></h3>
+      </div>
+    </div>
+    <div class="small-4 columns column-title">
+      <div class="column-header">
+        <i class="icon icon-circle-group modal-icon-flex-row"></i>
+        <h3 translate="onboardModal.meeting"></h3>
+      </div>
+    </div>
+    <div class="small-4 columns column-title">
+      <div class="column-header">
+        <i class="icon icon-circle-call modal-icon-flex-row"></i>
+        <h3 translate="onboardModal.call"></h3>
+      </div>
+    </div>
+    <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-title">
+      <div class="column-header">
+        <i class="icon icon-circle-contact-centre"></i>
+        <h3 translate="onboardModal.contactCenter"></h3>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column-subscription-header free" translate="onboardModal.freeCollab"></div>
+  </div>
+  <div class="row full flex-row">
+    <div class="small-4 columns column-free">
+      <div translate="onboardModal.msgFree"></div>
+    </div>
+    <div class="small-4 columns column-free">
+      <div translate="onboardModal.mtgFree"></div>
+    </div>
+    <div class="small-4 columns column-free">
+      <div translate="onboardModal.callFree"></div>
+    </div>
+    <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-free">
+      <div translate="onboardModal.none"></div>
+    </div>
+  </div>
+  <div ng-repeat="subscription in $ctrl.subscriptions track by subscription.subscriptionId">
+    <assignable-services-row
+      subscription="subscription"
+      is-care-enabled="$ctrl.isCareEnabled"
+      on-update="$ctrl.onUpdate({ $event: $event })"
+      auto-assign-template-data="$ctrl.autoAssignTemplateData">
+    </assignable-services-row>
+  </div>
+</div>

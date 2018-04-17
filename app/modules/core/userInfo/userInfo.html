@@ -1,43 +1,4 @@
-<div cr-feature-toggle feature-hide="atlas-2017-name-change" cs-dropdown class="user-info dropdown" ng-show="Utils.isAdminPage()">
-  <button cs-dropdown-toggle class="btn--user dropdown-toggle">
-    <img ng-if="image" class="user-img" ng-src="{{image}}" alt="" aria-hidden="true"/>
-    <span ng-if="!image" class="user-img" aria-hidden="true">
-      <i class="icon icon-user"></i>
-    </span>
-    <ul class="user-info-text">
-      <li class="user-name" title="{{username}}">{{username}}</li>
-      <li class="org-name" title="{{roleList}}">{{roleList}}</li>
-    </ul>
-  </button>
-  <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
-    <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
-      <a class="select-lng-dropdown" aria-label="Language Selection">
-        <label for="languageSelector"></label>
-        <select
-                id="languageSelector"
-                ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected"
-                ng-change="langSettings.updateLanguage()"
-                onclick="event.stopPropagation();">
-        </select>
-      </a>
-    </li>
-    <li id="feedback-btn" role="menuitem">
-      <a id="feedback-lnk" href="" ng-click="sendFeedback()" translate="index.feedback"></a>
-    </li>
-    <li id="support-btn" role="menuitem">
-      <a id="support-lnk" href="{{supportUrl}}" target="_blank" translate="index.support"></a>
-    </li>
-    <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
-      <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
-    </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
-      <a href="" ng-click="logout()" translate="index.logout"></a>
-    </li>
-  </ul>
-</div>
-
-<div cr-feature-toggle feature-show="atlas-2017-name-change" cs-dropdown class="user-info dropdown" ng-show="Utils.isAdminPage()">
+<div cs-dropdown class="user-info dropdown" ng-show="Utils.isAdminPage()">
   <div class="footer-divider"></div>
   <button ng-click="collapsed.value = false" cs-dropdown-toggle class="btn--user dropdown-toggle">
     <img ng-if="image" class="user-img" ng-src="{{image}}" alt="" aria-hidden="true"/>
@@ -53,27 +14,28 @@
   <ul id="dropdown-menu" cs-dropdown-menu class="dropdown-menu" role="menu">
     <li ng-controller="SettingsMenuCtrl as langSettings" role="menuitem">
       <a class="select-lng-dropdown" aria-label="Language Selection">
-        <label for="languageAdminSelector"></label>
         <select
 
-                id="languageAdminSelector"
-                ng-options="item.label for item in langSettings.options track by item.value"
-                ng-model="langSettings.selected"
-                ng-change="langSettings.updateLanguage()"
-                onclick="event.stopPropagation();">
+          id="languageAdminSelector"
+          ng-options="item.label for item in langSettings.options track by item.value"
+          ng-model="langSettings.selected"
+          ng-change="langSettings.updateLanguage()"
+          aria-labelledby="languageSelectorLabel"
+          ng-click="$event.stopPropagation();">
         </select>
+        <span id="languageSelectorLabel" class="sr-only" translate="common.selectLanguage" aria-hidden="true"></span>
       </a>
     </li>
     <li id="feedback-btn" role="menuitem">
       <a id="feedback-lnk" href="" ng-click="sendFeedback()" translate="index.feedback"></a>
     </li>
     <li id="support-btn" role="menuitem">
-      <a id="support-lnk" href="{{supportUrl}}" target="_blank" translate="index.support"></a>
+      <a id="support-lnk" href="{{supportUrl}}" target="_blank" translate="common.help"></a>
     </li>
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>
     </li>
-    <li id="logout-btn" ng-if="loggedIn && !isCustomerLaunchedFromPartner" role="menuitem">
+    <li id="logout-btn" ng-if="loggedIn" role="menuitem">
       <a href="" ng-click="logout()" translate="index.logout"></a>
     </li>
   </ul>

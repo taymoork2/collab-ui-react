@@ -8,7 +8,7 @@ var temp = require('temp').track();
 var maxLineWidth = 100;
 
 // Our custom implementation of commitizen (https://github.com/commitizen/cz-cli)
-// used by `npm run commit` or 'git cz'
+// used by `yarn commit` or 'git cz'
 // Loosely based on:
 // https://github.com/leonardoanalista/cz-customizable
 // https://github.com/commitizen/cz-conventional-changelog
@@ -66,10 +66,11 @@ module.exports = {
         'mediafusion',
         'messenger',
         'release',
-        'sunglight',
+        'sunlight',
         'support',
         'trials',
         'users',
+        'virtualassistant',
         'webex',
         '*',
         'custom',

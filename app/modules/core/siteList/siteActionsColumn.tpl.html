@@ -1,29 +1,40 @@
 
 <p ng-if="!row.entity.isLinkedSite"
   class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.isCI"
+  <span ng-if="!row.entity.isCI && !row.entity.isPending"
         id="{{row.entity.license.siteUrl}}_isNotCI"
         name="{{row.entity.license.siteUrl}}_isNotCI">
 
     <a target="_blank"
-       href= "{{row.entity.siteAdminUrl}}"
+       href="{{row.entity.siteAdminUrl}}"
        id="{{row.entity.license.siteUrl}}_siteAdminUrl">
 
       {{::'siteList.siteAdminUrl' | translate}}
     </a>
+  </span>
+  <!-- delete and redistribute show show up regardless of ci flag -->
+  <span ng-if="grid.appScope.isShowAddSite && grid.appScope.isSubscriptionEnterprise(row.entity.license)">
+    <!-- redistribute licenses icon -->
+    <cr-site-actions-licenses-icon  can-modify="grid.appScope.canModify(row.entity.license)"
+      license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)">
+    </cr-site-actions-licenses-icon>
+   <!-- delete icon -->
+   <cr-site-actions-delete-icon can-modify="grid.appScope.canModify(row.entity.license)"
+    license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)">
+  </cr-site-actions-delete-icon>
   </span>
 
   <span ng-if="row.entity.isCI"
         id="{{row.entity.license.siteUrl}}_isCI"
         name="{{row.entity.license.siteUrl}}_isCI">
   <!-- Reports icon -->
-  <span ng-include="'modules/core/siteList/siteActionsReportsIcon.tpl.html'"></span>
+  <cr-site-actions-reports-icon></cr-site-actions-reports-icon>
 
   <!-- Config icon -->
-  <span ng-include="'modules/core/siteList/siteActionsConfigIcon.tpl.html'"></span>
+  <cr-site-actions-config-icon></cr-site-actions-config-icon>
 
   <!-- CSV icon and results link -->
-  <span ng-include="'modules/core/siteList/siteActionsCsvIcon.tpl.html'"></span>
+  <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
 
   <!-- Start of Loading indication -->
   <span ng-if="!row.entity.isLinkedSite">
@@ -48,7 +59,7 @@
   <!-- End of Loading indication -->
 
   <!-- Start of Error/warning indication -->
-  <span ng-if="row.entity.showSiteLinks && row.entity.isError"
+  <span ng-if="row.entity.showSiteLinks && row.entity.isError && !row.entity.isPending"
         id="{{row.entity.license.siteUrl}}_error"
         name="{{row.entity.license.siteUrl}}_error">
 
@@ -77,10 +88,11 @@
   </span>
   <!-- End of Error/warning indication -->
   </span>
+  <span class="badge primary ui-grid-cell-contents__badge--pending" ng-if="row.entity.isPending" translate="siteList.pendingActionBadge"></span>
 </p>
 
 <p ng-if="row.entity.isLinkedSite"
   class="ui-grid-cell-contents">
   <!-- Webex icon and results link -->
-  <span ng-include="'modules/core/siteList/siteActionsLinkedIcon.tpl.html'"></span>
+  <cr-site-actions-linked-icon></cr-site-actions-linked-icon>
 </p>

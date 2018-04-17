@@ -1,0 +1,39 @@
+{
+  "url": {
+  "action": {
+    "concat": {
+      "actions": [{
+        "dynamic": {
+          "dynamicOperations": [{
+            "isDynamic": false,
+            "action": {
+              "eval": {
+                "value": "http://www.cisco.com"
+              }
+            }
+          }]
+        }
+      }]
+    }
+  }
+  },
+  "method": "GET",
+  "authentication": {
+    "credentials": {
+      "username": "testUser",
+      "password": "password"
+    }
+  },
+  "responseActions": [{
+    "assignVar": {
+      "variableName": "Language",
+      "value": "$Response.English"
+    }
+  },
+  {
+    "assignVar": {
+      "variableName": "Bhasha",
+      "value": "$Response.Espanol"
+    }
+  }]
+}

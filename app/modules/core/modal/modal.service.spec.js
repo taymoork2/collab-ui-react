@@ -38,7 +38,7 @@ describe('Service: ModalService', function () {
       btnType: myType,
     });
     expect($modal.open).toHaveBeenCalledWith({
-      templateUrl: 'modules/core/modal/modal.tpl.html',
+      template: require('modules/core/modal/modal.tpl.html'),
       controller: 'ModalCtrl',
       controllerAs: 'modal',
       type: 'dialog',

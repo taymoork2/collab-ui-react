@@ -29,7 +29,6 @@ export class ReportPrintService {
     private CommonGraphService: CommonGraphService,
     private CommonReportService: CommonReportService,
     private ReportConstants: ReportConstants,
-    private chartColors: ChartColors,
   ) {}
 
   // Array Constants
@@ -96,7 +95,7 @@ export class ReportPrintService {
     };
     pdfStyles[this.DEFAULT] = {
       fontSize: 10,
-      color: this.chartColors.grayDarkFour,
+      color: ChartColors.grayDarkFour,
     };
     pdfStyles[this.DEFAULT_MARGINS] = {
       margin: [0, 0, 0, this.MARGIN],
@@ -105,7 +104,7 @@ export class ReportPrintService {
       margin: [0, this.MARGIN, 0, this.MARGIN],
     };
     pdfStyles[this.ReportConstants.FAIR] = {
-      color: this.chartColors.attentionBase,
+      color: ChartColors.attentionBase,
     };
     pdfStyles[this.FILTER] = {
       fontSize: 10,
@@ -114,16 +113,16 @@ export class ReportPrintService {
       margin: [0, 0, 25, 0],
     };
     pdfStyles[this.GRAY] = {
-      color: this.chartColors.grayLightOne,
+      color: ChartColors.grayLightOne,
     };
     pdfStyles[this.ReportConstants.GOOD] = {
-      color: this.chartColors.primaryBase,
+      color: ChartColors.primaryBase,
     };
     pdfStyles[this.HEADER] = {
       fontSize: 18,
       lineHeight: 1,
       margin: [0, this.MARGIN, 0, this.MARGIN],
-      color: this.chartColors.grayDarkFour,
+      color: ChartColors.grayDarkFour,
     };
     pdfStyles[this.ReportConstants.HORIZONTAL_CENTER] = {
       alignment: this.CommonGraphService.CENTER,
@@ -131,32 +130,32 @@ export class ReportPrintService {
     };
     pdfStyles['mediaText'] = {
       fontSize: 12,
-      color: this.chartColors.grayLightOne,
+      color: ChartColors.grayLightOne,
     };
     pdfStyles['metricsText'] = {
       fontSize: 12,
-      color: this.chartColors.grayLightOne,
+      color: ChartColors.grayLightOne,
     };
     pdfStyles[this.ReportConstants.NEGATIVE] = {
-      color: this.chartColors.negativeBase,
+      color: ChartColors.negativeBase,
     };
     pdfStyles[this.NO_DATA] = {
       fontSize: 12,
-      color: this.chartColors.grayDarkFour,
+      color: ChartColors.grayDarkFour,
     };
     pdfStyles[this.NUMBER] = {
       fontSize: 18,
     };
     pdfStyles[this.PAGE_HEADER] = {
-      color: this.chartColors.peopleBase,
+      color: ChartColors.peopleBase,
       fontSize: 28,
       lineHeight: 1,
     };
     pdfStyles[this.ReportConstants.POOR] = {
-      color: this.chartColors.negativeBase,
+      color: ChartColors.negativeBase,
     };
     pdfStyles[this.ReportConstants.POSITIVE] = {
-      color: this.chartColors.ctaBase,
+      color: ChartColors.ctaBase,
     };
 
     return pdfStyles;
@@ -411,7 +410,7 @@ export class ReportPrintService {
             text: this.getHeader(header.title, timeFilter),
             style: rowStyle,
             bold: true,
-            fillColor: this.chartColors.grayLightThree,
+            fillColor: ChartColors.grayLightThree,
           };
           if (index === 1) {
             headerColumn.colSpan = 2;

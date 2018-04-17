@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="{{editServices.title}}"></h3>
 </div>
@@ -50,15 +50,21 @@
           <h3 translate="addDeviceWizard.editServices.calendar"></h3>
         </div>
         <div class="cs-radio-group callServiceControls">
-          <cs-toggle-switch ng-model="editServices.enableCalService" toggle-id="calService" name="toggleExample" size="small"></cs-toggle-switch>
+          <cs-toggle-switch
+            ng-model="editServices.enableCalService"
+            toggle-id="calService"
+            name="toggleExample"
+            size="small"
+            cs-aria-label="{{::'addDeviceWizard.editServices.toggleCalendar' | translate}}">
+          </cs-toggle-switch>
           <p class="help-toggle-calendar" translate="addDeviceWizard.editServices.toggleCalendar"></p>
         </div>
       </div>
     </form>
   </div>
 </div>
-<div class="modal-footer">
 
+<div class="modal-footer">
   <button
     id="back-button"
     class="btn"

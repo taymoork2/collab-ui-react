@@ -7,7 +7,7 @@
       <span translate="common.cancel"></span>
     </button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <cs-sp-section>
       <section-title
         title-key="directoryNumberPanel.title"
@@ -15,6 +15,22 @@
         show-actions="$ctrl.showActions">
       </section-title>
       <uc-directory-number
+        ng-if="$ctrl.isHI1484"
+        show-internal-extensions="$ctrl.showExtensions"
+        esn-prefix="$ctrl.esnPrefix"
+        internal-selected="$ctrl.lineOverviewData.line"
+        internal-numbers="$ctrl.internalNumbers"
+        internal-is-warn="$ctrl.internalIsWarn"
+        internal-warn-msg="$ctrl.internalWarnMsg"
+        internal-refresh-fn="$ctrl.refreshInternalNumbers(filter)"
+        external-selected="$ctrl.lineOverviewData.line.external"
+        external-numbers="$ctrl.externalNumbers"
+        external-refresh-fn="$ctrl.refreshExternalNumbers(filter)"
+        on-change-fn="$ctrl.setDirectoryNumbers(internalNumber, externalNumber)">
+      </uc-directory-number>
+      <!-- TODO: samwi - remove below after i1484 goes GA -->
+      <uc-directory-number
+        ng-if="!$ctrl.isHI1484"
         show-internal-extensions="$ctrl.showExtensions"
         esn-prefix="$ctrl.esnPrefix"
         internal-selected="$ctrl.lineOverviewData.line.internal"
@@ -40,15 +56,13 @@
         ng-if="!$ctrl.isCloudberryPlace()"
         on-change-fn="$ctrl.setSimultaneousCalls(incomingCallMaximum)">
       </uc-simultaneous-calls>
-      <uc-line-label     
+      <uc-line-label
         line-label="$ctrl.lineOverviewData.line.label.value"
-        apply-to-all-shared-lines="$ctrl.lineOverviewData.line.label.appliesToAllSharedLines"
-        ng-hide="!$ctrl.showLineLabel"     
-        ng-if="$ctrl.lineOverviewData.line.uuid"
+        apply-to-all-shared-lines="$ctrl.applyToAllSharedLines"
+        ng-hide="!$ctrl.showLineLabel"
         show-apply-to-all-shared-lines="$ctrl.showApplyToAllSharedLines"
-        disable-check-box="$ctrl.disableCheckBox"
         on-change-fn="$ctrl.setLineLabel(lineLabel, applyToAllSharedLines)">
-      </uc-line-label>      
+      </uc-line-label>
       <uc-caller-id
         caller-id-options="$ctrl.callerIdOptions"
         custom-caller-id-name="$ctrl.lineOverviewData.callerId.customCallerIdName"
@@ -56,7 +70,9 @@
         caller-id-selected="$ctrl.lineOverviewData.callerId.externalCallerIdType"
         direct-line="$ctrl.lineOverviewData.line.external"
         on-change-fn="$ctrl.setCallerId(callerIdSelected, customCallerIdName, customCallerIdNumber, companyNumber);"
-        company-numbers="$ctrl.lineOverviewData.companyNumbers">
+        company-numbers="$ctrl.lineOverviewData.companyNumbers"
+        owner-id="$ctrl.ownerId"
+        owner-type="$ctrl.ownerType">
       </uc-caller-id>
       <uc-auto-answer
         auto-answer="$ctrl.lineOverviewData.autoAnswer"
@@ -66,6 +82,8 @@
       <uc-media-on-hold
         cr-feature-toggle feature-show="huron-moh-enable"
         ng-if="$ctrl.isUserMohEnabled"
+        panel-title="$ctrl.panelTitle"
+        panel-desc="$ctrl.panelDesc"
         line-moh="$ctrl.lineOverviewData.lineMoh"
         line-moh-options="$ctrl.lineMediaOptions"
         on-change-fn="$ctrl.setLineMedia(lineMoh)">

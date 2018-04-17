@@ -57,7 +57,7 @@ class AdminListCtrl implements ng.IComponentController {
 
 export class AdminListComponent implements ng.IComponentOptions {
   public controller = AdminListCtrl;
-  public templateUrl = 'modules/core/customers/customerSubscriptions/adminList/adminList.html';
+  public template = require('modules/core/customers/customerSubscriptions/adminList/adminList.html');
   public bindings = {
     displayLimit: '<?',
     members: '<',

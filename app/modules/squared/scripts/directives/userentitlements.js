@@ -183,7 +183,7 @@
         queryuserslist: '=',
         licenseType: '<',
       },
-      templateUrl: 'modules/squared/scripts/directives/views/userentitlements.html',
+      template: require('modules/squared/scripts/directives/views/userentitlements.html'),
     };
   }
 })();

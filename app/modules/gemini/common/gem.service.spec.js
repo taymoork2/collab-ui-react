@@ -2,18 +2,22 @@
 
 describe('Service: gemService', function () {
   var $httpBackend, $translate, gemservice, UrlConfig, Authinfo;
-  var preData = getJSONFixture('gemini/common.json');
   var customerId = 'ff808081527ccb3f0152e39ec555010c';
+  var ccaDomainId = 'ff808081527ccb3f0152e39ec555010c';
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
   beforeEach(inject(dependencies));
 
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
+
   afterEach(function () {
     $httpBackend = $translate = gemservice = UrlConfig = Authinfo = undefined;
   });
   afterAll(function () {
-    preData = customerId = undefined;
+    customerId = undefined;
   });
 
   function dependencies(_$httpBackend_, _$translate_, _gemService_, _Authinfo_, _UrlConfig_) {
@@ -43,33 +47,31 @@ describe('Service: gemService', function () {
     });
 
     it('should return json data in getSpData', function () {
-      var countries = preData.getCountries;
+      var countries = this.preData.getCountries;
       var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
       $httpBackend.expectGET(getCountriesUrl).respond(200, countries);
 
-      var servicePartners = preData.common;
-      servicePartners.content.data.body = preData.servicePartners;
+      var servicePartners = this.preData.servicePartners;
       $httpBackend.expectGET(/.*\/servicepartner.*/g).respond(200, servicePartners);
 
       gemservice.getSpData().then(function (res) {
-        expect(res.content.data.body).toBeDefined();
+        expect(res).toBeDefined();
       });
       $httpBackend.flush();
     });
 
     it('should return RemedyTicket info in getRemedyTicket', function () {
-      var countries = preData.getCountries;
+      var countries = this.preData.getCountries;
       var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
       $httpBackend.expectGET(getCountriesUrl).respond(200, countries);
 
       var type = 9;
-      var remedyTicket = preData.common;
-      remedyTicket.content.data = preData.getRemedyTicket;
-      var remedyTicketUrl = UrlConfig.getGeminiUrl() + 'remedyTicket/customers/' + customerId + '/siteId/0/type/' + type;
+      var remedyTicket = this.preData.getRemedyTicket;
+      var remedyTicketUrl = UrlConfig.getGeminiUrl() + 'customers/' + customerId + '/type/' + type + '/entities/' + ccaDomainId + '/remedy-ticket';
 
       $httpBackend.expectGET(remedyTicketUrl).respond(200, remedyTicket);
-      gemservice.getRemedyTicket(customerId, type).then(function (res) {
-        expect(res.content.data.length).toBe(2);
+      gemservice.getRemedyTicket(customerId, ccaDomainId, type).then(function (res) {
+        expect(res.length).toBe(2);
       });
       $httpBackend.flush();
     });

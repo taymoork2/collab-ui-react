@@ -14,14 +14,16 @@
 export function callFeatureFallbackDestinationDirectoryNumberFilter($translate, PhoneNumberService) {
   return filter;
 
-  function filter(number: any): string {
-    let filteredNumber = _.get(number, 'pattern', '');
-    const externalNumber = _.get(number, 'alternateNumbers.externalNumber.pattern');
+  function filter(number: any): string | void {
+    if (number) {
+      let filteredNumber = number.siteToSite ? _.get(number, 'siteToSite', '') : _.get(number, 'pattern', '');
+      const externalNumber = number.siteToSite ? _.get(number, 'external', '') : _.get(number, 'alternateNumbers.externalNumber.pattern');
 
-    if (externalNumber) {
-      filteredNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);
+      if (externalNumber) {
+        filteredNumber += ' ' + $translate.instant('common.and') + ' ' + PhoneNumberService.getNationalFormat(externalNumber);
+      }
+
+      return filteredNumber;
     }
-
-    return filteredNumber;
   }
 }

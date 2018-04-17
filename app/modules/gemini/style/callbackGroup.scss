@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/settings/settings-collab-ui';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/settings-collab-ui';
 
 .gemini-request-callbackgroup {
   .input-icon {
@@ -39,11 +39,29 @@
   }
 }
 
+.gemCbgDetails-state {
+  .history-ul {
+    padding-bottom: 48px;
+  }
+}
+
 .gemCbgDetails-notes-state,
 .gemCbgDetails-sites-state,
 .gemCbgDetails-editCountry-state {
   cs-alert-banner {
     display: none;
+  }
+
+  .edit-td-name {
+    display: none;
+  }
+
+  .side-panel-container {
+    height: calc(100vh - 90px);
+  }
+
+  .history-ul {
+    padding-bottom: 48px;
   }
 }
 
@@ -62,5 +80,40 @@
 
   .tag {
     white-space: normal;
+  }
+
+  .side-panel-country {
+    .select-options {
+      li {
+        cs-checkbox {
+          position: relative;
+          top: 5px;
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          margin-right: 0.7rem;
+
+          label.cs-checkbox {
+            &:before {
+              position: absolute;
+              top: -2px;
+              margin-right: 0;
+            }
+
+            span {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    .edit-country {
+      .tag-country {
+        a {
+          padding-top: 5px;
+        }
+      }
+    }
   }
 }

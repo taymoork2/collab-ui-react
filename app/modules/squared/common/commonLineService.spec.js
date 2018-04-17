@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Service: CommonLineService', function () {
-  var CommonLineService, TelephonyInfoService, $q, $rootScope;
+  var CommonLineService, TelephonyInfoService, NumberService, $q, $rootScope;
   var internalNumberPool = [];
   var externalNumberPool = [];
   var entitylist;
@@ -9,17 +9,18 @@ describe('Service: CommonLineService', function () {
   beforeEach(angular.mock.module('Squared'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$q_, _$rootScope_, _CommonLineService_, _TelephonyInfoService_) {
+  beforeEach(inject(function (_$q_, _$rootScope_, _CommonLineService_, _TelephonyInfoService_, _NumberService_) {
     $q = _$q_;
     $rootScope = _$rootScope_;
     CommonLineService = _CommonLineService_;
     TelephonyInfoService = _TelephonyInfoService_;
+    NumberService = _NumberService_;
 
-    internalNumberPool = getJSONFixture('huron/json/internalNumbers/internalNumbers.json');
+    internalNumberPool = getJSONFixture('huron/json/internalNumbers/numbersInternalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumbers/externalNumbers.json');
     externalNumberPool = getJSONFixture('huron/json/externalNumberPoolMap/externalNumberPool.json');
 
-    spyOn(TelephonyInfoService, 'loadInternalNumberPool').and.returnValue($q.resolve(internalNumberPool));
+    spyOn(NumberService, 'getNumberList').and.returnValue($q.resolve(internalNumberPool));
     spyOn(TelephonyInfoService, 'loadExternalNumberPool').and.returnValue($q.resolve(externalNumberPool));
     spyOn(TelephonyInfoService, 'loadExtPoolWithMapping');
   }));

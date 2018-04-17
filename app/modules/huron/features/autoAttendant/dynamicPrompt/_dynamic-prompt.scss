@@ -1,5 +1,4 @@
 .aa-dynamic-prompt {
-  overflow: hidden;
 
   .dynamic-prompt {
     border: 1px solid $gray-light-2;
@@ -32,5 +31,14 @@
 
   div.dynamic-prompt[contentEditable="true"]:hover {
     border-color: $brand-primary;
+  }
+
+  .aa-rest-url-box-error {
+    border: 1px solid $color-red-base;
+    background-color: $color-red-light;
+  }
+
+  .aa-rest-url-box-focussed {
+    background-color: $white;
   }
 }

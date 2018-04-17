@@ -3,9 +3,25 @@
     <label class= 'control-label' for="dialByMessageInput{{ schedule + index + keyIndex}}" translate="{{ :: aaDialByExtCtrl.getMessageLabel() }}"></label>
     <textarea class="aa-message-textarea" aa-key="$index" aa-keypress ng-change="aaDialByExtCtrl.saveUiModel()" ng-model="aaDialByExtCtrl.messageInput" type="text" id="dialByMessageInput{{ schedule + index + keyIndex}}" name="dialByMessageInput" placeholder="{{ :: aaDialByExtCtrl.messageInputPlaceholder }}" rows="4" cols="31" maxlength="2000" ></textarea>
   </div>
-  <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialByTextOnlyMedia" > 
+  <div ng-if="aaDialByExtCtrl.isMediaUploadToggle()" id="dialByTextOnlyMedia" >
     <aa-message-type aa-from-sub-menu={{fromSubMenu}} aa-menu-id={{menuId}} aa-key-index={{menuKeyIndex}} aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
   </div>
+  <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
+    <div class="aa-routing-prefix-text" class="aa-routing-prefix-text">
+      <input cs-input type="checkbox"
+        id="cnvt_chk_{{schedule + menuId + menuKeyIndex}}"
+        cs-input-label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}"
+        ng-model="aaDialByExtCtrl.multiSiteState"
+        ng-click="aaDialByExtCtrl.determineDialByExtensionStatus()">
+    </div>
+    <div class="aa-helptext">
+      <p class="small-12 columns aa-phonemenu-helptext" translate="autoAttendant.dialByExtensionRoutingPrefixHelpText"></p>
+    </div>
+    <div class="aa-routing-text-dropdown" ng-if="aaDialByExtCtrl.multiSiteState">
+      <label translate="autoAttendant.routingPrefix"></label>
+      <cs-select ng-model="aaDialByExtCtrl.selectedRoutingOption" options="aaDialByExtCtrl.routingPrefixOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDialByExtCtrl.selectRoutingPrefix" ng-change="aaDialByExtCtrl.saveUiModel()">
+      </cs-select>
+    </div>
   </div>
 </div>
 
@@ -50,6 +66,23 @@
     </div>
     <div class="row">
     <aa-message-type aa-index="index" aa-schedule="{{schedule}}"></aa-message-type>
+    </div>
+  </div>
+  <div class="row" ng-if="aaDialByExtCtrl.checkBoxDisplayed">
+    <div class="aa-routing-prefix-text" class="aa-routing-prefix-text">
+      <input cs-input type="checkbox"
+        id="cnvt_chk_{{schedule + index}}"
+        cs-input-label="{{:: 'autoAttendant.dialByExtensionRoutingPrefix' | translate }}"
+        ng-model="aaDialByExtCtrl.multiSiteState"
+        ng-click="aaDialByExtCtrl.determineDialByExtensionStatus()">
+    </div>
+    <div class="aa-helptext">
+      <p class="small-12 columns aa-subtext" translate="autoAttendant.dialByExtensionRoutingPrefixHelpText"></p>
+    </div>
+    <div class="aa-routing-text-dropdown" ng-if="aaDialByExtCtrl.multiSiteState">
+      <label translate="autoAttendant.routingPrefix"></label>
+      <cs-select id="routingPrefixDropdown" ng-model="aaDialByExtCtrl.selectedRoutingOption" options="aaDialByExtCtrl.routingPrefixOptions" icon="icon-chevron-down" labelfield="label" valuefield="value" placeholder="aaDialByExtCtrl.selectRoutingPrefix" ng-change="aaDialByExtCtrl.saveUiModel()">
+      </cs-select>
     </div>
   </div>
   <div class="panel">

@@ -4,10 +4,9 @@ import { ServiceDescriptorService } from 'modules/hercules/services/service-desc
 class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentController {
 
   public serviceIsEnabled;
+  public saving = false;
   private onCallServiceConnectEnabled: Function;
   private onCallServiceConnectDisabled: Function;
-
-  private saving = false;
 
   /* @ngInject */
   constructor(
@@ -51,7 +50,7 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
     this.saving = true;
 
     this.$modal.open({
-      templateUrl: 'modules/hercules/service-settings/enable-disable-call-service-connect/confirm-disable-csc-dialog.html',
+      template: require('modules/hercules/service-settings/enable-disable-call-service-connect/confirm-disable-csc-dialog.html'),
       type: 'dialog',
     })
       .result
@@ -71,11 +70,22 @@ class HsEnableDisableCallServiceConnectComponentCtrl implements ng.IComponentCon
 
   }
 
+  public openPrerequisites(): void {
+    this.$modal.open({
+      controller: 'HybridCallPrerequisitesController',
+      controllerAs: 'vm',
+      template: require('modules/services-overview/new-hybrid/prerequisites-modals/hybrid-call-prerequisites-modal/hybrid-call-prerequisites.html'),
+      resolve: {
+        callServiceConnectOnly: () => true,
+      },
+    });
+  }
+
 }
 
 export class HsEnableDisableCallServiceConnectComponent implements ng.IComponentOptions {
   public controller = HsEnableDisableCallServiceConnectComponentCtrl;
-  public templateUrl = 'modules/hercules/service-settings/enable-disable-call-service-connect/hs-enable-disable-call-service-connect.html';
+  public template = require('modules/hercules/service-settings/enable-disable-call-service-connect/hs-enable-disable-call-service-connect.html');
   public bindings = {
     serviceIsEnabled: '<',
     onCallServiceConnectEnabled: '&',

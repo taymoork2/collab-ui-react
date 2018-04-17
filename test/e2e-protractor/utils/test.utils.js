@@ -2,39 +2,27 @@
 
 /*global TIMEOUT, isSauce*/
 
+const moment = require('moment');
 var config = require('./test.config.js');
 var request = require('request');
+var getCecId = require('../../../utils/getCecId');
+var processEnvUtil = require('../../../utils/processEnvUtil')();
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var fs = require('fs');
 
 var RETRY_COUNT = 5;
+let serialId = 0;
 
-exports.getDateTimeString = function () {
-  var now = new Date();
-  var year = now.getYear() - 100;
-  var month = now.getMonth() + 1;
-  var day = now.getDate();
-  var hour = now.getHours();
-  var minute = now.getMinutes();
-  var second = now.getSeconds();
-  if (month.toString().length == 1) {
-    month = '0' + month;
-  }
-  if (day.toString().length == 1) {
-    day = '0' + day;
-  }
-  if (hour.toString().length == 1) {
-    hour = '0' + hour;
-  }
-  if (minute.toString().length == 1) {
-    minute = '0' + minute;
-  }
-  if (second.toString().length == 1) {
-    second = '0' + second;
-  }
-  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
-  return dateTime;
+exports.getUTCDateTimeString = function () {
+  // notes:
+  // - want human-readable format for easier troubleshooting
+  // - use year + month + day + hours + min + sec
+  //
+  // e.g.
+  // - March 19, 2018, 4:59:22 PM PDT => '20180319_235922'
+  // - March 19, 2018, 5:00:22 PM PDT => '20180320_000022'
+  return moment.utc().format('YYYYMMDD_HHmmss');
 };
 
 exports.resolvePath = function (filePath) {
@@ -75,15 +63,35 @@ exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
-exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+exports.getTestRunOwner = function () {
+  return (processEnvUtil.isJenkins()) ? 'jenkins' : getCecId();
 };
 
-exports.randomTestGmailwithSalt = function (salt) {
-  if (!isSauce) {
-    salt = 'LOC_' + salt;
-  }
-  return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+function mkEmailUserComponentSuffix(options) {
+  options = options || {};
+  let salt = options.salt || '';
+  salt = (!isSauce) ? `LOC_${salt}` : salt;
+
+  // private counter
+  serialId = serialId + 1;
+
+  // TODO:
+  // - as of 2018-03-19, backend onboard API does not allow for email addresses where user-component is >=64 chars long
+  // - work with backend team to remove this artificial limit
+  // - then restore using full jenkins build tag instead of just 'jenkins'
+  const emailUserComponentSuffix = `${exports.getTestRunOwner()}_${exports.getUTCDateTimeString()}_${serialId}`;
+
+  // prepend salt if present
+  return (!!salt) ? `${salt}_${emailUserComponentSuffix}` : emailUserComponentSuffix;
+}
+
+exports.randomTestGmail = function (options) {
+  const emailUserComponentSuffix = mkEmailUserComponentSuffix(options);
+  return `collabctg+${emailUserComponentSuffix}@gmail.com`;
+};
+
+exports.randomTestGmailWithSalt = function (salt) {
+  return this.randomTestGmail({ salt: salt });
 };
 
 exports.sendRequest = function (options) {
@@ -155,26 +163,11 @@ exports.wait = function (elem, timeout) {
     }, timeout || TIMEOUT, 'Waiting for element array to be displayed: ' + elem.locator());
   }
 
-  function logAndWait() {
-    log('Waiting for element to be visible: ' + elem.locator());
-    return EC.visibilityOf(elem)().thenCatch(function () {
-      // handle a possible stale element
-      log('Possible stale element: ' + elem.locator());
-      return false;
-    });
-  }
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
+  return browser.wait(EC.visibilityOf(elem), timeout || TIMEOUT, 'Waiting for element to be visible: ' + elem.locator());
 };
 
 exports.waitForPresence = function (elem, timeout) {
-  function logAndWait() {
-    log('Waiting for element to be present: ' + elem.locator());
-    return EC.presenceOf(elem)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
+  return browser.wait(EC.presenceOf(elem), timeout || TIMEOUT, 'Waiting for element to be present: ' + elem.locator());
 };
 
 exports.waitUntilEnabled = function (elem) {
@@ -287,15 +280,7 @@ exports.expectIsNotDisplayed = function (elem, timeout) {
     }, timeout || TIMEOUT, 'Waiting for element array not to be displayed: ' + elem.locator());
   }
 
-  function logAndWait() {
-    log('Waiting for element not to be visible: ' + elem.locator());
-    return EC.invisibilityOf(elem)().thenCatch(function () {
-      // Handle stale element reference
-      return EC.stalenessOf(elem)();
-    });
-  }
-
-  return browser.wait(logAndWait, timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
+  return browser.wait(EC.invisibilityOf(elem), timeout || TIMEOUT, 'Waiting for element not to be visible: ' + elem.locator());
 };
 
 exports.expectAllNotDisplayed = exports.expectIsNotDisplayed;
@@ -379,15 +364,8 @@ exports.expectTokenInput = function (elem, value) {
 };
 
 exports.click = function (elem, maxRetry) {
-  function logAndWait() {
-    log('Waiting for element to be clickable: ' + elem.locator());
-    return EC.elementToBeClickable(elem)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
   return this.wait(elem).then(function () {
-    return browser.wait(logAndWait, TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
+    return browser.wait(EC.elementToBeClickable(elem), TIMEOUT, 'Waiting for element to be clickable: ' + elem.locator());
   }).then(function () {
     if (typeof maxRetry === 'undefined') {
       maxRetry = RETRY_COUNT;
@@ -595,6 +573,16 @@ exports.expectInputCheckbox = function (elem, value) {
   });
 };
 
+// notes:
+// - this is a more primitive implementation than the above methods
+// - a single 'input[type="checkbox"]' element is expected as the first arg
+// - TODO: investigate whether the above methods can be removed and if this method can replace them
+exports.expectCheckboxIsChecked = function (inputElem, isChecked) {
+  return this.wait(inputElem).then(function () {
+    return expect(inputElem.isSelected()).toBe(isChecked);
+  });
+};
+
 exports.expectRadioSelected = function (elem) {
   return this.wait(elem).then(function () {
     return browser.wait(function () {
@@ -625,14 +613,6 @@ exports.findDirectoryNumber = function (message, lineNumber) {
 exports.search = function (query, _searchCount) {
   var searchCount = _searchCount || 1;
 
-  function logAndWait() {
-    log('Waiting for ' + searchCount + ' search result');
-    return EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount)().thenCatch(function () {
-      // handle a possible stale element
-      return false;
-    });
-  }
-
   exports.click(exports.searchbox);
   exports.clear(exports.searchField);
   if (query) {
@@ -642,7 +622,7 @@ exports.search = function (query, _searchCount) {
   }
 
   if (searchCount > -1) {
-    browser.wait(logAndWait, TIMEOUT, 'Waiting for ' + searchCount + ' search result');
+    browser.wait(EC.textToBePresentInElement(element(by.css('.searchfilter li:first-child .count')), searchCount), TIMEOUT, 'Waiting for ' + searchCount + ' search result');
   }
 
   if (query) {
@@ -849,4 +829,9 @@ exports.waitForModal = function () {
 exports.selectDropdown = function (dropdown, option) {
   this.click(element(by.css(dropdown + ' span.select-toggle')));
   this.click(element(by.cssContainingText(dropdown + ' .select-options a', option)));
+};
+
+exports.selectLastDropdown = function (dropdown, option) {
+  this.click(element.all(by.css(dropdown + ' span.select-toggle')).last());
+  this.click(element.all(by.cssContainingText(dropdown + ' .select-options a', option)).last());
 };

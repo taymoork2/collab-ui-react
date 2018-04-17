@@ -7,7 +7,7 @@
       if (bytes === 0) {
         return '0';
       }
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+      if (_.isNaN(parseFloat(bytes)) || !_.isFinite(bytes)) {
         return '';
       }
       if (typeof precision === 'undefined') {

@@ -7,8 +7,7 @@ export * from './settings-bulk-enable-vm.service';
 
 export default angular
   .module('call.settings.bulk-enable-vm', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     featureToggleModule,
     require('modules/core/scripts/services/authinfo'),

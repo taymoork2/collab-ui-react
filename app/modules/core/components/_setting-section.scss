@@ -1,12 +1,15 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
 
 // Most CSS is reusing the toolkit forms styles
 setting-section {
   display: block;
 }
 
-setting-section + setting-section {
+setting-section + setting-section,
+.setting-section + setting-section,
+setting-section + .setting-section,
+.setting-section + .setting-section {
   border-top: 1px solid $gray-light-2;
 }
 
@@ -19,4 +22,12 @@ a.as-arrow {
   line-height: 2.25rem;
   width: auto;
   color: $gray-dark-1;
+}
+
+.subheader {
+  float: left;
+}
+
+.badge--premium {
+  margin: auto 20px 20px !important;
 }

@@ -6,7 +6,7 @@
     .controller('LinesListCtrl', LinesListCtrl);
 
   /* @ngInject */
-  function LinesListCtrl($scope, $templateCache, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
+  function LinesListCtrl($scope, $timeout, $translate, LineListService, Log, Config, Notification, $state, FeatureToggleService, Authinfo) {
     var vm = this;
 
     vm.currentDataPosition = 0;
@@ -15,8 +15,6 @@
     vm.timeoutVal = 1000;
     vm.timer = 0;
     vm.activeFilter = 'all';
-    vm.userPreviewActive = false;
-    vm.userDetailsActive = false;
     vm.load = false;
     vm.sortColumn = sortColumn;
     vm.getLineList = getLineList;
@@ -24,10 +22,26 @@
     vm.isBYOPSTNCarrier = isBYOPSTNCarrier;
     vm.exportCsv = exportCsv;
 
-    $scope.gridData = [];
-    $scope.canShowActionsMenu = canShowActionsMenu;
-    $scope.canShowExternalNumberDelete = canShowExternalNumberDelete;
-    $scope.deleteExternalNumber = deleteExternalNumber;
+    vm.canShowActionsMenu = canShowActionsMenu;
+    vm.canShowExternalNumberDelete = canShowExternalNumberDelete;
+    vm.deleteExternalNumber = deleteExternalNumber;
+    vm.clearRows = clearRows;
+    vm.initToggles = initToggles;
+
+    function initToggles() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          vm.ishI1484 = supported;
+          if (!supported) {
+            columnDefs.splice(0, 1);
+            columnDefs.splice(2, 1);
+          } else {
+            columnDefs.splice(1, 1);
+          }
+
+          initGridOptions();
+        });
+    }
 
     vm.sort = {
       by: 'userid',
@@ -43,8 +57,10 @@
       filterValue: 'all',
     };
 
-    vm.isCallTrial = Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc') || Authinfo.getLicenseIsTrial('SHARED_DEVICES', false);
-
+    vm.isCallTrial = (_.isUndefined(Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) ||
+                       Authinfo.getLicenseIsTrial('COMMUNICATION', 'ciscouc')) &&
+                       (_.isUndefined(Authinfo.getLicenseIsTrial('SHARED_DEVICES', false)) ||
+                       Authinfo.getLicenseIsTrial('SHARED_DEVICES', false));
     // Defines Grid Filters "Unassigned" and "Assigned"
     vm.filters = [{
       name: $translate.instant('linesPage.unassignedLines'),
@@ -62,6 +78,7 @@
       if (vm.activeFilter !== filter) {
         vm.activeFilter = filter;
         getLineList();
+        vm.currentDataPosition = 0;
       }
     };
 
@@ -79,6 +96,7 @@
         if (str.length >= 3 || str === '') {
           vm.searchStr = str;
           getLineList();
+          vm.currentDataPosition = 0;
         }
       }, vm.timeoutVal);
     };
@@ -124,26 +142,34 @@
       vm.currentLine = null;
 
       // Get "unassigned" internal and external lines
-      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, $scope.gridData)
+      LineListService.getLineList(startIndex, Config.usersperpage, vm.sort.by, vm.sort.order, vm.searchStr, vm.activeFilter, vm.gridOptions.data, vm.ishI1484)
         .then(function (response) {
           $timeout(function () {
             vm.load = true;
           });
 
           if (startIndex === 0) {
-            $scope.gridData = response;
+            vm.gridOptions.data = response;
           } else {
-            $scope.gridData = $scope.gridData.concat(response);
+            vm.gridOptions.data = vm.gridOptions.data.concat(response);
           }
 
           //function for sorting based on which piece of data the row has
-          _.forEach($scope.gridData, function (row) {
+          _.forEach(vm.gridOptions.data, function (row) {
             row.displayField = function () {
-              return (this.userId ? this.userId : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
+              var displayName = formatUserName(this.firstName, this.lastName, this.userId);
+              return (!_.isEmpty(displayName) ? displayName : $translate.instant('linesPage.unassignedLines')) + (this.status ? ' - ' + this.status : '');
             };
           });
           vm.gridRefresh = false;
           vm.vendor = LineListService.getVendor();
+
+          if (response.length === 0) {
+            //stop firing any more infinite scroll events
+            $scope.gridApi.infiniteScroll.dataLoaded(false, false);
+          } else {
+            $scope.gridApi.infiniteScroll.dataLoaded();
+          }
         })
         .catch(function (response) {
           Log.debug('Query for line associations failed.');
@@ -152,67 +178,91 @@
         });
     } // End of function getLineList
 
-    var gridRowHeight = 44;
+    function formatUserName(first, last, userId) {
+      var userName = userId;
+      var firstName = first || '';
+      var lastName = last || '';
+      if ((firstName.length > 0) || (lastName.length > 0)) {
+        userName = _.trim(firstName + ' ' + lastName);
+      }
+      return userName;
+    }
 
-    vm.gridOptions = {
-      data: 'gridData',
-      multiSelect: false,
-      showFilter: false,
-      rowHeight: gridRowHeight,
-      enableRowSelection: false,
-      enableRowHeaderSelection: false,
-      modifierKeysToMultiSelect: false,
-      useExternalSorting: false,
-      enableColumnMenus: false,
-      noUnselect: true,
-      onRegisterApi: function (gridApi) {
-        $scope.gridApi = gridApi;
-        gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if (vm.load) {
-            vm.currentDataPosition++;
-            vm.load = false;
-            getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
-            $scope.gridApi.infiniteScroll.dataLoaded();
-          }
-        });
-        gridApi.core.on.sortChanged($scope, sortColumn);
+    function clearRows() {
+      $scope.gridApi.selection.clearSelectedRows();
+    }
+
+    var columnDefs = [{
+      field: 'siteToSiteNumber',
+      displayName: $translate.instant('linesPage.internalNumberHeader'),
+      width: '20%',
+      cellClass: 'internalNumberColumn',
+      headerCellClass: 'internalNumberHeader',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.siteToSiteNumber"></cs-grid-cell>',
+    }, {
+      field: 'internalNumber',
+      displayName: $translate.instant('linesPage.internalNumberHeader'),
+      width: '20%',
+      cellClass: 'internalNumberColumn',
+      headerCellClass: 'internalNumberHeader',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.internalNumber"></cs-grid-cell>',
+    }, {
+      field: 'externalNumber',
+      displayName: $translate.instant('linesPage.phoneNumbers'),
+      cellClass: 'externalNumberColumn',
+      headerCellClass: 'externalNumberHeader',
+      width: '20%',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.externalNumber"></cs-grid-cell>',
+    }, {
+      field: 'locationName',
+      displayName: $translate.instant('usersPreview.location'),
+      cellClass: 'anyColumn',
+      headerCellClass: 'anyHeader',
+      width: '*',
+      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.clearRows()" cell-value="row.entity.locationName"></cs-grid-cell>',
+    }, {
+      field: 'displayField()',
+      displayName: $translate.instant('linesPage.assignedTo'),
+      cellTemplate: require('./templates/_tooltipTpl.html'),
+      sort: {
+        direction: 'asc',
+        priority: 0,
       },
-      columnDefs: [{
-        field: 'internalNumber',
-        displayName: $translate.instant('linesPage.internalNumberHeader'),
-        width: '20%',
-        cellClass: 'internalNumberColumn',
-        headerCellClass: 'internalNumberHeader',
-        sortable: true,
-      }, {
-        field: 'externalNumber',
-        displayName: $translate.instant('linesPage.phoneNumbers'),
-        sortable: true,
-        cellClass: 'externalNumberColumn',
-        headerCellClass: 'externalNumberHeader',
-        width: '20%',
-      }, {
-        field: 'displayField()',
-        displayName: $translate.instant('linesPage.assignedTo'),
-        cellTemplate: getTemplate('_tooltipTpl'),
-        sortable: true,
-        sort: {
-          direction: 'asc',
-          priority: 0,
+      sortCellFiltered: true,
+      cellClass: 'assignedToColumn',
+      headerCellClass: 'assignedToHeader',
+    }, {
+      field: 'actions',
+      displayName: $translate.instant('linesPage.actionHeader'),
+      cellTemplate: require('./templates/_actionsTpl.html'),
+      enableSorting: false,
+      width: '20%',
+      cellClass: 'actionsColumn',
+      headerCellClass: 'actionsHeader',
+    }];
+
+    function initGridOptions() {
+      vm.gridOptions = {
+        data: [],
+        appScopeProvider: vm,
+        showFilter: false,
+        rowHeight: 44,
+        useExternalSorting: false,
+        noUnselect: true,
+        onRegisterApi: function (gridApi) {
+          $scope.gridApi = gridApi;
+          gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if (vm.load) {
+              vm.currentDataPosition++;
+              vm.load = false;
+              getLineList((vm.currentDataPosition * Config.usersperpage) + 1);
+            }
+          });
+          gridApi.core.on.sortChanged($scope, sortColumn);
         },
-        sortCellFiltered: true,
-        cellClass: 'assignedToColumn',
-        headerCellClass: 'assignedToHeader',
-      }, {
-        field: 'actions',
-        displayName: $translate.instant('linesPage.actionHeader'),
-        enableSorting: false,
-        cellTemplate: getTemplate('_actionsTpl'),
-        width: '20%',
-        cellClass: 'actionsColumn',
-        headerCellClass: 'actionsHeader',
-      }],
-    };
+        columnDefs: columnDefs,
+      };
+    }
 
     function sortColumn(scope, sortColumns) {
       if (_.isUndefined(_.get(sortColumns, '[0]'))) {
@@ -231,17 +281,8 @@
       }
     }
 
-    function getTemplate(name) {
-      return $templateCache.get('modules/huron/lines/templates/' + name + '.html');
-    }
-
-    FeatureToggleService.supports(FeatureToggleService.features.huronPstn)
-      .then(function (supported) {
-        vm.hPstn = supported;
-      });
-
     function showProviderDetails() {
-      var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
+      var state = 'pstnWizard';
       return $state.go(state, {
         customerId: Authinfo.getOrgId(),
         customerName: Authinfo.getOrgName(),
@@ -252,7 +293,6 @@
       });
     }
 
-
-    getLineList();
+    initToggles().finally(getLineList);
   }
 })();

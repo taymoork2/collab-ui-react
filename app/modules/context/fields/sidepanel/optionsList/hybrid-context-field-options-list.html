@@ -1,0 +1,50 @@
+<!-- side panel options-list body -->
+<cs-sp-container>
+
+  <cs-sp-section>
+
+    <div class="section-content">
+
+      <!-- Options list -->
+      <!-- the class "options-feature" is used to designate the _single_ div container for the
+          options feature. There is currently no specific styling for this class.
+        -->
+
+      <!-- if no options -->
+      <div ng-if="$ctrl.getOptionsCount() === 0" class="feature options-feature">
+        <span class="feature-name" translate="context.dictionary.fieldPage.optionsLabel"></span>
+        <span class="feature-details" translate="common.none"></span>
+      </div>
+
+      <!-- if there are options -->
+      <div ng-if="$ctrl.getOptionsCount() > 0" class="options-feature">
+        <!-- options label with count of options -->
+        <div class="section-title-row">
+          <span class="section-name"
+            translate="context.dictionary.fieldPage.optionsLabelWithCount"
+            translate-values="{ count: $ctrl.getOptionsCount() }"></span>
+        </div>
+        <!-- options blurb -->
+        <span class="feature-name" translate="context.dictionary.fieldPage.optionsDetailLabel"></span>
+
+        <!-- list of options -->
+        <ul class="feature-details option-list">
+          <li ng-repeat="option in $ctrl.getOptions()">
+            <span
+              ng-class="$ctrl.getClassesForOption(option)"
+              tabindex="0"
+              tooltip="{{$ctrl.getToolTip(option)}}"
+              tooltip-placement="bottom"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{$ctrl.getToolTip(option)}}">
+              {{option}}
+            </span>
+            <span ng-if="$ctrl.isDefault(option)" class="badge" translate="common.default"></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </cs-sp-section>
+
+</cs-sp-container>

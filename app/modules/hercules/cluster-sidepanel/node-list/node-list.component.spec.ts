@@ -1,4 +1,3 @@
-import { IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { NodeListComponentCtrl } from 'modules/hercules/cluster-sidepanel/node-list/node-list.component';
 
 describe('Component: hybridServicesNodeList', () => {
@@ -28,10 +27,35 @@ describe('Component: hybridServicesNodeList', () => {
 
   describe('buildSidepanelConnectorList()', function () {
     it('should format a cluster object so that it is suitable for the sidepanel', function () {
-      const incomingCluster: IExtendedClusterFusion = {
+      const incomingCluster = {
         url: '',
         id: '1107700c-2eeb-11e6-8ebd-005056b10bf7',
         name: 'fms-quadruple.rd.cisco.com',
+        extendedProperties: {
+          isEmpty: false,
+          servicesStatuses: [{
+            serviceId: 'squared-fusion-mgmt',
+            state: {
+              name: 'operational',
+              cssClass: 'success',
+            },
+            total: 4,
+          }, {
+            serviceId: 'squared-fusion-uc',
+            state: {
+              name: 'operational',
+              cssClass: 'success',
+            },
+            total: 4,
+          }, {
+            serviceId: 'squared-fusion-cal',
+            state: {
+              name: 'operational',
+              cssClass: 'success',
+            },
+            total: 4,
+          }],
+        },
         upgradeSchedule: {
           scheduleDays: ['wednesday'],
           scheduleTime: '05:00',
@@ -58,6 +82,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_cal',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple03.rd.cisco.com',
@@ -73,6 +107,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_cal',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple02.rd.cisco.com',
@@ -88,6 +132,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_ucmc',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple04.rd.cisco.com',
@@ -103,6 +157,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_mgmt',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple02.rd.cisco.com',
@@ -118,6 +182,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_cal',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple04.rd.cisco.com',
@@ -133,6 +207,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_mgmt',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple01.rd.cisco.com',
@@ -148,6 +232,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_mgmt',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple03.rd.cisco.com',
@@ -163,6 +257,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_ucmc',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple01.rd.cisco.com',
@@ -178,6 +282,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_cal',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple01.rd.cisco.com',
@@ -193,6 +307,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_ucmc',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple03.rd.cisco.com',
@@ -208,6 +332,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_ucmc',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple02.rd.cisco.com',
@@ -223,6 +357,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'c_mgmt',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple04.rd.cisco.com',
@@ -257,34 +401,6 @@ describe('Component: hybridServicesNodeList', () => {
           packageUrl: '',
         }],
         targetType: 'c_mgmt',
-        servicesStatuses: [{
-          serviceId: 'squared-fusion-mgmt',
-          state: {
-            name: 'running',
-            severity: 0,
-            label: 'ok',
-            cssClass: 'success',
-          },
-          total: 4,
-        }, {
-          serviceId: 'squared-fusion-uc',
-          state: {
-            name: 'running',
-            severity: 0,
-            label: 'ok',
-            cssClass: 'success',
-          },
-          total: 4,
-        }, {
-          serviceId: 'squared-fusion-cal',
-          state: {
-            name: 'running',
-            severity: 0,
-            label: 'ok',
-            cssClass: 'success',
-          },
-          total: 4,
-        }],
       };
       HybridServicesClusterService.get.and.returnValue($q.resolve(incomingCluster));
       initController({
@@ -303,10 +419,14 @@ describe('Component: hybridServicesNodeList', () => {
     });
 
     it('should format a cluster object with hds_app connector suitable for the sidepanel', function () {
-      const incomingCluster: IExtendedClusterFusion = {
+      const incomingCluster = {
         url: '',
         id: '1107700c-2eeb-11e6-8ebd-005056b10bf7',
         name: 'fms-quadruple.rd.cisco.com',
+        extendedProperties: {
+          isEmpty: false,
+          servicesStatuses: [],
+        },
         upgradeSchedule: {
           scheduleDays: ['wednesday'],
           scheduleTime: '05:00',
@@ -333,6 +453,16 @@ describe('Component: hybridServicesNodeList', () => {
           clusterId: '1',
           clusterUrl: '1',
           connectorType: 'hds_app',
+          extendedProperties: {
+            alarms: 'none',
+            alarmsBadgeCss: '',
+            state: {
+              name: 'running',
+              label: 'ok',
+              cssClass: 'success',
+              severity: 0,
+            },
+          },
           upgradeState: 'upgraded',
           state: 'running',
           hostname: 'fms-quadruple01.rd.cisco.com',
@@ -346,7 +476,6 @@ describe('Component: hybridServicesNodeList', () => {
         releaseChannel: 'GA',
         provisioning: [],
         targetType: 'hds_app',
-        servicesStatuses: [],
       };
       HybridServicesClusterService.get.and.returnValue($q.resolve(incomingCluster));
       initController({

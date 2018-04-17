@@ -1,0 +1,50 @@
+<div ng-form="$ctrl.licenseDistributionForm">
+  <div class="distribute-licenses-heading" ng-hide="$ctrl.isHideDescription">
+    <h4 translate="webexSiteManagement.redistributeLicensesDesc"></h4>
+    <p translate="webexSiteManagement.redistributeLicensesDesc2"></p>
+  </div>
+  <div class="license_distrib_validate">
+    <div>
+      <span class="icon icon-lg" ng-class="{'icon-close': $ctrl.hasTotalLicensesRemaining(), 'icon-check': !$ctrl.hasTotalLicensesRemaining()}"></span>
+      <span translate="webexSiteManagement.redistributeLicensesValidMessages.allLicensesAssigned"></span>
+    </div>
+    <div>
+      <span class="icon icon-lg" ng-class="{'icon-close': $ctrl.hasSitesWithoutLicensesAssigned(), 'icon-check': !$ctrl.hasSitesWithoutLicensesAssigned()}"></span>
+      <span translate="webexSiteManagement.redistributeLicensesValidMessages.allSitesHaveLicense"></span>
+    </div>
+  </div>
+  <div class="license_distrib__row--centerTypes">
+    <div ng-repeat="center in $ctrl.centerDetails track by $index">
+      <section>
+        <p translate="firstTimeWizard.centerTypeLicensesRemaining" translate-values="{centerType: $ctrl.getCenterTypeInits(center.serviceName)}"></p>
+        <h3 ng-class="{'error': ($ctrl.getLicensesRemaining(center.serviceName) < 0)}">{{$ctrl.getLicensesRemaining(center.serviceName)}}</h3>
+      </section>
+    </div>
+  </div>
+  <div ng-repeat="site in $ctrl.distributedLicensesArray" class="license_distrib__row--site">
+    <cs-card>
+      <article>
+        <h4>{{site[0].siteUrl}}.webex.com</h4>
+        <div ng-repeat="center in site" class="license_distrib__row--siteCenters">
+          <p translate="firstTimeWizard.centerTypeLicenses" translate-values="{centerType: $ctrl.getCenterTypeString(center.centerType)}"></p>
+          <input cs-input class="align-license-count" step="1"
+            required ng-min="0"
+            type="number"
+            name="siteLicenseCount{{$parent.$index}}_{{$index}}"
+            ng-model-options="{ allowInvalid: 'true' }"
+            id="site-license-count-{{site.siteUrl}}-{{$index}}" cs-input-size="medium-12"
+            placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}"
+            ng-change="$ctrl.validateData($ctrl.steps.SITES_LICENSES)"
+            cs-input-messages="$ctrl.licenseDistributionErrors"
+            ng-model="center.quantity">
+        </div>
+        <div class="error" ng-if="$ctrl.licenseDistributionForm.$dirty">
+          <div class="message"
+            ng-if="$ctrl.getLicensesForSite(site[0].siteUrl) === 0"
+            translate="firstTimeWizard.meetingSettingsError.totalSiteLicenseNumber"
+            translate-values="{siteUrl: site[0].siteUrl}"></div>
+        </div>
+      </article>
+    </cs-card>
+  </div>
+</div>

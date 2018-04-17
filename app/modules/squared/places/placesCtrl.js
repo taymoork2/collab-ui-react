@@ -8,7 +8,7 @@ require('../devices/_devices.scss');
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $templateCache, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService, CloudConnectorService) {
         var vm = this;
 
         vm.data = [];
@@ -41,27 +41,37 @@ require('../devices/_devices.scss');
           });
 
           vm.gridOptions.data = vm.filteredView.getResult();
+
+          if ($state.params.preSelectedPlaceId) {
+            CsdmDataModelService.reloadPlace($state.params.preSelectedPlaceId).then(function (place) {
+              vm.showPlaceDetails(place);
+            });
+          }
         }
 
         function fetchAsyncSettings() {
-          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
-            vm.showATA = result;
-          });
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
-          var placeCalendarPromise = FeatureToggleService.csdmPlaceCalendarGetStatus().then(function (feature) {
-            vm.csdmHybridCalendarFeature = feature;
-          });
           var anyCalendarEnabledPromise = ServiceDescriptorService.getServices().then(function (services) {
-            vm.hybridCalendarEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
+            vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
             }).some().value();
             vm.hybridCallEnabledOnOrg = _.chain(ServiceDescriptorService.filterEnabledServices(services)).filter(function (service) {
               return service.id === 'squared-fusion-uc';
             }).some().value();
           });
-          $q.all([ataPromise, hybridPromise, placeCalendarPromise, anyCalendarEnabledPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          var office365Promise = FeatureToggleService.atlasOffice365SupportGetStatus().then(function (feature) {
+            if (feature) {
+              return CloudConnectorService.getService('squared-fusion-o365').then(function (service) {
+                vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
+              });
+            }
+          });
+          var googleCalendarPromise = CloudConnectorService.getService('squared-fusion-gcal').then(function (service) {
+            vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
+          });
+          $q.all([hybridPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -96,8 +106,12 @@ require('../devices/_devices.scss');
             }).length > 0;
         };
 
-        vm.numDevices = function (place) {
-          return _.size(place.devices);
+        vm.deviceTypes = function (devices) {
+          return _.chain(devices)
+            .values()
+            .map('product')
+            .join(', ')
+            .value();
         };
 
         vm.showPlaceDetails = function (place) {
@@ -107,18 +121,18 @@ require('../devices/_devices.scss');
           });
         };
 
+        vm.selectRow = function (grid, row) {
+          GridCellService.selectRow(grid, row);
+          vm.showPlaceDetails(row.entity);
+        };
+
         vm.gridOptions = {
+          appScopeProvider: vm,
           rowHeight: 45,
-          onRegisterApi: function (gridApi) {
-            vm.gridApi = gridApi;
-            vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-              vm.showPlaceDetails(row.entity);
-            });
-          },
           columnDefs: [{
             field: 'photos',
             displayName: '',
-            cellTemplate: getTemplate('_imageTpl'),
+            cellTemplate: require('./templates/image.tpl.html'),
             sortable: false,
             width: 70,
           }, {
@@ -130,20 +144,17 @@ require('../devices/_devices.scss');
               priority: 1,
             },
             sortCellFiltered: true,
-          }, {
-            field: 'readableType',
-            displayName: $translate.instant('placesPage.typeHeader'),
-            sortable: true,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
-            cellTemplate: getTemplate('_devicesTpl'),
             sortable: true,
-            sortingAlgorithm: sortNoDevicesFn,
+            sortingAlgorithm: sortDeviceTypes,
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
-            cellTemplate: getTemplate('_actionsTpl'),
+            cellTemplate: require('./templates/actions.tpl.html'),
             sortable: false,
           }],
         };
@@ -152,10 +163,8 @@ require('../devices/_devices.scss');
           var wizardState = {
             data: {
               function: 'addPlace',
-              showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
-              csdmHybridCalendarFeature: vm.csdmHybridCalendarFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
               hybridCallEnabledOnOrg: vm.hybridCallEnabledOnOrg,
               title: 'addDeviceWizard.newSharedSpace.title',
@@ -189,7 +198,7 @@ require('../devices/_devices.scss');
                   sparkCall: 'addDeviceFlow.addLines',
                   sparkCallConnect: 'addDeviceFlow.callConnectOptions',
                   sparkOnly: 'addDeviceFlow.showActivationCode',
-                  sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+                  calendar: 'addDeviceFlow.editCalendarService',
                 },
               },
               'addDeviceFlow.callConnectOptions': {
@@ -216,15 +225,18 @@ require('../devices/_devices.scss');
           });
         };
 
-        vm.deletePlace = function ($event, place) {
-          $event.stopPropagation();
-          RemPlaceModal
-            .open(place);
+        vm.keyboardDeletePlace = function ($event, place) {
+          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+            vm.deletePlace($event, place);
+          } else {
+            $event.stopPropagation();
+          }
         };
 
-        function getTemplate(name) {
-          return $templateCache.get('modules/squared/places/templates/' + name + '.html');
-        }
+        vm.deletePlace = function ($event, place) {
+          $event.stopPropagation();
+          RemPlaceModal.open(place);
+        };
 
         function sortFn(a, b) {
           if (a && a.localeCompare) {
@@ -233,8 +245,14 @@ require('../devices/_devices.scss');
           return 1;
         }
 
-        function sortNoDevicesFn(a, b) {
-          return _.size(a) - _.size(b);
+        function sortDeviceTypes(a, b) {
+          if (a) {
+            var typesA = vm.deviceTypes(a);
+            if (typesA && typesA.localeCompare) {
+              return typesA.localeCompare(vm.deviceTypes(b));
+            }
+          }
+          return -1;
         }
 
         init();

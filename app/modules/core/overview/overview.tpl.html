@@ -2,28 +2,32 @@
   <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
     <cs-card-layout class="three-fourths"  block-view="true">
-      <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
+      <cs-card class="menu-card overview-card cs-card--medium" ng-class="card.cardClass" ng-repeat="card in overview.cards">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
         <article ng-include="card.template"></article>
       </cs-card>
     </cs-card-layout>
     <cs-card-layout block-view="true" class="fourth">
-      <cs-card class="full side-info-card">
+      <cs-card class="cs-card--full side-info-card">
         <article>
           <header>
             <div translate="homePage.notifications"></div>
           </header>
-
-          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length === 0">
+          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length === 0 && !overview.showLearnMoreNotification">
             <div class="notification-style">
               <span translate="overview.nonotifications"></span>
             </div>
-          </section>
-          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0">
-            <div class="notification-style" ng-if="overview.showLearnMoreNotification && overview.isEnterpriseCustomer()">
+            </section>
+
+          <section class="monitoring-panel small-3 medium-12 column" ng-if="overview.notifications.length > 0 || overview.showLearnMoreNotification">
+            <div class="notification-style no-close" ng-if="overview.showLearnMoreNotification">
               <span class="notification-spacing">
                 <span class="badge primary" translate="common.upgrade"></span>
                 <span class="text" translate="homePage.proPackNotification"></span>
-                <div>
+                <div class="text-right">
                   <learn-more location="overview_notification"></learn-more>
                 </div>
               </span>
@@ -32,13 +36,19 @@
               <span class="notification-spacing">
                 <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
                 <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
-                <div>
+                <span ng-if="notification.extendedText" class="text" translate="{{notification.extendedText}}"></span>
+                <div class="text-right">
                   <a href ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>
               </span>
-              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)"></button>
+              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{::'common.close' | translate}}"></button>
             </div>
           </section>
+          <footer>
+            <div class="card-footer" cr-feature-toggle feature-show="atlas-csv-import-task-manager">
+              <button type="button" class="btn btn--primary" ng-click="overview.showUserTaskManagerModal()" translate="userTaskManagerModal.viewAllTasks"></button>
+            </div>
+          </footer>
         </article>
       </cs-card>
     </cs-card-layout>

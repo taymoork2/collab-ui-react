@@ -1,0 +1,74 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
+@import 'cva-config-overview';
+@import 'cva-dialog-integration';
+@import 'cva-access-token';
+@import 'eva-overview';
+@import 'eva-email';
+@import 'va-summary';
+@import 'va-avatar';
+@import 'eva-default-space';
+@import 'eva-configuration-steps';
+
+.va-button {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  color: $gray-dark-2;
+}
+
+.input-label {
+  @include vr-spacing(mt, 2.3125);
+  font-family: $brand-font-regular;
+  font-size: 20px;
+  color: $gray-dark-2;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.ct-input-hint {
+  @include vr-spacing(p, 1);
+  @include vr-spacing(mt, 0.2);
+
+  border: 0;
+  width: 100%;
+  text-align: center;
+  color: $gray;
+  font-style: italic;
+}
+
+.va-card {
+  @include vr-spacing(mt, 3);
+
+  display: flex;
+  flex-flow: column;
+}
+
+.va-card-center {
+  justify-content: center;
+  width: 100% !important;
+}
+
+.va-box {
+  border: 1px solid $gray-light-2;
+  border-radius: 3px;
+
+  .submit {
+    @include vr-spacing(m, 0);
+  }
+}
+
+.ct-name {
+  .message {
+    margin-left: 0;
+    max-width: inherit;
+  }
+}
+
+
+.ct-input-error {
+  .icon {
+    vertical-align: -30%;
+   }
+}

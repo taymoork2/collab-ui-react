@@ -3,14 +3,14 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="addDeviceWizard.confirmRoomDeviceOnly.roomDeviceOnly"></h3>
 </div>
 
 <!-- body -->
-<div
-  class="modal-body">
+<div class="modal-body">
   <p>
     <span translate="addDeviceWizard.confirmRoomDeviceOnly.noSparkCallWarning"></span>
   </p>
@@ -21,14 +21,12 @@
   class="modal-footer">
   <button
     class="btn"
-    ng-click="$dismiss()">
-    <span
-      translate="common.cancel">
-    </span>
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
   <button
     class="btn btn--primary"
-    sq-click-promise="confirmRoomDeviceOnly.next()" >
-    <span translate="common.ok"></span>
+    sq-click-promise="confirmRoomDeviceOnly.next()"
+    translate="common.ok">
   </button>
 </div>

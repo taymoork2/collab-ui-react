@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { AccessibilityService } from 'modules/core/accessibility';
 
 class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public generalSectionTexts = {
@@ -17,12 +18,15 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
   public hasCalsvcOneButtonToPushIntervalFeatureToggle = false;
   public oneButtonToPushIntervalOptions = [0, 1, 5, 10, 15];
   public oneButtonToPushIntervalMinutes: number | null = null;
+  public setFocus: boolean;
 
   private serviceId: HybridServiceId;
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
+    private AccessibilityService: AccessibilityService,
     private FeatureToggleService,
     private MailValidatorService,
     private Notification: Notification,
@@ -34,9 +38,15 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
     if (serviceId && serviceId.currentValue) {
       this.init(serviceId.currentValue);
     }
+    if (this.setFocus) {
+      this.AccessibilityService.setFocus(this.$element, 'tags-input input');
+    }
   }
 
-  private init(serviceId) {
+  private init(serviceId: HybridServiceId) {
+    if (serviceId === 'squared-fusion-o365') {
+      serviceId = 'squared-fusion-cal';
+    }
     this.serviceId = serviceId;
     this.ServiceDescriptorService.getEmailSubscribers(serviceId)
       .then((emailSubscribers: string[]) => {
@@ -112,8 +122,9 @@ class EmailNotificationsSectionCtrl implements ng.IComponentController {
 
 export class EmailNotificationsSectionComponent implements ng.IComponentOptions {
   public controller = EmailNotificationsSectionCtrl;
-  public templateUrl = 'modules/hercules/email-notifications-section/email-notifications-section.html';
+  public template = require('modules/hercules/email-notifications-section/email-notifications-section.html');
   public bindings = {
     serviceId: '<',
+    setFocus: '<?',
   };
 }

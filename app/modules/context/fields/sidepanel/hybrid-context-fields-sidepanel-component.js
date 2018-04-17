@@ -1,13 +1,18 @@
 require('./_fields-sidepanel.scss');
 
+var DataTypeDefinition = require('../dataTypeDefinition');
+var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
+
 (function () {
   'use strict';
 
   angular.module('Context')
     .component('contextFieldsSidepanel', {
       controller: ContextFieldsSidepanelCtrl,
-      templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
+      template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html'),
       bindings: {
+        adminAuthorizationStatus: '<',
         field: '<',
         process: '<',
         callback: '<',
@@ -17,6 +22,7 @@ require('./_fields-sidepanel.scss');
   /* @ngInject */
   function ContextFieldsSidepanelCtrl(Analytics, ContextFieldsService, ContextFieldsetsService, Notification, $filter, ModalService, $state, $translate) {
     var vm = this;
+    vm.dateFormat = 'LL';
     vm.associatedFieldsets = [];
     vm.fetchFailure = false;
     vm.fetchInProgress = false;
@@ -74,11 +80,26 @@ require('./_fields-sidepanel.scss');
     };
 
     vm.isEditable = function () {
-      return !vm.publiclyAccessible;
+      return (!vm.publiclyAccessible && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.isDeletable = function () {
-      return !vm.publiclyAccessible && !vm.inUse;
+      return (!vm.publiclyAccessible && !vm.inUse && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
+    };
+
+    vm.isDataTypeWithOptions = function () {
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
+    };
+
+    vm.getOptionSidepanelOptions = function () {
+      return {
+        dataTypeDefinition: _.get(vm, 'field.dataTypeDefinition'),
+        defaultOption: _.get(vm, 'field.defaultValue'),
+      };
+    };
+
+    vm.getOptionCount = function () {
+      return EnumDataTypeUtils.getActiveOptionsCount(vm.field.dataTypeDefinition);
     };
 
     vm.openDeleteConfirmDialog = function () {
@@ -98,7 +119,7 @@ require('./_fields-sidepanel.scss');
           Notification.error('context.dictionary.fieldPage.fieldDeleteFailure');
           Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELD_FAILURE);
         });
-      });
+      }).catch(_.noop);
     };
 
     vm.$onInit = function () {

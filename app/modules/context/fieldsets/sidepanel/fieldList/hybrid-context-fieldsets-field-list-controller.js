@@ -8,7 +8,7 @@ require('../_fieldsets-sidepanel.scss');
     .controller('ContextFieldsetsSidepanelFieldListCtrl', ContextFieldsetsSidepanelFieldListCtrl);
 
   /* @ngInject */
-  function ContextFieldsetsSidepanelFieldListCtrl($translate, fields) {
+  function ContextFieldsetsSidepanelFieldListCtrl($translate, fields, FieldUtils) {
     var vm = this;
 
     var classificationMap = {
@@ -20,10 +20,9 @@ require('../_fieldsets-sidepanel.scss');
     if (fields && fields.length > 0) {
       for (var index in fields) {
         var field = fields[index];
-        var fieldInfo = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
-        if (field.dataType) {
-          fieldInfo += ', ' + _.upperFirst(field.dataType.trim());
-        }
+        var classification = classificationMap[field.classification] || $translate.instant('context.dictionary.fieldPage.unencrypted');
+        var type = FieldUtils.getDataType(field);
+        var fieldInfo = type + ', ' + classification;
         fields[index].fieldInfo = fieldInfo.trim();
         fields[index].id = field.id.trim();
       }

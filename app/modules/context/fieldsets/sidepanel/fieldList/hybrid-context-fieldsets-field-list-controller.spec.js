@@ -50,6 +50,8 @@ describe('ContextFieldsetsSidepanelFieldListCtrl', function () {
     expect(controller).toBeDefined();
     expect(controller.fields.length).toBe(3);
     expect(controller.fields[0].id).toEqual('AAA_TEST_FIELD');
-    expect(controller.fields[0].fieldInfo).toEqual('context.dictionary.fieldPage.unencrypted, String');
+    var fieldInfo = controller.fields[0].fieldInfo;
+    expect(fieldInfo).toContain('context.dictionary.fieldPage.unencrypted');
+    expect(fieldInfo).toContain('context.dictionary.dataTypes.string');
   });
 });

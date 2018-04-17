@@ -23,6 +23,17 @@
   </div>
 </div>
 <div class="detail-reports" ng-if="nav.displayDetails">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="filterList(searchStr)" placeholder-text="{{nav.placeHolder.searchbox}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+      <cs-datepicker required id="startDate" ng-model="nav.startDate" placeholder="{{'reportsPage.placeholder.startDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="startTime" ng-model="nav.startTime" placeholder="{{nav.placeHolder.startTime}}" />
+      <span class="data-span">{{nav.placeHolder.to}}</span>
+      <cs-datepicker required id="endDate" ng-model="nav.endDate" placeholder="{{'reportsPage.placeholder.endDate' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
+      <input cs-timepicker ng-required="true" type="text" id="endTime" ng-model="nav.endTime" placeholder="{{nav.placeHolder.endTime}}" />
+    </cs-page-sub-header-left>
+  </cs-page-sub-header>
   <div class="detail-reports-content">
     <cs-grid grid-options="nav.gridOptions" spinner="nav.gridRefresh"></cs-grid>
   </div>

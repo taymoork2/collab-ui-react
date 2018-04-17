@@ -1,8 +1,8 @@
 <div ng-form="locationNameForm">
+  <label class="sub-section__label" translate="locations.locationName"></label>
   <div class="row">
     <input
       cs-input
-      unique-location
       type="text"
       name="locationName"
       ng-model="$ctrl.name"
@@ -11,8 +11,8 @@
       placeholder="{{'common.name' | translate}}"
       focus-on
       cs-input-messages="$ctrl.messages"
-      cs-input-size="medium-12"
-      cs-input-label="{{'locations.locationName' | translate}}"
+      cs-input-group-size="medium-8"
+      unique-location
       required>
   </div>
 </div>

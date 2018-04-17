@@ -1,7 +1,7 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/settings/settings-foundation';
-@import '~collab-ui/scss/settings/settings-collab-ui';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/settings-foundation';
+@import '~@collabui/collab-ui/scss/settings/settings-collab-ui';
 
 .gemServices {
   .card-icon {
@@ -39,6 +39,12 @@
     .btn--none {
       cursor: default;
     }
+  }
+}
+
+.side-panel {
+  cs-sp-container {
+    position: inherit;
   }
 }
 

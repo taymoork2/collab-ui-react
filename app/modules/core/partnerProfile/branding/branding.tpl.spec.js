@@ -3,7 +3,7 @@
 var testModule = require('./index').default;
 
 describe('Template: branding', function () {
-  var $scope, $controller, controller, $q, $templateCache, $compile, view;
+  var $scope, $controller, controller, $q, $compile, view;
   var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
 
   var PARTNER_LOGO_RADIO = 'partnerLogoRadio';
@@ -16,7 +16,7 @@ describe('Template: branding', function () {
     if (view) {
       view.remove();
     }
-    $scope = $controller = controller = $q = $templateCache = $compile = view = undefined;
+    $scope = $controller = controller = $q = $compile = view = undefined;
     Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
   });
 
@@ -25,11 +25,10 @@ describe('Template: branding', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$templateCache_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
-    $templateCache = _$templateCache_;
     $compile = _$compile_;
     Notification = _Notification_;
     Orgservice = _Orgservice_;
@@ -65,7 +64,7 @@ describe('Template: branding', function () {
     controller = $controller('BrandingCtrl as bctrl', {
       $scope: $scope,
     });
-    var template = $templateCache.get('modules/core/partnerProfile/branding/branding.tpl.html');
+    var template = require('modules/core/partnerProfile/branding/branding.tpl.html');
     view = $compile(angular.element(template))($scope);
     $scope.$apply();
   }
@@ -74,6 +73,13 @@ describe('Template: branding', function () {
     Authinfo.isPartner.and.returnValue(true);
     compileView();
   }
+
+  describe('pre conditions', function () {
+    beforeEach(compileView);
+    it('Verify show branding is set', function () {
+      expect(controller.showBranding).toBe(true);
+    });
+  });
 
   describe('client versions dropdown', function () {
     beforeEach(compileView);

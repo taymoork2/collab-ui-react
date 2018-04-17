@@ -278,7 +278,8 @@ require('modules/core/reports/amcharts-export.scss');
               info: deviceInfo[index].info,
               peopleCount: device.peopleCount,
               duration: secondsTohhmmss(device.callDuration),
-              calls: device.callCount });
+              calls: device.callCount,
+            });
           });
         });
     }
@@ -304,7 +305,7 @@ require('modules/core/reports/amcharts-export.scss');
     var exportProgressDialog;
     vm.openExportProgressTracker = function () {
       exportProgressDialog = $modal.open({
-        templateUrl: 'modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export-progress.html',
+        template: require('modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export-progress.html'),
         type: 'dialog',
         controller: function () {
           var vm = this;
@@ -323,7 +324,7 @@ require('modules/core/reports/amcharts-export.scss');
 
     vm.startDeviceUsageExport = function () {
       $modal.open({
-        templateUrl: 'modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html',
+        template: require('modules/core/customerReports/deviceUsage/deviceUsageExport/devices-usage-export.html'),
         type: 'dialog',
       }).result.then(function () {
         vm.openExportProgressTracker();

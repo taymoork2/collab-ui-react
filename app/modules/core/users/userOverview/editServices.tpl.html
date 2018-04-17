@@ -1,7 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()">
-    <span class="sr-only">Close</span>
-  </button>
+  <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="usersPreview.editServiceTitle" translate-values="{name: currentUserDisplayName()}"></h3>
 </div>
 
@@ -10,11 +8,43 @@
     <h3 translate="customerPage.licenseInfoNotAvailable"></h3>
     <p translate="customerPage.noAccountInfo"></p>
   </div>
-  <cr-services-panels ng-if="hasAccount" radioStates="radioStates"></cr-services-panels>
+  <cr-services-panels
+    ng-if="hasAccount"
+    message-features="messageFeatures"
+    radio-states="radioStates"
+    check-license-availability="checkLicenseAvailability"
+    entitlements="entitlements"
+    basic-licenses="basicLicenses"
+    determine-license-type="determineLicenseType"
+    generate-license-tooltip="generateLicenseTooltip"
+    generate-license-translation="generateLicenseTranslation"
+    advanced-licenses="advancedLicenses"
+    update-cmr-licenses-for-metric="updateCmrLicensesForMetric"
+    communication-features="communicationFeatures"
+    check-comm-license-availability="checkCommLicenseAvailability"
+    hybrid-call-service-aware="hybridCallServiceAware"
+    disable-comm-checkbox="disableCommCheckbox"
+    care-radio-value="careRadioValue"
+    cdc-care-feature="cdcCareFeature"
+    current-user-enables-call="currentUserEnablesCall"
+    cvc-care-feature="cvcCareFeature"
+    care-features="careFeatures"
+    on-update-is-context-service-admin-authorized="recvUpdateIsContextServiceAdminAuthorized(isAuthorized)"
+    ></cr-services-panels>
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnCancel" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span>
+  <button type="button"
+    id="btnCancel"
+    class="btn"
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
-    <button type="button" id="btnSaveEnt" cs-btn loading="btnSaveEntLoad" class="btn btn--primary" ng-click="editServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
+  <button cs-btn type="button"
+    id="btnSaveEnt"
+    loading="btnSaveEntLoad"
+    class="btn btn--primary"
+    ng-click="editServicesSave()">
+    <span translate="{{getServicesNextText()}}"></span>
+  </button>
 </div>

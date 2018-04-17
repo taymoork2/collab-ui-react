@@ -10,6 +10,7 @@ var config = {
   e2eReports: e2e + '/reports',
   e2eSuites: {
     hercules: e2e + '/hercules/**/*_spec.js',
+    featureToggleEnabled: e2e + '/feature-toggle-enabled/**/*_spec.js',
     mediafusion: e2e + '/mediafusion/**/*_spec.js',
     squared: e2e + '/squared/**/*_spec.js',
     sunlight: e2e + '/sunlight/**/*_spec.js',

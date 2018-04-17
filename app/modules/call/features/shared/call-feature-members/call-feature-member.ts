@@ -1,51 +1,64 @@
 import { MemberType } from 'modules/huron/members';
 
-export class CallFeatureMember {
+export interface ICallFeatureMember {
+  uuid: string;
+  name: string;
+  showName: boolean;
+  number: string;
+  type: MemberType;
+  cardType: CardType;
+  complexCardType?: ComplexCardType;
+  memberItems?: MemberItem[];
+  memberItemId?: string;
+  thumbnailSrc?: string;
+}
+
+export class CallFeatureMember implements ICallFeatureMember {
   public uuid: string;
   public name: string;
   public showName: boolean;
   public number: string;
   public type: MemberType;
-  public cardType: CardType | undefined;
-  public complexCardType: ComplexCardType | undefined;
-  public memberItems?: MemberItem[] | undefined;
-  public memberItemId?: string | undefined;
-  public thumbnailSrc?: string | undefined;
+  public cardType: CardType;
+  public complexCardType?: ComplexCardType;
+  public memberItems?: MemberItem[];
+  public memberItemId?: string;
+  public thumbnailSrc?: string;
 
-  constructor(obj: {
-    uuid: string,
-    name: string,
-    showName: boolean,
-    number: string,
-    type: MemberType,
-    cardType: CardType | undefined,
-    complexCardType: ComplexCardType | undefined,
-    memberItems: MemberItem[] | undefined,
-    memberItemId: string | undefined,
-    thumbnailSrc: string | undefined,
+  constructor(callFeatureMember: ICallFeatureMember = {
+    uuid: '',
+    name: '',
+    showName: true,
+    number: '',
+    type: MemberType.USER_REAL_USER,
+    cardType: CardType.SIMPLE,
+    complexCardType: undefined,
+    memberItems: undefined,
+    memberItemId: undefined,
+    thumbnailSrc: undefined,
   }) {
-    this.uuid = obj.uuid;
-    this.name = obj.name;
-    this.showName = obj.showName;
-    this.number = obj.number;
-    this.type = obj.type;
-    this.cardType = obj.cardType;
-    this.complexCardType = obj.complexCardType;
-    this.memberItems = obj.memberItems;
-    this.memberItemId = obj.memberItemId;
-    this.thumbnailSrc = obj.thumbnailSrc;
+    this.uuid = callFeatureMember.uuid;
+    this.name = callFeatureMember.name;
+    this.showName = callFeatureMember.showName;
+    this.number = callFeatureMember.number;
+    this.type = callFeatureMember.type;
+    this.cardType = callFeatureMember.cardType;
+    this.complexCardType = callFeatureMember.complexCardType;
+    this.memberItems = callFeatureMember.memberItems;
+    this.memberItemId = callFeatureMember.memberItemId;
+    this.thumbnailSrc = callFeatureMember.thumbnailSrc;
   }
 }
 
 export enum CardType {
-  SIMPLE = <any>'simple',
-  COMPLEX = <any>'complex',
+  SIMPLE = 'simple',
+  COMPLEX = 'complex',
 }
 
 export enum ComplexCardType {
-  CHECKBOX = <any>'checkbox',
-  RADIO = <any>'radio',
-  STATIC = <any>'static',
+  CHECKBOX = 'checkbox',
+  RADIO = 'radio',
+  STATIC = 'static',
 }
 
 export class MemberItem {

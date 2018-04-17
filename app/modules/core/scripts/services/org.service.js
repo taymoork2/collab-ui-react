@@ -1,10 +1,13 @@
 (function () {
   'use strict';
 
+  // TODO: Update all callback functions to be promises instead
+
+  var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
-  var configModule = require('modules/core/config/config');
+  var configModule = require('modules/core/config/config').default;
   var urlConfigModule = require('modules/core/config/urlConfig');
   var authinfoModule = require('modules/core/scripts/services/authinfo');
   var logModule = require('modules/core/scripts/services/log');
@@ -12,6 +15,7 @@
 
   module.exports = angular
     .module('core.org', [
+      angularCacheModule,
       angularResourceModule,
       angularTranslateModule,
       authModule,
@@ -25,12 +29,14 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, Log, UrlConfig, Utils, HuronCompassService) {
+  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
       getAdminOrgAsPromise: getAdminOrgAsPromise,
       getAdminOrgUsage: getAdminOrgUsage,
+      clearOrgUsageCache: clearOrgUsageCache,
+      updateOrgUsageCacheAge: updateOrgUsageCacheAge,
       getValidLicenses: getValidLicenses,
       getLicensesUsage: getLicensesUsage,
       getUnlicensedUsers: getUnlicensedUsers,
@@ -48,11 +54,22 @@
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
       validateDisplayName: validateDisplayName,
+      setOrgEmailSuppress: setOrgEmailSuppress,
+      getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
 
     var savedOrgSettingsCache = [];
     var isTestOrgCache = {};
     var domainCache = {};
+
+    var orgUsageCacheKey = 'orgServiceOrgUsageCache';
+    var orgUsageCache = CacheFactory.get(orgUsageCacheKey);
+    if (!orgUsageCache) {
+      orgUsageCache = new CacheFactory(orgUsageCacheKey, {
+        maxAge: 30 * 1000, // 30s
+        deleteOnExpire: 'passive',
+      });
+    }
 
     return service;
 
@@ -154,44 +171,37 @@
         });
     }
 
-    function getAdminOrgUsage(oid, useCache) {
-      var cache = _.isUndefined(useCache) ? true : useCache;
+    function getAdminOrgUsage(oid) {
       var orgId = oid || Authinfo.getOrgId();
       var adminUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
-      return $http.get(adminUrl, { cache: cache });
+      return $http.get(adminUrl, { cache: orgUsageCache });
     }
 
-    function getLicensesUsage(useCache) {
-      return getAdminOrgUsage(undefined, useCache)
+    function clearOrgUsageCache(oid) {
+      var orgId = oid || Authinfo.getOrgId();
+      var usageUrl = UrlConfig.getAdminServiceUrl() + 'customers/' + orgId + '/usage';
+      orgUsageCache.remove(usageUrl);
+    }
+
+    function updateOrgUsageCacheAge(ageInSeconds) {
+      orgUsageCache.setMaxAge(ageInSeconds * 1000);
+    }
+
+    function getLicensesUsage() {
+      return getAdminOrgUsage()
         .then(function (response) {
-          var usageLicenses = response.data || [];
-          var statusLicenses = Authinfo.getLicenses();
-          var trial = '';
-
-          var result = [];
-          var subscriptions = Authinfo.getSubscriptions();
-          _.forEach(usageLicenses, function (usageLicense) {
-            var licenses = _.filter(usageLicense.licenses, function (license) {
-              var match = _.find(statusLicenses, {
-                licenseId: license.licenseId,
-              });
-              trial = license.isTrial ? 'Trial' : 'unknown';
-              return !(_.isUndefined(match) || match.status === 'CANCELLED' || match.status === 'SUSPENDED');
+          return _.map(response.data, function (subscription) {
+            var licenses = _.reject(subscription.licenses, function (license) {
+              return license.status === 'CANCELLED' || license.status === 'SUSPENDED';
             });
-
-            var matchSub = _.find(subscriptions, {
-              subscriptionId: usageLicense.internalSubscriptionId,
-            });
-            var subscription = {
-              subscriptionId: usageLicense.subscriptionId ? usageLicense.subscriptionId : trial,
-              internalSubscriptionId: usageLicense.internalSubscriptionId ?
-                usageLicense.internalSubscriptionId : trial,
+            var fallbackSubscriptionStatus = _.some(licenses, ['isTrial', true]) ? 'Trial' : 'unknown';
+            return {
+              subscriptionId: subscription.subscriptionId ? subscription.subscriptionId : fallbackSubscriptionStatus,
+              internalSubscriptionId: subscription.internalSubscriptionId ?
+                subscription.internalSubscriptionId : fallbackSubscriptionStatus,
               licenses: licenses,
-              endDate: _.get(matchSub, 'endDate', ''),
             };
-            result.push(subscription);
           });
-          return result;
         })
         .catch(function (err) {
           Log.debug('Get existing admin org failed. Status: ' + JSON.stringify(_.pick(err, 'status', 'statusText')));
@@ -344,16 +354,15 @@
       });
     }
 
-    function deleteOrg(currentOrgId) {
+    function deleteOrg(currentOrgId, deleteUsers) {
       if (!currentOrgId) {
         return $q.reject('currentOrgId is not set');
       }
+      if (_.isUndefined(deleteUsers)) {
+        deleteUsers = true;
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-
-      return $http({
-        method: 'DELETE',
-        url: serviceUrl,
-      });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
     }
 
     function listOrgs(filter) {
@@ -374,6 +383,14 @@
       }
 
       return $http.get(orgUrl);
+    }
+
+    function setOrgEmailSuppress(isEmailSuppressed) {
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/emails';
+      var emailSuppressRequest = {
+        suppressEmail: isEmailSuppressed,
+      };
+      return $http.post(adminUrl, emailSuppressRequest);
     }
 
     function getOrgCacheOption(callback, oid, config) {
@@ -504,6 +521,22 @@
         .then(function (response) {
           return _.get(response, 'status') === 'ALLOWED';
         });
+    }
+
+    // filter out subscriptions where the sole license matches { offerName: 'MSGR' }
+    // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
+    // TODO: verify whether this should be the default behavior
+    function getInternallyManagedSubscriptions() {
+      return getLicensesUsage().then(function (subscriptions) {
+        return _.reject(subscriptions, function (subscription) {
+          var licenses = _.get(subscription, 'licenses');
+          if (_.size(licenses) !== 1) {
+            return false;
+          }
+          var license = _.head(licenses);
+          return Authinfo.isExternallyManagedLicense(license);
+        });
+      });
     }
   }
 })();

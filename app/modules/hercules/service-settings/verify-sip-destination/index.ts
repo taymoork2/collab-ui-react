@@ -2,7 +2,9 @@ import { SipDestinationTestResultComponent } from './sip-destination-test-result
 import { SipDestinationTestResultRowComponent } from './sip-destination-test-result-row.component';
 import { VerifySipDestinationComponent } from './verify-sip-destination.component';
 
-require('./_verify-sip-destination.scss');
+import './verify-sip-destination.scss';
+import './sip-destination-test-result.scss';
+import './sip-destination-test-result-row.scss';
 
 export default angular
   .module('Hercules')

@@ -1,0 +1,39 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+.device-support-section {
+  .indent {
+    margin-left: 32px;
+  }
+  button {
+    margin-top: 16px;
+  }
+  .custom-text {
+    margin-top: 6px;
+    margin-bottom: 0;
+    .text-wrap {
+      height: 4.1rem;
+      textarea {
+        height: 4.1rem;
+        resize: none;
+      }
+      .counter {
+        position: relative;
+        top: -1.25rem;
+        right: calc(104px - 100%);
+        width: 100px;
+        text-align: right;
+      }
+      .warn {
+        color: $warning-color;
+      }
+    }
+  }
+  .description {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .text-rec {
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    margin: 16px 0 0
+  }
+}

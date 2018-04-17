@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.cancelModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
+</div>
+
+<div class="modal-body" ng-if="!$ctrl.dataLoaded">
+  <div class="email-suppress">
+    <i class="icon icon-spinner larger"></i>
+  </div>
+</div>
+
+<div class="modal-body" ng-if="$ctrl.dataLoaded && !$ctrl.isEmailSuppressed">
+  <div class="email-suppress">
+    <i class="icon icon-circle-email larger"></i>
+    <div class="align-center">
+      <i class="icon icon-warning icon-lg"></i>
+      <p>{{::'userManage.emailSuppress.willGetEmail' | translate}}</p>
+      </div>
+    <div class="align-center">
+      <h4 class="can-change" translate="userManage.emailSuppress.canChange"></h4>
+    </div>
+  </div>
+</div>
+
+<div class="modal-body" ng-if="$ctrl.dataLoaded && $ctrl.isEmailSuppressed">
+  <div class="email-suppress">
+    <i class="icon icon-circle-email larger"></i>
+    <div class="align-center">
+      <i class="icon icon-warning icon-lg"></i>
+      <p>
+        {{::'userManage.emailSuppress.willNotGetEmail' | translate}}
+        <a href='https://collaborationhelp.cisco.com/article/en-us/DOC-22204' target='_blank'>
+          {{::'userManage.emailSuppress.learnMore' | translate}}
+        </a>
+      </p>
+    </div>
+    <div class="align-center">
+      <h4 class="can-change" translate="userManage.emailSuppress.canChange"></h4>
+    </div>
+    <div class="align-center" ng-if="$ctrl.isSparkCallEnabled">
+      <i class="icon icon-info icon-lg"></i>
+      <h4 class="spark-call" translate="userManage.emailSuppress.hasSparkCall"></h4>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" id="btnBack" class="btn" ng-click="$ctrl.onBack()"><span translate="common.back"></span></button>
+  <button type="button" class="btn btn--primary" ng-click="$ctrl.onNext()"><span translate="common.next"></span></button>
+</div>

@@ -7,6 +7,13 @@ var shimFileName = _.last(shimFile.split('/'));
 _.assignIn(process.env, args.env);
 var webpackConfig = require('./webpack.config.js')(process.env);
 
+var browser = 'ChromeHeadlessWithMemory';
+if (args.debug) {
+  browser = 'ChromeWithMemory';
+} else if (args.phantomjs) {
+  browser = 'PhantomJS';
+}
+
 module.exports = function (config) {
   var _config = {
     preprocessors: {},
@@ -40,7 +47,23 @@ module.exports = function (config) {
     {
       pattern: shimFile,
       watched: false,
+    },
+    {
+      pattern: './app/images/*.svg',
+      included: false,
+      watched: false,
+      served: true,
+    },
+    {
+      pattern: './app/images/*.png',
+      included: false,
+      watched: false,
+      served: true,
     }],
+
+    proxies: {
+      '/images/': '/base/app/images/',
+    },
 
     exclude: [],
 
@@ -50,20 +73,22 @@ module.exports = function (config) {
       stats: 'errors-only',
     },
 
-    coverageReporter: {
-      dir: 'test/coverage/',
-      reporters: [{
-        type: 'json',
-        subdir: 'json',
-        file: shimFileName + '.json',
-      }],
+    coverageIstanbulReporter: {
+      'fixWebpackSourcePaths': true,
+      'dir': 'test/coverage/',
+      'reports': ['json'],
+      'report-config': {
+        json: {
+          file: 'json/' + shimFileName + '.json',
+        },
+      },
     },
 
     webpackServer: {
       noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage-istanbul'],
 
     port: 9876,
 
@@ -74,12 +99,29 @@ module.exports = function (config) {
 
     autoWatch: false,
 
-    browsers: [args.debug ? 'Chrome' : 'PhantomJS'], // you can also use Chrome
+    browsers: [browser],
+
+    customLaunchers: {
+      ChromeWithMemory: {
+        base: 'Chrome',
+        flags: [
+          '--js-flags="--max-old-space-size=4096"',
+        ],
+      },
+      ChromeHeadlessWithMemory: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--disable-gpu',
+          '--remote-debugging-port=9222',
+          '--js-flags="--max-old-space-size=4096"',
+        ],
+      },
+    },
 
     singleRun: true,
 
     // time (ms) karma server waits for a browser message before disconnecting from it
-    browserNoActivityTimeout: 15000,  // default 10000
+    browserNoActivityTimeout: args.phantomjs ? 15000 : 60000, // longer startup for Chrome
 
     // if a browser disconnects from karma server, re-attempt N times
     //
@@ -91,7 +133,7 @@ module.exports = function (config) {
     // - ...exhibit what appears to be a race condition when spawning multiple tasks to
     //   run karma tests in parallel (either via 'gulp karma-parallel' or 'ktest-all')
     // - to mitigate this, we increment the disconnect tolerance to 2
-    browserDisconnectTolerance: 2,    // default 0
+    browserDisconnectTolerance: 2, // default 0
   });
 
   config.set(_config);

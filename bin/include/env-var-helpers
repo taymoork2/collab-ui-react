@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
     exit 1
@@ -6,36 +8,58 @@ fi
 # sniff-test function for whether current environment looks like jenkins
 # - ported over from '.../utils/processEnvUtils.js'
 function is_ci {
-    if [ -z "$BUILD_NUMBER" -o \
-        -z "$JOB_NAME" -o \
-        -z "$JENKINS_URL" ]; then
+    if [ -z "$BUILD_NUMBER" ] || \
+        [ -z "$JOB_NAME" ] || \
+        [ -z "$JENKINS_URL" ]; then
         return 1
     fi
 }
 
+function export_env_var_assignment {
+    local line=$*
+
+    # line uses a var, use eval
+    if [[ "$line" =~ =.*\$ ]]; then
+        eval "export $line"
+        return
+    fi
+
+    # line is blank, skip
+    if [[ "$line" =~ ^[[:space:]]*$ ]]; then
+       return
+    fi
+
+    # line is comment, skip
+    if [[ "$line" =~ ^[[:space:]]*# ]]; then
+        return
+    fi
+
+    # default
+    # shellcheck disable=SC2163
+    export "$line"
+}
+
 # parse properties file and export each property as an env var
-# shellcheck disable=SC2120
 function inj_env_vars_from_file {
-    while read line; do
-        # line uses a var, use eval
-        if [[ "$line" =~ =.*\$ ]]; then
-            eval "export $line"
-            continue
-        fi
+    local env_var_name
+    while read -r line; do
+        # process the line and export
+        export_env_var_assignment "$line"
 
-        # line is blank, skip
-        if [[ "$line" =~ ^[[:space:]]*$ ]]; then
-            continue
+        # print to stdout as appropriate
+        env_var_name="$(get_env_var_name "$line")"
+        if [ -n "$env_var_name" ]; then
+            echo "${env_var_name}=$(printenv "$env_var_name")"
         fi
-
-        # line is comment, skip
-        if [[ "$line" =~ ^[[:space:]]*# ]]; then
-            continue
-        fi
-
-        # default
-        export $line
     done < "$1"
+}
+
+function get_env_var_name {
+    local line=$*
+    line="${line/\#*/}"  # remove substring after a '#' char (ie. comments)
+    line="${line/\=*/}"  # remove substring after a '=' char (ie. value)
+    line="${line//[[:space:]]/}"  # remove any spaces
+    echo "$line"
 }
 
 function inj_build_env_vars_for {
@@ -54,25 +78,7 @@ function inj_build_env_vars_for {
             inj_env_vars_from_file "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/pipeline"
             ;;
         * )
-            >&2 echo "Error: inj_build_env_vars_for: invalid choice: $env"
-            return 1
-            ;;
-    esac
-}
-
-function print_build_env_vars_for {
-    local env="$1"
-    case "$env" in
-        "nightly" )
-            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
-            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/nightly"
-            ;;
-        "pipeline" )
-            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/common"
-            cat "${WX2_ADMIN_WEB_CLIENT_HOME}/config/env-vars/pipeline"
-            ;;
-        * )
-            >&2 echo "Error: print_build_env_vars_for: invalid choice: $env"
+            >&2 echo "[ERROR] ${FUNCNAME[0]}: invalid choice: $env"
             return 1
             ;;
     esac

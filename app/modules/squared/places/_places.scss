@@ -1,8 +1,12 @@
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .sq-places-page {
   @extend %grid-subheader;
   @extend %page-background-white;
+
+  .grid-contents {
+    height: inherit;
+  }
 
   .ui-grid-cell:first-child,
   .ui-grid-header-cell:first-child {
@@ -11,6 +15,125 @@
     .place_avatar {
       margin: 4px 5px 4px 30px;
       width: 35px;
+    }
+  }
+}
+
+.bot-auth {
+  .account-img {
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-image: none;
+    background-size: cover;
+    background-color: lighten($gray-dark, 25%);
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    overflow: hidden;
+    width: 30px;
+    .icon {
+      color: $brand-white;
+    }
+  }
+  .sub-header {
+    padding: 4px 200px 30px 0px;
+  }
+  .successfullyAdded {
+    color: $color-green-base;
+  }
+  .authName {
+    width: 200px;
+    display: flex;
+    .name {
+      span {
+        display: block;
+      }
+    }
+    .myavatar {
+      height: 47px;
+      margin-right: 15px;
+      padding-top: 8px;
+      background-color: transparent;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .email {
+      color: $gray-dark-3;
+      font-size: 0.85em;
+    }
+  }
+  .botCreator {
+    color: $gray-dark-3;
+    font-size: 0.7em;
+  }
+  .creationDate {
+    color: $gray-dark-3;
+    font-size: 0.85em;
+  }
+  .table {
+    width: 100%;
+    .tdName {
+      width: 40%;
+    }
+    .tdRole {
+      width: 20%;
+    }
+    .tdGivenBy {
+      width: 35%;
+    }
+    .tdDelete {
+      width: 5%;
+    }
+  }
+  table {
+    border-collapse: collapse;
+    border: 1px solid $gray-light;
+  }
+  th {
+    background-color: $gray-light-4;
+    border: 1px solid $gray-light;
+  }
+  table td {
+    border-left: 1px solid $gray-light-3;
+    border-right: 1px solid $gray-light-3;
+  }
+  table td:first-child {
+    border-left: none;
+  }
+  table td:last-child {
+    border-right: none;
+  }
+  table tbody tr {
+    border-bottom: 1px solid $gray-light-3;
+  }
+
+  .no_found {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+    flex: 1;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 7em;
+      color: $gray-light-1;
+    }
+
+    .h5,
+    .h2 {
+      color: $gray-base;
+      text-align: center;
+      margin-bottom: 12px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+
+      @media screen and (max-width: 640px) {
+        width: 90%;
+      }
     }
   }
 }

@@ -5,7 +5,7 @@ export * from './phoneNumber.service';
 
 export default angular
   .module('huron.phone-number-service', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .service('PhoneNumberService', PhoneNumberService)
   .filter('telephoneNumber', telephoneNumberFilter)

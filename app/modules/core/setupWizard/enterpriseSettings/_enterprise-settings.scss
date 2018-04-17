@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .form-inline .choose-file {
   margin-bottom: 2px;
@@ -188,7 +188,13 @@
     margin: 1rem 0;
   }
 }
+.margin-title {
+  margin: 1.5rem 0 1rem;
+}
 
+.margin-tos {
+  margin-bottom: 2rem;
+}
 .sso-warning {
   color: #f7c100;
   padding-right: rem-calc(15);

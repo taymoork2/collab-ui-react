@@ -1,29 +1,38 @@
-<div>
+<div class="create-location">
   <cs-overlay-panel
     class="overlay-panel typeahead-group"
     overlay-title="{{::'locations.createLocation' | translate}}" close="$ctrl.cancelModal()"
-    ng-keyup="$ctrl.evalKeyPress($event.keyCode)"
-    ng-keypress="$ctrl.enterNextPage($event.keyCode)">
+    ng-keyup="$ctrl.evalEscKeyPress($event)">
 
-    <cs-setup-assistant previous="$ctrl.previousButton()"
+    <div class="wizard-loading-spinner" ng-if="$ctrl.loading">
+      <i class="icon icon-spinner"></i>
+    </div>
+
+    <cs-setup-assistant
+      ng-if="!$ctrl.loading"
+      previous="$ctrl.previousButton()"
       next="$ctrl.nextButton()"
       next-text="$ctrl.nextText()"
       previous-fn="$ctrl.previousPage()"
-      next-fn="$ctrl.nextPage()">
+      next-fn="$ctrl.nextPage()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
 
-      <form novalidate class="assistant-form" name="$ctrl.form" role="form">
+      <form novalidate class="cs-form" name="$ctrl.form" role="form">
         <!-- Location Name -->
         <div ng-if="$ctrl.getPageIndex() === 0"  ng-class="$ctrl.animation">
-          <div class="typeahead-large typeahead-large__no-icon" ng-class="{error: $ctrl.form.locationName.$invalid && $ctrl.form.locationName.$touched}">
+          <div class="typeahead-large typeahead-large__no-icon" ng-class="{error: $ctrl.form.locationName.$invalid && $ctrl.form.locationName.$dirty}">
             <input class="form-control"
               name="locationName"
               placeholder="{{$ctrl.namePlaceholder}}"
               required
               unique-location
+              focus-on
               messages="$ctrl.validationMessages"
-              ng-model="$ctrl.locationDetail.name"
-              ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }">
-            <p class="input-description">{{'locations.locationDesc' | translate}}</p>
+              ng-model="$ctrl.callLocationSettingsData.location.name"
+              ng-model-options="{ debounce: 500 }"
+              ng-keydown="$ctrl.evalKeyPress($event)">
+            <p class="input-description" translate="locations.locationDesc"></p>
             <div class="cs-input__messages error" ng-messages="$ctrl.form.locationName.$error" role="alert">
               <div ng-repeat="(key, value) in $ctrl.validationMessages" class="message">
                 <span ng-message="{{key}}">{{value}}</span>
@@ -33,154 +42,129 @@
         </div>
 
         <!-- Caller ID -->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
-          <div class="section__content" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
-            <h4 translate="callerIdPanel.title"></h4>
-            <uc-company-caller-id
-              is-location="true"
-              site="$ctrl.locationDetail.site"
-              company-caller-id="$ctrl.huronSettingsData.companyCallerId"
-              external-number-options="$ctrl.settingsOptions.companyCallerIdOptions"
-              customer-name="$ctrl.huronSettingsData.customer.name"
-              on-number-filter="$ctrl.onCompanyCallerIdFilter(filter)"
-              on-change-fn="$ctrl.onCompanyCallerIdChanged(companyCallerId)">
-            </uc-company-caller-id>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 1">
+          <div class="cs-form__section location-create-step">
+            <div class="section__content">
+              <h4 class="step-title" translate="callerIdPanel.title"></h4>
+              <div class="step-desc" translate="companyCallerId.companyCallerIdLocationDesc"></div>
+              <div class="sub-section">
+                <uc-location-caller-id
+                  caller-id="$ctrl.callLocationSettingsData.location.callerId"
+                  show-label="false"
+                  region-code="$ctrl.callLocationSettingsData.customerVoice.regionCode"
+                  external-number-options="$ctrl.locationSettingsOptions.locationCallerIdOptions"
+                  voicemail-pilot-number="$ctrl.callLocationSettingsData.location.voicemailPilotNumber"
+                  company-name="$ctrl.callLocationSettingsData.customerVoice.name"
+                  on-change-fn="$ctrl.onCallerIdChanged(callerId)"
+                  size="large"
+                  key-press="$ctrl.evalKeyPress($event)">
+                </uc-location-caller-id>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Time Zone & Preferred Language -->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 2">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.regionalSettings"></h4>
-            <div class="sub-section">
-              <uc-time-zone
-                time-zone="$ctrl.locationDetail.timeZone"
-                time-zone-options="$ctrl.settingsOptions.timeZoneOptions"
-                on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
-              </uc-time-zone>
-            </div>
-            <div class="sub-section" ng-if="$ctrl.callDateTimeFormat">
-              <uc-date-format
-                date-format="$ctrl.locationDetail.dateFormat"
-                date-format-options="$ctrl.settingsOptions.dateFormatOptions"
-                on-change-fn="$ctrl.onDateFormatChanged(dateFormat)">
-              </uc-date-format>
-            </div>
-            <div class="sub-section" ng-if="$ctrl.callDateTimeFormat">
-              <uc-time-format
-                time-format="$ctrl.locationDetail.timeFormat"
-                time-format-options="$ctrl.settingsOptions.timeFormatOptions"
-                on-change-fn="$ctrl.onTimeFormatChanged(timeFormat)">
-              </uc-time-format>
-            </div>
-            <div class="sub-section service-setup service-setup-regional-settings">
-              <uc-settings-preferred-language
-                preferred-language="$ctrl.locationDetail.preferredLanguage"
-                preferred-language-options="$ctrl.settingsOptions.preferredLanguageOptions"
-                on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
-              </uc-settings-preferred-language>
-            </div>
-            <div class="sub-section service-setup service-setup-regional-settings"
-              cr-feature-toggle feature-show="h-regional-tones">
-              <uc-default-country
-                default-country="$ctrl.locationDetail.country"
-                default-country-options="$ctrl.settingsOptions.defaultCountryOptions"
-                on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)">
-              </uc-default-country>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 2">
+          <div class="cs-form__section location-create-step">
+            <div class="section__content">
+            <h4 class="step-title" translate="serviceSetupModal.regionalSettings"></h4>
+              <div class="sub-section">
+                <uc-time-zone
+                  time-zone="$ctrl.callLocationSettingsData.location.timeZone"
+                  time-zone-options="$ctrl.locationSettingsOptions.timeZoneOptions"
+                  on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+                </uc-time-zone>
+              </div>
+              <div class="sub-section service-setup service-setup-regional-settings">
+                <uc-settings-preferred-language
+                  preferred-language="$ctrl.callLocationSettingsData.location.preferredLanguage"
+                  preferred-language-options="$ctrl.locationSettingsOptions.preferredLanguageOptions"
+                  on-change-fn="$ctrl.onPreferredLanguageChanged(preferredLanguage)">
+                </uc-settings-preferred-language>
+              </div>
+              <div class="sub-section service-setup service-setup-regional-settings"
+                cr-feature-toggle feature-show="h-regional-tones">
+                <uc-default-country
+                  default-country="$ctrl.callLocationSettingsData.location.tone"
+                  default-country-options="$ctrl.locationSettingsOptions.defaultCountryOptions"
+                  on-change-fn="$ctrl.onDefaultCountryChanged(defaultCountry)"
+                  ng-keypress="$ctrl.evalKeyPress($event)">
+                </uc-default-country>
+              </div>
             </div>
           </div>
         </div>
 
         <!--Extentions and Routing Prefix-->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 3">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.internalDialing"></h4>
-            <div class="sub-section">
-              <uc-routing-prefix
-                routing-prefix="$ctrl.locationDetail.routingPrefix"
-                on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
-              </uc-routing-prefix>
-            </div>
-            <div class="sub-section">
-              <uc-extension-range
-                steering-digit="$ctrl.locationDetail.steeringDigit"
-                extension-length="$ctrl.huronSettingsData.customerVoice.extensionLength"
-                number-ranges="$ctrl.huronSettingsData.internalNumberRanges"
-                first-time-setup="false"
-                on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
-              </uc-extension-range>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 3">
+          <div class="cs-form__section location-create-step">
+            <div class="section__content">
+              <div class="step-title" translate="locations.internalDialingTitle"></div>
+              <div class="step-desc" translate="locations.internalDialingDesc"></div>
+              <div class="sub-section" ng-if="$ctrl.showRoutingPrefix">
+                <uc-location-routing-prefix
+                  routing-prefix="$ctrl.callLocationSettingsData.location.routingPrefix"
+                  routing-prefix-length="$ctrl.callLocationSettingsData.customerVoice.routingPrefixLength"
+                  on-change-fn="$ctrl.onRoutingPrefixChanged(routingPrefix)">
+                </uc-location-routing-prefix>
+              </div>
+              <div class="sub-section">
+                <uc-extension-range
+                  steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+                  extension-length="$ctrl.callLocationSettingsData.customerVoice.extensionLength"
+                  number-ranges="$ctrl.callLocationSettingsData.internalNumberRanges"
+                  first-time-setup="false"
+                  is-create-location="true"
+                  is-routing-prefix-valid="$ctrl.isRoutingPrefixValid"
+                  on-change-fn="$ctrl.onExtensionRangeChanged(extensionRanges)">
+                </uc-extension-range>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Steering Digit -->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 4">
-          <div class="section__content">
-            <h4 translate="serviceSetupModal.externalDialing"></h4>
-            <div class="sub-section">
-              <uc-outbound-dial-digit
-                steering-digit="$ctrl.locationDetail.steeringDigit"
-                internal-number-ranges="$ctrl.locationDetail.internalNumberRanges"
-                is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
-                on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
-              </uc-outbound-dial-digit>
+        <div ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 4">
+          <div class="section__content cs-form__section location-create-step">
+            <div class="section__content">
+              <div class="step-title" translate="locations.externalDialingTitle"></div>
+              <div class="step-desc" translate="locations.externalDialingDesc"></div>
+              <div class="sub-section">
+                <uc-outbound-dial-digit
+                  steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+                  internal-number-ranges="$ctrl.callLocationSettingsData.location.internalNumberRanges"
+                  is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
+                  on-change-fn="$ctrl.onSteeringDigitChanged(steeringDigit)">
+                </uc-outbound-dial-digit>
+              </div>
+              <div
+                class="sub-section"
+                ng-if="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing">
+                <uc-dialing-setup
+                  steering-digit="$ctrl.callLocationSettingsData.location.steeringDigit"
+                  use-simplified-national-dialing="$ctrl.callLocationSettingsData.location.regionCodeDialing.simplifiedNationalDialing"
+                  supports-simplified-national-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsSimplifiedNationalDialing"
+                  supports-local-dialing="$ctrl.locationSettingsOptions.dialPlan.supportsLocalDialing"
+                  region-code="$ctrl.callLocationSettingsData.location.regionCodeDialing.regionCode"
+                  is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
+                  on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
+                </uc-dialing-setup>
+              </div>
             </div>
-            <div
-              class="sub-section"
-              ng-if="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing || $ctrl.settingsOptions.dialPlan.supportsLocalDialing">
-              <uc-dialing-setup
-                steering-digit="$ctrl.locationDetail.steeringDigit"
-                use-simplified-national-dialing="$ctrl.locationDetail.regionCodeDialing.simplifiedNationalDialing"
-                supports-simplified-national-dialing="$ctrl.settingsOptions.dialPlan.supportsSimplifiedNationalDialing"
-                supports-local-dialing="$ctrl.settingsOptions.dialPlan.supportsLocalDialing"
-                region-code="$ctrl.locationDetail.regionCodeDialing.regionCode"
-                is-terminus-customer="$ctrl.PstnModel.isCustomerExists()"
-                on-change-fn="$ctrl.onRegionCodeChanged(regionCode, useSimplifiedNationalDialing)">
-              </uc-dialing-setup>
-            </div>
-          </div>
-        </div>
-
-        <!-- Voicemail -->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 5">
-          <div class="section__content">
-            <uc-company-voicemail
-              site="$ctrl.locationDetail.site"
-              dial-plan-country-code="$ctrl.settingsOptions.dialPlan.countryCode"
-              external-number-options="$ctrl.settingsOptions.companyVoicemailOptions"
-              company-voicemail-enabled="$ctrl.huronSettingsData.customer.hasVoicemailService"
-              voicemail-to-email="$ctrl.locationDetail.voicemailToEmailSettings.voicemailToEmail"
-              on-change-fn="$ctrl.onCompanyVoicemailChanged(voicemailPilotNumber, voicemailPilotNumberGenerated, companyVoicemailEnabled)"
-              on-number-filter="$ctrl.onCompanyVoicemailFilter(filter)"
-              on-voicemail-to-email-changed-fn="$ctrl.onVoicemailToEmailChanged(voicemailToEmail)">
-            </uc-company-voicemail>
           </div>
         </div>
 
         <!-- Address Validating -->
-        <div class="section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 6">
-          <div class="section__content">
-            <h4 class="left-indent" translate="locations.emergencyServicesTitle"></h4>
-            <div ng-if="!$ctrl.addressValidating && $ctrl.addressValidated !== true">
-              <hr-service-address
-                address="$ctrl.address"
-                hide-search="true"
-                hide-address="true"
-                class="columns row full large-form"
-                read-only="$ctrl.readOnly">
-              </hr-service-address>
-              <button class="btn btn--primary" ng-disabled="$ctrl.form.$invalid" ng-click="$ctrl.validateAddress()">Validate</button>
-            </div>
-            <div>
-              <div class="text-center" ng-show="$ctrl.addressValidating">
-                <i class="icon icon-spinner icon-2x text-center"></i>
-              </div>
-              <div ng-if="$ctrl.addressValidated === true">
-                <h6 translate="trialModal.pstn.addrFound"></h6>
-                <h5>{{$ctrl.address.streetAddress}} {{$ctrl.address.unit}}</h5>
-                <h5>{{$ctrl.address.city}}, {{$ctrl.address.state}}, {{$ctrl.address.zip}}</h5>
-                <a href="" class="primary" ng-click="$ctrl.resetAddr()" translate="trialModal.pstn.addrRetry"></a>
-              </div>
+        <div class="cs-form__section" ng-class="$ctrl.animation" ng-if="$ctrl.getPageIndex() === 5">
+          <div class="section__content cs-form__section location-create-step">
+            <div class="section__content">
+              <h4 class="step-title" translate="locations.emergencyServicesTitle"></h4>
+              <uc-call-emergency-services
+                address="$ctrl.callLocationSettingsData.address"
+                is-pstn-setup="$ctrl.PstnModel.isCustomerExists()"
+                allow-ecbn-setup="false">
+              </uc-call-emergency-services>
             </div>
           </div>
         </div>

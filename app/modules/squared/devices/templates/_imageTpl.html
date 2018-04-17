@@ -1,13 +1,7 @@
-<img
-  ng-if="row.entity.accountType === 'MACHINE'"
-  class="space_avatar"
-  ng-src="images/devices-hi/space_avatar.png"/>
-<span ng-if="row.entity.accountType === 'PERSON' && !row.entity.photos" class="user-img">
+<div class="grid-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
+  <img ng-if="row.entity.accountType === 'MACHINE'" class="space_avatar" src="/images/devices-hi/space_avatar.png"/>
+  <span ng-if="row.entity.accountType === 'PERSON' && !row.entity.photos" class="user-img">
     <i class="icon icon-user"></i>
   </span>
-<img
-  ng-if="row.entity.accountType === 'PERSON' && row.entity.photos"
-  class="user-img"
-  ng-src="{{row.entity.photos[0].url}}"/>
-
-
+  <img ng-if="row.entity.accountType === 'PERSON' && row.entity.photos" class="user-img" ng-src="{{row.entity.photos[0].url}}"/>
+</div>

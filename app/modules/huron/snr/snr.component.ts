@@ -1,118 +1,104 @@
-import { SnrService } from './snr.service';
-import { SingleNumberReach } from './snr';
+import { SnrService, SnrData } from './snr.service';
+import { IPatterns, Patterns } from './snr';
 import { HuronCustomerService } from 'modules/huron/customer/customer.service';
+import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
+import { Notification } from 'modules/core/notifications';
 
 interface ITranslationMessages {
   placeholderText: string;
   helpText: string;
 }
-const SNR_WAIT_SECONDS_OPTIONS = [{
-  name: '20',
-  value: '20000',
-}, {
-  name: '30',
-  value: '30000',
-}, {
-  name: '45',
-  value: '45000',
-}, {
-  name: '60',
-  value: '60000',
-}];
+
 const CALLDESTINPUTS = ['external', 'uri', 'custom'];
 
 class SnrCtrl implements ng.IComponentController {
 
   public ownerId: string;
-  public snrInfo: SingleNumberReach;
-  private snrWaitSeconds: any;
-  private snrWaitSecondsOptions: any;
-  private callDestInputs: string[];
-  private snrEnabled: boolean = false;
+  public snrData: SnrData;
+  public callDestInputs: string[];
   private form: ng.IFormController;
-  private customTranslations: ITranslationMessages;
-  private snrId: string = '';
+  public customTranslations: ITranslationMessages;
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
+  public loading: boolean = false;
+  public processing: boolean = false;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private HuronCustomerService: HuronCustomerService,
     private SnrService: SnrService,
+    private CallDestinationTranslateService: CallDestinationTranslateService,
     private $modal,
-    private Notification,
+    private Notification: Notification,
     private $scope: ng.IScope,
+    private $q: ng.IQService,
 
   ) {
     this.callDestInputs = CALLDESTINPUTS;
-    this.snrWaitSeconds = SNR_WAIT_SECONDS_OPTIONS[0];
-    this.snrWaitSecondsOptions = SNR_WAIT_SECONDS_OPTIONS;
     this.customTranslations = {
       placeholderText: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       helpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
     };
-    this.init();
+    this.inputTranslations = this.CallDestinationTranslateService.getCallDestinationTranslate();
+    this.customNumberValidationPatern = this.CallDestinationTranslateService.getCustomNumberValidationPatern();
   }
 
-  public init(): void {
-    this.snrId = '';
-    this.snrInfo = new SingleNumberReach();
-    this.snrEnabled = false;
-    this.SnrService.getSnrList(this.ownerId).then((data) => {
-      if (data && data.length > 0) {
-        this.snrId = data[0].uuid;
-        this.snrInfo = {
-          enableMobileConnect: data[0].enableMobileConnect,
-          destination: data[0].destination,
-          answerTooLateTimer: data[0].answerTooLateTimer,
-        };
-        this.snrWaitSeconds = _.find(SNR_WAIT_SECONDS_OPTIONS, { value: this.snrInfo.answerTooLateTimer });
-        this.snrEnabled = (this.snrInfo.enableMobileConnect === 'true');
-      }
-      this.resetForm();
-    });
+  public $onInit(): void {
+    this.loading = true;
+    this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
   }
 
-  public resetForm() {
-    if (this.form) {
-      this.form.$setPristine();
-      this.form.$setUntouched();
-    }
+  private initComponentData(): ng.IPromise<any> {
+    return this.SnrService.loadSnrData(this.ownerId).then(snr => this.snrData = snr);
   }
 
-  public reset() {
-    this.init();
-  }
-
-  public showRemove(): boolean {
-    return ( !_.isEmpty(this.snrId) && !this.snrEnabled);
+  public onCancel() {
+    this.snrData = this.SnrService.getOriginalConfig();
+    this.resetForm();
   }
 
   public remove(): void {
     this.$modal.open({
-      templateUrl: 'modules/huron/snr/snrDeleteConfirmation.tpl.html',
+      template: require('modules/huron/snr/snrDeleteConfirmation.tpl.html'),
       type: 'dialog',
     }).result.then(() => {
-      this.save(true);
+      this.delete();
     });
   }
 
-  public save(isDelete: boolean = false): void {
-    let snr: SingleNumberReach = new SingleNumberReach({
-      destination: this.snrInfo.destination,
-      answerTooLateTimer: this.snrWaitSeconds.value,
-      enableMobileConnect: (this.snrEnabled) ? 'true' : 'false',
-    });
-    if (isDelete) {
-      snr = new SingleNumberReach();
-    }
-    this.SnrService.saveSnr(this.ownerId, this.snrId, snr).then(() => {
-      const msg = (isDelete) ? this.$translate.instant('singleNumberReachPanel.removeSuccess') : this.$translate.instant('singleNumberReachPanel.success');
-      this.Notification.notify([msg], 'success');
-      this.$scope.$emit('SNR_CHANGE', this.snrEnabled);
-      this.init();
+  public onSnrLinesChanged(patterns: string[]) {
+    this.snrData.snr.patterns = new Patterns({
+      pattern: patterns,
+    } as IPatterns);
+  }
+
+  public onAnswerTooLateTimerChanged(answerTooLateTimer: string) {
+    this.snrData.snr.answerTooLateTimer = answerTooLateTimer;
+    this.checkForChanges();
+  }
+
+  public save(): void {
+    this.processing = true;
+    this.SnrService.saveSnr(this.ownerId, this.snrData.snr.uuid || '', this.snrData.snr).then(() => {
+      this.Notification.success('singleNumberReachPanel.success');
+      this.$scope.$emit('SNR_CHANGE', this.snrData.snr.enableMobileConnect);
     }).catch(() => {
-      const msg = this.$translate.instant('singleNumberReachPanel.error');
-      this.Notification.notify([msg], 'error');
+      this.Notification.error('singleNumberReachPanel.error');
+    }).finally(() => {
+      this.processing = false;
+      this.resetForm();
+    });
+  }
+
+  public delete(): void {
+    this.SnrService.deleteSnr(this.ownerId, this.snrData.snr.uuid || '').then(() => {
+      this.initComponentData();
+      this.Notification.success('singleNumberReachPanel.removeSuccess');
+    }).catch(() => {
+      this.Notification.error('singleNumberReachPanel.error');
+    }).finally(() => {
+      this.resetForm();
     });
   }
 
@@ -121,14 +107,28 @@ class SnrCtrl implements ng.IComponentController {
   }
 
   public setSnr(destination: string): void {
-    this.snrInfo.destination = destination;
+    this.snrData.snr.destination = _.clone(destination);
+    this.checkForChanges();
+  }
+
+  private checkForChanges(): void {
+    if (this.SnrService.matchesOriginalConfig(this.snrData)) {
+      this.resetForm();
+    }
+  }
+
+  private resetForm() {
+    if (this.form) {
+      this.form.$setPristine();
+      this.form.$setUntouched();
+    }
   }
 
 }
 
 export class SnrComponent implements ng.IComponentOptions {
   public controller = SnrCtrl;
-  public templateUrl = 'modules/huron/snr/snr.html';
+  public template = require('./snr.component.html');
   public bindings = {
     ownerId: '<',
   };

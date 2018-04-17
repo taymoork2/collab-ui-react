@@ -7,8 +7,12 @@
     <div class="save-section" ng-class="{invisible: !partnerProfileForm.$dirty}">
       <p translate="callerIdPanel.saveConfirmation"></p>
       <button type="button" translate="common.cancel" ng-click="init()" id="orgProfileCancelBtn"></button>
-      <button type="button" class="btn btn--primary" cs-btn loading="orgProfileSaveLoad" ng-click="validation()"
-              ng-disabled="partnerProfileForm.$invalid" id="orgProfileSaveBtn">
+      <button cs-btn type="button"
+        class="btn btn--primary"
+        loading="orgProfileSaveLoad"
+        ng-click="validation()"
+        ng-disabled="partnerProfileForm.$invalid"
+        id="orgProfileSaveBtn">
         <span translate="common.save"></span>
       </button>
     </div>
@@ -20,20 +24,23 @@
           <div class="form-group">
             <!-- <div class="columns small-4"> -->
             <label for="company-name" translate="partnerProfile.name"></label>
-            <input class="form-control" name="test2" type="text" ng-model="companyName" disabled="true"
-                   id="company-name">
+            <input cs-input type="text"
+              id="company-name"
+              class="form-control"
+              name="test2"
+              ng-model="companyName"
+              disabled="true">
             <!-- </div> -->
           </div>
           <div class="form-group">
             <!-- <div class="columns small-4"> -->
             <label for="company-id" translate="partnerProfile.id"></label>
-            <input id="company-id" class="form-control" type="text" disabled="true">
+            <input cs-input type="text" id="company-id" class="form-control" disabled="true">
             <!-- </div> -->
           </div>
         </div>
         <!-- cisco rep -->
-        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel"
-             ng-hide="rep == null || partner == null">
+        <div id="ciscoRepPanel" class="columns small-12 form-section cisco-rep-panel" ng-hide="rep === null || partner === null">
           <h4 ng-if="isPartner" translate="partnerProfile.ciscoRep"></h4>
           <h4 ng-if="!isPartner" translate="customerProfile.supportContacts"></h4>
           <div ng-show="rep !== null" class="form-spacing">
@@ -44,7 +51,10 @@
             <!-- grant cisco access checkbox -->
             <div class="row grant-row" ng-show="false">
               <div class="columns small-12">
-                <cs-checkbox ckid="ckbox1" ng-model="cb.checkboxValue0" label="{{grant | translate}}"></cs-checkbox>
+                <input cs-input type="checkbox"
+                  id="ckbox1"
+                  cs-input-label="{{grant | translate}}"
+                  ng-model="cb.checkboxValue0">
               </div>
             </div>
           </div>
@@ -55,8 +65,7 @@
           </div>
         </div>
         <div class="columns small-12 form-section">
-            <div ng-include="'modules/core/partnerProfile/branding/branding.tpl.html'"
-                 ng-controller="BrandingCtrl as bctrl"></div>
+            <cr-partner-profile-branding ng-controller="BrandingCtrl as bctrl"></cr-partner-profile-branding>
         </div>
         <div class="columns small-12 form-section">
           <crash-report-setting></crash-report-setting>
@@ -79,10 +88,13 @@
           <h4 translate="partnerProfile.supportSetup"></h4>
           <!-- partner problem reporting site form -->
           <div class="cs-input-group cs-input-radio" id="troubleReportingCiscoPanel" ng-click="setProblemRadio(0)">
-            <input type="radio" id="problemSiteRadio0" name="problemSiteRadio" ng-value="0"
-                   ng-model="problemSiteRadioValue">
+            <input type="radio"
+              id="problemSiteRadio0"
+              name="problemSiteRadio"
+              ng-value="0"
+              ng-model="problemSiteRadioValue">
             <label for="problemSiteRadio0">
-              <a href="" ng-click="sendFeedback()">
+              <a href ng-click="sendFeedback()">
                 <span ng-if="!isManaged" translate="partnerProfile.ciscoProblem"></span>
                 <span ng-if="isCiscoSupport && isManaged" translate="partnerProfile.ciscoProblem"></span>
                 <span ng-if="!isCiscoSupport && isManaged" translate="partnerProfile.partnerProblem"></span>
@@ -90,19 +102,22 @@
             </label>
           </div>
           <div class="cs-input-group cs-input-radio">
-            <input type="radio" id="problemSiteRadio1" name="problemSiteRadio" ng-value="1"
-                   ng-model="problemSiteRadioValue">
-            <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)"
-                   id="troubleReportingPartnerPanelRadio">
+            <input type="radio"
+              id="problemSiteRadio1"
+              name="problemSiteRadio"
+              ng-value="1"
+              ng-model="problemSiteRadioValue">
+            <label for="problemSiteRadio1" class="radio-input-spacing" ng-click="setProblemRadio(1)" id="troubleReportingPartnerPanelRadio">
               <div class="radio-input-flex">
-                <input type="text" id="partnerSupportUrl" class="form-control" placeholder="{{troubleUrl | translate}}"
-                       ng-model="supportUrl">
-                <textarea rows="7" id="partnerSupportText" class="form-control optional-row"
-                          placeholder="{{troubleText | translate}}" ng-model="supportText">
+                <input type="text"
+                  id="partnerSupportUrl"
+                  class="form-control"
+                  placeholder="{{troubleUrl | translate}}"
+                  ng-model="supportUrl">
+                <textarea rows="7" id="partnerSupportText" class="form-control optional-row" placeholder="{{troubleText | translate}}" ng-model="supportText">
                 </textarea>
                 <h6 translate="partnerProfile.matchingTix"></h6>
-                <p ng-if="!nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-                <p ng-if="nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: getAppTitle()}"></p>
+                <p class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: getAppTitle()}"></p>
               </div>
             </label>
           </div>
@@ -122,8 +137,12 @@
           <div class="cs-input-group cs-input-radio" ng-click="setHelpRadio(1)" id="helpPartnerPanel">
             <input type="radio" id="helpSiteRadio1" name="helpSiteRadio" ng-value="1" ng-model="helpSiteRadioValue">
             <label for="helpSiteRadio1" class="radio-input-spacing" id="helpPartnerPanelRadio">
-              <input type="text" id="partnerHelpUrl" name="testForm" class="form-control"
-                     placeholder="{{helpUrlText | translate}}" ng-model="helpUrl">
+              <input cs-input type="text"
+                id="partnerHelpUrl"
+                name="testForm"
+                class="form-control"
+                placeholder="{{helpUrlText | translate}}"
+                ng-model="helpUrl">
             </label>
           </div>
         </div>

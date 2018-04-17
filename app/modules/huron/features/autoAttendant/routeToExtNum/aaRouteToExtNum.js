@@ -6,7 +6,7 @@
     .controller('AARouteToExtNumCtrl', AARouteToExtNumCtrl);
 
   /* @ngInject */
-  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToExtNumCtrl($scope, $translate, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService) {
     var vm = this;
     var conditional = 'conditional';
 
@@ -16,6 +16,7 @@
 
     vm.model.phoneNumberInput = {
       phoneNumber: '',
+      extension: '',
     };
 
     vm.countryList = [{
@@ -41,12 +42,23 @@
 
     var fromRouteCall = false;
     var fromDecision = false;
+    vm.routeToExtOptions = ['Telephone Number', 'Extension'];
     vm.getPhoneNumber = getPhoneNumber;
+    vm.selectRoutingPrefix = $translate.instant('autoAttendant.selectRoutingPrefix');
+    vm.extensionMinLength = 3;
+    vm.extensionMaxLength = 10;
+    vm.orgHasHybridEnabled = false;
+    vm.validationMessages = {
+      required: $translate.instant('autoAttendant.extensionRequiredError'),
+      minlength: $translate.instant('autoAttendant.extensionMinLengthError'),
+      pattern: $translate.instant('autoAttendant.extensionPatternError'),
+    };
 
 
     /////////////////////
 
     function getPhoneNumber() {
+      vm.model.phoneNumberInput.extension = '';
       return vm.model.phoneNumberInput.phoneNumber;
     }
 
@@ -62,8 +74,24 @@
       if (action && _.get(action, 'name') === conditional) {
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
+      vm.orgHasHybridEnabled = AutoAttendantHybridCareService.getHybridandEPTConfiguration();
 
-      vm.model.phoneNumberInput.phoneNumber = action.getValue();
+      // value will hold either phone number or extension
+      var value = action.getValue();
+      if (!vm.orgHasHybridEnabled) {
+        if (!_.isEmpty(value)) {
+          if (AutoAttendantCeMenuModelService.checkIfEnteredValueIsPhoneNumber(value)) {
+            vm.typeOfPhoneNumberSelected = vm.routeToExtOptions[0];
+            vm.model.phoneNumberInput.phoneNumber = value;
+          } else {
+            // case when user has saved extension
+            vm.typeOfPhoneNumberSelected = vm.routeToExtOptions[1];
+            vm.model.phoneNumberInput.extension = value;
+          }
+        }
+      } else {
+        vm.model.phoneNumberInput.phoneNumber = value;
+      }
     }
 
     function saveUiModel(data) {
@@ -85,7 +113,6 @@
       if (_.get(action, 'name') === conditional) {
         action = _.get(action.then, 'queueSettings.fallback.actions[0]', action.then);
       }
-
       action.setValue(num);
 
       AACommonService.setPhoneMenuStatus(true);

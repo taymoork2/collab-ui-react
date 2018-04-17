@@ -6,21 +6,14 @@ describe('HelpdeskCardsService', function () {
   var HelpdeskCardsOrgService;
   var LicenseService;
   var HelpdeskHuronService;
-  var HybridServicesClusterService;
   var $scope, q;
-  var CloudConnectorService;
-  var UCCService;
 
-  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_, _HybridServicesClusterService_, _CloudConnectorService_, _UCCService_) {
+  beforeEach(inject(function (_HelpdeskCardsOrgService_, _$q_, _LicenseService_, _$rootScope_, _HelpdeskHuronService_) {
     HelpdeskCardsOrgService = _HelpdeskCardsOrgService_;
     LicenseService = _LicenseService_;
     HelpdeskHuronService = _HelpdeskHuronService_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
     $scope = _$rootScope_.$new();
     q = _$q_;
-    CloudConnectorService = _CloudConnectorService_;
-    UCCService = _UCCService_;
-    spyOn(HybridServicesClusterService, 'getAll').and.returnValue(q.resolve(getJSONFixture('hercules/fusion-cluster-service-test-clusters.json')));
   }));
 
   describe('Org Cards', function () {
@@ -64,7 +57,7 @@ describe('HelpdeskCardsService', function () {
     });
 
     afterEach(function () {
-      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = HybridServicesClusterService = $scope = q = CloudConnectorService = UCCService = undefined;
+      HelpdeskCardsOrgService = LicenseService = HelpdeskHuronService = $scope = q = undefined;
     });
 
     it('should return correct message card for org', function () {
@@ -172,81 +165,6 @@ describe('HelpdeskCardsService', function () {
       expect(license.type).toEqual('SHARED_DEVICES');
       expect(license.volume).toEqual(100);
       expect(license.usage).toEqual(50);
-    });
-
-    it('should return correct hybrid service card for org with only calendar setup', function () {
-      var org = {
-        services: ['squared-fusion-mgmt', 'squared-fusion-cal', 'squared-fusion-uc', 'squared-fusion-media'],
-      };
-      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
-      $scope.$apply();
-
-      expect(card.entitled).toBeTruthy();
-      expect(card.services.length).toEqual(3);
-
-      expect(card.services[0].serviceId).toEqual('squared-fusion-cal');
-      expect(card.services[0].status).toEqual('operational');
-      expect(card.services[0].setup).toBeTruthy();
-      expect(card.services[0].statusCss).toEqual('success');
-
-      expect(card.services[1].serviceId).toEqual('squared-fusion-uc');
-      expect(card.services[1].status).toEqual('operational');
-      expect(card.services[1].setup).toBeTruthy();
-      expect(card.services[1].statusCss).toEqual('success');
-
-      expect(card.services[2].serviceId).toEqual('squared-fusion-media');
-      expect(card.services[2].status).toEqual('setupNotComplete');
-      expect(card.services[2].setup).toBeFalsy();
-      expect(card.services[2].statusCss).toEqual('disabled');
-    });
-
-    it('should return correct hybrid service card when google calendar is enabled', function () {
-      spyOn(CloudConnectorService, 'getService').and.returnValue(q.resolve({ serviceId: 'squared-fusion-gcal', setup: true, status: 'OK', statusCss: 'success' }));
-      var org = {
-        services: ['squared-fusion-mgmt', 'squared-fusion-gcal'],
-      };
-      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
-      $scope.$apply();
-
-      expect(card.entitled).toBeTruthy();
-      expect(card.services.length).toBe(1);
-
-      expect(card.services[0].serviceId).toEqual('squared-fusion-gcal');
-      expect(card.services[0].status).toEqual('OK');
-      expect(card.services[0].setup).toBeTruthy();
-      expect(card.services[0].statusCss).toEqual('success');
-    });
-
-    it('should get the voicemail status from UCCService if the org is entitled to Call Service Connect, and show a green icon if the service is good', function () {
-      spyOn(UCCService, 'getOrgVoicemailConfiguration').and.returnValue(q.resolve({
-        voicemailOrgEnableInfo: {
-          orgVoicemailStatus: 'HYBRID_SUCCESS',
-        },
-      }));
-      LicenseService.orgIsEntitledTo.and.callFake(function (org, service) {
-        return service === 'squared-fusion-ec';
-      });
-      var org = {
-        services: ['squared-fusion-mgmt', 'squared-fusion-ec'],
-      };
-      var card = HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
-      $scope.$apply();
-
-      expect(card.services.length).toBe(1);
-      expect(card.services[0].statusCss).toEqual('success');
-      expect(UCCService.getOrgVoicemailConfiguration).toHaveBeenCalled();
-    });
-
-    it('should not get voicemail status if the org is not entitled to Call Service Connect', function () {
-      spyOn(UCCService, 'getOrgVoicemailConfiguration');
-      LicenseService.orgIsEntitledTo.and.returnValue(false);
-      var org = {
-        services: ['squared-fusion-mgmt'],
-      };
-      HelpdeskCardsOrgService.getHybridServicesCardForOrg(org);
-      $scope.$apply();
-
-      expect(UCCService.getOrgVoicemailConfiguration).not.toHaveBeenCalled();
     });
 
     it('should return care card for org', function () {

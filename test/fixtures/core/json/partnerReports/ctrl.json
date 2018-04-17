@@ -2,7 +2,7 @@
   "ALL": "all",
   "ENGAGEMENT": "engagement",
   "QUALITY": "quality",
-  "DETAILS": "Details",
+  "DETAILS": "details",
   "EMPTY": "empty",
   "ERROR": "error",
   "REFRESH": "refresh",
@@ -13,7 +13,7 @@
   "SCREEN_LG": "screen-lg",
   "reportFilter": [{
     "id": "allReports",
-    "label": "reportsPage.all",
+    "label": "common.all",
     "selected": true
   }, {
     "id": "engagementReports",

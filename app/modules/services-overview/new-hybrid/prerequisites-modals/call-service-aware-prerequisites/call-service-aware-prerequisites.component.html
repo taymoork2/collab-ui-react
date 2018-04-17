@@ -1,0 +1,89 @@
+<div class="intro">
+  <p translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.intro"></p>
+  <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+  </button>
+</div>
+<div class="steps-list">
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+  <div class="cs-checkbox-group">
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.determineCertificateTrust"
+        id="checkboxAware1"
+        name="checkboxAware1"
+        ng-change="$ctrl.processChange('determineCertificateTrust', $ctrl.checkboxes.determineCertificateTrust)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.determineCertificateTrust' | translate}}">
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.registerAllDomains"
+        id="checkboxAware2"
+        name="checkboxAware2"
+        ng-change="$ctrl.processChange('registerAllDomains', $ctrl.checkboxes.registerAllDomains)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.registerAllDomains' | translate}}">
+    <div class="checklist-help-text">
+      <span translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.registerAllDomainsHelp1"></span>
+    </div>
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.installOrUpgradeUCM"
+        id="checkboxAware3"
+        name="checkboxAware3"
+        ng-change="$ctrl.processChange('installOrUpgradeUCM', $ctrl.checkboxes.installOrUpgradeUCM)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.installOrUpgradeUCM' | translate}}">
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.configureRouting"
+        id="checkboxAware4"
+        name="checkboxAware4"
+        ng-change="$ctrl.processChange('configureRouting', $ctrl.checkboxes.configureRouting)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.configureRouting' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.configureRoutingHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.configureRoutingHelp2"></li>
+    </ul>
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.setFormat"
+        id="checkboxAware5"
+        name="checkboxAware5"
+        ng-change="$ctrl.processChange('setFormat', $ctrl.checkboxes.setFormat)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.setFormat' | translate}}">
+    <div class="checklist-help-text">
+      <span translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.setFormatHelp1"></span>
+    </div>
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.enableUCMServices"
+        id="checkboxAware6"
+        name="checkboxAware6"
+        ng-change="$ctrl.processChange('enableUCMServices', $ctrl.checkboxes.enableUCMServices)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.enableUCMServices' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.enableUCMServicesHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.awareSetup.enableUCMServicesHelp2"></li>
+    </ul>
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.enableServiceability"
+        id="checkboxAware7"
+        name="checkboxAware7"
+        ng-change="$ctrl.processChange('enableServiceability', $ctrl.checkboxes.enableServiceability)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.awareSetup.enableServiceability' | translate}}">
+
+  </div>
+</div>

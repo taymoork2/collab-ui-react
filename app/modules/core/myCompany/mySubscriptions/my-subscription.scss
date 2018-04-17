@@ -1,29 +1,11 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-
-.iframe-container {
-  display: inline;
-}
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .subscriptions-container {
   @include vr-spacing(mh, 1);
   @include vr-spacing(mv, 1.25);
   @include vr-spacing(p, 0);
-
-  .overage-warning {
-    @include vr-spacing(mh, 1);
-
-    .cs-alert-banner-text {
-      max-width: rem-calc(900);
-    }
-
-    .icon-warning {
-      color: $color-alerts-base;
-      font-size: vr-adjust(16);
-      top: rem-calc(2);
-    }
-  }
 
   .cs-card-layout,
   .cs-card-layout.cs-card-block {
@@ -56,6 +38,10 @@
     .subscription-header.pro-pack-view {
       padding-top: rem-calc(1);
       border-right: rem-calc(1) solid $gray-light-3;
+    }
+
+    .subscription-column.pro-pack-view {
+      border-left: rem-calc(1) solid $gray-light-3;
     }
 
     .sub-name {
@@ -189,7 +175,8 @@
 
   .pro-pack-card {
     .category-icon {
-      font-size: vr-adjust(20);
+      color: $color-blue-base !important;
+      top: 0 !important;
     }
 
     .category-icon,
@@ -218,6 +205,10 @@
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
       width: auto;
+
+      .online-subscription-summary {
+        @include vr-spacing(mb, 0);
+      }
     }
 
     .category-data-section {

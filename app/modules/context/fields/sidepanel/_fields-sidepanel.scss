@@ -14,4 +14,56 @@
     max-width: 100%;
     overflow-wrap: break-word;
   }
+
+  // specify that an identifier does not wrap or extend beyond its bounds. If too big, uses ellipsis.
+  .identifier {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  ul.feature-details.option-list {
+    margin-left: 0;
+    padding-left: 0;
+    max-width: 100%;
+    cursor: default;
+
+    // list item for an option
+    li {
+      list-style-type: none;
+      width: 100%;
+      margin-bottom: 10px;
+      // add a little more space to the top of the first one
+      &:first-child {
+        margin-top: 25px;
+      }
+
+      // the id of the option
+      .option {
+        @extend .identifier;
+
+        display: inline-block;
+        width: auto;
+        border-radius: 4px;
+        background-color: $gray-light-3;
+        padding: 4px 10px;
+        vertical-align: middle;
+        max-width: 100%;
+
+        // default options need to leve space for the badge
+        &.option-default {
+          max-width: 85%;
+        }
+      }
+
+      // the badge indicating that the option is the default
+      .badge {
+        display: inline-block;
+        white-space: nowrap;
+        padding-top: 4px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+    }
+  }
 }

@@ -1,36 +1,33 @@
-<div ng-if="grid.appScope.isEdit && row.entity.isEdit"
-     class="ui-grid-cell-contents select-overflow"
-     ng-class="{'error': row.entity.validation.country.invalid}"
-     tooltip-class="tn-error"
-     tooltip-append-to-body="true"
-     tooltip-is-open="row.entity.validation.country.show"
-     tooltip-html-unsafe="{{row.entity.validation.country.message}}">
-  <cs-select id="{{row.uid}}-country"
-             placeholder="grid.appScope.countryPlaceholder"
-             is-disabled="grid.appScope.submitLoading"
-             title="{{row.entity.country.label}}"
-             options="grid.appScope.countryOptions"
-             labelfield="label"
-             valuefield="value"
-             ng-change="grid.appScope.TelephonyNumberValidateService.validateCountry(row)"
-             ng-model="row.entity.country">
+<div ng-mouseover="row.entity.isEdit=true"
+  ng-if="grid.appScope.isEdit"
+  id="{{row.uid}}-country"
+  class="ui-grid-cell-contents select-overflow"
+  ng-class="{'error': row.entity.validation.country.invalid}"
+  tabindex="0"
+  tooltip-class="tn-error"
+  tooltip-append-to-body="true"
+  tooltip-is-open="row.entity.validation.country.show"
+  tooltip-html-unsafe="{{row.entity.validation.country.message}}"
+  aria-label="{{row.entity.validation.country.ariaLabel}}">
+  <cs-select ng-if="row.entity.isEdit"
+    placeholder="grid.appScope.countryPlaceholder"
+    is-disabled="grid.appScope.submitLoading"
+    title="{{row.entity.country.label}}"
+    options="grid.appScope.countryOptions"
+    labelfield="label"
+    valuefield="value"
+    ng-change="grid.appScope.TelephonyNumberValidateService.validateCountry(row)"
+    ng-model="row.entity.country">
   </cs-select>
-</div>
-<div ng-if="grid.appScope.isEdit && !row.entity.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents"
-     title="{{row.entity.country.label}}">
-  <div class="select-list">
-    <div class="dropdown" cs-dropdown cs-keyboard-nav="true">
-      <span class="select-toggle form-control" tabindex="0" aria-expanded="false" ng-class="{ disabled: grid.appScope.submitLoading }">
-        {{row.entity.country.label}}
-        <i class="icon icon-chevron-down" ng-class="csSelect.icon"></i>
-      </span>
-    </div>
+  <div ng-if="!row.entity.isEdit" class="select-list">
+    <span class="select-toggle form-control" tabindex="0" aria-expanded="false" ng-class="{ disabled: grid.appScope.submitLoading }">
+      {{row.entity.country.label}}
+      <i class="icon icon-chevron-down" ng-class="csSelect.icon"></i>
+    </span>
   </div>
 </div>
 <div ng-if="!grid.appScope.isEdit"
-     class="ui-grid-cell-contents read-only-text"
-     title="{{row.entity.country.label}}">
+  class="ui-grid-cell-contents read-only-text"
+  title="{{row.entity.country.label}}">
   {{row.entity.country.label}}
 </div>

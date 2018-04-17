@@ -1,8 +1,6 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-  <h3 class="modal-title" translate="gemini.tds.request.modalTitle"></h3>
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="gemini.tds.request.importTdModalTitle"></h3>
 </div>
 
 <div class="modal-body gemini-request-callbackgroup">

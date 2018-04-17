@@ -48,6 +48,12 @@
             quantity: 0,
             readonly: false,
             valid: true,
+          }, {
+            model: 'CISCO_ROOM_KIT',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true,
           }],
         },
       };

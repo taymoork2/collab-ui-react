@@ -13,5 +13,5 @@ export class AuthenticationSetting extends SettingSection {
 export class AuthenticationSettingComponent implements ng.IComponentOptions {
   public controller = AuthenticationSettingController;
   public controllerAs = 'vm';
-  public templateUrl = 'modules/core/settings/authentication/authenticationSetting.tpl.html';
+  public template = require('modules/core/settings/authentication/authenticationSetting.tpl.html');
 }

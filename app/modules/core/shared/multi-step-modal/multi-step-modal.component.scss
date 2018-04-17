@@ -1,0 +1,27 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+multi-step-modal {
+  @include keep-flex-container(column);
+
+  .modal-footer {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    .btn {
+      margin-left: .75rem;
+      flex-grow: 0;
+    }
+
+    .modal-footer__warning {
+      flex-grow: 1;
+
+      h6 {
+        color: $red-dark;
+        text-align: left;
+      }
+    }
+  }
+}

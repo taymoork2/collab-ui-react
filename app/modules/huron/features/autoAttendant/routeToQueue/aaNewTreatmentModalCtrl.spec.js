@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: AANewTreatmentModalCtrl', function () {
-  var $scope;
+  var $scope, $rootScope;
   var $controller, controller;
   var AACommonService;
   var AutoAttendantCeMenuModelService;
@@ -90,8 +90,9 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($rootScope, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_) {
-    $scope = $rootScope.$new();
+  beforeEach(inject(function (_$rootScope_, _$controller_, _AACommonService_, _AutoAttendantCeMenuModelService_, _AAUiModelService_) {
+    $rootScope = _$rootScope_;
+    $scope = _$rootScope_.$new();
     $controller = _$controller_;
     AACommonService = _AACommonService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -142,7 +143,23 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
   }));
 
   afterEach(function () {
-
+    $rootScope = null;
+    $scope = null;
+    $controller = null;
+    AACommonService = null;
+    AutoAttendantCeMenuModelService = null;
+    AAUiModelService = null;
+    uiMenu = null;
+    menuEntry = null;
+    musicOnHold = null;
+    initialAnnouncement = null;
+    periodicAnnouncement = null;
+    fallback = null;
+    playAction = null;
+    iaAction = null;
+    paAction = null;
+    fbAction = null;
+    routeToQueue = null;
   });
 
   describe('activate', function () {
@@ -365,8 +382,10 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
 
     it('ok function call results in calling resolving queue settings status', function () {
       spyOn(AACommonService, 'setQueueSettingsStatus');
+      spyOn($rootScope, '$broadcast');
       controller.ok();
       expect(AACommonService.setQueueSettingsStatus).toHaveBeenCalledWith(true);
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('AASaveQueueSettings');
     });
 
     describe('functionality', function () {
@@ -405,6 +424,14 @@ describe('Controller: AANewTreatmentModalCtrl', function () {
         controller.ok();
         expect(mohPlayAction.value).toEqual(VALUE);
       });
+    });
+  });
+  describe('cancel', function () {
+    it('cancel function call results in dismissing the Modal.', function () {
+      spyOn($rootScope, '$broadcast');
+      controller.cancel();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('AACancelQueueSettings');
+      expect(modalFake.dismiss).toHaveBeenCalled();
     });
   });
 });

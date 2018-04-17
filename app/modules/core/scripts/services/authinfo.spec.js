@@ -261,6 +261,25 @@ describe('Authinfo:', function () {
       expect(Authinfo.isAllowedState('blah')).toBe(false);
     });
 
+    it('should return true even if it is a partner user role, if it is a partial admin and the state is allowed by that partial role', function () {
+      var Authinfo = setupUser({
+        roles: ['PARTNER_USER', 'Device_Admin'],
+      });
+
+      expect(Authinfo.isAllowedState('devices')).toBe(true);
+      expect(Authinfo.isAllowedState('places')).toBe(true);
+      expect(Authinfo.isAllowedState('support')).toBe(false);
+    });
+
+    it('should return true for support if a user is a partial admin with helpdesk access', function () {
+      var Authinfo = setupUser({
+        roles: ['User_Admin', 'Device_Admin', 'Help_Desk'],
+      });
+
+      expect(Authinfo.isAllowedState('reports')).toBe(false);
+      expect(Authinfo.isAllowedState('support')).toBe(true);
+    });
+
     it('should return false if the state is part of the restricted states for customers and the user has not a partner role', function () {
       setupConfig({
         restrictedStates: {
@@ -377,6 +396,70 @@ describe('Authinfo:', function () {
     });
   });
 
+  describe('should return for partial admin roles only when those roles are present', function () {
+    it('should not return true for isUserAdminUser or isDeviceAdminUser when user is Full_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Full_Admin'],
+      });
+      expect(Authinfo.isUserAdminUser()).toBe(false);
+      expect(Authinfo.isDeviceAdminUser()).toBe(false);
+    });
+
+    it('should return true for isUserAdminUser when user is User_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['User_Admin'],
+      });
+      expect(Authinfo.isUserAdminUser()).toBe(true);
+      expect(Authinfo.isDeviceAdminUser()).toBe(false);
+    });
+
+    it('should return true for isDeviceAdminUser when user is Device_Admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Device_Admin'],
+      });
+      expect(Authinfo.isDeviceAdminUser()).toBe(true);
+      expect(Authinfo.isUserAdminUser()).toBe(false);
+    });
+  });
+
+
+  describe('isPartialAdmin', function () {
+    it('should return false when the user is a full admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Full_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(false);
+    });
+
+    it('should return true when the user is a device admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Device_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+
+    it('should return true when the user is a support admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['Support'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+
+    it('should return true when the user is a user admin', function () {
+      setupConfig();
+      var Authinfo = setupUser({
+        roles: ['User_Admin'],
+      });
+      expect(Authinfo.isPartialAdmin()).toEqual(true);
+    });
+  });
+
   describe('customer with CONFERENCING license', function () {
     var accountData = {
       customers: [{
@@ -470,6 +553,131 @@ describe('Authinfo:', function () {
       accountData.customers[0].licenses = [];
       Authinfo.updateAccountInfo(accountData);
       expect(Authinfo.getCallPartnerOrgId()).toEqual(defaultUser.orgId);
+    });
+  });
+
+  describe('Online customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }, {
+          customerId: '2',
+          customerType: 'Online',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlineCustomer should return true if any customer is Online', function () {
+      expect(Authinfo.isOnlineCustomer()).toBe(true);
+    });
+
+    it('isOnlineOnlyCustomer should return true if all customers are Online', function () {
+      expect(Authinfo.isOnlineOnlyCustomer()).toBe(true);
+    });
+  });
+
+  describe('Online and Enterprise customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }, {
+          customerId: '2',
+          customerType: 'Enterprise',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlineCustomer should return true if any customer is Online', function () {
+      expect(Authinfo.isOnlineCustomer()).toBe(true);
+    });
+
+    it('isOnlineOnlyCustomer should return false if some customerss are not Online', function () {
+      expect(Authinfo.isOnlineOnlyCustomer()).toBe(false);
+    });
+  });
+
+  describe('Online trial customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+          subscriptions: [{
+            orderingTool: 'CISCO_ONLINE_OPC',
+            licenses: [{
+              licenseType: 'CONFERENCING',
+              linkedSiteUrl: 'www.abc.com',
+            }],
+          }],
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlinePaid should return false if Online customer has a trial subscription', function () {
+      expect(Authinfo.isOnlinePaid()).toBe(false);
+    });
+  });
+
+  describe('Online paid customer', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser();
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+          subscriptions: [{
+            orderingTool: 'DIGITAL_RIVER',
+            licenses: [{
+              licenseType: 'CONFERENCING',
+              linkedSiteUrl: 'www.abc.com',
+            }],
+          }],
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnlinePaid should return true if Online customer has a paid subscription', function () {
+      expect(Authinfo.isOnlinePaid()).toBe(true);
+    });
+  });
+
+  describe('Online customer converted to partner sales admin', function () {
+    var Authinfo;
+
+    beforeEach(function () {
+      Authinfo = setupUser({
+        roles: ['PARTNER_SALES_ADMIN'],
+      });
+      var accountData = {
+        customers: [{
+          customerId: '1',
+          customerType: 'Online',
+        }],
+      };
+      Authinfo.updateAccountInfo(accountData);
+    });
+
+    it('isOnline should return false if customer is a partner', function () {
+      expect(Authinfo.isOnline()).toBe(false);
     });
   });
 

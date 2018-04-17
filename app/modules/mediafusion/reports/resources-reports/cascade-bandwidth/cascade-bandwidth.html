@@ -1,0 +1,29 @@
+<cs-card id='cascade-bandwidth-card' class="cs-card--full media-metrics-report-card">
+    <article class="media-service-card header-padding">
+      <graphheader>
+        <span class='report-section-header' translate='mediaFusion.metrics.cascadeBandwidthCardOrgHeading'></span>
+        <i class='icon icon-info-outline icon-large'
+        tooltip="{{::'mediaFusion.metrics.cascadeBandwidthOrgDesc' | translate}}"
+        tooltip-class="metrics-tooltip"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{::'mediaFusion.metrics.cascadeBandwidthOrgDesc' | translate}}">
+        </i>
+        <div id="cascadeBandwidthExportDiv"></div>
+      </graphheader>
+      <section>
+        <div class="cascade-bandwidth-reports">
+          <div id="cascadeBandwidthDiv" class="barchart" ng-class="{'cluster-cascade-bandwidth-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.cascadebandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.cascadebandwidthStatus)}"></div>
+          <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.cascadebandwidthStatus)">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+          <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.cascadebandwidthStatus)">
+            <h3 class="no-data">
+              <i class='icon icon-warning no-data-warning'></i>
+              <span translate='mediaFusion.metrics.nodata'></span>
+            </h3>
+          </div>
+        </div>
+      </section>
+    </article>
+  </cs-card>
+  

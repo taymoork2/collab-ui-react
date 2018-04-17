@@ -1,0 +1,39 @@
+<div ng-form="locationVoicemailForm">
+  <label ng-if="$ctrl.displayLabel"
+    class="sub-section__label"
+    translate="serviceSetupModal.voicemail">
+  </label>
+  <p class="description-block">{{$ctrl.voicemailToEmailText}} {{::'locations.voicemailInstruction' | translate}}</p>
+  <div class="row">
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.externalAccess"
+      id="externalVoiceMailAccess"
+      name="externalVoiceMailAccess"
+      ng-change="$ctrl.onExternalVoicemailAccessChanged()"
+      cs-input-label="{{::'serviceSetupModal.externalVoicemailAccessLabel' | translate}}">
+    <div class="indent-left">
+      <p class="description-block" translate="serviceSetupModal.externalNumberDescriptionText"></p>
+      <div class="medium-5">
+        <cs-select
+          name="externalVoicemailNumber"
+          ng-model="$ctrl.externalNumberModel"
+          options="$ctrl.externalNumberOptions"
+          input-placeholder="$ctrl.selectPlaceholder"
+          on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
+          is-warn="{{$ctrl.missingDirectNumbers}}"
+          warn-msg="{{::'serviceSetupModal.voicemailNoDirectNumbersError' | translate}}"
+          filter="true"
+          cs-required="$ctrl.externalAccess"
+          is-disabled="!$ctrl.externalAccess"
+          refresh-data-fn="$ctrl.onNumberFilter(filter)">
+        </cs-select>
+        <p ng-if="!$ctrl.missingDirectNumbers"
+          class="help-block"
+          translate="serviceSetupModal.voicemailPilotHelpText">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

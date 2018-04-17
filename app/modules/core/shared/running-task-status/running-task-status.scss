@@ -1,0 +1,29 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+running-task-status {
+
+  .rts-container {
+    position: absolute;
+    left: 50%;
+    font-family: $brand-font-light;
+    font-size: 1rem;
+    background-color: $gray-dark-4;
+    color: $color-white;
+    @include vr-spacing(pv, 0.25);
+    @include vr-spacing(ph, 1);
+    z-index: 10;
+    transform: translateX(-50%);
+    &:hover {
+      background: $gray-dark-2;
+    }
+
+    &__spinner {
+      color: $color-white;
+      vertical-align: middle;
+      @include vr-spacing(mr, 0.25);
+    }
+  }
+}

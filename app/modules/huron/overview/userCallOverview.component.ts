@@ -3,7 +3,9 @@ import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.c
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
 import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
 import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
+import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 const SNR_CHANGE = 'SNR_CHANGE';
+const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   public currentUser;
@@ -15,6 +17,9 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   public userServices: string[] = [];
   public snrEnabled: boolean = false;
   public wide: boolean = true;
+  public primaryLineEnabled: boolean = false;
+  public userPrimaryNumber: PrimaryNumber;
+  public isPrimaryLineFeatureEnabled: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -25,6 +30,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private LineService: LineService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
+    private PrimaryLineService: PrimaryLineService,
     private $q: ng.IQService,
 
   ) {
@@ -40,25 +46,16 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.snrEnabled = status;
       this.initFeatures();
     });
+    this.$scope.$on(PRIMARY_LINE_SELECTION_CHANGE, (_e, status) => {
+      this.primaryLineEnabled = status;
+      this.initFeatures();
+    });
   }
 
   public $onInit(): void {
     this.initActions();
-    const promises  = {
-      1: this.HuronVoicemailService.isEnabledForCustomer(),
-      2: this.HuronUserService.getUserServices(this.currentUser.id),
-      3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
-    };
-    this.$q.all(promises).then( data => {
-      this.customerVmEnabled = data[1];
-      this.userServices = data[2];
-      const rd: UserRemoteDestination[] = data[3];
-      this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
-    }).then(() => {
-      this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
-      this.initFeatures();
-    });
     this.initNumbers();
+    this.initServices();
   }
 
   private initActions(): void {
@@ -68,6 +65,26 @@ class UserCallOverviewCtrl implements ng.IComponentController {
         this.$state.go('user-overview.communication.line-overview');
       },
     }];
+  }
+
+  private initServices(): void {
+    const promises  = {
+      1: this.HuronVoicemailService.isEnabledForCustomer(),
+      2: this.HuronUserService.getUserServices(this.currentUser.id),
+      3: this.HuronUserService.getRemoteDestinations(this.currentUser.id),
+      4: this.HuronUserService.getUserLineSelection(this.currentUser.id),
+    };
+    this.$q.all(promises).then( data => {
+      this.customerVmEnabled = data[1];
+      this.userServices = data[2];
+      const rd: UserRemoteDestination[] = data[3];
+      this.snrEnabled = (!_.isEmpty(rd) && rd[0].enableMobileConnect === 'true');
+      this.userPrimaryNumber = data[4];
+      this.checkPrimaryLineFeature(this.userPrimaryNumber);
+    }).then(() => {
+      this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
+      this.initFeatures();
+    });
   }
 
   private initFeatures(): void {
@@ -89,13 +106,13 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     };
     this.features.push(snrService);
 
-    const service: IFeature = {
-      name: this.$translate.instant('telephonyPreview.speedDials'),
-      state: 'speedDials',
+    const phoneButtonLayoutService: IFeature = {
+      name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
+      state: 'phoneButtonLayout',
       detail: undefined,
       actionAvailable: true,
     };
-    this.features.push(service);
+    this.features.push(phoneButtonLayoutService);
 
     const cosService: IFeature = {
       name: this.$translate.instant('serviceSetupModal.cos.title'),
@@ -112,11 +129,27 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       actionAvailable: true,
     };
     this.features.push(externalTransferService);
+
+    if (this.isPrimaryLineFeatureEnabled) {
+      const primaryLineService: IFeature = {
+        name: this.$translate.instant('primaryLine.title'),
+        state: 'primaryLine',
+        detail: this.primaryLineEnabled ? this.$translate.instant('primaryLine.primaryLineLabel')
+                                        : this.$translate.instant('primaryLine.autoLabel'),
+        actionAvailable: true,
+      };
+      this.features.push(primaryLineService);
+    }
   }
 
   public clickFeature(feature: IFeature) {
+    const lineSelection = {
+      primaryLineEnabled: this.primaryLineEnabled,
+      module: 'user',
+    };
     this.$state.go('user-overview.communication.' + feature.state, {
       currentUser: this.currentUser,
+      lineSelection: lineSelection,
     });
   }
 
@@ -124,9 +157,18 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     this.LineService.getLineList(LineConsumerType.USERS, this.currentUser.id, this.wide)
       .then(lines => this.directoryNumbers = lines);
   }
+
+  private checkPrimaryLineFeature(userPrimaryNumber: PrimaryNumber): void {
+    if (!_.isEmpty(userPrimaryNumber)) {
+      this.primaryLineEnabled = userPrimaryNumber.alwaysUseForOutboundCalls;
+    }
+    if (!this.PrimaryLineService.checkIfMultiLineExists(this.directoryNumbers)) {
+      this.isPrimaryLineFeatureEnabled = false;
+    }
+  }
 }
 
 export class UserCallOverviewComponent implements ng.IComponentOptions {
   public controller = UserCallOverviewCtrl;
-  public templateUrl = 'modules/huron/overview/userCallOverview.html';
+  public template = require('modules/huron/overview/userCallOverview.html');
 }

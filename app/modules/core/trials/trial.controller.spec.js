@@ -9,6 +9,9 @@ describe('Controller: TrialCtrl:', function () {
   var purchasedCustomerData = getJSONFixture('core/json/customers/customerWithLicensesNoTrial.json');
   var purchasedWithTrialCustomerData = getJSONFixture('core/json/customers/customerWithLicensesAndTrial.json');
   var enabledFeatureToggles = [];
+
+  var orgAlreadyRegistered = 'ORGANIZATION_REGISTERED_USING_API';
+
   afterEach(function () {
     controller = helpers = $controller = $scope = $state = $q = $translate = $window = $httpBackend = Analytics = Authinfo = Config = Notification = TrialService = TrialContextService = HuronCustomer = FeatureToggleService = Orgservice = undefined;
   });
@@ -45,6 +48,7 @@ describe('Controller: TrialCtrl:', function () {
     spyOn(Notification, 'success');
     spyOn(Notification, 'errorResponse');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+    $state.modal.result = $q.resolve();
     spyOn($state, 'go');
     spyOn($state, 'href');
     spyOn($window, 'open');
@@ -55,11 +59,11 @@ describe('Controller: TrialCtrl:', function () {
     removeContextSpy = spyOn(TrialContextService, 'removeService').and.returnValue($q.resolve());
     spyOn(TrialContextService, 'trialHasService').and.returnValue(false);
     spyOn(TrialPstnService, 'checkForPstnSetup').and.returnValue($q.resolve(false));
-    spyOn(FeatureToggleService, 'atlasContextServiceTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasCareInboundTrialsGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasDarlingGetStatus').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasTrialsShipDevicesGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'atlasCareCvcToCdcMigrationGetStatus').and.returnValue($q.resolve(false));
     spyOn(FeatureToggleService, 'supports').and.callFake(function (param) {
       return $q.resolve(_.includes(enabledFeatureToggles, param));
     });
@@ -161,7 +165,7 @@ describe('Controller: TrialCtrl:', function () {
               message: 'An error occurred',
             },
           }));
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
         });
 
@@ -620,6 +624,7 @@ describe('Controller: TrialCtrl:', function () {
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
             expect(max).toBe(50);
           });
+
           it('care license validation allows max value up to and including 50 with advance care enabled', function () {
             controller.details.licenseCount = 50;
             controller.careTrial.enabled = true;
@@ -645,11 +650,10 @@ describe('Controller: TrialCtrl:', function () {
             expect(max).toBe(50);
           });
 
-          it('advance care license validation allows max value up to and including 50 with advance care enabled', function () {
+          it('advance care license validation allows max value up to and including 50 with advance care enabled.', function () {
             controller.details.licenseCount = 50;
             controller.advanceCareTrial.enabled = true;
             controller.careTrial.details.quantity = 25;
-
             var max = controller._helpers.getCareMaxLicenseCount(controller.careTypes.K1);
             expect(max).toBe(50);
           });
@@ -793,7 +797,7 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to disable context service fails', function () {
           removeContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = false;
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).not.toHaveBeenCalled();
           expect(TrialContextService.removeService).toHaveBeenCalled();
@@ -817,15 +821,71 @@ describe('Controller: TrialCtrl:', function () {
         it('should display notification if call to enable context service fails', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
-          controller.editTrial();
+          controller.editTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(TrialContextService.removeService).not.toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.editTrialContextServiceEnableError');
         });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is enabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.advanceCareTrial.enabled = true;
+          controller.editTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, false)
+          // Should evaluate to true
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: true });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(true);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(TrialContextService.removeService).not.toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is disabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.careTrial.enabled = false;
+          controller.advanceCareTrial.enabled = false;
+          controller.editTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, false)
+          // Should evaluate to true
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: true });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(true);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(TrialContextService.removeService).not.toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
+        });
       });
     });
   });
+
   describe('start trial mode:', function () {
     beforeEach(function () {
       var stateParams = {
@@ -847,17 +907,19 @@ describe('Controller: TrialCtrl:', function () {
       expect(controller.webexTrial.enabled).toBeTruthy();
       expect(controller.roomSystemTrial.enabled).toBeTruthy();
       expect(controller.sparkBoardTrial.enabled).toBeTruthy();
-      expect(controller.callTrial.enabled).toBeTruthy();
+      expect(controller.callTrial.enabled).toBeFalsy();
       expect(controller.pstnTrial.enabled).toBeTruthy();
       expect(controller.contextTrial.enabled).toBeFalsy();
     });
 
     it('should start in trial.info state', function () {
-      expect(controller.navStates).toEqual(['trial.info']);
+      // NOTE - disparity found while fixing PURS - code will always init to these states. It was not doing it
+      // previously due to error being generated and aborting before toggleTrial() was called in controller init
+      expect(controller.navStates).toEqual(['trial.info', 'trial.webex', 'trial.pstn']);
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.call']);
     });
 
     it('should transition state', function () {
@@ -920,6 +982,7 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
+          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -939,6 +1002,7 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
+          controller.careTrial.enabled = false;
           controller.startTrial(callback);
           $scope.$apply();
         });
@@ -958,6 +1022,7 @@ describe('Controller: TrialCtrl:', function () {
           controller.roomSystemTrial.enabled = false;
           controller.pstnTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
+          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
         });
@@ -976,8 +1041,8 @@ describe('Controller: TrialCtrl:', function () {
           controller.pstnTrial.enabled = false;
         });
 
-        it('should have Squared UC offer', function () {
-          expect(controller.callTrial.enabled).toBeTruthy();
+        it('should not have Squared UC offer by default', function () {
+          expect(controller.callTrial.enabled).toBeFalsy();
           expect(controller.pstnTrial.enabled).toBeFalsy();
         });
 
@@ -992,7 +1057,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1000,8 +1065,8 @@ describe('Controller: TrialCtrl:', function () {
       });
 
       describe('With Squared UC and PSTN', function () {
-        it('should have Squared UC offer', function () {
-          expect(controller.callTrial.enabled).toBeTruthy();
+        it('should not have Squared UC offer by default', function () {
+          expect(controller.callTrial.enabled).toBeFalsy();
           expect(controller.pstnTrial.enabled).toBeTruthy();
         });
 
@@ -1019,7 +1084,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1073,6 +1138,7 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
+          controller.careTrial.enabled = false;
           controller.startTrial();
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
@@ -1085,7 +1151,8 @@ describe('Controller: TrialCtrl:', function () {
           controller.callTrial.enabled = false;
           controller.roomSystemTrial.enabled = false;
           controller.sparkBoardTrial.enabled = false;
-          controller.startTrial();
+          controller.careTrial.enabled = false;
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
@@ -1131,7 +1198,7 @@ describe('Controller: TrialCtrl:', function () {
             message: 'An error occurred',
           },
         }));
-        controller.startTrial();
+        controller.startTrial().catch(_.noop);
         $scope.$apply();
       });
 
@@ -1311,7 +1378,7 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should have correct navigation state order', function () {
-      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstnDeprecated', 'trial.emergAddress', 'trial.call']);
+      expect(controller.navOrder).toEqual(['trial.info', 'trial.webex', 'trial.pstn', 'trial.call']);
     });
 
     it('should transition state', function () {
@@ -1435,7 +1502,7 @@ describe('Controller: TrialCtrl:', function () {
 
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1467,7 +1534,7 @@ describe('Controller: TrialCtrl:', function () {
         });
         it('error should notify error', function () {
           spyOn(HuronCustomer, 'create').and.returnValue($q.reject());
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(Notification.errorResponse).toHaveBeenCalled();
           expect(Notification.errorResponse.calls.count()).toEqual(1);
@@ -1527,10 +1594,38 @@ describe('Controller: TrialCtrl:', function () {
           addContextSpy.and.returnValue($q.reject('rejected'));
           controller.contextTrial.enabled = true;
           controller.callTrial.enabled = false;
-          controller.startTrial();
+          controller.startTrial().catch(_.noop);
           $scope.$apply();
           expect(TrialContextService.addService).toHaveBeenCalled();
           expect(Notification.errorResponse).toHaveBeenCalledWith('rejected', 'trialModal.startTrialContextServiceError');
+        });
+
+        it('doesn\'t notify on ORGANIZATION_REGISTERED_USING_API if care trial is disabled', function () {
+          addContextSpy.and.returnValue(
+            $q.reject({
+              data: {
+                error: {
+                  statusText: orgAlreadyRegistered,
+                },
+              },
+            })
+          );
+
+          controller.contextTrial.enabled = true;
+          controller.callTrial.enabled = false;
+          controller.careTrial.enabled = false;
+          controller.advanceCareTrial.enabled = false;
+          controller.startTrial();
+
+          // Check if button is greyed out, depending on form element being touched (in this case, true)
+          // Should evaluate to false
+          var greyedOut = controller.hasRegisteredContextService({ $pristine: false });
+
+          $scope.$apply();
+
+          expect(greyedOut).toBe(false);
+          expect(TrialContextService.addService).toHaveBeenCalled();
+          expect(Notification.errorResponse).not.toHaveBeenCalled();
         });
 
         it('should not be able to proceed if no other trial services are checked', function () {
@@ -1571,7 +1666,7 @@ describe('Controller: TrialCtrl:', function () {
             message: 'An error occurred',
           },
         }));
-        controller.startTrial();
+        controller.startTrial().catch(_.noop);
         $scope.$apply();
       });
 
@@ -1674,6 +1769,8 @@ describe('Controller: TrialCtrl:', function () {
     });
 
     it('should populate name and email fields', function () {
+      spyOn(HuronCustomer, 'create').and.returnValue($q.resolve());
+      spyOn(TrialPstnService, 'createPstnEntityV2').and.returnValue($q.resolve());
       spyOn(TrialService, 'startTrial').and.returnValue($q.resolve(getJSONFixture('core/json/trials/trialAddResponse.json')));
       controller.startTrial();
       $scope.$apply();

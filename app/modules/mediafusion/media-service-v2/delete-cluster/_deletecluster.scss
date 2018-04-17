@@ -1,53 +1,70 @@
-.deleteClusterTableRow {
-  border-top: 0;
-  display: flex;
+@import '~@collabui/collab-ui/scss/settings/colors';
 
-  td[disabled] {
-    width: 40%;
-    padding-left: 0rem;
+.mf-delete-cluster-modal {
+
+  .deleteClusterTableRow {
+    border-top: 0;
+    display: flex;
+
+    td[disabled] {
+      width: 40%;
+      padding-left: 0rem;
+      color: $gray-light-1;
+    }
+
+    td {
+      width: 40%;
+      padding-left: 0rem;
+    }
+  }
+
+  .deleteClusterTableHeaderRow {
+    border-top: 0;
+    display: flex;
+
+    th {
+      background-color: white;
+      width: 40%;
+      padding-left: 0rem;
+      color: $gray-light-1;
+    }
+  }
+
+  .radioButton1 {
+    display: inline-block;
+    padding-right: 1.2rem;
+  }
+
+  .makeASelection {
+    padding-top: 1rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .radioGroup {
+    margin-bottom: 0rem;
+  }
+
+  .selectTheDest {
     color: $gray-light-1;
+    font-style: italic;
   }
 
-  td {
-    width: 40%;
-    padding-left: 0rem;
+  .deleteClusterTableRow .select-list .msg-container {
+    position: inherit;
+    width: 100%;
   }
-}
-
-.deleteClusterTableHeaderRow {
-  border-top: 0;
-  display: flex;
-}
-
-.deleteClusterTableHeaderRow {
-  th {
-    background-color: white;
-    width: 40%;
-    padding-left: 0rem;
-    color: $gray-light-1;
+  .remove-cluster-spinner {
+    text-align: center;
+    height: 100%;
+    width: 100%;
   }
-}
+  .warning-icon {
+    color: $color-attention-base;
+    margin-right: 0.06rem;
+  }
+  .warning-container {
+    margin-left: 1.87rem;
+    max-width: 31.25rem;
+  }
 
-.radioButton1 {
-  display: inline-block;
-  padding-right: 1.2rem;
-}
-
-.makeASelection {
-  padding-top: 1rem;
-  padding-bottom: 0.4rem;
-}
-
-.radioGroup {
-  margin-bottom: 0rem;
-}
-
-.selectTheDest {
-  color: $gray-light-1;
-  font-style: italic;
-}
-
-.deleteClusterTableRow .select-list .msg-container {
-  position: inherit;
-  width: 100%;
 }

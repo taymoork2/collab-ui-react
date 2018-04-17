@@ -1,28 +1,34 @@
 <span ng-if="row.entity.isLinkedSite">
   <!-- display enabled Metrics report icon and tooltip -->
-  <i ng-click="grid.appScope.siteList.linkToReports(row.entity.license.linkedSiteUrl)"
+  <i ng-click="grid.appScope.linkToReports(row.entity.license.linkedSiteUrl)"
     class="icon icon-report iconEnabledWithHover grid-vcenter"
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.siteReports' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.siteReports' | translate}}">
+  </i>
   <span>&nbsp;</span>
 
   <!-- display enabled config icon and tooltip -->
-  <i ng-click="grid.appScope.siteList.linkToSiteAdminHomePage(row.entity.license.linkedSiteUrl)"
+  <i ng-click="grid.appScope.linkToSiteAdminHomePage(row.entity.license.linkedSiteUrl)"
     class="icon icon-webex iconEnabledWithHover grid-vcenter"
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.linkedSiteAdminTool' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.linkedSiteAdminTool' | translate}}">
+  </i>
 
   <span>&nbsp;</span>
   <!-- display enabled config icon and tooltip -->
-  <i ng-click="grid.appScope.siteList.linkToSiteAdminLinkedPage(row.entity.license.linkedSiteUrl)"
+  <i ng-click="grid.appScope.linkToSiteAdminLinkedPage(row.entity.license.linkedSiteUrl)"
     class="icon icon-document iconEnabledWithHover grid-vcenter"
     tabindex="0"
     tooltip-append-to-body="true"
     tooltip="{{::'siteList.LinkedSiteProgress' | translate}}"
-    tooltip-trigger="focus mouseenter"></i>
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{::'siteList.LinkedSiteProgress' | translate}}">
+  </i>
 </span>
 

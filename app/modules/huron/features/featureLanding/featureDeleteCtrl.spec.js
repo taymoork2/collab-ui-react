@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Huron Feature DeleteCtrl for AA', function () {
-  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, featDefer, AACalendarService;
+  var controller, Notification, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAModelService, featDefer, AACalendarService, AACommonService, DoRestService;
   var $rootScope, $scope, $stateParams, $q, $timeout;
 
   var cesWithNumber = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
@@ -29,7 +29,7 @@ describe('Huron Feature DeleteCtrl for AA', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$timeout_, _Notification_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeService_, _AAModelService_, _AACalendarService_, _AACommonService_, _DoRestService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $q = _$q_;
@@ -39,6 +39,8 @@ describe('Huron Feature DeleteCtrl for AA', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AAModelService = _AAModelService_;
     AACalendarService = _AACalendarService_;
+    AACommonService = _AACommonService_;
+    DoRestService = _DoRestService_;
 
     featDefer = $q.defer();
     spyOn(AutoAttendantCeService, 'deleteCe').and.returnValue(featDefer.promise);
@@ -63,6 +65,10 @@ describe('Huron Feature DeleteCtrl for AA', function () {
     $scope.$apply();
   }));
 
+  afterEach(function () {
+    $rootScope = $scope = $q = $timeout = Notification = AutoAttendantCeService = AutoAttendantCeInfoModelService = AAModelService = AACalendarService = AACommonService = DoRestService = featDefer = undefined;
+  });
+
   describe('deleteFeature', function () {
     beforeEach(function () {
       spyOn(Notification, 'success');
@@ -71,6 +77,7 @@ describe('Huron Feature DeleteCtrl for AA', function () {
       spyOn($scope.vm, 'deleteError').and.callThrough();
 
       spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
+      spyOn(DoRestService, 'deleteDoRest').and.returnValue($q.resolve());
 
       var ceInfos = [];
       for (var i = 0; i < cesWithNumber.length; i++) {
@@ -86,16 +93,66 @@ describe('Huron Feature DeleteCtrl for AA', function () {
         statusText: 'OK',
       };
 
-      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(true);
       controller.deleteFeature();
       featDefer.resolve(successResponse);
       $scope.$apply();
       $timeout.flush();
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
       expect(Notification.success).toHaveBeenCalledWith(
         'huronFeatureDetails.deleteSuccessText', jasmine.any(Object)
       );
       expect(Notification.error).not.toHaveBeenCalled();
-      expect(aaModel.ceInfos.length).toEqual(1);
+      expect(aaModel.ceInfos.length).toBe(1);
+      expect(AutoAttendantCeInfoModelService.deleteCeInfo).toHaveBeenCalled();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+    });
+
+    it('should produce a success notification and broadcast when auto attendant is deleted in non-REST API toggled tenants', function () {
+      var successResponse = {
+        status: 200,
+        statusText: 'OK',
+      };
+
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(false);
+      controller.deleteFeature();
+      featDefer.resolve(successResponse);
+      $scope.$apply();
+      $timeout.flush();
+      expect(DoRestService.deleteDoRest).not.toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith(
+        'huronFeatureDetails.deleteSuccessText', jasmine.any(Object)
+      );
+      expect(Notification.error).not.toHaveBeenCalled();
+      expect(aaModel.ceInfos.length).toBe(1);
+      expect(AutoAttendantCeInfoModelService.deleteCeInfo).toHaveBeenCalled();
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+    });
+
+    it('should produce a success notification and broadcast when auto attendant is deleted where the REST block is not found with 404', function () {
+      var successResponse = {
+        status: 200,
+        statusText: 'OK',
+      };
+
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(true);
+      DoRestService.deleteDoRest.and.returnValue($q.reject({
+        statusText: 'Not Found',
+        status: 404,
+      }));
+      controller.deleteFeature();
+      featDefer.resolve(successResponse);
+      $scope.$apply();
+      $timeout.flush();
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(Notification.success).toHaveBeenCalledWith(
+        'huronFeatureDetails.deleteSuccessText', jasmine.any(Object)
+      );
+      expect(Notification.error).not.toHaveBeenCalled();
+      expect(aaModel.ceInfos.length).toBe(1);
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).toHaveBeenCalled();
       expect($rootScope.$broadcast).toHaveBeenCalledWith('HURON_FEATURE_DELETED');
     });
@@ -106,12 +163,37 @@ describe('Huron Feature DeleteCtrl for AA', function () {
         status: 404,
         statusText: 'Not Found',
       };
-      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(true);
       controller.deleteFeature();
       featDefer.reject(errorResponse);
       $scope.$apply();
       $timeout.flush();
-      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(aaModel.ceInfos.length).toBe(2);
+      expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
+      expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
+      expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
+    });
+
+    it('should produce an error notification when auto attendant deletion fails while deleting a REST block', function () {
+      var errorResponse = {
+        data: 'Not Found',
+        status: 404,
+        statusText: 'Not Found',
+      };
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(true);
+      DoRestService.deleteDoRest.and.returnValue($q.reject({
+        statusText: 'Server Error',
+        status: 500,
+      }));
+      controller.deleteFeature();
+      featDefer.reject(errorResponse);
+      $scope.$apply();
+      $timeout.flush();
+      expect(DoRestService.deleteDoRest).toHaveBeenCalled();
+      expect(aaModel.ceInfos.length).toBe(2);
       expect(Notification.error).toHaveBeenCalledWith(jasmine.any(String));
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
       expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');
@@ -119,11 +201,13 @@ describe('Huron Feature DeleteCtrl for AA', function () {
 
     it('should produce a error notification if feature id for auto attendant delete is invalid', function () {
       $scope.vm.featureId = 'invalid-aa-id';
-      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(aaModel.ceInfos.length).toBe(2);
+      spyOn(AACommonService, 'isRestApiToggle').and.returnValue(true);
       controller.deleteFeature();
       $scope.$apply();
       $timeout.flush();
-      expect(aaModel.ceInfos.length).toEqual(2);
+      expect(DoRestService.deleteDoRest).not.toHaveBeenCalled();
+      expect(aaModel.ceInfos.length).toBe(2);
       expect(Notification.error).toHaveBeenCalledWith('huronFeatureDetails.deleteFailedText');
       expect(AutoAttendantCeInfoModelService.deleteCeInfo).not.toHaveBeenCalled();
       expect($rootScope.$broadcast).not.toHaveBeenCalledWith('HURON_FEATURE_DELETED');

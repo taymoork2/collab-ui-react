@@ -1,0 +1,10 @@
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.customer-reports {
+  @extend %content-subheader;
+
+  .metricsContent {
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+}

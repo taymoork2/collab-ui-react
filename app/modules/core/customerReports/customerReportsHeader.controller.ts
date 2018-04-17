@@ -1,17 +1,18 @@
-import ILogService = angular.ILogService;
 class CustomerReportsHeaderCtrl {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $scope: ng.IScope,
     private $state,
     private Authinfo,
     private FeatureToggleService,
     private MediaServiceActivationV2,
     private ProPackService,
-    private WebExApiGatewayService,
+    private WebexMetricsService,
     private $translate: ng.translate.ITranslateService,
   ) {
-    if (Authinfo.isCare()) {
+
+    if (this.Authinfo.isCare()) {
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.careTab'),
         state: 'reports.care',
@@ -23,10 +24,6 @@ class CustomerReportsHeaderCtrl {
           title: this.$translate.instant('reportsPage.sparkReports'),
           state: 'reports.sparkMetrics',
         });
-        this.headerTabs.push({
-          title: this.$translate.instant('reportsPage.webexMetrics.title'),
-          state: 'reports.webex-metrics',
-        });
       } else {
         this.headerTabs.push({
           title: this.$translate.instant('reportsPage.sparkReports'),
@@ -34,27 +31,21 @@ class CustomerReportsHeaderCtrl {
         });
       }
       if (features.isMfEnabled) {
-        if (features.mf) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.media',
-          });
-        } else if (features.mfMilestoneTwo) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.mediaservice',
-          });
-        } else {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.metrics',
-          });
-        }
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.mediaservice',
+        });
       }
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
+      if (features.autoLicenseEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.autoLicense'),
+          state: 'reports.autoLicense',
+        });
+      }
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }
@@ -62,51 +53,58 @@ class CustomerReportsHeaderCtrl {
     this.checkWebex();
   }
 
+  public isWebexClassicEnabled: boolean = false;
+  public isWebexMetricsEnabled: boolean = false;
   public headerTabs = new Array<any>();
 
-  private webex: boolean = false;
   private promises: any = {
-    mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
+    autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),
   };
 
-  private checkWebex (): void {
-    const webexSiteUrls = this.getUniqueWebexSiteUrls(); // strip off any duplicate webexSiteUrl to prevent unnecessary XML API calls
-
-    webexSiteUrls.forEach((url: string): void => {
-      this.WebExApiGatewayService.siteFunctions(url).then((result: any): void => {
-        if (result.isAdminReportEnabled && result.isIframeSupported) {
-          if (!this.webex) {
+  public checkWebex(): void {
+    this.FeatureToggleService.webexMetricsGetStatus().then((isMetricsOn: any) => {
+      this.isWebexMetricsEnabled = isMetricsOn;
+      if (isMetricsOn) {
+        this.WebexMetricsService.checkWebexAccessiblity().then((supports: any): void => {
+          const isSupported: any[] = this.WebexMetricsService.isAnySupported(supports);
+          if (isSupported) {
+            this.headerTabs.push({
+              title: this.$translate.instant('reportsPage.webexMetrics.title'),
+              state: 'reports.webex-metrics',
+            });
+          }
+          this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
+            if (hasClassicSite) {
+              this.isWebexClassicEnabled = true;
+              this.$scope.$broadcast('classicEnabled', this.isWebexMetricsEnabled);
+              if (!isSupported) {
+                this.headerTabs.push({
+                  title: this.$translate.instant('reportsPage.webexMetrics.title'),
+                  state: 'reports.webex-metrics',
+                });
+              }
+            }
+          });
+        });
+      } else {
+        this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
+          if (hasClassicSite) {
             this.headerTabs.push({
               title: this.$translate.instant('reportsPage.webex'),
               state: 'reports.webex',
             });
-            this.webex = true;
           }
-        }
-      }).catch(_.noop);
+        });
+      }
     });
   }
 
   public goToFirstReportsTab(): void {
     const firstTab = this.headerTabs[0];
     this.$state.go(firstTab.state);
-  }
-
-  private getUniqueWebexSiteUrls() {
-    const conferenceServices: any[] = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
-    const webexSiteUrls: any[] = [];
-
-    conferenceServices.forEach((conferenceService: any): void => {
-      webexSiteUrls.push(conferenceService.license.siteUrl);
-    });
-
-    return webexSiteUrls.filter((value: any, index: number, self: any): boolean => {
-      return self.indexOf(value) === index;
-    });
   }
 }
 

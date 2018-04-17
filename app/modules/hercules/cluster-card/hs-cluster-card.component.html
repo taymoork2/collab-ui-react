@@ -1,20 +1,17 @@
-<cs-card class="cluster-card medium">
+<cs-card class="cluster-card cs-card--medium">
   <article>
-    <header ng-class="{'one-liner': !$ctrl.hasNodesViewFeatureToggle}">
+    <header>
       <h4>{{::$ctrl.cluster.name}}</h4>
-      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && !$ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-list-hosts" tooltip-html-unsafe="{{$ctrl.getHostnames($ctrl.cluster)}}" tooltip-trigger="mouseenter" tooltip-placement="bottom">
-        <div translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></div>
-      </div>
-      <div ng-if="!$ctrl.cluster.isEmptyExpresswayCluster && $ctrl.hasNodesViewFeatureToggle && $ctrl.cluster.targetType !== 'ept'" class="cluster-nodes-link">
-        <a ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
+      <div ng-if="$ctrl.showLinkToNodesPage()" class="cluster-nodes-link">
+        <a href ng-click="$ctrl.openNodes($ctrl.cluster.targetType, $ctrl.cluster.id)">
           <span translate="hercules.fusion.list.nodes" translate-values="{count: $ctrl.countHosts($ctrl.cluster)}" translate-interpolation="messageformat"></span>
-          <span class="badge alert" ng-if="$ctrl.hasAlarms($ctrl.cluster)" translate="hercules.fusion.list.alarms"></span>
-          <span class="badge warning" ng-if="$ctrl.isInMaintenance($ctrl.cluster)" translate="hercules.fusion.list.maintenance"></span>
-          <span class="badge info" ng-if="$ctrl.hasUpgradeAvailable($ctrl.cluster)" translate="hercules.fusion.list.upgrade"></span>
+          <span class="badge badge-{{$ctrl.cluster.extendedProperties.alarmsBadgeCss}}" ng-if="$ctrl.cluster.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+          <span class="badge warning" ng-if="$ctrl.cluster.extendedProperties.maintenanceMode === 'on'" translate="hercules.fusion.list.maintenance"></span>
+          <span class="badge info" ng-if="$ctrl.cluster.extendedProperties.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
         </a>
       </div>
     </header>
-    <div class="row cluster-list-body" ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
+    <div class="row cluster-list-body" ng-if="!($ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt')">
       <div class="columns medium-3" ng-if="$ctrl.cluster.targetType === 'ept'"></div>
       <div class="columns medium-6" ng-if="$ctrl.cluster.targetType !== 'ept'">
         <div>
@@ -41,11 +38,11 @@
             <div class=" connection-status-icon connection-status-premises-icon"></div>
           </div>
           <div class="connection-status-services">
-            <div class="connection-status-service" ng-repeat="service in $ctrl.cluster.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'} | orderBy:'serviceId':false:$ctrl.hybridServicesComparator" ng-if="service.total > 0">
-              <a ng-click="$ctrl.openService(service.serviceId, $ctrl.cluster.id)">
-                <i class="icon icon-circle status-indicator" ng-class="service.state.cssClass"></i>
-                <span ng-if="service.serviceId !== 'squared-fusion-cal'">{{::'overview.cards.hybrid.services.' + service.serviceId | translate}}</span>
-                <span ng-if="service.serviceId === 'squared-fusion-cal'" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
+            <div class="connection-status-service" ng-repeat="serviceStatus in $ctrl.cluster.extendedProperties.servicesStatuses | filter: {serviceId: '!squared-fusion-mgmt'} | orderBy:'serviceId':false:$ctrl.hybridServicesComparator" ng-if="serviceStatus.total > 0">
+              <a href ng-click="$ctrl.openService(serviceStatus.serviceId, $ctrl.cluster.id)">
+                <cs-statusindicator ng-model="serviceStatus.state.cssClass"></cs-statusindicator>
+                <span ng-if="serviceStatus.serviceId !== 'squared-fusion-cal'">{{::'overview.cards.hybrid.services.' + serviceStatus.serviceId | translate}}</span>
+                <span ng-if="serviceStatus.serviceId === 'squared-fusion-cal'" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
               </a>
             </div>
           </div>
@@ -65,19 +62,22 @@
         </div>
       </div>
     </div>
-    <footer ng-if="!$ctrl.cluster.isEmptyExpresswayCluster">
-      <a ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
+    <footer ng-if="!($ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt')">
+      <a href ng-if="!$ctrl.hideFooter($ctrl.cluster)" ng-click="$ctrl.openSettings($ctrl.cluster.targetType, $ctrl.cluster.id)" translate="hercules.fusion.list.settings"></a>
     </footer>
 
-    <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.isEmptyExpresswayCluster">
-      <div class="medium-12" ng-if="$ctrl.cluster.allowedRedirectTarget">
+    <div class="row cluster-list-body empty-cluster-body" ng-if="$ctrl.cluster.extendedProperties.isEmpty && $ctrl.cluster.targetType === 'c_mgmt'">
+      <div class="medium-12" ng-if="$ctrl.cluster.extendedProperties.allowedRedirectTarget">
         <p translate="hercules.fusion.list.complete-registration"></p>
         <div class="center button-row">
           <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>
-          <button class="btn btn--primary" ng-click="$ctrl.goToExpressway($ctrl.cluster.allowedRedirectTarget.hostname)" translate="hercules.fusion.list.go-to-expressway"></button>
+          <button class="btn btn--primary"
+            ng-click="$ctrl.goToExpressway($ctrl.cluster.extendedProperties.allowedRedirectTarget.hostname)"
+            translate="hercules.fusion.list.go-to-expressway">
+          </button>
         </div>
       </div>
-      <div class="medium-12" ng-if="!$ctrl.cluster.allowedRedirectTarget">
+      <div class="medium-12" ng-if="!$ctrl.cluster.extendedProperties.allowedRedirectTarget">
         <p translate="hercules.fusion.list.registration-timeout"></p>
         <div class="center button-row">
           <button class="btn" ng-click="$ctrl.openDeleteConfirm($ctrl.cluster)" translate="common.remove"></button>

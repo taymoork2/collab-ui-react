@@ -98,7 +98,7 @@
       enabled: true,
     }, {
       name: 'trial.call',
-      trials: [vm.callTrial, vm.roomSystemTrial],
+      trials: [vm.callTrial, vm.roomSystemTrial, vm.sparkBoardTrial],
       enabled: true,
     }, {
       name: 'trial.pstnDeprecated',
@@ -166,6 +166,8 @@
       name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
+
+    vm.hasRegisteredContextService = hasRegisteredContextService;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -235,9 +237,10 @@
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
         ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        ftK1Promotion: FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
+        hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -251,6 +254,7 @@
           vm.showContextServiceTrial = true;
           vm.showBasicCare = results.ftCareTrials;
           vm.showAdvanceCare = results.ftAdvanceCareTrials;
+          vm.k1Promotion = results.ftK1Promotion;
           vm.showCare = vm.showBasicCare || vm.showAdvanceCare;
           vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
@@ -259,11 +263,9 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          vm.huronPstn = results.huronPstn;
+          vm.hybridCare = results.hybridCare;
 
-          if (vm.huronPstn) {
-            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
-          }
+          vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -318,7 +320,12 @@
     }
 
     function isPstn() {
-      return (((!vm.preset.call && hasEnabledCallTrial()) || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())) && !vm.preset.pstn);
+      if (vm.preset.pstn) {
+        return false;
+      }
+      return ((!vm.preset.call && hasEnabledCallTrial())
+      || (!vm.preset.roomSystems && hasEnabledRoomSystemTrial())
+      || (!vm.preset.sparkBoard && hasEnabledSparkBoardTrial()));
     }
 
     function toggleTrial() {
@@ -342,13 +349,7 @@
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
-
-      if (vm.huronPstn) {
-        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      } else {
-        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      }
-
+      setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       addRemoveStates();
     }
 
@@ -644,7 +645,7 @@
     }
 
     function hasEnabledSparkBoardTrial(vmSparkBoardTrial, vmPreset) {
-      var trial = vmSparkBoardTrial || vm.roomSystemTrial;
+      var trial = vmSparkBoardTrial || vm.sparkBoardTrial;
       var preset = vmPreset || vm.preset;
       return hasEnabled(trial.enabled, preset.sparkBoard);
     }
@@ -671,6 +672,10 @@
         hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
         hasEnabledCareTrial(vm.careTrial, vmPreset) ||
         hasEnabledAdvanceCareTrial(vm.advanceCareTrial, vmPreset);
+    }
+
+    function hasRegisteredContextService(contextFormSection) {
+      return vm.contextTrial.enabled && contextFormSection.$pristine;
     }
 
     function hasService(service) {
@@ -877,11 +882,11 @@
 
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
+
       _.set(initResults, 'roomSystemTrial.enabled', true);
       _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
-      _.set(initResults, 'callTrial.enabled', hasCallEntitlement);
       _.set(initResults, 'messageTrial.enabled', true);
       _.set(initResults, 'roomSystemTrial.details.quantity', stateDefaults.roomSystemsDefault);
       _.set(initResults, 'sparkBoardTrial.details.quantity', stateDefaults.sparkBoardDefault);
@@ -894,6 +899,7 @@
 
     function getExistingOrgInitResults(results, hasCallEntitlement, preset, paidServices) {
       var initResults = {};
+
       _.set(initResults, 'roomSystemTrial.enabled', preset.roomSystems);
       _.set(initResults, 'roomSystemTrial.paid', paidServices.roomSystems.qty);
       _.set(initResults, 'sparkBoardTrial.enabled', preset.sparkBoard);
@@ -922,13 +928,12 @@
         if (vm.pstnTrial.enabled) {
           _.set(initResults, 'preset.pstn', results.hasSetupPstn);
         }
-        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled) {
+        if (initResults.callTrial.enabled || initResults.roomSystemTrial.enabled || initResults.sparkBoardTrial.enabled) {
           _.set(initResults, 'details.country', preset.countryCode);
         }
       }
       return initResults;
     }
-
 
     // save trial helpers
 
@@ -949,11 +954,18 @@
       //edit
       var hasValueChanged = !isExistingOrg() ? vm.contextTrial.enabled : (vm.preset.context !== vm.contextTrial.enabled);
       var errorAddResponse = isNewTrial() ? 'trialModal.startTrialContextServiceError' : 'trialModal.editTrialContextServiceEnableError';
+      var orgAlreadyRegistered = 'ORGANIZATION_REGISTERED_USING_API';
+
       if (!hasValueChanged) {
         return;
       }
       if (vm.contextTrial.enabled) {
         return TrialContextService.addService(customerOrgId).catch(function (response) {
+          // ignore only the "org already registered" error
+          if (_.get(response, 'data.error.statusText') === orgAlreadyRegistered) {
+            return;
+          }
+
           Notification.errorResponse(response, errorAddResponse);
           return $q.reject(response);
         });
@@ -966,8 +978,8 @@
     }
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
-      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
-      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems));
+      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled || (vm.careTrial.enabled && vm.hybridCare);
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoard) || (vm.careTrial.enabled && !vm.preset.care && vm.hybridCare));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
       var countryCode;
 

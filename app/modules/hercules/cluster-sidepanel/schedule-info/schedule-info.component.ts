@@ -74,7 +74,7 @@ export class ScheduleInfoSectionComponentCtrl implements ng.IComponentController
 
 export class ScheduleInfoSectionComponent implements ng.IComponentOptions {
   public controller = ScheduleInfoSectionComponentCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/schedule-info/schedule-info.html';
+  public template = require('modules/hercules/cluster-sidepanel/schedule-info/schedule-info.html');
   public bindings = {
     cluster: '<',
     clusterType: '<',

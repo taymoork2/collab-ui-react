@@ -2,7 +2,7 @@
 
 # notes:
 # - in certain cases, 'lite-server' is not shutdown properly when the wrapping npm script (ie.
-#   'npm start' or 'npm run serve') dies
+#   'yarn start' or 'yarn serve') dies
 # - when the lingering 'lite-server' process holds onto the default port (8000), subsequent npm
 #   script commands launch a new 'lite-server' which listen on non-default port values, which will
 #   not function correctly due to our whitelist CSP policies
@@ -10,6 +10,8 @@
 #   include the PIDs of the npm script itself, thus killing the killer before it can kill
 # - the logic to properly acquire and filter the correct PIDs became involved enough to warrant
 #   moving into its own script here
+
+export WX2_ADMIN_WEB_CLIENT_HOME="${WX2_ADMIN_WEB_CLIENT_HOME:-$(pwd)}"
 
 if [ -z "$WX2_ADMIN_WEB_CLIENT_HOME" ]; then
     >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."

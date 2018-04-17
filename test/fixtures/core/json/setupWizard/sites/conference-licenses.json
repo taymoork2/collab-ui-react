@@ -1,0 +1,79 @@
+[[
+  {
+    "offerName": "EC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 25,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite2.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583342"
+  },
+  {
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 25,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite2.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583342"
+  },
+  {
+    "offerName": "TC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 50,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite2.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583342"
+  },
+  {
+    "offerName": "EC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 25,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite1.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583347"
+  },
+  {
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 25,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite1.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583347"
+  },
+  {
+    "offerName": "CF",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 50,
+    "isTrial": false,
+    "status": "ACTIVE"
+  }
+],
+[
+  {
+    "offerName": "MC",
+    "licenseType": "CONFERENCING",
+    "billingServiceId": "Sub-012",
+    "volume": 30,
+    "isTrial": false,
+    "status": "ACTIVE",
+    "siteUrl": "someSite2.dmz.webex.com",
+    "isCIUnifiedSite": true,
+    "siteId": "583342"
+  }
+]
+]

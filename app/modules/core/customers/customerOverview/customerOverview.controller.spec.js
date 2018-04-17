@@ -77,6 +77,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(FeatureToggleService, 'atlasITProPackGetStatus').and.returnValue($q.resolve(true));
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    spyOn(FeatureToggleService, 'atlasJira2126UseAltEndpointGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'hI1635GetStatus').and.returnValue($q.resolve(false));
+    spyOn(PartnerService, 'updateOrgForCustomerView').and.returnValue($q.resolve());
 
     initController();
   }));
@@ -98,13 +101,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
   xit('should transition to trialEdit.info state', function () {
     controller.openEditTrialModal();
     expect($state.go).toHaveBeenCalled();
-    expect($state.go.calls.mostRecent().args[0]).toEqual('trialEdit.info');
+    expect($state.go.calls.mostRecent().args[0]).toBe('trialEdit.info');
 
     $state.go.calls.reset();
 
     $scope.$apply(); // modal is closed and promise is resolved
     expect($state.go).toHaveBeenCalled();
-    expect($state.go.calls.mostRecent().args[0]).toEqual('partnercustomers.list');
+    expect($state.go.calls.mostRecent().args[0]).toBe('partnercustomers.list');
   });
 
   it('should check the customer org id to see if it is a test org', function () {
@@ -126,13 +129,13 @@ describe('Controller: CustomerOverviewCtrl', function () {
   });
 
   it('should display number of days left', function () {
-    expect(controller.getDaysLeft(1)).toEqual(1);
-    expect(controller.getDaysLeft(0)).toEqual('customerPage.expiresToday');
-    expect(controller.getDaysLeft(-1)).toEqual('customerPage.expired');
+    expect(controller.getDaysLeft(1)).toBe('customerPage.daysLeft');
+    expect(controller.getDaysLeft(0)).toBe('customerPage.expiresToday');
+    expect(controller.getDaysLeft(-1)).toBe('customerPage.expired');
   });
 
   it('should set the isSquaredUC flag based on services', function () {
-    expect(controller.isSquaredUC).toEqual(true);
+    expect(controller.isSquaredUC).toBe(true);
   });
 
 
@@ -141,45 +144,59 @@ describe('Controller: CustomerOverviewCtrl', function () {
       Userservice.updateUsers.and.returnValue($q.resolve());
     });
 
-    describe('as a full-admin', function () {
-      beforeEach(function () {
-        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(true);
-        controller.launchCustomerPortal();
-        $scope.$apply();
-      });
+    describe('using an old patch flow', function () {
+      describe('as a full-admin', function () {
+        beforeEach(function () {
+          spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(true);
+          controller.launchCustomerPortal();
+          $scope.$apply();
+        });
 
-      it('should call modifyManagedOrgs', function () {
-        expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
-        expect(Authinfo.isPartnerAdmin()).toBe(true);
-        expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
-      });
+        it('should call modifyManagedOrgs', function () {
+          expect(controller.customerOrgId).toBe(currentCustomer.customerOrgId);
+          expect(Authinfo.isPartnerAdmin()).toBe(true);
+          expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+        });
 
-      it('should create proper url', function () {
-        expect($state.href).toHaveBeenCalledWith('login', {
-          customerOrgId: controller.currentCustomer.customerOrgId,
+        it('should create proper url', function () {
+          expect($state.href).toHaveBeenCalledWith('login', {
+            customerOrgId: controller.currentCustomer.customerOrgId,
+          });
+        });
+
+        it('should call $window.open', function () {
+          expect($window.open).toHaveBeenCalled();
         });
       });
 
-      it('should call $window.open', function () {
-        expect($window.open).toHaveBeenCalled();
+      describe('as a non-full-admin', function () {
+        beforeEach(function () {
+          controller.isPartnerAdmin = false;
+          spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(false);
+          spyOn(controller._helpers, 'openCustomerPortal');
+          controller.launchCustomerPortal();
+          $scope.$apply();
+        });
+
+        it('should not call "modifyManagedOrgs()"', function () {
+          expect(PartnerService.modifyManagedOrgs).not.toHaveBeenCalled();
+        });
+
+        it('should call "openCustomerPortal()"', function () {
+          expect(controller._helpers.openCustomerPortal).toHaveBeenCalled();
+        });
       });
     });
 
-    describe('as a non-full-admin', function () {
+    describe('using an new flow', function () {
       beforeEach(function () {
-        controller.isPartnerAdmin = false;
-        spyOn(controller._helpers, 'canUpdateLicensesForSelf').and.returnValue(false);
-        spyOn(controller._helpers, 'openCustomerPortal');
+        FeatureToggleService.atlasJira2126UseAltEndpointGetStatus.and.returnValue($q.resolve(true));
+        initController();
         controller.launchCustomerPortal();
         $scope.$apply();
       });
-
-      it('should not call "modifyManagedOrgs()"', function () {
-        expect(PartnerService.modifyManagedOrgs).not.toHaveBeenCalled();
-      });
-
-      it('should call "openCustomerPortal()"', function () {
-        expect(controller._helpers.openCustomerPortal).toHaveBeenCalled();
+      it('should call the api to do the patching', function () {
+        expect(PartnerService.updateOrgForCustomerView).toHaveBeenCalled();
       });
     });
   });

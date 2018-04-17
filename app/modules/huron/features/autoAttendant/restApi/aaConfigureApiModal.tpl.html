@@ -1,68 +1,225 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss();"></button>
+  <button type="button" class="close" ng-click="aaConfigureApiModal.cancel()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="autoAttendant.configureRestApi"></h3>
 </div>
 <div class="modal-body">
-  <div class="row">
-    <div class="large-4 medium-4 small-12 columns">
-      <label class="h4" translate="autoAttendant.URL"></label>
-    </div>
-    <div class="large-8 medium-8 small-12 columns">
-      <div class="row">
-        <div class="large-11 medium-11 small-11 columns">
-          <textarea class="aa-message-textarea" id="configureApiUrl" ng-model="aaConfigureApiModal.url" cols="20" rows="7" maxlength="2000"></textarea>
+  <div ng-if='aaConfigureApiModal.showStep(1)'>
+    <div class="row">
+      <div class="large-4 medium-4 small-12 columns">
+        <label class="h4" translate="autoAttendant.URL"></label>
+      </div>
+      <div class="large-8 medium-8 small-12 columns">
+        <div class="row">
+          <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-only-type large-11 medium-11 small-11 columns">
+            <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url"
+            dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues"
+            insert-element="insertElement" aa-change ng-keyup = "aaConfigureApiModal.saveDynamicUi()"
+            id="configureApiUrl{{schedule + index}}" name="url"
+            data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"
+            ng-blur = "aaConfigureApiModal.getUrlErrorMessages()"
+            ng-class = "{'aa-rest-url-box-error' : aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage,
+            'aa-rest-url-box-focussed': aaConfigureApiModal.urlBoxFocussed}"
+            ng-focus = "aaConfigureApiModal.onUrlBoxFocus()"></dynamic-prompt>
+          <div ng-if="aaConfigureApiModal.getWarning()">
+            <br></br>
+            <div class="columns small-12 aa-div-click" ng-click="aaConfigureApiModal.toggleFullWarningMsg()" ng-blur="aaConfigureApiModal.closeFullWarningMsg()">
+              <span class="ellipsis icon icon-warning warning aa-icon-font-size"></span>
+              <span class="aa-text-overflow" data-ng-bind="aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></span>
+              <div ng-if = "aaConfigureApiModal.fullWarningMsgValue" class="aa-full-warning" data-ng-bind = "aaConfigureApiModal.deletedSessionVariablesListAlongWithWarning"></div>
+            </div>
+          </div>
+          <div class="large-12 medium-12 small-12 columns aa-rest-url-helper-text">
+            <label class ="cs-input__help-text" translate = "autoAttendant.restApiUrlHelperText"></label>
+          </div>
+          <div id = "aaRestErrorMessage" class = "aa-rest-url-error-message large-12 medium-12 small-12 columns"
+          ng-if = "aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage">
+            <div class="aa-rest-error-icon"></div>
+            <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showFullErrorMessage" translate = "autoAttendant.completeHttpsError"></div>
+            <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showSecureUrlErrorMessage" translate = "autoAttendant.secureHttpsError"></div>
+          </div>
+            <aa-add-variable dynamic-prompt-id="configureApiUrl{{schedule + index}}" aa-schedule="{{schedule}}" aa-index="index" dynamic-element-string="aaConfigureApiModal.addElement" aa-element-type="{{aaConfigureApiModal.aaElementType}}"></aa-add-variable>
+          </div>
+          <div ng-if="!aaConfigureApiModal.isDynamicToggle()" class="aa-message-only-type large-12 small-12 columns">
+            <textarea class="dynamic-prompt aa-message-type-textarea" aa-keypress ng-change="aaConfigureApiModal.saveDynamicUi()" ng-model="aaConfigureApiModal.url" type="text" id="configureApiUrl{{schedule + index}}" placeholder="{{ :: aaConfigureApiModal.messageInputPlaceholder }}" rows="4" maxlength="2000"></textarea>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <hr/>
-  <div class="row">
-    <div class="large-4 medium-4 small-12 columns">
-      <label class="h4 ng-scope" translate="autoAttendant.variableAssignment"></label>
-    </div>
-    <div class="large-8 medium-8 small-12 columns">
-      <div ng-repeat="variable in aaConfigureApiModal.variableSet">
-        <div class="row">
-          <div class="large-8 medium-8 small-12 columns">
-            <p translate="autoAttendant.responseDataBlock"></p>
-          </div>
+    <div ng-if = "aaConfigureApiModal.isRestApiTogglePhase2()">
+      <div class="aa-rest-margin row">
+        <div class="large-4 medium-4 small-12 columns">
+          <label class="h4" translate="autoAttendant.configureApiAuthentication"></label>
         </div>
-        <div class="row">
-          <div class="large-11 medium-11 small-11 columns">
-            <input id="responseSelect" type="text" ng-model="variable.value" name="response" class="large-4 medium-4 small-4">
-          </div>
-          <div class="small-1 columns">
-            <i ng-if="aaConfigureApiModal.variableSet.length > 1" class="icon icon-trash aa-trash-icon" aria-label="common.delete" ng-click="aaConfigureApiModal.deleteVariableSet($index);"></i>
-          </div>
+        <div class="large-4 medium-4 small-12 columns">
+          <cs-toggle-switch
+            class="aa-toggle"
+            ng-model="aaConfigureApiModal.basicAuthButton"
+            ng-click="aaConfigureApiModal.onBasicAuthSlider()"
+            toggle-id="BasicAuthToggle"
+            name="BasicAuthToggle"
+            size="small"
+            cs-aria-label="{{::'autoAttendant.configureApiAuthentication' | translate}}">
+          </cs-toggle-switch>
         </div>
+      </div>
+      <div class="row aa-rest-margin">
+        <ng-form name="formUsername" class="large-4 medium-4 small-12 columns">
+          <input cs-input insert-element="insertElement" ng-keyup="aaConfigureApiModal.isBasicCredentialUpdated()" ng-disabled="!aaConfigureApiModal.basicAuthButton" ng-required="aaConfigureApiModal.displayWarning()" ng-model="aaConfigureApiModal.username" name="restUsername" ng-minlength= "aaConfigureApiModal.usernameMinLength" ng-maxlength= "aaConfigureApiModal.usernameMaxLength" cs-input-messages="aaConfigureApiModal.validationUsernameMsgs" id="userNameInput" cs-input-label= "{{ :: 'autoAttendant.restApiUserName' | translate }}">
+        </ng-form>
         <div class="row">
-          <div class="large-4 medium-4 small-6 columns">
-            <p translate="autoAttendant.sessionVariable"></p>
-          </div>
-          <div class="large-6 medium-6 small-12 medium-pull-1 columns" ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);">
-            <p translate="autoAttendant.name"></p>
-          </div>
-        </div>
-        <div class="row aa-rest-var">
-          <ng-form name="nameKeyedInputForm">
-            <div class="large-4 medium-4 small-8 columns">
-              <cs-select id="sessionVar" ng-model="variable.variableName" name="sessionVar" options="aaConfigureApiModal.sessionVarOptions" placeholder="aaConfigureApiModal.selectVariablePlaceholder" icon="icon-chevron-down">
-              </cs-select>
-            </div>
-            <div  ng-if="aaConfigureApiModal.isNewVariable(variable.variableName);" class="large-5 medium-5 small-10 medium-pull-2 columns">
-              <input ng-model="variable.newVariableValue" cs-input type="text" ng-pattern="/^[a-zA-Z0-9 ]*$/" ng-required="true" ng-minlength="aaConfigureApiModal.minVariableLength" id="newVariableName" name="newVariableName" placeholder="{{ :: 'autoAttendant.callerInputNamePlaceHolder' | translate }}" ng-maxlength="aaConfigureApiModal.maxVariableLength" cs-input-messages="aaConfigureApiModal.validationMsgs" cs-input-warning-message="{{ :: 'autoAttendant.callerInputVariableDuplicateMsg' | translate }}" cs-input-warning="variable.isWarn" ng-change="aaConfigureApiModal.canShowWarn(variable);" cs-input-group-size="medium-12">
-            </div>
+          <ng-form name="formPassword" class="large-4 medium-4 small-12 columns">
+            <input cs-input insert-element="insertElement" ng-keyup="aaConfigureApiModal.isBasicCredentialUpdated()" ng-disabled="!aaConfigureApiModal.basicAuthButton" ng-click = "aaConfigureApiModal.passwordCheck()" type="password" ng-model="aaConfigureApiModal.password" name="restPassword" ng-maxlength= "aaConfigureApiModal.passwordMaxLength" cs-input-messages="aaConfigureApiModal.validationPasswordMsgs" id="passwordInput" cs-input-label="{{ :: 'autoAttendant.restApiPassword' | translate }}">
           </ng-form>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <a class="large-4 medium-4 small-4 medium-offset-4 columns" id="addVariableToSet" ng-click="aaConfigureApiModal.addVariableSet()">
-    <i class="icon icon-plus-circle"></i>{{ :: 'autoAttendant.addVariableToSet' | translate }}</a>
+  <div ng-if='aaConfigureApiModal.showStep(2)'>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+        <label class="h4 bold" translate="autoAttendant.configureApiHeading"></label>
+      </div>
+      <div class="large-12 medium-12 small-12 columns">
+        <label class ="aa-rest-header-text" translate="autoAttendant.configureApiHeadingHelperText"></label>
+      </div>
+    </div>
+    <div class="row">
+        <div class="large-12 medium-12 small-12 columns">
+          <label class="h4 bold aa-variable-text" translate="autoAttendant.Variables"></label>
+        </div>
+      </div>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+          <label class ="aa-rest-helper-text" translate="autoAttendant.configureApiHelpertext"></label>
+      </div>
+
+      <div class="large-10 medium-10 small-10 columns">
+        <div class="row" ng-repeat="i in aaConfigureApiModal.dynamics">
+          <p class="large-12 medium-12 small-12 columns aa-rest-value-text" translate="autoAttendant.value"></p>
+          <div class="large-6 medium-6 small-6 columns">
+            <input type="text" name="value" ng-model="i.value" ng-change="aaConfigureApiModal.isDynamicsValueUpdated()">
+          </div>
+          <div class="large-6 medium-6 small-6 columns">
+            <label name="variables" class="aa-rest-dynamic-variables">{{i.variableName}}</label>
+          </div>
+        </div>
+      </div>
+      <div> </div>
+      </div>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+        <button
+          id="testBtn"
+          class="btn btn-primary aa-rest-test-button-spacing"
+          ng-click="aaConfigureApiModal.callTestRestApiConfigs()"
+          ng-disabled="aaConfigureApiModal.isTestDisabled();"
+          translate="common.test">
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 medium-12 small-12 columns">
+        <tabset>
+          <tab heading="{{'autoAttendant.requestRestApi' | translate}}">
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <textarea class="aa-message-textarea aa-tab-text-area "
+                  id="restApiRequest" cols="20" rows="7" maxlength="2000" ng-readonly="true"
+                  ng-model="aaConfigureApiModal.restApiRequest"></textarea>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{'autoAttendant.responseRestApi' | translate}}">
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiResponse" cols="20" rows="7"
+                  maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiResponse"></textarea>
+                </div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="{{'autoAttendant.assignmentRestApi' | translate}}" id="assignmentTab">
+            <div class="large-12">
+              <p class ="cs-input__help-text" translate="autoAttendant.customVariablesAssignmentHelpText"></p>
+            </div>
+            <div class="tab-content">
+              <div class="row">
+                <div class="large-12 medium-12 small-12 columns">
+                  <table class="table table-striped var-assignment-table">
+                    <tr>
+                      <th translate = "autoAttendant.restApiResponseVar"></th>
+                      <th translate="autoAttendant.restApiResponseVal"></th>
+                      <th translate="autoAttendant.restApiCustomVar"></th>
+                    </tr>
+                    <tr ng-repeat = "data in aaConfigureApiModal.tableData">
+                      <td>
+                        {{data.responseKey}}
+                      </td>
+                      <td>
+                        {{data.responseValue}}
+                      </td>
+                      <td>
+                          <div>
+                            <form class = "aa-rest-assignment-block" name="sessionVarForm">
+                              <div class="row">
+                                <div class="large-12">
+                                  <cs-select id="sessionVar" ng-model="data.selected" options="data.options" combo="true"
+                                    searchable-combo="true">
+                                  </cs-select>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
   </div>
 </div>
 <div class="modal-footer">
-  <button id="cancelBtn" class="btn" ng-click="$dismiss();">{{ :: 'common.cancel' | translate }}</button>
-  <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()" ng-disabled="aaConfigureApiModal.isSaveDisabled();">{{ :: 'common.save' | translate }}</button>
+  <button
+    id="cancelBtn"
+    class="btn"
+    ng-click="aaConfigureApiModal.cancel()"
+    ng-if="aaConfigureApiModal.currentStep === 1"
+    translate="common.cancel">
+  </button>
+  <button
+    id="backBtn"
+    class="btn btn-default"
+    ng-click="aaConfigureApiModal.stepBack()"
+    ng-hide="aaConfigureApiModal.currentStep === 1"
+    translate="common.back">
+  </button>
+  <button
+    id="nextBtn"
+    class="btn btn-primary"
+    ng-click="aaConfigureApiModal.stepNext()"
+    ng-hide="aaConfigureApiModal.currentStep === 2"
+    ng-disabled="aaConfigureApiModal.isNextDisabled();"
+    translate="common.next">
+  </button>
+  <button
+    id="saveBtn"
+    class="btn btn-primary"
+    ng-click="aaConfigureApiModal.save()"
+    ng-if="aaConfigureApiModal.currentStep === 2"
+    ng-disabled="aaConfigureApiModal.isSaveDisabled();"
+    translate="common.save">
+  </button>
 </div>

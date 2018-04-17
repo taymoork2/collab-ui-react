@@ -1,5 +1,11 @@
 'use strict';
 
+/*
+Debug info: If the this test is failing, try downloading a new metadata file from the following URL.
+We can get the metadata from https://dojonst-win2k12.atlasad.koalabait.com/FederationMetadata/2007-06/FederationMetadata.xml. 
+If the server is down then we would need to contact Don Johnston or Stephen Cristensen.
+Don Johnston is the server admin and can help resolve the issue. 
+*/
 describe('First Time Wizard', function () {
   it('should login as an admin user into the SSO test-org', function () {
     login.loginThroughGui(helper.auth['sso-e2e-test-org-mailsac'].user, helper.auth['sso-e2e-test-org-mailsac'].pass, '#/overview');

@@ -1,5 +1,5 @@
 import { HuntGroupNumber } from 'modules/call/features/hunt-group';
-import { NumberService, INumber } from 'modules/huron/numbers';
+import { NumberService, INumber, NumberOrder } from 'modules/huron/numbers';
 
 const NUMBER_FORMAT_ENTERPRISE_LINE = 'NUMBER_FORMAT_ENTERPRISE_LINE';
 class HuntGroupNumbersCtrl implements ng.IComponentController {
@@ -9,14 +9,23 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
   public onKeyPressFn: Function;
   public selectedNumber: INumber | undefined;
   public errorNumberInput: boolean = false;
+  public hasLocations: boolean = false;
 
   /* @ngInject */
   constructor(
     private NumberService: NumberService,
-  ) {}
+    private FeatureToggleService,
+  ) {
+    // TODO: samwi - remove when locations is GA
+    this.FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(supports => {
+      if (supports) {
+        this.hasLocations = true;
+      }
+    });
+  }
 
   public getNumberList(value: string): ng.IPromise<INumber[]> {
-    return this.NumberService.getNumberList(value, undefined, false).then( numbers => {
+    return this.NumberService.getNumberList(value, undefined, false, NumberOrder.SITETOSITE_ASC).then( numbers => {
       const filteredNumbers = _.filter(numbers, (number) => {
         return this.isNewNumber(number.uuid);
       });
@@ -34,9 +43,14 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
     this.numbers.unshift(new HuntGroupNumber({
       uuid: number.uuid,
       type: number.type,
-      number: number.number,
+      number: this.getNumber(number),
+      siteToSite: number.siteToSite,
     }));
     this.onNumbersChanged(this.numbers);
+  }
+
+  public getNumber(number) {
+    return (this.hasLocations && number.siteToSite) ? <string>number.siteToSite : number.number ? number.number : number.external ? number.external : undefined;
   }
 
   public removeNumber(hgnumber: HuntGroupNumber): void {
@@ -68,7 +82,7 @@ class HuntGroupNumbersCtrl implements ng.IComponentController {
 
 export class HuntGroupNumbersComponent implements ng.IComponentOptions {
   public controller = HuntGroupNumbersCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group-numbers/hunt-group-numbers.component.html');
   public bindings = {
     numbers: '<',
     isNew: '<',

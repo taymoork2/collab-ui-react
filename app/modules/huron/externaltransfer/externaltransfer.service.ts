@@ -25,13 +25,20 @@ export class ExternalTransferService {
 
   }
 
-  public getDefaultSetting(memberId: string, memberType: string): ng.IPromise<string> {
+  public getDefaultSetting(memberId: string, memberType: string): ng.IPromise<boolean | null> {
     if (memberType === 'users') {
       return this.extTransferResourceUser.get({
         customerId: this.Authinfo.getOrgId(),
         userId: memberId,
       }).$promise.then(settings => {
-        return _.get(settings, 'allowExternalTransfer');
+        // Convert string to boolean as temporary fix until V2 update is pushed
+        if ('Off' === _.get(settings, 'allowExternalTarnsfer')) {
+          return false;
+        } else if ('On' === _.get(settings, 'allowExternalTransfer')) {
+          return true;
+        } else {
+          return null;
+        }
       });
     } else {
       return this.extTransferResourcePlace.get({
@@ -43,12 +50,21 @@ export class ExternalTransferService {
     }
   }
 
-  public updateSettings(memberId: string, memberType: string, allowExternalTransfer: string): ng.IPromise<void> {
+  public updateSettings(memberId: string, memberType: string, allowExternalTransfer: boolean | null): ng.IPromise<void> {
     if (memberType === 'users') {
+      // Convert bool to string, temporary fix until V2 update is pushed
+      let v1AllowExternalTransfer = <string>'';
+      if (allowExternalTransfer === true) {
+        v1AllowExternalTransfer = 'On';
+      } else if (allowExternalTransfer === false) {
+        v1AllowExternalTransfer = 'Off';
+      } else {
+        v1AllowExternalTransfer = 'Default';
+      }
       return this.extTransferResourceUser.update({
         customerId: this.Authinfo.getOrgId(),
         userId: memberId,
-      }, { allowExternalTransfer: allowExternalTransfer }).$promise;
+      }, { allowExternalTransfer: v1AllowExternalTransfer }).$promise;
     } else {
       return this.extTransferResourcePlace.update({
         customerId: this.Authinfo.getOrgId(),

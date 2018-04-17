@@ -49,6 +49,12 @@
             readonly: false,
             valid: true,
           }, {
+            model: 'CISCO_8841',
+            enabled: false,
+            quantity: 0,
+            readonly: false,
+            valid: true,
+          }, {
             model: 'CISCO_7841',
             enabled: false,
             quantity: 0,

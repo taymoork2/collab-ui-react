@@ -1,18 +1,60 @@
-[{
-  "isCustomerPartner": false,
-  "label": "Advanced Spark Call",
-  "license": {
-    "features": [
-      "webex-squared",
-      "squared-call-initiation",
-      "ciscouc"
-    ],
-    "isTrial": true,
-    "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
-    "licenseId": "CO_da652e7d-cd34-4545-8f23-936b74359afd",
-    "licenseType": "COMMUNICATION",
-    "offerName": "CO",
-    "status": "ACTIVE",
-    "volume": 100
+{
+  "singleLicense": [{
+    "isCustomerPartner": false,
+    "label": "Advanced Spark Call",
+    "license": {
+      "features": [
+        "webex-squared",
+        "squared-call-initiation",
+        "ciscouc"
+      ],
+      "isTrial": true,
+      "trialId": "33e66606-b1b8-4794-a7c5-5bfc5046380f",
+      "licenseId": "CO_da652e7d-cd34-4545-8f23-936b74359afd",
+      "licenseType": "COMMUNICATION",
+      "offerName": "CO",
+      "status": "ACTIVE",
+      "volume": 100
+    }
+  }],
+  "multipleLicenses": [{
+    "label": "Call",
+    "value": 1,
+    "name": "commRadio",
+    "license": {
+      "licenseId": "CO_3cd433a5-c140-4ee5-bfb8",
+      "offerName": "CO",
+      "licenseType": "COMMUNICATION",
+      "billingServiceId": "999f5183-1312-4112-966e-71125d8aaff8",
+      "features": [
+        "ciscouc"
+      ],
+      "volume": 10,
+      "isTrial": false,
+      "status": "ACTIVE",
+      "partnerOrgId": "8517088f-3144-46b4-9f04-adaa054ab797",
+      "partnerEmail": "boulder.vail@gmail.com"
+    },
+    "isCustomerPartner": false
+  }, {
+    "label": "Call",
+    "value": 1,
+    "name": "commRadio",
+    "license": {
+      "licenseId": "CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d",
+      "offerName": "CO",
+      "licenseType": "COMMUNICATION",
+      "billingServiceId": "999f5183-1312-4212-966e-71125d8aaff8",
+      "features": [
+        "ciscouc"
+      ],
+      "volume": 5,
+      "isTrial": false,
+      "status": "ACTIVE",
+      "partnerOrgId": "8517088f-3144-46b4-9f04-adaa054ab797",
+      "partnerEmail": "boulder.vail@gmail.com"
+    },
+    "isCustomerPartner": false
   }
-}]
+]
+}

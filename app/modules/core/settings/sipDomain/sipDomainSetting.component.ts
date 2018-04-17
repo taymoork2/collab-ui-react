@@ -14,7 +14,7 @@ export class SipDomainSetting extends SettingSection {
 export class SipDomainSettingComponent implements ng.IComponentOptions {
   public controller = SipDomainSettingController;
   public controllerAs = 'vm';
-  public templateUrl = 'modules/core/settings/sipDomain/sipDomainSetting.tpl.html';
+  public template = require('modules/core/settings/sipDomain/sipDomainSetting.tpl.html');
   public bindings = {
     showSaveButton: '<',
   };

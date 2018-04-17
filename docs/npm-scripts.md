@@ -1,10 +1,12 @@
-# NPM Commands and Scripts
+# npm Commands and Scripts
+
+(yes, they're still npm scripts, but since we switched to `yarn` for managing npm dependencies, we use `yarn` here as well for consistency)
 
 ## Optional Arguments
 
-Arguments are passed to npm commands after a special `--` delimiter
+Long-form arguments (e.g. `--foo`, `--bar=baz`) are passed through to the underlying script commands.
 
-eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
+eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` script
 
 #### Common build arguments
 
@@ -13,132 +15,153 @@ eg. `npm start -- --noopen` passes the `--noopen` argument to our `start` task
 
 * `webpack` arguments must be prefixed with `env.`
   * `--env.nolint` to prevent lint loaders during build
+  * `--env.analyze` to open the bundle visual analyzer
+  * `--env.noprogress` to hide the progress reporter
 
 #### Common test arguments
 
+* `--env.coverage` to enable code coverage
+* `--env.lint` to enable linting during tests
 * `--debug` to request debug mode
+* `--phantomjs` to run tests through PhantomJS browser
 * `--production-backend` to run e2e against production services
 * `--sauce` to run e2e through SauceLabs
 * `--specs` to specify specific e2e spec files
 * `--suite` to specify e2e protractor suite
 * `--verbose` to enable verbose logging
 
-## Standard NPM Commands
+## Standard Commands
 
-### `npm install`
+### `yarn`
 
 * Install project dependencies
 
-### `npm start`
+### `yarn start`
 
-* Alias for `npm run serve`
+* Alias for `yarn serve`
+* Installs yarn dependencies before serving
+* Can opt-out of linting with `--env.nolint`
 
-### `npm test`
+### `yarn test`
 
-* Alias for `npm run ktest-all`
+* Alias for `yarn ktest-all`
 * Runs parallel karma unit tests with `karma.conf.js`
+* Can opt-in to linting with `--env.lint`
+* Can opt-in to code coverage with `--env.coverage`
 
-## Custom NPM Scripts
+## Custom Scripts
 
-### `npm run analyze`
+### `yarn analyze`
 
 * Build the application with webpack
 * Opens webpack-bundle-analyzer for the dist output
 
-### `npm run build`
+### `yarn build`
 
 * Build the application with webpack
 * Build output to `dist` directory
 
-### `npm run clean`
+### `yarn clean-dist`
 
-* Clean `build`, `dist` and `test` directories
+* Clean `build`, `dist` and `dist-source-map` directories
 
-### `npm run clean-install`
-
-* Clean npm cache, `node_modules` directories, and reinstall `node_modules`
-
-### `npm run commit`
+### `yarn commit`
 
 * Starts a wizard to write a proper [git commit message](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit)
 
-### `npm run coverage-report`
+### `yarn coverage-report`
 
 * Generates html/cobertura coverage report from the combined unit test instanbul results
 
-### `npm run e2e`
+### `yarn e2e`
 
 * Runs protractor against production services and jenkins suite
 * Used by the Jenkins build scripts
 
-### `npm run eslint`
+### `yarn eslint`
 
 * Run eslint on entire project
-* Use `npm run eslint -- --fix` to try to autofix as many issues as possible
+* Use `yarn eslint --fix` to try to autofix as many issues as possible
 
-### `npm run json-verify`
+### `yarn gauntlet-push`
+
+* Runs `./bin/gauntlet-push.sh`
+* Defaults to a fork remote name matching your userid
+* Can specify specific fork with an argument `--fork=<remote>`
+
+### `yarn json-verify`
 
 * Verifies well-formed `.json` files
 
-### `npm run ktest-all`
+### `yarn ktest-all`
 
 * Runs `./bin/ktest-all`
 * Runs all karma unit tests in parallel
 
-### `npm run ktest-all-no-parallel`
+### `yarn ktest-all-no-parallel`
 
 * Runs `./bin/ktest-all --no-parallel`
 * Runs all karma unit tests
 
-### `npm run ktest-all-watch`
+### `yarn ktest-all-watch`
 
 * Runs `./bin/ktest-all --no-parallel --no-single-run --auto-watch`
 * Runs all karma unit tests in watch mode for iterative development
 * Reruns tests on app/test file changes
 * Focus tests (`fdescribe`, `fit`) to isolate tests
 
-### `npm run ktest-debug -- <tests>`
+### `yarn ktest-debug <tests>`
 
 * Runs `./bin/ktest --no-parallel --no-single-run --debug`
 * Runs specific karma unit tests in debug mode (chrome browser)
 
-### `npm run ktest-watch -- <tests>`
+### `yarn ktest-watch <tests>`
 
 * Runs `./bin/ktest --no-parallel --no-single-run --auto-watch`
 * Runs specific karma unit tests in watch mode for iterative development
 
-### `npm run languages-verify`
+### `yarn languages-verify`
 
 * Runs test to verify `l10n` language json files used in the app
 
-### `npm run lint`
+### `yarn lint`
 
 * Run eslint and tslint on entire project
 
-### `npm run protractor`
+### `yarn protractor`
 
 * Updates webdriver and runs protractor
 
-### `npm run serve`
+### `yarn protractor --specs <tests>`
+
+* Updates webdriver and runs protractor on tests in specified files
+
+### `yarn rebase-branch-and-update-fork`
+
+* Runs `./bin/rebase-branch-and-update-fork.sh`
+* Defaults to a fork remote name matching your userid
+* Can specify specific fork with an argument `--fork=<remote>`
+
+### `yarn serve`
 
 * Bundles the application as webpack middleware and serves the dev application
 
-### `npm run serve-dist`
+### `yarn serve-dist`
 
 * Serves the static content from the `dist` directory
 
-### `npm run ts-spec-delete`
+### `yarn ts-spec-delete`
 
 * Backwards-compatible utility to delete old compiled TypeScript spec files in the `app` directory
 
-### `npm run tslint`
+### `yarn tslint`
 
 * Run tslint on entire project
 
-### `npm run typings`
+### `yarn typings`
 
 * Reinstalls TypeScript definitions from `typings.json`
 
-### `npm run webdriver`
+### `yarn webdriver`
 
 * Update webdriver

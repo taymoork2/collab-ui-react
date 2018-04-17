@@ -11,10 +11,10 @@
       <h6 class="feature">{{host.hostname}}</h6>
       <ul>
         <li class="feature" ng-repeat="connector in host.connectors | orderBy: $ctrl.sortConnectors ">
-          <a ng-if="connector.connectorType === 'c_mgmt' || connector.connectorType == 'c_ucmc' || connector.connectorType == 'c_cal'"
+          <a ng-if="connector.connectorType === 'c_mgmt' || connector.connectorType === 'c_ucmc' || connector.connectorType === 'c_cal'"
              ui-sref="expressway-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, specificType: connector.connectorType})"
           >
-            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="feature-name" ng-if="connector.connectorType !== 'c_mgmt'">{{$ctrl.localizedConnectorName}}</span>
             <span class="feature-name" ng-if="connector.connectorType === 'c_mgmt'">{{$ctrl.localizedManagementConnectorName}}</span>
             <span class="feature-status">{{connector.runningVersion}}</span>
@@ -23,7 +23,7 @@
           <a ng-if="connector.connectorType === 'hds_app'"
              ui-sref="hds-cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, connectorType: connector.connectorType})"
           >
-            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="feature-name">{{$ctrl.localizedConnectorName}}</span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
@@ -31,15 +31,17 @@
           <a ng-if="connector.connectorType === 'mf_mgmt'"
              ui-sref="media-cluster-details.host-details({host: host.hostname, hostSerial: connector.hostSerial, connectorType: connector.connectorType})"
           >
-            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
-            <span class="feature-name">{{$ctrl.localizedConnectorName}}</span>
+            <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
+            <span class="feature-name">
+              {{$ctrl.localizedConnectorName}} <span class="badge badge-{{connector.extendedProperties.alarmsBadgeCss}}" ng-if="connector.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+            </span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
           </a>
           <a ng-if="connector.connectorType === 'cs_mgmt'"
              ui-sref="context-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
           >
-            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="feature-name">{{$ctrl.localizedContextManagementConnectorName}}</span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>
@@ -47,7 +49,7 @@
           <a ng-if="connector.connectorType === 'cs_context'"
              ui-sref="context-cluster-sidepanel.host-details({host: host.hostname, hostSerial: connector.hostSerial, clusterId: $ctrl.cluster.id, connectorType: connector.connectorType})"
           >
-            <i class="icon icon-circle status-indicator" ng-class="$ctrl.getSeverity(connector).cssClass"></i>
+            <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="feature-name">{{$ctrl.localizedContextConnectorName}}</span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>

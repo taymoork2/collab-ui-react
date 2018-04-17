@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h4 class="modal-title" translate="hercules.fusion.defaultReleaseChannelModal.title"></h4>
+</div>
+<div class="modal-body">
+  <p translate="hercules.fusion.defaultReleaseChannelModal.description"></p>
+  <cs-select
+      ng-model="vm.releaseChannelSelected"
+      options="vm.releaseChannelOptions"
+      on-change-fn="vm.releaseChannelChanged()"
+      is-disabled="vm.isDisabled()">
+  </cs-select>
+  <p class="cs-input__help-text" translate="hercules.fusion.defaultReleaseChannelModal.help"></p>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <button cs-btn class="btn btn-primary" ng-click="vm.saveReleaseChannel(vm.releaseChannelSelected.value)" loading="vm.isDisabled()">
+    <span translate="common.save"></span>
+  </button>
+</div>

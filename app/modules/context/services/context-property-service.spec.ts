@@ -11,9 +11,9 @@ describe('PropertyService', () => {
       '$httpBackend',
       '$q',
       'PropertyService',
-      'Discovery',
+      'ContextDiscovery',
     );
-    spyOn(this.Discovery, 'getEndpointForService').and.returnValue(this.$q.resolve(managementUrl));
+    spyOn(this.ContextDiscovery, 'getEndpointForService').and.returnValue(this.$q.resolve(managementUrl));
 
   });
 

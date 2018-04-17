@@ -1,0 +1,94 @@
+.ct-proactive-prompt {
+  align-items: center;
+
+  .proactive-prompt-preview {
+    border-radius: 1rem;
+    margin-left: rem-calc(42px);
+    height: rem-calc(150px);
+    width: rem-calc(266px);
+  }
+
+  .prompt-details-preview {
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(pr, 1);
+    @include vr-spacing(pl, 1);
+
+    color: $gray-dark-2;
+    font-family: $brand-font-cisco-TT-Regular;
+
+    .prompt-title-preview {
+      height: 1rem;
+      font-weight: bold;
+      line-height: 1rem;
+      overflow: hidden;
+    }
+
+    .prompt-message-preview {
+      @include vr-spacing(mt, 0.8);
+      height: 3rem;
+      font-size: $h6-font-size;
+      line-height: 120%;
+      overflow: hidden;
+    }
+
+    .buttons {
+      @include vr-spacing(mt, 0.6);
+      @include vr-spacing(pl, 0.7);
+      align-items: center;
+      color: $color-white;
+      display: flex;
+      text-align: center;
+
+      .not-now-btn {
+        background-color: $gray-light-1;
+        border-radius: 2rem;
+        font-size: $h6-font-size;
+        line-height: 2rem;
+        width: rem-calc(93px);
+      }
+
+      .chat-now-btn {
+        background-color: $color-primary-base;
+        border-radius: 2rem;
+        font-size: $h6-font-size;
+        left: 1.5rem;
+        line-height: 2rem;
+        position: relative;
+        width: rem-calc(93px);
+      }
+    }
+  }
+
+  .cs-card article.attributes {
+    background-color: $gray-light-4;
+  }
+
+  .proactive-prompt-attributes {
+    @include vr-spacing(pl, 1);
+
+    .prompt-message {
+      @include vr-spacing(p, 1);
+
+      height: 5rem;
+      width: 95%;
+      resize: none;
+      color: $gray-dark-1;
+      font-size: $h6-font-size;
+      line-height: 1.4rem;
+    }
+
+    .prompt-title {
+      height: 2.25rem;
+      line-height: rem-calc(12px);
+      width: 95%;
+    }
+
+    .prompt-time {
+      width: 40%;
+    }
+  }
+
+  .proactive-prompt-attributes-label {
+    font-family: $brand-font-cisco-TT-Regular;
+  }
+}

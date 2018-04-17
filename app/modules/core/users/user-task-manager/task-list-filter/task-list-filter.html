@@ -1,0 +1,7 @@
+<button ng-repeat="filter in ::$ctrl.filters track by filter.type"
+  type="button"
+  class="btn btn--white task-list-filter"
+  ng-class="{'task-list-filter--active': $ctrl.isActive(filter.type)}"
+  ng-click="$ctrl.setActive(filter.type)">
+  {{::filter.label}}
+</button>

@@ -1,29 +1,14 @@
 <cs-page-header
   title-name="{{$ctrl.title}}"
   back="true"
-  back-url="$ctrl.huronFeaturesUrl">
+  back-url="$ctrl.huronFeaturesUrl"
+  back-aria-label="{{::'common.back' | translate}}">
 </cs-page-header>
 <div class="call-feature-edit">
   <div class="loading-container" ng-if="$ctrl.isLoading">
     <i class='icon icon-spinner'></i>
   </div>
   <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
-    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p translate="common.saveLabel"></p>
-      <button
-        cs-btn
-        ng-click="$ctrl.onCancel()">
-        <span translate="common.cancel"></span>
-      </button>
-      <button
-        cs-btn
-        class="btn btn--primary"
-        loading="$ctrl.saveInProcess"
-        ng-click="$ctrl.save()"
-        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
-        <span translate="common.save"></span>
-      </button>
-    </div>
     <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="callPark.settingsTitle"></h4>
@@ -43,13 +28,25 @@
             ng-class="$ctrl.animation">
           </uc-call-feature-name>
         </div>
+        <div class="sub-section row collapse" ng-if="$ctrl.hasLocation">
+          <h5 class="sub-section__title" translate="callPark.locationLabel"></h5>
+          <uc-call-feature-location
+            call-feature-type="huronFeatureDetails.cp"
+            is-required="true"
+            is-new="false"
+            location="$ctrl.callPark.location"
+            on-change-fn="$ctrl.setCallParkLocation(location)"
+            class="columns medium-6">
+          </uc-call-feature-location>
+        </div>
         <div class="sub-section">
           <h5 class="sub-section__title" translate="callPark.numberLabel"></h5>
           <p class="sub-section__description" translate="callPark.numberDesc"></p>
           <uc-call-park-number
             range="$ctrl.range"
             extension-length="$ctrl.extensionLength"
-            on-change-fn="$ctrl.setCallParkRange(range)">
+            on-change-fn="$ctrl.setCallParkRange(range)"
+            location="$ctrl.callPark.location">
           </uc-call-park-number>
         </div>
       </div>
@@ -65,7 +62,8 @@
           <p class="sub-section__description" translate="callPark.reversionRuleDesc"></p>
           <uc-call-park-fallback-destination
             fallback-destination="$ctrl.callPark.fallbackDestination"
-            on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+            on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)"
+            location="$ctrl.callPark.location">
           </uc-call-park-fallback-destination>
         </div>
         <div class="sub-section">
@@ -94,10 +92,28 @@
             card-type="simple"
             show-external-numbers="false"
             drag-and-drop="false"
-            on-change-fn="$ctrl.setCallParkMembers(members)">
+            on-change-fn="$ctrl.setCallParkMembers(members)"
+            location="$ctrl.callPark.location">
           </uc-call-feature-members>
         </div>
       </div>
+    </div>
+
+    <div class="save-section" ng-if="$ctrl.form.$dirty">
+      <p translate="common.saveLabel"></p>
+      <button
+        cs-btn
+        ng-click="$ctrl.onCancel()">
+        <span translate="common.cancel"></span>
+      </button>
+      <button
+        cs-btn
+        class="btn btn--primary"
+        loading="$ctrl.saveInProcess"
+        ng-click="$ctrl.save()"
+        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+        <span translate="common.save"></span>
+      </button>
     </div>
   </form>
 </div>

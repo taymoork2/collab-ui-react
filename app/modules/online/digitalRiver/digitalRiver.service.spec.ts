@@ -7,6 +7,7 @@ describe('Service: DigitalRiverService', () => {
       '$document',
       '$httpBackend',
       '$sce',
+      'Config',
       'DigitalRiverService',
       'UrlConfig',
     );
@@ -34,26 +35,25 @@ describe('Service: DigitalRiverService', () => {
     this.$httpBackend.flush();
   });
 
-  it('should get digital river order history url', function () {
-    this.DigitalRiverService.getOrderHistoryUrl('spark').then(response => {
+  it('should get digital river subscriptions url', function () {
+    this.DigitalRiverService.getSubscriptionsUrl().then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://buy.ciscospark.com/store/ciscoctg/en_US/DisplayAccountOrderListPage?DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/store/ciscoctg/en_US/DisplaySelfServiceSubscriptionHistoryListPage?DRL=abc%2B123');
     });
     this.$httpBackend.flush();
   });
 
-  it('should get digital river subscriptions url', function () {
-    this.DigitalRiverService.getSubscriptionsUrl('webex').then(response => {
+  it('should get digital river billing url', function () {
+    this.DigitalRiverService.getBillingUrl().then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://buy.webex.com/store/ciscoctg/en_US/DisplaySelfServiceSubscriptionHistoryListPage?ThemeID=4777108300&DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/DRHM/store?Action=DisplayAddEditPaymentPage&SiteID=ciscoctg&ThemeID=4805888100&DRL=abc%2B123');
     });
-    this.$httpBackend.flush();
   });
 
   it('should get digital river order invoice url', function () {
-    this.DigitalRiverService.getInvoiceUrl('123456', 'WebEx').then(response => {
+    this.DigitalRiverService.getInvoiceUrl('123456', this.Config.onlineProducts.webex).then(response => {
       expect(this.$document.prop).toHaveBeenCalledWith(this.cookie, this.webexToken);
-      expect(response).toEqual('https://gc.digitalriver.com/store/ciscoctg/DisplayInvoicePage?requisitionID=123456&ThemeID=4777108300&DRL=abc%2B123');
+      expect(response).toEqual('https://buy.webex.com/store/ciscoctg/en_US/DisplayInvoicePage?requisitionID=123456&ThemeID=4777108300&DRL=abc%2B123');
     });
     this.$httpBackend.flush();
   });

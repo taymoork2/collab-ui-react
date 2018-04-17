@@ -1,21 +1,31 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.closeMediaMgrModal()"></button>
+  <button type="button" class="close" ng-click="$ctrl.closeMediaMgrModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title">{{::"mediaMgrModal.title" | translate }}</h3>
 </div>
 <div class="modal-body">
   <div class="modal-container">
     <div class="mb-nav">
-      <button class="icon icon-music icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Media)}" ng-click="$ctrl.setModal($ctrl.ModalView.Media)"></button>
-      <button class="icon icon-trash icon-lg" ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Trash)}" ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"></button>
+      <button
+        class="icon icon-music icon-lg"
+        ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Media)}"
+        ng-click="$ctrl.setModal($ctrl.ModalView.Media)"
+        aria-label="{{::'mediaMgrModal.title' | translate}}">
+      </button>
+      <button
+        class="icon icon-trash icon-lg"
+        ng-class="{'active' : $ctrl.isModalActive($ctrl.ModalView.Trash)}"
+        ng-click="$ctrl.setModal($ctrl.ModalView.Trash)"
+        aria-label="{{::'mediaMgrModal.deletedTitle' | translate}}">
+      </button>
     </div>
     <div class="mb-container" ng-if="$ctrl.loading">
-      <div class="mb-panel loading centered" ng-if="$ctrl.loading">
-        <i class="icon icon-spinner icon-4x"></i>
+      <div class="mb-panel centered">
+        <i class="icon icon-spinner icon-3x"></i>
       </div>
     </div>
     <div class="mb-container" ng-if="$ctrl.uploadActionInProgress()">
       <div class="mb-panel">
-        <cs-card class="large section-background">
+        <cs-card class="cs-card--large section-background">
           <div class="progress-bar">
             <div class="progressbar-icon-alignment">
               <div class="progressbar-content-alignment">
@@ -24,10 +34,10 @@
                   <span class="progressbar-progress">{{$ctrl.mohUploadPercentComplete}}%</span>
                 </div>
                 <progressbar value="$ctrl.mohUploadPercentComplete"></progressbar>
-                <div class="progressbar-label progressbar-sublabel"> {{$ctrl.mohUpload.filename}}</div>
               </div>
-              <i class="icon icon-exit" ng-click="$ctrl.cancelUpload()"></i>
+              <i class="icon icon-exit" ng-click="$ctrl.cancelUpload()" aria-label="{{::'common.cancel' | translate}}"></i>
             </div>
+            <div class="progressbar-label progressbar-sublabel"> {{$ctrl.mohUpload.filename}}</div>
           </div>
         </cs-card>
       </div>
@@ -35,24 +45,26 @@
     <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress() && $ctrl.isModalActive($ctrl.ModalView.Media)">
       <div class="mb-panel-left">
         <div class="mb-panel-header">
-          <cs-searchfilter search-item-fn="$ctrl.searchByString(searchStr)" placeholder-text="{{::'mediaMgrModal.searchPlaceholder' | translate}}"></cs-searchfilter>
-          <label class="hotspot" for="upload">
-            <i class="icon icon-plus icon-2x" ng-disabled="$ctrl.mohUploadInProgress"></i>
-            <input id="upload" name="upload"
-              type="file"
-              cr-file-read
-              reading-strategy="arrayBuffer"
-              ng-disabled="$ctrl.mohUploadInProgress"
-              style="display: none;"
-              file="$ctrl.mohUpload.file"
-              file-name="$ctrl.mohUpload.filename"
-              file-size="$ctrl.mohUpload.filesize"
-              file-checksum="$ctrl.mohUpload.checksum"
-              file-type="video/mpeg, audio/mpeg, audio/mp3, video/mp4, audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav, video/x-ms-wmv"
-              file-suffix="mpeg, mpg, mp3, mp4, wav, wmv, scpf, mov, ogg"
-              file-read-success="$ctrl.uploadMedia(file, filename, filesize, checksum)"
-              file-type-error="$ctrl.handleFileTypeError()"/>
-          </label>
+          <div class="mb-row-content">
+            <cs-searchfilter search-item-fn="$ctrl.searchByString(searchStr)" placeholder-text="{{::'mediaMgrModal.searchPlaceholder' | translate}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}"></cs-searchfilter>
+            <label class="hotspot" for="mediaManagerUpload" tabindex="0" aria-label="{{::'mediaMgrModal.uploadFile' | translate}}">
+              <i class="icon icon-plus icon-2x" ng-disabled="$ctrl.mohUploadInProgress"></i>
+              <input id="mediaManagerUpload" name="mediaManagerUpload"
+                type="file"
+                cr-file-read
+                reading-strategy="arrayBuffer"
+                ng-disabled="$ctrl.mohUploadInProgress"
+                style="display: none;"
+                file="$ctrl.mohUpload.file"
+                file-name="$ctrl.mohUpload.filename"
+                file-size="$ctrl.mohUpload.filesize"
+                file-checksum="$ctrl.mohUpload.checksum"
+                file-type="video/mpeg, audio/mpeg, audio/mp3, video/mp4, audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav, video/x-ms-wmv"
+                file-suffix="mpeg, mpg, mp3, mp4, wav, wmv, scpf, mov, ogg"
+                file-read-success="$ctrl.uploadMedia(file, filename, filesize, checksum)"
+                file-type-error="$ctrl.handleFileTypeError()"/>
+            </label>
+          </div>
         </div>
         <hr class="mb-row-seperator" />
         <div class="mb-panel-body">
@@ -86,38 +98,75 @@
       </div>
       <div class="mb-panel-right">
         <div ng-if="$ctrl.activeMedia">
-          <div class="mb-rows" ng-if="!$ctrl.mohEditInProgress">
-            <div class="mb-row-content">
-              <div class="mb-title text-left nowrap">{{$ctrl.activeMedia.displayName}}</div>
-              <span cs-dropdown class="mb-title actions-menu dropdown pull-right">
-                <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
-                  <i class="icon icon-more"></i>
-                </button>
-                <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                  <li><a ng-click="$ctrl.editMedia()"><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
-                  <li><a ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
-                </ul>
-              </span>
-            </div>
-            <div class="mb-row-content">
-              <div class="mb-desc text-left">{{$ctrl.activeMedia.description}}</div>
-            </div>
-          </div>
-          <div class="mb-rows" ng-if="$ctrl.mohEditInProgress">
+          <div class="mb-rows">
             <form name="$ctrl.form" novalidate role="form">
-              <div class="mb-row-content">
-                <input cs-input type="text" name="displayName" placeholder="$ctrl.activeMedia.displayName" ng-model="$ctrl.activeMedia.displayName"
-                  cs-input-group-size="medium-12" cs-input-messages="$ctrl.displayNameMessages" ng-maxlength="48" ng-required="true">
+              <div class="mb-row-content" ng-if="!$ctrl.mohEditInProgress('Title')">
+                <div id="mediaTitle" class="mb-title text-left nowrap" ng-click="$ctrl.editMedia('Title')">{{$ctrl.activeMedia.displayName}}</div>
+                <span cs-dropdown class="mb-title actions-menu dropdown pull-right" ng-if="!$ctrl.mohEditInProgress('FullEditMode')">
+                  <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{::'common.toggleMenu' | translate}}">
+                    <i class="icon icon-more"></i>
+                  </button>
+                  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                    <li ng-click="$ctrl.editMedia()"><a><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
+                    <li ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><a><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
+                  </ul>
+                </span>
               </div>
-              <div class="mb-row-content">
-                <textarea cs-input type="text" name="description" rows="3" placeholder="{{ $ctrl.activeMedia.description || ' ' }}" ng-model="$ctrl.activeMedia.description"
+              <div class="mb-row-content" ng-if="$ctrl.mohEditInProgress('Title')">
+                <input id="mediaTitle" cs-input type="text" name="displayName" placeholder="$ctrl.activeMedia.displayName" ng-model="$ctrl.activeMedia.displayName"
+                  cs-input-group-size="medium-12" cs-input-messages="$ctrl.displayNameMessages" ng-maxlength="48" ng-required="true">
+                <span cs-dropdown class="mb-title actions-menu dropdown pull-right" ng-if="!$ctrl.mohEditInProgress('FullEditMode')">
+                  <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{::'common.toggleMenu' | translate}}">
+                    <i class="icon icon-more"></i>
+                  </button>
+                  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+                    <li ng-click="$ctrl.editMedia()"><a><span>{{::"mediaMgrModal.edit" | translate}}</span></a></li>
+                    <li ng-click="$ctrl.deleteMedia($ctrl.activeMedia)"><a><span>{{::"mediaMgrModal.delete" | translate}}</span></a></li>
+                  </ul>
+                </span>
+              </div>
+              <div class="mb-row-content" ng-if="!$ctrl.mohEditInProgress('Description')">
+                <div class="mb-desc text-left" ng-click="$ctrl.editMedia('Description')" tabindex="{{$ctrl.activeMedia.description ? 0 : -1}}">{{$ctrl.activeMedia.description}}</div>
+              </div>
+              <div class="mb-row-content" ng-if="$ctrl.mohEditInProgress('Description')">
+                <textarea id="mediaDescription" cs-input type="text" name="description" rows="3" placeholder="{{ $ctrl.activeMedia.description || ' ' }}" ng-model="$ctrl.activeMedia.description"
                   cs-input-group-size="medium-12" cs-input-messages="$ctrl.descriptionMessages" ng-maxlength="512" ng-required="false">
                 </textarea>
               </div>
+              <div class="mb-panel-body">
+                <cs-card class="cs-card--full section-background download-media-card">
+                  <div class="mb-row-content">
+                    <div class="label-download text-left">{{$ctrl.activeMedia.filename}}</div>
+                    <button class="btn--none"
+                      id="mediaDownload"
+                      ng-if="!$ctrl.mohDownloadInProgress"
+                      ng-disabled="!$ctrl.isMohFileAvailable($ctrl.activeMedia.mediaState) || $ctrl.mohEditInProgress()"
+                      ng-click="$ctrl.downloadFromUrl($ctrl.activeMedia)"
+                      aria-label="{{::'common.download' | translate}}"
+                      ng-hide-animate>
+                      <i class="icon icon-download" ng-disabled="!$ctrl.isMohFileAvailable($ctrl.activeMedia.mediaState) || $ctrl.mohEditInProgress()"></i>
+                    </button>
+                    <button id="mediaDownloadSpinner" class="btn--none" ng-if="$ctrl.mohDownloadInProgress" aria-label="{{::'common.loading' | translate}}" ng-hide-animate>
+                      <i class="icon icon-spinner"></i>
+                    </button>
+                  </div>
+                </cs-card>
+              </div>
             </form>
-            <div class="mb-panel-footer">
-              <button class="btn" type="submit" ng-click="$ctrl.cancelEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.cancelButton" | translate}}</button>
-              <button class="btn btn--primary" type="submit" ng-disabled="$ctrl.form.$invalid" ng-click="$ctrl.saveEditMedia($ctrl.activeMedia)">{{::"mediaMgrModal.saveButton" | translate}}</button>
+            <div class="mb-panel-footer" ng-if="$ctrl.mohEditInProgress()">
+              <button
+                class="btn"
+                type="submit"
+                ng-click="$ctrl.cancelEditMedia($ctrl.activeMedia)"
+                translate="common.cancel">
+              </button>
+              <button
+                class="btn btn--primary"
+                type="submit"
+                ng-disabled="$ctrl.form.$invalid"
+                ng-click="$ctrl.saveEditMedia($ctrl.activeMedia)"
+                translate="common.save">
+              </button>
             </div>
           </div>
         </div>
@@ -126,7 +175,7 @@
     <div class="mb-container" ng-if="!$ctrl.loading && !$ctrl.uploadActionInProgress() && $ctrl.isModalActive($ctrl.ModalView.Trash)">
       <div class="mb-panel">
         <div class="mb-panel-header">
-          <div class="mb-title text-center">{{::"mediaMgrModal.deletedTitle" | translate}}</div>
+          <div class="mb-title text-center" translate="mediaMgrModal.deletedTitle"></div>
         </div>
         <hr class="mb-row-seperator" />
         <div class="mb-panel-body">
@@ -134,14 +183,14 @@
             <div class="mb-rows">
               <div class="mb-row-content">
                 <div class="media-text text-left">{{::mohFile.displayName}}</div>
-                <div class="media-text text-right">
-                  <i class="icon icon-back icon-lg" ng-click="$ctrl.restoreMedia(mohFile)"></i>
-                  <i class="icon icon-trash icon-lg" ng-click="$ctrl.deletePermMedia(mohFile)"></i>
+                <div class="media-text text-right nowrap">
+                  <i class="icon icon-back icon-lg" ng-click="$ctrl.restoreMedia(mohFile)" aria-label="{{::'mediaMgrModal.restoreMedia' | translate}}"></i>
+                  <i class="icon icon-trash icon-lg" ng-click="$ctrl.deletePermMedia(mohFile)" aria-label="{{::'common.delete' | translate}}"></i>
                 </div>
               </div>
               <div class="mb-row-content">
                 <div class="media-subtext text-left">{{$ctrl.getDisplayText(mohFile)}}</div>
-                <div class="media-subtext text-right"><em>{{::"mediaMgrModal.deleted" | translate}} {{$ctrl.getDeleteTime(mohFile)}}</em></div>
+                <div class="media-subtext text-right nowrap"><em>{{::"mediaMgrModal.deleted" | translate}} {{$ctrl.getDeleteTime(mohFile)}}</em></div>
               </div>
             </div>
           </div>
@@ -149,7 +198,13 @@
         </div>
         <hr class="mb-row-seperator" />
         <div class="mb-panel-footer">
-          <button class="btn" type="submit" ng-disabled="!filteredMedia.length" ng-click="$ctrl.deletePermAll()">{{::"mediaMgrModal.deleteButton" | translate}}</button>
+          <button
+            class="btn"
+            type="submit"
+            ng-disabled="!filteredMedia.length"
+            ng-click="$ctrl.deletePermAll()"
+            translate="mediaMgrModal.deleteButton">
+          </button>
         </div>
       </div>
     </div>

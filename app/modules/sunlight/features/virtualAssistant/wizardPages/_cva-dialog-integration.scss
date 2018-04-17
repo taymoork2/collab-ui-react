@@ -1,0 +1,84 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
+.cva-dialog-integration-box {
+  @include vr-spacing(mb, 1.5);
+  @include vr-spacing(p, 1.625);
+  width: rem-calc(612px);
+
+  .instruction-row {
+    @include vr-spacing(pt, 1);
+    display: flex;
+
+    &:first-child {
+      @include vr-spacing(p, 0);
+    }
+
+    .icon-circle {
+      @include vr-spacing(mt, 0.1875);
+      @include vr-spacing(mr, 1.25);
+      height: rem-calc(24px);
+      width: rem-calc(24px);
+    }
+
+    h4 {
+      font-family: $brand-font-regular;
+      font-size: rem-calc(20px);
+      color: $gray-dark-2;
+      letter-spacing: 0;
+      line-height: rem-calc(32px);
+    }
+  }
+
+  p,
+  ul {
+    @include vr-spacing(pl, 2.8125);
+    font-family: $brand-font-light;
+    font-size: rem-calc(14px);
+    color: $gray-dark-1;
+    letter-spacing: 0;
+    line-height: rem-calc(24px);
+  }
+
+  .desc {
+    @include vr-spacing(pt, 0.75);
+  }
+
+  .download-button {
+    @include vr-spacing(ml, 2.8125);
+    @include vr-spacing(mv, 0.625);
+    background: $color-mint-base;
+    border-radius: rem-calc(2px);
+    color: $white;
+    font-family: $brand-font-light;
+    font-size: rem-calc(16px);
+    height: rem-calc(48px);
+    letter-spacing: 0;
+    line-height: rem-calc(20px);
+    width: rem-calc(240px);
+
+    &:hover {
+      background: $color-mint-dark;
+    }
+  }
+
+  .learn-more-row {
+    @include vr-spacing(pt, 1.25);
+    display: flex;
+
+    a {
+      font-family: $brand-font-light;
+      font-size: rem-calc(14px);
+      letter-spacing: 0;
+      line-height: rem-calc(24px);
+    }
+
+    span {
+      @include vr-spacing(pl, 0.3125);
+      font-family: $brand-font-light;
+      font-size: rem-calc(14px);
+      color: $gray-dark-1;
+      letter-spacing: 0;
+      line-height: rem-calc(24px);
+    }
+  }
+}

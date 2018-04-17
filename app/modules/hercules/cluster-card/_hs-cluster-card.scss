@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/text-overflow';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/text-overflow';
 
 hs-cluster-card {
   display: block;
@@ -8,11 +8,6 @@ hs-cluster-card {
     header {
       position: relative;
       padding: 1.25rem 1rem 0.9375rem !important;
-
-      &.one-liner {
-        display: flex;
-        align-items: baseline;
-      }
 
       h4 {
         @include text-overflow();
@@ -56,6 +51,10 @@ hs-cluster-card {
     .columns {
       padding-left: 1rem;
       padding-right: 1rem;
+    }
+
+    cs-statusindicator {
+      padding-right: 4px;
     }
 
     .cluster-list-timezone {
@@ -149,7 +148,7 @@ hs-cluster-card {
     }
 
     .empty-cluster-body {
-      min-height: 13.75rem;
+      min-height: 15.25rem;
     }
 
     .button-row {
@@ -161,6 +160,12 @@ hs-cluster-card {
       }
     }
   }
+
+  // simulating .cs-card widths with cluster-card
+  width: 100%;
+  .cs-card.cs-card--medium {
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 470px) {
@@ -170,16 +175,6 @@ hs-cluster-card {
     .connection-status {
       margin-top: 0.9375rem;
     }
-  }
-}
-
-// override:
-// simulating .cs-card widths with cluster-card
-hs-cluster-card {
-  width: 100%;
-
-  .cs-card.medium {
-    width: 100%;
   }
 }
 

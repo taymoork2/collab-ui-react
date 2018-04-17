@@ -1,12 +1,12 @@
+#!/bin/bash
+
 # early out if this file has already been sourced
 if type unset_setup_helpers >/dev/null 2>&1; then
     return
 fi
 
-last_refreshed_file=".last-refreshed"
 manifest_checksums_file=".manifest-checksums"
-manifest_files="package.json"
-dependency_dirs="./node_modules"
+manifest_files="package.json yarn.lock"
 project_root_env_var_name="WX2_ADMIN_WEB_CLIENT_HOME"
 
 # reset function (use this when needing to re-source this file)
@@ -16,58 +16,76 @@ function unset_setup_helpers {
 
 # test if given arg is defined for the current shell
 function is_installed {
-    type $1 >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
     return $?
 }
 
-# install GNU Parallel for known used OS's
-function install_parallel_as_needed {
-    set -x
-    if ! is_installed "parallel"; then
-        if is_installed "brew"; then
-            brew install parallel                  # Mac (as of Yosemite)
-        elif is_installed "dnf"; then
-            sudo dnf install -y parallel           # Fedora (as of F23)
+# install GNU parallel for known used OS's
+function install_gnu_parallel {
+    # Mac (as of Yosemite)
+    if is_installed "brew"; then
+        brew install parallel
+        return $?
+    # Fedora (as of F23)
+    elif is_installed "dnf"; then
+        sudo dnf install -y parallel
+        return $?
+    # CentOS (as of CentOS 7)
+    elif is_installed "yum"; then
+        sudo yum install -y parallel
+        return $?
+    # Ubuntu (as of 14.04)
+    elif is_installed "apt-get"; then
+        sudo apt-get update
+        sudo apt-get install -y parallel
+        return $?
+    fi
+    >&2 echo "[ERROR] ${FUNCNAME[0]} package manager on this OS is not supported."
+    return 1
+}
+
+# install 'yarn' for known used OS's ('nvm' is assumed installed already)
+# - see: https://yarnpkg.com/lang/en/docs/install
+function install_yarn {
+    # Mac (as of Yosemite)
+    if is_installed "brew"; then
+        brew install yarn --without-node
+        return $?
+
+    elif is_installed "dnf" || is_installed "yum"; then
+        sudo wget "https://dl.yarnpkg.com/rpm/yarn.repo" -O "/etc/yum.repos.d/yarn.repo"
+        # Fedora (as of F23)
+        if is_installed "dnf"; then
+            sudo dnf install -y yarn
+            return $?
+        # CentOS (as of CentOS 7)
         elif is_installed "yum"; then
-            sudo yum install -y parallel           # CentOS (as of CentOS 7)
-        elif is_installed "apt-get"; then
-            sudo apt-get update                    # Ubuntu (as of 14.04)
-            sudo apt-get install -y parallel
-        else
-            >&2 echo "Error: package manager on this OS is not supported."
-            return 1
+            # workaround (as of 2017-08-15):
+            # - see: https://bugs.centos.org/view.php?id=13669&nbn=1
+            # - install rpm 'http-parser-2.7.1-3.el7.x86_64.rpm' from koji until EPEL team fixes the next 'nodejs-6.11.*' rpm
+            sudo rpm -Uvh "https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm"
+            sudo yum install -y yarn
+            return $?
         fi
+
+    # Ubuntu (as of 14.04)
+    elif is_installed "apt-get"; then
+        curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | sudo apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee "/etc/apt/sources.list.d/yarn.list"
+        sudo apt-get update
+        sudo apt-get install -y yarn
+        return $?
     fi
-    set +x
-}
 
-# generate a new timestamp file
-function mk_last_refreshed_file {
-    local timestamp_file=${1:-$last_refreshed_file}
-    date +"%Y%m%d%H%M%S" > $timestamp_file
-}
-
-# compare if current time minus a given timestamp's file time exceeds a given threshold
-function is_time_to_refresh {
-    local min_refresh_period=${1:-$(( 60 * 60 * 24 ))}  # default to 24 hours
-    local timestamp_file=${2:-$last_refreshed_file}
-
-    # no such file exists, return success
-    if [ ! -f $timestamp_file ]; then
-        return 0
-    else
-        set -x
-        local t1=`cat $timestamp_file`   # ex. Nov. 6, 2015 3:27:00 PM => '201511152700'
-        local t2=`date +"%Y%m%d%H%M%S"`
-        [ $(( $t2 - $t1 )) -gt $min_refresh_period ] && return 0 || return 1
-        set +x
-    fi
+    >&2 echo "[ERROR] ${FUNCNAME[0]} failed."
+    >&2 echo "- for alternate install instructions, see: https://yarnpkg.com/lang/en/docs/install/"
+    return 1
 }
 
 # quietly validate checksums
 function is_checksums_ok {
     local checksum_file=${1:-$manifest_checksums_file}
-    shasum -c $checksum_file > /dev/null && return 0 || return 1
+    shasum -c "$checksum_file" > /dev/null && return 0 || return 1
 }
 
 # generate a new checksum file
@@ -79,41 +97,30 @@ function mk_checksum_file {
     else
         local files_list=$*
     fi
-    > $checksum_file
+    > "$checksum_file"
     for f in $files_list; do
-        shasum $f >> $checksum_file
+        shasum "$f" >> "$checksum_file"
     done
-}
-
-# checks existence of a list of dirs
-function dirs_exist {
-    if [ $# -eq 0 ]; then
-        local dirs_list=${dependency_dirs}
-    else
-        local dirs_list="$*"
-    fi
-    for dir in $dirs_list; do
-        if [ ! -d $dir ]; then
-            return 1
-        fi
-    done
-    return 0
 }
 
 function set_local_npm_path {
     export PATH="$PATH:./node_modules/.bin"
-    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"./node_modules/.bin"* ]] || export PATH="$PATH:./node_modules/.bin"' >> "$HOME/$(get_bash_conf_file)"
 }
 
+# TODO: rm this after confirming no longer needed
 function set_global_npm_path {
     export PATH="$PATH:/usr/local/bin"
-    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"/usr/local/bin"* ]] || export PATH="$PATH:/usr/local/bin"' >> "$HOME/$(get_bash_conf_file)"
 }
 
 function set_atlas_web_bin_path {
     local atlas_web_bin_path="$1"
     export PATH="$PATH:${atlas_web_bin_path}"
-    echo '[[ "$PATH" == *"'${atlas_web_bin_path}'"* ]] || export PATH="$PATH:'${atlas_web_bin_path}'"' >> ~/`get_bash_conf_file`
+    # shellcheck disable=SC2016
+    echo '[[ "$PATH" == *"'"${atlas_web_bin_path}"'"* ]] || export PATH="$PATH:'"${atlas_web_bin_path}"'"' >> "$HOME/$(get_bash_conf_file)"
 }
 
 # clean up all files, but leave most recently modified <num_to_leave> files
@@ -122,15 +129,22 @@ function rm_all_but_last {
     local count=${1} && shift
 
     # early out if glob pattern matches no files
-    ls $@ >/dev/null 2>/dev/null
-    if [ $? -ne 0 ]; then
-        return 1
-    fi
-    echo $@ | xargs ls -t | awk "NR>${count}" | sed -e 's/.*/"&"/g' | xargs rm -f
+    ls "$@" >/dev/null 2>/dev/null || return 1
+
+    # - list files from args (globs will have been expanded)
+    # - trim out the first ${count} items
+    # - wrap each remaining item in double-quotes
+    # - pass to 'rm -f'
+    # shellcheck disable=SC2012
+    ls -1t "$@" \
+        | tail -n +"$((count + 1))" \
+        | sed -e 's/.*/"&"/g' \
+        | xargs rm -f
 }
 
 function get_most_recent {
-    ls -1tr $@ 2>/dev/null | tail -1
+    # shellcheck disable=SC2012
+    ls -1tr "$@" 2>/dev/null | tail -1
 }
 
 function get_head_commit_id {
@@ -138,10 +152,11 @@ function get_head_commit_id {
 }
 
 function mk_npm_deps_tar {
-    cd ${WX2_ADMIN_WEB_CLIENT_HOME}
-    local target_files="package.json node_modules"
-    local commit_id="${1:-`get_head_commit_id`}"
-    mk_deps_tar "npm-deps" "${commit_id}" ${target_files}
+    cd "${WX2_ADMIN_WEB_CLIENT_HOME}" || return 1
+    local target_files=( "package.json" "node_modules" )
+    local commit_id="${1:-$(get_head_commit_id)}"
+    mk_deps_tar "npm-deps" "${commit_id}" "${target_files[@]}"
+    # shellcheck disable=SC2164
     cd ~-
 }
 
@@ -151,27 +166,21 @@ function mk_deps_tar {
     local commit_id="${2}"
     archive_basename="${archive_basename}-for-${commit_id}.tar.gz"
     shift 2
-    local files_to_archive=$@
-    tar -czf "${cache_dir}/${archive_basename}" ${files_to_archive}
-}
-
-function mk_workspace_tar {
-    tmp_dir=`mktemp -d -t atlas-web.XXXXX`
-    git clone --depth 1 file://${WX2_ADMIN_WEB_CLIENT_HOME} $tmp_dir
-    tar -czf workspace.tar.gz -C $tmp_dir .
-    rm -rf $tmp_dir
+    local files_to_archive=( "$@" )
+    tar -czf "${cache_dir}/${archive_basename}" "${files_to_archive[@]}"
 }
 
 function restore_latest_deps {
     get_top_dir >/dev/null || return 1
-    top_dir="`get_top_dir`"
-    last_npm_deps_tar="`get_most_recent ${top_dir}/.cache/npm-deps-for-*`"
-    tar_opts="$@"
+    top_dir="$(get_top_dir)"
+    # shellcheck disable=SC2086
+    last_npm_deps_tar="$(get_most_recent ${top_dir}/.cache/npm-deps-for-*)"
+    tar_opts="$*"
 
     if [ -n "${last_npm_deps_tar}" ]; then
         set -x
         rm -rf ./node_modules
-        tar ${tar_opts} -xzf ${last_npm_deps_tar}
+        tar "${tar_opts}" -xzf "${last_npm_deps_tar}"
         set +x
     else
         # no built deps exist
@@ -181,7 +190,7 @@ function restore_latest_deps {
 
 # define and export project root dir, and add it to bash config
 function get_bash_conf_file {
-    if [ "`uname`" = "Darwin" ]; then
+    if [ "$(uname)" = "Darwin" ]; then
         echo ".bash_profile"
     else
         echo ".bashrc"
@@ -189,51 +198,81 @@ function get_bash_conf_file {
 }
 
 function get_top_dir {
-    local cwd=`pwd`
+    local cwd
+    cwd="$(pwd)"
     # get project top-level dir (look for 'fabfile.py')
-    while [ ! -r fabfile.py -a "`pwd`" != "/" ]; do
+    while [ ! -r fabfile.py ] && [ "$(pwd)" != "/" ]; do
       cd ..
     done
-    top_dir=`pwd`
-    cd $cwd
-    if [ "${top_dir}" = "/" ]; then
-        >&2 echo "Error: traversed to '/' while trying to find top-level dir"
+    top_dir=$(pwd)
+    cd "$cwd" || return 1
+    if [ "$top_dir" = "/" ]; then
+        >&2 echo "[ERROR] traversed to '/' while trying to find top-level dir"
         return 1
     fi
-    echo $top_dir
+    echo "$top_dir"
 }
 
 function export_project_root_env_var {
-    local bash_conf_file="$HOME/`get_bash_conf_file`"
+    local bash_conf_file
+    bash_conf_file="$HOME/$(get_bash_conf_file)"
     local entry_line_prefix="^export ${project_root_env_var_name}="
     local entry_line=
     local top_dir=
 
     get_top_dir >/dev/null || return 1
 
-    top_dir="`get_top_dir`"
+    top_dir="$(get_top_dir)"
     entry_line="export $project_root_env_var_name=$top_dir"
 
-    if grep -q "${entry_line_prefix}" ${bash_conf_file}; then
-        sed -i -E "s,${entry_line_prefix}.*,${entry_line}," ${bash_conf_file}
+    if grep -q "$entry_line_prefix" "$bash_conf_file"; then
+        sed -i -E "s,${entry_line_prefix}.*,${entry_line}," "$bash_conf_file"
     else
-        echo "" >> ${bash_conf_file}
-        echo "${entry_line}" >> ${bash_conf_file}
+        echo "" >> "$bash_conf_file"
+        echo "${entry_line}" >> "$bash_conf_file"
     fi
     eval "$entry_line"
+}
+
+# notes:
+# - 'nvm' will install itself by default to '.bashrc'
+# - in OSX, default terminal sessions load '.bash_profile', NOT '.bashrc' on new sessions
+# - so we modify '.bash_profile' to load '.bashrc' by default, as needed
+function update_bash_profile_to_source_bashrc_as_needed {
+    local bash_profile_file
+    bash_profile_file="$HOME/.bash_profile"
+    local entry_line='\[\[ -s \"\$HOME/.bashrc\" \]\] && source \"\$HOME/.bashrc\"'
+    local grep_term="^$entry_line"
+    local unescaped_entry_line
+    unescaped_entry_line="$(echo "$entry_line" | sed -E 's/\\(.)/\1/g')"  # <= unescape backslashes
+    if [ "$(uname)" = "Darwin" ]; then
+        if ! grep -q "$grep_term" "$bash_profile_file"; then
+            echo "[INFO] '.bash_profile' must source '.bashrc' for \`nvm\` support in shell, updating..."
+            echo "[WARNING] If you were already sourcing '.bashrc', please check '.bash_profile' to ensure it is not sourced twice."
+            echo "" >> "$bash_profile_file"
+            echo "# source in .bashrc" >> "$bash_profile_file"
+            echo "$unescaped_entry_line" >> "$bash_profile_file"
+        fi
+    fi
 }
 
 # make sure WX2_ADMIN_WEB_CLIENT_HOME is set
 export_project_root_env_var
 
+# in OSX, make sure '.bash_profile' sources '.bashrc'
+update_bash_profile_to_source_bashrc_as_needed
+
 # Check NPM local path
+# shellcheck disable=SC2015
 [[ "$PATH" == *"./node_modules/.bin"* ]] && echo "Local NPM path is set" || set_local_npm_path
 
 # Check NPM global path
+# shellcheck disable=SC2015
 [[ "$PATH" == *"/usr/local/bin"* ]] && echo "Global NPM path is set" || set_global_npm_path
 
 # Check Atlas web path
-atlas_web_bin_path="`get_top_dir`/bin"
+atlas_web_bin_path="$(get_top_dir)/bin"
+# shellcheck disable=SC2015
 [[ "$PATH" == *"${atlas_web_bin_path}"* ]] && echo "Atlas web project bin path is set" || set_atlas_web_bin_path "${atlas_web_bin_path}"
 
 # setup .cache subdir

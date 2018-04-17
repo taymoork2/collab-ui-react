@@ -11,11 +11,11 @@ describe('Controller: PartnerProfileCtrl', function () {
       '$q',
       'Authinfo',
       'BrandService',
+      'FeatureToggleService',
       'Orgservice',
       'Notification',
       'UserListService',
       'WebexClientVersion',
-      'FeatureToggleService',
       'ProPackService',
     );
 
@@ -26,7 +26,7 @@ describe('Controller: PartnerProfileCtrl', function () {
     spyOn(this.UserListService, 'listPartners');
     spyOn(this.Orgservice, 'getOrg');
     spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.$q.resolve('logoUrl'));
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'csdmDeviceSupportGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve());
     spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve());
@@ -186,14 +186,6 @@ describe('Controller: PartnerProfileCtrl', function () {
     });
 
     describe('2017 name update', function () {
-      it('nameChangeEnabled should depend on atlas2017NameChangeGetStatus', function () {
-        expect(this.controller.nameChangeEnabled).toBeFalsy();
-
-        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
-        this.initController();
-        expect(this.controller.nameChangeEnabled).toBeTruthy();
-      });
-
       it('getAppTitle should depend on hasProPackPurchased', function () {
         expect(this.controller.getAppTitle()).toEqual('loginPage.titleNew');
 

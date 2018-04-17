@@ -1,0 +1,77 @@
+<div class="intro">
+  <p translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.intro"></p>
+  <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+  </button>
+</div>
+<div class="steps-list">
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+  <div class="cs-checkbox-group">
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.planCapacity"
+        id="checkboxExpressway1"
+        name="checkboxExpressway1"
+        ng-change="$ctrl.processChange('planCapacity', $ctrl.checkboxes.planCapacity)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.planCapacity' | translate}}">
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.redundancy"
+        id="checkboxExpressway2"
+        name="checkboxExpressway2"
+        ng-change="$ctrl.processChange('redundancy', $ctrl.checkboxes.redundancy)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.redundancy' | translate}}">
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.followRequirements"
+        id="checkboxExpressway3"
+        name="checkboxExpressway3"
+        ng-change="$ctrl.processChange('followRequirements', $ctrl.checkboxes.followRequirements)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.followRequirements' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.followRequirementsHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.followRequirementsHelp2"></li>
+    </ul>
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.bypassFirstTimeWizard"
+        id="checkboxExpressway4"
+        name="checkboxExpressway4"
+        ng-change="$ctrl.processChange('bypassFirstTimeWizard', $ctrl.checkboxes.bypassFirstTimeWizard)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.bypassFirstTimeWizard' | translate}}">
+    <div class="checklist-help-text">
+      <span translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.bypassFirstTimeWizardHelp1"></span>
+    </div>
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.configureExpresswayC"
+        id="checkboxExpressway5"
+        name="checkboxExpressway5"
+        ng-change="$ctrl.processChange('configureExpresswayC', $ctrl.checkboxes.configureExpresswayC)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.configureExpresswayC' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.configureExpresswayCHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.configureExpresswayCHelp2"></li>
+    </ul>
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.openPortOnFirewall"
+        id="checkboxExpressway6"
+        name="checkboxExpressway6"
+        ng-change="$ctrl.processChange('openPortOnFirewall', $ctrl.checkboxes.openPortOnFirewall)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.openPortOnFirewall' | translate}}">
+    <ul class="checklist-help-text">
+      <li>*.ciscospark.com</li>
+      <li>*.wbx2.com</li>
+      <li>*.webex.com</li>
+      <span translate="servicesOverview.cards.hybridCall.prerequisites.expresswaySetup.openPortOnFirewallHelp1"></span>
+    </ul>
+  </div>
+
+</div>

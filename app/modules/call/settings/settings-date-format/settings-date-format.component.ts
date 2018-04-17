@@ -25,7 +25,7 @@ class HuronDateFormatCtrl implements ng.IComponentController {
 
 export class HuronDateFormatComponent implements ng.IComponentOptions {
   public controller = HuronDateFormatCtrl;
-  public templateUrl = 'modules/call/settings/settings-date-format/settings-date-format.component.html';
+  public template = require('modules/call/settings/settings-date-format/settings-date-format.component.html');
   public bindings = {
     dateFormat: '<',
     dateFormatOptions: '<',

@@ -57,6 +57,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -70,7 +71,8 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
 
     describe('with session variables', function () {
       beforeEach(function () {
-        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(customVarJson));
+        var var_names = _.clone(customVarJson[0].var_name);
+        spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve(var_names));
         spyOn(AAModelService, 'getAAModel').and.returnValue(aaModel);
         spyOn(AACommonService, 'sortByProperty').and.callThrough();
         controller = $controller('AADynamicAnnouncementsModalCtrl', {
@@ -78,13 +80,14 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
 
       it('should validate controller creation', function () {
         expect(controller).toBeDefined();
-        expect(controller.variableOptions.length).toBe(6);
+        expect(controller.variableOptions.length).toBe(10);
         expect(controller.readAsOptions.length).toBe(4);
       });
     });
@@ -104,6 +107,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -123,6 +127,7 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
@@ -141,28 +146,30 @@ describe('Controller: AADynamicAnnouncementsModalCtrl', function () {
           $modalInstance: modalFake,
           variableSelection: selection,
           readAsSelection: selection,
+          aaElementType: 'SayMessage',
         });
         $scope.$apply();
       });
 
-      it('should be false', function () {
-        expect(controller.isSaveEnabled()).toBe(false);
+      it('should be empty when variable not selected', function () {
+        expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be false', function () {
-        controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toBe(false);
+      it('should be empty when variable is not selected but readAs option is selected', function () {
+        controller.readAsSelection.label = 'Number';
+        controller.variableSelection.label = '';
+        expect(controller.isSaveEnabled()).toBe('');
       });
 
-      it('should be false', function () {
-        controller.variableSelection.label = true;
-        expect(controller.isSaveEnabled()).toBe(true);
+      it('should not return empty when variable is selected', function () {
+        controller.variableSelection.label = 'testVariable';
+        expect(controller.isSaveEnabled()).toBe('testVariable');
       });
 
-      it('should be true', function () {
-        controller.variableSelection.label = true;
-        controller.readAsSelection.label = true;
-        expect(controller.isSaveEnabled()).toBe(true);
+      it('should not return empty when variable and readAs option is selected', function () {
+        controller.variableSelection.label = 'testVariable';
+        controller.readAsSelection.label = 'Number';
+        expect(controller.isSaveEnabled()).toBe('testVariable');
       });
     });
   });

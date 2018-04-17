@@ -13,7 +13,7 @@ class HybridCallServiceTestCallToolCtrl implements ng.IComponentController {
 
   public openTool(): void {
     this.$modal.open({
-      templateUrl: 'modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool-modal.html',
+      template: require('modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool-modal.html'),
       controller: 'HybridCallServiceTestToolModalController',
       controllerAs: 'vm',
       resolve: {
@@ -29,7 +29,7 @@ class HybridCallServiceTestCallToolCtrl implements ng.IComponentController {
 
 export class HybridCallServiceTestCallToolComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceTestCallToolCtrl;
-  public templateUrl = 'modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool.component.html';
+  public template = require('modules/hercules/user-sidepanel/hybrid-call-service-test-call-tool/hybrid-call-service-test-call-tool.component.html');
   public bindings = {
     userId: '<',
   };

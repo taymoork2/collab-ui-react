@@ -14,6 +14,6 @@ export class SupportSetting extends SettingSection {
 export class SupportSettingComponent implements ng.IComponentOptions {
   public controller = SupportSettingsController;
   public controllerAs = 'ctrl';
-  public templateUrl = 'modules/core/settings/supportSection/supportSection.tpl.html';
+  public template = require('modules/core/settings/supportSection/supportSection.tpl.html');
 }
 

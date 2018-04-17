@@ -11,9 +11,28 @@ var scopes = [
   'cloudMeetings:login',
   'webex-messenger:get_webextoken',
   'cloud-contact-center:admin',
+  'spark-compliance:rooms_read',
+  'spark-compliance:people_read',
+  'spark-compliance:organizations_read',
   'compliance:spark_conversations_read',
   'contact-center-context:pod_read',
   'contact-center-context:pod_write',
+  'spark-admin:people_read',
+  'spark-admin:people_write',
+  'spark-admin:customers_read',
+  'spark-admin:customers_write',
+  'spark-admin:organizations_read',
+  'spark-admin:licenses_read',
+  'spark-admin:logs_read',
+  'spark:kms',
+  // to onboard bot account
+  'spark:applications_write',
+  'spark:applications_read',
+  // for Care Virtual Assistant
+  'spark:messages_read',
+  'spark:memberships_read',
+  'spark:memberships_write',
+  'spark:rooms_read',
 ];
 var oauth2Scope = scopes.join(' ');
 
@@ -90,6 +109,34 @@ exports.getTerminusServiceUrl = function () {
     return this.terminusServiceUrl.integration;
   }
 };
+
+exports.csdmServiceUrl = {
+  dev: 'https://csdm-intb.ciscospark.com/csdm/api/v1/',
+  integration: 'https://csdm-intb.ciscospark.com/csdm/api/v1/',
+  prod: 'https://csdm-a.wbx2.com/csdm/api/v1/',
+};
+
+exports.getCsdmServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.csdmServiceUrl.prod;
+  } else {
+    return this.csdmServiceUrl.integration;
+  }
+}
+
+exports.pagingServiceUrl = {
+  dev: 'https://paging.huron-int.com/api/v1/',
+  integration: 'https://paging.huron-int.com/api/v1/',
+  prod: 'https://paging.huron-dev.com/api/v1/',
+}
+
+exports.getPagingServiceUrl = function () {
+  if (isProductionBackend) {
+    return this.pagingServiceUrl.prod;
+  } else {
+    return this.pagingServiceUrl.integration;
+  }
+}
 
 exports.deviceUserAgent = {
   android: 'wx2-android/1 (Android 4.4.2; LGE Hammerhead / Google Nexus 5; )[preload=false;locale=en_US;clientidbase=android-google]',

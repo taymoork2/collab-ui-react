@@ -10,10 +10,9 @@ describe('Controller: EdiscoverySearchController', function () {
     spyOn(this.Analytics, 'trackEvent').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackEdiscoverySteps').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
-    spyOn(this.FeatureToggleService, 'atlasEdiscoveryGetStatus').and.returnValue(this.$q.resolve(false));
-    spyOn(this.FeatureToggleService, 'atlasEdiscoveryIPSettingGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3346EdiscoverySearchLimitGetStatus').and.returnValue(this.$q.resolve(false));
   }
 
   function init() {
@@ -58,6 +57,40 @@ describe('Controller: EdiscoverySearchController', function () {
     });
   });
 
+  describe('limit for email and space search validation ', function () {
+    beforeEach(function () {
+      initController.apply(this);
+      spyOn(this.ediscoverySearchController, 'advancedSearch');
+    });
+
+    it('should allow limit of 5 if FT is false', function () {
+      this.ediscoverySearchController.limitErrorMessage = '';
+      this.ediscoverySearchController.searchModel = 'one, two, three, four, five';
+      this.ediscoverySearchController.searchByLimit();
+      expect(this.ediscoverySearchController.limitErrorMessage).toBe('');
+      expect(this.ediscoverySearchController.advancedSearch).toHaveBeenCalled();
+    });
+
+    it('should not allow greater than 5 if FT is false', function () {
+      this.ediscoverySearchController.limitErrorMessage = '';
+      this.ediscoverySearchController.searchModel = 'one, two, three, four, five, six';
+      this.ediscoverySearchController.searchByLimit();
+      expect(this.ediscoverySearchController.limitErrorMessage).toBe('ediscovery.searchErrors.invalidEmailLimit');
+      expect(this.ediscoverySearchController.advancedSearch).not.toHaveBeenCalled();
+    });
+
+    it('should limit the max number to whatever the FT is set', function () {
+      this.FeatureToggleService.atlasF3346EdiscoverySearchLimitGetStatus.and.returnValue(this.$q.resolve('6'));
+      initController.apply(this);
+      spyOn(this.ediscoverySearchController, 'advancedSearch');
+      this.ediscoverySearchController.limitErrorMessage = '';
+      this.ediscoverySearchController.searchModel = 'one, two, three, four, five, six';
+      this.ediscoverySearchController.searchByLimit();
+      expect(this.ediscoverySearchController.limitErrorMessage).toBe('');
+      expect(this.ediscoverySearchController.advancedSearch).toHaveBeenCalled();
+    });
+  });
+
   describe('Date Validation', function () {
     beforeEach(function () {
       initController.apply(this);
@@ -66,18 +99,14 @@ describe('Controller: EdiscoverySearchController', function () {
     it('should not return an error', function () {
       startDate = moment().subtract(30, 'days').format();
       endDate = moment().format();
-
       result = this.ediscoverySearchController.dateErrors(startDate, endDate);
-
       expect(result).toEqual([]);
     });
 
     it('should not have end date be before start date', function () {
       startDate = moment().format();
       endDate = moment().subtract(2, 'days').format();
-
       result = this.ediscoverySearchController.dateErrors(startDate, endDate);
-
       expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate']);
       expect(this.ediscoverySearchController.validateDate()).toBe(true);
     });
@@ -85,25 +114,20 @@ describe('Controller: EdiscoverySearchController', function () {
     it('should not have a start date that is in the future', function () {
       startDate = moment().add(1, 'day').format();
       endDate = moment().format();
-
       result = this.ediscoverySearchController.dateErrors(startDate, endDate);
-
       expect(result).toEqual(['ediscovery.dateError.StartDateMustBeforeEndDate', 'ediscovery.dateError.StartDateCannotBeInTheFuture']);
     });
 
     it('should not exceed a 90 day range if ProPack is not purchased', function () {
       startDate = moment().subtract(91, 'days').format();
       endDate = moment().format();
-
       result = this.ediscoverySearchController.dateErrors(startDate, endDate);
-
       expect(result).toEqual(['ediscovery.dateError.InvalidDateRange']);
     });
   });
 
   describe('Create report', function () {
     beforeEach(function () {
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       var deferredRunReportResult = this.$q.defer();
 
       promise = this.$q.resolve({
@@ -141,8 +165,15 @@ describe('Controller: EdiscoverySearchController', function () {
   });
 
   describe('Create report with error', function () {
-    beforeEach(function () {
+    it('received from atlas backend', function () {
+      initController.apply(this);
+      var errorNotification = spyOn(this.Notification, 'errorWithTrackingId');
       promise = this.$q.reject({
+        config: {
+          headers: {
+            TrackingID: 12345678,
+          },
+        },
         data: {
           errorCode: 420000,
           message: 'Invalid Input',
@@ -153,12 +184,9 @@ describe('Controller: EdiscoverySearchController', function () {
         },
       });
 
-      spyOn(this.EdiscoveryService, 'createReport').and.returnValue(promise);
-      initController.apply(this);
-    });
-
-    it('received from atlas backend', function () {
-      var errorNotification = spyOn(this.Notification, 'error');
+      spyOn(this.EdiscoveryService, 'createReport').and.callFake(function () {
+        return promise;
+      });
       this.ediscoverySearchController.createReport();
       this.$scope.$apply();
       expect(errorNotification).toHaveBeenCalled();
@@ -175,17 +203,16 @@ describe('Controller: EdiscoverySearchController', function () {
       });
 
       spyOn(this.EdiscoveryService, 'createReport').and.returnValue(promise);
-      spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       spyOn(this.EdiscoveryService, 'patchReport').and.returnValue(this.$q.resolve({}));
       spyOn(this.EdiscoveryService, 'getReport').and.returnValue(promise);
-      spyOn(this.Notification, 'error').and.callFake(function () {
+      spyOn(this.Notification, 'errorWithTrackingId').and.callFake(function () {
         return true;
       });
     });
 
     it('received from avalon backend', function () {
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       initController.apply(this);
+      spyOn(this.EdiscoveryService, 'generateReport').and.returnValue(this.$q.reject());
       this.ediscoverySearchController.searchCriteria.roomId = 'whatever';
       this.ediscoverySearchController.searchCriteria.endDate = moment().format();
       this.ediscoverySearchController.searchCriteria.startDate = moment().subtract(1, 'day').format();
@@ -194,7 +221,7 @@ describe('Controller: EdiscoverySearchController', function () {
 
       expect(this.EdiscoveryService.generateReport.calls.count()).toBe(1);
       expect(this.EdiscoveryService.createReport).toHaveBeenCalled();
-      expect(this.Notification.error.calls.count()).toBe(1);
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       expect(this.EdiscoveryService.patchReport.calls.count()).toBe(1);
     });
   });
@@ -203,7 +230,6 @@ describe('Controller: EdiscoverySearchController', function () {
     var generatedResult;
     beforeEach(function () {
       initController.apply(this);
-      this.FeatureToggleService.atlasEdiscoveryGetStatus.and.returnValue(this.$q.resolve(true));
       generatedResult = {
         displayName: 'test1',
         url: 'whatever',
@@ -309,6 +335,20 @@ describe('Controller: EdiscoverySearchController', function () {
       expect(this.ediscoverySearchController.report.id).toEqual('4567');
       expect(this.ediscoverySearchController.report.displayName).toEqual('whatever');
       expect(this.ediscoverySearchController.currentReportId).toBe('4567');
+    });
+  });
+
+  describe('helper function:', function () {
+    beforeEach(function () {
+      initController.apply(this);
+    });
+
+    it('splitWords should return an array with no empty strings and no white spaces', function () {
+      var words = 'hello,   foo,   abc   ,';
+      var splitWordsResponse = ['hello', 'foo', 'abc'];
+
+      var splitWords = this.ediscoverySearchController.splitWords(words);
+      expect(splitWords).toEqual(splitWordsResponse);
     });
   });
 });

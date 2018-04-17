@@ -5,7 +5,7 @@ import storageModule from 'modules/core/storage';
 
 export default angular
   .module('core.auth.idleTimeout', [
-    require('modules/core/config/config'),
+    require('modules/core/config/config').default,
     require('modules/core/scripts/services/log'),
     require('modules/core/auth/auth'),
     storageModule,

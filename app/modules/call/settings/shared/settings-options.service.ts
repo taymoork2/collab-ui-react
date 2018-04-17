@@ -2,8 +2,10 @@ import { IOption } from 'modules/huron/dialing/dialing.service';
 import { IDialPlan, DialPlanService } from 'modules/huron/dialPlans';
 import { NumberService, NumberType } from 'modules/huron/numbers';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { LocationsService } from 'modules/call/locations/shared';
 import { HuntGroupService } from 'modules/call/features/hunt-group';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
+import { Notification } from 'modules/core/notifications';
 
 export class HuronSettingsOptions {
   public preferredLanguageOptions: IOption[];
@@ -16,7 +18,7 @@ export class HuronSettingsOptions {
   public emergencyServiceNumberOptions: IEmergencyNumberOption[];
   public companyMohOptions: IOption[];
   public dialPlan: IDialPlan;
-  public extensionsAssigned: boolean;
+  public extensionDecreaseAllowed: boolean;
 }
 
 export interface IEmergencyNumberOption extends IOption {
@@ -29,11 +31,13 @@ export class HuronSettingsOptionsService {
   constructor(
     private $q: ng.IQService,
     private ServiceSetup,
+    private LocationsService: LocationsService,
     private NumberService: NumberService,
     private PhoneNumberService: PhoneNumberService,
     private DialPlanService: DialPlanService,
     private HuntGroupService: HuntGroupService,
     private MediaOnHoldService: MediaOnHoldService,
+    private Notification: Notification,
     private FeatureToggleService,
     private Authinfo,
     private DirectoryNumberService,
@@ -53,7 +57,7 @@ export class HuronSettingsOptionsService {
       emergencyServiceNumbers: this.loadEmergencyServiceNumbers(undefined),
       companyMohOptions: this.loadCompanyMohOptions(),
       dialPlan: this.loadDialPlan(),
-      extensionsAssigned: this.areExtensionsAssigned(),
+      extensionDecreaseAllowed: this.extensionDecreaseAllowed(),
     }).then(response => {
       settingsOptions.dateFormatOptions = _.get<IOption[]>(response, 'dateFormatOptions');
       settingsOptions.timeFormatOptions = _.get<IOption[]>(response, 'timeFormatOptions');
@@ -65,8 +69,11 @@ export class HuronSettingsOptionsService {
       settingsOptions.emergencyServiceNumberOptions = _.get<IEmergencyNumberOption[]>(response, 'emergencyServiceNumbers');
       settingsOptions.companyMohOptions = _.get<IOption[]>(response, 'companyMohOptions', []);
       settingsOptions.dialPlan = _.get<IDialPlan>(response, 'dialPlan');
-      settingsOptions.extensionsAssigned = _.get<boolean>(response, 'extensionsAssigned');
+      settingsOptions.extensionDecreaseAllowed = _.get<boolean>(response, 'extensionDecreaseAllowed');
       return settingsOptions;
+    }).catch(error => {
+      this.Notification.errorWithTrackingId(error);
+      return this.$q.reject();
     });
   }
 
@@ -97,8 +104,8 @@ export class HuronSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
@@ -109,8 +116,8 @@ export class HuronSettingsOptionsService {
       .then(externalNumbers => {
         return _.map(externalNumbers, externalNumber => {
           return <IOption> {
-            value: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            value: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
@@ -142,8 +149,8 @@ export class HuronSettingsOptionsService {
         return _.map(externalNumbers, externalNumber => {
           return <IEmergencyNumberOption> {
             value: externalNumber.uuid,
-            pattern: externalNumber.number,
-            label: this.PhoneNumberService.getNationalFormat(externalNumber.number),
+            pattern: externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(externalNumber.number ? externalNumber.number : _.get(externalNumber, 'external')),
           };
         });
       });
@@ -179,20 +186,35 @@ export class HuronSettingsOptionsService {
       .catch(() => false);
   }
 
-  private areExtensionsAssigned(): ng.IPromise<any> {
+  private testForMultipleLocations(): ng.IPromise<boolean> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then(supports => {
+      if (supports) {
+        return this.LocationsService.getLocationList().then(locations => {
+          return _.isArray(locations) && locations.length > 1;
+        });
+      } else {
+        return this.$q.resolve(false);
+      }
+    });
+  }
+
+  private extensionDecreaseAllowed(): ng.IPromise<any> {
     return this.$q.all({
       extensions: this.testForExtensions(),
       huntGroups: this.testForHuntGroup(),
       autoAttendant: this.testForAutoAttendant(),
+      multipleLocations: this.testForMultipleLocations(),
     }).then(response => {
       if (response.extensions) {
-        return true;
-      } else if (response.huntGroups) {
-        return true;
-      } else if (response.autoAttendant) {
-        return true;
-      } else {
         return false;
+      } else if (response.huntGroups) {
+        return false;
+      } else if (response.autoAttendant) {
+        return false;
+      } else if (response.multipleLocations) {
+        return false;
+      } else {
+        return true;
       }
     });
   }

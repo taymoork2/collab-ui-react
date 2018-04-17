@@ -29,6 +29,7 @@
 
     function activate() {
       vm.schedule = $scope.schedule;
+      vm.routingPrefixOptions = $scope.routingPrefixOptions;
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
     }

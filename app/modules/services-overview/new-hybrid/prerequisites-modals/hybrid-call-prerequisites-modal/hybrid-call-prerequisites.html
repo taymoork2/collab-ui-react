@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <button class="close" ng-click="$dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
+  <h5 class="modal-title" translate="servicesOverview.cards.hybridCall.prerequisites.title"></h5>
+</div>
+<div class="modal-body hybrid-service-prerequisites">
+  <tabset justified="true" ng-if="!vm.callServiceConnectOnly">
+    <tab heading="{{vm.expresswayTabHeading}}">
+      <div class="tab-content">
+        <basic-expressway-prerequisites on-change="vm.expresswayData(options)"></basic-expressway-prerequisites>
+      </div>
+    </tab>
+    <tab heading="{{vm.awareTabHeading}}">
+      <div class="tab-content">
+        <call-service-aware-prerequisites on-change="vm.awareData(options)"></call-service-aware-prerequisites>
+      </div>
+    </tab>
+    <tab heading="{{vm.connectTabHeading}}">
+      <div class="tab-content">
+        <call-service-connect-prerequisites on-change="vm.connectData(options)"></call-service-connect-prerequisites>
+      </div>
+    </tab>
+  </tabset>
+  <call-service-connect-prerequisites ng-if="vm.callServiceConnectOnly" on-change="vm.connectData(options)"></call-service-connect-prerequisites>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="$close()">
+    <span translate="common.close"></span>
+  </button>
+</div>

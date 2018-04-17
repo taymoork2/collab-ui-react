@@ -3,11 +3,10 @@
 describe('PartnerManagementController:', function () {
   beforeEach(function () {
     this.initModules(require('./index').default);
-    this.injectDependencies('$controller', '$scope', '$state', '$q', 'FeatureToggleService', 'ProPackService', 'Notification', 'PartnerManagementService');
+    this.injectDependencies('$controller', '$scope', '$state', '$q', 'ProPackService', 'Notification', 'PartnerManagementService');
 
     this.jsonData = getJSONFixture('squared/json/partnerManagement.json');
 
-    spyOn(this.FeatureToggleService, 'atlas2017NameChangeGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.$state, 'go');
@@ -158,20 +157,13 @@ describe('PartnerManagementController:', function () {
     });
 
     // Name Change
-    describe('2017 Name Change Toggling - getHeader', function () {
-      it('should return base name when toggles are false', function () {
-        this.initController();
-        expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitle');
-      });
-
-      it('should return new name when atlas2017NameChangeGetStatus is true and atlasITProPackGetStatus is false', function () {
-        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+    describe('getHeader - ', function () {
+      it('should return navHeaderTitleNew as default', function () {
         this.initController();
         expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitleNew');
       });
 
-      it('should return new Pro name when atlas2017NameChangeGetStatus and hasProPackPurchased is true', function () {
-        this.FeatureToggleService.atlas2017NameChangeGetStatus.and.returnValue(this.$q.resolve(true));
+      it('should return new Pro name when hasProPackPurchased is true', function () {
         this.ProPackService.hasProPackPurchased.and.returnValue(this.$q.resolve(true));
         this.initController();
         expect(this.controller.getHeader()).toEqual('partnerManagement.navHeaderTitlePro');

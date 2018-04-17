@@ -15,6 +15,7 @@ require('./_login.scss');
     require('modules/core/storage').default,
     require('modules/core/scripts/services/utils'),
     require('modules/core/cache').default,
+    require('modules/core/metrics').default,
   ]).directive('login', require('./login.directive'))
     .name;
 }());

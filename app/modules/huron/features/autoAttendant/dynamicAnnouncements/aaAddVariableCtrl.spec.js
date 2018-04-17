@@ -28,6 +28,7 @@ describe('Controller: AAAddVariableCtrl', function () {
     $window = _$window_;
     $scope.schedule = schedule;
     $scope.index = index;
+    $scope.aaElementType = 'SayMessage';
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService.clearCeMenuMap();
@@ -160,6 +161,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         });
         $scope.dynamicElement = 'test';
         $scope.elementId = 'test';
+        $scope.aaElementType = 'SayMessage';
         controller = $controller('AAAddVariableCtrl', {
           $scope: $scope,
         });
@@ -170,6 +172,7 @@ describe('Controller: AAAddVariableCtrl', function () {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
         action.dynamicList = [];
         menuEntry.addAction(action);
+        spyOn($rootScope, '$broadcast');
         controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
         expect($modal.open).toHaveBeenCalled();
         modal.resolve(result);
@@ -177,6 +180,25 @@ describe('Controller: AAAddVariableCtrl', function () {
         expect(controller.menuEntry.actions[0].dynamicList.length).toEqual(2);
         expect(controller.menuEntry.actions[0].dynamicList[0].say.value).toEqual('this is test say message');
         expect(controller.menuEntry.actions[0].dynamicList[1].isDynamic).toEqual(true);
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('dynamicListUpdated');
+      });
+
+      it('should create/update dynamicList in actions under menuEntry when called from REST block', function () {
+        $scope.aaElementType = 'REST';
+        controller = $controller('AAAddVariableCtrl', {
+          $scope: $scope,
+        });
+        $scope.$apply();
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [];
+        menuEntry.addAction(action);
+        controller.dynamicAdd($scope.dynamicElement, $scope.elementId);
+        expect($modal.open).toHaveBeenCalled();
+        modal.resolve(result);
+        $scope.$apply();
+        expect(_.get(controller.menuEntry, 'actions[0].dynamicList.length', 0)).toBe(2);
+        expect(_.get(controller.menuEntry, 'actions[0].dynamicList[0].action.eval.value', '')).toBe('this is test say message');
+        expect(_.get(controller.menuEntry, 'actions[0].dynamicList[1].isDynamic', '')).toBe(true);
       });
 
       it('should be able to update/create dynamicList inside action for Menu Header', function () {

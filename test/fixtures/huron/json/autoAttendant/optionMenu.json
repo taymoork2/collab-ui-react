@@ -106,6 +106,45 @@
       }]
     }]
   },
+  "expectedCeOptionNoActions": {
+    "callExperienceName": "AA Option",
+    "assignedResources": [{
+        "trigger": "incomingCall",
+        "type": "directoryNumber",
+        "id": "e7d68d8c-9e92-4330-a881-5fc9ace1f7d3"
+      }],
+    "defaultActionSet": "openHours",
+    "scheduleEventTypeMap": {
+      "open": "openHours"
+    },
+    "actionSets": [{
+      "name": "openHours",
+      "actions": [{
+        "play": {
+          "description": "Welcome prompt",
+          "url": "file1.avi",
+          "voice": "Vanessa",
+          "deleteUrl": "file1.avi"
+        }
+      }, {
+        "runActionsOnInput": {
+          "description": "",
+          "prompts": {
+            "description": "",
+            "announcements": [{
+              "say": {
+                "value": "",
+                "voice": ""
+              }
+            }]
+          },
+          "language": "",
+          "voice": "",
+          "inputs": []
+        }
+      }]
+    }]
+  },
   "expectedCeOption": {
     "callExperienceName": "AA Option",
     "assignedResources": [{
@@ -155,7 +194,8 @@
             "input": "1",
             "actions": [{
               "route": {
-                "destination": "1111"
+                "destination": "1111",
+                "destType": "extension"
               }
             }]
           }, {

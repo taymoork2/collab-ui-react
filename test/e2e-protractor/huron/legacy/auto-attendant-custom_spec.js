@@ -5,27 +5,33 @@
 describe('Huron Auto Attendant', function () {
   var waitTime = 12000;
 
-  beforeAll(function () {
+  var testAAName;
+  var testAAImportName;
+  var testCardClose;
+  var testImportCardClose;
 
-    login.login('aa-admin', '#/hurondetails/features');
+  beforeAll(function () {
+    deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
+    deleteUtils.testAAImportName = deleteUtils.testAAImportName + "_" + Date.now();
+
+    testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
+    testAAImportName = element(by.css('p[title="' + deleteUtils.testAAImportName + '"]'));
+    testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+    testImportCardClose = testAAImportName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+ 
+    login.login('aa-admin', autoattendant.callFeature);
   }, 120000);
+  
+  afterAll(function () {
+    var flow = protractor.promise.controlFlow();
+    return flow.execute(deleteUtils.findAndDeleteTestAA);
+  });
+
 
   describe('Create and Delete AA', function () {
 
     // TEST CASES
-    it('should navigate to AA landing page', function () {
-
-      // First ensure the test AA is deleted (in case last test run failed for example)
-      var flow = protractor.promise.controlFlow();
-      var result = flow.execute(deleteUtils.findAndDeleteTestAA);
-
-      // and navigate to the landing page
-      navigation.clickAutoAttendant();
-
-    }, 120000);
-
-    it('should create a new auto attendant named "' + deleteUtils.testAAImportName + '"', function () {
-
+    it('should navigate to AA landing page and create AA', function () {
       // click new feature
       utils.click(autoattendant.newFeatureButton);
 
@@ -134,8 +140,10 @@ describe('Huron Auto Attendant', function () {
 
     it('should delete new AAs named "' + deleteUtils.testAAName + '" and "' + deleteUtils.testAAImportName + '"', function () {
 
+      notifications.clearNotifications();
+
       // click delete X on the AA card for e2e test AA
-      utils.click(autoattendant.testCardDelete);
+      utils.click(testCardClose);
 
       // confirm dialog with e2e AA test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
@@ -144,7 +152,7 @@ describe('Huron Auto Attendant', function () {
       });
 
       // click delete X on the AA card for import schedule test AA
-      utils.click(autoattendant.testImportCardDelete);
+      utils.click(testImportCardClose);
 
       // confirm dialog with import schedule test name in it is there, then agree to delete
       utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAImportName + ' Auto Attendant?').then(function () {

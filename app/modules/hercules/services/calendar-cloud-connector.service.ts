@@ -1,16 +1,17 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HybridServiceId, StatusIndicatorCSSClass } from 'modules/hercules/hybrid-services.types';
+import { HybridServiceId, ServiceStatusCSSClass } from 'modules/hercules/hybrid-services.types';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
-interface IService {
+export interface ICCCService {
   aclAdminAccount?: string;
   apiClientId?: string;
   errorCode: ProvisioningResult;
   provisioned: boolean;
-  serviceId: string;
+  serviceId: HybridServiceId;
   setup: boolean;
-  status: string;
-  statusCss: string;
+  status: HighLevelStatusForService;
+  cssClass: ServiceStatusCSSClass;
 }
 
 interface IConfig {
@@ -25,21 +26,33 @@ export interface IApiKey {
   status: number;
 }
 
-/* List of error codes from https://sqbu-github.cisco.com/WebExSquared/calendar-cloud-connector/issues/390 */
+export type CCCService = 'squared-fusion-gcal' | 'squared-fusion-o365';
+
 enum ProvisioningResult {
-  'OK' = 0,                       // All good
-  'INVALID_API_ACCESS_KEY' = 1,   // Invalid API access key
-  'DATABASE_ERROR' = 2,           // Database error
-  'REQUIRED_SCOPE_MISSING' = 3,   // Missing required auth scope
-  'SECURITY_FAILURE' = 4,         // Some kind of security issue
-  'GENERAL_ERROR' = 6,            // Default error
-  'TEST_ACCOUNT_NONEXISTENT' = 7, // No such account
+  'OK' = 0,                                // All good
+  'INVALID_API_ACCESS_KEY' = 1,            // Invalid API access key
+  'DATABASE_ERROR' = 2,                    // Database error
+  'REQUIRED_SCOPE_MISSING' = 3,            // Missing required auth scope
+  'SECURITY_FAILURE' = 4,                  // Some kind of security issue
+  'GENERAL_ERROR' = 6,                     // Default error
+  'TEST_ACCOUNT_NONEXISTENT' = 7,          // No such account
+  'SYNC_KMS_ROLE_FAILURE' = 8,             // Error adding sync KMS role
+  'MACHINE_ACCOUNT_CREATION_FAILURE' = 9,  // Error creating machine account
+  'PASSWORD_CREATION_FAILURE' = 10,        // Error creating passwords
+  'INVALID_SESSION_ID' = 11,               // Invalid session id
+  'BAD_ADMIN_CONSENT' = 12,                // Invalid admin consent
+  'PRECONDITIONS_NOT_MET' = 13,            // Session timeout
+  'MACHINE_ACCOUNT_DELETION_FAILURE' = 14, // Error creating machine account
+  'ORGANIZATION_ADDITION_FAILURE' = 15,    // Error adding organization
+}
+
+interface IRequestAdminConsentResponse {
+  redirectUrl: string;
 }
 
 export class CloudConnectorService {
   private setupModal: any;
   private secondSetupModal: any;
-  private serviceId: HybridServiceId = 'squared-fusion-gcal';
 
   /* @ngInject */
   constructor(
@@ -47,6 +60,7 @@ export class CloudConnectorService {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private Authinfo,
+    private OAuthConfig,
     private ServiceDescriptorService: ServiceDescriptorService,
     private UrlConfig,
   ) {}
@@ -55,7 +69,28 @@ export class CloudConnectorService {
     return res.data;
   }
 
+  public getOffice365AdminConsentUrl(): ng.IPromise<string> {
+    const returnUrl = `${this.OAuthConfig.getAdminPortalUrl()}/services`;
+    return this.$http.get<IRequestAdminConsentResponse>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/requestAdminConsent`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      params: {
+        atlasUrl: returnUrl,
+      },
+    }).then(response => response.data.redirectUrl);
+  }
+
+  public confirmO365Provisioning(email: string): ng.IPromise<''> {
+    return this.$http.get<any>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/confirmO365Provisioning`, {
+      params: {
+        testEmail: email,
+      },
+    }).then(r => r.data);
+  }
+
   public updateConfig = (config: IConfig): ng.IPromise<any> => {
+    const serviceId = 'squared-fusion-gcal';
     let promiseStart;
     // Fetch apiClientId if it wasn't provided, since the server requires it
     if (config.apiClientId === undefined) {
@@ -69,18 +104,25 @@ export class CloudConnectorService {
         config = _.extend({}, config, {
           apiClientId: apiClientId,
         });
-        return this.$http.post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`, config);
+        // We should be able to only update aclAdminAccount, but there is a bug in CCC which forces us to always provide
+        // testEmailAccount, and testEmailAccount needs apiClientId! Thankfully apiClientId is always present, but if
+        // aclAdminAccount is provided without testEmailAccount, let's use the same value for both.
+        if (config.aclAdminAccount && !config.testEmailAccount) {
+          config.testEmailAccount = config.aclAdminAccount;
+        }
+        return this.$http.post(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${serviceId}`, config);
       })
       .then(() => {
-        return this.ServiceDescriptorService.enableService(this.serviceId);
+        return this.ServiceDescriptorService.enableService(serviceId);
       });
   }
 
   public getApiKey(orgId?: string): ng.IPromise<IApiKey> {
+    const serviceId = 'squared-fusion-gcal';
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$http.get<IApiKey>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}/apikey`)
+    return this.$http.get<IApiKey>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${serviceId}/apikey`)
       .then(this.extractDataFromResponse);
   }
 
@@ -118,41 +160,56 @@ export class CloudConnectorService {
     }
   }
 
-  public getService = (orgId?: string): ng.IPromise<IService> => {
+  public getService = (serviceId: CCCService, orgId?: string): ng.IPromise<ICCCService> => {
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
-    return this.$http.get(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`)
+    // Transform fake entitlement to existing entitlement
+    let requestedService = serviceId;
+    if (requestedService === 'squared-fusion-o365') {
+      requestedService = 'squared-fusion-cal' as CCCService;
+    }
+    return this.$http.get(`${this.UrlConfig.getCccUrl()}/orgs/${orgId}/services/${requestedService}`)
       .then(this.extractDataFromResponse)
-      .then((service: IService) => {
+      .then((service: ICCCService) => {
         // Align this with the HybridServicesClusterService.getServiceStatus() to make the UI handling simpler
-        service.serviceId = this.serviceId;
+        service.serviceId = serviceId;
         service.setup = service.provisioned;
-        service.statusCss = this.getStatusCss(service);
+        service.cssClass = this.getStatusCss(service);
         service.status = this.translateStatus(service);
         return service;
       });
   }
 
-  public deactivateService = (orgId?: string): ng.IPromise<any> => {
+  public deactivateService = (serviceId: CCCService, orgId?: string): ng.IPromise<any> => {
+    // Transform fake entitlement to existing entitlement
+    let requestedService = serviceId;
+    if (requestedService === 'squared-fusion-o365') {
+      requestedService = 'squared-fusion-cal' as CCCService;
+    }
     if (_.isUndefined(orgId)) {
       orgId = this.Authinfo.getOrgId();
     }
     return this.$http
-      .delete(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${this.serviceId}`)
-      .then(() => this.ServiceDescriptorService.disableService(this.serviceId));
+      .delete(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/${requestedService}`)
+      .then(() => {
+        if (requestedService === 'squared-fusion-gcal') {
+          return this.ServiceDescriptorService.disableService(serviceId);
+        }
+        return undefined;
+      });
   }
 
   public getProvisioningResultTranslationKey(provisioningResultCode: number): string {
-
-    if (_.isUndefined(ProvisioningResult[provisioningResultCode])) {
+    // All other result codes than below are convidering "generic errors" because the admin can't
+    // do anything to fix them
+    if (!_.includes([0, 6, 7, 11, 12], provisioningResultCode)) {
       provisioningResultCode = 6;
     }
-
     return `hercules.settings.googleCalendar.provisioningResults.${ProvisioningResult[provisioningResultCode]}`;
   }
 
-  private getStatusCss(service: IService): StatusIndicatorCSSClass {
+  private getStatusCss(service: ICCCService): ServiceStatusCSSClass {
     if (!service || !service.provisioned || !service.status) {
       return 'disabled';
     }
@@ -168,23 +225,28 @@ export class CloudConnectorService {
     }
   }
 
-  private translateStatus(service: IService): 'setupNotComplete' | 'operational' | 'outage' | 'impaired' | 'unknown' {
+  private translateStatus(service: ICCCService): HighLevelStatusForService {
     if (!service || !service.provisioned || !service.status) {
       return 'setupNotComplete';
     }
     switch (service.status.toLowerCase()) {
       case 'ok':
         return 'operational';
+      default:
       case 'error':
         return 'outage';
       case 'warn':
         return 'impaired';
-      default:
-        return 'unknown';
     }
   }
 }
 
-angular
-  .module('Hercules')
-  .service('CloudConnectorService', CloudConnectorService);
+export default angular
+  .module('hercules.cloud-connector', [
+    require('@collabui/collab-ui-ng').default,
+    require('modules/core/scripts/services/authinfo'),
+    require('modules/hercules/services/service-descriptor.service').default,
+    require('modules/core/config/urlConfig'),
+  ])
+  .service('CloudConnectorService', CloudConnectorService)
+  .name;

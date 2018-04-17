@@ -47,15 +47,19 @@ describe('Directive: hrServiceAddress', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
     spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
     spyOn(HuronCountryService, 'getCountryList').and.returnValue($q.resolve(countries));
+
+    this.expectedId = 'id="streetAddress"';
+    this.expectedAddressLine1 = '123 MY STREET';
+    this.expectedAddressLine2 = 'RICHARDSON, TX 75082';
   }));
 
   it('should show the address form inputs', function () {
     element = $compile('<hr-service-address address="myAddress" read-only="readOnly"><hr-service-address/>')($scope);
     $scope.$apply();
 
-    expect(element.html()).toContain('id="streetAddress"');
-    expect(element.text()).not.toContain('123 MY STREET');
-    expect(element.text()).not.toContain('RICHARDSON, TX  75082');
+    expect(element.html()).toContain(this.expectedId);
+    expect(element.text()).not.toContain(this.expectedAddressLine1);
+    expect(element.text()).not.toContain(this.expectedAddressLine2);
   });
 
   it('should show the address text', function () {
@@ -63,9 +67,9 @@ describe('Directive: hrServiceAddress', function () {
     element = $compile('<hr-service-address address="myAddress" read-only="readOnly"><hr-service-address/>')($scope);
     $scope.$apply();
 
-    expect(element.html()).toContain('id="streetAddress"');
-    expect(element.text()).toContain('123 MY STREET');
-    expect(element.text()).toContain('RICHARDSON, TX  75082');
+    expect(element.html()).toContain(this.expectedId);
+    expect(element.text()).toContain(this.expectedAddressLine1);
+    expect(element.text()).toContain(this.expectedAddressLine2);
   });
   it('should have search button hidden if hide-search is true', function () {
     element = $compile('<hr-service-address address="myAddress" read-only="readOnly" hide-search="true"><hr-service-address/>')($scope);

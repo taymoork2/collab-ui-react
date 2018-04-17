@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('ParticipantDistributionResourceGraphService', ParticipantDistributionResourceGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, chartColors, $translate, $rootScope) {
+  function ParticipantDistributionResourceGraphService(CommonReportsGraphService, $translate, $rootScope) {
     var vm = this;
     vm.participantDistributiondiv = 'participantDistributiondiv';
     vm.exportDiv = 'participant-export-div';
@@ -61,7 +64,7 @@
         participantDistributionChart.chartCursor.valueLineEnabled = true;
         participantDistributionChart.chartCursor.categoryBalloonEnabled = true;
         participantDistributionChart.chartCursor.oneBalloonOnly = true;
-        participantDistributionChart.chartCursor.balloonColor = chartColors.grayLightTwo;
+        participantDistributionChart.chartCursor.balloonColor = ChartColors.grayLightTwo;
         participantDistributionChart.chartCursor.valueBalloonsEnabled = true;
         if (isDummy) {
           participantDistributionChart.chartCursor.valueLineBalloonEnabled = false;
@@ -158,8 +161,8 @@
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, vm.exportDiv));
       chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
-      if (chartData.graphs[0].lineColor == '#D7D7D8') {
-        chartData.legend.color = '#343537';
+      if (chartData.graphs[0].lineColor == ChartColors.grayLightTwo) {
+        chartData.legend.color = ChartColors.grayDarkThree;
       }
       chartData.legend.labelText = '[[title]]';
       chartData.legend.useGraphSettings = true;

@@ -1,0 +1,14 @@
+[
+  {
+    "offerName": "VoIPOnly",
+    "licenseType": "AUDIO",
+    "billingServiceId": "Sub-012",
+    "siteUrl": "someSite1.dmz.webex.com"
+  },
+  {
+    "offerName": "VoIPOnly",
+    "licenseType": "AUDIO",
+    "billingServiceId": "Sub-012",
+    "siteUrl": "someSite2.dmz.webex.com"
+  }
+]

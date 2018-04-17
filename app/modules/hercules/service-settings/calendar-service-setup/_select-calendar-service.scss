@@ -1,8 +1,7 @@
 .hybrid-calendar-setup {
   .service-select-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     justify-content: center;
     width: 90%;
   }

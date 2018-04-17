@@ -1,0 +1,189 @@
+  {
+        "orderStatus": "ERROR",
+        "serviceProvisioningId": "spvid-los071202",
+        "orderingTool": "CCW",
+        "externalOrderId": "wo-los071202",
+        "productProvisionStatus": {
+            "serviceStatus": [
+                {
+                    "status": "NA",
+                    "errorInfo": {
+                        "errorCode": 439011,
+                        "description": "Payload validation failed"
+                    }
+                },
+                {
+                    "orderItemUuid": "0b5be726-ebbf-443b-8127-543cc2318b20",
+                    "status": "ABORTED",
+                    "offercode": "CMR"
+                },
+                {
+                    "orderItemUuid": "3f214ac9-b1a9-4105-8566-7513eea65ca2",
+                    "status": "ABORTED",
+                    "offercode": "EE"
+                },
+                {
+                    "orderItemUuid": "69548967-758d-40e7-aab2-5f5c55610e6d",
+                    "status": "PROVISIONED",
+                    "offercode": "CF"
+                },
+                {
+                    "orderItemUuid": "761356dc-ba25-4d84-b1db-5dda50bc0c2e",
+                    "status": "PROVISIONED",
+                    "offercode": "MS"
+                },
+                {
+                    "orderItemUuid": "9de2ed86-f815-49da-a278-26010d38eda2",
+                    "status": "ABORTED",
+                    "offercode": "EE"
+                },
+                {
+                    "orderItemUuid": "b294101f-9aab-4a9f-9c03-f12143f03bbd",
+                    "status": "ABORTED",
+                    "offercode": "WEBEX"
+                },
+                {
+                    "orderItemUuid": "bd7fda3f-2eba-4ddd-8487-6881ac343eac",
+                    "status": "ABORTED",
+                    "offercode": "WEBEX"
+                },
+                {
+                    "orderItemUuid": "e96263ca-5602-4b81-9aed-6464d85efa3f",
+                    "status": "ABORTED",
+                    "offercode": "CMR"
+                }
+            ]
+        },
+        "orderReceived": "2017-07-12T14:51:17.419Z",
+        "serviceId": "Sub-los071202",
+        "orderContent": {
+            "common": {
+                "serviceProvisioningId": "spvid-los071202",
+                "SBPOrderId": "wo-los071202",
+                "action": "New",
+                "offerName": "M3-EE1000-TNU-ENT",
+                "orderingTool": "CCW",
+                "rtm": "direct",
+                "customerInfo": {
+                    "endCustomerInfo": {
+                        "name": "Atlas_Test_los071202",
+                        "adminDetails": {}
+                    }
+                },
+                "callbackUrl": "https://api-test.cisco.com/provCallBack/spvid-los071202"
+            },
+            "collabServiceInfoCommon": {
+                "orgName": "Atlas_Test_los071202",
+                "serviceId": "Sub-los071202",
+                "site": [
+                    {
+                        "siteUrl": "atlastestlos071202a.webex.com",
+                        "action": "New",
+                        "timeZoneId": 4,
+                        "primaryLanguage": "en-US",
+                        "convertFromTrial": false
+                    },
+                    {
+                        "siteUrl": "atlastestlos071202.webex.com",
+                        "action": "New",
+                        "timeZoneId": 6,
+                        "primaryLanguage": "en-US",
+                        "convertFromTrial": false
+                    }
+                ]
+            },
+            "serviceItems": {
+                "conferencing": [
+                    {
+                        "attendeeCapacity": "1000",
+                        "productName": "WX",
+                        "serviceName": "EE",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202.webex.com",
+                        "licenseVolume": "55"
+                    },
+                    {
+                        "attendeeCapacity": "25",
+                        "attendeeOverage": "false",
+                        "productName": "SQ",
+                        "serviceName": "CF",
+                        "action": "New",
+                        "licenseVolume": "44",
+                        "licenseOverage": "true"
+                    },
+                    {
+                        "attendeeCapacity": "1000",
+                        "productName": "WX",
+                        "serviceName": "EE",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202a.webex.com",
+                        "licenseVolume": "45"
+                    }
+                ],
+                "messaging": [
+                    {
+                        "productName": "SQ",
+                        "serviceName": "MS",
+                        "licenseVolume": "44",
+                        "licenseOverage": "true",
+                        "action": "New"
+                    }
+                ],
+                "cmr": [
+                    {
+                        "cmr": "true",
+                        "cmrLicenseVolume": "55",
+                        "productName": "WX",
+                        "serviceName": "CMR",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202.webex.com",
+                        "licenseVolume": "55"
+                    },
+                    {
+                        "cmr": "true",
+                        "cmrLicenseVolume": "45",
+                        "productName": "WX",
+                        "serviceName": "CMR",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202a.webex.com",
+                        "licenseVolume": "45"
+                    }
+                ],
+                "audio": [
+                    {
+                        "audioBroadcast": "false",
+                        "callBack": "false",
+                        "callBackInternational": "false",
+                        "callinToll": "true",
+                        "callinTollFree": "false",
+                        "callinGlobal": "true",
+                        "cloudConnectedAudio": "false",
+                        "integratedVOIP": "true",
+                        "sipInOut": "false",
+                        "productName": "WX",
+                        "serviceName": "WEBEX",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202.webex.com"
+                    },
+                    {
+                        "audioBroadcast": "false",
+                        "callBack": "false",
+                        "callBackInternational": "false",
+                        "callinToll": "true",
+                        "callinTollFree": "false",
+                        "callinGlobal": "true",
+                        "cloudConnectedAudio": "false",
+                        "integratedVOIP": "true",
+                        "sipInOut": "false",
+                        "productName": "WX",
+                        "serviceName": "WEBEX",
+                        "action": "New",
+                        "siteUrl": "atlastestlos071202a.webex.com"
+                    }
+                ]
+            }
+        },
+        "lastModified": "2017-07-12T14:56:09.137Z",
+        "orderUuid": "0b78cfa4-ee95-4a4d-81ee-8549a98f7761",
+        "subscriptionUuid": "30a60747-a36f-4da9-b5f7-88b30240c0c9"
+    }

@@ -2,10 +2,10 @@
 
 describe('HybridContextFieldsetsCtrl', function () {
   var PropertyConstants = require('modules/context/services/context-property-service').PropertyConstants;
-
+  var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
   var MOCK_ORG_ID = 'mocked-org-id';
 
-  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsetsService, Log, Notification, PropertyService;
+  var $controller, $scope, $state, $q, Authinfo, controller, ContextFieldsetsService, Log, Notification, PropertyService, ContextAdminAuthorizationService, $translate;
   var fakeGridApi = {
     infiniteScroll: {
       dataLoaded: jasmine.createSpy('dataLoaded'),
@@ -20,17 +20,16 @@ describe('HybridContextFieldsetsCtrl', function () {
     },
   };
 
-  beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Context'));
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
   afterAll(function () {
-    $controller = $scope = $state = $q = Authinfo = controller = ContextFieldsetsService = Log = Notification = PropertyService = fakeGridApi = undefined;
+    $controller = $scope = $state = $q = $translate = Authinfo = controller = ContextFieldsetsService = Log = Notification = PropertyService = fakeGridApi = ContextAdminAuthorizationService = undefined;
   });
 
-  function dependencies($rootScope, _$controller_, _$q_, _$state_, _Authinfo_, _ContextFieldsetsService_, _Log_, _Notification_, _PropertyService_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$translate_, _$state_, _Authinfo_, _ContextFieldsetsService_, _Log_, _Notification_, _PropertyService_, _ContextAdminAuthorizationService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -41,16 +40,19 @@ describe('HybridContextFieldsetsCtrl', function () {
     Notification = _Notification_;
     Authinfo = _Authinfo_;
     PropertyService = _PropertyService_;
+    ContextAdminAuthorizationService = _ContextAdminAuthorizationService_;
+    $translate = _$translate_;
   }
 
   function initSpies() {
     spyOn($state, 'go');
-    spyOn(ContextFieldsetsService, 'getFieldsets');
+    spyOn(ContextFieldsetsService, 'getFieldsets').and.returnValue($q.resolve([]));
     spyOn(Log, 'debug');
     spyOn(Notification, 'error');
     spyOn(Authinfo, 'getOrgName').and.returnValue('orgName');
-    spyOn(PropertyService, 'getProperty').and.returnValue($q.reject(undefined));
+    spyOn(PropertyService, 'getProperty').and.returnValue($q.resolve(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE));
     spyOn(Authinfo, 'getOrgId').and.returnValue(MOCK_ORG_ID);
+    spyOn(ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
   }
 
   function initController() {
@@ -64,7 +66,6 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   describe('init controller', function () {
     it('should set the default value', function () {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       expect(controller.load).toEqual(true);
     });
@@ -128,6 +129,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         id: 'aa2_custom_fieldset',
         lastUpdated: '2017-02-10T19:37:36.998Z',
       }]));
+      ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       controller = initController();
       $scope.$apply();
 
@@ -267,7 +269,6 @@ describe('HybridContextFieldsetsCtrl', function () {
 
   describe('filterListBySearchStr', function () {
     it('should filter out the correct number of fieldsets when the search string is a number and is found in some columns', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -301,7 +302,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         id: 'strMatchInLastUpdated',
-        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
         numOfFields: '4',
       },
       {
@@ -324,7 +325,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/fieldset5',
         id: 'fieldset5',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '2',
       },
       {
@@ -347,7 +348,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
         id: 'notThisfieldset',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '2',
       },
       {
@@ -365,7 +366,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
         id: 'strMatchInDescription',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
         numOfFields: '1',
       },
       {
@@ -403,7 +404,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchViaNumFields',
         id: 'strMatchViaNumFields',
-        lastUpdatedUI: '2017-02-12T19:37:36.998Z',
+        lastUpdated: '2017-02-12T19:37:36.998Z',
         numOfFields: '5',
       }];
 
@@ -420,7 +421,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should filter only when the search string is found case insensitive in the specified columns but not in unsearchable columns', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -452,13 +452,13 @@ describe('HybridContextFieldsetsCtrl', function () {
             lastUpdated: '2017-01-23T16:48:50.021Z',
           },
         ],
-        refUrl: '/dictionary/fieldset/v1/id/First',
-        id: 'First',
-        lastUpdatedUI: '2017-02-15T19:37:36.998Z',
+        refUrl: '/dictionary/fieldset/v1/id/August',
+        id: 'August',
+        lastUpdated: '2017-02-15T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
-        description: 'fiRsT 2 fields in this fieldset',
+        description: 'auGuST - first 2 fields in this fieldset',
         fields: [
           'AAA_TEST_FIELD',
           'Agent_ID',
@@ -476,19 +476,19 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInDescription',
         id: 'strMatchInDescription',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
         description: '2 fields in this fieldset',
         fields: [
-          'FIRST',
+          'AUGUST',
           'Agent_ID',
         ],
         publiclyAccessibleUI: 'false',
         fieldDefinitions: [
           {
-            id: 'FIRST',
+            id: 'AUGUST',
             lastUpdated: '2017-02-02T17:12:33.167Z',
           },
           {
@@ -498,7 +498,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/notThisfieldset',
         id: 'notThisfieldset',
-        lastUpdatedUI: '2017-02-10T19:37:36.998Z',
+        lastUpdated: '2017-02-10T19:37:36.998Z',
       },
       {
         orgId: 'd06308f8-c24f-4281-8b6f-03f672d34231',
@@ -515,18 +515,18 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/strMatchInLastUpdated',
         id: 'strMatchInLastUpdated',
-        lastUpdatedUI: 'first in date',
+        lastUpdated: '2017-08-23T16:48:50.021Z',
       },
       {
-        otherKey1: 'First',
-        otherKey2: 'first',
-        otherKey3: 'anyOtherFirst',
+        otherKey1: 'August',
+        otherKey2: 'august',
+        otherKey3: 'anyOtherAugust',
       }];
 
-      controller.filterBySearchStr(fieldsetList, 'first')
+      controller.filterBySearchStr(fieldsetList, 'august')
         .then(function (filteredList) {
           expect(filteredList.length).toBe(3);
-          expect(filteredList[0].id).toEqual('First');
+          expect(filteredList[0].id).toEqual('August');
           expect(filteredList[1].id).toEqual('strMatchInDescription');
           expect(filteredList[2].id).toEqual('strMatchInLastUpdated');
           done();
@@ -535,7 +535,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should filter by exact match with the search string despite the list contains the same text with different delimiters', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -630,7 +629,7 @@ describe('HybridContextFieldsetsCtrl', function () {
         ],
         refUrl: '/dictionary/fieldset/v1/id/shouldNotMatch',
         id: 'shouldNotMatch',
-        lastUpdated: 'first in date',
+        lastUpdated: '2017-01-23T16:48:50.021Z',
       },
       {
         otherKey1: 'aaa-test',
@@ -654,7 +653,6 @@ describe('HybridContextFieldsetsCtrl', function () {
     });
 
     it('should return full list when search string is empty', function (done) {
-      ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
       controller = initController();
       $scope.$apply();
 
@@ -775,8 +773,7 @@ describe('HybridContextFieldsetsCtrl', function () {
       expect(controller.placeholder.count).toBe(2);
     });
 
-    describe('max fieldsets allowed', function () {
-      var DEFAULT_MAX_FIELDSETS = PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE;
+    describe('max fieldsets allowed and admin authorized', function () {
       var MAX_FIELDSETS_PROPERTY = PropertyConstants.MAX_FIELDSETS_PROP_NAME;
 
       beforeEach(function () {
@@ -828,7 +825,7 @@ describe('HybridContextFieldsetsCtrl', function () {
           refUrl: '/dictionary/fieldset/v1/id/ccc_custom_fieldset',
           id: 'ccc_custom_fieldset',
         }]));
-        controller = initController();
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.AUTHORIZED));
       });
 
       afterEach(function () {
@@ -836,17 +833,60 @@ describe('HybridContextFieldsetsCtrl', function () {
       });
 
       it('should have the default max fields', function () {
+        controller = initController();
         $scope.$apply();
-        expect(controller.maxFieldsetsAllowed).toBe(DEFAULT_MAX_FIELDSETS);
+
+        expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
         expect(controller.showNew).toBe(true);
+        expect(controller.newButtonTooltip).toBe('');
       });
 
       it('should overrides the max fields property and new is disabled', function () {
-        var maxFields = 2;
-        PropertyService.getProperty.and.returnValue($q.resolve(maxFields));
+        PropertyService.getProperty.and.returnValue($q.resolve(2));
+        controller = initController();
         $scope.$apply();
-        expect(controller.maxFieldsetsAllowed).toBe(maxFields);
+
+        expect(controller.maxFieldsetsAllowed).toBe(2);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
         expect(controller.showNew).toBe(false);
+      });
+
+      it('should use default max fields allowed on reject', function () {
+        PropertyService.getProperty.and.returnValue($q.reject());
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.maxFieldsetsAllowed).toBe(PropertyConstants.MAX_FIELDSETS_DEFAULT_VALUE);
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.AUTHORIZED);
+        expect(controller.showNew).toBe(true);
+      });
+
+      it('should set the tooltip if admin not authorized', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNAUTHORIZED));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNAUTHORIZED);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldsetPage.notAuthorized'));
+      });
+
+      it('should set the tooltip if admin authorization is unknown ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.UNKNOWN));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.UNKNOWN);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.unknownAdminAuthorizationStatus'));
+      });
+
+      it('should set the tooltip if admin needs migration ', function () {
+        ContextAdminAuthorizationService.getAdminAuthorizationStatus.and.returnValue($q.resolve(AdminAuthorizationStatus.NEEDS_MIGRATION));
+        controller = initController();
+        $scope.$apply();
+
+        expect(controller.adminAuthorizationStatus).toBe(AdminAuthorizationStatus.NEEDS_MIGRATION);
+        expect(controller.newButtonTooltip).toBe($translate.instant('context.dictionary.fieldsetPage.needsMigration'));
       });
     });
   });
@@ -859,7 +899,6 @@ describe('HybridContextFieldsetsCtrl', function () {
         'FeatureToggleService'
       );
       this.featureSupportSpy = spyOn(this.FeatureToggleService, 'supports');
-      this.ContextFieldsetsService.getFieldsets.and.returnValue($q.resolve([]));
     });
 
     afterEach(function () {
@@ -871,7 +910,7 @@ describe('HybridContextFieldsetsCtrl', function () {
 
     it('should show fieldset-edit elements even if feature toggle is false', function () {
       this.featureSupportSpy.and.returnValue($q.resolve(false));
-      this.compileView('HybridContextFieldsetsCtrl', 'modules/context/fieldsets/hybrid-context-fieldsets.html', { controllerAs: 'contextFieldsets' });
+      this.compileViewTemplate('HybridContextFieldsetsCtrl', require('modules/context/fieldsets/hybrid-context-fieldsets.html'), { controllerAs: 'contextFieldsets' });
       var button = this.view.find('button'); // there's only one button for now
       expect(button).toExist();
       expect(button).toHaveClass('btn');

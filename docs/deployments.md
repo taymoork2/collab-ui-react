@@ -14,7 +14,7 @@
 
 The code is pushed to **[integration](https://int-admin.ciscospark.com)** after each successful build on [Gauntlet](https://gauntlet.wbx2.com/queue.html?queue=atlas-web)/[Jenkins](https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web/).
 
-Atlas UI, Atlas backend and a few other services are deployed to **[production](https://admin.ciscospark.com)** each **working day at 3:02 PM Pacific time** (Los Angeles timezone). Atlas UI is deployed **last**, so approximately around **4:17 PM** the deploy script will check the latest build that has been "gold starred" and deploy it.
+As of 2017-09-28, Atlas UI, is deployed to **[production](https://admin.ciscospark.com)** on Mondays and Thursdays **at 7:32 PM Pacific time** (Los Angeles timezone). Atlas UI is deployed **last**, so approximately around **9:45 PM** the deploy script will check the latest build that has been "gold starred" and deploy it.
 
 Several people can "gold star" a build (mark a successful build with a gold star), but usually [Michael McCann](http://wwwin-tools.cisco.com/dir/reports/mrmccann) takes care of it every US working day.
 

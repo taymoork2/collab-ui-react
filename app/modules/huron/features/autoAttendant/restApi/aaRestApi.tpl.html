@@ -1,22 +1,37 @@
-<div>
-  <div class="aa-rest-api row">
-    <div class="large-2 medium-2 small-2 columns aa-rest-api-block">
+<div class=" aa-rest-api-url">
+  <div class="row">
+    <div class="large-2 medium-2 small-2 column">
       <label translate="autoAttendant.method"></label>
     </div>
-    <div class="large-10 medium-10 small-10 columns">
+    <div class="large-10 medium-10 small-10 column">
       <label>{{aaRestApiCtrl.method}}</label>
     </div>
   </div>
   <div class="row">
-    <div class="large-1 medium-1 small-1 columns aa-rest-api-block">
+    <div class="large-2 medium-2 small-2 column">
       <label translate="autoAttendant.url"></label>
     </div>
-    <div class="large-11 medium-11 small-11 columns">
-      <label class="aa-rest-api-url">{{aaRestApiCtrl.url}}</label>
+    <div class="large-10 medium-10 small-10 column aa-rest-api-block">
+      <span class="aa-rest-spacing" ng-repeat="dynamicValue in aaRestApiCtrl.dynamicValues" ng-if="dynamicValue.model !== ''">
+        <span class="aa-url aa-dynamic-var" ng-if="dynamicValue.isDynamic">{{dynamicValue.label}}</span>
+        <span class="aa-static-var" ng-if="!dynamicValue.isDynamic">{{dynamicValue.model}}</span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 medium-2 small-2 columns aa-rest-api-block">
+      <label translate="autoAttendant.variables"></label>
+    </div>
+    <div class="large-10 medium-10 small-10 columns">
+      <div class="row" ng-repeat="i in aaRestApiCtrl.variables">
+        <div class="large-12 medium-12 small-12 columns aa-rest-api-url">
+          <label class= "aa-rest-api-variables">{{i.variableName }}</label>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
     <br>
-    <a translate="autoAttendant.configureApi" id="configureApi" ng-click="aaRestApiCtrl.openConfigureApiModal()"></a>
+    <a href translate="autoAttendant.configureApi" id="configureApi" ng-click="aaRestApiCtrl.openConfigureApiModal()"></a>
   </div>
 </div>

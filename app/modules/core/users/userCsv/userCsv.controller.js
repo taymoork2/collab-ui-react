@@ -10,7 +10,8 @@ require('./_user-csv.scss');
   /* @ngInject */
   function UserCsvCtrl($interval, $modal, $q, $rootScope, $scope, $state, $timeout, $translate, $previousState,
     Analytics, Authinfo, Config, CsvDownloadService, HuronCustomer, LogMetricsService, NAME_DELIMITER, OnboardService,
-    Notification, ServiceDescriptorService, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService) {
+    Notification, PhoneNumberService, UserCsvService, Userservice, ResourceGroupService, USSService, DirSyncService,
+    FeatureToggleService) {
     // variables
     var vm = this;
     vm.licenseUnavailable = false;
@@ -19,6 +20,7 @@ require('./_user-csv.scss');
     vm.isCsvValid = false;
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
+    vm.isLoading = true;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -36,10 +38,20 @@ require('./_user-csv.scss');
     var USER_ID_EMAIL_HEADER = 'User ID/Email (Required)';
     var NO_RESOURCE_GROUP = '**no resource group**';
 
-    CsvDownloadService.getCsv('headers').then(function (csvData) {
-      orgHeaders = _.cloneDeep(csvData.columns || []);
+    var isAtlasCsvImportTaskManagerToggled = false;
+    var isAtlasUserCsvSubscriptionEnabled = false;
+    $q.all({
+      isAtlasCsvImportTaskManagerToggled: FeatureToggleService.atlasCsvImportTaskManagerGetStatus(),
+      isAtlasUserCsvSubscriptionEnabled: FeatureToggleService.atlasUserCsvSubscriptionEnableGetStatus(),
+      headers: CsvDownloadService.getCsv('headers'),
+    }).then(function (promiseData) {
+      isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
+      isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
+      orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
     }).catch(function (response) {
-      Notification.errorResponse(response, 'firstTimeWizard.downloadHeadersError');
+      Notification.errorResponse(response);
+    }).finally(function () {
+      vm.isLoading = false;
     });
 
     vm.isDirSyncEnabled = DirSyncService.isDirSyncEnabled();
@@ -54,21 +66,7 @@ require('./_user-csv.scss');
     var processingError;
     var headers;
     var idIndex;
-    var isCalendarServiceEnabled = false;
-    var isCalendarOrCallServiceEntitled = false;
-
-    ServiceDescriptorService.getServices()
-      .then(function (services) {
-        _.forEach(services, function (service) {
-          if (service.id === Config.entitlements.fusion_cal) {
-            isCalendarServiceEnabled = service.enabled;
-            isCalendarOrCallServiceEntitled = true;
-          } else if (service.id === Config.entitlements.fusion_uc) {
-            isCalendarOrCallServiceEntitled = true;
-          }
-        });
-        vm.handleHybridServicesResourceGroups = isCalendarOrCallServiceEntitled;
-      });
+    vm.handleHybridServicesResourceGroups = Authinfo.isFusionUC() || Authinfo.isFusionCal() || Authinfo.isFusionIMP();
 
     var bulkStartLog = null;
     var hasVoicemailService = false;
@@ -96,9 +94,6 @@ require('./_user-csv.scss');
       userErrorArray: [],
       csvChunk: 0,
     };
-    vm.model.desc = $translate.instant('csvUpload.desc', {
-      maxUsers: maxUsers,
-    });
     vm.model.templateAnchorText = $translate.instant('firstTimeWizard.downloadStep');
 
     // watches
@@ -121,7 +116,9 @@ require('./_user-csv.scss');
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      Notification.error('firstTimeWizard.csvMaxSizeError');
+      if (!isAtlasCsvImportTaskManagerToggled) {
+        Notification.error('firstTimeWizard.csvMaxSizeError');
+      }
     };
 
     vm.onFileTypeError = function () {
@@ -135,28 +132,57 @@ require('./_user-csv.scss');
     vm.validateCsv = function () {
       setUploadProgress(0);
       vm.isCsvValid = false;
+
       try {
-        if (vm.model.file) {
-          // only validate if there is a file to test
-          csvUsersArray = $.csv.toArrays(vm.model.file);
-          if (_.isArray(csvUsersArray) && csvUsersArray.length > 0 && _.isArray(csvUsersArray[0])) {
-            if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) > -1) {
-              csvHeaders = csvUsersArray.shift();
-              if (csvUsersArray.length > 0 && csvUsersArray.length <= maxUsers) {
-                vm.isCsvValid = true;
-              } else {
-                warnCsvUserCount();
-                vm.resetFile();
-              }
-            } else {
-              Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-              vm.resetFile();
-            }
-          } else {
+        if (!vm.model.file) {
+          return;
+        }
+
+        // TO-DO $.csv.toArrays() should not be needed after all checks
+        // been moved to the server side
+        csvUsersArray = $.csv.toArrays(vm.model.file);
+        if (!isAtlasCsvImportTaskManagerToggled) {
+          // Check if the file is empty, or if the header is valid
+          // TO-DO This check should be moved to the server side.
+          if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
             Notification.error('firstTimeWizard.uploadCsvBadFormat');
             vm.resetFile();
+            return;
+          }
+
+          // Check required email column
+          // TO-DO This check should be moved to the server side.
+          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+            Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+            vm.resetFile();
+            return;
           }
         }
+
+        csvHeaders = csvUsersArray.shift();
+
+        // Check if exceeds the max user size
+        // TO-DO This check should be moved to the server side.
+        if (!isAtlasCsvImportTaskManagerToggled) {
+          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+            warnCsvUserCount();
+            vm.resetFile();
+            return;
+          }
+        }
+
+        // Check column name mis-match
+        // TO-DO This check should be moved to the server side.
+        var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
+        if (mismatchHeaderName) {
+          Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
+            name: mismatchHeaderName,
+          });
+          vm.resetFile();
+          return;
+        }
+
+        vm.isCsvValid = true;
       } catch (e) {
         Notification.error('firstTimeWizard.uploadCsvBadFormat');
         vm.resetFile();
@@ -166,17 +192,30 @@ require('./_user-csv.scss');
     };
 
     var rootState = $previousState.get().state.name;
+    if (rootState === 'users.manage.emailSuppress') {
+      rootState = 'users.manage.picker';
+    }
     vm.onBack = function () {
       Analytics.trackAddUsers(Analytics.eventNames.BACK);
       $state.go(rootState);
     };
 
     vm.startUpload = function () {
-      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
-      beforeSubmitCsv().then(function () {
-        bulkSaveWithIndividualLicenses();
-        $state.go('users.csv.results');
-      });
+      if (isAtlasCsvImportTaskManagerToggled) {
+        $state.go('users.csv.task-manager', {
+          job: {
+            fileName: vm.model.fileName,
+            fileData: vm.model.file,
+            exactMatchCsv: vm.model.enableRemove,
+          },
+        });
+      } else {
+        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
+        beforeSubmitCsv().then(function () {
+          bulkSaveWithIndividualLicenses();
+          $state.go('users.csv.results');
+        });
+      }
     };
 
     $scope.$on('modal.closing', function (ev) {
@@ -190,7 +229,7 @@ require('./_user-csv.scss');
       if (vm.model.isProcessing) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html',
+          template: require('modules/core/users/userCsv/userCsvStopImportConfirm.tpl.html'),
         }).result.then(function () {
           // cancel the current import
           vm.cancelProcessCsv();
@@ -227,7 +266,7 @@ require('./_user-csv.scss');
       if (Authinfo.isOnline()) {
         $modal.open({
           type: 'dialog',
-          templateUrl: 'modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html',
+          template: require('modules/core/users/userCsv/licenseUnavailabilityModal.tpl.html'),
         }).result.then(function () {
           $state.go('my-company.subscriptions');
         });
@@ -401,6 +440,19 @@ require('./_user-csv.scss');
       } else {
         return -1;
       }
+    }
+
+    function findMismatchHeader(serverHeaders, userHeaders) {
+      if (!isAtlasUserCsvSubscriptionEnabled || !serverHeaders || !userHeaders) {
+        return undefined;
+      }
+
+      // Find if there's any mis-matched header names
+      return _.find(userHeaders, function (uHeader) {
+        return !_.some(serverHeaders, function (sHeader) {
+          return sHeader.name === uHeader || sHeader.name === renamedHeaders[uHeader];
+        });
+      });
     }
 
     function generateHeaders(serverHeaders, userHeaders) {
@@ -602,7 +654,7 @@ require('./_user-csv.scss');
         var directoryNumber = '', directLine = '';
         var licenseList = [];
         var entitleList = [];
-        var numOfActiveMessageLicenses = 0;
+        var numOfActiveCallLicenses = 0;
         var isWrongLicenseFormat = false;
         var calendarServiceResourceGroup = null;
         var callServiceResourceGroup = null;
@@ -684,9 +736,9 @@ require('./_user-csv.scss');
             if (header.license) { // if this is a license column
               if (isTrue(input)) {
                 licenseList.push(new LicenseFeature(header.license, true));
-                // Check Active Spark Message
-                if (header.name.toUpperCase().indexOf('SPARK MESSAGE') !== -1) {
-                  numOfActiveMessageLicenses++;
+                // Check Active Spark Call
+                if (header.name.toUpperCase().indexOf('SPARK CALL') !== -1) {
+                  numOfActiveCallLicenses++;
                 }
               } else if (isFalse(input)) {
                 if (vm.model.enableRemove) {
@@ -698,19 +750,17 @@ require('./_user-csv.scss');
             } else if (_.isArray(header.entitlements) && header.entitlements.length > 0) {
               if (isTrue(input) || isFalse(input)) {
                 _.forEach(header.entitlements, function (entitlement) {
-                  // if lincense is Calendar Service, only process if it is enabled
-                  if (entitlement.toUpperCase().indexOf('SQUAREDFUSIONCAL') === -1 || isCalendarServiceEnabled) {
-                    if (isTrue(input)) {
-                      if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
-                        processingError = true;
-                        addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
-                      } else {
-                        entitleList.push(new Feature(entitlement, true));
-                      }
-                    } else if (isFalse(input)) {
-                      if (vm.model.enableRemove) {
-                        entitleList.push(new Feature(entitlement, false));
-                      }
+                  // if license is Calendar Service, only process if it is enabled
+                  if (isTrue(input)) {
+                    if (hasMutuallyExclusiveCalendarEntitlements(entitlement, entitleList)) {
+                      processingError = true;
+                      addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.mutuallyExclusiveCalendarEntitlements'));
+                    } else {
+                      entitleList.push(new Feature(entitlement, true));
+                    }
+                  } else if (isFalse(input)) {
+                    if (vm.model.enableRemove) {
+                      entitleList.push(new Feature(entitlement, false));
                     }
                   }
                 });
@@ -723,9 +773,9 @@ require('./_user-csv.scss');
           if (isWrongLicenseFormat) {
             processingError = true;
             addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.csvWrongLicenseFormat'));
-          } else if (numOfActiveMessageLicenses > 1) {
+          } else if (numOfActiveCallLicenses > 1) {
             processingError = true;
-            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.tooManyActiveMessageLicenses'));
+            addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.tooManyActiveSparkCallLicenses'));
           } else {
             uniqueEmails.push(id);
             // Do not send name and displayName if it's a DirSync org
@@ -746,6 +796,7 @@ require('./_user-csv.scss');
               directLine: directLine,
               licenses: licenseList,
               entitlements: entitleList,
+              onboardMethod: 'CSV',
             };
             if (vm.handleHybridServicesResourceGroups) {
               user.resourceGroups = {};

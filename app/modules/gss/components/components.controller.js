@@ -30,7 +30,7 @@
         type: 'small',
         controller: 'AddComponentCtrl',
         controllerAs: 'addComponentCtrl',
-        templateUrl: 'modules/gss/components/addComponent/addComponent.tpl.html',
+        template: require('modules/gss/components/addComponent/addComponent.tpl.html'),
         modalClass: 'add-component',
       }).result.then(function () {
         reloadComponent();
@@ -46,7 +46,7 @@
         type: 'small',
         controller: 'UpdateComponentCtrl',
         controllerAs: 'updateComponentCtrl',
-        templateUrl: 'modules/gss/components/updateComponent/updateComponent.tpl.html',
+        template: require('modules/gss/components/updateComponent/updateComponent.tpl.html'),
         modalClass: 'update-component',
       }).result.then(function () {
         reloadComponent();

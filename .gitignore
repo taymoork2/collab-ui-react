@@ -12,6 +12,7 @@
 stats.json
 
 .cache
+.cache-loader
 .bower-cache
 .bower-registry
 .DS_Store
@@ -30,6 +31,7 @@ stats.json
 .tern-project
 package-lock.json
 yarn.lock
+yarn-error.log
 
 build
 coverage

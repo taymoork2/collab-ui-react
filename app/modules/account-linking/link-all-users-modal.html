@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <h3 ng-if="!linkAllUsers" translate="accountLinking.siteDetails.linkAllUsers.startLinkingHeader"></h3>
+  <h3 ng-if="linkAllUsers" translate="accountLinking.siteDetails.linkAllUsers.stopLinkingHeader"></h3>
+</div>
+<div class="modal-body modal-info">
+  <span ng-if="!linkAllUsers" translate="accountLinking.siteDetails.linkAllUsers.startLinking"></span>
+  <span ng-if="linkAllUsers" translate="accountLinking.siteDetails.linkAllUsers.stopLinking"></span>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss('CANCEL')" translate="accountLinking.siteDetails.linkAllUsers.cancel"></button>
+  <button ng-if="!linkAllUsers" class="btn btn-primary" ng-click="$close('LINK_START')" translate="accountLinking.siteDetails.linkAllUsers.start"></button>
+  <button ng-if="linkAllUsers" class="btn btn-primary" ng-click="$close('LINK_STOP')" translate="accountLinking.siteDetails.linkAllUsers.stop"></button>
+</div>

@@ -1,0 +1,28 @@
+<multi-step-modal
+  l10n-title="userTaskManagerModal.title"
+  dismiss="$ctrl.dismissModal()">
+  <div class="loading-wrapper" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+  <task-container ng-if="!$ctrl.loading">
+    <task-container-panel-header>
+      <user-task-list-filter
+        filter="$ctrl.activeFilter"
+        on-filter-change="$ctrl.setActiveFilter(filter)">
+      </user-task-list-filter>
+    </task-container-panel-header>
+    <task-container-panel-list>
+      <user-task-list
+        task="$ctrl.activeTask"
+        task-list="$ctrl.taskList"
+        on-active-task-change="$ctrl.setActiveTask(task)">
+      </user-task-list>
+    </task-container-panel-list>
+    <task-container-details>
+      <csv-upload-results
+        input-active-task="$ctrl.activeTask"
+        on-status-update="$ctrl.updateActiveTaskStatus(status)">
+      </csv-upload-results>
+    </task-container-details>
+  </task-container>
+</multi-step-modal>

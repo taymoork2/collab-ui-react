@@ -3,6 +3,7 @@
     cs-input
     type="radio"
     id="radioParker"
+    name="parkerOrDestination"
     ng-value="'parker'"
     ng-model="$ctrl.reversionType"
     ng-click="$ctrl.onSelectRevertToParker()"
@@ -14,6 +15,7 @@
     type="radio"
     class="cs-input"
     id="radioParkDestination"
+    name="parkerOrDestination"
     ng-value="'destination'"
     ng-model="$ctrl.reversionType"
     ng-click="$ctrl.onSelectAnotherDestination()"
@@ -22,7 +24,9 @@
 <div class="row form-group">
   <uc-fallback-destination
     fallback-destination="$ctrl.fallbackDestination"
+    is-call-park="true"
     show-reversion-lookup="$ctrl.showReversionLookup"
-    on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)">
+    on-change-fn="$ctrl.setCallParkFallbackDestination(fallbackDestination)"
+    location="$ctrl.location">
   </uc-fallback-destination>
 </div>

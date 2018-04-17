@@ -9,7 +9,7 @@
     var directive = {
       restict: 'EA',
       scope: false,
-      templateUrl: 'modules/sunlight/reports/taskOffered.tpl.html',
+      template: require('modules/sunlight/reports/taskOffered.tpl.html'),
     };
 
     return directive;

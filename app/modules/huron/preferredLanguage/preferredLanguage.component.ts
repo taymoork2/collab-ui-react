@@ -2,7 +2,7 @@ import { IPreferredLanugageOption } from './preferredLanguage.interfaces';
 
 class PreferredLanguage implements ng.IComponentController {
   public hasSparkCall: boolean;
-  public plIsLoaded: boolean = false;
+  public plIsLoaded: boolean;
   public prefLanguageSaveInProcess: boolean = false;
   public preferredLanguage: IPreferredLanugageOption[];
   public preferredLanguageOptions: any[];
@@ -56,7 +56,7 @@ class PreferredLanguage implements ng.IComponentController {
 
 export class PreferredLanguageComponent implements ng.IComponentOptions {
   public controller = PreferredLanguage;
-  public templateUrl = 'modules/huron/preferredLanguage/preferredLanguage.html';
+  public template = require('modules/huron/preferredLanguage/preferredLanguage.html');
   public bindings = {
     plIsLoaded: '=',
     hasSparkCall: '<',

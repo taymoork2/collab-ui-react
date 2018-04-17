@@ -1,17 +1,31 @@
 <div class="csv-download">
   <div ng-hide="$ctrl.noIcon" class="stat">
-    <a href="" ng-click="$ctrl.downloadCsv()">
+    <a href ng-click="$ctrl.downloadCsv()" aria-label="{{::$ctrl.getDownloadTranslation()}}">
       <span ng-if="$ctrl.anchorText">{{::$ctrl.anchorText}}</span>
-      <span ng-if="!$ctrl.anchorText" tooltip-placement="top" tooltip="{{$ctrl.tooltipMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
-        <i ng-show="!$ctrl.downloading" class="icon" ng-class="$ctrl.iconClass">
-          <span class="sr-only" translate="common.download"></span>
-        </i>
+      <span
+        ng-if="!$ctrl.anchorText"
+        tooltip-placement="top"
+        tooltip="{{$ctrl.tooltipMessage}}"
+        tooltip-animation="false"
+        tooltip-append-to-body="true"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0"
+        aria-label="{{$ctrl.tooltipMessage}}">
+          <i ng-show="!$ctrl.downloading" class="icon" ng-class="$ctrl.iconClass"></i>
       </span>
     </a>
   </div>
-  <div class="status-container" ng-if="$ctrl.downloading" ng-click="$ctrl.goToDownload()"
-    tooltip-placement="bottom" tooltip="{{$ctrl.downloadingMessage}}" tooltip-animation="false" tooltip-append-to-body="true">
+  <div
+    class="status-container"
+    ng-if="$ctrl.downloading"
+    ng-click="$ctrl.goToDownload()"
+    tooltip-placement="bottom"
+    tooltip="{{$ctrl.downloadingMessage}}"
+    tooltip-animation="false"
+    tooltip-append-to-body="true"
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{$ctrl.downloadingMessage}}">
       <i class="icon icon-spinner"></i>
-      <span  class='status-message'>{{::$ctrl.statusMessage}}</span>
+      <span class='status-message'>{{::$ctrl.statusMessage}}</span>
   </div>
 </div>

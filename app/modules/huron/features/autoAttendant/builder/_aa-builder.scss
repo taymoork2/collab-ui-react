@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 
 $aa-builder-header-height: 54px;
 $aa-builder-border-color: $gray-light-1;
@@ -179,9 +179,7 @@ $aa-builder-text-color: $gray-dark-1;
   color: $aa-builder-text-color;
 
   &:focus {
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: transparent;
+    outline: solid 1px transparent;
   }
 }
 

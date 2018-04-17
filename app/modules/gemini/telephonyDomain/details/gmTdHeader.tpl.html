@@ -26,8 +26,8 @@
       <i class="icon icon-spinner"></i>
     </div>
 
-    <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.showRemedyTicket">
-      <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a>
+    <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.showRemedyTicket && $ctrl.remedyTicket">
+      <p class="remedyTicket">{{::'gemini.cbgs.remedyTicket' | translate}}: <a href ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a>
       </p>
       <p>
         <small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} -

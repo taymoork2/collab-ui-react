@@ -23,8 +23,7 @@
                           ng-disabled="!ctrl.useCustomSupportUrl">
                 </textarea>
     <h6 translate="partnerProfile.matchingTix"></h6>
-    <p ng-if="!ctrl.nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescr"></p>
-    <p ng-if="ctrl.nameChangeEnabled" class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: ctrl.getAppTitle()}"></p>
+    <p class="body-small form-section" translate="partnerProfile.matchingDescrNew" translate-values="{appTitle: ctrl.getAppTitle()}"></p>
     <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomSupportUrlSaveButton"
             ng-click="ctrl.saveUseCustomSupportUrl()"
             loading="ctrl.savingProgress">{{::"common.save" | translate}}
@@ -49,4 +48,39 @@
   <button cs-btn class="btn btn--primary" ng-if="ctrl.showCustomHelpSiteSaveButton" ng-click="ctrl.saveUseCustomHelpSite()"
           loading="ctrl.savingProgress">{{::"common.save" | translate}}
   </button>
+</div>
+
+<div class="device-support-section cs-radio-group small-12 columns" ng-if="ctrl.showDeviceSupportSection()">
+  <h5 translate="globalSettings.deviceBranding.subsectionLabel"></h5>
+  <div class="cs-input-group cs-input-radio">
+    <input type="radio" id="noDeviceSupport" ng-model="ctrl.enableDeviceSupport" ng-value="false"
+           ng-change="ctrl.toggleDeviceSupport(ctrl.enableDeviceSupport)">
+    <label for="noDeviceSupport">
+      <span translate="globalSettings.support.noDeviceSupportText"></span>
+    </label>
+  </div>
+  <div class="cs-input-group cs-input-radio custom-text">
+    <input type="radio" id="enableDeviceSupport" ng-model="ctrl.enableDeviceSupport" ng-value="true"
+           ng-change="ctrl.toggleDeviceSupport(ctrl.enableDeviceSupport)">
+    <label for="enableDeviceSupport">
+      <span translate="globalSettings.support.enableDeviceSupportText"></span>
+    </label>
+    <div class="indent custom-text" ng-if="ctrl.enableDeviceSupport">
+      <div class="text-wrap">
+        <textarea class="form-control" id="add-service-desc" ng-model="ctrl.deviceSupportText"
+                  placeholder="{{ 'globalSettings.support.supportTextPlaceholder' | translate }}">
+        </textarea>
+        <div class="counter description" ng-class="{warn:ctrl.deviceSupportText.length>35}">
+          {{35-(ctrl.deviceSupportText.length || 0)}}
+        </div>
+      </div>
+      <div class="text-rec" translate="globalSettings.support.deviceSupportTextDescription"></div>
+    </div>
+  </div>
+  <button cs-btn class="btn btn--primary" ng-class="{'indent':ctrl.enableDeviceSupport}"
+          ng-if="ctrl.showSaveCustomDeviceSupportText"
+          ng-click="ctrl.saveDeviceSupportText()"
+          loading="ctrl.savingProgress">{{::"common.save" | translate}}
+  </button>
+
 </div>

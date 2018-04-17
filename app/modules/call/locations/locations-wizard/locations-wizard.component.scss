@@ -1,33 +1,40 @@
-@import '~collab-ui/scss/tools/placeholders/page-layout';
-
-.cs-setupassistant {
-  .section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    align-items: center;
-    overflow-y: auto;
-    overflow-x: hidden;
-    &__content {
-      margin: 0 auto;
-      width: rem-calc(500);
-      min-height: 0;
-      .btn {
-        margin-left: 1rem;
-        margin-top: 1rem;
-      }
-    }
-  }
-  .left-indent {
-    padding-left: 1rem;
-  }
-
-  h4 {
-    margin-bottom: 1rem;
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+.overlay-panel__content {
+  .wizard-loading-spinner {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 3rem;
   }
 }
 
-.assistant-form {
-  height: 95%;
+.create-location {
+  .location-create-step {
+    margin-top: 0;
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: auto;
+    height: calc(100vh - 175px);
+
+    .step-title {
+      font-family: $brand-font-thin;
+      font-size: $h1-font-size;
+    }
+    .step-desc {
+      @include vr-spacing(pb, 2.75);
+      font-family: $brand-font-light;
+      font-size: $h4-font-size;
+    }
+    .section__content {
+      margin: 0;
+      width: 40rem;
+    }
+  }
 }

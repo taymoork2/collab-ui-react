@@ -5,7 +5,7 @@ export interface IPropertyService {
 
 export namespace PropertyConstants {
   export const MAX_FIELDS_PROP_NAME: string = 'org.max.fields';
-  export const MAX_FIELDS_DEFAULT_VALUE: number = 1000;
+  export const MAX_FIELDS_DEFAULT_VALUE: number = 100;
   export const MAX_FIELDSETS_PROP_NAME: string = 'org.max.fieldsets';
   export const MAX_FIELDSETS_DEFAULT_VALUE: number = 1000;
   export const MAX_FIELDS_PER_FIELDSET_PROP_NAME: string = 'org.max.fields.per.fieldset';
@@ -18,7 +18,7 @@ export class PropertyService implements IPropertyService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private Discovery,
+    private ContextDiscovery,
     private $q: ng.IQService,
   ) {}
 
@@ -33,7 +33,7 @@ export class PropertyService implements IPropertyService {
   }
 
   private getStringProperty(propertyName: string, orgId: string): ng.IPromise<string> {
-    return this.Discovery.getEndpointForService('management')
+    return this.ContextDiscovery.getEndpointForService('management')
       .then(managementUrl => {
         const propertyQueryUrl = `${managementUrl}${PropertyConstants.PROPERTY_URL}${propertyName}.org.${orgId}`;
         return this.$http.get(propertyQueryUrl);
@@ -45,6 +45,6 @@ export class PropertyService implements IPropertyService {
 }
 
 export default angular
-  .module('Context')
+  .module('context.services.context-property-service', [])
   .service('PropertyService', PropertyService)
   .name;

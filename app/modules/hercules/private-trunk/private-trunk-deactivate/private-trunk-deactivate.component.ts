@@ -27,7 +27,7 @@ export class PrivateTrunkDeactivateCtrl implements ng.IComponentController {
 
 export class PrivateTrunkDeactivateComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDeactivateCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-deactivate/private-trunk-deactivate-confirm.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-deactivate/private-trunk-deactivate-confirm.html');
   public bindings = {
     dismiss: '&',
   };
