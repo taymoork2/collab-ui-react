@@ -1,5 +1,6 @@
 import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/shared';
-import { ICheckbox, ISoftwareProfile } from './hcs-setup';
+import { ICheckbox } from './hcs-setup';
+import { ISoftwareProfile } from 'modules/hcs/shared/hcs-swprofile';
 import { ISftpServer } from './hcs-setup-sftp';
 import { Notification } from 'modules/core/notifications';
 

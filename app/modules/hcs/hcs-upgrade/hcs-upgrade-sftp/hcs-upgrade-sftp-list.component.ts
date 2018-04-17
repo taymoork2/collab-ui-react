@@ -32,7 +32,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
       state: `hcs.sftplist`,
     }, {
       title: this.$translate.instant('hcs.softwareProfiles.tabTitle'),
-      state: `hcs.sftplist`,
+      state: `hcs.swprofilelist`,
     });
     this.listSftpServers();
   }

@@ -3262,6 +3262,24 @@
               },
             },
           })
+          .state('hcs.upgradeGroup', {
+            url: '/hcs/inventory/:customerId/upgrades',
+            parent: 'partner',
+            template: '<hcs-upgrade-group customer-id="$resolve.customerId"></hcs-upgrade-group>',
+            params: {
+              customerId: '',
+            },
+            resolve: {
+              customerId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.customerId;
+              },
+            },
+          })
+          .state('hcs.sftplist', {
+            parent: 'partner',
+            url: '/hcs/sftplist',
+            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+          })
           .state('hcs.sftpserver-edit', {
             url: '/hcs/upgrade/sftpserveredit',
             parent: 'partner',
@@ -3280,23 +3298,10 @@
               },
             },
           })
-          .state('hcs.upgradeGroup', {
-            url: '/hcs/inventory/:customerId/upgrades',
+          .state('hcs.swprofilelist', {
             parent: 'partner',
-            template: '<hcs-upgrade-group customer-id="$resolve.customerId"></hcs-upgrade-group>',
-            params: {
-              customerId: '',
-            },
-            resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
-              },
-            },
-          })
-          .state('hcs.sftplist', {
-            parent: 'partner',
-            url: '/hcs/sftplist',
-            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+            url: '/hcs/swprofilelist',
+            template: '<hcs-upgrade-swprofile-list></hcs-upgrade-swprofile-list>',
           })
           .state('taasSuites', {
             parent: 'main',

@@ -7,6 +7,7 @@ import './hcs-card.scss';
 export * from './hcs-base';
 export * from './hcs-license';
 export * from './hcs-delete-modal';
+export * from './hcs-swprofile';
 export { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect, HcsLicenseService };
 
 export default angular

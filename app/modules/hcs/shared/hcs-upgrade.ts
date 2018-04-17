@@ -108,3 +108,4 @@ export interface IHcsClusterSummaryItem {
   sftpServer?: ISftpServerItem;
   status?: string;
 }
+

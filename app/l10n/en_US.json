@@ -11118,6 +11118,8 @@
       "expwayPlace": "Choose Expressway Version",
       "name": "Software Profile Name",
       "namePlace": "Enter Profile Name",
+      "noneProfile": "No Software profile",
+      "noneProfileDesc": "Get started by creating a software profile.",
       "plm": "Cisco Prime License Manager Version",
       "plmPlace": "Choose PLM Version",
       "tabTitle": "Software Profiles",
