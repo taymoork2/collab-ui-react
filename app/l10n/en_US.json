@@ -11093,7 +11093,7 @@
       "name": "SFTP Server Name",
       "namePlace": "Enter SFTP Server Name",
       "noneSftp": "No SFTP Servers",
-      "noneInstruction": "After you configure a SFTP server you will see it here.",
+      "noneSftpDesc": "After you configure an SFTP server you will see it here.",
       "server": "IP Address/Hostname",
       "serverPlace": "Enter IP Address or Hostname",
       "password": "Password",
