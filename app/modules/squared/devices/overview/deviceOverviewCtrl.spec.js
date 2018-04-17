@@ -381,7 +381,7 @@ describe('Huron Device', function () {
 
 
   function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
-    _$timeout_, _$window_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_) {
+    _$timeout_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
