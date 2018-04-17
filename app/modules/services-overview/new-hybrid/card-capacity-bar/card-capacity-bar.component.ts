@@ -36,7 +36,7 @@ class CardCapacityBarController implements ng.IComponentController {
       this.capacity = capacityInfo.capacity;
       this.maxUsers = capacityInfo.maxUsers;
       this.progressBarType = capacityInfo.progressBarType;
-      this.tooltip = this.$translate.instant('hercules.capacity.tooltip', {
+      this.tooltip = this.$translate.instant('hercules.capacity.tooltipUnassigned', {
         capacity: this.capacity,
         total: capacityInfo.users,
         max: this.maxUsers,
