@@ -20,8 +20,6 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
   private customerUserId: string;
   private userId: string;
   private timestamp: string;
-  //private readonly TEST_SIGNATURE: string = 'RmJLWlp5WDdNUGxUdnNJLzdPbXc1OEsrVlY5aXZoVE94SjVyNjZiYy9jcz0=';
-  //private readonly INVALID_SIGNATURE: string = 'invalid';
 
   /* @ngInject */
   constructor(private $log: ng.ILogService,
@@ -38,10 +36,6 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
     if (!this.orgId || !this.signature || !this.customerUserId || !this.userId || !this.signature) {
       this.$state.go('404');
     } else {
-      // TODO remove when testing done
-      //if (this.signature !== this.INVALID_SIGNATURE) {
-        //this.signature = this.TEST_SIGNATURE;
-      //}
       this.AdminElevationService.validateSignature(this.orgId, this.signature, this.customerUserId, this.userId, this.timestamp).then((data) => {
         this.helpDeskOperatorName = data.helpDeskOperatorName;
         this.orgName = data.orgName;

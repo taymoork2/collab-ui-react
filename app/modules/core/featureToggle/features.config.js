@@ -44,6 +44,7 @@ module.exports = {
   atlasHelpDeskExt: 'atlas-helpdesk-extended-information',
   atlasHelpDeskOrderSearch: 'atlas-helpdesk-order-search',
   atlasHelpDeskOrderSetup: 'atlas-helpdesk-order-setup',
+  atlasHelpDeskAdminElevation: 'atlas-helpesk-admin-elevation',
   atlasHostedCloudService: 'atlas-hosted-cloud-service',
   atlasHybridAuditLog: 'atlas-hybrid-audit-log',
   atlasHybridCallUserTestTool: 'atlas-hybrid-call-user-test-tool',
