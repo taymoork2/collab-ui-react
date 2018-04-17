@@ -49,12 +49,11 @@ describe('placeOverview component', () => {
   };
 
   describe('on init', () => {
-    let showATA, showHybrid, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId, PlaceCallOverviewData, siteLanguages, locationData;
+    let showHybrid, deviceName, displayName, email, userCisUuid, placeCisUuid, orgId, PlaceCallOverviewData, siteLanguages, locationData;
     let adminFirstName, adminLastName, adminDisplayName, adminUserName, adminCisUuid, adminOrgId,
       goStateData;
     beforeEach(() => {
 
-      showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
       displayName = 'displayName';
@@ -85,7 +84,6 @@ describe('placeOverview component', () => {
       }];
 
       spyOn(CsdmCodeService, 'createCodeForExisting').and.returnValue($q.resolve('0q9u09as09vu0a9sv'));
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
       spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/' + orgId + '/upgradeChannels').respond(200);
@@ -128,7 +126,6 @@ describe('placeOverview component', () => {
         beforeEach(() => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: placeCisUuid } };
           controller = initController($stateParams, $scope, $state);
-          controller.showATA = showATA;
           controller.csdmHybridCallFeature = showHybrid;
         });
 
@@ -144,7 +141,6 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showATA: true,
                 csdmHybridCallFeature: true,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
@@ -181,7 +177,6 @@ describe('placeOverview component', () => {
           $stateParams = { currentPlace: { displayName: deviceName, type: 'huron', cisUuid: placeCisUuid } };
           controller = initController($stateParams, $scope, $state);
           controller.adminDisplayName = displayName;
-          controller.showATA = showATA;
           controller.csdmHybridCallFeature = showHybrid;
         });
 
@@ -197,7 +192,6 @@ describe('placeOverview component', () => {
             {
               data: {
                 function: 'showCode',
-                showATA: true,
                 csdmHybridCallFeature: showHybrid,
                 hybridCalendarEnabledOnOrg: false,
                 hybridCallEnabledOnOrg: false,
@@ -231,9 +225,8 @@ describe('placeOverview component', () => {
 
   describe('invoke editCloudberryServices', () => {
     let goStateData;
-    let showATA, showHybrid, deviceName, orgId, entitlements, placeUuid, siteLanguages, locationData;
+    let showHybrid, deviceName, orgId, entitlements, placeUuid, siteLanguages, locationData;
     beforeEach(() => {
-      showATA = true;
       showHybrid = true;
       deviceName = 'deviceName';
       orgId = 'orgId';
@@ -248,7 +241,6 @@ describe('placeOverview component', () => {
         placeCount: 3,
       }];
 
-      spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(showATA));
       spyOn(FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue($q.resolve(showHybrid));
       spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([]));
       spyOn(PlaceCallOverviewService, 'getSiteLanguages').and.returnValue($q.resolve(siteLanguages));

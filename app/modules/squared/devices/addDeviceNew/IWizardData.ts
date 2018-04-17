@@ -4,7 +4,6 @@ declare namespace csdm {
     recipient: IRecipientUser;
     function: string;
     showPersonal: boolean;
-    showATA: boolean;
     account: IAccountData;
     title: string;
   }
