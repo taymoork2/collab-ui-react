@@ -37,7 +37,8 @@ class Chart implements ng.IComponentController {
     this.currentAggregations = _.map(this.searchResult.aggregations, (a, k) => {
       return new NamedAggregation(k, a);
     });
-    this.updateGraph(this.pickAggregate(this.currentAggregations, 'connectionStatus'), this.searchResult.hits.total, 'key', 'docCount');
+    this.updateGraph(this.pickAggregate(this.currentAggregations, 'connectionStatus'), this.searchResult.hits.total,
+      'key', 'docCount');
     this.setChartTitle(this.searchResult);
   }
 
@@ -93,7 +94,8 @@ class Chart implements ng.IComponentController {
         event: 'clickSlice',
         method: (e) => {
           if (incommingData) {
-            const fieldQuery = new FieldQuery(e.dataItem.dataContext.key, incommingData.bucketName, FieldQuery.QueryTypeExact);
+            const fieldQuery = new FieldQuery(e.dataItem.dataContext.key, _.toLower(incommingData.bucketName),
+              FieldQuery.QueryTypeExact);
             this.pieChartClicked({ searchElement: fieldQuery });
             this.CsdmAnalyticsHelper.trackSuggestionAction(CsdmAnalyticsValues.SLICE, fieldQuery);
           }
@@ -112,7 +114,7 @@ class Chart implements ng.IComponentController {
   };
 
   public legendClick(legend: IBuckedDataChart) {
-    const fieldQuery = new FieldQuery(legend.key, legend.bucketName, FieldQuery.QueryTypeExact);
+    const fieldQuery = new FieldQuery(legend.key, _.toLower(legend.bucketName), FieldQuery.QueryTypeExact);
     this.pieChartClicked({ searchElement: fieldQuery });
     this.CsdmAnalyticsHelper.trackSuggestionAction(CsdmAnalyticsValues.LEGEND, fieldQuery);
   }
@@ -128,7 +130,8 @@ class Chart implements ng.IComponentController {
           bucketName: data.bucketName,
           docCount: bucket.docCount,
           color: DeviceHelper.translateConnectionStatusToColor(_.toUpper(bucket.key)),
-          selected: !!(this.searchObject && this.searchObject.containsElement(new FieldQuery(bucket.key, data.bucketName, FieldQuery.QueryTypeExact))),
+          selected: !!(this.searchObject && this.searchObject.containsElement(
+            new FieldQuery(bucket.key, _.toLower(data.bucketName), FieldQuery.QueryTypeExact))),
         };
       }).value();
   }
