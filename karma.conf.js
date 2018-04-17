@@ -14,6 +14,11 @@ if (args.debug) {
   browser = 'PhantomJS';
 }
 
+var reporters = ['progress'];
+if (_.has(args, 'env.coverage')) {
+  reporters = reporters.concat('coverage-istanbul');
+}
+
 module.exports = function (config) {
   var _config = {
     preprocessors: {},
@@ -88,7 +93,7 @@ module.exports = function (config) {
       noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage-istanbul'],
+    reporters: reporters,
 
     port: 9876,
 
