@@ -8,7 +8,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskUserController($log, $modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -39,6 +39,7 @@
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
+    vm.confirmRequestForFullAdminAccessModal = confirmRequestForFullAdminAccessModal;
     vm.showSendRequestForFullAdminAccess = showSendRequestForFullAdminAccess;
     vm.sendRequestForFullAdminAccess = sendRequestForFullAdminAccess;
     vm.downloadLog = downloadLog;
@@ -91,15 +92,31 @@
     }
 
     function showSendRequestForFullAdminAccess() {
-      $log.info('balle');
       if (vm.user != undefined && vm.user.roles != undefined) {
         return vm.user.roles.length > 0 && vm.user.roles.includes('id_full_admin');
       }
       return false;
     }
 
+    function confirmRequestForFullAdminAccessModal() {
+      $modal.open({
+        controller: function () {
+          var ctrl = this;
+          ctrl.customerDisplayName = vm.user.displayName;
+        },
+        controllerAs: 'ctrl',
+        type: 'dialog',
+        template: require('modules/squared/helpdesk/helpdesk-confirm-full-admin-elevation.html'),
+      }).result.then(function () {
+        sendRequestForFullAdminAccess();
+      });
+    }
+
     function sendRequestForFullAdminAccess() {
       HelpdeskService.sendRequestForFullAdminAccess(vm.user.id, vm.user.orgId).then(function () {
+        Notification.success('helpdesk.requestFullAdminSentSuccess', {
+          customerUser: vm.user.displayName,
+        });
         vm.sendRequestForFullAdminAccess = false;
       }, vm._helpers.notifyError);
     }
