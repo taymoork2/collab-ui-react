@@ -40,7 +40,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
-    // private $state: ng.ui.IStateService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
@@ -49,11 +48,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   private defaultClusterOptions: IClusterOption[] = [
     {
-      label: 'Expressway',
+      label: this.$translate.instant('hercules.eventHistory.filters.expressway'),
       value: 'expressway',
       childOptions: [
         {
-          label: 'All clusters',
+          label: this.$translate.instant('hercules.eventHistory.filters.allClusters'),
           value: 'all_expressway',
           nodes: [],
           services: [],
@@ -61,11 +60,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
       ],
     },
     {
-      label: 'Media',
+      label: this.$translate.instant('hercules.eventHistory.filters.media'),
       value: 'media',
       childOptions: [
         {
-          label: 'All clusters',
+          label: this.$translate.instant('hercules.eventHistory.filters.allClusters'),
           value: 'all_media',
           nodes: [],
           services: [],
@@ -73,11 +72,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
       ],
     },
     {
-      label: 'Data Security',
+      label: this.$translate.instant('hercules.eventHistory.filters.dataSecurity'),
       value: 'hds',
       childOptions: [
         {
-          label: 'All clusters',
+          label: this.$translate.instant('hercules.eventHistory.filters.allClusters'),
           value: 'all_hds',
           nodes: [],
           services: [],
@@ -85,11 +84,11 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
       ],
     },
     {
-      label: 'Context',
+      label: this.$translate.instant('hercules.eventHistory.filters.context'),
       value: 'context',
       childOptions: [
         {
-          label: 'All clusters',
+          label: this.$translate.instant('hercules.eventHistory.filters.allClusters'),
           value: 'all_context',
           nodes: [],
           services: [],
@@ -111,13 +110,13 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public serviceOptions: IServiceOption[] = [];
   public serviceSelected;
   public timeOptions: ITimeFilterOptions[] = [{
-    label: this.$translate.instant('hercules.eventHistory.lastDay'),
+    label: this.$translate.instant('hercules.eventHistory.filters.lastDay'),
     value: 'last_day',
   }, {
-    label: this.$translate.instant('hercules.eventHistory.last2Days'),
+    label: this.$translate.instant('hercules.eventHistory.filters.last2Days'),
     value: 'last_2_days',
   }, {
-    label: this.$translate.instant('hercules.eventHistory.lastWeek'),
+    label: this.$translate.instant('hercules.eventHistory.filters.lastWeek'),
     value: 'last_week',
   }];
   public timeSelected = this.timeOptions[0];
@@ -180,13 +179,15 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   }
 
   public disableServiceSelect() {
-    return this.clusterSelected && _.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value'));
+    return this.clusterSelected &&
+      (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value')) ||
+      _.includes(['squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'], _.get(this.clusterSelected, 'selectedChild.services[1]')));
   }
 
   public clusterSelectedUpdate(): void {
     // Read data from the selected cluster to populate the Node dropdown
     this.nodeOptions = _.concat([{
-      label: 'All Nodes',
+      label: this.$translate.instant('hercules.eventHistory.filters.allNodes'),
       value: 'all_nodes',
     }], _.get(this.clusterSelected, 'selectedChild.nodes'));
     if (!this.hostSerial) {
@@ -197,7 +198,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
     // Read data from the selected cluster to populate the Services dropdown
     this.serviceOptions = _.concat([<IServiceOption>{
-      label: 'All Services',
+      label: this.$translate.instant('hercules.eventHistory.filters.allServices'),
       value: 'all_services',
     }], _.get(this.clusterSelected, 'selectedChild.services'));
     if (_.find(this.serviceOptions, { value: this.serviceId })) {
@@ -218,7 +219,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
   public nodeSelectedUpdate(): void {
     // Read data from the selected node to populate the Services dropdown
     this.serviceOptions = _.concat([<IServiceOption>{
-      label: 'All Services',
+      label: this.$translate.instant('hercules.eventHistory.filters.allServices'),
       value: 'all_services',
     }], this.nodeSelected.services);
 
@@ -291,10 +292,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
             allContextClustersOption.services.concat(clusterMenuItem.services);
           }
         });
-
-        // Remove the top-level menu items without clusters
-        // /!\ Filtering disabled for now because it may still be useful, to be discussed
-        // clusterOptions = _.filter(clusterOptions, option => option.childOptions.length > 1);
 
         // Add nodes and services properties to the various "All Clusters" menu items
         clusterOptions = _.map(clusterOptions, clusterOption => {
