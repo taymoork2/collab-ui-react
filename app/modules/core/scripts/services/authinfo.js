@@ -377,9 +377,9 @@
 
         // check if the state is part of the restricted list for this view
         if (_.includes(Config.restrictedStates[view], state)) {
-          // If a state is usually restricted by view, but is allowed by partial admin roles,
+          // If a state is usually restricted by view, but is allowed by user/device admin roles,
           // then a Partner_User may view that state
-          if (isPartnerUser && this.isPartialAdmin() && stateAllowedByARole) {
+          if (isPartnerUser && this.isUserOrDeviceAdmin() && stateAllowedByARole) {
             return true;
           }
           return false;
@@ -407,7 +407,7 @@
 
         // if the state is in the allowed list of one of the user's service, and the user is not
         // a User_Admin or Device_Admin, all good
-        if (!this.isUserAdminUser() && !this.isDeviceAdminUser()) {
+        if (!this.isUserOrDeviceAdmin()) {
           var stateAllowedByAService = _.some(services, function (service) {
             return _.chain(Config.serviceStates)
               .get(service.ciName)
@@ -436,6 +436,9 @@
           this.hasRole(Config.roles.support) ||
           this.hasRole(Config.roles.user_admin)) &&
           !this.isAdmin();
+      },
+      isUserOrDeviceAdmin: function () {
+        return this.hasRole(Config.roles.device_admin) || this.hasRole(Config.roles.user_admin);
       },
       isCustomerAdmin: function () {
         return this.hasRole(Config.roles.full_admin);
