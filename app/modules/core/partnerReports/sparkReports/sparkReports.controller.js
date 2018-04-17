@@ -64,7 +64,7 @@
       getSparkPartnerReportData('spark', vm.viewType, userInfo).then(function (data) {
         vm.sparkReports.appData = {
           QlikTicket: data.ticket,
-          appId: 'partner_spark_v1',
+          appId: data.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
           persistent: true,
