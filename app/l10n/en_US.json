@@ -11084,10 +11084,12 @@
     "sftp":  {
       "add": "Add SFTP Server",
       "confirmPassword": "Confirm Password",
+      "deleteModalDesc": "Any node using this server will need updated with a new sftp server.",
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
       "error": "SFTP Server creation failed",
+      "loginCred": "Login Credentials",
       "name": "SFTP Server Name",
       "namePlace": "Enter SFTP Server Name",
       "noneSftp": "No SFTP Servers",
@@ -11100,6 +11102,7 @@
       "passwordMismatch": "The password entered does not match",
       "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
+      "successupdate": "SFTP server has been successfully updated",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"

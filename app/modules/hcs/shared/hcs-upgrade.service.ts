@@ -24,6 +24,9 @@ export class HcsUpgradeService {
 
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
     };
     const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
@@ -37,11 +40,19 @@ export class HcsUpgradeService {
         Authorization: BASIC_AUTH_VAL,
       },
     };
+    const deleteAction: ng.resource.IActionDescriptor = {
+      method: 'DELETE',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
+
     this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
         save: saveAction,
         query: queryAction,
+        delete: deleteAction,
       });
     this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterid', {},
       {
@@ -71,11 +82,18 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public updateSftpServer(_sftpServerId: string, sftpServer: ISftpServer) {
+  public updateSftpServer(_sftpServerId: string, sftpServer: ISftpServer): ng.IPromise<any>  {
     return this.sftpServerResource.update({
       partnerId: this.Authinfo.getOrgId(),
       sftpServerId: _sftpServerId,
     }, sftpServer).$promise;
+  }
+
+  public deleteSftpServer(_sftpServerId: string): ng.IPromise<any> {
+    return this.sftpServerResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      sftpServerId: _sftpServerId,
+    }).$promise;
   }
 
   public listSftpServers(): ng.IPromise <any[]> {

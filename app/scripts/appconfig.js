@@ -3262,6 +3262,24 @@
               },
             },
           })
+          .state('hcs.sftpserver-edit', {
+            url: '/hcs/upgrade/sftpserveredit',
+            parent: 'partner',
+            template: '<hcs-upgrade-sftp-edit sftp-server="$resolve.sftpServer"></hcs-upgrade-sftp-edit>',
+            params: {
+              sftpServer: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp/hcs-upgrade-sftp-edit.component'));
+                }, 'hcs-upgrade-sftp-edit');
+              }),
+              sftpServer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.sftpServer;
+              },
+            },
+          })
           .state('hcs.upgradeGroup', {
             url: '/hcs/inventory/:customerId/upgrades',
             parent: 'partner',
