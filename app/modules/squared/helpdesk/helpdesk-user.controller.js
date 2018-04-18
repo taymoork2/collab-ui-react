@@ -92,7 +92,7 @@
     }
 
     function showSendRequestForFullAdminAccess() {
-      if (vm.user != undefined && vm.user.roles != undefined) {
+      if (vm.user !== undefined && vm.user.roles !== undefined) {
         return vm.user.roles.length > 0 && vm.user.roles.includes('id_full_admin');
       }
       return false;

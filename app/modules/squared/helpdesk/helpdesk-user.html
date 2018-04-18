@@ -126,7 +126,7 @@
         </div>
       </div>
 
-      <div ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()" class="row">
+      <div cr-feature-toggle feature-show="atlas-helpesk-admin-elevation" ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()" class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.requestFullAdminAccessToOrg' | translate}}:</span>
           <i
