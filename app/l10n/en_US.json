@@ -11013,7 +11013,8 @@
       }
     },
     "clustersList": {
-      "title":"Clusters"
+      "title":"Clusters",
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
     },
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "inventory": {
@@ -11033,7 +11034,6 @@
       "addFile": "Add File",
       "clusterCount": "Number of Clusters",
       "copFile": "COP file",
-      "customerName": "Customer/ Group Name",
       "deleteModal": {
         "title": "Are you sure?",
         "description": "You are about to delete an Agent Install File. You can not undo this action."
@@ -11048,7 +11048,6 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
       "setupTitle": "Create Agent Install Files",
-      "status": "Status",
       "tarFile": ".tar file",
       "title": "Install Files",
       "nofileTitle": "No Agent Install Files",

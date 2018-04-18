@@ -109,3 +109,17 @@ export interface IHcsClusterSummaryItem {
   status?: string;
 }
 
+export interface IHcsPaging {
+  next?: number| null;
+  prev?: number| null;
+  limit: number| null;
+  offset: number| null;
+  pages?: number| null;
+  count?: number| null;
+}
+
+export interface IHcsCustomerClusters {
+  url: string;
+  clusters: IHcsClusterSummaryItem[];
+  paging: IHcsPaging;
+}

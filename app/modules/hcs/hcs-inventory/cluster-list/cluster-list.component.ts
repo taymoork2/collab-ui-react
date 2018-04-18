@@ -1,5 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/shared/hcs-upgrade';
+import { HcsUpgradeService } from 'modules/hcs/shared';
+import { Notification } from 'modules/core/notifications';
 
 interface IHeaderTab {
   title: string;
@@ -23,15 +25,17 @@ export class ClusterListCtrl implements ng.IComponentController {
   public back: boolean = true;
   public backState: string = 'hcs.shared.inventoryList';
   public clusterList: IClusterItem[];
-  public responseData: IHcsClusterSummaryItem[];
 
   public clusterToBeDeleted: IClusterItem;
+  public customerId: string | undefined;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
     private $modal: IToolkitModalService,
+    private HcsUpgradeService: HcsUpgradeService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -43,165 +47,23 @@ export class ClusterListCtrl implements ng.IComponentController {
       state: `hcs.upgradeGroup({customerId: '${this.groupId}'})`,
     });
 
-    this.responseData = [
-      {
-        uuid: '8e2cf5cb-ca63-4d06-9210-77b5a62ad40b',
-        name: 'sm-cucm-c1',
-        status: 'Active',
-        url: 'http://<base url>/partners/c4bb590c-2b05-4d7a-b796-b94b648b32cb/clusters/8e2cf5cb-ca63-4d06-9210-77b5a62ad40b',
-        sftpServer: {
-          uuid: '6aeca3ba-b693-4f71-8d5a-7102ce701ea2',
-          name: 'sftpserver1',
-        },
-        hcsNodes: [
-          {
-            hostName: 'ccm-01',
-            typeApplication: 'CUCM',
-            isPublisher: false,
-            ipAddress: '10.23.34.245',
-          }, {
-            hostName: 'ccm-c992',
-            typeApplication: 'CUCM',
-            isPublisher: true,
-            ipAddress: '10.23.34.244',
-          }, {
-            hostName: 'adadse-02',
-            typeApplication: 'IM&P',
-            isPublisher: true,
-            ipAddress: '10.23.34.256',
-          }, {
-            hostName: 'adsfaj-01',
-            typeApplication: 'IM&P',
-            isPublisher: false,
-            ipAddress: '10.23.34.292',
-          },
-        ],
-      }, {
-        uuid: '8e2cf5cb-ca63-4d06-9210-77b5a62ad40c',
-        name: 'edlid-uxcn-c2',
-        status: 'Needs Software update',
-        url: 'http://<base url>/partners/c4bb590c-2b05-4d7a-b796-b94b648b32cb/clusters/8e2cf5cb-ca63-4d06-9210-77b5a62ad40c',
-        sftpServer: {
-          uuid: '6aeca3ba-b693-4f71-8d5a-7102ce701ea2',
-          name: 'sftpserver1',
-        },
-        hcsNodes: [
-          {
-            hostName: 'cuxcn-01',
-            typeApplication: 'UXCN',
-            isPublisher: false,
-            ipAddress: '10.23.34.145',
-          }, {
-            hostName: 'cuxcn-02',
-            typeApplication: 'UXCN',
-            isPublisher: true,
-            ipAddress: '10.23.34.144',
-          },
-        ],
-      },
-    ];
     this.clusterList = [];
 
     if (this.groupType === 'unassigned') {
       //get customer name from api
       this.groupName = 'Unassigned';
-      //get cluster list from controller api??
-      // this.clusterList = [
-      //   {
-      //     id: 'a1234',
-      //     name: 'un-cucm-f3',
-      //     status: 'Nodes need Accepted',
-      //     applications: [
-      //       {
-      //         name: 'CUCM',
-      //         count: 2,
-      //       }, {
-      //         name: 'IM&P',
-      //         count: 2,
-      //       },
-      //     ],
-      //   }, {
-      //     id: 'x5678',
-      //     name: 'asdf-imp-c1',
-      //     status: 'Nodes need Accepted',
-      //     applications: [
-      //       {
-      //         name: 'IM&P',
-      //         count: 2,
-      //       },
-      //     ],
-      //   }, {
-      //     id: 'b1920',
-      //     name: 'edlid-uxcn-c2',
-      //     status: 'Nodes need Accepted',
-      //     applications: [
-      //       {
-      //         name: 'EXPRC',
-      //         count: 2,
-      //       },
-      //     ],
-      //   }, {
-      //     id: 'm1212',
-      //     name: 'adfve-uxcn-c2',
-      //     status: 'Nodes need Accepted',
-      //     applications: [
-      //       {
-      //         name: 'UXCN',
-      //         count: 2,
-      //       },
-      //     ],
-      //   }];
+      this.customerId = undefined;
     } else {
       //get customer name from api
       this.groupName = 'Betty\'s Flower Shop';
-      //get cluster list from upgrade api
-      // this.clusterList = [{
-      //   id: 'a1234',
-      //   name: 'sm-cucm-c1',
-      //   status: 'Active',
-      //   applications: [
-      //     {
-      //       name: 'CUCM',
-      //       count: 2,
-      //     }, {
-      //       name: 'IM&P',
-      //       count: 2,
-      //     },
-      //   ],
-      // }, {
-      //   id: 'x5678',
-      //   name: 'sm-imp-c1',
-      //   status: 'Active',
-      //   applications: [
-      //     {
-      //       name: 'IM&P',
-      //       count: 2,
-      //     },
-      //   ],
-      // }, {
-      //   id: 'b1920',
-      //   name: 'sm-uxcn-c2',
-      //   status: 'Active',
-      //   applications: [
-      //     {
-      //       name: 'EXPRC',
-      //       count: 2,
-      //     },
-      //   ],
-      // }, {
-      //   id: 'm1212',
-      //   name: 'sm-expr-c2',
-      //   status: 'Needs Software update',
-      //   applications: [
-      //     {
-      //       name: 'UXCN',
-      //       count: 2,
-      //     },
-      //   ],
-      // }];
+      this.customerId = this.groupId;
     }
-
-    this.initClusterList();
+    this.HcsUpgradeService.listClusters(this.customerId).then((clusters: IHcsClusterSummaryItem[]) => {
+      this.initClusterList(clusters);
+    })
+    .catch(() => {
+      this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
+    });
   }
 
   public cardSelected(cluster: IClusterItem): void {
@@ -231,9 +93,10 @@ export class ClusterListCtrl implements ng.IComponentController {
     //delete intsall file && update install file list
   }
 
-  public initClusterList(): void {
+  public initClusterList(clustersData: IHcsClusterSummaryItem[]): void {
+    this.clusterList = [];
     //function to get cluster data from response object
-    _.each(this.responseData, (cluster: IHcsClusterSummaryItem) => {
+    _.each(clustersData, (cluster: IHcsClusterSummaryItem) => {
       const applicationList: IApplicationItem[] = [];
       if (!_.isUndefined(cluster.hcsNodes)) {
         _.each(cluster.hcsNodes, (node: INodeSummaryItem) => {
