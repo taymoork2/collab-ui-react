@@ -8,10 +8,11 @@ import { DeviceExportService } from 'modules/squared/devices/export/deviceExport
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service';
 import serviceDescriptorModuleName from 'modules/hercules/services/service-descriptor.service';
 import cloudConnectorServiceModuleName from 'modules/hercules/services/calendar-cloud-connector.service';
+import csdmServices from '../services/index';
 
 export default angular
   .module('Csdm.devices', [
-    'Csdm.services',
+    csdmServices,
     require('angular-resource'),
     require('angular-translate'),
     require('angular-sanitize'),

@@ -190,17 +190,17 @@ export class FieldQuery extends SearchElement {
 
   public toQuery(translator?: SearchTranslator): string {
     const query = this.toQueryComponents(translator);
-    return query.prefix + query.query;
+    return query.prefix + FieldQuery.addQuotesIfNeeded(query.query);
   }
 
   public toQueryComponents(translator?: SearchTranslator): { prefix: string, query: string } {
     if (translator && this.field && this.type === FieldQuery.QueryTypeExact) {
       return {
         prefix: this.getQueryPrefix(translator),
-        query: FieldQuery.addQuotesIfNeeded(translator.lookupTranslatedQueryValueDisplayName(this.query, this.field)),
+        query: translator.lookupTranslatedQueryValueDisplayName(this.query, this.field),
       };
     }
-    return { prefix: this.getQueryPrefix(translator), query: this.getQueryWithoutField() };
+    return { prefix: this.getQueryPrefix(translator), query: this.query };
   }
 
   public toJSON(): any {
