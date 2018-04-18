@@ -5,6 +5,7 @@ import { TemplateWizardService } from './services/TemplateWizard.service';
 
 class CtVirtualAssistantController extends CtBaseController {
 
+  private cardMode: string;
   public isCareAssistantEnabled: boolean;
   public selectedVA: CVAConfig;
   public configuredVirtualAssistantServices: CVAConfig[];
@@ -19,6 +20,7 @@ class CtVirtualAssistantController extends CtBaseController {
     public TemplateWizardService: TemplateWizardService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -62,6 +64,9 @@ class CtVirtualAssistantController extends CtBaseController {
 export class CtVirtualAssistantComponent implements ng.IComponentOptions {
   public controller = CtVirtualAssistantController;
   public template = require('./wizardPagesComponent/ctVirtualAssistant.tpl.html');
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

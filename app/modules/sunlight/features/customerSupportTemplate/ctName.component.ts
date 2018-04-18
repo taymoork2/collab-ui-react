@@ -10,8 +10,10 @@ class CtNameController extends CtBaseController {
     public $translate: ng.translate.ITranslateService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
+  private cardMode: string;
   public $onInit(): void {
     this.isValid();
   }
@@ -41,6 +43,9 @@ class CtNameController extends CtBaseController {
 export class CtNameComponent implements ng.IComponentOptions {
   public controller = CtNameController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctName.tpl.html');
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

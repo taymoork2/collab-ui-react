@@ -103,7 +103,7 @@
                 </div>
               </div>
               <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name === 'type' && attribute.value.id === 'category'">
-                <div class="escalation-required-info escalation-required-info-category" ng-if="$ctrl.isExpertEscalationSelected()">
+                <div class="escalation-required-info escalation-required-info-category" ng-if="$ctrl.TemplateWizardService.isExpertEscalationSelected()">
                   <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
                   <span
                     tabindex="0"
@@ -119,7 +119,7 @@
                 </div>
                 <i class="icon icon-add-contain ct-add-contain" ng-click="$ctrl.addCategoryOption()"></i>
                 <input cs-input type="text"
-                  ng-readonly="{{!$ctrl.validateType(attribute.value)}}"
+                  ng-readonly="{{!$ctrl.validateCategoryTextBoxType(attribute.value)}}"
                   name="categoryTextBox"
                   id="categoryTextBox"
                   class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"

@@ -3,6 +3,7 @@ import { TemplateWizardService } from './services/TemplateWizard.service';
 import { CTService } from 'modules/sunlight/features/customerSupportTemplate/services/CTService';
 class CtFeedbackController extends CtBaseController {
 
+  private cardMode: string;
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
@@ -12,6 +13,7 @@ class CtFeedbackController extends CtBaseController {
   ) {
 
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -52,7 +54,9 @@ class CtFeedbackController extends CtBaseController {
 export class CtFeedbackComponent implements ng.IComponentOptions {
   public controller = CtFeedbackController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ct-feedback.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular
