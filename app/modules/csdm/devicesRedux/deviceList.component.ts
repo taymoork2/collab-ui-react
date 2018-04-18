@@ -178,23 +178,25 @@ class DeviceList implements ng.IComponentController {
           enableSorting: false,
           headerCellTemplate: require('modules/csdm/templates/_selectionHeaderTpl.html'),
         }, {
-          field: 'displayName',
-          displayName: this.$translate.instant('spacesPage.nameHeader'),
-          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
+          field: 'product',
+          displayName: this.$translate.instant('spacesPage.typeHeader'),
+          cellTemplate: require('modules/csdm/templates/_productTpl.html'),
           suppressRemoveSort: true,
-        }, {
-          field: 'connectionStatus',
-          displayName: this.$translate.instant('spacesPage.statusHeader'),
-          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
+          maxWidth: 370,
           sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
             direction: 'asc',
             priority: 0,
           },
-          suppressRemoveSort: true,
         }, {
-          field: 'product',
-          displayName: this.$translate.instant('spacesPage.typeHeader'),
-          cellTemplate: require('modules/csdm/templates/_productTpl.html'),
+          field: 'connectionStatus',
+          displayName: this.$translate.instant('spacesPage.statusHeader'),
+          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
+          suppressRemoveSort: true,
+          maxWidth: 250,
+        }, {
+          field: 'displayName',
+          displayName: this.$translate.instant('spacesPage.nameHeader'),
+          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
           suppressRemoveSort: true,
         }],
     };
