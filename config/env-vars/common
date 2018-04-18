@@ -1,3 +1,4 @@
+APP_DEPLOY_DESCRIPTOR_TEMPLATE=atlas-web.webpack.yml.tpl
 APP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.tar.gz
 SOURCE_MAP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.source-map.tar.gz
 BUILD_DEPS_ARCHIVE=build-deps.tar
