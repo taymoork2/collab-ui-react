@@ -128,7 +128,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
     describe('correct texts are displayed', function () {
       var showPersonal;
-      var showATA;
       var accountType;
       var deviceType;
       var isEntitledToHuron;
@@ -138,7 +137,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             return {
               data: {
                 showPersonal: showPersonal,
-                showATA: showATA,
                 account: {
                   type: accountType,
                   deviceType: deviceType,

@@ -41,6 +41,7 @@ export class TemplateWizardService {
     isAgentUnavailableValid: false,
     isFeedbackValid: false,
     isChatEscalationValid: false,
+    isCustomerInfoPageValid: false,
   };
 
   //TODO: to set it from the right page

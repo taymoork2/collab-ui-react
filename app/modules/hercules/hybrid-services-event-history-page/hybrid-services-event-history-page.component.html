@@ -4,35 +4,54 @@
                   js-back="true"></cs-page-header>
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <div class="service-filter-container">
-        <span translate="hercules.eventHistory.serviceFilter"></span>
+      <div class="cluster-filter-container">
+        <span translate="hercules.eventHistory.filters.clusterFilter"></span>
         <form>
           <div class="filter-dropdown">
             <cs-select
-              ng-model="$ctrl.selectedServiceFilter"
-              options="$ctrl.servicesOptions"
-              on-change-fn="$ctrl.serviceFilterChanged()">
+              ng-model="$ctrl.clusterSelected"
+              options="$ctrl.clusterOptions"
+              on-change-fn="$ctrl.clusterSelectedUpdate()"
+              nested="true"
+              icon="icon-chevron-down"
+              iconnested="icon-chevron-right"
+              >
             </cs-select>
           </div>
         </form>
       </div>
-      <div class="resource-filter-container">
-        <span translate="hercules.eventHistory.resourceFilter"></span>
+      <div class="node-filter-container">
+        <span translate="hercules.eventHistory.filters.nodeFilter"></span>
         <form>
           <div class="filter-dropdown">
             <cs-select
-              ng-model="$ctrl.selectedResourceFilter"
-              options="$ctrl.resourcesOptions">
+              ng-model="$ctrl.nodeSelected"
+              options="$ctrl.nodeOptions"
+              on-change-fn="$ctrl.nodeSelectedUpdate()"
+              >
+            </cs-select>
+          </div>
+        </form>
+      </div>
+      <div class="service-filter-container">
+        <span translate="hercules.eventHistory.filters.serviceFilter"></span>
+        <form>
+          <div class="filter-dropdown">
+            <cs-select
+              ng-model="$ctrl.serviceSelected"
+              is-disabled="$ctrl.disableServiceSelect()"
+              options="$ctrl.serviceOptions"
+              >
             </cs-select>
           </div>
         </form>
       </div>
       <div class="time-filter-container">
-        <span translate="hercules.eventHistory.dataSince"></span>
+        <span translate="hercules.eventHistory.filters.dateSince"></span>
         <form>
           <div class="filter-dropdown">
             <cs-select
-              ng-model="$ctrl.selectedTimeFilter"
+              ng-model="$ctrl.timeSelected"
               options="$ctrl.timeOptions"></cs-select>
             </cs-select>
           </div>
@@ -41,10 +60,10 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
   <hybrid-services-cluster-status-history-table
-    service-id="$ctrl.serviceId"
-    connector-id="$ctrl.connectorId"
-    resource-filter="$ctrl.selectedResourceFilter.value"
-    time-filter="$ctrl.selectedTimeFilter.value"
-    cluster-id="$ctrl.clusterId">
+    cluster-filter="$ctrl.clusterSelected.selectedChild.value"
+    node-filter="$ctrl.nodeSelected.value"
+    service-filter="$ctrl.serviceSelected.value"
+    time-filter="$ctrl.timeSelected.value"
+  >
   </hybrid-services-cluster-status-history-table>
 </div>

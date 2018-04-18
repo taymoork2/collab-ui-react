@@ -47,9 +47,12 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="imp-service.list">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="imp-service.list" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
+        <a ng-if="$ctrl.hasEventsHistoryFeatureToggle" ui-sref="hybrid-services-event-history-page({serviceId: 'spark-hybrid-impinterop'})" class="active-card_footer_events-link">
+          <span>Events</span>
         </a>
       </div>
     </article>
@@ -57,6 +60,7 @@ export class HybridIMPActiveCardComponent implements ng.IComponentOptions {
   public bindings = {
     clusters: '<',
     hasCapacityFeatureToggle: '<',
+    hasEventsHistoryFeatureToggle: '<',
     serviceStatus: '<',
   };
 }

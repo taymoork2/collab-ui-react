@@ -9,98 +9,50 @@
 
   .cs-card article {
     height: rem-calc(244);
-  }
-  .cs-card article section {
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: space-between;
-    align-items: baseline;
-  }
 
-  .cs-card > article header {
-    @include vr-spacing(pt, 1);
-  }
-
-  .card-body {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .card-section {
-    @include vr-spacing(pl, 1.5);
-  }
-
-  .card-section-item {
-    display: block;
-    color: $gray-base;
-    font-family: $brand-font-light;
-    font-size: $base-font-size;
-    line-height: rem-calc(24);
-
-    span {
-      font-size: 1rem;
-    }
-  }
-
-  .card-icon {
-    @include vr-spacing(ml, 0.5);
-
-    display: block;
-    height: 2rem;
-    width: 2rem;
-    line-height: 2rem;
-    border-radius: 50%;
-    background-color: $gray-light-4;
-    text-align: center;
-  }
-
-  // Atlas
-  .cs-card.hoverable {
-    article {
-      &.hover,
-      &:focus {
-        p.h6,
+    section {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      .card-section {
+        @include vr-spacing(pl, 1.5);
         .card-section-item {
-          color: $color-white;
+          display: block;
+          color: $gray-base;
+          font-family: $brand-font-light;
+          font-size: $base-font-size;
+          line-height: rem-calc(24);
+
+          span {
+            font-size: 1rem;
+          }
         }
       }
-      section {
-        justify-content: flex-end;
+    }
+
+    header {
+      @include vr-spacing(pt, 1);
+      button.close::before {
+        font-size: rem-calc(16);
+      }
+      padding-left: rem-calc(24);
+      padding-bottom: rem-calc(24);
+      p.h6 {
+        color: $gray-dark-1;
+      }
+      p.h4.ellipsis {
+        color: $gray-dark-4;
       }
     }
-  }
 
-  footer.install-file-footer {
-    background-color: #f5f5f5;
-    padding: .5rem 1.5rem .375rem;
-    .footer-item {
-      float: right;
-      margin-left: 0.75rem;
+    footer.install-file-footer {
+      background-color: #f5f5f5;
+      padding: .5rem 1.5rem .375rem;
+      .footer-item {
+        float: right;
+        margin-left: 0.75rem;
+      }
     }
-  }
-
-}
-
-.no-install-files {
-  width: 100%;
-  height: rem-calc(420);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  h2 {
-    text-align: center;
-    color: $gray-base;
-  }
-  h5 {
-    text-align: center;
-    margin-top: rem-calc(24);
-    width: 50%;
-    color: $gray-base;
-  }
-  button {
-    margin-top: rem-calc(24);
-    border-radius: 100px;
   }
 }

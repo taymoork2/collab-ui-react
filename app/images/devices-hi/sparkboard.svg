@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180px" height="180px" viewBox="0 0 180 180" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>Spark Board 55</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="152" height="96" rx="4"></rect>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FFFFFF" stop-opacity="0.06" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-3" x="4" y="8" width="144" height="80" rx="0.5"></rect>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.2" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="50%" cy="38.6978159%" fx="50%" fy="38.6978159%" r="61.3021841%" gradientTransform="translate(0.500000,0.386978),scale(0.581818,1.000000),rotate(90.000000),scale(1.000000,1.059799),translate(-0.500000,-0.386978)" id="radialGradient-5">
+            <stop stop-color="#FFFFFF" stop-opacity="0.244480299" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.0713032156" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="50%" cy="100%" fx="50%" fy="100%" r="41.713714%" gradientTransform="translate(0.500000,1.000000),scale(0.581818,1.000000),rotate(90.000000),scale(1.000000,2.167936),translate(-0.500000,-1.000000)" id="radialGradient-6">
+            <stop stop-color="#000000" stop-opacity="0.747424139" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.0713032156" offset="100%"></stop>
+        </radialGradient>
+        <rect id="path-7" x="73" y="2.79999995" width="5.5" height="3.20000005" rx="1"></rect>
+        <filter x="-4.5%" y="-7.8%" width="109.1%" height="115.6%" filterUnits="objectBoundingBox" id="filter-8">
+            <feGaussianBlur stdDeviation="0.125" in="SourceAlpha" result="shadowBlurInner1"></feGaussianBlur>
+            <feOffset dx="0" dy="0.25" in="shadowBlurInner1" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+        <radialGradient cx="50%" cy="37.2216791%" fx="50%" fy="37.2216791%" r="43.3691406%" gradientTransform="translate(0.500000,0.372217),rotate(180.000000),scale(1.000000,0.594876),translate(-0.500000,-0.372217)" id="radialGradient-9">
+            <stop stop-color="#FFFFFF" stop-opacity="0.24889606" offset="3.83173772%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <circle id="path-10" cx="75.75" cy="4.25" r="1.25"></circle>
+        <filter x="-10.0%" y="-10.0%" width="120.0%" height="120.0%" filterUnits="objectBoundingBox" id="filter-11">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.328974185 0" type="matrix" in="shadowInnerInner1" result="shadowMatrixInner1"></feColorMatrix>
+            <feOffset dx="0" dy="0.25" in="SourceAlpha" result="shadowOffsetInner2"></feOffset>
+            <feComposite in="shadowOffsetInner2" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.471965349   0 0 0 0 0.471965349   0 0 0 0 0.471965349  0 0 0 0.160552536 0" type="matrix" in="shadowInnerInner2" result="shadowMatrixInner2"></feColorMatrix>
+            <feOffset dx="0" dy="-0.5" in="SourceAlpha" result="shadowOffsetInner3"></feOffset>
+            <feComposite in="shadowOffsetInner3" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner3"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.02 0" type="matrix" in="shadowInnerInner3" result="shadowMatrixInner3"></feColorMatrix>
+            <feGaussianBlur stdDeviation="0.125" in="SourceAlpha" result="shadowBlurInner4"></feGaussianBlur>
+            <feOffset dx="0" dy="-0.25" in="shadowBlurInner4" result="shadowOffsetInner4"></feOffset>
+            <feComposite in="shadowOffsetInner4" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner4"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.128113678 0" type="matrix" in="shadowInnerInner4" result="shadowMatrixInner4"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixInner1"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner2"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner3"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner4"></feMergeNode>
+            </feMerge>
+        </filter>
+        <circle id="path-12" cx="75.9999985" cy="91.9" r="1.39999998"></circle>
+    </defs>
+    <g id="Spark-Board-55" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="img" transform="translate(14.000000, 42.000000)">
+            <g id="Group">
+                <g id="Rectangle-14">
+                    <use fill="#222222" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    <rect stroke-opacity="0.12" stroke="#DDDDDD" stroke-width="1.25" x="0.625" y="0.625" width="150.75" height="94.75" rx="4"></rect>
+                    <rect stroke="#000000" stroke-width="1" x="0.5" y="0.5" width="151" height="95" rx="4"></rect>
+                    <rect stroke="#979797" stroke-width="0.25" x="0.125" y="0.125" width="151.75" height="95.75" rx="4"></rect>
+                </g>
+                <g id="Rectangle">
+                    <use fill="#222222" xlink:href="#path-3"></use>
+                    <use fill="url(#linearGradient-2)" xlink:href="#path-3"></use>
+                </g>
+                <rect id="Rectangle-14" fill="url(#linearGradient-4)" x="0" y="0" width="152" height="96" rx="4"></rect>
+            </g>
+            <path d="M134.708204,91 L146.5,91 C147.052285,91 147.5,91.4477153 147.5,92 L147.5,92 C147.5,92.5522847 147.052285,93 146.5,93 L134.708204,93 C134.242469,93 133.783129,92.8915647 133.366563,92.6832816 L132.447214,92.2236068 C132.323719,92.1618595 132.273663,92.0116912 132.33541,91.8881966 C132.359601,91.8398148 132.398832,91.8005841 132.447214,91.7763932 L133.366563,91.3167184 C133.783129,91.1084353 134.242469,91 134.708204,91 Z" id="Rectangle" fill-opacity="0.239999995" fill="#FFFFFF"></path>
+            <g id="Rectangle-15">
+                <use fill="#535353" fill-rule="evenodd" xlink:href="#path-7"></use>
+                <use fill="" fill-rule="evenodd" xlink:href="#path-7"></use>
+                <use fill="url(#radialGradient-5)" fill-rule="evenodd" xlink:href="#path-7"></use>
+                <use fill="url(#radialGradient-6)" fill-rule="evenodd" xlink:href="#path-7"></use>
+                <use fill-opacity="0.12" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-7"></use>
+                <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+            </g>
+            <g id="Oval">
+                <use fill="#242424" fill-rule="evenodd" xlink:href="#path-10"></use>
+                <use fill="url(#radialGradient-9)" fill-rule="evenodd" xlink:href="#path-10"></use>
+                <use fill="black" fill-opacity="1" filter="url(#filter-11)" xlink:href="#path-10"></use>
+                <circle stroke-opacity="0.4" stroke="#000000" stroke-width="0.25" cx="75.75" cy="4.25" r="1.125"></circle>
+            </g>
+            <circle id="Oval" fill-opacity="0.08" fill="#FFFFFF" cx="75.75" cy="4.25" r="1.25"></circle>
+            <g id="Oval-7">
+                <use fill-opacity="0.24" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-12"></use>
+                <circle stroke-opacity="0.8" stroke="#FFFFFF" stroke-width="0.25" cx="75.9999985" cy="91.9" r="1.27499998"></circle>
+            </g>
+            <path d="M75.5250015,91.4000015 C75.5940015,91.4000015 75.6500015,91.4560015 75.6500015,91.5250015 C75.6500015,91.5940015 75.5940015,91.6500015 75.5250015,91.6500015 C75.4560015,91.6500015 75.4000015,91.5940015 75.4000015,91.5250015 C75.4000015,91.4560015 75.4560015,91.4000015 75.5250015,91.4000015 Z M75.9840015,91.4000015 C76.0530015,91.4000015 76.1090015,91.4560015 76.1090015,91.5250015 C76.1090015,91.5940015 76.0530015,91.6500015 75.9840015,91.6500015 C75.9150015,91.6500015 75.8590015,91.5940015 75.8590015,91.5250015 C75.8590015,91.4560015 75.9150015,91.4000015 75.9840015,91.4000015 Z M76.4425015,91.4000015 C76.5115015,91.4000015 76.5675015,91.4560015 76.5675015,91.5250015 C76.5675015,91.5940015 76.5115015,91.6500015 76.4425015,91.6500015 C76.3735015,91.6500015 76.3175015,91.5940015 76.3175015,91.5250015 C76.3175015,91.4560015 76.3735015,91.4000015 76.4425015,91.4000015 Z M75.5250015,91.8175015 C75.5940015,91.8175015 75.6500015,91.8735015 75.6500015,91.9425015 C75.6500015,92.0115015 75.5940015,92.0675015 75.5250015,92.0675015 C75.4560015,92.0675015 75.4000015,92.0115015 75.4000015,91.9425015 C75.4000015,91.8735015 75.4560015,91.8175015 75.5250015,91.8175015 Z M75.9840015,91.8175015 C76.0530015,91.8175015 76.1090015,91.8735015 76.1090015,91.9425015 C76.1090015,92.0115015 76.0530015,92.0675015 75.9840015,92.0675015 C75.9150015,92.0675015 75.8590015,92.0115015 75.8590015,91.9425015 C75.8590015,91.8735015 75.9150015,91.8175015 75.9840015,91.8175015 Z M76.4425015,91.8175015 C76.5115015,91.8175015 76.5675015,91.8735015 76.5675015,91.9425015 C76.5675015,92.0115015 76.5115015,92.0675015 76.4425015,92.0675015 C76.3735015,92.0675015 76.3175015,92.0115015 76.3175015,91.9425015 C76.3175015,91.8735015 76.3735015,91.8175015 76.4425015,91.8175015 Z M75.5250015,92.2355015 C75.5940015,92.2355015 75.6500015,92.2915015 75.6500015,92.3605015 C75.6500015,92.4295015 75.5940015,92.4855015 75.5250015,92.4855015 C75.4560015,92.4855015 75.4000015,92.4295015 75.4000015,92.3605015 C75.4000015,92.2915015 75.4560015,92.2355015 75.5250015,92.2355015 Z M75.9840015,92.2355015 C76.0530015,92.2355015 76.1090015,92.2915015 76.1090015,92.3605015 C76.1090015,92.4295015 76.0530015,92.4855015 75.9840015,92.4855015 C75.9150015,92.4855015 75.8590015,92.4295015 75.8590015,92.3605015 C75.8590015,92.2915015 75.9150015,92.2355015 75.9840015,92.2355015 Z M76.4425015,92.2355015 C76.5115015,92.2355015 76.5675015,92.2915015 76.5675015,92.3605015 C76.5675015,92.4295015 76.5115015,92.4855015 76.4425015,92.4855015 C76.3735015,92.4855015 76.3175015,92.4295015 76.3175015,92.3605015 C76.3175015,92.2915015 76.3735015,92.2355015 76.4425015,92.2355015 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

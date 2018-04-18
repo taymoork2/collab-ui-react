@@ -261,6 +261,35 @@ describe('Authinfo:', function () {
       expect(Authinfo.isAllowedState('blah')).toBe(false);
     });
 
+    it('should return true even if it is a partner user role, if it is a user/device admin and the state is allowed by that partial role', function () {
+      var Authinfo = setupUser({
+        roles: ['PARTNER_USER', 'Device_Admin', 'User_Admin'],
+      });
+
+      expect(Authinfo.isAllowedState('users')).toBe(true);
+      expect(Authinfo.isAllowedState('devices')).toBe(true);
+      expect(Authinfo.isAllowedState('places')).toBe(true);
+      expect(Authinfo.isAllowedState('support')).toBe(false);
+    });
+
+    it('should return false if it is a partner user role, if it also has a Support Admin role and is restricted from the partner view', function () {
+      var Authinfo = setupUser({
+        roles: ['PARTNER_USER', 'Support'],
+      });
+
+      expect(Authinfo.isAllowedState('overview')).toBe(false);
+      expect(Authinfo.isAllowedState('support')).toBe(true);
+    });
+
+    it('should return true for support if a user is a partial admin with helpdesk access', function () {
+      var Authinfo = setupUser({
+        roles: ['User_Admin', 'Device_Admin', 'Help_Desk'],
+      });
+
+      expect(Authinfo.isAllowedState('reports')).toBe(false);
+      expect(Authinfo.isAllowedState('support')).toBe(true);
+    });
+
     it('should return false if the state is part of the restricted states for customers and the user has not a partner role', function () {
       setupConfig({
         restrictedStates: {

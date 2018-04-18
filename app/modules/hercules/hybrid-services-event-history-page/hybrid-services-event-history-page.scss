@@ -25,20 +25,47 @@ hybrid-services-event-history-page {
     border-bottom: 0;
   }
 
+  .cluster-filter-container,
+  .node-filter-container,
   .service-filter-container,
-  .resource-filter-container,
   .time-filter-container {
     display: flex;
     flex-direction: column;
   }
 
-  .service-filter-container,
-  .resource-filter-container {
+  .cluster-filter-container,
+  .node-filter-container,
+  .service-filter-container {
     margin-right: 1rem;
+  }
+
+  .service-filter-container,
+  .time-filter-container {
+    position: relative;
+    margin-left: 1rem;
+
+    &:before {
+      position: absolute;
+      content: '';
+      top: -0.75rem;
+      bottom: -0.75rem;
+      left: -1rem;
+      border-left: 1px solid $gray-light-3;
+    }
+  }
+
+  .service-filter-container {
+    margin-right: auto;
   }
 
   form {
     margin: 0;
-    width: 15.625rem;
+    width: 14.375rem;
+
+    // Waiting for https://wwwin-github.cisco.com/collab-ui/collab-ui-ng/issues/185
+    // to be fixed
+    .select-options > li.parent > a > i.icon {
+      top: 0.9rem;
+    }
   }
 }

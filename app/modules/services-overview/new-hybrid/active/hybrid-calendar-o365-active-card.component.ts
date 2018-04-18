@@ -42,9 +42,9 @@ export class HybridCalendarO365ActiveCardComponent implements ng.IComponentOptio
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="office-365-service.settings">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="office-365-service.settings" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
         </a>
       </div>
     </article>

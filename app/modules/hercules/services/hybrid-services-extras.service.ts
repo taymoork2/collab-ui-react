@@ -1,4 +1,4 @@
-import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType, IConnectorAlarm, IExtendedConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
+import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType, IConnectorAlarm, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
 import { IExtendedStatusByClusters } from 'modules/hercules/services/uss.service';
 
@@ -107,10 +107,7 @@ export class HybridServicesExtrasService {
 
   public getCapacityInformation(clusters: IExtendedClusterFusion[], connectorType: ConnectorType, summaries: IExtendedStatusByClusters[] = []): ICapacityInformation {
     const maxUsers = _.chain(clusters)
-      .map(cluster => cluster.connectors)
-      .flatten<IExtendedConnector>()
-      .filter(connector => connector.connectorType === connectorType)
-      .map(connector => connector.userCapacity)
+      .map(cluster => _.get(cluster, `userCapacities.${connectorType}`))
       .sum()
       .value();
 

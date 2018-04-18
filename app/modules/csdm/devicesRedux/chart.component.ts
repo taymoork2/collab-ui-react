@@ -4,6 +4,7 @@ import { Aggregation, IBucketData, NamedAggregation, SearchResult } from '../ser
 import { FieldQuery, SearchElement } from '../services/search/searchElement';
 import { DeviceHelper } from '../services/csdmHelper';
 import { SearchObject } from '../services/search/searchObject';
+import { CsdmAnalyticsValues, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 class Chart implements ng.IComponentController {
   private currentAggregations: NamedAggregation[] = [];
@@ -21,7 +22,7 @@ class Chart implements ng.IComponentController {
   public searchObject?: SearchObject;
 
   /* @ngInject */
-  constructor(private $translate, private Analytics) {
+  constructor(private $translate, private CsdmAnalyticsHelper: ICsdmAnalyticHelper) {
   }
 
   public $onInit() {
@@ -94,7 +95,7 @@ class Chart implements ng.IComponentController {
           if (incommingData) {
             const fieldQuery = new FieldQuery(e.dataItem.dataContext.key, incommingData.bucketName, FieldQuery.QueryTypeExact);
             this.pieChartClicked({ searchElement: fieldQuery });
-            this.trackSearchClick('SLICE', fieldQuery);
+            this.CsdmAnalyticsHelper.trackSuggestionAction(CsdmAnalyticsValues.SLICE, fieldQuery);
           }
         },
       }],
@@ -113,7 +114,7 @@ class Chart implements ng.IComponentController {
   public legendClick(legend: IBuckedDataChart) {
     const fieldQuery = new FieldQuery(legend.key, legend.bucketName, FieldQuery.QueryTypeExact);
     this.pieChartClicked({ searchElement: fieldQuery });
-    this.trackSearchClick('LEGEND', fieldQuery);
+    this.CsdmAnalyticsHelper.trackSuggestionAction(CsdmAnalyticsValues.LEGEND, fieldQuery);
   }
 
   private updateLegend(data: BuckedDataChartHolder) {
@@ -196,17 +197,6 @@ class Chart implements ng.IComponentController {
       const i = _.findIndex(this.currentAggregations, a => a.bucketName === selected.bucketName);
       this.showAggregate(this.currentAggregations[(i + 1) % this.currentAggregations.length].bucketName);
     }
-  }
-
-  private trackSearchClick(clickSource: string, fieldQuery: FieldQuery) {
-    if (!fieldQuery) {
-      return;
-    }
-    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.SELECT_SUGGESTION, {
-      suggestion_click: clickSource,
-      suggestion_field: _.toLower(fieldQuery.field || 'ANY_FIELD'),
-      suggestion_length: (fieldQuery.query || '').length,
-    });
   }
 }
 

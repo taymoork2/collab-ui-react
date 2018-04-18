@@ -19,6 +19,7 @@ export class AddResourceSectionController implements ng.IComponentController {
   public onlineNodeList: string[] = [];
   public offlineNodeList: string[] = [];
   public enteredCluster: string = '';
+  public selectedClusterFromList: string = '';
   public hostName: string = '';
   public helpText: string;
   public validNodeCheck: boolean = true;
@@ -85,9 +86,17 @@ export class AddResourceSectionController implements ng.IComponentController {
     if (_.isFunction(this.onClusterNameUpdate)) {
       this.onClusterNameUpdate({ response: { clusterName: this.enteredCluster } });
     }
+    this.selectedClusterFromList = '';
     return this.clusterExist = (_.includes(this.clusterList, this.enteredCluster)) ? true : false;
   }
 
+  public validateClusterNameFromList () {
+    if (_.isFunction(this.onClusterNameUpdate)) {
+      this.onClusterNameUpdate({ response: { clusterName: this.selectedClusterFromList } });
+    }
+    this.enteredCluster = '';
+    this.clusterExist = false;
+  }
 }
 
 export class AddResourceSectionComponent implements ng.IComponentOptions {

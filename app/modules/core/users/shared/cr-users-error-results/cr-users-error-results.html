@@ -29,8 +29,8 @@
 
   <div class="error-table__body">
     <div class="error-table__row" ng-repeat="data in $ctrl.userErrorArray track by $index">
-      <span class="error-table__column-one">{{::data.lineNum}}</span>
-      <span class="error-table__column-two">{{::data.errorMessage}}</span>
+      <span class="error-table__column-one">{{::data.row}}</span>
+      <span class="error-table__column-two">{{::data.message}}</span>
     </div>
   </div>
 </div>

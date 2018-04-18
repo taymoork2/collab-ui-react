@@ -1,11 +1,11 @@
-<div class="no-install-files" ng-if="$ctrl.installFilesList.count === 0">
-  <h2 class="center" translate="hcs.installFiles.nofileTitle"></h2>
-  <h5 class="center" translate="hcs.installFiles.nofileDescription"></h5>
+<div class="hcs-no-data" ng-if="$ctrl.installFilesList.length === 0">
+  <h2 translate="hcs.installFiles.nofileTitle"></h2>
+  <h5 translate="hcs.installFiles.nofileDescription"></h5>
   <button class="btn btn--primary btn--large" ng-click="$ctrl.addAgentInstallFile()">
     <span translate="hcs.installFiles.addFile"></span>
   </button>
 </div>
-<div ng-if="$ctrl.installFilesList.count !== 0">
+<div ng-if="$ctrl.installFilesList.length !== 0">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter ng-model="$ctrl.placeholder.count" search-item-fn="$ctrl.filterList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
@@ -19,14 +19,14 @@
   </cs-page-sub-header>
   <div class="cs-card-container install-file-container">
     <cs-card-layout>
-      <cs-card class="cs-card--small header-background hoverable" ng-repeat="installFile in $ctrl.installFilesList">
-        <article ng-click="$ctrl.cardSelected()" hover-delay>
+      <cs-card class="cs-card--small" ng-repeat="installFile in $ctrl.installFilesList">
+        <article>
           <header>
             <div class="header-with-right-icon">
               <p class="h4 ellipsis" title="Card Name">{{installFile.name}}</p>
               <div class="right card-icon-div ">
                 <button type="button" class="close"
-                  ng-click="$ctrl.closeCard()"
+                  ng-click="$ctrl.closeCard((installFile), $event)"
                   ng-keydown=""
                   aria-label="{{::'common.delete' | translate}}"></button>
               </div>

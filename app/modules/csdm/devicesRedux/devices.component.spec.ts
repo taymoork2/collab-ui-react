@@ -41,7 +41,6 @@ describe('Controller: DevicesReduxCtrl', () => {
 
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([]));
 
-    spyOn(this.FeatureToggleService, 'csdmATAGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasDeviceExportGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'cloudberryPersonalModeGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
@@ -69,13 +68,11 @@ describe('Controller: DevicesReduxCtrl', () => {
     let adminOrgId;
     let isEntitledToHuron;
     let isEntitledToRoomSystem;
-    let showATA;
     let showPersonal;
     let csdmMultipleDevicesPerPlaceFeature;
     beforeEach(function () {
       isEntitledToHuron = true;
       isEntitledToRoomSystem = true;
-      showATA = true;
       showPersonal = true;
       csdmMultipleDevicesPerPlaceFeature = true;
       userCisUuid = 'userCisUuid';
@@ -101,7 +98,6 @@ describe('Controller: DevicesReduxCtrl', () => {
         cisUuid: adminCisUuid,
         organizationId: adminOrgId,
       };
-      controller.showATA = showATA;
       controller.showPersonal = showPersonal;
       controller.csdmMultipleDevicesPerPlaceFeature = csdmMultipleDevicesPerPlaceFeature;
       controller.startAddDeviceFlow();
@@ -113,7 +109,6 @@ describe('Controller: DevicesReduxCtrl', () => {
       const wizardState = this.$state.go.calls.mostRecent().args[1].wizard.state().data;
       expect(wizardState.title).toBe('addDeviceWizard.newDevice');
       expect(wizardState.function).toBe('addDevice');
-      expect(wizardState.showATA).toBe(showATA);
       expect(wizardState.showPersonal).toBe(showPersonal);
       expect(wizardState.multipleRoomDevices).toBe(csdmMultipleDevicesPerPlaceFeature);
       expect(wizardState.admin.firstName).toBe(adminFirstName);

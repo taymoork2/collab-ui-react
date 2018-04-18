@@ -1,4 +1,5 @@
 import { HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/shared/';
+import { IToolkitModalService } from 'modules/core/modal';
 
 interface IInstallFileObject {
   id: string;
@@ -16,10 +17,13 @@ export class InstallFilesComponent implements ng.IComponentOptions {
 
 export class InstallFilesCtrl implements ng.IComponentController {
   public installFilesList: IInstallFileObject[] = [];
+  public installFileToBeDeleted: IInstallFileObject;
 
   /* @ngInject */
   constructor(
     private HcsSetupModalService: HcsSetupModalService,
+    private $modal: IToolkitModalService,
+    private $translate: ng.translate.ITranslateService,
   ) {}
 
   public $onInit(): void {
@@ -66,9 +70,30 @@ export class InstallFilesCtrl implements ng.IComponentController {
     return input;
   }
 
-  public closeCard(): void {}
+  public closeCard(installFile: IInstallFileObject, $event: Event): void {
+    $event.preventDefault();
+    $event.stopImmediatePropagation();
+    this.installFileToBeDeleted = installFile;
+    this.$modal.open({
+      template: '<hcs-delete-modal delete-fn="$ctrl.deleteFn()" dismiss="$dismiss()" modal-title="$ctrl.title" modal-description="$ctrl.description"></hcs-delete-modal>',
+      controller: () => {
+        return {
+          deleteFn: () => this.deleteAgentInstallFile(),
+          title: this.$translate.instant('hcs.installFiles.deleteModal.title'),
+          description: this.$translate.instant('hcs.installFiles.deleteModal.description'),
+        };
+      },
+      modalClass: 'hcs-delete-modal-class',
+      controllerAs: '$ctrl',
+      type: 'dialog',
+    });
+  }
 
   public cardSelected(): void {}
+
+  public deleteAgentInstallFile(): void {
+    //delete intsall file && update install file list
+  }
 
   public addAgentInstallFile(): void {
     this.HcsSetupModalService.openSetupModal(false, HcsSetupModalSelect.AgentInstallFileSetup);

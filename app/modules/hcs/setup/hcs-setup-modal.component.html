@@ -6,9 +6,10 @@
   cancel-removed="$ctrl.cancelRemoved"
   next-disabled="$ctrl.disableNext()"
   next-removed="$ctrl.finish"
-  custom-finish="$ctrl.finishFxn()"
+  custom-finish="$ctrl.finishModal()"
   custom-finish-removed="!$ctrl.finish"
-  custom-finish-l10n-label="common.finish"
+  custom-finish-l10n-label="{{:: $ctrl.isFirstTimeSetup ? 'common.finish' : 'common.save' }}"
+  custom-finish-loading="$ctrl.loading"
   custom-finish-disabled="$ctrl.finishDisable">
   <div ng-form="$ctrl.hcsSetupModalForm">
     <setup-service-selection ng-if="$ctrl.currentStepIndex === 1"
@@ -17,13 +18,14 @@
     <setup-agent-install-file ng-if="$ctrl.currentStepIndex === 2"
       on-change-fn="$ctrl.setAgentInstallFile(fileName, httpProxyList)">
     </setup-agent-install-file >
-    <hcs-setup-sftp ng-if="$ctrl.currentStepIndex === 3 && $ctrl.hcsServices.upgrade"
+    <hcs-setup-sftp ng-if="$ctrl.currentStepIndex === 3 && $ctrl.hcsServices.upgrade || $ctrl.isSftp"
+      sftp-server="$ctrl.sftpServer"
       on-change-fn="$ctrl.setSftpServer(sftpServer)">
     </hcs-setup-sftp>
     <hcs-setup-software-profile ng-if="$ctrl.currentStepIndex === 4"
       on-change-fn="$ctrl.setSoftwareProfile(profile)">
     </hcs-setup-software-profile>
-    <hcs-setup-finish ng-if="$ctrl.currentStepIndex === 3 && !$ctrl.hcsServices.upgrade || $ctrl.currentStepIndex === 5">
+    <hcs-setup-finish ng-if="$ctrl.currentStepIndex === 3 && !$ctrl.isSftp && !$ctrl.hcsServices.upgrade || $ctrl.currentStepIndex === 5">
     </hcs-setup-finish>
   </div>
 </multi-step-modal>

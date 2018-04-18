@@ -10,9 +10,12 @@ export class HcsSetupSftpController implements ng.IComponentController {
   public validators: Object;
   public errors: Object;
   public hcsSftpForm: ng.IFormController;
+  public editSftp: boolean = false;
+
   /* @ngInject */
   constructor(
-    public $translate: ng.translate.ITranslateService,
+    private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
   ) {
   }
   public $onInit() {
@@ -32,8 +35,9 @@ export class HcsSetupSftpController implements ng.IComponentController {
         max: this.MAX_LENGTH_NAME,
       }),
     };
-    if (this.hcsSftpForm) {
-      this.hcsSftpForm.$setPristine();
+
+    if (!_.isUndefined(this.sftpServer) && this.sftpServer) {
+      this.editSftp = this.$state.current.name === 'hcs.sftpserver-edit' || !_.isEmpty(this.sftpServer.uuid);
     }
   }
 
@@ -41,10 +45,13 @@ export class HcsSetupSftpController implements ng.IComponentController {
     if (this.confirmPasswd) {
       this.confirmPasswd = '';
     }
+    if (this.editSftp) {
+      this.confirmPasswd = '';
+    }
   }
 
   public confirmPassword(passwd): boolean {
-    return (passwd && passwd === this.sftpServer.password);
+    return (this.sftpServer && _.isEmpty(this.sftpServer.password) || passwd && passwd === this.sftpServer.password);
   }
 
   public processChange() {
@@ -59,6 +66,7 @@ export class HcsSetupSftpComponent implements ng.IComponentOptions {
   public controller = HcsSetupSftpController;
   public template = require('modules/hcs/setup/hcs-setup-sftp/hcs-setup-sftp.component.html');
   public bindings = {
+    sftpServer: '<',
     onChangeFn: '&',
   };
 }

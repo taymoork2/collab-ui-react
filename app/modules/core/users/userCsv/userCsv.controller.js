@@ -116,7 +116,9 @@ require('./_user-csv.scss');
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      Notification.error('firstTimeWizard.csvMaxSizeError');
+      if (!isAtlasCsvImportTaskManagerToggled) {
+        Notification.error('firstTimeWizard.csvMaxSizeError');
+      }
     };
 
     vm.onFileTypeError = function () {
@@ -136,26 +138,41 @@ require('./_user-csv.scss');
           return;
         }
 
+        // TO-DO $.csv.toArrays() should not be needed after all checks
+        // been moved to the server side
         csvUsersArray = $.csv.toArrays(vm.model.file);
-        if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
-          Notification.error('firstTimeWizard.uploadCsvBadFormat');
-          vm.resetFile();
-          return;
-        }
+        if (!isAtlasCsvImportTaskManagerToggled) {
+          // Check if the file is empty, or if the header is valid
+          // TO-DO This check should be moved to the server side.
+          if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
+            Notification.error('firstTimeWizard.uploadCsvBadFormat');
+            vm.resetFile();
+            return;
+          }
 
-        if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
-          Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-          vm.resetFile();
-          return;
+          // Check required email column
+          // TO-DO This check should be moved to the server side.
+          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+            Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+            vm.resetFile();
+            return;
+          }
         }
 
         csvHeaders = csvUsersArray.shift();
-        if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
-          warnCsvUserCount();
-          vm.resetFile();
-          return;
+
+        // Check if exceeds the max user size
+        // TO-DO This check should be moved to the server side.
+        if (!isAtlasCsvImportTaskManagerToggled) {
+          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+            warnCsvUserCount();
+            vm.resetFile();
+            return;
+          }
         }
 
+        // Check column name mis-match
+        // TO-DO This check should be moved to the server side.
         var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
         if (mismatchHeaderName) {
           Notification.error('firstTimeWizard.csvHeaderNameMismatch', {

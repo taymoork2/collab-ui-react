@@ -1,4 +1,4 @@
-import { ISoftwareProfile } from 'modules/hcs/setup/hcs-setup';
+import { ISoftwareProfile } from 'modules/hcs/shared/hcs-swprofile';
 
 export class HcsSetupSoftwareProfileController implements ng.IComponentController {
   public readonly MAX_LENGTH: number = 50;

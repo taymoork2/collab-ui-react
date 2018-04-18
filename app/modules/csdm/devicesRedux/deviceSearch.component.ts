@@ -9,6 +9,7 @@ import { ISuggestion } from '../services/search/suggestion';
 import { IBulletContainer } from './deviceSearchBullet.component';
 import { KeyCodes } from '../../core/accessibility';
 import { ISuggestionDropdown, SuggestionDropdown } from '../services/search/suggestionDropdown';
+import { CsdmAnalyticsValues, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 export class DeviceSearch implements ng.IComponentController, ISearchHandler, IBulletContainer {
 
@@ -47,7 +48,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
               private Notification,
               private $timeout: ng.ITimeoutService,
               private DeviceSearchTranslator: SearchTranslator,
-              private Analytics,
+              private CsdmAnalyticsHelper: ICsdmAnalyticHelper,
               private $state,
               private CsdmUpgradeChannelService) {
     const upgradeChannelsAvailable = this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
@@ -116,7 +117,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     }
     const rootPill = bullet.getRootPill();
     this.searchObject.hasError = false;
-    this.searchObject.setWorkingElementText(rootPill.toQuery());
+    this.searchObject.setWorkingElementText(rootPill.toQuery(this.DeviceSearchTranslator));
     this.setFocusToInputField();
     rootPill.setBeingEdited(true);
     this.suggestions.updateBasedOnInput(this.searchObject);
@@ -177,9 +178,9 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
   }
 
   public selectSuggestion(suggestion: ISuggestion | null, byMouse: boolean) {
-    this.trackSuggestionAction(byMouse
-      ? 'MOUSE'
-      : 'KEYBOARD',
+    this.CsdmAnalyticsHelper.trackSuggestionAction(byMouse
+      ? CsdmAnalyticsValues.MOUSE
+      : CsdmAnalyticsValues.KEY,
       suggestion);
     if (suggestion) {
       this.searchObject.setWorkingElementText(suggestion.searchString);
@@ -288,42 +289,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
         this.updateSearchResult();
       }
       this.isSearching = false;
+      this.CsdmAnalyticsHelper.trackSearchAction(caller === Caller.aggregator
+        ? CsdmAnalyticsValues.INITIAL_SEARCH
+        : CsdmAnalyticsValues.SEARCH, search, response && response.data && response.data.hits.total || 0, this.queryCounter++);
     }).catch(e => {
       if (e.xhrStatus !== 'abort') {
         this.isSearching = false;
         DeviceSearch.ShowSearchError(this.Notification, e.data && e.data.trackingId);
       }
-    });
-    this.trackSearchAction(caller === Caller.aggregator
-      ? 'INITIAL_SEARCH'
-      : 'SEARCH',
-      search);
-  }
-
-  private trackSuggestionAction(clickSource: string, suggestion: ISuggestion | null) {
-    if (!suggestion) {
-      return;
-    }
-    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.SELECT_SUGGESTION, {
-      suggestion_click: clickSource,
-      suggestion_field: _.toLower(suggestion.field || 'ANY_FIELD'),
-      suggestion_length: (suggestion.searchString || '').length,
-      suggestion_rank: suggestion.rank,
-      suggestion_count: suggestion.count,
-      suggestion_field_only: suggestion.isFieldSuggestion,
-    });
-  }
-
-  private trackSearchAction(querySource: string, search: SearchObject) {
-    if (!search) {
-      return;
-    }
-    const query = search.getTranslatedQueryString(null) || '';
-    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.PERFORM_SEARCH, {
-      query_length: query.length,
-      query_error: search.hasError,
-      query_source: querySource,
-      query_count: this.queryCounter++,
     });
   }
 

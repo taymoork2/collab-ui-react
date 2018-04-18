@@ -5,7 +5,7 @@ import setupAgentInstallFilesModule from 'modules/hcs/setup/agent-install-file';
 import setupSftpServerModule from 'modules/hcs/setup/hcs-setup-sftp';
 import setupSoftwareProfileModule from 'modules/hcs/setup/hcs-setup-software-profile';
 import { HcsSetupFinishDirectiveFactory } from './hcs-setup-finish.directive';
-import './_hcs-setup.scss';
+import './hcs-setup.scss';
 
 export * from './hcs-setup';
 

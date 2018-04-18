@@ -409,7 +409,8 @@
       "stopped": "Stopped",
       "unknown": "Status Unknown",
       "processing": "Processing..."
-    }
+    },
+    "anotherJobIsRunning": "Import users failed because there is a job already running."
   },
   "ssoCertificateModal": {
     "certificateExpirationWarning": "SSO certificate may expire in {{days}} days. Check below for next steps.",
@@ -2381,8 +2382,8 @@
       "filterLabel": "Filter to view resource groups & capacity",
       "label": "Capacity: {{capacity}}%",
       "labelNA": "Capacity: N/A",
-      "tooltip": "Capacity: {{capacity}}%<br>Users enabled: {{total}} of {{max}}",
-      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}} of {{max}}",
+      "tooltip": "Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
+      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
       "tooltipNA": "Choose a filter on the left to view capacity for clusters that don't belong to a resource group or clusters in specific resources groups",
       "tooltipNoConnectors": "No connectors can host users",
       "allClusters": "All clusters",
@@ -3582,22 +3583,33 @@
       "errorCode": "Error Code: {{code}}."
     },
     "eventHistory": {
-      "pageTitle": "Alarm, Status, and Upgrade History",
+      "pageTitle": "Hybrid Services Events History",
       "featureDescription": "View all raised and resolved alarms, connector status changes, and cluster configuration changes over the last 7 days.",
       "viewHistory": "View History",
-      "noEventsFound": "No Events Found",
+      "noEventsFoundLastDay": "No events found for these filters in the last day.",
+      "noEventsFoundLastTwoDays": "No events found for these filters in the last two days.",
+      "noEventsFoundLastWeek": "No events found for these filters in the last week.",
       "cannotReadEventData": "Could not read event history data",
       "cannotReadResourceNames": "Could not read resource names. Defaulting to not filtering on any specific resource.",
       "scheduledTask": "Scheduled Task",
       "automatic": "Automatic",
-      "allServices": "All Services",
       "allResources": "All Resources",
-      "serviceFilter": "Service Filter:",
-      "resourceFilter": "Resource Filter:",
-      "dataSince": "Events since:",
-      "lastDay": "Last 24 hours",
-      "last2Days": "Last 48 hours",
-      "lastWeek": "Last 7 days",
+      "filters": {
+        "allClusters": "All Clusters",
+        "allNodes": "All Nodes",
+        "allServices": "All Services",
+        "expressway": "Expressway",
+        "media": "Media",
+        "dataSecurity": "Data Security",
+        "context": "Context",
+        "lastDay": "Last 24 hours",
+        "last2Days": "Last 48 hours",
+        "lastWeek": "Last 7 days",
+        "clusterFilter": "Cluster",
+        "nodeFilter": "Node",
+        "serviceFilter": "Service (on selected resource)",
+        "dateSince": "Since"
+      },
       "connectorProvisioned": "Cluster has been provisioned with {{connectorName}} version {{newVersion}}",
       "connectorDeprovisioned": "{{connectorName}} has been removed from cluster",
       "connectorProvisioningChanged": "{{connectorName}} upgrade to {{newVersion}} initiated",
@@ -3647,7 +3659,7 @@
           "not_installed": "The Expressway reports that {{localizedConnectorName}} is not installed. This state is expected for a short while for new deployments, and it could also happen during upgrades.",
           "not_installed-help": "Something is likely to be misconfigured if this state lasts for more than a couple of minutes, and admin action is required to fix it. The Expressway's Management Connector might have raised an alarm that could assist you with troubleshooting.",
           "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Spark Control Hub.",
-          "downloading": "Version {{softwareVersion}} of  {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
+          "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
           "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Collaboration Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
@@ -6193,11 +6205,9 @@
     "analog": "Analog Telephone",
     "manage": "Manage Device Settings",
     "title": "Device Settings",
-    "description": "Updating settings will affect the entire analog telephone adapter. You may need to perform testing on the connected analog device after saving your settings.",
     "rebootDescription": "Updating settings will affect the entire analog telephone adapter and cause the device to reboot after saving. You may need to perform testing on the connected analog device after saving your settings.",
     "input": "Input Audio Level",
     "output": "Output Audio Level",
-    "saved": "The settings are saved. You will have to reboot the device for the changes to take effect.",
     "savedReboot": "The settings are saved. Your device will now reboot.",
     "t38Warning": "Warning: T.38 faxes will not be encrypted",
     "t38Label": "T.38 Fax Protocol",
@@ -6223,7 +6233,6 @@
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
       "ciscoPhone": "Cisco Phone",
       "deskPhone": "Desk Phone",
-      "deskPhoneExamples": "e.g. Cisco 8845, 8865 and 8800",
       "deskPhoneExamplesExtra": "e.g. Cisco 8845, 8865, 8800 and Analog Telephone Adapter ports",
       "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
       "otherCiscoDevice": "Other Cisco device",
@@ -6561,7 +6570,7 @@
       "title": "Maximum cluster cascade bandwidth",
       "description": "Enter the maximum bandwidth (in megabits per second) that Hybrid Media Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
       "range": "Enter a value between 5 to 50",
-      "mbps": "Mbps"
+      "megabytes": "Megabytes"
     },
     "metrics": {
       "today": "Last 24 Hours",
@@ -11015,13 +11024,27 @@
     },
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "inventory": {
-      "title": "Inventory"
+      "title": "Inventory",
+      "noInventoryTitle": "No Inventory yet",
+      "noInventoryDescription": "Get started by downloading an Agent Install File and installing it on a node.",
+      "status": {
+        "agentoffline": "Agent Offline",
+        "failedUpgrade":"Failed Upgrade",
+        "needsAssigned": "Needs Assigned",
+        "nodesNeedAccepted": "Nodes need Accepted",
+        "operational": "Operational",
+        "softwareUpdateNeeded": "Software update needed"
+      }
     },
     "installFiles": {
       "addFile": "Add File",
       "clusterCount": "Number of Clusters",
       "copFile": "COP file",
       "customerName": "Customer/ Group Name",
+      "deleteModal": {
+        "title": "Are you sure?",
+        "description": "You are about to delete an Agent Install File. You can not undo this action."
+      },
       "description": "Create an Agent Install File (.cop file). This file need to be installed on each Unified Communications instance, that would be managed by the Service. This process may take some time. Once completed, it would be available on the Agent Install File Page for download and installation.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file name",
@@ -11077,13 +11100,18 @@
       "next4": "Once the nodes appear in the list, you can accept them and assign them to a customer or a group."
     },
     "sftp":  {
+      "add": "Add SFTP Server",
       "confirmPassword": "Confirm Password",
+      "deleteModalDesc": "Any node using this server will need updated with a new sftp server.",
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
       "error": "SFTP Server creation failed",
+      "loginCred": "Login Credentials",
       "name": "SFTP Server Name",
       "namePlace": "Enter SFTP Server Name",
+      "noneSftp": "No SFTP Servers",
+      "noneSftpDesc": "After you configure an SFTP server you will see it here.",
       "server": "IP Address/Hostname",
       "serverPlace": "Enter IP Address or Hostname",
       "password": "Password",
@@ -11092,11 +11120,13 @@
       "passwordMismatch": "The password entered does not match",
       "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
+      "successupdate": "SFTP server has been successfully updated",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"
     },
     "softwareProfiles": {
+      "add": "Add Profile",
       "cer": "Cisco Emergency Responder Version",
       "cerPlace": "Choose CER Version",
       "cucm": "Cisco Unified Communication Manager Version",
@@ -11106,8 +11136,11 @@
       "expwayPlace": "Choose Expressway Version",
       "name": "Software Profile Name",
       "namePlace": "Enter Profile Name",
+      "noneProfile": "No Software profile",
+      "noneProfileDesc": "Get started by creating a software profile.",
       "plm": "Cisco Prime License Manager Version",
       "plmPlace": "Choose PLM Version",
+      "tabTitle": "Software Profiles",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "Choose UCXN Version"

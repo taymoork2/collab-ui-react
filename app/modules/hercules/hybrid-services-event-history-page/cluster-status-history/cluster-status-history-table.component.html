@@ -3,10 +3,12 @@
     <i class="icon icon-spinner"></i>
   </span>
 </div>
-<div ng-if="$ctrl.getEventsToDisplay().length === 0 && !$ctrl.loadingPage" class="no-events-found-container">
-  <p class="no-events-found" translate="hercules.eventHistory.noEventsFound"></p>
+<div ng-if="$ctrl.allEvents.length === 0 && !$ctrl.loadingPage" class="no-events-found-container">
+  <p ng-if="$ctrl.timeFilter === 'last_day'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastDay"></p>
+  <p ng-if="$ctrl.timeFilter === 'last_2_days'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastTwoDays"></p>
+  <p ng-if="$ctrl.timeFilter === 'last_week'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastWeek"></p>
 </div>
-<table ng-if="$ctrl.getEventsToDisplay().length > 1 && !$ctrl.loadingPage">
+<table ng-if="$ctrl.allEvents.length > 1 && !$ctrl.loadingPage">
   <thead>
     <tr>
       <th translate="hercules.eventHistory.table.event"></th>
@@ -19,7 +21,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="event in $ctrl.getEventsToDisplay() | orderBy:'timeStamp' track by $index" ng-click="$ctrl.openSidepanel(event)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
+    <tr ng-repeat="event in $ctrl.allEvents | orderBy:'timeStamp' track by $index" ng-click="$ctrl.openSidepanel(event)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
       <td>{{::event.title}}</td>
       <td ng-if="event.severity === 'critical'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.critical"></span></td>
       <td ng-if="event.severity === 'error'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.error"></span></td>

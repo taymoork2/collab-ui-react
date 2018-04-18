@@ -16,7 +16,7 @@
 
     vm.timeStamp = $translate.instant('mediaFusion.metrics.timeStamp');
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
-    vm.mbps = $translate.instant('mediaFusion.clusterBandwidth.mbps');
+    vm.megabytes = $translate.instant('mediaFusion.clusterBandwidth.megabytes');
     vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
     vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
     vm.cascadeTypeMap = {
@@ -83,7 +83,7 @@
       valueAxes[0].minimum = 0;
       valueAxes[0].autoGridCount = true;
       valueAxes[0].position = 'left';
-      valueAxes[0].title = vm.mbps;
+      valueAxes[0].title = vm.megabytes;
       valueAxes[0].labelOffset = 28;
 
       var catAxis = CommonReportsGraphService.getBaseVariable(vm.AXIS);
