@@ -1,7 +1,11 @@
 @import './legal-hold-matter-new';
 @import './legal-hold-custodian-import';
-
 // algendel TODO: z-index should be addressed in toolkit. Revisit ASAP
-.legalhold-detail-state .side-panel-full-height {
-  z-index: 1100;
+//the way I understand that the z-index in the toolkit is left over from the old implementation
+//if it can be removed this will not be needed.
+//currently this is needed to keep the RHS from being under the top toolbar which has z-index set in toolkit
+.legalhold-detail-state {
+  .side-panel-full-height {
+    z-index: 1051;
+  }
 }

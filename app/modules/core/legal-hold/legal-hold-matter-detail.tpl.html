@@ -1,0 +1,151 @@
+<div class="legalhold-side-panel">
+  <cs-sp-header>
+    <div class="header-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <span title="{{$ctrl.matter.name}}">{{$ctrl.name}}</span>
+          <a class="edit-td-name"
+            href
+            ng-click="$ctrl.isEdit=true"
+            aria-label="{{::'common.edit' | translate}}">
+            <i class="edit-button icon icon-edit"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+  <div class="side-panel-container-view"
+    ui-view="side-panel-container">
+    <form novalidate
+      name="$ctrl.form"
+      class="cs-form">
+      <cs-sp-buttons ng-show="$ctrl.isEdit"
+        title="{{::'common.edit' | translate}}">
+        <button cs-btn
+          ng-click="$ctrl.cancelEdit()">
+          <span translate="common.cancel"></span>
+        </button>
+        <button cs-btn
+          class="btn btn--primary"
+          loading="$ctrl.saveInProcess"
+          ng-click="$ctrl.saveEdit()"
+          ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+          <span translate="common.save"></span>
+        </button>
+      </cs-sp-buttons>
+      <cs-sp-container>
+        <cs-sp-section>
+          <section-title title-key="common.details"></section-title>
+          <div class="cs-input-group">
+            <label class="cs-input__label"
+              translate="common.status"></label>
+            <cs-statusindicator ng-model="$ctrl.status"></cs-statusindicator>
+            <span translate="{{$ctrl.l10nStatus}}"></span>
+          </div>
+          <div class="row">
+            <div class="cs-input-group medium-12 columns"
+              ng-class="{'error': $ctrl.form.$invalid}">
+              <label class="cs-input__label"
+                for="matterName"
+                translate="common.name"></label>
+              <span ng-if="!$ctrl.isEdit">{{$ctrl.name}}</span>
+              <input ng-if="$ctrl.isEdit"
+                name="matterName"
+                class="cs-input"
+                type="text"
+                ng-model="$ctrl.matterEdit.matterName"
+                placeholder="{{::'common.name' | translate}}"
+                ng-required="true" />
+              <div class="cs-input__messages"
+                ng-messages="error"
+                role="alert"
+                aria-live="assertive">
+                <div class="message"
+                  translate="common.required">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cs-input-group">
+            <label class="cs-input__label"
+              translate="legalHold.matterList.dateCreated"></label>
+            <span>{{::$ctrl.creationDate}}</span>
+          </div>
+          <div class="cs-input-group">
+            <label class="cs-input__label"
+              translate="legalHold.matterList.createdBy"></label>
+            <span>{{::$ctrl.createdByName}}</span>
+          </div>
+          <div class="row">
+            <div class="cs-input-group medium-12 columns">
+              <label class="cs-input__label"
+                translate="common.description"></label>
+              <span ng-if="!$ctrl.isEdit">{{$ctrl.description}}</span>
+              <textarea type="text"
+                ng-if="$ctrl.isEdit"
+                class="cs-input"
+                name="matterDescription"
+                placeholder="{{::'common.description' | translate}}"
+                ng-model="$ctrl.matterEdit.matterDescription" />
+            </div>
+          </div>
+        </cs-sp-section>
+        <cs-sp-section>
+          <section-title title-key="common.actions"></section-title>
+          <div class="row">
+            <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
+              <div ng-if="$ctrl.isActive()"
+                class="matter-detail__action__release">
+                <i class="icon icon-circle-data icon-4x"
+                  aria-label="{{::'legalHold.detail.release' | translate}}"
+                  ng-click="$ctrl.releaseMatter()"></i>
+                <label class="body-small"
+                  translate="legalHold.detail.release"></label>
+              </div>
+              <div class="matter-detail__action__delete">
+                <i class="icon icon-circle-data icon-4x"
+                  aria-label="{{::'common.delete' | translate}}"
+                  ng-click="$ctrl.deleteMatter()"></i>
+                <label class="body-small"
+                  translate="common.delete"></label>
+              </div>
+            </div>
+          </div>
+          <div class="cs-input-group">
+            <label>
+              <span translate="legalHold.matterList.custodians"></span>
+              <span class="badge info">{{$ctrl.numberOfCustodians}}</span>
+            </label>
+          </div>
+          <div class="row">
+            <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
+              <div>
+                <i class="icon icon-circle-data icon-4x"
+                  aria-label="{{::'common.export' | translate}}"
+                  ng-click="$ctrl.exportCustodians()"></i>
+                <label class="body-small"
+                  translate="common.export"></label>
+              </div>
+              <div ng-if="$ctrl.isActive()"
+                class="matter-detail__action__add">
+                <i class="icon icon-circle-data icon-4x"
+                  aria-label="{{::'common.add' | translate}}"
+                  ng-click="$ctrl.addCustodians()"></i>
+                <label class="body-small"
+                  translate="common.add"></label>
+              </div>
+              <div ng-if="$ctrl.isActive()"
+                class="matter-detail__action__remove">
+                <i class="icon icon-circle-data icon-4x"
+                  aria-label="{{::'common.common.remove' | translate}}"
+                  ng-click="$ctrl.removeCustodians()"></i>
+                <label class="body-small"
+                  translate="common.remove"></label>
+              </div>
+            </div>
+          </div>
+        </cs-sp-section>
+      </cs-sp-container>
+    </form>
+  </div>
+</div>

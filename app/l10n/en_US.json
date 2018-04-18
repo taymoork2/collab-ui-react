@@ -1652,6 +1652,7 @@
     "enabled": "Enabled",
     "error": "Error",
     "errors": "Errors",
+    "export": "Export",
     "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
@@ -4154,10 +4155,12 @@
   },
   "legalHold": {
     "title": "Legal Matters",
+    "matterName": "Matter Name",
+    "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
+    "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
+    "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
     "matterList": {
       "title": "Matters",
-      "name": "Matter Name",
-      "description": "Description",
       "dateReleased": "Date Released",
       "dateCreated": "Date Created",
       "createdBy": "Created By",
@@ -4172,10 +4175,12 @@
       },
       "new": "Create Matter"
     },
+    "detail": {
+      "release": "Release",
+      "releaseMatter": "Release Matter"
+    },
     "matterNew": {
       "title": "Create Matter",
-      "name": "Matter Name",
-      "description": "Description",
       "optional": "(optional)",
       "addCustodians": "Add Custodians"
     },
@@ -4207,7 +4212,6 @@
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
         "resultCanceled": "User import has been canceled",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
-
       },
       "new": {
         "title": "Add Custodians",
@@ -4227,8 +4231,12 @@
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
         "resultCanceled": "User import has been canceled",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
-
       }
+    },
+    "notifications": {
+      "releaseSuccess": "Matter has been released",
+      "deleteSuccess": "Matter has been deleted",
+      "saveSuccess": "Your matter has been saved"
     }
   },
   "firstTimeWizard": {
