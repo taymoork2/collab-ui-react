@@ -131,12 +131,8 @@ export class FieldQuery extends SearchElement {
     return this.field || '';
   }
 
-  public getQueryWithoutField() {
-    let innerQuery = this.query;
-    if (this.query.search(/\s|\(/) > 0) {
-      innerQuery = '"' + innerQuery + '"';
-    }
-    return innerQuery;
+  public getQueryWithoutField(): string {
+    return FieldQuery.addQuotesIfNeeded(this.query);
   }
 
   public getCommonMatchOperator(): string {
@@ -201,7 +197,7 @@ export class FieldQuery extends SearchElement {
     if (translator && this.field && this.type === FieldQuery.QueryTypeExact) {
       return {
         prefix: this.getQueryPrefix(translator),
-        query: translator.lookupTranslatedQueryValueDisplayName(this.query, this.field),
+        query: FieldQuery.addQuotesIfNeeded(translator.lookupTranslatedQueryValueDisplayName(this.query, this.field)),
       };
     }
     return { prefix: this.getQueryPrefix(translator), query: this.getQueryWithoutField() };
@@ -213,6 +209,13 @@ export class FieldQuery extends SearchElement {
       field: this.field,
       type: this.type,
     };
+  }
+
+  private static addQuotesIfNeeded(query: string): string {
+    if (query.search(/\s|\(/) > 0) {
+      return '"' + query + '"';
+    }
+    return query;
   }
 }
 

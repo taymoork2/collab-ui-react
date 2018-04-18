@@ -15,9 +15,9 @@ export class SearchTranslator {
     'CsdmStatus.connectionStatus.': QueryParser.Field_ConnectionStatus,
   };
 
-  private fieldNameTranslationTable: { [fieldKey: string]: string };
-  private fieldNameDisplayNameTranslationTable: { [fieldKey: string]: string };
-  private csdmPartOfTranslationTable: any[];
+  private fieldNameTranslationTable: { [fieldKey: string]: string } = {};
+  private fieldNameDisplayNameTranslationTable: { [fieldKey: string]: string } = {};
+  private csdmPartOfTranslationTable: any[] = [];
   private currentLanguage: string;
 
   private updateLanguageIfNeeded() {
