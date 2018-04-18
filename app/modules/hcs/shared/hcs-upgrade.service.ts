@@ -42,6 +42,12 @@ export class HcsUpgradeService {
         Authorization: BASIC_AUTH_VAL,
       },
     };
+    const getAction: ng.resource.IActionDescriptor = {
+      method: 'GET',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
     const deleteAction: ng.resource.IActionDescriptor = {
       method: 'DELETE',
       headers: {
@@ -67,7 +73,7 @@ export class HcsUpgradeService {
       {
         update: updateAction,
         save: saveAction,
-        get: queryAction,
+        get: getAction,
       });
   }
 
