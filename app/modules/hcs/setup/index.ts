@@ -3,7 +3,7 @@ import sharedModule from 'modules/hcs/shared';
 import setupServiceSelectionModule from 'modules/hcs/setup/selection';
 import setupAgentInstallFilesModule from 'modules/hcs/setup/agent-install-file';
 import setupSftpServerModule from 'modules/hcs/setup/hcs-setup-sftp';
-import setupSoftwareProfileModule from 'modules/hcs/setup/hcs-setup-software-profile';
+import setupSwprofileModule from 'modules/hcs/setup/hcs-setup-swprofile';
 import { HcsSetupFinishDirectiveFactory } from './hcs-setup-finish.directive';
 import './hcs-setup.scss';
 
@@ -17,7 +17,7 @@ export default angular
     setupServiceSelectionModule,
     setupAgentInstallFilesModule,
     setupSftpServerModule,
-    setupSoftwareProfileModule,
+    setupSwprofileModule,
   ])
   .component('hcsSetupModal', new HcsSetupModalComponent())
   .directive('hcsSetupFinish', HcsSetupFinishDirectiveFactory)
