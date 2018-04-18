@@ -23,6 +23,11 @@ class PartnerReportsTabs implements ng.IComponentController {
           state: `partnerreports.tab.spark`,
           title: this.$translate.instant(`reportsPage.sparkReports`),
         });
+      } else {
+        this.tabs.unshift({
+          state: `partnerreports.tab.base`,
+          title: this.$translate.instant(`reportsPage.sparkReports`),
+        });
       }
     });
 
