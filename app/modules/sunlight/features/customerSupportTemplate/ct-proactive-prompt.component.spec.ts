@@ -35,10 +35,9 @@ describe('Test', () => {
     );
     getLogoDeferred = this.$q.defer();
     getLogoUrlDeferred = this.$q.defer();
-    spyOn(this.CTService, 'getPromptTime').and.returnValue(defaultPromptTime);
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
-    spyOn(this.$translate, 'instant').and.returnValue('careChatTpl.defaultPromptMessage');
+    spyOn(this.$translate, 'instant').and.returnValue('careChatTpl.promptTimeOption1');
     getLogoDeferred.resolve(getDummyLogo('abcd'));
     getLogoUrlDeferred.resolve(dummyLogoUrl);
   });
@@ -48,7 +47,7 @@ describe('Test', () => {
       return  <ProactivePrompt>(_.merge(sampleProactivePrompt, overrideProperties));
     };
     const setPromptTime = (time) => {
-      expect(controller.promptTime).toEqual(defaultPromptTime);
+      expect(controller.promptTimeObj).toEqual(defaultPromptTime);
       controller.template.configuration.proactivePrompt.fields.promptTime = time.value;
     };
     const orgName = 'Test Org';
@@ -66,12 +65,12 @@ describe('Test', () => {
       controller = undefined;
     });
     it('should set default promptTime, promptTitle and promptMessage', function () {
-      expect(controller.promptTime.label).toBe('careChatTpl.promptTimeOption1');
-      expect(controller.promptTime.value).toBe(30);
+      expect(controller.promptTimeObj.label).toBe('careChatTpl.promptTimeOption1');
+      expect(controller.promptTimeObj.value).toBe(30);
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
         .toBe(orgName);
       expect(controller.template.configuration.proactivePrompt.fields.promptMessage.message)
-        .toBe('careChatTpl.defaultPromptMessage');
+        .toBe('careChatTpl.promptTimeOption1');
     });
     it('should disable the next button if promptTitle is more than 25 characters', function () {
       controller.template.configuration.proactivePrompt.fields.promptTitle.displayText = getStringOfLength(26);
@@ -136,15 +135,15 @@ describe('Test', () => {
       controller.isProactivePromptPageValid();
       expect(controller.template.configuration.proactivePrompt).toEqual(expectedJSON(updatedProperties));
     });
-    it('should update the existing template with the default proactive prompt data', function () {
-      this.TemplateWizardService.template.configuration.proactivePrompt = undefined;
-      const existingProperties = {
-        fields: {
-          promptTime: 30,
-        },
+
+    it('on change should update the existing template with updated prompt time', function () {
+      const promptTime = {
+        label: '5 minutes',
+        value: 300,
       };
-      controller.$onInit();
-      expect(controller.template.configuration.proactivePrompt).toEqual(expectedJSON(existingProperties));
+      controller.promptTimeObj = promptTime;
+      controller.onPromptTimeChange();
+      expect(controller.template.configuration.proactivePrompt.fields.promptTime).toBe(promptTime.value);
     });
   });
 

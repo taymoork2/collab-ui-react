@@ -7,6 +7,7 @@ import { IdNameConfig, MediaTypes } from './factory/ctCustomerSupportClasses';
 class CtChatEscalationBehaviorController extends CtBaseController {
   public evaLearnMoreLink: string = 'https://www.cisco.com/go/create-template';
   public evaDataModel: any;
+  private cardMode;
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
@@ -17,6 +18,7 @@ class CtChatEscalationBehaviorController extends CtBaseController {
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
     this.evaDataModel = this.getEVADataModel();
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -127,6 +129,9 @@ class CtChatEscalationBehaviorController extends CtBaseController {
 export class CtChatEscalationBehaviorComponent implements ng.IComponentOptions {
   public controller = CtChatEscalationBehaviorController;
   public template = require('./wizardPagesComponent/ct-chat-escalation-behavior.tpl.html');
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

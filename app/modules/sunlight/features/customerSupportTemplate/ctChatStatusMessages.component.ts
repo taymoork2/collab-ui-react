@@ -10,8 +10,10 @@ class CtChatStatusMessagesController extends CtBaseController {
     public TemplateWizardService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
+  private cardMode: string;
   public isCareAssistantEnabled;
 
   public $onInit(): void {
@@ -70,7 +72,9 @@ class CtChatStatusMessagesController extends CtBaseController {
 export class CtChatStatusMessagesComponent implements ng.IComponentOptions {
   public controller = CtChatStatusMessagesController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctChatStatusMessages.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

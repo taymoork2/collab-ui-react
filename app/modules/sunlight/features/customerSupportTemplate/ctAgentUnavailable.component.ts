@@ -1,6 +1,7 @@
 import { CtBaseController } from './ctBase.controller';
 class CtAgentUnavailableController extends CtBaseController {
 
+  private cardMode;
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
@@ -10,6 +11,7 @@ class CtAgentUnavailableController extends CtBaseController {
   ) {
 
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -27,7 +29,9 @@ class CtAgentUnavailableController extends CtBaseController {
 export class CtAgentUnavailableComponent implements ng.IComponentOptions {
   public controller = CtAgentUnavailableController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctAgentUnavailable.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular
