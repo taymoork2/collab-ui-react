@@ -3,6 +3,8 @@ import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.com
 class DeviceList implements ng.IComponentController {
   private static CISCO_SPARK_VOICE = 'Cisco Spark Voice';
   private static CISCO_SPARK_SHARE = 'Cisco Spark Share';
+  private static CISCO_WEBEX_VOICE = 'Cisco Webex Voice';
+  private static CISCO_WEBEX_SHARE = 'Cisco Webex Share';
 
   public ownerType: string;
   public deviceList: any;
@@ -66,7 +68,16 @@ class DeviceList implements ng.IComponentController {
       && _
         .chain(deviceList)
         .map('product')
-        .intersection([DeviceList.CISCO_SPARK_VOICE, DeviceList.CISCO_SPARK_SHARE])
+        .map(product => {
+          if (product === DeviceList.CISCO_SPARK_VOICE) {
+            return DeviceList.CISCO_WEBEX_VOICE;
+          }
+          if (product === DeviceList.CISCO_SPARK_SHARE) {
+            return DeviceList.CISCO_WEBEX_SHARE;
+          }
+          return product;
+        })
+        .intersection([DeviceList.CISCO_WEBEX_VOICE, DeviceList.CISCO_WEBEX_SHARE])
         .size()
         .value() === 2;
   }
