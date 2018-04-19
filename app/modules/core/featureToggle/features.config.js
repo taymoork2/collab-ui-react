@@ -52,6 +52,7 @@ module.exports = {
   atlasHybridEnable: 'huron-i387-enterprise-private-trunking',
   atlasHybridGlobalCallServiceConnect: 'atlas-hybrid-global-call-service-connect',
   atlasHybridImp: 'atlas-hybrid-imp',
+  atlasHybridMediaServiceQlikReports: 'atlas-hybrid-media-service-qlik-reports',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',
