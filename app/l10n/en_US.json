@@ -6602,7 +6602,7 @@
       "title": "Maximum cluster cascade bandwidth",
       "description": "Enter the maximum bandwidth (in megabits per second) that Hybrid Media Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
       "range": "Enter a value between 5 to 50",
-      "megabytes": "Megabytes"
+      "megabytes": "Mbps"
     },
     "metrics": {
       "today": "Last 24 Hours",
