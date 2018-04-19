@@ -131,12 +131,8 @@ export class FieldQuery extends SearchElement {
     return this.field || '';
   }
 
-  public getQueryWithoutField() {
-    let innerQuery = this.query;
-    if (this.query.search(/\s|\(/) > 0) {
-      innerQuery = '"' + innerQuery + '"';
-    }
-    return innerQuery;
+  public getQueryWithoutField(): string {
+    return FieldQuery.addQuotesIfNeeded(this.query);
   }
 
   public getCommonMatchOperator(): string {
@@ -194,7 +190,7 @@ export class FieldQuery extends SearchElement {
 
   public toQuery(translator?: SearchTranslator): string {
     const query = this.toQueryComponents(translator);
-    return query.prefix + query.query;
+    return query.prefix + FieldQuery.addQuotesIfNeeded(query.query);
   }
 
   public toQueryComponents(translator?: SearchTranslator): { prefix: string, query: string } {
@@ -204,7 +200,7 @@ export class FieldQuery extends SearchElement {
         query: translator.lookupTranslatedQueryValueDisplayName(this.query, this.field),
       };
     }
-    return { prefix: this.getQueryPrefix(translator), query: this.getQueryWithoutField() };
+    return { prefix: this.getQueryPrefix(translator), query: this.query };
   }
 
   public toJSON(): any {
@@ -213,6 +209,13 @@ export class FieldQuery extends SearchElement {
       field: this.field,
       type: this.type,
     };
+  }
+
+  private static addQuotesIfNeeded(query: string): string {
+    if (query.search(/\s|\(/) > 0) {
+      return '"' + query + '"';
+    }
+    return query;
   }
 }
 

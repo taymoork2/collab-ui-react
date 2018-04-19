@@ -26,6 +26,9 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceCascadeBwConfig).then( (supported) => {
       this.hasMfCascadeBwConfigToggle = supported;
     });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceClusterWizard).then( (supported) => {
+      this.hasMfClusterWizardFeatureToggle = supported;
+    });
   }
 
   public openPrerequisites(): void {
@@ -45,6 +48,7 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
           hasMfFeatureToggle: this.hasMfFeatureToggle,
           hasMfSIPFeatureToggle: this.hasMfSIPFeatureToggle,
           hasMfCascadeBwConfigToggle: this.hasMfCascadeBwConfigToggle,
+          hasMfClusterWizardFeatureToggle: this.hasMfClusterWizardFeatureToggle,
         },
         type: 'modal',
         controller: 'ClusterCreationWizardController',

@@ -53,7 +53,7 @@ describe('SipRegistrationSectionCtrl', () => {
     };
     initController(cluster);
     expect(HybridServicesClusterService.getProperties).toHaveBeenCalledWith(cluster.id);
-    expect(HybridServicesClusterService.getProperties.calls.count()).toBe(1);
+    expect(HybridServicesClusterService.getProperties.calls.count()).toBe(2);
   });
 
   it('should save a SIP trunk with the correct data', () => {

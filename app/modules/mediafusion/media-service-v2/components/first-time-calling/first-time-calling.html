@@ -1,0 +1,70 @@
+<div class="modal-header">
+
+  <button type="button" class="close" ng-click="vm.closeSetupModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <h5 class="modal-title">{{vm.headerSelected.label}}
+    <span {{vm.headerSelected.label}}></span>
+  </h5>
+
+</div>
+			
+<div class="modal-body">
+
+  <div ng-if="vm.clusterStateValue !== 'operational'" class="position-error-msg">
+    <span><i class="icon icon-error icon-error-size"></i></span>
+    <div class="position-msg"> {{vm.clusterStateMsg}} </div>
+  </div>
+
+  <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'Cisco Spark'">
+    <h6 class="sub-section__label" translate="mediaFusion.easyConfig.sparkcallline1"></h6>
+    <div class="spark-success">
+      <div class="loading-text" ng-if="vm.loading">
+        <i class="icon icon-spinner icon-size icon-loading"></i>
+        <h5 class="loading-text-position" translate="mediaFusion.easyConfig.callwait"></h5>
+      </div>
+      <h5 ng-show="!vm.loading && !vm.callExists" class="sub-section__label no-calls" translate="mediaFusion.easyConfig.nocalls" translate-values="{callType: vm.callType}"></h5>
+      <div ng-show = "vm.callExists">
+        <i class="icon icon-circle-check-mark-success icon-size icon-sucesss"></i>
+        <h5 translate="mediaFusion.easyConfig.callsuccess" class="call-details" translate-values="{callType: vm.callType}"></h5>
+        <h5 translate="mediaFusion.easyConfig.lastcalldetails" class="text-align"></h5>
+        <ul>
+          <div class="call-details-list" ng-repeat="callers in vm.callParticipants track by $id($index)">
+            <h6>{{vm.participant}} {{$index + 1}} &nbsp;&nbsp;&nbsp;&nbsp; {{callers}}</h6>
+          </div>
+          <div class="call-details-list display-flex">
+              <h6 translate="mediaFusion.easyConfig.starttime"></h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6> {{ vm.callStartTime }} </h6> 
+          </div>
+        </ul>
+      </div>
+    </div>
+    <p class="sub-section__description stick-bottom-spark" translate="mediaFusion.easyConfig.sparkcallline2"></p>
+  </div>
+  
+  <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'SIP'">
+    <h6 class="sub-section__label" translate="mediaFusion.easyConfig.sipcallline1"></h6>
+    <div class="spark-success">
+      <div class="loading-text " ng-if="vm.loading">
+        <i class="icon icon-spinner icon-size icon-loading"></i>
+        <h5 class="loading-text-position" translate="mediaFusion.easyConfig.callwait"></h5>
+      </div>
+      <h5 ng-show="!vm.loading && !vm.callExists" class="sub-section__label no-calls" translate="mediaFusion.easyConfig.nocalls" translate-values="{callType: vm.callType}"></h5>
+      <div ng-show = "vm.callExists">
+        <i class="icon icon-circle-check-mark-success icon-size icon-sucesss"></i>
+        <h5 translate="mediaFusion.easyConfig.callsuccess" class="call-details" translate-values="{callType: vm.callType}"></h5>
+        <h5 translate="mediaFusion.easyConfig.lastcalldetails" class="text-align"></h5>
+        <ul class="call-details-list display-flex">
+          <h6 translate="mediaFusion.easyConfig.starttime"></h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h6>{{ vm.callStartTime }} </h6>
+        </ul>
+      </div>
+    </div>
+    <p class="sub-section__description stick-bottom-sip" translate="mediaFusion.easyConfig.sipcallline2"></p>
+  </div>
+
+</div>
+				
+<div class="modal-footer">
+
+	<button class="btn" ng-click="vm.closeSetupModal()">
+			<span translate="common.done"></span>
+  </button>
+
+</div>

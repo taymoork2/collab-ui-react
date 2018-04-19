@@ -23,6 +23,7 @@
             hasMfFeatureToggle: hasMfFeatureToggle,
             hasMfSIPFeatureToggle: hasMfSIPFeatureToggle,
             hasMfCascadeBwConfigToggle: hasMfCascadeBwConfigToggle,
+            hasMfClusterWizardFeatureToggle: hasMfClusterWizardFeatureToggle,
           },
         });
       } else {
