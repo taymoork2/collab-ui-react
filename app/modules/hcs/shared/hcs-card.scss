@@ -2,6 +2,7 @@
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .hcs-card-header {
 
@@ -38,5 +39,23 @@
       line-height: 2;
       padding-right: .5rem;
     }
+  }
+}
+
+.hcs-container {
+  @extend %content-header;
+  @extend %page-background-white;
+  .save-section {
+    position: fixed;
+    bottom: 0;
+  }
+  .cs-form {
+    margin: 0;
+  }
+  .content-container {
+    height: calc(100vh - (100px));
+  }
+  .cs-form__section:last-child {
+    @include vr-spacing(pb, 5);
   }
 }
