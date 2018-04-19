@@ -1,6 +1,11 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 
 trusted-sip-section {
+
+    .description-padding {
+      padding-bottom: 1px !important;
+    }
+
     tags-input.ng-invalid .tags {
         border-color: $color-alerts-base;
         box-shadow: none;

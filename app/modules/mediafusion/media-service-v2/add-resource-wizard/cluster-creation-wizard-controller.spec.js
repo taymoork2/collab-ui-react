@@ -47,6 +47,7 @@ describe('ClusterCreationWizardController', function () {
         firstTimeSetup: false,
         yesProceed: true,
         hasMfCascadeBwConfigToggle: true,
+        hasMfClusterWizardFeatureToggle: true,
         hasMfFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
       });

@@ -219,6 +219,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/user-sidepanel/user-status-messages').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
   ]);
 
   angular.module('HDS', [
@@ -235,6 +236,7 @@
     require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
     require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
     require('modules/mediafusion/media-service-v2/components/first-time-setup').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-email-notification').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,

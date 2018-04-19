@@ -2,7 +2,9 @@ import moduleName from './index';
 
 describe('SipCallSettingsController', () => {
 
-  let $componentController, $q, $scope;
+  let $componentController, $modal, $state, $q, $scope, HybridServicesClusterService;
+  let SipRegistrationSectionService;
+  let TrustedSipSectionService;
 
   interface ICluster {
     id: string;
@@ -11,16 +13,28 @@ describe('SipCallSettingsController', () => {
   beforeEach(angular.mock.module(moduleName));
 
   beforeEach(inject(dependencies));
+  beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies(_$componentController_, _$q_, $rootScope) {
+  function dependencies(_$componentController_, _$modal_, _$state_, _$q_, $rootScope, _HybridServicesClusterService_, _SipRegistrationSectionService_, _TrustedSipSectionService_) {
     $componentController = _$componentController_;
+    $modal = _$modal_;
+    $state = _$state_;
     $q = _$q_;
     $scope = $rootScope.$new();
+    HybridServicesClusterService = _HybridServicesClusterService_;
+    SipRegistrationSectionService = _SipRegistrationSectionService_;
+    TrustedSipSectionService = _TrustedSipSectionService_;
   }
 
   function cleanup() {
-    $componentController = $q = $scope = undefined;
+    $componentController = $modal = $state = $q = $scope = HybridServicesClusterService = undefined;
+  }
+
+  function initSpies() {
+    spyOn(HybridServicesClusterService, 'getProperties').and.returnValue($q.resolve({}));
+    spyOn(SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue($q.resolve({}));
+    spyOn(TrustedSipSectionService, 'saveSipConfigurations');
   }
 
   function initController(cluster?: ICluster) {
@@ -30,6 +44,18 @@ describe('SipCallSettingsController', () => {
         currentValue: cluster,
       },
       isWizard : {
+        currentValue: true,
+      },
+      mfToggle : {
+        currentValue: true,
+      },
+      mfTrustedToggle : {
+        currentValue: true,
+      },
+      mfCascadeToggle : {
+        currentValue: true,
+      },
+      mfWizardToggle : {
         currentValue: true,
       },
     });

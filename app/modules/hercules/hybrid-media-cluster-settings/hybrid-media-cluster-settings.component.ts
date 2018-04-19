@@ -1,4 +1,5 @@
 import { IExtendedClusterFusion, ICluster } from 'modules/hercules/hybrid-services.types';
+import { IToolkitModalService } from 'modules/core/modal';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IDeregisterModalOptions } from 'modules/hercules/hs-cluster-section/hs-cluster-section.component';
 
@@ -7,6 +8,7 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public hasMfPhaseTwoToggle: boolean;
   public hasMfTrustedSipToggle: boolean;
   public hasMfCascadeBwConfigToggle: boolean;
+  public hasMfClusterWizardFeatureToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
   public clusterList: IExtendedClusterFusion[] = [];
@@ -24,8 +26,13 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
   };
 
+  public sparkCalls = {
+    title: 'mediaFusion.easyConfig.sparkcalls',
+  };
+
   /* @ngInject */
   constructor(
+    private $modal: IToolkitModalService,
     private HybridServicesClusterService: HybridServicesClusterService,
   ) { }
 
@@ -60,6 +67,19 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
       });
   }
 
+  public openSetUpModal() {
+    this.$modal.open({
+      template: require('modules/mediafusion/media-service-v2/components/first-time-calling/first-time-calling.html'),
+      type: 'modal',
+      controller: 'FirstTimeCallingController',
+      controllerAs: 'vm',
+      resolve: {
+        cluster: () => this.cluster,
+        spark: () => true,
+      },
+    });
+  }
+
 }
 
 export class HybridMediaClusterSettingsComponent implements ng.IComponentOptions {
@@ -70,5 +90,6 @@ export class HybridMediaClusterSettingsComponent implements ng.IComponentOptions
     hasMfPhaseTwoToggle: '<',
     hasMfTrustedSipToggle: '<',
     hasMfCascadeBwConfigToggle: '<',
+    hasMfClusterWizardFeatureToggle: '<',
   };
 }
