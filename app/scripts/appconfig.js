@@ -2318,6 +2318,16 @@
               },
             },
           })
+          .state('reports.live-resource', {
+            url: '/live-resource',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'LiveMediaReportsController',
+                template: require('modules/mediafusion/reports/live-reports/live-resource-reports.html'),
+              },
+            },
+          })
           .state('reports.care', {
             url: '/care',
             views: {
@@ -2349,6 +2359,16 @@
             },
             params: {
               siteUrl: null,
+            },
+          })
+          .state('reports.hybridMedia', {
+            url: '/hybridMediaReports',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'HybridMediaMetricsCtrl',
+                template: require('modules/core/customerReports/hybridMedia/hybridMediaMetrics.tpl.html'),
+              },
             },
           })
           .state('webex-reports-iframe', {

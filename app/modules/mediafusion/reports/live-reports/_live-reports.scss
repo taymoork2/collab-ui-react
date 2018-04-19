@@ -1,0 +1,22 @@
+.mf-live-reports {
+    margin-right: 8px !important;
+    .reports-header {
+        justify-content: left !important;
+        padding: 10px 20px !important;
+        font-size: 1.4rem !important;
+    }
+    .reports-header-back {
+        justify-content: left !important;
+        padding: 1px 20px !important;
+        font-size: 1.4rem !important;
+    }
+    .height-compensate {
+        height: calc(100vh - 220px)!important;
+    }
+    .live-reorts-select-filter {
+        width: 12rem;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: 20px;
+    }
+}
