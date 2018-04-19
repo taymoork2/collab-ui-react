@@ -12,5 +12,6 @@ fi
 
 2>&1 echo "[ERROR] Adding new '*.js' files under './app' is no longer allowed."
 2>&1 echo ""
-2>&1 echo "Please convert your logic to TypeScript and save as '*.ts'."
+2>&1 echo "Please convert your logic to TypeScript and save as '*.ts'. Please see"
+2>&1 echo "'./docs/typescript-overview.md' for more details."
 exit 1
