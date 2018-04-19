@@ -2960,15 +2960,14 @@
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
-            template: require('modules/core/partnerHome/partnerHome.tpl.html'),
-            controller: 'PartnerHomeCtrl',
+            template: '<partner-home></partner-home>',
           })
           .state('partnerreports', {
             parent: 'partner',
             url: '/reports',
             template: '<div ui-view></div>',
             controller: /* @ngInject */ function ($state) {
-              $state.go('partnerreports.tab.base');
+              $state.go('partnerreports.tab.spark');
             },
           })
           .state('partnerreports.tab', {
@@ -2980,6 +2979,12 @@
             url: '/metrics',
             template: require('modules/core/partnerReports/partnerReports.tpl.html'),
             controller: 'PartnerReportCtrl',
+            controllerAs: 'nav',
+          })
+          .state('partnerreports.tab.spark', {
+            url: '/spark',
+            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
+            controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
           })
           .state('partnerreports.tab.ccaReports', {
@@ -3274,6 +3279,47 @@
             parent: 'partner',
             url: '/hcs/sftplist',
             template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+          })
+          .state('hcs.sftpserver-edit', {
+            url: '/hcs/upgrade/sftpserveredit',
+            parent: 'partner',
+            template: '<hcs-upgrade-sftp-edit sftp-server="$resolve.sftpServer"></hcs-upgrade-sftp-edit>',
+            params: {
+              sftpServer: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp/hcs-upgrade-sftp-edit.component'));
+                }, 'hcs-upgrade-sftp-edit');
+              }),
+              sftpServer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.sftpServer;
+              },
+            },
+          })
+          .state('hcs.swprofilelist', {
+            parent: 'partner',
+            url: '/hcs/swprofilelist',
+            template: '<hcs-upgrade-swprofile-list></hcs-upgrade-swprofile-list>',
+          })
+          .state('hcs.swprofile-edit', {
+            url: '/hcs/upgrade/swprofileedit',
+            parent: 'partner',
+            template: '<hcs-upgrade-swprofile-edit swprofile="$resolve.swprofile"></hcs-upgrade-swprofile-edit>',
+            params: {
+              swprofile: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile/hcs-upgrade-swprofile-edit.component'));
+                }, 'hcs-upgrade-swprofile-edit');
+              }),
+              swprofile: /* @ngInject */ function ($stateParams) {
+                return $stateParams.swprofile;
+              },
+            },
           })
           .state('taasSuites', {
             parent: 'main',
@@ -5638,6 +5684,25 @@
             views: {
               'modal@': {
                 template: '<legal-hold-matter-new dismiss="$dismiss()" class="modal-content legalhold-modal"></legal-hold-matter-new>',
+              },
+            },
+          })
+          .state('legalhold.detail', {
+            parent: 'sidepanel',
+            params: {
+              matter: null,
+              displayName: null,
+            },
+            views: {
+              'sidepanel@': {
+                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter" class="modal-content legalhold-modal"></legal-hold-matter-detail>',
+
+                resolve: {
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
+                  },
+                  displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+                },
               },
             },
           });

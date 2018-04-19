@@ -180,6 +180,27 @@ export class CustomerInformation {
   }
 }
 
+export class CustomerInformationCallback {
+  public enabled: boolean;
+  public fields: any;
+  constructor(authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
+    const chatInfo = new CustomerInformation(authinfo, ctService, $translate);
+    this.enabled = true;
+    this.fields = {
+      ...chatInfo.fields,
+      field2: {
+        attributes: [
+          new Attribute('required', 'required'),
+          new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultPhoneText')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultPhoneHintText')),
+          new CategoryAttribute('type', ctService.getTypeObject('phone'), ''),
+        ],
+      },
+    };
+  }
+}
+
 export class AgentUnavailable {
   public enabled: boolean;
   public fields: any;
@@ -310,7 +331,7 @@ export class CallbackPages implements IPages {
 
 export class CBPages implements IPages {
   public customerInformationChat: CustomerInformation;
-  public customerInformationCallback: CustomerInformation;
+  public customerInformationCallback: CustomerInformationCallback;
   public agentUnavailable: AgentUnavailable;
   public offHours: OffHours;
   public feedback: Feedback;
@@ -319,7 +340,7 @@ export class CBPages implements IPages {
 
   constructor( authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformationChat = new CustomerInformation(authinfo, ctService, $translate);
-    this.customerInformationCallback = new CustomerInformation(authinfo, ctService, $translate);
+    this.customerInformationCallback = new CustomerInformationCallback(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
     this.feedbackCallback = new FeedbackCallback($translate);

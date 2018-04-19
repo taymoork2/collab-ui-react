@@ -100,17 +100,8 @@ describe('Component: csvUploadResults', () => {
       expect(this.view.find(ERROR_LINE_BREAK)).not.toExist();
       expect(this.view.find(ERROR_TABLE)).not.toExist();
       this.controller.userErrorArray = [{
-        error: {
-          key: '',
-          message: [{
-            code: '',
-            description: '',
-            location: '',
-          }],
-        },
-        trackingId: '',
-        lineNum: 0,
-        errorMessage: '',
+        row: 0,
+        message: '',
       }];
       this.$scope.$apply();
       expect(this.view.find(ERROR_LINE_BREAK)).toExist();

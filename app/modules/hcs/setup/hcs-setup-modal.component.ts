@@ -1,5 +1,6 @@
 import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/shared';
-import { ICheckbox, ISoftwareProfile } from './hcs-setup';
+import { ICheckbox } from './hcs-setup';
+import { ISoftwareProfile } from 'modules/hcs/shared/hcs-swprofile';
 import { ISftpServer } from './hcs-setup-sftp';
 import { Notification } from 'modules/core/notifications';
 
@@ -26,6 +27,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     private HcsSetupModalService: HcsSetupModalService,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
+    private $state: ng.ui.IStateService,
   ) {
   }
 
@@ -43,7 +45,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     this.isSftp = false;
     if (!this.isFirstTimeSetup) {
       this.finish = true;
-      this.finishDisable = false;
+      this.finishDisable = true;
       this.isSftp = this.currentStepIndex === 3;
     }
     switch (this.currentStepIndex) {
@@ -74,6 +76,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         if (this.hcsSetupModalForm) {
           this.hcsSetupModalForm.$setPristine();
         }
+        break;
       case 2:
         this.nextEnabled = false;
         break;
@@ -84,6 +87,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
           this.finish = true;
           this.finishDisable = false;
         } else {
+          this.title = 'hcs.sftp.setupTitle';
           this.nextEnabled = false;
         }
         break;
@@ -114,6 +118,9 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         this.Notification.success('hcs.sftp.success');
         this.loading = false;
         if (!this.isFirstTimeSetup) {
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
           this.dismissModal();
         }
       })
@@ -141,14 +148,19 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
     this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
-    if (!this.isFirstTimeSetup) {
-      this.finishDisable = !this.nextEnabled;
-    }
+    this.enableSave();
   }
 
   public setSftpServer(sftpServer: ISftpServer) {
     this.nextEnabled = (sftpServer && this.hcsSetupModalForm.$valid);
     this.sftpServer = sftpServer;
+    this.enableSave();
+  }
+
+  public enableSave() {
+    if (!this.isFirstTimeSetup) {
+      this.finishDisable = !this.nextEnabled;
+    }
   }
 
   public setSoftwareProfile(profile: ISoftwareProfile) {
@@ -170,7 +182,6 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
           break;
         case 3:
           this.createSftp();
-          this.dismissModal();
           break;
         case 4:
           this.createSoftwareProfile();

@@ -1,5 +1,5 @@
 import { ISftpServer } from '../setup/hcs-setup-sftp';
-import { IHcsCluster } from './hcs-upgrade';
+import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem } from './hcs-upgrade';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
@@ -9,10 +9,12 @@ interface IClusterResource extends ng.resource.IResourceClass<ng.resource.IResou
   update: ng.resource.IResourceMethod<ng.resource.IResource<IHcsCluster>>;
 }
 
+interface ICustomerClustersResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCustomerClusters>> {}
+
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
   private clusterResource: IClusterResource;
-  private clusterCustomerResource: IClusterResource;
+  private customerClustersResource: ICustomerClustersResource;
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
@@ -24,6 +26,9 @@ export class HcsUpgradeService {
 
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
     };
     const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
@@ -37,11 +42,25 @@ export class HcsUpgradeService {
         Authorization: BASIC_AUTH_VAL,
       },
     };
+    const getAction: ng.resource.IActionDescriptor = {
+      method: 'GET',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
+    const deleteAction: ng.resource.IActionDescriptor = {
+      method: 'DELETE',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
+
     this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
         save: saveAction,
         query: queryAction,
+        delete: deleteAction,
       });
     this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterid', {},
       {
@@ -50,11 +69,11 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.clusterCustomerResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {},
+    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {},
       {
         update: updateAction,
         save: saveAction,
-        query: queryAction,
+        get: getAction,
       });
   }
 
@@ -71,11 +90,18 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public updateSftpServer(_sftpServerId: string, sftpServer: ISftpServer) {
+  public updateSftpServer(_sftpServerId: string, sftpServer: ISftpServer): ng.IPromise<any>  {
     return this.sftpServerResource.update({
       partnerId: this.Authinfo.getOrgId(),
       sftpServerId: _sftpServerId,
     }, sftpServer).$promise;
+  }
+
+  public deleteSftpServer(_sftpServerId: string): ng.IPromise<any> {
+    return this.sftpServerResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      sftpServerId: _sftpServerId,
+    }).$promise;
   }
 
   public listSftpServers(): ng.IPromise <any[]> {
@@ -98,16 +124,20 @@ export class HcsUpgradeService {
     }, cluster).$promise;
   }
 
-  public listAllClusters(): ng.IPromise <any[]> {
-    return this.clusterResource.query({
+  public listAllClusters(): ng.IPromise <IHcsClusterSummaryItem[]> {
+    return this.customerClustersResource.get({
       partnerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise.then(response => {
+      return response.clusters;
+    });
   }
 
-  public listClusters(customerId?: string): ng.IPromise <any[]> {
-    return this.clusterCustomerResource.query({
+  public listClusters(customerId?: string): ng.IPromise <IHcsClusterSummaryItem[]> {
+    return this.customerClustersResource.get({
       partnerId: this.Authinfo.getOrgId(),
       customerId: customerId,
-    }).$promise;
+    }).$promise.then(response => {
+      return response.clusters;
+    });
   }
 }

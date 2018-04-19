@@ -24,7 +24,6 @@ describe('Controller: PlacesCtrl', function () {
     spyOn(this.Userservice, 'getUser');
     spyOn(this.$state, 'go');
     spyOn(this.RemPlaceModal, 'open');
-    spyOn(this.FeatureToggleService, 'csdmATAGetStatus').and.returnValue(this.$q.resolve());
     spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([]));
     spyOn(this.CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
@@ -254,7 +253,6 @@ describe('Controller: PlacesCtrl', function () {
           this.adminUserName = 'adminUserName';
           this.adminCisUuid = 'adminCisUuid';
           this.adminOrgId = 'adminOrgId';
-          this.controller.showATA = true;
           this.controller.adminUserDetails = {
             firstName: this.adminFirstName,
             lastName: this.adminLastName,
@@ -277,7 +275,6 @@ describe('Controller: PlacesCtrl', function () {
           var wizardState = this.$state.go.calls.mostRecent().args[1].wizard.state().data;
           expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
           expect(wizardState.function).toBe('addPlace');
-          expect(wizardState.showATA).toBe(true);
           expect(wizardState.csdmHybridCallFeature).toBe(true);
           expect(wizardState.admin.firstName).toBe(this.adminFirstName);
           expect(wizardState.admin.lastName).toBe(this.adminLastName);

@@ -29,3 +29,7 @@ export enum ImportResultStatus {
   SUCCESS_PARTIAL,
 }
 
+export enum Events {
+  CHANGED = 'Core::matterUpdated',
+}
+

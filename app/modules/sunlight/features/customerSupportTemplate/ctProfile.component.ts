@@ -15,6 +15,7 @@ class CtProfileController extends CtBaseController {
   public selectedVA: CVAConfig;
   public logoFile: string;
   public logoUploaded: boolean;
+  private cardMode: string;
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
@@ -24,6 +25,7 @@ class CtProfileController extends CtBaseController {
     public CTService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -144,7 +146,9 @@ class CtProfileController extends CtBaseController {
 export class CtProfileComponent implements ng.IComponentOptions {
   public controller = CtProfileController;
   public template = require('./wizardPagesComponent/ctProfile.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 

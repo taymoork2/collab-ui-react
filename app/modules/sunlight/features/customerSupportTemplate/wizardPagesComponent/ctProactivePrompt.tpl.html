@@ -31,7 +31,8 @@
                 class="prompt-time"
                 labelfield="label"
                 valuefield="value"
-                ng-model="$ctrl.template.configuration.proactivePrompt.fields.promptTime"
+                ng-model="$ctrl.promptTimeObj"
+                ng-change="$ctrl.onPromptTimeChange()"
                 options="$ctrl.promptTimeOptions"
                 placeholder="careChatTpl.promptTimeLabel"></cs-select>
             </div>

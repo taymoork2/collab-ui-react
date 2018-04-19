@@ -87,7 +87,6 @@ export class InstallFilesCtrl implements ng.IComponentController {
       controllerAs: '$ctrl',
       type: 'dialog',
     });
-
   }
 
   public cardSelected(): void {}

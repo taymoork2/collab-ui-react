@@ -23,7 +23,6 @@ export class DevicesCtrl implements ng.IComponentController {
   //region for add device/place button
   private showPersonal = false;
   public addDeviceIsDisabled = true;
-  private showATA: boolean;
   private hybridCallEnabledOnOrg: boolean;
   private hybridCalendarEnabledOnOrg: boolean;
   private csdmHybridCallFeature: boolean;
@@ -205,9 +204,6 @@ export class DevicesCtrl implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
-      this.showATA = result;
-    });
     const hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature: boolean) => {
       this.csdmHybridCallFeature = feature;
     });
@@ -236,7 +232,7 @@ export class DevicesCtrl implements ng.IComponentController {
     const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
       this.csdmMultipleDevicesPerPlaceFeature = feature;
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise, office365Promise, googleCalendarPromise]).finally(() => {
+    this.$q.all([hybridPromise, personalPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise, office365Promise, googleCalendarPromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -285,7 +281,6 @@ export class DevicesCtrl implements ng.IComponentController {
     return {
       data: {
         function: 'addDevice',
-        showATA: this.showATA,
         showPersonal: true,
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
@@ -362,7 +357,6 @@ export class DevicesCtrl implements ng.IComponentController {
     return {
       data: {
         function: 'addDevice',
-        showATA: this.showATA,
         showPersonal: false,
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,

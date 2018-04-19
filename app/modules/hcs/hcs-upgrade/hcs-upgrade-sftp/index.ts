@@ -1,5 +1,6 @@
 import 'modules/hcs/hcs-inventory/cluster-list/cluster-list.scss';
 import { HcsUpgradeSftpListComponent } from './hcs-upgrade-sftp-list.component';
+import { HcsUpgradeSftpEditComponent } from './hcs-upgrade-sftp-edit.component';
 
 export default angular
 .module('hcs.sftplist', [
@@ -7,4 +8,5 @@ export default angular
   require('angular-translate'),
 ])
 .component('hcsUpgradeSftpList', new HcsUpgradeSftpListComponent())
+.component('hcsUpgradeSftpEdit', new HcsUpgradeSftpEditComponent())
 .name;

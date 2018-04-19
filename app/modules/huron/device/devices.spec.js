@@ -43,7 +43,6 @@ describe('Controller: DevicesCtrlHuron', function () {
 
     spyOn(CsdmHuronUserDeviceService, 'create').and.returnValue(poller);
     spyOn(CsdmDataModelService, 'reloadDevicesForUser').and.returnValue($q.resolve({}));
-    spyOn(FeatureToggleService, 'csdmATAGetStatus').and.returnValue($q.resolve(false));
     spyOn(Userservice, 'getUser');
     spyOn(Authinfo, 'isDeviceMgmt').and.returnValue(true);
     spyOn(CsdmUpgradeChannelService, 'getUpgradeChannelsPromise').and.returnValue($q.resolve([]));
@@ -192,7 +191,6 @@ describe('Controller: DevicesCtrlHuron', function () {
     var adminUserName;
     var adminCisUuid;
     var adminOrgId;
-    var showATA;
     var userName;
 
     function initCurrentUserAndResetUser() {
@@ -208,7 +206,6 @@ describe('Controller: DevicesCtrlHuron', function () {
       adminUserName = 'adminUserName';
       adminCisUuid = 'adminCisUuid';
       adminOrgId = 'adminOrgId';
-      showATA = true;
       controller.currentUser = {
         displayName: displayName,
         id: userCisUuid,
@@ -225,7 +222,6 @@ describe('Controller: DevicesCtrlHuron', function () {
           organizationID: orgId,
         },
       };
-      controller.showATA = showATA;
       controller.adminUserDetails = {
         firstName: adminFirstName,
         lastName: adminLastName,
@@ -249,7 +245,6 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect($state.go).toHaveBeenCalled();
         var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
         expect(wizardState.title).toBe('addDeviceWizard.newDevice');
-        expect(wizardState.showATA).toBe(showATA);
         expect(wizardState.showPersonal).toBe(true);
         expect(wizardState.admin.firstName).toBe(adminFirstName);
         expect(wizardState.admin.lastName).toBe(adminLastName);
@@ -283,7 +278,6 @@ describe('Controller: DevicesCtrlHuron', function () {
         expect($state.go).toHaveBeenCalled();
         var wizardState = $state.go.calls.mostRecent().args[1].wizard.state().data;
         expect(wizardState.title).toBe('addDeviceWizard.newDevice');
-        expect(wizardState.showATA).toBe(showATA);
         expect(wizardState.showPersonal).toBe(false);
         expect(wizardState.admin.firstName).toBe(adminFirstName);
         expect(wizardState.admin.lastName).toBe(adminLastName);
