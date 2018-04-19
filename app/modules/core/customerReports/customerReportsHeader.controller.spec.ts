@@ -113,9 +113,8 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     it('should display all reports tabs', function () {
       expect(this.controller.headerTabs).toContain(headerTabs[0]);
-      expect(this.controller.headerTabs).toContain(headerTabs[3], headerTabs[4]);
+      expect(this.controller.headerTabs).toContain(headerTabs[4], headerTabs[5]);
       expect(this.controller.headerTabs).toContain(propackTabs[0], propackTabs[1]);
-      expect(this.controller.headerTabs).toContain(headerTabs[5]);
     });
   });
 });

@@ -6515,9 +6515,6 @@
       "placeholder": "Enter the SIP trunk address...",
       "example": "Example: sips://203.0.113.0:5062"
     },
-    "newMfReport": {
-      "title": "Hybrid Media(Qlik)"
-    },
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",

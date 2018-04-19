@@ -75,13 +75,13 @@
 
       var viewType = _.get(vm, 'reportView.view');
 
-      // var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
-      var getSparkReportData = _.get(QlikService, 'getQBSInfo');
+      // var getHmsReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+      var getHmsReportData = _.get(QlikService, 'getQBSInfo');
 
-      if (!_.isFunction(getSparkReportData)) {
+      if (!_.isFunction(getHmsReportData)) {
         return;
       }
-      getSparkReportData('hybridMedia', viewType, userInfo).then(function (data) {
+      getHmsReportData('hybridMedia', viewType, userInfo).then(function (data) {
         vm.hybridMetrics.appData = {
           ticket: data.ticket,
           appId: data.appName,
