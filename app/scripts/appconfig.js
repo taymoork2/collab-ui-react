@@ -2988,20 +2988,12 @@
             parent: 'partner',
             url: '/reports',
             template: '<div ui-view></div>',
-            controller: /* @ngInject */ function ($state) {
-              $state.go('partnerreports.tab.spark');
-            },
+            controller: 'ReportsRedirectCtrl',
           })
           .state('partnerreports.tab', {
             abstract: true,
             parent: 'partner',
             template: '<partner-reports-tabs></partner-reports-tabs>',
-          })
-          .state('partnerreports.tab.base', {
-            url: '/metrics',
-            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
-            controller: 'PartnerReportCtrl',
-            controllerAs: 'nav',
           })
           .state('partnerreports.tab.spark', {
             url: '/spark',
