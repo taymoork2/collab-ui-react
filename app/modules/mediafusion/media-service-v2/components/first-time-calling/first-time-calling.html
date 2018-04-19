@@ -9,13 +9,13 @@
 			
 <div class="modal-body">
 
-  <div ng-if="vm.clusterStateValue !== 'operational'">
-    <span><i class="icon icon-error icon-size"></i></span>
+  <div ng-if="vm.clusterStateValue !== 'operational'" class="position-error-msg">
+    <span><i class="icon icon-error icon-error-size"></i></span>
     <div class="position-msg"> {{vm.clusterStateMsg}} </div>
   </div>
 
   <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'Cisco Spark'">
-    <h5 class="sub-section__label" translate="mediaFusion.easyConfig.sparkcallline1"></h5>
+    <h6 class="sub-section__label" translate="mediaFusion.easyConfig.sparkcallline1"></h6>
     <div class="spark-success">
       <div class="loading-text" ng-if="vm.loading">
         <i class="icon icon-spinner icon-size icon-loading"></i>
@@ -36,11 +36,11 @@
         </ul>
       </div>
     </div>
-    <p class="sub-section__description stick-bottom" translate="mediaFusion.easyConfig.sparkcallline2"></p>
+    <p class="sub-section__description stick-bottom-spark" translate="mediaFusion.easyConfig.sparkcallline2"></p>
   </div>
   
-  <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'Sip'">
-    <h5 class="sub-section__label" translate="mediaFusion.easyConfig.sipcallline1"></h5>
+  <div ng-if="vm.clusterStateValue === 'operational' && vm.callType === 'SIP'">
+    <h6 class="sub-section__label" translate="mediaFusion.easyConfig.sipcallline1"></h6>
     <div class="spark-success">
       <div class="loading-text " ng-if="vm.loading">
         <i class="icon icon-spinner icon-size icon-loading"></i>
@@ -56,7 +56,7 @@
         </ul>
       </div>
     </div>
-    <p class="sub-section__description stick-bottom" translate="mediaFusion.easyConfig.sipcallline2"></p>
+    <p class="sub-section__description stick-bottom-sip" translate="mediaFusion.easyConfig.sipcallline2"></p>
   </div>
 
 </div>

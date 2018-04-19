@@ -26,4 +26,8 @@ hybrid-media-upgrade-schedule {
     margin-top: 20px;
     flex: 1 0 250px;
   }
+
+  .upgrade-schedule-timezone .dropdown-menu {
+    max-height: 12rem;
+  }
 }

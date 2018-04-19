@@ -46,7 +46,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
       this.callTypeUrl = 'SPARK';
     } else {
       this.headerSelected = this.headerOptions[1];
-      this.callType = 'Sip';
+      this.callType = 'SIP';
       this.callTypeUrl = 'CMR';
     }
     this.clusterName = this.cluster.name.replace(/\W/g, '').toLowerCase();
