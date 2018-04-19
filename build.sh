@@ -128,7 +128,7 @@ function phase_3 {
     fi
     rm -f wx2-admin-web-client.*.tar.gz
 
-    envsubst < "$APP_DEPLOY_DESCRIPTOR_TEMPLATE" > "${APP_DEPLOY_DESCRIPTOR_TEMPLATE%%.tpl}" || :
+    envsubst < "$APP_DEPLOY_DESCRIPTOR_TEMPLATE" > "$APP_DEPLOY_DESCRIPTOR" || :
 
     # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
     tar -zcvf "$APP_ARCHIVE" dist/* &> "${APP_ARCHIVE}--files-list"
