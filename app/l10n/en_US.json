@@ -2384,7 +2384,7 @@
       "label": "Capacity: {{capacity}}%",
       "labelNA": "Capacity: N/A",
       "tooltip": "Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
-      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
+      "tooltipUnassigned": "<em>Clusters and users<br>(not in a resource group)</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
       "tooltipNA": "Choose a filter on the left to view capacity for clusters that don't belong to a resource group or clusters in specific resources groups",
       "tooltipNoConnectors": "No connectors can host users",
       "allClusters": "All clusters",
