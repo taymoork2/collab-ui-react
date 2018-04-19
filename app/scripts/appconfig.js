@@ -1431,6 +1431,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -2567,6 +2568,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
