@@ -30,7 +30,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
       ucxn: this.$translate.instant('hcs.softwareProfiles.ucxnPlace'),
       plm: this.$translate.instant('hcs.softwareProfiles.plmPlace'),
       cer: this.$translate.instant('hcs.softwareProfiles.cerPlace'),
-      expway: this.$translate.instant('hcs.softwareProfiles.expwayPlace') };
+      expway: this.$translate.instant('hcs.softwareProfiles.expwayPlace')};
     this.errors = {
       required: this.$translate.instant('common.invalidRequired'),
       maxlength: this.$translate.instant('common.invalidMaxLength', {
