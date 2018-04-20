@@ -1,9 +1,7 @@
 <!-- Edit Trial Modal -->
 
 <div class="modal-header">
-  <button type="button" class="close" ng-click="trial.cancelModal()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="trial.cancelModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title modal-title-wrap" ng-if="trial.isEditTrial()">{{trial.currentTrial.customerName}}</h3>
   <h3 class="modal-title" translate="trialModal.addTrial.title" ng-if="trial.isNewTrial()"></h3>
 </div>
@@ -19,8 +17,10 @@
         <div ng-if="trial.isExistingOrg()" class="cs-input-group">
           <label class="sub-section__label" translate="partnerHomePage.customerName"></label>
           <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
-          <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
-          <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          <div ng-if="!trial.isEditTrial()">
+            <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
+            <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          </div>
         </div>
         <!-- new customer -->
         <div ng-if="!trial.isExistingOrg()" class="cs-input-group">
@@ -33,8 +33,8 @@
               ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
               required>
             <div class="cs-input__messages" ng-messages="trialForm.customerName.$error" role="alert">
-              <div ng-repeat="(key, value) in trial.validationMessages.general" class="message">
-                <span ng-message="{{key}}">{{value}}</span>
+              <div ng-repeat="(key, value) in trial.validationMessages.general">
+                <span class="message" ng-message="{{key}}">{{value}}</span>
               </div>
             </div>
           </div>
@@ -119,6 +119,7 @@
               ng-model="trial.careTrial.enabled"
               ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
               cs-input-label="{{::'trials.care' | translate}}">
+            <p class="cs-input__help-text" translate="trials.kOneContents" ng-if="trial.k1Promotion"></p>
 
             <input cs-input type="number"
               id="trialCareLicenseCount" name="trialCareLicenseCount"
@@ -127,7 +128,7 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-size="medium-4"
               cs-input-messages="trial.validationMessages.care"
-              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
+              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(trial.careTypes.K1)}}"
               min="1"
               ng-required="trial.careTrial.enabled"
               ng-disabled="!trial.careTrial.enabled"
@@ -139,13 +140,15 @@
               ng-model="trial.advanceCareTrial.enabled"
               ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
               cs-input-label="{{::'trials.advanceCare' | translate}}">
+            <p class="cs-input__help-text" translate="trials.kTwoContents" ng-if="trial.k1Promotion"></p>
+
             <input cs-input type="number"
               id="trialAdvanceCareLicenseCount" name="trialAdvanceCareLicenseCount"
               ng-model="trial.advanceCareTrial.details.quantity"
               cs-input-group-size="medium-8" cs-input-nested="1" cs-input-size="medium-4"
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-messages="trial.validationMessages.care"
-              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
+              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(trial.careTypes.K2)}}"
               min="1"
               ng-required="trial.advanceCareTrial.enabled"
               ng-disabled="!trial.advanceCareTrial.enabled"
@@ -273,7 +276,7 @@
 
     <!-- regional settings -->
     <trial-regional-settings
-      ng-if="trial.roomSystemTrial.enabled || trial.callTrial.enabled"
+      ng-if="trial.roomSystemTrial.enabled || trial.callTrial.enabled || trial.sparkBoardTrial.enabled"
       new-trial="trial.isNewTrial()"
       is-ftsw="false"
       select-name="'defaultCountry'"
@@ -289,7 +292,9 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
+         <!-- we don't support de-registering Context Service, so grey out checkbox if it is enabled -->
          <input type="checkbox" cs-input
+            ng-disabled="trial.hasRegisteredContextService(trialForm.contextTrial)"
             ng-model="trial.contextTrial.enabled"
             id="contextTrial" name="contextTrial"
             cs-input-label="{{::'trials.context' | translate}}">
@@ -306,7 +311,7 @@
     </div>
   </div>
   <button id="cancelTrialButton" class="btn" ng-click="trial.cancelModal()" ng-disabled="trial.loading">
-    <span translate="partnerHomePage.cancel"></span>
+    <span translate="common.cancel"></span>
   </button>
   <!-- edit trial -->
   <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading" ng-click="trialForm.$setPristine(true); trial.nextStep()"

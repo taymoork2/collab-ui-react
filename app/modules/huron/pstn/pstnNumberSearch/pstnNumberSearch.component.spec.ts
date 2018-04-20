@@ -8,7 +8,7 @@ describe('Component: PstnNumberSearchComponent', () => {
   const customerCarrierList = getJSONFixture('huron/json/pstnSetup/customerCarrierList.json');
   const areas = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
   const ADD_BUTTON = '.btn--people';
-  const CHECKBOX = 'cs-checkbox label';
+  const CHECKBOX = 'label.cs-checkbox';
 
   const areaData: IAreaData = {
     zipName: '_zipName',

@@ -1,0 +1,36 @@
+<div class="fusion-cluster-settings">
+  <div class="cs-form">
+    <email-notifications-section service-id="'squared-fusion-uc'" set-focus="true"></email-notifications-section>
+
+    <setting-section class="needs-border-top" setting="$ctrl.callServiceAwareSection">
+      <div class="sub-section">
+        <p class="sub-section__label" translate="hercules.serviceNames.squared-fusion-uc.full"></p>
+        <p><span translate="hercules.settings.call.aware"></span><br></p>
+      </div>
+      <div class="sub-section call-service-aware-settings">
+        <p class="sub-section__label" translate="hercules.settings.call.domainVerification"></p>
+        <domains-setting></domains-setting>
+      </div>
+    </setting-section>
+
+    <setting-section setting="$ctrl.callServiceConnectSection">
+      <hs-enable-disable-call-service-connect service-is-enabled="$ctrl.callServiceConnectIsEnabled"
+                                              on-call-service-connect-enabled="$ctrl.onCallServiceConnectEnabled()"
+                                              on-call-service-connect-disabled="$ctrl.onCallServiceConnectDisabled()">
+      </hs-enable-disable-call-service-connect>
+      <sip-destination-settings-section ng-if="$ctrl.callServiceConnectIsEnabled"></sip-destination-settings-section>
+      <cisco-collaboration-cloud-certificate-store ng-if="$ctrl.callServiceConnectIsEnabled"
+                                 is-first-time-setup = "false"
+                                 is-certificate-default = "$ctrl.isCertificateDefault"
+                                 is-importing = "$ctrl.isImporting"
+                                 formatted-cert-list="$ctrl.formattedCertList"
+                                 on-change-fn="$ctrl.uploadCertificate(file)"
+                                 on-change-option-fn="$ctrl.onCertificateChanges(isCertificateDefault)"
+                                 service-id="'squared-fusion-ec'">
+      </cisco-collaboration-cloud-certificate-store>
+    </setting-section>
+
+    <deactivate-section service-id="'squared-fusion-uc'"></deactivate-section>
+    <documentation-section service-id="'squared-fusion-uc'"></documentation-section>
+  </div>
+</div>

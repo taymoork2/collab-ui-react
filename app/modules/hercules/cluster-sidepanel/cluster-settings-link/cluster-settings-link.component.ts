@@ -32,7 +32,7 @@ export class ClusterSettingsLinkCtrl implements ng.IComponentController {
 
 export class ClusterSettingsLinkComponent implements ng.IComponentOptions {
   public controller = ClusterSettingsLinkCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/cluster-settings-link/cluster-settings-link.component.html';
+  public template = require('modules/hercules/cluster-sidepanel/cluster-settings-link/cluster-settings-link.component.html');
   public bindings = {
     clusterId: '<',
     clusterType: '<',

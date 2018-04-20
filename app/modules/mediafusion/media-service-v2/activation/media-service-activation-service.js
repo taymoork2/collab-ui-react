@@ -1,11 +1,10 @@
 (function () {
   'use strict';
 
-  angular.module('Mediafusion')
-    .service('MediaServiceActivationV2', MediaServiceActivationV2);
+  module.exports = MediaServiceActivationV2;
 
   /* @ngInject */
-  function MediaServiceActivationV2($http, UrlConfig, Authinfo, Notification, $q, HybridServicesClusterService, ServiceDescriptorService, Orgservice) {
+  function MediaServiceActivationV2($http, $q, $timeout, Authinfo, Notification, ServiceDescriptorService, Orgservice, UrlConfig) {
     var vm = this;
     vm.mediaServiceId = 'squared-fusion-media';
 
@@ -29,19 +28,31 @@
       return $http.delete(url);
     };
 
+    function recoverProm(errorResponse) {
+      Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaEntitlementEnablementFailure');
+      return undefined;
+    }
+
+    function enableMediaServiceEntitlements() {
+      return [enableRhesosEntitlement().catch(recoverProm), enableCallServiceEntitlement().catch(recoverProm)];
+    }
+
+    function enableMediaServiceEntitlementsWizard() {
+      return [enableRhesosEntitlement().catch(recoverPromFailure), enableCallServiceEntitlement().catch(recoverPromFailure)];
+    }
+
+    function recoverPromFailure(errorResponse) {
+      var errormsg = Notification.getTrackingId(errorResponse);
+      return errormsg;
+    }
 
     function enableMediaService(serviceId) {
-      ServiceDescriptorService.enableService(serviceId).then(
-        function success() {
-          setisMediaServiceEnabled(true);
-          enableOrpheusForMediaFusion();
-          enableRhesosEntitlement();
-          enableCallServiceEntitlement();
-          setOrgSettingsForDevOps();
-        },
-        function error() {
-          Notification.error('mediaFusion.mediaServiceActivationFailure');
-        });
+      ServiceDescriptorService.enableService(serviceId).then('', function () {
+        Notification.error('mediaFusion.mediaServiceActivationFailure');
+      });
+      setIsMediaServiceEnabled(true);
+      enableOrpheusForMediaFusion();
+      setOrgSettingsForDevOps();
     }
 
     var enableOrpheusForMediaFusion = function () {
@@ -78,10 +89,18 @@
     };
 
     var addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
+      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
+        function error() {
+          $timeout(function () {
+            //Adding a 3 sec timeout here so that on failure this API will be retried.
+            //As per the flow when this call is being executed, user will will be redirected to a new tab to continue registering the node to the cloud.
+            //Hence the tab won’t be closed in the given timeout period.
+            setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
+              function error(errorResponse) {
+                logUserIdentityOrgToMediaAgentOrgMapping(errorResponse);
+                Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
+              });
+          }, 3000);
         });
     };
 
@@ -91,7 +110,7 @@
       if (!_.isUndefined(vm.isMediaServiceEnabled)) {
         isMediaService.resolve(vm.isMediaServiceEnabled);
       } else {
-        HybridServicesClusterService.serviceIsSetUp(vm.mediaServiceId).then(function (enabled) {
+        ServiceDescriptorService.isServiceEnabled(vm.mediaServiceId).then(function (enabled) {
           if (enabled) {
             vm.isMediaServiceEnabled = enabled;
           }
@@ -101,7 +120,7 @@
       return isMediaService.promise;
     };
 
-    var setisMediaServiceEnabled = function (value) {
+    var setIsMediaServiceEnabled = function (value) {
       vm.isMediaServiceEnabled = value;
     };
 
@@ -141,12 +160,7 @@
 
     var enableRhesosEntitlement = function () {
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/rhesos';
-      return $http.post(url).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
-        }
-      );
+      return $http.post(url);
     };
 
     var enableCallServiceEntitlement = function () {
@@ -155,12 +169,7 @@
         roles: ['Spark_CallService'],
       };
       var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/services/spark';
-      return $http.post(url, payload).then(
-        function success() {},
-        function error(errorResponse) {
-          Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaNetworkFailure');
-        }
-      );
+      return $http.post(url, payload);
     };
 
     var setOrgSettingsForDevOps = function () {
@@ -169,6 +178,12 @@
         mediaFusionEnabledAt: moment().utc(),
       };
       Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+      var payload = {
+        isMediaFusionEnabled: true,
+        updatedTime: moment().utc(),
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
+      $http.post(url, payload);
     };
 
     var disableMFOrgSettingsForDevOps = function () {
@@ -176,10 +191,30 @@
         isMediaFusionEnabled: false,
       };
       Orgservice.setOrgSettings(Authinfo.getOrgId(), settings);
+      var payload = {
+        isMediaFusionEnabled: false,
+        updatedTime: moment().utc(),
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/hms_org_activation';
+      return $http.post(url, payload);
+    };
+
+    var logUserIdentityOrgToMediaAgentOrgMapping = function (response) {
+      var status = response.status;
+      var statusText = response.statusText;
+      var message = 'statusCode: ' + status + ', statusText: ' + statusText;
+      var trackingId = Notification.getTrackingId(response);
+      var payload = {
+        serviceName: 'Orpheus',
+        message: message,
+        trackingId: trackingId,
+      };
+      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/log_message';
+      return $http.post(url, payload);
     };
 
     return {
-      setisMediaServiceEnabled: setisMediaServiceEnabled,
+      setIsMediaServiceEnabled: setIsMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
       getUserIdentityOrgToMediaAgentOrgMapping: getUserIdentityOrgToMediaAgentOrgMapping,
       setUserIdentityOrgToMediaAgentOrgMapping: setUserIdentityOrgToMediaAgentOrgMapping,
@@ -188,6 +223,8 @@
       disableOrpheusForMediaFusion: disableOrpheusForMediaFusion,
       deactivateHybridMedia: deactivateHybridMedia,
       disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
+      enableMediaServiceEntitlements: enableMediaServiceEntitlements,
+      enableMediaServiceEntitlementsWizard: enableMediaServiceEntitlementsWizard,
     };
   }
 })();

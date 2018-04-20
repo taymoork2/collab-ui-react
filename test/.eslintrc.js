@@ -1,6 +1,10 @@
 module.exports = {
   extends: ['../.eslintrc.js'],
   plugins: ['lodash', 'promise'],
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+  },
   rules: {
     // custom rule defined in config/rules/protractor-guidelines.js
     // deactivated because tons of e2e tests do not pass it…
@@ -42,6 +46,7 @@ module.exports = {
     config: true,
     customers: true,
     deleteUtils: true,
+    aaGetCeUtils: true,
     createUtils: true,
     describe: true,
     disyncwizard: true,
@@ -63,6 +68,8 @@ module.exports = {
     careFeatureLandingPage: true,
     careChatTemplateSetupPage: true,
     careVirtualAssistantTemplateSetupPage: true,
+    careAppleBusinessChatPage: true,
+    careSettingsPage: true,
     inject: true,
     invite: true,
     inviteusers: true,
@@ -82,6 +89,7 @@ module.exports = {
     orgprofile: true,
     partner: true,
     process: true,
+    Promise: true,
     protractor: true,
     provisionerKeepCustomer: true,
     reports: true,

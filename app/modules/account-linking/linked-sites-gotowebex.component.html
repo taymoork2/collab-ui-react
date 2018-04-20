@@ -1,0 +1,7 @@
+<form action="{{$ctrl.trustSrc}}"
+      style="display:none"
+      method="post"
+      target="_blank">
+  <input type="hidden" name="authorization" value="{{$ctrl.accessToken}}">
+  <button type="submit" id="{{$ctrl.buttonId}}" aria-label="{{::'common.submit' | translate}}"></button>
+</form>

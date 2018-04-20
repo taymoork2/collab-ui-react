@@ -2,8 +2,11 @@
   'use strict';
 
   angular.module('Mediafusion').service('MediaReportsDummyGraphService', MediaReportsDummyGraphService);
+
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
-  function MediaReportsDummyGraphService($translate, chartColors) {
+  function MediaReportsDummyGraphService($translate) {
     var vm = this;
     vm.average_utilzation = $translate.instant('mediaFusion.metrics.avgutilization');
     vm.client_types = $translate.instant('mediaFusion.metrics.clientTypes');
@@ -18,7 +21,7 @@
       dummyAvailabilityData: dummyAvailabilityData,
       dummyLineChartData: dummyLineChartData,
       dummyUtilizationGraph: dummyUtilizationGraph,
-      dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
+      dummyClusterLineChartGraph: dummyClusterLineChartGraph,
       dummyClientTypeGraph: dummyClientTypeGraph,
       dummyMeetingLocationGraph: dummyMeetingLocationGraph,
       dummyNumberOfParticipantGraph: dummyNumberOfParticipantGraph,
@@ -29,7 +32,7 @@
       var start;
       var end;
       var duration;
-      var color = chartColors.grayLightTwo;
+      var color = ChartColors.grayLightTwo;
       var period;
       if (filter.value === 0) {
         end = moment().utc().format(vm.timeFormat);
@@ -108,8 +111,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 1) {
@@ -119,8 +122,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 2) {
@@ -130,8 +133,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else if (filter.value === 3) {
@@ -141,8 +144,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       } else {
@@ -152,8 +155,8 @@
             call_reject: Math.floor((Math.random() * 1) + 1),
             active_calls: Math.floor((Math.random() * 1) + 1),
             balloon: false,
-            colorOne: chartColors.grayLightThree,
-            colorTwo: chartColors.grayLightTwo,
+            colorOne: ChartColors.grayLightThree,
+            colorTwo: ChartColors.grayLightTwo,
           });
         }
       }
@@ -212,19 +215,19 @@
         title: vm.average_utilzation,
         valueField: 'field',
         dashLength: 4,
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       });
       return dummyGraph;
     }
 
-    function dummyParticipantDistributionGraph() {
+    function dummyClusterLineChartGraph() {
       var dummyGraph = [];
       dummyGraph.push({
         title: vm.clusterHeading,
         valueField: 'field',
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       });
@@ -236,7 +239,7 @@
       dummyGraph.push({
         title: vm.client_types,
         valueField: 'field',
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       });
@@ -248,13 +251,13 @@
       dummyGraph.push({
         title: vm.cloudHeading,
         valueField: 'field',
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       }, {
         title: vm.onPremisesHeading,
         valueField: 'field',
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       });
@@ -266,7 +269,7 @@
       dummyGraph.push({
         title: vm.locations,
         valueField: 'field',
-        lineColor: chartColors.grayLightTwo,
+        lineColor: ChartColors.grayLightTwo,
         showBalloon: false,
         isDummy: true,
       });

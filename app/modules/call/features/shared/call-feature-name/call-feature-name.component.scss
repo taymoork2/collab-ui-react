@@ -1,0 +1,49 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.call-feature-name {
+  .name-add {
+    margin-top: calc(32vh - 143px);
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .title {
+      color: $color-primary-base;
+      font-family: $brand-font-thin;
+      font-size: $h1-font-size;
+
+      @include vr-spacing(pt, 3);
+    }
+    .desc {
+      @include vr-spacing(pt, 1);
+      @include vr-spacing(pb, 2.5);
+      color: $gray-dark-1;
+      font-family: $brand-font-light;
+      font-size: $h4-font-size;
+    }
+  }
+  .name-input {
+    display: inline-flex;
+    align-items: inherit;
+    margin-right: auto;
+    margin-left: auto;
+    width: 54.5rem;
+    .cs-input {
+      width: 19rem;
+      margin-left: 2px;
+    }
+    .input-description {
+      width: 56rem;
+    }
+  }
+}
+
+.cs-setupassistant--content {
+  .call-feature-name {
+    .typeahead-large.no-margin-top {
+      margin-top: 0;
+    }
+  }
+}

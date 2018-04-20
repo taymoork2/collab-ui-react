@@ -4,7 +4,7 @@
   module.exports = ServiceSetup;
 
   /* @ngInject */
-  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, DateFormatService, ExternalNumberPool, FeatureToggleService, MediaManagerService, SiteCountryService, SiteLanguageService, SiteService, TimeFormatService, TimeZoneService, VoicemailService, VoicemailTimezoneService) {
+  function ServiceSetup($filter, $q, $translate, Authinfo, AvrilSiteService, AvrilSiteUpdateService, CeSiteService, CustomerCommonService, CustomerCosRestrictionServiceV2, ExternalNumberPool, FeatureToggleService, MediaManagerService, SiteService, VoicemailService, VoicemailTimezoneService) {
     return {
       internalNumberRanges: [],
       sites: [],
@@ -100,15 +100,15 @@
       },
 
       getDateFormats: function () {
-        return DateFormatService.query().$promise;
+        return $q.resolve(require('./dateFormats.json'));
       },
 
       getTimeFormats: function () {
-        return TimeFormatService.query().$promise;
+        return $q.resolve(require('./timeFormat.json'));
       },
 
       getTimeZones: function () {
-        return TimeZoneService.query().$promise;
+        return $q.resolve(require('./jodaTimeZones.json'));
       },
 
       getTranslatedTimeZones: function (timeZones) {
@@ -131,7 +131,7 @@
 
       getTranslatedSiteLanguages: function (languages) {
         var localizedLanguages = _.map(languages, function (language) {
-          return _.assign(language, {
+          return _.assign({}, language, {
             label: $translate.instant(language.label),
           });
         });
@@ -139,14 +139,14 @@
       },
 
       getSiteCountries: function () {
-        return SiteCountryService.query().$promise.then(function (countries) {
+        return $q.resolve(require('./siteCountries.json')).then(function (countries) {
           return filterFeatureToggleEnabledObjects(countries);
         });
       },
 
       getTranslatedSiteCountries: function (countries) {
         var localizedCountries = _.map(countries, function (country) {
-          return _.assign(country, {
+          return _.assign({}, country, {
             label: $translate.instant(country.label),
           });
         });
@@ -221,7 +221,7 @@
     }
 
     function getAllLanguages() {
-      return SiteLanguageService.query().$promise;
+      return $q.resolve(require('./siteLanguages.json'));
     }
   }
 })();

@@ -1,0 +1,151 @@
+{
+  "customers": [
+      {
+          "customerId": "955ad3d9-2e02-4877-aa0c-ee627bebebad",
+          "customerName": "GRUPPO24ORE",
+          "customerOrgId": "d29971f7-7f4b-4fc1-b576-205b5d2a734c",
+          "customerAdminEmail": "tutor24@ilsole24ore.com",
+          "licenses": [
+              {
+                  "licenseId": "CMR_607b57eb-178e-48f4-8e3b-0a122394f525_elearning24.webex.com",
+                  "offerName": "CMR",
+                  "licenseType": "CMR",
+                  "features": [],
+                  "volume": 250,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "capacity": 200,
+                  "siteUrl": "elearning24.webex.com",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it",
+                  "isCIUnifiedSite": true
+              },
+              {
+                  "licenseId": "EE_7f958056-1eaf-4729-8d79-f33543aedba9_elearning24.webex.com",
+                  "offerName": "EE",
+                  "licenseType": "CONFERENCING",
+                  "features": [
+                      "cloudmeetings"
+                  ],
+                  "volume": 250,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "capacity": 200,
+                  "siteUrl": "elearning24.webex.com",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it",
+                  "isCIUnifiedSite": true
+              },
+              {
+                  "licenseId": "MS_ae17d07e-0836-4b07-bc4c-c0868c5e89f6",
+                  "offerName": "MS",
+                  "licenseType": "MESSAGING",
+                  "features": [
+                      "squared-room-moderation"
+                  ],
+                  "volume": 250,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it"
+              },
+              {
+                  "licenseId": "ST_1fc83bfa-fb6e-45c6-b8fb-9f407accefe1",
+                  "offerName": "ST",
+                  "licenseType": "STORAGE",
+                  "features": [],
+                  "volume": 250,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it"
+              },
+              {
+                  "licenseId": "CDC_f41542e7-5aeb-4b3b-826f-7360cb65943c",
+                  "offerName": "CDC",
+                  "licenseType": "CARE",
+                  "features": [
+                      "contact-center-context",
+                      "cloud-contact-center-digital",
+                      "cloud-contact-center"
+                  ],
+                  "volume": 15,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it"
+              },
+              {
+                  "licenseId": "CF_c021d16e-67f3-4736-bf4a-70087a65a0b8",
+                  "offerName": "CF",
+                  "licenseType": "CONFERENCING",
+                  "features": [
+                      "squared-syncup"
+                  ],
+                  "volume": 250,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it"
+              },
+              {
+                  "licenseId": "SD_681b3001-8efc-4e99-afac-f9aa20051231",
+                  "offerName": "SD",
+                  "licenseType": "SHARED_DEVICES",
+                  "features": [
+                      "spark-room-system",
+                      "ciscouc"
+                  ],
+                  "volume": 5,
+                  "isTrial": true,
+                  "trialId": "5958bdb8-05a0-41d1-acc3-36849f6558db",
+                  "status": "ACTIVE",
+                  "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+                  "partnerEmail": "solutioncenter@maticmind.it"
+              }
+          ],
+          "customerType": "Pending",
+          "commerceRelation": "Partner",
+          "licenseEnforcement": {
+              "licenseExceedAction": "NOTHING",
+              "licenseExceedThreshold": "NA"
+          },
+          "isTestCustomer": false
+      },
+      {
+          "customerId": "4439cb6b-1501-49ae-9383-bed04837e8b4",
+          "customerName": "GRUPPO24ORE",
+          "customerOrgId": "d29971f7-7f4b-4fc1-b576-205b5d2a734c",
+          "customerAdminEmail": "tutor24@ilsole24ore.com",
+          "subscriptions": [
+              {
+                  "subscriptionId": "816c6660-3253-4fb3-8a0a-6f9744a661cb",
+                  "externalSubscriptionId": "Sub121303",
+                  "partnerAdminId": "3acf26d4-5b61-42d6-972e-84d60016befa",
+                  "trialDuration": 0,
+                  "status": "PENDING",
+                  "licenses": [],
+                  "duration": 0,
+                  "gracePeriod": 0,
+                  "orderingTool": "CCW",
+                  "pendingServiceOrderUUID": "7198d234-9542-4267-8e2f-5a1cb7fa4bdf"
+              }
+          ],
+          "customerType": "Enterprise",
+          "commerceRelation": "Direct",
+          "licenseEnforcement": {
+              "licenseExceedAction": "NOTHING",
+              "licenseExceedThreshold": "NA"
+          },
+          "isTestCustomer": false,
+          "partnerOrgId": "ea9c0f67-7046-46ec-a742-d63fa20073bd",
+          "customerSetupStatus": "INITIALIZED"
+      }
+  ]
+}

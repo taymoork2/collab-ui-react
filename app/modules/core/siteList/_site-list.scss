@@ -1,6 +1,7 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .site-list {
   @extend %grid-header;
@@ -9,6 +10,9 @@
   .ui-grid-row {
     &:hover {
       background-color: transparent;
+    }
+    .badge.primary.ui-grid-cell-contents__badge--pending {
+      margin-left: 20px;
     }
   }
 
@@ -58,5 +62,36 @@
   .webex-hidden-form {
     display: none;
   }
+
+  .tabs-container {
+    padding: 1rem;
+
+    ul.menu {
+      margin-left: 0.25rem;
+      padding: 0;
+      border: 0px;
+      li {
+        display: inline;
+        margin-right: 1rem;
+        font-family: $brand-font-light;
+        &:hover {
+          cursor: pointer;
+          color: $color-primary-base;
+        }
+        .active {
+          color: $color-primary-base;
+        }
+        .link {
+          border: 0px;
+          outline: none;
+        }
+        span {
+          font-size:1rem;
+          color: $gray-2;
+        }
+      }
+    }
+  }
+
 }
 

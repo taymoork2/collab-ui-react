@@ -5,8 +5,8 @@
 
   /* @ngInject */
   function wx2AdminWebClientApp($animate, $document, $interval, $location, $rootScope, $state, $timeout, $translate, $window, Auth, Authinfo, Config,
-    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, MetricsService, OnlineUpgradeService, PreviousState, SessionStorage,
-    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowService) {
+    HealthService, IdleTimeoutService, Localize, Log, LogMetricsService, MetricsService, OnlineUpgradeService, PreviousState, SecurityPolicyViolationService, SessionStorage,
+    StorageKeys, TokenService, TrackingId, Utils, TOSService, WindowEventService) {
     //Expose the localize service globally.
     $rootScope.Localize = Localize;
     $rootScope.Utils = Utils;
@@ -14,15 +14,13 @@
     $rootScope.exporting = false;
     var LOGIN_STATE = 'login';
 
-    setNewRelicRouteName(LOGIN_STATE);
-
     function timeoutReportLoadingMetrics() {
       $timeout(MetricsService.reportLoadingMetrics.bind(MetricsService));
     }
     if ($document.readyState === 'complete') {
-      MetricsService.reportLoadingMetrics();
+      timeoutReportLoadingMetrics();
     } else {
-      WindowService.registerEventListener('load', timeoutReportLoadingMetrics);
+      WindowEventService.registerEventListener('load', timeoutReportLoadingMetrics);
     }
 
     $rootScope.typeOfExport = {
@@ -37,6 +35,7 @@
     TokenService.setAuthorizationHeader();
 
     IdleTimeoutService.init();
+    SecurityPolicyViolationService.init();
 
     Config.setTestEnvConfig($location.search()['test-env-config']);
 
@@ -133,8 +132,6 @@
     );
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-      setNewRelicRouteName(toState.name);
-
       // TrackingId is generated/incremented on each request
       // Clear the current TrackingId when a new state is loaded
       TrackingId.clear();
@@ -146,12 +143,5 @@
       // Add Body Class to the $rootScope on stateChange
       $rootScope.bodyClass = _.get(toState, 'data.bodyClass') || _.replace(toState.name, /\./g, '-') + '-state';
     });
-
-    function setNewRelicRouteName(name) {
-      if (typeof newrelic !== 'undefined') {
-        /* global newrelic */
-        newrelic.setCurrentRouteName(name);
-      }
-    }
   }
 })();

@@ -8,9 +8,10 @@
     .factory('ScimPatchService', ScimPatchService);
 
   /* @ngInject */
-  function PartnerService($http, $rootScope, $q, $translate, Analytics, Authinfo, Config, MetricsService, TrialService, UrlConfig, UserRoleService) {
+  function PartnerService($http, $rootScope, $q, $resource, $translate, Analytics, Authinfo, Config, MetricsService, TrialService, UrlConfig, UserRoleService) {
     var managedOrgsUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/managedOrgs';
     var siteListUrl = UrlConfig.getAdminServiceUrl() + 'organizations/%s/sitesProvOrderStatus';
+    var patchAdminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/:orgId/users/:userId/actions/configureCustomerAdmin/invoke?customerOrgId=:customerOrgId';
 
     var customerStatus = {
       FREE: 0,
@@ -18,11 +19,7 @@
       ACTIVE: 2,
       CANCELED: 99,
       NO_LICENSE: -1,
-      NOTE_EXPIRED: 0,
-      NOTE_EXPIRE_TODAY: 0,
-      NOTE_NO_LICENSE: 0,
-      NOTE_CANCELED: 0,
-      NOTE_NOT_EXPIRED: 99,
+      NOTE_DAYS_LEFT: 100,
     };
 
     var helpers = {
@@ -42,6 +39,7 @@
 
     var factory = {
       customerStatus: customerStatus,
+      getAccountStatus: getAccountStatus,
       getManagedOrgsList: getManagedOrgsList,
       modifyManagedOrgs: modifyManagedOrgs,
       isLicenseATrial: isLicenseATrial,
@@ -60,6 +58,8 @@
       getTrialMeetingServices: getTrialMeetingServices,
       canAdminTrial: canAdminTrial,
       isServiceManagedByCurrentPartner: isServiceManagedByCurrentPartner,
+      isServiceManagedByCustomer: isServiceManagedByCustomer,
+      updateOrgForCustomerView: updateOrgForCustomerView,
       helpers: helpers,
     };
 
@@ -188,7 +188,7 @@
       return freeServices;
     }
 
-    function _LicensedService(licenseInfo, mapping) {
+    function _LicensedService(licenseInfo, mapping, customerOrgId) {
       var isConference = (mapping[Config.offerCodes.CF] !== undefined);
       var service;
       if (isConference) {
@@ -198,16 +198,22 @@
         if (!service) {
           // TODO: remove after identifying unhandled offers
           var licenseInfoDebug = _.pick(licenseInfo, ['capacity', 'features', 'isCIUnifiedSite', 'isTrial', 'licenseId', 'licenseType', 'offerName', 'partnerOrgId', 'status', 'trialId', 'volume']);
-          MetricsService.trackDiagnosticMetricAndThrow(DiagnosticKey.LICENSE_MAP_ERROR, licenseInfoDebug);
+          licenseInfoDebug.customerOrgId = customerOrgId;
+          MetricsService.trackDiagnosticMetric(DiagnosticKey.LICENSE_MAP_ERROR, licenseInfoDebug);
+        } else {
+          service.licenseType = licenseInfo.licenseType;
         }
-        service.licenseType = licenseInfo.licenseType;
       }
-
-      _.assign(this, service);
-      this.qty = licenseInfo.volume || 0;
+      if (service) {
+        _.assign(this, service);
+        this.qty = licenseInfo.volume || 0;
+      }
     }
 
     function _addService(services, service) {
+      if (!service || _.isEmpty(service)) {
+        return;
+      }
       var existingService = _.find(services, {
         name: service.name,
       });
@@ -234,16 +240,20 @@
       var isShowCMR = options.isShowCMR;
       var isCareEnabled = options.isCareEnabled;
       var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
+      var hiddenWebexServices = [Config.licenseTypes.STORAGE, Config.licenseTypes.AUDIO];
+      var isWebexServiceHidden = _.includes(hiddenWebexServices, service.licenseType);
+      var isServiceProPack = service.licenseType === Config.licenseTypes.MANAGEMENT;
 
       var serviceNotCareOrCareIsShown = (service.licenseType !== Config.licenseTypes.CARE || isCareEnabled) &&
         (service.licenseType !== Config.licenseTypes.ADVANCE_CARE || isAdvanceCareEnabled);
-      var serviceNotHiddenWebex = ((service.licenseType !== Config.licenseTypes.STORAGE) && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
+      var serviceNotHiddenWebex = (!isWebexServiceHidden && (isShowCMR || service.licenseType !== Config.licenseTypes.CMR));
+
       //if 'isTrial' it has to be true. Otherwise any false value is fine
       var correctServiceStatus = true;
       if (isTrial !== undefined) {
         correctServiceStatus = (isTrial) ? (service.isTrial === true) : !service.isTrial;
       }
-      return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus);
+      return (serviceNotHiddenWebex && serviceNotCareOrCareIsShown && correctServiceStatus && !isServiceProPack);
     }
 
     function getManagedOrgsList(searchText) {
@@ -266,6 +276,16 @@
       });
     }
 
+    function updateOrgForCustomerView(customerOrgId) {
+      var params = {
+        orgId: Authinfo.getOrgId(),
+        userId: Authinfo.getUserId(),
+        customerOrgId: customerOrgId,
+      };
+
+      return $resource(patchAdminUrl, params).save().$promise;
+    }
+
     function getLicenseObj(rowData, licenseTypeField) {
       return rowData[licenseTypeField] || null;
     }
@@ -285,7 +305,7 @@
     // end series of fn's
 
     function isLicenseTypeAny(customerData, licenseTypeField) {
-      if (!isLicenseInfoAvailable(customerData.licenseList)) {
+      if (!isLicenseInfoAvailable(customerData)) {
         return false;
       }
       if (licenseTypeField === 'webex') {
@@ -308,8 +328,8 @@
       return (offers.length === 0) ? {} : offers;
     }
 
-    function isLicenseInfoAvailable(licenses) {
-      return _.isArray(licenses);
+    function isLicenseInfoAvailable(rowData) {
+      return _.isArray(_.get(rowData, 'licenseList'));
     }
 
     function setServiceSortOrder(license) {
@@ -328,45 +348,66 @@
       }
     }
 
+    function hasTrialLicenses(rowData) {
+      return _.some(Config.licenseObjectNames, function (type) {
+        return isLicenseInfoAvailable(rowData) && isLicenseATrial(getLicenseObj(rowData, type));
+      });
+    }
+
+    function getAccountStatus(rowData) {
+      var status = 'active';
+      var hasTrial = hasTrialLicenses(rowData);
+
+      if (hasTrial) {
+        if (rowData.purchased) {
+          status = (rowData.daysLeft < 0) ? 'purchasedWithExpired' : 'purchasedWithActive';
+        } else {
+          status = (rowData.daysLeft < 0) ? 'expired' : 'trial';
+        }
+      } else if (_.isEmpty(rowData.licenseList)) {
+        status = 'expired';
+      }
+
+      return status;
+    }
+
     function setNotesSortOrder(rowData) {
       var notes = {};
+      var key = 'licenseInfoNotAvailable';
+      var hasTrial = hasTrialLicenses(rowData);
+
       notes.daysLeft = rowData.daysLeft;
-      if (isLicenseInfoAvailable(rowData.licenseList)) {
+      if (isLicenseInfoAvailable(rowData)) {
         if (rowData.status === 'CANCELED') {
-          notes.sortOrder = customerStatus.NOTE_CANCELED;
-          notes.text = $translate.instant('customerPage.suspended');
-        } else if (rowData.purchased) {
-          notes.sortOrder = customerStatus.ACTIVE;
-          notes.text = $translate.instant('customerPage.purchased');
+          key = 'suspended';
+        } else if (rowData.purchased && !hasTrial) {
+          key = 'purchased';
         } else if (rowData.customerOrgId === Authinfo.getOrgId()) {
-          notes.sortOrder = customerStatus.ACTIVE;
-          notes.text = $translate.instant('customerPage.myOrganization');
+          key = 'myOrganization';
         } else if (rowData.status === 'ACTIVE' || rowData.status === 'EXPIRED') {
-          // while "daysLeft > 0" and expired doesn't make sense, the other 2 cases have the same text
+          notes.sortOrder = customerStatus.NOTE_DAYS_LEFT;
           if (rowData.daysLeft > 0) {
-            notes.sortOrder = customerStatus.NOTE_NOT_EXPIRED;
             notes.text = $translate.instant('customerPage.daysLeftToPurchase', {
               count: rowData.daysLeft,
             }, 'messageformat');
           } else if (rowData.daysLeft === 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRE_TODAY;
-            notes.text = $translate.instant('customerPage.expiringToday');
+            key = 'expiringToday';
           } else if (rowData.daysLeft < 0) {
-            notes.sortOrder = customerStatus.NOTE_EXPIRED;
-            // equal to the maximum days past expiration, always negative!
-            var gracePeriodDays = Config.trialGracePeriod;
-            if (_.inRange(rowData.daysLeft, 0, gracePeriodDays)) {
-              notes.text = $translate.instant('customerPage.expiredWithGracePeriod');
+            if (rowData.accountStatus === 'pending') {
+              key = 'needsSetup';
+            } else if (rowData.startDate && _.inRange(rowData.daysLeft, 0, Config.trialGracePeriod)) {
+              notes.text = $translate.instant('customerPage.expiredWithGracePeriod', {
+                count: rowData.daysLeft - Config.trialGracePeriod,
+              }, 'messageformat');
             } else {
-              notes.text = $translate.instant('customerPage.expired');
+              key = 'expired';
             }
           }
         }
       }
-      // If any of the previous tests fail, fall back to no license info
-      if (!_.has(notes, 'text')) {
-        notes.sortOrder = customerStatus.NOTE_NO_LICENSE;
-        notes.text = $translate.instant('customerPage.licenseInfoNotAvailable');
+
+      if (_.isUndefined(notes.text)) {
+        notes.text = $translate.instant('customerPage.' + key);
       }
       rowData.notes = notes;
     }
@@ -380,15 +421,16 @@
     function massageDataForCustomer(customer, options) {
       var edate = moment(customer.startDate).add(customer.trialPeriod, 'days').format('MMM D, YYYY');
       var dataObj = {
+        accountStatus: '',
         trialId: customer.trialId,
         customerOrgId: customer.customerOrgId || customer.id,
-        customerName: customer.customerName || customer.displayName,
+        customerName: customer.customerName || customer.displayName || '',
         customerEmail: customer.customerEmail || customer.email,
         endDate: edate,
         startDate: customer.startDate,
         numUsers: customer.allUsers || 0, // sometimes we get back undefined users, temp workaround
         activeUsers: customer.activeUsers || 0,
-        daysLeft: 0,
+        daysLeft: -1,
         usage: 0,
         licenses: 0,
         deviceLicenses: 0,
@@ -405,7 +447,7 @@
         advanceCare: null,
         daysUsed: 0,
         percentUsed: 0,
-        duration: customer.trialPeriod,
+        duration: customer.trialPeriod || 0,
         dealId: customer.dealId,
         offer: {},
         offers: customer.offers,
@@ -427,44 +469,40 @@
       dataObj.unmodifiedLicenses = _.cloneDeep(customer.licenses);
       dataObj.licenseList = customer.licenses;
 
-      var premiumLicenses = _.filter(customer.licenses, function (license) {
+      var premiumLicenses = _.filter(dataObj.licenseList, function (license) {
         return license.offerName === Config.offerCodes.MGMTPRO;
       });
       dataObj.isPremium = _.some(premiumLicenses);
 
-      var daysDone = TrialService.calcDaysUsed(customer.startDate);
-      dataObj.daysUsed = daysDone;
-      dataObj.percentUsed = Math.round((daysDone / customer.trialPeriod) * 100);
+      dataObj.daysUsed = TrialService.calcDaysUsed(customer.startDate);
+      dataObj.percentUsed = (dataObj.duration > 0) ? Math.round((dataObj.daysUsed / dataObj.duration) * 100) : 0;
 
-      var daysLeft = TrialService.calcDaysLeft(customer.startDate, customer.trialPeriod);
-      dataObj.daysLeft = daysLeft;
-      if (dataObj.isTrialData) {
-        if (daysLeft < 0) {
-          dataObj.status = $translate.instant('customerPage.expired');
-          dataObj.state = 'EXPIRED';
-        }
+      dataObj.daysLeft = TrialService.calcDaysLeft(customer.startDate, dataObj.duration);
+      if ((dataObj.isTrialData) && (dataObj.daysLeft < 0)) {
+        dataObj.status = $translate.instant('customerPage.expired');
+        dataObj.state = 'EXPIRED';
       }
 
       var serviceEntry = {
         status: dataObj.status,
-        daysLeft: daysLeft,
+        daysLeft: dataObj.daysLeft,
         customerName: dataObj.customerName,
       };
 
       // havent figured out what this is doing yet...
-      dataObj.sparkConferencing = initializeService(customer.licenses, Config.offerCodes.CF, serviceEntry);
-      dataObj.communications = initializeService(customer.licenses, Config.offerCodes.CO, serviceEntry);
-      dataObj.webexEventCenter = initializeService(customer.licenses, Config.offerCodes.EC, serviceEntry);
-      dataObj.webexEEConferencing = initializeService(customer.licenses, Config.offerCodes.EE, serviceEntry);
-      dataObj.webexMeetingCenter = initializeService(customer.licenses, Config.offerCodes.MC, serviceEntry);
-      dataObj.messaging = initializeService(customer.licenses, Config.offerCodes.MS, serviceEntry);
-      dataObj.webexSupportCenter = initializeService(customer.licenses, Config.offerCodes.SC, serviceEntry);
-      dataObj.roomSystems = initializeService(customer.licenses, Config.offerCodes.SD, serviceEntry);
-      dataObj.sparkBoard = initializeService(customer.licenses, Config.offerCodes.SB, serviceEntry);
-      dataObj.webexTrainingCenter = initializeService(customer.licenses, Config.offerCodes.TC, serviceEntry);
-      dataObj.webexCMR = initializeService(customer.licenses, Config.offerCodes.CMR, serviceEntry);
-      dataObj.care = initializeService(customer.licenses, Config.offerCodes.CDC, serviceEntry);
-      dataObj.advanceCare = initializeService(customer.licenses, Config.offerCodes.CVC, serviceEntry);
+      dataObj.sparkConferencing = initializeService(dataObj.licenseList, Config.offerCodes.CF, serviceEntry);
+      dataObj.communications = initializeService(dataObj.licenseList, Config.offerCodes.CO, serviceEntry);
+      dataObj.webexEventCenter = initializeService(dataObj.licenseList, Config.offerCodes.EC, serviceEntry);
+      dataObj.webexEEConferencing = initializeService(dataObj.licenseList, Config.offerCodes.EE, serviceEntry);
+      dataObj.webexMeetingCenter = initializeService(dataObj.licenseList, Config.offerCodes.MC, serviceEntry);
+      dataObj.messaging = initializeService(dataObj.licenseList, Config.offerCodes.MS, serviceEntry);
+      dataObj.webexSupportCenter = initializeService(dataObj.licenseList, Config.offerCodes.SC, serviceEntry);
+      dataObj.roomSystems = initializeService(dataObj.licenseList, Config.offerCodes.SD, serviceEntry);
+      dataObj.sparkBoard = initializeService(dataObj.licenseList, Config.offerCodes.SB, serviceEntry);
+      dataObj.webexTrainingCenter = initializeService(dataObj.licenseList, Config.offerCodes.TC, serviceEntry);
+      dataObj.webexCMR = initializeService(dataObj.licenseList, Config.offerCodes.CMR, serviceEntry);
+      dataObj.care = initializeService(dataObj.licenseList, Config.offerCodes.CDC, serviceEntry);
+      dataObj.advanceCare = initializeService(dataObj.licenseList, Config.offerCodes.CVC, serviceEntry);
 
       // 12/17/2015 - Timothy Trinh
       // setting conferencing to sparkConferencing for now to preserve how
@@ -478,6 +516,7 @@
 
       dataObj.orderedServices = _getOrderedServices(dataObj, options);
 
+      dataObj.accountStatus = getAccountStatus(dataObj);
       setNotesSortOrder(dataObj);
       return dataObj;
     }
@@ -492,6 +531,7 @@
       };
       var servicesManagedByCurrentPartner = [];
       var servicesManagedByAnotherPartner = [];
+      var servicesManagedByCustomer = [];
 
       _.forEach(servicesToProcess, function (service) {
         var serviceToAdd = service;
@@ -501,7 +541,9 @@
 
         var careServiceEnabledPropertyName = careServices[service];
         if (!careServices[service] || _.get(options, careServiceEnabledPropertyName, true)) {
-          if (isServiceManagedByCurrentPartner(data[service])) {
+          if (isServiceManagedByCustomer(data[service])) {
+            servicesManagedByCustomer.push(serviceToAdd);
+          } else if (isServiceManagedByCurrentPartner(data[service])) {
             servicesManagedByCurrentPartner.push(serviceToAdd);
           } else {
             servicesManagedByAnotherPartner.push(serviceToAdd);
@@ -509,22 +551,23 @@
         }
       });
 
-      return { servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
-        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner };
+      return {
+        servicesManagedByCurrentPartner: servicesManagedByCurrentPartner,
+        servicesManagedByAnotherPartner: servicesManagedByAnotherPartner,
+        servicesManagedByCustomer: servicesManagedByCustomer,
+      };
     }
 
     function isServiceManagedByCurrentPartner(serviceObj) {
-      var currentPartnerId = Authinfo.getPrimaryEmail();
-      var currentPartnerOrgId = Authinfo.getOrgId();
+      return (serviceObj.partnerOrgId === Authinfo.getOrgId()) ||
+        (serviceObj.partnerEmail === Authinfo.getPrimaryEmail()) ||
+        _isServiceNotLicensed(serviceObj);
+    }
 
-      var isInCurrentPartnerOrg = serviceObj.partnerOrgId === currentPartnerOrgId;
-      var isCurrentPartnerId = serviceObj.partnerEmail === currentPartnerId;
-      var isNotLicensed = _isServiceNotLicensed(serviceObj);
-      if (isInCurrentPartnerOrg || isCurrentPartnerId || isNotLicensed) {
-        return true;
-      }
-
-      return false;
+    function isServiceManagedByCustomer(serviceObj) {
+      return _.isUndefined(serviceObj.partnerOrgId) &&
+        _.isUndefined(serviceObj.partnerEmail) &&
+        !isLicenseFree(serviceObj);
     }
 
     // Services that are not licensed will not have the usual properties associated with a license. The volume property is a
@@ -538,10 +581,9 @@
 
     function _calculatePurchaseStatus(customerData) {
       if (customerData.state === Config.licenseStatus.ACTIVE && customerData.licenseList) {
-        return !(customerData.licenseList.length === 0 || _.some(customerData.licenseList, 'isTrial'));
-      } else {
-        return false;
+        return !_.isEmpty(customerData.licenseList) && _.some(customerData.licenseList, ['isTrial', false]);
       }
+      return false;
     }
 
 
@@ -557,8 +599,8 @@
       } else {
         // device and care licenses can be undefined
         return customerData.licenses +
-              (customerData.deviceLicenses || 0) +
-              (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
+          (customerData.deviceLicenses || 0) +
+          (_.get(options, 'isCareEnabled', false) ? (customerData.careLicenses || 0) : 0);
       }
     }
 
@@ -674,13 +716,13 @@
         });
     }
 
-    function getTrialMeetingServices(licenseList) {
+    function getTrialMeetingServices(licenseList, customerOrgId) {
       var conferenceMapping = helpers.createConferenceMapping();
       var meetingServices = [];
       _.forEach(licenseList, function (licenseInfo) {
         if (licenseInfo.isTrial) {
           if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
-            var service = new helpers.LicensedService(licenseInfo, conferenceMapping);
+            var service = new helpers.LicensedService(licenseInfo, conferenceMapping, customerOrgId);
             helpers.addService(meetingServices, service);
           }
         }
@@ -808,7 +850,9 @@
           .join(', ');
         var licenseQty = conferenceServices[0].qty;
         var hasWebex = _.some(conferenceServices, { isWebex: true });
-        trialServices.push({ name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex });
+        trialServices.push({
+          name: name, sub: conferenceServices, qty: licenseQty, icon: 'icon-circle-group', order: 1, hasWebex: hasWebex,
+        });
       }
 
       if (sparkCare.length > 0) {
@@ -819,7 +863,9 @@
           return o;
         });
         partial.careLicenses = _.sumBy(uniqueSparkCare, 'qty');
-        trialServices.push({ name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true });
+        trialServices.push({
+          name: careName, sub: uniqueSparkCare, qty: partial.careLicenses, icon: 'icon-circle-contact-centre', order: 5, isSparkCare: true,
+        });
       }
 
       if (roomServices.length > 0) {
@@ -859,6 +905,7 @@
       var isCareEnabled = options.isCareEnabled;
       var isAdvanceCareEnabled = options.isAdvanceCareEnabled;
       var isTrial = options.isTrial;
+      var customerOrgId = customer.customerOrgId;
 
       var meetingHeader = {
         licenseType: 'MEETING',
@@ -886,15 +933,17 @@
         if (licenseInfo) {
           helpers.removeFromFreeServices(freeServices, licenseInfo);
           //from paid or free services
-          if (helpers.isDisplayableService(licenseInfo, { isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled })) { //if conference
+          if (helpers.isDisplayableService(licenseInfo, {
+            isTrial: isTrial, isShowCMR: true, isCareEnabled: isCareEnabled, isAdvanceCareEnabled: isAdvanceCareEnabled,
+          })) { //if conference
             if (licenseInfo.licenseType === Config.licenseTypes.CONFERENCING || licenseInfo.licenseType === Config.licenseTypes.CMR) {
-              service = new helpers.LicensedService(licenseInfo, conferenceMapping);
+              service = new helpers.LicensedService(licenseInfo, conferenceMapping, customerOrgId);
               helpers.addService(meetingServices, service);
             } else if (licenseInfo.licenseType === Config.licenseTypes.SHARED_DEVICES) {
-              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping);
+              service = new helpers.LicensedService(licenseInfo, roomDeviceMapping, customerOrgId);
               helpers.addService(roomDevices, service);
             } else {
-              service = new helpers.LicensedService(licenseInfo, licenseMapping);
+              service = new helpers.LicensedService(licenseInfo, licenseMapping, customerOrgId);
               helpers.addService(paidServices, service);
             }
           }

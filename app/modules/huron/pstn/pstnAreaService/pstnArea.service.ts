@@ -1,5 +1,3 @@
-export const JSON_US: string = 'modules/huron/pstn/pstnAreaService/states.json';
-export const JSON_CA: string = 'modules/huron/pstn/pstnAreaService/provinces.json';
 export const CCODE_US: string = 'US';
 export const CCODE_CA: string = 'CA';
 
@@ -27,16 +25,15 @@ export class PstnAreaService {
   /* @ngInject */
   constructor (
     private $q,
-    private $http,
     private $translate,
   ) {}
 
   public getStates(): ng.IPromise<any> {
-    return this.$http.get(JSON_US);
+    return this.$q.resolve(require('./states.json'));
   }
 
   public getProvinces(): ng.IPromise<any> {
-    return this.$http.get(JSON_CA);
+    return this.$q.resolve(require('./provinces.json'));
   }
 
   private createLocation(zipKey: string, typeKey: string, areas: IArea[]): IAreaData {
@@ -48,20 +45,16 @@ export class PstnAreaService {
   }
 
   public getCountryAreas(countryCode): ng.IPromise<IAreaData> {
-    const defer = this.$q.defer();
     switch (countryCode) {
       case CCODE_CA:
-        this.getProvinces().then((areas) => {
-          defer.resolve(this.createLocation('pstnSetup.postal', 'pstnSetup.province', areas.data));
+        return this.getProvinces().then(areas => {
+          return this.$q.resolve(this.createLocation('pstnSetup.postal', 'pstnSetup.province', areas));
         });
-        break;
       case CCODE_US:
       default:
-        this.getStates().then((areas) => {
-          defer.resolve(this.createLocation('pstnSetup.zip', 'pstnSetup.state', areas.data));
+        return this.getStates().then(areas => {
+          return this.$q.resolve(this.createLocation('pstnSetup.zip', 'pstnSetup.state', areas));
         });
-        break;
     }
-    return defer.promise;
   }
 }

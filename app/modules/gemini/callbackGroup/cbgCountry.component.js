@@ -8,11 +8,11 @@
         selected: '=',
       },
       controller: cbgCountryCtrl,
-      templateUrl: 'modules/gemini/callbackGroup/cbgCountry.tpl.html',
+      template: require('modules/gemini/callbackGroup/cbgCountry.tpl.html'),
     });
 
   /* @ngInject */
-  function cbgCountryCtrl($scope, $modal, $window, $timeout, $translate, Notification, cbgService, WindowLocation) {
+  function cbgCountryCtrl($scope, $modal, $timeout, $translate, Notification, cbgService, WindowLocation) {
     var vm = this;
     vm.model = {
       file: null,
@@ -47,22 +47,27 @@
     }
 
     function getCountries() {
-      cbgService.getCountries().then(function (res) {
-        _.forEach(res.content.data, function (item) {
-          var key = item.countryName.replace(/[()".\-+,\s]/g, '');
-          vm.allCountries[key] = item;
-          vm.options.push({ value: item.countryId, label: item.countryName });
-          if (vm.selected.length) {
-            updateOptions();
-          }
+      cbgService.getCountries()
+        .then(function (res) {
+          _.forEach(res, function (item) {
+            var key = item.name.replace(/[()".\-+,\s]/g, '');
+            vm.allCountries[key] = item;
+            vm.options.push({ value: item.id, label: item.name });
+            if (vm.selected.length) {
+              updateOptions();
+            }
+          });
+          vm.enableBtn = true;
+        })
+        .catch(function () {
+          vm.enableBtn = false;
         });
-      });
     }
 
     function onDownloadTemplate() {
       $modal.open({
         type: 'dialog',
-        templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+        template: require('modules/gemini/telephonyDomain/details/downloadConfirm.html'),
       }).result.then(function () {
         WindowLocation.set(cbgService.getDownloadCountryUrl());
       });
@@ -108,17 +113,14 @@
       setUploadProgress(0);
       if (vm.model.file) {
         setUploadProgress(0);
-        csvArray = $.csv.toArrays(vm.model.file);
-        if (_.isArray(csvArray) && csvArray.length > 1 && _.isArray(csvArray[0])) {
-          csvArray.shift(); // remove first line
-
+        csvArray = _.split(vm.model.file, '\r\n');
+        if (_.size(csvArray) > 1) {
           formateCountries(csvArray);
+          updateOptions();
+          substrFileName();
+          vm.isCsvValid = true;
           if (vm.inValidCountry) {
             Notification.error('gemini.cbgs.invalidCountry', { country: vm.inValidCountry });
-          } else {
-            updateOptions();
-            substrFileName();
-            vm.isCsvValid = true;
           }
         }
         setUploadProgress(100);
@@ -127,20 +129,20 @@
 
     function formateCountries(data) {
       var countries = [];
-      vm.inValidCountry = '';
+      var inValidCountry = [];
       _.forEach(data, function (item) {
-        var key = item[0].replace(/[()".\-+/,\s]/g, '');
-        if (key === 'SelectCountryRegion') {
+        var key = _.replace(item, /[()".\-+/,\s]/g, '');
+        if (_.includes(key, 'Countries') || _.includes(key, 'Regions')) {
           return true;
         }
         if (!vm.allCountries[key]) {
-          vm.inValidCountry = item[0];
-          return false;
+          inValidCountry.push(item);
+          return true;
         }
-        countries.push({ value: vm.allCountries[key].countryId, label: vm.allCountries[key].countryName });
+        countries.push({ value: vm.allCountries[key].id, label: vm.allCountries[key].name });
       });
-
-      vm.selected = countries;
+      vm.inValidCountry = _.join(inValidCountry, ',');
+      vm.selected = _.unionBy(vm.selected, countries, 'value');
     }
 
     function setUploadProgress(percent) {

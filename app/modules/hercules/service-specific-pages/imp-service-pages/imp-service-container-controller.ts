@@ -1,11 +1,9 @@
 import { ExpresswayContainerController } from 'modules/hercules/service-specific-pages/common-expressway-based/expressway-common-container.controller';
 import { Notification } from 'modules/core/notifications';
-import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 export class ImpServiceContainerController extends ExpresswayContainerController {
-
-  public tabs: any = [{
+  public tabs = [{
     title: this.$translate.instant('common.resources'),
     state: 'imp-service.list',
   }, {
@@ -17,30 +15,44 @@ export class ImpServiceContainerController extends ExpresswayContainerController
     resolve: {
       connectorType: () => 'c_imp',
       serviceId: () => 'spark-hybrid-impinterop',
-      firstTimeSetup: false,
+      options: {
+        firstTimeSetup: false,
+        hasCapacityFeatureToggle: this.hasCapacityFeatureToggle,
+      },
     },
     controller: 'AddResourceController',
     controllerAs: 'vm',
-    templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html',
+    template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
     type: 'small',
   };
+
+  public clusterId: string;
 
   /* @ngInject */
   constructor(
     $modal,
-    $scope: ng.IScope,
     $state: ng.ui.IStateService,
+    $timeout: ng.ITimeoutService,
+    private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
-    public clusterId: string,
-    ClusterService: ClusterService,
     Notification: Notification,
     ServiceDescriptorService: ServiceDescriptorService,
     ServiceStateChecker,
     USSService,
+    private hasCapacityFeatureToggle,
   ) {
-    super($modal, $scope, $state, ClusterService, true, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    super($modal, $state, $timeout, Notification, ServiceDescriptorService, ServiceStateChecker, USSService, ['spark-hybrid-impinterop'], 'c_imp');
+    this.clusterId = this.$stateParams['clusterId'];
+    if (this.$stateParams['backState']) {
+      this.backState = this.$stateParams['backState'];
+    }
+    if (this.hasCapacityFeatureToggle) {
+      this.tabs.push({
+        title: this.$translate.instant('common.users'),
+        state: 'imp-service.users',
+      });
+    }
   }
-
 }
 
 angular

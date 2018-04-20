@@ -181,7 +181,7 @@
       "organizations": [{
         "customerOrgId": "b93b10ad-ae24-4abf-9c21-76e8b86faf01",
         "startDate": "2015-11-05T00:00:00.000Z",
-        "trialPeriod": 900,
+        "trialPeriod": 9000,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,
@@ -258,7 +258,7 @@
       }, {
         "customerOrgId": "1803daee-4247-4d67-a812-932382682642",
         "startDate": "2015-10-19T00:00:00.000Z",
-        "trialPeriod": 900,
+        "trialPeriod": 9000,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,
@@ -331,7 +331,7 @@
       }, {
         "customerOrgId": "3166b803-d6a0-4127-9d81-539950339a3d",
         "startDate": "2015-10-10T00:00:00.000Z",
-        "trialPeriod": 900,
+        "trialPeriod": 9000,
         "offers": [{
           "id": "COLLAB",
           "licenseCount": 100,

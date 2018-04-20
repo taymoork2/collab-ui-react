@@ -81,10 +81,13 @@ describe('Service: PstnWizardService', () => {
       'PstnService',
       'FeatureToggleService',
       '$rootScope',
+      'Orgservice',
     );
 
     spyOn(this.Auth, 'getCustomerAccount').and.returnValue(this.$q.resolve(customerAccount));
+    spyOn(this.Orgservice, 'getAdminOrgUsage').and.returnValue(this.$q.resolve(customerAccount));
     installPromiseMatchers();
+
   });
 
   describe('showOrderQuantity', function () {

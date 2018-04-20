@@ -71,6 +71,9 @@ export class NodeListComponentCtrl implements ng.IComponentController {
         const node = _.find(nodes, node => {
           return node.hostname === connector.hostname;
         });
+        if (node.hostname === '') {
+          node.hostname = this.$translate.instant('hercules.connectors.no_name');
+        }
         node.connectors.push(connector);
       }
     });
@@ -80,7 +83,7 @@ export class NodeListComponentCtrl implements ng.IComponentController {
 
 export class NodeListComponent implements ng.IComponentOptions {
   public controller = NodeListComponentCtrl;
-  public templateUrl = 'modules/hercules/cluster-sidepanel/node-list/node-list.html';
+  public template = require('modules/hercules/cluster-sidepanel/node-list/node-list.html');
   public bindings = {
     cluster: '<',
     connectorType: '<',

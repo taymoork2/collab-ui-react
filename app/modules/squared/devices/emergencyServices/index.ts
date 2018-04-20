@@ -17,7 +17,7 @@ export interface IEmergencyServicesData {
 }
 
 export interface IEmergencyServicesStateParams {
-  currentDevice: IDevice;
+  currentHuronDevice: IDevice;
   currentAddress: IEmergencyAddress;
   currentNumber: string;
   status: string;

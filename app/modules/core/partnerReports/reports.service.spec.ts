@@ -73,12 +73,6 @@ describe('Service: Report Service', () => {
       }));
     });
 
-    it('should getOverallActiveUserData', function () {
-      this.ReportService.getOverallActiveUserData(timeFilter).then(function (response) {
-        expect(response).toBe(undefined);
-      });
-    });
-
     it('should getActiveUserData for an existing customer', function () {
       const popData = _.cloneDeep(activeUserData.activePopResponse);
       _.forEach(popData, (data) => {

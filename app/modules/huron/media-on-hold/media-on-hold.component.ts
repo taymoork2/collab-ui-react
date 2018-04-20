@@ -41,7 +41,7 @@ class MediaOnHoldCtrl implements ng.IComponentController {
 
 export class MediaOnHoldComponent implements ng.IComponentOptions {
   public controller = MediaOnHoldCtrl;
-  public templateUrl = 'modules/huron/media-on-hold/media-on-hold.html';
+  public template = require('modules/huron/media-on-hold/media-on-hold.html');
   public bindings = {
     lineMoh: '<',
     lineMohOptions: '<',

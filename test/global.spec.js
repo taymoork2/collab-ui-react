@@ -1,5 +1,14 @@
 'use strict';
 
+/* eslint no-restricted-globals:0 */
+
+var looserKebabCase = require('../utils/looser-kebab-case');
+var consoleWarn = console.warn;
+console.warn = function () {
+  consoleWarn.apply(console, arguments);
+  fail('Unhandled warning in unit test');
+};
+
 var Promise = require('promise');
 require('oclazyload');
 beforeEach(angular.mock.module('oc.lazyLoad', function ($provide) {
@@ -54,7 +63,9 @@ beforeEach(function () {
    * Inject each argument and assign to this context
    */
   this.injectDependencies = function () {
-    var dependencies = _.toArray(arguments);
+    var argumentDependencies = _.toArray(arguments);
+    var commonDependencies = ['$http', '$httpBackend', '$q', '$scope'];
+    var dependencies = _.union(argumentDependencies, commonDependencies);
     return inject(function ($injector) {
       _.forEach(dependencies, _.bind(function (dependency) {
         // skip if we already have this dependency
@@ -114,14 +125,11 @@ beforeEach(function () {
    * Init a controller on this.controller and compile a template on this.view
    *
    * @param {String} controller Name of the controller
-   * @param {String} template Path of the template
+   * @param {String} templateString The template string
    * @param {Object} options Optional controller configuration
    */
-  this.compileView = function (controller, template, options) {
+  this.compileViewTemplate = function (controller, templateString, options) {
     this.initController(controller, options);
-
-    this.injectDependencies('$templateCache');
-    var templateString = this.$templateCache.get(template);
     this.compileTemplate('<div>' + templateString + '</div>');
   };
 
@@ -162,7 +170,7 @@ beforeEach(function () {
    * @returns {string} A template string suitable for compiling
    */
   this.buildComponentTemplateString = function (componentName, componentParamsObj) {
-    var component = _.kebabCase(componentName);
+    var component = looserKebabCase(componentName);
     var componentParams = '';
     this.injectDependencies('$scope'); // just in case we have objects to inject
     // save this.$scope to be accessible inside _.reduce()
@@ -178,13 +186,36 @@ beforeEach(function () {
         } else {
           valueString = value;
         }
-        result += ' ' + _.kebabCase(key) + '="' + valueString + '"';
+        result += ' ' + looserKebabCase(key) + '="' + valueString + '"';
         return result;
       }, '');
     }
     var componentString = '<' + component + componentParams + '></' + component + '>';
     return componentString;
-  }
+  };
+
+  // Inspired by https://velesin.io/2016/08/23/unit-testing-angular-1-5-components/
+  this.spyOnComponent = function (name, options) {
+    function componentSpy($provide) {
+      componentSpy.bindings = [];
+
+      $provide.decorator(name + 'Directive', function ($delegate) {
+        var component = $delegate[0];
+
+        if (_.isObjectLike(component.transclude)) {
+          component.transclude = true; // replace custom transcludes with single transclusion
+        }
+        component.template = component.transclude ? '<div ng-transclude></div>' : '';
+        component.controller = function () {
+          componentSpy.bindings.push(this);
+        };
+        _.assignIn(component, options);
+        return $delegate;
+      });
+    }
+
+    return componentSpy;
+  };
 });
 
 describe('Global Unit Test Config', function () {

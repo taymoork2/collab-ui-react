@@ -1,4 +1,5 @@
 import { PrimaryNumber } from 'modules/huron/primaryLine';
+
 export class UserV1 {
   public uuid?: string;
   public firstName?: string;
@@ -44,7 +45,7 @@ export class UserV2 {
   public userName?: string;
   public sipAddress?: string;
   public preferredLanguage?: string;
-  public numbers?: UserNumber[];
+  public numbers?: IUserNumber[];
   public primaryNumber?: PrimaryNumber;
 
   constructor(obj: {
@@ -69,7 +70,20 @@ export class UserV2 {
   }
 }
 
-export class UserNumber {
+export interface IBaseCallNumber {
+  uuid?: string;
+  internal?: string;
+  external?: string;
+  siteToSite?: string;
+  primary: boolean;
+  shared: boolean;
+}
+
+export interface IUserNumber extends IBaseCallNumber {
+  incomingCallMaximum: number;
+}
+
+export class UserNumber implements IUserNumber {
   public uuid?: string;
   public internal?: string;
   public external?: string;
@@ -78,37 +92,40 @@ export class UserNumber {
   public primary: boolean;
   public shared: boolean;
 
-  constructor(obj: {
-    uuid: string | undefined,
-    internal: string | undefined,
-    external: string | undefined,
-    siteToSite: string | undefined,
-    incomingCallMaximum: number,
-    primary: boolean,
-    shared: boolean,
-
+  constructor(userNumber: IUserNumber = {
+    uuid: '',
+    internal: undefined,
+    external: undefined,
+    siteToSite: undefined,
+    incomingCallMaximum: 3,
+    primary: false,
+    shared: false,
   }) {
-    this.uuid = obj.uuid;
-    this.internal = obj.internal;
-    this.external = obj.external;
-    this.siteToSite = obj.siteToSite;
-    this.incomingCallMaximum = obj.incomingCallMaximum;
-    this.primary = obj.primary;
-    this.shared = obj.shared;
+    this.uuid = userNumber.uuid;
+    this.internal = userNumber.internal;
+    this.external = userNumber.external;
+    this.siteToSite = userNumber.siteToSite;
+    this.incomingCallMaximum = userNumber.incomingCallMaximum;
+    this.primary = userNumber.primary;
+    this.shared = userNumber.shared;
   }
 }
 
-export class UserRemoteDestination {
+export interface IUserRemoteDestination {
+  uuid?: string;
+  enableMobileConnect: string;
+}
+
+export class UserRemoteDestination implements IUserRemoteDestination {
   public uuid?: string;
   public enableMobileConnect: string;
 
-  constructor(obj: {
-    uuid: string | undefined,
-    enableMobileConnect: string,
-
+  constructor(userRemoteDestination: IUserRemoteDestination = {
+    uuid: '',
+    enableMobileConnect: '',
   }) {
-    this.uuid = obj.uuid;
-    this.enableMobileConnect = obj.enableMobileConnect;
+    this.uuid = userRemoteDestination.uuid;
+    this.enableMobileConnect = userRemoteDestination.enableMobileConnect;
   }
 }
 

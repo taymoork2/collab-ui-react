@@ -1,0 +1,40 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">
+    {{$ctrl.getText('defaultSpace.title')}}
+    </span>
+  </div>
+  <h6 class="ct-title-desc">
+    {{$ctrl.getText('defaultSpace.desc')}}
+  </h6>
+  <div class="cs-card-container ct-sa-content">
+    <cs-card-layout block-view="true" class="va-card-center">
+      <cs-card class="va-box eva-default-space-box va-card">
+        <p class="h6">{{$ctrl.getText('defaultSpace.boxDesc')}}
+          <a href="https://www.cisco.com/go/create-eva" target="_blank">
+            {{$ctrl.getText('defaultSpace.learnMoreLink')}}
+          </a></p>
+        <div class="row">
+            <cs-select id="defaultSpaceDropdown"
+              ng-model="$ctrl.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace"
+              options="$ctrl.template.configuration.pages.evaDefaultSpace.defaultSpaceOptions"
+              labelfield="title"
+              valuefield="id"
+              placeholder="$ctrl.getText('defaultSpace.placeHolder')"
+              required="$ctrl.required"
+              filter="true"
+              refresh-data-fn="$ctrl.getFilterDefaultSpaces(filter)"
+              is-warn="{{$ctrl.template.missingDefaultSpace}}">
+            </cs-select>
+        </div>
+        <div class="warning-message" ng-if="$ctrl.template.missingDefaultSpace">
+          <i class="icon icon-warning icon-lg"></i>
+          <div class="warning-text">{{$ctrl.getText('defaultSpace.noDefaultWarning')}}</div>
+        </div>
+        <div class="note-info">
+          <i class="icon icon-info icon-lg"></i>{{$ctrl.getText('defaultSpace.noteInfo')}}
+        </div>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

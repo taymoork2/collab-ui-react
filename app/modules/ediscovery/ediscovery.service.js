@@ -5,12 +5,9 @@ var Spark = require('@ciscospark/spark-core').default;
 
   module.exports = EdiscoveryService;
   /* @ngInject */
-  function EdiscoveryService($document, $http, $location, $modal, $q, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
-    var modalTypes = {
-      DOWNLOAD: 0,
-      PASSWORD: 1,
-    };
+
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
     if (!avalonRoomsUrlCache) {
       avalonRoomsUrlCache = new CacheFactory('avalonRoomsUrlCache', {
@@ -60,28 +57,6 @@ var Spark = require('@ciscospark/spark-core').default;
           endDate: endDate,
           query: query,
         });
-    }
-
-    function getAvalonServiceUrl() {
-      var orgId = Authinfo.getOrgId();
-      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
-      if (cachedAvalonRoomsUrl) {
-        var deferred = $q.defer();
-        deferred.resolve(cachedAvalonRoomsUrl);
-        return deferred.promise;
-      }
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
-        .then(function (res) {
-          if (res.data && res.data.avalonRoomsUrl) {
-            avalonRoomsUrlCache.put(orgId, res.data);
-          }
-          return res.data;
-        });
-    }
-
-    function getAvalonRoomInfo(url) {
-      return $http.get(url).then(extractData);
     }
 
     function getReportKey(url, spark) {
@@ -146,7 +121,8 @@ var Spark = require('@ciscospark/spark-core').default;
       };
       return $http
         .post(urlBase + 'compliance/organizations/' + orgId + '/reports/', roomParams)
-        .then(extractData);
+        .then(extractData)
+        .finally($state.go('ediscovery.reports'));
     }
 
     // new report generation api using argonaut notes:
@@ -211,12 +187,11 @@ var Spark = require('@ciscospark/spark-core').default;
       });
     }
 
-    function openReportModal(_scope, modalType) {
-      var template = (modalType && modalType === modalTypes.PASSWORD) ?
-        'modules/ediscovery/ediscovery-report-password-modal.html' :
-        'modules/ediscovery/download-report-modal.html';
+    function openReportModal(_scope) {
+      var template = require('./ediscovery-report-password-modal.html');
+
       $modal.open({
-        templateUrl: template,
+        template: template,
         type: 'small',
         scope: _scope,
       });
@@ -256,8 +231,6 @@ var Spark = require('@ciscospark/spark-core').default;
 
     return {
       getArgonautServiceUrl: getArgonautServiceUrl,
-      getAvalonServiceUrl: getAvalonServiceUrl,
-      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       getReportKey: getReportKey,
@@ -270,7 +243,6 @@ var Spark = require('@ciscospark/spark-core').default;
       setEntitledForCompliance: setEntitledForCompliance,
       openReportModal: openReportModal,
       downloadReport: downloadReport,
-      modalTypes: modalTypes,
       setupSpark: setupSpark,
     };
   }

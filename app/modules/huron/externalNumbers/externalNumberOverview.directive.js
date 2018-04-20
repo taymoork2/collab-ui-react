@@ -8,7 +8,10 @@
   function ucExternalNumberOverview() {
     var directive = {
       restrict: 'EA',
-      templateUrl: 'modules/huron/externalNumbers/externalNumberOverview.tpl.html',
+      scope: {
+        showContractIncomplete: '=',
+      },
+      template: require('modules/huron/externalNumbers/externalNumberOverview.tpl.html'),
       controller: 'ExternalNumberOverviewCtrl',
       controllerAs: 'externalNumberOverview',
     };

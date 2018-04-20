@@ -3,6 +3,7 @@ import { IOrders } from './provisioning.interfaces';
 import { IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
+import { STATUS_UPDATE_EVENT_NAME } from './provisioning.service';
 
 export class ProvisioningController {
 
@@ -22,6 +23,7 @@ export class ProvisioningController {
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
   private sharedColumDefs: uiGrid.IColumnDef[];
+  private actionMenuOpened: boolean;
   private static sharedGridOptions: uiGrid.IGridOptions = {
     rowHeight: 45,
     enableRowSelection: true,
@@ -29,9 +31,7 @@ export class ProvisioningController {
 
   /* @ngInject */
   constructor(
-
     private $state: ng.ui.IStateService,
-    private $templateCache: ng.ITemplateCacheService,
     private $q: ng.IQService,
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
@@ -46,6 +46,7 @@ export class ProvisioningController {
     }, {
       field: 'customerName',
       displayName: this.$translate.instant('provisioningConsole.customerName'),
+      width: '20%',
     }, {
       field: 'adminEmail',
       displayName: this.$translate.instant('provisioningConsole.customerMail'),
@@ -53,72 +54,61 @@ export class ProvisioningController {
       field: 'manualCode',
       displayName: this.$translate.instant('provisioningConsole.manualCode'),
       width: '7%',
-    },
-    {
+    }, {
       field: 'siteUrl',
       displayName: this.$translate.instant('provisioningConsole.siteUrl'),
-    },
-    {
+    }, {
       field: 'orderReceived',
       displayName: this.$translate.instant('provisioningConsole.orderReceived'),
-    },
-    {
+      type: 'date',
+    }, {
       field: 'lastModified',
       displayName: this.$translate.instant('provisioningConsole.lastModified'),
-    },
-    {
+      type: 'date',
+    }, {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
     }];
-
     this.init();
   }
 
   private init(): void {
     this.isLoading = true;
+    this.actionMenuOpened = false;
     this.gridOptions = this.getGridOptions();
+    this.$scope.$on(STATUS_UPDATE_EVENT_NAME, (_event, order) => {
+      this.updateOrderStatusInGrid(order);
+    });
     this.getOrderData().then((results: IOrders) => {
       this.setGridData(results);
     })
-    .catch((error) => {
-      this.pendingOrders = [];
-      this.completedOrders = [];
-      this.Notification.errorResponse(error);
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
+      .catch((error) => {
+        this.pendingOrders = [];
+        this.completedOrders = [];
+        this.Notification.errorResponse(error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
 
   public showDetails(row) {
-    this.$state.go('order-details', { order: row });
+    if (!this.actionMenuOpened) {
+      this.$state.go('order-details', { order: row });
+    } else {
+      this.actionMenuOpened = false;
+    }
   }
 
-  /*
-  * Move an order between pending, in progress and completed.
-  */
-  public moveTo(order, newStatus: Status): void {
-    this.isLoading = true;
-    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus)
-    .then((result) => {
-      if (result) {
-        order.status = newStatus;
-        if (newStatus === Status.COMPLETED) {
-          //moving from pending dataset to completed no reason to get results again - just modify existing datasets
-          const completedOrder =  _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl }));
-          if (completedOrder) {
-            this.completedOrders.push(completedOrder);
-          }
-        }
+  public updateOrderStatusInGrid(order) {
+    if (order.status === Status.COMPLETED) {
+      //moving from pending dataset to completed no reason to get results again - just modify existing datasets
+      const completedOrder = _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl }));
+      if (completedOrder) {
+        this.completedOrders.push(completedOrder);
       }
-    })
-    .catch((error) => {
-      this.Notification.errorResponse(error);
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
+    }
   }
 
   /*
@@ -138,12 +128,12 @@ export class ProvisioningController {
         this.getOrderData(searchStr).then((results: IOrders) => {
           this.setGridData(results);
         })
-        .catch((error) => {
-          this.Notification.errorResponse(error);
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
+          .catch((error) => {
+            this.Notification.errorResponse(error);
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
       }
     }, 500);
   }
@@ -152,10 +142,6 @@ export class ProvisioningController {
     this.pendingOrders = this.gridOptions.pending.data = orders.pending;
     this.completedOrders = this.gridOptions.completed.data = orders.completed;
 
-  }
-
-  private getTemplate(tpl): {} {
-    return this.$templateCache.get('modules/squared/provisioning-console/templates/' + tpl + '.html');
   }
 
   private getOrderData(searchStr?: string): ng.IPromise<{ pending: IOrder[], completed: IOrder[] }> {
@@ -176,18 +162,12 @@ export class ProvisioningController {
   * Get the options for the pending/in progress and completed table.
   */
   private getGridOptions(): { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions } {
-    const customPendingFields = [{
-      field: 'actions',
-      displayName: this.$translate.instant('provisioningConsole.actions.title'),
-      cellTemplate: this.getTemplate('actions'),
-    }];
-
     const result = {
       pending: _.extend({}, ProvisioningController.sharedGridOptions),
       completed: _.merge({}, ProvisioningController.sharedGridOptions),
     };
 
-    result.pending.columnDefs = this.sharedColumDefs.concat(customPendingFields);
+    result.pending.columnDefs = _.cloneDeep(this.sharedColumDefs);
     result.pending.appScopeProvider = this;
     result.completed.appScopeProvider = this;
     result.completed.columnDefs = _.filter(this.sharedColumDefs, (def) => {
@@ -207,7 +187,6 @@ export class ProvisioningController {
       });
     };
     return result;
-
   }
 }
 

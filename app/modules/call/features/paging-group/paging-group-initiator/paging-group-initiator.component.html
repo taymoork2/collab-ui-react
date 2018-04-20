@@ -1,0 +1,93 @@
+<script type="text/ng-template" id="initTemplate.html">
+  <a>
+    <span ng-bind-html="match.label.name | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<div class="typeahead paging-group-initiators">
+  <div class="cs-radio-group">
+    <input cs-input type="radio"
+            ng-model="$ctrl.initiatorType"
+            name="initiatorRadio"
+            ng-change="$ctrl.onInitiatorTypeChanged()"
+            id="public"
+            value="PUBLIC"
+            cs-input-label="{{:: 'pagingGroup.all' | translate}}">
+    <input cs-input type="radio"
+            ng-model="$ctrl.initiatorType"
+            id="membersonly"
+            ng-change="$ctrl.onInitiatorTypeChanged()"
+            name="initiatorRadio"
+            value="MEMBERS_ONLY"
+            cs-input-label="{{:: 'pagingGroup.allMembers' | translate}}">
+    <input cs-input type="radio"
+            ng-model="$ctrl.initiatorType"
+            id="custom"
+            ng-change="$ctrl.onInitiatorTypeChanged()"
+            name="initiatorRadio"
+            value="CUSTOM"
+            cs-input-label="{{:: 'pagingGroup.custom' | translate}}">
+  </div>
+  <div class="search-add">
+    <input
+      cs-input
+      id="paging-group-initiator"
+      ng-model="$ctrl.selectedInitiator"
+      typeahead="member for member in $ctrl.getInitiatorList($viewValue) | limitTo:10"
+      typeahead-on-select="$ctrl.selectInitiator($item)"
+      typeahead-template-url="initTemplate.html"
+      typeahead-min-length="3"
+      typeahead-wait-ms="200"
+      placeholder="{{::'pagingGroup.editInitiatorPlaceholder' | translate}}"
+      cs-input-size="small-12"
+      autocomplete="off"
+      ng-disabled="$ctrl.initiatorType!=='CUSTOM'"
+      no-dirty>
+    <div class="search-member">
+      <i class="icon icon-search"></i>
+        <input
+          cs-input
+          id="search-initiator-box"
+          type="text"
+          placeholder="{{::'pagingGroup.searchInitiators' | translate}}"
+          ng-model="$ctrl.searchStr"
+          ng-change="$ctrl.filterDisplayedInitiators()"
+          ng-disabled="$ctrl.initiatorType!=='CUSTOM'"
+          no-dirty>
+    </div>
+  </div>
+  <cs-card-layout>
+    <div  id="membersContainer" class="members-container">
+      <cs-card-member
+        ng-repeat="initiator in $ctrl.displayedInitiators track by initiator.uuid"
+        cs-type="{{::initiator.cardType}}"
+        cs-member-type="{{::initiator.type}}"
+        cs-complex-card-type="{{::initiator.complexCardType}}"
+        cs-id="initiator.uuid"
+        cs-title="initiator.name"
+        cs-subtitle="initiator.number"
+        cs-image="initiator.thumbnailSrc"
+        on-update="$ctrl.onUpdateCardInitiator(id, data)"
+        cs-remove-label="$ctrl.removeStr"
+        on-remove="$ctrl.unSelectInitiator(initiator)"
+        delete-aria-label="{{::'common.delete' | translate}}"
+        toggle-aria-label="{{::'common.toggleData' | translate}}">
+      </cs-card-member>
+    </div>
+  </cs-card-layout>
+  <div class="members-footer" ng-if="!$ctrl.isNew">
+    <span
+      ng-if="$ctrl.getInitiatorCount()"
+      class="member-count"
+      translate="pagingGroup.initiatorCount"
+      translate-values="{count: $ctrl.getInitiatorCount()}">
+    </span>
+    <a ng-click="$ctrl.onShowMoreClicked()"
+      ng-show="$ctrl.showMoreButton()">
+      <span translate="common.showMore"></span>
+    </a>
+    <a ng-click="$ctrl.onShowLessClicked()"
+      ng-show="$ctrl.showLessButton()">
+      <span translate="common.showLess"></span>
+    </a>
+  </div>
+</div>

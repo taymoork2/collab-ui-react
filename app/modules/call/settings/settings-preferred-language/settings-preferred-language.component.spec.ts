@@ -2,7 +2,7 @@ import preferredLanguageModule from './index';
 
 describe('Component: preferredLanguage', () => {
   const PREFERRED_LANG_SELECT = '.csSelect-container[name="preferredLanguage"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const LANG_ENGLISH = 'en_US';
   const LANG_SVENSKA = 'sv_SE';
   const preferredLanguageOptions = getJSONFixture('huron/json/settings/languages.json');

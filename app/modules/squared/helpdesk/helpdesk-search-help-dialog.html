@@ -1,20 +1,15 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
-
-  <div class="modal-title" translate="helpdesk.help.title">
-  </div>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <div class="modal-title" translate="helpdesk.help.title"></div>
 </div>
 
 <div class="modal-body helpdesk-help">
-
   <h4 translate="helpdesk.help.search-criterias-title"></h4>
   <p translate="helpdesk.help.search-criterias-users"></p>
   <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.search-criterias-customers"></p>
   <p translate="helpdesk.help.search-criterias-devices"></p>
   <p translate="helpdesk.help.search-criterias-note"></p>
-  <p translate="helpdesk.help.search-criterias-orders" ng-if="searchHelpModalCtrl.isOrderSearchEnabled"</p>
+  <p translate="helpdesk.help.search-criterias-orders" ng-if="searchHelpModalCtrl.isOrderSearchEnabled"></p>
 
   <h4 ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.narrow-title"></h4>
   <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.narrow-info"></p>
@@ -22,9 +17,7 @@
   <h4 translate="helpdesk.help.navigation-title"></h4>
   <p translate="helpdesk.help.navigation-info1"></p>
   <p ng-if="!searchHelpModalCtrl.isCustomerHelpDesk" translate="helpdesk.help.navigation-info2"></p>
-
 </div>
 
-<div class="modal-footer">
-</div>
+<div class="modal-footer"></div>
 

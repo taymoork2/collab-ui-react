@@ -2,7 +2,7 @@
 
 # notes:
 # - in certain cases, 'lite-server' is not shutdown properly when the wrapping npm script (ie.
-#   'npm start' or 'npm run serve') dies
+#   'yarn start' or 'yarn serve') dies
 # - when the lingering 'lite-server' process holds onto the default port (8000), subsequent npm
 #   script commands launch a new 'lite-server' which listen on non-default port values, which will
 #   not function correctly due to our whitelist CSP policies

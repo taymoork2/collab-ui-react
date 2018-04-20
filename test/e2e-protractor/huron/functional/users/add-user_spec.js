@@ -1,16 +1,17 @@
 import * as provisioner from '../../../provisioner/provisioner';
 import { huronCustomer } from '../../../provisioner/huron/huron-customer-config';
 import { CallUserPage } from '../../pages/callUser.page';
-import { CallSpeedDialsPage } from '../../pages/callSpeedDials.page';
+import { CallUserPhoneButtonLayoutPage } from '../../pages/callUserPhoneButtonLayout.page';
+import * as featureToggle from '../../../utils/featureToggle.utils';
 
 const CallUser = new CallUserPage();
-const SpeedDialsPage = new CallSpeedDialsPage();
+const PhoneButtonLayoutPage = new CallUserPhoneButtonLayoutPage();
 const now = Date.now();
 
 /* globals LONG_TIMEOUT, manageUsersPage, navigation, users, telephony */
 
 describe('Huron Functional: add-user', () => {
-  const customer = huronCustomer('add-user');
+  const customer = huronCustomer({ test: 'add-user' });
   const USER_EMAIL = `huron.ui.test.partner+${customer.name}_${now}@gmail.com`;
   const USER_FIRST_NAME = 'Darth';
   const USER_LAST_NAME = 'Vader';
@@ -33,13 +34,20 @@ describe('Huron Functional: add-user', () => {
   });
 
   describe('Add user flow', () => {
-    it('should navigate to Manage Users page and "Manually add or modify users" radio button is selected', () => {
+    it('should navigate to Manage Users page', () => {
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-      utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
     });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-      utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+      } else {
+        utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
+        utils.click(manageUsersPage.buttons.next);
+      }
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.expectIsDisplayed(manageUsersPage.manual.emailAddress.addUsersField, LONG_TIMEOUT);
       utils.expectIsDisplayed(manageUsersPage.manual.radio.emailAddress);
     });
@@ -95,10 +103,10 @@ describe('Huron Functional: add-user', () => {
       utils.sendKeys(CallUser.usersList.searchFilter, USER_EMAIL + protractor.Key.ENTER);
       utils.click(CallUser.usersList.userFirstName);
       utils.expectIsDisplayed(users.servicesPanel);
-      utils.expectIsDisplayed(users.communicationsService);
+      utils.expectIsDisplayed(users.communicationService);
     });
     it('should navigate to call details view', () => {
-      utils.click(users.communicationsService);
+      utils.click(users.communicationService);
       utils.expectIsDisplayed(CallUser.callOverview.directoryNumbers.title);
       utils.expectIsDisplayed(CallUser.callOverview.features.title);
       utils.expectIsDisplayed(CallUser.callOverview.directoryNumbers.number);
@@ -133,10 +141,10 @@ describe('Huron Functional: add-user', () => {
       utils.expectIsDisplayed(CallUser.callOverview.features.title);
       utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
     });
-    it('should navigate to Speed Dials details view', () => {
-      utils.click(CallUser.callOverview.features.speedDials);
-      utils.expectIsDisplayed(SpeedDialsPage.title);
-      utils.expectIsDisplayed(SpeedDialsPage.actionMenu);
+    it('should navigate to Phone Button Layout details view', () => {
+      utils.click(CallUser.callOverview.features.phoneButtonLayout);
+      utils.expectIsDisplayed(PhoneButtonLayoutPage.title);
+      utils.expectIsDisplayed(PhoneButtonLayoutPage.actionMenu);
     });
     it('should navigate back to call details view', () => {
       utils.click(CallUser.callSubMenu);

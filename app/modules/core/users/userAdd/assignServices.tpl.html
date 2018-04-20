@@ -1,4 +1,4 @@
-<div id="licenseBlock" class="onboard-block license-block" ng-if="collabRadio === 1 && !hasAccount">
+<div id="licenseBlock" class="onboard-block license-block" ng-if="!hasAccount">
   <div class="bold">
     <span translate="onboardModal.entitlements"></span>
     <hr class="onboard-divider"/>
@@ -9,5 +9,31 @@
     </div>
   </div>
 </div>
-<cr-services-panels ng-if="collabRadio === 1 && hasAccount" radioStates="radioStates"></cr-services-panels>
-<hybrid-services-panel bind-entitlements="updateExtensionEntitlements(entitlements)"></hybrid-services-panel>
+<cr-services-panels
+  ng-if="hasAccount"
+  message-features="messageFeatures"
+  radio-states="radioStates"
+  check-license-availability="checkLicenseAvailability"
+  entitlements="entitlements"
+  basic-licenses="basicLicenses"
+  determine-license-type="determineLicenseType"
+  generate-license-tooltip="generateLicenseTooltip"
+  generate-license-translation="generateLicenseTranslation"
+  advanced-licenses="advancedLicenses"
+  update-cmr-licenses-for-metric="updateCmrLicensesForMetric"
+  communication-features="communicationFeatures"
+  check-comm-license-availability="checkCommLicenseAvailability"
+  hybrid-call-service-aware="hybridCallServiceAware"
+  disable-comm-checkbox="disableCommCheckbox"
+  care-radio-value="careRadioValue"
+  cdc-care-feature="cdcCareFeature"
+  current-user-enables-call="currentUserEnablesCall"
+  cvc-care-feature="cvcCareFeature"
+  care-features="careFeatures"
+  on-update-is-context-service-admin-authorized="recvUpdateIsContextServiceAdminAuthorized(isAuthorized)"
+  ></cr-services-panels>
+<hybrid-services-entitlements-panel
+  entitlements-callback="updateHybridServicesEntitlements(entitlements)"
+  is-huron-call-license-selected="isHuronCallLicenseSelected()"
+  has-license-selections="userIsLicensed()"
+></hybrid-services-entitlements-panel>

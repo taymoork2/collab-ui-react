@@ -1,0 +1,53 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+trusted-sip-section {
+
+    .description-padding {
+      padding-bottom: 1px !important;
+    }
+
+    tags-input.ng-invalid .tags {
+        border-color: $color-alerts-base;
+        box-shadow: none;
+    }
+    
+    tags-input .host {
+        border: 1px solid $gray-light-2;
+        border-radius: 5px;
+    }
+    
+    tags-input .tags {
+        border-radius: 4px;
+        box-shadow: none;
+        border: none !important;
+        padding: 5px !important;
+    
+        &:hover {
+          border-color: $gray-light-1;
+        }
+    
+        &.focused {
+          box-shadow: none;
+          border-color: $color-primary-darker;
+        }
+    
+        .tag-item {
+          background: $brand-primary-light;
+          border: 0;
+          color: $brand-white;
+          line-height: 24px;
+    
+          .remove-button {
+            color: $brand-white;
+          }
+        }
+    
+        .input.invalid-tag {
+          color: $brand-danger;
+        }
+        .input {
+          width: 100%;
+        }
+    }
+}
+

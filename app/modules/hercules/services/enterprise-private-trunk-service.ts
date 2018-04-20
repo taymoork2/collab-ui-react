@@ -50,6 +50,7 @@ export class EnterprisePrivateTrunkService {
   }
 
   public fetch() {
+    // TODO: handle 404 to say that setup === false
     const promises: ng.IPromise<any>[] = [
       this.PrivateTrunkService.getPrivateTrunk(),
       this.ServiceDescriptorService.getServiceStatus('ept'),

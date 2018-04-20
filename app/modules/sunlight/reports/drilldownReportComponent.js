@@ -5,47 +5,10 @@
     var dd = this;
     dd.gridData = [];
     $scope.gridData = dd.gridData;
+    dd.display = false;
     var RESIZE_DELAY_IN_MS = 100;
 
     dd.$onInit = function () {
-      var defaultProps = {
-        broadcast: {},
-        description: '',
-        display: false,
-        hasData: false,
-        emptyDescription: '',
-        errorDescription: '',
-        show: '',
-        hide: '',
-        search: '',
-        searchPlaceholder: '',
-        state: ReportConstants.EMPTY,
-        table: {
-          columnDefs: [],
-          gridOptions: {
-            data: 'gridData',
-            multiSelect: false,
-            enableRowHeaderSelection: false,
-            enableColumnResize: true,
-            enableSorting: true,
-            enableFiltering: true,
-            enableColumnMenus: false,
-            enableHorizontalScrollbar: 0,
-            enableVerticalScrollbar: 0,
-            paginationPageSize: 5,
-            enablePaginationControls: false,
-            onRegisterApi: onRegisterApi,
-            columnDefs: dd.props.table.columnDefs,
-          },
-          pagination: {
-            maxPages: 3,
-          },
-        },
-        title: '',
-      };
-
-      dd.props = _.merge(defaultProps, dd.props);
-
       if (dd.props.broadcast) {
         if (dd.props.broadcast.refresh) {
           $scope.$on(dd.props.broadcast.refresh, function () {
@@ -61,13 +24,19 @@
       }
     };
 
+    dd.$doCheck = function () {
+      if (dd.props && dd.props.table && dd.props.table.gridOptions && !dd.props.table.gridOptions.onRegisterApi) {
+        dd.props.table.gridOptions.onRegisterApi = onRegisterApi;
+      }
+    };
+
     function onRegisterApi(gridApi) {
       $scope.gridApi = gridApi;
     }
 
     dd.toggleDrilldownReport = function () {
-      dd.props.display = !dd.props.display;
-      if (dd.display() && $scope.gridData && $scope.gridData.length === 0) {
+      dd.display = !dd.display;
+      if (dd.display && $scope.gridData && $scope.gridData.length === 0) {
         dd.refreshData();
       } else {
         CardUtils.resize();
@@ -104,12 +73,8 @@
       dd.resetCurrentPage();
     };
 
-    dd.display = function () {
-      return dd.props.display;
-    };
-
     dd.setDisplay = function (bool) {
-      dd.props.display = Boolean(bool);
+      dd.display = Boolean(bool);
     };
 
     dd.isDataError = function () {
@@ -164,11 +129,11 @@
   angular.module('Sunlight').component('drilldownReport', {
     controller: DrilldownReportController,
     bindings: {
-      props: '=',
+      props: '<',
       callback: '&',
       gridData: '=?',
     },
-    templateUrl: 'modules/sunlight/reports/drilldownReport.tpl.html',
+    template: require('modules/sunlight/reports/drilldownReport.tpl.html'),
     controllerAs: 'dd',
   }
   );

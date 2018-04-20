@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="{{newPlace.title}}"></h3>
 </div>
@@ -11,23 +11,22 @@
     <form class="createNewPlaceForm" onsubmit="$('#next-button').click()">
       <div>
         <input
-            required
-            type="text"
-            id="newPlace"
-            name="roomName"
-            focus-on
-            ng-model="newPlace.deviceName"
-            placeholder="{{'addDeviceWizard.newSharedSpace.insertRoomName' | translate}}"
-            class="form-control"
-            autocomplete="off"
-            maxlength="127">
+          required
+          type="text"
+          id="newPlace"
+          name="roomName"
+          focus-on
+          ng-model="newPlace.deviceName"
+          placeholder="{{'addDeviceWizard.newSharedSpace.insertRoomName' | translate}}"
+          class="form-control"
+          autocomplete="off"
+          maxlength="127">
         </input>
       </div>
     </form>
   </div>
 </div>
 <div class="modal-footer">
-
   <button
     type="button"
     class="btn"
@@ -35,12 +34,11 @@
     translate="common.cancel">
   </button>
   <button
-      cs-btn
-      id="next-button"
-      class="btn btn--primary"
-      ng-click="newPlace.next()"
-      ng-disabled="!newPlace.isNameValid()">
-        <span translate="common.next"></span>
-    </button>
+    cs-btn
+    id="next-button"
+    class="btn btn--primary"
+    ng-click="newPlace.next()"
+    ng-disabled="!newPlace.isNameValid()">
+    <span translate="common.next"></span>
   </button>
 </div>

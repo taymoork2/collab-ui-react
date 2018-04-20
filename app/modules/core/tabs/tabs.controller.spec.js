@@ -2,7 +2,7 @@
   'use strict';
 
   describe('Controller: TabsCtrl', function () {
-    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, UrlConfig, $provide, $injector, ControlHubService;
+    var tabsController, $q, $controller, $rootScope, injectedRootScope, $scope, $location, Authinfo, Auth, ControlHubService, UrlConfig, $provide, $injector;
     var featureToggleService = {
       supports: function () {},
     };
@@ -48,7 +48,7 @@
       $provide.value('FeatureToggleService', featureToggleService);
     }));
 
-    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _UrlConfig_, _$injector_, _ControlHubService_) {
+    beforeEach(inject(function (_$controller_, _$rootScope_, _$location_, _$q_, _Authinfo_, _Auth_, _ControlHubService_, _UrlConfig_, _$injector_) {
       $q = _$q_;
       $controller = _$controller_;
       $rootScope = _$rootScope_;
@@ -57,9 +57,9 @@
       $location = _$location_;
       Authinfo = _Authinfo_;
       Auth = _Auth_;
+      ControlHubService = _ControlHubService_;
       UrlConfig = _UrlConfig_;
       $injector = _$injector_;
-      ControlHubService = _ControlHubService_;
 
       tabConfig = [{
         tab: 'tab1',
@@ -91,7 +91,8 @@
       spyOn($location, 'path');
       $provide.value('tabConfig', tabConfig);
       states = ['tab1', 'subTab1', 'subTab2', 'devTab', 'subDevTab'];
-      spyOn(ControlHubService, 'getControlHubEnabled').and.returnValue($q.resolve(false));
+      spyOn(ControlHubService, 'getTabs').and.returnValue(tabConfig);
+      spyOn(ControlHubService, 'getIcon').and.returnValue(undefined);
     }));
 
     function initTabsController(args, dontApply) {
@@ -341,7 +342,7 @@
         }];
         $provide.value('tabConfig', tabConfig);
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
-        // Authinfo.getTabs.and.returnValue(tabConfig);
+        ControlHubService.getTabs.and.returnValue(tabConfig);
         initTabsController();
         $location.path.and.returnValue('tab3Path');
       });

@@ -6,12 +6,13 @@
     .controller('AADynamicAnnouncementsModalCtrl', AADynamicAnnouncementsModalCtrl);
 
   /* @ngInject */
-  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, AASessionVariableService, AAModelService, AAUiModelService, AACommonService, variableSelection, readAsSelection/*, aa_schedule, aa_index*/) {
+  function AADynamicAnnouncementsModalCtrl($modalInstance, $translate, aaElementType, readAsSelection, variableSelection, AACommonService, AAModelService, AASessionVariableService, AAUiModelService/*, aa_schedule, aa_index*/) {
     var vm = this;
 
     vm.selectPlaceholder = $translate.instant('common.select');
     vm.ok = ok;
     vm.isSaveEnabled = isSaveEnabled;
+    vm.isReadAsVisible = true;
     vm.readAsOptions = [
       {
         label: $translate.instant('autoAttendant.date'),
@@ -70,12 +71,15 @@
     }
 
     function isSaveEnabled() {
-      if (vm.readAsSelection.label && vm.variableSelection.label) {
-        return true;
-      }
-      return false;
+      return vm.variableSelection.label;
     }
 
+    function getIsReadAsVisible() {
+      if (_.isEqual(aaElementType, 'REST')) {
+        vm.isReadAsVisible = !vm.isReadAsVisible;
+      }
+      return vm.isReadAsVisible;
+    }
 
     function populateUiModel() {
       //TODO
@@ -146,8 +150,10 @@
 
     function init() {
       populateScope();
+      getIsReadAsVisible();
       var variablesOptions = [];
       executeAsyncWaitTasks(variablesOptions)
+        .catch(_.noop)
         .finally(function () {
           setUpVariablesOptions(variablesOptions);
           activate();

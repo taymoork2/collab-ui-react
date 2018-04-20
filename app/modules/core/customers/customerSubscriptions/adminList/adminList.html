@@ -2,12 +2,12 @@
   <div>
     <span class="title list-title">{{$ctrl.title}}</span>
     <span class="title toggle-link" ng-show="$ctrl.showToggleLink()">
-      <a
+      <a href
         ng-show="!$ctrl.isExpanded"
         ng-click="$ctrl.toggleList()"
         translate="common.showAllAdminUsers"
         translate-values="{ numUsers: $ctrl.members.length }"></a>
-      <a
+      <a href
         ng-show="$ctrl.isExpanded"
         ng-click="$ctrl.toggleList()"
         translate="common.hideAllAdminUsers"></a>

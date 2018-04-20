@@ -3,8 +3,14 @@
   <div class="row element-spacing" ng-repeat="site in meetingCtrl.sitesArray">
     <div class="site-heading">{{site.siteUrl}}.webex.com</div>
     <p ng-if="site.timezone" class="time-zone" translate-values="{label: site.timezone.label}" translate="firstTimeWizard.timeZoneSetTo"></p>
-    <p ng-if="site.quantity" class="time-zone" translate-values="{quantity: meetingCtrl.getLicensesForSite(site.siteUrl)}" translate="firstTimeWizard.licenseCountEquals"></p>
-    <p ng-if="site.audioPackageDisplay"><span translate="firstTimeWizard.audioPackage"></span><span>: {{site.audioPackageDisplay}}</span></p>
-    <p ng-if="meetingCtrl.ccasp.subscriptionId"><span translate="firstTimeWizard.ccasp.ccaspProvided" translate-values="{partner:  meetingCtrl.audioPartnerName}"></p>
+    <p class="time-zone" translate-values="{quantity: meetingCtrl.getLicensesForSite(site.siteUrl)}" translate="firstTimeWizard.licenseCountEquals"></p>
+    <div ng-if="meetingCtrl.isShowUserManagement && site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
+    <div ng-if="meetingCtrl.isShowUserManagement && !site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
+    <div ng-if="meetingCtrl.getSitesAudioPackageTypeDisplay()"> 
+      <p>{{::meetingCtrl.getSitesAudioPackageTypeDisplay()}}</p>
+      <p ng-if="meetingCtrl.getSitesAudioPartnerDisplay()">
+        {{::meetingCtrl.getSitesAudioPartnerDisplay()}}
+      </p>
+    </div>
   </div>
 </div>

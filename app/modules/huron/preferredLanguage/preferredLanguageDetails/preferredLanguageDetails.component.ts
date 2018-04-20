@@ -96,7 +96,7 @@ class PreferredLanguageDetails implements ng.IComponentController {
 
 export class PreferredLanguageDetailsComponent implements ng.IComponentOptions {
   public controller = PreferredLanguageDetails;
-  public templateUrl = 'modules/huron/preferredLanguage/preferredLanguageDetails/preferredLanguageDetails.html';
+  public template = require('modules/huron/preferredLanguage/preferredLanguageDetails/preferredLanguageDetails.html');
   public bindings = {
     preferredLanguageFeature: '<',
   };

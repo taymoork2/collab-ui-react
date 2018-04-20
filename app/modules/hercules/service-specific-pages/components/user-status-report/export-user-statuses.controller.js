@@ -1,9 +1,7 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Hercules')
-    .controller('ExportUserStatusesController', ExportUserStatusesController);
+  module.exports = ExportUserStatusesController;
 
   /* @ngInject */
   function ExportUserStatusesController($scope, $q, $translate, $modalInstance, userStatusSummary, Authinfo, UserDetails, USSService, HybridServicesClusterService, ExcelService, ResourceGroupService) {
@@ -12,10 +10,16 @@
 
     vm.exportingUserStatusReport = false;
     vm.includeResourceGroupColumn = false;
-    vm.progress = { total: 0, current: 0, message: $translate.instant('hercules.export.readingUserStatuses'), exportCanceled: false };
+    vm.progress = {
+      total: 0,
+      current: 0,
+      message: $translate.instant('hercules.export.readingUserStatuses'),
+      exportCanceled: false,
+    };
 
     vm.statusTypes = getStatusTypes();
     vm.nothingToExport = nothingToExport;
+    vm.ussCacheIsEmpty = ussCacheIsEmpty;
     vm.cancelExport = cancelExport;
     vm.exportCSV = exportCSV;
 
@@ -138,7 +142,12 @@
         .map(function (tuple) {
           return USSService.getAllStatuses(tuple.service, tuple.type)
             .then(function (userStatuses) {
-              return userStatuses;
+              return userStatuses.map(function (userStatus) {
+                if (userStatus.serviceId === 'squared-fusion-cal' && userStatus.owner === 'ccc') {
+                  userStatus.serviceId = 'squared-fusion-o365';
+                }
+                return userStatus;
+              });
             });
         })
         .flatten()
@@ -185,6 +194,15 @@
         })
         .every(function (status) {
           return !status.selected;
+        })
+        .value();
+    }
+
+    function ussCacheIsEmpty() {
+      return !_.chain(vm.statusTypes)
+        .flatten()
+        .sumBy(function (n) {
+          return n.count;
         })
         .value();
     }

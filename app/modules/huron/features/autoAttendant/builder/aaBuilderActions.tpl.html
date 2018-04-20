@@ -6,8 +6,8 @@
         <h3 class="text-info" translate="autoAttendant.builderNewStep"></h3>
         <aa-help content="{{ :: 'autoAttendant.builderNewStepHelp' | translate }}" metric="New-Step-Title"></aa-help>
         <div class="aa-action-delete">
-          <a ng-click="actions.removeAction(index)">
-            <span class="icon icon-close aa-action-delete-icon" aria-label="common.delete"></span>
+          <a href ng-click="actions.removeAction(index)">
+            <span class="icon icon-close aa-action-delete-icon" aria-label="{{::'common.delete' | translate}}"></span>
           </a>
         </div>
       </div>
@@ -28,12 +28,16 @@
         <h3 ng-if="!actions.option.ifTitle" class="text-info">{{actions.option.title}}</h3>
         <aa-help ng-if="actions.option.help" content="{{ :: actions.option.help }}" show-link="actions.option.showHelpLink" metric="{{ :: actions.option.metric }}"></aa-help>
         <div class="aa-action-delete">
-          <a ng-click="actions.removeAction(index)">
-            <span class="icon icon-close aa-action-delete-icon" aria-label="common.delete"></span>
+          <a href ng-click="actions.removeAction(index)">
+            <span class="icon icon-close aa-action-delete-icon" aria-label="{{::'common.delete' | translate}}"></span>
           </a>
         </div>
       </div>
       <div class="row aa-flex-row">
+        <!--
+          currently ng-include templates loaded through ngtemplate-loader
+          TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+        -->
         <div ng-controller="actions.getOptionController" ng-include="actions.option.url"></div>
       </div>
     </div>
@@ -43,8 +47,15 @@
     <div class="aa-flex-container">
       <div class="aa-vertical-line"></div>
       <div class="panel-body aa-panel-round">
-        <a ng-click="addAction({index: index})">
-          <span class="icon icon-plus-circle aa-add-step-icon" popover=" {{ :: 'autoAttendant.builderAddNewStep' | translate }} " popover-trigger="mouseenter" popover-animation="true" popover-placement="right" popover-append-to-body="false"></span>
+        <a href
+          ng-click="addAction({index: index})"
+          class="icon icon-plus-circle aa-add-step-icon"
+          popover="{{::'autoAttendant.builderAddNewStep' | translate}}"
+          popover-trigger="focus mouseenter"
+          popover-animation="true"
+          popover-placement="right"
+          popover-append-to-body="false"
+          aria-label="{{::'autoAttendant.builderAddNewStep' | translate}}">
         </a>
       </div>
     </div>

@@ -1,11 +1,11 @@
 export class AddHuntGroupPage {
   constructor() {
     // Used in step 1 of proviosing name of hunt group
-    this.createHGTtile = element(by.cssContainingText('h2.title.ng-binding', 'Create Hunt Group'));
+    this.createHGTtile = element(by.cssContainingText('h2.title', 'Create Hunt Group'));
     this.closeBtn = element(by.id('close-panel'));
     this.toNextPage = element(by.css('span.icon.icon-arrow-next'));
     this.disabledBtn = element(by.css('button.btn--circle.btn--primary.btn--right.disabled'));
-    this.description = element(by.css('p.input-description.ng-binding'));
+    this.description = element(by.css('p.input-description'));
     this.hgName = element(by.css('input.form-control'));
     this.enableBtn = element(by.css('button.btn--circle.btn--primary.btn--right'));
     this.closeDialog = element(by.css('div.modal-content.undefined.dialog'));
@@ -22,11 +22,11 @@ export class AddHuntGroupPage {
     this.lastCard = element.all(by.css('div.cs-card-number')).last();
     this.leftPanel = element(by.css('div.left-panel'));
     this.rightPanel = element(by.css('div.right-panel'));
-    this.leftSide = element(by.cssContainingText('p.title.ng-binding', '310'));
+    this.leftSide = element(by.cssContainingText('p.title', '325'));
     this.rightSide = element(by.css('i.icon.icon-exit'));
     this.inputMember = element(by.css('input'));
-    this.firstHG = element(by.cssContainingText('p.title', '310'));
-    this.secondHG = element(by.cssContainingText('p.title', '311'));
+    this.firstHG = element(by.cssContainingText('p.title', '325'));
+    this.secondHG = element(by.cssContainingText('p.title', '326'));
     this.longestIdle = element(by.cssContainingText('div', 'Longest Idle'));
     this.broadcast = element(by.cssContainingText('div', 'Broadcast'));
     this.circular = element(by.cssContainingText('div', 'Circular'));
@@ -35,14 +35,14 @@ export class AddHuntGroupPage {
     this.memberLeft = element(by.css('div.left-panel'));
     this.memberMiddle = element(by.css('div.middle-panel'));
     this.memberRight = element(by.css('div.right-panel'));
-    this.fallbackTitle = element(by.cssContainingText('div.feature-title.ng-scope', 'Select Fallback Destination Number'));
+    this.fallbackTitle = element(by.cssContainingText('div.feature-title', 'Select Fallback Destination Number'));
     this.internalDest = element(by.cssContainingText('button.call-dest-button', 'Internal'));
     this.externalDest = element(by.cssContainingText('button.call-dest-button', 'External'));
-    this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right.ng-binding.active.enabled', 'Create'));
+    this.createEnabled = element(by.cssContainingText('div.btn-helptext.helptext-btn--right.active.enabled', 'Create'));
     this.article = element(by.css('article'));
-    this.hgDetailHeader = element(by.cssContainingText('div.header-with-right-icon', 'new-hg'));
+    this.hgDetailHeader = element(by.css('div.header-with-right-icon'));
     this.btnClose = element(by.css('button.close'));
-    this.hgPilot = element(by.css('span.card-section-num.ng-binding', '2 Numbers'));
+    this.hgPilot = element(by.css('span.card-section-num', '2 Numbers'));
     this.hgMembersCount = element(by.css('span.card-members.left', '1 Members'));
     this.deleteHG = element(by.cssContainingText('p.h3.modal-title', 'Delete'));
     this.cancelDeleteFeature = element(by.id('cancelDeleteFeature'));

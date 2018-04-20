@@ -19,7 +19,7 @@ class UserCsvResultsController implements ng.IComponentController {
 /* UI for display Csv Results */
 export class UserCsvResultsComponent {
   public controller = UserCsvResultsController;
-  public templateUrl = 'modules/core/users/userCsv/userCsvResults.tpl.html';
+  public template = require('modules/core/users/userCsv/userCsvResults.tpl.html');
   public bindings = {
     csvData: '<',
     onDoneImport: '&',

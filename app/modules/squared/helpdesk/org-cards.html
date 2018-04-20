@@ -1,5 +1,5 @@
 <cs-card-layout block-view="true" class="helpdesk-cards">
-  <cs-card class="large header-bar primary" ng-if="helpdeskOrgCtrl.messageCard.entitled">
+  <cs-card class="cs-card--large header-bar primary" ng-if="helpdeskOrgCtrl.messageCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -18,7 +18,7 @@
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
-            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -31,7 +31,7 @@
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
             <span
               ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
-            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+            <span ng-if="license.isTrial && license.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
         </div>
@@ -40,7 +40,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar meetings" ng-show="helpdeskOrgCtrl.meetingCard.entitled">
+  <cs-card class="cs-card--large header-bar meetings" ng-show="helpdeskOrgCtrl.meetingCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -61,7 +61,7 @@
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
-            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -74,7 +74,7 @@
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
             <span
               ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
-            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+            <span ng-if="license.isTrial && license.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
         </div>
@@ -83,7 +83,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar cta-base" ng-show="helpdeskOrgCtrl.callCard.entitled">
+  <cs-card class="cs-card--large header-bar cta-base" ng-show="helpdeskOrgCtrl.callCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -102,7 +102,7 @@
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
-            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -115,7 +115,7 @@
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
             <span
               ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
-            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+            <span ng-if="license.isTrial && license.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
           <div>
@@ -144,7 +144,7 @@
     </article>
   </cs-card>
 
-    <cs-card class="large header-bar care-base" ng-show="helpdeskOrgCtrl.careCard.entitled">
+    <cs-card class="cs-card--large header-bar care-base" ng-show="helpdeskOrgCtrl.careCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -163,7 +163,7 @@
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
-            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -176,7 +176,7 @@
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
             <span
               ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
-            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+            <span ng-if="license.isTrial && license.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
 
@@ -186,7 +186,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar gray" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
+  <cs-card class="cs-card--large header-bar gray" ng-show="helpdeskOrgCtrl.roomSystemsCard.entitled">
     <article>
       <header class="align-center">
         <div class="overview-header">
@@ -205,7 +205,7 @@
           <span ng-if="aggregatedLicense.isTrial">| </span>
           <span class="badge badge-warning" ng-if="aggregatedLicense.isTrial" translate="helpdesk.trial"></span>
           <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(aggregatedLicense)}}</span>
-            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays == 0"
+            <span ng-if="aggregatedLicense.isTrial && aggregatedLicense.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
 
           <div ng-repeat="license in aggregatedLicense.licenses" style="margin-left: 1rem;"
@@ -218,7 +218,7 @@
             <span class="badge badge-warning" ng-if="license.isTrial" translate="helpdesk.trial"></span>
             <span
               ng-if="license.isTrial && license.trialExpiresInDays > 0">{{helpdeskOrgCtrl.daysLeftText(license)}}</span>
-            <span ng-if="license.isTrial && license.trialExpiresInDays == 0"
+            <span ng-if="license.isTrial && license.trialExpiresInDays === 0"
                   class="red">{{'helpdesk.licenseStatus.expired' |  translate}}</span>
           </div>
         </div>
@@ -227,25 +227,6 @@
     </article>
   </cs-card>
 
-  <cs-card class="large header-bar gray-light" ng-show="helpdeskOrgCtrl.hybridServicesCard.entitled">
-    <article>
-      <header class="align-center" ng-class="helpdeskOrgCtrl.loadingHSData ? 'wait' : 'pointer'" ng-click="helpdeskOrgCtrl.openHybridServicesModal()">
-        <div class="overview-header">
-          <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
-        </div>
-      </header>
-      <section>
-        <h5 translate="common.status"></h5>
-        <div ng-repeat="hybridService in helpdeskOrgCtrl.hybridServicesCard.services">
-          <span>
-            <i class="icon icon-circle circle-status-icon"
-               ng-class="'helpdesk-' + hybridService.cssClass"></i>
-          </span>
-          <span translate="{{'overview.cards.hybrid.services.' + hybridService.serviceId}}"></span>
-        </div>
-      </section>
-      <footer></footer>
-    </article>
-  </cs-card>
+  <help-desk-hybrid-services-org-card org="helpdeskOrgCtrl.org"></help-desk-hybrid-services-org-card>
 
 </cs-card-layout>

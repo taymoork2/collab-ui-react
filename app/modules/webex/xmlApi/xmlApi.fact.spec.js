@@ -8,6 +8,7 @@ describe('WebExXmlApiFact', function () {
   var deferred;
   var Auth;
   var TokenService;
+  var reportTestData = _.cloneDeep(getJSONFixture('webex/json/test-report-xml.json'));
 
   /**
     var MyReporter = function () {
@@ -65,6 +66,19 @@ describe('WebExXmlApiFact', function () {
     $rootScope.$apply();
 
     expect(Auth.redirectToLogin).toHaveBeenCalled();
+  });
+
+  it('function xml2JsonConvert should convert data correctly', function () {
+    var testXmlApiXml2JsonConvert = reportTestData.testXmlApiXml2JsonConvert;
+    var convertedObj = WebExXmlApiFact.xml2JsonConvert(
+      'Site Version Header',
+      testXmlApiXml2JsonConvert,
+      '<serv:header>',
+      '<serv:body>'
+    );
+
+    expect(convertedObj.body.serv_header.serv_response.serv_result).toBe('SUCCESS');
+    expect(convertedObj.body.serv_header.serv_response.serv_gsbStatus).toBe('PRIMARY');
   });
 
   afterEach(function () {

@@ -6,10 +6,12 @@
     .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACesOnboardHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AAModelService, AASessionVariableService) {
     var vm = this;
 
     var actionName = 'conditional';
+    var dependentCeSessionVariablesList = [];
+
     vm.queues = [];
 
     vm.ui = {};
@@ -57,17 +59,11 @@
     };
 
     vm.thenOptions = [{
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      value: 'routeToHuntGroup',
-    }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       value: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       value: 'routeToUser',
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      value: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       value: 'route',
@@ -82,8 +78,8 @@
 
     ///////////////////////////////////////////////////////
     $scope.$on('CE Updated', function () {
-      getSessionVariables().finally(function () {
-        refreshVarSelects();
+      getSessionVariablesOfDependentCe().finally(function () {
+        refreshVars();
       });
     });
 
@@ -97,8 +93,27 @@
       }
     });
 
+    function refreshVars() {
+      vm.sessionVarOptions = _.concat(dependentCeSessionVariablesList, AACommonService.collectThisCeActionValue(vm.ui, true, false));
+
+      vm.sessionVarOptions = _.uniq(vm.sessionVarOptions).sort();
+
+      // resets possibly warning messages
+      setLeft();
+    }
+
     function setWarning(flag) {
       vm.isWarn = flag;
+    }
+
+    function getSessionVariablesOfDependentCe() {
+      dependentCeSessionVariablesList = [];
+
+      return AASessionVariableService.getSessionVariablesOfDependentCeOnly(_.get(AAModelService.getAAModel(), 'aaRecordUUID')).then(function (data) {
+        if (!_.isUndefined(data) && data.length > 0) {
+          dependentCeSessionVariablesList = data;
+        }
+      });
     }
 
     function getSessionVarsAfterRemovingChangedValue(oldCI) {
@@ -265,8 +280,8 @@
     }
     */
 
-    function setReturnedCallerBasedOnToggle() {
-      if (AACommonService.isReturnedCallerToggle()) {
+    function setReturnedCallerBasedOnToggle(result) {
+      if (_.isEqual(result.csOnboardingStatus.toLowerCase(), 'success')) {
         vm.ifOptions.splice(0, 0, {
           label: $translate.instant('autoAttendant.decisionCallerReturned'),
           value: 'callerReturned',
@@ -315,8 +330,24 @@
       vm.ifOptions.sort(AACommonService.sortByProperty('label'));
     }
 
+    function setSparkCallOptions() {
+    /* spark call options will be shown in case
+     * 1. hybrid toggle is disabled
+     * 2. hybrid toggle is enabled and customer have spark call configuration */
+      if ((!AACommonService.isHybridEnabledOnOrg()) ||
+        (AACommonService.isHybridEnabledOnOrg() && AutoAttendantHybridCareService.isSparkCallConfigured())) {
+        vm.thenOptions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          value: 'routeToVoiceMail',
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+          value: 'routeToHuntGroup',
+        });
+      }
+    }
+
     function activate() {
-      setReturnedCallerBasedOnToggle();
+      setSparkCallOptions();
       setActionEntry();
       sortAndSetActionType();
 
@@ -341,14 +372,26 @@
     }
 
     function init() {
-      getSessionVariables().finally(function () {
-        /* no support for Queues as of this story.
-         * if (AACommonService.isRouteQueueToggle()) {
-         *
-         * getQueues().finally(activate);
-         * } else {
-         */
-        activate();
+      getSessionVariables().then(function () {
+        if (AACommonService.isReturnedCallerToggle()) {
+          AACesOnboardHelperService.isCesOnBoarded().then(function (result) {
+            setReturnedCallerBasedOnToggle(result);
+            activate();
+          }).catch(function () {
+            vm.returnedCallerToggle = false;
+            activate();
+          });
+        } else {
+          vm.returnedCallerToggle = false;
+          activate();
+        }
+        /*}).finally(function () {
+        no support for Queues as of this story.
+        * if (AACommonService.isRouteQueueToggle()) {
+        *
+        * getQueues().finally(activate);
+        * } else {
+        */
         /* } */
       });
     }

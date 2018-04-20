@@ -1,70 +1,73 @@
 <div class="sq-places-page-overview">
   <div ui-view="header"></div>
-  <cs-sp-buttons ng-class="{invisible: !$ctrl.onPrefLanguageChange}">
-  <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
-    <span translate="common.save"></span>
-  </button>
-  <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
-    <span translate="common.cancel"></span>
-  </button>
-</cs-sp-buttons>
-  <cs-sp-container>
-    <cs-sp-section>
-      <section-title
-        title-key="placesPage.servicesHeader"
-        action-list="$ctrl.actionList"
-        as-button="true">
-      </section-title>
-      <feature-list
-        features="$ctrl.services"
-        on-feature-click="$ctrl.clickService(feature)">
-      </feature-list>
-      <hercules-cloud-extensions place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.anyHybridServiceToggle() && $ctrl.hasSquaredFusionUc()"></hercules-cloud-extensions>
-    </cs-sp-section>
+  <cs-sp-buttons ng-if="$ctrl.onPrefLanguageChange">
+    <button cs-btn loading="$ctrl.prefLanguageSaveInProcess" class="btn btn--primary" ng-click="$ctrl.savePreferredLanguage()" ng-disabled="$ctrl.prefLanguageSaveInProcess" type="click">
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn ng-click="$ctrl.onCancelPreferredLanguage()">
+      <span translate="common.cancel"></span>
+    </button>
+  </cs-sp-buttons>
+  <div class="side-panel-container-view" ui-view="side-panel-container">
+    <cs-sp-container cs-tabindex="$ctrl.onPrefLanguageChange ? -1 : 0">
+      <cs-sp-section>
+        <section-title
+          title-key="placesPage.servicesHeader"
+          action-list="$ctrl.actionList"
+          as-button="true">
+        </section-title>
+        <feature-list
+          features="$ctrl.services"
+          on-feature-click="$ctrl.clickService(feature)">
+        </feature-list>
+        <hybrid-cloudberry-section place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.hasHybridEntitlements()"></hybrid-cloudberry-section>
+      </cs-sp-section>
 
-    <cs-sp-section>
-      <uc-device-list
-        owner-type="place"
-        device-list="$ctrl.currentPlace.devices"
-        place-type="$ctrl.currentPlace.type"
-        on-generate-fn="$ctrl.onGenerateOtpFn()"
-        on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
-      </uc-device-list>
-    </cs-sp-section>
-    <cs-sp-section ng-if="($ctrl.showLocations() || $ctrl.showLanguage())">
-      <section-title title-key="preferredLanguage.placeDetails"></section-title>
-      <div class="feature-list">
-        <ul>
-            <li class="feature" ng-if="$ctrl.showLocations()">
-              <a ng-click="$ctrl.openPanel()">
-                <span class="feature-name" translate="usersPreview.location"></span>
-                <span class="feature-details feature-label">{{$ctrl.placeLocation}}</span>
+      <cs-sp-section>
+        <uc-device-list
+          owner-type="place"
+          device-list="$ctrl.currentPlace.devices"
+          place-type="$ctrl.currentPlace.type"
+          on-generate-fn="$ctrl.onGenerateOtpFn()"
+          on-show-device-detail-fn="$ctrl.showDeviceDetails(device)">
+        </uc-device-list>
+      </cs-sp-section>
+      <cs-sp-section ng-if="($ctrl.showLocations() || $ctrl.showLanguage())">
+        <section-title title-key="preferredLanguage.placeDetails"></section-title>
+        <div class="feature-list">
+          <ul>
+              <li class="feature" ng-if="$ctrl.showLocations()">
+                <a href ng-click="$ctrl.openPanel()">
+                  <span class="feature-name" translate="usersPreview.location"></span>
+                  <span class="feature-details feature-label feature-status">{{$ctrl.placeLocation}}</span>
+                    <i class="feature-arrow"></i>
+                </a>
+              </li>
+              <li class="feature" ng-if="$ctrl.showLanguage()">
+                <a href ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
+                  <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
+                  <span class="feature-details feature-label">
+                    {{$ctrl.preferredLanguage.label}}
+                  </span>
                   <i class="feature-arrow"></i>
-              </a>
-            </li>
-            <li class="feature" ng-if="$ctrl.showLanguage()">
-              <a ng-if="$ctrl.preferredLanguage" ng-click="$ctrl.openPreferredLanguage()">
-                <span class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
-                <span class="feature-details feature-label">
-                  {{$ctrl.preferredLanguage.label}}
+                </a>
+                <span ng-if="!$ctrl.preferredLanguage" class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
+                <span ng-if="!$ctrl.preferredLanguage" class="feature-details feature-label">
+                  {{'usersPreview.notConfigured' | translate}}
                 </span>
-                <i class="feature-arrow"></i>
-              </a>
-              <span ng-if="!$ctrl.preferredLanguage" class="feature-name" translate="serviceSetupModal.preferredLanguage"></span>
-              <span ng-if="!$ctrl.preferredLanguage" class="feature-details feature-label">
-                {{'usersPreview.notConfigured' | translate}}
-              </span>
-            </li>
-        </ul>
-      </div>
-    </cs-sp-section>
+              </li>
+          </ul>
+        </div>
+      </cs-sp-section>
 
-    <cs-sp-section ng-if="$ctrl.showDeviceSettings">
-      <uc-device-settings
-        owner-type="place"
-        owner-id="$ctrl.currentPlace.id"
-        device-list="$ctrl.currentPlace.devices">
-      </uc-device-settings>
-    </cs-sp-section>
-  </cs-sp-container>
+      <cs-sp-section ng-if="$ctrl.showDeviceSettings">
+        <uc-device-settings
+          owner-type="place"
+          owner-id="$ctrl.currentPlace.cisUuid"
+          owner-display-name="$ctrl.currentPlace.displayName"
+          device-list="$ctrl.currentPlace.devices">
+        </uc-device-settings>
+      </cs-sp-section>
+    </cs-sp-container>
+  </div>
 </div>

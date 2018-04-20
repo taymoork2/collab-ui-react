@@ -56,6 +56,23 @@
         "siteId": "5794f327"
       },
       {
+        "licenseId": "MC_0da6fgfd7c7d-f0fg8b-4097-5b29a-64fdgd62111995c4_frankSinatraTestWX.dmz.webex.com",
+        "offerName": "MC",
+        "masterOfferName": "M3-MC200-ENT",
+        "licenseType": "CONFERENCING",
+        "billingServiceId": "Sub-os090825",
+        "features": [
+          "cloudmeetings"
+        ],
+        "volume": 25,
+        "isTrial": false,
+        "status": "ACTIVE",
+        "capacity": 25,
+        "siteUrl": "frankSinatraTestWX.dmz.webex.com",
+        "isCIUnifiedSite": false,
+        "siteId": "5794f328"
+      },
+      {
         "licenseId": "MS_30ae927d-11af-42bb-982a-d7784bc8145f",
         "offerName": "MS",
         "masterOfferName": "M3-MC200-ENT",
@@ -89,8 +106,7 @@
     "endDate": "2065-08-02T07:00:00.000Z",
     "duration": -1,
     "gracePeriod": 0,
-    "orderingTool": "CCW",
-    "pendingServiceOrderUUID": "1a35a909-1688-4353-a558-d4ea85e1c948"
+    "orderingTool": "CCW"
   },
   {
     "subscriptionId": "2675675-2365756-42365756-8767575-d05b7c67657",
@@ -127,11 +143,11 @@
         "isTrial": false,
         "status": "ACTIVE",
         "capacity": 200,
-        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "siteUrl": "shafiTest.dmz.webex.com",
         "isCIUnifiedSite": true,
         "siteId": "57493322",
         "isCI": true,
-        "siteAdminUrl": "https://frankSinatraTest.dmz.webex.com/wbxadmin/default.do?siteurl=frankSinatraTest"
+        "siteAdminUrl": "https://shafiTest.dmz.webex.com/wbxadmin/default.do?siteurl=shafiTest"
       },
       {
         "licenseId": "CMR_0dsdfsfdg7c7d-f0fdgsb-3497-5f59a-64fddsf32r31995c4_shafiTest.dmz.webex.com",

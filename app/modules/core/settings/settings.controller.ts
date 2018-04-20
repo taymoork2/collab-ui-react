@@ -1,16 +1,21 @@
 import { SettingSection } from './settingSection';
 import { AuthenticationSetting } from './authentication/authenticationSetting.component';
+import { EmailSetting } from './email/emailSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
 import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
+import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
 
 import { SecuritySetting } from './security/securitySetting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
-import { DeviceBrandingSetting } from './deviceBranding/device-branding-setting.component';
+import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
+import { WebexVersionSetting } from './webexVersion/webex-version.component';
+import { WebexSiteManagementSetting } from './webexSiteManagement/webexSiteManagementSetting.component';
+import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
 
 export class SettingsCtrl {
 
@@ -19,12 +24,17 @@ export class SettingsCtrl {
   public domains: SettingSection;
   public sipDomain: SettingSection;
   public authentication: SettingSection;
+  public email: SettingSection;
   public branding: SettingSection;
-  public deviceBranding: SettingSection;
+  public brandingWrapper: SettingSection;
   public support: SettingSection;
   public retention: SettingSection;
   public externalCommunication: SettingSection;
+  public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
+  public webexVersion: SettingSection;
+  public webexSiteManagement: SettingSection;
+  public sparkAssistant: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -62,18 +72,21 @@ export class SettingsCtrl {
     // if they are not a partner, provide everything else
     if (!this.Authinfo.isPartner()) {
       this.authentication = new AuthenticationSetting();
+      this.initEmailSuppress();
       this.domains = new DomainsSetting();
       this.privacy = new PrivacySetting();
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
+      this.initSparkAssistant();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
+        this.initFileSharingControl();
         this.initRetention();
       }
+    } else {
+      this.webexSiteManagement = new WebexSiteManagementSetting();
     }
-    //TODO temporary adding device branding
-    this.initDeviceBranding();
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
     if (!_.isNull(settingsToShow)) {
@@ -104,37 +117,58 @@ export class SettingsCtrl {
   }
 
   private initBranding() {
+    this.initDeviceBranding();
+  }
+
+  private initOldBranding(setBranding: boolean): IPromise<boolean> {
+    const defered = this.$q.defer<boolean>();
     if (this.Authinfo.isPartner() || this.Authinfo.isDirectCustomer()) {
-      this.branding = new BrandingSetting();
+      if (setBranding) {
+        this.branding = new BrandingSetting();
+      }
+      defered.resolve(true);
     } else if (this.Authinfo.isCustomerAdmin()) {
       const params = {
         basicInfo: true,
       };
       this.Orgservice.getOrg(_.noop, null, params).then(response => {
         if (_.get(response, 'data.orgSettings.allowCustomerLogos')) {
-          this.branding = new BrandingSetting();
+          if (setBranding) {
+            this.branding = new BrandingSetting();
+          }
+          defered.resolve(true);
         }
+        defered.resolve(false);
+      }).catch(() => {
+        defered.resolve(false);
       });
+    } else {
+      defered.resolve(false);
     }
+    return defered.promise;
   }
 
   private initDeviceBranding() {
     this.FeatureToggleService.csdmDeviceBrandingGetStatus().then((toggle) => {
       if (toggle) {
-        this.deviceBranding = new DeviceBrandingSetting();
+        this.initOldBranding(false).then((showBranding: boolean) => {
+          this.brandingWrapper = new DeviceBrandingSetting(this.Authinfo.isPartner(), showBranding);
+          if (showBranding && this.Authinfo.isPartner()) {
+            this.webexVersion = new WebexVersionSetting();
+          }
+        });
+      } else {
+        this.initOldBranding(true);
       }
     });
   }
 
   private initSecurity() {
     const promises = {
-      pinSettingsToggle: this.FeatureToggleService.atlasPinSettingsGetStatus(),
       proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
     this.$q.all(promises).then((result) => {
-      if (result.pinSettingsToggle) {
-        this.security = new SecuritySetting(result.proPackPurchased);
-      }
+      this.security = new SecuritySetting(result.proPackPurchased);
     });
   }
 
@@ -146,7 +180,21 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.blockExternalCommunicationToggle) {
-        this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
+        //TODO: algendel 1/12/18. This temporarily replaces ExternalCommunicationSetting(proPackPurchased) to enable for all for GA
+        this.externalCommunication = new ExternalCommunicationSetting(true);
+      }
+    });
+  }
+
+  private initFileSharingControl() {
+    const promises = {
+      fileSharingControlToggle: this.FeatureToggleService.atlasFileSharingControlSettingsGetStatus(),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+    };
+
+    this.$q.all(promises).then((result) => {
+      if (result.fileSharingControlToggle) {
+        this.fileSharingControl = new FileSharingControlSetting(result.proPackPurchased);
       }
     });
   }
@@ -160,6 +208,22 @@ export class SettingsCtrl {
     this.$q.all(promises).then((result) => {
       if (result.retentionToggle) {
         this.retention = new RetentionSetting(result.proPackPurchased);
+      }
+    });
+  }
+
+  private initEmailSuppress() {
+    this.FeatureToggleService.atlasEmailSuppressGetStatus().then((toggle) => {
+      if (toggle) {
+        this.email = new EmailSetting();
+      }
+    });
+  }
+
+  private initSparkAssistant() {
+    this.FeatureToggleService.atlasSparkAssistantGetStatus().then((toggle) => {
+      if (toggle) {
+        this.sparkAssistant = new SparkAssistantSetting();
       }
     });
   }

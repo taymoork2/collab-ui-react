@@ -17,7 +17,7 @@
             HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-cal'));
           },
           link: function () {
-            $state.go('calendar-service.list');
+            $state.go('services-overview');
           },
           linkText: 'homePage.getStarted',
           name: 'calendar',

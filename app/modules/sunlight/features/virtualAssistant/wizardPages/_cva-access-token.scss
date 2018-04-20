@@ -1,0 +1,48 @@
+.cva-access-token-box {
+  @include vr-spacing(mv, 1);
+  @include vr-spacing(p, 2.1875);
+  width: rem-calc(612px);
+
+  .input-row {
+    display: flex;
+
+    input {
+      @include vr-spacing(mt, 0.75);
+      width: rem-calc(386px);
+    }
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 1.84);
+  }
+
+  .cs-input-group.error {
+    @include vr-spacing(mb, 0);
+  }
+
+  .cs-input__messages .message{
+    @include vr-spacing(mt, 0);
+  }
+
+  .token-check-mark {
+    color: $color-green-darker;
+    font-size: rem-calc(26px);
+    @include vr-spacing(mh, 0.75);
+    @include vr-spacing(mt, 1);
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(pb, 0.3125);
+  }
+
+  .ng-hide:not(.ng-hide-animate) {
+    /* These are just alternative ways of hiding an element */
+    display: block !important;
+    visibility: hidden;
+  }
+
+  .validate-button {
+    @include vr-spacing(mt, 0.75);
+    border-radius: 2px;
+    height: rem-calc(36px);
+    width: rem-calc(100px);
+  }
+}

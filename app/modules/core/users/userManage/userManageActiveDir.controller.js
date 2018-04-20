@@ -7,20 +7,32 @@ require('./_user-manage.scss');
     .controller('UserManageActiveDirController', UserManageActiveDirController);
 
   /* @ngInject */
-  function UserManageActiveDirController($state, UserCsvService, OnboardService, $timeout) {
+  function UserManageActiveDirController(Authinfo, FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
+    vm.dirSyncStatus = 'success';
+    vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onNext = onNext;
     vm.onTurnOffDS = onTurnOffDS;
     vm.manageType = 'manual';
     vm.maxUsersInCSV = UserCsvService.maxUsersInCSV;
     vm.maxUsersInManual = OnboardService.maxUsersInManual;
-
     vm.onInit();
 
+    var isAtlasEmailSuppressToggle = false;
+    vm.ManageType = require('./shared/user-manage.keys').ManageType;
+
     //////////////////
-    function onInit() { }
+    function onInit() {
+      FeatureToggleService.atlasEmailSuppressGetStatus().then(function (toggle) {
+        isAtlasEmailSuppressToggle = toggle;
+      });
+    }
+
+    function isUserAdmin() {
+      return Authinfo.isUserAdminUser();
+    }
 
     function onTurnOffDS() {
       $state.modal.dismiss();
@@ -32,18 +44,25 @@ require('./_user-manage.scss');
     }
 
     function onNext() {
-      switch (vm.manageType) {
-        case 'manual':
-          $state.go('users.add');
-          break;
+      if (isAtlasEmailSuppressToggle) {
+        $state.go('users.manage.emailSuppress', {
+          manageType: vm.manageType,
+          prevState: 'users.manage.activedir',
+        });
+      } else {
+        switch (vm.manageType) {
+          case vm.ManageType.MANUAL:
+            $state.go('users.add.manual');
+            break;
 
-        case 'bulk':
-          $state.go('users.csv');
-          break;
+          case vm.ManageType.BULK:
+            $state.go('users.csv');
+            break;
 
-        case 'advanced':
-          $state.go('users.manage.advanced.add.ob.syncStatus');
-          break;
+          case vm.ManageType.ADVANCED_DS:
+            $state.go('users.manage.dir-sync.add.ob.syncStatus');
+            break;
+        }
       }
     }
   }

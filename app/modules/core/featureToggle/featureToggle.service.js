@@ -4,7 +4,7 @@
   module.exports = FeatureToggleService;
 
   /* @ngInject */
-  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, UrlConfig) {
+  function FeatureToggleService($http, $q, $resource, $rootScope, $state, Authinfo, HuronConfig, Orgservice, UrlConfig) {
     var features = require('./features.config');
     var toggles = {};
     var huronCustomerResource;
@@ -37,10 +37,12 @@
       getFeaturesForUser: getFeaturesForUser,
       getFeatureForOrg: getFeatureForOrg,
       getFeaturesForOrg: getFeaturesForOrg,
+      getCallFeatureForCustomer: getCallFeatureForCustomer,
       setFeatureToggles: setFeatureToggles,
       generateFeatureToggleRule: generateFeatureToggleRule,
       stateSupportsFeature: stateSupportsFeature,
       supports: supports,
+      hasFeatureToggleOrIsTestOrg: hasFeatureToggleOrIsTestOrg,
       features: features,
     };
 
@@ -179,6 +181,20 @@
       });
     }
 
+    function hasFeatureToggleOrIsTestOrg(feature) {
+      var promises = {
+        hasFeatureToggle: supports(feature),
+        isTestOrg: Orgservice.isTestOrg(),
+      };
+      return $q.all(promises)
+        .then(function (results) {
+          return results.hasFeatureToggle || results.isTestOrg;
+        })
+        .catch(function () {
+          return false;
+        });
+    }
+
     function setFeatureToggles(isUser, listOfFeatureToggleRules) {
       if (isUser) {
         return $q.reject('User level toggles are not changeable in the web app');
@@ -248,6 +264,20 @@
           isArray: true,
           cache: true,
         },
+      });
+    }
+
+    function getCallFeatureForCustomer(customerId, feature) {
+      return $resource(HuronConfig.getToggleUrl() + '/features/customers/:customerId/developer/:feature', {
+        customerId: '@customerId',
+        feature: '@feature',
+      }).get({
+        customerId: customerId,
+        feature: feature,
+      }).$promise.then(function (data) {
+        return data.val;
+      }).catch(function () {
+        return false;
       });
     }
   }

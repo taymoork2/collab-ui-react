@@ -81,14 +81,13 @@ describe('Controller: AAMessageTypeCtrl', function () {
                   }, {
                     nodeName: 'SPAN',
                     parentElement: {
-                      attributes: [{
-                        value: 'Test Attribute',
-                      }, {
-                        value: 'NUMBER',
-                      }, {
-                        value: 'dummyId',
-                      }],
+                      attributes: [
+                      ],
                     },
+                  }, {
+                    nodeName: 'P',
+                    innerText: 'Test String for copy paste scenario',
+
                   }],
                   className: 'dynamic-prompt aa-message-height',
                   id: 'messageTypeopenHours0',
@@ -96,6 +95,12 @@ describe('Controller: AAMessageTypeCtrl', function () {
               },
             },
           };
+          var rangeChildNode = range.endContainer.ownerDocument.activeElement.childNodes[1];
+          var attributes = rangeChildNode.parentElement.attributes;
+          _.set(attributes, 'element-text.value', 'Test Attribute');
+          _.set(attributes, 'read-as.value', 'NUMBER');
+          _.set(attributes, 'element-id.value', 'dummyId');
+
           return range;
         };
         spyOn(angular, 'element').and.returnValue(dynamicElement);
@@ -140,6 +145,73 @@ describe('Controller: AAMessageTypeCtrl', function () {
 
         expect(c).toBeDefined();
         expect(c.dynamicValues[0].model).toEqual('dummy message');
+      });
+
+      it('should be able to create new AA entry with null dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+          say: {
+            value: null,
+            voice: null,
+          },
+          isDynamic: true,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        expect(c.dynamicValues[0].model).toEqual('');
+      });
+
+      it('should be able to create new AA entry with undefined dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [{
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        expect(c.dynamicValues[0].model).toEqual('');
+      });
+
+      it('should be able to create new AA entry with blank dynamic say', function () {
+        var c;
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+        action.dynamicList = [
+        ];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+        // setup the options menu
+        c = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        expect(c).toBeDefined();
+        var blankArray = [];
+        expect(c.dynamicValues).toEqual(blankArray);
       });
 
       it('should be able to create new AA entry with dynamicValues set to value', function () {
@@ -214,7 +286,10 @@ describe('Controller: AAMessageTypeCtrl', function () {
       });
 
       it('should be able to create dynamicList', function () {
-        var c;
+        var ctrl;
+        var $event = {
+          keyCode: 8,
+        };
         var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
         action.dynamicList = [{
           say: {
@@ -230,16 +305,81 @@ describe('Controller: AAMessageTypeCtrl', function () {
         aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
         aaUiModel.openHours.addEntryAt(0, menuEntry);
         // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
+        ctrl = controller('AAMessageTypeCtrl', {
           $scope: $scope,
         });
 
-        c.actionEntry = menuEntry.actions[0];
-        expect(c.actionEntry.dynamicList[0].say.value).toEqual('');
-        c.saveDynamicUi();
-        expect(c.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
-        expect(c.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
-        expect(c.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('');
+        ctrl.saveDynamicUi($event);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create dynamicList with P Node', function () {
+        var ctrl;
+        var $event = {
+          keyCode: 8,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('');
+        ctrl.saveDynamicUi($event);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toEqual('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toEqual('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[2].say.value).toEqual('Test String for copy paste scenario');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toEqual(true);
+      });
+
+      it('should be able to create dynamicList with keycode other than backspace', function () {
+        var ctrl;
+        var $event1 = {
+          keyCode: 9,
+        };
+        var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+        action.dynamicList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        menuEntry.addAction(action);
+
+        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        // setup the options menu
+        ctrl = controller('AAMessageTypeCtrl', {
+          $scope: $scope,
+        });
+
+        ctrl.actionEntry = menuEntry.actions[0];
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('');
+        ctrl.saveDynamicUi($event1);
+        expect(ctrl.actionEntry.dynamicList[0].say.value).toBe('this is test say message');
+        expect(ctrl.actionEntry.dynamicList[1].say.value).toBe('Test Attribute');
+        expect(ctrl.actionEntry.dynamicList[1].isDynamic).toBe(true);
       });
     });
 
@@ -645,59 +785,65 @@ describe('Controller: AAMessageTypeCtrl', function () {
         spyOn(c, 'getWarning').and.returnValue(false);
         expect(c.getWarning()).toBe(false);
       });
-      it('boradcast of CE Updated', function () {
-        var c;
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-        action.dynamicList = [{
-          say: {
-            value: 'dummy message',
-            voice: '',
-          },
-          isDynamic: true,
-          htmlModel: '',
-        }];
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.addAction(action);
+      describe('broadcast', function () {
+        beforeEach(inject(function (CustomVariableService, $q) {
+          spyOn(CustomVariableService, 'listCustomVariables').and.returnValue($q.resolve([]));
+        }));
 
-        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        aaUiModel.openHours.addEntryAt(0, menuEntry);
+        it('broadcast of CE Updated', function () {
+          var c;
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+          action.dynamicList = [{
+            say: {
+              value: 'dummy message',
+              voice: '',
+            },
+            isDynamic: true,
+            htmlModel: '',
+          }];
+          menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          menuEntry.addAction(action);
 
-        // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
-          $scope: $scope,
+          aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+          aaUiModel.openHours.addEntryAt(0, menuEntry);
+
+          // setup the options menu
+          c = controller('AAMessageTypeCtrl', {
+            $scope: $scope,
+          });
+          $scope.$apply();
+          c.deletedSessionVariablesList = [];
+          $rootScope.$broadcast('CE Updated');
+          c.getWarning();
+          expect(c.getWarning()).toBe(true);
         });
-        $scope.$apply();
-        c.deletedSessionVariablesList = [];
-        $rootScope.$broadcast('CE Updated');
-        c.getWarning();
-        expect(c.getWarning()).toBe(true);
-      });
-      it('boradcast of CIVarNameChanged', function () {
-        var c;
-        var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
-        action.dynamicList = [{
-          say: {
-            value: 'dummy message',
-            voice: '',
-          },
-          isDynamic: true,
-          htmlModel: '',
-        }];
-        menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
-        menuEntry.addAction(action);
+        it('broadcast of CIVarNameChanged', function () {
+          var c;
+          var action = AutoAttendantCeMenuModelService.newCeActionEntry('runActionsOnInput', '');
+          action.dynamicList = [{
+            say: {
+              value: 'dummy message',
+              voice: '',
+            },
+            isDynamic: true,
+            htmlModel: '',
+          }];
+          menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+          menuEntry.addAction(action);
 
-        aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
-        aaUiModel.openHours.addEntryAt(0, menuEntry);
+          aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+          aaUiModel.openHours.addEntryAt(0, menuEntry);
 
-        // setup the options menu
-        c = controller('AAMessageTypeCtrl', {
-          $scope: $scope,
+          // setup the options menu
+          c = controller('AAMessageTypeCtrl', {
+            $scope: $scope,
+          });
+          $scope.$apply();
+          c.deletedSessionVariablesList = [];
+          $rootScope.$broadcast('CIVarNameChanged');
+          c.getWarning();
+          expect(c.getWarning()).toBe(true);
         });
-        $scope.$apply();
-        c.deletedSessionVariablesList = [];
-        $rootScope.$broadcast('CIVarNameChanged');
-        c.getWarning();
-        expect(c.getWarning()).toBe(true);
       });
     });
   });

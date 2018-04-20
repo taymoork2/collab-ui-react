@@ -1,4 +1,4 @@
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { PrivateTrunkResource, Destination } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services';
 import { USSService } from 'modules/hercules/services/uss.service';
@@ -189,7 +189,7 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
 }
 export class PrivateTrunkDestinationComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkDestinationCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-destination/private-trunk-destination.html');
   public bindings = {
     isFirstTimeSetup: '<',
     privateTrunkResource: '<',

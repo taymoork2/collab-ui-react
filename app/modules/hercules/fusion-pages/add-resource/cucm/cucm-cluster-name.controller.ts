@@ -1,6 +1,7 @@
 import { FmsOrgSettings } from 'modules/hercules/services/fms-org-settings.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
+import { KeyCodes } from 'modules/core/accessibility';
 
 export class CucmClusterNameController {
 
@@ -52,7 +53,7 @@ export class CucmClusterNameController {
   }
 
   public handleKeypress(event) {
-    if (event.keyCode === 13 && this.canGoNext()) {
+    if (event.keyCode === KeyCodes.ENTER && this.canGoNext()) {
       this.next();
     }
   }

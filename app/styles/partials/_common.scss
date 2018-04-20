@@ -4,6 +4,10 @@ body {
   background-color: $background-color;
 }
 
+.side-panel-container-view {
+  position: relative;
+}
+
 .app-container {
   padding: 0;
 }
@@ -112,10 +116,10 @@ a[href='http://www.amcharts.com/javascript-charts/'] {
 }
 
 .messagebox-backdrop {
-  background-image: url('~collab-ui/images/Spaceballs_BG.jpg');
+  background-image: url('~@collabui/collab-ui/images/Spaceballs_BG.jpg');
 
   .message-box::before {
-    background-image: url('~collab-ui/images/Spaceballs_BG.jpg');
+    background-image: url('~@collabui/collab-ui/images/Spaceballs_BG.jpg');
   }
 }
 

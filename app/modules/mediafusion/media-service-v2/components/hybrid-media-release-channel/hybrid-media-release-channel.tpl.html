@@ -1,0 +1,11 @@
+<setting-section setting="$ctrl.releaseChannelTexts" ng-if="$ctrl.releaseChannelOptions.length > 1">
+  <h5 class="sub-section__label" translate="hercules.releaseChannelSection.releaseChannelHeader"></h5>
+  <p class="sub-section__description" translate="hercules.releaseChannelSection.releaseChannelClusterDescription"></p>
+  <div class="medium-8">
+    <cs-select
+      ng-model="$ctrl.releaseChannelSelected"
+      options="$ctrl.releaseChannelOptions"
+      on-change-fn="$ctrl.releaseChannelChanged()">
+    </cs-select>
+  </div>
+</setting-section>

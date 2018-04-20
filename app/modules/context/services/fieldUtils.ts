@@ -2,45 +2,40 @@
  * service for providing the user-readable name of a field dataType. Examines the field dataType and the dataTypeDefinition and
  * provides the appropriate name for a user interface to use. This requires the l10n json file(s) and the $translate service.
  */
+
 export class FieldUtils {
   private static translationRoot = 'context.dictionary.dataTypes.';
+  private static unknownType = 'unknownDataType';
 
-  private translations: { [key: string]: string } = {};
+  public supportedUiTypes(): string[] {
+    return [
+      'boolean',
+      'double',
+      'integer',
+      'string',
+      'enumString',
+    ];
+  }
 
   constructor(private $translate: ng.translate.ITranslateService) {
   }
 
-  private getTypeConstant(typeName: string): string {
+  public getTypeConstant(typeName: string): string {
     return FieldUtils.translationRoot + typeName;
-  }
-
-  private getTranslatedType(typeName: string): string {
-    const key = this.getTypeConstant(typeName);
-    let value = this.translations[key];
-
-    if (value === undefined) {
-      value =  this.$translate.instant(key);
-      this.translations[key] =  value;
-    }
-    return value;
-  }
-
-  private getUnknownType(): string {
-    return this.getTranslatedType('unknownDataType');
   }
 
   private getAdvancedType(field: any): string {
     const type = field.dataTypeDefinition.type.trim();
     switch (type) {
       case 'enum':
-        return this.getTranslatedType('enumString');
+        return 'enumString';
       case 'regex': // not supported yet
       default:
-        return this.getUnknownType();
+        return FieldUtils.unknownType;
     }
   }
 
-  public getDataType(field: any): string {
+  public getDataTypeBase(field: any): string {
     try {
       const dataType = _.toLower(field.dataType).trim();
       switch (dataType) {
@@ -53,16 +48,46 @@ export class FieldUtils {
         case 'double':
         case 'integer':
         case 'list<string>':
-          return this.getTranslatedType(dataType);
+          return dataType;
       }
     } catch (e) {
       // nothing to do - just make sure if _anything_ weird happens, we at least return.
     }
 
-    return this.getUnknownType();
+    return FieldUtils.unknownType;
+  }
+
+  public getDataTypeKey(field: any): string {
+    return this.getTypeConstant(this.getDataTypeBase(field));
+  }
+
+  public getApiDataTypeFromSelection(selectionType: string): string {
+    switch (selectionType) {
+      case 'boolean':
+      case 'double':
+      case 'integer':
+      case 'string':
+        return selectionType;
+      case 'enumString':
+        return 'string';
+      default:
+        const msg = 'unhandled data type in getApiDataTypeFromSelection: '
+          + selectionType;
+
+        throw new Error(msg);
+    }
+  }
+
+  public translateBase(field: any): string {
+    return this.$translate.instant(field);
+  }
+
+  public getDataType(field: any): string {
+    return this.translateBase(this.getDataTypeKey(field));
   }
 }
 
-export default angular.module('Context')
+export default angular.module('context.services.context-field-utils-service', [])
   .service('FieldUtils', FieldUtils)
   .name;
+

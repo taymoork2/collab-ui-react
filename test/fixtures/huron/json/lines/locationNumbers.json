@@ -1,0 +1,49 @@
+[{
+  "dnUsage": null,
+  "externalNumber": "+19725551000",
+  "internalNumber": "1000",
+  "userId": "asuna@sao.com",
+  "location": "TestLocation",
+  "uuid": null,
+  "url": "https://cmi.huron.com/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
+  }]
+}, {
+  "dnUsage": null,
+  "externalNumber": null,
+  "internalNumber": "1001",
+  "userId": "kirito@sao.com",
+  "location": "TestLocation",
+  "uuid": null,
+  "url": "https://cmi.huron.com/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
+  }]
+}, {
+  "dnUsage": null,
+  "externalNumber": null,
+  "internalNumber": "1002",
+  "userId": null,
+  "location": "TestLocation",
+  "uuid": null,
+  "url": "https://cmi.huron.com/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
+  }]
+}, {
+  "dnUsage": null,
+  "externalNumber": "+19725551001",
+  "internalNumber": null,
+  "userId": null,
+  "location": "TestLocation",
+  "uuid": null,
+  "url": "https://cmi.huron.com/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations",
+  "links": [{
+    "rel": "voice",
+    "href": "/api/v1/voice/customers/00000000-0000-0000-0000-000000000000/userlineassociations"
+}]
+}]

@@ -1,0 +1,11 @@
+<div class="modal-header ct-confirmation-header">
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <span class="h3 modal-title">{{controller.cancelModalText.cancelHeader}}</span>
+</div>
+<div class="modal-body ct-confirmation-body">
+  <p><span class="ct-confirmation-message">{{controller.cancelModalText.cancelDialog}}</span></p>
+</div>
+<div class="modal-footer">
+  <button class="btn" id="continueChat" ng-click="$dismiss()" focus-on>{{controller.cancelModalText.continueButton}}</button>
+  <button class="btn btn--negative" id="cancelChat" ng-click="$dismiss()" ui-sref="care.Features">{{controller.cancelModalText.confirmButton}}</button>
+</div>

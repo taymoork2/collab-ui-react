@@ -6,9 +6,11 @@
   module.exports = TrialPstnService;
 
   /* @ngInject */
-  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnService, FeatureToggleService) {
+  function TrialPstnService($q, Config, Notification, PstnServiceAddressService, PstnService, PstnModel, FeatureToggleService) {
     var _trialData;
     var ftEnterprisePrivateTrunking = false;
+    var ftLocation = false;
+
     var service = {
       getData: getData,
       reset: reset,
@@ -48,6 +50,7 @@
             firstName: '',
             lastName: '',
             emailAddress: '',
+            confirmEmailAddress: '',
           },
           pstnNumberInfo: {
             state: {},
@@ -56,6 +59,7 @@
             numbers: [],
           },
           pstnOrderData: [],
+          location: {},
           emergAddr: {
             streetAddress: '',
             unit: '',
@@ -73,20 +77,19 @@
     function createPstnEntityV2(customerOrgId, customerName) {
       return checkForPstnSetup(customerOrgId)
         .catch(function () {
+          if (!_.isString(_trialData.details.pstnContractInfo.companyName) || _trialData.details.pstnContractInfo.companyName.length === 0) {
+            _trialData.details.pstnContractInfo.companyName = customerName;
+          }
+          var promise = createPstnCustomerV2(customerOrgId);
           if (_trialData.details.pstnProvider.apiImplementation === 'SWIVEL') {
             _trialData.details.pstnNumberInfo.numbers = _trialData.details.swivelNumbers;
-            _trialData.details.pstnContractInfo.companyName = customerName;
-            return createPstnCustomerV2(customerOrgId)
-              .then(_.partial(createCustomerSite, customerOrgId))
-              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-              .then(_.partial(getEnterprisePrivateTrunkingFeatureToggle))
-              .then(_.partial(orderNumbers, customerOrgId));
-          } else {
-            return createPstnCustomerV2(customerOrgId)
-              .then(_.partial(createCustomerSite, customerOrgId))
-              .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
-              .then(_.partial(orderNumbersV2, customerOrgId));
+            promise = promise.then(_.partial(getEnterprisePrivateTrunkingFeatureToggle));
           }
+          return promise
+            .then(_.partial(getLocationsFeatureToggle))
+            .then(_.partial(createCustomerSiteOrLocation, customerOrgId))
+            .then(_.partial(reserveNumbersWithCustomerV2, customerOrgId))
+            .then(_.partial(orderNumbers, customerOrgId));
         });
     }
 
@@ -136,7 +139,24 @@
         _trialData.details.pstnContractInfo.emailAddress,
         _trialData.details.pstnProvider.uuid,
         _trialData.details.isTrial
-      ).catch(function (response) {
+      ).then(function () {
+        PstnModel.setCustomerId(customerOrgId);
+        PstnModel.setCustomerExists(true);
+        //Once the Terminus customer is created setup the Location data
+        _trialData.details.location.name = _trialData.details.pstnContractInfo.companyName;
+        //First location is default
+        _trialData.details.location.default = true;
+        _trialData.details.location.addresses = [{
+          address1: _trialData.details.emergAddr.streetAddress,
+          address2: _trialData.details.emergAddr.unit,
+          city: _trialData.details.emergAddr.city,
+          stateOrProvinceOrRegion: _trialData.details.emergAddr.state,
+          zip: _trialData.details.emergAddr.zip,
+          country: _trialData.details.countryCode,
+          //First address for location is default
+          default: true,
+        }];
+      }).catch(function (response) {
         Notification.errorResponse(response, 'trialModal.pstn.error.customerFail');
         return $q.reject(response);
       });
@@ -150,20 +170,38 @@
         });
     }
 
-    function orderNumbers(customerOrgId) {
-      if (ftEnterprisePrivateTrunking) {
-        return PstnService.orderNumbersV2Swivel(
-          customerOrgId,
-          _trialData.details.pstnNumberInfo.numbers
-        ).catch(function (response) {
-          Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
-          return $q.reject(response);
+    function getLocationsFeatureToggle() {
+      return FeatureToggleService.supports(FeatureToggleService.features.hI1484)
+        .then(function (supported) {
+          ftLocation = supported;
+          return supported;
         });
+    }
+
+    function orderNumbers(customerOrgId) {
+      if (_trialData.details.pstnProvider.apiImplementation === 'SWIVEL') {
+        if (ftEnterprisePrivateTrunking) {
+          return PstnService.orderNumbersV2Swivel(
+            customerOrgId,
+            _trialData.details.pstnNumberInfo.numbers
+          ).catch(function (response) {
+            Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+            return $q.reject(response);
+          });
+        } else {
+          return PstnService.orderNumbers(
+            customerOrgId,
+            _trialData.details.pstnProvider.uuid,
+            _trialData.details.pstnNumberInfo.numbers
+          ).catch(function (response) {
+            Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
+            return $q.reject(response);
+          });
+        }
       } else {
-        return PstnService.orderNumbers(
+        return PstnService.orderNumbersV2(
           customerOrgId,
-          _trialData.details.pstnProvider.uuid,
-          _trialData.details.pstnNumberInfo.numbers
+          _trialData.details.pstnOrderData
         ).catch(function (response) {
           Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
           return $q.reject(response);
@@ -171,14 +209,14 @@
       }
     }
 
-    function orderNumbersV2(customerOrgId) {
-      return PstnService.orderNumbersV2(
-        customerOrgId,
-        _trialData.details.pstnOrderData
-      ).catch(function (response) {
-        Notification.errorResponse(response, 'trialModal.pstn.error.orderFail');
-        return $q.reject(response);
-      });
+    function createCustomerSiteOrLocation(customerOrgId) {
+      if (ftLocation) {
+        return PstnService.createLocation(_trialData.details.location)
+          .catch(function (error) {
+            this.Notification.errorResponse(error, 'locations.createFailed');
+          });
+      }
+      return createCustomerSite(customerOrgId);
     }
 
     function createCustomerSite(customerOrgId) {

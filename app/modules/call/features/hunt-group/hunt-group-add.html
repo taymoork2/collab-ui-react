@@ -10,7 +10,10 @@
       next="$ctrl.nextButton($ctrl.pageIndex)"
       previous-fn="$ctrl.previousPage()"
       next-fn="$ctrl.nextPage()"
-      next-text="$ctrl.createHelpText()">
+      next-text="$ctrl.createHelpText()"
+      next-aria-label="{{::'common.next' | translate}}"
+      previous-aria-label="{{::'common.previous' | translate}}">
+
       <div ng-class="{'cs-fallback-content': ($ctrl.pageIndex === 4)}">
         <form novalidate name="$ctrl.form" role="form">
           <uc-call-feature-name
@@ -39,7 +42,8 @@
               hunt-method="$ctrl.huntGroup.huntMethod"
               is-new="true"
               on-change-fn="$ctrl.setHuntGroupMethod(method)"
-              on-key-press-fn="$ctrl.enterNextPage(keyCode)">
+              on-key-press-fn="$ctrl.enterNextPage(keyCode)"
+              set-focus="true">
             </uc-hunt-group-method>
           </div>
 
@@ -49,6 +53,7 @@
               member-hint-key="huronHuntGroup.memberHint"
               member-item-type="number"
               remove-key="common.remove"
+              show-numbers="true"
               show-external-numbers="true"
               is-new="true"
               on-change-fn="$ctrl.setHuntGroupMembers(members)"

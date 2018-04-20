@@ -1,49 +1,11 @@
-<div ng-form="meetingCtrl.licenseDistributionForm">
-<div class="meeting-settings">
-  <div ng-init="meetingCtrl.initLicenseDistributionStep()" class="distribute-licenses-heading">
-    <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
-  </div>
-  <div ng-repeat="licenses in meetingCtrl.distributedLicensesArray">
-    <div ng-if="$first" class="row element-spacing adjust-card-margin">
-      <div class="col-md-3">&nbsp;</div>
-      <div ng-repeat="site in licenses">
-        <cs-card class="col-md-2">
-          <article>
-            <section class="row">
-              <p class="col-md-7">{{meetingCtrl.offerCodeToCenterTypeString(site.centerType)}}</p>
-              <p class="col-md-5 count align-license-count" ng-class="{'error': (meetingCtrl.getLicensesRemaining(site.centerType) < 0)}">{{meetingCtrl.getLicensesRemaining(site.centerType)}}</p>
-            </section>
-          </article>
-        </cs-card>
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div ng-repeat="site in licenses">
-        <div ng-if="$first" class="col-md-3">{{site.siteUrl}}.webex.com</div>
-        <div class="col-md-2" >
-          <input cs-input class="align-license-count" type="number" step="1"
-            required ng-min="0"
-            name="siteLicenseCount{{$parent.$index}}_{{$index}}"
-            ng-model-options="{ allowInvalid: 'true' }"
-            id="site-license-count-{{site.siteUrl}}-{{$index}}" cs-input-size="medium-12"
-            placeholder="{{::'firstTimeWizard.enterNumberOfLicenses' | translate}}"
-            ng-change="meetingCtrl.enableOrDisableNext(meetingCtrl.steps.SITES_LICENSES)"
-            cs-input-messages="meetingCtrl.licenseDistributionErrors"
-            ng-model="site.quantity">
-          </div>
-      </div>
-    </div>
-    <div class="row error" ng-if="meetingCtrl.licenseDistributionForm.$dirty" >
-      <div class="message" ng-if ="meetingCtrl.getLicensesForSite(licenses[0].siteUrl) === 0" translate="firstTimeWizard.meetingSettingsError.totalSiteLicenseNumber" translate-values="{siteUrl: licenses[0].siteUrl}"></div>
-    </div>
-    <div ng-if="$last" class="row element-spacing">
-      <div ng-repeat="site in licenses">
-        <div ng-if="$first" class="col-md-3" translate="common.total"></div>
-        <div class="col-md-2 align-license-count-total" ng-class="{'error': (meetingCtrl.getLicensesRemaining(site.centerType) < 0)}">{{meetingCtrl.getLicensesAssignedTotal(site.centerType)}}</div>
-      </div>
-    </div>
-  </div>
+<div class="add-webex-site meeting-settings">
+  <h4 translate="firstTimeWizard.distributeYourWebExLicenses"></h4>
+  <webex-site-licenses sites-array="meetingCtrl.sitesArray"
+    existing-webex-sites="meetingCtrl.existingWebexSites"
+    conference-licenses-in-subscription="meetingCtrl.pendingMeetingLicenses"
+    distributed-licenses-payload="meetingCtrl.sitesLicensesData"
+    is-hide-description="'true'"
+    on-distribution-change="meetingCtrl.updateSitesWithNewDistribution(sites, isValid)"
+    on-send-tracking="meetingCtrl.onSendTracking(event, properties)">
+  </webex-site-licenses>
 </div>
-</form>

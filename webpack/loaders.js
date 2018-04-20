@@ -1,11 +1,17 @@
+const _ = require('lodash');
+const args = require('yargs').argv;
 const path = require('path');
 
 const appPath = path.resolve('./app');
 const testPath = path.resolve('./test');
+const examplePath = path.resolve('./examples');
 
 exports.js = {
   test: /\.js$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'ng-annotate-loader',
     },
@@ -39,7 +45,7 @@ exports.tslint = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
   enforce: 'pre',
 };
@@ -47,6 +53,9 @@ exports.tslint = {
 exports.ts = {
   test: /\.ts$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'ng-annotate-loader',
     },
@@ -57,13 +66,16 @@ exports.ts = {
       },
     },
   ],
-  include: [appPath, testPath],
+  include: [appPath, testPath, examplePath],
   exclude: [/node_modules/],
 };
 
 exports.scss = {
   test: /\.scss$/,
   use: [
+    {
+      loader: 'cache-loader',
+    },
     {
       loader: 'style-loader',
     },
@@ -100,21 +112,18 @@ exports.html = {
   test: /\.html$/,
   use: [
     {
-      loader: 'ngtemplate-loader',
+      loader: 'html-loader',
       options: {
-        module: 'atlas.templates',
-        relativeTo: `${appPath}/`,
+        minimize: true,
+        removeAttributeQuotes: false, // consistency preference
       },
-    },
-    {
-      loader: 'raw-loader',
     },
   ],
   exclude: /\/app\/index.html$/,
 };
 
 exports.assets = {
-  test: /\.(json|csv|pdf)(\?v=.*)?$/,
+  test: /\.(csv|pdf)(\?v=.*)?$/,
   use: [
     {
       loader: 'file-loader',
@@ -131,7 +140,7 @@ exports.fonts = {
     {
       loader: 'file-loader',
       options: {
-        name: 'fonts/[name].[ext]',
+        name: 'fonts/[name].[ext]?[hash]',
       },
     },
   ],
@@ -143,7 +152,7 @@ exports.images = {
     {
       loader: 'file-loader',
       options: {
-        name: '[path][name].[ext]',
+        name: '[path][name].[ext]?[hash]',
       },
     },
   ],
@@ -156,7 +165,7 @@ exports.vendorImages = {
     {
       loader: 'file-loader',
       options: {
-        name: 'images/[name].[ext]',
+        name: 'images/[name].[ext]?[hash]',
       },
     },
   ],
@@ -192,13 +201,6 @@ exports.dependencies = [{
     },
   ],
 }, {
-  test: /stickyfill.js$/,
-  use: [
-    {
-      loader: 'script-loader',
-    },
-  ],
-}, {
   test: /bard.js$/,
   use: [
     {
@@ -228,16 +230,48 @@ exports.dependencies = [{
   ],
 }];
 
-exports.instrument = {
-  test: /\.(js|ts)$/,
+exports.instrumentJs = {
+  test: /\.js$/,
   use: [
     {
       loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: false,
+      },
     },
   ],
   exclude: [
     /node_modules/,
-    /spec\.(js|ts)$/,
+    /spec\.js$/,
+  ],
+};
+
+exports.instrumentTs = {
+  test: /\.ts$/,
+  use: [
+    {
+      loader: 'istanbul-instrumenter-loader',
+      options: {
+        esModules: true,
+      },
+    },
+  ],
+  exclude: [
+    /node_modules/,
+    /spec\.ts$/,
   ],
   enforce: 'post',
 };
+
+function stripCacheLoader(loaderList) {
+  return _.reject(loaderList, {
+    loader: 'cache-loader',
+  });
+}
+
+// remove 'cache-loader' for CLI switch
+if (args.env && args.env.nocacheloader) {
+  exports.js.use = stripCacheLoader(exports.js.use);
+  exports.ts.use = stripCacheLoader(exports.ts.use);
+  exports.scss.use = stripCacheLoader(exports.scss.use);
+}

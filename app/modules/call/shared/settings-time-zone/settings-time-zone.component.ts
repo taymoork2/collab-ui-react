@@ -34,7 +34,7 @@ class TimeZoneCtrl implements ng.IComponentController {
 
 export class TimeZoneComponent implements ng.IComponentOptions {
   public controller = TimeZoneCtrl;
-  public templateUrl = 'modules/call/shared/settings-time-zone/settings-time-zone.component.html';
+  public template = require('modules/call/shared/settings-time-zone/settings-time-zone.component.html');
   public bindings = {
     timeZone: '<',
     timeZoneOptions: '<',

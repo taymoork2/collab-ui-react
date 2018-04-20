@@ -1,0 +1,54 @@
+.va-summary {
+  @include vr-spacing(mt, 11);
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  .success-icon {
+    color: $color-cta-base;
+  }
+
+  .edit-message {
+    @include vr-spacing(pt, 1.2);
+    color: $color-attention-darker;
+    line-height: initial;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .description {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pv, 1);
+
+    text-align: center;
+    width: 100%;
+  }
+
+  .retry-message {
+    @include vr-spacing(mt, 1);
+    color: $color-alerts-base;
+    display: inline-block;
+    text-align: center;
+
+    .icon-error {
+      vertical-align: middle;
+      font-size: rem-calc(16px);
+    }
+    .error-message {
+      @include vr-spacing(ml, 0.5);
+      white-space: pre-wrap;
+    }
+  }
+
+  .vaSetupFinishBtn {
+    @include vr-spacing(mt, 1.8125);
+    border-radius: 2px;
+    width: rem-calc(100px);
+  }
+
+  .warning-sign {
+    color: $color-attention-base;
+    @include vr-spacing(mr, 0.5);
+  }
+}

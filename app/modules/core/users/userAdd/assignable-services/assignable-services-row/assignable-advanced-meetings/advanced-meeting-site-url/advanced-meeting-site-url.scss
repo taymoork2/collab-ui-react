@@ -1,0 +1,12 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
+advanced-meeting-site-url {
+  .license__siteUrl {
+    color: $color-primary-base;
+
+    span {
+      font-size: inherit;
+    }
+  }
+}

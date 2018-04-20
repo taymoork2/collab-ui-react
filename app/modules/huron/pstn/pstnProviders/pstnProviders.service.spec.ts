@@ -137,9 +137,6 @@ describe('Service: PstnProvidersService', () => {
     this.carrierRespNoVendorMatch = carrierRespNoVendorMatch;
 
     spyOn(this.PstnModel, 'isCarrierExists').and.returnValue(false);
-    const expectedUrl = 'modules/huron/pstn/pstnProviders/pstnProviders.json';
-    this.$httpBackend.whenGET(expectedUrl).respond(200, this.carrierListJSON.carriers);
-
   });
 
   afterEach(function () {
@@ -156,7 +153,6 @@ describe('Service: PstnProvidersService', () => {
       expect(response[0].country).toEqual('GB');
       expect(response[0].logoSrc).toEqual('images/carriers/logo_tata_comm.svg');
     });
-    this.$httpBackend.flush();
   });
 
   it('should load carriers with vendor match and country code match', function () {
@@ -169,7 +165,6 @@ describe('Service: PstnProvidersService', () => {
       expect(response[1].country).toEqual('US');
       expect(response[1].logoSrc).toContain('logo');
     });
-    this.$httpBackend.flush();
   });
 
   it('should load default carrier with vendor match but no country code match', function () {
@@ -179,7 +174,6 @@ describe('Service: PstnProvidersService', () => {
       expect(response.length).toBe(1);
       expect(response[0].logoSrc).toEqual('images/carriers/logo_tata_comm.svg');
     });
-    this.$httpBackend.flush();
   });
 
   it('should not load carrier logo with no match for carrier/vendor', function () {
@@ -191,7 +185,6 @@ describe('Service: PstnProvidersService', () => {
       expect(response.length).toBe(1);
       expect(response[0].logoSrc).toEqual('');
     });
-    this.$httpBackend.flush();
   });
 
 });

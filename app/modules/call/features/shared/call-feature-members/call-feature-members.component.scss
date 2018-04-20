@@ -1,7 +1,7 @@
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .call-feature-edit {
   .typeahead .dropdown-menu {
@@ -17,6 +17,9 @@
 }
 
 .call-feature-members {
+  .icon.icon-tables.selected {
+    color: $color-blue-base;
+  }
   .search-add {
     display: inline-flex;
     align-items: inherit;
@@ -56,7 +59,6 @@
   .members-footer {
     margin: auto;
     width: 54.5rem;
-    margin-bottom: 2rem;
     .member-count {
       color: $gray;
       padding-right: 2rem;
@@ -70,13 +72,11 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin-left: -.5rem;
 
     .overlay-panel & {
       @include vr-spacing(ml, 26, 0px, true);
       @include vr-spacing(pb, 1);
 
-      position: fixed !important;
       height: 16rem !important;
       width: 54rem;
       left: 50%;

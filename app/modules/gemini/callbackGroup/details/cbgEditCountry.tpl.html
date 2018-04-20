@@ -1,41 +1,47 @@
 <cs-sp-container class="side-panel-country">
-  <cs-sp-section>
-    <div class="ui-mt">
-      <div class="form-group">
-        <label class="cs-input__label">{{::'gemini.cbgs.request.labelCustomer' | translate}}</label>
-        <input
-          class="form-control"
-          required
-          type="text"
-          ng-maxlength="60"
-          ng-model="$ctrl.model.groupName"
-          placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}"
-          ng-change="$ctrl.onSetBtnDisable('groupName')"
-          ng-readonly="$ctrl.isReadonly">
+  <form name="cbgForm" novalidate>
+    <cs-sp-section>
+      <div class="ui-mt">
+        <div class="form-group">
+          <input
+            class="form-control"
+            cs-input
+            required
+            type="text"
+            ng-maxlength="64"
+            name="groupName"
+            ng-model="$ctrl.model.groupName"
+            cs-input-messages="$ctrl.messages.groupName"
+            cs-input-label="{{$ctrl.groupNameLabel}}"
+            placeholder="{{::'gemini.cbgs.request.customerPlaceholder' | translate}}"
+            ng-change="$ctrl.onSetBtnDisable('groupName')"
+            ng-disabled="$ctrl.model.groupId">
+        </div>
+        <div class="form-group">
+          <input
+            class="form-control"
+            cs-input
+            type="text"
+            ng-maxlength="200"
+            name="customerAttribute"
+            ng-model="$ctrl.model.customerAttribute"
+            cs-input-messages="$ctrl.messages.customerAttribute"
+            cs-input-label="{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}"
+            placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
+            ng-change="$ctrl.onSetBtnDisable('customerAttribute')">
+        </div>
       </div>
-      <div class="form-group">
-        <label class="cs-input__label">{{::'gemini.cbgs.request.labelCustomerAttr' | translate}}</label>
-        <input
-          class="form-control"
-          type="text"
-          type="text"
-          ng-maxlength="60"
-          ng-model="$ctrl.model.customerAttribute"
-          placeholder="{{::'gemini.cbgs.request.customerAttrPlaceholder' | translate}}"
-          ng-change="$ctrl.onSetBtnDisable('customerAttribute')">
+    </cs-sp-section>
+    <cs-sp-section>
+      <div class="section-title-row">
+        <span class="section-name" translate="gemini.cbgs.editCountry"></span>
       </div>
-    </div>
-  </cs-sp-section>
-  <cs-sp-section>
-    <div class="section-title-row">
-      <span class="section-name" translate="gemini.cbgs.editCountry"></span>
-    </div>
-    <cbg-country class="gemini-select-country" selected="$ctrl.countries"></cbg-country>
-
-  </cs-sp-section>
+      <cbg-country class="gemini-select-country" selected="$ctrl.countries"></cbg-country>
+    </cs-sp-section>
+  </form>
   <cs-sp-buttons>
     <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
-    <button type="button" class="btn btn--primary" loading="$ctrl.btnLoading" cs-btn ng-click="$ctrl.onSave()" ng-disabled="$ctrl.btnDisable">
+    <button type="button" class="btn btn--primary" loading="$ctrl.btnLoading" cs-btn ng-click="cbgForm.$setPristine(true); $ctrl.onSave()" ng-disabled="$ctrl.btnDisable || cbgForm.$invalid">
       <span translate="common.submit"></span>
     </button>
   </cs-sp-buttons>

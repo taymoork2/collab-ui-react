@@ -1,0 +1,11 @@
+<div class="setting" ng-class="{'sparkAssistant-subsection': !ctrl.ftsw}">
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.sparkAssistantEnabled"
+    id="sparkAssistant"
+    cs-input-label="{{$ctrl.label}}">
+  <div>
+    <p ng-if="$ctrl.ftsw" class="margin-tos" translate="globalSettings.sparkAssistant.description"></p>
+  </div>
+</div>

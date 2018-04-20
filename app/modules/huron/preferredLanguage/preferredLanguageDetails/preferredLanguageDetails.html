@@ -6,7 +6,7 @@
     <span translate="common.cancel"></span>
   </button>
 </cs-sp-buttons>
-<cs-sp-container>
+<cs-sp-container cs-tabindex="$ctrl.onPrefLanguageChange ? -1 : 0">
   <uc-preferred-language
     cr-feature-toggle feature-show="huron-l10n-user-locale-2"
     pl-is-loaded="true"

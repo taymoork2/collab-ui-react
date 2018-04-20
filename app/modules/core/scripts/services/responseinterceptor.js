@@ -3,6 +3,7 @@
 
   module.exports = angular
     .module('core.responseinterceptor', [
+      require('modules/core/auth/auth'),
       require('modules/core/scripts/services/log'),
     ])
     .factory('ResponseInterceptor', ResponseInterceptor)

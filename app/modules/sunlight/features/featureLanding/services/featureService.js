@@ -6,10 +6,12 @@
     .service('CareFeatureList', CareFeatureList);
 
   /* @ngInject */
-  function CareFeatureList(Authinfo, ConfigTemplateService, VirtualAssistantService) {
+  function CareFeatureList(Authinfo, ConfigTemplateService) {
     var filterConstants = {
       customerSupport: 'customerSupport',
-      virtualAssistant: VirtualAssistantService.serviceCard.type,
+      virtualAssistant: 'virtualAssistant',
+      autoAttendant: 'AA',
+      appleBusinessChat: 'appleBusinessChat',
       all: 'all',
     };
     var service = {
@@ -19,7 +21,6 @@
       getTemplate: getTemplate,
       formatTemplates: formatTemplates,
       deleteTemplate: deleteTemplate,
-      deleteVirtualAssistantConfig: deleteVirtualAssistantConfig,
       filterCards: filterCards,
       filterConstants: filterConstants,
     };
@@ -54,10 +55,6 @@
       }).$promise;
     }
 
-    function deleteVirtualAssistantConfig(configId) {
-      return VirtualAssistantService.delete(configId, Authinfo.getOrgId()).$promise;
-    }
-
     function getTemplate(templateId) {
       return ConfigTemplateService.get({
         orgId: Authinfo.getOrgId(),
@@ -75,31 +72,38 @@
     function filterCards(list, filterValue, filterText) {
       var filterStringProperties = [
         'name',
+        'cardName',
       ];
 
       var filteredList = _.filter(list, function (feature) {
-        if (filterValue === filterConstants.customerSupport && feature.mediaType === filterConstants.virtualAssistant) {
-          //if the filter selected is support virtual assistant templates should not be displayed
-          return false;
+        if (filterValue === filterConstants.all) {
+          return true;
         }
-        if (filterValue === filterConstants.virtualAssistant && feature.mediaType !== filterConstants.virtualAssistant) {
-          //if the virtual assistant filter is selected only virtual assistant templates should be displayed
-          return false;
+        if (feature.filterValue && filterValue === feature.filterValue) {
+          return true;
         }
+        return false;
+      });
+
+      var newFilteredList = _.filter(filteredList, function (feature) {
         if (filterValue !== filterConstants.customerSupport && filterValue !== filterConstants.virtualAssistant
+          && filterValue !== filterConstants.autoAttendant && filterValue !== filterConstants.appleBusinessChat
           && filterValue !== filterConstants.all) {
-          //if the filter value is not any of the valid values templates should not be displayed
+          //if the filter value is not any of the valid values, it should return false
           return false;
         }
         if (_.isEmpty(filterText)) {
           return true;
         }
         var matchedStringProperty = _.some(filterStringProperties, function (stringProperty) {
-          return _.includes(_.get(feature, stringProperty).toLowerCase(), filterText.toLowerCase());
+          return _.includes(_.get(feature, stringProperty, '').toLowerCase(), filterText.toLowerCase());
         });
-        return matchedStringProperty;
+        var matchedNumbers = _.some(feature.numbers, function (number) {
+          return _.includes(number, filterText);
+        });
+        return matchedStringProperty || matchedNumbers;
       });
-      return filteredList;
+      return newFilteredList;
     }
 
     function formatTemplates(list, feature) {
@@ -107,7 +111,8 @@
         tpl.featureType = feature.name;
         tpl.color = feature.color;
         tpl.icons = feature.icons;
-        tpl.templateOrConfig = 'template';
+        tpl.featureIcons = feature.featureIcons;
+        tpl.filterValue = filterConstants.customerSupport;
         return tpl;
       });
       return orderByCardName(formattedList);

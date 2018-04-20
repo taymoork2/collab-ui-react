@@ -1,7 +1,7 @@
 export class CallPlacesPage {
   constructor() {
-    this.addNewPlace = element.all(by.css('button.add-button')).first();
-    this.addNewPlaceEmpty = element.all(by.css('button.add-button.places-empty')).first();
+    this.addNewPlace = element.all(by.css('button.btn--people')).first();
+    this.addNewPlaceEmpty = element.all(by.css('button.btn--people')).last();
     this.newPlaceInput = element(by.id('newPlace'));
     this.nxtBtn = element(by.id('next-button'));
     this.nxtBtn2 = element(by.css('[ng-click="chooseDeviceType.next()"]'));
@@ -17,13 +17,13 @@ export class CallPlacesPage {
     this.searchPlaces = element(by.css('i.icon-search'));
     this.clearSearchPlace = element(by.css('i.icon-exit-outline'));
     this.searchBar = element(by.id('searchFilter'));
-    this.clickLocation = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Naboo'));
+    this.clickLocation = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Mustafar'));
     this.overviewPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Overview')).first();
     this.servicesSctn = element(by.cssContainingText('.section-name', 'Services'));
     this.devicesSctn = element(by.cssContainingText('.section-name', 'Devices'));
     this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Cisco Spark Call'));
     this.callStngsPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Call')).first();
-    this.clickLocation2 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Jedha'));
+    this.clickLocation2 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Naboo'));
     this.clickLocation3 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Eadu'));
     this.callClick2 = element(by.cssContainingText('.feature-label', 'Cisco Spark only'));
     this.callOverview = {
@@ -34,6 +34,7 @@ export class CallPlacesPage {
       features: {
         title: element(by.css('[translate="telephonyPreview.features"]')),
         speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
+        phoneButtonLayout: element(by.cssContainingText('.feature-name', 'Phone Button Layout & Speed Dials')),
       },
     };
     this.callSubMenu = element.all(by.css('[ui-sref="place-overview.communication"]')).last();
@@ -48,5 +49,6 @@ export class CallPlacesPage {
     this.autoAnsSct = element(by.cssContainingText('.section__title', 'Auto Answer'));
     this.sharedLineSct = element(by.cssContainingText('.section__title', 'Shared Line'));
     this.sideNavClose = element(by.css('button.panel-close'));
+    this.dropdownSelection = element(by.css('.ng-not-empty[name="internalNumber"]'));
   }
 };

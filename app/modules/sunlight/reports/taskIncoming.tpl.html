@@ -1,14 +1,29 @@
-<cs-card id='task-incoming-card' class="large report-card" ng-class="{'hideCard': !nav.displayEngagement}">
+<cs-card id='task-incoming-card' class="report-card"
+         ng-class="{'hideCard': !nav.displayEngagement,
+         'large': nav.showChartWithoutBreakdown.taskIncoming}">
   <article>
     <header>
-      <h4 class='report-section-header' translate='taskIncoming.title'></h4>
+      <h4 class='report-section-header'>{{nav.taskIncomingTitle}}</h4>
     </header>
-    <section>
+    <section class='report-section' ng-class="{'showBreakdown': !nav.showChartWithoutBreakdown.taskIncoming}">
       <div class="care-card-report">
         <p class="report-description">{{nav.taskIncomingDescription}}</p>
         <div id="taskIncomingdiv" class="areachart"></div>
         <drilldown-report props="nav.taskIncomingDrilldownProps"
           callback="nav.showTable(onSuccess, onError, nav.mediaTypeSelected, nav.timeSelected)"></drilldown-report>
+        <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
+          <i class='icon icon-spinner icon-2x'></i>
+        </div>
+        <div class="no-data-center" ng-if="nav.isEmpty(nav.dataStatus)">
+          <h3 class="no-data">
+            <i class='icon icon-warning no-data-warning'></i>
+            <span translate='reportsPage.noCustomerData'></span>
+          </h3>
+        </div>
+      </div>
+      <div class="care-card-report" ng-if="!nav.showChartWithoutBreakdown.taskIncoming">
+        <p class="report-description">{{nav.taskIncomingBreakdownDescription}}</p>
+        <div id="taskIncomingBreakdownDiv" class="areachart"></div>
         <div class="spinner-position" ng-if="nav.isRefresh(nav.dataStatus)">
           <i class='icon icon-spinner icon-2x'></i>
         </div>

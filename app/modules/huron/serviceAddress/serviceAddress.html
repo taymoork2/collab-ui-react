@@ -20,13 +20,17 @@
       <div class="columns medium-7">
         <label for="state">{{$ctrl.stateLabel}}</label>
         <cs-select
+          aria-text="{{::$ctrl.stateLabel}}"
           ng-model="$ctrl.locationModel"
           options="$ctrl.stateOptions"
+          placeholder="::'common.select' | translate"
           labelfield="name"
           valuefield="abbreviation"
           required="true"
           on-change-fn="$ctrl.onLocationSelect()"
-          is-disabled="$ctrl.readOnly">
+          is-disabled="$ctrl.readOnly"
+          filter="true">
+        </cs-select>
       </div>
       <div class="columns medium-5">
         <label for="zip">{{$ctrl.zipLabel}}</label>
@@ -37,8 +41,10 @@
       <div class="columns medium-12">
         <label for="country" translate="serviceAddress.country"></label>
         <cs-select
+          aria-text="{{::'serviceAddress.country' |  translate}}"
           ng-model="$ctrl.countryCode"
           options="$ctrl.countryOptions"
+          placeholder="::'common.select' | translate"
           labelfield="name"
           valuefield="id"
           required="true"

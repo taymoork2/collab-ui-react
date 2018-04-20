@@ -42,21 +42,23 @@ class GmTdHeaderCtrl implements ng.IComponentController {
     }
 
     const type = 7;
-    this.gemService.getRemedyTicket(this.customerId, type)
+    this.gemService.getRemedyTicket(this.customerId, this.ccaDomainId, type)
       .then((res) => {
-        const resArr: any = _.filter(_.get(res, 'content.data'), (item: any) => {
+        const resArr: any = _.filter(res, (item: any) => {
           return item.description === this.ccaDomainId;
         });
         const remedyTicket: any = _.first(resArr);
         if (remedyTicket) {
           remedyTicket.createTime = moment(remedyTicket.createTime).toDate().toString();
+          remedyTicket.status = _.replace(remedyTicket.status, /Cancelled/, 'Canceled');
 
           this.remedyTicket = remedyTicket;
-          this.remedyTicketLoading = false;
         }
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      }).finally(() => {
+        this.remedyTicketLoading = false;
       });
   }
 
@@ -69,5 +71,5 @@ class GmTdHeaderCtrl implements ng.IComponentController {
 export class GmTdHeaderComponent implements ng.IComponentOptions {
   public bindings = { showRemedyTicket: '<', tdBaseInfo: '<' };
   public controller = GmTdHeaderCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdHeader.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdHeader.tpl.html');
 }

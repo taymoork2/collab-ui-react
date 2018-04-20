@@ -25,7 +25,7 @@ class HuronTimeFormatCtrl implements ng.IComponentController {
 
 export class HuronTimeFormatComponent implements ng.IComponentOptions {
   public controller = HuronTimeFormatCtrl;
-  public templateUrl = 'modules/call/settings/settings-time-format/settings-time-format.component.html';
+  public template = require('modules/call/settings/settings-time-format/settings-time-format.component.html');
   public bindings = {
     timeFormat: '<',
     timeFormatOptions: '<',

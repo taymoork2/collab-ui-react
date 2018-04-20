@@ -1,7 +1,10 @@
+import 'usertiming'; // polyfill for performance methods - https://developer.mozilla.org/en-US/docs/Web/API/Performance
 import 'babel-polyfill';
 import '@ciscospark/internal-plugin-metrics';
 import '@ciscospark/plugin-logger';
 import Spark from '@ciscospark/spark-core';
+
+import { Config } from 'modules/core/config/config';
 
 import {
   DiagnosticKey,
@@ -49,7 +52,7 @@ export class MetricsService {
     private $timeout: ng.ITimeoutService,
     private $window: ng.IWindowService,
     private Auth,
-    private Config,
+    private Config: Config,
     private TokenService,
   ) {}
 
@@ -68,23 +71,35 @@ export class MetricsService {
 
   public startTimer(key: TimingKey) {
     const metric = this.getMetricByKey(key);
+    if (!metric) {
+      return;
+    }
+
     if (metric.markStart && this.isNotPerformanceTimingKey(metric.markStart)) {
       this.mark(metric.markStart);
     }
   }
 
-  public stopTimer(key: TimingKey) {
+  public stopTimer(key: TimingKey, props?: Object) {
     const metric = this.getMetricByKey(key);
+    if (!metric) {
+      return;
+    }
+
     if (metric.markStop && this.isNotPerformanceTimingKey(metric.markStop)) {
       this.mark(metric.markStop);
     }
     this.measure(metric);
-    this.reportMeasurement(metric);
+    this.reportMeasurement(metric, props);
     this.cleanup(metric);
   }
 
   public reportLoadingMetrics() {
     if (typeof this.$window.performance.timing === 'undefined') {
+      return;
+    }
+
+    if (this.hasInvalidTimingValue(this.$window.performance.timing)) {
       return;
     }
 
@@ -94,6 +109,10 @@ export class MetricsService {
       network_duration_in_millis: this.$window.performance.timing.responseEnd - this.$window.performance.timing.fetchStart,
       total_duration_in_millis: this.$window.performance.timing.loadEventEnd - this.$window.performance.timing.navigationStart,
     };
+
+    if (this.hasInvalidTimingValue(loadMetric)) {
+      return;
+    }
 
     this.sendToInflux(TimingKey.LOAD_DURATION, loadMetric);
   }
@@ -199,7 +218,7 @@ export class MetricsService {
     return this.Config.isProd() && !this.Config.isE2E();
   }
 
-  private reportMeasurement(metric: TimingMetric) {
+  private reportMeasurement(metric: TimingMetric, props?: Object) {
     if (typeof this.$window.performance.getEntriesByName === 'undefined') {
       return;
     }
@@ -208,23 +227,19 @@ export class MetricsService {
     if (measurements.length) {
       const measurement = _.last(measurements);
       if (measurement.duration >= 0) {
-        const durationMetric = {
+        const durationMetric = _.assign({
           duration_in_millis: measurement.duration,
-        };
+        }, props);
 
         this.sendToInflux(metric.key, durationMetric);
       }
     }
   }
 
-  private getMetricByKey(key: TimingKey) {
-    const metric = _.find(this.timingMetrics, {
+  private getMetricByKey(key: TimingKey): TimingMetric | undefined {
+    return _.find(this.timingMetrics, {
       key,
     });
-    if (!metric) {
-      throw new Error(`No TimingMetric by key: ${key}`);
-    }
-    return metric;
   }
 
   private isNotPerformanceTimingKey(key: string) {
@@ -252,6 +267,10 @@ export class MetricsService {
   }
 
   private cleanup(metric: TimingMetric) {
+    if (metric.isOneTime) {
+      _.remove(this.timingMetrics, metric);
+    }
+
     if (typeof this.$window.performance.clearMarks === 'undefined' || typeof this.$window.performance.clearMeasures === 'undefined') {
       return;
     }
@@ -259,6 +278,10 @@ export class MetricsService {
     this.$window.performance.clearMarks(metric.markStart);
     this.$window.performance.clearMarks(metric.markStop);
     this.$window.performance.clearMeasures(metric.measure);
+  }
+
+  private hasInvalidTimingValue(obj: Object) {
+    return _.some(obj, value => !_.isFinite(value) || value < 0);
   }
 
 }

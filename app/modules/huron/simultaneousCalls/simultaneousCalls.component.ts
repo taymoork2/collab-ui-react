@@ -15,7 +15,7 @@ class SimultaneousCalls implements ng.IComponentController {
 
 export class SimultaneousCallsComponent implements ng.IComponentOptions {
   public controller = SimultaneousCalls;
-  public templateUrl = 'modules/huron/simultaneousCalls/simultaneousCalls.html';
+  public template = require('modules/huron/simultaneousCalls/simultaneousCalls.html');
   public bindings = {
     incomingCallMaximum: '<',
     onChangeFn: '&',

@@ -15,12 +15,12 @@
 
     <!-- Reports -->
     <div class="content-container">
-      <cs-card-layout>
+      <cs-card-layout ng-if="nav.isVideoFeatureEnabled !== 'empty'">
         <cc-task-incoming></cc-task-incoming>
-        <cc-task-offered></cc-task-offered>
         <cc-task-time></cc-task-time>
         <cc-average-csat></cc-average-csat>
         <cc-task-aggregate></cc-task-aggregate>
+        <cc-task-offered></cc-task-offered>
       </cs-card-layout>
     </div>
 </div>

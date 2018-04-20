@@ -1,10 +1,18 @@
-import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType } from 'modules/hercules/hybrid-services.types';
+import { HybridServiceId, IServiceAlarm, IAlarmReplacementValues, ConnectorType, IConnectorAlarm, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-services-i18n.service';
+import { IExtendedStatusByClusters } from 'modules/hercules/services/uss.service';
 
 export interface IAllowedRegistrationHost {
   ttlInSeconds: number;
   hostname: string;
   url: string;
+}
+
+export interface ICapacityInformation {
+  capacity: number;
+  maxUsers: number;
+  progressBarType: 'success' | 'warning' | 'danger';
+  users: number;
 }
 
 /**
@@ -32,8 +40,8 @@ export class HybridServicesExtrasService {
     });
   }
 
-  public getAlarms(serviceId: HybridServiceId, orgId?: string): ng.IPromise<IServiceAlarm[]> {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/alarms?serviceId=${serviceId}&sourceType=cloud`;
+  public getAlarms(serviceId: HybridServiceId, orgId = this.Authinfo.getOrgId()): ng.IPromise<IServiceAlarm[]> {
+    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId}/alarms?serviceId=${serviceId}&sourceType=cloud`;
     return this.$http.get(url)
       .then(this.extractDataAndTranslateAlarms);
   }
@@ -63,7 +71,13 @@ export class HybridServicesExtrasService {
 
   private convertToTranslateReplacements(alarmReplacementValues: IAlarmReplacementValues[]) {
     return _.reduce(alarmReplacementValues, (translateReplacements, replacementValue) => {
-      translateReplacements[replacementValue.key] = replacementValue.type === 'timestamp' ? this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value) : replacementValue.value;
+      if (replacementValue.type === 'timestamp') {
+        translateReplacements[replacementValue.key] = this.HybridServicesI18NService.getLocalTimestamp(replacementValue.value);
+      } else if (replacementValue.type === 'link') {
+        translateReplacements[replacementValue.key] = replacementValue.href;
+      } else {
+        translateReplacements[replacementValue.key] = replacementValue.value;
+      }
       return translateReplacements;
     }, {});
   }
@@ -81,7 +95,59 @@ export class HybridServicesExtrasService {
       .value();
   }
 
-  private extractDataFromResponse<T>(response: ng.IHttpPromiseCallbackArg<T>): T {
+  public translateResourceAlarm(alarm: IConnectorAlarm): IConnectorAlarm {
+    if (alarm.key && alarm.replacementValues) {
+      const translationKey = `hercules.resourceAlarms.${alarm.key}`;
+      const translateReplacements = this.convertToTranslateReplacements(alarm.replacementValues);
+      alarm.title = this.$translate.instant(`${translationKey}.title`, translateReplacements);
+      alarm.description = this.$translate.instant(`${translationKey}.description`, translateReplacements);
+    }
+    return alarm;
+  }
+
+  public getCapacityInformation(clusters: IExtendedClusterFusion[], connectorType: ConnectorType, summaries: IExtendedStatusByClusters[] = []): ICapacityInformation {
+    const maxUsers = _.chain(clusters)
+      .map(cluster => _.get(cluster, `userCapacities.${connectorType}`))
+      .sum()
+      .value();
+
+    const relevantClusterIds = _.reduce(clusters, (acc, cluster) => {
+      acc.push(cluster.id);
+      // The data we get from the User Statuses summary could use the legacy device id instead of the current cluster id
+      if (cluster.legacyDeviceClusterId) {
+        acc.push(cluster.legacyDeviceClusterId);
+      }
+      return acc;
+    }, <string[]>[]);
+
+    let users = 0;
+    users = _.sum(_.map(summaries, summary => {
+      if (_.includes(relevantClusterIds, summary.id)) {
+        return summary.users;
+      }
+      return 0;
+    }));
+
+    const capacity = Math.ceil(users / maxUsers * 100);
+
+    let progressBarType: ICapacityInformation['progressBarType'] = 'success';
+    if (capacity > 90) {
+      progressBarType = 'danger';
+    } else if (capacity > 60) {
+      progressBarType = 'warning';
+    } else {
+      progressBarType = 'success';
+    }
+
+    return {
+      capacity: capacity,
+      maxUsers: maxUsers,
+      progressBarType: progressBarType,
+      users: users,
+    };
+  }
+
+  private extractDataFromResponse<T>(response: ng.IHttpResponse<T>): T {
     return _.get<T>(response, 'data');
   }
 

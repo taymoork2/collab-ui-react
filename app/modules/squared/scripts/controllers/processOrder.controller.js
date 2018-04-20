@@ -38,7 +38,7 @@ require('modules/squared/processOrder/_countrySelectModal.scss');
     function openCountryModal() {
       $modal.open({
         type: 'full',
-        templateUrl: 'modules/squared/processOrder/countrySelectModal.html',
+        template: require('modules/squared/processOrder/countrySelectModal.html'),
         controller: function () {
           var ctrl = this;
           ctrl.country = '';

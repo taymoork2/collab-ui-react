@@ -73,7 +73,7 @@ describe('User List Service', function () {
     });
 
     it('should include entitlements in query when specified', function () {
-      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10';
+      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=10';
 
       this.$httpBackend.expectGET(listUsersUrl).respond(200, {
         TotalResults: '2',
@@ -98,7 +98,7 @@ describe('User List Service', function () {
     });
 
     it('should leave out entitlements in query when not specified', function () {
-      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10';
+      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20(userName%20sw%20%22test%22%20or%20name.givenName%20sw%20%22test%22%20or%20name.familyName%20sw%20%22test%22%20or%20displayName%20sw%20%22test%22)&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=10';
 
       this.$httpBackend.expectGET(listUsersUrl).respond(200, {
         TotalResults: '2',
@@ -123,7 +123,7 @@ describe('User List Service', function () {
     });
 
     it('should include entitlements in query when specified without search filter', function () {
-      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=10';
+      var listUsersUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '?filter=active%20eq%20true%20and%20entitlements%20eq%20%22everything%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=10';
 
       this.$httpBackend.expectGET(listUsersUrl).respond(200, {
         TotalResults: '2',
@@ -538,6 +538,16 @@ describe('User List Service', function () {
       this.UserListService.listUsersAsPromise({ orgId: fakeOrgId });
     });
 
+    it('should return a catch call if it responds with a 403', function () {
+      this.$httpBackend.expectGET(/\/identity\/scim\/12345\/v1\/Users/).respond(403);
+
+      this.UserListService.listUsersAsPromise()
+        .then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(403);
+        });
+    });
+
     it('calls through to mkFilterExpr() with "params.filter" property', function () {
       needsHttpFlush = false;
       spyOn(this.$http, 'get').and.returnValue(this.$q.resolve());
@@ -561,7 +571,7 @@ describe('User List Service', function () {
       };
       var expectedUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
       var expectedFilter = this.UserListService._helpers.mkFilterExpr(params.filter);
-      var expectedAttrs = 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
+      var expectedAttrs = 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences';
       var expectedGetParams = {
         params: {
           filter: expectedFilter,

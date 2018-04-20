@@ -12,10 +12,11 @@
         schedule: '@aaSchedule',
         index: '=aaIndex',
         addAction: '&aaAddAction',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AABuilderActionsCtrl',
       controllerAs: 'actions',
-      templateUrl: 'modules/huron/features/autoAttendant/builder/aaBuilderActions.tpl.html',
+      template: require('modules/huron/features/autoAttendant/builder/aaBuilderActions.tpl.html'),
     };
   }
 })();

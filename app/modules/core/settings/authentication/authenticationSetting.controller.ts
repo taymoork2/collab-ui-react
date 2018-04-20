@@ -8,12 +8,14 @@ export class AuthenticationSettingController {
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private $q: ng.IQService,
     private Orgservice,
   ) {
     const params = {
       basicInfo: true,
+      disableCache: true,
     };
-    this.Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params);
+    this.$q.resolve(this.Orgservice.getAdminOrg(this.getAdminOrgHandler.bind(this), null, params)).catch(_.noop);
   }
 
   private getAdminOrgHandler(data: { success: boolean, ssoEnabled: boolean }) {
@@ -26,7 +28,7 @@ export class AuthenticationSettingController {
     this.ssoEnabled = ssoEnabled;
     this.ssoStatus = ssoEnabled ? 'success' : 'disabled';
     this.ssoStatusLoaded = true;
-    this.ssoStatusText = `ssoModal.${this.ssoEnabled ? 'ssoEnabledStatus' : 'ssoNotEnabledStatus'}`;
+    this.ssoStatusText = `common.${this.ssoEnabled ? 'enabled' : 'disabled'}`;
   }
 
   public modifySSO() {

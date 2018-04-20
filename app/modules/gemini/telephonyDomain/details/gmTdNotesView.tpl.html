@@ -11,7 +11,7 @@
       <div ng-if="$ctrl.isLoading">
         <i class="icon icon-spinner"></i>
       </div>
-      <div ng-if="$ctrl.model.length == 0 && !$ctrl.isLoading">
+      <div ng-if="$ctrl.model.length === 0 && !$ctrl.isLoading">
         <small translate="gemini.cbgs.notes.noNoteMsg"></small>
       </div>
 
@@ -22,10 +22,8 @@
           </small>
           <h6>{{note.objectName}}</h6>
         </li>
+        <li><div ng-if="$ctrl.displayCount < $ctrl.model.length"><a href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a></div></li>
       </ul>
-      <p ng-if="$ctrl.displayCount < $ctrl.model.length" class="show-more">
-        <a class="primary-color" href ng-click="$ctrl.onShowAll()" translate="gemini.cbgs.showMore"></a>
-      </p>
     </div>
     <div class="columns medium-6">
       <span class="feature-name" translate="gemini.cbgs.notes.newNote"></span>

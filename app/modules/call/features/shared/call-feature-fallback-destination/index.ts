@@ -8,8 +8,10 @@ import numberService from 'modules/huron/numbers';
 import voicemailServiceModule from 'modules/huron/voicemail';
 import featureMemberService from 'modules/huron/features/services';
 import phoneNumberModule from 'modules/huron/phoneNumber';
+import featureToggleModule from 'modules/core/featureToggle';
+import callDestModule from 'modules/call/shared/call-destination-translate';
 
-export * from './call-feature-fallback-destination.service';
+export { CallFeatureFallbackDestinationService };
 export * from './call-feature-fallback-destination';
 
 export default angular
@@ -17,8 +19,7 @@ export default angular
     require('angular-resource'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/core/scripts/services/authinfo'),
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/telephony/cmiServices'),
     require('modules/core/scripts/services/authinfo'),
@@ -28,6 +29,8 @@ export default angular
     numberService,
     voicemailServiceModule,
     phoneNumberModule,
+    featureToggleModule,
+    callDestModule,
   ])
   .component('ucFallbackDestination', new CallFeatureFallbackDestinationComponent())
   .service('CallFeatureFallbackDestinationService', CallFeatureFallbackDestinationService)

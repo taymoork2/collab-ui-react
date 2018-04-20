@@ -1,13 +1,12 @@
-import * as provisionerHelper from './provisioner.helper';
-import * as atlasHelper from './provisioner.helper.atlas';
-import * as cmiHelper from './huron/provisioner.helper.cmi';
-import * as helper from '../../api_sanity/test_helper';
 import * as _ from 'lodash';
 import * as Promise from 'promise';
-import { PstnCustomer } from './huron/terminus-customers';
-import { PstnCustomerE911Signee } from './huron/terminus-customers-customer-e911';
-import { PstnNumbersOrders } from './huron/terminus-numbers-orders';
-import * as pstnHelper from './huron/provisioner.helper.pstn';
+import * as helper from '../../api_sanity/test_helper';
+import * as provisionerHelper from './provisioner.helper';
+import * as atlasHelper from './provisioner.helper.atlas';
+import * as huronCmiHelper from './huron/provisioner.helper.cmi';
+import * as huronPstnHelper from './huron/provisioner.helper.pstn';
+import * as huronFeaturesHelper from './huron/provisioner.helper.features';
+import * as atlasUser from './atlas-users-config';
 
 /* global LONG_TIMEOUT */
 
@@ -31,113 +30,28 @@ export function provisionAtlasCustomer(partnerName, trial) {
     });
 }
 
-export function provisionCmiCustomer(partnerName, customer, site, numberRange, setupWiz) {
-  return provisionerHelper.getToken(partnerName)
-    .then(token => {
-      console.log(`Creating customer ${customer.name} in CMI...`);
-      return cmiHelper.createCmiCustomer(token, customer)
-        .then(() => {
-          console.log(`${customer.name} successfully created in CMI!`);
-          console.log('Creating site in CMI...');
-          return cmiHelper.createCmiSite(token, customer.uuid, site);
-        })
-        .then(() => {
-          console.log('Site successfully created in CMI!');
-          console.log(`Creating number range ${numberRange.name} in CMI...`);
-          return cmiHelper.createNumberRange(token, customer.uuid, numberRange);
-        })
-        .then(() => {
-          if (!setupWiz) {
-            console.log('Number Range successfully created in CMI!');
-            return provisionerHelper.flipFtswFlag(token, customer.uuid);
-          } else {
-            return Promise.resolve();
-          }
-        });
-    });
-}
-
-
 export function provisionCustomerAndLogin(customer) {
   return this.provisionAtlasCustomer(customer.partner, customer.trial)
     .then(atlasCustomer => {
-      if (atlasCustomer.offers[0].id == 'MESSAGE') {
-        console.log('No offers selected, proceeding without CMI setup!');
-        return loginPartner(customer.partner)
-          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
-      } else if (atlasCustomer && customer.cmiCustomer) {
-        customer.cmiCustomer.uuid = atlasCustomer.customerOrgId;
-        customer.cmiCustomer.name = atlasCustomer.customerName;
-        return this.provisionCmiCustomer(customer.partner, customer.cmiCustomer, customer.cmiSite, customer.numberRange, customer.doFtsw)
+      customer.orgId = atlasCustomer.customerOrgId;
+      if (atlasCustomer && customer.callOptions) {
+        customer.callOptions.cmiCustomer.uuid = atlasCustomer.customerOrgId;
+        customer.callOptions.cmiCustomer.name = atlasCustomer.customerName;
+        return huronCmiHelper.provisionCmiCustomer(customer.partner, customer.callOptions.cmiCustomer, customer.callOptions.cmiSite, customer.callOptions.numberRange, customer.doFtsw, customer.doCallPickUp, customer.doHuntGroup)
+          .then(() => huronPstnHelper.setupPSTN(customer))
+          .then(() => provisionPlaces(customer))
           .then(() => provisionUsers(customer))
-          .then(() => setupPSTN(customer))
+          .then(() => huronFeaturesHelper.setupHuntGroup(customer))
+          .then(() => huronFeaturesHelper.setupCallPickup(customer))
+          .then(() => huronFeaturesHelper.setupCallPark(customer))
+          .then(() => huronFeaturesHelper.setupCallPaging(customer))
           .then(() => loginPartner(customer.partner))
           .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       } else {
         return loginPartner(customer.partner)
-          .then(() => switchToCustomerWindow(customer.name));
+          .then(() => switchToCustomerWindow(customer.name, customer.doFtsw));
       }
     });
-}
-
-export function setupPSTN(customer) {
-  if (customer.pstn) {
-    return provisionerHelper.getToken(customer.partner)
-      .then(token => {
-        console.log('Creating PSTN customer');
-        var obj = {};
-        obj.firstName = customer.cmiCustomer.name;
-        obj.email = customer.trial.customerEmail;
-        obj.uuid = customer.cmiCustomer.uuid;
-        obj.name = customer.name;
-        obj.resellerId = helper.auth[customer.partner].org;
-        const pstnCustomer = new PstnCustomer(obj);
-        return pstnHelper.createPstnCustomer(token, pstnCustomer)
-          .then(() => {
-            console.log('Adding e911 signature to customer');
-            obj = {};
-            obj.firstName = customer.cmiCustomer.name;
-            obj.email = customer.trial.customerEmail;
-            obj.name = customer.name;
-            obj.e911Signee = customer.cmiCustomer.uuid;
-            const pstnCustomerE911 = new PstnCustomerE911Signee(obj);
-            return pstnHelper.putE911Signee(token, pstnCustomerE911)
-              .then(() => {
-                console.log('Adding phone numbers to customer');
-                obj = {};
-                obj.numbers = customerNumbersPSTN(customer.pstnLines);
-                const pstnNumbersOrders = new PstnNumbersOrders(obj);
-                return pstnHelper.addPstnNumbers(token, pstnNumbersOrders, customer.cmiCustomer.uuid);
-              });
-          });
-      });
-  }
-}
-
-export function customerNumbersPSTN(number) {
-  var prevNumber = 0;
-  var pstnNumbers = [];
-  for (var i = 0; i < number; i++) {
-    var numbers = numberPSTN(prevNumber);
-    prevNumber = numbers[1];
-    pstnNumbers.push(numbers[0]);
-  }
-  return pstnNumbers;
-}
-
-export function numberPSTN(prevNumber) {
-  var date = Date.now();
-  // If created at same millisecond as previous
-  if (date <= prevNumber) {
-    date = ++prevNumber;
-  } else {
-    prevNumber = date;
-  }
-  // get last 10 digits from date and format into PSTN number
-  date = date.toString();
-  date = ('+1919' + date.substr(date.length - 7));
-  console.log('Added Phone Number: ' + date);
-  return [date, prevNumber];
 }
 
 export function tearDownAtlasCustomer(partnerName, customerName) {
@@ -181,6 +95,10 @@ export function loginPartner(partnerEmail) {
 }
 
 function switchToCustomerWindow(customerName, doFtsw) {
+  utils.waitForSpinner();
+  utils.click(element(by.css('i.icon-search')));
+  utils.sendKeys(element(by.id('searchFilter')), customerName);
+  utils.waitForSpinner()
   utils.click(element(by.cssContainingText('.ui-grid-cell', customerName)));
   utils.click(partner.launchCustomerPanelButton);
   return utils.switchToNewWindow().then(() => {
@@ -194,40 +112,41 @@ function switchToCustomerWindow(customerName, doFtsw) {
 
 export function provisionUsers(customer) {
   if (customer.users) {
-    console.log(`Need to provision ${customer.users} users for ${customer.name}!`);
+    console.log(`Onboarding users for ${customer.name}!`);
     return provisionerHelper.getToken(customer.partner)
       .then(token => {
-        console.log('Got token for provisionUsers!');
-        return atlasHelper.getAtlasOrg(token, customer.cmiCustomer.uuid)
-          .then((response) => {
+        return atlasHelper.getAtlasOrg(token, customer.orgId)
+          .then(response => {
             const licenseArray = _.get(response, 'licenses', undefined);
-            const licenseCom = _.find(licenseArray, ['licenseType', 'COMMUNICATION']);
-            console.log('Got communication type of license for provisionUsers!');
-            let internalExt = 351;
-            let userList = [];
-            for (var i = 0; i < customer.users; i++) {
-              internalExt = internalExt + i;
-              const userObj = {
-                email: `${customer.name}_${i}@gmail.com`,
-                userEntitlements: null,
-                licenses: [{
-                  id: `${licenseCom.licenseId}`,
-                  OperationId: 'ADD',
-                  properties: { internalExtension: `${internalExt}` },
-                },
-                ],
-              }
-              userList.push(userObj);
-            }
-
-            let finalList = { users: userList }
-
-            return atlasHelper.createAtlasUser(token, customer.cmiCustomer.uuid, finalList)
+            const users = { users: atlasUser.atlasUsers(customer, licenseArray) };
+            return atlasHelper.createAtlasUser(token, customer.orgId, users)
               .then(() => {
-                console.log(`Successfully added users for ${customer.name}!`);
+                console.log(`Successfully onboarded users for ${customer.name}!`);
               });
           });
       });
   }
 }
 
+function provisionPlaces(customer) {
+  if (customer.places) {
+    console.log('Creating places');
+    return provisionerHelper.getToken(customer.partner)
+      .then(token => {
+        createPlaceObj(token, customer.orgId, customer.places);
+        console.log('Successfully added places');
+      });
+  }
+}
+
+function createPlaceObj(tkn, id, plObj) {
+  let placeObj = {};
+  for (let i = 0; i < plObj.length; i++) {
+    placeObj[i] = plObj[i];
+    createNewPlace(tkn, id, placeObj[i]);
+  }
+}
+
+function createNewPlace(tkn, id, plObj) {
+  return atlasHelper.createAtlasPlace(tkn, id, plObj)
+}

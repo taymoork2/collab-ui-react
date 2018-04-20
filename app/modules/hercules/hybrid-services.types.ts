@@ -8,7 +8,10 @@ export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloa
 export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab' | 'c_imp';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
-export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' | 'spark-hybrid-datasecurity' | 'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' | 'spark-hybrid-impinterop';
+export type HybridServiceId = 'squared-fusion-mgmt' | 'squared-fusion-cal' | 'squared-fusion-gcal' | 'squared-fusion-uc' | 'squared-fusion-ec' | 'squared-fusion-media' |
+                              'spark-hybrid-datasecurity' |'contact-center-context' | 'squared-fusion-khaos' | 'squared-fusion-servicability' | 'ept' |
+                              'spark-hybrid-impinterop' | 'squared-fusion-o365' | 'spark-hybrid-licensing' | 'spark-hybrid-testing' |
+                              'hcs' | 'hcs-licensing' | 'hcs-upgrade';
 export type ServiceAlarmSeverity = 'error' | 'warning' | 'critical';
 
 // Connectors
@@ -22,7 +25,6 @@ export type ServiceStatus = 'operational' | 'impaired' | 'outage';
 export type ServiceStatusCSSClass = 'success' | 'disabled' | 'warning' | 'danger';
 
 export type TimeOfDay = '00:00' | '01:00' | '02:00' | '03:00' | '04:00' | '05:00' | '06:00' | '07:00' | '08:00' | '09:00' | '10:00' | '11:00' | '12:00' | '13:00' | '14:00' | '15:00' | '16:00' | '17:00' | '18:00' | '19:00' | '20:00' | '21:00' | '22:00' | '23:00';
-export type HybridVoicemailStatus = 'NOT_CONFIGURED' | 'REQUESTED' | 'HYBRID_SUCCESS' | 'HYBRID_FAILED' | 'HYBRID_PARTIAL' | undefined ;
 
 export interface IFMSOrganization {
   alarmsUrl: string;
@@ -50,8 +52,11 @@ export interface IUpgradeSchedule {
 }
 
 export interface ICluster {
+  allowedRegistrationHostsUrl: string;
   connectors: IConnector[];
+  createdAt: string;
   id: string;
+  legacyDeviceClusterId?: string;
   name: string;
   provisioning: IConnectorProvisioning[];
   releaseChannel: string;
@@ -59,13 +64,11 @@ export interface ICluster {
   targetType: ClusterTargetType;
   upgradeSchedule: IUpgradeSchedule;
   upgradeScheduleUrl: string;
+  userCapacities?: {
+    // TODO: is there a way to tell TS that it's ConnectorType not string?
+    [connectorType: string]: number;
+  };
   url: string;
-}
-
-// ClusterService
-export interface IExtendedCluster extends ICluster {
-  aggregates: IClusterAggregate;
-  extendedProperties: IClusterExtendedProperties;
 }
 
 // HybridServicesClusterService
@@ -80,8 +83,9 @@ export interface IExtendedClusterFusion extends IClusterWithExtendedConnectors {
 export interface IClusterExtendedProperties {
   alarms: string; //  'none' | 'warning' | 'error';
   alarmsBadgeCss: string;
-  allowedRedirectTarget: IAllowedRegistrationHost | undefined;
+  allowedRedirectTarget?: IAllowedRegistrationHost;
   hasUpgradeAvailable: boolean;
+  isUpgradeUrgent: boolean;
   isEmpty: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
   registrationTimedOut: boolean;
@@ -97,10 +101,16 @@ export interface IExtendedClusterServiceStatus {
 
 export interface IHost {
   connectors: IConnector[];
+  hardware?: {
+    cpus: number;
+    hostType: 'virtual' | 'physical' | 'unknown';
+    totalDisk: string;
+    totalMemory: string;
+  };
   hostname: string;
-  lastMaintenanceModeEnabledTimestamp: string;
+  lastMaintenanceModeEnabledTimestamp?: string;
   maintenanceMode: ConnectorMaintenanceMode;
-  platform?: 'expressway';
+  platform?: 'ecp' | 'expressway';
   platformVersion?: string;
   serial: string;
   url: string;
@@ -143,14 +153,17 @@ export interface IConnector {
   connectorStatus?: IConnectorStatus;
   connectorType: ConnectorType;
   createdAt: string;
+  hostname: string;
   hostSerial: string;
   hostUrl: string;
-  hostname: string;
   id: string;
   maintenanceMode: 'on' | 'off';
+  platform?: 'ecp' | 'expressway';
+  platformVersion?: string;
   runningVersion: string;
   state: ConnectorState;
   upgradeState: ConnectorUpgradeState;
+  userCapacity?: number;
   url: string;
 }
 
@@ -161,25 +174,10 @@ export interface IConnectorStatus {
   operational: boolean;
   userCapacity?: number;
   services: {
-    onprem: {
-      address: string;
-      type: 'uc_service' | 'cal_service' | 'mercury' | 'common_identity' | 'encryption_service' | 'cmr' | 'ebex_files' | 'fms';
-      httpProxy: string;
-      state: 'ok' | 'error';
-      stateDescription: string;
-      mercury?: {
-        route: string;
-        dataCenter: string;
-      };
-    }[];
-    cloud: {
-      address: string;
-      type: 'ucm_cti' | 'ucm_axl' | 'exchange' | 'kms';
-      version: string;
-      state: 'ok' | 'error';
-      stateDescription: string;
-    }[];
+    onprem: any[];
+    cloud: any[];
   };
+  state: string;
   users?: {
     assignedRoomCount: number;
     assignedUserCount: number;
@@ -196,6 +194,7 @@ export interface IConnectorExtendedProperties {
   alarms: string; //  'none' | 'warning' | 'error';
   alarmsBadgeCss: string; // duplicate of AlarmCSSClass
   hasUpgradeAvailable: boolean;
+  isUpgradeUrgent: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
   state: IConnectorStateDetails;
 }
@@ -205,6 +204,11 @@ export interface IHostAggregate {
   hostname: string;
   state: ConnectorState;
   upgradeState: ConnectorUpgradeState;
+}
+
+export interface ISolutionReplacementValues {
+  text: string;
+  link: string;
 }
 
 export interface IConnectorAlarm {
@@ -217,16 +221,16 @@ export interface IConnectorAlarm {
   title: string;
   description: string;
   solution: string;
-  solutionReplacementValues: {
-    text: string;
-    link: string;
-  }[];
+  solutionReplacementValues: ISolutionReplacementValues[];
+  key?: string;
+  replacementValues: IAlarmReplacementValues[];
 }
 
 export interface IAlarmReplacementValues {
   key: string;
   value: string;
   type?: string;
+  href?: string;
 }
 
 export interface IServiceAlarm {
@@ -262,3 +266,15 @@ export interface IReleaseChannelEntitlement {
   entitled: boolean;
 }
 
+export interface IClusterPropertySet {
+  'mf.group.displayName'?: string;
+  'mf.group.region'?: string;
+  'mf.role'?: string;
+  'mf.ucSipTrunk'?: string;
+  'mf.videoQuality'?: string;
+  'mf.trustedSipSources'?: string;
+  'mf.maxCascadeBandwidth'?: number;
+  'fms.releaseChannel'?: string;
+  'fms.calendarAssignmentType'?: 'standard' | 'activeActive';
+  'fms.callManagerAssignmentType'?: 'standard' | 'activeActive';
+}

@@ -1,0 +1,47 @@
+{
+  "confLicenses": [
+    {
+      "licenseId": "MC_c296f369-9aa4-4f99-a780-b7258f76e16d_abc.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "MC",
+      "features": [],
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "68b2a05e-3d64-44c2-9877-d133f28af058",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "abc.dmz.webex.com",
+      "partnerOrgId": "d67e9928-4528-4e6d-97f0-f4b0c64c4bc6",
+      "partnerEmail": "ordersimp-partner@mailinator.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "EE_cd136d50-98b7-45f0-87f1-c53bf27e41d9_abc.dmz.webex.com",
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "68b2a05e-3d64-44c2-9877-d133f28af058",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "abc.dmz.webex.com",
+      "partnerOrgId": "d67e9928-4528-4e6d-97f0-f4b0c64c4bc6",
+      "partnerEmail": "ordersimp-partner@mailinator.com",
+      "isCIUnifiedSite": true
+    },
+    {
+      "licenseId": "EE_cd136d50-98b7-45f0-87f1-c53bf27e41d9_abc.dmz.webex.com",
+      "offerName": "EE",
+      "licenseType": "CONFERENCING",
+      "volume": 100,
+      "isTrial": true,
+      "trialId": "68b2a05e-3d64-44c2-9877-d133f28af058",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "site2.dmz.webex.com",
+      "partnerOrgId": "d67e9928-4528-4e6d-97f0-f4b0c64c4bc6",
+      "partnerEmail": "ordersimp-partner@mailinator.com",
+      "isCIUnifiedSite": true
+    }
+  ]
+}

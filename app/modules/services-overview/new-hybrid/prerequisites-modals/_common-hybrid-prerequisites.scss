@@ -1,0 +1,58 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.hybrid-service-prerequisites {
+
+  display: block;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  .intro {
+
+    button {
+      margin-top: 10px;
+    }
+
+  }
+
+  .steps-list {
+    margin-top: 25px;
+  }
+
+  .checklist-help-text {
+    margin-left: 32px;
+    font-style: italic;
+    font-size: .75rem;
+    color: $gray-base;
+
+    li {
+      margin-left: 20px;
+    }
+
+    span {
+      font-size: .75rem;
+    }
+
+  }
+
+  .cs-input-group {
+    margin-top: 20px;
+  }
+
+  .condition {
+    font-size: .75rem;
+    margin-top: 15px;
+  }
+
+  .optional-steps {
+    margin-left: 1.5em;
+  }
+
+  .domain-warning-icon {
+    color: $color-attention-base;
+  }
+
+  .domain-good-icon {
+    color: $color-cta-base;
+  }
+
+}

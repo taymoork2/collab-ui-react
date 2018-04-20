@@ -1,9 +1,11 @@
 'use strict';
 
 describe('Service: LineListService', function () {
-  var $httpBackend, $q, $scope, ExternalNumberService, HuronConfig, LineListService, PstnService;
+  var $httpBackend, $q, $scope, ExternalNumberService, FeatureToggleService, HuronConfig, LineListService, PstnService;
   var lines = getJSONFixture('huron/json/lines/numbers.json');
+  var locationLines = getJSONFixture('huron/json/lines/locationNumbers.json');
   var linesExport = getJSONFixture('huron/json/lines/numbersCsvExport.json');
+  var locationLinesExport = getJSONFixture('huron/json/lines/locationNumbersCsvExport.json');
   var pendingLines = _.cloneDeep(getJSONFixture('huron/json/lines/pendingNumbersV2.json'));
   var formattedPendingLines = getJSONFixture('huron/json/lines/formattedPendingNumbers.json');
   var carrierInfo = getJSONFixture('huron/json/lines/carrierInfo.json');
@@ -23,7 +25,7 @@ describe('Service: LineListService', function () {
     $provide.value('Authinfo', authInfo);
   }));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _HuronConfig_, _LineListService_, _PstnService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, _$q_, _ExternalNumberService_, _FeatureToggleService_, _HuronConfig_, _LineListService_, _PstnService_) {
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     $q = _$q_;
@@ -31,6 +33,7 @@ describe('Service: LineListService', function () {
     HuronConfig = _HuronConfig_;
     LineListService = _LineListService_;
     PstnService = _PstnService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(PstnService, 'listPendingOrdersWithDetail').and.returnValue($q.resolve());
     spyOn(PstnService, 'translateStatusMessage');
@@ -39,6 +42,9 @@ describe('Service: LineListService', function () {
   }));
 
   describe('getLineList', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+    });
     it('should have the right carrierInfo', function () {
       $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=userid-asc').respond(lines);
       LineListService.getLineList(0, 100, 'userid', '-asc', '', 'all').then(function (response) {
@@ -152,6 +158,20 @@ describe('Service: LineListService', function () {
       LineListService.exportCSV({})
         .then(function (response) {
           expect(response.length).toBe(linesExport.length);
+        });
+    });
+  });
+
+  describe('get LineList with Toggle SET', function () {
+    beforeEach(function () {
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
+    });
+    it('should exportCSV', function () {
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=0&order=internalnumber-asc').respond(locationLines);
+      $httpBackend.expectGET(HuronConfig.getCmiUrl() + '/voice/customers/' + Authinfo.getOrgId() + '/userlineassociations?limit=100&offset=101&order=internalnumber-asc').respond([]);
+      LineListService.exportCSV({})
+        .then(function (response) {
+          expect(response.length).toBe(locationLinesExport.length);
         });
     });
   });

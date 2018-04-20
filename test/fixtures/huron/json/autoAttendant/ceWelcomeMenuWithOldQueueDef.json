@@ -173,22 +173,9 @@
         }
       }, {
         "doREST":{
-          "url":"test URL",
-          "method":"GET",
-          "responseActions":[  
-           {
-             "assignVar":{  
-               "variableName":"var1",
-               "value":"$Response.testResponse"
-             }
-           },{
-             "assignVar":{  
-               "variableName":"testVar",
-               "value":"$Response.testRes2"
-             }
-           }
-        ]
-      }
+            "id": "testID",
+            "varList": ["testVar"]
+        }
     }, {
       "routeToQueue": {
         "description": "{\"musicOnHoldDescription\":\"\",\"periodicAnnouncementType\":\"say\",\"periodicAnnouncementDescription\":\"\",\"initialAnnouncementType\":\"say\",\"initialAnnouncementDescription\":\"\"}",

@@ -2,7 +2,6 @@
 
 describe('Service: AACalendarService', function () {
   var AACalendarService, $httpBackend, HuronConfig, url, scheduleURL, calendarId;
-  // require('jasmine-collection-matchers');
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };

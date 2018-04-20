@@ -17,6 +17,33 @@
     vm.othersHeading = $translate.instant('mediaFusion.metrics.othersHeading');
     vm.redirectHeading = $translate.instant('mediaFusion.metrics.redirectedcalls');
 
+    vm.desktop = $translate.instant('mediaFusion.metrics.clientType.desktop');
+    vm.mobile = $translate.instant('mediaFusion.metrics.mobile');
+    vm.tp = $translate.instant('mediaFusion.metrics.clientType.tp');
+    vm.mac = $translate.instant('mediaFusion.metrics.clientType.mac');
+    vm.windowsDesk = $translate.instant('mediaFusion.metrics.clientType.windowsDesk');
+
+    vm.sparkDesktop = $translate.instant('mediaFusion.metrics.clientType.sparkDesktop');
+    vm.sparkMobile = $translate.instant('mediaFusion.metrics.clientType.sparkMobile');
+    vm.sparkDevices = $translate.instant('mediaFusion.metrics.clientType.sparkDevices');
+
+    vm.android = $translate.instant('mediaFusion.metrics.clientType.android');
+    vm.blackberry = $translate.instant('mediaFusion.metrics.clientType.blackberry');
+    vm.ipad = $translate.instant('mediaFusion.metrics.clientType.ipad');
+    vm.iphone = $translate.instant('mediaFusion.metrics.clientType.iphone');
+    vm.windows = $translate.instant('mediaFusion.metrics.clientType.windows');
+
+    vm.sip = $translate.instant('mediaFusion.metrics.clientType.sip');
+    vm.uc = $translate.instant('mediaFusion.metrics.clientType.uc');
+    vm.jabber = $translate.instant('mediaFusion.metrics.clientType.jabber');
+    vm.board = $translate.instant('mediaFusion.metrics.clientType.board');
+
+    vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
+    vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
+    vm.sipList = [vm.sip, vm.uc];
+    vm.sparkDevicesList = [vm.tp, vm.board];
+    vm.jabber = [vm.jabber];
+
 
     return {
       setClientTypePiechart: setClientTypePiechart,
@@ -128,30 +155,79 @@
     }
 
     function formatClientTypePieData(data) {
-      var totalValue = 0;
       var newData = [];
-      var desktopList = [$translate.instant('mediaFusion.metrics.clientType.desktop'),
-        $translate.instant('mediaFusion.metrics.clientType.mac'),
-        $translate.instant('mediaFusion.metrics.clientType.windowsDesk'),
-      ];
-      var desktopPercentage = 0;
-      var desktopValue = 0;
-      var mobileList = [$translate.instant('mediaFusion.metrics.clientType.android'),
-        $translate.instant('mediaFusion.metrics.clientType.blackberry'),
-        $translate.instant('mediaFusion.metrics.clientType.ipad'),
-        $translate.instant('mediaFusion.metrics.clientType.iphone'),
-        $translate.instant('mediaFusion.metrics.clientType.windows'),
-      ];
-      var mobilePercentage = 0;
-      var mobileValue = 0;
-      var tpList = [$translate.instant('mediaFusion.metrics.clientType.sip'),
-        $translate.instant('mediaFusion.metrics.clientType.tp'),
-        $translate.instant('mediaFusion.metrics.clientType.uc'),
-        $translate.instant('mediaFusion.metrics.clientType.jabber'),
-        $translate.instant('mediaFusion.metrics.clientType.board'),
-      ];
-      var tpPercentage = 0;
-      var tpValue = 0;
+      var clientPercents = calculateClientPercentage(data);
+
+      vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
+      vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
+      vm.sipList = [vm.sip, vm.uc];
+      vm.sparkDevicesList = [vm.tp, vm.board];
+      vm.jabber = [vm.jabber];
+
+      if (clientPercents.sparkDesktopValue > 0) {
+        newData.push({
+          name: vm.sparkDesktop,
+          value: clientPercents.sparkDesktopValue,
+          percentage: clientPercents.sparkDesktopPercentage,
+          color: '#23C1E2',
+        });
+      }
+      if (clientPercents.sparkMobileValue > 0) {
+        newData.push({
+          name: vm.sparkMobile,
+          value: clientPercents.sparkMobileValue,
+          percentage: clientPercents.sparkMobilePercentage,
+          color: '#FEB32B',
+        });
+      }
+      if (clientPercents.sipValue > 0) {
+        newData.push({
+          name: vm.sip,
+          value: clientPercents.sipValue,
+          percentage: clientPercents.sipPercentage,
+          color: '#D349D5',
+        });
+      }
+      if (clientPercents.sparkDevicesValue > 0) {
+        newData.push({
+          name: vm.sparkDevices,
+          value: clientPercents.sparkDevicesValue,
+          percentage: clientPercents.sparkDevicesPercentage,
+          color: '#336E7B',
+        });
+      }
+      if (clientPercents.jabberValue > 0) {
+        newData.push({
+          name: vm.jabber,
+          value: clientPercents.jabberValue,
+          percentage: clientPercents.jabberPercentage,
+          color: '#16a085',
+        });
+      }
+      if (clientPercents.othersValue > 0) {
+        newData.push({
+          name: vm.othersHeading,
+          value: clientPercents.othersValue,
+          percentage: clientPercents.othersPercentage,
+          color: '#FD416A',
+        });
+      }
+
+      return newData;
+    }
+
+    function calculateClientPercentage(data) {
+      var totalValue = 0;
+      var sparkDesktopPercentage = 0;
+      var sparkDesktopValue = 0;
+      var sparkMobilePercentage = 0;
+      var sparkMobileValue = 0;
+      var sparkDevicesPercentage = 0;
+      var sparkDevicesValue = 0;
+      var sipPercentage = 0;
+      var sipValue = 0;
+      var jabberPercentage = 0;
+      var jabberValue = 0;
       var othersPercentage = 0;
       var othersValue = 0;
 
@@ -161,55 +237,41 @@
       });
       _.each(data, function (type) {
         type.percentage = 100 * (type.value / totalValue);
-        if (_.includes(desktopList, type.name)) {
-          desktopPercentage += type.percentage;
-          desktopValue += type.value;
-        } else if (_.includes(mobileList, type.name)) {
-          mobilePercentage += type.percentage;
-          mobileValue += type.value;
-        } else if (_.includes(tpList, type.name)) {
-          tpPercentage += type.percentage;
-          tpValue += type.value;
+        if (_.includes(vm.sparkDesktopList, type.name)) {
+          sparkDesktopPercentage += type.percentage;
+          sparkDesktopValue += type.value;
+        } else if (_.includes(vm.sparkMobileList, type.name)) {
+          sparkMobilePercentage += type.percentage;
+          sparkMobileValue += type.value;
+        } else if (_.includes(vm.sparkDevicesList, type.name)) {
+          sparkDevicesPercentage += type.percentage;
+          sparkDevicesValue += type.value;
+        } else if (_.includes(vm.sipList, type.name)) {
+          sipPercentage += type.percentage;
+          sipValue += type.value;
+        } else if (_.includes(vm.jabber, type.name)) {
+          jabberPercentage += type.percentage;
+          jabberValue += type.value;
         } else {
           othersPercentage += type.percentage;
           othersValue += type.value;
         }
       });
 
-      if (desktopValue > 0) {
-        newData.push({
-          name: $translate.instant('mediaFusion.metrics.clientType.desktop'),
-          value: desktopValue,
-          percentage: _.round(desktopPercentage, 2),
-          color: '#23C1E2',
-        });
-      }
-      if (mobileValue > 0) {
-        newData.push({
-          name: $translate.instant('mediaFusion.metrics.mobile'),
-          value: mobileValue,
-          percentage: _.round(mobilePercentage, 2),
-          color: '#FEB32B',
-        });
-      }
-      if (tpValue > 0) {
-        newData.push({
-          name: $translate.instant('mediaFusion.metrics.clientType.tp'),
-          value: tpValue,
-          percentage: _.round(tpPercentage, 2),
-          color: '#D349D5',
-        });
-      }
-      if (othersValue > 0) {
-        newData.push({
-          name: vm.othersHeading,
-          value: othersValue,
-          percentage: _.round(othersPercentage, 2),
-          color: '#FD416A',
-        });
-      }
-
-      return newData;
+      return {
+        sparkDesktopPercentage: _.round(sparkDesktopPercentage, 2),
+        sparkDesktopValue: sparkDesktopValue,
+        sparkMobilePercentage: _.round(sparkMobilePercentage, 2),
+        sparkMobileValue: sparkMobileValue,
+        sparkDevicesPercentage: _.round(sparkDevicesPercentage, 2),
+        sparkDevicesValue: sparkDevicesValue,
+        jabberPercentage: _.round(jabberPercentage, 2),
+        jabberValue: jabberValue,
+        sipPercentage: _.round(sipPercentage, 2),
+        sipValue: sipValue,
+        othersPercentage: _.round(othersPercentage, 2),
+        othersValue: othersValue,
+      };
     }
 
     function formatTotal(value) {

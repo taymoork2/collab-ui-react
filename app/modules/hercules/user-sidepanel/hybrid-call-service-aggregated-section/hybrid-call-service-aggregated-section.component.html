@@ -1,20 +1,48 @@
 <cs-sp-container>
-  <cs-sp-section class="cloud-extensions">
+  <cs-sp-section class="hybrid-services-user-sidepanel">
     <div class="section-title-row">
       <span class="section-name" translate="hercules.hybridServiceNames.squared-fusion-uc"></span>
     </div>
     <div class="feature-list">
       <ul>
-        <li class="feature">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, onEntitlementChange: $ctrl.onEntitlementChanges})">
+        <li class="feature"
+            ng-hide="!$ctrl.callServiceAwareEnabledForOrg">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
-            <span class="feature-status"
-                  ng-if="$ctrl.callServiceAware && !$ctrl.loadingPage"
-                  ng-class="$ctrl.callServiceAware ? 'status-' + $ctrl.getStatus($ctrl.callServiceAware) : ''"
-                  translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceAware)}}"></span>
-            <span ng-if="!$ctrl.callServiceAware && !$ctrl.loadingPage"
-                  class="feature-status status-off"
-                  translate="common.off"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span class="feature-status"
+                    ng-if="$ctrl.callServiceAware && !$ctrl.loadingPage"
+                    ng-class="$ctrl.callServiceAware ? 'status-' + $ctrl.getStatus($ctrl.callServiceAware) : ''"
+                    translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceAware)}}"></span>
+              <span ng-if="!$ctrl.callServiceAware && !$ctrl.loadingPage && $ctrl.isInvitePending"
+                    class="feature-status"
+                    translate="hercules.activationStatus.accountNotActivated"></span>
+            </span>
+            <span cs-loader
+                  ng-if="$ctrl.loadingPage"
+                  class="feature-list-loader"></span>
+            <i class="feature-arrow"></i>
+          </a>
+        </li>
+        <li class="feature"
+            ng-hide="$ctrl.callServiceAwareEnabledForOrg">
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.aware-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
+            <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-uc"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-uc')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="hercules.activationStatus.pendingNotSetup"></span>
+            </span>
             <span cs-loader
                   ng-if="$ctrl.loadingPage"
                   class="feature-list-loader"></span>
@@ -23,16 +51,22 @@
         </li>
         <li class="feature"
             ng-hide="!$ctrl.callServiceConnectEnabledForOrg">
-          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress, voicemailFeatureToggled: $ctrl.voicemailFeatureToggled, onEntitlementChange: $ctrl.onEntitlementChanges, })">
-            <span class="feature-name" ng-if="!$ctrl.voicemailEnabled" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-            <span class="feature-name" ng-if="$ctrl.voicemailEnabled" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec-and-voicemail"></span>
-            <span class="feature-status"
-                  ng-if="$ctrl.callServiceConnect && !$ctrl.loadingPage"
-                  ng-class="$ctrl.callServiceConnect ? 'status-' + $ctrl.getStatus($ctrl.callServiceConnect) : ''"
-                  translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceConnect)}}"></span>
-            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage"
-                  class="feature-status status-off"
-                  translate="common.off"></span>
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
+            <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span class="feature-status"
+                    ng-if="$ctrl.callServiceConnect && !$ctrl.loadingPage"
+                    ng-class="$ctrl.callServiceConnect ? 'status-' + $ctrl.getStatus($ctrl.callServiceConnect) : ''"
+                    translate="hercules.activationStatus.{{$ctrl.getStatus($ctrl.callServiceConnect)}}"></span>
+              <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage && $ctrl.isInvitePending"
+                    class="feature-status"
+                    translate="hercules.activationStatus.accountNotActivated"></span>
+            </span>
             <span cs-loader
                   ng-if="$ctrl.loadingPage"
                   class="feature-list-loader"></span>
@@ -41,11 +75,22 @@
         </li>
         <li class="feature"
             ng-hide="$ctrl.callServiceConnectEnabledForOrg">
-          <a>
+          <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings({userId: $ctrl.userId, userEmailAddress: $ctrl.userEmailAddress })">
             <span class="feature-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-ec"></span>
-            <span ng-if="!$ctrl.callServiceConnect && !$ctrl.loadingPage"
-                  class="feature-status status-off"
-                  translate="hercules.userSidepanel.notEnabledInOrg"></span>
+            <span ng-if="!$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="common.off"></span>
+            </span>
+            <span ng-if="$ctrl.userHasEntitlement('squared-fusion-ec')">
+              <span ng-if="!$ctrl.loadingPage"
+                    class="feature-status status-off"
+                    translate="hercules.activationStatus.pendingNotSetup"></span>
+            </span>
+            <span cs-loader
+                  ng-if="$ctrl.loadingPage"
+                  class="feature-list-loader"></span>
+            <i class="feature-arrow"></i>
           </a>
         </li>
       </ul>
@@ -54,5 +99,6 @@
 
   <hybrid-services-resource-group-selector user-id="$ctrl.userId"
                                            resource-group-id="$ctrl.resourceGroupId"
-                                           service-id="'squared-fusion-uc'"></hybrid-services-resource-group-selector>
+                                           service-id="'squared-fusion-uc'"
+                                           refresh-callback="$ctrl.resourceGroupRefreshCallback()"></hybrid-services-resource-group-selector>
 </cs-sp-container>

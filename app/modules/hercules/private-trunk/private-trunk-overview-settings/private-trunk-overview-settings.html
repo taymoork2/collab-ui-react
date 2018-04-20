@@ -9,15 +9,16 @@
         is-domain="$ctrl.isDomain"
         on-change-fn="$ctrl.setSelectedDomain(isDomain, domainSelected)">
       </private-trunk-domain>
-      <private-trunk-certificate
+      <cisco-collaboration-cloud-certificate-store
         is-first-time-setup = false
         is-certificate-default = "$ctrl.isCertificateDefault"
         is-importing = "$ctrl.isImporting"
         formatted-cert-list="$ctrl.formattedCertList"
         on-change-fn="$ctrl.uploadFile(file)"
         on-delete-cert-fn="$ctrl.deleteCert(certId)"
-        on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
-      </private-trunk-certificate>
+        on-change-option-fn="$ctrl.changeOption(isCertificateDefault)"
+        service-id="'ept'">
+      </cisco-collaboration-cloud-certificate-store>
      </div>
   </setting-section>
   <deactivate-section class="private-trunk needs-border-top" service-id="'ept'" deactivate-modal-options="$ctrl.modalOptions"></deactivate-section>

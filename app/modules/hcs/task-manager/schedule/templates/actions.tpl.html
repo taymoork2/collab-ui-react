@@ -1,0 +1,35 @@
+<div class="grid-contents" ng-class="{'selected' : row.isSelected}">
+    <span cs-dropdown class="actions-menu">
+      <button cs-dropdown-toggle
+        id="actionsButton"
+        class="btn--none dropdown-toggle icon icon-three-dots"
+        ng-click="$event.stopPropagation();"
+        ng-keydown="$event.stopPropagation();"
+        ng-class="dropdown-toggle"
+        aria-label="{{::'common.toggleMenu' | translate}}">
+      </button>
+      <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+        <li id="runScheduleOption">
+          <a href
+          ng-click="grid.appScope.runSchedule(row.entity)"
+          ng-keydown="grid.appScope.runSchedule()">
+            <span translate="hcs.taas.scheduleView.runSchedule"></span>
+          </a>
+        </li>
+        <li id="editScheduleOption">
+          <a href
+          ng-click="grid.appScope.editSchedule(row.entity)"
+          ng-keydown="grid.appScope.editTaasSuite()">
+            <span translate="hcs.taas.scheduleView.editSchedule"></span>
+          </a>
+        </li>
+        <li id="deleteScheduleOption">
+          <a href
+          ng-click="grid.appScope.deleteSchedule(row.entity)"
+          ng-keydown="grid.appScope.deleteAll()">
+            <span translate="hcs.taas.scheduleView.deleteSchedule"></span>
+          </a>
+        </li>
+      </ul>
+    </span>
+  </div>

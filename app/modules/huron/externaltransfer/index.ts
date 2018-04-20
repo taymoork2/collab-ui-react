@@ -6,8 +6,7 @@ import notificationsModule from 'modules/core/notifications';
 
 export default angular
   .module('huron.externaltransfer', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     siteServiceModule,
     FeatureToggleService,

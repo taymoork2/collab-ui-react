@@ -1,29 +1,14 @@
 <cs-page-header
   title-name="{{$ctrl.title}}"
   back="true"
-  back-url="$ctrl.huronFeaturesUrl">
+  back-url="$ctrl.huronFeaturesUrl"
+  back-aria-label="{{::'common.back' | translate}}">
 </cs-page-header>
 <div class="call-feature-edit">
   <div class="loading-container" ng-if="$ctrl.isLoading">
     <i class='icon icon-spinner'></i>
   </div>
   <form novalidate class="cs-form content-container" name="$ctrl.form" role="form" ng-if="!$ctrl.isLoading">
-    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
-      <p translate="common.saveLabel"></p>
-      <button
-        cs-btn
-        ng-click="$ctrl.onCancel()">
-        <span translate="common.cancel"></span>
-      </button>
-      <button
-        cs-btn
-        class="btn btn--primary"
-        loading="$ctrl.saveInProcess"
-        ng-click="$ctrl.save()"
-        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
-        <span translate="common.save"></span>
-      </button>
-    </div>
     <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="huronHuntGroup.settingsTitle"></h4>
@@ -74,14 +59,6 @@
             on-change-fn="$ctrl.setMaxWaitMins(minutes)">
           </uc-hunt-group-max-wait-time>
         </div>
-        <div class="sub-section">
-          <h5 class="sub-section__title" translate="huronHuntGroup.fallbackLabel"></h5>
-          <p class="sub-section__description" translate="huronHuntGroup.fallbackDesc"></p>
-          <uc-fallback-destination
-            fallback-destination="$ctrl.huntGroup.fallbackDestination"
-            on-change-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)">
-          </uc-fallback-destination>
-        </div>
       </div>
     </div>
 
@@ -97,6 +74,8 @@
               destination-rule="$ctrl.huntGroup.destinationRule"
               fallback-destination="$ctrl.huntGroup.fallbackDestination"
               alternate-destination="$ctrl.huntGroup.alternateDestination"
+              numbers="$ctrl.huntGroup.numbers"
+              method="$ctrl.huntGroup.huntMethod"
               on-change-destination-rule-fn="$ctrl.setHuntGroupDestinationRule(destinationRule)"
               on-change-destination-fn="$ctrl.setHuntGroupFallbackDestination(fallbackDestination)"
               on-change-alternate-fn="$ctrl.setHuntGroupAlternateDestination(alternateDestination)">
@@ -147,6 +126,7 @@
             members="$ctrl.huntGroup.members"
             member-item-type="number"
             remove-key="common.remove"
+            show-numbers="true"
             show-external-numbers="true"
             filter-by="$ctrl.memberProperties"
             drag-and-drop="$ctrl.dragAndDropEnabled"
@@ -156,5 +136,21 @@
       </div>
     </div>
 
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+      <p translate="common.saveLabel"></p>
+      <button
+        cs-btn
+        ng-click="$ctrl.onCancel()">
+        <span translate="common.cancel"></span>
+      </button>
+      <button
+        cs-btn
+        class="btn btn--primary"
+        loading="$ctrl.saveInProcess"
+        ng-click="$ctrl.save()"
+        ng-disabled="$ctrl.form.$invalid || $ctrl.saveInProcess">
+        <span translate="common.save"></span>
+      </button>
+    </div>
   </form>
 </div>

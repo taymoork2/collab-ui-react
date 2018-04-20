@@ -19,6 +19,11 @@
   /* @ngInject */
   function TrialWebexService($http, $q, Config, UrlConfig, WebexOrderStatusResource, Notification, SetupWizardService) {
     var _trialData;
+    var _siteValidationResponseMessage = {
+      VALID_SITE: 'validSite',
+      DOMAIN_INVALID: 'domainInvalid',
+      DUPLICATE_SITE: 'duplicateSite',
+    };
     var service = {
       getData: getData,
       reset: reset,
@@ -26,6 +31,7 @@
       getTrialStatus: getTrialStatus,
       provisionWebexSites: provisionWebexSites,
       provisionSubscriptionWithoutWebexSites: provisionSubscriptionWithoutWebexSites,
+      provisionSubscription: provisionSubscription,
       setProvisioningWebexSendCustomerEmailFlag: setProvisioningWebexSendCustomerEmailFlag,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
@@ -81,11 +87,12 @@
       return $http(config).then(function (response) {
         var data = _.get(response, 'data.properties[0]', {});
         var errorCodes = {
-          0: 'validSite',
-          434057: 'domainInvalid',
-          439012: 'duplicateSite',
-          439015: 'duplicateSite',
-          431397: 'duplicateSite',
+          0: _siteValidationResponseMessage.VALID_SITE,
+          434057: _siteValidationResponseMessage.DOMAIN_INVALID,
+          439012: _siteValidationResponseMessage.DUPLICATE_SITE,
+          439015: _siteValidationResponseMessage.DUPLICATE_SITE,
+          431205: _siteValidationResponseMessage.DUPLICATE_SITE,
+          431397: _siteValidationResponseMessage.DUPLICATE_SITE,
         };
         var isValid = (data.isValid === 'true');
         var doesNotExist = (data.isExist !== 'true');
@@ -116,12 +123,12 @@
 
     function provisionWebexSites() {
       var payload = _.get(webexProvisioningData, 'webexLicencesPayload');
-      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
-        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
-      }
-
       var subscriptionId = _.get(webexProvisioningData, 'subscriptionId');
-      return provisionSubscription(payload, subscriptionId);
+
+      return provisionSubscription(payload, subscriptionId)
+        .finally(function () {
+          SetupWizardService.clearDeterminantParametersFromSession();
+        });
     }
 
     function provisionSubscriptionWithoutWebexSites() {
@@ -129,11 +136,8 @@
         provisionOrder: true,
         serviceOrderUUID: SetupWizardService.getActingSubscriptionServiceOrderUUID(),
       };
-      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
-        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
-      }
-
       var subscriptionId = SetupWizardService.getInternalSubscriptionId();
+
       return provisionSubscription(payload, subscriptionId);
     }
 
@@ -142,6 +146,12 @@
         $q.reject('invlaid paramenters passed to provision subscription.');
       }
       var webexProvisioningUrl = UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision';
+
+      if (_.has(webexProvisioningData, 'sendCustomerEmail')) {
+        _.set(payload, 'sendCustomerEmail', webexProvisioningData.sendCustomerEmail);
+      } else {
+        _.set(payload, 'sendCustomerEmail', false);
+      }
 
       return $http.post(webexProvisioningUrl, payload);
     }

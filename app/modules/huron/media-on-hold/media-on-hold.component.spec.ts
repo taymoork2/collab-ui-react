@@ -2,7 +2,7 @@ import mediaOnHold from './index';
 
 describe('Component: mediaOnHold', () => {
   const MEDIA_ON_HOLD_SELECT = '.csSelect-container[name="lineMohSelect"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const MEDIA_FILE_1 = 'drbd-1234-g79e-0op3';
   const MEDIA_FILE_2 = 'bjek-3491-fu69-l140';
 
@@ -31,7 +31,7 @@ describe('Component: mediaOnHold', () => {
     this.$scope.$apply();
   });
 
-  it('should have a select element with options', function(){
+  it('should have a select element with options', function() {
     expect(this.view).toContainElement(MEDIA_ON_HOLD_SELECT);
     expect(this.view.find(MEDIA_ON_HOLD_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('sample-media-1');
     expect(this.view.find(MEDIA_ON_HOLD_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('sample-media-2');

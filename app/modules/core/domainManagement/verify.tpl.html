@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="dmpopup.cancel()"><span class="sr-only">Close</span></button>
+  <button type="button" class="close" ng-click="dmpopup.cancel()" aria-label="{{::'common.close' | translate}}"></button>
   <h4 class="modal-title" translate="domainManagement.verify.header"></h4>
 </div>
 <div class="modal-body domainModal">
@@ -7,8 +7,8 @@
     <p translate="domainManagement.verify.verifyThis"></p>
     <p class="domainInput">{{dmpopup.domainName}}</p>
     <p translate="domainManagement.verify.beforeVerify"/>
-    <p class="domainToken"><b>{{dmpopup.domain.token}}</b></p>
-    <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-compile></p>
+    <p class="domainToken" ng-if="dmpopup.domain.token"><b>ciscocidomainverification={{::dmpopup.domain.token}}</b></p>
+    <p translate="domainManagement.verify.learn" translate-value-click="dmpopup.learnMore()" translate-value-howtolink="https://collaborationhelp.cisco.com/article/en-us/nxz79m5" translate-compile></p>
   </section>
 
   <div ng-if="!dmpopup.error && dmpopup.showWarning" class="modal-body domWarning">

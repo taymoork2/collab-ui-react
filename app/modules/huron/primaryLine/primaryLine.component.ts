@@ -14,6 +14,7 @@ class PrimaryLine implements ng.IComponentController {
   constructor(
     private Notification: Notification,
     private PrimaryLineService: PrimaryLineService,
+    private $scope: ng.IScope,
   ) {
     this.optionSelected = this.lineSelection.primaryLineEnabled;
     this.lineSelectionCopy = this.lineSelection;
@@ -43,6 +44,7 @@ class PrimaryLine implements ng.IComponentController {
     this.PrimaryLineService.update(this.ownerId, this.lineSelection).then(() => {
       this.Notification.success('primaryLine.saveSuccess');
       this.lineSelectionCopy = this.lineSelection;
+      this.$scope.$emit('PRIMARY_LINE_SELECTION_CHANGE', this.lineSelection.primaryLineEnabled);
     })
     .catch((response) => {
       this.Notification.errorResponse(response, 'primaryLine.failedToSaveChanges');
@@ -61,7 +63,7 @@ class PrimaryLine implements ng.IComponentController {
 
 export class PrimaryLineComponent implements ng.IComponentOptions {
   public controller = PrimaryLine;
-  public templateUrl = 'modules/huron/primaryLine/primaryLine.html';
+  public template = require('modules/huron/primaryLine/primaryLine.html');
   public bindings = {
     ownerId: '=',
     lineSelection: '=',

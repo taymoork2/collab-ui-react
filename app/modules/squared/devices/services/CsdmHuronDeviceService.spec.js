@@ -21,7 +21,7 @@ describe('CsdmHuronOrgDeviceService', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should return an empty list if no directorynumbers', function (done) {
+  it('should return an empty list if no directorynumbers', function () {
     HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
@@ -32,15 +32,17 @@ describe('CsdmHuronOrgDeviceService', function () {
       .expectGET('testHuronUrl/voice/customers/testOrg/users/testUserId/directorynumbers')
       .respond(200, []);
 
+    var promiseExecuted;
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(0);
-      _.defer(done);
+      promiseExecuted = true;
     });
 
     $httpBackend.flush();
+    expect(promiseExecuted).toBe(true);
   });
 
-  it('should return only extension if no alternates', function (done) {
+  it('should return only extension if no alternates', function () {
     HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
@@ -61,18 +63,20 @@ describe('CsdmHuronOrgDeviceService', function () {
       .expectGET('testHuronUrl/voice/customers/testOrg/directorynumbers/testNumberId/alternatenumbers?alternatenumbertype=%2BE.164+Number')
       .respond(200, []);
 
+    var promiseExecuted;
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(1);
       expect(res[0].directoryNumber).toBe('1234');
       expect(res[0].usage).toBe('Primary');
       expect(res[0].alternate).toBeUndefined();
-      _.defer(done);
+      promiseExecuted = true;
     });
 
     $httpBackend.flush();
+    expect(promiseExecuted).toBe(true);
   });
 
-  it('should return alternate', function (done) {
+  it('should return alternate', function () {
     HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
@@ -95,18 +99,20 @@ describe('CsdmHuronOrgDeviceService', function () {
         numMask: '+47 1234',
       }]);
 
+    var promiseExecuted;
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(1);
       expect(res[0].directoryNumber).toBe('1234');
       expect(res[0].usage).toBe('Primary');
       expect(res[0].alternate).toBe('+47 1234');
-      _.defer(done);
+      promiseExecuted = true;
     });
 
     $httpBackend.flush();
+    expect(promiseExecuted).toBe(true);
   });
 
-  it('should return multiple results', function (done) {
+  it('should return multiple results', function () {
     HuronConfig.getCmiUrl = jasmine.createSpy('getCmiUrl').and.returnValue('testHuronUrl');
     Authinfo.getOrgId = jasmine.createSpy('getOrgId').and.returnValue('testOrg');
     var testDevice = {
@@ -141,6 +147,7 @@ describe('CsdmHuronOrgDeviceService', function () {
         numMask: '+47 5678',
       }]);
 
+    var promiseExecuted;
     csdmHuronOrgDeviceService.getLinesForDevice(testDevice).then(function (res) {
       expect(res.length).toBe(2);
       expect(res[0].directoryNumber).toBe('1234');
@@ -149,21 +156,24 @@ describe('CsdmHuronOrgDeviceService', function () {
       expect(res[1].directoryNumber).toBe('5678');
       expect(res[1].usage).toBe('Undefined');
       expect(res[1].alternate).toBe('+47 5678');
-      _.defer(done);
+      promiseExecuted = true;
     });
 
     $httpBackend.flush();
+    expect(promiseExecuted).toBe(true);
   });
 
-  it('should call delete', function (done) {
+  it('should call delete', function () {
     $httpBackend
       .expectDELETE('testUrl')
       .respond(204);
 
+    var promiseExecuted;
     csdmHuronOrgDeviceService.deleteDevice('testUrl').then(function () {
-      _.defer(done);
+      promiseExecuted = true;
     });
 
     $httpBackend.flush();
+    expect(promiseExecuted).toBe(true);
   });
 });

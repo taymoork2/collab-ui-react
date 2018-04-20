@@ -1,0 +1,135 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.add-webex-site {
+
+  .error input[type=radio]+label:before {
+    border-color: $color-red-base;
+  }
+
+  .site-preview {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .time-zone {
+    font-size: 14px;
+    color: $gray-base;
+  }
+
+  .verified-check {
+    font-size: 24px;
+    color: $color-cta-base;
+  }
+
+  .site-description,
+  .distribute-licenses-heading,
+  .element-spacing {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .small {
+    span {
+      font-size: .75rem;
+    }
+  }
+  .info .cs-input__messages {
+    padding-top: 0px;
+  }
+
+  .input-block--transfer-code {
+    .cs-input-group > .cs-input-group {
+      margin-bottom: 0;
+    }
+    .input-block__help-link {
+      font-size: .8em;
+    }
+  }
+
+  .count {
+    color: $color-primary-base;
+  }
+
+  .site-heading {
+    font-weight: bolder;
+  }
+
+  .align-license-count {
+    text-align: right;
+  }
+
+  .align-license-count-total {
+    text-align: end;
+  }
+
+  .notice {
+    font-size: 18px;
+  }
+
+  .error {
+    color: $brand-danger;
+    .message {
+      font-size: .8rem;
+    }
+  }
+  .icon-help {
+    color: $color-blue-darker;
+  }
+
+  .license_distrib_validate {
+    margin: .5em;
+    .icon-close {
+      color: $brand-danger;
+    }
+    .icon-check {
+      color: $color-mint-darker;
+    }
+    div {
+      display: flex;
+      align-items: center;
+      flex-flow: row nowrap;
+      span.icon {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .license_distrib__row--site {
+    .cs-card {
+      width: 100%;
+    }
+    article {
+      flex-flow: row wrap;
+      align-items: flex-start;
+    }
+    h4 {
+      width: 100%;
+      margin: .5em;
+    }
+    .error {
+      width: 100%;
+    }
+    .license_distrib__row--siteCenters {
+      max-width: 120px;
+      flex: 1 1 0%;
+      margin: .5em;
+    }
+  }
+
+  .license_distrib__row--centerTypes {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    section {
+      max-width: 120px;
+      margin: .5em;
+      padding: .5em;
+    }
+    h3 {
+      color: $color-blue-base;
+      &.error {
+        color: $brand-danger;
+      }
+    }
+  }
+}

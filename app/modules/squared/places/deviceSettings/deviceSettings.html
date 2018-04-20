@@ -1,34 +1,51 @@
 <section-title
   title-key="deviceSettings.title">
 </section-title>
-<div class="form-group" ng-if="$ctrl.shouldShowUpgradeChannel">
-  <label class="col-sm-4 control-label" translate="deviceSettings.softwareUpgradeChannel"></label>
-  <div class="col-sm-7" >
-    <cs-select
-      ng-model="$ctrl.selectedUpgradeChannel"
-      options="$ctrl.upgradeChannelOptions"
-      is-disabled="$ctrl.updatingUpgradeChannel"
-      labelfield="label"
-      valuefield="value"
-      on-change-fn="$ctrl.onSaveUpgradeChannel()"
-    >
-    </cs-select>
-    <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceTypeForUpgradeChannel"
-       translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForUpgradeChannel }"></p>
+<div class="device-settings-section">
+  <div class="form-group" ng-if="$ctrl.shouldShowUpgradeChannel">
+    <label class="col-sm-4 control-label" translate="deviceSettings.softwareUpgradeChannel"></label>
+    <div class="col-sm-7" >
+      <cs-select
+        ng-model="$ctrl.selectedUpgradeChannel"
+        options="$ctrl.upgradeChannelOptions"
+        is-disabled="$ctrl.updatingUpgradeChannel"
+        labelfield="label"
+        valuefield="value"
+        on-change-fn="$ctrl.onSaveUpgradeChannel()">
+      </cs-select>
+      <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceTypeForUpgradeChannel"
+         translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForUpgradeChannel }"></p>
+    </div>
   </div>
-</div>
-<div class="form-group" ng-if="$ctrl.shouldShowGuiSettings">
-  <label class="col-sm-4 control-label" translate="deviceSettings.guiSettings"></label>
-  <div class="col-sm-8" >
-    <cs-toggle-switch
-      ng-model="$ctrl.guiSettingsEnabled"
-      is-disabled="$ctrl.updatingGuiSettings"
-      toggle-id="guiSettingsEnabled"
-      name="guiSettingsEnabled"
-      size="small"
-    >
-    </cs-toggle-switch>
-    <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceTypeForGuiSettings"
-       translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForGuiSettings }"></p>
+  <div class="form-group">
+    <div class="col-sm-4 setting-with-tooltip">
+      <label class="control-label" translate="deviceSettings.settingsLock"></label>
+      <i class="icon icon-information"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="top-left"
+        tooltip-class="setting-help-tooltip"
+        tooltip-animation="true"
+        tooltip="{{::'deviceSettings.settingsLockTooltip' | translate}}"
+        tabindex="0"
+        aria-label="{{::'deviceSettings.settingsLockTooltip' | translate}}"></i>
+    </div>
+    <div class="col-sm-8">
+      <cs-toggle-switch
+        ng-model="$ctrl.settingsLockedDown"
+        is-disabled="$ctrl.updatingSettingsLockDown"
+        toggle-id="settingsLockedDown"
+        name="settingsLockedDown"
+        size="small"
+        cs-aria-label="{{::'deviceSettings.settingsLock' | translate}}">
+      </cs-toggle-switch>
+      <p class="form-control-static settingsWarning" ng-show="$ctrl.unsupportedDeviceTypeForSettingsLockDown"
+         translate="deviceSettings.deviceNotSupported" translate-values="{ deviceType: $ctrl.unsupportedDeviceTypeForSettingsLockDown }"></p>
+    </div>
+  </div>
+  <div class="form-group" cr-feature-toggle feature-show="csdm-api-access">
+    <label class="col-sm-4 control-label" translate="deviceSettings.deviceApis"></label>
+    <div class="col-sm-8">
+      <a href sq-click-promise="$ctrl.startManageApiAccessFlow()" translate="deviceSettings.deviceApiViewEdit"></a>
+    </div>
   </div>
 </div>

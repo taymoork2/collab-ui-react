@@ -7,7 +7,6 @@ import featureToggleModule from 'modules/core/featureToggle';
 export default angular
   .module('reports.reportServices', [
     'core.authinfo',
-    'core.chartColors',
     'core.notifications',
     'core.urlconfig',
     featureToggleModule,

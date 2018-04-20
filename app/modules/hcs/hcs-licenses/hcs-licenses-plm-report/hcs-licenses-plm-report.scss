@@ -1,0 +1,49 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.hcs-license-plm-report {
+  @extend %grid-subheader;
+
+  .ui-grid {
+    .plmNameColumn,
+    .basicLicenseColumn,
+    .essentialLicenseColumn,
+    .foundationLicenseColumn,
+    .standardLicenseColumn,
+    .plmStatusColumn {
+      text-align: left;
+    }
+
+    .ui-grid-row {
+      border-bottom: none;
+      background-color: $white;
+
+      &:hover {
+        background-color: $gray-light-4;
+      }
+    }
+  }
+
+  .ui-grid-header-cell.plmName,
+  .ui-grid-header-cell.basicLicense,
+  .ui-grid-header-cell.essentialLicense,
+  .ui-grid-header-cell.foundationLicense,
+  .ui-grid-header-cell.standardLicense,
+  .ui-grid-header-cell.plmStatus {
+    text-align: left;
+  }
+}
+
+.hcs-license-plm-report .page-sub-header .export-lines i {
+  color: $gray-dark-1;
+  font-size: $h3-font-size;
+  margin-left: 1rem;
+  cursor: pointer;
+  padding-left: 0;
+}
+
+.hcs-license-plm-report .page-sub-header .export-lines {
+  display: inline-block;
+  height: 22px;
+}

@@ -4,11 +4,13 @@
       <div class="col-md-12">
         <div class="title pull-left" translate="usersPreview.servicesPreview"></div>
         <div cs-dropdown class="actions-menu dropdown pull-right" ng-show="isHuronEnabled()">
-          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+          <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{::'common.toggleMenu' | translate}}">
             <i class="icon icon-three-dots"></i>
           </button>
           <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-            <li><a ui-sref="users.list.preview.adddirectorynumber" translate="usersPreview.addNewLinePreview"></a></li>
+            <li>
+              <a ui-sref="users.list.preview.adddirectorynumber" translate="usersPreview.addNewLinePreview"></a>
+            </li>
           </ul>
         </div>
       </div>

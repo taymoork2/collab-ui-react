@@ -3,8 +3,8 @@
 describe('Controller: AAPhoneMenuCtrl', function () {
   var controller;
   var FeatureToggleService;
-  var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
-  var $rootScope, $scope, $q;
+  var AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, QueueHelperService;
+  var $rootScope, $scope, $q, $controller;
   var aaUiModel = {
     openHours: {},
   };
@@ -12,6 +12,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   var index = '0';
   var menuId = 'menu1';
   var attempts = 4;
+  var routingPrefixOptions = [];
   var queueName = 'Sunlight Queue 1';
   var queues = [{
     queueName: queueName,
@@ -77,14 +78,17 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _$q_, _FeatureToggleService_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _AutoAttendantHybridCareService_, _AACommonService_, _QueueHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
+    $controller = _$controller_;
 
     FeatureToggleService = _FeatureToggleService_;
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
+    AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
+    AACommonService = _AACommonService_;
     QueueHelperService = _QueueHelperService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
@@ -97,6 +101,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     $scope.index = index;
     $scope.menuId = menuId;
     $scope.queues = queues;
+    $scope.routingPrefixOptions = routingPrefixOptions;
 
     var menu = AutoAttendantCeMenuModelService.newCeMenu();
     menu.type = 'MENU_OPTION';
@@ -110,7 +115,7 @@ describe('Controller: AAPhoneMenuCtrl', function () {
   }));
 
   afterEach(function () {
-
+    AAUiModelService = AutoAttendantCeMenuModelService = AACommonService = controller = FeatureToggleService = QueueHelperService = null;
   });
 
   describe('addKeyAction', function () {
@@ -186,9 +191,9 @@ describe('Controller: AAPhoneMenuCtrl', function () {
     });
 
     it('should change Repeat-Menu to Dial-by-Extension action in the model', function () {
-      var ceMenu = _.cloneDeep(data.ceMenu);
-      var expectEntry = raw2MenuEntry(ceMenu.entries[0]);
-      var expectEntry2 = raw2MenuEntry(ceMenu.entries[1]);
+      var ceMenuDialByExtension = _.cloneDeep(data.ceMenuDialByExtension);
+      var expectEntry = raw2MenuEntry(ceMenuDialByExtension.entries[0]);
+      var expectEntry2 = raw2MenuEntry(ceMenuDialByExtension.entries[1]);
       var phoneMenu = {
         type: 'MENU_OPTION',
         entries: [],
@@ -331,6 +336,37 @@ describe('Controller: AAPhoneMenuCtrl', function () {
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.keyActions[i].label).toEqual(sortedOptions[i].label);
       }
+    });
+  });
+
+  describe('Check spark call options', function () {
+    it('should not add the sparkCalloptions when hybrid toggle is enabled and sparkCall is not configured', function () {
+      spyOn(AutoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(false);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      $scope.$apply();
+      var options = _.difference(sortedOptions, [
+        {
+          label: 'autoAttendant.phoneMenuDialExt',
+        }, {
+          label: 'autoAttendant.phoneMenuRouteHunt',
+        }, {
+          label: 'autoAttendant.phoneMenuRouteVM',
+        }]);
+      expect(controller.keyActions.length).toBe(options.length);
+      var keyActions = controller.keyActions;
+      _.forEach(keyActions, options, function (actual, expected) {
+        expect(actual.label).toBe(expected.label);
+      });
+    });
+    it('should  add the sparkCalloptions when hybrid toggle is enabled and sparkCall is also configured', function () {
+      spyOn(AutoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(true);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      $scope.$apply();
+      expect(controller.keyActions.length).toBe(sortedOptions.length);
+      var keyActions = controller.keyActions;
+      _.forEach(keyActions, sortedOptions, function (actual, expected) {
+        expect(actual.label).toBe(expected.label);
+      });
     });
   });
 });

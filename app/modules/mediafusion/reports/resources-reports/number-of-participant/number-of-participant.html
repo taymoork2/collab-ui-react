@@ -1,9 +1,15 @@
-<cs-card id='number-of-participant-card' class="full media-metrics-report-card">
+<cs-card id='number-of-participant-card' class="cs-card--full media-metrics-report-card">
   <article class="media-service-card header-padding">
     <graphheader>
-              <span class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle'></span>
-              <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.callActivityDesc' | translate}}" tooltip-class="metrics-tooltip"></i>
-              <div id="number-of-participant-div"></div>
+      <span class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle'></span>
+      <i class='icon icon-info-outline icon-large'
+        tabindex="0"
+        tooltip="{{::'mediaFusion.metrics.graphDescription.callActivityDesc' | translate}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-class="metrics-tooltip"
+        aria-label="{{::'mediaFusion.metrics.graphDescription.callActivityDesc' | translate}}">
+      </i>
+      <div id="number-of-participant-div"></div>
     </graphheader>
     <section>
       <div class="number-of-participant-reports">

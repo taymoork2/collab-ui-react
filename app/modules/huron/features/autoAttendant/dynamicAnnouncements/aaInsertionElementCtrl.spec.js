@@ -46,6 +46,19 @@ describe('Controller: AAInsertionElementCtrl', function () {
     $scope.$apply();
   }));
 
+  afterEach((function () {
+    $rootScope = null;
+    $scope = null;
+    $controller = null;
+    $modal = null;
+    $q = null;
+    $window = null;
+    AutoAttendantCeMenuModelService = null;
+    AAUiModelService = null;
+    uiMenu = null;
+    menuEntry = null;
+  }));
+
   describe('activate', function () {
     it('should validate controller creation', function () {
       expect(controller).toBeDefined();
@@ -64,13 +77,19 @@ describe('Controller: AAInsertionElementCtrl', function () {
           $scope: $scope,
         });
         $scope.$apply();
-        expect(controller.elementText).toEqual('test');
+        expect(controller.elementText).toBe('test');
       });
     });
   });
 
   describe('mainClickFn', function () {
     beforeEach(function () {
+      spyOn($modal, 'open').and.returnValue({
+        result: modal.promise,
+      });
+    });
+
+    it('elementText and readAs values should be updated upon calling mainClickFn', function () {
       action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
       action.dynamicList = [{
         say: {
@@ -82,12 +101,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(action);
-      spyOn($modal, 'open').and.returnValue({
-        result: modal.promise,
-      });
-    });
-
-    it('elementText and readAs values should be updated upon calling mainClickFn', function () {
+      spyOn($rootScope, '$broadcast');
       var variableSelection = {
         label: 'testVar',
         value: 'testVal',
@@ -104,8 +118,40 @@ describe('Controller: AAInsertionElementCtrl', function () {
       expect($modal.open).toHaveBeenCalled();
       modal.resolve(result);
       $scope.$apply();
-      expect(controller.elementText).toEqual('testVar');
-      expect(controller.readAs).toEqual('testValRead');
+      expect(controller.elementText).toBe('testVar');
+      expect(controller.readAs).toBe('testValRead');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Updated');
+    });
+
+    it('elementText and readAs values should be updated upon calling mainClickFn from REST block', function () {
+      $scope.aaElementType = 'REST';
+      spyOn($rootScope, '$broadcast');
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      actionEntry.url = [{
+        action: {
+          eval: {
+            value: 'testVar',
+          },
+        },
+        isDynamic: true,
+        htmlModel: encodeURIComponent(ele),
+      }];
+      menuEntry.addAction(actionEntry);
+      $scope.$apply();
+      var variableSelection = {
+        label: 'testVar',
+        value: 'testVal',
+      };
+      var result = {
+        variable: variableSelection,
+      };
+      controller.mainClickFn();
+      expect($modal.open).toHaveBeenCalled();
+      modal.resolve(result);
+      $scope.$apply();
+      expect(controller.elementText).toBe('testVar');
+      expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe(_.get(menuEntry.actions[0], 'url[0].action.eval.value', ''));
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Updated');
     });
   });
 
@@ -132,6 +178,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
           return true;
         },
         focus: function () {},
+        remove: function () {},
       };
       var rangeGetter = function () {
         var range = {
@@ -153,6 +200,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
       };
       spyOn(angular, 'element').and.returnValue(dynamicElement);
       spyOn(dynamicElement, 'focus');
+      spyOn(dynamicElement, 'remove');
       spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
       spyOn(scopeElement, 'insertElement');
       spyOn($window, 'getSelection').and.returnValue({
@@ -180,9 +228,30 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(action);
+      spyOn($rootScope, '$broadcast');
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('dynamicListUpdated');
+    });
+
+    it('should clear out elementText and readAs upon calling of closeClickFn from REST CTRL', function () {
+      $scope.aaElementType = 'REST';
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      actionEntry.url = [{
+        action: {
+          eval: {
+            value: 'testVar',
+          },
+        },
+        isDynamic: true,
+        htmlModel: encodeURIComponent(ele),
+      }];
+      menuEntry.addAction(actionEntry);
+      $scope.$apply();
+      controller.closeClickFn();
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from phoneMenu', function () {
@@ -201,8 +270,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       }];
       menuEntry.headers[0].actions.push(action);
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from subMenu', function () {
@@ -224,8 +293,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       }];
       menuEntry.entries[0].actions.push(action);
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from initial announcement queueSettings', function () {
@@ -262,8 +331,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.type = 'initialAnnouncement';
 
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
 
     it('should clear out elementText and readAs upon calling of closeClickFn from periodic announcement queueSettings', function () {
@@ -299,8 +368,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       $scope.elementId = 'periodicAnnouncementTest';
       $scope.type = 'periodicAnnouncement';
       controller.closeClickFn();
-      expect(controller.elementText).toEqual('');
-      expect(controller.readAs).toEqual('');
+      expect(controller.elementText).toBe('');
+      expect(controller.readAs).toBe('');
     });
   });
 });

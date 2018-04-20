@@ -1,0 +1,48 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+hybrid-services-nodes-page-actions {
+  .instructions-link {
+    margin-left: 3em;
+    color: $color-blue-darker;
+    font-size: smaller;
+    cursor: pointer;
+  }
+
+  .unclickable {
+    cursor: not-allowed;
+  }
+
+  .disabled-link {
+    color: $gray-light-2;
+  }
+
+  .help-item {
+    cursor: help;
+  }
+
+  [cs-dropdown-toggle] {
+    margin-left: 1.5rem;
+    font-size: 14px;
+    padding: 0.3rem;
+  }
+
+  .open [cs-dropdown-menu] {
+    left: auto;
+    right: 0;
+
+    a {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-right: auto;
+      }
+    }
+
+    .icon {
+      margin-left: 5px;
+      color: $gray-base;
+    }
+  }
+
+}

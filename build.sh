@@ -90,35 +90,21 @@ function phase_1 {
 function phase_2 {
     set -e
 
-    # notes:
-    # - building the prod-version of webpack takes 5+ min.
-    # - start it in the background at the beginning to leverage concurrency
-    #   - it is single-threaded, so will not monopolize all the available cpu
-    #   - capture the pid, so we can wait on it before proceeding to e2e tests
-    (
-        set +e
-        # - 'typings' seems to be required for webpack to succeed
-        npm run typings
-        time nice -10 npm run build -- --env.nolint --env.noprogress --devtool source-map
-        echo $? > ./.cache/webpack_exit_code
-        set -e
-    ) &
-    webpack_pid=$!
+    # run linting tasks in parallel
+    parallel yarn ::: eslint tslint stylelint
 
-    npm run lint
-    npm run json-verify
-    npm run languages-verify
-    nice -15 npm run test -- --env.noprogress
+    yarn json-verify
+    yarn languages-verify
+
+    # generate a plain-text file defining custom HTTP headers for use by nginx (CSP-related headers currently)
+    node ./utils/printCustomHttpHeaders.js --env int | tee ./int-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env cfe | tee ./cfe-headers.txt
+    node ./utils/printCustomHttpHeaders.js --env prod | tee ./prod-headers.txt
+
+    time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
+
+    nice -15 yarn test --phantomjs --env.noprogress --env.coverage
     set +e
-
-
-    # webpack must complete before running e2e tests
-    set -x
-    wait "$webpack_pid"
-    read -r webpack_exit_code < ./.cache/webpack_exit_code
-    [ "$webpack_exit_code" -eq 0 ] || exit "$webpack_exit_code"
-    set +x
-
 
     # e2e tests
     ./e2e.sh | tee ./.cache/e2e-sauce-logs
@@ -141,6 +127,8 @@ function phase_3 {
         BUILD_NUMBER=0
     fi
     rm -f wx2-admin-web-client.*.tar.gz
+
+    envsubst < "$APP_DEPLOY_DESCRIPTOR_TEMPLATE" > "$APP_DEPLOY_DESCRIPTOR" || :
 
     # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
     tar -zcvf "$APP_ARCHIVE" dist/* &> "${APP_ARCHIVE}--files-list"

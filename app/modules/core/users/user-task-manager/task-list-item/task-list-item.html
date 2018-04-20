@@ -1,0 +1,13 @@
+<div class="task" ng-class="{'task--active': $ctrl.isActiveTask}">
+  <div class="task__row">
+    <span class="task__text">{{::$ctrl.task.jobTypeTranslate}}</span>
+    <span class="task__text task__text--right">{{::$ctrl.task.createdTime}}</span>
+  </div>
+  <div class="task__row">
+    <span class="task__subtext" ng-class="{'alert': $ctrl.isTaskError()}">
+      <i class="icon task__subtext-icon" ng-class="{'icon-error': $ctrl.isTaskError(), 'icon-spinner': $ctrl.isTaskInProcess()}"></i>
+      {{$ctrl.task.statusTranslate}}
+    </span>
+    <span class="task__subtext task__subtext--right">{{::$ctrl.task.createdDate}}</span>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<span cs-dropdown>
+  <button cs-dropdown-toggle class="actions-button btn--link dropdown-toggle" translate="common.actions"></button>
+  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary">
+    <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.targetType) && $ctrl.node.maintenanceMode === 'off'">
+      <a ng-click="$ctrl.enableMaintenanceMode($ctrl.node)">
+        <span translate="hercules.nodesPage.enableMaintenanceMode"></span>
+        <i class="icon icon-question-circle help-item"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}"
+          tooltip-append-to-body="true"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}">
+        </i>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.targetType) && $ctrl.node.maintenanceMode !== 'off'">
+      <a ng-click="$ctrl.disableMaintenanceMode($ctrl.node)">
+        <span translate="hercules.nodesPage.disableMaintenanceMode"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayGoToNodeMenuItem($ctrl.targetType)">
+      <a target="_blank" ng-href="https://{{::$ctrl.node.name}}/">
+        <span translate="hercules.nodesPage.goToNode"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayMoveNodeMenuItem($ctrl.targetType)">
+      <a id="move-ecp" ng-click="$ctrl.openMoveNodeModal($ctrl.node)">
+        <span translate="hercules.nodesPage.moveNode"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayDeregisterNodeMenuItem($ctrl.targetType)">
+      <a id="deregister-ecp" ng-click="$ctrl.openDeregisterNodeModal($ctrl.node)">
+        <span translate="hercules.nodesPage.deregisterNode"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItemWithDocumentationLink($ctrl.targetType, $ctrl.node, $ctrl.numberOfClusterNodes)">
+      <a href="https://collaborationhelp.cisco.com/article/en-us/DOC-21669" target="_blank" class="unclickable">
+        <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>
+        <span class="instructions-link" translate="hercules.nodesPage.instructions"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItem($ctrl.targetType, $ctrl.node, $ctrl.numberOfClusterNodes)">
+      <a class="unclickable">
+        <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItemWithDeregisterInfo($ctrl.targetType, $ctrl.numberOfClusterNodes)">
+      <a class="unclickable">
+        <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>
+        <i class="icon icon-question-circle help-item"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.nodesPage.removeNodeTooltip' | translate}}"
+          tooltip-append-to-body="true"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.nodesPage.removeNodeTooltip' | translate}}">
+        </i>
+      </a>
+    </li>
+    <li ng-if="$ctrl.displayActiveRemoveNodeMenuItem($ctrl.targetType, $ctrl.node, $ctrl.numberOfClusterNodes)">
+      <a ng-click="$ctrl.openDeleteExpresswayNodeModal($ctrl.node)">
+        <span translate="hercules.nodesPage.removeNode"></span>
+      </a>
+    </li>
+  </ul>
+</span>

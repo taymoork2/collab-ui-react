@@ -7,8 +7,10 @@ require('./_feature-landing.scss');
     .module('Huron')
     .controller('HuronFeaturesCtrl', HuronFeaturesCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
+  function HuronFeaturesCtrl($scope, $state, $filter, $modal, $q, $translate, Authinfo, HuronFeaturesListService, HuntGroupService, CallParkService, PagingGroupSettingsService, CallPickupGroupService, AutoAttendantCeInfoModelService, Notification, Log, CardUtils) {
     var vm = this;
     vm.searchData = searchData;
     vm.setFilter = setFilter;
@@ -90,7 +92,7 @@ require('./_feature-landing.scss');
     }, {
       name: 'PG',
       getFeature: function () {
-        return PagingGroupService.getListOfPagingGroups();
+        return PagingGroupSettingsService.listPagingGroupsWithNumberData();
       },
       formatter: HuronFeaturesListService.pagingGroups,
       isEmpty: false,
@@ -254,6 +256,17 @@ require('./_feature-landing.scss');
       });
     };
 
+    vm.deleteKeypress = function (feature, $event) {
+      switch ($event.keyCode) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopPropagation();
+          vm.deleteHuronFeature(feature, $event);
+          break;
+      }
+    };
+
     vm.detailsHuronFeature = function (feature, $event) {
       $event.preventDefault();
       $event.stopImmediatePropagation();
@@ -321,7 +334,7 @@ require('./_feature-landing.scss');
 
     function openModal() {
       var modalInstance = $modal.open({
-        templateUrl: 'modules/huron/features/newFeature/newFeatureModal.tpl.html',
+        template: require('modules/huron/features/newFeature/newFeatureModal.tpl.html'),
         controller: 'NewFeatureModalCtrl',
         controllerAs: 'newFeatureModalCtrl',
       });

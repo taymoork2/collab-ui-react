@@ -45,7 +45,7 @@ describe('Service: USSService', function () {
         }, {
           userId: '123',
           orgId: 'cisco',
-          serviceId: 'squared-fusion-voicemail',
+          serviceId: 'squared-fusion-monaco',
           entitled: true,
           state: 'activated',
         }],
@@ -55,7 +55,7 @@ describe('Service: USSService', function () {
       .then(function (response) {
         expect(response.length).toBe(2);
         expect(response[0].serviceId).toBe('squared-fusion-yolo');
-        expect(response[1].serviceId).toBe('squared-fusion-voicemail');
+        expect(response[1].serviceId).toBe('squared-fusion-monaco');
       });
 
     $httpBackend.flush();
@@ -126,6 +126,7 @@ describe('Service: USSService', function () {
         .respond(500);
 
       USSService.getStatusesForUser('123')
+        .then(fail)
         .catch(function (error) {
           expect(error.status).toBe(500);
         });
@@ -262,7 +263,7 @@ describe('Service: USSService', function () {
   describe('getStatusesSummary', function () {
     it('should be empty by default', function () {
       const statuses = USSService.getStatusesSummary();
-      expect(statuses).toEqual([]);
+      expect(statuses).toEqual({});
     });
 
     // TODO: find how to check changes after polling

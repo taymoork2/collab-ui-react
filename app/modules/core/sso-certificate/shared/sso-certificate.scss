@@ -1,0 +1,70 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+sso-certificate-check, sso-certificate-type, sso-certificate-download-metadata, sso-certificate-test {
+  @include keep-flex-container(column);
+
+  .reveal-modal.full & .modal-body {
+    align-items: center;
+  }
+
+  .sso-certificate-content {
+    @include keep-flex-container(column);
+
+    &-check {
+      max-width: 26.125rem !important; // override modal-body direct child max-width
+    }
+
+    &-type {
+      max-width: 25rem !important; // override modal-body direct child max-width
+    }
+
+    &-download-metadata {
+      max-width: 31.25rem !important; // override modal-body direct child max-width
+    }
+
+    &-test {
+      max-width: 25rem !important; // override modal-body direct child max-width
+    }
+
+    &__icon {
+      align-self: center;
+      @include vr-spacing(mt, 6);
+      @include vr-spacing(mb, 4);
+      line-height: 1;
+      &--size100 {
+        font-size: 100px;
+      }
+      &--green {
+        color: $green-base;
+      }
+    }
+
+    &__paragraph-question {
+      @include vr-spacing(mb, 1.5);
+    }
+
+    &__radio {
+      @include vr-spacing(mb, 1.75);
+    }
+
+    &__paragraph-action1 {
+      @include vr-spacing(mb, 0.5);
+    }
+
+    &__paragraph-action2 {
+      @include vr-spacing(mb, 2);
+    }
+
+    &__paragraph-title {
+      align-self: center;
+      @include vr-spacing(mb, 1.5);
+    }
+
+    &__button {
+      align-self: center;
+      @include vr-spacing(mb, 3.75);
+    }
+  }
+}

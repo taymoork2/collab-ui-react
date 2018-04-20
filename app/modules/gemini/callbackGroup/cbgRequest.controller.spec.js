@@ -1,9 +1,12 @@
 'use strict';
 
 describe('controller: CbgRequestCtrl', function () {
-  var $q, $state, $scope, $controller, $stateParams, $httpBackend;
-  var ctrl, cbgService, gemService, Notification, UrlConfig;
-  var preData = getJSONFixture('gemini/common.json');
+  var $q, $state, $scope, $controller, $stateParams;
+  var ctrl, cbgService, Notification;
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -12,38 +15,27 @@ describe('controller: CbgRequestCtrl', function () {
   beforeEach(initController);
 
   afterEach(function () {
-    $q = $state = $httpBackend = UrlConfig = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
-  });
-  afterAll(function () {
-    preData = undefined;
+    $q = $state = $scope = $controller = $stateParams = ctrl = cbgService = undefined;
   });
 
-  function dependencies(_$q_, _$state_, _UrlConfig_, _$httpBackend_, $rootScope, _$controller_, _$stateParams_, _Notification_, _gemService_, _cbgService_) {
+  function dependencies(_$q_, _$state_, $rootScope, _$controller_, _$stateParams_, _Notification_, _cbgService_) {
     $q = _$q_;
     $state = _$state_;
-    gemService = _gemService_;
     cbgService = _cbgService_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $stateParams = _$stateParams_;
     Notification = _Notification_;
-    UrlConfig = _UrlConfig_;
-    $httpBackend = _$httpBackend_;
   }
 
   function initSpies() {
-    spyOn(Notification, 'notify');
-    spyOn(gemService, 'showError');
     $state.modal = jasmine.createSpyObj('modal', ['close']);
+    spyOn(Notification, 'errorResponse');
     spyOn(cbgService, 'postRequest').and.returnValue($q.resolve());
   }
 
   function initController() {
     $stateParams.customerId = 'ff808081552992ec0155299619cb0001';
-
-    var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
-    $httpBackend.flush();
 
     ctrl = $controller('CbgRequestCtrl', {
       $scope: $scope,
@@ -51,7 +43,7 @@ describe('controller: CbgRequestCtrl', function () {
       $element: angular.element(''),
     });
 
-    ctrl.countries = preData.getCountries.content.data;
+    ctrl.countries = this.preData.getCountries;
   }
 
   describe('$onInit', function () {
@@ -72,18 +64,17 @@ describe('controller: CbgRequestCtrl', function () {
 
   describe('onSubmit', function () {
     it('should call $state.modal.close', function () {
-      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
+      cbgService.postRequest.and.returnValue($q.resolve());
       ctrl.onSubmit();
       $scope.$apply();
       expect($state.modal.close).toHaveBeenCalled();
     });
 
-    it('should call Notification.notify', function () {
-      preData.common.content.data.returnCode = 1000;
-      cbgService.postRequest.and.returnValue($q.resolve(preData.common));
+    it('should show Notification error when submit failed', function () {
+      cbgService.postRequest.and.returnValue($q.reject({ status: 404 }));
       ctrl.onSubmit();
       $scope.$apply();
-      expect(Notification.notify).toHaveBeenCalled();
+      expect(Notification.errorResponse).toHaveBeenCalled();
     });
   });
 });

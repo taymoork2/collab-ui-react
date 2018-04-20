@@ -1,0 +1,60 @@
+<div class="timeline">
+  <tabset type="pills" class="timeline-tab">
+    <tab heading="Audio" ng-click="$ctrl.onChangeQOS('voip')"></tab>
+    <tab heading="Video" ng-click="$ctrl.onChangeQOS('video')"></tab>
+  </tabset>
+
+  <dgc-time-line
+    source-data="$ctrl.dataSet"
+    cmr-data="$ctrl.cmrData"
+    pstn-data="$ctrl.pstnData"
+    line-color="$ctrl.lineColor"
+    circle-color="$ctrl.circleColor"
+    call-legs-data="$ctrl.callLegsData"
+    tab-type="$ctrl.tabType"
+    ng-if="!$ctrl.loading"></dgc-time-line>
+  <div ng-if="$ctrl.loading" class="loading">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+</div>
+
+<div class="meeting-overview">
+  <h4 translate="webexReports.meetingOverview"></h4>
+  <ul class="overviewInfo">
+    <li>
+      <h6 translate="webexReports.created"></h6>
+      <p><span ng-bind="$ctrl.overview.createTime_"></span></p>
+    </li>
+    <li>
+      <h6 translate="webexReports.site"></h6>
+      <p>{{$ctrl.overview.siteName}}</p>
+      <p>({{$ctrl.overview.siteId}})</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.meetingType"></h6>
+      <p>{{$ctrl.overview.meetingType}}</p>
+    </li>
+    <li ng-if="$ctrl.overview.audioSession">
+      <h6>Audio</h6>
+      <p>{{$ctrl.overview.audioSession}}</p>
+    </li>
+    <li ng-if="$ctrl.overview.audioSession">
+      <h6>Video</h6>
+      <p>{{$ctrl.overview.videoSession}}</p>
+    </li>
+  </ul>
+  <ul class="overviewInfo">
+    <li>
+      <h6 translate="webexReports.hostName"></h6>
+      <p>{{$ctrl.overview.hostName}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.hostID"></h6>
+      <p>{{$ctrl.overview.hostId}}</p>
+    </li>
+    <li>
+      <h6 translate="webexReports.hostEmail"></h6>
+      <p>{{$ctrl.overview.hostEmail}}</p>
+    </li>
+  </ul>
+</div>

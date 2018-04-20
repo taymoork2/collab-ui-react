@@ -1,7 +1,17 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 @import 'modules/sunlight/reports/_pagination';
 
+.showBreakdown {
+  display: flex;
+
+  .care-card-report {
+    position: relative;
+    width: 50%;
+  }
+}
+
 .care-card-report {
+
   .areachart {
     position: relative;
     margin-left: 0px !important;

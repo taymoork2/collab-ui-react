@@ -80,7 +80,7 @@ export class OrderDetailCtrl implements ng.IComponentController {
 
 export class OrderDetailComponent implements ng.IComponentOptions {
   public controller = OrderDetailCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnOrderManagement/orderDetail/orderDetail.html';
+  public template = require('modules/huron/pstn/pstnOrderManagement/orderDetail/orderDetail.html');
   public bindings = {
     currentOrder: '<',
     currentCustomer: '<',

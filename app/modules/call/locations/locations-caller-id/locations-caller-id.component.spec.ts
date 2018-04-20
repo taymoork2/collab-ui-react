@@ -6,7 +6,7 @@ describe('Component: locations-caller-id', () => {
   const CALLER_ID_NAME = 'input#callerIdName';
   const CALLER_ID_NUMBER_SELECT = '.csSelect-container[name="locationCallerIdNumber"]';
   const COMBO_INPUT = '.combo-box input';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
 
   beforeEach(function() {
@@ -49,13 +49,31 @@ describe('Component: locations-caller-id', () => {
     });
 
     it('should call onChangeFn when company caller id is toggled', function() {
-      const callerId = new LocationCallerId({
-        name: 'Awesome Sauce',
-        number: null,
-      });
+      this.controller.callerId = null;
+      this.controller.$onInit();
       this.view.find(CALLER_ID_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callerId);
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(new LocationCallerId({
+        name: 'Awesome Sauce',
+        number: '',
+        uuid: '',
+      }));
     });
+
+    it('should restore the original callerId when toggle is turned off and then on', function() {
+      this.controller.callerId = new LocationCallerId({
+        name: 'Awesome Sauce',
+        number: '',
+        uuid: '',
+      });
+      this.controller.$onInit();
+      this.$scope.$apply();
+      this.view.find(CALLER_ID_TOGGLE).click();
+      this.view.find(CALLER_ID_TOGGLE).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(null);
+      this.view.find(CALLER_ID_TOGGLE).click();
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(this.controller.callerId);
+    });
+
 
     it('should have Caller ID Name and Caller ID Number when Caller ID is enabled', function() {
       this.view.find(CALLER_ID_TOGGLE).click();
@@ -70,6 +88,7 @@ describe('Component: locations-caller-id', () => {
       this.$scope.callerId = new LocationCallerId({
         name: 'Awesome Sauce',
         number: '',
+        uuid: '',
       });
       this.$scope.$apply();
     });
@@ -78,6 +97,7 @@ describe('Component: locations-caller-id', () => {
       const callerId = new LocationCallerId({
         name: 'Awesome Sauce',
         number: '+19725551212',
+        uuid: '',
       });
       expect(this.view).toContainElement(CALLER_ID_NUMBER_SELECT + ' ' + COMBO_INPUT);
       this.view.find(CALLER_ID_NUMBER_SELECT).find(COMBO_INPUT).val('+19725551212').change();
@@ -91,6 +111,7 @@ describe('Component: locations-caller-id', () => {
       this.$scope.callerId = new LocationCallerId({
         name: 'Awesome Sauce',
         number: '+19725551212',
+        uuid: '',
       });
       this.$scope.externalNumberOptions = externalNumberOptions;
       this.$scope.$apply();
@@ -107,6 +128,7 @@ describe('Component: locations-caller-id', () => {
       const callerId = new LocationCallerId({
         name: 'Awesome Sauce',
         number: '+19725551414',
+        uuid: '',
       });
       this.view.find(CALLER_ID_NUMBER_SELECT).find(DROPDOWN_OPTIONS).get(2).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(callerId);

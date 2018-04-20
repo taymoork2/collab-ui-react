@@ -1,0 +1,136 @@
+<div class="gemini-page">
+  <cs-page-sub-header class="row show-grid">
+    <cs-page-sub-header-left tabs="$ctrl.tabs"></cs-page-sub-header-left>
+
+    <cs-page-sub-header-right ng-if="$ctrl.filterEnable">
+      <div class="col-sm-5">
+        <cs-select
+          name="customers"
+          ng-model="$ctrl.data.customerSelected"
+          options="$ctrl.data.customerOptions"
+          on-change-fn="$ctrl.onCustomer()"
+          placeholder="$ctrl.customerPlaceholder"
+        ></cs-select>
+      </div>
+
+      <div class="col-sm-5">
+        <cs-select
+          name="account"
+          ng-model="$ctrl.data.accountSelected"
+          options="$ctrl.data.accountOptions"
+          on-change-fn="$ctrl.onAccount()"
+          placeholder="$ctrl.data.accountPlaceholder"
+        ></cs-select>
+      </div>
+
+      <div class="getExportcsv">
+        <!-- TODO: replace untranslated text -->
+        <a href class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
+        <span class="icon icon-download icon-2x" ng-if="!$ctrl.loading" ng-csv="$ctrl.onExportCSV()"></span>
+      </div>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+
+  <div class="row chartFilter" ng-if="$ctrl.onAdvanced">
+    <div class="col-sm-6">
+      <div class="col-sm-7">
+        <cs-select
+          name="sites"
+          ng-model="$ctrl.data.siteSelected"
+          options="$ctrl.data.siteOptions"
+          on-change-fn="$ctrl.onSites()"
+          placeholder="$ctrl.data.sitePlaceholder">
+        </cs-select>
+      </div>
+      <div class="col-sm-5">
+        <cs-select
+          multi="true"
+          name="sesstionTypes"
+          plural="Sesstion Types"
+          singular="Sesstion Type"
+          max="$ctrl.data.sessionMax"
+          on-change-fn="$ctrl.onSession()"
+          options="$ctrl.data.sessionOptions"
+          ng-model="$ctrl.data.sessionSelected"
+          ng-if="$ctrl.data.sessionOptions.length"
+          placeholder="$ctrl.data.sessionPlaceholder">
+        </cs-select>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="col-sm-7">
+        <p class="durationSelected">{{$ctrl.startDateFormat}} {{$ctrl.startDateFormat ? 'thru' : '' }}  {{$ctrl.endDateFormat}}</p>
+      </div>
+      <div class="col-sm-4 pull-right">
+        <cs-select
+          name="duration"
+          ng-model="$ctrl.data.durationSelected"
+          options="$ctrl.data.durationOptions"
+          on-change-fn="$ctrl.onDuration()">
+        </cs-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row chartFilter time-box" ng-if="$ctrl.onAdvanced && $ctrl.data.dateEnable">
+    <div class="col-sm-12 pull-right datepickerList">
+
+      <div class="tk-example-datepicker end-time pull-right">
+        <div class="example-indent" ng-click="$ctrl.onChangeDate()">
+          <cs-datepicker
+            ng-model="$ctrl.endDate"
+            placeholder="{{::'webexReports.placeholder-date' | translate}}"
+            first-enabled-date="{{$ctrl.dateRange.end.firstEnableDate}}"
+            last-enabled-date="{{$ctrl.dateRange.end.lastEnableDate}}">
+          </cs-datepicker>
+        </div>
+      </div>
+
+      <span class="data-span pull-right" translate="webexReports.to"></span>
+
+      <div class="tk-example-datepicker start-time pull-right" >
+        <div class="example-indent"
+          ng-click="$ctrl.onChangeDate()"
+          tabindex="0"
+          tooltip-class="tn-search-error"
+          tooltip-append-to-body="true"
+          tooltip-is-open="$ctrl.errMsg.datePicker !== ''"
+          tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+          ng-class="{'error': $ctrl.errMsg.datePicker !==''}"
+          aria-label="{{$ctrl.errMsg.datePicker}}">
+
+          <cs-datepicker
+            ng-model="$ctrl.startDate"
+            placeholder="{{::'webexReports.placeholder-date' | translate}}"
+            first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
+            last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
+          </cs-datepicker>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div ng-if="!$ctrl.loading">
+    <cs-card-layout class="kpi-banner">
+      <cs-card class="cs-card--small"  ng-repeat="item in $ctrl.KPIData">
+        <article>
+          <header>
+            <h4> {{::'gemini.reports.kpi.'+ item.name | translate}}</h4></header>
+          <section>
+            <p ng-class="{'waring': item.flag, '': !item.flag}">{{item.value}} <i class="icon" ng-if="item.value !== '--'" ng-class="{'icon-arrow-down': item.flag, 'icon-arrow-up': !item.flag}"></i></p>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+
+    <div ui-view></div>
+  </div>
+
+  <div ng-if="$ctrl.loading" class="grid-refresh">
+      <span class="spinner-example-large">
+        <i class="icon icon-spinner icon-3x"></i>
+      </span>
+  </div>
+</div>

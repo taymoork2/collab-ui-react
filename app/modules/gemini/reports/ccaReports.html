@@ -1,0 +1,21 @@
+<div class="reportsChart">
+
+  <div class="row spinner-example--large" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <div ng-if="!$ctrl.loading">
+    <div class="chartList">
+      <div class="panel-body reportsChartBody">
+        <cs-card-layout>
+          <cca-chart
+            ng-repeat="item in $ctrl.data"
+            provide-data="item"
+          ></cca-chart>
+        </cs-card-layout>
+      </div>
+    </div>
+  </div>
+
+</div>
+

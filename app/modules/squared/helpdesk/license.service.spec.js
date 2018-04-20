@@ -131,7 +131,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 10,
       isTrial: false,
-      usage: 50,
+      usage: 5,
     }, {
       offerCode: 'MS',
       type: 'MESSAGING',
@@ -139,7 +139,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 20,
       isTrial: false,
-      usage: 50,
+      usage: 10,
     }, {
       offerCode: 'MS',
       type: 'MESSAGING',
@@ -155,7 +155,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 1000,
       isTrial: false,
-      usage: 200,
+      usage: 50,
       capacity: 25,
       siteUrl: 'mock.webex.com',
     }, {
@@ -165,7 +165,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 1000,
       isTrial: false,
-      usage: 200,
+      usage: 150,
       capacity: 25,
       siteUrl: 'mock.webex.com',
     }, {
@@ -232,12 +232,6 @@ describe('LicenseService', function () {
       volume: 1000,
       isTrial: true,
       trialExpiresInDays: 100,
-    }, {
-      type: 'SHARED_DEVICES',
-      name: 'Shared Devices',
-      status: 'ACTIVE',
-      volume: 50,
-      isTrial: false,
     }];
 
     // MESSAGING
@@ -245,53 +239,42 @@ describe('LicenseService', function () {
     expect(aggregated.length).toEqual(1);
     var aggregate = aggregated[0];
     expect(aggregate.totalVolume).toEqual(130);
-    expect(aggregate.totalUsage).toEqual(50);
-    expect(aggregate.usagePercentage).toEqual(38);
+    expect(aggregate.totalUsage).toEqual(65);
+    expect(aggregate.usagePercentage).toEqual(50);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(3);
 
     // CONFERENCING
-    // The conferencing ones should be aggregated into 4: MC-mock.webex.com (2), MC-ladidadi.webex.com (1), TC (2), CMR (1), CF (2)
     aggregated = LicenseService.aggregatedLicenses(licenses, 'CONFERENCING');
-    expect(aggregated.length).toEqual(5);
+    expect(aggregated.length).toEqual(4);
 
-    // MC-mock.webex.com
+    // MC
     aggregate = _.find(aggregated, {
-      key: 'MC#25#mock.webex.com',
+      key: 'MC',
     });
-    expect(aggregate.totalVolume).toEqual(2000);
-    expect(aggregate.totalUsage).toEqual(200);
-    expect(aggregate.usagePercentage).toEqual(10);
+    expect(aggregate.totalVolume).toEqual(2300);
+    expect(aggregate.totalUsage).toEqual(215);
+    expect(aggregate.usagePercentage).toEqual(9);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
     expect(aggregate.isTrial).toBeFalsy();
-    expect(aggregate.licenses.length).toEqual(2);
+    expect(aggregate.licenses.length).toEqual(3);
 
-    // MC-ladidadi.webex.com
-    aggregate = _.find(aggregated, {
-      key: 'MC#200#ladidadi.webex.com',
-    });
-    expect(aggregate.totalVolume).toEqual(300);
-    expect(aggregate.totalUsage).toEqual(15);
-    expect(aggregate.usagePercentage).toEqual(5);
-    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
-    expect(aggregate.isTrial).toBeFalsy();
-    expect(aggregate.licenses.length).toEqual(1);
 
     // TC
     aggregate = _.find(aggregated, {
-      key: 'TC#25#mock.webex.com',
+      key: 'TC',
     });
     expect(aggregate.totalVolume).toEqual(1250);
-    expect(aggregate.totalUsage).toEqual(250);
-    expect(aggregate.usagePercentage).toEqual(20);
+    expect(aggregate.totalUsage).toEqual(500);
+    expect(aggregate.usagePercentage).toEqual(40);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.TC');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(2);
 
     // CMR
     aggregate = _.find(aggregated, {
-      key: 'CMR#25#mock.webex.com',
+      key: 'CMR',
     });
     expect(aggregate.totalVolume).toEqual(250);
     expect(aggregate.totalUsage).toEqual(250);
@@ -302,7 +285,7 @@ describe('LicenseService', function () {
 
     // CF
     aggregate = _.find(aggregated, {
-      key: 'CF#0',
+      key: 'CF',
     });
     expect(aggregate.totalVolume).toEqual(600);
     expect(aggregate.totalUsage).toEqual(0);

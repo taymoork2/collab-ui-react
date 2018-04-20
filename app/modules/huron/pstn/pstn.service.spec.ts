@@ -29,6 +29,7 @@ describe('Service: PstnService', function () {
 
   let onlyPstnNumbers: any = ['+14694691234', '+19724564567'];
   let onlyTollFreeNumbers: any = ['+18554929632', '+18554929636'];
+  const onlyImportedNumbers: any = ['3365', '23445'];
   let invalidNumbers: any = ['123', '456'];
   let numbers = onlyPstnNumbers.concat(onlyTollFreeNumbers, invalidNumbers);
   let portNumbers: any = ['+19726579867', '+18004321010'];
@@ -95,7 +96,7 @@ describe('Service: PstnService', function () {
   };
 
   const swivelOrderPayload: any = {
-    numbers: onlyPstnNumbers.concat(onlyTollFreeNumbers),
+    numbers: onlyPstnNumbers.concat(onlyTollFreeNumbers).concat(onlyImportedNumbers),
   };
 
   const swivelOrderV2DidPayload: any = {
@@ -111,6 +112,12 @@ describe('Service: PstnService', function () {
   const swivelOrderV2TfnPayload: any = {
     numbers: onlyTollFreeNumbers,
     numberType: 'TOLLFREE',
+    createdBy: 'PARTNER',
+  };
+
+  const swivelOrderV2ImportedPayload: any = {
+    numbers: onlyImportedNumbers,
+    numberType: 'IMPORTED',
     createdBy: 'PARTNER',
   };
 
@@ -245,7 +252,7 @@ describe('Service: PstnService', function () {
   });
 
   it('should retrieve a resellers\'s carriers', function () {
-    this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
+    this.$httpBackend.expectGET(this.HuronConfig.getTerminusV2Url() + '/resellers/' + suite.partnerId + '/carriers').respond(resellerCarrierList);
     this.$httpBackend.expectGET(this.HuronConfig.getTerminusUrl() + '/carriers/' + suite.carrierId).respond(carrierIntelepeer);
 
     const promise = this.PstnService.listResellerCarriers();
@@ -355,7 +362,7 @@ describe('Service: PstnService', function () {
 
   it('should get translated order status message', function () {
     const translated = this.PstnService.translateStatusMessage(pendingOrder[0]);
-    expect(translated).toEqual('pstnSetup.orderStatus.trialStatus');
+    expect(translated).toEqual('pstnSetup.orderStatus.tosNotSigned');
   });
 
   it('should get original order status message since it does not exist in translations', function () {
@@ -380,6 +387,7 @@ describe('Service: PstnService', function () {
     this.Authinfo.isPartner.and.returnValue(true);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2DidPayload).respond(201);
     this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2TfnPayload).respond(201);
+    this.$httpBackend.expectPOST(this.HuronConfig.getTerminusV2Url() + '/customers/' + suite.customerId + '/numbers/orders', swivelOrderV2ImportedPayload).respond(201);
     const swivelOrderData = _.cloneDeep(swivelOrderPayload);
     const promise = this.PstnService.orderNumbersV2Swivel(suite.customerId, swivelOrderData.numbers);
     promise.then(function () {

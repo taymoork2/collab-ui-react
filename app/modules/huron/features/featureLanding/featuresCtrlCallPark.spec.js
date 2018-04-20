@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Features Controller', function () {
-  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, CallPickupGroupService, PagingGroupService;
+  var featureCtrl, $rootScope, $scope, $modal, $q, $state, $filter, $timeout, Authinfo, HuntGroupService, PhoneNumberService, Log, Notification, getDeferred, AutoAttendantCeInfoModelService, AAModelService, FeatureToggleService, CallParkService, CallPickupGroupService, PagingGroupSettingsService;
   var listOfCPs = getJSONFixture('huron/json/features/callPark/cpList.json');
   var emptyListOfCPs = {
     callparks: [],
@@ -53,7 +53,7 @@ describe('Features Controller', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PagingGroupService_, _CallPickupGroupService_, _PhoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
+  beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$modal_, _$state_, _$filter_, _$timeout_, _Authinfo_, _HuntGroupService_, _PagingGroupSettingsService_, _CallPickupGroupService_, _PhoneNumberService_, _AutoAttendantCeInfoModelService_, _AAModelService_, _Log_, _Notification_, _FeatureToggleService_, _CallParkService_) {
     $rootScope = _$rootScope_;
     $scope = _$rootScope_.$new();
     $modal = _$modal_;
@@ -63,7 +63,7 @@ describe('Features Controller', function () {
     $q = _$q_;
     Authinfo = _Authinfo_;
     HuntGroupService = _HuntGroupService_;
-    PagingGroupService = _PagingGroupService_;
+    PagingGroupSettingsService = _PagingGroupSettingsService_;
     CallPickupGroupService = _CallPickupGroupService_;
     CallParkService = _CallParkService_;
     PhoneNumberService = _PhoneNumberService_;
@@ -80,7 +80,7 @@ describe('Features Controller', function () {
     spyOn(HuntGroupService, 'getHuntGroupList').and.returnValue($q.resolve([]));
     spyOn(CallParkService, 'getCallParkList').and.returnValue(getDeferred.promise);
     spyOn(AutoAttendantCeInfoModelService, 'getCeInfosList').and.returnValue($q.resolve([]));
-    spyOn(PagingGroupService, 'getListOfPagingGroups').and.returnValue($q.resolve());
+    spyOn(PagingGroupSettingsService, 'listPagingGroupsWithNumberData').and.returnValue($q.resolve());
     spyOn(CallPickupGroupService, 'getListOfPickupGroups').and.returnValue($q.resolve());
     spyOn(AAModelService, 'newAAModel').and.returnValue(getDeferred.promise);
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));

@@ -8,7 +8,7 @@ export class VideoModal implements ng.IComponentController {
 
 export class VideoModalComponent implements ng.IComponentOptions {
   public controller = VideoModal;
-  public templateUrl = 'modules/core/video/videoModal.tpl.html';
+  public template = require('modules/core/video/videoModal.tpl.html');
   public bindings = {
     dismiss: '&',
   };

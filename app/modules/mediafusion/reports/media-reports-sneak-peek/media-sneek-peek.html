@@ -1,5 +1,5 @@
 <div class="tooltipDiv">
   <div ng-repeat="option in $ctrl.tooltipOptions.values">
-    <a ng-click="$ctrl.parentcntrl.clusterUpdateFromTooltip(option.key)" class="performingCluster">
+    <a href ng-click="$ctrl.parentcntrl.clusterUpdateFromTooltip(option.key)" class="performingCluster">
 	{{option.key}}: {{option.value}}%</a></div>
 </div>

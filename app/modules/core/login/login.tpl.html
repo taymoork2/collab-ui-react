@@ -1,7 +1,7 @@
 <div class="messagebox-backdrop login-box" ng-class="{loading: loading}">
   <div class="message-box" ng-class="checkForIeWorkaround">
     <div class="message-box__content">
-      <img class="message-box__logo" src="images/spark-logo.svg">
+      <img class="message-box__logo" src="/images/spark-logo.svg">
       <h2 class="message-box__app-name" translate="loginPage.titleNew"></h2>
       <h4 class="message-box__login-title" translate="loginPage.email"></h4>
       <div ng-show="result">
@@ -9,7 +9,7 @@
       </div>
       <div id="generic-message" class="validation-messages info" ng-if="message && !loading">
           <div class="cs-input__messages" >
-            <div class="message" translate="{{message}}">
+            <div class="message expired-inactivity" translate="{{message}}">
             </div>
           </div>
       </div>
@@ -28,8 +28,12 @@
           </div>
         </div>
       </form>
-      <button class="btn btn--primary btn--large message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
-      <span translate="loginPage.login"></span>
+      <button
+        class="btn btn--primary btn--large message-box__btn"
+        role="button"
+        ng-click="login()"
+        ng-disabled="loginForm.email.$invalid"
+        translate="loginPage.login">
       </button>
       <div class="message-box__footer" translate="loginPage.license"></div>
       <div ng-show="loading" class="login-spinner">
@@ -40,7 +44,7 @@
   <div class="messagebox-backdrop__footer">
     <i class="icon icon-cisco-logo"></i>
     <div class="body-smallest">
-      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2017 <span translate="loginPage.copyright"></span>
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2018 <span translate="loginPage.copyright"></span>
     </div>
   </div>
 </div>

@@ -9,6 +9,20 @@ import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
 import { Notification } from 'modules/core/notifications';
 import { AutoAnswerService } from 'modules/huron/autoAnswer';
 import { IOption } from 'modules/huron/dialing';
+import { LocationsService } from 'modules/call/locations';
+
+export interface IInternalNumber {
+  assigned?: boolean;
+  directoryNumber?: string;
+  external?: string;
+  internal?: string;
+  locationUuid?: string;
+  number?: string;
+  siteToSite?: string;
+  type?: string;
+  url?: string;
+  uuid?: string;
+}
 
 class LineOverview implements ng.IComponentController {
   private ownerType: string;
@@ -28,10 +42,12 @@ class LineOverview implements ng.IComponentController {
   public showLineLabel: boolean = true;
   public panelTitle: string = this.$translate.instant('mediaOnHoldPanel.mohTitle');
   public panelDesc: string = this.$translate.instant('mediaOnHoldPanel.mohDesc');
+  public locationId: string | undefined;
 
   // Directory Number properties
   public esnPrefix: string;
-  public internalNumbers: string[];
+  public internalNumbers: string[] | IInternalNumber[];
+  //public internalNumbers: any[];
   public externalNumbers: string[];
   public showExtensions: boolean;
 
@@ -39,6 +55,7 @@ class LineOverview implements ng.IComponentController {
   public showApplyToAllSharedLines: boolean = false;
   public applyToAllSharedLines: boolean = false;
   public origApplyToAllSharedLinesValue: boolean;
+  private MAX_LABEL_LENGTH: number = 30;
 
   //SharedLine Properties
   public newSharedLineMembers: Member[] = [];
@@ -46,7 +63,8 @@ class LineOverview implements ng.IComponentController {
   // Data from services
   public lineOverviewData: LineOverviewData;
   public lineMediaOptions: IOption[] = [];
-  private userVoicemailEnabled: boolean = false;
+  public userVoicemailEnabled: boolean = false;
+  private isHI1484: boolean = false;
   /* @ngInject */
   constructor(
     private LineOverviewService: LineOverviewService,
@@ -64,12 +82,23 @@ class LineOverview implements ng.IComponentController {
     private CsdmDataModelService,
     private AutoAnswerService: AutoAnswerService,
     private $q,
+    public LocationsService: LocationsService,
   ) { }
 
   public $onInit(): void {
     this.initActions();
     this.initConsumerType();
-    this.initLineOverviewData();
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(isSupported => {
+        if (isSupported) {
+          this.isHI1484 = isSupported;
+          this.getUserLocation().then(() => {
+            this.initLineOverviewData();
+          });
+        } else {
+          this.initLineOverviewData();
+        }
+      });
   }
 
   private initActions(): void {
@@ -84,14 +113,14 @@ class LineOverview implements ng.IComponentController {
   private initLineOverviewData(): void {
     this.showExtensions = true;
     if (!this.numberId) {
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
           this.getLineOverviewData();
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
     } else {
       this.getLineOverviewData();
-      this.DirectoryNumberOptionsService.getInternalNumberOptions()
+      this.DirectoryNumberOptionsService.getInternalNumberOptions(undefined, this.locationId)
         .then(numbers => {
           this.internalNumbers = numbers;
         }).catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
@@ -114,7 +143,18 @@ class LineOverview implements ng.IComponentController {
       this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
       this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
       if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
-        this.lineOverviewData.line.internal = this.internalNumbers[0];
+        if (this.isHI1484) {
+          this.lineOverviewData.line.internal = _.get(this.internalNumbers, '[0].internal');
+          this.lineOverviewData.line.siteToSite = _.get(this.internalNumbers, '[0].siteToSite');
+        } else if (typeof this.internalNumbers[0] === 'string') {
+          this.lineOverviewData.line.internal = String(this.internalNumbers[0]);
+        }
+        if (lineOverviewData.line.label != null) {
+          if (this.lineOverviewData.line.label != null) {
+            this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal +
+              ' - ' + lineOverviewData.line.label.value.substr(0,  this.MAX_LABEL_LENGTH - this.lineOverviewData.line.internal.length - 3);
+          }
+        }
         this.form.$setDirty();
       }
     });
@@ -128,22 +168,35 @@ class LineOverview implements ng.IComponentController {
           .then(mediaList => {
             this.lineMediaOptions = mediaList;
           })
-          .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetOptionsError'));
+          .catch(error => this.Notification.errorResponse(error, 'mediaOnHold.mohGetOptionsError'));
         }
       });
+  }
+
+  public getUserLocation(): IPromise<void> {
+    return this.LocationsService.getUserLocation(this.ownerId).then(result => {
+      this.locationId = result.uuid;
+    });
   }
 
   public setDirectoryNumbers(internalNumber: string, externalNumber: string): void {
     this.lineOverviewData.line.internal = internalNumber;
     this.lineOverviewData.line.external = externalNumber;
     this.checkForChanges();
-    // Hide out line label and clear any values
-    this.showLineLabel = false;
-    this.lineOverviewData.line.label = null;
+    // If add a new line and DN changed, regenerate line label, else hide line label and clear its values
+    if (this.lineOverviewData.line.uuid === undefined ) {
+      if (this.lineOverviewData.line.label != null) {
+        this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal + ' - ' +
+          this.lineOverviewData.line.label.value.substr(this.lineOverviewData.line.internal.length + 3,  this.MAX_LABEL_LENGTH);
+      }
+    } else {
+      this.showLineLabel = false;
+      this.lineOverviewData.line.label = null;
+    }
   }
 
   public refreshInternalNumbers(filter: string): void {
-    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter)
+    this.DirectoryNumberOptionsService.getInternalNumberOptions(filter, this.locationId)
       .then(numbers => this.internalNumbers = numbers)
       .catch(error => this.Notification.errorResponse(error, 'directoryNumberPanel.internalNumberPoolError'));
   }
@@ -182,6 +235,9 @@ class LineOverview implements ng.IComponentController {
   public setNewSharedLineMembers(members): void {
     this.newSharedLineMembers = members;
     this.showApplyToAllSharedLines = true;
+    if (this.lineOverviewData.line.label != null) {
+      this.lineOverviewData.line.label.appliesToAllSharedLines = this.applyToAllSharedLines;
+    }
   }
 
   public setSharedLines(sharedLines): void {
@@ -211,7 +267,7 @@ class LineOverview implements ng.IComponentController {
   public deleteSharedLineMember(sharedLine: SharedLine): void {
     this.deleteSharedLineMessage = this.$translate.instant('sharedLinePanel.disassociateUser');
     this.$modal.open({
-      templateUrl: 'modules/huron/sharedLine/removeSharedLineMember.html',
+      template: require('modules/huron/sharedLine/removeSharedLineMember.html'),
       scope: this.$scope,
       type: 'dialog',
     }).result.then( () => {
@@ -286,7 +342,7 @@ class LineOverview implements ng.IComponentController {
       user: this.ownerName,
     });
     this.$modal.open({
-      templateUrl: 'modules/huron/lines/lineOverview/lineDelete.html',
+      template: require('modules/huron/lines/lineOverview/lineDelete.html'),
       scope: this.$scope,
       type: 'dialog',
     }).result.then(() => {
@@ -356,7 +412,7 @@ class LineOverview implements ng.IComponentController {
 
 export class LineOverviewComponent implements ng.IComponentOptions {
   public controller = LineOverview;
-  public templateUrl = 'modules/huron/lines/lineOverview/lineOverview.html';
+  public template = require('modules/huron/lines/lineOverview/lineOverview.html');
   public bindings = {
     ownerType: '@',
     ownerId: '<',

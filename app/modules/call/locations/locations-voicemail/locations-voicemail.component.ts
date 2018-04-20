@@ -4,7 +4,7 @@ import { PhoneNumberService } from 'modules/huron/phoneNumber';
 
 export class LocationsVoicemailComponent implements ng.IComponentOptions {
   public controller = LocationsVoicemailComponentCtrl;
-  public templateUrl = 'modules/call/locations/locations-voicemail/locations-voicemail.component.html';
+  public template = require('modules/call/locations/locations-voicemail/locations-voicemail.component.html');
   public bindings = {
     displayLabel: '<',
     voicemailPilotNumber: '<',

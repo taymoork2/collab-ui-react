@@ -1,6 +1,7 @@
 import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
-import { ManualCode } from './../provisioning.service';
+import { Notification } from 'modules/core/notifications';
+import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -27,7 +28,14 @@ export class ProvisioningDetailsController {
   public dateInfo: string = '';
   public isLoading: boolean = false;
   public status = Status;
-  public manualCode = ManualCode;
+  public isShowRaw = false;
+  public orderContent;
+  public customerInfo = {
+    customerName: '-',
+    customerEmail: '-',
+    partnerName: '-',
+    partnerEmail: '-',
+  };
 
   public items: {
     audio?: IDetailItem,
@@ -41,7 +49,10 @@ export class ProvisioningDetailsController {
 
   /* @ngInject */
   constructor(
+    private $rootScope,
     private $stateParams,
+    private $translate,
+    private Notification: Notification,
     private ProvisioningService: ProvisioningService) {
     this.order = this.$stateParams.order;
     this.items = {};
@@ -60,12 +71,21 @@ export class ProvisioningDetailsController {
     };
   }
 
+  private populateCustomer(orderContent) {
+    this.customerInfo.customerName = _.get(orderContent, 'common.customerInfo.endCustomerInfo.name', '-');
+    this.customerInfo.customerEmail = _.get(orderContent, 'common.customerInfo.endCustomerInfo.adminDetails.emailId', '-');
+    this.customerInfo.partnerName = _.get(orderContent, 'common.customerInfo.partnerInfo.name', '-');
+    this.customerInfo.partnerEmail = _.get(orderContent, 'common.customerInfo.partnerInfo.adminDetails.emailId', '-');
+  }
+
   private init(): void {
     this.isLoading = true;
     this.dateInfo  = (this.order.status !== Status.COMPLETED) ? this.order.orderReceived : this.order.lastModified;
     this.ProvisioningService.getOrder(this.order.orderUUID).then((orderDetail) => {
       this.isLoading = false;
       const orderContent = JSON.parse(orderDetail.orderContent || '{}');
+      this.orderContent = orderContent;
+      this.populateCustomer(orderContent);
       if (_.has(orderContent , 'collabServiceInfoCommon.site')) {
         this.selectedSite = _.find(orderContent.collabServiceInfoCommon.site, (site) => {
           return site.siteUrl === this.order.siteUrl;
@@ -95,6 +115,10 @@ export class ProvisioningDetailsController {
     }
   }
 
+  public getManualCode(code) {
+    return this.$translate.instant('provisioningConsole.manualCodes.' + code);
+  }
+
   /*
    * Group service items by category and site.
    */
@@ -108,6 +132,27 @@ export class ProvisioningDetailsController {
       result.cmr = this.getServiceItemsForType(serviceItems.cmr);
     }
     return result;
+  }
+
+
+   /*
+  * Move an order between pending, in progress and completed.
+  */
+  public moveTo(order, newStatus: Status): void {
+    this.isLoading = true;
+    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus)
+    .then((result) => {
+      if (result) {
+        this.order.status = newStatus;
+        this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
+      }
+    })
+    .catch((error) => {
+      this.Notification.errorResponse(error);
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
   }
 }
 

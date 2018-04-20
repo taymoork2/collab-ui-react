@@ -2,6 +2,6 @@
   <button id="sunlight-user-overview-save" class="btn btn--primary" translate="common.save" ng-click="SunlightUserOverview.updateUserData(SunlightUserOverview.currentUser.id)"></button>
   <button id="sunlight-user-overview-cancel"  translate="common.cancel" ng-click="SunlightUserOverview.setUserInfoView(SunlightUserOverview.userData)"></button>
 </cs-sp-buttons>
-<cs-sp-container>
+<cs-sp-container cs-tabindex="SunlightUserOverview.saveCancelEnabled ? -1 : 0">
   <sunlight-user-profile></sunlight-user-profile>
 </cs-sp-container>

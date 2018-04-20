@@ -18,33 +18,36 @@
       .state('care.DetailsBase', {
         parent: 'main',
         abstract: true,
-        templateUrl: 'modules/sunlight/details/details.tpl.html',
+        template: require('modules/sunlight/details/details.tpl.html'),
       })
       .state('care.Details', {
         url: '/services/careDetails',
         parent: 'care.DetailsBase',
         views: {
           header: {
-            templateUrl: 'modules/sunlight/details/detailsHeader.tpl.html',
-            controller: 'DetailsHeaderCtrl',
-            controllerAs: 'header',
+            template: '<details-header-component></details-header-component>',
           },
           main: {
             template: '<div ui-view></div>',
           },
         },
       })
+      .state('care.numbers', {
+        url: '/numbers',
+        parent: 'care.Details',
+        template: '<care-numbers-component></care-numbers-component>',
+      })
       .state('care.Settings', {
         url: '/settings',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/settings/careSettings.tpl.html',
+        template: require('modules/sunlight/settings/careSettings.tpl.html'),
         controller: 'CareLocalSettingsCtrl',
         controllerAs: 'localCareSettings',
       })
       .state('care.Features', {
         url: '/features',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/featureLanding/careFeatures.tpl.html',
+        template: require('modules/sunlight/features/featureLanding/careFeatures.tpl.html'),
         controller: 'CareFeaturesCtrl',
         controllerAs: 'careFeaturesCtrl',
         resolve: {
@@ -54,12 +57,39 @@
                 $state.isVirtualAssistantEnabled = isEnabled;
               });
           },
+          isHybridToggleEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+              .then(function (isEnabled) {
+                $state.isHybridToggleEnabled = isEnabled;
+              });
+          },
+          isExpertCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isExpertVirtualAssistantEnabled = isEnabled;
+              });
+          },
+          isHybridAndEPTConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
+            return AutoAttendantHybridCareService.isHybridAndEPTConfigured()
+              .then(function (isEnabled) {
+                $state.isHybridAndEPTConfigured = isEnabled;
+              });
+          },
+          isSparkCallConfigured: /* @ngInject */ function (AutoAttendantHybridCareService, $state) {
+            $state.isSparkCallConfigured = AutoAttendantHybridCareService.isSparkCallConfigured();
+          },
+          isAppleBusinessChatEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.careApplebuschatBasicEnable)
+              .then(function (isEnabled) {
+                $state.isAppleBusinessChatEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {
         url: '/setupAssistant/:type',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/template/ctSetupAssistant.tpl.html',
+        template: require('modules/sunlight/features/customerSupportTemplate/wizardPages/ctSetupAssistant.tpl.html'),
         controller: 'CareSetupAssistantCtrl',
         controllerAs: 'careSetupAssistant',
         params: {
@@ -74,23 +104,106 @@
               });
           },
           isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
-            // SL team: replace atlasCareChatAssistant with atlasVirtualAssistantEnable
-            return FeatureToggleService.supports(FeatureToggleService.features.atlasCareChatAssistant)
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable)
               .then(function (isEnabled) {
                 $state.isCareAssistantEnabled = isEnabled;
               });
           },
+          isEvaFlagEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isEvaFlagEnabled = isEnabled;
+              });
+          },
         },
       })
-      .state('care.assistant', {
-        url: '/virtualAssistant',
+      .state('care.setupAssistant_new', {
+        url: '/setupAssistant_new/:type',
         parent: 'care.Details',
-        templateUrl: 'modules/sunlight/features/template/vaSetupAssistant.tpl.html',
-        controller: 'CareSetupVirtualAssistantCtrl',
-        controllerAs: 'vaSetupAssistant',
+        template: '<ct-setup-assistant-component dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></ct-setup-assistant-component>',
+        params: {
+          template: null,
+          isEditFeature: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+          isCareProactiveChatTrialsEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasCareProactiveChatTrials)
+              .then(function (isEnabled) {
+                $state.isCareProactiveChatTrialsEnabled = isEnabled;
+              });
+          },
+          isCareAssistantEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isCareAssistantEnabled = isEnabled;
+              });
+          },
+          isEvaFlagEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.atlasExpertVirtualAssistantEnable)
+              .then(function (isEnabled) {
+                $state.isEvaFlagEnabled = isEnabled;
+              });
+          },
+        },
+      })
+      .state('care.customerVirtualAssistant', {
+        url: '/customerVirtualAssistant',
+        parent: 'care.Details',
+        template: '<cva-setup dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></cva-setup>',
         params: {
           isEditFeature: null,
           template: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
+      .state('care.expertVirtualAssistant', {
+        url: '/expertVirtualAssistant',
+        parent: 'care.Details',
+        template: '<eva-setup dismiss="$dismiss()" is-edit-feature="$resolve.isEditFeature" template="$resolve.template"></eva-setup>',
+        params: {
+          isEditFeature: null,
+          template: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+        },
+      })
+      .state('care.appleBusinessChat', {
+        url: '/abcService?businessId',
+        parent: 'care.Details',
+        template: '<abc-setup dismiss="$dismiss()"  is-edit-feature="$resolve.isEditFeature" template="$resolve.template" business-id="$resolve.businessId"></abc-setup>',
+        params: {
+          isEditFeature: null,
+          template: null,
+        },
+        resolve: {
+          isEditFeature: /* @ngInject */ function ($stateParams) {
+            return $stateParams.isEditFeature;
+          },
+          template: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.template;
+          },
+          businessId: /* @ngIngect */ function ($stateParams) {
+            return $stateParams.businessId;
+          },
         },
       })
       .state('care.Features.DeleteFeature', {
@@ -99,7 +212,7 @@
           'modal@': {
             controller: 'CareFeaturesDeleteCtrl',
             controllerAs: 'careFeaturesDeleteCtrl',
-            templateUrl: 'modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html',
+            template: require('modules/sunlight/features/featureLanding/careFeaturesDeleteModal.tpl.html'),
           },
         },
         params: {

@@ -3,7 +3,7 @@
 describe('Controller: Spark partner report Ctrl', function () {
   function init() {
     this.initModules('Core', 'core.partner-reports');
-    this.injectDependencies('$q', '$sce', '$scope', '$timeout', '$window', 'Analytics', 'Authinfo', 'Notification', 'QlikService', 'ReportService');
+    this.injectDependencies('$q', '$sce', '$scope', '$window', 'Analytics', 'Authinfo', 'Notification', 'QlikService', '$log', 'Userservice');
     initData.apply(this);
     initDependencySpies.apply(this);
   }
@@ -11,14 +11,15 @@ describe('Controller: Spark partner report Ctrl', function () {
   function initController() {
     this.initController('SparkReportsCtrl', {
       $q: this.$q,
+      $sce: this.$sce,
       $scope: this.$scope,
-      $timeout: this.$timeout,
       $window: this.$window,
       Analytics: this.Analytics,
       Authinfo: this.Authinfo,
       Notification: this.Notification,
       QlikService: this.QlikService,
-      ReportService: this.ReportService,
+      $log: this.$log,
+      Userservice: this.Userservice,
     });
   }
 
@@ -47,15 +48,12 @@ describe('Controller: Spark partner report Ctrl', function () {
     var _this = this;
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.Authinfo, 'getPrimaryEmail').and.returnValue(this.testData.testEmail);
-    spyOn(this.QlikService, 'getSparkReportQBSforPartnerUrl').and.returnValue(this.$q.resolve(function () {
+    spyOn(this.QlikService, 'getQBSInfo').and.returnValue(this.$q.resolve(function () {
       return {
         data: _this.testData.postResult,
       };
     }));
-    spyOn(this.QlikService, 'getSparkReportAppforPartnerUrl').and.returnValue(_this.testData.postAppResult);
-    spyOn(this.ReportService, 'getCustomerList').and.returnValue(this.$q.resolve(function () {
-      return _this.testData.org_ids;
-    }));
+    spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(_this.testData.postAppResult);
     spyOn(this.Analytics, 'trackReportsEvent');
   }
 
@@ -68,12 +66,6 @@ describe('Controller: Spark partner report Ctrl', function () {
     });
     it('should have the sparkReports object', function () {
       expect(this.controller.sparkReports).toBeDefined();
-    });
-    it('should call the ReportService', function () {
-      expect(this.ReportService.getCustomerList).toHaveBeenCalled();
-    });
-    it('should call the Qlik mashup url', function () {
-      expect(this.controller.sparkReports.appData.url).toBe('qlik-loader/custportal');
     });
     it('should call Analytics.trackReportsEvent during init', function () {
       expect(this.Analytics.trackReportsEvent).toHaveBeenCalledWith(this.Analytics.sections.REPORTS.eventNames.PARTNER_SPARK_REPORT);

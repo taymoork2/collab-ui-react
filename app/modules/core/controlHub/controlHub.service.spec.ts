@@ -6,10 +6,10 @@ describe('ControlHubService', () => {
     this.injectDependencies(
       '$rootScope',
       '$q',
-      'FeatureToggleService',
       'ControlHubService',
+      'ProPackService',
     );
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    spyOn(this.ProPackService, 'showProBadge').and.returnValue(false);
     installPromiseMatchers();
   });
 
@@ -18,7 +18,7 @@ describe('ControlHubService', () => {
   });
 
   it('it should return control hub tabs', function () {
-    expect(this.ControlHubService.getTabs().length).toBe(15);
+    expect(this.ControlHubService.getTabs().length).toBe(16);
   });
 
   describe('getCollapsed()', () => {
@@ -32,25 +32,6 @@ describe('ControlHubService', () => {
       expect(this.ControlHubService.getCollapsed().value).toBeFalsy();
       collapsed.value = true;
       expect(this.ControlHubService.getCollapsed().value).toBeTruthy();
-    });
-  });
-
-  describe('getControlHubEnabled()', () => {
-    it('should return true if atlas-2017-name-change FT is enabled', function(){
-      const promise = this.ControlHubService.getControlHubEnabled().then(result => {
-        expect(result).toBeTruthy();
-      });
-      this.$rootScope.$digest();
-      expect(promise).toBeResolved();
-    });
-
-    it('should return false if atlas-2017-name-change FT is disabled', function(){
-      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
-      const promise = this.ControlHubService.getControlHubEnabled().then(result => {
-        expect(result).toBeFalsy();
-      });
-      this.$rootScope.$digest();
-      expect(promise).toBeResolved();
     });
   });
 

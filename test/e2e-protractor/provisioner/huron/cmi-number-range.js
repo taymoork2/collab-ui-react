@@ -6,8 +6,8 @@ export class CmiNumberRange {
     name: undefined,
     patternUsage: undefined,
   }) {
-    this.beginNumber = obj.beginNumber;
-    this.endNumber = obj.endNumber;
+    this.beginNumber = obj.beginNumber || '300';
+    this.endNumber = obj.endNumber || '399';
     this.description = obj.description || this.beginNumber + ' - ' + this.endNumber;
     this.name = obj.name || this.beginNumber + ' - ' + this.endNumber;
     this.patternUsage = obj.patternUsage || 'Device';

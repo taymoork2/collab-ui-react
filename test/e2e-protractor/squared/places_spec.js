@@ -41,7 +41,6 @@ describe('Places Page', function () {
 
     it('should generate an activation code', function () {
       utils.click(placesPage.addPlaceWizard.nextButton);
-      utils.expectIsDisplayed(placesPage.addPlaceWizard.showActivationCode.spinner);
       utils.waitForSpinner();
       utils.expectIsDisplayed(placesPage.addPlaceWizard.showActivationCode.qrCodeImage);
       utils.expectIsDisplayed(placesPage.addPlaceWizard.showActivationCode.activationCode);

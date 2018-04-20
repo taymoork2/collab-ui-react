@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window, $state) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window, $state, $q) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -22,8 +22,10 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
+    vm.validNode = true;
     vm.yesProceed = yesProceed;
     vm.canGoNext = canGoNext;
+    vm.validateHostName = validateHostName;
 
     AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -31,9 +33,29 @@
 
     function redirectToTargetAndCloseWindowClicked(hostName, enteredCluster) {
       $modalInstance.close();
-      AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
-        AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster, vm.selectedClusterId, vm.firstTimeSetup);
-      });
+      if (vm.firstTimeSetup) {
+        $q.all(AddResourceCommonServiceV2.enableMediaServiceEntitlements()).then(function (result) {
+          var resultRhesos = result[0];
+          var resultSparkCall = result[1];
+          if (!_.isUndefined(resultRhesos) && !_.isUndefined(resultSparkCall)) {
+            //create cluster
+            //on success call media service activation service enableMediaService
+            AddResourceCommonServiceV2.createFirstTimeSetupCluster(hostName, enteredCluster).then(function () {
+              //call the rest of the services which needs to be enabled
+              AddResourceCommonServiceV2.enableMediaService();
+              AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
+            }).then(function () {
+              $state.go('media-service-v2.list');
+            });
+          } else {
+            $state.go('services-overview', {}, { reload: true });
+          }
+        });
+      } else {
+        AddResourceCommonServiceV2.addRedirectTargetClicked(hostName, enteredCluster).then(function () {
+          AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
+        });
+      }
     }
 
     function closeSetupModal(isCloseOk) {
@@ -47,7 +69,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        template: require('modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function (isAborting) {
@@ -83,10 +105,14 @@
       }
     }
 
+    function validateHostName() {
+      vm.validNode = AddResourceCommonServiceV2.validateHostName(vm.hostName);
+    }
+
     function canGoNext() {
       if (vm.firstTimeSetup && vm.showDownloadableOption) {
         return true;
-      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

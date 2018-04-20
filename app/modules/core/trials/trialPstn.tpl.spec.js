@@ -2,7 +2,7 @@
 
 describe('Template: trialPstn.tpl.spec.js:', function () {
   var areas = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
-  var $q, $compile, $controller, $scope, $templateCache, Analytics, Orgservice, PstnAreaService, PstnProvidersService, PstnService;
+  var $q, $compile, $controller, $scope, Analytics, Orgservice, PstnAreaService, PstnProvidersService, PstnService;
   var view;
   var skipBtn, backBtn;
 
@@ -42,7 +42,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
     if (view) {
       view.remove();
     }
-    $q = $compile = $controller = $scope = $templateCache = Analytics = Orgservice = PstnAreaService = PstnService = undefined;
+    $q = $compile = $controller = $scope = Analytics = Orgservice = PstnAreaService = PstnService = undefined;
     view = skipBtn = backBtn = undefined;
   });
 
@@ -51,12 +51,11 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
   beforeEach(compileView);
 
 
-  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _$templateCache_, _Analytics_, _Orgservice_, _PstnAreaService_, _PstnProvidersService_, _PstnService_) {
+  function dependencies(_$q_, _$compile_, _$controller_, _$rootScope_, _Analytics_, _Orgservice_, _PstnAreaService_, _PstnProvidersService_, _PstnService_) {
     $q = _$q_;
     $compile = _$compile_;
     $controller = _$controller_;
     $scope = _$rootScope_.$new();
-    $templateCache = _$templateCache_;
     PstnAreaService = _PstnAreaService_;
     Orgservice = _Orgservice_;
     Analytics = _Analytics_;
@@ -72,7 +71,7 @@ describe('Template: trialPstn.tpl.spec.js:', function () {
 
   function compileView() {
     spyOn(Orgservice, 'getOrg');
-    var template = $templateCache.get('modules/core/trials/trialPstn.tpl.html');
+    var template = require('modules/core/trials/trialPstn.tpl.html');
 
     $controller('TrialPstnCtrl', {
       $scope: $scope,

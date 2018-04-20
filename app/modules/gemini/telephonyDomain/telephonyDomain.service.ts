@@ -32,18 +32,13 @@ export class TelephonyDomainService {
     return this.$http.get(url).then(this.extractData);
   }
 
-  public getNotes(customerId: string, ccaDomainId: string) {
-    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs/${customerId}/${ccaDomainId}/add_notes_td`;
-    return this.$http.get(url).then(this.extractData);
-  }
-
   public getHistories(data) {
     const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
     return this.$http.put(url, data).then(this.extractData);
   }
 
   public postNotes(data: any) {
-    const url = `${this.UrlConfig.getGeminiUrl()}activityLogs`;
+    const url = `${this.UrlConfig.getGeminiUrl()}notes`;
     return this.$http.post(url, data).then(this.extractData);
   }
 
@@ -52,17 +47,9 @@ export class TelephonyDomainService {
     return this.$http.put(url, data).then(this.extractData);
   }
 
-  public updateTelephonyDomainStatus(customerId: string, ccaDomainId: string, telephonyDomainId: number, operation: string) {
-    let url: string = '';
-    const postData: any = {
-      ccaDomainId: ccaDomainId,
-      customerId: customerId,
-      TelephonyDomainId: telephonyDomainId,
-    };
-    if (operation === 'cancel') {
-      url = `${this.url}cancelSubmission`;
-    }
-    return this.$http.post(url, postData).then(this.extractData);
+  public cancelTDSubmission(customerId: string, ccaDomainId: string) {
+    const url: string = `${this.url}customerId/${customerId}/ccaDomainId/${ccaDomainId}/cancelSubmission`;
+    return this.$http.put(url, null).then(this.extractData);
   }
 
   public getDownloadUrl() {
@@ -85,25 +72,22 @@ export class TelephonyDomainService {
   }
 
   public telephonyDomainsExportCSV(customerId: string) {
-    return this.getTelephonyDomains(customerId).then((response) => {
-      const lines: any = _.get(response, 'content.data');
-
+    return this.getTelephonyDomains(customerId).then((res: any[]) => {
       let exportedLines: any[] = [];
       const headerLine = {
         domainName: this.$translate.instant('gemini.tds.field.telephonyDomains'),
         totalSites: this.$translate.instant('gemini.tds.field.totalSites'),
         bridgeSet: this.$translate.instant('gemini.tds.field.bridgeSet'),
-        webDomain: this.$translate.instant('gemini.tds.field.webDomain'),
         status: this.$translate.instant('gemini.tds.field.status'),
         partnerTdName: this.$translate.instant('gemini.tds.field.partnerTdName'),
         sites: this.$translate.instant('gemini.tds.field.sites'),
       };
       exportedLines.push(headerLine);
 
-      if (!lines.body.length) {
+      if (!res.length) {
         return exportedLines; // only export the header when is empty
       }
-      _.forEach(lines.body, (line) => {
+      _.forEach(res, (line) => {
         exportedLines = exportedLines.concat(this.formatTdData(line));
       });
       return exportedLines;
@@ -111,8 +95,7 @@ export class TelephonyDomainService {
   }
 
   public exportNumbersToCSV(customerId: string, ccaDomainId: string) {
-    return this.getNumbers(customerId, ccaDomainId).then((response) => {
-      const lines: any = _.get(response, 'content.data');
+    return this.getNumbers(customerId, ccaDomainId).then((res: any[]) => {
       let exportedLines: any[] = [];
       const headerLine = {
         phoneNumber: this.$translate.instant('gemini.tds.numbers.field.phoneNumber').toUpperCase(),
@@ -125,10 +108,10 @@ export class TelephonyDomainService {
       };
       exportedLines.push(headerLine);
 
-      if (!lines.body.length) {
+      if (!res.length) {
         return exportedLines;
       }
-      _.forEach(lines.body, (line) => {
+      _.forEach(res, (line) => {
         this.makeNumberItemReadable(line);
         exportedLines = exportedLines.concat(this.formatNumbersData(line));
       });
@@ -157,7 +140,7 @@ export class TelephonyDomainService {
       ? this.$translate.instant('gemini.tds.numbers.field.labels.display')
       : this.$translate.instant('gemini.tds.numbers.field.labels.no');
 
-    item.isHidden = item.isHidden === 'true'
+    item.isHidden = item.isHidden
       ? this.$translate.instant('gemini.tds.numbers.field.labels.hidden')
       : this.$translate.instant('gemini.tds.numbers.field.labels.display');
 
@@ -187,7 +170,6 @@ export class TelephonyDomainService {
       domainName: this.formatAsCsvString(data.telephonyDomainName || data.domainName),
       totalSites: this.formatAsCsvString(data.telephonyDomainSites.length),
       bridgeSet: this.transformBridgeSet(data.primaryBridgeName, data.backupBridgeName),
-      webDomain: this.formatAsCsvString(data.webDomainName || 'N/A'),
       status: data.status ? this.$translate.instant('gemini.cbgs.field.status.' + data.status) : '',
       partnerTdName: this.formatAsCsvString(data.customerAttribute),
       siteUrl: '',
@@ -204,7 +186,6 @@ export class TelephonyDomainService {
         oneLine.domainName = '';
         oneLine.totalSites = '';
         oneLine.bridgeSet = '';
-        oneLine.webDomain = '';
         oneLine.status = '';
         oneLine.partnerTdName = '';
         oneLine.siteUrl = '';

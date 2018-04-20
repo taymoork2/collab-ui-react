@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/text-overflow';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/text-overflow';
 
 hs-resource-group-card {
   display: block;
@@ -27,6 +27,14 @@ hs-resource-group-card {
         display: inline;
         font-size: 16px;
         margin-right: auto;
+      }
+
+      > .resource-group-caret > cs-statusindicator {
+        padding-right: 4px;
+
+        i {
+          vertical-align: 2px;
+        }
       }
     }
 
@@ -161,6 +169,10 @@ hs-resource-group-card {
 
         h4 {
           padding-top: 0;
+        }
+
+        cs-statusindicator {
+          padding-right: 4px;
         }
       }
 

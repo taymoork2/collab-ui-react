@@ -3,7 +3,7 @@ import { CustomerSettings } from './customer-settings';
 import { ISite, HuronSiteService } from 'modules/huron/sites';
 import { Notification } from 'modules/core/notifications';
 import { CompanyNumber, ExternalCallerIdType } from 'modules/call/settings/settings-company-caller-id';
-import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/huron/avril';
+import { AvrilService, IAvrilSite, AvrilSite, IAvrilSiteFeatures, AvrilSiteFeatures } from 'modules/call/avril';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
 import { TerminusService } from 'modules/huron/pstn';
 import { ExtensionLengthService } from './extension-length.service';
@@ -268,7 +268,7 @@ export class HuronSettingsService {
     if (this.supportsCompanyMoh) {
       return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
         return this.$q.reject();
       });
     }
@@ -295,14 +295,14 @@ export class HuronSettingsService {
   private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
   private unassignCompanyMediaOnHold(): ng.IPromise<void> {
     return this.MediaOnHoldService.unassignMediaOnHold()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
@@ -489,7 +489,8 @@ export class HuronSettingsService {
           || !_.isEqual(this.huronSettingsDataCopy.site.preferredLanguage, siteData.preferredLanguage)
           || !_.isEqual(this.huronSettingsDataCopy.site.extensionLength, siteData.extensionLength)
           || !_.isEqual(this.huronSettingsDataCopy.customer.hasVoicemailService, customerData.hasVoicemailService)
-          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)) {
+          || !_.isEqual(this.huronSettingsDataCopy.avrilFeatures, avrilFeatures)
+          || !_.isEqual(this.huronSettingsDataCopy.site.voicemailPilotNumber, siteData.voicemailPilotNumber)) {
           return this.updateAvrilSite(siteData, avrilFeatures);
         } else {
           return this.$q.resolve();
@@ -585,7 +586,7 @@ export class HuronSettingsService {
     return this.AvrilService.updateAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,
@@ -605,7 +606,7 @@ export class HuronSettingsService {
     return this.AvrilService.createAvrilSite(
       <IAvrilSite>{
         guid: site.uuid,
-        extensionLength: site.extensionLength,
+        extensionLength: site.extensionLength.toString(),
         language: site.preferredLanguage,
         pilotNumber: site.voicemailPilotNumber,
         siteSteeringDigit: site.routingPrefix ? site.routingPrefix.substr(1) : null,

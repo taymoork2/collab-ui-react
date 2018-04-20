@@ -5,6 +5,7 @@ import {
 import { Notification } from '../../../core/notifications/notification.service';
 import { PstnService } from '../pstn.service';
 import { PstnModel } from '../pstn.model';
+import { PstnAddressService, Address } from '../shared/pstn-address';
 import { NumberModel } from '../pstnNumberSearch';
 import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
@@ -20,7 +21,7 @@ interface ITrialData {
         code: string,
       },
     },
-    emergAddr: {
+    emergAddr: {  //TODO: remove this and use Address class
       streetAddress: string,
       unit: string,
       city: string,
@@ -43,13 +44,14 @@ interface ICustomScope extends ng.IScope {
 
 export class PstnTrialSetupComponent implements ng.IComponentOptions {
   public controller = PstnTrialSetupCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnTrialSetup/pstnTrialSetup.html';
+  public template = require('modules/huron/pstn/pstnTrialSetup/pstnTrialSetup.html');
   public bindings = {
     dismiss: '&',
   };
 }
 
 export class PstnTrialSetupCtrl implements ng.IComponentController {
+  public trialForm: ng.IFormController;
   public dismiss: Function;
   public trialData: ITrialData;
   public providerImplementation: string;
@@ -67,6 +69,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public countryCode: string;
 
   public ftEnterpriseTrunking: boolean  = false;
+  public ftLocation: boolean = false;
 
   /* @ngInject */
   constructor(private PstnModel: PstnModel,
@@ -77,7 +80,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private $scope: ICustomScope,
               private $timeout: ng.ITimeoutService,
               private Analytics,
-              private PstnServiceAddressService,
+              private PstnAddressService: PstnAddressService, //Site and Location Based
               private $translate: ng.translate.ITranslateService,
               private HuronCompassService: HuronCompassService,
               private FeatureToggleService) {
@@ -96,8 +99,12 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       this.addressLoading = false;
     }
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then(result => {
-      this.ftEnterpriseTrunking = result;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking).then(enabled => {
+      this.ftEnterpriseTrunking = enabled;
+    });
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484).then((enabled) => {
+      this.ftLocation = enabled;
     });
   }
 
@@ -261,27 +268,30 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
   public validateAddress(): void {
     this.addressLoading = true;
     this.validation = true;
-    return this.PstnServiceAddressService.lookupAddressV2({
-      streetAddress: this.trialData.details.emergAddr.streetAddress,
-      unit: this.trialData.details.emergAddr.unit,
-      city: this.trialData.details.emergAddr.city,
-      state: this.trialData.details.emergAddr.state,
-      zip: this.trialData.details.emergAddr.zip,
-    }, this.trialData.details.pstnProvider.uuid)
-      .then(response => {
-        if (!_.isUndefined(response)) {
-          this.addressFound = true;
-          this.readOnly = true;
-          _.extend(this.trialData.details.emergAddr, response);
-        } else {
-          this.validation = false;
-          this.Notification.error('trialModal.pstn.error.noAddress');
-          this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
-        }
-      })
-      .finally(() => {
-        this.addressLoading = false;
-      });
+
+    const address: Address = new Address();
+    address.streetAddress = this.trialData.details.emergAddr.streetAddress;
+    address.unit = this.trialData.details.emergAddr.unit;
+    address.city = this.trialData.details.emergAddr.city;
+    address.state = this.trialData.details.emergAddr.state;
+    address.zip = this.trialData.details.emergAddr.zip;
+    address.country = this.PstnModel.getCountryCode();
+    this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
+    .then((_address: Address | null) => {
+      if (_address) {
+        this.addressFound = true;
+        this.readOnly = true;
+        _.extend(this.trialData.details.emergAddr, _address);
+      } else {
+        this.validation = false;
+        this.Notification.error('trialModal.pstn.error.noAddress');
+        this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
+      }
+    })
+    .finally(() => {
+      this.addressLoading = false;
+    });
+    return;
   }
 
   public resetAddress(): void {
@@ -300,8 +310,15 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public dismissModal() {
     this.HuronCompassService.setIsCustomer(false);
-    this.PstnModel.clear();
+    this.PstnModel.clear(this.ftLocation);
     this.dismiss();
+  }
+
+  public isDisabled(): boolean {
+    if (this.providerImplementation === this.SWIVEL) {
+      return this.disableNextButton();
+    }
+    return this.trialForm.$invalid || !this.addressFound || this.disableNextButton();
   }
 
 }

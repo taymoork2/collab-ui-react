@@ -33,7 +33,7 @@
         userEmailParam: '@',
         webexAdvancedUrl: '@',
       },
-      templateUrl: 'modules/core/launchSite/launchSite.tpl.html',
+      template: require('modules/core/launchSite/launchSite.tpl.html'),
     };
   }
 })();

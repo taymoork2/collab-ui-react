@@ -1,4 +1,4 @@
-<div class="columns subscription-header" ng-class="{ 'medium-2': !($ctrl.isProPackPurchased && $ctrl.subscription.proPack), 'medium-3 pro-pack-view': $ctrl.isProPackPurchased && $ctrl.subscription.proPack }">
+<div class="columns subscription-header" ng-class="{ 'medium-2': !$ctrl.getProPackStatus(), 'medium-3': $ctrl.getProPackStatus(), 'pro-pack-view': $ctrl.getProPackStatus() && !$ctrl.getView() }">
   <div class="icon-container" ng-click="$ctrl.toggleView()" ng-class="{'icon-container-down': $ctrl.getView()}">
     <i class="icon icon-right-arrow-contained"></i>
   </div>
@@ -9,10 +9,18 @@
     </div>
   </h5>
 
-  <div class="pro-pack-column" ng-if="$ctrl.isProPackPurchased && $ctrl.subscription.proPack">
-    <div class="detail" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}" tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
-      <i class="icon icon-certified icon-detail"></i>
+  <div class="pro-pack-column" ng-if="$ctrl.getProPackStatus()">
+    <div class="detail"
+      ng-class="{'tooltip-present': !$ctrl.getView()}"
+      tabindex="0"
+      tooltip-html-unsafe="{{::$ctrl.subscription.proPack.tooltip}}"
+      tooltip-enable="!$ctrl.getView() && $ctrl.subscription.proPack.tooltip"
+      tooltip-placement="top-left"
+      tooltip-class="subscription-tooltip"
+      tooltip-append-to-body="true"
+      aria-label="{{::$ctrl.subscription.proPack.tooltipAriaLabel}}">
       <span class="h6">{{::$ctrl.getLicenseName($ctrl.subscription.proPack.offerName)}}</span>
+      <cr-pro-pack-icon></cr-pro-pack-icon>
       <div class="detail-break match-icon" ng-if="$ctrl.getView()">
         <span class="h6" translate="subscriptions.usage"></span>
         <span class="h6" ng-class="{'warning': $ctrl.getWarning($ctrl.subscription.proPack) }">{{$ctrl.getUsage($ctrl.subscription.proPack)}}</span>
@@ -20,7 +28,7 @@
     </div>
   </div>
 </div>
-<div class="columns subscription-column" ng-class="{ 'medium-8': !($ctrl.isProPackPurchased && $ctrl.subscription.proPack), 'medium-7': $ctrl.isProPackPurchased && $ctrl.subscription.proPack }">
+<div class="columns subscription-column" ng-class="{ 'medium-8': !$ctrl.getProPackStatus(), 'medium-7': $ctrl.getProPackStatus(), 'pro-pack-view': $ctrl.getProPackStatus() && $ctrl.getView() }">
   <div ng-repeat="license in $ctrl.subscription.licenses" class="detail" ng-if="($index < 3) || $ctrl.getView()" ng-class="{'tooltip-present': !$ctrl.getView()}" tooltip-html-unsafe="{{::license.tooltip}}" tooltip-enable="!$ctrl.getView() && license.tooltip" tooltip-placement="top-left" tooltip-class="subscription-tooltip" tooltip-append-to-body="true">
     <i class="icon {{::license.class}} icon-detail" ng-if="license.class"></i>
     <span class="h6">{{::$ctrl.getLicenseName(license.offerName)}}</span>

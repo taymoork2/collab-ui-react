@@ -1,15 +1,20 @@
 <div class="cs-card-container">
   <cs-card-layout>
-    <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures" class="small header-background hoverable" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
+    <cs-card ng-repeat="huronFeature in huronFeaturesCtrl.listOfFeatures" class="cs-card--small header-background hoverable" ng-class="huronFeaturesCtrl.cardColor[huronFeature.filterValue]">
       <article ng-click="huronFeaturesCtrl.editHuronFeature((huronFeature), $event)" hover-delay>
         <header>
           <div class="header-with-right-icon">
             <p class="h4 ellipsis" title="{{huronFeature.cardName}}"> {{huronFeature.cardName}} </p>
             <div class="right card-icon-div ">
-              <a class="icon icon-link" ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)" ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature), $event)"><span class="sr-only" translate="huronFeatureDetails.viewDepend"></span></a>
-              <button type="button" ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature), $event)" class="close">
-                <span class="sr-only" translate="common.close"></span>
-              </button>
+              <a href
+                class="icon icon-link"
+                ng-if="(huronFeature.filterValue === 'AA' && huronFeature.hasDepends)"
+                ng-click="huronFeaturesCtrl.detailsHuronFeature((huronFeature), $event)"
+                aria-label="{{::'huronFeatureDetails.viewDepend' | translate}}"></a>
+              <button type="button" class="close"
+                ng-click="huronFeaturesCtrl.deleteHuronFeature((huronFeature), $event)"
+                ng-keydown="huronFeaturesCtrl.deleteKeypress((huronFeature), $event)"
+                aria-label="{{::'common.delete' | translate}}"></button>
             </div>
           </div>
           <p><span class="badge badge--outline" ng-class="huronFeaturesCtrl.badgeColor[huronFeature.filterValue]">{{:: huronFeature.featureName | translate}}</span></p>

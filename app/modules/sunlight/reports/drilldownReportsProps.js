@@ -9,30 +9,58 @@
     var broadcastRefresh = 'DrilldownReport::Refresh';
     var broadcastReset = 'DrilldownReport::Reset';
 
-    var service = {
-      taskIncomingDrilldownProps: taskIncomingDrilldownProps,
-      taskOfferedDrilldownProps: taskOfferedDrilldownProps,
-      taskTimeDrilldownProps: taskTimeDrilldownProps,
-      avgCsatDrilldownProps: avgCsatDrilldownProps,
-      broadcastRefresh: broadcastRefresh,
-      broadcastReset: broadcastReset,
-    };
-
-    return service;
-
-    function taskIncomingDrilldownProps(timeSelected) {
+    function getDefaultProps() {
       return {
         broadcast: {
           refresh: broadcastRefresh,
           reset: broadcastReset,
         },
+        description: '',
+        hasData: true,
+        emptyDescription: '',
+        errorDescription: '',
+        show: '',
+        hide: '',
+        search: true,
+        searchPlaceholder: '',
+        state: ReportConstants.SET,
+        table: {
+          gridOptions: {
+            data: 'gridData',
+            multiSelect: false,
+            enableRowHeaderSelection: false,
+            enableColumnResize: true,
+            enableSorting: true,
+            enableFiltering: true,
+            enableColumnMenus: false,
+            enableHorizontalScrollbar: 0,
+            enableVerticalScrollbar: 0,
+            paginationPageSize: 5,
+            enablePaginationControls: false,
+            rowHeight: 42,
+            columnDefs: [],
+          },
+          pagination: {
+            maxPages: 3,
+          },
+        },
+        title: '',
+      };
+    }
+
+    function setStateInProps(props, setStateToEmpty) {
+      if (setStateToEmpty) {
+        props.state = ReportConstants.EMPTY;
+      }
+    }
+
+    function taskIncomingDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
+      var props = {
         description: function () {
           return $translate.instant('taskIncoming.drilldownDescription', {
             time: timeSelected().drilldownDescription,
           });
         },
-        display: false,
-        hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskIncoming.drilldownEmptyDescription', {
             time: timeSelected().drilldownDescription,
@@ -47,36 +75,35 @@
         hide: function () {
           return $translate.instant('taskIncoming.drilldownHide');
         },
-        search: true,
         searchPlaceholder: $translate.instant('taskIncoming.drilldownSearchPlaceholder'),
-        state: ReportConstants.SET,
         table: {
-          columnDefs: [
-            {
-              field: 'displayName',
-              id: 'userName',
-              displayName: $translate.instant('taskIncoming.user'),
-              width: '60%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-              cellClass: function (grid, row) {
-                return getClassName(grid, row);
-              },
-            }, {
-              field: 'tasksHandled',
-              id: 'tasksHandled',
-              displayName: $translate.instant('taskIncoming.tasksHandled'),
-              enableFiltering: false,
-              width: '40%',
-              sortable: true,
-              sort: {
-                direction: uiGridConstants.DESC,
-              },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            },
-          ],
           gridOptions: {
-            rowHeight: 42,
+            columnDefs: [
+              {
+                field: 'displayName',
+                id: 'userName',
+                displayName: $translate.instant('taskIncoming.user'),
+                width: shouldDisplayWebcall ? '30%' : '60%',
+                sortable: true,
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+                cellClass: function (grid, row) {
+                  return getClassName(grid, row);
+                },
+              }, {
+                field: shouldDisplayVideoCall ? 'webcallTasksHandled' : 'tasksHandled',
+                id: shouldDisplayVideoCall ? 'webcallTasksHandled' : 'tasksHandled',
+                displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
+                  $translate.instant('taskIncoming.tasksHandled'),
+                enableFiltering: false,
+                width: shouldDisplayWebcall ? '30%' : '40%',
+                sortable: true,
+                type: 'number',
+                sort: {
+                  direction: uiGridConstants.DESC,
+                },
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              },
+            ],
           },
         },
         title: function () {
@@ -85,21 +112,30 @@
           });
         },
       };
+      if (shouldDisplayWebcall) {
+        props.table.gridOptions.columnDefs.push({
+          field: 'webcallTasksHandled',
+          id: 'webcallTasksHandled',
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
+          enableFiltering: false,
+          width: '40%',
+          sortable: true,
+          type: 'number',
+          sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+        });
+      }
+      setStateInProps(props, setStateToEmpty);
+
+      return _.merge(getDefaultProps(), props);
     }
 
-    function taskOfferedDrilldownProps(timeSelected) {
-      return {
-        broadcast: {
-          refresh: broadcastRefresh,
-          reset: broadcastReset,
-        },
+    function taskOfferedDrilldownProps(timeSelected, setStateToEmpty) {
+      var props = {
         description: function () {
           return $translate.instant('taskOffered.drilldownDescription', {
             time: timeSelected().drilldownDescription,
           });
         },
-        display: false,
-        hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskOffered.drilldownEmptyDescription', {
             time: timeSelected().drilldownDescription,
@@ -114,52 +150,52 @@
         hide: function () {
           return $translate.instant('taskOffered.drilldownHide');
         },
-        search: true,
         searchPlaceholder: $translate.instant('taskOffered.drilldownSearchPlaceholder'),
-        state: ReportConstants.SET,
         table: {
-          columnDefs: [
-            {
-              field: 'displayName',
-              id: 'userName',
-              displayName: $translate.instant('taskOffered.user'),
-              width: '33%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-              cellClass: function (grid, row) {
-                return getClassName(grid, row);
-              },
-            }, {
-              field: 'tasksOffered',
-              id: 'tasksOffered',
-              displayName: $translate.instant('taskOffered.tasksOffered'),
-              enableFiltering: false,
-              width: '22%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            }, {
-              field: 'tasksAccepted',
-              id: 'tasksAccepted',
-              displayName: $translate.instant('taskOffered.tasksAccepted'),
-              enableFiltering: false,
-              width: '23%',
-              sortable: true,
-              sort: {
-                direction: uiGridConstants.DESC,
-              },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            }, {
-              field: 'tasksMissed',
-              id: 'tasksMissed',
-              displayName: $translate.instant('taskOffered.tasksMissed'),
-              enableFiltering: false,
-              width: '22%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            },
-          ],
           gridOptions: {
-            rowHeight: 42,
+            columnDefs: [
+              {
+                field: 'displayName',
+                id: 'userName',
+                displayName: $translate.instant('taskOffered.user'),
+                width: '33%',
+                sortable: true,
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+                cellClass: function (grid, row) {
+                  return getClassName(grid, row);
+                },
+              }, {
+                field: 'tasksOffered',
+                id: 'tasksOffered',
+                displayName: $translate.instant('taskOffered.tasksOffered'),
+                enableFiltering: false,
+                width: '22%',
+                sortable: true,
+                type: 'number',
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              }, {
+                field: 'tasksAccepted',
+                id: 'tasksAccepted',
+                displayName: $translate.instant('taskOffered.tasksAccepted'),
+                enableFiltering: false,
+                width: '23%',
+                sortable: true,
+                type: 'number',
+                sort: {
+                  direction: uiGridConstants.DESC,
+                },
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              }, {
+                field: 'tasksMissed',
+                id: 'tasksMissed',
+                displayName: $translate.instant('taskOffered.tasksMissed'),
+                enableFiltering: false,
+                width: '22%',
+                sortable: true,
+                type: 'number',
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              },
+            ],
           },
         },
         title: function () {
@@ -168,21 +204,19 @@
           });
         },
       };
+
+      setStateInProps(props, setStateToEmpty);
+
+      return _.merge(getDefaultProps(), props);
     }
 
-    function avgCsatDrilldownProps(timeSelected) {
-      return {
-        broadcast: {
-          refresh: broadcastRefresh,
-          reset: broadcastReset,
-        },
+    function avgCsatDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
+      var props = {
         description: function () {
           return $translate.instant('averageCsat.drilldownDescription', {
             time: timeSelected().drilldownDescription,
           });
         },
-        display: false,
-        hasData: true,
         emptyDescription: function () {
           return $translate.instant('averageCsat.drilldownEmptyDescription', {
             time: timeSelected().drilldownDescription,
@@ -197,37 +231,36 @@
         hide: function () {
           return $translate.instant('averageCsat.drilldownHide');
         },
-        search: true,
         searchPlaceholder: $translate.instant('averageCsat.drilldownSearchPlaceholder'),
-        state: ReportConstants.SET,
         table: {
-          columnDefs: [
-            {
-              field: 'displayName',
-              id: 'userName',
-              displayName: $translate.instant('averageCsat.user'),
-              width: '60%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-              cellClass: function (grid, row) {
-                return getClassName(grid, row);
-              },
-            }, {
-              field: 'avgCsatScore',
-              id: 'averageCsat',
-              displayName: $translate.instant('averageCsat.averageCsat'),
-              type: 'string',
-              enableFiltering: false,
-              width: '40%',
-              sortable: true,
-              sort: {
-                direction: uiGridConstants.DESC,
-              },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            },
-          ],
           gridOptions: {
-            rowHeight: 42,
+            columnDefs: [
+              {
+                field: 'displayName',
+                id: 'userName',
+                displayName: $translate.instant('averageCsat.user'),
+                width: shouldDisplayWebcall ? '30%' : '60%',
+                sortable: true,
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+                cellClass: function (grid, row) {
+                  return getClassName(grid, row);
+                },
+              }, {
+                field: shouldDisplayVideoCall ? 'avgWebcallCsatScore' : 'avgCsatScore',
+                id: shouldDisplayVideoCall ? 'avgWebcallCsatScore' : 'averageCsat',
+                displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
+                  $translate.instant('averageCsat.averageCsat'),
+                enableFiltering: false,
+                cellFilter: 'careAvgCSAT',
+                width: shouldDisplayWebcall ? '30%' : '40%',
+                sortable: true,
+                type: 'number',
+                sort: {
+                  direction: uiGridConstants.DESC,
+                },
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              },
+            ],
           },
         },
         title: function () {
@@ -236,21 +269,31 @@
           });
         },
       };
+      if (shouldDisplayWebcall) {
+        props.table.gridOptions.columnDefs.push({
+          field: 'avgWebcallCsatScore',
+          id: 'avgWebcallCsatScore',
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
+          enableFiltering: false,
+          cellFilter: 'careAvgCSAT',
+          width: '40%',
+          sortable: true,
+          type: 'number',
+          sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+        });
+      }
+      setStateInProps(props, setStateToEmpty);
+
+      return _.merge(getDefaultProps(), props);
     }
 
-    function taskTimeDrilldownProps(timeSelected) {
-      return {
-        broadcast: {
-          refresh: broadcastRefresh,
-          reset: broadcastReset,
-        },
+    function taskTimeDrilldownProps(timeSelected, shouldDisplayWebcall, shouldDisplayVideoCall, setStateToEmpty) {
+      var props = {
         description: function () {
           return $translate.instant('taskTime.drilldownDescription', {
             time: timeSelected().drilldownDescription,
           });
         },
-        display: false,
-        hasData: true,
         emptyDescription: function () {
           return $translate.instant('taskTime.drilldownEmptyDescription', {
             time: timeSelected().drilldownDescription,
@@ -265,37 +308,36 @@
         hide: function () {
           return $translate.instant('taskTime.drilldownHide');
         },
-        search: true,
         searchPlaceholder: $translate.instant('taskTime.drilldownSearchPlaceholder'),
-        state: ReportConstants.SET,
         table: {
-          columnDefs: [
-            {
-              field: 'displayName',
-              id: 'userName',
-              displayName: $translate.instant('taskTime.user'),
-              width: '60%',
-              sortable: true,
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-              cellClass: function (grid, row) {
-                return getClassName(grid, row);
-              },
-            }, {
-              field: 'handleTime',
-              id: 'handleTime',
-              displayName: $translate.instant('taskTime.averageHandleTime'),
-              cellFilter: 'careTime',
-              enableFiltering: false,
-              width: '40%',
-              sortable: true,
-              sort: {
-                direction: uiGridConstants.ASC,
-              },
-              sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
-            },
-          ],
           gridOptions: {
-            rowHeight: 42,
+            columnDefs: [
+              {
+                field: 'displayName',
+                id: 'userName',
+                displayName: $translate.instant('taskTime.user'),
+                width: shouldDisplayWebcall ? '30%' : '60%',
+                sortable: true,
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+                cellClass: function (grid, row) {
+                  return getClassName(grid, row);
+                },
+              }, {
+                field: shouldDisplayVideoCall ? 'avgWebcallHandleTime' : 'avgHandleTime',
+                id: shouldDisplayVideoCall ? 'avgWebcallHandleTime' : 'avgHandleTime',
+                displayName: shouldDisplayWebcall ? $translate.instant('careReportsPage.media_type_chat') :
+                  $translate.instant('taskTime.averageHandleTime'),
+                cellFilter: 'careTime',
+                enableFiltering: false,
+                width: shouldDisplayWebcall ? '30%' : '40%',
+                sortable: true,
+                type: 'number',
+                sort: {
+                  direction: uiGridConstants.ASC,
+                },
+                sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+              },
+            ],
           },
         },
         title: function () {
@@ -304,7 +346,34 @@
           });
         },
       };
+      if (shouldDisplayWebcall) {
+        props.table.gridOptions.columnDefs.push({
+          field: 'avgWebcallHandleTime',
+          id: 'avgWebcallHandleTime',
+          displayName: $translate.instant('careReportsPage.media_type_chat_with_video'),
+          cellFilter: 'careTime',
+          enableFiltering: false,
+          width: '40%',
+          sortable: true,
+          type: 'number',
+          sortDirectionCycle: [uiGridConstants.DESC, uiGridConstants.ASC],
+        });
+      }
+      setStateInProps(props, setStateToEmpty);
+
+      return _.merge(getDefaultProps(), props);
     }
+
+    var service = {
+      taskIncomingDrilldownProps: taskIncomingDrilldownProps,
+      taskOfferedDrilldownProps: taskOfferedDrilldownProps,
+      taskTimeDrilldownProps: taskTimeDrilldownProps,
+      avgCsatDrilldownProps: avgCsatDrilldownProps,
+      broadcastRefresh: broadcastRefresh,
+      broadcastReset: broadcastReset,
+    };
+
+    return service;
   }
 
   function getClassName(grid, row) {

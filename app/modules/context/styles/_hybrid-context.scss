@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/fonts';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .context-fields-state {
   background-color: $gray-lightest;
@@ -412,4 +412,12 @@
     background-color: transparent;
     outline: none;
   }
+}
+
+.btn.btn--people {
+  margin-left: 4px;
+}
+
+.context-settings-state {
+  background-color: $brand-white;
 }

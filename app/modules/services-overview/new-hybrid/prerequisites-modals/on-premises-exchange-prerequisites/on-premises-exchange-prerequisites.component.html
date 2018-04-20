@@ -1,0 +1,97 @@
+<div class="intro">
+  <p translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.intro"></p>
+  <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+  </button>
+</div>
+<div class="steps-list">
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+  <div class="cs-checkbox-group">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.configureImpersonation"
+      id="checkboxOnPremisesCalendar1"
+      name="checkboxOnPremisesCalendar1"
+      ng-change="$ctrl.processChange('configureImpersonation', $ctrl.checkboxes.configureImpersonation)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.configureImpersonation' | translate}}">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.runSupportedExchange"
+      id="checkboxOnPremisesCalendar2"
+      name="checkboxOnPremisesCalendar2"
+      ng-change="$ctrl.processChange('runSupportedExchange', $ctrl.checkboxes.runSupportedExchange)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.runSupportedExchange' | translate}}">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.ensureActiveDirectory"
+      id="checkboxOnPremisesCalendar3"
+      name="checkboxOnPremisesCalendar3"
+      ng-change="$ctrl.processChange('ensureActiveDirectory', $ctrl.checkboxes.ensureActiveDirectory)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.ensureActiveDirectory' | translate}}">
+
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.providePortAccess"
+      id="checkboxOnPremisesCalendar4"
+      name="checkboxOnPremisesCalendar4"
+      ng-change="$ctrl.processChange('providePortAccess', $ctrl.checkboxes.providePortAccess)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.providePortAccess' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.providePortAccessHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.providePortAccessHelp2"></li>
+      <li translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.providePortAccessHelp3"></li>
+      <li translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.providePortAccessHelp4"></li>
+    </ul>
+
+    <p translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.forWebExFunctionality" class="condition"></p>
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.configureWebEx"
+      id="checkboxOnPremisesCalendar5"
+      name="checkboxOnPremisesCalendar5"
+      ng-change="$ctrl.processChange('configureWebEx', $ctrl.checkboxes.configureWebEx)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.configureWebEx' | translate}}">
+
+    <p translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.toMakeOBTP" class="condition"></p>
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.setUpTMS"
+      id="checkboxOnPremisesCalendar6"
+      name="checkboxOnPremisesCalendar6"
+      ng-change="$ctrl.processChange('setUpTMS', $ctrl.checkboxes.setUpTMS)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.setUpTMS' | translate}}">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.configureTMSXE"
+      id="checkboxOnPremisesCalendar7"
+      name="checkboxOnPremisesCalendar7"
+      ng-change="$ctrl.processChange('configureTMSXE', $ctrl.checkboxes.configureTMSXE)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.configureTMSXE' | translate}}">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.reviewLicensing"
+      id="checkboxOnPremisesCalendar8"
+      name="checkboxOnPremisesCalendar8"
+      ng-change="$ctrl.processChange('reviewLicensing', $ctrl.checkboxes.reviewLicensing)"
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.reviewLicensing' | translate}}">
+    <div class="checklist-help-text">
+      <span translate="servicesOverview.cards.hybridCalendar.premisesBasedPrerequisites.reviewLicensingHelp"></span>
+    </div>
+  </div>
+</div>

@@ -37,7 +37,7 @@
     var trialAdrServer = '';
     var trialSecurityService = '';
 
-    Analytics.trackHSNavigation(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
+    Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_HDS_SETTINGS);
 
     // TODO: below is the jason to recover initial state, remove it when at the very late stage of HDS dev
     var jsonTrialMode = {
@@ -236,7 +236,7 @@
       if (vm.model.serviceMode === vm.TRIAL && !vm.lock) {
         vm.lock = true;
         $modal.open({
-          templateUrl: 'modules/hds/settings/confirm-move-to-production-dialog.html',
+          template: require('modules/hds/settings/confirm-move-to-production-dialog.html'),
           type: 'dialog',
         })
           .result.then(function () {
@@ -264,7 +264,7 @@
       $modal.open({
         controller: 'AddTrialUsersController',
         controllerAs: 'addTrialUsersCtrl',
-        templateUrl: 'modules/hds/settings/addtrialusers_modal/add-trial-users.html',
+        template: require('modules/hds/settings/addtrialusers_modal/add-trial-users.html'),
         type: 'small',
       })
         .result.then(function () {
@@ -278,7 +278,7 @@
       $modal.open({
         controller: 'EditTrialUsersController',
         controllerAs: 'editTrialUsersCtrl',
-        templateUrl: 'modules/hds/settings/edittrialusers_modal/edit-trial-users.html',
+        template: require('modules/hds/settings/edittrialusers_modal/edit-trial-users.html'),
         type: 'small',
         resolve: {
           dirsyncEnabled: vm.dirsyncEnabled,
@@ -294,7 +294,7 @@
       if (vm.model.serviceMode === vm.TRIAL && !vm.lock) {
         vm.lock = true;
         $modal.open({
-          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          template: require('modules/hds/settings/confirm-deactivate-trialmode-dialog.html'),
           type: 'dialog',
         })
           .result.then(function () {
@@ -388,7 +388,7 @@
       if (vm.model.serviceMode === vm.PRODUCTION && !vm.lock) {
         vm.lock = true;
         $modal.open({
-          templateUrl: 'modules/hds/settings/confirm-deactivate-trialmode-dialog.html',
+          template: require('modules/hds/settings/confirm-deactivate-trialmode-dialog.html'),
           type: 'dialog',
         })
           .result.then(function () {

@@ -1,73 +1,76 @@
 <div class="speed-dials-panel">
-  <cs-sp-buttons ng-show="$ctrl.editing || $ctrl.reordering">
+  <cs-sp-buttons ng-show="$ctrl.editing || $ctrl.isReordering()">
     <button class="btn btn--primary" ng-click="$ctrl.save()"
             ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
     <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
-    <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering">
+  <cs-sp-container cs-tabindex="($ctrl.editing || $ctrl.isReordering())  ? -1 : 0">
+    <div class="warning" ng-show="$ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.isReordering()">
       <div class="cs-input__messages">
-        <div class="message limit-reach-warning" translate="speedDial.limitSpeedDialsReach"></div>
+        <div class="message limit-reach-warning" translate="speedDials.limitSpeedDialsReach"></div>
       </div>
     </div>
     <cs-sp-section>
       <section-title
         title-key="speedDials.title"
         action-list="$ctrl.actionList"
-        ng-class="{'sd-title-with-warning': $ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.reordering}">
+        ng-class="{'sd-title-with-warning': $ctrl.reachSpeedDialLimit() && !$ctrl.editing && !$ctrl.isReordering()}">
       </section-title>
       <div>
         <form name="$ctrl.form" novalidate role="form">
           <div id="speedDialsContainer" class="sd-container">
-            <div ng-repeat="sd in $ctrl.speedDialList" ng-class="{'sd-reorder': $ctrl.reordering}">
+            <div ng-repeat="sd in $ctrl.speedDialList" id="speedDial{{$index}}" ng-class="{'sd-reorder': $ctrl.isReordering()}" tabindex="{{$ctrl.isReordering() ? 0 : -1}}" ng-keydown="$ctrl.speedDialKeypress($event, sd)">
               <div ng-if="!sd.edit" class="sd-readonly-wrapper">
                 <div>
                   <p class="sd-label">{{sd.label}}</p>
                   <p>{{sd.number | telephoneNumber}}</p>
                 </div>
-                <div ng-if="!$ctrl.editing && !$ctrl.reordering">
-                  <i ng-if="sd.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(sd)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info sd-spacing-edit"></i>
-                  <a class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)"></a>
-                  <a class="icon icon-trash" ng-click="$ctrl.delete(sd)"></a>
+                <div ng-if="!$ctrl.editing && !$ctrl.isReordering()">
+                  <i ng-if="sd.callPickupEnabled"
+                    tabindex="0"
+                    tooltip="{{$ctrl.getTooltipText(sd)}}"
+                    tooltip-placement="left"
+                    tooltip-trigger="mouseenter focus"
+                    class="icon icon-info sd-spacing-edit"
+                    aria-label="{{$ctrl.getTooltipText(sd)}}">
+                  </i>
+                  <a href class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)" aria-label="{{::'common.edit | translate'}}"></a>
+                  <a href class="icon icon-trash" ng-click="$ctrl.delete(sd)" aria-label="{{::'common.delete | translate'}}"></a>
                 </div>
-                <div ng-if="$ctrl.reordering">
-                  <a class="icon icon-tables"></a>
+                <div ng-if="$ctrl.isReordering()">
+                  <a class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedSpeedDial(sd)}"></a>
                </div>
               </div>
             </div>
             <div ng-if="$ctrl.editing" class="sd-edit-wrapper">
               <div class="sd-spacing-input row">
-                 <input
-                    id="{{'sd-'+sd.index}}"
-                    cs-input
-                    type="text"
-                    id="label{{$index}}"
-                    name="label{{$index}}"
-                    ng-model="$ctrl.newLabel"
-                    cs-input-label="{{:: 'speedDials.label' | translate}}"
-                    ng-required="true"
-                    maxlength="30"
-                    cs-input-messages="$ctrl.labelMessages"
-                    pattern="^((?!<).)*$"/>
+                <input cs-input type="text"
+                  id="{{'sd-'+sd.index}}"
+                  name="label{{$index}}"
+                  ng-model="$ctrl.newLabel"
+                  cs-input-label="{{:: 'speedDials.label' | translate}}"
+                  ng-required="true"
+                  maxlength="30"
+                  cs-input-messages="$ctrl.labelMessages"
+                  pattern="^((?!<).)*$"/>
               </div>
               <div class="sd-spacing-input row">
                 <cs-call-destination
-                    model="$ctrl.newNumber"
-                    size="medium-12"
-                    country-code="$ctrl.countryCode"
-                    inputs="$ctrl.callDestInputs"
-                    id="number{{$index}}"
-                    name="number{{$index}}"
-                    select-type="select"
-                    custom-number-translations="$ctrl.customTranslations"
-                    input-translations="$ctrl.inputTranslations"
-                    on-change-fn="$ctrl.setSpeedDial(model)">
+                  model="$ctrl.newNumber"
+                  size="medium-12"
+                  country-code="$ctrl.countryCode"
+                  inputs="$ctrl.callDestInputs"
+                  id="number{{$index}}"
+                  name="number{{$index}}"
+                  select-type="select"
+                  custom-number-translations="$ctrl.customTranslations"
+                  custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+                  input-translations="$ctrl.inputTranslations"
+                  on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>
               <div ng-if="$ctrl.isValid">
-                <input
-                  cs-input
-                  type="checkbox"
+                <input cs-input type="checkbox"
                   id="validInput"
                   ng-model="$ctrl.callPickupEnabled"
                   cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}"/>

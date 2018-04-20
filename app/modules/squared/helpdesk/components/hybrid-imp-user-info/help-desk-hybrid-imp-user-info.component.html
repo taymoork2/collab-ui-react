@@ -1,0 +1,39 @@
+<div ng-if="$ctrl.status.entitled" class="hybrid-service-section">
+  <h5 translate="helpdesk.hybridImp.hybridImp"></h5>
+  <div class="row collapse">
+    <div class="columns small-4 details-heading">
+      <span>{{::'cloudExtensions.status' | translate}}:</span>
+    </div>
+    <div class="columns small-8 details-value">
+      <span ng-if="!$ctrl.status" translate="common.on"></span>
+      <span ng-if="$ctrl.status"
+            ng-class="$ctrl.status.state === 'error' ? 'helpdesk-red' : ''"
+            translate="hercules.activationStatus.{{$ctrl.status.collapsedState}}"></span>
+      <span ng-if="$ctrl.status.lastStateChangeText">{{$ctrl.status.lastStateChangeText}}</span>
+      <div ng-if="$ctrl.status" ng-repeat="message in $ctrl.status.messages" ng-class="{'last-status-message': $last}">
+        <span ng-if="message.title"><i class="icon" ng-class="message.iconClass"></i> {{::message.title}} - </span>
+        <span><i ng-if="!message.title" class="icon" ng-class="message.iconClass"></i> {{::message.description}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row collapse" ng-if="$ctrl.status.homedCluster">
+    <div class="columns small-4 details-heading">
+      <span>{{::'cloudExtensions.cluster' | translate}}:</span>
+    </div>
+    <div class="columns small-8 details-value">
+      <span>{{$ctrl.status.homedCluster.name}} ({{$ctrl.status.homedConnector.hostname}})</span>
+    </div>
+  </div>
+  <div class="row collapse" ng-if="$ctrl.status.resourceGroup">
+    <div class="columns small-4 details-heading">
+      <span>{{::'hercules.resourceGroups.resourceGroupHeading' | translate}}:</span>
+    </div>
+    <div class="columns small-8 details-value">
+      <span>{{$ctrl.status.resourceGroup.name}}</span>
+    </div>
+  </div>
+</div>
+
+
+

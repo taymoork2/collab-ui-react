@@ -1,11 +1,13 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, $window, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
+  function HelpdeskCloudberryDeviceController($stateParams, $window, AccessibilityService, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
-    vm.deviceId = $stateParams.id;
+    vm.deviceId = decodeURIComponent($stateParams.id);
     vm.orgId = $stateParams.orgId;
     vm.device = $stateParams.device;
     vm.keyPressHandler = keyPressHandler;
@@ -38,8 +40,6 @@
           vm.lastPushedLog = log;
         }, _.noop);
       }
-
-      angular.element('.helpdesk-details').focus();
     }
 
     function isAuthorizedForLog() {
@@ -53,7 +53,7 @@
     }
 
     function keyPressHandler(event) {
-      if (event.keyCode === 27) { // Esc
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
       }
     }

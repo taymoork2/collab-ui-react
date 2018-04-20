@@ -39,13 +39,6 @@ describe('Partner flow', function () {
     });
   });
 
-  describe('Partner landing page reports', function () {
-    it('should show the reports', function () {
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
-    });
-  });
-
   describe('Add Partner Trial', function () {
     it('should view all trials', function () {
       navigation.clickCustomers();
@@ -58,9 +51,7 @@ describe('Partner flow', function () {
       utils.expectIsDisplayed(partner.editTrialForm);
       utils.expectIsDisabled(partner.startTrialButton);
 
-      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
       utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
-      utils.click(partner.squaredUCTrialCheckbox); // no PSTN on this trial
       utils.click(partner.roomSystemsTrialCheckbox); // no room systems on this trial
       utils.click(partner.sparkBoardTrialCheckbox); // no spark board system on this trial
       utils.click(partner.careTrialCheckbox); // no care on this trial

@@ -2,13 +2,16 @@
   ng-class="{'selected' : row.isSelected}"
   ng-click="grid.appScope.selectRow(grid, row)"
   aria-label="{{::'customerPage.services'|translate}}">
-  <div ng-if="grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)" aria-hidden>
+  <div ng-if="grid.appScope.isLicenseInfoAvailable(row.entity)" aria-hidden>
     <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByCurrentPartner">
       <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
     </ng-repeat>
     <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByAnotherPartner">
       <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
     </ng-repeat>
+    <ng-repeat ng-repeat="type in row.entity.orderedServices.servicesManagedByCustomer">
+      <cr-service-column-icon row="row.entity" type={{type}}></cr-service-column-icon>
+    </ng-repeat>
   </div>
-  <span ng-if="!grid.appScope.isLicenseInfoAvailable(row.entity.licenseList)" translate="common.notAvailable"></span>
+  <span ng-if="!grid.appScope.isLicenseInfoAvailable(row.entity)" translate="common.notAvailable"></span>
 </div>

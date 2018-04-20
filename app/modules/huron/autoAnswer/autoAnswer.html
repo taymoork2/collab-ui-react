@@ -1,27 +1,32 @@
 <div ng-form="autoAnswerForm" class="cs-form">
   <div class="cs-form__section auto-answer">
     <div class="section__info">
-      <div id="autoAnswerTitle" h4 class="section__title auto-answer-title">{{::'autoAnswerPanel.title' | translate}}</h4></div>
-      <div><cs-toggle-switch
-        ng-model="$ctrl.autoAnswerEnabled"
-        toggle-id="enableAutoAnswer"
-        name="enableAutoAnswer"
-        is-disabled="{{$ctrl.autoAnswerNoSupportedPhone}}"
-        cs-change="$ctrl.onAutoAnswerToggleChange(toggleValue)"
-        size="small">
-      </cs-toggle-switch></div>
+      <div id="autoAnswerTitle">
+        <h4 class="section__title auto-answer-title" translate="autoAnswerPanel.title"></h4>
+      </div>
+      <div>
+        <cs-toggle-switch
+          ng-model="$ctrl.autoAnswerEnabled"
+          toggle-id="enableAutoAnswer"
+          name="enableAutoAnswer"
+          is-disabled="$ctrl.autoAnswerNoSupportedPhone"
+          cs-change="$ctrl.onAutoAnswerToggleChange(toggleValue)"
+          size="small"
+          cs-aria-label="{{::'autoAnswerPanel.title' | translate}}">
+        </cs-toggle-switch>
+      </div>
       <div class="clearfix"></div>
       <div>
         <p id="autoAnswerDescription" class="section__description auto-answer-description">{{'autoAnswerPanel.description' | translate}}</p>
-        <div><class="auto-answer-warning" ng-if="$ctrl.autoAnswerEnabled && $ctrl.autoAnswerEnabledForSharedLineMemberMsg !== ''">
+        <div class="auto-answer-warning" ng-if="$ctrl.autoAnswerEnabled && $ctrl.autoAnswerEnabledForSharedLineMemberMsg !== ''">
           <div><i class="icon icon-warning"></i></div><div id="sharedline-member-warning"><p>{{$ctrl.autoAnswerEnabledForSharedLineMemberMsg}}</p></div>
         </div>
         <div class="clearfix"></div>
-        <div><class="auto-answer-info" ng-if="$ctrl.autoAnswerEnabled && !$ctrl.autoAnswerNoSupportedPhone && $ctrl.autoAnswerPhoneOptions.length > 1">
+        <div class="auto-answer-info" ng-if="$ctrl.autoAnswerEnabled && !$ctrl.autoAnswerNoSupportedPhone && $ctrl.autoAnswerPhoneOptions.length > 1">
           <div><i class="icon icon-info"></i></div><div id="multi-device-info"><p>{{'autoAnswerPanel.multiDeviceLineDescription' | translate}}</p></div>
         </div>
         <div class="clearfix"></div>
-        <div><class="auto-answer-warning" ng-if="$ctrl.autoAnswerNoSupportedPhone">
+        <div class="auto-answer-warning" ng-if="$ctrl.autoAnswerNoSupportedPhone">
           <div><i class="icon icon-warning"></i></div><div id="no-supported-device-warning"><p>{{'autoAnswerPanel.noSupportedDevices' | translate}}</p></div>
         </div>
       </div>

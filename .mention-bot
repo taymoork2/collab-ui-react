@@ -4,22 +4,83 @@
   "message": "Hi @pullRequester! By analyzing the annotation information on this pull request, I identified @reviewers to be potential reviewers.",
   "alwaysNotifyForPaths": [{
     "name": "kribalac",
-    "files": ["app/modules/mediafusion/**/*.js"]
+    "files": [
+      "app/modules/mediafusion/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/atlas-web-jedi",
+    "files": [
+      "*.sh",
+      ".githooks/**/*",
+      "bin/**/*",
+      "config/**/*",
+      "karma/**/*",
+      "karma.conf.js",
+      "postcss.config.js",
+      "protractor/**/*",
+      "protractor-config.js",
+      "protractor.conf.js",
+      "sauce/**/*",
+      "tsconfig.json",
+      "tslint.json",
+      "utils/**/*",
+      "webpack/**/*",
+      "webpack.config.js"
+    ]
+  }, {
+    "name": "WebExSquared/atlas-web-core-team",
+    "files": [
+      "app/modules/core/**/*",
+      "package.json"
+    ]
+  }, {
+    "name": "WebExSquared/atlas-hybrid-services-ui",
+    "files": [
+      "app/modules/hds/**/*",
+      "app/modules/hercules/**/*",
+      "app/modules/mediafusion/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/atlas-device-management",
+    "files": [
+      "app/modules/csdm/**/*",
+      "app/modules/squared/common/filtered-view/*",
+      "app/modules/squared/devices/**/*",
+      "app/modules/squared/places/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/atlas-call-team",
+    "files": [
+      "app/modules/call/**/*",
+      "app/modules/huron/**/*",
+      "app/modules/squared/places/**/*"
+    ]
+  }, {
+    "name": "WebExSquared/spark-care",
+    "files": [
+      "app/modules/sunlight/**/*"
+    ]
   }, {
     "name": "mipark2",
     "files": [
-      "*.sh",
-      "bin/**/*",
-      "sauce/**/*",
-      "webpack/**/*"
+      "app/modules/core/users/userAdd/onboard.controller.js"
     ]
-  }, {
-    "name": "thobasse",
-    "files": ["app/modules/hercules/**/*.js"]
-  }, {
-    "name": "woulamme",
-    "files": ["app/modules/squared/devices/**/*.js"]
   }],
-  "fileBlacklist": ["app/l10n/*.json"],
-  "userBlacklist": ["admolla", "atlas-ui-bot-gen", "cidylle", "cstoy", "mikecan", "stimurbe", "zamamoha", "zzatking"]
+  "fileBlacklist": [
+    "app/l10n/*.json",
+    "yarn.lock"
+  ],
+  "userBlacklist": [
+    "admolla",
+    "atlas-ui-bot-gen",
+    "cidylle",
+    "claughbo",
+    "cstoy",
+    "kjeree",
+    "stimurbe",
+    "svanneyg",
+    "thobasse",
+    "zamamoha",
+    "zzatking"
+  ]
 }

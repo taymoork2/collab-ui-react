@@ -7,6 +7,7 @@ import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared
 import { LocationsService, LocationListItem, MEMBER_TYPE_PLACE } from 'modules/call/locations';
 import { IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption } from 'modules/huron/preferredLanguage';
 import { Notification } from 'modules/core/notifications';
+import { CloudConnectorService } from '../../../hercules/services/calendar-cloud-connector.service';
 
 interface IDevice {
 }
@@ -16,9 +17,7 @@ class PlaceOverview implements ng.IComponentController {
   public services: IFeature[] = [];
   public actionList: IActionItem[] = [];
   public showPstn: boolean = false;
-  public showATA: boolean = false;
   public csdmHybridCallFeature: boolean = false;
-  private csdmHybridCalendarFeature = false;
   private hybridCalendarEnabledOnOrg = false;
   private hybridCallEnabledOnOrg = false;
   public generateCodeIsDisabled = true;
@@ -28,7 +27,7 @@ class PlaceOverview implements ng.IComponentController {
   private currentPlace: IPlace = <IPlace>{ devices: {} };
   private csdmHuronUserDeviceService;
   private adminUserDetails;
-  private showDeviceSettings = false;
+  public showDeviceSettings = false;
 
   public ishI1484: boolean = false;
 
@@ -56,10 +55,10 @@ class PlaceOverview implements ng.IComponentController {
     private ServiceDescriptorService: ServiceDescriptorService,
     private Userservice,
     private WizardFactory,
-    private CsdmUpgradeChannelService,
     public LocationsService: LocationsService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
     private Notification: Notification,
+    private CloudConnectorService: CloudConnectorService,
   ) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
     CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
@@ -74,14 +73,15 @@ class PlaceOverview implements ng.IComponentController {
       this.getPlaceLocation();
     }
     this.fetchAsyncSettings();
+    this.showDeviceSettings = this.currentPlace.type === 'cloudberry';
     this.setDisplayDescription();
     if (this.showLanguage()) {
       this.initPreferredLanguage();
     }
   }
 
-  public hasSquaredFusionUc(): boolean {
-    return this.hasEntitlement('squared-fusion-uc');
+  public hasHybridEntitlements(): boolean {
+    return this.hasEntitlement('squared-fusion-uc') || this.hasEntitlement('squared-fusion-cal') || this.hasEntitlement('squared-fusion-gcal');
   }
 
   public initPlaceCallOverviewData(): void {
@@ -176,7 +176,7 @@ class PlaceOverview implements ng.IComponentController {
         actionAvailable: true,
       };
     } else if (this.hasEntitlement('squared-fusion-uc')) {
-      //dont add call services, it will be handled by hercules-cloud-extensions
+      //dont add call services, it will be handled by hybrid-cloudberry-section
       this.services = [];
       return;
     } else {
@@ -193,41 +193,30 @@ class PlaceOverview implements ng.IComponentController {
   }
 
   private fetchAsyncSettings() {
-    this.FeatureToggleService.csdmATAGetStatus().then(feature => {
-      this.showATA = feature;
-    });
     this.FeatureToggleService.csdmHybridCallGetStatus().then(feature => {
       this.csdmHybridCallFeature = feature;
     });
-    this.FeatureToggleService.csdmPlaceCalendarGetStatus().then(feature => {
-      this.csdmHybridCalendarFeature = feature;
-    });
     this.ServiceDescriptorService.getServices().then(services => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
       this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter(service => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
+    this.FeatureToggleService.atlasOffice365SupportGetStatus().then(feature => {
+      if (feature) {
+        this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+          this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+        });
+      }
+    });
+    this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+    });
 
     this.fetchDetailsForLoggedInUser();
 
-    if (this.currentPlace.type === 'cloudberry') {
-      this.$q.all([
-        this.FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
-        this.FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
-      ])
-        .then(features => {
-          if (features[1]) {
-            this.showDeviceSettings = true;
-          } else if (features[0]) {
-            this.CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(channels => {
-              this.showDeviceSettings = channels.length > 1;
-            });
-          }
-        });
-    }
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
     .then(result => this.ishI1484 = result);
   }
@@ -278,7 +267,6 @@ class PlaceOverview implements ng.IComponentController {
         function: 'editServices',
         title: 'usersPreview.editServices',
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         account: {
@@ -297,7 +285,7 @@ class PlaceOverview implements ng.IComponentController {
           nextOptions: {
             sparkCall: 'addDeviceFlow.addLines',
             sparkCallConnect: 'addDeviceFlow.callConnectOptions',
-            sparkOnlyAndCalendar: 'addDeviceFlow.editCalendarService',
+            calendar: 'addDeviceFlow.editCalendarService',
           },
         },
         'addDeviceFlow.addLines': {
@@ -356,17 +344,11 @@ class PlaceOverview implements ng.IComponentController {
     this.$state.go('place-overview.' + feature.state);
   }
 
-  public anyHybridServiceToggle() {
-    return this.csdmHybridCalendarFeature || this.csdmHybridCallFeature;
-  }
-
   public onGenerateOtpFn(): void {
     const wizardState = {
       data: {
         function: 'showCode',
-        showATA: this.showATA,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         admin: this.adminUserDetails,
@@ -408,7 +390,7 @@ class PlaceOverview implements ng.IComponentController {
 
 export class PlaceOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceOverview;
-  public templateUrl = 'modules/squared/places/overview/placeOverview.html';
+  public template = require('modules/squared/places/overview/placeOverview.html');
   public bindings = {
     userDetails: '<',
   };

@@ -1,0 +1,13 @@
+<span id="{{$ctrl.license.siteUrl}}_deleteIcon" name="{{$ctrl.license.siteUrl}}_deleteIcon">
+  <i id="{{$ctrl.license.siteUrl}}_delete-site"
+    class="icon icon-trash grid-vcenter"
+    ng-class="$ctrl.canModify ? 'iconEnabledWithHover' : 'iconDisabled'"
+    tabindex="0"
+    tooltip-append-to-body="true"
+    tooltip="{{::'siteList.deleteSiteTooltip' | translate}}"
+    aria-label="{{::'siteList.deleteSiteTooltip' | translate}}"
+    ng-click="$ctrl.delete($ctrl.license)"
+    tooltip-trigger="mouseenter focus"
+    tabindex="0">
+  </i>
+</span>

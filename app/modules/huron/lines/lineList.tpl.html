@@ -1,13 +1,13 @@
 <div class="line-list">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter filters="linesListCtrl.filters" set-filter-fn="linesListCtrl.setFilter(filter.filterValue)" ng-model="linesListCtrl.placeholder.count" search-item-fn="linesListCtrl.filterList(searchStr)" placeholder-text="{{linesListCtrl.placeholder.name}}">
+      <cs-searchfilter filters="linesListCtrl.filters" set-filter-fn="linesListCtrl.setFilter(filter.filterValue)" ng-model="linesListCtrl.placeholder.count" search-item-fn="linesListCtrl.filterList(searchStr)" placeholder-text="{{linesListCtrl.placeholder.name}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right ng-if="Utils.isAdminPage()">
 
       <div ng-if="!linesListCtrl.gridRefresh">
-        <a ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
+        <a href ui-sref="customerPstnOrdersOverview({currentCustomer: linesListCtrl.currentCustomer, vendor:linesListCtrl.vendor})">
           <span class="order-history" translate="pstnOrderOverview.historyAndImports"></span>
         </a>
         <span ng-if="!linesListCtrl.isCallTrial || (linesListCtrl.isCallTrial && linesListCtrl.isBYOPSTNCarrier())">
@@ -26,5 +26,5 @@
 
     </cs-page-sub-header-right>
   </cs-page-sub-header>
-  <div id="linesListPanel" class="gridStyle col-md-12" ui-grid="linesListCtrl.gridOptions" ui-grid-infinite-scroll grid-spinner="linesListCtrl.gridRefresh"></div>
+  <cs-grid ng-if="linesListCtrl.gridOptions" id="linesListPanel" grid-api="gridApi" grid-options="linesListCtrl.gridOptions" spinner="linesListCtrl.gridRefresh"></cs-grid>
 </div>

@@ -1,10 +1,12 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global manageUsersPage */
 
 describe('Onboard users with Message Service', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('message');
+  var testUser = utils.randomTestGmailWithSalt('message');
   var LICENSE = users.paidMsgCheckbox;
 
   function checkAndClickInterop(curState, targetState) {
@@ -37,12 +39,17 @@ describe('Onboard users with Message Service', function () {
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-      utils.click(manageUsersPage.select.radio.orgManual);
-      utils.click(manageUsersPage.buttons.next);
-      utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
+      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+      } else {
+        utils.click(manageUsersPage.select.radio.orgManual);
+        utils.click(manageUsersPage.buttons.next);
+      }
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
     });
-
 
     it('should clear user input field and error message', function () {
       utils.sendKeys(users.addUsersField, 'abcdefg' + protractor.Key.ENTER);

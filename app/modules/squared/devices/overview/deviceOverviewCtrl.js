@@ -5,14 +5,13 @@
     .module('Core')
     .controller('DeviceOverviewCtrl', DeviceOverviewCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function DeviceOverviewCtrl($q, $state, $scope, $interval, Notification, $stateParams, $translate, $timeout, Authinfo,
-    FeedbackService, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, Utils, $window, RemDeviceModal,
-    ResetDeviceModal, channels, RemoteSupportModal, LaunchAdvancedSettingsModal, ServiceSetup, KemService,
-    TerminusService, EmergencyServicesService, AtaDeviceModal, DeviceOverviewService,
-    FeatureToggleService, ConfirmAtaRebootModal, PstnModel, PstnService) {
+  function DeviceOverviewCtrl($element, $interval, $q, $state, $stateParams, $scope, $timeout, $translate, $window, AccessibilityService, AtaDeviceModal, Authinfo, ConfirmAtaRebootModal, CsdmDataModelService, CsdmDeviceService, CsdmUpgradeChannelService, channels, DeviceOverviewService, EmergencyServicesService, FeatureToggleService, FeedbackService, KemService, LaunchAdvancedSettingsModal, Notification, PstnModel, PstnService, RemDeviceModal, RemoteSupportModal, ResetDeviceModal, ServiceSetup, TerminusService, Utils, Userservice, WizardFactory) {
     var deviceOverview = this;
     var huronDeviceService = $stateParams.huronDeviceService;
+    var adminUserDetails;
     deviceOverview.linesAreLoaded = false;
     deviceOverview.tzIsLoaded = false;
     deviceOverview.countryIsLoaded = false;
@@ -21,25 +20,20 @@
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
     deviceOverview.showT38 = false;
-    deviceOverview.cpcFeatureToggle = false;
-    deviceOverview.disableAtaRebootSettings = true;
     deviceOverview.actionList = [{
       actionKey: 'common.edit',
       actionFunction: goToEmergencyServices,
     }];
 
     function init() {
-      FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
-        deviceOverview.cpcFeatureToggle = response;
-      });
-      FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
-        deviceOverview.ataRebootWarningToggle = response;
-        deviceOverview.disableAtaRebootSettings = false;
-      });
-
       displayDevice($stateParams.currentDevice);
 
+      FeatureToggleService.csdmDeviceAccountJumpGetStatus().then(function (response) {
+        deviceOverview.jumpToAccount = response;
+      });
+
       fetchT38Visibility();
+      fetchDetailsForLoggedInUser();
 
       CsdmDataModelService.reloadItem($stateParams.currentDevice).then(function (updatedDevice) {
         displayDevice(updatedDevice);
@@ -48,28 +42,40 @@
 
     init();
 
+    function fetchDetailsForLoggedInUser() {
+      Userservice.getUser('me', function (data) {
+        if (data.success) {
+          adminUserDetails = {
+            firstName: data.name && data.name.givenName,
+            lastName: data.name && data.name.familyName,
+            displayName: data.displayName,
+            userName: data.userName,
+            cisUuid: data.id,
+            organizationId: data.meta.organizationID,
+          };
+        }
+      });
+    }
+
     function fetchT38Visibility() {
       if (deviceOverview.currentDevice.isATA) {
-        FeatureToggleService.csdmT38GetStatus().then(function (t38Supported) {
-          if (t38Supported) {
-            if (!PstnModel.getProviderId()) {
-              PstnService.getCustomer(Authinfo.getOrgId()).then(function (customer) {
-                PstnService.getCarrierCapabilities(customer.pstnCarrierId).then(function (capabilities) {
-                  deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
-                });
-              });
-            } else {
-              PstnService.getCarrierCapabilities(PstnModel.getProviderId()).then(function (capabilities) {
-                deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
-              });
-            }
-          }
-        });
+        if (!PstnModel.getProviderId()) {
+          PstnService.getCustomer(Authinfo.getOrgId()).then(function (customer) {
+            PstnService.getCarrierCapabilities(customer.pstnCarrierId).then(function (capabilities) {
+              deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+            });
+          });
+        } else {
+          PstnService.getCarrierCapabilities(PstnModel.getProviderId()).then(function (capabilities) {
+            deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+          });
+        }
       }
     }
 
     function displayDevice(device) {
       var lastDevice = deviceOverview.currentDevice;
+      var promises = [];
       deviceOverview.currentDevice = device;
 
       if (!lastDevice || lastDevice.product != deviceOverview.currentDevice.product) {
@@ -84,42 +90,87 @@
           $interval.cancel(deviceOverview.huronPollInterval);
         });
       }
-      pollLines();
+      promises.push(pollLines());
 
       if (deviceOverview.currentDevice.isHuronDevice) {
         if (!deviceOverview.tzIsLoaded) {
-          initTimeZoneOptions().then(function () {
-            getCurrentDeviceInfo();
+          var timeZonePromise = initTimeZoneOptions().then(function () {
+            return getCurrentDeviceInfo();
           });
+          promises.push(timeZonePromise);
         }
         if (!deviceOverview.countryIsLoaded) {
-          initCountryOptions().then(function () {
-            getCurrentDeviceInfo();
+          var countryPromise = initCountryOptions().then(function () {
+            return getCurrentDeviceInfo();
           });
+          promises.push(countryPromise);
         }
       }
 
       if (deviceOverview.currentDevice.isATA) {
-        getCurrentAtaSettings();
+        promises.push(getCurrentAtaSettings());
       }
 
       deviceOverview.deviceHasInformation = deviceOverview.currentDevice.ip || deviceOverview.currentDevice.mac || deviceOverview.currentDevice.serial || deviceOverview.currentDevice.software || deviceOverview.currentDevice.hasRemoteSupport;
 
-      FeatureToggleService.csdmPlaceUpgradeChannelGetStatus().then(function (feature) {
-        var placeUpgradeChannelSupported = feature && deviceOverview.currentDevice.productFamily === 'Cloudberry';
-        deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
-        deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
-      });
+      var placeUpgradeChannelSupported = deviceOverview.currentDevice.productFamily === 'Cloudberry' || deviceOverview.currentDevice.productFamily === 'Novum';
+      deviceOverview.canChangeUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && deviceOverview.currentDevice.isOnline && !placeUpgradeChannelSupported;
+      deviceOverview.shouldShowUpgradeChannel = channels.length > 1 && !deviceOverview.currentDevice.isHuronDevice && (!deviceOverview.currentDevice.isOnline || placeUpgradeChannelSupported);
 
       deviceOverview.upgradeChannelOptions = _.map(channels, getUpgradeChannelObject);
 
       resetSelectedChannel();
+      return $q.all(promises);
     }
+
+    deviceOverview.goToAccount = function () {
+      if (deviceOverview.currentDevice.accountType === 'MACHINE') {
+        $state.go('places', {
+          preSelectedPlaceId: deviceOverview.currentDevice.cisUuid,
+        });
+      } else {
+        $state.go('users.list', {
+          preSelectedUserId: deviceOverview.currentDevice.cisUuid,
+        });
+      }
+    };
+
+    deviceOverview.reactivateRoomDevice = function () {
+      var wizardState = {
+        data: {
+          function: 'showCode',
+          admin: adminUserDetails,
+          account: {
+            type: deviceOverview.currentDevice.accountType === 'MACHINE' ? 'shared' : 'personal',
+            deviceType: 'cloudberry',
+            cisUuid: deviceOverview.currentDevice.cisUuid,
+            name: deviceOverview.currentDevice.displayName,
+            organizationId: Authinfo.getOrgId(),
+          },
+          recipient: {
+            cisUuid: Authinfo.getUserId(),
+            email: Authinfo.getPrimaryEmail(),
+            displayName: adminUserDetails.displayName,
+            organizationId: adminUserDetails.organizationId,
+          },
+          title: 'addDeviceWizard.newCode',
+        },
+        history: [],
+        currentStateName: 'addDeviceFlow.showActivationCode',
+        wizardState: {
+          'addDeviceFlow.showActivationCode': {},
+        },
+      };
+      var wizard = WizardFactory.create(wizardState);
+      $state.go('addDeviceFlow.showActivationCode', {
+        wizard: wizard,
+      });
+    };
 
     function getCurrentAtaSettings() {
       deviceOverview.updatingT38Settings = true;
       deviceOverview.updatingCpcSettings = true;
-      huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getAtaInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.faxEnabled = result.t38FaxEnabled;
         deviceOverview.cpcEnabled = result.cpcDelay > 2;
         deviceOverview.updatingT38Settings = false;
@@ -150,17 +201,21 @@
     }
 
     function getEmergencyAddress() {
-      TerminusService.customerNumberE911V2().get({
-        customerId: Authinfo.getOrgId(),
-        number: deviceOverview.emergencyCallbackNumber,
-      }).$promise.then(function (info) {
-        deviceOverview.emergencyAddress = info.e911Address;
-        deviceOverview.emergencyAddressStatus = info.status;
-      }).then(function () {
-        deviceOverview.isE911Available = true;
-      }).catch(function () {
+      if (deviceOverview.emergencyCallbackNumber) {
+        TerminusService.customerNumberE911V2().get({
+          customerId: Authinfo.getOrgId(),
+          number: deviceOverview.emergencyCallbackNumber,
+        }).$promise.then(function (info) {
+          deviceOverview.emergencyAddress = info.e911Address;
+          deviceOverview.emergencyAddressStatus = info.status;
+        }).then(function () {
+          deviceOverview.isE911Available = true;
+        }).catch(function () {
+          deviceOverview.e911NotFound = true;
+        });
+      } else {
         deviceOverview.e911NotFound = true;
-      });
+      }
     }
 
     function initTimeZoneOptions() {
@@ -187,7 +242,7 @@
     }
 
     function getCurrentDeviceInfo() {
-      huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getDeviceInfo(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.timeZone = result.timeZone;
         deviceOverview.emergencyCallbackNumber = result.emergencyCallbackNumber;
         deviceOverview.selectedTimeZone = getTimeZoneFromId(result);
@@ -207,7 +262,7 @@
     }
 
     function pollLines() {
-      huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
+      return huronDeviceService.getLinesForDevice(deviceOverview.currentDevice).then(function (result) {
         deviceOverview.lines = result;
         deviceOverview.linesAreLoaded = true;
       }).then(function () {
@@ -230,7 +285,7 @@
     }
 
     deviceOverview.saveT38Settings = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
           .open({
             name: $translate.instant('ataSettings.t38Label'),
@@ -262,16 +317,12 @@
     }
 
     deviceOverview.saveCpcSettings = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
-        ConfirmAtaRebootModal
-          .open({
-            name: $translate.instant('ataSettings.cpcLabel'),
-          })
-          .then(executeSaveCpcSettings)
-          .catch(getCurrentAtaSettings);
-      } else {
-        executeSaveCpcSettings();
-      }
+      ConfirmAtaRebootModal
+        .open({
+          name: $translate.instant('ataSettings.cpcLabel'),
+        })
+        .then(executeSaveCpcSettings)
+        .catch(getCurrentAtaSettings);
     };
 
     function executeSaveCpcSettings() {
@@ -295,10 +346,9 @@
     }
 
     deviceOverview.saveTimeZoneAndWait = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
-          .open({ name: $translate.instant('deviceOverviewPage.timeZone'),
-          })
+          .open({ name: $translate.instant('deviceOverviewPage.timeZone') })
           .then(executeSaveTimeZoneAndWait)
           .catch(getCurrentDeviceInfo);
       } else {
@@ -323,7 +373,7 @@
     }
 
     deviceOverview.saveCountryAndWait = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
           .open({
             name: $translate.instant('deviceOverviewPage.country'),
@@ -355,6 +405,7 @@
     function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
+        currentHuronDevice: deviceOverview.currentDevice,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
         staticNumber: !deviceOverview.currentDevice.isHuronDevice,
@@ -439,7 +490,12 @@
     deviceOverview.deleteDevice = function () {
       RemDeviceModal
         .open(deviceOverview.currentDevice)
-        .then($state.sidepanel.close);
+        .then(function () {
+          $state.sidepanel.close();
+          if (_.isFunction($stateParams.deviceDeleted)) {
+            $stateParams.deviceDeleted(deviceOverview.currentDevice.url);
+          }
+        });
     };
 
     deviceOverview.openAtaSettings = function () {
@@ -479,7 +535,7 @@
         return CsdmDataModelService
           .updateTags(deviceOverview.currentDevice, deviceOverview.currentDevice.tags.concat(tag))
           .then(function (updatedDevice) {
-            displayDevice(updatedDevice);
+            return displayDevice(updatedDevice);
           })
           .catch(function (response) {
             Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
@@ -491,19 +547,30 @@
     };
 
     deviceOverview.addTagOnEnter = function ($event) {
-      if ($event.keyCode == 13) {
+      if ($event.keyCode === KeyCodes.ENTER) {
         deviceOverview.addTag();
       }
     };
 
-    deviceOverview.removeTag = function (tag) {
+    deviceOverview.removeTag = function (tag, index) {
       var tags = _.without(deviceOverview.currentDevice.tags, tag);
       return CsdmDataModelService.updateTags(deviceOverview.currentDevice, tags)
         .then(function (updatedDevice) {
-          displayDevice(updatedDevice);
+          return displayDevice(updatedDevice);
+        }, function (response) {
+          // this only applies to the previous promise rejection from `updateTags()`
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
         })
         .catch(function (response) {
-          Notification.errorResponse(response, 'deviceOverviewPage.failedToSaveChanges');
+          // this applies to the `displayDevice(updatedDevice)` promise
+          Notification.errorResponse(response, 'deviceOverviewPage.failedToDisplayDevice');
+        })
+        .finally(function () {
+          if (index < deviceOverview.currentDevice.tags.length) {
+            AccessibilityService.setFocus($element, '#deleteTag' + index);
+          } else {
+            AccessibilityService.setFocus($element, '#addNewTag');
+          }
         });
     };
 

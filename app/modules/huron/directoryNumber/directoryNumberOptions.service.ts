@@ -1,3 +1,5 @@
+import { NumberType,  NumberService, NumberOrder, INumber } from 'modules/huron/numbers';
+
 export interface IDirectoryNumber {
   pattern: string;
 }
@@ -18,7 +20,6 @@ export enum Pattern {
 }
 
 export class DirectoryNumberOptionsService {
-  private internalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
   private externalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
 
   /* @ngInject */
@@ -26,21 +27,29 @@ export class DirectoryNumberOptionsService {
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private HuronConfig,
+    private FeatureToggleService,
+    private NumberService: NumberService,
   ) {
-    this.internalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId');
     this.externalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId');
   }
 
-  public getInternalNumberOptions(pattern?: string | Pattern, assignment?: Availability): ng.IPromise<string[]> {
-    return this.internalNumbersOptions.query({
-      customerId: this.Authinfo.getOrgId(),
-      directorynumber: assignment || Availability.UNASSIGNED,
-      order: 'pattern',
-      pattern: pattern ? '%' + pattern + '%' : undefined,
-    }).$promise
-    .then(options => {
-      return _.map(options, 'pattern');
-    });
+  public getInternalNumberOptions(pattern?: string | undefined, locationId?: string): ng.IPromise<string[]> {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
+      .then(isSupported => {
+        if (isSupported && locationId && !_.isUndefined(locationId)) {
+          return this.loadLocationsInternalNumberPool(pattern, locationId);
+        } else {
+          return this.NumberService.getNumberList(pattern, NumberType.INTERNAL, false)
+            .then(options => {
+              return _.map(options, 'number');
+            });
+        }
+      });
+  }
+
+  public loadLocationsInternalNumberPool(pattern: string | undefined, locationId?: string): ng.IPromise<INumber[]> {
+    const order: NumberOrder = NumberOrder.SITETOSITE_ASC;
+    return this.NumberService.getNumberList(pattern, NumberType.INTERNAL, false, order, undefined, undefined, locationId);
   }
 
   public getExternalNumberOptions(pattern?: string | Pattern, assignment?: Availability, externalNumberType?: ExternalNumberType): ng.IPromise<string[]> {

@@ -3,25 +3,36 @@
     <button class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
     <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
   </cs-sp-buttons>
-  <cs-sp-container>
+  <cs-sp-container cs-tabindex="$ctrl.form.$dirty ? -1 : 0">
     <cs-sp-section class="userLocation-panel">
-      <div class="section-title-row">
-        <span class="section-name" translate="usersPreview.location"></span>
+      <div ng-if="!$ctrl.loading">
+        <div ng-if="!$ctrl.disableLocation">
+          <div class="section-title-row">
+            <span class="section-name" translate="usersPreview.location"></span>
+          </div>
+          <p class="snr-description" translate="locations.locationSelectDesc"></p>
+          <div class="large-8">
+            <cs-select
+              name="location"
+              ng-model="$ctrl.selectedLocation"
+              options="$ctrl.locationOptions"
+              labelfield="name"
+              valuefield="uuid"
+              required="true"
+              filter="true"
+              on-change-fn="$ctrl.onLocationChange()"
+              refresh-data-fn="sel.getoptions(filter)">
+            </cs-select>
+          </div>
+        </div>
+        <div ng-if="$ctrl.disableLocation">
+          <span><i class="icon icon-warning warning"></i></span>
+          <span class="warning" translate="locations.waitForE911"></span>
+        </div>
       </div>
-      <p class="snr-description" translate="locations.locationSelectDesc"></p>
-      <div class="large-8">
-      <cs-select
-        name="location"
-        ng-model="$ctrl.selectedLocation"
-        options="$ctrl.locationOptions"
-        labelfield="name"
-        valuefield="uuid"
-        required="true"
-        filter="true"
-        on-change-fn="$ctrl.onLocationChange()"
-        refresh-data-fn="sel.getoptions(filter)">
-      </cs-select>
-    </div>
+      <div ng-if="$ctrl.loading">
+        <i class='icon icon-spinner'></i>
+      </div>
     </cs-sp-section>
   </cs-sp-container>
 </form>

@@ -2,7 +2,7 @@ import defaultCountryModule from './index';
 
 describe('Component: defaultCountry', () => {
   const DEFAULT_COUNTRY_SELECT = '.csSelect-container[name="defaultCountry"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const COUNTRY_US = 'US';
   const COUNTRY_CANADA = 'CA';
   const defaultCountryOptions = getJSONFixture('huron/json/settings/countries.json');

@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var meetingCardTemplatePath = require('ngtemplate-loader?module=Core!./meetingCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewMeetingCard', OverviewMeetingCard);
@@ -11,7 +14,7 @@
       createCard: function createCard($scope) {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/meetingCard.tpl.html';
+        card.template = meetingCardTemplatePath;
         card.icon = 'icon-circle-group';
         card.desc = 'overview.cards.meeting.desc';
         card.name = 'overview.cards.meeting.title';
@@ -54,7 +57,7 @@
             return l.siteUrl;
           });
 
-          card.settingsUrl = hasSites ? '#/site-list' : '';
+          card.settingsUrl = hasSites ? '/site-list' : '';
 
           if (filterLicenses(licenses).length > 0) {
             card.enabled = true; //don't disable if no licenses in case test org..
@@ -64,7 +67,7 @@
         card.provisioningEventHandler = function (productProvStatus) {
           if (_.some(productProvStatus, { status: 'PENDING_PARM', productName: 'WX' })) {
             card.needsWebExSetup = true;
-          } else if (_.some(productProvStatus, { status: 'PROVISIONING', productName: 'WX' })) {
+          } else if (someMeetingsAreNotProvisioned(productProvStatus)) {
             card.isProvisioning = true;
           }
         };
@@ -73,6 +76,12 @@
           card.needsWebExSetup = false;
           card.isProvisioning = true;
         });
+
+        var someMeetingsAreNotProvisioned = function (productProvStatus) {
+          return _.some(productProvStatus, function (status) {
+            return status.productName === 'WX' && status.status !== 'PROVISIONED';
+          });
+        };
 
         $scope.$on('$destroy', meetingServicesSetupSuccessDeregister);
 
@@ -85,7 +94,6 @@
         card.showMeetingSettings = function () {
           $state.go('setupwizardmodal', {
             currentTab: 'meetingSettings',
-            currentStep: 'migrate',
             onlyShowSingleTab: true,
             showStandardModal: true,
           });

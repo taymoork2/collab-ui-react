@@ -1,10 +1,12 @@
 <div ng-if="!wizard.showStandardModal" class="wizard-main">
-  <div id="wizardTitle" class="wizard-main-title"><span ng-if="!wizard.onlyShowSingleTab" translate="{{wizard.current.tab.title}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span ng-if="wizard.current.step.title" class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
-    <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
-        <span class="sr-only" translate="common.close"></span>
-    </button>
+  <div id="wizardTitle" class="wizard-main-title"><span ng-if="!wizard.onlyShowSingleTab" translate="{{wizard.getTitleKey()}}"></span><span ng-if="wizard.current.subTab && !wizard.isFirstStep()"> <span ng-if="wizard.current.step.title" class="title-separator-pipe">|</span> <span ng-if="wizard.current.step.title" translate="{{wizard.current.step.title}}"></span><span ng-if="!wizard.current.step.title" translate="{{wizard.current.subTab.title}}"></span></span>
+    <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()" aria-label="{{::'common.close' | translate}}"></button>
   </div>
   <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
+    <!--
+      currently ng-include templates loaded through ngtemplate-loader
+      TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+    -->
     <div scroll-indicator ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
     </div>
   </div>
@@ -12,15 +14,17 @@
 </div>
 <div ng-if="wizard.showStandardModal" class="modal-content">
   <div class="modal-header">
-    <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()">
-        <span class="sr-only" translate="common.close"></span>
-    </button>
+    <button type="button" class="close" ng-if="!wizard.isFirstTime()" ng-click="wizard.closeModal()" aria-label="{{::'common.close' | translate}}"></button>
     <div id="wizardTitle ssoWizardTitle" class="modal-title">
       <span translate="{{wizard.current.tab.title}}"></span>
     </div>
   </div>
   <div class="modal-body">
     <div class="wizard-main-content" ng-if="wizard.current.tab" ng-controller="wizard.getTabController">
+      <!--
+        currently ng-include templates loaded through ngtemplate-loader
+        TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+      -->
       <div scroll-indicator ng-include="wizard.current.step.template" class="wizard-main-wrapper" ng-controller="wizard.getSubTabController">
       </div>
     </div>

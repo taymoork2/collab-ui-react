@@ -2,7 +2,7 @@
 
 describe('RedirectAddResourceControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
-  var redirectTargetPromise, $q, httpBackend, controller, $state, $stateParams, AddResourceCommonServiceV2, Notification, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
+  var $q, $scope, controller, $state, $stateParams, AddResourceCommonServiceV2, Notification, $translate, $modalInstance, $modal, firstTimeSetup, yesProceed;
   var fakeModal = {
     result: {
       then: function (confirmCallback, cancelCallback) {
@@ -17,13 +17,9 @@ describe('RedirectAddResourceControllerV2', function () {
       this.result.cancelCallback(type);
     },
   };
-  beforeEach(inject(function (_Notification_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $httpBackend, $controller, _$q_, _$modal_) {
+  beforeEach(inject(function (_Notification_, _$translate_, _$state_, _$stateParams_, _AddResourceCommonServiceV2_, $controller, _$q_, _$modal_, _$rootScope_) {
     $q = _$q_;
-    httpBackend = $httpBackend;
-    httpBackend.when('GET', /^\w+.*/).respond({});
-    redirectTargetPromise = {
-      then: jasmine.createSpy('then'),
-    };
+    $scope = _$rootScope_.$new();
     $state = _$state_;
     $stateParams = _$stateParams_;
     AddResourceCommonServiceV2 = _AddResourceCommonServiceV2_;
@@ -53,11 +49,48 @@ describe('RedirectAddResourceControllerV2', function () {
     expect(controller).toBeDefined();
   });
 
-  it('AddResourceCommonServiceV2.redirectPopUpAndClose should be called for redirectToTargetAndCloseWindowClicked', function () {
-    spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.resolve());
-    spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue(redirectTargetPromise);
+  it('AddResourceCommonServiceV2.enableMediaServiceEntitlements should be called for redirectToTargetAndCloseWindowClicked', function () {
+    var respnse = {
+      status: 204,
+    };
+    spyOn(AddResourceCommonServiceV2, 'enableMediaServiceEntitlements').and.returnValue([$q.resolve(respnse), $q.resolve(respnse)]);
+    spyOn(AddResourceCommonServiceV2, 'createFirstTimeSetupCluster').and.returnValue($q.resolve(respnse));
+    spyOn(AddResourceCommonServiceV2, 'enableMediaService').and.returnValue($q.resolve(respnse));
+    spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue($q.resolve(respnse));
     controller.redirectToTargetAndCloseWindowClicked();
-    httpBackend.flush();
+    $scope.$apply();
+    expect(AddResourceCommonServiceV2.enableMediaServiceEntitlements).toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.createFirstTimeSetupCluster).toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.enableMediaService).toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
+  });
+
+
+  it('AddResourceCommonServiceV2.enableMediaServiceEntitlements should be called for redirectToTargetAndCloseWindowClicked Filure scenario', function () {
+    var respnse = {
+      status: 204,
+    };
+    spyOn(AddResourceCommonServiceV2, 'enableMediaServiceEntitlements').and.returnValue([$q.resolve(undefined), $q.resolve(respnse)]);
+    spyOn(AddResourceCommonServiceV2, 'createFirstTimeSetupCluster').and.returnValue($q.resolve(respnse));
+    spyOn(AddResourceCommonServiceV2, 'enableMediaService').and.returnValue($q.resolve(respnse));
+    spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue($q.resolve(respnse));
+    controller.redirectToTargetAndCloseWindowClicked();
+    $scope.$apply();
+    expect(AddResourceCommonServiceV2.enableMediaServiceEntitlements).toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.createFirstTimeSetupCluster).not.toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.enableMediaService).not.toHaveBeenCalled();
+    expect(AddResourceCommonServiceV2.redirectPopUpAndClose).not.toHaveBeenCalled();
+  });
+
+  it('AddResourceCommonServiceV2.addRedirectTargetClicked should be called for redirectToTargetAndCloseWindowClicked not first time setup', function () {
+    var respnse = {
+      status: 204,
+    };
+    controller.firstTimeSetup = false;
+    spyOn(AddResourceCommonServiceV2, 'addRedirectTargetClicked').and.returnValue($q.resolve(respnse));
+    spyOn(AddResourceCommonServiceV2, 'redirectPopUpAndClose').and.returnValue($q.resolve(respnse));
+    controller.redirectToTargetAndCloseWindowClicked();
+    $scope.$apply();
     expect(AddResourceCommonServiceV2.addRedirectTargetClicked).toHaveBeenCalled();
     expect(AddResourceCommonServiceV2.redirectPopUpAndClose).toHaveBeenCalled();
   });

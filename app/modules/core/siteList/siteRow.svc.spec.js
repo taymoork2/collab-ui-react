@@ -1,10 +1,10 @@
 'use strict';
 
 describe('Service: WebExSiteRowService', function () {
-  var $rootScope, $q, WebExSiteRowService, Auth, Authinfo, FeatureToggleService, WebExUtilsFact, WebExApiGatewayService, WebExApiGatewayConstsService, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  var $httpBackend, $rootScope, $q, Auth, Authinfo, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus, FeatureToggleService, SetupWizardService, UrlConfig, WebExApiGatewayConstsService, WebExApiGatewayService, WebExSiteRowService, WebExUtilsFact;
 
   afterEach(function () {
-    $rootScope = $q = WebExSiteRowService = Auth = Authinfo = FeatureToggleService = WebExUtilsFact = WebExApiGatewayService = WebExApiGatewayConstsService = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
+    $httpBackend = $rootScope = $q = Auth = Authinfo = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = FeatureToggleService = SetupWizardService = UrlConfig = WebExApiGatewayConstsService = WebExApiGatewayService = WebExSiteRowService = WebExUtilsFact = undefined;
   });
 
   var fakeSiteRow1 = {
@@ -135,6 +135,54 @@ describe('Service: WebExSiteRowService', function () {
     $$hashKey: 'uiGrid-0009',
     showCSVIconAndResults: true,
   };
+  var pendingStatusSubscriptions = [
+    {
+      externalSubscriptionId: 'WX-12345',
+      pendingServiceOrderUUID: 'abcd-12345',
+    },
+    {
+      externalSubscriptionId: 'WX-67890',
+      pendingServiceOrderUUID: 'efgh-67890',
+    },
+  ];
+  var returnedServiceStatuses1 = {
+    serviceStatus: [
+      {
+        siteUrl: 'abc.webex.com',
+        license: {
+          status: 'PROVISIONING',
+        },
+      },
+      {
+        siteUrl: 'abc.webex.com',
+        license: {
+          status: 'PROVISIONING',
+        },
+      },
+    ],
+  };
+  var returnedServiceStatuses2 = {
+    serviceStatus: [
+      {
+        siteUrl: 'sjsite04.webex.com',
+        license: {
+          status: 'PROVISIONING',
+        },
+      },
+      {
+        license: {
+          status: 'PROVISIONING',
+        },
+      },
+      {
+        siteUrl: 'ghi.webex.com',
+        license: {
+          status: 'PROVISIONED',
+        },
+      },
+    ],
+  };
+  var confServices = getJSONFixture('core/json/authInfo/webexLicenses.json');
 
   // var fakeConferenceService1 = {
   //   "label": "Meeting Center 200",
@@ -201,15 +249,18 @@ describe('Service: WebExSiteRowService', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(angular.mock.module('WebExApp'));
 
-  beforeEach(inject(function (_$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _WebExUtilsFact_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_) {
+  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _SetupWizardService_, _UrlConfig_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_, _WebExUtilsFact_) {
     Auth = _Auth_;
     Authinfo = _Authinfo_;
     WebExSiteRowService = _WebExSiteRowService_;
     FeatureToggleService = _FeatureToggleService_;
-    WebExUtilsFact = _WebExUtilsFact_;
+    SetupWizardService = _SetupWizardService_;
+    UrlConfig = _UrlConfig_;
     WebExApiGatewayService = _WebExApiGatewayService_;
     WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
+    WebExUtilsFact = _WebExUtilsFact_;
 
+    $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
     $q = _$q_;
 
@@ -241,10 +292,13 @@ describe('Service: WebExSiteRowService', function () {
     spyOn(Auth, 'redirectToLogin');
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
     spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('nobody@nowhere.com');
+    spyOn(Authinfo, 'getUserName').and.returnValue('bob@nonmatching-email.com');
+    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
+    spyOn(Authinfo, 'getCustomerAdminEmail').and.returnValue('bob@nonmatching-email.com');
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(WebExUtilsFact, 'getAllSitesWebexLicenseInfo').and.returnValue(deferred_licenseInfo.promise);
     spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
     spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+    spyOn(WebExUtilsFact, 'getAllSitesWebexLicenseInfo').and.returnValue(deferred_licenseInfo.promise);
     spyOn(WebExUtilsFact, 'isCIEnabledSite').and.callFake(function (siteUrl) {
       if (siteUrl === 'sjsite04.webex.com') {
         return true;
@@ -252,6 +306,8 @@ describe('Service: WebExSiteRowService', function () {
         return false;
       }
     });
+    spyOn(SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
+    installPromiseMatchers();
   }));
 
   ////////
@@ -713,6 +769,70 @@ describe('Service: WebExSiteRowService', function () {
     WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
       expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
       expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
+    });
+  });
+
+  it('can group licenses by sites correctly', function () {
+    var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites();
+    expect(_.keys(sites).length).toEqual(3);
+  });
+
+  describe('shouldShowSiteManagement() function', function () {
+    it('should return TRUE the logged in user\'s email or customer admin email matches the pattern supplied', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      Authinfo.getCustomerAdminEmail.and.returnValue('ordersimp-alina@mailinator.com');
+      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
+      promise.then(function (result) {
+        expect(result).toBeTruthy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('should return FALSE if the logged in user\'s PrimaryEmail or CustomerAdminEmail or UserName does NOT match the pattern supplied AND FT is false', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
+      Authinfo.getCustomerAdminEmail.and.returnValue('another@nonmatching-email.com');
+      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
+      promise.then(function (result) {
+        expect(result).toBeFalsy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('will return TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled whoever logged in user is', function () {
+      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
+      promise.then(function (result) {
+        expect(result).toBeTruthy();
+      });
+      expect(promise).toBeResolved();
+    });
+
+    it('will return FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled and the pattern does not match', function () {
+      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
+      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
+      promise.then(function (result) {
+        expect(result).toBeFalsy();
+      });
+      expect(promise).toBeResolved();
+    });
+  });
+  describe('For sites with pending action', function () {
+    beforeEach(function () {
+      spyOn(SetupWizardService, 'getPendingAuthinfoSubscriptions').and.returnValue(pendingStatusSubscriptions);
+      spyOn(UrlConfig, 'getAdminServiceUrl').and.returnValue('adminServiceUrl/');
+      $httpBackend.expect('GET', 'adminServiceUrl/orders/abcd-12345').respond(returnedServiceStatuses1);
+      $httpBackend.expect('GET', 'adminServiceUrl/orders/efgh-67890').respond(returnedServiceStatuses2);
+    });
+    afterEach(function () {
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('displays them as pending action', function () {
+      WebExSiteRowService.initSiteRows();
+      $httpBackend.flush();
+      expect(WebExSiteRowService.siteRows.gridData.length).toBe(3);
+      expect(WebExSiteRowService.siteRows.gridData[0].isPending).toBe(true);
     });
   });
 });

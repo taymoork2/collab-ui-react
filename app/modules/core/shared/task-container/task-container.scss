@@ -1,0 +1,37 @@
+@import 'styles/partials/mixins';
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+task-container {
+  @include keep-flex-container(column);
+
+  .task-container {
+    @include keep-flex-container(row);
+
+    &__panel {
+      @include keep-flex-container(column);
+      flex-grow: 1;
+      min-width: 0;
+      border-right: 1px solid $gray-light;
+
+      &-header {
+        border-bottom: 1px solid $gray-light;
+      }
+
+      &-list {
+        flex: 1 1 0;
+        overflow-y: auto;
+      }
+    }
+
+    &__details {
+      @include keep-flex-container(column);
+      flex-grow: 2;
+      min-width: 0;
+      overflow-y: auto;
+
+      task-container-details {
+        @include keep-flex-container(column);
+      }
+    }
+  }
+}

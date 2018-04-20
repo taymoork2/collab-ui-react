@@ -6,7 +6,7 @@
     .controller('HDSServiceController', HDSServiceController);
 
   /* @ngInject */
-  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, HybridServicesClusterService) {
+  function HDSServiceController($modal, $state, $stateParams, $translate, Authinfo, ServiceDescriptorService) {
     var vm = this;
     vm.backState = $stateParams.backState || 'services-overview';
     vm.pageTitle = 'hds.resources.page_title';
@@ -25,20 +25,20 @@
       type: 'small',
       controller: 'HDSRedirectAddResourceController',
       controllerAs: 'hdsRedirectAddResourceController',
-      templateUrl: 'modules/hds/add-resource/add-resource-modal.html',
+      template: require('modules/hds/add-resource/add-resource-modal.html'),
       modalClass: 'redirect-add-resource',
       resolve: {
         firstTimeSetup: false,
       },
     };
 
-    HybridServicesClusterService.serviceIsSetUp('spark-hybrid-datasecurity')
+    ServiceDescriptorService.isServiceEnabled('spark-hybrid-datasecurity')
       .then(function (enabled) {
         if (!enabled) {
           vm.addResourceModal.resolve.firstTimeSetup = true;
           if (Authinfo.isCustomerLaunchedFromPartner()) {
             $modal.open({
-              templateUrl: 'modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html',
+              template: require('modules/hercules/service-specific-pages/components/add-resource/partnerAdminWarning.html'),
               type: 'dialog',
             });
             return;

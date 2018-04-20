@@ -12,37 +12,30 @@
 
         <td id="domainMenu">
             <span cs-dropdown class="actions-menu dropdown pull-right">
-              <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle">
+              <button cs-dropdown-toggle class="actions-button btn--none dropdown-toggle" aria-label="{{domain.text}} {{domain.status}}">
                 <i class="icon icon-three-dots"></i>
               </button>
               <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
-                <li>
-                  <a ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-show="domain.status==='pending'"
-                     translate="domainManagement.actions.instructions"></a>
+                <li ng-if="domain.status==='pending'">
+                  <a href ui-sref="domainmanagement.instructions({domain: domain, loggedOnUser: dv.loggedOnUser})" translate="domainManagement.actions.instructions"></a>
                 </li>
-                <li>
-                  <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status==='verified'" translate="domainManagement.actions.unverify"></a>
+                <li ng-if="domain.status==='verified'">
+                  <a href ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})" translate="domainManagement.actions.unverify"></a>
                 </li>
-                <li>
-                  <a ui-sref="domainmanagement.unclaim({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status==='claimed'" translate="domainManagement.actions.unclaim"></a>
+                <li ng-if="domain.status==='claimed'">
+                  <a href ui-sref="domainmanagement.unclaim({domain: domain, loggedOnUser: dv.loggedOnUser})" translate="domainManagement.actions.unclaim"></a>
                 </li>
-                <li>
-                  <a ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status==='pending'" translate="domainManagement.verifyDomain"></a>
+                <li ng-if="domain.status==='pending'">
+                  <a href ui-sref="domainmanagement.verify({domain: domain, loggedOnUser: dv.loggedOnUser})" translate="domainManagement.verifyDomain"></a>
                 </li>
-                <li>
-                  <a ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})"
-                     ng-if="domain.status==='pending'" translate="domainManagement.actions.delete"></a>
+                <li ng-if="domain.status==='pending'">
+                  <a href ui-sref="domainmanagement.delete({domain: domain, loggedOnUser: dv.loggedOnUser})" translate="domainManagement.actions.delete"></a>
                 </li>
               </ul>
             </span>
         </td>
       </tr>
     </table>
-    <button class="btn--primary addDomain" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain"
-            ui-sref="domainmanagement.add({loggedOnUser: dv.loggedOnUser})"></button>
+    <button class="btn--primary addDomain" ng-show="dv.loggedOnUser.isLoaded" translate="domainManagement.addDomain" ui-sref="domainmanagement.add({loggedOnUser: dv.loggedOnUser})"></button>
   </section>
 </div>

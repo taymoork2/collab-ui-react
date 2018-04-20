@@ -1,4 +1,5 @@
 import testModule from './index';
+import { KeyCodes } from 'modules/core/accessibility';
 
 describe('Component: csGrid', () => {
   beforeEach(function () {
@@ -10,7 +11,6 @@ describe('Component: csGrid', () => {
       '$scope',
       '$state',
       '$timeout',
-      'GridCellService',
       'uiGridConstants',
     );
 
@@ -18,6 +18,7 @@ describe('Component: csGrid', () => {
       return {
         grid: {
           columns: [{
+            enableSorting: true,
             sort: {
               direction: direction,
             },
@@ -79,7 +80,7 @@ describe('Component: csGrid', () => {
 
   it('should initialize with keyboard shortcuts added when gridAPI is provided', function () {
     this.gridApi = this.getGridApi(this.uiGridConstants.DESC);
-    this.keyCode = this.GridCellService.ENTER;
+    this.keyCode = KeyCodes.ENTER;
     this.spinner = true;
     this.gridOptions.onRegisterApi = jasmine.any(Function);
     const allOptions = _.defaults(this.gridOptions, this.defaultGridOptions);
@@ -96,7 +97,7 @@ describe('Component: csGrid', () => {
 
   it('should initialize with keyboard shortcuts added when gridAPI is not provided', function () {
     const gridApi = this.getGridApi(this.uiGridConstants.ASC);
-    this.keyCode = this.GridCellService.ENTER;
+    this.keyCode = KeyCodes.ENTER;
     this.spinner = true;
     this.initController();
     this.controller.gridOptions.onRegisterApi(gridApi);
@@ -113,7 +114,7 @@ describe('Component: csGrid', () => {
 
   it('should not create sorting shortcuts when sorting is false', function () {
     const gridApi = this.getGridApi();
-    this.keyCode = this.GridCellService.ENTER;
+    this.keyCode = KeyCodes.ENTER;
     this.spinner = true;
     this.gridOptions.enableSorting = false;
 

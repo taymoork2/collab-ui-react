@@ -1,0 +1,237 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
+.gemini-page {
+  .kpi-banner {
+    height: auto !important;
+    padding: 0 0.3rem  0.5rem 0.5rem;
+    overflow: hidden;
+    background: $white;
+    padding-top: 1.2rem;
+    margin-bottom: 0!important;
+
+    .small{
+      position: static !important;
+      width: 16.6% !important;
+      text-align: center;
+      margin: 0.25rem 0;
+
+      h4 {
+        color: $gray-dark-1;
+        font-size: 0.8rem;
+        text-align: center;
+      }
+
+      .waring {
+        color: $color-orange-darker;
+      }
+
+      .row {
+        padding-top: 1rem;
+        height: 4.2rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        height: 4.2rem;
+
+        i {
+          display: inline-block;
+          margin-right: 0.5rem;
+          margin-left: -0.3rem;
+          margin-top: 0.3rem;
+          vertical-align: top;
+        }
+      }
+    }
+  }
+
+  .page-sub-header__right {
+    .select-toggle {
+      margin-bottom: 0;
+    }
+
+    .getExportcsv {
+      position: relative;
+      width: 130px;
+      padding: 0 1.5rem 0 0.5rem;
+      box-sizing: border-box;
+
+      .filterBtn {
+        font-size: 0.9rem;
+        color: $color-blue-dark;
+
+        &:focus {
+          outline: none;
+        }
+      }
+      .icon-download {
+        position: absolute;
+        right: 0;
+        top: 2px;
+      }
+    }
+  }
+
+  .row.chartFilter {
+    background: $white;
+    padding: 1rem;
+    border-bottom: 1px solid $gray-light-3;
+
+    .col-sm-6 {
+      padding-bottom: 0;
+    }
+
+    .durationSelected {
+      text-align: right;
+      line-height: 37px;
+    }
+
+    .col-sm-7 {
+      font-size: 0.9rem;
+      text-align: right;
+      line-height: 2.125rem;
+    }
+
+    .datepickerList {
+      padding-bottom: 0;
+
+      .cs-datapicker-normal {
+
+        i.date-selected {
+          color: $gray-light-3;
+        }
+
+        .close {
+          z-index: -1;
+        }
+      }
+
+      .example-indent {
+        position: relative;
+        .cs-datepicker {
+          width: 100%;
+        }
+      }
+
+      .cs-datepicker .calendar span.day-wrapper span.day.today {
+        color: $color-primary-base;
+      }
+
+      .cs-datepicker .calendar span.day-wrapper span.day.selected-date {
+        color: $white;
+      }
+
+      .data-span {
+        min-width: 2rem;
+        font-size: 15px;
+        line-height: 35px;
+        text-align: center;
+      }
+
+      .data-icon-i {
+        color: $gray-light-1;
+        cursor: pointer;
+        font-size: 30px;
+        line-height: 35px;
+        padding-right: 1rem;
+        margin-top: -10px;
+
+        &::before {
+          padding-top: 10px;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+
+  }
+
+  .row.chartFilter.time-box {
+    padding: 1rem 1.5rem;
+  }
+
+  .icon-download {
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+
+  .reportsChart {
+    background: $white;
+
+    .sm-graphic {
+      width: 100%;
+      height: 380px !important;
+
+      .amExportButton {
+        top: -2.5rem;
+
+        ul {
+          padding: 0.5rem;
+        }
+      }
+    }
+
+    .reportsChartBody {
+
+      .chartHeader {
+        padding: 0 1.5rem;
+        line-height: 30px;
+        box-sizing: border-box;
+
+        h4 {
+          font-family: $brand-font-light;
+          color: $gray-dark-1;
+          font-size: 0.9rem;
+          //padding: 0;
+        }
+
+        span {
+          font-size: 1.2rem;
+          color: $gray-light-2;
+        }
+      }
+    }
+
+    .chartList {
+      .panel-body {
+        padding: 1rem 0.5rem;
+        padding-top: 0;
+      }
+
+      .cs-card-layout {
+        &::after {
+          clear: both;
+          content: '';
+          height: 0;
+          display: block;
+        }
+
+        height: auto !important;
+      }
+
+      .cs-card {
+        &.large {
+          position: inherit !important;
+        }
+        .row {
+          position: absolute;
+          left: 45%;
+          top: 45%;
+        }
+
+        .chartHeader {
+          span {
+            i {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    *:focus {
+      box-shadow: none;
+    }
+  }
+}

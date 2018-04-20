@@ -1,0 +1,5 @@
+<div class="ui-grid-cell-contents" ng-click="grid.appScope.selectRow(grid, row)">
+  <i class="icon icon-circle status-indicator" ng-class="row.entity.cssColorClass"></i>
+  <span
+    ng-bind-html="row.entity.state.readableState | highlightFromSearch:grid.appScope.searchObject():'connectionstatus':true"></span>
+</div>

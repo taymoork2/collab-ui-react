@@ -17,7 +17,7 @@
             HybridServicesFlagService.raiseFlag(HybridServicesUtilsService.getAckFlagForHybridServiceId('squared-fusion-ec'));
           },
           link: function () {
-            $state.go('call-service.list');
+            $state.go('services-overview');
           },
           linkText: 'homePage.getStarted',
           name: 'callConnect',

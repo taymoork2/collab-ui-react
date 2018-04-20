@@ -1,0 +1,47 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.paging-group-member-lookup {
+  .cs-card-layout {
+    @include vr-spacing(ml, 28.5, 0px, true);
+    @include vr-spacing(pb, 1);
+
+    position: fixed !important;
+    height: 16rem !important;
+    width: 58rem;
+    left: 50%;
+    margin-right: auto;
+    overflow: auto;
+    display: inline-flex;
+    flex-flow: row wrap;
+    flex: 1;
+    align-content: flex-start;
+    justify-content: center;
+  }
+
+  .pg-header {
+    margin: auto;
+    width: 54.5rem;
+
+    .member-count {
+      color: $gray-base;
+    }
+  }
+
+  .member-warning {
+    @include vr-spacing(pl, 0);
+
+    color: $gray-darkest;
+  }
+
+  .pg-cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
+
+  .warning .pg-cs-input__messages {
+    margin-top: -1rem;
+    visibility: visible;
+  }
+}

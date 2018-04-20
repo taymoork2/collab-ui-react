@@ -4,14 +4,17 @@
   angular.module('Core')
     .controller('TabsCtrl', TabsCtrl);
 
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   /* @ngInject */
-  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, tabConfig, ControlHubService) {
+  function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, ControlHubService) {
     var vm = this;
     vm.features = [];
     vm.tabs = [];
-    vm.controlHubEnabled = false;
     vm.image = null;
     vm.collapsed = null;
+    vm.icon = null;
+    vm.onResize = onResize;
 
     initTabs();
 
@@ -71,19 +74,17 @@
     }
 
     function initTabs() {
-      ControlHubService.getControlHubEnabled().then(function (result) {
-        vm.image = ControlHubService.getImage();
-        vm.collapsed = ControlHubService.getCollapsed();
-        vm.controlHubEnabled = result;
-        vm.unfilteredTabs = initializeTabs();
-        vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
-        getFeatureToggles(vm.features);
-        filterTabsOnFeaturesAndSetActiveTab();
-      });
+      vm.image = ControlHubService.getImage();
+      vm.icon = ControlHubService.getIcon();
+      vm.collapsed = ControlHubService.getCollapsed();
+      vm.unfilteredTabs = initializeTabs();
+      vm.features = getUpdatedFeatureTogglesFromTabs(vm.unfilteredTabs, vm.features);
+      getFeatureToggles(vm.features);
+      filterTabsOnFeaturesAndSetActiveTab();
     }
 
     function initializeTabs() {
-      var tabs = _.cloneDeep(vm.controlHubEnabled ? ControlHubService.getTabs() : tabConfig);
+      var tabs = _.cloneDeep(ControlHubService.getTabs());
       return _.chain(tabs)
         .filter(function (tab) {
           // Remove subPages whose parent tab is hideProd or states that aren't allowed
@@ -154,6 +155,10 @@
       $q.all(toggles).then(function () {
         filterTabsOnFeaturesAndSetActiveTab();
       });
+    }
+
+    function onResize() {
+      $rootScope.$emit(CoreEvent.SIDENAV_RESIZED);
     }
   }
 })();

@@ -25,9 +25,10 @@ interface ICallParkRangeResource extends ng.resource.IResourceClass<ng.resource.
 export class CallParkService {
   private callParkResource: ICallParkResource;
   private callParkRangeResource: ICallParkRangeResource;
+  private locationCallParkRangeResource: ICallParkRangeResource;
   private callParkDataCopy: CallPark;
-  private callParkProperties: string[] = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer'];
-  private fallbackDestProperties: string[] = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail'];
+  private callParkProperties: string[] = ['uuid', 'name', 'startRange', 'endRange', 'members', 'fallbackTimer', 'location'];
+  private fallbackDestProperties: string[] = ['memberUuid', 'name', 'number', 'numberUuid', 'sendToVoicemail', 'timer'];
 
   /* @ngInject */
   constructor(
@@ -56,6 +57,7 @@ export class CallParkService {
       });
 
     this.callParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/features/callparks/ranges/:startRange');
+    this.locationCallParkRangeResource = <ICallParkRangeResource>this.$resource(this.HuronConfig.getCmiV2Url() + '/customers/:customerId/locations/:locationId/features/callparks/ranges/:startRange');
   }
 
   public getCallParkList(): ng.IPromise<ICallParkListItem[]> {
@@ -78,6 +80,8 @@ export class CallParkService {
       .then( (callParkResource) => {
         const callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
         callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
+        // The timer property is not in GET callpark and needs to be set to null to be consistent.
+        callPark.fallbackDestination.timer = null;
 
         const callParkMembers: CallFeatureMember[] = _.map(callParkResource.members, member => {
           return new CallFeatureMember({
@@ -130,6 +134,7 @@ export class CallParkService {
     return this.callParkResource.save({
       customerId: this.Authinfo.getOrgId(),
     }, {
+      locationUuid: _.get(data, 'location.uuid'),
       name: data.name,
       startRange: data.startRange,
       endRange: data.endRange,
@@ -147,6 +152,8 @@ export class CallParkService {
       customerId: this.Authinfo.getOrgId(),
       callParkId: callParkId,
     }, {
+      // TODO: samwi - enable when ready
+      // locationUuid: _.get(data, 'location.uuid'),
       name: data.name,
       startRange: data.startRange,
       endRange: data.endRange,
@@ -172,23 +179,44 @@ export class CallParkService {
     }).$promise;
   }
 
-  public getRangeList(): ng.IPromise<ICallParkRangeItem[]> {
-    return this.callParkRangeResource.get({
-      customerId: this.Authinfo.getOrgId(),
-    }).$promise
-    .then( ranges => {
-      return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
-    });
+  public getRangeList(location?): ng.IPromise<ICallParkRangeItem[]> {
+    if (location) {
+      return this.locationCallParkRangeResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        locationId: location.uuid,
+      }).$promise
+      .then( ranges => {
+        return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
+      });
+    } else {
+      return this.callParkRangeResource.get({
+        customerId: this.Authinfo.getOrgId(),
+      }).$promise
+      .then( ranges => {
+        return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
+      });
+    }
   }
 
-  public getEndRange(startRange: string): ng.IPromise<string[]> {
-    return this.callParkRangeResource.get({
-      customerId: this.Authinfo.getOrgId(),
-      startRange: startRange,
-    }).$promise
-    .then( endRanges => {
-      return _.get<string[]>(endRanges, 'endRange', []);
-    });
+  public getEndRange(startRange: string, location?): ng.IPromise<string[]> {
+    if (location) {
+      return this.locationCallParkRangeResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        locationId: location.uuid,
+        startRange: startRange,
+      }).$promise
+      .then( endRanges => {
+        return _.get<string[]>(endRanges, 'endRange', []);
+      });
+    } else {
+      return this.callParkRangeResource.get({
+        customerId: this.Authinfo.getOrgId(),
+        startRange: startRange,
+      }).$promise
+      .then( endRanges => {
+        return _.get<string[]>(endRanges, 'endRange', []);
+      });
+    }
   }
 
   private cloneCallParkData(callParkData: CallPark): CallPark {

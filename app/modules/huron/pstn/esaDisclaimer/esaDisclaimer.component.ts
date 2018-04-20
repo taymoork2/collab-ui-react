@@ -3,7 +3,7 @@ import { Notification } from 'modules/core/notifications';
 
 export class EsaDisclaimerComponent implements ng.IComponentOptions {
   public controller = EsaDisclaimerCtrl;
-  public templateUrl = 'modules/huron/pstn/esaDisclaimer/esaDisclaimer.html';
+  public template = require('modules/huron/pstn/esaDisclaimer/esaDisclaimer.html');
   public bindings = {
     onDismiss: '&',
   };

@@ -1,0 +1,28 @@
+<div class="bullet"
+     ng-class="{'bullet_edited': bctrl.searchElement.isBeingEdited(), 'bullet_toplevel': !bctrl.isSubLevel}"
+     ng-dblclick="bctrl.bulletContainer.editBullet(bctrl.searchElement)">
+
+  <span class="field-descriptor" ng-if="bctrl.getQueryField()">{{bctrl.getTranslatedQueryPrefix()}} </span>
+
+  <span ng-if="!bctrl.collectionOperator()">
+    <span>{{bctrl.getTranslatedQueryValue()}}</span>
+  </span>
+
+  <span ng-if="bctrl.collectionOperator()">
+    <span ng-if="bctrl.getQueryField()" class="collection-operator">(</span>
+    <span ng-repeat="subElem in bctrl.subElements()">
+      <span class="collection-operator" ng-if="subElem !== bctrl.subElements()[0]"> {{ bctrl.collectionOperator() }}
+      </span>
+      <device-search-bullet is-sub-level=true search-element="subElem"
+                            bullet-container="bctrl.bulletContainer"></device-search-bullet>
+      </span>
+      <span ng-if="bctrl.getQueryField()" class="collection-operator">)</span>
+  </span>
+  <div class="bullet-close">
+  <i ng-if=!bctrl.isSubLevel class="icon icon-close"
+     ng-click="bctrl.bulletContainer.removeBullet(bctrl.searchElement)"/>
+  </div>
+
+</div>
+
+

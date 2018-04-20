@@ -4,16 +4,17 @@
     translate="locations.locationCallerId">
   </label>
   <cs-toggle-switch
+    id="locationCallerIdToggleSwitch"
     ng-model="$ctrl.locationCallerIdEnabled"
     toggle-id="locationCallerIdToggle"
     name="locationCallerIdToggle"
-    size="small"
-    cs-change="$ctrl.onLocationCallerIdToggled(toggleValue)">
+    size="$ctrl.size"
+    cs-change="$ctrl.onLocationCallerIdToggled(toggleValue)"
+    cs-aria-label="{{::'locations.locationCallerId' | translate}}"
+    ng-keypress="$ctrl.evalKeyPress($event)">
   </cs-toggle-switch>
   <div ng-if="$ctrl.locationCallerIdEnabled">
-    <input
-      cs-input
-      type="text"
+    <input cs-input type="text"
       id="callerIdName"
       name="callerIdName"
       placeholder="{{$ctrl.companyName}}"

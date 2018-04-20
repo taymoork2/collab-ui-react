@@ -40,7 +40,7 @@ class CallParkReversionTimerCtrl implements ng.IComponentController {
 
 export class CallParkReversionTimerComponent implements ng.IComponentOptions {
   public controller = CallParkReversionTimerCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park-reversion-timer/call-park-reversion-timer.component.html';
+  public template = require('modules/call/features/call-park/call-park-reversion-timer/call-park-reversion-timer.component.html');
   public bindings = {
     fallbackTimer: '<',
     onChangeFn: '&',

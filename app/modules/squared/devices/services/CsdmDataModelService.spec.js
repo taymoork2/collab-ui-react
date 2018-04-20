@@ -25,7 +25,6 @@ describe('Service: CsdmDataModelService', function () {
   var huronPlaceWithoutDeviceUrl = placesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
 
   var initialDeviceMap;
-  var initialDevice1Reference;
   var initialDeviceCount;
   var initialPlaceMap;
   var initialPlaceCount;
@@ -69,7 +68,6 @@ describe('Service: CsdmDataModelService', function () {
       initialPlaceMap = placesMap;
       initialDeviceMapPromise.then(function (deviceMap) {
         initialDeviceMap = deviceMap;
-        initialDevice1Reference = initialDeviceMap[device1Url];
         initialDeviceCount = Object.keys(initialDeviceMap).length;
       });
     });
@@ -924,160 +922,6 @@ describe('Service: CsdmDataModelService', function () {
 
       $httpBackend.verifyNoOutstandingRequest();
       $httpBackend.verifyNoOutstandingExpectation();
-    });
-  });
-
-  describe('polling', function () {
-    var scope;
-
-    beforeEach(function () {
-      scope = $rootScope.$new();
-
-      $httpBackend.expectGET(devicesUrl + '?checkDisplayName=false&checkOnline=false');
-      $httpBackend.expectGET(devicesUrl);
-      $rootScope.$apply();
-
-      CsdmDataModelService.devicePollerOn('data', _.noop, {
-        scope: scope,
-      });
-
-      $rootScope.$digest();
-      $timeout.flush(1000);
-      $httpBackend.flush();
-      $rootScope.$apply();
-    });
-
-    afterEach(function () {
-      $httpBackend.verifyNoOutstandingRequest();
-      $httpBackend.verifyNoOutstandingExpectation();
-
-      scope.$destroy();
-    });
-
-    it('has done the initial poll', function () {
-      $httpBackend.verifyNoOutstandingRequest();
-      $httpBackend.verifyNoOutstandingExpectation();
-    });
-
-    it('polls for devices every 30 second', function () {
-      $httpBackend.expectGET(devicesUrl).respond(initialHttpDevices);
-      $timeout.flush(31000);
-
-      $httpBackend.flush();
-    });
-
-    it('polls only the full url, not the fast url', function () {
-      $httpBackend.expectGET(devicesUrl).respond(initialHttpDevices);
-      $timeout.flush(31000);
-      $httpBackend.flush(1); //there should only be one to flush
-      $rootScope.$digest();
-    });
-
-    it('stops polling when the scope is destroyed', function () {
-      scope.$destroy();
-
-      $timeout.flush(31000);
-
-      $httpBackend.verifyNoOutstandingRequest();
-      $httpBackend.verifyNoOutstandingExpectation();
-    });
-
-    describe('datamodel', function () {
-      beforeEach(function () {
-        executeGetCallsAndInitPromises();
-      });
-
-
-      it('will keep references and include a new added device', function () {
-        var addedDevUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f';
-
-        var devicesWithOneAdded = JSON.parse(JSON.stringify(initialHttpDevices));
-
-        devicesWithOneAdded[addedDevUrl] = {
-          displayName: 'addedDevice',
-          cisUuid: 'a19b308a-AddedDevice-71898e423bec',
-          accountType: 'MACHINE',
-          url: 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/aaaaaa-ed35-4e00-a20d-d4d3519efb4f',
-          createTime: '2016-09-15T01:12:01.105Z',
-          description: '["one", "two", "three"]',
-          product: 'SX10',
-        };
-
-        $httpBackend.expectGET(devicesUrl).respond(devicesWithOneAdded);
-
-        $timeout.flush(31000);
-
-        $httpBackend.flush();
-
-        expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount + 1);
-        expect(initialDeviceMap[addedDevUrl].cisUuid).toEqual('a19b308a-AddedDevice-71898e423bec');
-        expect(initialDeviceMap[device1Url].cisUuid).toEqual(initialDevice1Reference.cisUuid);
-
-        expect(initialDeviceMap[device1Url]).toBe(initialDevice1Reference);
-
-        initialDevice1Reference.ThisIsTheInitialRef = 'YAYA';
-
-        expect(initialDeviceMap[device1Url].ThisIsTheInitialRef).toEqual('YAYA');
-
-        CsdmDataModelService.getDevicesMap().then(function (devicesMap) {
-          expect(Object.keys(devicesMap).length).toBe(initialDeviceCount + 1);
-          expect(devicesMap[addedDevUrl].cisUuid).toEqual('a19b308a-AddedDevice-71898e423bec');
-          expect(devicesMap[device1Url]).toBe(initialDevice1Reference);
-        });
-      });
-
-      it('will keep references and remove a no longer returned device', function () {
-        var deletedDeviceUrl = device1Url;
-
-        var devicesWithOneRemoved = JSON.parse(JSON.stringify(initialHttpDevices));
-        delete devicesWithOneRemoved[deletedDeviceUrl];
-
-        var randomKeptDeviceUrl = Object.keys(devicesWithOneRemoved)[0];
-        var randomKeptDevice = initialDeviceMap[randomKeptDeviceUrl];
-
-        $httpBackend.expectGET(devicesUrl).respond(devicesWithOneRemoved);
-
-        $timeout.flush(31000);
-
-        $httpBackend.flush();
-
-        expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount - 1);
-
-        expect(initialDeviceMap[deletedDeviceUrl]).toBeUndefined();
-
-        //Make sure references are kept:
-        expect(initialDeviceMap[randomKeptDeviceUrl]).toBe(randomKeptDevice);
-      });
-
-      it('will keep references and apply changes to a modified device', function () {
-        var moddedDevUrl = device1Url;
-
-        var devicesWithOneModified = JSON.parse(JSON.stringify(initialHttpDevices));
-
-        var newDisplayName = 'Modified Display Name';
-
-        var moddedDeviceRef = initialDeviceMap[moddedDevUrl];
-
-        _(devicesWithOneModified)
-          .filter({
-            cisUuid: pWithDevicesUuid,
-          })
-          .forEach(function (device) {
-            device.displayName = newDisplayName;
-          });
-
-        expect(devicesWithOneModified[moddedDevUrl].displayName).toEqual(newDisplayName);
-
-        $httpBackend.expectGET(devicesUrl).respond(devicesWithOneModified);
-
-        $timeout.flush(31000);
-
-        $httpBackend.flush();
-
-        expect(Object.keys(initialDeviceMap).length).toBe(initialDeviceCount);
-        expect(initialDeviceMap[moddedDevUrl].displayName).toEqual(newDisplayName);
-        expect(initialDeviceMap[moddedDevUrl]).toBe(moddedDeviceRef);
-      });
     });
   });
 });

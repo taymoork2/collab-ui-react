@@ -84,8 +84,8 @@
             error: 'trialModal.errorServerDown',
           };
         } else {
-          // we allow duplicate emails for the  the user who is a consumer
-          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true')) {
+          // we allow duplicate emails for the consumer users and duplicate organization names
+          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true') && key !== 'organizationName') {
             return {
               error: 'trialModal.errorInUse',
             };
@@ -376,8 +376,7 @@
 
     function calcDaysLeft(startDate, trialPeriod, currentDate) {
       var daysUsed = calcDaysUsed(startDate, currentDate);
-      var daysLeft = trialPeriod - daysUsed;
-      return daysLeft;
+      return (daysUsed < 0) ? -1 : trialPeriod - daysUsed;
     }
 
     function calcDaysUsed(startDate, currentDate) {
@@ -387,7 +386,7 @@
       d2.setUTCHours(0, 0, 0, 0);
       var deltaMs = d2 - d1;
       var daysUsed = Math.floor(deltaMs / (24 * 60 * 60 * 1000));
-      return daysUsed;
+      return Number.isNaN(daysUsed) ? -1 : daysUsed;
     }
 
     function getExpirationPeriod(trialId, currentDate) {

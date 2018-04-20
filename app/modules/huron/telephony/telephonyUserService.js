@@ -1,58 +1,27 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Huron')
-    .factory('HuronUser', HuronUser);
+  var userServiceCommonModuleName = require('./cmiServices');
+  var logMetricsServiceModuleName = require('modules/core/scripts/services/logmetricsservice');
+  var notificationModuleName = require('modules/core/notifications').default;
+
+  module.exports = angular
+    .module('huron.huron-user', [
+      userServiceCommonModuleName,
+      logMetricsServiceModuleName,
+      notificationModuleName,
+    ])
+    .factory('HuronUser', HuronUser)
+    .name;
 
   /* @ngInject */
-  function HuronUser(Authinfo, UserServiceCommon, UserServiceCommonV2, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification, CallerId) {
-    function deleteUser(uuid) {
-      return UserServiceCommon.remove({
-        customerId: Authinfo.getOrgId(),
-        userId: uuid,
-      }).$promise;
-    }
-
+  function HuronUser(Authinfo, UserServiceCommon, HuronEmailService, UserDirectoryNumberService, IdentityOTPService, LogMetricsService, Notification) {
     function acquireOTP(userName) {
       var otpRequest = {
         userName: userName,
       };
 
       return IdentityOTPService.save({}, otpRequest).$promise;
-    }
-
-    function create(uuid, data) {
-      var user = {};
-      user.userName = data.email;
-
-      if (data.name) {
-        if (data.name.givenName) {
-          user.firstName = data.name.givenName.trim();
-        }
-        if (data.name.familyName) {
-          user.lastName = data.name.familyName.trim();
-        }
-      }
-
-      if (!_.isUndefined(uuid)) {
-        user.uuid = uuid;
-      }
-
-      if (data.directoryNumber) {
-        user.directoryNumber = data.directoryNumber;
-      }
-
-      if (data.externalNumber) {
-        user.externalNumber = data.externalNumber;
-      }
-
-      return UserServiceCommonV2.save({
-        customerId: Authinfo.getOrgId(),
-      }, user).$promise
-        .then(function () {
-          return sendWelcomeEmail(user.userName, user.lastName, uuid, Authinfo.getOrgId());
-        });
     }
 
     function sendWelcomeEmail(userName, lastName, uuid, customerId) {
@@ -113,34 +82,12 @@
       return UserServiceCommon.update({
         customerId: Authinfo.getOrgId(),
         userId: uuid,
-      }, user).$promise.then(function () {
-        var userName = '';
-        userName = (user.firstName) ? user.firstName : '';
-        userName = (user.lastName) ? (userName + ' ' + user.lastName) : userName;
-        userName = userName || data.userName;
-        return CallerId.updateInternalCallerId(uuid, userName);
-      });
-    }
-
-    function updateDtmfAccessId(uuid, dtmfAccessId) {
-      var payload = {
-        voicemail: {
-          dtmfAccessId: dtmfAccessId,
-        },
-      };
-
-      return UserServiceCommon.update({
-        customerId: Authinfo.getOrgId(),
-        userId: uuid,
-      }, payload).$promise;
+      }, user).$promise;
     }
 
     return {
-      delete: deleteUser,
       acquireOTP: acquireOTP,
-      create: create,
       update: update,
-      updateDtmfAccessId: updateDtmfAccessId,
       sendWelcomeEmail: sendWelcomeEmail,
     };
   }

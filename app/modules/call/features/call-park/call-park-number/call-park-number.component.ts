@@ -1,3 +1,4 @@
+import { AccessibilityService } from 'modules/core/accessibility';
 import { CallParkService, ICallParkRangeItem } from 'modules/call/features/call-park';
 
 export enum RangeType {
@@ -14,9 +15,11 @@ export enum RangeFieldName {
 class CallParkNumberCtrl implements ng.IComponentController {
 
   public range: ICallParkRangeItem;
+  public location;
   public extensionLength: string;
   public onChangeFn: Function;
   public onKeyPressFn: Function;
+  public setFocus: boolean;
 
   public form: ng.IFormController;
   public rangeType: RangeType = RangeType.RANGE;
@@ -28,8 +31,16 @@ class CallParkNumberCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
+    private AccessibilityService: AccessibilityService,
     private CallParkService: CallParkService,
   ) {}
+
+  public $onInit() {
+    if (this.setFocus) {
+      this.AccessibilityService.setFocus(this.$element, '[name="startRange"]', 100);
+    }
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { range } = changes;
@@ -53,7 +64,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public getRangeList(): ng.IPromise<ICallParkRangeItem[]> {
-    return this.CallParkService.getRangeList().then( ranges => {
+    return this.CallParkService.getRangeList(this.location).then( ranges => {
       return ranges;
     });
   }
@@ -69,7 +80,7 @@ class CallParkNumberCtrl implements ng.IComponentController {
   }
 
   public getEndRangeList(startRange: string): ng.IPromise<string[]> {
-    return this.CallParkService.getEndRange(startRange).then( endRanges => {
+    return this.CallParkService.getEndRange(startRange, this.location).then( endRanges => {
       return _.drop(endRanges);
     });
   }
@@ -127,19 +138,17 @@ class CallParkNumberCtrl implements ng.IComponentController {
       this.singleNumber = '';
     }
   }
-
-  public focusInput($event) {
-    angular.element($event.currentTarget).siblings('label').find('input').first().focus();
-  }
 }
 
 export class CallParkNumberComponent implements ng.IComponentOptions {
   public controller = CallParkNumberCtrl;
-  public templateUrl = 'modules/call/features/call-park/call-park-number/call-park-number.component.html';
+  public template = require('modules/call/features/call-park/call-park-number/call-park-number.component.html');
   public bindings = {
     range: '<',
     extensionLength: '<',
+    location: '<',
     onChangeFn: '&',
     onKeyPressFn: '&',
+    setFocus: '<',
   };
 }

@@ -2,31 +2,4 @@
 <div ng-if="userOverview.currentUser.pendingStatus">
   <div ui-view="userPending"></div>
 </div>
-<cs-sp-container ng-class="{'user-pending': userOverview.currentUser.pendingStatus}">
-  <cs-sp-section>
-    <section-title
-      title-key="usersPreview.servicesPreview"
-      action-list="userOverview.actionList"
-      as-button="true">
-    </section-title>
-    <feature-list
-      features="userOverview.services"
-      on-feature-click="userOverview.clickService(feature)">
-    </feature-list>
-  </cs-sp-section>
-  <hercules-cloud-extensions user="userOverview.currentUser"></hercules-cloud-extensions>
-  <cs-sp-section ng-if="userOverview.enableRolesAndSecurityOption">
-    <section-title
-      title-key="usersPreview.rolesAndSecurity"
-      on-action-click="userOverview.clickRolesAndSecurity()">
-    </section-title>
-  </cs-sp-section>
-  <uc-devices ng-if="userOverview.showDevices"></uc-devices>
-  <uc-user-details
-    ng-show="userOverview.hasSparkCall"
-    details="userOverview.userDetailList"
-    on-user-detail-click="userOverview.clickUserDetailsService(userDetail)"
-    user-details="userOverview.currentUser"></uc-user-details>
-  <cmc-user-details user="userOverview.currentUser">
-  </cmc-user-details>
-</cs-sp-container>
+<div class="side-panel-container-view" ui-view="side-panel-container"></div>

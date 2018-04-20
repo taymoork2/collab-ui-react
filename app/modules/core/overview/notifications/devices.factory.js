@@ -9,13 +9,15 @@
   function OverviewDevicesNotification($state) {
     return {
       createNotification: function createNotification(text) {
+        var devicesLocation = 'devices';
         var notification = {
           badgeText: 'homePage.todo',
           badgeType: 'warning',
           canDismiss: true,
-          dismiss: function () {},
+          dismiss: function () {
+          },
           link: function () {
-            $state.go('devices');
+            $state.go(devicesLocation);
           },
           linkText: 'homePage.getStarted',
           name: 'devices',

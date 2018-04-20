@@ -1,0 +1,57 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{::'hcs.upgrade.title'| translate}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="hcs-no-data" ng-if="$ctrl.currentList.length === 0">
+  <h2 translate="hcs.softwareProfiles.noneProfile"></h2>
+  <h5 translate="hcs.softwareProfiles.noneProfileDesc"></h5>
+  <button class="btn btn--primary btn--large" ng-click="$ctrl.addSwProfile()">
+    <span translate="hcs.softwareProfiles.add"></span>
+  </button>
+</div>
+<div ng-if="$ctrl.currentList.length > 0">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter
+        search-item-fn="$ctrl.filteredList(searchStr)"
+        clear-aria-text="{{::'common.clear' | translate}}"
+        search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+      <div>
+        <span translate="common.all"></span>
+        <span class="count">{{$ctrl.currentList.length}}</span>
+      </div>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button type="button"
+        class="btn--primary"
+        ng-click="$ctrl.addSwProfile()"> {{::'hcs.softwareProfiles.add' | translate}}</button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="cs-card-container">
+    <cs-card-layout>
+      <cs-card class="cs-card--small header-background hoverable" ng-repeat="swprofile in $ctrl.currentList">
+        <article ng-click="$ctrl.editSwProfile(swprofile)" hover-delay>
+          <header>
+            <div class="header-with-right-icon">
+              <p class="h4" title="Card Name">{{swprofile.name}}</p>
+              <div class="right card-icon-div">
+                <button type="button" class="close"
+                  ng-click="$ctrl.deleteSwProfile()"
+                  ng-keydown=""
+                  aria-label="{{::'common.delete' | translate}}"></button>
+              </div>
+            </div>
+          </header>
+          <section class="card-body card-section">
+          </section>
+          <footer></footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

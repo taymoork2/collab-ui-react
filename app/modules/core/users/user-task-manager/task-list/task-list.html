@@ -1,0 +1,6 @@
+<user-task-list-item
+  ng-repeat="task in $ctrl.taskList track by task.id"
+  task="task"
+  is-active-task="$ctrl.isActiveTask(task)"
+  ng-click="$ctrl.setActiveTask(task)">
+</user-task-list-item>

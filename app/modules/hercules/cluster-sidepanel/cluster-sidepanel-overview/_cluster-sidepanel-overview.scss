@@ -4,7 +4,12 @@ cluster-sidepanel-overview {
   .cs-input__help-text {
     margin-top: 3px;
   }
+
+  cs-statusindicator {
+    padding-right: 4px;
+  }
 }
+
 .tooltip[popup-class="cluster-name"] .c-nub {
   font-size: small;
   white-space: normal;

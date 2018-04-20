@@ -6,8 +6,7 @@ import { CallParkRangeLengthValidator } from './call-park-number-validate-range-
 
 export default angular
   .module('huron.call-park-number', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucCallParkNumber', new CallParkNumberComponent())

@@ -3,8 +3,7 @@ import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-s
 class HybridServicesClusterPageCtrl implements ng.IComponentController {
   public tabs: { title: string, state: string }[] = [];
   public title: string;
-  public backUrl: string = 'cluster-list';
-  public hasNodesViewFeatureToggle: boolean;
+  public backState = 'cluster-list';
 
   /* @ngInject */
   constructor(
@@ -15,9 +14,12 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { clusterId } = changes;
+    const { clusterId, backState } = changes;
     if (clusterId && clusterId.currentValue) {
       this.init(clusterId.currentValue);
+    }
+    if (backState && backState.currentValue) {
+      this.backState = backState.currentValue;
     }
   }
 
@@ -43,18 +45,22 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
           case 'ucm_mgmt':
             route = 'cucm';
             break;
+          case 'cs_mgmt':
+            route = 'context';
+            break;
           default:
             route = '';
         }
-        // Don't show any tabs if the "Nodes" one is not available. Only the "Settings" tab would be weird
-        if (this.hasNodesViewFeatureToggle) {
-          this.tabs = [{
-            title: this.$translate.instant('common.nodes'),
-            state: `${route}-cluster.nodes`,
-          }, {
-            title: this.$translate.instant('common.settings'),
-            state: `${route}-cluster.settings`,
-          }];
+        this.tabs = [{
+          title: this.$translate.instant('common.nodes'),
+          state: `${route}-cluster.nodes`,
+        }, {
+          title: this.$translate.instant('common.settings'),
+          state: `${route}-cluster.settings`,
+        }];
+        // Context clusters doesn't have settings so no need to display the tabs for now
+        if (cluster.targetType === 'cs_mgmt') {
+          this.tabs = [];
         }
       });
 
@@ -68,9 +74,9 @@ class HybridServicesClusterPageCtrl implements ng.IComponentController {
 
 export class HybridServicesClusterPageComponent implements ng.IComponentOptions {
   public controller = HybridServicesClusterPageCtrl;
-  public templateUrl = 'modules/hercules/hybrid-services-cluster-page/hybrid-services-cluster-page.html';
+  public template = require('modules/hercules/hybrid-services-cluster-page/hybrid-services-cluster-page.html');
   public bindings = {
+    backState: '<',
     clusterId: '<',
-    hasNodesViewFeatureToggle: '<',
   };
 }

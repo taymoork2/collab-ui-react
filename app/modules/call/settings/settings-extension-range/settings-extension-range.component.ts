@@ -5,11 +5,14 @@ class ExtensionRangeCtrl implements ng.IComponentController {
   public steeringDigit: string;
   public numberRanges: InternalNumberRange[];
   public firstTimeSetup: boolean;
+  public isCreateLocation: boolean;
+  public isRoutingPrefixValid: boolean;
   public onChangeFn: Function;
   public extensionRangeForm: ng.IFormController;
   public messages: any = {};
   public DEFAULT_START_RANGE: string = '500';
   public DEFAULT_END_RANGE: string = '599';
+  public addDisabled: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -57,7 +60,9 @@ class ExtensionRangeCtrl implements ng.IComponentController {
       beginNumber: '',
       endNumber: '',
     });
-    this.extensionRangeForm.$setDirty();
+    if (this.extensionRangeForm) {
+      this.extensionRangeForm.$setDirty();
+    }
     this.onExtensionRangeChange();
   }
 
@@ -81,27 +86,41 @@ class ExtensionRangeCtrl implements ng.IComponentController {
     return false;
   }
 
-  public showTrashCan(): boolean {
-    if (this.numberRanges.length === 1) {
+  public showTrashCan(numberRange: InternalNumberRange): boolean {
+    if (this.isCreateLocation && !_.isEmpty(numberRange.uuid)) {
+      return false;
+    } else if (this.numberRanges.length === 1) {
       return false;
     }
     return true;
   }
 
   public isDisabled(numberRange: InternalNumberRange): boolean {
-    return !_.isEmpty(numberRange.uuid);
+    if (this.isCreateLocation) {
+      if (this.isRoutingPrefixValid) {
+        this.addDisabled = false;
+        return !_.isEmpty(numberRange.uuid);
+      } else {
+        this.addDisabled = true;
+        return true;
+      }
+    } else {
+      return !_.isEmpty(numberRange.uuid);
+    }
   }
 
 }
 
 export class ExtensionRangeComponent implements ng.IComponentOptions {
   public controller = ExtensionRangeCtrl;
-  public templateUrl = 'modules/call/settings/settings-extension-range/settings-extension-range.component.html';
+  public template = require('modules/call/settings/settings-extension-range/settings-extension-range.component.html');
   public bindings = {
     steeringDigit: '<',
     extensionLength: '<',
     numberRanges: '<',
     firstTimeSetup: '<',
+    isCreateLocation: '<',
+    isRoutingPrefixValid: '<',
     onChangeFn: '&',
   };
 }

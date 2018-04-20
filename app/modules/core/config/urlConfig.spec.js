@@ -353,6 +353,15 @@ describe('UrlConfigSpec', function () {
     });
   });
 
+  it('should return correct hydra url', function () {
+    whenCalling('getHydraServiceUrl').expectUrlToBe({
+      dev: 'https://api.ciscospark.com/v1',
+      cfe: 'https://api.ciscospark.com/v1',
+      integration: 'https://api.ciscospark.com/v1',
+      prod: 'https://api.ciscospark.com/v1',
+    });
+  });
+
   it('should return correct Sunlight Config Service url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
       dev: 'https://config.devus1.ciscoccservice.com/config/v1',
@@ -362,12 +371,30 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct Virtual Assistant Config Service url', function () {
-    whenCalling('getVirtualAssistantConfigServiceUrl').expectUrlToBe({
-      dev: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      cfe: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      integration: 'https://bot-services.appstaging.ciscoccservice.com/bot-services/v1/config',
-      prod: 'https://bot-services.produs1.ciscoccservice.com/bot-services/v1/config',
+  it('should return correct Sunlight UR Service url', function () {
+    whenCalling('getSunlightURServiceUrl').expectUrlToBe({
+      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
+      prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
+    });
+  });
+
+  it('should return correct Customer Virtual Assistant Service url', function () {
+    whenCalling('getCvaServiceUrl').expectUrlToBe({
+      dev: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      cfe: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      integration: 'https://int-virtual-assistant.appstaging.ciscoccservice.com/virtual-assistant/v1/',
+      prod: 'https://virtual-assistant.produs1.ciscoccservice.com/virtual-assistant/v1/',
+    });
+  });
+
+  it('should return correct Expert Virtual Assistant Service url', function () {
+    whenCalling('getEvaServiceUrl').expectUrlToBe({
+      dev: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      cfe: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
+      prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     });
   });
 
@@ -377,24 +404,6 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com',
-    });
-  });
-
-  it('should return correct sunlight pick notification url', function () {
-    whenCalling('getSunlightPickNotificationUrl').expectUrlToBe({
-      dev: 'https://notifs.devus1.ciscoccservice.com/notifs/v1/publish',
-      cfe: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      integration: 'https://notifs.appstaging.ciscoccservice.com/notifs/v1/publish',
-      prod: 'https://notifs.produs1.ciscoccservice.com/notifs/v1/publish',
-    });
-  });
-
-  it('should return correct sunlight push notification url', function () {
-    whenCalling('getSunlightPushNotificationUrl').expectUrlToBe({
-      dev: 'https://pqm.devus1.ciscoccservice.com/pqm/v1/publish/taskState',
-      cfe: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      integration: 'https://pqm.appstaging.ciscoccservice.com/pqm/v1/publish/taskState',
-      prod: 'https://pqm.produs1.ciscoccservice.com/pqm/v1/publish/taskState',
     });
   });
 
@@ -431,6 +440,15 @@ describe('UrlConfigSpec', function () {
       cfe: 'https://web.ciscospark.com/',
       integration: 'https://web.ciscospark.com/',
       prod: 'https://web.ciscospark.com/',
+    });
+  });
+
+  it('should return correct ccfs urls', function () {
+    whenCalling('getContextCcfsUrl', 'foo').expectUrlToBe({
+      dev: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      cfe: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      integration: 'https://ccfs.appstaging.ciscoccservice.com/v1',
+      prod: 'https://ccfs.produs1.ciscoccservice.com/v1',
     });
   });
 });

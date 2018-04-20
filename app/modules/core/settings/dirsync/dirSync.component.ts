@@ -46,7 +46,7 @@ class DirSyncController implements ng.IComponentController {
 
 export class DirSyncComponent implements ng.IComponentOptions {
   public controller = DirSyncController;
-  public templateUrl = 'modules/core/settings/dirsync/dirSync.html';
+  public template = require('modules/core/settings/dirsync/dirSync.html');
   public bindings = {
     enabled: '<',
     onDisableDirsync: '&',

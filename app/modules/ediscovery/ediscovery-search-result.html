@@ -1,162 +1,100 @@
-<div class="row" ng-if="ediscoverySearchCtrl.roomInfo">
-  <div class="columns small-12 small-centered">
-    <cs-card class="full">
-      <article>
-        <div class="row search-result">
-          <div class="report-logo-column columns small-12 medium-5 large-5">
-            <div class="report-logo center">
-              <i class="icon icon-circle-group"></i>
-            </div>
-          </div>
-          <div class="columns small-12 medium-7 large-7">
-            <div class="create-form">
-              <h2 class="ellipsis">
-                {{ediscoverySearchCtrl.report ? ediscoverySearchCtrl.report.displayName : ediscoverySearchCtrl.roomInfo.displayName}}
-              </h2>
-              <h4 class="ellipsis room-id">{{ediscoverySearchCtrl.roomInfo.id}}</h4>
-              <div class="row" ng-hide="ediscoverySearchCtrl.report">
-                <div class="columns small-12 medium-12 large-10">
-                  <div class="input-section">
-                    <h6 translate="ediscovery.reportsList.reportName"></h6>
-                    <input required id="displayName" class="cs-input report-name" placeholder="{{'ediscovery.originalConsole.reportNamePlaceholder' | translate}}" ng-model="ediscoverySearchCtrl.searchCriteria.displayName">
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-if="!ediscoverySearchCtrl.searchCriteria.displayName">
-                <div class="columns small-12">
-                  <div class="input-section">
-                    <p class="date-error" translate="ediscovery.originalConsole.reportNameNotEmpty">
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="row last-input-row" ng-hide="ediscoverySearchCtrl.report">
-                <div class="columns small-12 medium-6 large-5">
-                  <div class="input-section">
-                    <h6 translate="ediscovery.originalConsole.startDate"></h6>
-                    <cs-datepicker id="startDate" ng-model="ediscoverySearchCtrl.searchCriteria.startDate" placeholder="{{'ediscovery.originalConsole.startDatePlaceholder' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
-                  </div>
-                </div>
-                <div class="columns small-12 medium-6 large-5 end">
-                  <div class="input-section">
-                    <h6 translate="ediscovery.originalConsole.endDate"></h6>
-                    <cs-datepicker id="endDate" ng-model="ediscoverySearchCtrl.searchCriteria.endDate" placeholder="{{'ediscovery.originalConsole.endDatePlaceholder' | translate}}" view-format="YYYY-MM-DD"></cs-datepicker>
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-if="ediscoverySearchCtrl.dateValidationError">
-                <div class="columns small-12">
-                  <div class="input-section">
-                    <p class="date-error" ng-repeat="error in ediscoverySearchCtrl.dateValidationError.errors">
-                      {{error}}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-if="ediscoverySearchCtrl.report">
-                <div class="columns small-12">
-                  <div class="result-section">
-                    <h6 translate="ediscovery.originalConsole.reportDateRange"></h6>
-                    <span ng-if="ediscoverySearchCtrl.searchCriteria.startDate && ediscoverySearchCtrl.searchCriteria.endDate">
-                      {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'mediumDate'}} {{'ediscovery.originalConsole.dateTo' | translate}} {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'mediumDate'}}
-                    </span>
-                    <span ng-if="ediscoverySearchCtrl.searchCriteria.startDate && !ediscoverySearchCtrl.searchCriteria.endDate">
-                      {{ediscoverySearchCtrl.searchCriteria.startDate | date: 'mediumDate'}} {{'ediscovery.originalConsole.endDateOnward' | translate}}
-                    </span>
-                    <span ng-if="!ediscoverySearchCtrl.searchCriteria.startDate && ediscoverySearchCtrl.searchCriteria.endDate">
-                      {{'ediscovery.originalConsole.endDateUntil' | translate}} {{ediscoverySearchCtrl.searchCriteria.endDate | date: 'mediumDate'}}
-                    </span>
-                    <span translate="ediscovery.originalConsole.noRangeSpecified" ng-if="!ediscoverySearchCtrl.searchCriteria.startDate && !ediscoverySearchCtrl.searchCriteria.endDate">
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="columns small-11 medium-11 large-9">
-                  <div ng-if="ediscoverySearchCtrl.report" class="result-section">
-                    <h6 translate="ediscovery.searchResults.reportStatus"></h6>
-                    <div ng-if="!ediscoverySearchCtrl.report.isDone">
-                      <div class="progressbar-info">
-                        <span class="progressbar-label">{{('ediscovery.reportStates.' + ediscoverySearchCtrl.report.state | translate) + '...'}}</span>
-                        <span class="progressbar-progress">{{ediscoverySearchCtrl.report.progress || 0}}%</span>
-                      </div>
-                      <progressbar class="progress-striped" value="ediscoverySearchCtrl.reportProgress()"></progressbar>
-                    </div>
-                    <span ng-if="ediscoverySearchCtrl.report.state === 'COMPLETED'"
-                          translate="ediscovery.originalConsole.generatedAt"
-                          translate-value-time="{{ediscoverySearchCtrl.report.createdTime | date: 'shortTime'}}"></span>
-                    <span ng-if="ediscoverySearchCtrl.report.state === 'ABORTED'" translate="ediscovery.reportStates.ABORTED"></span>
-                    <div class="row" ng-if="ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.timeoutDetected" ng-class="{'report-timeout' : ediscoverySearchCtrl.report.timeoutDetected }">
-                      <div class="columns small-1">
-                        <i class="icon icon-warning"></i>
-                      </div>
-                      <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.state === 'FAILED'">
-                        <span translate="ediscovery.reportsList.failure"></span>:
-                        <span>{{'ediscovery.reportFailureReasons.' + ediscoverySearchCtrl.report.failureReason | translate}}</span>
-                        <br>
-                        <span translate="ediscovery.reportsList.tryAgain"></span>
-                      </div>
-                      <div class="columns small-11 small-collapse failure" ng-if="ediscoverySearchCtrl.report.timeoutDetected">
-                        <span translate="ediscovery.reportTimeout"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="columns small-1 end">
-                  <div ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeCancelled">
-                    <span ng-if="!ediscoverySearchCtrl.cancellingReport"
-                          ng-click="ediscoverySearchCtrl.cancelReport(ediscoverySearchCtrl.report.id)"
-                          class="cancel-icon">
-                      <i class="icon icon-remove" tooltip-placement="top" cs-tooltip="{{'ediscovery.reportsList.cancelReport' | translate}}" tooltip-animation="false" tooltip-append-to-body="true"></i>
-                    </span>
-                    <span ng-if="ediscoverySearchCtrl.cancellingReport" class="cancel-icon">
-                      <i class="icon icon-spinner"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeCancelled">
-                <div class="columns small-12 medium-6 large-6">
-                  <button ng-cloak type="button" class="btn btn--primary"
-                            translate="ediscovery.originalConsole.takeMeToReports"
-                            ui-sref="ediscovery.reports"></button>
-                </div>
-              </div>
-              <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.state === 'COMPLETED'">
-                <div class="columns small-12 medium-12 large-10">
-                  <div class="result-section">
-                    <h6 translate="ediscovery.searchResults.reportSize"></h6>
-                    <span>{{ediscoverySearchCtrl.report.sizeInBytes | bytesFilter : 2 }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-if="ediscoverySearchCtrl.report && ediscoverySearchCtrl.report.canBeDownloaded">
-                <div class="columns small-12 medium-12 large-10">
-                  <button cs-btn
-                          class="btn btn--primary"
-                          loading="ediscoverySearchCtrl.downloadingReport"
-                          ng-click="ediscoverySearchCtrl.downloadReport(ediscoverySearchCtrl.report)">
-                    <span translate="ediscovery.reportsList.downloadReport"></span>
-                  </button>
-                  <div class="expiry-info">
-                    <span translate="ediscovery.searchResults.expiryInfo"></span>
-                  </div>
-                </div>
-              </div>
-              <div class="row" ng-show="!ediscoverySearchCtrl.report || (ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED')">
-                <div class="columns small-12 medium-12 large-10">
-                  <div ng-if="!ediscoverySearchCtrl.createReportInProgress">
-                    <button translate="ediscovery.searchResults.generateReport"
-                            ng-disabled="!ediscoverySearchCtrl.searchCriteria.displayName || ediscoverySearchCtrl.dateValidationError"
-                            type="button"
-                            class="btn--primary"
-                            ng-click="(ediscoverySearchCtrl.report.state === 'FAILED' || ediscoverySearchCtrl.report.state === 'ABORTED') ? ediscoverySearchCtrl.retrySearch() : ediscoverySearchCtrl.createReport()"></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="row search-result" ng-if="ediscoverySearchCtrl.roomInfo">
+  <div class="create-form">
+    <cs-card class="cs-card--medium">
+      <article class="input-section">
+        <div class="back-button">
+          <a href ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()">
+            <i class="icon icon-back icon-lg"></i>
+            <span translate="ediscovery.searchResults.backToSearch"></span>
+          </a>
         </div>
+        <header><h4 class="result-info" translate="ediscovery.searchResults.searchInfo"></h4></header>
+        <section>
+          <p class="result-title">{{ediscoverySearchCtrl.searchResultsHeader}}</p>
+          <div ng-repeat="keyword in ediscoverySearchCtrl.searchResults.keywords">
+            <p class="result-info">{{keyword}}</p>
+          </div>
+          <div class="date-range-tooltip">
+            <span class="result-title" translate="ediscovery.searchResults.dateRange"></span>
+            <i ng-if="ediscoverySearchCtrl.showHover()"
+              tabindex="0"
+              tooltip="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}"
+              tooltip-placement="right"
+              tooltip-trigger="focus mouseenter"
+              class="icon icon-info"
+              aria-label="{{::'ediscovery.searchParameters.dateRangeTooltip' | translate}}">
+            </i>
+          </div>
+          <p class="result-info">{{ediscoverySearchCtrl.searchCriteria.startDate}} - {{ediscoverySearchCtrl.searchCriteria.endDate}}</p>
+          <p class="result-title" translate="ediscovery.searchResults.messages"></p>
+          <div ng-repeat="query in ediscoverySearchCtrl.searchResults.queries">
+            <p class="result-info">{{query}}</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+    <cs-card ng-if="ediscoverySearchCtrl.isReport" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.reportSummary"></h4></header>
+        <section class="row">
+          <div class="col-md-2">
+            <p class="report-title" translate="ediscovery.searchResults.spaces"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numRooms}}</p>
+          </div>
+          <div class="col-md-3">
+            <p class="report-title" translate="ediscovery.searchResults.messages"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numMessages}}</p>
+          </div>
+          <div class="col-md-2">
+            <p class="report-title" translate="ediscovery.searchResults.files"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.numFiles}}</p>
+          </div>
+          <div class="col-md-5">
+            <p class="report-title" translate="ediscovery.searchResults.estReport"></p>
+            <p class="report-info">{{ediscoverySearchCtrl.searchResults.totalSize}}</p>
+          </div>
+        </section>
+      </article>
+    </cs-card>
+    <!-- Max Rooms (2500) error card -->
+    <cs-card ng-if="ediscoverySearchCtrl.isReportMaxRooms" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.maxRoomsReached"></h4></header>
+        <section>
+          <div class="report-error">
+            <i class="icon icon-warning report-warning"></i>
+            <span translate="ediscovery.searchResults.maxRoomsReachedSummary"></span>
+            <br>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
+        </footer>
+      </article>
+    </cs-card>
+    <!-- Report Size (5GB) max card -->
+    <cs-card ng-if="ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
+      <article>
+        <header><h4 translate="ediscovery.searchResults.reportSizeTooBig"></h4></header>
+        <section>
+          <div class="report-error">
+            <i class="icon icon-warning report-warning"></i>
+            <span translate="ediscovery.searchResults.reportSizeErrorSummary"></span>
+            <br>
+          </div>
+        </section>
+        <footer>
+          <button type="button" class="btn btn--primary" ng-click="ediscoverySearchCtrl.resetSearchPageToInitialState()" translate="ediscovery.searchResults.reportErrorButton"></button>
+        </footer>
+      </article>
+    </cs-card>
+    <!-- Normal Report Generation Card -->
+    <cs-card ng-if="!ediscoverySearchCtrl.isReportMaxRooms && !ediscoverySearchCtrl.isReportTooBig" class="cs-card--large">
+      <article>
+        <section class="report-section">
+          <!-- Generate Report Section -->
+          <search-results-report ng-if="ediscoverySearchCtrl.isReport"></search-results-report>
+        </section>
       </article>
     </cs-card>
   </div>

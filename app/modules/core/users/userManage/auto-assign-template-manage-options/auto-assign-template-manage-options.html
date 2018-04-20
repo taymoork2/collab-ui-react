@@ -1,0 +1,20 @@
+<span cs-dropdown class="actions-menu">
+  <button cs-dropdown-toggle
+    class="btn--none dropdown-toggle icon icon-three-dots"
+    ng-click="$event.stopPropagation();">
+  </button>
+  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+    <li>
+      <a href ng-click="$ctrl.modifyAutoAssignTemplate()" translate="userManage.org.moreOptions.modifyAutoAssign"></a>
+    </li>
+    <li>
+      <a href ng-if="$ctrl.isTemplateActive" ng-click="$ctrl.deactivateAutoAssignTemplate()"
+        translate="userManage.org.moreOptions.deactivateAutoAssign"></a>
+      <a href ng-if="!$ctrl.isTemplateActive" ng-click="$ctrl.activateAutoAssignTemplate()"
+        translate="userManage.org.moreOptions.activateAutoAssign"></a>
+    </li>
+    <li>
+      <a href ng-click="$ctrl.deleteAutoAssignTemplate()" translate="userManage.org.moreOptions.deleteAutoAssign"></a>
+    </li>
+  </ul>
+</span>

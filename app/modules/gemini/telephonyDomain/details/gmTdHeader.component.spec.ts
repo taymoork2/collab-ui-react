@@ -1,22 +1,18 @@
 import testModule from '../index';
 
 describe('Component: gmTdHeader', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
   });
 
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$window', 'Notification', 'gemService', 'TelephonyDomainService');
-    this.mockData = {
-      content: {
-        data: [{
-          description: '8a607bdb5b1280d3015b1353f92800cd',
-          createTime: new Date(),
-          ticketUrl: '',
-        }],
-      },
-    };
+    this.mockData = [{
+      description: '8a607bdb5b1280d3015b1353f92800cd',
+      createTime: new Date(),
+      ticketUrl: '',
+    }];
     initSpies.apply(this);
   });
 
@@ -28,11 +24,12 @@ describe('Component: gmTdHeader', () => {
 
   function initComponent(viaHttp: boolean = false, httpError: boolean = false) {
     if (viaHttp) {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.resolve( this.mockData ));
-
-      if (httpError) {
-        this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      }
+      this.gemService.getRemedyTicket.and.callFake(() => {
+        if (httpError) {
+          return this.$q.reject({ status: 404 });
+        }
+        return this.$q.resolve(this.mockData);
+      });
     } else {
       this.gemService.setStorage('remedyTicket', { status: 'Canceled', ticketUrl: '' });
     }

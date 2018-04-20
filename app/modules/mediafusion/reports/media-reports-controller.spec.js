@@ -3,7 +3,7 @@
 describe('Controller:MediaReportsController', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, MediaClusterServiceV2, Notification, MeetingLocationAdoptionGraphService, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
+  var controller, $scope, httpMock, $stateParams, $q, $translate, $timeout, $interval, Log, Config, Notification, MeetingLocationAdoptionGraphService, ClientTypeAdoptionGraphService, UtilizationResourceGraphService, ParticipantDistributionResourceGraphService, MediaReportsService, MediaReportsDummyGraphService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, MediaSneekPeekResourceService;
 
   var callVolumeData = getJSONFixture('mediafusion/json/metrics-graph-report/callVolumeData.json');
   var clusteravailabilityData = getJSONFixture('mediafusion/json/metrics-graph-report/availabilityResourceData.json');
@@ -42,13 +42,12 @@ describe('Controller:MediaReportsController', function () {
 
   var allClusters = 'mediaFusion.metrics.allclusters';
 
-  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _MediaClusterServiceV2_, _$q_, _MeetingLocationAdoptionGraphService_, _ClientTypeAdoptionGraphService_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_, _$stateParams_, _$timeout_, _$translate_, _$q_, _MeetingLocationAdoptionGraphService_, _ClientTypeAdoptionGraphService_, _UtilizationResourceGraphService_, _ParticipantDistributionResourceGraphService_, _Notification_, _MediaReportsDummyGraphService_, _MediaReportsService_, _$interval_, _Log_, _Config_, _AvailabilityResourceGraphService_, _CallVolumeResourceGraphService_, _MediaSneekPeekResourceService_) {
     $scope = $rootScope.$new();
 
     $stateParams = _$stateParams_;
     $timeout = _$timeout_;
     $translate = _$translate_;
-    MediaClusterServiceV2 = _MediaClusterServiceV2_;
     $q = _$q_;
     httpMock = _$httpBackend_;
     Log = _Log_;
@@ -91,7 +90,6 @@ describe('Controller:MediaReportsController', function () {
       $timeout: $timeout,
       $translate: $translate,
       httpMock: httpMock,
-      MediaClusterServiceV2: MediaClusterServiceV2,
       $q: $q,
       MediaReportsDummyGraphService: MediaReportsDummyGraphService,
       UtilizationResourceGraphService: UtilizationResourceGraphService,
@@ -106,7 +104,8 @@ describe('Controller:MediaReportsController', function () {
       $interval: $interval,
       Log: Log,
       Config: Config,
-      hasHmsTwoDotFiveFeatureToggle: false,
+      hasMFMultipleInsightFeatureToggle: false,
+      hasMFCascadeBandwidthFeatureToggle: false,
     });
   }));
   it('controller should be defined', function () {
@@ -151,7 +150,7 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getCallVolumeData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
       expect(MediaReportsService.getAvailabilityData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
       expect(MediaReportsService.getUtilizationData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
-      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
+      expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected, false);
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalledWith(timeOptions[1], controller.clusterSelected);
     });
   });
@@ -214,11 +213,21 @@ describe('Controller:MediaReportsController', function () {
       expect(MediaReportsService.getTotalCallsData).toHaveBeenCalled();
       expect(MediaReportsService.getOverflowIndicator).toHaveBeenCalled();
       expect(controller.onprem).toBe(20);
-      expect(controller.cloudOverflow).toBe(30);
-      expect(controller.total).toBe(50);
-      expect(controller.second_card_value).toBe('30');
-      expect(controller.cardIndicator).toBe('+2');
-      expect(controller.overflowPercentage).toBe(60);
+      expect(controller.cardIndicator).toBe(controller.increaseBy + ' ' + '2');
+    });
+
+    it('overflowPercentage should not be NaN when total calls is 0', function () {
+      var response = {
+        data: {
+          callsOnPremise: 0,
+          callsRedirect: 0,
+        },
+      };
+      spyOn(MediaReportsService, 'getTotalCallsData').and.returnValue($q.resolve(response));
+      spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
+      controller.setTotalCallsData();
+      httpMock.verifyNoOutstandingExpectation();
+      expect(controller.overflowPercentage).toBe(0);
     });
 
     it('setClientTypeCard should invoke getClienTypeCardData', function () {
@@ -296,13 +305,13 @@ describe('Controller:MediaReportsController', function () {
     it('should call dummysetParticipantDistribution for setDummyParticipantDistribution when there is no data', function () {
       spyOn(MediaReportsService, 'getParticipantDistributionData').and.callThrough();
       spyOn(MediaReportsDummyGraphService, 'dummyLineChartData').and.callThrough();
-      spyOn(MediaReportsDummyGraphService, 'dummyParticipantDistributionGraph').and.callThrough();
+      spyOn(MediaReportsDummyGraphService, 'dummyClusterLineChartGraph').and.callThrough();
       spyOn(MediaReportsService, 'getOverflowIndicator').and.returnValue($q.resolve(participantChangedata));
       controller.changeTabs(false, true);
       httpMock.flush();
       expect(MediaReportsService.getParticipantDistributionData).toHaveBeenCalled();
       expect(MediaReportsDummyGraphService.dummyLineChartData).toHaveBeenCalled();
-      expect(MediaReportsDummyGraphService.dummyParticipantDistributionGraph).toHaveBeenCalled();
+      expect(MediaReportsDummyGraphService.dummyClusterLineChartGraph).toHaveBeenCalled();
       expect(ParticipantDistributionResourceGraphService.setParticipantDistributionGraph).toHaveBeenCalled();
     });
 

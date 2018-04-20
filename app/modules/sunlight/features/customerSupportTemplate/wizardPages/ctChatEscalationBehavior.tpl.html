@@ -1,0 +1,61 @@
+<div>
+    <div class="ct-title">
+      <span class="h3">{{careSetupAssistant.getLocalisedText('careChatTpl.chatEscalationBehavior')}}</span>
+    </div>
+    <div class="h5 ct-title-desc" translate="careChatTpl.chatEscalationBehaviorDesc"></div>
+  <div class="cs-card-container ct-chat-escalation-behavior ct-sa-content">
+      <cs-card-layout block-view="true" class="ct-card-center">
+        <cs-card class="ct-card chat-escalation-wrapper">
+          <article class="ct-article">
+              <section>
+                  <div class="content-header">
+                      <span class="h4" translate="careChatTpl.evaTemplateHeader"></span>
+                  </div>
+                  <div class="cs-radio-group">
+                  <div class="content-row" ng-repeat="evaData in careSetupAssistant.evaDataModel">
+                      <div class="ct-content-radio">
+                          <input
+                          type="radio"
+                          cs-input
+                          ng-model="careSetupAssistant.template.configuration.routingLabel"
+                          value="{{evaData.value}}"
+                          id="{{evaData.id}}"
+                          name="{{evaData.name}}"
+                          cs-input-label="{{evaData.label}}"
+                          ng-change="careSetupAssistant.onEscalationOptionChange(evaData.value)"
+                          ng-disabled="evaData.isDisabled"
+                          ng-click="careSetupAssistant.setRequiredValue()"
+                          >
+                          <span class="ct-info-icon" ng-if="!evaData.isDisabled">
+                            <i
+                              tooltip-html-unsafe={{evaData.tooltipHtml}}
+                              tooltip-placement="top"
+                              tooltip-trigger="focus mouseenter"
+                              class="body-small icon icon-info"
+                              tabindex="0"
+                              aria-label={{evaData.tooltipHtml}}>
+                            </i>
+                          </span>
+                      </div>
+                      <div>
+                        <p ng-class="(evaData.isDisabled) ? 'body-small ct-info-disabled ' : 'body-small ct-info'">{{evaData.desc}}</p>
+                      </div>
+                  </div>
+                  </div>
+                  <div class="org-setting-info" ng-if="!careSetupAssistant.evaConfig.isEvaConfigured">
+                    <span class="icon-wrapper">
+                      <i class="icon icon-info"></i>
+                    </span>
+                    <span class="body-small setting-info ng-binding" translate="careChatTpl.evaSettingInfo"></span>
+                  </div>
+                  <div class="h6 eva-enabled-info" ng-if="careSetupAssistant.evaConfig.isEvaConfigured">
+                    <a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
+                    <span class="msg" translate="careChatTpl.evaEnabledSettingInfo"></span>
+                  </div>
+              </section>
+          </article>
+        </cs-card>
+      </cs-card-layout>
+  </div>
+</div>
+

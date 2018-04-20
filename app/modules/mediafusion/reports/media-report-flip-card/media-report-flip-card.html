@@ -9,8 +9,15 @@
         <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow===true}">{{$ctrl.value}}</div>
         <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow===true}">
           <div class="call-counts">
-            <span tooltip="{{$ctrl.tooltipValue}}" class="cardTooltipClass">{{$ctrl.value}}</span>
-            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername != $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+            <span
+              class="cardTooltipClass"
+              tabindex="0"
+              tooltip="{{$ctrl.tooltipValue}}"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{$ctrl.tooltipValue}}">
+              {{$ctrl.value}}
+            </span>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
           </div>
           <span class="partically-unavailable" ng-class="{'no-display': $ctrl.parentcntrl.clusterUnavailablityFlag===false}"><i class="icon icon-warning"></i><span translate="mediaFusion.metrics.clusterPartiallyInService"></span></span>
           <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
@@ -34,7 +41,7 @@
         {{$ctrl.footerOptions.footerDesc}} <span class="footer-value">{{$ctrl.footerOptions.value}}</span>
       </div>
     </div>
-    <i class='icon icon-add-outline icon-large media-flip-icon' ng-click="isFlipped=true" ng-class="{'no-display': $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters && $ctrl.parentcntrl.clusterSelected !== undefined}"></i>
+    <i class='icon icon-info-outline icon-large media-flip-icon' ng-click="isFlipped=true" ng-class="{'no-display': $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters && $ctrl.parentcntrl.clusterSelected !== undefined}"></i>
   </article>
 
   <article class="face back" ng-class="{'no-display': !isFlipped}">
@@ -48,7 +55,7 @@
         </div>
       </div>
     </section>
-    <i class='icon icon-remove-outline icon-large media-flip-icon' ng-click="isFlipped=false"></i>
+    <i class='icon icon-info icon-large media-flip-icon' ng-click="isFlipped=false"></i>
   </article>
   </div>
 </cs-card>

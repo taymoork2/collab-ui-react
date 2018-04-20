@@ -8,7 +8,6 @@ export class PrimaryLineService {
   /* @ngInject */
   constructor(
     private HuronUserService: HuronUserService,
-    private FeatureToggleService,
     private PlaceCallOverviewService: PlaceCallOverviewService,
   ) {}
 
@@ -41,10 +40,6 @@ export class PrimaryLineService {
         return data;
       });
     }
-  }
-
-  public isPrimaryLineFeatureEnabled(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1474);
   }
 
   public checkIfMultiLineExists(lines: Line[]): boolean {

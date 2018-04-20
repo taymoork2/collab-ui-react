@@ -20,7 +20,7 @@
       },
       controller: 'AARouteToUserCtrl',
       controllerAs: 'aaRouteUser',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html',
+      template: require('modules/huron/features/autoAttendant/routeToUser/aaRouteToUser.tpl.html'),
     };
   }
 })();

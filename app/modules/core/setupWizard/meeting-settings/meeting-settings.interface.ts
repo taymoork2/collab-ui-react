@@ -5,7 +5,11 @@ export interface IWebExSite {
   quantity?: number;
   audioPackageDisplay?: string;
   setupType?: string;
-  keepExistingSite?: boolean;
+  isCIUnifiedSite?: boolean;
+}
+
+export interface IExistingWebExTrialSite extends IWebExSite {
+  keepExistingSite: boolean;
 }
 
 export interface IWebexSiteDetail {
@@ -15,9 +19,16 @@ export interface IWebexSiteDetail {
   quantity: number;
 }
 
+export enum SiteErrorType {
+  URL = 'URL',
+  TIME_ZONE = 'TIME_ZONE',
+  USER_MGMT = 'USR_MGMT',
+}
+
 export interface ISiteNameError {
   isError: boolean;
   errorMsg: string;
+  errorType?: SiteErrorType;
 }
 
 export interface IConferenceService {
@@ -26,31 +37,25 @@ export interface IConferenceService {
   license: IConferenceLicense;
 }
 
-export interface IConferenceLicense {
+export interface ICenterDetails {
+  serviceName: string;
+  quantity: number;
+}
+
+export interface IConferenceLicense  extends IPendingLicense {
   billingServiceId: string;
   capacity: number;
-  features: string[];
   siteId?: string;
-  isTrial: boolean;
   trialId: string;
-  licenseId: string;
-  licenseType: string;
-  offerName: string;
-  status: string;
-  volume: number;
   siteUrl?: string;
   isCIUnifiedSite?: true;
   licenseModel: string;
 }
 
-export interface IExistingTrialSites extends IWebExSite {
-  keepExistingSite: boolean;
-}
-
 export interface IWebexLicencesPayload {
   provisionOrder: boolean;
   sendCustomerEmail?: boolean;
-  serviceOrderUUID: string | null;
+  serviceOrderUUID?: string | null;
   webexProvisioningParams?: IWebexProvisioningParams;
 }
 
@@ -66,13 +71,13 @@ export interface IWebExProvisioningData {
 
 export interface IPendingOrderSubscription {
   duration?: number;
-  externalSubscriptionId?: string;
+  externalSubscriptionId: string;
   gracePeriod?: number;
   licenses?: any;
   orderingTool?: string;
-  pendingServiceOrderUUID?: string | undefined;
+  pendingServiceOrderUUID?: string;
   status?: string;
-  subscriptionId?: string;
+  subscriptionId: string;
   trialDuration?: number;
 }
 
@@ -85,6 +90,16 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+  capacity?: number;
+}
+
+export interface ICCASPLicense extends IPendingLicense {
+  ccaspPartnerName: string;
+  ccaspSubscriptionId: string;
+}
+
+export interface ITSPLicense extends IPendingLicense {
+  tspPartnerName: string;
 }
 
 export interface ICCASPInfo {

@@ -1,0 +1,10 @@
+<div class="enterprise-sipDomain-page domain-page" id="sip-url-domain-setup">
+  <h3 ng-if="!entprCtrl.sipUpdateToggle" id="sipDomainTitle" translate="firstTimeWizard.setSipDomainTitle"></h3>
+  <p ng-if="entprCtrl.sipUpdateToggle" class="domain domain-header" translate="firstTimeWizard.setSipDomainTitle"></p>
+  <sipdomain-setting show-save-button="false"></sipdomain-setting>
+  <div ng-if="entprCtrl.sparkAssistantToggle">
+    <h3 ng-if="!entprCtrl.sipUpdateToggle" class="margin-title" translate="globalSettings.sparkAssistant.title"></h3>
+    <p ng-if="entprCtrl.sipUpdateToggle" class="margin-title" translate="globalSettings.sparkAssistant.title"></p>
+    <spark-assistant-setting ftsw="true"></spark-assistant-setting>
+  </div>
+</div>

@@ -1,124 +1,65 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/media';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-.modal-content .center-spinner {
-  height: 100%;
-
-  .icon {
-    top: 50%;
-    left: 50%;
-  }
-}
-
-.modal-usermanage-dialog {
-  width: 900px;
-}
-
-.modal-usermanage-header {
-  padding: 20px;
-  border-bottom: 0px;
-  background-color: $brand-white;
+.user-manage-picker__center-spinner {
+  margin: auto;
 }
 
 .user-manage {
-  display: flex;
-  flex: 1 1 auto;
-
-  h4 {
-    @include vr-spacing(mb, 0.5);
+  &__text--margin {
+    @include vr-spacing(mt, 0.75);
   }
 
-  .sync-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-
-    .ad-top {
-      max-height: 20rem;
-    }
+  &__text--disabled {
+    color: $gray-light-1;
   }
 
-  .csv-export-link {
+  &__manage-type-list-item-indent {
+    @include vr-spacing(pt, 0.5);
     @include vr-spacing(pl, 2);
-    @include vr-spacing(pv, 0.5);
+  }
 
-    .cancel {
-      display: inline-flex;
+  &__modify-users-title {
+    @include vr-spacing(mb, 1.5);
+  }
 
-      .icon-spinner {
-        @include vr-spacing(ml, 0.25);
-        @include vr-spacing(mr, 0.5);
+  // TODO extract this into generic class for toolkit layout container
+  &__row > .columns {
+    &:not(:last-child) {
+      @media #{$small-only} {
+        @include vr-spacing(mb, 1.5);
+      }
+    }
+
+    &:last-child {
+      @media #{$medium-up} {
+        margin-top: 4px;
       }
     }
   }
 
-  .row {
-    flex: 1 1 auto;
+  &__hr {
+    @include vr-spacing(mv, 1.5);
   }
 
-  .row.no-flex {
-    flex: 0 0 auto;
+  &__auto-assign-title-row {
+    display: flex;
+    align-items: flex-start;
   }
 
-  form {
-    .columns {
-      @include vr-spacing(mb, 1);
+  &__auto-assign-title-action {
+    @include vr-spacing(mt, -.5);
+
+    @media #{$small-only} {
+      @include vr-spacing(ml, 1);
+    }
+    @media #{$medium-up} {
+      @include vr-spacing(ml, 3);
     }
   }
 
-  .sync-status {
-    .ds-inline {
-      display: inline;
-    }
-
-    .icon-refresh {
-      @include vr-spacing(m, 0.5);
-
-      font-weight: bolder;
-      position: relative;
-      top: 0.1rem;
-    }
-
-    .ds-sync {
-      display: flex;
-      flex-direction: row;
-      padding-bottom: 1rem;
-
-      h5 {
-        @include vr-spacing(ml, 0.5);
-      }
-
-      div.details {
-        @include vr-spacing(ml, 0.5);
-
-        h5 {
-          @include vr-spacing(ml, 0);
-        }
-
-        p {
-          @include vr-spacing(mv, 1);
-        }
-      }
-
-      .working {
-        color: $brand-success;
-        top: 0.25rem;
-        font-size: small;
-      }
-
-      .failing {
-        color: $brand-danger;
-      }
-    }
-  }
-
-  .divider {
-    @include vr-spacing(mb, 0.75);
-
-    flex: 0 0 auto;
-  }
-
-  li {
+  &__manage-type-list-item {
     @include vr-spacing(pb, 1);
 
     list-style-type: none;
@@ -126,17 +67,5 @@
     .cs-input-radio.cs-input-group {
       @include vr-spacing(mb, 0);
     }
-  }
-
-  .dirsync-info {
-    width: 100%;
-
-    .ftwdirgridStyle {
-      height: 100%;
-    }
-  }
-
-  &.user-csv.modal-body.user-manage-advanced-results > .flex-container {
-    flex-shrink: 0;
   }
 }

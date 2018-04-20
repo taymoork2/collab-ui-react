@@ -10,17 +10,7 @@ export enum Status {
   COMPLETED = 'COMPLETED',
 }
 
-export enum ManualCode {
-  'Not Used' = 100,
-  'Transfer; Modify of non-CI WebEx site' = 200,
-  'TSP to WEBEX Audio' = 300,
-  'WEBEX to TSP Audio' = 400,
-  'Manual Branding needed' = 500,
-  'CCASP Audio Setup, Modify, Cancel, Suspend/Resume, or Audio Change' = 600,
-  'CCASP to WEBEX Audio/VoIPOnly' = 700,
-  'WEBEX Audio/VoIPOnly to CCASP' = 800,
-  'Messenger' = 1000,
-}
+export const STATUS_UPDATE_EVENT_NAME = 'prov_status_update';
 
 export class ProvisioningService {
 

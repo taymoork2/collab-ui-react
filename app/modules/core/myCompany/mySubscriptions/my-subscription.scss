@@ -1,10 +1,6 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-
-.iframe-container {
-  display: inline;
-}
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .subscriptions-container {
   @include vr-spacing(mh, 1);
@@ -42,6 +38,10 @@
     .subscription-header.pro-pack-view {
       padding-top: rem-calc(1);
       border-right: rem-calc(1) solid $gray-light-3;
+    }
+
+    .subscription-column.pro-pack-view {
+      border-left: rem-calc(1) solid $gray-light-3;
     }
 
     .sub-name {
@@ -205,6 +205,10 @@
       @include vr-spacing(pt, 0);
       color: $gray-dark-1;
       width: auto;
+
+      .online-subscription-summary {
+        @include vr-spacing(mb, 0);
+      }
     }
 
     .category-data-section {

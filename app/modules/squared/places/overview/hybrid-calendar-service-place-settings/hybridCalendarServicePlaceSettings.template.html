@@ -1,0 +1,63 @@
+<cs-sp-container>
+  <cs-sp-section class="hybrid-services-user-sidepanel">
+    <div class="section-title-row">
+      <span class="section-name" translate="hercules.cloudExtensions.serviceNames.squared-fusion-cal"></span>
+    </div>
+    <div>
+      <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal-place"></p>
+
+      <div class="row collapse">
+        <div class="columns small-3">
+          <span class="hybrid-services-label">{{'hercules.cloudExtensions.calendarType' | translate}}:</span>
+        </div>
+        <div class="columns small-9">
+          <span class="hybrid-services-label">{{calendarType}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse">
+        <div class="columns small-3">
+          <span class="hybrid-services-label">{{::'cloudExtensions.status' | translate}}:</span>
+        </div>
+        <div class="columns small-7 normal-line-height">
+          <span class="hybrid-services-label"
+            ng-class="'status-' + placeStatusInUSS.state"
+            translate="hercules.activationStatus.{{getStatus(placeStatusInUSS)}}">
+          </span>
+          <span class="hybrid-services-label last-state-change-timestamp" ng-if="placeStatusInUSS && placeStatusInUSS.lastStateChangeText">{{placeStatusInUSS.lastStateChangeText}}</span>
+        </div>
+        <div class="columns small-2">
+          <span ng-if="placeStatusInUSS" class="hybrid-services-label right">
+            <a ui-sref="{{currentStateName}}.history" translate="hercules.userHistory.seeHistory"></a>
+          </span>
+        </div>
+      </div>
+
+      <div class="row collapse">
+        <div class="columns small-9 small-offset-3">
+          <user-status-messages ng-if="placeStatusInUSS" messages="placeStatusInUSS.messages"></user-status-messages>
+        </div>
+      </div>
+
+      <hybrid-services-user-homed-cluster-and-hostname ng-if="placeStatusInUSS.connectorId"
+        connector-id="placeStatusInUSS.connectorId">
+      </hybrid-services-user-homed-cluster-and-hostname>
+
+    </div>
+  </cs-sp-section>
+
+  <cs-sp-section class="hybrid-services-user-sidepanel">
+    <div class="row collapse hybrid-services-label normal-line-height hybrid-services-place-mail-id">
+      <div class="columns small-12"><span translate="addDeviceWizard.editServices.calendarEmail"></span><span>: {{emailOfMailbox}}</span></div>
+    </div>
+    <div class="row collapse hybrid-services-label normal-line-height">{{'hercules.placeSidepanel.email-calendar-explanation-part1' | translate}}
+      <a href ng-click="editCloudberryServices(serviceId)">{{'hercules.placeSidepanel.email-calendar-explanation-part2' | translate}}</a>
+    </div>
+  </cs-sp-section>
+
+  <hybrid-services-resource-group-selector ng-if="serviceId === 'squared-fusion-cal'"
+    user-id="currentPlace.id"
+    service-id="'squared-fusion-cal'"
+    user-owned-by-c-c-c="false">
+  </hybrid-services-resource-group-selector>
+</cs-sp-container>

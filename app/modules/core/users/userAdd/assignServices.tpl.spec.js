@@ -5,7 +5,7 @@ var csvDownloadModule = require('modules/core/csvDownload').default;
 
 describe('assignServices', function () {
   var $scope, $state, $previousState, $httpBackend, $q;
-  var view, authinfo, csvDownloadService, CloudConnectorService, Orgservice;
+  var view, authinfo, csvDownloadService, CloudConnectorService, FeatureToggleService, Orgservice;
 
   var orgid = '1';
 
@@ -31,7 +31,7 @@ describe('assignServices', function () {
   };
 
   var expectCB = function (name, entitled) {
-    var entitlement = _.find(view.scope().hybridServicesPanelCtrl.entitlements, {
+    var entitlement = _.find($scope.hybridServicesPanelCtrl.entitlements, {
       entitlementName: ENT_NAMES[name],
     });
     if (entitled) {
@@ -57,9 +57,9 @@ describe('assignServices', function () {
   beforeEach(angular.mock.module('WebExApp'));
   beforeEach(angular.mock.module(csvDownloadModule));
 
-  beforeEach(inject(function ($compile, $rootScope, $templateCache, _$httpBackend_,
+  beforeEach(inject(function ($compile, $rootScope, _$httpBackend_,
     $controller, _$q_, _$state_, _Authinfo_, _CsvDownloadService_,
-    _Orgservice_, _$previousState_, _CloudConnectorService_) {
+    _FeatureToggleService_, _Orgservice_, _$previousState_, _CloudConnectorService_) {
     $scope = $rootScope.$new();
     $state = _$state_;
     $previousState = _$previousState_;
@@ -67,6 +67,7 @@ describe('assignServices', function () {
     $q = _$q_;
     $previousState = _$previousState_;
 
+    FeatureToggleService = _FeatureToggleService_;
     Orgservice = _Orgservice_;
     authinfo = _Authinfo_;
     csvDownloadService = _CsvDownloadService_;
@@ -123,7 +124,7 @@ describe('assignServices', function () {
 
     spyOn(_Orgservice_, 'getUnlicensedUsers');
     spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve(getLicensesUsage));
-
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({ setup: true }));
 
     spyOn(csvDownloadService, 'getCsv').and.callFake(function (type) {
@@ -180,12 +181,12 @@ describe('assignServices', function () {
       $state: $state,
     });
 
-    var html = $templateCache.get('modules/core/users/userAdd/assignServices.tpl.html');
+    var html = require('modules/core/users/userAdd/assignServices.tpl.html');
     view = $compile(angular.element('<div>').append(html))($scope);
     $scope.$apply();
 
     // Hybrid controller on child scope, so let's make a reference to it
-    $scope.hybridServicesPanelCtrl = $scope.$$childHead.hybridServicesPanelCtrl;
+    $scope.hybridServicesPanelCtrl = $scope.$$childHead.$ctrl;
 
     $httpBackend.flush();
   }));
@@ -209,6 +210,9 @@ describe('assignServices', function () {
   });
 
   it('should confirm checking Call Service Aware only affects Call Service Aware', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     // Click UC
     view.find(ENT.id_uc).click();
     expectCB(ENT.uc, true);
@@ -217,6 +221,9 @@ describe('assignServices', function () {
   });
 
   it('should confirm unchecking Call Service Connect does not uncheck Call Service Aware', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     // Click both UC and EC
     view.find(ENT.id_uc).click();
     view.find(ENT.id_ec).click();
@@ -230,6 +237,9 @@ describe('assignServices', function () {
   });
 
   it('should confirm unchecking Call Service Aware also unchecks Call Service Connect', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     // Click UC and EC
     view.find(ENT.id_uc).click();
     view.find(ENT.id_ec).click();
@@ -242,7 +252,10 @@ describe('assignServices', function () {
     expectCB(ENT.ec, false);
   });
 
-  it('should confirm checking Calendar Service does affect Call Services', function () {
+  it('should confirm checking Calendar Service does not affect Call Services', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     // Click Cal
     view.find(ENT.id_cal).click();
     expectCB(ENT.cal, true);
@@ -251,6 +264,9 @@ describe('assignServices', function () {
   });
 
   it('should confirm checking Huron Call, disabled Call Services Aware', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(false);
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(false);
 
@@ -264,6 +280,9 @@ describe('assignServices', function () {
   });
 
   it('should confirm checking Call Services Aware disables Huron Call', function () {
+    // Assign at least one paid license to enable the hybrid services panel
+    view.find('#paid-msg').click();
+
     expect(view.find(BUCKET.comm).is(':disabled')).toBe(false);
     expect(view.find(ENT.id_uc).is(':disabled')).toBe(false);
 

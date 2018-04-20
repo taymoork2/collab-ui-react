@@ -66,6 +66,8 @@
       var handleCount = initValue;
       var abandonCount = initValue / 3;
       var avgCsatScores = 3.0;
+      var avgChatCsatScores = 3.0;
+      var avgWebcallCsatScores = 2.0;
       var numWorkingTasks = 20;
       var numPendingTasks = 15;
       var tasksAccepted = 40;
@@ -86,6 +88,8 @@
           rangeStats.numPendingTasks = 0;
           rangeStats.tasksAccepted = 0;
           rangeStats.tasksMissed = 0;
+          rangeStats.avgChatCsatScores = 0;
+          rangeStats.avgWebcallCsatScores = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
@@ -96,6 +100,8 @@
           rangeStats.numPendingTasks = numPendingTasks;
           rangeStats.tasksAccepted = tasksAccepted;
           rangeStats.tasksMissed = tasksMissed;
+          rangeStats.avgChatCsatScores = avgChatCsatScores;
+          rangeStats.avgWebcallCsatScores = avgWebcallCsatScores;
         }
         rangeStatsList.push(rangeStats);
         count = count + 1;
@@ -111,6 +117,8 @@
         }
 
         avgCsatScores = Math.min(avgCsatScores + 0.1 + (flip * 0.25), 5.0);
+        avgChatCsatScores = Math.min(avgChatCsatScores + 0.1 + (flip * 0.25), 5.0);
+        avgWebcallCsatScores = Math.min(avgWebcallCsatScores + 0.1 + (flip * 0.25), 5.0);
       });
       return rangeStatsList;
     }
@@ -123,6 +131,8 @@
       var avgTaskWaitTime = 5;
       var avgTaskCloseTime = 3;
       var avgCsatScores = 3.0;
+      var avgChatCsatScores = 3.0;
+      var avgWebcallCsatScores = 2.0;
       var tasksAccepted = 40;
       var tasksMissed = 17;
       range.by(interval, function (moment) {
@@ -137,6 +147,8 @@
           rangeStats.avgCsatScores = 0;
           rangeStats.tasksAccepted = 0;
           rangeStats.tasksMissed = 0;
+          rangeStats.avgChatCsatScores = 0;
+          rangeStats.avgWebcallCsatScores = 0;
         } else {
           rangeStats.numTasksHandledState = handleCount;
           rangeStats.numTasksAbandonedState = abandonCount;
@@ -145,6 +157,8 @@
           rangeStats.avgCsatScores = avgCsatScores;
           rangeStats.tasksAccepted = tasksAccepted;
           rangeStats.tasksMissed = tasksMissed;
+          rangeStats.avgChatCsatScores = avgChatCsatScores;
+          rangeStats.avgWebcallCsatScores = avgWebcallCsatScores;
         }
         rangeStatsList.push(rangeStats);
         if (interval === 'w' || interval === 'd') {
@@ -182,6 +196,8 @@
         avgTaskWaitTime = Math.min(avgTaskWaitTime + 1, 10);
         avgTaskCloseTime = Math.min(avgTaskCloseTime + 1, 6);
         avgCsatScores = Math.min(avgCsatScores + 0.1, 5.0);
+        avgChatCsatScores = Math.min(avgChatCsatScores + 0.1, 5.0);
+        avgWebcallCsatScores = Math.min(avgWebcallCsatScores + 0.1, 5.0);
       });
       return rangeStatsList;
     }

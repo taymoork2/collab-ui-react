@@ -30,7 +30,7 @@ class DeleteLocationCtrl implements ng.IComponentController {
 
 export class DeleteLocationComponent implements ng.IComponentOptions {
   public controller = DeleteLocationCtrl;
-  public templateUrl = 'modules/call/locations/locations-delete/locations-delete.component.html';
+  public template = require('modules/call/locations/locations-delete/locations-delete.component.html');
   public bindings = {
     dismiss: '&', //used in HTML
     name: '@', //used in HTML

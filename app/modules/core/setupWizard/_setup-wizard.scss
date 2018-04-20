@@ -4,9 +4,9 @@
 @import 'enterpriseSettings/enterprise-settings';
 @import 'finish/finish';
 
-@import '~collab-ui/scss/settings/settings';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/settings';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 .wizard-main-wrapper {
   .row {

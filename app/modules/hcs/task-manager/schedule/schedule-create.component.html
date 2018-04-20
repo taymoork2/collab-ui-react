@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <div class="modal-title" translate="hcs.taas.scheduleCreateModal.title"></div>
+</div>
+<div class="modal-body schedulerModal" ng-form="$ctrl.scheduleForm">
+  <div class="date-input" ng-click="$ctrl.onChangeDate()">
+    <!-- TODO: update placeholder text to translation -->
+    <cs-datepicker ng-required="true" large-datepicker required id="runDate" ng-model="$ctrl.runDate" placeholder="Choose a day" view-format="MM-DD"></cs-datepicker>
+    <br>
+    <!-- TODO: update placeholder text to translation -->
+    <input cs-timepicker twentyfourhour="true" ng-required="true" type="text" id="runTime" ng-model="$ctrl.runTime" placeholder="Choose a time to run" />
+  </div>
+  {{$ctrl.dateObj.timeVal}}
+</div>
+
+<div class="modal-footer" ng-if="!$ctrl.showConfirmation">
+  <button class="btn btn-default"  ng-click="$ctrl.dismiss()"
+    translate="common.cancel">
+  </button>
+  <button class="btn btn-primary" ng-click="$ctrl.validateAndSave()" ng-disabled="$ctrl.scheduleForm.$invalid">
+    <span translate="common.save"></span>
+  </button>
+</div>

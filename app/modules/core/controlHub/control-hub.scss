@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 $admin-orgname-only-color: $gray-base;
 
@@ -6,6 +6,10 @@ $admin-orgname-only-color: $gray-base;
   .overview-bmmp-banner,
   .reports-bmmp-banner {
     top: auto;
+
+    &.readonly {
+      top: auto;
+    }
   }
 
   .admin-orgname-only {

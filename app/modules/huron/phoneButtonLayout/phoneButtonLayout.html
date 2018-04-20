@@ -1,0 +1,146 @@
+<cs-sp-buttons ng-show="$ctrl.editing || $ctrl.isReordering()">
+  <button class="btn btn--primary" ng-click="$ctrl.save()" ng-disabled="$ctrl.form.$invalid" type="submit" translate="common.save"></button>
+  <button ng-click="$ctrl.reset()" translate="common.cancel"></button>
+</cs-sp-buttons>
+<cs-sp-container class="phonebuttonlayout-panel" cs-tabindex="($ctrl.editing || $ctrl.isReordering())  ? -1 : 0">
+  <div class="warning" ng-show="$ctrl.isButtonLimitReached && !$ctrl.editing && !$ctrl.isReordering()">
+    <div class="cs-input__messages">
+      <div class="message limit-reach-warning">
+        {{$ctrl.getButtonLimitReachedText()}}
+      </div>
+    </div>
+  </div>
+  <cs-sp-section>
+    <section-title
+      title-key="phoneButtonLayout.title"
+      action-list="$ctrl.actionList"
+      ng-class="{'phonebuttonlayout-title-with-warning': $ctrl.isButtonLimitReached && !$ctrl.editing && !$ctrl.isReordering()}">
+    </section-title>
+    <p class="phonebutton-description" translate="phoneButtonLayout.description1"></p>
+    <p class="phonebutton-description phonebutton-description-next-line">
+      <span translate="phoneButtonLayout.description2" translate-values="{ownerType: $ctrl.ownerType === 'places'? ('phoneButtonLayout.place' | translate) : ('phoneButtonLayout.user' | translate )}"></span>
+      <span ng-if="$ctrl.ownerType === 'users'" translate="phoneButtonLayout.description3" ></span>
+    </p>
+    <form name="$ctrl.form" novalidate role="form">
+      <div class="section-name phonebuttonlayout-readonly-wrapper">
+        <div class="side-by-side-flex-elements">
+          <div class="phonebutton-sequence-column phonebutton-sequence-title" translate="phoneButtonLayout.buttonOrderTitle">
+            {{'phoneButtonLayout.buttonOrderTitle' | translate}}
+          </div>
+          <div class="phonebutton-feature-column">
+            {{'phoneButtonLayout.buttonTypeTitle' | translate}}
+          </div>
+        </div>
+      </div>
+      <div class="side-panel-section"><!-- used for horizonal line --></div>
+      <div class="phonebuttonlayout-container">
+        <!-- this section holds phone buttons that shouldn't be re-arrangeable -->
+        <div id="readonlyPhoneButtonsContainer">
+          <div ng-repeat="phoneButton in $ctrl.phoneButtonListReadonly">
+            <div class="phonebuttonlayout-readonly-wrapper" id="readonlyPhoneButton">
+              <div class="side-by-side-flex-elements phonebutton-sequence-align-center">
+                <div class="phonebutton-sequence-column">
+                  {{$index + 1}}
+                </div>
+                <div class="phonebutton-feature-column">
+                  <p class="phonebutton-label">{{phoneButton.label}}</p>
+                  <p class="phonebutton-type">{{'phoneButtonLayout.buttonType.' + phoneButton.type | translate}}</p>
+                </div>
+              </div>
+              <div ng-if="$index === 0" class="badge badge--outline primary pro-badge">
+                {{'common.primary' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- this section holds phone buttons that can be re-arranged -->
+        <div id="arrangeablePhoneButtonsContainer">
+          <div ng-repeat="phoneButton in $ctrl.phoneButtonList" id="phoneButton{{$index}}" ng-class="{'phonebuttonlayout-reorder': $ctrl.isReordering()}" tabindex="{{$ctrl.isReordering() ? 0 : -1}}" ng-keydown="$ctrl.phoneButtonKeyPress($event, phoneButton)">
+            <div class="phonebuttonlayout-readonly-wrapper" id="movablePhoneButton">
+              <div class="side-by-side-flex-elements" ng-class="{'phonebutton-sequence-align-center': phoneButton.edit ? $ctrl.newType.value === $ctrl.buttonTypeEmpty : true}">
+                <div class="phonebutton-sequence-column" >
+                  {{$index + 1 + $ctrl.phoneButtonListReadonly.length}}
+                </div>
+                <div class="phonebutton-feature-column">
+                  <!-- this section holds phone button view mode views -->
+                  <div ng-if="!phoneButton.edit">
+                    <p class="phonebutton-label" title="{{phoneButton.label}}">{{phoneButton.label}}</p>
+                    <p class="phonebutton-type">{{'phoneButtonLayout.buttonType.' + phoneButton.type | translate}}</p>
+                  </div>
+                  <!-- this section holds phone button edit mode views -->
+                  <div ng-if="phoneButton.edit">
+                    <div class="phonebuttonlayout-spacing-input row side-by-side-flex-elements" ng-class="{'phonebutton-sequence-align-center': phoneButton.edit ? $ctrl.newType.value === $ctrl.buttonTypeEmpty : true}">
+                      <div class="phonebutton-type-editor">
+                        <cs-select
+                          id="buttonTypeSelect"
+                          name="buttonTypeSelect"
+                          ng-model="$ctrl.newType"
+                          options="$ctrl.buttonTypeInputs"
+                          labelfield="name"
+                          valuefield="value">
+                        </cs-select>
+                      </div>
+                      <div ng-if="$ctrl.newType.value !== $ctrl.buttonTypeEmpty">
+                        <input
+                          cs-input
+                          type="text"
+                          id="buttonLabel"
+                          name="buttonLabel"
+                          placeholder="{{'customerPage.contactName' | translate}}"
+                          maxlength="30"
+                          ng-model="$ctrl.newLabel"
+                          ng-required="true"
+                          pattern="^((?!<).)*$"/>
+                      </div>
+                      <div ng-if="$ctrl.newType.value === $ctrl.buttonTypeEmpty" class="phonebutton-type-empty">
+                          {{'phoneButtonLayout.buttonType.' + $ctrl.newType.value | translate}}
+                      </div>
+                    </div>
+                    <div ng-if="$ctrl.newType.value !== $ctrl.buttonTypeEmpty" class="phonebuttonlayout-spacing-input row">
+                      <cs-call-destination
+                        model="$ctrl.newDestination"
+                        size="medium-12"
+                        inputs="$ctrl.callDestInputs"
+                        id="destinationInput"
+                        name="destinationInput"
+                        select-type="select"
+                        custom-number-translations="$ctrl.customTranslations"
+                        custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+                        input-translations="$ctrl.inputTranslations"
+                        on-change-fn="$ctrl.setPhoneButton(model)">
+                      </cs-call-destination>
+                    </div>
+                    <div ng-if="$ctrl.isValid">
+                      <input
+                        cs-input
+                        type="checkbox"
+                        id="validInput"
+                        ng-model="$ctrl.callPickupEnabled"
+                        cs-input-label="{{$ctrl.ownerName}} {{:: 'phoneButtonLayout.blfPickup' | translate}} {{$ctrl.extension}}"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- this section holds the icons to the right of the phone buttons -->
+              <div ng-if="!$ctrl.editing && !$ctrl.isReordering()">
+                <i ng-if="phoneButton.callPickupEnabled"
+                  tabindex="0"
+                  tooltip="{{$ctrl.getTooltipText(phoneButton)}}"
+                  tooltip-placement="left"
+                  tooltip-trigger="mouseenter focus"
+                  class="icon icon-info phonebuttonlayout-spacing-edit"
+                  aria-label="{{$ctrl.getTooltipText(phoneButton)}}">
+                </i>
+                <a href ng-if="phoneButton.isEditable" class="icon icon-edit phonebuttonlayout-spacing-edit" ng-click="$ctrl.setEdit(phoneButton)"></a>
+                <a href ng-if="phoneButton.isDeletable" class="icon icon-trash" ng-click="$ctrl.delete(phoneButton)"></a>
+              </div>
+              <div ng-if="$ctrl.isReordering()">
+                <a class="icon icon-tables" ng-class="{'selected': $ctrl.isSelectedPhoneButton(phoneButton)}"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </cs-sp-section>
+</cs-sp-container>

@@ -3,7 +3,10 @@
 describe('controller: servicePartnerCtrl', function () {
   var $q, $scope, $controller, defer, controller, gemService, Notification, $httpBackend, UrlConfig;
   var spData = getJSONFixture('gemini/servicepartner.json');
-  var preData = getJSONFixture('gemini/common.json');
+
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
+  });
 
   beforeEach(angular.mock.module('Core'));
   beforeEach(angular.mock.module('Gemini'));
@@ -29,7 +32,7 @@ describe('controller: servicePartnerCtrl', function () {
 
   function initController() {
     var getCountriesUrl = UrlConfig.getGeminiUrl() + 'countries';
-    $httpBackend.expectGET(getCountriesUrl).respond(200, preData.getCountries);
+    $httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
 
     controller = $controller('servicePartnerCtrl', {
       $scope: $scope,
@@ -47,11 +50,5 @@ describe('controller: servicePartnerCtrl', function () {
     defer.resolve(spData.error1);
     $scope.$apply();
     expect(Notification.error).toHaveBeenCalledWith('gemini.msg.splsResponseErr');
-  });
-
-  it('The response have message', function () {
-    defer.resolve(spData.error2);
-    $scope.$apply();
-    expect(Notification.error).toHaveBeenCalled();
   });
 });

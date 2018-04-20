@@ -28,10 +28,9 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
   brand.wbxclientVersionInvalidError = '';
   brand.wbxclientversions = [];
   brand.wbxclientversionplaceholder = $translate.instant('partnerProfile.selectAWbxClientVersion');
-  brand.showClientVersions = true;
+  brand.showClientVersions = false;
 
   brand.init = function () {
-    Log.debug('branding init');
     brand.rep = null; // cs admin rep
     brand.partner = {};
 
@@ -78,6 +77,10 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
     });
 
     brand.initWbxClientVersions();
+
+    //set by binding. used in settings page.
+    brand.showClientVersions = _.isUndefined(brand.showVersion) ? true : brand.showVersion;
+    brand.showBranding = _.isUndefined(brand.showBranding) ? true : brand.showBranding;
   };
 
   brand.initWbxClientVersions = function () {
@@ -230,7 +233,7 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
       type: 'small',
       scope: $scope,
       modalClass: 'modal-logo-upload',
-      templateUrl: 'modules/core/partnerProfile/branding/brandingUpload.tpl.html',
+      template: require('modules/core/partnerProfile/branding/brandingUpload.tpl.html'),
     });
   }
 

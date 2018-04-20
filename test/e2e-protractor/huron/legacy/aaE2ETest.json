@@ -1,0 +1,1143 @@
+{
+    "Test0": {
+        "actionSets": [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 4,
+			"inputs": [{
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+	}, 
+"Test1" : {
+   "actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level":0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+} , 
+"Test2" : {
+	"actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "#",
+				"actions": [{
+					"routeToSipEndpoint": {
+					}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+},
+"Test3" : {
+	"actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "",
+			"voice": "",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"say": {
+						"value": "",
+						"voice": "Vanessa"
+					}
+				}]
+			},
+			"attempts": 4,
+			"inputs": [],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"play": {
+			"voice": "Vanessa"
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "#",
+				"actions": [{
+					"routeToSipEndpoint": {
+					}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+}, 
+"Test4" : {
+	"actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "",
+			"voice": "",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"say": {
+						"value": "",
+						"voice": "Vanessa"
+					}
+				}]
+			},
+			"attempts": 4,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Updated the second phone menu??",
+								"voice": "Vanessa"
+							}
+						}]
+					}
+				}, {
+					"repeatActionsOnInput": {}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"play": {
+			"voice": "Vanessa"
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "#",
+				"actions": [{
+					"routeToSipEndpoint": {}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"runActionsOnInput": {
+			"inputType": 2,
+			"repeats": 2,
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Enter the Extension",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Caller-Area-Code",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 4,
+			"minNumberOfCharacters": 0,
+			"maxNumberOfCharacters": 0,
+			"inputs": [],
+			"incompleteInputActions": [],
+			"rawInputActions": [{
+				"routeToExtension": {
+					"destination": "$Input"
+				}
+			}]
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+},
+"Test5" : {
+	"actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "",
+			"voice": "",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"say": {
+						"value": "",
+						"voice": "Vanessa"
+					}
+				}]
+			},
+			"attempts": 4,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Updated the second phone menu??",
+								"voice": "Vanessa"
+							}
+						}]
+					}
+				}, {
+					"repeatActionsOnInput": {}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"play": {
+			"voice": "Vanessa"
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "#",
+				"actions": [{
+					"routeToSipEndpoint": {
+					}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"runActionsOnInput": {
+			"inputType": 2,
+			"repeats": 2,
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"say": {
+						"value": ""
+					}
+				}]
+			},
+			"attempts": 4,
+			"minNumberOfCharacters": 0,
+			"maxNumberOfCharacters": 0,
+			"inputs": [],
+			"incompleteInputActions": [],
+			"rawInputActions": [{
+				"routeToExtension": {
+					"destination": "$Input"
+				}
+			}]
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+}, 
+"Test6" : {
+	"actionSets" : [{
+	"name": "openHours",
+	"actions": [{
+		"dynamic": {
+			"dynamicOperations": [{
+				"isDynamic": false,
+				"say": {
+					"value": "Welcome to the AA",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": true,
+				"say": {
+					"value": "Original-Called-Number",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": " ",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}, {
+				"isDynamic": false,
+				"say": {
+					"value": "",
+					"voice": "Jordi"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "",
+			"voice": "",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"say": {
+						"value": "",
+						"voice": "Vanessa"
+					}
+				}]
+			},
+			"attempts": 4,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Updated the second phone menu??",
+								"voice": "Vanessa"
+							}
+						}]
+					}
+				}, {
+					"repeatActionsOnInput": {}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"play": {
+			"voice": "Vanessa"
+		}
+	}, {
+		"runActionsOnInput": {
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Press a key at the menu",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 1,
+			"inputs": [{
+				"input": "*",
+				"actions": [{
+					"route": {
+						"destination": "+14084741234"
+					}
+				}]
+			}, {
+				"input": "#",
+				"actions": [{
+					"routeToSipEndpoint": {
+					}
+				}]
+			}, {
+				"input": "0",
+				"actions": [{
+					"repeatActionsOnInput": {
+						"level": 0
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": []
+		}
+	}, {
+		"runActionsOnInput": {
+			"inputType": 2,
+			"repeats": 2,
+			"language": "ca_ES",
+			"voice": "Jordi",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": false,
+							"say": {
+								"value": "Enter the Extension",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": true,
+							"say": {
+								"value": "Original-Called-Number",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Jordi"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 4,
+			"minNumberOfCharacters": 0,
+			"maxNumberOfCharacters": 0,
+			"inputs": [],
+			"incompleteInputActions": [],
+			"rawInputActions": [{
+				"routeToExtension": {
+					"destination": "$Input"
+				}
+			}]
+		}
+	}, {
+		"runActionsOnInput": {
+			"inputType": 4,
+			"language": "en_US",
+			"voice": "Vanessa",
+			"prompts": {
+				"playList": [],
+				"sayList": [],
+				"announcements": [{
+					"dynamic": {
+						"dynamicOperations": [{
+							"isDynamic": true,
+							"say": {
+								"value": "named Variable",
+								"voice": "Vanessa"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": " ",
+								"voice": "Vanessa"
+							}
+						}, {
+							"isDynamic": false,
+							"say": {
+								"value": "",
+								"voice": "Vanessa"
+							}
+						}]
+					}
+				}]
+			},
+			"attempts": 4,
+			"minNumberOfCharacters": 1,
+			"maxNumberOfCharacters": 16,
+			"inputs": [{
+				"input": "0",
+				"actions": [{
+					"assignVar": {
+						"variableName": "named Variable",
+						"value": "Auto Attendant"
+					}
+				}]
+			}],
+			"incompleteInputActions": [],
+			"rawInputActions": [{
+				"assignVar": {
+					"variableName": "named Variable",
+					"value": "$Input"
+				}
+			}]
+		}
+	}, {
+		"disconnect": {
+			"treatment": "none"
+		}
+	}]
+}]
+},
+  "Test7": {
+  "actionSets": 
+  [  
+  {
+    "name": "openHours",
+    "actions": [
+      {
+        "play": {
+          "voice": "Vanessa"
+        }
+      },
+      {
+        "runActionsOnInput": {
+          "language": "",
+          "voice": "",
+          "prompts": {
+            "playList": [],
+            "sayList": [],
+            "announcements": [
+              {
+                "say": {
+                  "value": "",
+                  "voice": "Vanessa"
+                }
+              }
+            ]
+          },
+          "attempts": 4,
+          "inputs": [],
+          "incompleteInputActions": [],
+          "rawInputActions": []
+        }
+      },
+      {
+        "routeToUser": {
+          "id": "1958c860-0b52-4d76-bdb5-7824181fbbb0"
+        }
+      },
+      {
+        "disconnect": {
+          "treatment": "none"
+        }
+      }
+    ]
+  }],
+  "defaultActionSet": "openHours",
+  "scheduleEventTypeMap": {
+    "open": "openHours"
+  }
+}
+}

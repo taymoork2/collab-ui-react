@@ -2,49 +2,35 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3
     class="modal-title"
-    translate="spacesPage.remoteAccessKey">
+    translate="spacesPage.remoteAccessKey.remoteAccessKey">
   </h3>
 </div>
 
-<div class="modal-success" ng-show="rs.resetDone">
-  <i class="icon icon-checkbox"></i>
-  <span translate="spacesPage.rsuKeyWasReset"></span>
-</div>
-<div class="modal-warning" ng-show="rs.resetFailed">
-  <i class="icon icon-warning"></i>
-  <span translate="spacesPage.rsuKeyResetFailed"></span>
-</div>
+<div class="modal-body remote-support-modal-body">
+  <h4 translate="spacesPage.remoteAccessKey.rsuKey"></h4>
+  <p translate="spacesPage.remoteAccessKey.rsuKeyDesc"></p>
 
-<div class="modal-body">
-
-  <h4 translate="spacesPage.rsuKey"></h4>
-  <p translate="spacesPage.rsuKeyDesc"></p>
-
-  <div class="clearfix">
+  <div class="remote-support-key">
     <h3>
       <input id="display-key" type="text" ng-model="rs.currentDevice.rsuKey" readonly>
-      <a class="clipboard-button" sq-clipboard="rs.currentDevice.rsuKey"><i class="icon icon-clipboard"></i></a>
     </h3>
+    <div class="remote-support-buttons">
+      <!-- TODO: replace text with translation -->
+      <a href sq-clipboard="rs.currentDevice.rsuKey"><i class="icon icon-clipboard"></i> <span>Copy to Clipboard</span></a>
+      <a href ng-if="rs.currentDevice.isOnline" sq-click-promise="rs.resetRsuKeyAndWait()"><i class="icon icon-reset"></i> <span>Reset Key</span></a>
+      <div ng-if="!rs.currentDevice.isOnline"><i class="icon icon-reset"></i> <span>Reset Key</span></div>
+    </div>
   </div>
-
   </div>
 
 </div>
 
 <div class="modal-footer">
-  <button
-    cs-btn
-    type="button"
-    class="btn"
-    ng-disabled="!rs.currentDevice.isOnline"
-    ng-click="rs.resetRsuKeyAndWait()"
-    loading="rs.resetting">
-    <span translate="spacesPage.reset"></span>
-  </button>
   <button
     type="button"
     class="btn btn--primary"

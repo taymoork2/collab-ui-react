@@ -5,7 +5,8 @@
     toggle-id="companyVoicemailToggle"
     name="companyVoicemailToggle"
     size="small"
-    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)"
+    cs-aria-label="{{::'serviceSetupModal.companyVoicemail' | translate}}">
   </cs-toggle-switch>
   <div ng-if="$ctrl.companyVoicemailEnabled" class="save-popup-margin">
     <label class="control-label" translate="serviceSetupModal.vmDeliveryMethods"></label>
@@ -20,7 +21,7 @@
     <div ng-if="$ctrl.externalVoicemailAccess" class="indent-area-code">
       <p
         class="description-block"
-        translate="serviceSetupModal.externalNumberDescriptionText">
+        translate="serviceSetupModal.voicemailToPhoneDescriptionText">
       </p>
       <div class="medium-5 external-voicemail-number">
         <cs-select

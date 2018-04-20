@@ -28,6 +28,10 @@
         code: 'BE',
       },
       {
+        country: 'Brazil',
+        code: 'BR',
+      },
+      {
         country: 'Bulgaria',
         code: 'BG',
       },
@@ -164,6 +168,9 @@
       ROLLOUT2: ['United States', 'Canada'],
     };
 
+    /* ROLLOUT3 = ROLLOUT1 + Brazil */
+    _countries.ROLLOUT3 = _.concat(_countries.ROLLOUT1, ['Brazil']).sort();
+
     var _deviceLimit = {
       roomSystems: {
         min: 1,
@@ -200,6 +207,12 @@
         model: 'CISCO_MX300',
         type: 'ROOM_SYSTEMS',
       },
+      CISCO_ROOM_KIT: {
+        min: 1,
+        max: 1,
+        model: 'CISCO_ROOM_KIT',
+        type: 'ROOM_SYSTEMS',
+      },
       CISCO_8865: {
         min: 1,
         max: 4,
@@ -216,6 +229,12 @@
         min: 1,
         max: 4,
         model: 'CISCO_7832',
+        type: 'CALL_DEVICES',
+      },
+      CISCO_8841: {
+        min: 1,
+        max: 4,
+        model: 'CISCO_8841',
         type: 'CALL_DEVICES',
       },
       CISCO_7841: {
@@ -235,8 +254,9 @@
     var countryListTypes = {
       US_ONLY: 'US',
       CISCO_SX10: 'ROLLOUT1',
-      CISCO_DX80: 'ROLLOUT1',
+      CISCO_DX80: 'ROLLOUT3',
       CISCO_MX300: 'US',
+      CISCO_ROOM_KIT: 'ROLLOUT1',
       CISCO_8865: 'ROLLOUT2',
       CISCO_8845: 'ROLLOUT2',
       CISCO_8841: 'ROLLOUT2',

@@ -1,0 +1,79 @@
+<div class="devices-redux">
+  <cs-page-header title-name="{{'spacesPage.title' | translate}}"></cs-page-header>
+  <div ng-if="!devices.anyDevicesOrCodesLoaded">
+    <div style="padding: 100px; text-align: center;">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.subscriptionErrorsExist">
+    <div class="error-spinner">
+      <i class="icon icon-2x icon-spinner"/>
+    </div>
+  </div>
+
+  <div ng-if="devices.anyDevicesOrCodesLoaded">
+    <cs-page-sub-header ng-hide="devices.emptydatasource()">
+      <!--<cs-page-sub-header-left>-->
+        <device-search search-object="devices.searchObject"
+                       is-searching="devices.issearching"
+                       search-interaction="devices.searchInteraction"
+                       search-result-changed="devices.searchResultChanged(result)"></device-search>
+      <device-chart search-result="devices.searchResult"
+                    search-object="devices.searchObject"
+                    pie-chart-clicked="devices.addToSearch(searchElement, true)"></device-chart>
+      <!--</cs-page-sub-header-left>-->
+      <div class="new-export">
+        <span
+          ng-if="devices.deviceExportFeature"
+          class="icon icon-download export-button"
+          ng-click="devices.startDeviceExport()"
+          ng-hide="devices.exporting">
+        </span>
+        <button
+          class="btn btn--people add-button pull-right"
+          ng-click="devices.startAddDeviceFlow()"
+          ng-disabled="devices.addDeviceIsDisabled">
+          <span translate="spacesPage.addBtn"></span>
+        </button>
+
+      </div>
+    </cs-page-sub-header>
+    <div class="content-container">
+      <cs-accordion id="licenseWarning" ng-show="devices.licenseError">
+        <cs-accordion-group show-caret="true" display-status="warning">
+          <cs-accordion-heading>
+            <span class="badge badge-custom-warn">{{'spacesPage.licenseWarningTitle' | translate}}</span>
+            <span>{{'spacesPage.licenseWarningHeader' | translate}}</span>
+          </cs-accordion-heading>
+          <p>{{devices.licenseError}}</p>
+        </cs-accordion-group>
+      </cs-accordion>
+      <div class="searchingcontainer" ng-if="devices.issearching || devices.initializing()">
+        <div class="loadmore">
+          <i class="icon icon-2x icon-spinner"/>
+        </div>
+      </div>
+      <div ng-if="devices.showresult()" id="roomsListPanel" class="row">
+        <device-list search-hits="devices.searchResult.hits" search-object="devices.searchObject" sort-order-changed="devices.sortOrderChanged(field,order)"></device-list>
+      </div>
+      <div ng-if="devices.emptysearchresult()">
+        <div class="none_found">
+          <i class="icon icon-circle-comp-negative"/>
+          <span class="h2" translate="spacesPage.noneFound"></span>
+          <span class="h5" translate="spacesPage.tryAgain"></span>
+        </div>
+      </div>
+      <div ng-if="devices.emptydatasource()">
+        <div class="none_found">
+          <i class="icon icon-circle-telepresence"/>
+          <span class="h2" translate="spacesPage.nothingHere"></span>
+          <span class="h5" translate="spacesPage.noDevices"></span>
+          <button class="btn btn--people btn--large add-button" ng-click="devices.startAddDeviceFlow()">
+            <span translate="spacesPage.addBtn"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 'use strict';
 
+var featureToggle = require('../utils/featureToggle.utils');
+
 /* global manageUsersPage */
 
 // NOTE: Be sure to re-enable the afterAll at line 144 when re-enabling this test!
@@ -8,7 +10,7 @@ describe('Manage Users - Manual -', function () {
 
   var usersEmailOnly = _.times(2, function () {
     return {
-      email: utils.randomTestGmailwithSalt('manual'),
+      email: utils.randomTestGmailWithSalt('manual'),
       first: 'EmailOnly',
       last: 'McTestuser-' + utils.randomDid(),
     };
@@ -16,7 +18,7 @@ describe('Manage Users - Manual -', function () {
 
   var usersNamesAndEmail = _.times(2, function () {
     return {
-      email: utils.randomTestGmailwithSalt('manual'),
+      email: utils.randomTestGmailWithSalt('manual'),
       first: 'NamesAndEmail',
       last: 'McTestuser-' + utils.randomDid(),
     };
@@ -37,9 +39,16 @@ describe('Manage Users - Manual -', function () {
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-      utils.click(manageUsersPage.select.radio.orgManual);
-      utils.click(manageUsersPage.buttons.next);
+      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
+        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
+      } else {
+        utils.click(manageUsersPage.select.radio.orgManual);
+        utils.click(manageUsersPage.buttons.next);
+      }
+      if (featureToggle.features.atlasEmailSuppress) {
+        utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
+        utils.click(manageUsersPage.buttons.next);
+      }
       utils.waitForText(manageUsersPage.select.title, 'Manually Add or Modify Users');
     });
 

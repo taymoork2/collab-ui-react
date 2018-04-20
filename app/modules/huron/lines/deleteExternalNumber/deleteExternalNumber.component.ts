@@ -49,7 +49,7 @@ class DeleteExternalNumberCtrl implements ng.IComponentController {
 
 export class DeleteExternalNumberComponent implements ng.IComponentOptions {
   public controller = DeleteExternalNumberCtrl;
-  public templateUrl = 'modules/huron/lines/deleteExternalNumber/deleteExternalNumber.html';
+  public template = require('modules/huron/lines/deleteExternalNumber/deleteExternalNumber.html');
   public bindings = {
     numberInfo: '<',
     refreshFn: '&',

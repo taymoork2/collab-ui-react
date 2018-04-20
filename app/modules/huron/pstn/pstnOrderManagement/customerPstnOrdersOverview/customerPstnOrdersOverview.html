@@ -12,5 +12,7 @@
       </div>
     </div>
   </cs-sp-header>
-  <uc-orders-overview is-partner= "false" current-customer="$ctrl.currentCustomer"></uc-orders-overview>
+  <div class="side-panel-container-view" ui-view="side-panel-container">
+    <uc-orders-overview is-partner= "false" current-customer="$ctrl.currentCustomer"></uc-orders-overview>
+  </div>
 </div>

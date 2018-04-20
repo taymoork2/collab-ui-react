@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .overview-page {
   a.monitoring-cell {
@@ -156,12 +156,23 @@
   }
 
   .user-card {
-    // height: auto !important;
     header {
       text-align: left;
 
       .icon-circle-user {
         top: auto;
+      }
+    }
+
+    &--auto-assign-enabled {
+      padding: 1rem 1.5rem 2rem;
+
+      @media #{$small-only} {
+        display: inline-block;
+      }
+
+      @media #{$medium-up} {
+        display: flex;
       }
     }
 
@@ -173,8 +184,16 @@
       .convert-block {
         padding: 0 1.5rem 1rem;
 
+        &--auto-assign-enabled {
+          padding: 0 2rem 1rem;
+        }
+
         .convert-nr {
           color: $color-attention-base;
+        }
+
+        .convert-pending {
+          color: $color-green-base;
         }
 
         .btn {
@@ -182,10 +201,49 @@
         }
       }
 
+      .onboard-block {
+        padding: 0 1rem 1rem;
+        margin-left: 0;
+
+        .onboard-nr {
+          color: $color-mint-base;
+        }
+
+        .onboard-users-text {
+          margin: 0 1rem;
+        }
+      }
+
       .status-block {
         @extend .hybrid-card;
+        @include vr-spacing(mb, 2);
 
-        border-top: 1px solid $gray-light-2;
+        &.user-border {
+          border-top: 1px solid $gray-light-2;
+        }
+
+        &.status-block--auto-assign-enabled {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+
+          @media #{$small-only} {
+            padding-top: 1rem;
+            border-top: 1px solid $gray-light-2;
+          }
+
+          @media #{$medium-up} {
+            border-left: 1px solid $gray-light-2;
+          }
+
+          .convert-nr {
+            padding: 0;
+          }
+
+          ul {
+            margin: 0;
+          }
+        }
 
         ul {
           margin: 1rem 0;
@@ -259,10 +317,17 @@
       font-size: rem-calc(16);
       color: $gray-light-2;
     }
+
+    .card-footer {
+      text-align: center;
+      padding-top: 1.5rem;
+      margin-top: 1rem;
+      border-top: 1px solid $gray-light-2;
+    }
   }
 
   .fourth {
-    .full.side-info-card.cs-card {
+    .cs-card--full.side-info-card.cs-card {
       display: block;
 
       article {

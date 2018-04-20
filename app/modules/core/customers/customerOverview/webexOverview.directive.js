@@ -8,7 +8,7 @@
   function customerWebexOverview() {
     var directive = {
       restrict: 'E',
-      templateUrl: 'modules/core/customers/customerOverview/webexOverview.tpl.html',
+      template: require('modules/core/customers/customerOverview/webexOverview.tpl.html'),
       controller: 'CustomerWebexOverviewCtrl',
       controllerAs: 'customerWebexOverview',
     };

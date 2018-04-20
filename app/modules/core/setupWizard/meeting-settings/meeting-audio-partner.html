@@ -1,4 +1,4 @@
-<div class="meeting-settings" ng-init="meetingCtrl.setNextDisableStatus(true)">
+<div class="meeting-settings" ng-init="meetingCtrl.tspSetNextDisabled()">
   <h4 class="element-spacing" translate="firstTimeWizard.tspPartnerRequired"></h4>
   <div class="row">
     <div class="col-md-5">
@@ -7,7 +7,7 @@
         ng-model="meetingCtrl.audioPartnerName"
         options="meetingCtrl.tspPartnerOptions"
         placeholder="meetingCtrl.dropdownPlaceholder"
-        on-change-fn="meetingCtrl.setNextDisableStatus(false)"
+        on-change-fn="meetingCtrl.audioPartnerSelectionChange()"
         >
       </cs-select>
     </div>

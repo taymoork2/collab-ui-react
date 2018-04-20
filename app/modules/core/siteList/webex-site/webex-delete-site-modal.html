@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.cancel()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="webexSiteManagement.redistributeLicenses"></h3>
+</div>
+<div class="modal-body">
+  <div ng-if = "!$ctrl.isResult()">
+    <p translate="webexSiteManagement.redistributeLicensesDelete"
+      translate-values="{siteUrl: $ctrl.siteUrl}"></p>
+    <p translate="webexSiteManagement.deleteSiteNote"></p>
+    <webex-site-licenses sites-array="$ctrl.sitesArray"
+      center-details="$ctrl.centerDetails"
+      existing-webex-sites="$ctrl.existingWebexSites"
+      conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
+      is-hide-description="true"
+      on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid)">
+    </webex-site-licenses>
+  </div>
+  <webex-site-result-display  ng-if="$ctrl.isResult()" action="'deleteSite'" is-success="$ctrl.isSuccess"></webex-site-result-display>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-if="!$ctrl.isResult()"
+    ng-click="$ctrl.cancel()"
+    translate="common.cancel"></button>
+  <button class="btn btn-primary"
+    cs-btn
+    loading="$ctrl.isLoading"
+    ng-click="$ctrl.next()"
+    ng-disabled="$ctrl.isNextDisabled()">
+    <span>{{ ($ctrl.isResult()? 'common.close': 'common.delete') | translate }}</span>
+  </button>
+</div>

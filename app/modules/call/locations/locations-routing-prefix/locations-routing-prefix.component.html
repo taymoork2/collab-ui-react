@@ -1,5 +1,6 @@
-<div ng-form="routingPrefixForm">
+<div ng-form="$ctrl.routingPrefixForm">
   <label class="sub-section__label" translate="serviceSetupModal.routingPrefix.title"></label>
+  <p ng-if="!$ctrl.ftsw" class="description-block" translate="locations.routingPrefixDesc" translate-values="{ length: $ctrl.routingPrefixLength }"></p>
     <div class="row">
       <input
         cs-input
@@ -8,10 +9,11 @@
         name="dialingPrefix"
         placeholder="8100"
         ng-pattern="/^[0-9]*$/"
-        ng-maxlength="7"
-        ng-minlength="1"
+        ng-maxlength="$ctrl.routingPrefixLength"
+        ng-minlength="$ctrl.minRoutingPrefixLength"
         ng-model="$ctrl.routingPrefix"
         ng-change="$ctrl.onRoutingPrefixChanged()"
+        ng-disabled="$ctrl.isDisabled()"
         cs-input-messages="$ctrl.messages"
         cs-input-group-size="medium-5"
         cs-input-help-text="{{::'serviceSetupModal.routingPrefix.exampleHelpText'|translate}}">

@@ -3,6 +3,7 @@
 describe('Controller: AABuilderActionsCtrl', function () {
   var controller, $controller, optionController;
   var AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, CustomVariableService;
+  var autoAttendantHybridCareService;
   var $rootScope, $scope, $q;
   var $modal;
   var modalDefer;
@@ -22,6 +23,8 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
   var sortedOptions = [
     {
+      title: 'autoAttendant.actionCallerInput',
+    }, {
       title: 'autoAttendant.actionDecision',
     }, {
       title: 'autoAttendant.actionPhoneMenu',
@@ -61,7 +64,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, _$modal_, _AAUiModelService_, _$q_, _AutoAttendantCeMenuModelService_, _AACommonService_, _CustomVariableService_) {
+  beforeEach(inject(function (_$rootScope_, _$controller_, _$modal_, _AAUiModelService_, _$q_, _AutoAttendantCeMenuModelService_, _AACommonService_, _CustomVariableService_, _AutoAttendantHybridCareService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $controller = _$controller_;
@@ -73,6 +76,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AACommonService = _AACommonService_;
     CustomVariableService = _CustomVariableService_;
+    autoAttendantHybridCareService = _AutoAttendantHybridCareService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(AutoAttendantCeMenuModelService, 'deleteCeMenuMap');
@@ -92,6 +96,7 @@ describe('Controller: AABuilderActionsCtrl', function () {
     AutoAttendantCeMenuModelService = null;
     CustomVariableService = null;
     controller = null;
+    autoAttendantHybridCareService = null;
   });
 
   describe('setOption for Dial By Extension', function () {
@@ -328,17 +333,37 @@ describe('Controller: AABuilderActionsCtrl', function () {
 
   describe('test caller Input', function () {
     it('should not add the Caller Input label', function () {
-      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(false);
       // setup the options menu
       controller = $controller('AABuilderActionsCtrl', {
         $scope: $scope,
       });
 
-      expect(controller.options.length).toEqual(5);
+      expect(controller.options.length).toEqual(6);
+    });
+
+    it('should not add the DialByExt label when hybrid toggle is enabled and sparkCall is not configured', function () {
+      spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(false);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope,
+      });
+
+      expect(controller.options.length).toBe(5);
+    });
+
+    it('should add the DialByExt label when hybrid toggle is enabled and sparkCall is also configured', function () {
+      spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(true);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      // setup the options menu
+      controller = $controller('AABuilderActionsCtrl', {
+        $scope: $scope,
+      });
+      expect(controller.options.length).toBe(6);
+      expect(controller.options[5].title).toBe('autoAttendant.phoneMenuDialExt');
     });
 
     it('should add the Caller Input label', function () {
-      spyOn(AACommonService, 'isCallerInputToggle').and.returnValue(true);
       // setup the options menu
       controller = $controller('AABuilderActionsCtrl', {
         $scope: $scope,

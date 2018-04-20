@@ -1,0 +1,195 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/core';
+@import '~@collabui/collab-ui/scss/settings/typography';
+
+.setting {
+  .application {
+    .columns {
+      padding-left: 0;
+    }
+    h4 {
+      display: none;
+    }
+  }
+  .webexversion {
+    #webex_client_versions_label_and_dropdown .row {
+      margin-top: 0;
+    }
+  }
+  .device-branding {
+    .indent {
+      margin-left: 32px;
+    }
+    .device-brand-files {
+      display: flex;
+      margin-top: 6px;
+
+      .file {
+        flex-grow: 1;
+        .fileinfo {
+          color: $gray-light-1;
+          height: 50px;
+          width: 186px;
+          display: flex;
+          flex-wrap: wrap;
+          overflow: hidden;
+          justify-content: space-between;
+          background-color: $color-white;
+          border: solid $gray-base 1px;
+          border-top: none;
+          border-radius: 0 0 5px 5px;
+          .progress {
+            width: 100%;
+            margin: 0;
+            align-self: flex-start;
+          }
+          div, a {
+            margin: 0 8px;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            align-self: flex-end;
+            margin-bottom: 8px;
+          }
+          a {
+            font-size: 0.625rem;
+          }
+          .ng-hide {
+            display: block !important;
+            visibility: hidden;
+          }
+          .name {
+            margin-bottom: 0;
+            margin-top: 4px;
+            color: $gray-dark-3;
+            flex-basis: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            align-self: flex-start;
+          }
+        }
+        .filearea {
+          &.filled {
+            height: 144px;
+            border: solid $gray-base 1px;
+            border-radius: 5px 5px 0 0;
+          }
+          width: 186px;
+          height: 194px;
+          border: dashed $gray-base 1px;
+          border-radius: 5px;
+          background-color: $gray-lightest;
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          justify-content: center;
+          text-align: center;
+          position: relative;
+          &.dragover {
+            border-color: $link-hover-color;
+            background: $gray-lighter;
+          }
+          span {
+            font-size: 1rem;
+          }
+          i {
+            font-size: 2rem;
+          }
+          .dropinfo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
+            z-index: 2;
+            width: inherit;
+            height: inherit;
+            :first-child {
+              margin-top: auto;
+            }
+            * {
+              flex-basis: 75%;
+            }
+          }
+          .imgbox {
+            height: 144px;
+            width: 186px;
+            overflow: hidden;
+            position: absolute;
+            border-radius: 5px 5px 0 0;
+            top: -1px;
+            left: -1px;
+          }
+          .tmb {
+            background-position: center;
+            background-size: cover;
+            border: solid $gray-base 1px;
+            background-repeat: no-repeat;
+            &.logo {
+              background-size: auto 100%;
+            }
+          }
+          .imgpresent {
+            display: none;
+            color: white;
+            border: solid $gray-base 1px;
+            background-color: rgba(0, 0, 0, 0.75);
+          }
+          &:hover > .imgpresent {
+            display: flex;
+          }
+        }
+        input {
+          display: none;
+        }
+        .filetopdrop {
+          font-size: 0.75rem;
+          line-height: 1rem;
+          height: 1.2rem;
+          text-overflow: ellipsis;
+          font-family: $brand-font-regular;
+        }
+      }
+      .midfile {
+        margin: 0 10px;
+      }
+    }
+
+    #best-res {
+      font-size: 0.75rem;
+      line-height: 0.75rem;
+      margin: 16px 0 0
+    }
+
+    #apply-device-branding {
+      width: 72px;
+      max-width: 200px;
+      margin-top: 16px;
+    }
+  }
+}
+.device-branding-modal {
+  .modal-body {
+    .section__description {
+      font-size: 0.875rem;
+    }
+    .tab-content {
+      border: none;
+    }
+    overflow-y: auto;
+    display: flex;
+    height: calc(100vh - 210px);
+    .imgflow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-top: 16px;
+      img {
+        margin-right: 16px;
+      }
+    }
+    .imgtitle {
+      margin-top: 8px;
+    }
+  }
+}

@@ -3,9 +3,10 @@
     <span ng-bind-html="match.label.firstName | typeaheadHighlight:query" ng-if="match.label.firstName"></span>
     <span ng-bind-html="match.label.lastName | typeaheadHighlight:query" ng-if="match.label.lastName"></span>
     <span ng-bind-html="match.label.number | typeaheadHighlight:query" ng-if="match.label.number"></span>
+    <span ng-bind-html="match.label.siteToSite | typeaheadHighlight:query" ng-if="match.label.siteToSite"></span>
     <span ng-show="match.label.lastName">(<span ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>)</span>
-    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
-    <span ng-show="!match.label.userName && !match.label.number" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.lastName && !match.label.displayName && !match.label.number && !match.label.siteToSite" ng-bind-html="match.label.userName | typeaheadHighlight:query"></span>
+    <span ng-show="!match.label.userName && !match.label.number && !match.label.siteToSite" ng-bind-html="match.label.displayName | typeaheadHighlight:query"></span>
   </a>
   <div class="member__line">
     <span ng-bind-html="(match.label.numbers | callFeatureMemberNumberFormatterFilter : true) | typeaheadHighlight:query" ng-if="match.label.numbers"></span>
@@ -49,19 +50,23 @@
   </div>
   <div ng-if="$ctrl.showMember">
     <cs-card-layout>
-      <cs-card-member ng-if="$ctrl.fallbackDestination.memberUuid"
+      <cs-card-member
+        ng-if="$ctrl.fallbackDestination.memberUuid"
         cs-type="simple"
         cs-member-type="user"
         cs-id="$ctrl.fallbackDestination.memberUuid"
         cs-title="$ctrl.fallbackDestination.name"
         cs-subtitle="$ctrl.directoryNumber | callFeatureFallbackDestinationDirectoryNumberFilter"
         cs-image="$ctrl.thumbnailSrc"
-        on-remove="$ctrl.removeMember()">
+        on-remove="$ctrl.removeMember()"
+        delete-aria-label="{{::'common.delete' | translate}}">
       </cs-card-member>
-      <cs-card-number ng-if="!$ctrl.fallbackDestination.memberUuid"
+      <cs-card-number
+        ng-if="!$ctrl.fallbackDestination.memberUuid"
         cs-id="$ctrl.fallbackDestination.numberUuid"
         cs-title="$ctrl.fallbackDestination.number"
-        on-remove-fn="$ctrl.removeMember()">
+        on-remove-fn="$ctrl.removeMember()"
+        delete-aria-label="{{::'common.delete' | translate}}">
       </cs-card-number>
     </cs-card-layout>
     <div class="send-to-voicemail-chk" ng-if="!$ctrl.isNew">

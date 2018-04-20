@@ -1,11 +1,17 @@
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
-import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+
+interface ITooltipData {
+  tooltip?: string;
+  ariaLabel?: string;
+}
 
 export class MySubscriptionCtrl implements ng.IController {
   private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
@@ -18,7 +24,6 @@ export class MySubscriptionCtrl implements ng.IController {
   public trialUrlFailed: boolean = false;
   public productInstanceFailed: boolean = false;
   public loading: boolean = false;
-  public digitalRiverSubscriptionsUrl: string;
   public emptyBmmpAttr: IBmmpAttr = {
     subscriptionId: '',
     productInstanceId: '',
@@ -76,7 +81,7 @@ export class MySubscriptionCtrl implements ng.IController {
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
     private Notification: Notification,
@@ -121,8 +126,8 @@ export class MySubscriptionCtrl implements ng.IController {
     return _.isNumber(usage);
   }
 
-  private getChangeSubURL(env: string): ng.IPromise<string> {
-    return this.DigitalRiverService.getSubscriptionsUrl(env).then((subscriptionsUrl: string): string => {
+  private getChangeSubURL(): ng.IPromise<string> {
+    return this.DigitalRiverService.getSubscriptionsUrl().then((subscriptionsUrl: string): string => {
       return subscriptionsUrl;
     }).catch((error: any): string => {
       this.loading = false;
@@ -132,20 +137,27 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   // generating the subscription view tooltips
-  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): string | undefined {
+  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): ITooltipData {
+    const tooltipData: ITooltipData = {};
     if (_.isNumber(volume)) {
-      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offer.offerName) + '<br>';
+      const offerLabel = this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName}`);
+
       if (this.useTotal(offer) || !_.isNumber(usage)) {
-        tooltip += this.$translate.instant('subscriptions.licenses') + volume;
-      } else if (usage > volume) {
-        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
+        const licenseLabel = this.$translate.instant('subscriptions.licenses');
+
+        tooltipData.tooltip = `${offerLabel}<br>${licenseLabel}${volume}`;
+        tooltipData.ariaLabel = `${offerLabel} ${licenseLabel}${volume}`;
       } else {
-        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
+        const usageLabel = this.$translate.instant('subscriptions.usage');
+        tooltipData.ariaLabel = `${offerLabel} ${usageLabel}${usage}/${volume}`;
+        if (usage > volume) {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}<span class="warning">${usage}/${volume}</span>`;
+        } else {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}${usage}/${volume}`;
+        }
       }
-      return tooltip;
-    } else {
-      return;
     }
+    return tooltipData;
   }
 
   // combines licenses for the license view
@@ -167,23 +179,32 @@ export class MySubscriptionCtrl implements ng.IController {
         offer.volume += item.volume;
         exists = true;
       }
-      this.setOverage(offer);
     });
 
     if (!exists) {
       offers.push(item);
-      this.setOverage(item);
     }
   }
 
-  private setOverage(offer: IOfferData) {
-    if (!this.overage) {
-      if (offer.usage) {
-        this.overage = offer.usage > offer.volume;
-      } else if (offer.totalUsage) {
-        this.overage = offer.totalUsage > offer.volume;
-      }
+  private setOverage (offer?: IOfferData) {
+    const isUsageGreaterThanVolume = (offer) => offer.usage ? offer.usage > offer.volume : false;
+    if (offer) {
+      return this.overage = isUsageGreaterThanVolume(offer);
     }
+    let over = this.overage;
+    _.forEach(this.licenseCategory, cat => {
+      over = over ||  _.some(cat.offers, offer => {
+        return isUsageGreaterThanVolume(offer);
+      });
+      if (!over && !_.isEmpty(cat.offerWrapper)) {
+        over = _.some(cat.offerWrapper, siteIndex => {
+          return _.some(siteIndex.offers, offer => {
+            return isUsageGreaterThanVolume(offer);
+          });
+        });
+      }
+    });
+    this.overage = over;
   }
 
   private sortSubscription(index: number, siteIndex: number): void {
@@ -198,16 +219,8 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private subscriptionRetrieval(): void {
-    this.Orgservice.getLicensesUsage().then((subscriptions: any[]): void => {
-      // filter out subscriptions with a license with an offerName that is 'MSGR'
-      // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
-      subscriptions = _.reject(subscriptions, (subscription) => {
-        const licenses = _.get(subscription, 'licenses');
-        return _.some(licenses, license => this.Authinfo.isExternallyManagedLicense(license));
-      });
-
+    this.Orgservice.getInternallyManagedSubscriptions().then((subscriptions: any[]): void => {
       const authinfoSubscriptions = this.Authinfo.getSubscriptions();
-
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],
@@ -223,31 +236,31 @@ export class MySubscriptionCtrl implements ng.IController {
         }
         if (subscription.internalSubscriptionId && (subscription.internalSubscriptionId !== 'unknown')) {
           newSubscription.internalSubscriptionId = subscription.internalSubscriptionId;
-          if (subscription.internalSubscriptionId !== 'Trial') {
-            newSubscription.isOnline = true;
-          }
         }
 
-        const matchingSubscription = _.find(authinfoSubscriptions, {
-          subscriptionId: subscription.internalSubscriptionId,
+        const matchingSubscription = _.find(authinfoSubscriptions, (sub: ISubscription) => {
+          return (sub.subscriptionId === subscription.internalSubscriptionId) && (sub.orderingTool === this.Config.orderingTool.online || sub.orderingTool === this.Config.orderingTool.digitalRiver);
         });
-        const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
-        if (matchingSubscriptionEndDate) {
-          const currentDate = new Date();
-          const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
-          const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
-          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (!_.isUndefined(matchingSubscription)) {
+          newSubscription.isOnline = true;
+          const matchingSubscriptionEndDate = _.get<string>(matchingSubscription, 'endDate', '');
+          if (matchingSubscriptionEndDate) {
+            const currentDate = new Date();
+            const subscriptionEndDate = new Date(matchingSubscriptionEndDate);
+            const timeDiff = subscriptionEndDate.getTime() - currentDate.getTime();
+            const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-          newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
-          if (diffDays > this.EXPIRATION_DAYS.warning) {
-            newSubscription.badge = this.EXPIRATION_BADGES.default;
-          } else if (diffDays > this.EXPIRATION_DAYS.alert) {
-            newSubscription.badge = this.EXPIRATION_BADGES.warning;
-          } else if (diffDays > this.EXPIRATION_DAYS.expired) {
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
-          } else {
-            newSubscription.endDate = this.$translate.instant('subscriptions.expired');
-            newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            newSubscription.endDate = this.$translate.instant('subscriptions.expires', { date: moment(subscriptionEndDate).format('MMM DD, YYYY') });
+            if (diffDays > this.EXPIRATION_DAYS.warning) {
+              newSubscription.badge = this.EXPIRATION_BADGES.default;
+            } else if (diffDays > this.EXPIRATION_DAYS.alert) {
+              newSubscription.badge = this.EXPIRATION_BADGES.warning;
+            } else if (diffDays > this.EXPIRATION_DAYS.expired) {
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            } else {
+              newSubscription.endDate = this.$translate.instant('subscriptions.expired');
+              newSubscription.badge = this.EXPIRATION_BADGES.alert;
+            }
           }
         }
 
@@ -308,11 +321,8 @@ export class MySubscriptionCtrl implements ng.IController {
             const offer: IOfferData = this.generateOffer(license, subIndex, licenseIndex);
 
             newSubscription.proPack = offer;
-            if (this.proPackData && this.proPackData.usage && offer.usage) {
-              this.proPackData.usage += offer.usage;
-              this.proPackData.volume += offer.volume;
-            } else if (this.proPackData && offer.usage) {
-              this.proPackData.usage = offer.usage;
+            if (this.proPackData) {
+              this.proPackData.usage = _.get(this.proPackData, 'usage', 0) + _.get(offer, 'usage', 0);
               this.proPackData.volume += offer.volume;
             } else {
               this.proPackData = _.cloneDeep(offer);
@@ -345,11 +355,6 @@ export class MySubscriptionCtrl implements ng.IController {
         this.oneOnlineSub = true;
       }
 
-      if (_.find(this.subscriptionDetails, 'isOnline')) {
-        // create cookie for Digital River
-        this.DigitalRiverService.getDigitalRiverToken();
-      }
-
       let enterpriseSubs = 1;
       let enterpriseTrials = 1;
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((instances) => {
@@ -366,6 +371,9 @@ export class MySubscriptionCtrl implements ng.IController {
               } else {
                 this.subscriptionDetails[index].name = this.$translate.instant('subscriptions.numberedName', { number: enterpriseSubs++ });
               }
+            }
+            if (this.subscriptionDetails.length === 1) {
+              this.licenseSummary = this.$translate.instant('subscriptions.licenseSummaryEnterprise');
             }
           } else {
             const prodResponse: IProdInst = _.find(instances, ['subscriptionId', subscription.internalSubscriptionId]);
@@ -390,6 +398,7 @@ export class MySubscriptionCtrl implements ng.IController {
         }
       });
 
+      this.setOverage();
       this.setOverageWarning();
     });
   }
@@ -398,7 +407,7 @@ export class MySubscriptionCtrl implements ng.IController {
     subscription.productInstanceId = prodResponse.productInstanceId;
     subscription.name = prodResponse.name;
     const env: string = _.includes(prodResponse.name, 'Spark') ? this.SPARK : this.WEBEX;
-    this.getChangeSubURL(env).then((urlResponse) => {
+    this.getChangeSubURL().then((urlResponse) => {
       subscription.changeplanOverride = '';
       if (urlResponse && env === this.SPARK) {
         subscription.changeplanOverride = urlResponse;
@@ -454,7 +463,7 @@ export class MySubscriptionCtrl implements ng.IController {
     this.ServiceDescriptorService.getServices().then((services) => {
       return this.ServiceDescriptorService.filterEnabledServices(services);
     }).then((enabledServices) => {
-      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator(s1.id, s2.id));
+      enabledServices.sort((s1, s2) => this.HybridServicesUtilsService.hybridServicesComparator({ value: s1.id }, { value: s2.id }));
       return _.map(enabledServices, (service: any) => {
         if (service.id === 'squared-fusion-uc' || service.id === 'squared-fusion-ec') {
           return `hercules.serviceNames.${service.id}.full`;
@@ -478,6 +487,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private generateOffer(license: any, subIndex: number, licenseIndex: number) {
+    const tooltipData: ITooltipData = this.generateTooltip(license, license.usage, license.volume);
     const offer: IOfferData = {
       licenseId: license.licenseId,
       licenseType: license.licenseType,
@@ -485,7 +495,8 @@ export class MySubscriptionCtrl implements ng.IController {
       offerName: license.offerName,
       volume: license.volume,
       id: 'donutId' + subIndex + licenseIndex,
-      tooltip: this.generateTooltip(license, license.usage, license.volume),
+      tooltip: tooltipData.tooltip,
+      tooltipAriaLabel: tooltipData.ariaLabel,
     };
 
     if (this.useTotal(offer)) {
@@ -507,7 +518,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private setOverageWarning(): void {
-    if (this.overage && this.isProPackEnabled) {
+    if (this.overage) {
       this.$rootScope.$emit(this.HEADER_BROADCAST, {
         iconCss: 'icon-warning',
         translation: 'subscriptions.overageWarning',

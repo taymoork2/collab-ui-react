@@ -2,7 +2,7 @@ import timeZoneModule from './index';
 
 describe('Component: timeZone', () => {
   const TIME_ZONE_SELECT = '.csSelect-container[name="timeZone"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const TZ_ANCHORAGE = 'America/Anchorage';
   const TZ_LA = 'America/Los_Angeles';
   const timeZoneOptions = getJSONFixture('huron/json/settings/timeZones.json');

@@ -3,7 +3,6 @@
 describe('Service: AutoAttendantCeInfoModelService', function () {
   var AutoAttendantCeInfoModelService, AutoAttendantCeService, AACeDependenciesService, AAModelService, AANumberAssignmentService;
   var $rootScope, $scope, $q, $timeout;
-  // require('jasmine-collection-matchers');
 
   var callExperienceInfos = getJSONFixture('huron/json/autoAttendant/callExperiencesWithNumber.json');
   var depends = getJSONFixture('huron/json/autoAttendant/dependencies.json');

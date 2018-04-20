@@ -6,7 +6,7 @@
     .controller('AAAddVariableCtrl', AAAddVariableCtrl);
 
   /* @ngInject */
-  function AAAddVariableCtrl($scope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
+  function AAAddVariableCtrl($scope, $rootScope, $modal, AADynaAnnounceService, AAUiModelService, AACommonService, AutoAttendantCeMenuModelService) {
     var vm = this;
 
     var CONSTANTS = {};
@@ -40,6 +40,9 @@
             var elementHtml = dynamicElement.replace('DynamicText', vm.variableSelection.value);
             elementHtml = elementHtml.replace('ReadAs', vm.readAsSelection.value);
             var myId = id + Date.now();
+            //replacing element-id
+            elementHtml = elementHtml.replace('elementId', myId);
+            //replacing id
             elementHtml = elementHtml.replace('Id', myId);
             dispatchElementInsertion(id, elementHtml, range);
           }, function () {
@@ -49,7 +52,7 @@
       }
     }
 
-    function cancelledDynamicModal() {}
+    function cancelledDynamicModal() { }
 
     function modalClosed() {
       var dynamicList = range.endContainer.ownerDocument.activeElement;
@@ -87,50 +90,50 @@
           }
         }
         AACommonService.setSayMessageStatus(true);
+        $rootScope.$broadcast('dynamicListUpdated');
       }
+    }
+
+    function setActionValue(value, isDynamic, htmlModel, readAsValue) {
+      var opt = {};
+      if (_.isEqual($scope.aaElementType, 'REST')) {
+        _.set(opt, 'action.eval.value', value);
+      } else {
+        _.set(opt, 'say.value', value);
+        _.set(opt, 'say.as', readAsValue);
+      }
+      opt.isDynamic = isDynamic;
+      opt.htmlModel = htmlModel;
+      return opt;
     }
 
     function createDynamicList(dynamicList) {
       _.forEach(dynamicList.childNodes, function (node) {
-        var opt = {};
+        var opt;
 
         if ((node.nodeName === 'AA-INSERTION-ELEMENT' && node.childNodes.length > 0) || node.nodeName === 'DIV') {
           return createDynamicList(node);
-        } else if (node.nodeName === 'BR') {
-          opt = {
-            say: {
-              value: '',
-              voice: '',
-            },
-            isDynamic: true,
-            htmlModel: encodeURIComponent('<br>'),
-          };
-        } else if (node.nodeName === '#text') {
-          opt = {
-            say: {
-              value: node.nodeValue,
-              voice: '',
-            },
-            isDynamic: false,
-            htmlModel: '',
-          };
-        } else if (node.nodeName === 'SPAN' || node.nodeName === 'AA-INSERTION-ELEMENT') {
-          var attributes;
-          if (node.nodeName === 'SPAN') {
-            attributes = node.parentElement.attributes;
-          } else {
-            attributes = node.attributes;
+        } else {
+          switch (node.nodeName) {
+            case 'BR':
+              opt = setActionValue('', true, encodeURIComponent('<br>'));
+              break;
+
+            case '#text':
+              opt = setActionValue(node.nodeValue, false, '');
+              break;
+
+            case 'SPAN':
+            case 'AA-INSERTION-ELEMENT':
+              var attributes;
+              if (node.nodeName === 'SPAN') {
+                attributes = node.parentElement.attributes;
+              } else {
+                attributes = node.attributes;
+              }
+              var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"id="' + attributes[2].value + '" aa-Element-Type="' + $scope.aaElementType + '"></aa-insertion-element>';
+              opt = setActionValue(attributes[0].value, true, encodeURIComponent(ele), attributes[1].value);
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
-          opt = {
-            say: {
-              value: attributes[0].value,
-              voice: '',
-              as: attributes[1].value,
-            },
-            isDynamic: true,
-            htmlModel: encodeURIComponent(ele),
-          };
         }
         finalList.push(opt);
       });
@@ -143,7 +146,7 @@
         value: '',
       };
       return $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html',
+        template: require('modules/huron/features/autoAttendant/dynamicAnnouncements/aaDynamicAnnouncementsModal.tpl.html'),
         controller: 'AADynamicAnnouncementsModalCtrl',
         controllerAs: 'aaDynamicAnnouncementsModalCtrl',
         type: 'small',
@@ -153,6 +156,9 @@
           },
           readAsSelection: function () {
             return Selection;
+          },
+          aaElementType: function () {
+            return $scope.aaElementType;
           },
         },
         modalClass: 'aa-dynamic-announcements-modal',

@@ -1,10 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 .meeting-settings {
-  .site-preview {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
 
   .time-zone {
     font-size: 14px;
@@ -16,15 +12,18 @@
     color: $color-cta-base;
   }
 
-  .site-description,
-  .distribute-licenses-heading,
   .element-spacing {
     margin-top: 20px;
     margin-bottom: 20px;
   }
 
-  .delete-site {
-    font-size: 24px;
+  .small {
+    span {
+      font-size: .75rem;
+    }
+  }
+  .info .cs-input__messages {
+    padding-top: 0px;
   }
 
   .keep-existing-trials {
@@ -44,18 +43,6 @@
 
   .site-heading {
     font-weight: bolder;
-  }
-
-  .align-license-count {
-    text-align: right;
-  }
-
-  .align-license-count-total {
-    text-align: end;
-  }
-
-  .notice {
-    font-size: 18px;
   }
 
   .adjust-card-margin {

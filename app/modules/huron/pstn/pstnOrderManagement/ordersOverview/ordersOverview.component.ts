@@ -1,7 +1,7 @@
 import { PstnService } from 'modules/huron/pstn/pstn.service';
 export class OrdersOverviewComponent implements ng.IComponentOptions {
   public controller = OrdersOverviewCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnOrderManagement/ordersOverview/ordersOverview.html';
+  public template = require('modules/huron/pstn/pstnOrderManagement/ordersOverview/ordersOverview.html');
   public bindings = {
     currentCustomer: '<',
     isPartner: '<',
@@ -11,7 +11,7 @@ export class OrdersOverviewComponent implements ng.IComponentOptions {
 export class OrdersOverviewCtrl implements ng.IComponentController {
   public currentCustomer: any;
   public loading: boolean = true;
-  private orders: any[] = [];
+  public orders: any[] = [];
   private ordersWithDuplicates: any[] = [];
   private PENDING = this.$translate.instant('pstnOrderOverview.inProgress');
   public isPartner: boolean;

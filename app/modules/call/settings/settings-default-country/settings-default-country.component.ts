@@ -25,7 +25,7 @@ class HuronDefaultCountryCtrl implements ng.IComponentController {
 
 export class HuronDefaultCountryComponent implements ng.IComponentOptions {
   public controller = HuronDefaultCountryCtrl;
-  public templateUrl = 'modules/call/settings/settings-default-country/settings-default-country.component.html';
+  public template = require('modules/call/settings/settings-default-country/settings-default-country.component.html');
   public bindings = {
     defaultCountry: '<',
     defaultCountryOptions: '<',

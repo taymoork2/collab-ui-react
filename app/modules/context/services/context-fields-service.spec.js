@@ -8,11 +8,11 @@ describe('Service: contextFieldsService', function () {
     this.initModules('Context');
     this.injectDependencies(
       'ContextFieldsService',
-      'Discovery',
+      'ContextDiscovery',
       '$q',
       '$httpBackend'
     );
-    spyOn(this.Discovery, 'getEndpointForService').and.returnValue(this.$q.resolve(dictionaryUrl));
+    spyOn(this.ContextDiscovery, 'getEndpointForService').and.returnValue(this.$q.resolve(dictionaryUrl));
   });
 
   afterEach(inject(function () {
@@ -23,7 +23,8 @@ describe('Service: contextFieldsService', function () {
   describe('getfields', function () {
     it('should get fields and verify results', function () {
       fieldData = [
-        { classification: 'PII',
+        {
+          classification: 'PII',
           dataType: 'string',
           searchable: 'false',
           publiclyAccessible: true,
@@ -31,7 +32,9 @@ describe('Service: contextFieldsService', function () {
           locales: [],
           refUrl: '/dictionary/field/v1/id/Agent_ID',
           id: 'Agent_ID',
-          lastUpdated: '2017-01-23T16:48:50.021Z' }];
+          lastUpdated: '2017-01-23T16:48:50.021Z',
+        },
+      ];
 
       this.$httpBackend.expectGET(dictionaryUrl + '/dictionary/field/v1/search?q=id:*&maxEntries=1500').respond(200, fieldData);
       this.ContextFieldsService.getFields().then(function (response) {

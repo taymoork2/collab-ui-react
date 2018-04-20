@@ -386,7 +386,7 @@
 
       $modal.open({
         type: 'small',
-        templateUrl: 'modules/gss/incidents/message/deleteMessage.tpl.html',
+        template: require('modules/gss/incidents/message/deleteMessage.tpl.html'),
         controller: function () {
           var ctrl = this;
           ctrl.message = delMessage;

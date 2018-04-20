@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewCallCard', OverviewCallCard);
@@ -11,7 +14,7 @@
       createCard: function createCard() {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/genericCard.tpl.html';
+        card.template = genericCardTemplatePath;
         card.icon = 'icon-circle-call';
         card.desc = 'overview.cards.call.desc';
         card.name = 'overview.cards.call.title';
@@ -20,16 +23,16 @@
         card.enabled = false;
         card.notEnabledText = 'overview.cards.call.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
-        card.settingsUrl = '#/services/call-settings';
+        card.settingsUrl = '/services/call-settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
 
         FeatureToggleService.supports(FeatureToggleService.features.hI1484)
           .then(function (supported) {
             if (supported) {
-              card.settingsUrl = '#/services/call-settings-location';
+              card.settingsUrl = '/services/call-settings-location';
             } else {
-              card.settingsUrl = '#/services/call-settings';
+              card.settingsUrl = '/services/call-settings';
             }
           });
 

@@ -2,6 +2,8 @@ import './call-park.component.scss';
 
 import { CallParkService } from './call-park.service';
 import { CallParkComponent } from './call-park.component';
+import { CallParkAddDirectiveFactory } from './call-park-add.directive';
+import { CallParkEditDirectiveFactory } from './call-park-edit.directive';
 import callParkNumber from './call-park-number';
 import callParkFallbackDestination from 'modules/call/features/call-park/call-park-fallback-destination';
 import callParkReversionTimer from './call-park-reversion-timer';
@@ -14,8 +16,7 @@ export * from './call-park';
 
 export default angular
   .module('call.features.call-park', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     callParkNumber,
     callParkFallbackDestination,
@@ -30,4 +31,6 @@ export default angular
   ])
   .service('CallParkService', CallParkService)
   .component('ucCallPark', new CallParkComponent())
+  .directive('ucCallParkAdd', CallParkAddDirectiveFactory)
+  .directive('ucCallParkEdit', CallParkEditDirectiveFactory)
   .name;

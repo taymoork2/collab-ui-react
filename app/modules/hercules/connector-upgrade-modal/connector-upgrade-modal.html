@@ -1,7 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-    <span class="sr-only" translate="common.close"></span>
-  </button>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h4 class="modal-title" translate="hercules.connectorUpgrade.title"></h4>
 </div>
 <div class="modal-body connector-upgrade-modal">
@@ -12,6 +10,11 @@
   <h5 translate="hercules.connectorUpgrade.releaseNotes"></h5>
   <p ng-if="!ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl">{{ConnectorUpgradeCtrl.upgradeInfo.releaseNotes}}</p>
   <p ng-if="ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl"><a href="{{ConnectorUpgradeCtrl.upgradeInfo.releaseNotesUrl}}" target="_blank" translate="hercules.connectorUpgrade.releaseNotesLink"></a></p>
+  <div ng-if="ConnectorUpgradeCtrl.upgradeInfo.connectorUpgrade.upgradable === 'yes_but_mixed_state'" class="warning-box">
+    <i class="icon icon-warning"></i>
+    <p translate="hercules.connectorUpgrade.warning1"></p>
+    <p translate="hercules.connectorUpgrade.warning2"></p>
+  </div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-default"

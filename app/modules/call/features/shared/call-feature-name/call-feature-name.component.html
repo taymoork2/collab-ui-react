@@ -1,14 +1,22 @@
-<div ng-form="featureNameForm">
-  <div class="typeahead-large typeahead-large__no-icon" ng-if="$ctrl.isNew">
-    <input
-      class="form-control"
-      placeholder={{::$ctrl.placeholder}}
-      ng-model="$ctrl.name"
-      ng-change="$ctrl.onNameChange()"
-      ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
-      ng-required="$ctrl.isRequired"
-      focus-on>
-    <p class="input-description">{{::$ctrl.nameHint}}</p>
+<div ng-form="featureNameForm" class="call-feature-name">
+  <div ng-if="$ctrl.isNew">
+    <div class="name-add">
+      <div class="title">{{::$ctrl.placeholder}}</div>
+      <div class="desc">{{::$ctrl.nameHint}}</div>
+      <div class="typeahead-large typeahead-large__no-icon name-input no-margin-top" ng-if="$ctrl.isNew">
+        <input
+          cs-input
+          type="text"
+          class="form-control"
+          ng-model="$ctrl.name"
+          ng-change="$ctrl.onNameChange()"
+          ng-keypress="$ctrl.onHandleKeyPress($event.keyCode)"
+          ng-required="$ctrl.isRequired"
+          placeholder="{{::$ctrl.placeholder}}"
+          focus-on>
+        <p class="input-description"></p>
+      </div>
+    </div>
   </div>
 
   <div ng-if="!$ctrl.isNew">
@@ -17,9 +25,12 @@
       type="text"
       name="editCallFeatureName"
       cs-input-size="small-12"
+      cs-input-messages="$ctrl.messages"
       placeholder={{::$ctrl.placeholder}}
       ng-model="$ctrl.name"
       ng-change="$ctrl.onNameChange()"
-      ng-required="$ctrl.isRequired">
+      ng-required="$ctrl.isRequired"
+      ng-pattern="$ctrl.validationRegEx"
+      focus-on>
   </div>
 </div>

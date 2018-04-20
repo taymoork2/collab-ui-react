@@ -1,8 +1,8 @@
 import testModule from '../index';
 
 describe('Component: gmTdImportNumbersFromCsv', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
+  beforeEach(function () {
+    this.preData = _.cloneDeep(getJSONFixture('gemini/common.json'));
   });
 
   beforeEach(function () {

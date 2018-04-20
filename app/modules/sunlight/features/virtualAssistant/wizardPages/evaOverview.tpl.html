@@ -1,0 +1,24 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">
+    {{$ctrl.getText('overview.title')}}
+    </span>
+  </div>
+  <h6 class="ct-title-desc">
+    {{$ctrl.getText('overview.desc')}}
+  </h6>
+  <div class="cs-card-container ct-sa-content">
+    <cs-card-layout block-view="true" class="va-card-center">
+      <cs-card class="va-box eva-overview-box va-card">
+        <h4>{{$ctrl.getText('overview.boxTitle')}}</h4>
+        <div class="learn-more-row">
+          <span class="h6">{{$ctrl.getText('overview.boxDesc')}}</span>
+          <a href="https://www.cisco.com/go/create-eva" target="_blank">
+            {{$ctrl.getText('overview.learnMoreLink')}}
+          </a>
+        </div>
+        <img class="infograph" src="/images/EVA_Infographic.png" />
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

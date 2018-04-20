@@ -1,12 +1,21 @@
+import { Analytics } from 'modules/core/analytics';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
+import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { IOrderDetail } from './myCompanyOrders.service';
 import { Notification } from 'modules/core/notifications';
 import { MyCompanyOrdersService } from './myCompanyOrders.service';
 
-const COMPLETED = 'COMPLETED';
-const CLOSED = 'CLOSED';
-const TRIAL = 'Trial';
-const FREE = 'Free';
+enum OrderStatus {
+  COMPLETED = 'COMPLETED',
+  CLOSED = 'CLOSED',
+}
+enum OrderType {
+  ONLINE_SPARK = 'A-SPK-M',
+  ONLINE_WEBEX = '-ONL-',
+  TRIAL = 'Trial',
+  FREE = 'Free',
+}
 
 class MyCompanyOrdersCtrl implements ng.IComponentController {
 
@@ -15,14 +24,12 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
   public logoutLoading: boolean = true;
   public orderDetailList: IOrderDetail[] = [];
 
-  public digitalRiverOrderHistoryUrl: string;
-  public digitalRiverLogoutUrl: string;
-
   /* @ngInject */
   constructor(
     private $translate: angular.translate.ITranslateService,
-    private $window: ng.IWindowService,
-    private Config,
+    private Analytics: Analytics,
+    private Authinfo: Authinfo,
+    private Config: Config,
     private DigitalRiverService: DigitalRiverService,
     private Notification: Notification,
     private MyCompanyOrdersService: MyCompanyOrdersService,
@@ -32,28 +39,65 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     this.loading = true;
     this.initGridOptions();
     this.MyCompanyOrdersService.getOrderDetails().then(orderDetails => {
-      this.orderDetailList = _.filter(orderDetails, (orderDetail: any) => {
-        if (CLOSED !== orderDetail.status) {
-          if (_.size(orderDetail.productDescriptionList) > 0) {
-            orderDetail.productDescriptionList =
-                this.formatProductDescriptionList(orderDetail.productDescriptionList);
-          }
-          orderDetail.isTrial = false;
-          if (_.includes(orderDetail.productDescriptionList, TRIAL) ||
-              _.includes(orderDetail.productDescriptionList, FREE)) {
-            orderDetail.isTrial = true;
-          }
-          if (COMPLETED === orderDetail.status) {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
-          } else if (this.Config.webexSiteStatus.PENDING_PARM === orderDetail.status) {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
-          } else {
-            orderDetail.status = this.$translate.instant('myCompanyOrders.pending');
-          }
-          return orderDetail;
+      // create a modified version of the order details to display in the table, excluding closed orders
+      _.map(_.filter(orderDetails, orderDetail => orderDetail.status !== OrderStatus.CLOSED), (origOrderDetail: any) => {
+        const orderDetail: IOrderDetail = {
+          externalOrderId: origOrderDetail.externalOrderId,
+          orderDate: origOrderDetail.orderDate,
+          displayDate: origOrderDetail.orderDate,
+          total: origOrderDetail.total,
+          productDescriptionList: _.map<string, string>(origOrderDetail.productList, 'description').join(', '),
+          isTrial: false,
+          status: this.$translate.instant('myCompanyOrders.pending'),
+          invoiceURL: '',
+        };
+        const skuList = _.map<string, string>(origOrderDetail.productList, 'sku').join(', ');
+        // We only care about Online orders
+        if (!_.includes(skuList, OrderType.ONLINE_WEBEX) &&
+            !_.includes(skuList, OrderType.ONLINE_SPARK)) {
+          return;
         }
+        let lang = this.$translate.use();
+        if (lang) {
+          // Get the current locale and convert to <language>-<country>
+          lang = _.toLower(_.replace(lang, '_', '-'));
+          // Display the currency symbol based on the order. Default to USD.
+          orderDetail.total = origOrderDetail.total.toLocaleString(lang, { style: 'currency',
+            currency: origOrderDetail.currency || 'USD' });
+          // Display date according to locale
+          orderDetail.displayDate = moment(origOrderDetail.orderDate).format('ll');
+        }
+        if (OrderStatus.COMPLETED === origOrderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.completed');
+        } else if (this.Config.webexSiteStatus.PENDING_PARM === origOrderDetail.status) {
+          orderDetail.status = this.$translate.instant('myCompanyOrders.pendingActivation');
+        }
+        if (_.includes(orderDetail.productDescriptionList, OrderType.TRIAL) ||
+            _.includes(orderDetail.productDescriptionList, OrderType.FREE)) {
+          // trial orders don't display a price
+          orderDetail.isTrial = true;
+        } else {
+          // We need the ID of the admin that placed the order.
+          let adminEmail = this.Authinfo.getCustomerAdminEmail();
+          const buyerEmail = origOrderDetail.buyerEmail;
+          if (buyerEmail !== adminEmail) {
+            adminEmail = buyerEmail;
+          }
+          const orgId = this.Authinfo.getOrgId();
+          this.MyCompanyOrdersService.getUserId(orgId, adminEmail)
+            .then(userId => {
+              // generate the URL to display the Digital River invoice
+              const product = _.includes(orderDetail.productDescriptionList, this.Config.onlineProducts.webex)
+                ? this.Config.onlineProducts.webex : this.Config.onlineProducts.spark;
+              this.DigitalRiverService.getInvoiceUrl(orderDetail.externalOrderId, product, userId)
+                .then((invoiceUrl: string): void => {
+                  orderDetail.invoiceURL = invoiceUrl;
+                });
+            });
+        }
+        this.orderDetailList.push(orderDetail);
       });
-      // sort orders with newest in top
+      // sort orders with newest on top
       this.orderDetailList.sort((a: IOrderDetail, b: IOrderDetail): number => {
         if (a.orderDate < b.orderDate) {
           return 1;
@@ -66,6 +110,18 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
     }).finally(() => {
       this.loading = false;
     });
+  }
+
+  // Called by the template when the user clicks the link.
+  public viewInvoice(row: IOrderDetail): void {
+    this.Analytics.trackEvent(this.Analytics.sections.ONLINE_ORDER.eventNames.VIEW_INVOICE, {
+      orderId: row.externalOrderId,
+    });
+    if (row.invoiceURL) {
+      this.DigitalRiverService.logout();
+    } else {
+      this.Notification.error('myCompanyOrders.invoiceError');
+    }
   }
 
   private initGridOptions(): void {
@@ -86,7 +142,7 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
         displayName: this.$translate.instant('myCompanyOrders.descriptionHeader'),
         width: '*',
       }, {
-        name: 'orderDate',
+        name: 'displayDate',
         displayName: this.$translate.instant('myCompanyOrders.dateHeader'),
         cellFilter: 'date',
         width: '14%',
@@ -97,26 +153,16 @@ class MyCompanyOrdersCtrl implements ng.IComponentController {
       }, {
         name: 'total',
         displayName: this.$translate.instant('myCompanyOrders.priceHeader'),
-        cellTemplate: 'modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html',
+        cellTemplate: require('modules/core/myCompany/orders/myCompanyOrdersAction.tpl.html'),
         width: '14%',
       }],
     };
-  }
-
-  public viewInvoice(orderId: string, product: string): void {
-    this.DigitalRiverService.getInvoiceUrl(orderId, product).then((invoiceUrl: string): void => {
-      this.$window.open(invoiceUrl, '_blank');
-    });
-  }
-
-  public formatProductDescriptionList(productDescriptionList: string[] = []): string {
-    return productDescriptionList.join(', ');
   }
 }
 
 angular
   .module('Core')
   .component('myCompanyOrders', {
-    templateUrl: 'modules/core/myCompany/orders/myCompanyOrders.tpl.html',
+    template: require('modules/core/myCompany/orders/myCompanyOrders.tpl.html'),
     controller: MyCompanyOrdersCtrl,
   });

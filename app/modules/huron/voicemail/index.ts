@@ -1,4 +1,4 @@
-import { VoicemailComponent } from './voicemail.component';
+import { UserVoicemailComponent } from './voicemail.component';
 import { HuronVoicemailService } from './voicemail.service';
 import customerServiceModule from 'modules/huron/customer';
 import userServiceModule from 'modules/huron/users';
@@ -8,8 +8,7 @@ import notifications from 'modules/core/notifications';
 export * from './voicemail.service';
 export default angular
   .module('huron.voicemail', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     customerServiceModule,
     userServiceModule,
@@ -17,6 +16,6 @@ export default angular
     featureToggleModule,
     huronUserServiceModule,
   ])
-  .component('ucVoicemail', new VoicemailComponent())
+  .component('ucUserVoicemail', new UserVoicemailComponent())
   .service('HuronVoicemailService', HuronVoicemailService)
   .name;

@@ -33,7 +33,7 @@ class DirConnectorsController implements ng.IComponentController {
 
 export class DirConnectorsComponent implements ng.IComponentOptions {
   public controller = DirConnectorsController;
-  public templateUrl = 'modules/core/settings/dirsync/dirConnectors.html';
+  public template = require('modules/core/settings/dirsync/dirConnectors.html');
   public bindings = {
     connectors: '<',
     onDeregister: '&',

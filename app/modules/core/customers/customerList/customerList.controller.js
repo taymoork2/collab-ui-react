@@ -7,9 +7,15 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $templateCache, $translate, $window, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+    var nameTemplate = require('./grid/nameColumn.tpl.html');
+    var compactServiceTemplate = require('./grid/compactServiceColumn.tpl.html');
+    var accountStatusTemplate = require('./grid/accountStatusColumn.tpl.html');
+
     var PREMIUM = 'premium';
     var STANDARD = 'standard';
+
+    var myOrgDetails = {};
 
     var vm = this;
     vm.isCustomerPartner = !!Authinfo.isCustomerPartner;
@@ -29,7 +35,6 @@ require('./_customer-list.scss');
     vm.openAddTrialModal = openAddTrialModal;
     vm.actionEvents = actionEvents;
     vm.isLicenseInfoAvailable = isLicenseInfoAvailable;
-    vm.isLicenseTypeATrial = isLicenseTypeATrial;
     vm.isLicenseTypeActive = isLicenseTypeActive;
     vm.isLicenseTypeFree = isLicenseTypeFree;
     vm.isNoLicense = isNoLicense;
@@ -40,258 +45,136 @@ require('./_customer-list.scss');
     vm.closeActionsDropdown = closeActionsDropdown;
     vm.addNumbers = addNumbers;
     vm.getLicenseCountColumnText = getLicenseCountColumnText;
-    vm.getAccountStatus = getAccountStatus;
     vm.isLicenseTypeAny = isLicenseTypeAny;
     vm.getUserCountColumnText = getUserCountColumnText;
     vm.isPastGracePeriod = isPastGracePeriod;
     vm.isPstnSetup = isPstnSetup;
     vm.exportCsv = exportCsv;
-
-    vm.convertStatusToInt = convertStatusToInt;
+    vm.onChangeFilters = onChangeFilters;
 
     vm.activeFilter = 'all';
     vm.filterList = _.debounce(filterAction, vm.timeoutVal);
 
-    vm.filter = {
-      selected: [],
-      placeholder: $translate.instant('customerPage.filterSelectPlaceholder'),
-      options: [{
-        value: 'messaging',
-        label: $translate.instant('customerPage.message'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'conferencing',
-        label: $translate.instant('customerPage.meeting'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'webex',
-        label: $translate.instant('customerPage.webexOverview'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'communications',
-        label: $translate.instant('customerPage.call'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'roomSystems',
-        label: $translate.instant('customerPage.roomSystem'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'sparkBoard',
-        label: $translate.instant('customerPage.sparkBoard'),
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: false,
-      }, {
-        value: 'care',
-        label: $translate.instant('customerPage.care'),
-        isSelected: false,
-        isAccountFilter: false, // a non-account filter filters on services instead
-        isPremiumFilter: false,
-      }, {
-        value: 'trial',
-        label: $translate.instant('customerPage.trialAccountsFilter', {
-          count: 0,
-        }),
-        count: 0,
-        isSelected: false,
-        isAccountFilter: true,
-        isPremiumFilter: false,
-      }, {
-        value: 'active',
-        label: $translate.instant('customerPage.activeAccountsFilter', {
-          count: 0,
-        }),
-        count: 0,
-        isSelected: false,
-        isAccountFilter: true,
-        isPremiumFilter: false,
-      }, {
-        value: PREMIUM,
-        label: $translate.instant('customerPage.premiumAccountsFilter', {
-          count: 0,
-        }),
-        count: 0,
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: true,
-        previousState: false,
-      }, {
-        value: STANDARD,
-        label: $translate.instant('customerPage.standardAccountsFilter', {
-          count: 0,
-        }),
-        count: 0,
-        isSelected: false,
-        isAccountFilter: false,
-        isPremiumFilter: true,
-      }, {
-        value: 'expired',
-        label: $translate.instant('customerPage.expiredAccountsFilter', {
-          count: 0,
-        }),
-        count: 0,
-        isSelected: false,
-        isAccountFilter: true,
-        isPremiumFilter: false,
-      }],
+    // columnSort - this is the collection of column sorting algorithms
+    // NOTE: version of ui-grid we are using does not support 'defaultSort', otherwise
+    // we'd want to set a default sort on the name field
+    var columnSort = {
+      name: function (a, b) {
+        var first = _.toLower(a);
+        var second = _.toLower(b);
+        if (first < second) {
+          return -1;
+        } else if (first > second) {
+          return 1;
+        }
+        return 0;
+      },
+
+      // Sort function to keep partner org at top
+      namePartnerAtTop: function (a, b) {
+        var orgName = Authinfo.getOrgName();
+        var aOrg = (a === orgName);
+        var bOrg = (b === orgName);
+        if (aOrg && bOrg) {
+          return 0;
+        } else if (aOrg) {
+          return -1;
+        } else if (bOrg) {
+          return 1;
+        }
+        return columnSort.name(a, b);
+      },
+
+      accountStatus: function (a, b) {
+        var aUnavailable = !a;
+        var bUnavailable = !b;
+
+        if (aUnavailable && bUnavailable) {
+          return 0;
+        } else if (aUnavailable) {
+          return -1;
+        } else if (bUnavailable) {
+          return 1;
+        }
+
+        return (vm.statusTextOrder[a] - vm.statusTextOrder[b]);
+      },
+
+      license: function (a, b) {
+        return _.toFinite(a) - _.toFinite(b);
+      },
+
+      notes: function (a, b, rowA, rowB) {
+        var aUnavailable = !a || !rowA;
+        var bUnavailable = !b || !rowB;
+
+        if (aUnavailable && bUnavailable) {
+          return 0;
+        } else if (aUnavailable) {
+          return -1;
+        } else if (bUnavailable) {
+          return 1;
+        }
+
+        var modA = (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : a.text;
+        var modB = (b.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : b.text;
+        if (modA < modB) {
+          return -1;
+        } else if (modA > modB) {
+          return 1;
+        } else if (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) {
+          // Anything with 'days left' is sorted by the actual days, not the text
+          // Then lump all expired but within grace period trials by how expired (-x days)
+          // Then lump all expired trials together (-9999)
+          if (a.daysLeft < 0) {
+            modA = (rowA.entity.startDate && _.inRange(a.daysLeft, 0, Config.trialGracePeriod)) ?
+              a.daysLeft : -9999;
+          } else {
+            modA = a.daysLeft;
+          }
+
+          if (b.daysLeft < 0) {
+            modB = (rowB.entity.startDate && _.inRange(b.daysLeft, 0, Config.trialGracePeriod)) ?
+              b.daysLeft : -9999;
+          } else {
+            modB = b.daysLeft;
+          }
+
+          return modB - modA;
+        }
+        return 0;
+      },
+
+      service: function (a, b) {
+        return _.toFinite(a) - _.toFinite(b);
+      },
+
+      /* AG TODO:  once we have data for total users -- add back
+      function userSort(a, b, rowA, rowB) {
+        var noUsersA = rowA.entity.numUsers === 0;
+        var noUsersB = rowB.entity.numUsers === 0;
+        if (noUsersA && noUsersB) {
+          return 0;
+        } else if (noUsersA) {
+          return -1;
+        } else if (noUsersB) {
+          return 1;
+        }
+        var aPercent = rowA.entity.activeUsers / rowA.entity.numUsers;
+        var bPercent = rowB.entity.activeUsers / rowB.entity.numUsers;
+        return aPercent - bPercent;
+      }*/
     };
-    $scope.$watch(function () {
-      return vm.filter.selected;
-    }, function () {
-      if (vm.gridApi) {
-        vm.gridApi.grid.refresh();
-      }
-    }, true);
 
-
-    // for testing purposes
+    // for jasmine tests
     vm._helpers = {
-      serviceSort: serviceSort,
-      sortByDays: sortByDays,
-      sortByName: sortByName,
-      partnerAtTopSort: partnerAtTopSort,
-      setNotesTextOrder: setNotesTextOrder,
-      notesSort: notesSort,
-      rowFilter: rowFilter,
-      resetLists: resetLists,
-      launchCustomerPortal: launchCustomerPortal,
-      getLicenseObj: getLicenseObj,
+      columnSort: columnSort,
       updateResultCount: updateResultCount,
       updateServiceForOrg: updateServiceForOrg,
     };
 
-    var nameTemplate = $templateCache.get('modules/core/customers/customerList/grid/nameColumn.tpl.html');
-    var compactServiceTemplate = $templateCache.get('modules/core/customers/customerList/grid/compactServiceColumn.tpl.html');
-    var accountStatusTemplate = $templateCache.get('modules/core/customers/customerList/grid/accountStatusColumn.tpl.html');
-
-    // new column defs for the customer list redesign. These should stay once the feature is rolled out
-    var customerNameField = {
-      field: 'customerName',
-      displayName: $translate.instant('customerPage.customerNameHeader'),
-      width: '25%',
-      cellTemplate: nameTemplate,
-      cellClass: 'ui-grid-add-column-border',
-      sortingAlgorithm: partnerAtTopSort,
-      sort: {
-        direction: 'asc',
-        priority: 0,
-      },
-    };
-    var allServicesField = {
-      field: 'uniqueServiceCount',
-      displayName: $translate.instant('customerPage.services'),
-      width: '25%',
-      cellTemplate: compactServiceTemplate,
-      headerCellClass: 'align-center',
-    };
-    var accountStatusField = {
-      field: 'accountStatus',
-      displayName: $translate.instant('customerPage.accountStatus'),
-      width: '16.5%',
-      cellTemplate: accountStatusTemplate,
-      headerCellClass: 'align-center',
-      sortingAlgorithm: accountStatusSort,
-    };
-    var licenseQuantityField = {
-      field: 'totalLicenses',
-      displayName: $translate.instant('customerPage.totalLicenses'),
-      width: '16.5%',
-      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
-      headerCellClass: 'align-center',
-    };
-    /* AG TODO:  once we have data for total users -- add back
-        var totalUsersField = {
-        field: 'totalUsers',
-        displayName: $translate.instant('customerPage.active') + ' / ' + $translate.instant('customerPage.totalUsers'),
-        width: '16%',
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getUserCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
-        headerCellClass: 'align-center',
-        sortingAlgorithm: userSort
-      };*/
-    var notesField = {
-      field: 'notes',
-      displayName: $translate.instant('customerPage.notes'),
-      cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
-      sortingAlgorithm: notesSort,
-    };
-
-    var myOrgDetails = {};
-
-    vm.gridColumns = [];
-
-    vm.gridOptions = {
-      //gridOptions.data is populated directly by the functions supplying the data.
-      appScopeProvider: vm,
-      rowHeight: 56,
-      onRegisterApi: function (gridApi) {
-        vm.gridApi = gridApi;
-
-        vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
-          if (vm.load) {
-            vm.currentDataPosition++;
-            vm.load = false;
-            vm.gridApi.infiniteScroll.dataLoaded();
-          }
-        });
-
-        gridApi.grid.registerRowsProcessor(rowFilter, 150);
-      },
-      multiFields: {
-        meeting: [{
-          columnGroup: 'conferencing',
-          columnName: 'conferencing',
-          offerCode: 'CF',
-          tooltip: $translate.instant('customerPage.meeting'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'EE',
-          columnName: 'webexEEConferencing',
-          tooltip: $translate.instant('customerPage.webex'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'CMR',
-          columnName: 'webexCMR',
-          tooltip: $translate.instant('customerPage.webex'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'MC',
-          columnName: 'webexMeetingCenter',
-          tooltip: $translate.instant('customerPage.webex'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'SC',
-          columnName: 'webexSupportCenter',
-          tooltip: $translate.instant('customerPage.webex'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'TC',
-          columnName: 'webexTrainingCenter',
-          tooltip: $translate.instant('customerPage.webex'),
-        }, {
-          columnGroup: 'webex',
-          offerCode: 'EC',
-          columnName: 'webexEventCenter',
-          tooltip: $translate.instant('customerPage.webex'),
-        }],
-      },
-      columnDefs: vm.gridColumns,
-    };
-
-    init();
-
     function init() {
-      setNotesTextOrder();
-      initColumns();
+      initUIGrid();
 
       $q.all({
         isCareEnabled: FeatureToggleService.atlasCareTrialsGetStatus(),
@@ -319,6 +202,191 @@ require('./_customer-list.scss');
           vm.isTestOrg = isTestOrg;
         });
     }
+    init();
+
+    // Filters allow user to cull what is displayed in ui-grid
+    function initFilters() {
+      var arFilters = [
+        ['messaging', 'message'],
+        ['conferencing', 'meeting'],
+        ['webex', 'webexOverview'],
+        ['communications', 'call'],
+        ['roomSystems', 'roomSystem'],
+        ['sparkBoard', 'sparkBoard'],
+        ['care', 'care'],
+        ['trial'],
+        ['active'],
+        [PREMIUM],
+        [STANDARD],
+        ['expired'],
+        //['pending'], -- don't include pending until DE2048 is fixed
+        ['purchasedWithActive'],
+        ['purchasedWithExpired'],
+      ];
+
+      vm.filter = {
+        selected: [],
+        placeholder: $translate.instant('customerPage.filters.placeholder'),
+        singular: $translate.instant('customerPage.filters.filter'),
+        plural: $translate.instant('customerPage.filters.filters'),
+        options: [],
+      };
+
+      _.forEach(arFilters, function (filter) {
+        var isPremium = (filter[0] === PREMIUM) || (filter[0] === STANDARD);
+        var key = filter[1] || (filter[0] + 'Accounts');
+        vm.filter.options.push({
+          count: 0,
+          value: filter[0],
+          key: key,
+          label: $translate.instant('customerPage.filters.' + key, { count: 0 }),
+          isSelected: false,
+          isAccountFilter: (key.indexOf('Accounts') !== -1) && !isPremium,
+          isPremiumFilter: isPremium,
+          previousState: false,
+        });
+      });
+
+      sortFilterList();
+    }
+
+    // sortFilterList() - resorts vm.filter.options into buckets of selected, services, accounts, premiums
+    function sortFilterList() {
+      vm.filter.options = _.sortBy(vm.filter.options, ['isSelected',
+        function (o) { return o.isAccountFilter || o.isPremiumFilter; },
+        'isPremiumFilter', 'label',
+      ]);
+    }
+
+    // onChangeFilters invoked everytime filter droplist modified
+    function onChangeFilters() {
+      if (_.get(vm, 'gridApi.grid.refresh')) {
+        vm.gridApi.grid.refresh();
+      }
+    }
+
+    function initUIGrid() {
+      // ColumnDefs for the customer list grid
+      var columnDefs = [
+        {
+          field: 'customerName',
+          displayName: 'customerNameHeader',
+          width: '25%',
+          cellTemplate: nameTemplate,
+          cellClass: 'ui-grid-add-column-border',
+          sort: {
+            direction: 'asc',
+          },
+          sortingAlgorithm: columnSort.namePartnerAtTop,
+        }, {
+          field: 'uniqueServiceCount',
+          displayName: 'services',
+          width: '25%',
+          cellTemplate: compactServiceTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: columnSort.service,
+        }, {
+          field: 'accountStatus',
+          displayName: 'accountStatus',
+          width: '16.5%',
+          cellTemplate: accountStatusTemplate,
+          headerCellClass: 'align-center',
+          sortingAlgorithm: columnSort.accountStatus,
+        }, {
+          field: 'totalLicenses',
+          displayName: 'totalLicenses',
+          width: '16.5%',
+          cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getLicenseCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
+          headerCellClass: 'align-center',
+          sortingAlgorithm: columnSort.license,
+        }, {
+        /* AG TODO:  once we have data for total users -- add back
+          field: 'totalUsers',
+          displayName: '$translate.instant('customerPage.'active') + ' / ' + $translate.instant('customerPage.totalUsers'),
+          width: '16%',
+          cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="grid.appScope.getUserCountColumnText(row.entity)" center-text="true"></cs-grid-cell>',
+          headerCellClass: 'align-center',
+          sortingAlgorithm: userSort
+        }, {*/
+          field: 'notes',
+          displayName: 'notes',
+          cellTemplate: '<cs-grid-cell title="TOOLTIP" row="row" grid="grid" cell-click-function="grid.appScope.showCustomerDetails(row.entity)" cell-value="row.entity.notes.text"></cs-grid-cell>',
+          cellTooltip: function (row) {
+            return _.get(row, 'entity.notes.text');
+          },
+          sortingAlgorithm: columnSort.notes,
+        },
+      ];
+
+      // post-processing of columnDefs array
+      _.forEach(columnDefs, function (o) {
+        o.displayName = $translate.instant('customerPage.' + o.displayName);
+      });
+
+      vm.gridOptions = {
+        //gridOptions.data is populated directly by the functions supplying the data.
+        appScopeProvider: vm,
+        rowHeight: 56,
+        onRegisterApi: function (gridApi) {
+          vm.gridApi = gridApi;
+
+          vm.gridApi.infiniteScroll.on.needLoadMoreData($scope, function () {
+            if (vm.load) {
+              vm.currentDataPosition++;
+              vm.load = false;
+              vm.gridApi.infiniteScroll.dataLoaded();
+            }
+          });
+
+          gridApi.grid.registerRowsProcessor(rowFilter, 150);
+        },
+        multiFields: {
+          meeting: [{
+            columnGroup: 'conferencing',
+            columnName: 'conferencing',
+            offerCode: 'CF',
+            tooltip: $translate.instant('customerPage.meeting'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'EE',
+            columnName: 'webexEEConferencing',
+            tooltip: $translate.instant('customerPage.webex'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'CMR',
+            columnName: 'webexCMR',
+            tooltip: $translate.instant('customerPage.webex'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'MC',
+            columnName: 'webexMeetingCenter',
+            tooltip: $translate.instant('customerPage.webex'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'SC',
+            columnName: 'webexSupportCenter',
+            tooltip: $translate.instant('customerPage.webex'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'TC',
+            columnName: 'webexTrainingCenter',
+            tooltip: $translate.instant('customerPage.webex'),
+          }, {
+            columnGroup: 'webex',
+            offerCode: 'EC',
+            columnName: 'webexEventCenter',
+            tooltip: $translate.instant('customerPage.webex'),
+          }],
+        },
+        columnDefs: vm.gridColumns,
+      };
+
+      vm.gridColumns = columnDefs;
+      vm.gridOptions.columnDefs = columnDefs;
+
+      initStatusTextOrder(); // sort order for 'status' column
+      initFilters();
+    }
 
     function getSubfields(entry, name) {
       var groupedFields = _.groupBy(vm.gridOptions.multiFields[name], 'columnGroup');
@@ -331,15 +399,6 @@ require('./_customer-list.scss');
         }) || group[0]);
       });
       return result;
-    }
-
-    function initColumns() {
-      var columns = [customerNameField];
-      /* AG TODO: Once we have total users info -- use this line
-      columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, totalUsersField, notesField); */
-      columns = columns.concat(allServicesField, accountStatusField, licenseQuantityField, notesField);
-      vm.gridColumns = columns;
-      vm.gridOptions.columnDefs = columns;
     }
 
     function isOrgSetup(customer) {
@@ -360,118 +419,31 @@ require('./_customer-list.scss');
       return customer.customerOrgId === Authinfo.getOrgId();
     }
 
-    function serviceSort(a, b) {
-      if (a.sortOrder === PartnerService.customerStatus.TRIAL && b.sortOrder === PartnerService.customerStatus.TRIAL) {
-        // if a and b are both trials, sort by expiration length
-        return sortByDays(a, b);
-      } else if (a.sortOrder === b.sortOrder) {
-        // if a & b have the same sort order, sort by name
-        return sortByName(a, b);
-      } else {
-        return a.sortOrder - b.sortOrder;
-      }
-    }
-
-    function sortByDays(a, b) {
-      if (a.daysLeft !== b.daysLeft) {
-        return a.daysLeft - b.daysLeft;
-      } else {
-        return sortByName(a, b);
-      }
-    }
-
-    function sortByName(a, b) {
-      var first = a.customerName || a;
-      var second = b.customerName || b;
-      if (first.toLowerCase() > second.toLowerCase()) {
-        return 1;
-      } else if (first.toLowerCase() < second.toLowerCase()) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
-
-    // Sort function to keep partner org at top
-    function partnerAtTopSort(a, b) {
-      var orgName = Authinfo.getOrgName();
-      if (a === orgName) {
-        return -1;
-      } else if (b === orgName) {
-        return 1;
-      } else {
-        return sortByName(a, b);
-      }
-    }
-
-    function accountStatusSort(a, b, rowA, rowB) {
-      var aStatus = vm.convertStatusToInt(vm.getAccountStatus(rowA.entity));
-      var bStatus = vm.convertStatusToInt(vm.getAccountStatus(rowB.entity));
-      return aStatus - bStatus;
-    }
-
-    function convertStatusToInt(a) {
-      // These numbers are simply used for sorting, meaning lower numbers come first for ascending
-      var statuses = ['active', 'expired', 'trial'];
-      var index = statuses.indexOf(a);
-      if (index === -1) {
-        return statuses.length;
-      }
-      return index;
-    }
-
-    /* AG TODO:  once we have data for total users -- add back
-    function userSort(a, b, rowA, rowB) {
-      var noUsersA = rowA.entity.numUsers === 0;
-      var noUsersB = rowB.entity.numUsers === 0;
-      if (noUsersA && noUsersB) {
-        return 0;
-      } else if (noUsersA) {
-        return -1;
-      } else if (noUsersB) {
-        return 1;
-      }
-      var aPercent = rowA.entity.activeUsers / rowA.entity.numUsers;
-      var bPercent = rowB.entity.activeUsers / rowB.entity.numUsers;
-      return aPercent - bPercent;
-    }*/
-
-    function setNotesTextOrder() {
-      var textSuspended = $translate.instant('customerPage.suspended'),
-        textExpiringToday = $translate.instant('customerPage.expiringToday'),
-        textExpired = $translate.instant('customerPage.expired'),
-        textLicenseInfoNotAvailable = $translate.instant('customerPage.licenseInfoNotAvailable');
-      var textArray = [
-        textSuspended,
-        textExpiringToday,
-        textExpired,
-        textLicenseInfoNotAvailable,
+    // notes:
+    // - sort order based on the translated text for account status fields
+    // - we do this because the actual text in the columns includes a status icon and that prevent us from using the standard alpha sort built into ui-grid
+    function initStatusTextOrder() {
+      var statuses = [
+        { key: 'active', xlat: 'purchased' },
+        { key: 'purchasedWithActive' },
+        { key: 'purchasedWithExpired' },
+        { key: 'trial' },
+        { key: 'expired' },
+        { key: 'pending' },
       ];
-      textArray.sort();
-      _.forEach(textArray, function (text, index) {
-        if (text === textSuspended) {
-          PartnerService.customerStatus.NOTE_CANCELED = index;
-        } else if (text === textExpiringToday) {
-          PartnerService.customerStatus.NOTE_EXPIRE_TODAY = index;
-        } else if (text === textExpired) {
-          PartnerService.customerStatus.NOTE_EXPIRED = index;
-        } else if (text === textLicenseInfoNotAvailable) {
-          PartnerService.customerStatus.NOTE_NO_LICENSE = index;
-        }
+
+      // Sort values by translated strings
+      _.forEach(statuses, function (status) {
+        status.xlat = $translate.instant('customerPage.' + ((status.xlat) ? status.xlat : status.key));
+      });
+      statuses = _.sortBy(statuses, ['xlat']);
+
+      // Store sort order for future reference
+      vm.statusTextOrder = {};
+      _.forEach(statuses, function (status, index) {
+        vm.statusTextOrder[status.key] = index;
       });
     }
-
-    function notesSort(a, b) {
-      if (a.sortOrder !== b.sortOrder) {
-        return a.sortOrder - b.sortOrder;
-      } else if (a.sortOrder === PartnerService.customerStatus.NOTE_NOT_EXPIRED ||
-        a.sortOrder === PartnerService.customerStatus.NOTE_EXPIRED) {
-        return Math.abs(a.daysLeft) - Math.abs(b.daysLeft);
-      } else {
-        return 0;
-      }
-    }
-
 
     // this function is called every time the grid needs to refresh after column filtering and before sorting
     // No changes to the length of rows can be made here, only visibility
@@ -496,7 +468,7 @@ require('./_customer-list.scss');
         var isVisibleFlags = {
           byAccountFilter: (!selectedFilters.account.length) ||
           _.some(selectedFilters.account, function (filter) {
-            return (vm.getAccountStatus(row.entity) === filter.value);
+            return (row.entity.accountStatus === filter.value);
           }),
           byLicenseFilter: (!selectedFilters.license.length) ||
           _.some(selectedFilters.license, function (filter) {
@@ -510,20 +482,17 @@ require('./_customer-list.scss');
 
         row.visible = _.every(isVisibleFlags);
       });
-      var visibleRowsData = _.chain(rows).filter({ visible: true }).map(function (row) { return row.entity; }).value();
 
-      vm._helpers.updateResultCount(visibleRowsData);
+      var visibleRowData = _.map(_.filter(rows, { visible: true }), 'entity');
+      var allRowData = _.map(rows, 'entity');
+      updateResultCount(visibleRowData, allRowData);
+      sortFilterList();
+
       return rows;
     }
 
     function isPremiumFilterType(filterValue, isPremium) {
-      if (filterValue === PREMIUM) {
-        return isPremium;
-      } else if (filterValue === STANDARD) {
-        return !isPremium;
-      } else {
-        return false;
-      }
+      return (filterValue === PREMIUM) ? isPremium : !isPremium;
     }
 
     function filterAction(value) {
@@ -564,33 +533,33 @@ require('./_customer-list.scss');
             myOrg[0].customerName = custName;
             myOrg[0].customerOrgId = accountId;
 
-            myOrg[0].messaging = vm._helpers.updateServiceForOrg(myOrg[0].messaging, licenses, {
+            myOrg[0].messaging = updateServiceForOrg(myOrg[0].messaging, licenses, {
               licenseType: 'MESSAGING',
             });
-            myOrg[0].communications = vm._helpers.updateServiceForOrg(myOrg[0].communications, licenses, {
+            myOrg[0].communications = updateServiceForOrg(myOrg[0].communications, licenses, {
               licenseType: 'COMMUNICATION',
             });
-            myOrg[0].roomSystems = vm._helpers.updateServiceForOrg(myOrg[0].roomSystems, licenses, {
+            myOrg[0].roomSystems = updateServiceForOrg(myOrg[0].roomSystems, licenses, {
               licenseType: 'SHARED_DEVICES',
               offerName: 'SD',
             });
-            myOrg[0].sparkBoard = vm._helpers.updateServiceForOrg(myOrg[0].sparkBoard, licenses, {
+            myOrg[0].sparkBoard = updateServiceForOrg(myOrg[0].sparkBoard, licenses, {
               licenseType: 'SHARED_DEVICES',
               offerName: 'SB',
             });
-            myOrg[0].care = vm._helpers.updateServiceForOrg(myOrg[0].care, licenses, {
+            myOrg[0].care = updateServiceForOrg(myOrg[0].care, licenses, {
               licenseType: 'CARE',
               offerName: 'CDC',
             });
-            myOrg[0].advanceCare = vm._helpers.updateServiceForOrg(myOrg[0].advanceCare, licenses, {
+            myOrg[0].advanceCare = updateServiceForOrg(myOrg[0].advanceCare, licenses, {
               licenseType: 'CAREVOICE',
               offerName: 'CVC',
             });
-            myOrg[0].conferencing = vm._helpers.updateServiceForOrg(myOrg[0].conferencing, licenses, {
+            myOrg[0].conferencing = updateServiceForOrg(myOrg[0].conferencing, licenses, {
               licenseType: 'CONFERENCING',
               offerName: 'CF',
             });
-            myOrg[0].webexEEConferencing = vm._helpers.updateServiceForOrg(myOrg[0].webexEEConferencing, licenses, {
+            myOrg[0].webexEEConferencing = updateServiceForOrg(myOrg[0].webexEEConferencing, licenses, {
               licenseType: 'CONFERENCING',
               offerName: 'EE',
             });
@@ -653,28 +622,26 @@ require('./_customer-list.scss');
         });
     }
 
-    function updateResultCount(visibleRowsData) {
-      vm.totalOrgs = visibleRowsData.length;
-      var statusTypeCounts = _.countBy(visibleRowsData, function (dataRow) {
-        return vm.getAccountStatus(dataRow);
-      });
+    function updateResultCount(visibleRows, allRows) {
+      vm.totalOrgs = visibleRows.length;
+      var statusTypeCounts = _.countBy(allRows, 'accountStatus');
       var accountFilters = _.filter(vm.filter.options, { isAccountFilter: true });
       _.forEach(accountFilters, function (filter) {
         filter.count = statusTypeCounts[filter.value] || 0;
-        filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+        filter.label = $translate.instant('customerPage.filters.' + filter.key, {
           count: filter.count,
         });
       });
 
       if (vm.isProPackEnabled) {
         var counts = {};
-        counts[PREMIUM] = _.filter(visibleRowsData, { isPremium: true });
-        counts[STANDARD] = _.filter(visibleRowsData, { isPremium: false });
+        counts[PREMIUM] = _.filter(visibleRows, { isPremium: true });
+        counts[STANDARD] = _.filter(visibleRows, { isPremium: false });
         var premiumFilters = _.filter(vm.filter.options, { isPremiumFilter: true });
 
         _.forEach(premiumFilters, function (filter) {
           filter.count = _.get(counts, filter.value, []).length;
-          filter.label = $translate.instant('customerPage.' + filter.value + 'AccountsFilter', {
+          filter.label = $translate.instant('customerPage.filters.' + filter.key, {
             count: filter.count,
           });
 
@@ -708,14 +675,6 @@ require('./_customer-list.scss');
       });
     }
 
-    function launchCustomerPortal(trial) {
-      var customer = trial;
-
-      $window.open($state.href('login', {
-        customerOrgId: customer.customerOrgId,
-      }));
-    }
-
     function actionEvents($event, action, org) {
       $event.stopPropagation();
       if (action === 'myOrg') {
@@ -730,29 +689,25 @@ require('./_customer-list.scss');
       }
     }
 
-    function isLicenseInfoAvailable(licenses) {
-      return PartnerService.isLicenseInfoAvailable(licenses);
+    function isLicenseInfoAvailable(rowData) {
+      return PartnerService.isLicenseInfoAvailable(rowData);
     }
 
     function getLicenseObj(rowData, licenseTypeField) {
       return rowData[licenseTypeField] || null;
     }
 
-    function isLicenseTypeATrial(rowData, licenseTypeField) {
-      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseATrial(getLicenseObj(rowData, licenseTypeField));
-    }
-
     function isLicenseTypeActive(rowData, licenseTypeField) {
-      return isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
+      return isLicenseInfoAvailable(rowData) && PartnerService.isLicenseActive(getLicenseObj(rowData, licenseTypeField));
     }
 
     function isLicenseTypeFree(rowData, licenseTypeField) {
-      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      return (isLicenseInfoAvailable(rowData) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
         _.includes(Config.freeLicenses, licenseTypeField));
     }
 
     function isNoLicense(rowData, licenseTypeField) {
-      return (isLicenseInfoAvailable(rowData.licenseList) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
+      return (isLicenseInfoAvailable(rowData) && PartnerService.isLicenseFree(getLicenseObj(rowData, licenseTypeField)) &&
         !_.includes(Config.freeLicenses, licenseTypeField));
     }
 
@@ -761,10 +716,10 @@ require('./_customer-list.scss');
     }
 
     function getLicenseCountColumnText(rowData) {
-      if (!isLicenseInfoAvailable(rowData.licenseList)) {
+      if (!isLicenseInfoAvailable(rowData)) {
         return $translate.instant('common.notAvailable');
       }
-      return rowData.totalLicenses;
+      return '' + rowData.totalLicenses; // was not displaying '0' without the `'' + ` preceding
     }
 
     function isPastGracePeriod(rowData) {
@@ -795,16 +750,6 @@ require('./_customer-list.scss');
       vm.currentTrial = trial;
     }
 
-    function getAccountStatus(rowData) {
-      if (rowData.daysLeft <= 0 || _.get(rowData, 'licenseList', []).length === 0) {
-        return 'expired';
-      }
-      var isTrial = _.some(Config.licenseObjectNames, function (type) {
-        return isLicenseTypeATrial(rowData, type);
-      });
-      return isTrial ? 'trial' : 'active';
-    }
-
     function selectRow(grid, row) {
       GridCellService.selectRow(grid, row);
       vm.showCustomerDetails(row.entity);
@@ -831,7 +776,7 @@ require('./_customer-list.scss');
       return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
         .then(function (response) {
           if (response) {
-            return $state.go('pstnSetup', {
+            return $state.go('pstnWizard', {
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,

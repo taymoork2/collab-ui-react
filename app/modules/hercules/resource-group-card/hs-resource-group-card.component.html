@@ -1,9 +1,9 @@
-<cs-card class="full">
+<cs-card class="cs-card--full">
   <article>
     <header>
       <div class="resource-group-caret" ng-click="$ctrl.toggleDetails()">
         <i class="icon icon-arrow-down" ng-class="{'icon-arrow-down-rotated': !$ctrl.showDetails}"></i>
-        <i class="icon icon-circle status-indicator" ng-class="$ctrl.getStatusCssClass()"></i>
+        <cs-statusindicator ng-model="$ctrl.group.statusCssClass"></cs-statusindicator>
         <h4>{{::$ctrl.group.name}}</h4>
         <div class="resource-group-release-channel"><span translate="hercules.fusion.list.release-channel"></span>:&nbsp;{{$ctrl.getLocalizedReleaseChannel($ctrl.group.releaseChannel)}}</div>
         <div class="resource-group-release-cluster-number"><span translate="hercules.fusion.list.clusters"></span>:&nbsp;{{::$ctrl.group.clusters.length}}</div>
@@ -12,7 +12,9 @@
           <span translate="hercules.fusion.list.users"></span>:&nbsp;{{::$ctrl.group.numberOfUsers}}
         </div>
       </div>
-      <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link"><i class="icon icon-settings"></i></a>
+      <a ui-sref="resource-group-settings({id: $ctrl.group.id})" class="resource-group-settings-link" aria-label="{{$ctrl.getResourceGroupSettingsAriaLabel()}}">
+        <i class="icon icon-settings"></i>
+      </a>
     </header>
     <section ng-show="$ctrl.showDetails">
       <div ng-if="$ctrl.hasZeroClusters() && !$ctrl.hasUsers()" class="resource-group-banner">

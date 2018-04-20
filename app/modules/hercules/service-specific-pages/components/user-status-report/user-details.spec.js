@@ -1,7 +1,9 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('Service: UserDetails', function () {
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
 
   var UserDetails, $httpBackend, progress;
 
@@ -24,7 +26,7 @@ describe('Service: UserDetails', function () {
       expect(userRow[3]).toBe('hercules.activationStatus.' + status);
       expect(userRow[4]).toBe(details);
       expect(userRow[5]).toBe(id);
-      expect(userRow[6]).toBe('hercules.serviceNames.' + service);
+      expect(userRow[6]).toBe('hercules.hybridServiceNames.' + service);
     }
 
     function expectUserRowWithResourceGroup(userRow, user, type, cluster, status, details, id, service, resourceGroupName) {
@@ -35,7 +37,7 @@ describe('Service: UserDetails', function () {
       expect(userRow[4]).toBe('hercules.activationStatus.' + status);
       expect(userRow[5]).toBe(details);
       expect(userRow[6]).toBe(id);
-      expect(userRow[7]).toBe('hercules.serviceNames.' + service);
+      expect(userRow[7]).toBe('hercules.hybridServiceNames.' + service);
     }
 
     it('when uss user is entitled and activated', function () {
@@ -140,7 +142,9 @@ describe('Service: UserDetails', function () {
       $httpBackend
         .when('GET', 'https://identity.webex.com/organization/5632-f806-org/v1/Machines?filter=id eq "222" or id eq "333"')
         .respond({
-          data: [{ id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space' }],
+          data: [{
+            id: '222', name: 'machine1', displayName: 'Cloudberry Device', machineType: 'lyra_space',
+          }],
         });
       var simulatedResponse = [{
         userId: '111', // User
@@ -164,6 +168,31 @@ describe('Service: UserDetails', function () {
           expectUserRow(userRows[1], 'Cloudberry Device', 'machineTypes.lyra_space', '', 'error', '', '222', 'squared-fusion-cal');
           expectUserRow(userRows[2], 'hercules.export.userNotFound', '', '', 'error', '', '333', 'squared-fusion-cal');
           expect(progress.current).toEqual(3);
+        });
+      $httpBackend.flush();
+    });
+
+    it('populates the cluster column correctly when Office 365', function () {
+      $httpBackend
+        .when('GET', 'https://identity.webex.com/identity/scim/5632-f806-org/v1/Users?filter=id eq "111"')
+        .respond({
+          Resources: [{
+            id: '111',
+            userName: 'sparkuser1@gmail.com',
+          }],
+        });
+      var simulatedResponse = [{
+        userId: '111',
+        entitled: true,
+        state: 'activated',
+        owned: 'ccc',
+        serviceId: 'squared-fusion-o365',
+        messages: [],
+      }];
+      UserDetails.getUsers('5632-f806-org', simulatedResponse, progress)
+        .then(function (userRows) {
+          expectUserRow(userRows[0], 'sparkuser1@gmail.com', 'common.user', 'common.ciscoCollaborationCloud', 'activated',
+            '', '111', 'squared-fusion-o365');
         });
       $httpBackend.flush();
     });

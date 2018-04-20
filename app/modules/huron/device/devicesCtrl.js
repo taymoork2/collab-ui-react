@@ -7,13 +7,12 @@
 
   /* @ngInject */
   function DevicesCtrlHuron($q, $scope, $state, $stateParams, Config, CsdmHuronUserDeviceService, CsdmDataModelService,
-    CsdmUpgradeChannelService, WizardFactory, FeatureToggleService, Userservice, Authinfo) {
+    WizardFactory, FeatureToggleService, Userservice, Authinfo) {
     var vm = this;
     vm.devices = {};
     vm.otps = [];
     vm.currentUser = $stateParams.currentUser;
     vm.csdmHuronUserDeviceService = CsdmHuronUserDeviceService.create(vm.currentUser.id);
-    vm.showDeviceSettings = false;
 
     function init() {
       fetchAsyncSettings();
@@ -22,28 +21,11 @@
     init();
 
     function fetchAsyncSettings() {
-      FeatureToggleService.csdmATAGetStatus().then(function (result) {
-        vm.showATA = result;
-      });
       FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
         activate();
       });
       fetchDetailsForLoggedInUser();
-
-      $q.all([
-        FeatureToggleService.csdmPlaceUpgradeChannelGetStatus(),
-        FeatureToggleService.csdmPlaceGuiSettingsGetStatus(),
-      ])
-        .then(function (features) {
-          if (features[1]) {
-            vm.showDeviceSettings = true;
-          } else if (features[0]) {
-            CsdmUpgradeChannelService.getUpgradeChannelsPromise().then(function (channels) {
-              vm.showDeviceSettings = channels.length > 1;
-            });
-          }
-        });
     }
 
     function fetchDetailsForLoggedInUser() {
@@ -97,7 +79,6 @@
         data: {
           function: 'addDevice',
           title: 'addDeviceWizard.newDevice',
-          showATA: vm.showATA,
           showPersonal: vm.showPersonal,
           isEntitledToHuron: vm.isOrgEntitledToHuron(),
           isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),

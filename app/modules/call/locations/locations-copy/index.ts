@@ -2,14 +2,15 @@ import { CopyLocationComponent } from 'modules/call/locations/locations-copy/loc
 import notifications from 'modules/core/notifications';
 import locationsServiceModule from 'modules/call/locations/shared';
 import locationsNameModule from 'modules/call/locations/locations-name';
+import settingSetupInitModule  from 'modules/call/settings/settings-setup-init';
 
 export default angular
   .module('call.locations.copy-location', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     notifications,
     locationsServiceModule,
     locationsNameModule,
+    settingSetupInitModule,
   ])
 
   .component('ucCopyLocation', new CopyLocationComponent())

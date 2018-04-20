@@ -12,8 +12,7 @@ import './_dirSync.scss';
 export default angular.module('core.settings.dirsync', [
   require('angular-cache'),
   require('angular-translate'),
-  require('scripts/app.templates'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/scripts/services/logmetricsservice'),
   featureToggleModule,
   modalModule,

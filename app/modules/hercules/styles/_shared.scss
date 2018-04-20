@@ -102,3 +102,40 @@
 label.toggle-switch {
   padding-top: 0 !important;
 }
+
+.hybrid-services-info-message {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    color: $color-primary-base;
+    top: 3px;
+  }
+}
+
+.hybrid-services-warning-message {
+  position: relative;
+  margin-top: 1rem;
+
+  .icon {
+    position: absolute;
+    color: $color-attention-base;
+    top: 3px;
+  }
+}
+
+.hybrid-services-error-message {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    color: $color-alerts-base;
+    top: 3px;
+  }
+}
+
+.hybrid-services-message {
+  margin-left: 1.5rem;
+  font-size: 0.875rem;
+  max-width: 36rem;
+}

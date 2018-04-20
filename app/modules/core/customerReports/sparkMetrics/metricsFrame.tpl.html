@@ -1,0 +1,63 @@
+<div ng-if="!$ctrl.isIframeLoaded"
+     id="webexMetricsIframeLoading"
+     name="webexMetricsIframeLoading"
+     align="center"
+     class="fullSize">
+    <br/>
+    <i ng-hide="nav.isNoData" class="icon icon-spinner metrics-loading-icon"></i>
+    <p class="h3 metrics-loading-data" translate="reportsPage.loadingData"></p>
+    <p class="metrics-loading-description" translate="reportsPage.loadingDescription"></p>
+    <div ng-show="nav.isNoData" translate="reportsPage.noData"></div>
+</div>
+
+<div ng-show="$ctrl.isIframeLoaded"
+     id="iframeContainer"
+     name="iframeContainer"
+     class="fullSize">
+    <iframe id="sparkMetricsIframeContainer"
+            name="sparkMetricsIframeContainer"
+            load-event
+            on-load-event="$ctrl.onIframeLoad({elem: elem})"
+            class="fullSize"
+            frameborder="0">
+    </iframe>
+    <form id="iframeForm"
+          name="$ctrl.iframeForm"
+          action={{$ctrl.data.trustIframeUrl}}
+          method="get"
+          hidden
+          target="sparkMetricsIframeContainer">
+
+        <input id="appid"
+               name="appid"
+               type="hidden"
+               value={{$ctrl.data.appId}} />
+
+        <input id="QlikTicket"
+               name="QlikTicket"
+               type="hidden"
+               value={{$ctrl.data.QlikTicket}} />
+
+        <input id="persistent"
+               name="persistent"
+               type="hidden"
+               value={{$ctrl.data.persistent}} />
+
+        <input id="vID"
+               name="vID"
+               type="hidden"
+               value={{$ctrl.data.vID}} />
+
+        <input id="node"
+               name="node"
+               type="hidden"
+               value={{$ctrl.data.node}} />
+
+        <button id="submitFormBtn"
+                type="submit"
+                translate="common.submit"
+                hidden >
+        </button>
+    </form>
+</div>
+

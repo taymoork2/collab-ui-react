@@ -13,12 +13,15 @@ describe('component: UserLocationDetailsComponent', () => {
     this.initModules(userLocationDetails);
     this.injectDependencies(
       '$scope',
+      'HuronUserService',
       'LocationsService',
       '$state',
       '$q',
     );
+    spyOn(this.HuronUserService, 'getUserV2Numbers').and.returnValue(this.$q.resolve({}));
     spyOn(this.LocationsService, 'getLocationList').and.returnValue(this.$q.resolve(SUCCESS_DATA));
     spyOn(this.LocationsService, 'updateLocation').and.returnValue(this.$q.resolve());
+    spyOn(this.LocationsService, 'getUserLocation').and.returnValue(this.$q.resolve({}));
     spyOn(this.$state, 'go');
     this.compileComponent('ucUserLocationDetails', {});
   });

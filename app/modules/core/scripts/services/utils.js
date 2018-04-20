@@ -36,9 +36,9 @@
           enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
           enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
           enc4 = chr3 & 63;
-          if (isNaN(chr2)) {
+          if (_.isNaN(chr2)) {
             enc3 = enc4 = 64;
-          } else if (isNaN(chr3)) {
+          } else if (_.isNaN(chr3)) {
             enc4 = 64;
           }
           output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
@@ -268,6 +268,11 @@
           }
         }
         return result;
+      },
+
+      extractTrackingIdFromResponse: function (response) {
+        var headers = _.get(response, 'headers');
+        return _.isFunction(headers) ? headers('TrackingID') : undefined;
       },
 
       getSqEntitlements: function (user) {

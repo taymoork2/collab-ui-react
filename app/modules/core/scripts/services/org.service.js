@@ -1,11 +1,13 @@
 (function () {
   'use strict';
 
+  // TODO: Update all callback functions to be promises instead
+
   var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
   var authModule = require('modules/core/auth/auth');
-  var configModule = require('modules/core/config/config');
+  var configModule = require('modules/core/config/config').default;
   var urlConfigModule = require('modules/core/config/urlConfig');
   var authinfoModule = require('modules/core/scripts/services/authinfo');
   var logModule = require('modules/core/scripts/services/log');
@@ -52,6 +54,8 @@
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
       validateDisplayName: validateDisplayName,
+      setOrgEmailSuppress: setOrgEmailSuppress,
+      getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
 
     var savedOrgSettingsCache = [];
@@ -350,16 +354,15 @@
       });
     }
 
-    function deleteOrg(currentOrgId) {
+    function deleteOrg(currentOrgId, deleteUsers) {
       if (!currentOrgId) {
         return $q.reject('currentOrgId is not set');
       }
+      if (_.isUndefined(deleteUsers)) {
+        deleteUsers = true;
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-
-      return $http({
-        method: 'DELETE',
-        url: serviceUrl,
-      });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
     }
 
     function listOrgs(filter) {
@@ -380,6 +383,14 @@
       }
 
       return $http.get(orgUrl);
+    }
+
+    function setOrgEmailSuppress(isEmailSuppressed) {
+      var adminUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + Authinfo.getOrgId() + '/emails';
+      var emailSuppressRequest = {
+        suppressEmail: isEmailSuppressed,
+      };
+      return $http.post(adminUrl, emailSuppressRequest);
     }
 
     function getOrgCacheOption(callback, oid, config) {
@@ -510,6 +521,22 @@
         .then(function (response) {
           return _.get(response, 'status') === 'ALLOWED';
         });
+    }
+
+    // filter out subscriptions where the sole license matches { offerName: 'MSGR' }
+    // - as of 2017-07-24, 'Authinfo.isExternallyManagedLicense()' is sufficient for checking this
+    // TODO: verify whether this should be the default behavior
+    function getInternallyManagedSubscriptions() {
+      return getLicensesUsage().then(function (subscriptions) {
+        return _.reject(subscriptions, function (subscription) {
+          var licenses = _.get(subscription, 'licenses');
+          if (_.size(licenses) !== 1) {
+            return false;
+          }
+          var license = _.head(licenses);
+          return Authinfo.isExternallyManagedLicense(license);
+        });
+      });
     }
   }
 })();

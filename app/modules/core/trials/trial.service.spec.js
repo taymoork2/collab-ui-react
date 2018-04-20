@@ -355,11 +355,12 @@ describe('Service: Trial Service:', function () {
           });
 
           it('should bubble up rejection that that caused "getTrial" to reject', function () {
-            this.TrialService.getTrialPeriodData(fakeTrialId).catch(function (reason) {
-              expect(reason).toEqual({
-                message: 'getTrial failed',
+            this.TrialService.getTrialPeriodData(fakeTrialId).then(fail)
+              .catch(function (reason) {
+                expect(reason).toEqual({
+                  message: 'getTrial failed',
+                });
               });
-            });
           });
         });
       });
@@ -553,11 +554,11 @@ describe('Service: Trial Service:', function () {
         });
       });
 
-      it('should return error in use', function () {
+      it('should allow for duplicate org names now', function () {
         valData.properties[0].isExist = 'true';
         this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
         expectShallowVal.call(this, org, {
-          error: 'trialModal.errorInUse',
+          unique: true,
         });
       });
 

@@ -1,5 +1,7 @@
 'use strict';
 
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Controller: aaBuilderNameCtrl', function () {
   var controller, AANotificationService, AutoAttendantCeService;
   var AAModelService, AutoAttendantCeInfoModelService;
@@ -18,7 +20,6 @@ describe('Controller: aaBuilderNameCtrl', function () {
   };
 
   var aaModel = {};
-  var rightArrow = 39;
   var testGroupName = 'test';
 
   function ce2CeInfo(rawCeInfo) {
@@ -96,7 +97,7 @@ describe('Controller: aaBuilderNameCtrl', function () {
 
     it('should save a new aaRecord successfully on right arrow press', function () {
       controller.name = testGroupName;
-      controller.evalKeyPress(rightArrow);
+      controller.evalKeyPress(KeyCodes.RIGHT);
       expect(controller.ui.ceInfo.name).toEqual(testGroupName);
     });
 

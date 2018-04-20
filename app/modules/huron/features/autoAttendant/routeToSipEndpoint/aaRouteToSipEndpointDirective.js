@@ -16,7 +16,7 @@
         fromRouteCall: '@aaFromRouteCall',
         fromFallback: '@aaFromFallback',
       },
-      templateUrl: 'modules/huron/features/autoAttendant/routeToSipEndpoint/aaRouteToSipEndpoint.tpl.html',
+      template: require('modules/huron/features/autoAttendant/routeToSipEndpoint/aaRouteToSipEndpoint.tpl.html'),
       controllerAs: 'aaRouteToSip',
       controller: 'AARouteToSipEndpointCtrl',
     };

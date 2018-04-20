@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="text-right ui-mt">
-        <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote" ng-click="$ctrl.onSave();" ng-disabled="noteForm.$invalid"></button>
+        <button id="addnote" class="btn info" translate="gemini.cbgs.notes.addNote" ng-click="$ctrl.onSave();" ng-disabled="noteForm.$invalid || $ctrl.loading"></button>
       </div>
     </form>
   </div>

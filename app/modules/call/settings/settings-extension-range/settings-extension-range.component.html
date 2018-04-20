@@ -17,7 +17,7 @@
       ng-maxlength="$ctrl.extensionLength"
       ng-minlength="$ctrl.extensionLength"
       ng-disabled="$ctrl.isDisabled(range)"
-      ng-attr-focus-on="$last && range.beginNumber === ''"
+      ng-attr-focus-on="!$ctrl.isCreateLocation && $last && range.beginNumber === ''"
       cs-input-messages="$ctrl.messages"
       cs-input-warning="$ctrl.steeringDigitOverlap(range)"
       cs-input-warning-message="{{::'directoryNumberPanel.steeringDigitOverlapWarning' | translate}}"
@@ -51,7 +51,7 @@
       validate-extension-overlap
       required>
     <i
-      ng-if="$ctrl.showTrashCan()"
+      ng-if="$ctrl.showTrashCan(range)"
       class="icon icon-trash trash-icon"
       ng-click="$ctrl.removeExtensionRange(range)"
       role="button">
@@ -60,6 +60,7 @@
   <div class="row">
     <button
       class="btn-sm btn-link"
+      ng-disabled="$ctrl.addDisabled"
       ng-click="$ctrl.addExtensionRange()"
       translate="serviceSetupModal.addMoreExtensionRanges">
     </button>

@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
+
   angular
     .module('Core')
     .factory('OverviewCareCard', OverviewCareCard);
@@ -11,7 +14,7 @@
       createCard: function createCard() {
         var card = {};
         card.isCSB = Authinfo.isCSB();
-        card.template = 'modules/core/overview/genericCard.tpl.html';
+        card.template = genericCardTemplatePath;
         card.icon = 'icon-circle-contact-centre';
         card.desc = 'overview.cards.care.desc';
         card.name = 'overview.cards.care.title';
@@ -20,7 +23,7 @@
         card.enabled = false;
         card.notEnabledText = 'overview.cards.care.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
-        card.settingsUrl = '#/services/careDetails/settings';
+        card.settingsUrl = '/services/careDetails/settings';
         card.helper = OverviewHelper;
         card.showHealth = true;
 

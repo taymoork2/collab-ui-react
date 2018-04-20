@@ -19,7 +19,7 @@ interface IOrganization {
 
 export class PstnTermsOfServiceComponent implements ng.IComponentOptions {
   public controller = PstnTermsOfServiceCtrl;
-  public templateUrl = 'modules/huron/pstn/pstnTermsOfService/pstnTermsOfService.html';
+  public template = require('modules/huron/pstn/pstnTermsOfService/pstnTermsOfService.html');
   public bindings = {
     onDismiss: '&',
   };

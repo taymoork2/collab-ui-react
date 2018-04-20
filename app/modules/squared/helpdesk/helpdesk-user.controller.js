@@ -5,8 +5,10 @@
     .module('Squared')
     .controller('HelpdeskUserController', HelpdeskUserController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, Userservice, ResourceGroupService, UCCService) {
+  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -25,6 +27,7 @@
         id: $stateParams.orgId,
       };
     }
+    vm.ignoreRole = ignoreRole;
     vm.resendInviteEmail = resendInviteEmail;
     vm.user = $stateParams.user;
     vm.userStatusesAsString = '';
@@ -42,7 +45,6 @@
     vm.openExtendedInformation = openExtendedInformation;
     vm.openHybridServicesModal = openHybridServicesModal;
     vm.supportsExtendedInformation = false;
-    vm.isProPackCustomer = false;
     vm.cardsAvailable = false;
     vm.hasEmailStatus = hasEmailStatus;
     vm.hasEmailProblem = hasEmailProblem;
@@ -55,13 +57,14 @@
       vm.supportsExtendedInformation = result;
     });
 
-    FeatureToggleService.getFeatureForUser(vm.userId, FeatureToggleService.features.atlasITProPackPurchased).then(function (result) {
-      vm.isProPackCustomer = result;
-    });
-
     HelpdeskService.getUser(vm.orgId, vm.userId)
       .then(initUserView)
       .catch(vm._helpers.notifyError);
+
+    function ignoreRole(role) {
+      // Device Admins will have 2 device roles assigned but should only display the rolename once
+      return role === Config.backend_roles.ci_device_admin;
+    }
 
     function resendInviteEmail() {
       var trimmedUserData = {
@@ -95,7 +98,7 @@
     function openExtendedInformation() {
       if (vm.supportsExtendedInformation) {
         $modal.open({
-          templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
           controller: 'HelpdeskExtendedInfoDialogController as modal',
           modalId: 'HelpdeskExtendedInfoDialog',
           resolve: {
@@ -394,23 +397,29 @@
             switch (status.serviceId) {
               case 'squared-fusion-cal':
                 vm.hybridServicesCard.cal.status = status;
-                vm.hybridServicesCard.cal.preferredWebExSiteName = Userservice.getPreferredWebExSiteForCalendaring(vm.user);
                 break;
               case 'squared-fusion-gcal':
                 vm.hybridServicesCard.gcal.status = status;
                 break;
               case 'squared-fusion-uc':
                 vm.hybridServicesCard.uc.status = status;
-                vm.hybridServicesCard.uc.showDirectoryUri = false;
+                vm.hybridServicesCard.uc.showUserNumbers = false;
                 if (vm.hybridServicesCard.uc.status.state === 'error' || vm.hybridServicesCard.uc.status.state === 'activated') {
-                  vm.hybridServicesCard.uc.showDirectoryUri = true;
-                  UCCService.getUserDiscovery(vm.userId, vm.orgId).then(function (userDiscovery) {
-                    vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
-                  });
+                  vm.hybridServicesCard.uc.showUserNumbers = true;
+                  UCCService.getUserDiscovery(vm.userId, vm.orgId)
+                    .then(function (userDiscovery) {
+                      vm.hybridServicesCard.uc.directoryUri = userDiscovery.directoryURI;
+                      vm.hybridServicesCard.uc.primaryDn = userDiscovery.primaryDn;
+                      vm.hybridServicesCard.uc.telephoneNumber = userDiscovery.telephoneNumber;
+                      vm.hybridServicesCard.uc.ucmCluster = userDiscovery.UCMInfo && userDiscovery.UCMInfo.ClusterFQDN;
+                    });
                 }
                 break;
               case 'squared-fusion-ec':
                 vm.hybridServicesCard.ec.status = status;
+                break;
+              case 'spark-hybrid-impinterop':
+                vm.hybridServicesCard.imp.status = status;
                 break;
             }
             if (status.lastStateChange) {
@@ -468,7 +477,6 @@
       }
 
       vm.cardsAvailable = true;
-      angular.element('.helpdesk-details').focus();
     }
 
     function filterLog(metadataList, condnFn) {
@@ -501,15 +509,9 @@
       }
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
-        if (event.keyCode === 27) { // Esc
-          $window.history.back();
-        }
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
+        $window.history.back();
       }
     }
 
@@ -522,7 +524,7 @@
       USSService.getUserJournal(vm.userId, vm.orgId, 20)
         .then(function (hsData) {
           $modal.open({
-            templateUrl: 'modules/squared/helpdesk/helpdesk-extended-information.html',
+            template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
             controller: 'HelpdeskExtendedInfoDialogController as modal',
             resolve: {
               title: function () {

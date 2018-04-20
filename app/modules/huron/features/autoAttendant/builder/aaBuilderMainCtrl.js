@@ -5,11 +5,13 @@
     .module('uc.autoattendant')
     .controller('AABuilderMainCtrl', AABuilderMainCtrl); /* was AutoAttendantMainCtrl */
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function AABuilderMainCtrl($rootScope, $modalStack, $scope, $translate, $state, $stateParams, $q, AAUiModelService, AAMediaUploadService,
-    AAModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AutoAttendantCeService,
-    AAValidationService, AANumberAssignmentService, AANotificationService, Authinfo, AACommonService, AAUiScheduleService, AACalendarService,
-    AATrackChangeService, AADependencyService, ServiceSetup, Analytics, AAMetricNameService, FeatureToggleService) {
+  function AABuilderMainCtrl($element, $modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
+    AADependencyService, AAMediaUploadService, AAMetricNameService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService,
+    AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AccessibilityService, AutoAttendantCeInfoModelService,
+    AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
     var vm = this;
     vm.isWarn = false;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -34,7 +36,7 @@
     vm.templateName = $stateParams.aaTemplate;
     vm.saveAANumberAssignmentWithErrorDetail = saveAANumberAssignmentWithErrorDetail;
     vm.areAssignedResourcesDifferent = areAssignedResourcesDifferent;
-
+    vm.populateRoutingLocation = populateRoutingLocation;
     vm.getSystemTimeZone = getSystemTimeZone;
     vm.getTimeZoneOptions = getTimeZoneOptions;
     vm.save8To5Schedule = save8To5Schedule;
@@ -69,6 +71,7 @@
       id: 'America/Los_Angeles',
       label: $translate.instant('timeZones.America/Los_Angeles'),
     };
+
     $scope.$on('$locationChangeStart', function (event) {
       var top = $modalStack.getTop();
       if (top) {
@@ -107,18 +110,21 @@
         // otherwise, filter on the passed-in field and compare
         var a1 = _.map(aa1, tag);
         var a2 = _.map(aa2, tag);
-        return (_.difference(a1, a2).length > 0 || _.difference(a2, a1).length > 0);
+        return _.difference(a1, a2).length !== 0;
       }
     }
 
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
       // check to see if the local assigned list of resources is different than in CE info
-      if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+      if (!_.isUndefined(vm.aaModel.aaRecord) && (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')
+              || areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'uuid'))) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
-          function (response) {
-            return response;
+          function () {
+            return AANumberAssignmentService.getAANumberAssignments(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID).then(function (numbers) {
+              return numbers;
+            });
           },
           function (response) {
             AANotificationService.error('autoAttendant.errorResetCMI');
@@ -135,11 +141,54 @@
 
     function closePanel() {
       AAMediaUploadService.resetResources();
+      var aaRecord = vm.aaModel.aaRecord;
+      var aaRecords = vm.aaModel.aaRecords;
+      var ceURL = '';
 
       AutoAttendantCeMenuModelService.clearCeMenuMap();
-      unAssignAssigned().finally(function () {
-        $state.go('huronfeatures');
-      });
+
+      unAssignAssigned().then(function (numbers) {
+        if (numbers.length === 0) {
+          return;
+        }
+        _.forEach(aaRecord.assignedResources, function (resource) {
+          resource.uuid = _.find(numbers, { number: resource.number }).uuid;
+        });
+
+        if (vm.aaModel.aaRecordUUID.length > 0) {
+          _.forEach(aaRecords, function (aa) {
+            if (AutoAttendantCeInfoModelService.extractUUID(aa.callExperienceURL) === vm.aaModel.aaRecordUUID) {
+              ceURL = aa.callExperienceURL;
+            }
+          });
+        }
+
+        return AutoAttendantCeService.updateCe(
+          ceURL,
+          aaRecord).catch(function (response) {
+          AANotificationService.errorResponse(response, 'autoAttendant.errorUpdateCe', {
+            name: aaRecord.callExperienceName,
+            statusText: response.statusText,
+            status: response.status,
+          });
+        });
+      })
+      // unAsignAssigned - calls error notification itself, so no-op here is fine
+        .catch(_.noop)
+        .finally(function () {
+          FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+            .then(function (results) {
+              if (results && $rootScope.isCare === true) {
+                $state.go('care.Features');
+                $rootScope.isCare = false;
+              } else {
+                $state.go('huronfeatures');
+              }
+            })
+            .catch(function () {
+              $state.go('huronfeatures');
+            });
+        });
     }
 
     function populateUiModel() {
@@ -190,6 +239,8 @@
     }
 
     function saveUiModel() {
+      // Reset the UiRestBlocks at the very beginning.
+      AARestModelService.setUiRestBlocks({});
       if (!_.isUndefined(vm.ui.ceInfo) && !_.isUndefined(vm.ui.ceInfo.getName()) && vm.ui.ceInfo.getName().length > 0) {
         if (!_.isUndefined(vm.ui.builder.ceInfo_name) && (vm.ui.builder.ceInfo_name.length > 0)) {
           vm.ui.ceInfo.setName(_.cloneDeep(vm.ui.builder.ceInfo_name));
@@ -215,6 +266,7 @@
       }
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(vm.aaModel.aaRecord, vm.ui.hasClosedHours);
+      vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
     }
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
@@ -232,6 +284,151 @@
           }
         );
       });
+    }
+
+    function getThirdPartyRestApiDynamicUrl(doRest) {
+      var dummyUrlObj = {};
+      _.set(dummyUrlObj, 'action.concat.actions[0].dynamic.dynamicOperations', doRest.url);
+      return dummyUrlObj;
+    }
+
+    function createAuthenticationBlock(action) {
+      if (_.isEmpty(action.username)) {
+        return undefined;
+      }
+      var authenticationBlock = {
+        type: 'BASIC',
+        credentials: {
+          username: action.username,
+          password: action.password,
+          id: action.credentialId,
+        },
+      };
+      return authenticationBlock;
+    }
+
+    function makeRestBodyForHttpPostOrPut(action) {
+      var doRestBody = {
+        url: getThirdPartyRestApiDynamicUrl(action),
+        method: action.method,
+        responseActions: action.responseActions,
+        testResponse: action.testResponse,
+        authentication: createAuthenticationBlock(action),
+      };
+      return doRestBody;
+    }
+
+    function doRestPost(action) {
+      // Preserve the promise chain and return the promise of createDoRest()
+      return DoRestService.createDoRest(makeRestBodyForHttpPostOrPut(action));
+    }
+
+    function doRestPut(doRestId, action) {
+      // Preserve the promise chain and return the promise of updateDoRest()
+      return DoRestService.updateDoRest(doRestId, makeRestBodyForHttpPostOrPut(action));
+    }
+
+    function deleteDoRest(doRestList) {
+      var promiseList = _.map(doRestList, function (doRest) {
+        return DoRestService.deleteDoRest(doRest)
+          .then(_.noop)
+          .catch(function (response) {
+            if (response.status === 404) {
+              return response;
+            } else {
+              return $q.reject(response);
+            }
+          });
+      });
+      return $q.all(promiseList);
+    }
+
+    function processDeletedRestBlocks(restBlocks, restBlockIds) {
+      var deletedRestIds = _.keys(_.pickBy(restBlocks, function (restBlock, key) {
+        return (_.isUndefined(restBlockIds[key]));
+      }));
+      return deleteDoRest(deletedRestIds);
+    }
+
+    function updateDoRest(actionSets) {
+      var uiRestBlocks = AARestModelService.getUiRestBlocks();
+      var restBlocks = AARestModelService.getRestBlocks();
+
+      // Quit processing further in case there is no REST block in either GUI or back-end
+      if ((_.size(uiRestBlocks) === 0) && (_.size(restBlocks) === 0)) {
+        return $q.resolve();
+      }
+
+      var promises = {};
+      // POST if id starts with TEMP_, PUT otherwise.
+      _.forEach(uiRestBlocks, function (uiRestBlock, restBlockId) {
+        if (_.startsWith(restBlockId, AARestModelService.REST_TEMP_ID_PREFIX)) {
+          _.set(promises, restBlockId, doRestPost(uiRestBlock));
+        } else {
+          _.set(promises, restBlockId, doRestPut(restBlockId, uiRestBlock));
+        }
+      });
+      var restBlockIds = {};
+      return $q.all(promises).then(function (responses) {
+        _.forEach(responses, function (response, key) {
+          var doRestId = key;
+          var restConfigUrl = _.get(response, 'restConfigUrl');
+          if (restConfigUrl) {
+            doRestId = _.last(_.split(restConfigUrl, '/'));
+          }
+          _.set(restBlockIds, key, doRestId);
+        });
+        _.forEach(actionSets, function (actionSet) {
+          var mappedActions = _.get(actionSet, 'actions');
+          _.forEach(mappedActions, function (action) {
+            if (_.has(action, 'doREST')) {
+              action.doREST.id = restBlockIds[action.doREST.id];
+            }
+          });
+        });
+        // Make sure to delete the restBlocks if they are marked for Deletion
+        return processDeletedRestBlocks(restBlocks, restBlockIds).then(function () {
+          var tempRestBlocks = {};
+          _.forEach(restBlockIds, function (restBlockId, key) {
+            _.set(tempRestBlocks, restBlockId, uiRestBlocks[key]);
+          });
+
+          AARestModelService.setUiRestBlocks(tempRestBlocks);
+          AARestModelService.setRestBlocks(tempRestBlocks);
+        });
+      });
+    }
+
+    function updateCeDefinition(recNum) {
+      var actionSets = _.get(vm, 'aaModel.aaRecord.actionSets', []);
+      return updateDoRest(actionSets)
+        .then(function () {
+          return updateCE(recNum);
+        })
+        .catch(function (updateRestResponse) {
+          AANotificationService.errorResponse(updateRestResponse, 'autoAttendant.errorUpdateCe', {
+            name: _.get(vm, 'aaModel.aaRecord.callExperienceName', ''),
+            statusText: updateRestResponse.statusText,
+            status: updateRestResponse.status,
+          });
+        })
+        .finally(function () {
+          _.forEach(actionSets, function (actionSet) {
+            if (actionSet.actions) {
+              //scheduleName is kept to capture schedule [openHours, closedHours, holidays]
+              var scheduleName = actionSet.name;
+              var actions = actionSet.actions;
+              _.forEach(actions, function (action, index) {
+                var doRestId = _.get(action, 'doREST.id', '');
+                if (doRestId) {
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].value', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].credentialId', doRestId);
+                  _.set(vm, 'ui.' + scheduleName + '.entries[' + index + '].actions[0].password', '');
+                }
+              });
+            }
+          });
+        });
     }
 
     function updateCE(recNum) {
@@ -336,6 +533,13 @@
       }
     }
 
+    function saveCE(recNum) {
+      if (AACommonService.isRestApiToggle()) {
+        return updateCeDefinition(recNum);
+      }
+      return updateCE(recNum);
+    }
+
     function saveAARecords(validateCES) {
       var deferred = $q.defer();
       var aaRecords = vm.aaModel.aaRecords;
@@ -389,11 +593,11 @@
 
           return saveAANumberAssignmentWithErrorDetail(currentlyShownResources).then(function () {
             return AANumberAssignmentService.formatAAExtensionResourcesBasedOnCMI(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, currentlyShownResources).then(function () {
-              updateCE(recNum);
+              return saveCE(recNum);
             });
           });
         } else {
-          return updateCE(recNum);
+          return saveCE(recNum);
         }
       }
     }
@@ -482,6 +686,63 @@
       });
     }
 
+    function readDoRest(actionSets) {
+      var promises = {};
+      var responseBlockPrefix = '$Response.';
+      var restBlocks = {};
+
+      _.forEach(actionSets, function (actionSet) {
+        var actions = _.get(actionSet, 'actions');
+        _.forEach(actions, function (action) {
+          if (action.doREST) {
+            _.set(promises, action.doREST.id, DoRestService.readDoRest(action.doREST.id));
+          }
+        });
+      });
+
+      return $q.all(promises).then(function (responses) {
+        _.forEach(responses, function (response, key) {
+          // clean up prefixes (prune out '$Response.')
+          _.forEach(response.responseActions, function (responseAction) {
+            responseAction.assignVar.value = responseAction.assignVar.value.slice(responseBlockPrefix.length);
+          });
+
+          var overrideProps = {
+            url: '',
+            method: response.method,
+            responseActions: response.responseActions,
+            testResponse: response.testResponse,
+          };
+
+          // make use of 'response' to get rest of the items to be shown under the REST block
+          var restApiUrl = _.get(response, 'url.action.concat.actions[0].dynamic.dynamicOperations');
+          if (restApiUrl) {
+            _.set(overrideProps, 'url', restApiUrl);
+          }
+
+          // Error Notification if credential block is Empty
+          if (!_.isUndefined(_.get(response, 'authentication'))) {
+            if (_.isEmpty(_.get(response, 'authentication.credentials.username'))) {
+              AANotificationService.error('autoAttendant.errorReadDoRestCredential', {
+                name: vm.aaModel.aaName,
+              });
+            }
+            var username = _.get(response, 'authentication.credentials.username', '');
+            _.set(overrideProps, 'username', username);
+          }
+          restBlocks[key] = overrideProps;
+        });
+        AARestModelService.setRestBlocks(restBlocks);
+        AARestModelService.setUiRestBlocks(restBlocks);
+      });
+    }
+
+    function populateBuilder(ceName) {
+      vm.populateUiModel();
+      vm.isAANameDefined = true;
+      AATrackChangeService.track('AAName', ceName);
+    }
+
     function selectAA(aaName) {
       vm.aaModel.aaName = aaName;
       if (_.isUndefined(vm.aaModel.aaRecord)) {
@@ -498,14 +759,72 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
-
+                //Getting Numbers from CES and CMI
+                var cesPilotNumbers = _.map(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                var cmiPilotNumbers = _.map(aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                //Getting common Numbers which exists in both CES and CMI
+                var commonPilotNumbers = _.intersection(cesPilotNumbers, cmiPilotNumbers);
+                if (commonPilotNumbers.length > 0) {
+                  var cesUUIDs = [];
+                  //Gettting UUIDs of commmon Numbers from CES and CMI
+                  _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cesUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  var cmiUUIDs = [];
+                  _.forEach(aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cmiUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  //Getting all the conflicting UUIDs from CES and CMI
+                  var conflictingUUIDs = _.difference(cesUUIDs, cmiUUIDs);
+                  //displaying error message for inconsistency if any conflicting UUIDs are found in CES and CMI
+                  if (conflictingUUIDs.length > 0) {
+                    var phoneNumbers = [];
+                    _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                      _.forEach(conflictingUUIDs, function (uuid) {
+                        if (_.isEqual(uuid, resource.uuid)) {
+                          phoneNumbers.push(resource.number);
+                        }
+                      });
+                    });
+                    AANotificationService.error('autoAttendant.errorNumberInconsistency', {
+                      phoneNumbers: phoneNumbers,
+                    });
+                  }
+                }
                 // make sure assigned numbers are from CMI, CES might be out of date.
                 vm.aaModel.aaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
 
                 vm.aaModel.aaRecordUUID = AutoAttendantCeInfoModelService.extractUUID(aaRecord.callExperienceURL);
-                vm.populateUiModel();
-                vm.isAANameDefined = true;
-                AATrackChangeService.track('AAName', aaRecord.callExperienceName);
+
+                if (AACommonService.isRestApiToggle()) {
+                  var actionSets = _.get(vm.aaModel.aaRecord, 'actionSets', []);
+                  readDoRest(actionSets)
+                    .then(_.noop)
+                    .catch(function (readRestResponse) {
+                      AANotificationService.errorResponse(readRestResponse, 'autoAttendant.errorReadCe', {
+                        name: aaName,
+                        statusText: readRestResponse.statusText,
+                        status: readRestResponse.status,
+                      });
+                    })
+                    .finally(function () {
+                      populateBuilder(aaRecord.callExperienceName);
+                    });
+                } else {
+                  populateBuilder(aaRecord.callExperienceName);
+                }
               },
               function (response) {
                 AANotificationService.errorResponse(response, 'autoAttendant.errorReadCe', {
@@ -513,8 +832,7 @@
                   statusText: response.statusText,
                   status: response.status,
                 });
-              }
-            );
+              });
             return;
           } else {
             AANotificationService.error('autoAttendant.errorReadCe', {
@@ -529,6 +847,12 @@
 
     function getSystemTimeZone() {
       vm.ui.systemTimeZone = DEFAULT_TZ;
+      if (AACommonService.isMultiSiteEnabled()) {
+        return AutoAttendantLocationService.getDefaultLocation().then(function (locationInfo) {
+          return { id: locationInfo.timeZone, label: locationInfo.timeZone };
+        });
+      }
+      // otherwise
       return ServiceSetup.listSites().then(function () {
         if (ServiceSetup.sites.length !== 0) {
           return ServiceSetup.getSite(ServiceSetup.sites[0].uuid).then(function (site) {
@@ -613,33 +937,55 @@
 
     function setUpFeatureToggles(featureToggleDefault) {
       AACommonService.setMediaUploadToggle(featureToggleDefault);
-      AACommonService.setCallerInputToggle(featureToggleDefault);
       AACommonService.setRouteSIPAddressToggle(featureToggleDefault);
       AACommonService.setDynAnnounceToggle(featureToggleDefault);
       AACommonService.setRestApiToggle(featureToggleDefault);
+      AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
+      AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
+      AACommonService.setHybridToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
     function checkFeatureToggles() {
       return $q.all({
-        hasCallerinput: FeatureToggleService.supports(FeatureToggleService.features.huronAACallerInput),
         hasMediaUpload: FeatureToggleService.supports(FeatureToggleService.features.huronAAMediaUpload),
         hasRouteRoom: FeatureToggleService.supports(FeatureToggleService.features.huronAARouteRoom),
         hasRestApi: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApi),
+        hasRestApiPhase2: FeatureToggleService.supports(FeatureToggleService.features.huronAARestApiPhase2),
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
+        hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
+        isHybridOrg: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable),
       });
     }
 
     function assignFeatureToggles(featureToggles) {
-      AACommonService.setCallerInputToggle(featureToggles.hasCallerinput);
       AACommonService.setMediaUploadToggle(featureToggles.hasMediaUpload);
       AACommonService.setRouteSIPAddressToggle(featureToggles.hasRouteRoom);
       AACommonService.setRestApiToggle(featureToggles.hasRestApi);
+      AACommonService.setRestApiTogglePhase2(featureToggles.hasRestApiPhase2);
       AACommonService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
+      AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
+      AACommonService.setHybridToggle(featureToggles.isHybridOrg);
+    }
+
+    function populateRoutingLocation() {
+      return AutoAttendantLocationService.listLocations()
+        .then(function (routingLocations) {
+          _.forEach(routingLocations.locations, function (location) {
+            if (!_.isEmpty(location.routingPrefix)) {
+              vm.ui.routingPrefixOptions.push(location.routingPrefix);
+            }
+          });
+          return $q.resolve();
+        })
+        .catch(function () {
+          AANotificationService.error('autoAttendant.errorReadLocations');
+          return $q.reject();
+        });
     }
 
     //load the feature toggle prior to creating the elements
@@ -657,6 +1003,7 @@
       vm.ui.ceInfo.name = aaName;
       vm.ui.builder = {};
       vm.ui.aaTemplate = $stateParams.aaTemplate;
+      vm.ui.routingPrefixOptions = [];
 
       // Define vm.ui.builder.ceInfo_name for editing purpose.
       vm.ui.builder.ceInfo_name = _.cloneDeep(vm.ui.ceInfo.name);
@@ -672,14 +1019,26 @@
         vm.aaModel = AAModelService.getAAModel();
         vm.aaModel.aaRecord = undefined;
         vm.selectAA(aaName);
-        setLoadingDone();
+        if (AACommonService.isMultiSiteEnabled()) {
+          populateRoutingLocation().then(function () {
+            setLoadingDone();
+            AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+          });
+        } else {
+          setLoadingDone();
+          AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
+        }
       });
+      if (AACommonService.isHybridEnabledOnOrg()) {
+        AutoAttendantHybridCareService.isHybridAndEPTConfigured().then(function (result) {
+          AutoAttendantHybridCareService.setHybridandEPTConfiguration(result);
+        });
+      }
     }
 
-    function evalKeyPress($keyCode) {
-      switch ($keyCode) {
-        // esc key
-        case 27:
+    function evalKeyPress($event) {
+      switch ($event.keyCode) {
+        case KeyCodes.ESCAPE:
           closePanel();
           break;
         default:

@@ -4,25 +4,27 @@
   "url": "",
   "members": [
     {
-      "deviceId": [],
-      "memberId": "0001",
-      "type": "USER"
+      "uuid": "0001",
+      "name": "Pager1",
+      "type": "user"
     },
     {
-      "deviceId": [],
-      "memberId": "0002",
-      "type": "PLACE"
+      "uuid": "0002",
+      "name": "Pager2",
+      "type": "place"
     }
   ],
   "initiatorType": "CUSTOM",
   "initiators": [
     {
-      "initiatorId": "0001",
-      "type": "USER"
+      "uuid": "0001",
+      "name": "Pager1",
+      "type": "user"
     },
     {
-      "initiatorId": "0002",
-      "type": "PLACE"
+      "uuid": "0002",
+      "name": "Pager2",
+      "type": "place"
     }
   ]
 }

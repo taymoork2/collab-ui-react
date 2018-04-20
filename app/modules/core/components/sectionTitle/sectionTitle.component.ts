@@ -24,7 +24,7 @@ class SectionTitle implements ng.IComponentController {
 
 angular.module('Core')
   .component('sectionTitle', {
-    templateUrl: 'modules/core/components/sectionTitle/sectionTitle.tpl.html',
+    template: require('modules/core/components/sectionTitle/sectionTitle.tpl.html'),
     controller: SectionTitle,
     bindings: {
       titleKey: '@',

@@ -43,9 +43,7 @@
           <ul class="list-group">
             <li class="list-group-item list-token" ng-repeat="number in externalNumbers.unassignedNumbers">
               <span ng-bind="::number.number"></span>
-              <button type="button" class="close" ng-click="externalNumbers.deleteNumber(number)">
-                <span class="sr-only" translate="common.delete"></span>
-              </button>
+              <button type="button" class="close" ng-click="externalNumbers.deleteNumber(number)" aria-label="{{::'common.delete' | translate}}"></button>
             </li>
           </ul>
         </div>

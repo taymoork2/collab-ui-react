@@ -1,5 +1,6 @@
 import './hybrid-services-cluster-list-with-cards.scss';
 
+import { Config } from 'modules/core/config/config';
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesClusterService, IResourceGroups, HighLevelStatusForService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { IToolkitModalService } from 'modules/core/modal';
@@ -47,7 +48,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
     private $translate: ng.translate.ITranslateService,
     private Analytics,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
@@ -60,7 +61,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
   }
 
   public $onInit() {
-    this.Analytics.trackHSNavigation(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CLUSTER_LIST);
     this.loadResources();
   }
 
@@ -128,7 +129,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       type: 'full',
       controller: 'AddResourceGroupController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/hybrid-services-cluster-list-with-cards/add-resource-group.html',
+      template: require('modules/hercules/hybrid-services-cluster-list-with-cards/add-resource-group.html'),
     })
     .result
     .then(this.loadResources);
@@ -185,7 +186,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       type: 'small',
       controller: 'SetDefaultReleaseChannelController',
       controllerAs: 'vm',
-      templateUrl: 'modules/hercules/hybrid-services-cluster-list-with-cards/set-default-release-channel.html',
+      template: require('modules/hercules/hybrid-services-cluster-list-with-cards/set-default-release-channel.html'),
       resolve: {
         unassignedClusters: () => this.groupsCache[0].unassigned,
       },
@@ -371,7 +372,7 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
 
 export class HybridServicesClusterListWithCardsComponent implements ng.IComponentOptions {
   public controller = HybridServicesClusterListWithCardsCtrl;
-  public templateUrl = 'modules/hercules/hybrid-services-cluster-list-with-cards/hybrid-services-cluster-list-with-cards.component.html';
+  public template = require('modules/hercules/hybrid-services-cluster-list-with-cards/hybrid-services-cluster-list-with-cards.component.html');
   public bindings = {
     hasCucmSupportFeatureToggle: '<',
     hasEnterprisePrivateTrunkingFeatureToggle: '<',

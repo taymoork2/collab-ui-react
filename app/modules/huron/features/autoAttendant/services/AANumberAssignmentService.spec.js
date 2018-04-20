@@ -3,7 +3,6 @@
 describe('Service: AANumberAssignmentService', function () {
   var AANumberAssignmentService, $httpBackend, HuronConfig, AutoAttendantCeInfoModelService;
   var url, cmiAAAsignmentURL;
-  // require('jasmine-collection-matchers');
   var Authinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('1'),
   };

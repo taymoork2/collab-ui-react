@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AddResourceCommonServiceV2(Notification, $translate, $q, MediaClusterServiceV2, $window, MediaServiceActivationV2) {
+  function AddResourceCommonServiceV2($translate, $q, $window, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, Notification) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -10,6 +10,7 @@
     vm.clusterList = [];
     vm.selectedClusterId = '';
     vm.currentServiceId = 'squared-fusion-media';
+    vm.releaseChannel = 'stable';
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     function updateClusterLists() {
@@ -18,7 +19,7 @@
       vm.onlineNodeList = [];
       vm.offlineNodeList = [];
       var deferred = $q.defer();
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusters = _.filter(clusters, {
             targetType: 'mf_mgmt',
@@ -65,9 +66,10 @@
       });
       if (vm.clusterDetail == null) {
         var deferred = $q.defer();
-        MediaClusterServiceV2.createClusterV2(enteredCluster, 'stable')
+        HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
           .then(function (resp) {
-            vm.selectedClusterId = resp.data.id;
+            vm.releaseChannel = resp.releaseChannel;
+            vm.selectedClusterId = resp.id;
             // Add the created cluster to property set
             MediaClusterServiceV2.getPropertySets()
               .then(function (propertySets) {
@@ -95,26 +97,78 @@
           });
         return deferred.promise;
       } else {
+        vm.releaseChannel = vm.clusterDetail.releaseChannel;
         vm.selectedClusterId = vm.clusterDetail.id;
         return whiteListHost(hostName, vm.selectedClusterId);
       }
     }
 
     function whiteListHost(hostName, clusterId) {
-      return MediaClusterServiceV2.addRedirectTarget(hostName, clusterId);
+      return HybridServicesExtrasService.addPreregisteredClusterToAllowList(hostName, clusterId);
     }
 
-    function redirectPopUpAndClose(hostName, enteredCluster, clusterId, firstTimeSetup) {
-      if (firstTimeSetup) {
-        MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
-      }
-      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
+    function redirectPopUpAndClose(hostName, enteredCluster) {
+      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId) + '&channel=' + encodeURIComponent(vm.releaseChannel));
+    }
+
+    function enableMediaServiceEntitlements() {
+      return MediaServiceActivationV2.enableMediaServiceEntitlements();
+    }
+
+    function enableMediaService() {
+      return MediaServiceActivationV2.enableMediaService(vm.currentServiceId);
+    }
+
+    function validateHostName(hostName) {
+      var regex = new RegExp(/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|((?!:\/\/)([a-zA-Z0-9-]+\.)?[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,6}))$/g);
+      return regex.test(hostName);
+    }
+
+    function createFirstTimeSetupCluster(hostName, enteredCluster) {
+      var deferred = $q.defer();
+      HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then(function (result) {
+        deferred.resolve();
+        vm.releaseChannel = result.releaseChannel;
+        vm.selectedClusterId = result.id;
+        // Cluster created, now creating a property set for video quality
+        var payLoad = {
+          type: 'mf.group',
+          name: 'videoQualityPropertySet',
+          properties: {
+            'mf.videoQuality': 'false',
+          },
+        };
+        MediaClusterServiceV2.createPropertySet(payLoad)
+          .then(function (response) {
+            vm.videoPropertySetId = response.data.id;
+            var clusterPayload = {
+              assignedClusters: vm.selectedClusterId,
+            };
+            // Assign it the property set with cluster id
+            MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySetId, clusterPayload)
+              .then('', function (err) {
+                Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
+              });
+          });
+        whiteListHost(hostName, vm.selectedClusterId);
+      }, function (error) {
+        deferred.reject();
+        var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
+          enteredCluster: enteredCluster,
+        });
+        Notification.errorWithTrackingId(error, errorMessage);
+      });
+      return deferred.promise;
     }
 
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
       redirectPopUpAndClose: redirectPopUpAndClose,
+      enableMediaServiceEntitlements: enableMediaServiceEntitlements,
+      createFirstTimeSetupCluster: createFirstTimeSetupCluster,
+      enableMediaService: enableMediaService,
+      validateHostName: validateHostName,
     };
   }
   angular

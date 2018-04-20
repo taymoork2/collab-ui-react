@@ -1,5 +1,5 @@
 import companyVoicemailAvrilModule from './index';
-import { AvrilSiteFeatures } from 'modules/huron/avril';
+import { AvrilSiteFeatures } from 'modules/call/avril';
 
 describe('Component: companyVoicemailAvril', () => {
   const VOICEMAIL_TOGGLE = 'input#companyVoicemailToggle';
@@ -10,13 +10,22 @@ describe('Component: companyVoicemailAvril', () => {
   const COMPANY_NUMBER_SELECT = '.csSelect-container[name="companyVoicemailNumber"]';
   const MESSAGE_CONTAINER = '.msg-container';
   const NO_EXTERNAL_NUMBER_WARNING = COMPANY_NUMBER_SELECT + ' ' + MESSAGE_CONTAINER;
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
-  const AVRIL_FEATURES = new AvrilSiteFeatures();
   const USE_TLS_CHECKBOX = 'input#useTLS';
   const ENABLE_OTP_CHECKBOX = 'input#enableOTP';
-
+  const avrilFeatures = new AvrilSiteFeatures({
+    VM2E: false,
+    VM2E_PT: false,
+    VMOTP: true,
+    VM2E_TLS: true,
+    VM2T: false,
+    VM2E_Transcript: false,
+    VM2S: false,
+    VM2S_Attachment: false,
+    VM2S_Transcript: false,
+  });
   beforeEach(function() {
     this.initModules(companyVoicemailAvrilModule);
     this.injectDependencies(
@@ -69,7 +78,8 @@ describe('Component: companyVoicemailAvril', () => {
 
     it('should call onChangeFn when voicemail is toggled', function() {
       this.view.find(VOICEMAIL_TOGGLE).click();
-      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, AVRIL_FEATURES);
+      avrilFeatures.VM2E_TLS = false;
+      expect(this.$scope.onChangeFn).toHaveBeenCalledWith(GENERATED_VM_PILOT_NUMBER, 'true', true, avrilFeatures);
     });
 
     it('should have External Voicemail Access and Voicemail to Email checkboxes when voicemail is toggled on', function() {
@@ -106,12 +116,7 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when an external number is chosen', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: false,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
+      avrilFeatures.VM2E_TLS = false;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(EXTERNAL_VM_CHECKBOX);
       this.view.find(EXTERNAL_VM_CHECKBOX).click();
@@ -128,13 +133,9 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should show Email Attachment radios, use TLS checkbox and call onChangeFn when Voicemail to Email is checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: true,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
-
+      avrilFeatures.VM2E = true;
+      avrilFeatures.VM2E_PT = false;
+      avrilFeatures.VM2E_TLS = true;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
@@ -148,13 +149,9 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when Email Notification without Attachment is checked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: false,
-        VM2E_PT: true,
-        VMOTP: true,
-        VM2E_TLS: true,
-      });
-
+      avrilFeatures.VM2E = false;
+      avrilFeatures.VM2E_PT = true;
+      avrilFeatures.VM2E_TLS = true;
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();
@@ -167,13 +164,9 @@ describe('Component: companyVoicemailAvril', () => {
     });
 
     it('should call onChangeFn when use TLS is unchecked', function() {
-      const avrilFeatures = new AvrilSiteFeatures({
-        VM2E: true,
-        VM2E_PT: false,
-        VMOTP: true,
-        VM2E_TLS: false,
-      });
-
+      avrilFeatures.VM2E = true;
+      avrilFeatures.VM2E_TLS = false;
+      avrilFeatures.VM2E_PT = false,
       this.view.find(VOICEMAIL_TOGGLE).click();
       expect(this.view).toContainElement(VOICEMAIL_TO_EMAIL_CHECKBOX);
       this.view.find(VOICEMAIL_TO_EMAIL_CHECKBOX).click();

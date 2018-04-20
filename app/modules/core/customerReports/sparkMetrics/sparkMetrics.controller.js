@@ -7,11 +7,8 @@
 
   /* @ngInject */
   function SparkMetricsCtrl(
-    $log,
-    $rootScope,
     $sce,
     $scope,
-    $timeout,
     $window,
     Analytics,
     Authinfo,
@@ -26,7 +23,7 @@
 
     vm.sparkMetrics.views = [
       {
-        view: 'Base',
+        view: 'Basic',
         appName: 'basic_spark_v1',
       },
       {
@@ -39,16 +36,8 @@
 
     init();
 
-    function generateWebexMetricsUrl() {
-      ProPackService.hasProPackPurchased().then(function (isPurchased) {
-        if (isPurchased) {
-          vm.reportView = vm.sparkMetrics.views[1];
-        }
-        loadMetricsReport();
-      });
-    }
-
     function init() {
+      setViewHeight();
       Userservice.getUser(
         'me',
         function (data) {
@@ -63,6 +52,23 @@
       Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_SPARK_REPORT);
     }
 
+    function setViewHeight() {
+      if (Authinfo.isReadOnlyAdmin()) {
+        vm.iframeContainerClass = 'sparkMetricsContentWithReadOnly';
+      } else {
+        vm.iframeContainerClass = 'sparkMetricsContent';
+      }
+    }
+
+    function generateWebexMetricsUrl() {
+      ProPackService.hasProPackPurchased().then(function (isPurchased) {
+        if (isPurchased) {
+          vm.reportView = vm.sparkMetrics.views[1];
+        }
+        loadMetricsReport();
+      });
+    }
+
     function loadMetricsReport() {
       var userInfo = {
         org_id: Authinfo.getOrgId(),
@@ -71,86 +77,55 @@
 
       var viewType = _.get(vm, 'reportView.view');
 
-      var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+      // var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
+      var getSparkReportData = _.get(QlikService, 'getQBSInfo');
 
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData(userInfo).then(function (data) {
+      getSparkReportData('spark', viewType, userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
-          appId: vm.reportView.appName, //TODO changes to data.appName, if QBS can handle this parameter
+          appId: data.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
-          persistent: false, //TODO changes to data.isPersistent, if QBS can handle this parameter
+          persistent: data.isPersistent,
           vID: Authinfo.getOrgId(),
         };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getSparkReportAppfor' + viewType + 'Url')(vm.sparkMetrics.appData.qrp);
+        //TODO remove this 'if' segment, if QBS can handle this parameter
+        if (vm.sparkMetrics.appData.persistent === 'false') {
+          vm.sparkMetrics.appData.appId = vm.reportView.appName;
+        }
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, 'spark', viewType);
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
 
         updateIframe();
       })
         .catch(function (error) {
+          $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'common.error');
         });
     }
 
     function updateIframe() {
-      vm.isIframeLoaded = false;
-
       var iframeUrl = vm.sparkMetrics.appData.url;
-      $scope.trustIframeUrl = $sce.trustAsResourceUrl(iframeUrl);
-      $scope.appId = vm.sparkMetrics.appData.appId;
-      $scope.QlikTicket = vm.sparkMetrics.appData.ticket;
-      $scope.node = vm.sparkMetrics.appData.node;
-      $scope.persistent = vm.sparkMetrics.appData.persistent;
-      $scope.vID = vm.sparkMetrics.appData.vID;
-
-      var parser = $window.document.createElement('a');
-      parser.href = iframeUrl;
-
-      $timeout(
-        function loadIframe() {
-          var submitFormBtn = $window.document.getElementById('submitFormBtn');
-          submitFormBtn.click();
-        },
-        0
-      );
+      var data = {
+        trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
+        appId: vm.sparkMetrics.appData.appId,
+        QlikTicket: vm.sparkMetrics.appData.ticket,
+        node: vm.sparkMetrics.appData.node,
+        persistent: vm.sparkMetrics.appData.persistent,
+        vID: vm.sparkMetrics.appData.vID,
+      };
+      $scope.$broadcast('updateIframe', iframeUrl, data);
     }
 
-    function messageHandle(event) {
-      var iframeEle = angular.element('#webexMetricsIframeContainer');
-      var currScope = iframeEle.scope();
-
-      if (event.data === 'unfreeze') {
-        $log.log('Unfreeze message received.');
-        currScope.$apply(function () {
-          vm.isIframeLoaded = true;
-        });
-      }
-    }
-
-    $window.iframeLoaded = function (iframeId) {
-      var rec = angular.element(iframeId);
-      rec.ready(function () {
+    $scope.iframeLoaded = function (elem) {
+      elem.ready(function () {
         var token = $window.sessionStorage.getItem('accessToken');
         var orgID = Authinfo.getOrgId();
-        rec[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
       });
     };
-
-    vm.onStateChangeStart = function (event) {
-      if (!vm.isIframeLoaded) {
-        event.preventDefault();
-      }
-    };
-
-    $window.addEventListener('message', messageHandle, true);
-    var stateChangeStart = $rootScope.$on('$stateChangeStart', vm.onStateChangeStart);
-
-    $scope.$on('$destory', function () {
-      stateChangeStart();
-      $window.removeEventListener('message', messageHandle, true);
-    });
   }
 })();

@@ -35,6 +35,6 @@ class BannerController implements ng.IComponentController {
 
 export class BannerComponent implements ng.IComponentOptions {
   public controller = BannerController;
-  public templateUrl = 'modules/core/banner/banner.tpl.html';
+  public template = require('modules/core/banner/banner.tpl.html');
   public bindings = {};
 }

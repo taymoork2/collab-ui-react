@@ -1,11 +1,12 @@
 (function () {
   'use strict';
 
-  angular.module('Hercules')
-    .controller('TypeSelectorController', TypeSelectorController);
+  module.exports = TypeSelectorController;
+
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, HybridServicesClusterService, hasCucmSupportFeatureToggle, hasImpSupportFeatureToggle) {
+  function TypeSelectorController($q, $stateParams, $translate, Authinfo, Config, hasCucmSupportFeatureToggle, hasImpSupportFeatureToggle, ServiceDescriptorService) {
     var vm = this;
     vm.UIstate = 'loading';
     vm.isEntitledTo = {
@@ -76,9 +77,9 @@
       var promises = _.map(services, function (service) {
         switch (service) {
           case 'expressway':
-            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-mgmt');
+            return ServiceDescriptorService.isServiceEnabled('squared-fusion-mgmt');
           case 'mediafusion':
-            return HybridServicesClusterService.serviceIsSetUp('squared-fusion-media');
+            return ServiceDescriptorService.isServiceEnabled('squared-fusion-media');
           default:
             return true;
         }
@@ -94,7 +95,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13 && canGoNext()) {
+      if (event.keyCode === KeyCodes.ENTER && canGoNext()) {
         next();
       }
     }

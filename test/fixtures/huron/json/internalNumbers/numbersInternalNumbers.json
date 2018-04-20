@@ -1,0 +1,45 @@
+[{
+  "assigned" : true,
+  "directoryNumber"  :  "null",
+  "external"  :  "null",
+  "internal"  : "503",
+  "locationUuid"  :  "dabbe3cb-2464-4c90-84c8-df80677c5558",
+  "number"  :  "503",
+  "siteToSite" :  "65503",
+  "type"  :  "null",
+  "url"  :  "someUrl",
+  "uuid"  :  "21b73321-b92d-4537-8871-bb75c26c5191"
+}, {
+  "assigned" : true,
+  "directoryNumber"  :  "null",
+  "external"  :  "null",
+  "internal"  : "504",
+  "locationUuid"  :  "dabbe3cb-2464-4c90-84c8-df80677c5558",
+  "number"  :  "504",
+  "siteToSite" :  "65504",
+  "type"  :  "null",
+  "url"  :  "someUrl",
+  "uuid"  :  "21b73321-b92d-4537-8871-bb75c26c5192"
+} , {
+  "assigned" : true,
+  "directoryNumber"  :  "null",
+  "external"  :  "null",
+  "internal"  : "505",
+  "locationUuid"  :  "dabbe3cb-2464-4c90-84c8-df80677c5558",
+  "number"  :  "505",
+  "siteToSite" :  "65505",
+  "type"  :  "null",
+  "url"  :  "someUrl",
+  "uuid"  :  "21b73321-b92d-4537-8871-bb75c26c5193"
+ } , {
+  "assigned" : true,
+  "directoryNumber"  :  "null",
+  "external"  :  "null",
+  "internal"  : "506",
+  "locationUuid"  :  "dabbe3cb-2464-4c90-84c8-df80677c5558",
+  "number"  :  "506",
+  "siteToSite" :  "67890",
+  "type"  :  "null",
+  "url"  :  "someUrl",
+  "uuid"  :  "21b73321-b92d-4537-8871-bb75c26c5192"
+  }]

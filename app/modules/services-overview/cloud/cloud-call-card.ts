@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { ServicesOverviewCard, ICardButton } from '../shared/services-overview-card';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
@@ -65,7 +66,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
   /* @ngInject */
   public constructor(
     private Authinfo,
-    private Config,
+    private Config: Config,
   ) {
     super({
       active: Authinfo.isAllowedState('huronsettings'),

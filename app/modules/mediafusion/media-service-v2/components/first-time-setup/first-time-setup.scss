@@ -1,0 +1,61 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+first-time-setup {
+  button {
+    margin-left: 0.5rem;
+  }
+
+  .modal-footer .btn + .btn {
+    transition: initial;
+  }
+
+  .radioNoTranform {
+    transition: initial;
+    display: inline-block;
+  }
+
+  .small-font {
+    font-size: 0.75rem;
+  }
+
+  .paddingPrivacy {
+    padding-bottom: 200px;
+  }
+
+  .addResourceBodyInfo {
+    padding-top: 1rem;
+  }
+
+  .preRegisterClusterForm .cs-radio-group {
+    padding-top: 1rem;
+  }
+
+  .myAddResourceDownloadForm {
+    padding-left: 31px;
+  }
+  .myAddResourceDownloadForm > div {
+    margin-bottom: 1em;
+    color: $gray-darker;
+  }
+
+  .stick-bottom {
+    position: absolute !important;
+    top: 28rem;
+    line-height: 1.2rem;
+    width: 88%;
+  }
+  .inputHostNameForm {
+    padding-top: 1rem;
+  }
+
+  .inputHostNameForm .dropdown-menu {
+    top: 101%;
+    bottom: auto;
+    height: 11rem;
+  }
+
+  .addResourceInlineBlock {
+    display: initial;
+  }
+
+}

@@ -5,7 +5,7 @@
     .controller('ExternalNumberOverviewCtrl', ExternalNumberOverview);
 
   /* @ngInject */
-  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification, ExternalNumberPool, FeatureToggleService) {
+  function ExternalNumberOverview($scope, $state, $stateParams, ExternalNumberService, Notification, ExternalNumberPool) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.loading = true;
@@ -17,9 +17,6 @@
     }];
     var ALL = 'all';
 
-    FeatureToggleService.supports(FeatureToggleService.features.huronPstn).then(function (results) {
-      vm.hPstn = results;
-    });
     updatePhoneNumberCount();
 
     $scope.$watchCollection(function () {
@@ -51,13 +48,13 @@
     function isTerminusCustomer() {
       ExternalNumberService.isTerminusCustomer(vm.currentCustomer.customerOrgId).then(function (response) {
         if (response) {
-          var state = vm.hPstn ? 'pstnWizard' : 'pstnSetup';
-          return $state.go(state, {
+          return $state.go('pstnWizard', {
             customerId: vm.currentCustomer.customerOrgId,
             customerName: vm.currentCustomer.customerName,
             customerEmail: vm.currentCustomer.customerEmail,
             customerCommunicationLicenseIsTrial: getCommTrial(vm.currentCustomer, 'communications'),
             customerRoomSystemsLicenseIsTrial: getCommTrial(vm.currentCustomer, 'roomSystems'),
+            showContractIncomplete: $scope.showContractIncomplete,
           });
         } else {
           return Notification.error('pstnSetup.errors.customerNotFound');

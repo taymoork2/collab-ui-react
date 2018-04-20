@@ -1,20 +1,33 @@
-export class LineLabel {
+export interface ILineLabel {
+  value: string;
+  appliesToAllSharedLines: boolean;
+}
+
+export class LineLabel implements ILineLabel {
   public value: string;
   public appliesToAllSharedLines: boolean;
 
-  constructor(obj: {
-    value: string,
-    appliesToAllSharedLines: boolean,
-  } = {
+  constructor(lineLabel: ILineLabel = {
     value: '',
     appliesToAllSharedLines: false,
   }) {
-    this.value = obj.value;
-    this.appliesToAllSharedLines = obj.appliesToAllSharedLines;
+    this.value = lineLabel.value;
+    this.appliesToAllSharedLines = lineLabel.appliesToAllSharedLines;
   }
 }
 
-export class Line {
+export interface ILine {
+  uuid?: string;
+  primary: boolean;
+  shared: boolean;
+  internal: string;
+  external?: string | null;
+  siteToSite: string;
+  incomingCallMaximum: number;
+  label: LineLabel | null;
+}
+
+export class Line implements ILine {
   public uuid: string | undefined;
   public primary: boolean;
   public shared: boolean;
@@ -24,16 +37,7 @@ export class Line {
   public incomingCallMaximum: number;
   public label: LineLabel | null;
 
-  constructor(obj: {
-    uuid?: string,
-    primary: boolean,
-    shared: boolean,
-    internal: string,
-    external?: string | null,
-    siteToSite: string,
-    incomingCallMaximum: number,
-    label: LineLabel | null,
-  } = {
+  constructor(line: ILine = {
     uuid: undefined,
     primary: false,
     shared: false,
@@ -43,13 +47,13 @@ export class Line {
     incomingCallMaximum: 2,
     label: new LineLabel(),
   }) {
-    this.uuid = obj.uuid;
-    this.primary = obj.primary;
-    this.shared = obj.shared;
-    this.internal = obj.internal;
-    this.external = obj.external;
-    this.siteToSite = obj.siteToSite;
-    this.incomingCallMaximum = obj.incomingCallMaximum;
-    this.label = obj.label;
+    this.uuid = line.uuid;
+    this.primary = line.primary;
+    this.shared = line.shared;
+    this.internal = line.internal;
+    this.external = line.external;
+    this.siteToSite = line.siteToSite;
+    this.incomingCallMaximum = line.incomingCallMaximum;
+    this.label = line.label;
   }
 }

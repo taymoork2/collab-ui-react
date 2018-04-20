@@ -3,8 +3,10 @@ require('./helpdesk.scss');
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
-  function HelpdeskController($modal, $q, $scope, $state, $translate, $window, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
+  function HelpdeskController($element, $modal, $q, $scope, $state, $translate, $window, AccessibilityService, Authinfo, Config, HelpdeskHuronService, HelpdeskSearchHistoryService, HelpdeskService, HelpdeskSplunkReporterService, LicenseService) {
     $scope.$on('$viewContentLoaded', function () {
       setSearchFieldFocus();
       $window.document.title = $translate.instant('helpdesk.browserTabHeaderTitle');
@@ -21,6 +23,7 @@ require('./helpdesk.scss');
     vm.searchingForDevices = false;
     vm.lookingUpOrgFilter = false;
     vm.searchString = '';
+    vm.arrowNavigation = arrowNavigation;
     vm.keyPressHandler = keyPressHandler;
     vm.showMoreResults = showMoreResults;
     vm.showDeviceResultPane = showDeviceResultPane;
@@ -31,7 +34,6 @@ require('./helpdesk.scss');
     vm.showSearchHelp = showSearchHelp;
     vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
     vm.orderNumberSize = 8;
-    vm.isOrderSearchEnabled = false;
     vm.isOrderSearchEnabled = Authinfo.isCisco() || Authinfo.isCiscoMock();
 
     $scope.$on('helpdeskLoadSearchEvent', function (event, args) {
@@ -41,11 +43,11 @@ require('./helpdesk.scss');
     });
 
     function showSearchHelp() {
-      var searchHelpUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog.html';
-      var searchHelpMobileUrl = 'modules/squared/helpdesk/helpdesk-search-help-dialog-mobile.html';
+      var searchHelpTemplate = require('./helpdesk-search-help-dialog.html');
+      var searchHelpMobileTemplate = require('./helpdesk-search-help-dialog-mobile.html');
       var isSearchOrderEnabled = vm.isOrderSearchEnabled;
       $modal.open({
-        templateUrl: HelpdeskService.checkIfMobile() ? searchHelpMobileUrl : searchHelpUrl,
+        template: HelpdeskService.checkIfMobile() ? searchHelpMobileTemplate : searchHelpTemplate,
         controller: function () {
           var vm = this;
           vm.isCustomerHelpDesk = !Authinfo.isInDelegatedAdministrationOrg();
@@ -311,65 +313,41 @@ require('./helpdesk.scss');
 
     function searchOrders(searchString) {
       var searchDone = $q.defer();
-      if (isValidOrderEntry(searchString)) {
-        vm.searchingForOrders = true;
-        HelpdeskService.searchOrders(searchString).then(function (res) {
-          var order = [];
-          var found = _.find(res, function (el) { return el.orderStatus === 'PROVISIONED'; });
-          if (!_.isUndefined(found)) {
-            order.push(found);
-          }
-
-          if (order.length === 0) {
-            vm.currentSearch.orderSearchResults = null;
+      vm.searchingForOrders = true;
+      HelpdeskService.searchOrders(searchString).then(function (res) {
+        var orders = HelpdeskService.filterOrders(res);
+        if (orders.length === 0) {
+          vm.currentSearch.orderSearchResults = null;
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
+        } else {
+          orders = sortOrdersForDisplay(orders);
+          vm.currentSearch.orderSearchResults = orders;
+          vm.currentSearch.orderSearchFailure = null;
+        }
+        vm.searchingForOrders = false;
+        HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
+        vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
+      }, function (err) {
+        vm.searchingForOrders = false;
+        vm.currentSearch.orderSearchResults = null;
+        vm.currentSearch.orderSearchFailure = null;
+        if (err.status === 404) {
+          var errorCode = _.get(err.data, 'errorCode');
+          // Compare the error code with 'Order not found' (400117)
+          if (errorCode === 400117) {
             vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
           } else {
-            vm.currentSearch.orderSearchResults = order;
-            vm.currentSearch.orderSearchFailure = null;
+            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
           }
-          vm.searchingForOrders = false;
-          HelpdeskSearchHistoryService.saveSearch(vm.currentSearch);
-          vm.searchHistory = HelpdeskSearchHistoryService.getAllSearches();
-        }, function (err) {
-          vm.searchingForOrders = false;
-          vm.currentSearch.orderSearchResults = null;
-          vm.currentSearch.orderSearchFailure = null;
-          if (err.status === 404) {
-            var errorCode = _.get(err.data, 'errorCode');
-            // Compare the error code with 'Order not found' (400117)
-            if (errorCode === 400117) {
-              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.noSearchHits');
-            } else {
-              vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
-            }
-          } else if (err.cancelled === true || err.timedout === true) {
-            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
-          } else {
-            vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
-          }
-        }).finally(function () {
-          searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
-        });
-      } else {
-        vm.searchingForOrders = false;
-        vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.badOrderSearchInput');
-        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure));
-      }
+        } else if (err.cancelled === true || err.timedout === true) {
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.cancelled');
+        } else {
+          vm.currentSearch.orderSearchFailure = $translate.instant('helpdesk.unexpectedError');
+        }
+      }).finally(function () {
+        searchDone.resolve(stats(HelpdeskSplunkReporterService.ORDER_SEARCH, vm.currentSearch.orderSearchFailure || vm.currentSearch.orderSearchResults));
+      });
       return searchDone.promise;
-    }
-
-    function isValidOrderEntry(searchString) {
-      // A valid order search entry should has a prefix of 'ssw' or minimum 8-digit followed by a hyphen '-'
-      if (searchString.toLowerCase().indexOf('ssw') === 0) {
-        return true;
-      }
-      var n = searchString.search('-');
-      var prefix = (n === -1) ? searchString : searchString.substring(0, n);
-
-      if (!isNaN(prefix) && prefix.length >= vm.orderNumberSize) {
-        return true;
-      }
-      return false;
     }
 
     function initSearchWithOrgFilter(org) {
@@ -447,74 +425,69 @@ require('./helpdesk.scss');
       });
     }
 
+    function sortOrdersForDisplay(orders) {
+      var sorted = [];
+      var serviceIdKeys = [];
+      _.forEach(orders, function (order) {
+        if (!(_.includes(serviceIdKeys, order.serviceId))) {
+          serviceIdKeys.push(order.serviceId);
+          sorted.push(order);
+        }
+      });
+      return sorted;
+    }
+
+    function arrowNavigation($event, index, locator) {
+      switch ($event.keyCode) {
+        // UP/DOWN arrows allow for navigating list, skipping the search icon when it is present
+        // Tabbing will follow tab order and include the search icon when it is present
+        case KeyCodes.UP:
+          if (index > 0) {
+            var previousIndex = index - 1;
+            AccessibilityService.setFocus($element, '.' + locator + '-card-' + previousIndex + ' article');
+          }
+          break;
+        case KeyCodes.DOWN:
+          var nextIndex = index + 1;
+          AccessibilityService.setFocus($element, '.' + locator + '-card-' + nextIndex + ' article');
+          break;
+      }
+    }
+
     function keyPressHandler(event) {
-      var LEFT_ARROW = 37;
-      var UP_ARROW = 38;
-      var RIGHT_ARROW = 39;
-      var DOWN_ARROW = 40;
-      var ESC = 27;
-      var ENTER = 13;
-      var S = 83;
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL)) {
+        var S = 83;
+        var activeElement = $element.find(event.target);
+        var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
+        if (inputFieldHasFocus && !(event.keyCode === KeyCodes.ESCAPE || event.keyCode === KeyCodes.ENTER)) {
+          return; // if not escape and enter, nothing to do
+        }
 
-      var activeElement = angular.element($window.document.activeElement);
-      var inputFieldHasFocus = activeElement[0]['id'] === 'searchInput';
-      if (inputFieldHasFocus && !(event.keyCode === 27 || event.keyCode === 13)) {
-        return; // if not escape and enter, nothing to do
-      }
-      var activeTabIndex = activeElement[0]['tabIndex'];
-      var newTabIndex = -1;
+        switch (event.keyCode) {
+          case KeyCodes.ESCAPE:
+            if (inputFieldHasFocus) {
+              initSearchWithoutOrgFilter();
+            } else {
+              $element.find('#searchInput').focus().select();
+            }
+            break;
 
-      switch (event.keyCode) {
-        case LEFT_ARROW:
-          newTabIndex = activeTabIndex - 1;
-          break;
-
-        case UP_ARROW:
-          newTabIndex = activeTabIndex - 10;
-          break;
-
-        case RIGHT_ARROW:
-          newTabIndex = activeTabIndex + 1;
-          break;
-
-        case DOWN_ARROW:
-          newTabIndex = activeTabIndex + 10;
-          break;
-
-        case ESC:
-          if (inputFieldHasFocus) {
-            initSearchWithoutOrgFilter();
-          } else {
-            angular.element('#searchInput').focus().select();
-            newTabIndex = -1;
-          }
-          break;
-
-        case ENTER:
-          if (!inputFieldHasFocus) {
-            activeElement.click();
-          }
-          break;
-
-        case S:
-          var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
-          // TODO: Avoid throwing console error when element not found !
-          if (orgLink) {
-            initSearchWithOrgFilter(orgLink);
-          }
-          break;
-      }
-
-      if (newTabIndex != -1) {
-        $('[tabindex=' + newTabIndex + ']').focus();
+          case S:
+            var orgLink = JSON.parse(activeElement.find('a')[0]['name']);
+            // TODO: Avoid throwing console error when element not found !
+            if (orgLink) {
+              initSearchWithOrgFilter(orgLink);
+            }
+            break;
+        }
       }
     }
 
     function setSearchFieldFocus() {
       if (HelpdeskService.checkIfMobile()) {
-        angular.element('#searchInput').blur();
+        $element.find('#searchInput').blur();
       } else {
-        angular.element('#searchInput').focus();
+        $element.find('#searchInput').focus();
       }
     }
 

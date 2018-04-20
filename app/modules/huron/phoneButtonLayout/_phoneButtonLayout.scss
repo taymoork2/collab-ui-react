@@ -1,0 +1,143 @@
+.phonebuttonlayout-panel {
+  .phonebuttonlayout-title-with-warning {
+    @include vr-spacing(pt, 0);
+  }
+
+  .phonebuttonlayout-spacing-edit {
+    @include vr-spacing(mr, 1);
+    word-break: break-word;
+  }
+
+  .phonebuttonlayout-spacing-input {
+    @include vr-spacing(pr, 0.25);
+  }
+
+  .phonebutton-description {
+    color: $gray-dark-1;
+    font-family: $brand-font-light;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    line-height: inherit;
+  }
+
+  .phonebutton-description-next-line {
+    margin-top: 1rem;
+  }
+
+  .phonebutton-label {
+    color: $gray-dark-2;
+    @include vr-spacing(pb, 0.25);
+    @include text-overflow;
+    max-width: 18rem;
+  }
+
+  .phonebutton-sequence-column {
+    text-align: center;
+    width: 2rem;
+  }
+
+  .phonebutton-sequence-title {
+    text-align: left;
+  }
+
+  .phonebutton-feature-column {
+    margin-left: 2rem;
+  }
+
+  .phonebutton-sequence-align-center {
+    align-items: center;
+  }
+
+  .phonebutton-type {
+    color: $gray-base;
+  }
+
+  .phonebutton-type-editor {
+    margin-right: 0.5rem;
+    width: 8rem;
+  }
+
+  .phonebutton-type-empty {
+    color: $gray-light-1;
+    font-size: .875rem;
+    font-style: italic;
+  }
+
+  .phonebuttonlayout-readonly-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    @include vr-spacing(pv, 0.5);
+
+    .icon {
+      color: $gray-light-1;
+
+      &:hover {
+        color: $color-primary-base;
+      }
+
+      &.icon-info {
+        padding-left: 10px;
+      }
+    }
+  }
+
+  .icon-tables {
+    cursor: move;
+    cursor: grab;
+    font-size: 1.5rem;
+
+    &.selected {
+      color: $color-blue-base;
+    }
+  }
+
+  .phonebuttonlayout-container {
+    overflow: auto;
+    width: 100%;
+  }
+
+  .phonebuttonlayout-reorder {
+    cursor: move;
+    cursor: grab;
+  }
+
+  .phonebuttonlayout-reorder-transit {
+    background-color: $brand-primary;
+    color: $brand-white;
+
+    .phonebuttonlayout-label,
+    .icon {
+      color: $brand-white;
+    }
+  }
+
+  .side-by-side-flex-elements {
+    display: flex;
+  }
+
+  .side-panel-section {
+    padding-bottom: 0;
+  }
+
+  .limit-reach-warning {
+    @include vr-spacing(pl, 0);
+
+    color: $gray-dark-2;
+  }
+
+  .cs-input__messages {
+    display: block;
+    visibility: hidden;
+  }
+
+  .error .cs-input__messages {
+    visibility: visible;
+  }
+
+  .warning .cs-input__messages {
+    visibility: visible;
+  }
+}

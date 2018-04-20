@@ -10,6 +10,7 @@
     .factory('CeSiteService', CeSiteService)
     .factory('CeCustomVariableService', CeCustomVariableService)
     .factory('CeVariableDependeciesService', CeVariableDependeciesService)
+    .factory('CeTestRestApiConfigsService', CeTestRestApiConfigsService)
     .name;
 
   /* @ngInject */
@@ -71,6 +72,16 @@
     return $resource(HuronConfig.getCesUrl() + '/customers/:customerId/customVariables/:varname/dependencies', {
       customerId: '@customerId',
       varname: '@varname',
+    }, {
+      update: {
+        method: 'PUT',
+        isArray: false,
+      },
+    });
+  }
+  function CeTestRestApiConfigsService($resource, HuronConfig) {
+    return $resource(HuronConfig.getCesUrl() + '/rest/customers/:customerId/testRestConfigs', {
+      customerId: '@customerId',
     }, {
       update: {
         method: 'PUT',

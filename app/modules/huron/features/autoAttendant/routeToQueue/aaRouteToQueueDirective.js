@@ -19,7 +19,7 @@
       },
       controller: 'AARouteToQueueCtrl',
       controllerAs: 'aaRouteToQueue',
-      templateUrl: 'modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html',
+      template: require('modules/huron/features/autoAttendant/routeToQueue/aaRouteToQueue.tpl.html'),
     };
   }
 })();

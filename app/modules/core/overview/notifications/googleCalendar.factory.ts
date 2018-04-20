@@ -1,6 +1,8 @@
+import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
+
 export class OverviewGoogleCalendarNotification {
 
-  public createNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService) {
+  public createNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService): IOverviewPageNotification {
     return {
       badgeText: 'common.new',
       badgeType: 'success',

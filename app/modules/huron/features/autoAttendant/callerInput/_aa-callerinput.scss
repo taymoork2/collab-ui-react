@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 
 .aa-call-input-message-panel {
   @extend .aa-message-panel;
@@ -36,9 +36,6 @@
 
   .aa-pm-action-select {
     @extend %aa-menu-select;
-  }
-
-  .aa-pm-action-select {
     max-width: $aa-pm-action-max-width;
   }
 
@@ -148,5 +145,16 @@
     @include vr-spacing(mb, 1);
     @include vr-spacing(ml, 0);
     @include vr-spacing(pl, 0);
+  }
+  .aa-call-input-subtextlen {
+    @include vr-spacing(mt, -0.5);
+    @include vr-spacing(pl, 0);
+    @include vr-spacing(mb, 0.75);
+    color: $gray-light-1;
+    font-style: italic;
+  }
+
+   .aa-call-input-width {
+     width: 20%;
   }
 }

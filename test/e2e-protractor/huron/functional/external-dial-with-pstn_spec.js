@@ -5,7 +5,11 @@ import { CallSettingsPage } from '../pages/callSettings.page';
 const callSettings = new CallSettingsPage();
 
 describe('Huron Functional: external-dial-with-pstn', () => {
-  const customer = huronCustomer('external-dial-with-pstn', null, null, true, 3);
+  const customerOptions = {
+    test: 'external-dial-with-pstn',
+    pstn: 3,
+  };
+  const customer = huronCustomer(customerOptions);
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -115,4 +119,3 @@ describe('Huron Functional: external-dial-with-pstn', () => {
     });
   });
 });
-

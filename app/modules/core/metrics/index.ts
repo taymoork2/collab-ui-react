@@ -18,7 +18,7 @@ export {
 export default angular.module('core.metrics', [
   require('modules/core/auth/auth'),
   require('modules/core/auth/token.service'),
-  require('modules/core/config/config'),
+  require('modules/core/config/config').default,
 ])
   .service('MetricsService', MetricsService)
   .name;

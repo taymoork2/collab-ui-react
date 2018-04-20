@@ -4,12 +4,13 @@ import { TelephonyDomainService } from '../telephonyDomain.service';
 import { TelephonyNumberDataService } from './telephonyNumberData.service';
 import { TelephonyNumberValidateService } from './telephonyNumberValidate.service';
 
+const MAX_PHONE_NUMBERS: number = 300;
 const DATA_TYPE: any = { MANUAL_ADD : 0, IMPORT_TD : 1, IMPORT_CSV : 2, SUBMITTED : 3 };
 const DNIS_TYPE: any = { NEW: 0, EXISTED: 1, NON_CCA: 2 };
 const DNIS_CHANGE_TYPE: any = { INPUT_DNIS: 0, CHANGE_TOLLTYPE: 1, CHANGE_CALLTYPE: 2 };
 
-const SUBMIT_CONFIRM_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitConfirm.tpl.html';
-const SUBMIT_MUTIDISPLAY_TEMPLATE = 'modules/gemini/telephonyDomain/details/gmTdSubmitMultipleDisplayConfirm.tpl.html';
+const SUBMIT_CONFIRM_TEMPLATE = require('./gmTdSubmitConfirm.tpl.html');
+const SUBMIT_MUTIDISPLAY_TEMPLATE = require('./gmTdSubmitMultipleDisplayConfirm.tpl.html');
 
 class GmTdNumbersCtrl implements ng.IComponentController {
 
@@ -42,8 +43,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private callTypeOptions: any[] = [];
   private defaultNumberOptions: any[] = [];
   private globalDisplayOptions: any[] = [];
-  private _countryOptions: any[] = [];
-  private countryOptions: any[] = [];
+  public _countryOptions: any[] = [];
+  public countryOptions: any[] = [];
   private isHiddenOptions: any[] = [];
   private phoneAndLabelLength: number = 0;
 
@@ -122,14 +123,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
     this.loading = true;
     this.TelephonyDomainService.getNumbers(this.customerId, this.ccaDomainId).then((res) => {
-      const resJson: any = _.get(res, 'content.data');
-      if (resJson.returnCode) {
-        this.Notification.notify(this.gemService.showError(resJson.returnCode));
-        return;
-      }
-
-      const data = resJson.body;
-      _.forEach(data, (item: any) => {
+      _.forEach(res, (item: any) => {
         if (_.toNumber(item.compareToSuperadminPhoneNumberStatus) === this.constObject.DATA_STATUS.DELETED) {
           return true;
         }
@@ -139,6 +133,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       });
 
       this.loading = false;
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -216,13 +212,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     }
 
     this.TelephonyDomainService.getAccessNumberInfo(accessNumber).then((res: any) => {
-      const returnCode = _.get(res, 'content.data.returnCode');
-      if (returnCode) {
-        this.Notification.notify(this.gemService.showError(returnCode));
-        return;
-      }
-
-      accessNumberEntity = _.get(res, 'content.data.body')[0];
+      accessNumberEntity = res[0];
       if (_.isNull(accessNumberEntity.tollType) && _.isNull(accessNumberEntity.callType)) { // new access number
         accessNumberEntity = {};
         accessNumberEntity.number = accessNumber;
@@ -247,6 +237,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
       this.resetAccessNumberAttribute(row, accessNumberEntity, type);
       this.accessNumber2EntityMapping[accessNumber] = accessNumberEntity;
+    }).catch((err) => {
+      this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
     });
   }
 
@@ -269,10 +261,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       this.$element.find('#' + row.uid + '-tollType').find('.select-toggle').focus();
     }
     if (status === DNIS_TYPE.NON_CCA) {
-      const message = this.TelephonyNumberValidateService.getValidationMessage('dnisNumberNotAvailable');
+      const label = this.TelephonyNumberValidateService.getValidationLabel('dnisNumberNotAvailable');
 
       row.entity.validation.dnisNumberFormat.invalid = true;
-      row.entity.validation.dnisNumberFormat.message = message;
+      row.entity.validation.dnisNumberFormat.ariaLabel = label;
+      row.entity.validation.dnisNumberFormat.message = this.TelephonyNumberValidateService.createTooltip(label);
       row.entity.validation.dnisNumberFormat.show = true;
 
       this.$element.find('#' + row.uid + '-dnisNumberFormat').focus();
@@ -321,6 +314,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public changeDefaultNumber(row) {
     this.resetDefaultNumberValidation(row);
     this.resetGlobalDisplayValidation(row);
+    this.resetHiddenOnClientValidation(row);
 
     const defaultNumber = row.entity.defaultNumber;
     if (defaultNumber.value === '0') {
@@ -400,8 +394,12 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     const phone = row.entity.phone;
     const rows = this.phoneNumber2RowsMapping[phone];
     _.forEach(rows, (row) => {
-      row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
+      this.resetHiddenOnClientValidation(row);
     });
+  }
+
+  private resetHiddenOnClientValidation(row) {
+    row.entity.phnNumDisplayValidation = { invalid: false, message: '', show: false };
   }
 
   public deleteNumber(row) {
@@ -409,21 +407,27 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       return;
     }
 
-    _.remove(this.gridData, (data: any) => {
-      return row.entity.rowId === data.rowId;
-    });
+    this.loading = true;
 
-    if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
-      this.deleteTelephonyNumberData.push(row);
-    } else if (row.entity.dataType === DATA_TYPE.IMPORT_TD) {
-      delete this.dnisId2ImportedNumberMapping[row.entity.dnisId];
-    }
+    this.$timeout(() => {
+      _.remove(this.gridData, (data: any) => {
+        return row.entity.rowId === data.rowId;
+      });
+
+      if (row.entity.dataType === DATA_TYPE.SUBMITTED) {
+        this.deleteTelephonyNumberData.push(row);
+      } else if (row.entity.dataType === DATA_TYPE.IMPORT_TD) {
+        _.unset(this.dnisId2ImportedNumberMapping, row.entity.dnisId);
+      }
+
+      this.loading = false;
+    }, 100);
   }
 
   public downloadTemplate() {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: 'modules/gemini/telephonyDomain/details/downloadConfirm.html',
+      template: require('modules/gemini/telephonyDomain/details/downloadConfirm.html'),
     }).result.then(() => {
       this.WindowLocation.set(this.TelephonyDomainService.getDownloadUrl());
     });
@@ -434,22 +438,36 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       type: 'default',
       template: '<gm-import-td dismiss="$dismiss()" close="$close()" class="new-field-modal"></gm-import-td>',
     }).result.then(() => {
+      let imported: number = 0;
       const data = this.gemService.getStorage('currentTelephonyDomain');
-
       const numbers = _.get(data, 'importTDNumbers', []);
-      _.forEach(numbers, (item: any) => {
-        if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
-          delete item.defaultNumber;
-          delete item.globalListDisplay;
+      this.loading = true;
 
-          item.dataType = DATA_TYPE.IMPORT_TD;
-          item.typeDisabled = true;
-          this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
-        }
+      this.$timeout(() => {
+        const totalNum = this.gridData.length + numbers.length;
+        const _numbers = totalNum > MAX_PHONE_NUMBERS ? _.slice(numbers, 0, MAX_PHONE_NUMBERS - this.gridData.length) : numbers;
 
-        this.dnisId2ImportedNumberMapping[item.dnisId] = item;
-      });
+        _.forEach(_numbers, (item: any) => {
+          if (!this.dnisId2ImportedNumberMapping[item.dnisId]) {
+            delete item.defaultNumber;
+            delete item.globalListDisplay;
 
+            item.dataType = DATA_TYPE.IMPORT_TD;
+            item.isEdit = false;
+            item.typeDisabled = true;
+            this.TelephonyNumberDataService.initNumber(item, this.telephonyDomainId);
+            imported++;
+          }
+
+          this.dnisId2ImportedNumberMapping[item.dnisId] = item;
+        });
+
+        this.$timeout(() => {
+          this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
+        }, 10);
+
+        this.loading = false;
+      }, 1000);
     });
   }
 
@@ -458,7 +476,10 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.loading = true;
 
     this.$timeout(() => {
-      _.forEach(numbers, (item) => {
+      const totalNum = this.gridData.length + numbers.length;
+      const _numbers = totalNum > MAX_PHONE_NUMBERS ? _.slice(numbers, 0, MAX_PHONE_NUMBERS - this.gridData.length) : numbers;
+
+      _.forEach(_numbers, (item) => {
         const formattedItem = _.assignIn({}, item, {
           dataType: DATA_TYPE.IMPORT_CSV,
           typeDisabled: false,
@@ -469,12 +490,12 @@ class GmTdNumbersCtrl implements ng.IComponentController {
         imported++;
       });
 
-      if (imported) {
+      this.$timeout(() => {
         this.Notification.success('gemini.tds.numbers.import.resultMsg.success', { importedNumbersCount: imported });
-      }
+      }, 10);
 
       this.loading = false;
-    }, 10);
+    }, 100);
   }
 
   public onCancel(): void {
@@ -643,7 +664,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private postAll(result) {
     this.$modal.open({
       type: 'dialog',
-      templateUrl: result === 1 ? SUBMIT_CONFIRM_TEMPLATE : SUBMIT_MUTIDISPLAY_TEMPLATE,
+      template: result === 1 ? SUBMIT_CONFIRM_TEMPLATE : SUBMIT_MUTIDISPLAY_TEMPLATE,
     }).result.then(() => {
       this.confirmPostAll();
     });
@@ -660,11 +681,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     this.$scope.$emit('detailWatch', { isEdit: false });
     this.submitLoading = true;
     this.TelephonyDomainService.postTelephonyDomain(this.customerId, this.submitTelephonyAllData).then((res: any) => {
-      const returnCode = _.get(res, 'content.data.code');
-      const returnMessage = _.get(res, 'content.data.message', '');
+      const returnCode = _.get(res, 'code');
+      const returnMessage = _.get(res, 'message', '');
 
-      if (returnCode <= 5001) {
-        this.Notification.success('gemini.tds.submit.returnCode.' + returnCode);
+      if (returnCode === '5000') {
+        this.Notification.success('gemini.tds.submit.success');
         this.$state.sidepanel.dismiss();
         this.$scope.$emit('tdUpdated');
       } else {
@@ -703,7 +724,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
     });
 
     _.forEach(deletedRows, (data: any) => {
-      delete this.dnisId2ImportedNumberMapping[data.dnisId];
+      _.unset(this.dnisId2ImportedNumberMapping, data.dnisId);
     });
   }
 
@@ -728,7 +749,7 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   public getGridHeight() {
     return {
       height: (this.gridData.length * 43 + 48) + 'px',
-      'min-height': 'calc(100vh - 405px)',
+      'min-height': 'calc(100vh - 365px)',
     };
   }
 
@@ -736,5 +757,5 @@ class GmTdNumbersCtrl implements ng.IComponentController {
 
 export class GmTdNumbersComponent implements ng.IComponentOptions {
   public controller = GmTdNumbersCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdNumbers.tpl.html');
 }

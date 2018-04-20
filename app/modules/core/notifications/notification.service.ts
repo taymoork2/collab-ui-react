@@ -1,10 +1,30 @@
-import { MetricsService, OperationalKey } from 'modules/core/metrics';
-import { WindowService } from 'modules/core/window';
+import { Config } from 'modules/core/config/config';
+import { DiagnosticKey, MetricsService, OperationalKey } from 'modules/core/metrics';
+import { WindowEventService } from 'modules/core/window';
+import * as HttpStatus from 'http-status-codes';
 
 enum NotificationType {
   ERROR = 'error',
   SUCCESS = 'success',
   WARNING = 'warning',
+}
+
+enum CustomHttpStatus {
+  UNKNOWN = 0,
+}
+
+enum XhrStatus {
+  COMPLETE = 'complete',
+  ERROR = 'error',
+  TIMEOUT = 'timeout',
+  ABORT = 'abort',
+}
+
+export interface INotificationOptions {
+  errorKey?: string;
+  errorParams?: Object;
+  allowHtml?: boolean;
+  feedbackInstructions?: boolean;
 }
 
 export class Notification {
@@ -13,12 +33,6 @@ export class Notification {
   private static readonly HTML_MESSAGES = 'htmlMessages';
   private static readonly NO_TIMEOUT = 0;
   private static readonly DEFAULT_TIMEOUT = 3000;
-  private static readonly HTTP_STATUS = {
-    NOT_FOUND: 404,
-    REJECTED: -1,
-    UNAUTHORIZED: 401,
-    UNKNOWN: 0,
-  };
   private failureTimeout: number;
   private successTimeout: number;
   private preventToasters = false;
@@ -28,10 +42,11 @@ export class Notification {
   constructor(
     private $log: ng.ILogService,
     private $timeout: ng.ITimeoutService,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private MetricsService: MetricsService,
-    private WindowService: WindowService,
-    private Config,
+    private WindowEventService: WindowEventService,
+    private Config: Config,
     private toaster,
   ) {
     this.initTimeouts();
@@ -50,29 +65,65 @@ export class Notification {
     this.notify(this.$translate.instant(messageKey, messageParams), NotificationType.ERROR, this.getTitle(titleKey), allowHtml);
   }
 
-  public errorWithTrackingId(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
-    let errorMsg = this.getErrorMessage(errorKey, errorParams);
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object);
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, options: INotificationOptions);
+  public errorWithTrackingId(response: ng.IHttpResponse<any>, arg2?, arg3?): void {
+
+    let errorKey: string = '';
+    let errorParams: Object = {};
+    let allowHtml: boolean = false;
+    let feedbackInstructions: boolean = false;
+
+    if (typeof arg2 === 'string') {
+      errorKey = arg2;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('errorKey')) {
+      errorKey = arg2.errorKey;
+    }
+    if (!_.isUndefined(arg3)) {
+      errorParams = arg3;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('errorParams')) {
+      errorParams = arg2.errorParams;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('allowHtml')) {
+      allowHtml = arg2.allowHtml;
+    }
+    if (!_.isUndefined(arg2) && arg2.hasOwnProperty('feedbackInstructions')) {
+      feedbackInstructions = arg2.feedbackInstructions;
+      allowHtml = true; // The feedback instructions contain html, so we need to override its value
+    }
+    let errorMsg: string = this.getErrorMessage(errorKey, errorParams);
     errorMsg = this.addResponseMessage(errorMsg, response, false);
-    this.notifyHttpErrorResponse(errorMsg, response);
+
+    if (feedbackInstructions) {
+      errorMsg = `${errorMsg}<br />${this.$translate.instant('common.ifErrorRemains')}`;
+    }
+    this.notifyHttpErrorResponse(errorMsg, response, allowHtml);
   }
 
-  public processErrorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): string {
+  public processErrorResponse(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): string {
     const errorMsg = this.getErrorMessage(errorKey, errorParams);
     return this.addResponseMessage(errorMsg, response, true);
   }
 
-  public errorResponse(response: ng.IHttpPromiseCallbackArg<any>, errorKey?: string, errorParams?: Object): void {
+  public errorResponse(response: ng.IHttpResponse<any>, errorKey?: string, errorParams?: Object): void {
     const errorMsg = this.processErrorResponse(response, errorKey, errorParams);
     this.notifyHttpErrorResponse(errorMsg, response);
   }
 
-  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): void {
-    if (!this.isCancelledResponse(response)) {
+  private notifyHttpErrorResponse(errorMsg: string, response: ng.IHttpResponse<any>, allowHtml: boolean = false): void {
+    if (!this.isAbortResponse(response)) {
+      const headers = _.get(response, 'headers');
       this.popToast({
         notifications: errorMsg,
         type: NotificationType.ERROR,
-        allowHtml: false,
+        allowHtml: allowHtml,
         httpStatus: _.get(response, 'status'),
+        requestMethod: _.get(response, 'config.method'),
+        requestUrl: _.get(response, 'config.url'),
+        trackingId: _.isFunction(headers) ? headers('TrackingID') : undefined,
+        xhrStatus: _.get(response, 'xhrStatus'),
       });
     }
   }
@@ -92,8 +143,12 @@ export class Notification {
     title?: string,
     allowHtml: boolean,
     httpStatus?: number,
+    requestMethod?: string,
+    requestUrl?: string,
+    trackingId?: string,
+    xhrStatus?: string,
   }): void {
-    const { notifications, type, title, allowHtml, httpStatus } = options;
+    const { notifications, type, title, allowHtml, httpStatus, requestMethod, requestUrl, trackingId, xhrStatus } = options;
     if (this.preventToasters) {
       this.$log.warn('Deliberately prevented a notification:', notifications);
       return;
@@ -105,7 +160,7 @@ export class Notification {
     if (!notificationMessages.length) {
       return;
     }
-    const closeHtml = `<button type="button" class="close toast-close-button"><span class="sr-only">${this.$translate.instant('common.close')}</span></button>`;
+    const closeHtml = `<button type="button" class="close toast-close-button" arial-label="${this.$translate.instant('common.close')}"></button>`;
     const directiveData = {};
     _.set(directiveData, allowHtml ? Notification.HTML_MESSAGES : Notification.MESSAGES , notificationMessages);
 
@@ -114,7 +169,21 @@ export class Notification {
     this.MetricsService.trackOperationalMetric(OperationalKey.NOTIFICATION, {
       action_type: notificationType,
       http_status: _.isUndefined(httpStatus) ? undefined : _.toString(httpStatus),
+      state: xhrStatus,
     });
+
+    if (notificationType === NotificationType.ERROR) {
+      this.MetricsService.trackDiagnosticMetric(DiagnosticKey.NOTIFICATION, {
+        currentState: _.get(this.$state, 'current.name'),
+        httpStatus,
+        notificationMessage: _.toString(notificationMessages),
+        notificationType,
+        requestMethod,
+        requestUrl,
+        trackingId,
+        xhrStatus,
+      });
+    }
 
     this.toaster.pop({
       title: title,
@@ -133,20 +202,31 @@ export class Notification {
     this.$timeout(() => this.preventToasters = false, 1000);
   }
 
-  private addResponseMessage(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>, useResponseData: boolean = false): string {
+  private addResponseMessage(errorMsg: string, response: ng.IHttpResponse<any>, useResponseData: boolean = false): string {
     const status = _.get<number>(response, 'status');
-    if (this.isCancelledResponse(response)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusCancelled');
-    } else if (this.isOfflineStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusOffline');
-    } else if (this.isRejectedStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusRejected');
+    let responseErrorKey: string | undefined;
+    if (this.isAbortResponse(response)) {
+      responseErrorKey = 'errors.statusCancelled';
+    } else if (this.isOfflineStatus(response)) {
+      responseErrorKey = 'errors.statusOffline';
+    } else if (this.isTimeoutResponse(response)) {
+      responseErrorKey = 'errors.statusTimeout';
+    } else if (this.isErrorResponse(response)) {
+      responseErrorKey = 'errors.statusRejected';
     } else if (this.isNotFoundStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.status404');
+      responseErrorKey = 'errors.status404';
     } else if (this.isUnauthorizedStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnauthorized');
+      responseErrorKey = 'errors.statusUnauthorized';
+    } else if (this.isUnavailableStatus(status)) {
+      responseErrorKey = 'errors.status503';
+    } else if (this.isThrottledStatus(status)) {
+      responseErrorKey = 'errors.status429';
     } else if (this.isUnknownStatus(status)) {
-      errorMsg = this.addTranslateKeyMessage(errorMsg, 'errors.statusUnknown');
+      responseErrorKey = 'errors.statusUnknown';
+    }
+
+    if (responseErrorKey) {
+      errorMsg = this.addTranslateKeyMessage(errorMsg, responseErrorKey);
     } else if (useResponseData) {
       errorMsg = this.addMessageFromResponseData(errorMsg, response);
     }
@@ -158,30 +238,43 @@ export class Notification {
     return `${this.addTrailingPeriod(message)} ${this.$translate.instant(translateKey)}`;
   }
 
-  private isCancelledResponse(response: ng.IHttpPromiseCallbackArg<any>): boolean {
-    return this.isRejectedStatus(_.get<number>(response, 'status')) && _.get(response, 'config.timeout.$$state.status') > 0;
-  }
-  private isOfflineStatus(status: number): boolean {
-    return this.isNetworkOffline && this.isRejectedStatus(status);
+  private isAbortResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.ABORT;
   }
 
-  private isRejectedStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.REJECTED;
+  private isTimeoutResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.TIMEOUT;
+  }
+
+  private isOfflineStatus(response: ng.IHttpResponse<any>): boolean {
+    return this.isNetworkOffline && this.isErrorResponse(response);
+  }
+
+  private isErrorResponse(response: ng.IHttpResponse<any>): boolean {
+    return _.get(response, 'xhrStatus') === XhrStatus.ERROR;
   }
 
   private isNotFoundStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.NOT_FOUND;
+    return status === HttpStatus.NOT_FOUND;
   }
 
   private isUnknownStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.UNKNOWN;
+    return status === CustomHttpStatus.UNKNOWN;
   }
 
   private isUnauthorizedStatus(status: number): boolean {
-    return status === Notification.HTTP_STATUS.UNAUTHORIZED;
+    return status === HttpStatus.UNAUTHORIZED;
   }
 
-  private addMessageFromResponseData(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
+  private isUnavailableStatus(status: number): boolean {
+    return status === HttpStatus.SERVICE_UNAVAILABLE;
+  }
+
+  private isThrottledStatus(status: number): boolean {
+    return status === HttpStatus.TOO_MANY_REQUESTS;
+  }
+
+  private addMessageFromResponseData(errorMsg: string, response: ng.IHttpResponse<any>): string {
     let error: string;
     let errors: any[] | string;
     let responseMessage: string | undefined;
@@ -229,7 +322,15 @@ export class Notification {
       .value();
   }
 
-  private addTrackingId(errorMsg: string, response: ng.IHttpPromiseCallbackArg<any>): string {
+  private addTrackingId(errorMsg: string, response: ng.IHttpResponse<any>): string {
+    const trackingId = this.getTrackingId(response);
+    if (_.isString(trackingId) && trackingId.length) {
+      errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
+    }
+    return errorMsg;
+  }
+
+  public getTrackingId(response: ng.IHttpResponse<any>): string {
     const headers = _.get(response, 'headers');
     let trackingId = _.isFunction(headers) && headers('TrackingID');  // exposed via CORS headers
     if (!trackingId) {
@@ -241,10 +342,7 @@ export class Notification {
     if (!trackingId) {
       trackingId = _.get(response, 'config.headers.TrackingID');  // fallback for when request could not be made
     }
-    if (_.isString(trackingId) && trackingId.length) {
-      errorMsg = `${this.addTrailingPeriod(errorMsg)} TrackingID: ${trackingId}`;
-    }
-    return errorMsg;
+    return trackingId;
   }
 
   private addTrailingPeriod(message?: string): string {
@@ -281,7 +379,7 @@ export class Notification {
   }
 
   private initOfflineListeners(): void {
-    this.WindowService.registerEventListener('offline', this.setNetworkOffline.bind(this));
-    this.WindowService.registerEventListener('online', this.setNetworkOnline.bind(this));
+    this.WindowEventService.registerEventListener('offline', this.setNetworkOffline.bind(this));
+    this.WindowEventService.registerEventListener('online', this.setNetworkOnline.bind(this));
   }
 }

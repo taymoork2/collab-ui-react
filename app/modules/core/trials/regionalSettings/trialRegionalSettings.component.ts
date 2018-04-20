@@ -3,7 +3,7 @@ import { HuronCompassService } from 'modules/huron/compass/compass.service';
 
 export class TrialRegionalSettingsComponent implements ng.IComponentOptions {
   public controller = TrialRegionalSettingsCtrl;
-  public templateUrl = 'modules/core/trials/regionalSettings/regionalSettings.html';
+  public template = require('./trialRegionalSettings.html');
   public bindings = {
     isFtsw: '<',
     callTrialEnabled: '<',
@@ -42,7 +42,13 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     private $q: ng.IQService,
     private HuronCompassService: HuronCompassService,
     private TrialPstnService,
-  ) { }
+  ) {
+    this.notApplicable = {
+      id: 'N/A',
+      name: this.$translate.instant('serviceSetupModal.notApplicable'),
+      domain: '',
+    };
+  }
 
   public $onInit(): void {
     this.placeholder = this.$translate.instant('serviceSetupModal.defaultCountryPlaceholder');
@@ -53,7 +59,7 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
     };
 
     this.$q.all(promises).then((data) => {
-      this.countryList = data['countryList'];
+      this.countryList = [...data['countryList'], ...this.countryList];
       this.countryCode = data['countryCode'];
     }).then(() => {
       if (!this.newTrial) {
@@ -66,26 +72,25 @@ class TrialRegionalSettingsCtrl implements ng.IComponentController {
         }
       }
     });
-    this.notApplicable = {
-      id: 'N/A',
-      name: this.$translate.instant('serviceSetupModal.notApplicable'),
-      domain: '',
-    };
+  }
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { callTrialEnabled } = changes;
+
+    if (callTrialEnabled) {
+      if (callTrialEnabled.currentValue) {
+        if (_.includes(this.countryList, this.notApplicable)) {
+          this.countryList = _.dropRight(this.countryList);
+        }
+      } else if (!_.includes(this.countryList, this.notApplicable)) {
+        this.countryList = _.unionWith(this.countryList, [this.notApplicable], _.isEqual);
+      }
+    }
   }
 
   public $postLink(): void {
     if (!this.isFtsw) {
       this.$element.addClass('cs-form__section');
-    }
-  }
-
-  set callTrialEnabled(value: boolean) {
-    if (value) {
-      if (_.includes(this.countryList, this.notApplicable)) {
-        this.countryList = _.dropRight(this.countryList);
-      }
-    } else if (!_.includes(this.countryList, this.notApplicable)) {
-      this.countryList = _.unionWith(this.countryList, [this.notApplicable], _.isEqual);
     }
   }
 

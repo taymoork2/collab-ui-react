@@ -1,3 +1,4 @@
+import { Config } from 'modules/core/config/config';
 import { Notification } from 'modules/core/notifications';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -48,13 +49,14 @@ export class SipDomainSettingController {
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private $modal,
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private Config,
+    private Config: Config,
     private FeatureToggleService,
     private Notification: Notification,
     private Orgservice,
@@ -135,6 +137,10 @@ export class SipDomainSettingController {
     }
   }
 
+  public resetFocus() {
+    this.$timeout(() => { this.$element.find('#editSubdomainLink').focus(); });
+  }
+
   public validateSipDomain() {
     if (this._inputValue.length > 40) {
       this.isError = true;
@@ -188,7 +194,7 @@ export class SipDomainSettingController {
           this.errorMsg = this.$translate.instant('firstTimeWizard.setSipDomainErrorMessageInvalidDomain');
           this.isError = true;
         } else {
-          this.Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
         }
         this.isButtonDisabled = false;
       })
@@ -201,29 +207,29 @@ export class SipDomainSettingController {
     const params = {
       basicInfo: true,
     };
-    this.Orgservice.getOrg((data, status) => {
+    this.Orgservice.getOrg(_.noop, false, params).then((response) => {
       let displayName = '';
       const sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
-      if (status === 200) {
-        if (data.orgSettings.sipCloudDomain) {
-          displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
-          this.isDisabled = true;
-          this.isButtonDisabled = true;
-          this.isSSAReserved = true;
-          this.checkSSAReservation();
-        }
-      } else {
-        this.Notification.error('firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+      const sipCloudDomain = _.get<string>(response.data, 'orgSettings.sipCloudDomain');
+      if (sipCloudDomain) {
+        displayName = sipCloudDomain.replace(sparkDomainStr, '');
+        this.isDisabled = true;
+        this.isButtonDisabled = true;
+        this.isSSAReserved = true;
+        this.checkSSAReservation();
       }
       this._inputValue = displayName;
       this.currentDisplayName = displayName;
-    }, false, params);
+    }).catch(response => {
+      this.Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
+    });
   }
 
   // Used in New Feature
   public editSubdomain() {
     if (!this.isCsc) {
       this.toggleSipForm();
+      this.$timeout(() => { this.$element.find('#sipDomainInput').focus(); });
     }
   }
 
@@ -237,7 +243,7 @@ export class SipDomainSettingController {
   }
 
   public openSipHelpWiki() {
-    this.$window.open('https://help.webex.com/docs/DOC-7763', '_blank');
+    this.$window.open('https://collaborationhelp.cisco.com/article/en-us/DOC-7763', '_blank');
   }
 
   public toggleSipForm(): void {
@@ -313,7 +319,7 @@ export class SipDomainSettingController {
   private updateSubdomain(): void {
     this.saving = true;
     this.$modal.open({
-      templateUrl: 'modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html',
+      template: require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html'),
       type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
@@ -365,26 +371,25 @@ export class SipDomainSettingController {
       basicInfo: true,
       disableCache: true,
     };
-    this.Orgservice.getOrg((data, status) => {
+    this.Orgservice.getOrg(_.noop, false, params).then((response) => {
       let displayName = '';
       const sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
-      if (status === 200 && _.get(data, 'orgSettings.sipCloudDomain', false)) {
-        displayName = data.orgSettings.sipCloudDomain.replace(sparkDomainStr, '');
+      const sipCloudDomain = _.get<string>(response.data, 'orgSettings.sipCloudDomain');
+      if (sipCloudDomain) {
+        displayName = sipCloudDomain.replace(sparkDomainStr, '');
         this.isSSAReserved = true;
         this.$scope.$emit(this.DISMISS_DISABLE, false);
-      } else if (status !== 200) {
-        this.errorResponse({
-          status: status,
-        });
-        this.$scope.$emit(this.DISMISS_DISABLE, true);
       }
       this._inputValue = displayName;
       this.currentDisplayName = displayName;
-
+    }).catch(response => {
+      this.errorResponse(response);
+      this.$scope.$emit(this.DISMISS_DISABLE, true);
+    }).finally(() => {
       if (this.Config.isE2E()) {
         this.$scope.$emit(this.DISMISS_DISABLE, false);
       }
-    }, false, params);
+    });
   }
 
 }

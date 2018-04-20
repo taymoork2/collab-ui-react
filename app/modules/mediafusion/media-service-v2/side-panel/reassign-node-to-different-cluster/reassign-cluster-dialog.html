@@ -1,8 +1,5 @@
 <div class="modal-header">
-  <button class="close" id="convertModalClose" ng-click="$dismiss()" type="button">
-    <span class="sr-only" translate="common.close">
-    </span>
-  </button>
+  <button class="close" id="convertModalClose" ng-click="$dismiss()" type="button" aria-label="{{::'common.close' | translate}}"></button>
   <h5 class="modal-title" translate="mediaFusion.reassign.moveNode">
 </div>
 <div class="modal-body">
@@ -23,7 +20,7 @@
     </span>
   </button>
   <button class="btn pull-right" id="convertCancelButton" ng-click="$dismiss()" style="margin-right: 10px">
-    <span translate="mediaFusion.clusters.deregisterCancel">
+    <span translate="common.cancel">
     </span>
   </button>
 </div>

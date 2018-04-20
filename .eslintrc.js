@@ -2,10 +2,10 @@ module.exports = {
   // we have to use the legacy flavor because we use ES5
   extends: [
     'airbnb-base/legacy',
-    'plugin:atlas-ui/recommended',
+    'plugin:@atlas/atlas-ui/recommended',
   ],
   plugins: [
-    'atlas-ui',
+    '@atlas/eslint-plugin-atlas-ui',
     'lodash',
     'promise',
   ],
@@ -22,6 +22,7 @@ module.exports = {
     'consistent-return': 0,
     'eqeqeq': 0,
     'func-names': 0,
+    'function-paren-newline': 0,
     'global-require': 0,
     'linebreak-style': [2, process.platform === 'win32' ? 'windows' : 'unix'],
     'max-len': 0,
@@ -29,6 +30,7 @@ module.exports = {
     'no-console': 0,
     'no-continue': 0,
     'no-else-return': 0,
+    'no-extra-boolean-cast': 0,
     'no-lonely-if': 0,
     'no-multi-assign': 0,
     'no-plusplus': 0,

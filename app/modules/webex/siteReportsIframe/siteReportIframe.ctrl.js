@@ -15,6 +15,7 @@
     $window,
     Log,
     Authinfo,
+    FeatureToggleService,
     TokenService,
     WebExUtilsFact
   ) {
@@ -74,6 +75,28 @@
       'trustIframeUrl=' + $scope.trustIframeUrl;
     Log.debug(_this.logMsg);
 
+    // $scope.classicLink = getWebexClassicLink();
+    getWebexClassicLink();
+
+    function getWebexClassicLink() {
+      FeatureToggleService.webexMetricsGetStatus().then(function (isWebexMetricsOn) {
+        var classicLink = 'reports.webex';
+        if (isWebexMetricsOn) {
+          classicLink = 'reports.webex-metrics.classic';
+        }
+        classicLink += '({siteUrl:' + siteUrl + '})';
+        $scope.classicLink = classicLink;
+        return classicLink;
+      });
+      /*var isClassicOn = FeatureToggleService.webexMetricsGetStatus();
+      var classicLink = 'reports.webex-metrics.classic';
+      if (isClassicOn) {
+        classicLink = 'reports.webex';
+      }
+      classicLink += '({siteUrl:' + siteUrl + '})';
+      return classicLink;*/
+    }
+
     $rootScope.lastSite = siteUrl;
     $log.log('last site ' + $rootScope.lastSite);
 
@@ -91,11 +114,9 @@
       0
     );
 
-    $window.iframeLoaded = function (iframeId) {
+    $scope.iframeLoaded = function (currScope) {
       var funcName = 'iframeLoaded()';
       var logMsg = funcName;
-
-      var currScope = angular.element(iframeId).scope();
       var phase = currScope.$$phase;
 
       logMsg = funcName + '\n' +

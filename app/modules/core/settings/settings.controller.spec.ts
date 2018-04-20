@@ -6,7 +6,6 @@ describe('SettingsCtrl', function () {
     this.initModules(testModule);
     this.injectDependencies('$rootScope', '$scope', '$stateParams', '$controller', '$q', '$timeout', 'Authinfo', 'FeatureToggleService', 'ProPackService', 'Orgservice');
 
-    spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.reject());
     spyOn(this.Authinfo, 'isPartner').and.returnValue(false);
     spyOn(this.Authinfo, 'isCustomerAdmin').and.returnValue(false);
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
@@ -15,8 +14,8 @@ describe('SettingsCtrl', function () {
 
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'atlasPinSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasBlockExternalCommunicationSettingsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled');
   });
 
@@ -42,9 +41,10 @@ describe('SettingsCtrl', function () {
       expect(this.controller.support).toBeTruthy();
 
       // these do not exist for Partner admins
-      expect(this.controller.branding).toBeTruthy();
+      expect(this.controller.brandingWrapper).toBeTruthy(); //wrapper until toggle is removed
       expect(this.controller.security).toBeFalsy();
       expect(this.controller.authentication).toBeFalsy();
+      expect(this.controller.email).toBeFalsy();
       expect(this.controller.domains).toBeFalsy();
       expect(this.controller.privacy).toBeFalsy();
       expect(this.controller.sipDomain).toBeFalsy();
@@ -62,12 +62,13 @@ describe('SettingsCtrl', function () {
     });
 
     it('should create the ctrl and add the direct customer setting sections', function () {
-      expect(this.controller.branding).toBeTruthy();
+      expect(this.controller.brandingWrapper).toBeTruthy(); //wrapper until toggle is removed
       expect(this.controller.support).toBeTruthy();
 
       // these should exist for non-Partner admin
       expect(this.controller.security).toBeTruthy();
       expect(this.controller.authentication).toBeTruthy();
+      expect(this.controller.email).toBeTruthy();
       expect(this.controller.domains).toBeTruthy();
       expect(this.controller.privacy).toBeTruthy();
       expect(this.controller.sipDomain).toBeTruthy();
@@ -86,7 +87,7 @@ describe('SettingsCtrl', function () {
 
     describe('with allowCustomerLogos set to true', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: true,
@@ -101,8 +102,9 @@ describe('SettingsCtrl', function () {
         expect(this.controller.domains).toBeTruthy();
         expect(this.controller.sipDomain).toBeTruthy();
         expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.email).toBeTruthy();
         expect(this.controller.support).toBeTruthy();
-        expect(this.controller.branding).toBeTruthy();
+        expect(this.controller.brandingWrapper).toBeTruthy(); //wrapper until toggle is removed
         expect(this.controller.privacy).toBeTruthy();
         expect(this.controller.retention).toBeTruthy();
         expect(this.controller.externalCommunication).toBeTruthy();
@@ -111,7 +113,7 @@ describe('SettingsCtrl', function () {
 
     describe('with allowCustomerLogos set to false', function () {
       beforeEach(function () {
-        this.Orgservice.getOrg.and.returnValue(this.$q.resolve({
+        spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({
           data: {
             orgSettings: {
               allowCustomerLogos: false,
@@ -126,6 +128,7 @@ describe('SettingsCtrl', function () {
         expect(this.controller.domains).toBeTruthy();
         expect(this.controller.sipDomain).toBeTruthy();
         expect(this.controller.authentication).toBeTruthy();
+        expect(this.controller.email).toBeTruthy();
         expect(this.controller.support).toBeTruthy();
         expect(this.controller.branding).toBeFalsy();
         expect(this.controller.privacy).toBeTruthy();

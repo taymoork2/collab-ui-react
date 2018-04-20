@@ -23,14 +23,16 @@ export class CallUserPage {
         title: element(by.css('[translate="directoryNumberPanel.directNumbers"]')),
         number: element(by.css('[ng-click="$ctrl.onDirectoryNumberClick()"]')),
       },
+      addNewLine: element(by.css('a.as-button[translate="usersPreview.addNewLinePreview"]')),
       features: {
         title: element(by.css('[translate="telephonyPreview.features"]')),
         singleNumberReach: element(by.cssContainingText('.feature-name', 'Single Number Reach')),
         speedDials: element(by.cssContainingText('.feature-name', 'Speed Dials')),
         dialingRestrictions: element(by.cssContainingText('.feature-name', 'Dialing Restrictions')),
+        phoneButtonLayout: element(by.cssContainingText('.feature-name', 'Phone Button Layout & Speed Dials')),
       },
     };
-    this.callSubMenu = element.all(by.css('[ui-sref="user-overview.communication"]')).get(2);
+    this.callSubMenu = element.all(by.css('a[ui-sref="user-overview.communication"]')).get(0);
     this.dialingRestrictions = {
       nationaDialing: {
         title: element(by.cssContainingText('.section-title-row', 'National Dialing')),

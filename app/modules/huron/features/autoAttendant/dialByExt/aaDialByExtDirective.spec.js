@@ -32,6 +32,7 @@ describe('Directive: aaDialByExt', function () {
     $scope.index = '0';
     $scope.keyIndex = '0';
     $scope.menuId = 'menu1';
+    $scope.routingPrefixOptions = '1002';
 
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
@@ -53,7 +54,7 @@ describe('Directive: aaDialByExt', function () {
   });
 
   it('replaces the element with the appropriate content', function () {
-    element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0'></aa-dial-by-ext>")($rootScope);
+    element = $compile("<aa-dial-by-ext aa-schedule='openHours' aa-menu-id='menu1' aa-index='0' aa-key-index='0' aa-routing-prefix-options='1002';></aa-dial-by-ext>")($rootScope);
     $rootScope.$digest();
     expect(element.html()).toContain('aaDialByExtCtrl');
   });

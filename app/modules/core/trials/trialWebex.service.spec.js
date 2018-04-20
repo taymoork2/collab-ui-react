@@ -43,6 +43,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(true);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -57,6 +58,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -70,6 +72,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DOMAIN_INVALID);
       });
       this.$httpBackend.flush();
     });
@@ -83,6 +86,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -96,6 +100,7 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -109,6 +114,21 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
+      });
+      this.$httpBackend.flush();
+    });
+
+    it('should fail to validate with duplicateSite error due to 431205: "Site brand name exists in DNS." error code', function () {
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + '/orders/actions/shallowvalidation/invoke').respond({
+        properties: [{
+          isValid: 'false',
+          errorCode: '431205',
+        }],
+      });
+      this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
+        expect(response.isValid).toBe(false);
+        expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
       });
       this.$httpBackend.flush();
     });
@@ -167,22 +187,26 @@ describe('Service: Webex Trial Service', function () {
     });
   });
 
-  xdescribe('provision a webex site', function () {
+  describe('provision a webex site', function () {
     it('should successfully send WebEx site for provisioning', function () {
       var subscriptionId = 'some-test-id-here';
       var payload = {
         provisionOrder: true,
         serviceOrderUUID: 'some-service-uuid-here',
         webexProvisioningParams: {
-          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'MC', quantity: 4 }],
+          webexSiteDetailsList: [{
+            siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'MC', quantity: 4,
+          }],
           audioPartnerName: 'someaudiopartnerhere@gmail.com',
         },
       };
       var response = { status: 200, message: 'Updated Provisioning parameters' };
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(response);
-      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).then(function (response) {
+      this.TrialWebexService.provisionSubscription(payload, subscriptionId).then(function (response) {
         expect(response.status).toBe(200);
       });
+      var payloadHasSendCustomerEmailParam = _.has(payload, 'sendCustomerEmail');
+      expect(payloadHasSendCustomerEmailParam).toBe(true);
       this.$httpBackend.flush();
     });
 
@@ -192,15 +216,17 @@ describe('Service: Webex Trial Service', function () {
         provisionOrder: true,
         serviceOrderUUID: 'some-service-uuid-here',
         webexProvisioningParams: {
-          webexSiteDetailsList: [{ siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'someInvalidCenterTypeHere', quantity: 4 }],
+          webexSiteDetailsList: [{
+            siteUrl: 'somenewsiteurl@webex.com', timezone: '7', centerType: 'someInvalidCenterTypeHere', quantity: 4,
+          }],
           audioPartnerName: 'someaudiopartnerhere@gmail.com',
         },
       };
-      var errorResponse = { status: 400, message: 'Invalid Request' };
-      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(errorResponse);
-      this.TrialWebexService.provisionWebexSites(payload, subscriptionId).catch(function (response) {
-        expect(response.status).toBe(400);
-      });
+      this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(400);
+      this.TrialWebexService.provisionSubscription(payload, subscriptionId).then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(400);
+        });
       this.$httpBackend.flush();
     });
   });

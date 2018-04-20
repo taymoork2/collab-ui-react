@@ -122,7 +122,7 @@ export class AutoAnswerCtrl implements ng.IComponentController {
 
 export class AutoAnswerComponent implements ng.IComponentOptions {
   public controller = AutoAnswerCtrl;
-  public templateUrl = 'modules/huron/autoAnswer/autoAnswer.html';
+  public template = require('modules/huron/autoAnswer/autoAnswer.html');
   public bindings = {
     autoAnswer: '<',
     onChangeFn: '&',

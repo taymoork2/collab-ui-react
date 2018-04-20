@@ -14,10 +14,11 @@
         index: '=aaIndex',
         fromSubMenu: '@aaFromSubMenu',
         menuKeyIndex: '@aaKeyIndex',
+        routingPrefixOptions: '=aaRoutingPrefixOptions',
       },
       controller: 'AADialByExtCtrl',
       controllerAs: 'aaDialByExtCtrl',
-      templateUrl: 'modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html',
+      template: require('modules/huron/features/autoAttendant/dialByExt/aaDialByExt.tpl.html'),
     };
   }
 })();

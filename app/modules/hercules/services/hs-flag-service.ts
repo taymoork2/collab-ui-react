@@ -66,6 +66,15 @@ export class HybridServicesFlagService {
   }
 }
 
-angular
-  .module('Hercules')
-  .service('HybridServicesFlagService', HybridServicesFlagService);
+import * as ngResourceModuleName from 'angular-resource';
+import * as UrlConfigModuleName from 'modules/core/config/urlConfig';
+import * as AuthinfoModuleName from 'modules/core/scripts/services/authinfo';
+
+export default angular
+  .module('hercules.hybrid-services-flag-service', [
+    ngResourceModuleName,
+    AuthinfoModuleName,
+    UrlConfigModuleName,
+  ])
+  .service('HybridServicesFlagService', HybridServicesFlagService)
+  .name;

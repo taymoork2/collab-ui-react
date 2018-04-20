@@ -4,6 +4,8 @@
   angular.module('uc.autoattendant')
     .controller('AAMessageTypeCtrl', AAMessageTypeCtrl);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function AAMessageTypeCtrl($scope, $translate, AADynaAnnounceService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, AASessionVariableService, AAModelService/*, $window*/) {
     var vm = this;
@@ -34,6 +36,7 @@
     var uniqueId;
     var holdActionDesc;
     var holdActionValue;
+    var holdDeleteUrl;
     var dependentCeSessionVariablesList = [];
     var dynamicVariablesList = [];
     var ui;
@@ -79,16 +82,13 @@
 
     vm.MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024;
 
-    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + '"></aa-insertion-element>';
+    vm.addElement = '<aa-insertion-element element-text="DynamicText" read-as="ReadAs" element-id="elementId" id="Id" aa-schedule="' + $scope.schedule + '" aa-index="' + $scope.index + ' " contenteditable="false""></aa-insertion-element>';
 
     //////////////////////////////////////////////////////
 
     $scope.$on('CE Updated', function () {
       getDynamicVariables();
       refreshVarSelects();
-      if (_.isEmpty(vm.deletedSessionVariablesList)) {
-        vm.fullWarningMsgValue = false;
-      }
     });
 
     $scope.$on('CIVarNameChanged', function () {
@@ -171,6 +171,7 @@
     $scope.$on('CE Saved', function () {
       holdActionDesc = '';
       holdActionValue = '';
+      holdDeleteUrl = '';
     });
 
     function setMessageOptions() {
@@ -178,35 +179,41 @@
 
       var saveDesc = {};
       var saveValue = {};
+      var saveDeleteUrl = {};
 
       AACommonService.setSayMessageStatus(true);
 
       saveDesc = action.description;
       saveValue = action.value;
+      saveDeleteUrl = _.get(action, 'deleteUrl', '');
 
       action.description = holdActionDesc;
       action.value = holdActionValue;
+      action.deleteUrl = holdDeleteUrl;
 
       vm.messageInput = action.value;
 
       holdActionValue = saveValue;
       holdActionDesc = saveDesc;
+      holdDeleteUrl = saveDeleteUrl;
 
       //for holding dynamicList in case of retrieval needed when toggle b/w say and play
       if (isDynamicToggle() && vm.messageOption.value === vm.messageOptions[actionType.PLAY].value) {
         vm.dynamicValues = [];
         holdDynaList = action.dynamicList;
-        if (_.isUndefined(action.dynamicList)) {
-          holdDynaList = [{
-            say: {
-              value: '',
-              voice: '',
-            },
-            isDynamic: false,
-            htmlModel: '',
-          }];
-        }
       }
+
+      if (_.isUndefined(holdDynaList) || _.isEmpty(holdDynaList)) {
+        holdDynaList = [{
+          say: {
+            value: '',
+            voice: '',
+          },
+          isDynamic: false,
+          htmlModel: '',
+        }];
+      }
+
       // name could be say, play or runActionsOnInput
       // make sure it is say or play but don't touch runActions
 
@@ -226,6 +233,7 @@
           } else {
             action.name = vm.messageOptions[actionType.SAY].action;
           }
+          delete action.deleteUrl;
         }
       }
 
@@ -240,14 +248,18 @@
     function createDynamicValues(action) {
       _.forEach(action.dynamicList, function (opt) {
         var model = {};
+        var sayValue = '';
+        if (!_.isUndefined(opt.say) && !_.isEmpty(opt.say.value)) {
+          sayValue = opt.say.value;
+        }
         if (!opt.isDynamic && _.isEmpty(opt.htmlModel)) {
           model = {
-            model: opt.say.value,
-            html: opt.say.value,
+            model: sayValue,
+            html: sayValue,
           };
         } else {
           model = {
-            model: opt.say.value,
+            model: sayValue,
             html: decodeURIComponent(opt.htmlModel),
           };
         }
@@ -264,7 +276,7 @@
       AACommonService.setSayMessageStatus(true);
     }
 
-    function saveDynamicUi() {
+    function saveDynamicUi($event) {
       var action = vm.actionEntry;
       var range = AADynaAnnounceService.getRange();
       finalList = [];
@@ -281,6 +293,15 @@
             htmlModel: '',
           });
           action.dynamicList = finalList;
+        }
+        //disable warning message at the time of deleting dynamic variable using backspace button
+        if ($event.keyCode === KeyCodes.BACKSPACE) {
+          _.forEach(finalList, function (dynamicList) {
+            if (dynamicList.isDynamic) {
+              getDynamicVariables();
+              refreshVarSelects();
+            }
+          });
         }
         AACommonService.setSayMessageStatus(true);
       }
@@ -322,15 +343,38 @@
           } else {
             attributes = node.attributes;
           }
-          var ele = '<aa-insertion-element element-text="' + attributes[0].value + '" read-as="' + attributes[1].value + '" element-id="' + attributes[2].value + '"></aa-insertion-element>';
+          var nodeEleText = _.get(attributes, 'element-text');
+          var nodeReadAs = _.get(attributes, 'read-as');
+          var nodeId = _.get(attributes, 'element-id');
+          if (!_.isUndefined(nodeEleText) && !_.isUndefined(nodeReadAs) && !_.isUndefined(nodeId)) {
+            var ele = '<aa-insertion-element element-text="' + nodeEleText.value + '" read-as="' + nodeReadAs.value + '" element-id="' + nodeId.value + '"id="' + nodeId.value + '" contenteditable="false""></aa-insertion-element>';
+            opt = {
+              say: {
+                value: nodeEleText.value,
+                voice: '',
+                as: nodeReadAs.value,
+              },
+              isDynamic: true,
+              htmlModel: encodeURIComponent(ele),
+            };
+          } else {
+            opt = {
+              say: {
+                value: '',
+                voice: '',
+              },
+              isDynamic: false,
+              htmlModel: '',
+            };
+          }
+        } else if (node.nodeName === 'P') {
           opt = {
             say: {
-              value: attributes[0].value,
+              value: node.innerText,
               voice: '',
-              as: attributes[1].value,
             },
-            isDynamic: true,
-            htmlModel: encodeURIComponent(ele),
+            isDynamic: false,
+            htmlModel: '',
           };
         }
         finalList.push(opt);
@@ -395,6 +439,7 @@
 
       holdActionDesc = '';
       holdActionValue = '';
+      holdDeleteUrl = '';
 
       switch (vm.messageType) {
         case messageType.MENUHEADER:

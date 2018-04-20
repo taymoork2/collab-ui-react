@@ -28,6 +28,7 @@ export class LineOverviewService {
   private callForwardBusyProperties: string[] = ['internalDestination', 'internalVoicemailEnabled', 'externalDestination', 'externalVoicemailEnabled', 'ringDurationTimer'];
   private lineOverviewDataCopy: LineOverviewData;
   private errors: any[] = [];
+  private MAX_LABEL_LENGTH: number = 30;
 
   /* @ngInject */
   constructor(
@@ -57,6 +58,7 @@ export class LineOverviewService {
       getAutoAnswerSupportedDeviceAndMember: this.getAutoAnswerSupportedDeviceAndMember(consumerType, ownerId, numberId),
       getUserServices: this.HuronUserService.getUserServices(ownerId),
       getLineMediaOnHold: this.getLineMediaOnHold(consumerType, numberId),
+      getUserV2LineLabel: this.HuronUserService.getUserV2LineLabel(ownerId),
     }).then(response => {
       if (this.errors.length > 0) {
         this.Notification.notify(this.errors, 'error');
@@ -71,6 +73,11 @@ export class LineOverviewService {
       lineOverviewData.services = _.get<string[]>(response, 'getUserServices');
       lineOverviewData.lineMoh = _.get<string>(response, 'getLineMediaOnHold');
       lineOverviewData.voicemailEnabled = this.HuronVoicemailService.isEnabledForUser(lineOverviewData.services);
+      if (lineOverviewData.line.uuid === undefined) {
+        if (lineOverviewData.line.label != null) {
+          lineOverviewData.line.label.value = _.get<string>(response, 'getUserV2LineLabel');
+        }
+      }
       this.lineOverviewDataCopy = this.cloneLineOverviewData(lineOverviewData);
       return lineOverviewData;
     });
@@ -111,6 +118,18 @@ export class LineOverviewService {
         .then(() => lineOverviewData.callForward = data.callForward)
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then<any>(() => this.createSharedLineMembers(consumerType, ownerId, lineOverviewData, newSharedLineMembers))
+        .then(() => this.rejectAndNotifyPossibleErrors())
+        // The following needs to come after createSharedLineMembers
+        .then(() => {
+          if (data.line.label != null) {
+            let tempLineLabel: string;
+            tempLineLabel = lineOverviewData.line.internal + ' - ' + _.get(this, 'lineOverviewDataCopy.line.label.value');
+            if (_.isEqual(data.line.label.value, tempLineLabel.substr(0, this.MAX_LABEL_LENGTH))) {
+              data.line.label = null;
+            }
+            return this.updateLine(consumerType, ownerId, lineOverviewData.line.uuid, data.line);
+          }
+        })
         .then(() => this.rejectAndNotifyPossibleErrors())
         .then(() => this.get(consumerType, ownerId, lineOverviewData.line.uuid));
     } else { // update
@@ -210,7 +229,7 @@ export class LineOverviewService {
     });
   }
 
-  private updateLine(consumerType: LineConsumerType, ownerId: string, numberId: string, data: Line): ng.IPromise<void> {
+  private updateLine(consumerType: LineConsumerType, ownerId: string, numberId: string = '', data: Line): ng.IPromise<void> {
     return this.LineService.updateLine(consumerType, ownerId, numberId, data)
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'directoryNumberPanel.updateLineError'));
@@ -254,7 +273,7 @@ export class LineOverviewService {
         }
       })
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
       });
   }
 

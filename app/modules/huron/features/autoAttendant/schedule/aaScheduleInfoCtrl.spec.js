@@ -23,7 +23,7 @@ describe('Controller: AAScheduleInfoCtrl', function () {
     }],
     label: '',
   };
-  var dtStr = '04/11/2016';
+  var dtStr = '2016-04-11';
   var defaultRange = getJSONFixture('huron/json/autoAttendant/defaultDays.json');
   var hours = _.cloneDeep(defaultRange);
   var hours1 = _.cloneDeep(defaultRange);

@@ -1,7 +1,12 @@
 import pstnWizard from './index';
+import { PstnModel } from '../pstn.model';
+import { ContractStatus } from '../pstn.const';
+
+let pstnModel: PstnModel;
 
 describe('Component: PstnWizardComponent', () => {
-
+  let $componentController: ng.IComponentControllerService;
+  let ctrl;
   const swivelCarrierDetails = [{
     uuid: '4f5f5bf7-0034-4ade-8b1c-db63777f062c',
     name: 'INTELEPEER-SWIVEL',
@@ -25,14 +30,22 @@ describe('Component: PstnWizardComponent', () => {
       'PstnModel',
       'PstnService',
       'PstnWizardService',
-      'PstnServiceAddressService',
       'HuronCountryService',
       'FeatureToggleService',
       '$rootScope',
     );
-
+    pstnModel = this.PstnModel;
     installPromiseMatchers();
   });
+
+
+  beforeEach(inject((_$componentController_) => {
+    $componentController = _$componentController_;
+  }));
+
+  function initController(): ng.IComponentControllerService {
+    return $componentController('ucPstnPaidWizard', {}, {});
+  }
 
   function initComponent() {
     spyOn(this.PstnService, 'listResellerCarriersV2');
@@ -93,8 +106,8 @@ describe('Component: PstnWizardComponent', () => {
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should make i387FeatureToggle as true', function () {
-      expect(this.controller.i387FeatureToggle).toBe(true);
+    it('should make ftI387PrivateTrunking as true', function () {
+      expect(this.controller.ftI387PrivateTrunking).toBe(true);
     });
 
     it('should go to the step 8 if the toggle is enabled', function () {
@@ -270,8 +283,8 @@ describe('Component: PstnWizardComponent', () => {
       this.$httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should make i387FeatureToggle as false if feature toggle is not set', function () {
-      expect(this.controller.i387FeatureToggle).toBe(false);
+    it('should make ftI387PrivateTrunking as false if feature toggle is not set', function () {
+      expect(this.controller.ftI387PrivateTrunking).toBe(false);
     });
 
     it('should go to the step 5 if the toggle is not enabled', function () {
@@ -289,6 +302,29 @@ describe('Component: PstnWizardComponent', () => {
       });
       this.$rootScope.$digest();
       expect(promise).toBeResolved();
+    });
+  });
+
+  describe('showContractIncomplete', () => {
+    beforeEach(initComponent);
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    });
+
+    it('should show the contract incomplete message', function () {
+      pstnModel.setContractStatus(ContractStatus.UnSigned);
+      ctrl = initController();
+      ctrl.$onInit();
+      this.$scope.$apply();
+      expect(ctrl.showContractUnSigned()).toBe(true);
+    });
+
+    it('should NOT show the contract incomplete message', function () {
+      pstnModel.setContractStatus(ContractStatus.Signed);
+      ctrl = initController();
+      ctrl.$onInit();
+      this.$scope.$apply();
+      expect(ctrl.showContractUnSigned()).toBe(false);
     });
   });
 });

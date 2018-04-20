@@ -32,9 +32,13 @@
           <li ng-repeat="option in $ctrl.getOptions()">
             <span
               ng-class="$ctrl.getClassesForOption(option)"
+              tabindex="0"
               tooltip="{{$ctrl.getToolTip(option)}}"
               tooltip-placement="bottom"
-            >{{option}}</span>
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{$ctrl.getToolTip(option)}}">
+              {{option}}
+            </span>
             <span ng-if="$ctrl.isDefault(option)" class="badge" translate="common.default"></span>
           </li>
         </ul>

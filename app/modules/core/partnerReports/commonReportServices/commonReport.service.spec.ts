@@ -17,7 +17,7 @@ describe('Service: Common Report Service', () => {
     this.cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
     this.customers = this.customerData.customerOptions;
     this.filter = _.cloneDeep(this.defaults.timeFilter);
-    this.today = moment().format(this.defaults.format);
+    this.today = new Date().toISOString();
     this.message = 'dummyMessage';
 
     this.queryOne = _.cloneDeep(this.defaults.intervalQuery);

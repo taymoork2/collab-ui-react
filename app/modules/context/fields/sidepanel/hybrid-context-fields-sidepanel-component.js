@@ -2,6 +2,7 @@ require('./_fields-sidepanel.scss');
 
 var DataTypeDefinition = require('../dataTypeDefinition');
 var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
+var AdminAuthorizationStatus = require('modules/context/services/context-authorization-service').AdminAuthorizationStatus;
 
 (function () {
   'use strict';
@@ -9,12 +10,12 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
   angular.module('Context')
     .component('contextFieldsSidepanel', {
       controller: ContextFieldsSidepanelCtrl,
-      templateUrl: 'modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html',
+      template: require('modules/context/fields/sidepanel/hybrid-context-fields-sidepanel.html'),
       bindings: {
+        adminAuthorizationStatus: '<',
         field: '<',
         process: '<',
         callback: '<',
-        hasContextExpandedTypesToggle: '<',
       },
     });
 
@@ -79,15 +80,15 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
     };
 
     vm.isEditable = function () {
-      return !vm.publiclyAccessible;
+      return (!vm.publiclyAccessible && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.isDeletable = function () {
-      return !vm.publiclyAccessible && !vm.inUse;
+      return (!vm.publiclyAccessible && !vm.inUse && (vm.adminAuthorizationStatus === AdminAuthorizationStatus.AUTHORIZED));
     };
 
     vm.isDataTypeWithOptions = function () {
-      return vm.hasContextExpandedTypesToggle ? _.get(vm, 'field.dataTypeDefinition.type') === 'enum' : false;
+      return _.get(vm, 'field.dataTypeDefinition.type') === 'enum';
     };
 
     vm.getOptionSidepanelOptions = function () {
@@ -118,7 +119,7 @@ var EnumDataTypeUtils = DataTypeDefinition.EnumDataTypeUtils;
           Notification.error('context.dictionary.fieldPage.fieldDeleteFailure');
           Analytics.trackEvent(Analytics.sections.CONTEXT.eventNames.CONTEXT_DELETE_FIELD_FAILURE);
         });
-      });
+      }).catch(_.noop);
     };
 
     vm.$onInit = function () {

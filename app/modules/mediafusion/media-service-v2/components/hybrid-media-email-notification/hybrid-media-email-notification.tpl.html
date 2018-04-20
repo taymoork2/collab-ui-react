@@ -1,0 +1,14 @@
+<setting-section setting="$ctrl.generalSectionTexts">
+    <div class="sub-section">
+      <h5 class="sub-section__label" translate="hercules.settings.emailNotificationsHeading"></h5>
+      <p class="sub-section__description" translate="hercules.settings.emailAdministratorNotification"></p>
+      <tags-input add-on-blur="true"
+                  on-tag-added="$ctrl.processConfig()"
+                  on-tag-removed="$ctrl.processConfig()"
+                  placeholder={{$ctrl.localizedAddEmailWatermark}}
+                  ng-model="$ctrl.emailSubscribers"
+                  type="email"
+                  allowed-tags-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
+      </tags-input>
+    </div>
+</setting-section>

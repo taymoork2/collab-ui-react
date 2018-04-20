@@ -2,7 +2,7 @@
   {
     "groupId": "bbcd1234-abcd-abcd-abcddef123456",
     "name": "Test1",
-    "extension": "5010",
+    "extension": { "number": "5010" },
     "memberCount": 2,
     "featureName": "huronFeatureDetails.pg",
     "filterValue": "PG"
@@ -10,7 +10,7 @@
   {
     "groupId": "abcd1234-abcd-abcd-abcddef123456",
     "name": "Test2",
-    "extension": "5011",
+    "extension": { "number": "5011" },
     "memberCount": 3,
     "featureName": "huronFeatureDetails.pg",
     "filterValue": "PG"

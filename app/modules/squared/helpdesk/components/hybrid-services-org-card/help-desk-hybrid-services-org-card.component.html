@@ -1,0 +1,19 @@
+<cs-card class="cs-card--large header-bar gray-light" ng-show="$ctrl.hybridServicesCard.entitled && !$ctrl.isConsumerOrg">
+  <article>
+    <header class="align-center" ng-class="$ctrl.loadingHSData ? 'wait' : 'pointer'" ng-click="$ctrl.openHybridServicesModal()">
+      <div class="overview-header">
+        <i class="icon icon-circle-data"></i>{{'helpdesk.hybridServices' | translate}}
+      </div>
+    </header>
+    <section>
+      <h5 translate="common.status"></h5>
+      <div ng-repeat="hybridService in $ctrl.hybridServicesCard.services | orderBy:'serviceId':false:$ctrl.hybridServicesComparator | filter: { setup : true }">
+        <span>
+          <cs-statusindicator ng-model="hybridService.cssClass"></cs-statusindicator>
+        </span>
+        <span translate="{{'overview.cards.hybrid.services.' + hybridService.serviceId}}"></span>
+      </div>
+    </section>
+    <footer></footer>
+  </article>
+</cs-card>

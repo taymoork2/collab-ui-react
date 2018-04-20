@@ -67,7 +67,7 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     UserListService = _UserListService_;
 
     spyOn(Notification, 'success');
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorWithTrackingId').and.callThrough();
     spyOn(UserListService, 'listPartnersAsPromise').and.returnValue($q.resolve(fakePartnerInfoData));
     $httpBackend.whenGET(/organization\/trials$/).respond(fakeTrialPeriodData);
 
@@ -166,12 +166,13 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
     describe('sendRequest():', function () {
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners fails', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.reject('error'));
-
-        controller.sendRequest().then(function () {
-          expect(Notification.errorResponse).toHaveBeenCalled();
-          expect(Notification.errorResponse.calls.count()).toEqual(1);
-          expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
-        });
+        controller.sendRequest().then(fail)
+          .catch(function (response) {
+            expect(response).toBe('error');
+            expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+            expect(Notification.errorWithTrackingId.calls.count()).toEqual(1);
+            expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
+          });
       });
 
       it('should set requestResult to TOTAL_FAILURE when the request to notify partners has no notifications', function () {
@@ -183,8 +184,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
-          expect(Notification.error).toHaveBeenCalled();
-          expect(Notification.error.calls.count()).toEqual(1);
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+          expect(Notification.errorWithTrackingId.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
         });
       });
@@ -204,8 +205,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
-          expect(Notification.error).toHaveBeenCalled();
-          expect(Notification.error.calls.count()).toEqual(1);
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+          expect(Notification.errorWithTrackingId.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.TOTAL_FAILURE);
         });
       });
@@ -225,8 +226,8 @@ describe('Controller: TrialNoticeBannerCtrl:', function () {
         spyOn(TrialService, 'notifyPartnerTrialExt').and.returnValue($q.resolve(fakePartnerNotifyResponse));
 
         controller.sendRequest().then(function () {
-          expect(Notification.error).toHaveBeenCalled();
-          expect(Notification.error.calls.count()).toEqual(1);
+          expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+          expect(Notification.errorWithTrackingId.calls.count()).toEqual(1);
           expect(controller.requestResult).toBe(controller.requestResultEnum.PARTIAL_FAILURE);
         });
       });

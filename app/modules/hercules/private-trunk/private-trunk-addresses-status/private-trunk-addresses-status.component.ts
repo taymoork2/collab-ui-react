@@ -28,7 +28,7 @@ class PrivateTrunkAddressesStatusComponentCtrl implements ng.IComponentControlle
 
 export class PrivateTrunkAddressesStatusComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkAddressesStatusComponentCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-addresses-status/private-trunk-addresses-status.component.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-addresses-status/private-trunk-addresses-status.component.html');
   public bindings = {
     destinationList: '<',
   };

@@ -5,18 +5,18 @@
       filter="true"
       options="$ctrl.options"
       ng-model="$ctrl.selected"
-      singular="Country/Region"
-      plural="Countries/Regions"
+      singular="Country and Region"
+      plural="Countries and Regions"
       placeholder="$ctrl.selectPlaceholder"
     ></cs-select>
   </div>
 
   <div class="ui-mt medium-12">
     <div class="gemini-select-country">
-
       <div class="pull-left upload-file-box" ng-if="!$ctrl.isCsvValid">
-        <span class="btn" translate="gemini.cbgs.importCsv"></span>
+        <span class="btn" translate="gemini.cbgs.importCsv" ng-class="{'disabled' : !$ctrl.enableBtn}"></span>
         <input
+          ng-if="$ctrl.enableBtn"
           class="country-upload-input"
           id="upload"
           name="upload"
@@ -32,33 +32,36 @@
       </div>
       <div ng-if="$ctrl.isCsvValid" class="pull-left">
         <span title="{{$ctrl.model.fullFileName}}">{{$ctrl.model.fileName}}</span>
-        <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none">
+        <button type="button" ng-click="$ctrl.onResetFile()" class="btn--none" aria-label="{{::'common.close' | translate}}">
           <small class="icon icon-exit"></small>
         </button>
       </div>
 
-      <a class="btn btn--none" ng-click="$ctrl.onDownloadTemplate()"><small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small></a>
-
+      <a href class="btn btn--none" ng-click="$ctrl.onDownloadTemplate()">
+        <small translate="gemini.cbgs.downloadCsv" class="color-primary-base"></small>
+      </a>
     </div>
   </div>
 
-  <div ng-if="$ctrl.selected.length > 0">
+  <div ng-if="$ctrl.selected.length">
     <h4 class="ui-mt">
-      <small>{{::'gemini.cbgs.selectedCountry' | translate}}</small>
+      <small translate="gemini.cbgs.selectedCountry"></small>
     </h4>
   </div>
 
-  <div ng-if="$ctrl.selected.length == 0">
+  <div ng-if="!$ctrl.selected.length">
     <h3 class="ui-mt">
-      <small>{{::'gemini.cbgs.request.countryDisplayNull' | translate}}</small>
+      <small translate="gemini.cbgs.request.countryDisplayNull"></small>
     </h3>
-    <h5><small>{{::'gemini.cbgs.requestTip' | translate}}</small></h5>
+    <h5><small translate="gemini.cbgs.requestTip"></small></h5>
   </div>
 
   <div class="tag-container edit-country ui-mt">
       <span class="tag tag-country" ng-repeat="val in $ctrl.selected">
         <span>{{val.label}}</span>
-        <i class="icon icon-close" ng-click="$ctrl.onDelSelected(val.label)"></i>
+        <a href ng-click="$ctrl.onDelSelected(val.label)" aria-label="{{::'common.close' | translate}}">
+          <i class="icon icon-close"></i>
+        </a>
       </span>
   </div>
 </div>

@@ -42,6 +42,16 @@ describe('CsdmConverterSpec', function () {
     expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
   });
 
+  it('should set isOnline when status is CONNECTED_WITH_ISSUES', function () {
+    var arr = [{
+      status: {
+        connectionStatus: 'CONNECTED_WITH_ISSUES',
+      },
+    }];
+    expect(converter.convertCloudberryDevices(arr)[0].isOnline).toBeTruthy();
+    expect(converter.convertHuronDevices(arr)[0].isOnline).toBeTruthy();
+  });
+
   it('should not set isOnline when status isnt CONNECTED', function () {
     var arr = [{
       status: {
@@ -175,7 +185,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.OnlineWithIssues');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('1');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('warning');
     });
@@ -186,7 +196,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'CONNECTED',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Online');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.CONNECTED');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('5');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('success');
     });
@@ -197,7 +207,7 @@ describe('CsdmConverterSpec', function () {
           connectionStatus: 'UNKNOWN',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.Offline');
+      expect(converter.convertCloudberryDevices(arr)[0].state.readableState).toBe('CsdmStatus.connectionStatus.DISCONNECTED');
       expect(converter.convertCloudberryDevices(arr)[0].state.priority).toBe('2');
       expect(converter.convertCloudberryDevices(arr)[0].cssColorClass).toBe('danger');
     });
@@ -285,14 +295,14 @@ describe('CsdmConverterSpec', function () {
       expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
-    it('has does not have issues when status.level is not ok and device is OFFLINE', function () {
+    it('has issues when status.level is not ok and device is OFFLINE', function () {
       var arr = [{
         status: {
           level: 'not_ok',
           connectionStatus: 'OFFLINE',
         },
       }];
-      expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeFalsy();
+      expect(converter.convertCloudberryDevices(arr)[0].hasIssues).toBeTruthy();
     });
 
     it('has does not have issues when status.level is ok', function () {

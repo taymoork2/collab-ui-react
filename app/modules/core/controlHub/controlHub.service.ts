@@ -1,34 +1,31 @@
 export class ControlHubService {
-  private image: string;
-  private collapsed: { value: boolean, image: string };
+  private image = '/images/control-hub-logo.svg';
+  private collapsed = {
+    value: false,
+    image: '/images/spark-logo.svg',
+  };
+  private proPackIcon = 'icon-propack-solid-outline';
 
   /* @ngInject */
   constructor(
-    private FeatureToggleService,
     private tabConfigControlHub,
+    private ProPackService,
     ) {
-    this.image =  '/images/control-hub-logo.svg';
-    this.collapsed = {
-      value: false,
-      image: '/images/spark-logo.svg',
-    };
   }
 
-  public getControlHubEnabled(): ng.IPromise<boolean> {
-    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlas2017NameChange).then(result => {
-      return result;
-    });
-  }
-
-  public getImage() {
+  public getImage(): string {
     return this.image;
   }
 
-  public getCollapsed() {
+  public getIcon(): string|undefined {
+    return this.ProPackService.showProBadge() ? this.proPackIcon : undefined;
+  }
+
+  public getCollapsed(): { value: boolean, image: string } {
     return this.collapsed;
   }
 
-  public getTabs() {
+  public getTabs(): any[] {
     return this.tabConfigControlHub;
   }
 }

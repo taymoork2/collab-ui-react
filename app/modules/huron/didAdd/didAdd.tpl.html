@@ -1,7 +1,7 @@
 <div class="add-did-numbers-modal" id="didAddModal">
     <div class="add-numbers modal-content" ng-show="didAdd.addNumbers">
         <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
+            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess" aria-label="{{::'common.close' | translate}}"></button>
             <h3 class="modal-title" translate="didManageModal.title"></h3>
         </div>
         <div class="modal-body">
@@ -18,7 +18,7 @@
     </div>
     <div class="adding-numbers modal-content" ng-show="didAdd.processing">
         <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
+            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess" aria-label="{{::'common.close' | translate}}"></button>
             <h3 class="modal-title" translate="didManageModal.title"></h3>
         </div>
         <div class="modal-body">
@@ -30,7 +30,7 @@
     </div>
     <div class="add-success modal-content" ng-show="didAdd.addSuccess">
         <div class="modal-header">
-            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess"><span class="sr-only" translate="common.close"></span></button>
+            <button type="button" class="close" ng-click="$dismiss()" ng-show="didAdd.addNumbers || didAdd.addSuccess" aria-label="{{::'common.close' | translate}}"></button>
             <h3 class="modal-title" translate="didManageModal.title"></h3>
         </div>
         <div class="modal-body">

@@ -6,7 +6,7 @@
     .controller('HDSRedirectAddResourceController', HDSRedirectAddResourceController);
 
   /* @ngInject */
-  function HDSRedirectAddResourceController($modal, $modalInstance, $q, $state, $translate, $window, FeatureToggleService, firstTimeSetup, HDSAddResourceCommonService, ProPackService, Notification) {
+  function HDSRedirectAddResourceController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, HDSAddResourceCommonService, ProPackService, Notification) {
     var vm = this;
     vm.clusterList = [];
     var states = {
@@ -32,14 +32,11 @@
     vm.currentState = vm.states.INIT;
     vm.getAppTitle = getAppTitle;
 
-    vm.nameChangeEnabled = undefined;
     var proPackEnabled = undefined;
     $q.all({
       proPackEnabled: ProPackService.hasProPackPurchased(),
-      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;
-      vm.nameChangeEnabled = toggles.nameChangeEnabled;
     });
 
     HDSAddResourceCommonService.updateClusterLists().then(function (clusterList) {
@@ -67,7 +64,7 @@
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hds/add-resource/confirm-setup-cancel-dialog.html',
+        template: require('modules/hds/add-resource/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function () {

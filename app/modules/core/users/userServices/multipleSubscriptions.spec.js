@@ -17,7 +17,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
     Authinfo = _Authinfo_;
 
     getLicensesUsage = getJSONFixture('core/json/organizations/Orgservice.json').getLicensesUsage;
-    spyOn(Orgservice, 'getLicensesUsage').and.returnValue($q.resolve());
+    spyOn(Orgservice, 'getInternallyManagedSubscriptions').and.returnValue($q.resolve());
     spyOn(Authinfo, 'getLicenses').and.returnValue('anything');
   }));
 
@@ -37,13 +37,13 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
   describe('MultipleSubscriptionsCtrl controller', function () {
     describe('for single subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.singleSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.singleSub));
         initController();
       });
 
       it('should verify that there is one subscriptionId', function () {
         expect('getLicenses').toBeDefined();
-        expect(Orgservice.getLicensesUsage).toHaveBeenCalled();
+        expect(Orgservice.getInternallyManagedSubscriptions).toHaveBeenCalled();
         expect(controller.oneBilling).toEqual(true);
         expect(controller.subscriptionOptions).toEqual(['srvcid-integ-uitest-1a']);
         expect(controller.showLicenses('srvcid-integ-uitest-1a', false)).toEqual(true);
@@ -52,7 +52,7 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
 
     describe('for multiple subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.multiSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.multiSub));
         initController();
       });
 
@@ -62,17 +62,32 @@ describe('MultipleSubscriptionsCtrl: Ctrl', function () {
         expect(controller.selectedSubscription).toEqual('svcid-integ-sunnyway-1a');
         expect(controller.showLicenses('svcid-integ-sunnyway-1a', false)).toEqual(true);
       });
+
+      it('should only show service section if there are licenses for the selected subscription', function () {
+        var services = _.cloneDeep(getJSONFixture('core/json/authInfo/messagingServices.json')).singleLicense;
+        expect(controller.showSection(services)).toBe(false);
+
+        controller.selectedSubscription = services[0].license.billingServiceId;
+        expect(controller.showSection(services)).toBe(true);
+      });
     });
 
     describe('for trial subscriptions', function () {
       beforeEach(function () {
-        Orgservice.getLicensesUsage.and.returnValue($q.resolve(getLicensesUsage.trialSub));
+        Orgservice.getInternallyManagedSubscriptions.and.returnValue($q.resolve(getLicensesUsage.trialSub));
         initController();
       });
 
       it('should verify there is a trial subscription', function () {
+        controller.selectedSubscription = controller.subscriptionOptions[controller.subscriptionOptions.length - 1];
+        $scope.$apply();
         expect(controller.oneBilling).toEqual(false);
         expect(controller.showLicenses('', true)).toEqual(true);
+      });
+
+      it('should place trial subscription at the bottom of the subscription selection dropdown', function () {
+        var trialOption = 'Trial';
+        expect(controller.subscriptionOptions[controller.subscriptionOptions.length - 1]).toEqual(trialOption);
       });
     });
 

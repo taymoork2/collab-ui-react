@@ -1,6 +1,8 @@
 'use strict';
 
 import provisioningModule from './../index';
+import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
+import { Status } from './../provisioning.service';
 
 describe('Controller: ProvisioningDetailsController', function () {
   const order_detail = getJSONFixture('squared/json/order_detail.json');
@@ -9,6 +11,8 @@ describe('Controller: ProvisioningDetailsController', function () {
 
   function initDependencySpies() {
     spyOn(this.ProvisioningService, 'getOrder').and.returnValue(this.$q.resolve(order_detail));
+    spyOn(this.$rootScope, '$broadcast').and.callThrough();
+    spyOn(this.ProvisioningService, 'updateOrderStatus').and.returnValue(this.$q.resolve(orders));
   }
 
   function init() {
@@ -16,10 +20,10 @@ describe('Controller: ProvisioningDetailsController', function () {
     this.injectDependencies(
       '$controller',
       '$q',
+      '$rootScope',
       '$scope',
       '$state',
       '$stateParams',
-      '$templateCache',
       '$timeout',
       'ProvisioningService');
     initDependencySpies.apply(this);
@@ -59,6 +63,19 @@ describe('Controller: ProvisioningDetailsController', function () {
       expect(result.cmr.length).toBe(1);
       expect(result.audio.length).toBe(1);
       expect(result.storage.length).toBe(0);
+    });
+  });
+
+  describe('change order status', () => {
+    it('moveTo should update the order status and emit the event', function () {
+      initController.call(this, 0);
+      const order = this.controller.order;
+      expect(order.status).toEqual(Status.PENDING);
+      this.controller.moveTo(order, Status.COMPLETED);
+      this.$scope.$digest();
+      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalledWith(order, Status.COMPLETED);
+      expect(order.status).toEqual(Status.COMPLETED);
+      expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(STATUS_UPDATE_EVENT_NAME, order);
     });
   });
 });

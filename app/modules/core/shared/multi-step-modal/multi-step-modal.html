@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title" translate="{{$ctrl.l10nTitle}}"></h3>
+</div>
+
+<div class="modal-body" scroll-indicator="{{::$ctrl.showScrollIndicator}}" ng-transclude>
+</div>
+
+<div class="modal-footer" ng-if="::$ctrl.showFooter()">
+  <div ng-if="$ctrl.l10nWarningFooter"
+    class="modal-footer__warning"
+    >
+    <h6 translate="{{$ctrl.l10nWarningFooter}}"></h6>
+  </div>
+  <button type="button" class="btn cancel"
+    ng-if="$ctrl.cancel && !$ctrl.cancelRemoved"
+    ng-disabled="$ctrl.cancelDisabled"
+    ng-click="$ctrl.cancel()"
+    ><span translate="common.cancel"></span>
+  </button>
+  <button type="button" class="btn back"
+    ng-if="$ctrl.back && !$ctrl.backRemoved"
+    ng-disabled="$ctrl.backDisabled"
+    ng-click="$ctrl.back()"
+    ><span translate="common.back"></span>
+  </button>
+  <button type="button" class="btn btn--primary next"
+    ng-if="$ctrl.next && !$ctrl.nextRemoved"
+    ng-disabled="$ctrl.nextDisabled"
+    ng-click="$ctrl.next()"
+    cs-btn
+    loading="$ctrl.nextLoading"
+    ><span translate="common.next"></span>
+  </button>
+  <button type="button" class="btn btn--primary save"
+    ng-if="$ctrl.save && !$ctrl.saveRemoved"
+    ng-disabled="$ctrl.saveDisabled"
+    ng-click="$ctrl.save()"
+    cs-btn
+    loading="$ctrl.saveLoading"
+    ><span translate="common.save"></span>
+  </button>
+  <button type="button" class="btn btn--primary custom-finish"
+    ng-if="$ctrl.customFinish && !$ctrl.customFinishRemoved"
+    ng-disabled="$ctrl.customFinishDisabled"
+    ng-click="$ctrl.customFinish()"
+    cs-btn
+    loading="$ctrl.customFinishLoading"
+    ><span translate="{{::$ctrl.customFinishL10nLabel}}"></span>
+  </button>
+</div>

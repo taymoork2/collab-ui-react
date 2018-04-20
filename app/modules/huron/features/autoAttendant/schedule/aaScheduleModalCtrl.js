@@ -6,13 +6,13 @@
     .controller('AAScheduleModalCtrl', AAScheduleModalCtrl);
 
   /* @ngInject */
-
   function AAScheduleModalCtrl($modal, $modalInstance, $translate, Analytics, AAMetricNameService, sectionToToggle, AANotificationService, AACalendarService,
     AAModelService, AAUiModelService, AutoAttendantCeService, AutoAttendantCeInfoModelService, AAICalService, AACommonService,
     $timeout) {
     /*jshint validthis: true */
     var vm = this;
 
+    var firstTimeZoneChanged = true;
     vm.calendar = null;
 
     vm.save = save;
@@ -77,6 +77,7 @@
           vm.openhours[index].endtime = '05:00 PM';
         }
       });
+      resetFocus();
     }
 
     //check each hours form that exist in the DOM for validity
@@ -195,6 +196,7 @@
             holiday.endtime = '05:00 PM';
           }
         });
+        resetFocus();
       } else {
         vm.forceCheckHoliday();
       }
@@ -233,6 +235,12 @@
       vm.isDeleted = true;
       resetHolidayBehavior();
       vm.holidaysForm.$setDirty();
+    }
+
+    function resetFocus() {
+      $timeout(function () {
+        $('.icon.icon-trash.aa-schedule-trash:visible').last().focus();
+      });
     }
 
     function isOpenHoursAfterCloseHours(startTime, endTime) {
@@ -381,13 +389,14 @@
         // copy value from modal to the ui model
         vm.ui.timeZone = vm.timeZone;
 
-        if (_.isUndefined(vm.aaModel.aaRecord.assignedTimeZone)) {
+        if (firstTimeZoneChanged) {
           // log event for first-time timezone change in a schedule
           var type = 'change';
           Analytics.trackEvent(AAMetricNameService.TIME_ZONE, {
             type: type,
             timezone: vm.ui.timeZone.id,
           });
+          firstTimeZoneChanged = false;
         }
 
         // update model
@@ -606,7 +615,7 @@
 
     function openImportModal() {
       var importModal = $modal.open({
-        templateUrl: 'modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html',
+        template: require('modules/huron/features/autoAttendant/schedule/importSchedule.tpl.html'),
         type: 'dialog',
         controller: 'AAScheduleImportCtrl',
         controllerAs: 'import',
@@ -647,6 +656,7 @@
     function activate() {
       vm.aaModel = AAModelService.getAAModel();
       vm.ui = AAUiModelService.getUiModel();
+      vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
       $timeout(function () {
         populateUiModel();
       }, 250);

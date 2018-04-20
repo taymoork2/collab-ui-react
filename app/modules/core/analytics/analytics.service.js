@@ -6,7 +6,8 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, Orgservice, TrialService, UserListService) {
+  function Analytics($document, $location, $q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+    var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
@@ -122,12 +123,21 @@
           VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
           VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
           VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
-          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings',
+          VISIT_CAL_EXC_USER_LIST: 'Visit Hybrid Calendar (Exchange) Service User List',
+          VISIT_IMP_LIST: 'Visit Hybrid Messaging Service Cluster List',
+          VISIT_IMP_SETTINGS: 'Visit Hybrid Messaging Service Settings',
+          VISIT_IMP_USER_LIST: 'Visit Hybrid Messaging Service User List',
+          VISIT_CAL_O365_SETTINGS: 'Visit Hybrid Calendar (Office 365) Service Settings',
           VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
+          VISIT_CALL_USER_LIST: 'Visit Hybrid Call Service User List',
           VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
           VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+          VISIT_NODE_LIST_SETTINGS: 'Visit Hybrid Nodes List',
+          OPEN_CONNECTOR_UPGRADE_MODAL: 'Open Connector Upgrade Modal',
+          START_CONNECTOR_UPGRADE: 'Start Connector Upgrade',
         },
         persistentProperties: null,
       },
@@ -157,6 +167,125 @@
         },
         persistentProperties: null,
       },
+      SERVICE_SETUP: {
+        name: 'Service Setup',
+        eventNames: {
+          NEXT: 'Service Setup: User clicked \'Next\' button',
+          BACK: 'Service Setup: User clicked \'Back\' button',
+          SUBSCRIPTION_SELECT: 'Service Setup: Subscription selected from dropdown',
+          FORWARDED_TO_OVERVIEW: 'Service Setup: Forwarded to overview for provisioned subscription',
+          REDIRECTED_INTO_ATLAS_FROM_OPC: 'Service Setup: Redirected into atlas from Order Processing Client',
+          PARTNER_LAUNCH: 'Service Setup: Partner launches customer/own org from customers tab',
+          PARTNER_SETUP_OWNORG: 'Service Setup: Partner Setting up ownorg',
+          PARTNER_SETUP_CUSTOMER: 'Service Setup: Partner Setting up customer',
+          CUSTOMER_SETUP: 'Service Setup: Customer logs into portal directly and is setting up',
+          GET_STARTED: 'Service Setup: Clicked on Get Started at the start for Service Setup Wizard',
+          MEETING_SETTINGS: 'Service Setup: Attempt to setup Meeting Settings',
+          SKIPPED_MEETING_SETTINGS: 'Service Setup: Clicked on skip for Meeting Settings',
+          TRIAL_EXISTING_SITES: 'Service Setup: Use existing site checkbox clicked',
+          SEND_CUSTOMER_EMAIL: 'Service Setup: Send customer email checkbox changed',
+          DO_NOT_PROVISION: 'Service Setup: Do Not Provision button clicked',
+          VALIDATE_SITE_URL: 'Service Setup: Validate Site Url button clicked', // 11/27 algendel - not used?
+          VALIDATE_TRANSFER_CODE: 'Service Setup: Transfer code validated', // 11/27 algendel - not used?
+          CCASP_VALIDATION_FAILURE: 'Service Setup: CCASP audio partner validation succeeded',
+          CCASP_VALIDATION_SUCCESS: 'Service Setup: CCASP audio partner validation succeeded',
+          AUDIO_PARTNER_SELECTED: 'Service Setup: Audio partner selection made',
+          DO_NOT_PROVISION_BUTTON_CLICK: 'Service Setup: The \'Do Not Provision\' button was clicked',
+          PROVISION_CALL_SUCCESS: 'Service Setup: Call to provision succeeded',
+          PROVISION_CALL_FAILURE: 'Service Setup: Call to provision failed',
+          PROVISION_WITHOUT_MEETING_SETTINGS_SUCCESS: 'Service Setup: Provisioned without Meeting Settings setup',
+          PROVISION_WITHOUT_MEETING_SETTINGS_FAILURE: 'Service Setup: Provision without Meeting Settings call failed',
+          FINISH_BUTTON_CLICK: 'Service Setup: Finish button clicked',
+        },
+      },
+      WEBEX_SITE_MANAGEMENT: {
+        name: 'Webex Site Management',
+        eventNames: {
+          TRANSFER_SITE_ADDED: 'Transfer site was added to sites list',
+          INVALID_TRANSFER_CODE: 'Transfer code/siteUrl combination invalid',
+          TRANSFER_CODE_CALL_FAILED: 'Transfer code call failed',
+          NEW_SITE_ADDED: 'A new site was added',
+          DUPLICATE_WEBEX_SITE: 'WebEx Shallow validation: duplicate site',
+          INVALID_WEBEX_SITE: 'WebEx Shallow validation: invalid site',
+          REMOVE_SITE: 'Removed validated site',
+          CLIENT_VERSION_RADIO: 'Client version radio selection made',
+        },
+      },
+      VIRTUAL_ASSISTANT: {
+        name: 'Virtual Assistant operations',
+        eventNames: {
+          CVA_OVERVIEW_PAGE: 'Customer VA Overview',
+          CVA_DIALOGUE_PAGE: 'Customer VA Dialogue Integration',
+          CVA_ACCESS_TOKEN_PAGE: 'Customer VA Client Access Token',
+          CVA_NAME_PAGE: 'Customer VA Name',
+          CVA_AVATAR_PAGE: 'Customer VA Avatar',
+          CVA_SUMMARY_PAGE: 'Customer VA Summary',
+          CVA_START_FINISH: 'Customer VA the entire wizard',
+          CVA_CREATE_SUCCESS: 'Customer VA created',
+          CVA_CREATE_FAILURE: 'Customer VA creation failed',
+          CVA_DELETE_SUCCESS: 'Customer VA deleted',
+          CVA_DELETE_FAILURE: 'Customer VA deletion failed',
+          EVA_OVERVIEW_PAGE: 'Expert VA Overview',
+          EVA_NAME_PAGE: 'Expert VA Name',
+          EVA_EMAIL_PAGE: 'Expert VA Email',
+          EVA_AVATAR_PAGE: 'Expert VA Avatar',
+          EVA_DEFAULT_SPACE: 'Expert VA Default Space',
+          EVA_CONFIGURATION_STEPS_PAGE: 'Expert VA Configuration Steps',
+          EVA_SUMMARY_PAGE: 'Expert VA Summary',
+          EVA_START_FINISH: 'Expert VA the entire wizard',
+          EVA_CREATE_SUCCESS: 'Expert VA created',
+          EVA_CREATE_FAILURE: 'Expert VA creation failed',
+          EVA_DELETE_SUCCESS: 'Expert VA deleted',
+          EVA_DELETE_FAILURE: 'Expert VA deletion failed',
+        },
+      },
+      APPLE_BUSINESS_CHAT: {
+        name: 'Apple Business Chat operations',
+        eventNames: {
+          ABC_DELETE_SUCCESS: 'ABC deleted',
+          ABC_DELETE_FAILURE: 'ABC deletion failed',
+          ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
+          ABC_NAME_PAGE: 'ABC Name',
+          ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_SUMMARY_PAGE: 'ABC Summary',
+          ABC_START_FINISH: 'ABC the entire wizard',
+          ABC_CREATE_SUCCESS: 'ABC created',
+          ABC_CREATE_FAILURE: 'ABC creation failed',
+        },
+      },
+      ONLINE_ORDER: {
+        name: 'Online Orders',
+        eventNames: {
+          FREEMIUM: 'Online: Downgrade to Freemium',
+          VIEW_INVOICE: 'Online: View Invoice',
+        },
+      },
+      DEVICE_BULK: {
+        name: 'Bulk device',
+        eventNames: {
+          BULK: 'bulk',
+          COMPLETE: 'bulk complete',
+          DELETE: 'bulk delete',
+          DELETE_ASK: 'bulk delete ask',
+          DELETE_FAKE: 'bulk delete fake',
+          SELECT: 'bulk select',
+          SELECT_ALL: 'bulk select all',
+        },
+      },
+      DEVICE_SEARCH: {
+        name: 'Devices search',
+        eventNames: {
+          PERFORM_SEARCH: 'CSDM dev search',
+          SELECT_SUGGESTION: 'CSDM Suggestion',
+          EXPAND_DEVICE: 'CSDM expand device',
+        },
+      },
+      ORGANIZATION: {
+        name: 'Organization',
+        eventNames: {
+          DELETE: 'Organization Delete',
+        },
+      },
     };
 
     var service = {
@@ -175,12 +304,14 @@
       trackEvent: trackEvent,
       trackPremiumEvent: trackPremiumEvent,
       trackEdiscoverySteps: trackEdiscoverySteps,
+      trackServiceSetupSteps: trackServiceSetupSteps,
+      trackWebExMgmntSteps: trackWebExMgmntSteps,
       trackPartnerActions: trackPartnerActions,
       trackTrialSteps: trackTrialSteps,
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
       trackCsv: trackCsv,
-      trackHSNavigation: trackHSNavigation,
+      trackHybridServiceEvent: trackHybridServiceEvent,
       trackReportsEvent: trackReportsEvent,
     };
 
@@ -209,7 +340,11 @@
       }).then(function (result) {
         hasInit = true;
         if (result) {
-          mixpanel.init(result);
+          mixpanel.init(result, {
+            api_host: UrlConfig.getMixpanelUrl(),
+            persistence: 'localStorage', // default to localStorage, fallback to cookie
+            cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
+          });
         }
       });
     }
@@ -248,9 +383,29 @@
           properties[prefix + key] = value;
         }
       });
-      return _init().then(function () {
-        return service._track(eventName, properties);
+
+      _.set(properties, '$current_url', cleanUrl($location.absUrl()));
+      _.set(properties, '$referrer', cleanUrl((_.get($document, '[0].referrer'))));
+
+      _init()
+        .then(function () {
+          service._track(eventName, properties);
+        })
+        .catch(_.noop); // don't log error, legit reasons to fail
+    }
+
+    function cleanUrl(url) {
+      var REDACTED = '***';
+      var urlSearchAndReplacePairs = [
+        {
+          search: /\/search\/.*/,
+          replace: '/search/' + REDACTED,
+        },
+      ];
+      _.forEach(urlSearchAndReplacePairs, function (pair) {
+        url = _.replace(url, pair.search, pair.replace);
       });
+      return url;
     }
 
     /**
@@ -258,7 +413,7 @@
      */
     function trackPremiumEvent(eventName, location) {
       if (_.isEmpty(eventName) || !_.isString(eventName)) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackPremiumEvent', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -281,7 +436,7 @@
       */
     function trackEdiscoverySteps(eventName, searchProperties) {
       if (!_.isString(eventName) || eventName.length === 0) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackEdiscoverSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -301,11 +456,53 @@
     }
 
     /**
+     * IT Decoupling: New order Service Setup flow
+     */
+    function trackServiceSetupSteps(eventName, adminProperties) {
+      if (!_.isString(eventName)) {
+        return _logError('trackServiceSetupSteps', NO_EVENT_NAME);
+      }
+      var adminType = _getAdminType();
+
+      var properties = {
+        subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
+        userOrgId: Authinfo.getUserOrgId(),
+        userId: Authinfo.getUserId(),
+        loggedInUser: getLoggedInUser(),
+        adminSettingUp: adminType,
+      };
+      _.assignIn(properties, adminProperties);
+
+      return trackEvent(eventName, properties);
+    }
+
+    /**
+     * WebEx Site Management: add/delete/redistribute liacenses
+     */
+    function trackWebExMgmntSteps(eventName, adminProperties) {
+      if (!_.isString(eventName)) {
+        return _logError('trackWebExMgmntSteps', NO_EVENT_NAME);
+      }
+      eventName = sections.WEBEX_SITE_MANAGEMENT.name + ': ' + eventName;
+      var adminType = _getAdminType();
+
+      var properties = {
+        subscriptionId: _.get(adminProperties, 'subscriptionId', 'N/A'),
+        loggedInUser: getLoggedInUser(),
+        userId: Authinfo.getUserId(),
+        adminSettingUp: adminType,
+        userOrgId: Authinfo.getUserOrgId(),
+      };
+      _.assignIn(properties, adminProperties);
+      //TODO: algendel 11/27/17 - once we have actual requirements for tracking, revisit for correctness and return trackEvent(eventName, properties);
+    }
+
+    /**
      * Trial Events
      */
     function trackTrialSteps(eventName, trialData, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackTrialSteps', NO_EVENT_NAME);
       }
 
       var properties = {
@@ -330,7 +527,7 @@
      */
     function trackPartnerActions(eventName, orgId, UUID) {
       if (!eventName || !UUID || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackPartnerActions', 'eventName, uuid or orgId not passed');
       }
       var properties = {
         uuid: UUID,
@@ -345,7 +542,7 @@
     */
     function trackUserOnboarding(eventName, name, orgId, additionalData) {
       if (!eventName || !name || !orgId) {
-        return $q.reject('eventName, uuid or orgId not passed');
+        return _logError('trackUserOnboarding', 'eventName, uuid or orgId not passed');
       }
 
       var properties = {
@@ -356,7 +553,7 @@
 
       if (eventName === sections.USER_ONBOARDING.eventNames.CMR_CHECKBOX) {
         if (!additionalData.licenseId) {
-          return $q.reject('license id not passed');
+          return _logError('trackUserOnboarding', 'license id not passed');
         } else {
           properties.licenseId = additionalData.licenseId;
         }
@@ -364,13 +561,12 @@
       return trackEvent(eventName, properties);
     }
 
-
     /**
     * Add User Events
     */
     function trackAddUsers(eventName, uploadMethod, additionalPayload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackAddUsers', NO_EVENT_NAME);
       }
       var properties = {
         from: _.get($state, '$current.name'),
@@ -397,11 +593,12 @@
     }
 
     /**
-     * Hybrid Services navigation
+     * Hybrid Services
      */
-    function trackHSNavigation(eventName, payload) {
+    // function trackHybridServiceEvent(eventName, payload) {
+    function trackHybridServiceEvent(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackHybridServiceEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -416,7 +613,7 @@
      */
     function trackReportsEvent(eventName, payload) {
       if (!eventName) {
-        return $q.reject(NO_EVENT_NAME);
+        return _logError('trackReportsEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -430,7 +627,6 @@
     /**
     * General Error Tracking
     */
-
     function trackError(errorObj, cause) {
       var message = _.get(errorObj, 'message');
       var stack = _.get(errorObj, 'stack');
@@ -512,7 +708,7 @@
     }
 
     function _getOrgStatus(daysLeft, licenseList) {
-      if (daysLeft <= 0 || _.get(licenseList, 'length', 0) === 0) {
+      if (daysLeft < 0 || _.get(licenseList, 'length', 0) === 0) {
         return 'expired';
       }
       var isTrial = _.some(licenseList, function (license) {
@@ -523,6 +719,33 @@
 
     function _getDomainFromEmail(email) {
       return email ? email.split('@')[1] || '' : '';
+    }
+
+    // TODO: Refactor this into Authinfo
+    function getLoggedInUser() {
+      if (_.includes(Authinfo.getUserName(), '@')) {
+        return Authinfo.getUserName();
+      } else if (_.includes(Authinfo.getPrimaryEmail(), '@')) {
+        return Authinfo.getPrimaryEmail();
+      } else if (_.includes(Authinfo.getCustomerAdminEmail(), '@')) {
+        return Authinfo.getCustomerAdminEmail();
+      }
+    }
+
+    function _getAdminType() {
+      if ((Authinfo.isPartner() && !Authinfo.isCustomerLaunchedFromPartner()) || Authinfo.isPartnerSalesAdmin()) {
+        return 'Partner';
+      } else {
+        return 'Customer';
+      }
+    }
+
+    function _logError(method, msg) {
+      MetricsService.trackDiagnosticMetric(DiagnosticKey.ANALYTICS_FAILURE, {
+        method: method,
+        message: msg,
+      });
+      return msg;
     }
   }
 })();

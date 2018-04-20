@@ -1,0 +1,77 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.paging-group-initiators {
+  .cs-radio-group {
+    margin-bottom: .5rem;
+  }
+  .search-add {
+    display: inline-flex;
+    align-items: inherit;
+    margin: auto;
+    width: 54.5rem;
+    .cs-input {
+      width: 19rem;
+      margin-left: 2px;
+    }
+    .search-member {
+      @include vr-spacing(ml, 2);
+      width: 18.3rem;
+      position: relative;
+      .icon-search {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+      input {
+        width: 100%;
+        text-indent: 20px;
+      }
+    }
+  }
+  .members-header {
+    .cancel-reorder {
+      color: $gray;
+    }
+    .apply-reorder {
+      padding-left: 1rem;
+    }
+    .overlay-panel & {
+      margin: auto;
+      width: 52rem;
+    }
+  }
+  .members-footer {
+    margin: auto;
+    width: 54.5rem;
+    margin-bottom: 2rem;
+    .member-count {
+      color: $gray;
+      padding-right: 2rem;
+    }
+  }
+  .members-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .overlay-panel & {
+      @include vr-spacing(ml, 26, 0px, true);
+      @include vr-spacing(pb, 1);
+
+      position: fixed !important;
+      height: 16rem !important;
+      width: 54rem;
+      left: 50%;
+      margin-right: auto;
+      overflow: auto;
+      display: inline-flex;
+      flex-flow: row wrap;
+      flex: 1;
+      align-content: flex-start;
+      justify-content: center;
+    }
+  }
+}

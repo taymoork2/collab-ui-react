@@ -1,6 +1,7 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .dialog-padding {
   @include vr-spacing(mh, 1.5);
@@ -42,6 +43,10 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
 
+  &--center {
+    margin: auto;
+  }
+
   ul {
     @include vr-spacing(mt, 1);
 
@@ -61,7 +66,7 @@
 
   .columns .box {
     @include vr-spacing(mh, 1);
-    @include vr-spacing(mt, 2);
+    @include vr-spacing(mv, 2);
 
     border: thin solid $gray-light-2;
     color: $gray-base;
@@ -303,7 +308,7 @@
       .total {
         font-size: 2rem;
         line-height: 1;
-        font-family: 'CiscoSansTT Thin';
+        font-family: $brand-font-thin;
       }
 
       .total-title {

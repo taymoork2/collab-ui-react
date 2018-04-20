@@ -1,6 +1,6 @@
 import { ICertificate, IformattedCertificate } from 'modules/hercules/services/certificate-formatter-service';
-import { PrivateTrunkCertificateService } from 'modules/hercules/private-trunk/private-trunk-certificate';
-import { PrivateTrunkPrereqService } from 'modules/hercules/private-trunk/private-trunk-prereq/private-trunk-prereq.service';
+import { CiscoCollaborationCloudCertificateService } from 'modules/hercules/service-settings/cisco-collaboration-cloud-certificate-store';
+import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { IOption } from 'modules/hercules/private-trunk/private-trunk-setup/private-trunk-setup';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/';
 import { Notification } from 'modules/core/notifications';
@@ -23,7 +23,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
-    private PrivateTrunkCertificateService: PrivateTrunkCertificateService,
+    private CiscoCollaborationCloudCertificateService: CiscoCollaborationCloudCertificateService,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private PrivateTrunkService: PrivateTrunkService,
     private Notification: Notification,
@@ -54,7 +54,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
 
   public initCertificateInfo(): void {
     this.isCertificateDefault = true;
-    this.PrivateTrunkCertificateService.readCerts()
+    this.CiscoCollaborationCloudCertificateService.readCerts()
       .then((cert) => {
         if (!_.isUndefined(cert)) {
           this.formattedCertList = cert.formattedCertList;
@@ -80,7 +80,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
       return;
     }
     this.isImporting = true;
-    this.PrivateTrunkCertificateService.uploadCertificate(file)
+    this.CiscoCollaborationCloudCertificateService.uploadCertificate(file)
       .then( cert => {
         if (cert) {
           this.formattedCertList = cert.formattedCertList || [];
@@ -99,7 +99,7 @@ export class PrivateTrunkOverviewSettingsCtrl implements ng.IComponentController
 
 export class PrivateTrunkOverviewSettingsComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkOverviewSettingsCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-overview-settings/private-trunk-overview-settings.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-overview-settings/private-trunk-overview-settings.html');
   public bindings = {
     hasPrivateTrunkFeatureToggle: '<',
   };

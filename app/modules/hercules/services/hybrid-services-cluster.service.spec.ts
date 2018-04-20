@@ -1,4 +1,4 @@
-import serviceModule, { HybridServicesClusterService } from './hybrid-services-cluster.service';
+import serviceModule from './hybrid-services-cluster.service';
 
 // import { ConnectorType, IConnector, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IExtendedClusterFusion, ConnectorType, IExtendedConnector } from 'modules/hercules/hybrid-services.types';
@@ -7,16 +7,18 @@ import { USSService } from 'modules/hercules/services/uss.service';
 describe('Service: HybridServicesClusterService', function () {
   let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
-  let HybridServicesClusterService: HybridServicesClusterService;
+  let HybridServicesClusterService;
   let USSService: USSService;
+  let $scope;
 
   beforeEach(angular.mock.module(serviceModule));
   beforeEach(angular.mock.module(mockDependencies));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$httpBackend_, _$q_, _HybridServicesClusterService_, _USSService_) {
+  function dependencies(_$httpBackend_, _$rootScope_, _$q_, _HybridServicesClusterService_, _USSService_) {
     $httpBackend = _$httpBackend_;
     $q = _$q_;
+    $scope = _$rootScope_.$new();
     HybridServicesClusterService = _HybridServicesClusterService_;
     USSService = _USSService_;
     spyOn(USSService, 'getUserPropsSummary').and.returnValue($q.resolve({
@@ -38,6 +40,13 @@ describe('Service: HybridServicesClusterService', function () {
       getUssUrl: jasmine.createSpy('UrlConfig.getUssUrl').and.returnValue('http://whatever.no/'),
     };
     $provide.value('UrlConfig', UrlConfig);
+    const CacheFactory = class {
+      public static get() {
+        return 'whatever';
+      }
+      constructor () {}
+    };
+    $provide.value('CacheFactory', CacheFactory);
   }
 
   describe('get()', function () {
@@ -331,14 +340,15 @@ describe('Service: HybridServicesClusterService', function () {
   });
 
   describe('preregister Expressway cluster', function () {
+    beforeEach(function () {
+      spyOn(HybridServicesClusterService, 'clearCache');
+    });
 
-    afterEach(verifyHttpBackend);
-
-    function verifyHttpBackend() {
+    afterEach(function () {
       $httpBackend.flush();
       $httpBackend.verifyNoOutstandingExpectation();
       $httpBackend.verifyNoOutstandingRequest();
-    }
+    });
 
     it('should provision management and calendar connectors', function () {
 
@@ -450,114 +460,12 @@ describe('Service: HybridServicesClusterService', function () {
     });
   });
 
-  describe('processClustersToSeeIfServiceIsSetup()', function () {
-
-    describe('Org with Call and Calendar', function () {
-
-      // Test cluster: Two clusters where Call is installed on one cluster, and Calendar is installed on both clusters
-      let baseClusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        baseClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
-      });
-
-      it('should find that Call is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', baseClusters)).toBe(true);
-      });
-
-      it('should find that Calendar is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', baseClusters)).toBe(true);
-      });
-
-      it('should find that Management is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-mgmt', baseClusters)).toBe(true);
-      });
-
-      // TypeScript no longer let us use invalid services…
-      // it('should find that InvalidService is *not* enabled', function () {
-      //   expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-invalid-service', baseClusters)).toBe(false);
-      // });
-
-      it('should find that Media is *not* enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', baseClusters)).toBe(false);
-      });
-    });
-
-    describe('Disco Systems, an org with Call, Calendar, and Media,', function () {
-
-      // Test clusters: Disco Systems, org
-      let discothequeClusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        discothequeClusters = getJSONFixture('hercules/disco-systems-cluster-list.json');
-      });
-
-      it('should find that Media is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', discothequeClusters)).toBe(true);
-      });
-
-      it('should find that Call is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', discothequeClusters)).toBe(true);
-      });
-
-      it('should find that Calendar is enabled in the Discotheque org', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', discothequeClusters)).toBe(true);
-      });
-
-    });
-
-    describe('Empty Clusters Corp', function () {
-
-      // Test clusters: Empty Hybrid Media Corp org
-      let clusters: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        clusters = getJSONFixture('hercules/empty-clusters-corp-cluster-list.json');
-      });
-
-      it('should find that Media is enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clusters)).toBe(true);
-      });
-
-      it('should find that Call is **not** enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clusters)).toBe(false);
-      });
-
-      it('should find that Calendar is **not** enabled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clusters)).toBe(false);
-      });
-
-    });
-
-    describe('An org with nothing at all,', function () {
-
-      // Test clusters: Two clusters, with nothing provisioned and nothing installed
-      let clustersWithNothingInstalled: IExtendedClusterFusion[];
-      beforeEach(function () {
-        jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
-        clustersWithNothingInstalled = getJSONFixture('hercules/nothing-provisioned-cluster-list.json');
-      });
-
-      it('should find that Media is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-media', clustersWithNothingInstalled)).toBe(false);
-      });
-
-      it('should find that Call is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-uc', clustersWithNothingInstalled)).toBe(false);
-      });
-
-      it('should find that Calendar is *dis*-abled', function () {
-        expect(HybridServicesClusterService.processClustersToSeeIfServiceIsSetup('squared-fusion-cal', clustersWithNothingInstalled)).toBe(false);
-      });
-
-    });
-
-  });
-
-  describe('serviceHasHighAvailability()', () => {
+  describe('serviceHasHighAvailability() and hasOnlyOneExpresswayWithConnectorProvisioned()', () => {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
       return {
+        allowedRegistrationHostsUrl: '',
+        createdAt: '',
         connectors: [],
         id: String(_.random(10)),
         name: String(connectorType + _.random(10)),
@@ -566,6 +474,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarmsBadgeCss: 'success',
           allowedRedirectTarget: undefined,
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           isEmpty: true,
           maintenanceMode: 'on',
           registrationTimedOut: false,
@@ -612,6 +521,7 @@ describe('Service: HybridServicesClusterService', function () {
           alarms: '',
           alarmsBadgeCss: '',
           hasUpgradeAvailable: false,
+          isUpgradeUrgent: false,
           maintenanceMode: 'off',
           state: {
             name: 'running',
@@ -712,5 +622,97 @@ describe('Service: HybridServicesClusterService', function () {
       $httpBackend.flush();
     });
 
+    it('should not treat a cluster list with no connectors as having exactly one one', () => {
+      const clusters = [createExpresswayCluster('c_ucmc'), createExpresswayCluster('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should treat a cluster with one provisioned connector as having only one' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(true);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should not treat a cluster with two provisioned connectors as having only one' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_cal')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_cal')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_cal')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
+    it ('should not look at other connector types when calculating' , () => {
+      const clusters = [createExpresswayCluster('c_cal'), createExpresswayCluster('c_ucmc')];
+      clusters[0].connectors = [createConnector('c_cal')];
+      clusters[1].connectors = [createConnector('c_ucmc')];
+      $httpBackend.expectGET('http://elg.no/organizations/0FF1C3?fields=@wide').respond({
+        clusters: clusters,
+      });
+      HybridServicesClusterService.hasOnlyOneExpresswayWithConnectorProvisioned('c_imp')
+        .then((isLast) => {
+          expect(isLast).toBe(false);
+        });
+      $httpBackend.flush();
+    });
+
   });
+
+  describe('addExtendedPropertiesToClusters', () => {
+    it('should get a list of allowed redirect targets if the cluster is empty, and the cluster is an Expressway', () => {
+      const clusterId = 'Romelu Lukaku';
+      const clusters = [{
+        id: clusterId,
+        connectors: [],
+        targetType: 'c_mgmt',
+      }];
+      $httpBackend
+        .expectGET(`http://elg.no/organizations/0FF1C3/clusters/${clusterId}/allowedRegistrationHosts`)
+        .respond(200, { items: [] });
+      HybridServicesClusterService.addExtendedPropertiesToClusters(clusters);
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation();
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+
+    it('should not return a rejected promise when there is inconsistent data in FMS', function (done) {
+      const clusterId = 'Paul Pogba';
+      const clusters = [{
+        id: clusterId,
+        connectors: [],
+        targetType: 'c_mgmt',
+      }];
+      $httpBackend
+        .expectGET(`http://elg.no/organizations/0FF1C3/clusters/${clusterId}/allowedRegistrationHosts`)
+        .respond(404, {});
+
+      HybridServicesClusterService.addExtendedPropertiesToClusters(clusters)
+        .then(() => done())
+        .catch(() => fail('addExtendedPropertiesToClusters should not reject the promise'));
+      $httpBackend.flush();
+      $scope.$apply();
+    });
+
+  });
+
 });

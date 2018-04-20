@@ -2,6 +2,7 @@ import { HuntGroup, HuntMethod, DestinationRule, HuntGroupNumber, HuntGroupServi
 import { CallFeatureMember } from 'modules/call/features/shared/call-feature-members/call-feature-member';
 import { FallbackDestination } from 'modules/call/features/shared/call-feature-fallback-destination';
 import { Notification } from 'modules/core/notifications';
+import { KeyCodes } from 'modules/core/accessibility';
 
 const ALTERNATE_TIMER_MIN: number = 2;
 const ALTERNATE_TIMER_MAX: number = 60;
@@ -123,6 +124,7 @@ class HuntGroupCtrl implements ng.IComponentController {
     if (_.isNull(_.get(fbDestination, 'number') || _.isUndefined(_.get(fbDestination, 'number')))) {
       this.form.$setValidity('', false, this.form);
     }
+
     this.form.$setDirty();
     this.checkForChanges();
   }
@@ -140,7 +142,7 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public cancelModal(): void {
     this.$modal.open({
-      templateUrl: 'modules/call/features/hunt-group/hunt-group-cancel-modal.html',
+      template: require('modules/call/features/hunt-group/hunt-group-cancel-modal.html'),
       type: 'dialog',
     });
   }
@@ -195,18 +197,15 @@ class HuntGroupCtrl implements ng.IComponentController {
 
   public evalKeyPress($keyCode): void {
     switch ($keyCode) {
-      case 27:
-      //escape key
+      case KeyCodes.ESCAPE:
         this.cancelModal();
         break;
-      case 39:
-      //right arrow
+      case KeyCodes.RIGHT:
         if (this.nextButton(this.pageIndex) === true) {
           this.nextPage();
         }
         break;
-      case 37:
-      //left arrow
+      case KeyCodes.LEFT:
         if (this.previousButton(this.pageIndex) === true) {
           this.previousPage();
         }
@@ -217,7 +216,7 @@ class HuntGroupCtrl implements ng.IComponentController {
   }
 
   public enterNextPage($keyCode): boolean | undefined {
-    if ($keyCode === 13 && this.nextButton(this.pageIndex) === true) {
+    if ($keyCode === KeyCodes.ENTER && this.nextButton(this.pageIndex) === true) {
       switch (this.pageIndex) {
         case 0 :
           if (!_.isUndefined(_.get(this.huntGroup, 'name'))) {
@@ -328,11 +327,10 @@ class HuntGroupCtrl implements ng.IComponentController {
     return this.$translate.instant('callPark.createHelpText');
   }
 
-
 }
 
 export class HuntGroupComponent implements ng.IComponentOptions {
   public controller = HuntGroupCtrl;
-  public templateUrl = 'modules/call/features/hunt-group/hunt-group.component.html';
+  public template = require('modules/call/features/hunt-group/hunt-group.component.html');
   public bindings = {};
 }

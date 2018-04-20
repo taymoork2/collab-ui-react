@@ -1,23 +1,37 @@
-import { WindowService } from 'modules/core/window';
+import { WindowEventService } from 'modules/core/window';
 
 interface IDialogState {
   button1text?: string;
-  button1Click?(): void;
   button2text: string;
-  button2Click?(): void;
   isRetry?: boolean;
   title: string;
   message: string;
+
   onEnter?(): void;
+
+  button1Click?(): void;
+
+  button2Click?(): void;
 }
 
 class LaunchAdvancedSettingsController {
 
   public states: { connect: IDialogState, offline: IDialogState, unsupportedSoftwareVersion: IDialogState, unavailable: IDialogState };
   public state: IDialogState;
-  private endpointWindow: Window;
+  private endpointWindow?: Window;
   private timeoutPromise: ng.IPromise<void>;
   private SHA512 = require('crypto-js/sha512');
+
+  //The script section of the following HTML must not be modified unless you also update the CSP HASH in csp-prod.config.js
+  // ('sha256-5zmUxCaNKNz+kTngvNTF8srDs9p8XHdW0oh+h9q46KQ=')
+  public readonly forwardingPageScript = `<script>window.addEventListener('message', function(event) {
+  if (event.origin !== window.location.origin) {
+    return;
+  }
+  document.title = event.data.connectingTitle;
+  document.getElementById("connecting").innerHTML = event.data.connectingText;
+  window.location.assign(event.data.endpointOrigin + '/cloud-login');
+});</script>`;
 
   /* @ngInject */
   constructor(
@@ -31,9 +45,9 @@ class LaunchAdvancedSettingsController {
     private CsdmDeviceService,
     private currentDevice,
     private Utils,
-    private WindowService: WindowService,
+    private WindowEventService: WindowEventService,
     private Notification,
-  ) {
+    ) {
     this.buildStates();
     this.changeState(this.getInitialState(this.currentDevice));
   }
@@ -121,40 +135,51 @@ class LaunchAdvancedSettingsController {
   private connectToEndpoint() {
 
     const endpointInitialContactTimeout = 10000;
+    const endpointOrigin = 'http://' + this.currentDevice.ip;
 
-    const createEndpointWindow = (endpointOrigin, currentDevice): Window => {
+    const createEndpointWindow = (endpointOrigin, currentDevice): Window | undefined => {
+      const forwardingPageHtml =
+        `<html><head><title>Waiting for connection</title></head><br>
+          <body><h4 id="connecting"></h4></body>
+          ${this.forwardingPageScript}
+        </html>`;
+      const forwardingWindow = this.$window.open('about:blank', '_blank', '');
 
-      function createForwardingPageHtml($sanitize, endpointOrigin, connectingText, title) {
-        return `<html><head><title>${$sanitize(title)}</title></head><br><body><h4>${$sanitize(connectingText)}</h4></body>
-                <script>window.location.assign('${endpointOrigin}/cloud-login');</script></html>`;
+      if (!forwardingWindow) {
+        return;
       }
+
+      forwardingWindow.document.write(forwardingPageHtml);
 
       const getText = (templateName, device) => {
         let template = this.$translate.instant('spacesPage.advancedSettings.' + templateName);
         template = template.replace('{name}', (device.displayName || ''));
         return template.replace('{product}', (device.product || ''));
       };
+      const connectingText = this.$sanitize(getText('connecting', currentDevice));
+      const connectingTitle = this.$sanitize(getText('connectingTitle', currentDevice));
 
-      const forwardingPageHtml = createForwardingPageHtml(this.$sanitize,
-        endpointOrigin,
-        getText('connecting', currentDevice),
-        getText('connectingTitle', currentDevice));
-
-      const forwardingWindow = this.$window.open('about:blank', '_blank', '');
-      forwardingWindow.document.write(forwardingPageHtml);
+      forwardingWindow.postMessage(
+        {
+          connectingTitle,
+          connectingText,
+          endpointOrigin,
+        },
+        forwardingWindow.location.origin,
+      );
       return forwardingWindow;
     };
 
-    const endpointOrigin = 'http://' + this.currentDevice.ip;
-
-    this.WindowService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
+    this.WindowEventService.registerEventListener('message', this.handleMessageEvent.bind(this), this.$scope);
 
     this.endpointWindow = createEndpointWindow(endpointOrigin, this.currentDevice);
 
     this.timeoutPromise = this.$timeout(() => {
 
       this.changeState(this.states.unavailable);
-      this.endpointWindow.close();
+      if (this.endpointWindow) {
+        this.endpointWindow.close();
+      }
 
     }, endpointInitialContactTimeout);
   }
@@ -228,7 +253,7 @@ angular
           },
           controllerAs: 'vm',
           controller: 'LaunchAdvancedSettingsController',
-          templateUrl: 'modules/squared/devices/launchAdvancedSettings/launchAdvancedSettings.tpl.html',
+          template: require('modules/squared/devices/launchAdvancedSettings/launchAdvancedSettings.tpl.html'),
           modalId: 'launchAdvancedSettingsModal',
           type: 'dialog',
         }).result;

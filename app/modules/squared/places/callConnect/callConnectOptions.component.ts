@@ -5,6 +5,7 @@ import IWizardData = csdm.IWizardData;
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 import { Notification } from 'modules/core/notifications';
 import { USSService } from 'modules/hercules/services/uss.service';
+import { IQService } from 'angular';
 
 export class CallConnectOptions implements ng.IComponentController {
   private dismiss: Function;
@@ -45,6 +46,7 @@ export class CallConnectOptions implements ng.IComponentController {
     private Notification: Notification,
     private ResourceGroupService: ResourceGroupService,
     private USSService: USSService,
+    private $q: IQService,
   ) {
   }
 
@@ -135,7 +137,10 @@ export class CallConnectOptions implements ng.IComponentController {
           .then(() => {
             const props = this.getUssProps();
             if (props) {
-              this.USSService.updateBulkUserProps([props]).then(() => {
+              this.$q.all({
+                saveRGroup: this.USSService.updateBulkUserProps([props]),
+                ussRefresh: this.USSService.refreshEntitlementsForUser(place.id || ''),
+              }).then(() => {
                 this.dismiss();
                 this.Notification.success('addDeviceWizard.editServices.servicesSaved');
               }, (error) => {
@@ -215,7 +220,7 @@ export class CallConnectOptions implements ng.IComponentController {
 export class CallConnectOptionsComponent implements ng.IComponentOptions {
   public controller = CallConnectOptions;
   public controllerAs = 'callConnectOptions';
-  public templateUrl = 'modules/squared/places/callConnect/CallConnectOptions.tpl.html';
+  public template = require('modules/squared/places/callConnect/CallConnectOptions.tpl.html');
   public bindings = {
     dismiss: '&',
   };

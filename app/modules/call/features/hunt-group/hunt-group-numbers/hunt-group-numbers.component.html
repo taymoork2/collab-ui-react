@@ -1,6 +1,8 @@
 <script type="text/ng-template" id="hgNumbersTemplate.html">
   <a>
-    <span ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="match.label.siteToSite" ng-bind-html="(match.label.siteToSite | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="!match.label.siteToSite && match.label.number" ng-bind-html="(match.label.number | telephoneNumber) | typeaheadHighlight:query"></span>
+    <span ng-if="!match.label.siteToSite && !match.label.number && match.label.external" ng-bind-html="(match.label.external | telephoneNumber) | typeaheadHighlight:query"></span>
   </a>
 </script>
 <div class="typeahead-large with-feature-title" ng-if="$ctrl.isNew">
@@ -36,10 +38,11 @@
 <div class="hg-edit-numbers">
   <cs-card-layout>
     <cs-card-number
-      ng-repeat="number in $ctrl.numbers track by number.uuid" ng-if="number.type!=='NUMBER_FORMAT_ENTERPRISE_LINE'"
+      ng-repeat="number in $ctrl.numbers track by number.uuid"
       cs-id="number.uuid"
       cs-title="number.number"
-      on-remove-fn="$ctrl.removeNumber(number)">
+      on-remove-fn="$ctrl.removeNumber(number)"
+      delete-aria-label="{{::'common.delete' | translate}}">
     </cs-card-number>
   </cs-card-layout>
 </div>

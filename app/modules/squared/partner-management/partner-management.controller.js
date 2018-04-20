@@ -4,7 +4,7 @@
   module.exports = PartnerManagementController;
 
   /* @ngInject */
-  function PartnerManagementController($scope, $state, $translate, $window, $q, FeatureToggleService, Notification, PartnerManagementService, ProPackService) {
+  function PartnerManagementController($scope, $state, $translate, $window, $q, Notification, PartnerManagementService, ProPackService) {
     $scope.$on('$viewContentLoaded', function () {
       $window.document.title = $translate.instant('partnerManagement.browserTabHeaderTitle');
     });
@@ -13,21 +13,14 @@
     var svc = PartnerManagementService;
 
     var proPackEnabled = undefined;
-    var nameChangeEnabled = undefined;
     $q.all({
       proPackEnabled: ProPackService.hasProPackPurchased(),
-      nameChangeEnabled: FeatureToggleService.atlas2017NameChangeGetStatus(),
     }).then(function (toggles) {
       proPackEnabled = toggles.proPackEnabled;
-      nameChangeEnabled = toggles.nameChangeEnabled;
     });
 
     vm.getHeader = function () {
-      if (nameChangeEnabled) {
-        return proPackEnabled ? $translate.instant('partnerManagement.navHeaderTitlePro') : $translate.instant('partnerManagement.navHeaderTitleNew');
-      } else {
-        return $translate.instant('partnerManagement.navHeaderTitle');
-      }
+      return proPackEnabled ? $translate.instant('partnerManagement.navHeaderTitlePro') : $translate.instant('partnerManagement.navHeaderTitleNew');
     };
 
     vm.isLoading = false;
@@ -35,7 +28,8 @@
     vm.partnerPlaceholder = $translate.instant('partnerManagement.create.selectPartnerPlaceholder');
     vm.partnerTypes = ['DISTI', 'DVAR', 'RESELLER'];
     vm.partnerOptions = _.map(vm.partnerTypes, function (s) {
-      return { label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
+      return {
+        label: $translate.instant('partnerManagement.create.partnerTypes.' + s),
         value: s,
       };
     });
@@ -102,8 +96,10 @@
         vm.isLoading = false;
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.searchFailed',
-          { msg: (_.isEmpty(resp.data)) ?
-            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+          {
+            msg: (_.isEmpty(resp.data)) ?
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+          });
       });
     };
 
@@ -121,8 +117,10 @@
         } else {
           Notification.errorWithTrackingId(resp,
             'partnerManagement.error.createFailed',
-            { msg: (_.isEmpty(resp.data)) ?
-              $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+            {
+              msg: (_.isEmpty(resp.data)) ?
+                $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+            });
         }
       });
     };
@@ -178,8 +176,10 @@
       }).catch(function (resp) {
         Notification.errorWithTrackingId(resp,
           'partnerManagement.error.getOrgDetails',
-          { msg: (_.isEmpty(resp.data)) ?
-            $translate.instant('partnerManagement.error.timeout') : resp.data.message });
+          {
+            msg: (_.isEmpty(resp.data)) ?
+              $translate.instant('partnerManagement.error.timeout') : resp.data.message,
+          });
         vm.showSpinner = false;
       });
     }

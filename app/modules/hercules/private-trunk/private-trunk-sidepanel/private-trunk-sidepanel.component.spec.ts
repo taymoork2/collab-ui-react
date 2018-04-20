@@ -29,15 +29,14 @@ describe('Component: PrivateTrunkSidepanelComponent ', () => {
 
   describe('Controller: ', () => {
 
-    let $componentController, $q, $scope, EnterprisePrivateTrunkService, ctrl;
+    let $componentController, $scope, EnterprisePrivateTrunkService, ctrl;
 
     beforeEach(function () {
       this.initModules(privateTrunkSidepanel);
     });
 
-    beforeEach(inject((_$componentController_, _$q_, $rootScope, _EnterprisePrivateTrunkService_) => {
+    beforeEach(inject((_$componentController_, $rootScope, _EnterprisePrivateTrunkService_) => {
       $componentController = _$componentController_;
-      $q = _$q_;
       $scope = $rootScope.$new();
       EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
     }));

@@ -6,6 +6,8 @@ export class CallDestinationTranslateService {
     private $translate: ng.translate.ITranslateService,
   ) {}
 
+  private customNumberValidationPattern: RegExp = /^[ 0-9,#+*sPpFfCc]{1,50}$/;
+
   public getCallDestinationTranslate() {
     return new CallDestinationTranslateObject({
       numberFormat: this.$translate.instant('callDestination.numberFormat'),
@@ -21,8 +23,12 @@ export class CallDestinationTranslateService {
       customHelpText: this.$translate.instant('callDestination.customHelpText'),
       alternateCustomPlaceholder: this.$translate.instant('callDestination.alternateCustomPlaceholder'),
       alternateCustomHelpText: this.$translate.instant('callDestination.alternateCustomHelpText'),
-      commonInvalidFormat: this.$translate.instant('callDestination.commonInvalidFormat'),
-      commonInvalidRequired: this.$translate.instant('callDestination.commonInvalidRequired'),
+      callDestinationInvalidFormat: this.$translate.instant('callDestination.invalidFormat'),
+      commonInvalidRequired: this.$translate.instant('common.invalidRequired'),
     });
+  }
+
+  public getCustomNumberValidationPatern() {
+    return this.customNumberValidationPattern;
   }
 }

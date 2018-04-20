@@ -56,6 +56,10 @@
     cursor: move;
     cursor: grab;
     font-size: 1.5rem;
+
+    &.selected {
+      color: $color-blue-base;
+    }
   }
 
   .sd-container {

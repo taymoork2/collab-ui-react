@@ -51,6 +51,29 @@ describe('Component: InlineEditText', () => {
     });
   });
 
+  describe('showProPackIcon', () => {
+    it('should not show pro pack icon if not bound to component', function () {
+      this.initComponent();
+      expect(this.view.find('cr-pro-pack-icon')).not.toExist();
+    });
+
+    it('should not show pro pack icon if bound and false', function () {
+      this.$scope.shouldShowProPackIcon = false;
+      this.initComponent({
+        showProPackIcon: 'shouldShowProPackIcon',
+      });
+      expect(this.view.find('cr-pro-pack-icon')).not.toExist();
+    });
+
+    it('should show pro pack icon if bound and true', function () {
+      this.$scope.shouldShowProPackIcon = true;
+      this.initComponent({
+        showProPackIcon: 'shouldShowProPackIcon',
+      });
+      expect(this.view.find('cr-pro-pack-icon .pro-pack-icon')).toExist(); // find child element compiled from crProPackIcon component
+    });
+  });
+
   describe('display mode with onTextClick', () => {
     beforeEach(function () {
       this.$scope.clickMyText = jasmine.createSpy('clickMyText');
@@ -110,7 +133,7 @@ describe('Component: InlineEditText', () => {
     });
 
     it('should save new value after clicking submit button', function () {
-      this.view.find(this.INPUT).val(this.newValue).change();
+      this.view.find(this.INPUT).val(this.newValue).change().submit();
       this.view.find(this.SUBMIT_BUTTON).click();
 
       expect(this.$scope.saveValue).toHaveBeenCalledWith(this.newValue);
@@ -118,9 +141,11 @@ describe('Component: InlineEditText', () => {
     });
 
     it('should remain in edit mode if save fails', function () {
-      this.$scope.saveValue.and.returnValue(this.$q.reject());
-
-      this.view.find(this.INPUT).val(this.newValue).change();
+      // when using rejects and views, use callFake instead of returnValue to avoid PURs...
+      this.$scope.saveValue.and.callFake(() => {
+        return this.$q.reject();
+      });
+      this.view.find(this.INPUT).val(this.newValue).change().submit();
       this.view.find(this.SUBMIT_BUTTON).click();
 
       expect(this.$scope.saveValue).toHaveBeenCalledWith(this.newValue);

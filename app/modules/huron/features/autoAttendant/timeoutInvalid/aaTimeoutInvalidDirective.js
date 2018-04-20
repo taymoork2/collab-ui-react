@@ -16,7 +16,7 @@
       },
       controller: 'AATimeoutInvalidCtrl',
       controllerAs: 'aaTimeoutInvalidCtrl',
-      templateUrl: 'modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html',
+      template: require('modules/huron/features/autoAttendant/timeoutInvalid/aaTimeoutInvalid.tpl.html'),
     };
   }
 })();

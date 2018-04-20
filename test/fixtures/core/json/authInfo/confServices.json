@@ -30,6 +30,52 @@
         "cloudmeetings"
       ],
       "volume": 200,
+      "isTrial": true,
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "sqcie2e30.dmz.webex.com",
+      "isCIUnifiedSite": true,
+      "licenseModel": "Cloud Shared Meeting"
+    },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting Center 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_63423459-d345-5318-934f-6353535355a1_someonlinesite.my.webex.com",
+      "offerName": "MC",
+      "masterOfferName": "A-MC200-SPK-ONL-TRIAL",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "0000-000b-0007-0045-900000000",
+      "features": [
+      "cloudmeetings"
+      ],
+      "volume": 1,
+      "isTrial": true,
+      "trialId": "089334344-590b-4347-aa45-956434343444",
+      "status": "ACTIVE",
+      "capacity": 200,
+      "siteUrl": "someonlinesite.my.webex.com",
+      "isCIUnifiedSite": true,
+      "siteId": "12354322"
+      },
+    "isCustomerPartner": false
+  },
+  {
+    "label": "Meeting Center 200",
+    "value": 1,
+    "name": "confRadio",
+    "license": {
+      "licenseId": "MC_60a53872-76d1-404d-ba44-a4929ac839e6_sqcie2e30.dmz.webex.com",
+      "offerName": "MC",
+      "licenseType": "CONFERENCING",
+      "billingServiceId": "SubCt31test20161222111",
+      "features": [
+        "cloudmeetings"
+      ],
+      "volume": 200,
       "isTrial": false,
       "status": "ACTIVE",
       "capacity": 200,

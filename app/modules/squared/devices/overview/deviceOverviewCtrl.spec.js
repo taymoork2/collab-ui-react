@@ -79,6 +79,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
 
   function initControllerWithSettings(channels, stateParams) {
     controller = $controller('DeviceOverviewCtrl', {
+      $element: {
+        find: jasmine.createSpy('find').and.returnValue({
+          focus: _.noop,
+        }),
+      },
       $scope: $scope,
       channels: channels,
       $stateParams: stateParams,
@@ -111,179 +116,85 @@ describe('Controller: DeviceOverviewCtrl', function () {
   describe('upgrade channel', function () {
     var stateParams;
 
-    describe('with feature toggle "csdmPlaceUpgradeChannel"', function () {
+    describe('with device online', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(true));
+        stateParams = {
+          currentDevice: {
+            isOnline: true,
+          },
+          huronDeviceService: CsdmHuronDeviceService,
+        };
       });
 
-      describe('with device online', function () {
-        beforeEach(function () {
-          stateParams = {
-            currentDevice: {
-              isOnline: true,
-            },
-            huronDeviceService: CsdmHuronDeviceService,
-          };
-        });
-
-        it('should show current channel if there are channels to choose for a Cloudberry device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Cloudberry';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBe(true);
-        });
-
-        it('should be able to change channels if there are channels to choose for a Spark Board device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Darling';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBe(true);
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything if there are no channels to choose', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          initControllerWithSettings([], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything for Huron devices', function () {
-          stateParams.currentDevice.isHuronDevice = true;
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
+      it('should show current channel if there are channels to choose for a Cloudberry device', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        stateParams.currentDevice.productFamily = 'Cloudberry';
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBe(true);
       });
 
-      describe('with device offline', function () {
-        beforeEach(function () {
-          stateParams = {
-            currentDevice: {
-              isOnline: false,
-            },
-            huronDeviceService: CsdmHuronDeviceService,
-          };
-        });
+      it('should be able to change channels if there are channels to choose for a Spark Board device', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        stateParams.currentDevice.productFamily = 'Darling';
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBe(true);
+        expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+      });
 
-        it('should show current channel if there are channels to choose for a Cloudberry device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Cloudberry';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBe(true);
-        });
+      it('should not show anything if there are no channels to choose', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        initControllerWithSettings([], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+      });
 
-        it('should show current channel if there are channels to choose for a Spark Board device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Darling';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBe(true);
-        });
-
-        it('should not show anything if there are no channels to choose', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          initControllerWithSettings([], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything for Huron devices', function () {
-          stateParams.currentDevice.isHuronDevice = true;
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
+      it('should not show anything for Huron devices', function () {
+        stateParams.currentDevice.isHuronDevice = true;
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBeFalsy();
       });
     });
 
-    describe('without feature toggle "csdmPlaceUpgradeChannel"', function () {
+    describe('with device offline', function () {
       beforeEach(function () {
-        spyOn(FeatureToggleService, 'csdmPlaceUpgradeChannelGetStatus').and.returnValue($q.resolve(false));
+        stateParams = {
+          currentDevice: {
+            isOnline: false,
+          },
+          huronDeviceService: CsdmHuronDeviceService,
+        };
       });
 
-      describe('with device online', function () {
-        beforeEach(function () {
-          stateParams = {
-            currentDevice: {
-              isOnline: true,
-            },
-            huronDeviceService: CsdmHuronDeviceService,
-          };
-        });
-
-        it('should be able to change channels if there are channels to choose for a Cloudberry device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Cloudberry';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBe(true);
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should be able to change channels if there are channels to choose for a Spark Board device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Darling';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBe(true);
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything if there are no channels to choose', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          initControllerWithSettings([], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything for Huron devices', function () {
-          stateParams.currentDevice.isHuronDevice = true;
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
+      it('should show current channel if there are channels to choose for a Cloudberry device', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        stateParams.currentDevice.productFamily = 'Cloudberry';
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBe(true);
       });
 
-      describe('with device offline', function () {
-        beforeEach(function () {
-          stateParams = {
-            currentDevice: {
-              isOnline: false,
-            },
-            huronDeviceService: CsdmHuronDeviceService,
-          };
-        });
+      it('should show current channel if there are channels to choose for a Spark Board device', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        stateParams.currentDevice.productFamily = 'Darling';
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBe(true);
+      });
 
-        it('should show current channel if there are channels to choose for a Cloudberry device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Cloudberry';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBe(true);
-        });
+      it('should not show anything if there are no channels to choose', function () {
+        stateParams.currentDevice.isHuronDevice = false;
+        initControllerWithSettings([], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+      });
 
-        it('should show current channel if there are channels to choose for a Spark Board device', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          stateParams.currentDevice.productFamily = 'Darling';
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBe(true);
-        });
-
-        it('should not show anything if there are no channels to choose', function () {
-          stateParams.currentDevice.isHuronDevice = false;
-          initControllerWithSettings([], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
-
-        it('should not show anything for Huron devices', function () {
-          stateParams.currentDevice.isHuronDevice = true;
-          initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
-          expect(controller.canChangeUpgradeChannel).toBeFalsy();
-          expect(controller.shouldShowUpgradeChannel).toBeFalsy();
-        });
+      it('should not show anything for Huron devices', function () {
+        stateParams.currentDevice.isHuronDevice = true;
+        initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
+        expect(controller.canChangeUpgradeChannel).toBeFalsy();
+        expect(controller.shouldShowUpgradeChannel).toBeFalsy();
       });
     });
   });
@@ -456,8 +367,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
 describe('Huron Device', function () {
   var $scope, $controller, controller, $httpBackend;
   var $q, UrlConfig;
-  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig, FeatureToggleService,
-    PstnModel, PstnService;
+  var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig,
+    ConfirmAtaRebootModal, PstnModel, PstnService;
   var usStatesList = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
   var $timeout;
 
@@ -470,7 +381,7 @@ describe('Huron Device', function () {
 
 
   function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
-    _FeatureToggleService_, _$timeout_, _PstnModel_, _PstnService_) {
+    _$timeout_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
@@ -479,7 +390,7 @@ describe('Huron Device', function () {
     UrlConfig = _UrlConfig_;
     ServiceSetup = _ServiceSetup_;
     HuronConfig = _HuronConfig_;
-    FeatureToggleService = _FeatureToggleService_;
+    ConfirmAtaRebootModal = _ConfirmAtaRebootModal_;
     PstnModel = _PstnModel_;
     PstnService = _PstnService_;
     $stateParams = {
@@ -568,6 +479,11 @@ describe('Huron Device', function () {
 
   function initController() {
     controller = $controller('DeviceOverviewCtrl', {
+      $element: {
+        find: jasmine.createSpy('find').and.returnValue({
+          focus: _.noop,
+        }),
+      },
       $scope: $scope,
       channels: {},
       $stateParams: $stateParams,
@@ -594,7 +510,7 @@ describe('Huron Device', function () {
   });
 
   describe('T38 support', function () {
-    it('should show T38 when feature toggle is present and carrier supports it', function () {
+    it('should show T38 when carrier supports it', function () {
       $stateParams = {
         currentDevice: {
           url: 'http://thedeviceurl',
@@ -603,7 +519,6 @@ describe('Huron Device', function () {
         },
         huronDeviceService: CsdmHuronDeviceService($q),
       };
-      spyOn(FeatureToggleService, 'csdmT38GetStatus').and.returnValue($q.resolve(true));
       spyOn(PstnModel, 'getProviderId').and.returnValue('carrier');
       spyOn(PstnService, 'getCarrierCapabilities').and.returnValue($q.resolve([{ capability: 'T38' }]));
       initController();
@@ -621,29 +536,12 @@ describe('Huron Device', function () {
         },
         huronDeviceService: CsdmHuronDeviceService($q),
       };
-      spyOn(FeatureToggleService, 'csdmT38GetStatus').and.returnValue($q.resolve(true));
       spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve({ pstnCarrierId: 'carrier' }));
       spyOn(PstnService, 'getCarrierCapabilities').and.returnValue($q.resolve([{ capability: 'T38' }]));
       initController();
       $scope.$apply();
 
       expect(controller.showT38).toBe(true);
-    });
-
-    it('should not show T38 when feature toggle is absent', function () {
-      $stateParams = {
-        currentDevice: {
-          url: 'http://thedeviceurl',
-          isHuronDevice: true,
-          isATA: true,
-        },
-        huronDeviceService: CsdmHuronDeviceService($q),
-      };
-      spyOn(FeatureToggleService, 'csdmT38GetStatus').and.returnValue($q.resolve(false));
-      initController();
-      $scope.$apply();
-
-      expect(controller.showT38).toBeFalsy();
     });
 
     it('should not show T38 when feature toggle is present but carrier does not support it', function () {
@@ -655,7 +553,6 @@ describe('Huron Device', function () {
         },
         huronDeviceService: CsdmHuronDeviceService($q),
       };
-      spyOn(FeatureToggleService, 'csdmT38GetStatus').and.returnValue($q.resolve(true));
       spyOn(PstnModel, 'getProviderId').and.returnValue('carrier');
       spyOn(PstnService, 'getCarrierCapabilities').and.returnValue($q.resolve([]));
       initController();
@@ -683,6 +580,7 @@ describe('Huron Device', function () {
     });
 
     it('should update CPC setting', function () {
+      spyOn(ConfirmAtaRebootModal, 'open').and.returnValue($q.resolve(true));
       controller.saveCpcSettings();
       $scope.$apply();
 

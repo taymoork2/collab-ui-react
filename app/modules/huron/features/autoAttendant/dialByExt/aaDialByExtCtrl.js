@@ -10,6 +10,8 @@
     var vm = this;
 
     var runActionName = 'runActionsOnInput';
+    var INPUT_TYPE_FOR_ESN = 5;
+    var INPUT_TYPE_FOR_DIALBYEXT = 2;
 
     var languageOption = {
       label: '',
@@ -21,9 +23,13 @@
     };
 
     var selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
+    vm.selectRoutingPrefix = $translate.instant('autoAttendant.selectRoutingPrefix');
+    vm.uniqueCtrlIdentifer = '';
     vm.aaModel = {};
     vm.menuEntry = {};
     vm.messageInput = '';
+    vm.checkBoxDisplayed = false;
+    vm.multiSiteState = false;
     vm.messageInputPlaceholder = $translate.instant('autoAttendant.sayMessagePlaceholder');
     vm.languageOption = languageOption;
     vm.languagePlaceholder = selectPlaceholder;
@@ -37,14 +43,21 @@
 
     vm.setVoiceOptions = setVoiceOptions;
 
+    vm.determineDialByExtensionStatus = determineDialByExtensionStatus;
+
     vm.saveUiModel = saveUiModel;
 
     vm.isMediaUploadToggle = isMediaUploadToggle;
+    vm.isMultiSiteToggle = isMultiSiteToggle;
 
     /////////////////////
 
     function isMediaUploadToggle() {
       return AACommonService.isMediaUploadToggle();
+    }
+
+    function isMultiSiteToggle() {
+      return AACommonService.isMultiSiteEnabled();
     }
 
     function setVoiceOptions() {
@@ -80,6 +93,11 @@
         }
       }
 
+      if (!_.isEmpty(vm.menuEntry.actions[0].routingPrefix)) {
+        vm.multiSiteState = true;
+        vm.selectedRoutingOption = vm.menuEntry.actions[0].routingPrefix;
+      }
+
       if (isMediaUploadToggle() && vm.isTextOnly) {
         vm.messageInput = action.getValue();
       }
@@ -89,6 +107,28 @@
       vm.languageOption = AALanguageService.getLanguageOption(vm.menuEntry.getVoice());
       vm.voiceBackup = vm.voiceOption;
       setVoiceOptions();
+    }
+
+    function setDialByExtensionStatusByRoutingOption(status) {
+      AACommonService.setDialByExtensionStatus(status);
+      AACommonService.setIsValid(vm.uniqueCtrlIdentifer, status);
+    }
+
+    function setRoutingPrefixByMultiSiteState() {
+      if (vm.multiSiteState) {
+        vm.menuEntry.actions[0].routingPrefix = vm.selectedRoutingOption;
+      } else {
+        vm.menuEntry.actions[0].routingPrefix = '';
+      }
+    }
+
+    function determineDialByExtensionStatus() {
+      setRoutingPrefixByMultiSiteState();
+      if ((vm.multiSiteState) && (_.isEmpty(vm.menuEntry.actions[0].routingPrefix))) {
+        setDialByExtensionStatusByRoutingOption(false);
+      } else {
+        setDialByExtensionStatusByRoutingOption(true);
+      }
     }
 
     function saveUiModel() {
@@ -101,8 +141,8 @@
         vm.menuEntry.actions[0].voice = vm.voiceOption.value;
         vm.menuEntry.actions[0].language = vm.languageOption.value;
       }
-
-      AACommonService.setDialByExtensionStatus(true);
+      setRoutingPrefixByMultiSiteState();
+      setDialByExtensionStatusByRoutingOption(true);
     }
 
     function setActionMinMax(action) {
@@ -117,10 +157,18 @@
       }
     }
 
+    function setInputType(action) {
+      if (isMultiSiteToggle()) {
+        action.inputType = INPUT_TYPE_FOR_ESN;
+      } else {
+        action.inputType = INPUT_TYPE_FOR_DIALBYEXT;
+      }
+    }
+
     function setActionEntry() {
       if (vm.menuEntry.actions.length === 0) {
         var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
-        action.inputType = 2;
+        setInputType(action);
 
         setActionMinMax(action);
 
@@ -130,13 +178,23 @@
         if (!(vm.menuEntry.actions[0].getName() === runActionName)) {
           vm.menuEntry.actions[0].setName(runActionName);
           vm.menuEntry.actions[0].setValue('');
-          vm.menuEntry.actions[0].inputType = 2;
+          setInputType(vm.menuEntry.actions[0]);
           setActionMinMax(vm.menuEntry.actions[0]);
         } // else let saved value be used
       }
     }
 
+    function setRoutingPrefixOptions(routingPrefixOptions) {
+      if (_.gt(routingPrefixOptions.length, 1)) {
+        vm.checkBoxDisplayed = true;
+        vm.routingPrefixOptions = routingPrefixOptions;
+      } else {
+        vm.checkBoxDisplayed = false;
+      }
+    }
+
     function activate() {
+      vm.uniqueCtrlIdentifer = AACommonService.makeKey($scope.index, AACommonService.getUniqueId());
       if ($scope.menuKeyIndex) {
         // called from phone menu, no support for lang/voice/timeout
         var uiPhoneMenu = AutoAttendantCeMenuModelService.getCeMenu($scope.menuId);
@@ -150,11 +208,14 @@
           var action = AutoAttendantCeMenuModelService.newCeActionEntry(runActionName, '');
           vm.menuEntry.addAction(action);
         }
+        setRoutingPrefixOptions($scope.routingPrefixOptions);
+        setInputType(vm.menuEntry.actions[0]);
         setPhoneMenuMinMaxEntry();
       } else {
         var uiModel = AAUiModelService.getUiModel();
         var uiCombinedMenu = uiModel[$scope.schedule];
         vm.menuEntry = uiCombinedMenu.entries[$scope.index];
+        setRoutingPrefixOptions($scope.routingPrefixOptions);
         setActionEntry();
       }
 

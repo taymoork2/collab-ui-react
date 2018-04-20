@@ -20,11 +20,11 @@ class UserClassOfService implements ng.IComponentController {
   public loading: boolean = false;
   public saveInProcess: boolean = false;
   private changedRestrictions = new Array<any>();
-  private currentRestrictions = new Array<any>();
+  public currentRestrictions = new Array<any>();
   private callTrial: boolean;
   private roomSystemsTrial: boolean;
   private cosTrialToggle;
-  private disableControl: boolean = true;
+  public disableControl: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -244,7 +244,7 @@ class UserClassOfService implements ng.IComponentController {
 
 export class UserClassOfServiceComponent implements ng.IComponentOptions {
   public controller = UserClassOfService;
-  public templateUrl = 'modules/huron/cos/user/userCos.component.html';
+  public template = require('modules/huron/cos/user/userCos.component.html');
   public bindings = {
     memberType: '@',
     memberId: '<',

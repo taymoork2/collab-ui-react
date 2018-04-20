@@ -1,12 +1,36 @@
-<div class="hercules-clusters-list">
+<div ng-if="$ctrl.showResourceGroupBar()" class="resource-group-bar">
+  <div class="select-container" ng-show="$ctrl.showSelect()">
+    <p translate="hercules.capacity.filterLabel"></p>
+    <form id="resourceGroupForm">
+      <cs-select
+        ng-model="$ctrl.selectedOption"
+        options="$ctrl.options"
+        on-change-fn="$ctrl.updateUI(value)"
+        required="true"
+        >
+      </cs-select>
+    </form>
+  </div>
+  <div class="capacity-container">
+    <div class="capacity-na" ng-if="$ctrl.showCapacityNA()">
+      <div ng-if="$ctrl.maxUsers !== 0" tooltip="{{::'hercules.capacity.tooltipNA'|translate}}" tooltip-placement="bottom" translate="hercules.capacity.labelNA"></div>
+      <div ng-if="$ctrl.maxUsers === 0" tooltip="{{::'hercules.capacity.tooltipNoConnectors'|translate}}" tooltip-placement="bottom" translate="hercules.capacity.labelNA"></div>
+    </div>
+    <div class="capacity-active" ng-if="!$ctrl.showCapacityNA()" tooltip-html-unsafe="{{$ctrl.tooltip}}" tooltip-placement="bottom">
+      <div class="capacity-label" translate="hercules.capacity.label" translate-value-capacity="{{$ctrl.capacity}}"></div>
+      <div class="progressbar-container"><progressbar max="100" value="$ctrl.capacity" type="{{$ctrl.progressBarType}}"></progressbar></div>
+    </div>
+  </div>
+</div>
+<div class="js-hercules-clusters-list">
   <div ng-if="$ctrl.firstLoad" class="loading-list">
     <span class="spinner-example--large">
       <i class="icon icon-spinner"></i>
     </span>
   </div>
   <div ng-if="!$ctrl.firstLoad">
-    <div ng-if="$ctrl.clusterList.length !== 0" class="gridStyle" ui-grid="$ctrl.clusterListGridOptions" ui-grid-selection></div>
-    <div ng-if="$ctrl.clusterList.length === 0">
+    <cs-grid ng-if="$ctrl.clusterListGridOptions.data.length !== 0" grid-api="$ctrl.gridApi" grid-options="$ctrl.clusterListGridOptions" spinner="false" state="{{::$ctrl.state}}"></cs-grid>
+    <div ng-if="$ctrl.clusterListGridOptions.data.length === 0">
       <div ng-if="$ctrl.serviceId !== 'contact-center-context' && $ctrl.serviceId !== 'ept'" class="centered-info-pane">
         <h3 translate="hercules.clusters.listing.no_clusters_heading"></h3>
         <p translate="hercules.clusters.listing.no_clusters_text"></p>
@@ -15,7 +39,7 @@
         <h3 translate="context.clusters.listing.no_clusters_heading"></h3>
         <p>
           <span translate="context.clusters.listing.no_clusters_text"></span>
-          <a href="http://www.cisco.com/web/go/hybrid-services-context" translate="context.clusters.listing.learn_how" target="_blank"></a>
+          <a href="https://collaborationhelp.cisco.com/article/en-us/DOC-4165" translate="context.clusters.listing.learn_how" target="_blank"></a>
         </p>
       </div>
       <div ng-if="$ctrl.serviceId === 'ept'" class="centered-info-pane">

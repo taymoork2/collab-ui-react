@@ -1,0 +1,198 @@
+{
+  "customers": [
+    {
+      "customerId": "12ac0778-6037-4f7e-991d-06a999fa9635",
+      "customerName": "UCaaS Vinci Energies",
+      "customerOrgId": "22a0137d-0f8d-4c16-a796-894649f02b7b",
+      "customerAdminEmail": "stephen.carlier@ucaas-axians.net",
+      "licenses": [
+        {
+          "licenseId": "CO_47201347-2d4d-4219-8cc8-60c04751b825",
+          "offerName": "CO",
+          "licenseType": "COMMUNICATION",
+          "features": [
+            "ciscouc"
+          ],
+          "volume": 1,
+          "isTrial": true,
+          "trialId": "d24160ca-0e1c-4bef-8a42-25f8503a8d62",
+          "status": "ACTIVE",
+          "partnerOrgId": "1aa858bb-534c-4556-9cf8-df9df90f516e",
+          "partnerEmail": "remi.plantard@axians.com"
+        },
+        {
+          "licenseId": "SD_f107496e-f179-4dcf-a777-557b85a3b095",
+          "offerName": "SD",
+          "licenseType": "SHARED_DEVICES",
+          "billingServiceId": "Sub110870",
+          "features": [
+            "spark-room-system",
+            "ciscouc"
+          ],
+          "volume": 1,
+          "isTrial": false,
+          "status": "ACTIVE",
+          "partnerOrgId": "1aa858bb-534c-4556-9cf8-df9df90f516e",
+          "partnerEmail": "stephen.carlier@axians.com"
+        }
+      ],
+      "customerType": "Enterprise",
+      "commerceRelation": "Partner",
+      "licenseEnforcement": {
+        "licenseExceedAction": "NOTHING",
+        "licenseExceedThreshold": "NA"
+      },
+      "isTestCustomer": false
+    },
+    {
+      "customerId": "1f2eacc0-ae55-475a-93ea-0f7273756aba",
+      "customerName": "UCaaS Vinci Energies",
+      "customerOrgId": "22a0137d-0f8d-4c16-a796-894649f02b7b",
+      "customerAdminEmail": "remi.plantard@ucaas-axians.net",
+      "subscriptions": [
+        {
+          "subscriptionId": "d7fa89c5-0694-472a-bc4e-dc20423385ca",
+          "externalSubscriptionId": "Sub110871",
+          "partnerAdminId": "bf87e688-ff78-4374-8166-e1b5b278a7c3",
+          "trialDuration": 0,
+          "status": "ACTIVE",
+          "licenses": [
+            {
+              "licenseId": "MC_8cd5d3a9-88bd-42c0-be51-9adac9e22198_ucaas-axians.webex.com",
+              "offerName": "MC",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "CONFERENCING",
+              "billingServiceId": "Sub110871",
+              "features": [
+                "cloudmeetings"
+              ],
+              "volume": 33,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 200,
+              "siteUrl": "ucaas-axians.webex.com",
+              "partnerEmail": "stephen.carlier@axians.com",
+              "isCIUnifiedSite": true,
+              "licenseModel": "hosts",
+              "siteId": "1227147"
+            },
+            {
+              "licenseId": "WEBEX_174d811c-1e35-4551-8316-7d666c5db386_ucaas-axians.webex.com",
+              "offerName": "WEBEX",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "AUDIO",
+              "billingServiceId": "Sub110871",
+              "features": [],
+              "volume": 0,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "siteUrl": "ucaas-axians.webex.com",
+              "isCIUnifiedSite": true,
+              "siteId": "1227147"
+            },
+            {
+              "licenseId": "CMR_052b7919-9f0e-4368-ad15-b35895848efa_ucaas-axians.webex.com",
+              "offerName": "CMR",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "CMR",
+              "billingServiceId": "Sub110871",
+              "features": [],
+              "volume": 33,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 25,
+              "siteUrl": "ucaas-axians.webex.com",
+              "partnerEmail": "stephen.carlier@axians.com",
+              "isCIUnifiedSite": true,
+              "siteId": "1227147"
+            },
+            {
+              "licenseId": "ST_531a369a-ec63-49b1-b3ad-3438606c8b02",
+              "offerName": "ST",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "STORAGE",
+              "billingServiceId": "Sub110871",
+              "features": [],
+              "volume": 0,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 10,
+              "partnerEmail": "stephen.carlier@axians.com"
+            },
+            {
+              "licenseId": "CF_dbf45427-6a58-4b8c-8ed7-323ab2f1e3ed",
+              "offerName": "CF",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "CONFERENCING",
+              "billingServiceId": "Sub110871",
+              "features": [
+                "squared-syncup"
+              ],
+              "volume": 40,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 25,
+              "partnerEmail": "stephen.carlier@axians.com"
+            },
+            {
+              "licenseId": "ST-SPK_33116848-c338-48a6-8430-4fbb8a532b26",
+              "offerName": "ST-SPK",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "STORAGE",
+              "billingServiceId": "Sub110871",
+              "features": [],
+              "volume": 205,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 200
+            },
+            {
+              "licenseId": "SB_cf194af8-a2d0-4aec-8946-051b7c30c61d",
+              "offerName": "SB",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "SHARED_DEVICES",
+              "billingServiceId": "Sub110871",
+              "features": [
+                "spark-room-system",
+                "ciscouc"
+              ],
+              "volume": 1,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "partnerEmail": "stephen.carlier@axians.com"
+            },
+            {
+              "licenseId": "MS_52c03b3c-163e-484e-ba8c-0cdeba3e67fb",
+              "offerName": "MS",
+              "masterOfferName": "M3-MC200-ENT",
+              "licenseType": "MESSAGING",
+              "billingServiceId": "Sub110871",
+              "features": [
+                "squared-room-moderation"
+              ],
+              "volume": 40,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "partnerEmail": "stephen.carlier@axians.com"
+            }
+          ],
+          "startDate": "2017-10-11T07:07:50.832Z",
+          "endDate": "2065-08-02T07:00:00.000Z",
+          "duration": -1,
+          "gracePeriod": 0,
+          "orderingTool": "CCW",
+          "pendingServiceOrderUUID": "ecd2f384-1d50-42db-85e2-f643bcab0c49"
+        }
+      ],
+      "customerType": "Enterprise",
+      "commerceRelation": "Direct",
+      "licenseEnforcement": {
+        "licenseExceedAction": "NOTHING",
+        "licenseExceedThreshold": "NA"
+      },
+      "isTestCustomer": false,
+      "partnerOrgId": "1aa858bb-534c-4556-9cf8-df9df90f516e",
+      "customerSetupStatus": "COMPLETED"
+    }
+  ]
+}

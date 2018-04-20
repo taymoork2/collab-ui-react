@@ -45,11 +45,6 @@
     .factory('DirectoryNumberSipEndPointService', DirectoryNumberSipEndPointService)
     .factory('SipEndpointDirectoryNumberService', SipEndpointDirectoryNumberService)
     .factory('MediaManagerService', MediaManagerService)
-    .factory('DateFormatService', DateFormatService)
-    .factory('TimeFormatService', TimeFormatService)
-    .factory('TimeZoneService', TimeZoneService)
-    .factory('SiteLanguageService', SiteLanguageService)
-    .factory('SiteCountryService', SiteCountryService)
     .factory('DeviceLogApiService', DeviceLogApiService)
     .factory('UserLineAssociationService', UserLineAssociationService)
     .factory('UserLineAssociationCountService', UserLineAssociationCountService)
@@ -115,10 +110,6 @@
     return $resource(HuronConfig.getCmiUrl() + '/voice/customers/:customerId/directorynumbers/:directoryNumberId', {
       customerId: '@customerId',
       directoryNumberId: '@directoryNumberId',
-    }, {
-      update: {
-        method: 'PUT',
-      },
     });
   }
 
@@ -436,31 +427,6 @@
         },
       },
     });
-  }
-
-  /* @ngInject */
-  function TimeZoneService($resource) {
-    return $resource('modules/huron/serviceSetup/jodaTimeZones.json', {}, {});
-  }
-
-  /* @ngInject */
-  function DateFormatService($resource) {
-    return $resource('modules/huron/serviceSetup/dateFormats.json', {}, {});
-  }
-
-  /* @ngInject */
-  function TimeFormatService($resource) {
-    return $resource('modules/huron/serviceSetup/timeFormat.json', {}, {});
-  }
-
-  /* @ngInject */
-  function SiteLanguageService($resource) {
-    return $resource('modules/huron/serviceSetup/siteLanguages.json', {}, {});
-  }
-
-  /* @ngInject */
-  function SiteCountryService($resource) {
-    return $resource('modules/huron/serviceSetup/siteCountries.json', {}, {});
   }
 
   /* @ngInject */

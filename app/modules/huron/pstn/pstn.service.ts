@@ -1,6 +1,9 @@
-import { PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER, PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT, ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL } from './pstn.const';
-
-import { Notification } from 'modules/core/notifications/notification.service';
+import {
+  PSTN, NUMTYPE_DID, NXX, NPA, GROUP_BY, NUMTYPE_TOLLFREE, TATA, BLOCK_ORDER, NUMBER_ORDER,
+  PORT_ORDER, AUDIT, UPDATE, DELETE, ADD, PROVISIONED, CANCELLED, PENDING, QUEUED, TYPE_PORT,
+  ORDER, ADMINTYPE_PARTNER, ADMINTYPE_CUSTOMER, PSTN_CARRIER_ID, E911_SIGNEE, SWIVEL,
+  ContractStatus, NUMTYPE_IMPORTED,
+} from './pstn.const';
 import {
   PstnModel,
   IOrder,
@@ -9,9 +12,36 @@ import {
   TerminusService,
   INumberOrder,
 } from './terminus.service';
+import { IRAddress } from './shared/pstn-address';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { PhoneNumberType } from 'google-libphonenumber';
+import { Notification } from 'modules/core/notifications/notification.service';
 
+export interface IRTerminusLocation {
+  uuid?: string;
+  name: string;
+  addresses?: IRAddress[];
+  default?: boolean;
+  voiceLocationRef?: string;
+}
+
+export class TerminusLocation implements IRTerminusLocation {
+  public uuid?: string;
+  public name: string;
+  public addresses?: IRAddress[];
+  public default?: boolean;
+  public voiceLocationRef?: string;
+
+  constructor(terminusLocation: IRTerminusLocation = {
+    name: '',
+  }) {
+    this.uuid = terminusLocation.uuid;
+    this.name = terminusLocation.name;
+    this.addresses = terminusLocation.addresses;
+    this.default = terminusLocation.default;
+    this.voiceLocationRef = terminusLocation.voiceLocationRef;
+  }
+}
 
 export class PstnService {
   /* @ngInject */
@@ -83,10 +113,20 @@ export class PstnService {
     }).$promise;
   }
 
-  public getCustomerV2(customerId: string): ng.IPromise<any> {
-    return this.TerminusService.customerV2().get({
-      customerId: customerId,
-    }).$promise;
+  public getCustomerV2(customerId: string, params: any = {}): ng.IPromise<any> {
+    params['customerId'] = customerId;
+    return this.TerminusService.customerV2().get(params).$promise.then(result => {
+      result['contractStatus'] = ContractStatus.UnKnown;
+      if (_.get(params, 'deep') === true) {
+        const isContractSigned: boolean | undefined = _.get(result, 'isContractSigned');
+        if (isContractSigned !== undefined) {
+          result.contractStatus = isContractSigned ? ContractStatus.Signed : ContractStatus.UnSigned;
+        } else {
+          result.contractStatus = ContractStatus.NotImplemented;
+        }
+      }
+      return result;
+    });
   }
 
   public getCustomerTrialV2(customerId: string): ng.IPromise<any> {
@@ -121,7 +161,7 @@ export class PstnService {
   }
 
   public listResellerCarriers(): ng.IPromise<any[]> {
-    return this.TerminusService.resellerCarrier().query({
+    return this.TerminusService.resellerCarrierV2().query({
       resellerId: this.Authinfo.getCallPartnerOrgId(),
     }).$promise.then((response) => this.getCarrierDetails(response));
   }
@@ -226,7 +266,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierInventoryV2(customerId: string, reservationId: string | undefined, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -249,7 +289,7 @@ export class PstnService {
     }
   }
 
-  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
+  public releaseCarrierTollFreeInventory(customerId: string, _carrierId: string, numbers: string | string[], reservationId: string | undefined, isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -272,7 +312,7 @@ export class PstnService {
     }
   }
 
-  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
+  public reserveCarrierTollFreeInventory(customerId: string, carrierId: string, numbers: string | string[], isCustomerExists: boolean): ng.IPromise<any> {
     if (!_.isArray(numbers)) {
       numbers = [numbers];
     }
@@ -317,7 +357,9 @@ export class PstnService {
     });
   }
 
-  public orderBlock(customerId: string, _carrierId: string, npa: string, quantity: string, isSequential: boolean, nxx: string): ng.IPromise<any> {
+  public orderBlock(
+    customerId: string,  _carrierId: string, npa: undefined | string,
+    quantity: undefined | number, isSequential: undefined | boolean,  nxx: undefined | string): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,
@@ -334,7 +376,9 @@ export class PstnService {
     }, payload).$promise;
   }
 
-  public orderTollFreeBlock(customerId: string, _carrierId: string, npa: string, quantity: number): ng.IPromise<any> {
+  public orderTollFreeBlock(
+    customerId: string, _carrierId: string, npa: undefined | string,
+    quantity: number): ng.IPromise<any> {
     const payload = {
       npa: npa,
       quantity: quantity,
@@ -413,14 +457,26 @@ export class PstnService {
   public orderNumbersV2Swivel(customerId: string, numbers: string[]): ng.IPromise<any[]> {
     const promises: ng.IPromise<any>[] = [];
     let tfnNumbers: string[] = [];
+    let importedNumbers: string[] = [];
 
     tfnNumbers = _.remove(numbers, number => {
       return this.PhoneNumberService.getPhoneNumberType(number) === PhoneNumberType.TOLL_FREE;
     });
 
+    importedNumbers = _.remove(numbers, number => {
+      const e164FormattedNumber = this.PhoneNumberService.getE164Format(number);
+      return !this.PhoneNumberService.internationalNumberValidator(e164FormattedNumber);
+    });
+
     const tfnPayload = {
       numbers: tfnNumbers,
       numberType: NUMTYPE_TOLLFREE,
+      createdBy: this.setCreatedBy(),
+    };
+
+    const importedPayload = {
+      numbers: importedNumbers,
+      numberType: NUMTYPE_IMPORTED,
       createdBy: this.setCreatedBy(),
     };
 
@@ -442,6 +498,13 @@ export class PstnService {
           customerId: customerId,
       }, tfnPayload).$promise;
       promises.push(tollFreePromise);
+    }
+
+    if (importedNumbers.length > 0) {
+      const importedPromise = this.TerminusService.customerNumbersOrderV2().save({
+        customerId: customerId,
+      }, importedPayload).$promise;
+      promises.push(importedPromise);
     }
     return this.$q.all(promises);
   }
@@ -642,11 +705,10 @@ export class PstnService {
       'Account Number and PIN Required': this.$translate.instant('pstnSetup.orderStatus.pinRequired'),
       'Address Mismatch': this.$translate.instant('pstnSetup.orderStatus.addressMismatch'),
       'BTN Mismatch': this.$translate.instant('pstnSetup.orderStatus.btnMismatch'),
-      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.trialStatus'),
+      'Customer has Trial Status': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'FOC Received': this.$translate.instant('pstnSetup.orderStatus.focReceived'),
       'Invalid Authorization Signature': this.$translate.instant('pstnSetup.orderStatus.invalidSig'),
       'LOA Not Signed': this.$translate.instant('pstnSetup.orderStatus.loaNotSigned'),
-      'Terms of Service has not yet been accepted': this.$translate.instant('pstnSetup.orderStatus.tosNotSigned'),
       'Master Service Agreement not signed': this.$translate.instant('pstnSetup.orderStatus.msaNotSigned'),
       'Pending FOC from Vendor': this.$translate.instant('pstnSetup.orderStatus.pendingVendor'),
       Rejected: this.$translate.instant('pstnSetup.orderStatus.rejected'),
@@ -765,10 +827,24 @@ export class PstnService {
     return (this.Authinfo.isCustomerLaunchedFromPartner() || this.Authinfo.isPartner()) ? ADMINTYPE_PARTNER : ADMINTYPE_CUSTOMER;
   }
 
+  public createLocation(terminusLocation: TerminusLocation): ng.IPromise<string> {
+    let uuid: string;
+    return this.TerminusService.customerLocations<IRTerminusLocation>()
+    .save({
+      customerId: this.PstnModel.getCustomerId(),
+    },
+    terminusLocation,
+    (_response, headers) => {
+      uuid = headers('location').split('/').pop();
+    })
+    .$promise
+    .then(() => uuid);
+  }
+
 }
 
-import pstnModelName from './pstn.model';
-import terminusServiceName from './terminus.service';
+import pstnModelModule from './pstn.model';
+import terminusServiceModule from './terminus.service';
 
 export default angular
   .module('huron.pstn.pstn-service', [
@@ -776,11 +852,10 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/notifications').default,
     require('modules/core/featureToggle').default,
-    require('modules/huron/pstnSetup/terminusServices'),
     require('modules/huron/telephony/telephonyConfig'),
     require('modules/huron/phoneNumber').default,
-    pstnModelName,
-    terminusServiceName,
+    pstnModelModule,
+    terminusServiceModule,
   ])
   .service('PstnService', PstnService)
   .name;

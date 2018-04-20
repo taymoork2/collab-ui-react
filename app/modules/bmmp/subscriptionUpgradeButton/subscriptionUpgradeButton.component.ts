@@ -1,5 +1,5 @@
 import { BmmpService } from '../index';
-import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr } from 'modules/online/upgrade/shared/upgrade.service';
 
 class SubscriptionUpgradeButton implements ng.IComponentController {
   public showLoading: string;
@@ -34,7 +34,7 @@ class SubscriptionUpgradeButton implements ng.IComponentController {
 
 export class SubscriptionUpgradeButtonComponent implements ng.IComponentOptions {
   public controller = SubscriptionUpgradeButton;
-  public templateUrl = 'modules/bmmp/subscriptionUpgradeButton/subscriptionUpgradeButton.html';
+  public template = require('modules/bmmp/subscriptionUpgradeButton/subscriptionUpgradeButton.html');
   public bindings = <{ [binding: string]: string }>{
     bmmpAttr: '<',
     showLoading: '@',

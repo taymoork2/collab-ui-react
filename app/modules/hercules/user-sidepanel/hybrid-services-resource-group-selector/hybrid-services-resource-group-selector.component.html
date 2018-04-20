@@ -1,9 +1,9 @@
-<cs-sp-section class="cloud-extensions">
+<cs-sp-section class="hybrid-services-user-sidepanel" ng-if="$ctrl.options.length > 1">
   <div class="section-title-row">
     <span class="section-name" translate="hercules.resourceGroups.resourceGroupHeading"></span>
   </div>
   <div ng-if="!resourceGroup.cannotFindResouceGroup">
-    <p class="extension-description" translate="hercules.resourceGroups.setDescription"></p>
+    <p class="hybrid-service-description" translate="hercules.resourceGroups.setDescription"></p>
 
     <cs-select ng-if="!$ctrl.loading"
                ng-model="$ctrl.selectedResourceGroup"
@@ -15,14 +15,8 @@
          cs-loader
          class="loader-example--small"></div>
 
-    <div class="warning-message" ng-if="$ctrl.showGroupIsEmptyWarning">
-      <i class="icon icon-warning"></i>
-      <p class="message"
-         translate="hercules.resourceGroups.groupIsEmptyWarning"
-         translate-values="{ConnectorName: $ctrl.localizedConnectorName}">
-      </p>
-    </div>
   </div>
+
   <div ng-if="$ctrl.showButtons" class="saveCancelButtons">
     <span ng-if="$ctrl.saving" class="resource-group-spinner">
       <i class="icon icon-spinner"></i>
@@ -39,9 +33,24 @@
             translate="common.save">
     </button>
   </div>
-  <div ng-if="$ctrl.cannotFindResourceGroup" class="error-message">
+
+  <div class="hybrid-services-warning-message" ng-if="$ctrl.showGroupIsEmptyWarning">
+    <i class="icon icon-warning"></i>
+    <p class="hybrid-services-message"
+       translate="hercules.resourceGroups.groupIsEmptyWarning"
+       translate-values="{ConnectorName: $ctrl.localizedConnectorName}">
+    </p>
+  </div>
+
+  <div ng-if="$ctrl.userOwnedByCCC" class="hybrid-services-info-message">
+    <i class="icon icon-info"></i>
+    <p class="hybrid-services-message"
+       translate="hercules.resourceGroups.cautionOwnedByCCC"></p>
+  </div>
+
+  <div ng-if="$ctrl.cannotFindResourceGroup" class="hybrid-services-error-message">
     <i class="icon icon-error"></i>
-    <p class="message"
+    <p class="hybrid-services-message"
        translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
     <form>
       <button class="btn" type="submit" ng-click="$ctrl.setResourceGroupOnUser('')">

@@ -5,112 +5,139 @@
   </div>
 
   <div ng-if="!$ctrl.loading">
-  <cs-sp-header>
-    <div class="header-image ng-scope">
-      <div class="user-img">
-        <i class="icon icon-user ng-scope"></i>
-      </div>
-    </div>
-    <div class="header-info" id="customer-info">
-      <div class="header-info-wrap">
-        <div class="header-title">
-          <span>{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
-          <a ng-if="$ctrl.model.isEdit" ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"><i class="edit-button icon icon-edit"></i></a>
+    <cs-sp-header>
+      <div class="header-image ng-scope">
+        <div class="user-img">
+          <i class="icon icon-user ng-scope"></i>
         </div>
       </div>
-    </div>
-  </cs-sp-header>
-
-  <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission" type="warning">{{::'gemini.cbgs.submissionMsg' | translate}} <a ng-click="$ctrl.onCancelSubmission()">{{::'gemini.cbgs.cancelSubmissionLink' | translate}}</a></cs-alert-banner>
-  <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</a></cs-alert-banner>
-
-    <cs-sp-container class="gemini-side-panel">
-    <cs-sp-section>
-      <div class="row">
-        <div class="pull-left medium-9">
-          <span class="feature-name ellipsis spanBlock "  popover-trigger="mouseenter" popover="{{$ctrl.model.customerAttribute}}">{{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}</span>
-        </div>
-        <div class="columns medium-3">
-          <span class="pull-right" ng-if="$ctrl.model.status">
-            <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
-            {{$ctrl.model.status_}}
-          </span>
-        </div>
-      </div>
-      <div class="feature-list">
-        <ul>
-          <li class="feature" ng-if="$ctrl.model.callbackGroupSites.length">
-            <a ui-sref="gemCbgDetails.sites({obj: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
-              <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
-              <span class="feature-status">{{$ctrl.model.callbackGroupSites.length}}</span>
-              <i class="feature-arrow"></i>
+      <div class="header-info" id="customer-info">
+        <div class="header-info-wrap">
+          <div class="header-title">
+            <span title="{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}">{{$ctrl.model.groupName ? $ctrl.model.groupName : $ctrl.model.customerName}}</span>
+            <a class="edit-td-name"
+              ng-if="$ctrl.model.isEdit"
+              ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})"
+              aria-label="{{::'common.edit' | translate}}">
+              <i class="edit-button icon icon-edit"></i>
             </a>
-          </li>
-          <li class="feature" ng-if="!$ctrl.model.callbackGroupSites.length">
-              <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
-              <span class="feature-status">0</span>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-    </cs-sp-section>
+    </cs-sp-header>
 
-    <cs-sp-section class="side-panel-country">
-      <div class="section-title-row">
-        <span class="section-name" translate="gemini.cbgs.remedyTicket"></span>
-      </div>
-      <div ng-if="!$ctrl.remedyTicketLoading">
-        <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
-        <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
-      </div>
-      <div ng-if="$ctrl.remedyTicketLoading">
-        <i class="icon icon-spinner"></i>
-      </div>
-      <div class="section-title-row">
-        <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
-        <span class="pull-right" ng-if="$ctrl.model.isEdit"><a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a></span>
-      </div>
-      <div class="tag-container auto-scrollbar">
-          <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">
-              <span>{{val.countryName}}</span>
-          </span>
-      </div>
-    </cs-sp-section>
+    <cs-alert-banner ng-if="$ctrl.isShowCancelSubmission && !$ctrl.btnCancelSubmissionLoading" type="warning">
+      <span translate="gemini.cbgs.submissionMsg"></span>
+      <a href ng-click="$ctrl.onCancelSubmission()" translate="gemini.cbgs.cancelSubmissionLink"></a>
+    </cs-alert-banner>
+    <cs-alert-banner ng-if="$ctrl.isShowReject" type="danger">{{::'gemini.cbgs.rejectSubmissionMsg' | translate}}</cs-alert-banner>
 
-    <cs-sp-section class="side-panel-note">
-      <div class="feature-list note-title">
-        <ul>
-          <li class="feature">
-            <a ui-sref="gemCbgDetails.notes({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})">
-              <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
-              <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
-              <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
-              <i class="feature-arrow"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </cs-sp-section>
+    <div class="side-panel-container-view" ui-view="side-panel-container">
+      <cs-sp-container class="gemini-side-panel">
+        <cs-sp-section>
+          <div class="row">
+            <div class="pull-left medium-9">
+              <span class="feature-name ellipsis spanBlock"
+                tabindex="0"
+                popover-trigger="mouseenter focus"
+                popover="{{$ctrl.model.customerAttribute}}">
+                {{::'gemini.cbgs.field.alias' | translate}}: {{$ctrl.model.customerAttribute}}
+              </span>
+            </div>
+            <div class="columns medium-3">
+              <span class="pull-right" ng-if="$ctrl.model.status">
+                <i class="icon icon-circle status-indicator" ng-class="{'success': $ctrl.model.status === 'A' || $ctrl.model.status === 'P', 'danger': $ctrl.model.status === 'R' || $ctrl.model.status === 'L', 'warning': $ctrl.model.status === 'S', 'disabled': $ctrl.model.status === 'C'}"></i>
+                {{$ctrl.model.status_}}
+              </span>
+            </div>
+          </div>
+          <div class="feature-list">
+            <ul>
+              <li class="feature" ng-if="$ctrl.model.callbackGroupSites.length">
+                <a ui-sref="gemCbgDetails.sites({obj: {cbgs: $ctrl.cbgs, customerId: $ctrl.customerId, currCbg: $ctrl.model}})">
+                  <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+                  <span class="feature-status">{{$ctrl.model.callbackGroupSites.length}}</span>
+                  <i class="feature-arrow"></i>
+                </a>
+              </li>
+              <li class="feature" ng-if="!$ctrl.model.callbackGroupSites.length">
+                <span class="feature-name" translate="gemini.cbgs.field.totalSites"></span>
+                <span class="feature-status">0</span>
+              </li>
+            </ul>
+          </div>
+        </cs-sp-section>
 
-    <cs-sp-section class="side-panel-history">
-      <div class="section-title-row">
-        <div class="section-name" translate="gemini.cbgs.logs.history"></div>
-      </div>
-      <ul class="history-ul" ng-if="!$ctrl.hisLoading">
-        <li ng-repeat="log in $ctrl.histories">
-          <h6>{{log.action}}</h6>
-          <h6 ng-if="log.objectName">{{log.objectName}}</h6>
-          <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
-          <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
-        </li>
-      </ul>
-      <div ng-if="$ctrl.hisLoading">
-        <i class="icon icon-spinner"></i>
-      </div>
-      <p ng-if="$ctrl.isShowAllHistories" class="show-more">
-        <a class="primary-color" href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
-      </p>
-    </cs-sp-section>
+        <cs-sp-section class="side-panel-country">
+          <div class="section-title-row">
+            <span class="section-name" translate="gemini.cbgs.remedyTicket"></span>
+          </div>
+          <div ng-if="!$ctrl.remedyTicketLoading && $ctrl.remedyTicket">
+            <p>{{::'gemini.cbgs.remedyTicket' | translate}}: <a href ng-click="$ctrl.onOpenRemedyTicket()">{{$ctrl.remedyTicket.remedyTicketId}}</a></p>
+            <p><small>{{::'gemini.cbgs.openedOn' | translate}} {{$ctrl.remedyTicket.createTime}} - {{$ctrl.remedyTicket.status}}</small></p>
+          </div>
+          <div ng-if="$ctrl.remedyTicketLoading">
+            <i class="icon icon-spinner"></i>
+          </div>
+          <div class="section-title-row">
+            <span class="section-name" translate="gemini.cbgs.request.labelCountries"></span>
+            <span class="pull-right" ng-if="$ctrl.model.isEdit">
+              <a ui-sref="gemCbgDetails.editCountry({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})" translate="common.edit" class="color-primary-base"></a>
+            </span>
+          </div>
+          <div class="tag-container auto-scrollbar">
+            <span class="tag tag-country" ng-repeat="val in $ctrl.model.countries">{{val.name}}</span>
+          </div>
+        </cs-sp-section>
 
-  </cs-sp-container>
+        <cs-sp-section class="side-panel-note">
+          <div class="feature-list note-title">
+            <ul>
+              <li class="feature">
+                <a href ui-sref="gemCbgDetails.notes({obj: {info: $ctrl.model, customerId: $ctrl.customerId}})">
+                  <span class="feature-name" translate="gemini.cbgs.notes.notes"></span>
+                  <span ng-if="!$ctrl.notes.length" class="feature-status" translate="gemini.cbgs.notes.noNotes"></span>
+                  <span ng-if="$ctrl.notes.length" class="feature-status">{{$ctrl.notes.length}}</span>
+                  <i class="feature-arrow"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </cs-sp-section>
+
+        <cs-sp-section class="side-panel-history">
+          <div class="section-title-row">
+            <div class="section-name" translate="gemini.cbgs.logs.history"></div>
+          </div>
+          <ul class="history-ul" ng-if="!$ctrl.hisLoading">
+            <li ng-repeat="log in $ctrl.histories">
+              <h6>{{log.action}}</h6>
+              <h6 ng-if="log.objectName">{{log.objectName}}</h6>
+              <p><small>{{log.createdDate}} {{log.actionTime}} {{::'gemini.cbgs.by' | translate}} {{log.userName}} {{!log.email ? '' : '(' + log.email + ')'}}</small></p>
+              <p><small ng-if="log.moveSiteMsg">{{log.moveSiteMsg}}</small></p>
+            </li>
+            <li>
+              <div ng-if="$ctrl.isShowAllHistories">
+                <a href ng-click="$ctrl.onShowAllHistories()" translate="gemini.cbgs.showMore"></a>
+              </div>
+            </li>
+          </ul>
+          <div ng-if="$ctrl.hisLoading">
+            <i class="icon icon-spinner"></i>
+          </div>
+        </cs-sp-section>
+
+        <cs-sp-buttons ng-if="$ctrl.model.status === 'S'">
+          <button cs-btn type="button"
+            class="btn btn--primary"
+            loading="$ctrl.btnCancelSubmissionLoading"
+            ng-click="$ctrl.onCancelSubmission()" ng-if="$ctrl.isShowCancelSubmission"
+            ng-disabled="$ctrl.btnCancelSubmissionDisable">
+            <span translate="gemini.button.cancelSubmission"></span>
+          </button>
+        </cs-sp-buttons>
+
+      </cs-sp-container>
+    </div>
   </div>
 </div>

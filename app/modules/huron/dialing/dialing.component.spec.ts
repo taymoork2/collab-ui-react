@@ -1,6 +1,6 @@
 describe('component: dialing', () => {
   const INT_DIAL_SELECT = '.csSelect-container[name="dialing"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const BUTTON_RESET = 'button.btn-default';
 
   beforeEach(function() {

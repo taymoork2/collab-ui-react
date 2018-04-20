@@ -7,10 +7,10 @@ describe('Controller: SupportCtrl', function () {
   beforeEach(angular.mock.module('Squared'));
 
   var controller, Authinfo, Userservice, currentUser, Config,
-    $scope, $httpBackend, $q, FeatureToggleService, WindowLocation, UrlConfig, Notification;
+    $modal, $scope, $httpBackend, $q, FeatureToggleService, WindowLocation, UrlConfig, Notification;
   var roles = ['ciscouc.devsupport', 'atlas-portal.support'];
 
-  beforeEach(inject(function ($rootScope, $controller, _$q_, _Userservice_, _Authinfo_, _Config_, _FeatureToggleService_, _WindowLocation_, _UrlConfig_, _$httpBackend_, _Notification_) {
+  beforeEach(inject(function ($controller, _$httpBackend_, _$modal_, _$q_, $rootScope, _Userservice_, _Authinfo_, _Config_, _FeatureToggleService_, _Notification_, _UrlConfig_, _WindowLocation_) {
     Userservice = _Userservice_;
     Authinfo = _Authinfo_;
     Config = _Config_;
@@ -19,6 +19,7 @@ describe('Controller: SupportCtrl', function () {
     $httpBackend = _$httpBackend_;
     Notification = _Notification_;
     $q = _$q_;
+    $modal = _$modal_;
     FeatureToggleService = _FeatureToggleService_;
 
     currentUser = {
@@ -29,13 +30,16 @@ describe('Controller: SupportCtrl', function () {
     spyOn(Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(currentUser, 200);
     });
+    spyOn($modal, 'open');
     spyOn(Authinfo, 'isCiscoMock').and.returnValue(true);
     spyOn(Authinfo, 'isCisco').and.returnValue(false);
+    spyOn(Authinfo, 'isComplianceUser').and.returnValue(false);
+    spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
     spyOn(Config, 'isProd').and.returnValue(false);
     spyOn(FeatureToggleService, 'atlasOrderProvisioningConsoleGetStatus').and.returnValue($q.resolve(true));
-    spyOn(Authinfo, 'isOrderAdminUser').and.returnValue(true);
     $scope = $rootScope.$new();
     controller = $controller('SupportCtrl', {
+      $modal: $modal,
       $scope: $scope,
       Authinfo: Authinfo,
       Userservice: Userservice,
@@ -66,6 +70,19 @@ describe('Controller: SupportCtrl', function () {
   it('should NOT show PartnerManagementLink if user does NOT have partner management role', function () {
     $scope.initializeShowLinks();
     expect($scope.showPartnerManagementLink).toEqual(false);
+  });
+
+  describe('ediscovery console', function () {
+    it('should NOT show if user does NOT have both compliance role and ediscovery feature toggle', function () {
+      expect($scope.showEdiscoveryLink()).toEqual(false);
+    });
+
+    it('should show if user has both compliance role and ediscovery feature toggle', function () {
+      Authinfo.isComplianceUser.and.returnValue(true);
+      $scope.initializeShowLinks();
+      $scope.$apply();
+      expect($scope.showEdiscoveryLink()).toEqual(true);
+    });
   });
 
   describe('launch Order Provisioning Console', function () {
@@ -161,6 +178,20 @@ describe('Controller: SupportCtrl', function () {
         $httpBackend.verifyNoOutstandingRequest();
       });
     });
+  });
+
+  it('should open modal when openExtendedMetadata is invoked', function () {
+    var metadata = 'theMetadata';
+
+    $scope.openExtendedMetadata(metadata);
+    $scope.$apply();
+
+    expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
+      template: '<logs-extended-metadata metadata="metadata" dismiss="$dismiss()"></logs-extended-metadata>',
+      scope: jasmine.objectContaining({
+        metadata: metadata,
+      }),
+    }));
   });
 });
 

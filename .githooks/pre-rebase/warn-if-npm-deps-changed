@@ -1,32 +1,13 @@
 #!/bin/bash
 
-target_head="$1"
-changed_files="$(git diff-tree --no-commit-id --name-only -r "$target_head" HEAD)"
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1090
+. "$this_pwd/include/pre-rebase-helpers"
 
-function file_has_changed {
-    local test_file="$1"
-    [ -z "$test_file" ] && return 1
-    echo "$changed_files" | grep -q "$test_file"
-    return $?
-}
+if file_has_changed "yarn.lock"; then
+    cat <<_EOF | print_notice_banner
+'yarn.lock' has updated dependencies.
 
-function diff_changed_file {
-    local changed_file="$1"
-    [ -z "$changed_file" ] && return 1
-    git diff HEAD "$target_head" "$changed_file"
-}
-
-function print_notice_banner {
-    echo ""
-    echo "********************** ATTENTION **********************"
-    echo ""
-    echo "$@"
-    echo ""
-    echo "*******************************************************"
-    echo ""
-}
-
-if file_has_changed "package.json"; then
-    print_notice_banner "'package.json' has changed (see below for diff), re-running \`npm install\` is advised."
-    diff_changed_file "package.json"
+Re-running \`yarn\` is advised after your rebase/merge.
+_EOF
 fi

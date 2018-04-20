@@ -6,7 +6,7 @@
       restrict: 'E',
       controller: require('./loginCtrl'),
       controllerAs: 'login',
-      templateUrl: 'modules/core/login/login.tpl.html',
+      template: require('modules/core/login/login.tpl.html'),
     };
     return directive;
   }

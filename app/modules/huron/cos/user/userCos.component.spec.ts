@@ -2,7 +2,7 @@ import UserClassOfServiceComponent from './index';
 
 describe('Component: UserClassOfService', () => {
   const restrictions = getJSONFixture('huron/json/cos/userCos.json');
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const USER_ID = '123456';
 
   beforeEach(function() {

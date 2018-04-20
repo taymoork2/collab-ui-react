@@ -5,10 +5,12 @@
     .module('Hercules')
     .controller('ResourceGroupSettingsController', ResourceGroupSettingsController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   /* @ngInject */
   function ResourceGroupSettingsController($stateParams, ResourceGroupService, Notification, $state, HybridServicesClusterService, $modal) {
     var vm = this;
-    vm.backUrl = 'cluster-list';
+    vm.backState = 'cluster-list';
     vm.clusters = {
       title: 'hercules.resourceGroupSettings.clustersHeader',
     };
@@ -18,7 +20,7 @@
     vm.resourceGroup = {
       title: 'hercules.resourceGroups.resourceGroupHeading',
     };
-    vm.userDocumentation = 'https://help.webex.com/docs/DOC-16382';
+    vm.userDocumentation = 'https://collaborationhelp.cisco.com/article/en-us/DOC-16382';
     vm.allowRemove = false;
     vm.showResetSection = false;
     vm.setGroupName = setGroupName;
@@ -84,7 +86,7 @@
         },
         controller: 'ConfirmDeleteResourceGroupController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/confirm-delete-resource-group.html'),
         type: 'dialog',
       }).result.then(function () {
         $state.go('cluster-list');
@@ -100,7 +102,7 @@
         },
         controller: 'AssignClustersController',
         controllerAs: 'vm',
-        templateUrl: 'modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html',
+        template: require('modules/hercules/fusion-pages/resource-group-settings/assign-clusters.html'),
         type: 'full',
         windowClass: 'assign-clusters-modal',
       }).result.then(function (result) {
@@ -112,7 +114,7 @@
     }
 
     function handleKeypress(event) {
-      if (event.keyCode === 13) {
+      if (event.keyCode === KeyCodes.ENTER) {
         setGroupName(vm.newGroupName);
       }
     }

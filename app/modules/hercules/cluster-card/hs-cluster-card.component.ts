@@ -4,7 +4,6 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { HybridServiceId, ClusterTargetType, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 
 export class ClusterCardController implements ng.IComponentController {
-  private hasNodesViewFeatureToggle = false;
   private cluster: IExtendedClusterFusion;
   public formatTimeAndDate = this.HybridServicesI18NService.formatTimeAndDate;
   public getLocalizedReleaseChannel = this.HybridServicesI18NService.getLocalizedReleaseChannel;
@@ -15,17 +14,9 @@ export class ClusterCardController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $state: ng.ui.IStateService,
     private $window: ng.IWindowService,
-    private FeatureToggleService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServicesUtilsService: HybridServicesUtilsService,
   ) { }
-
-  public $onInit() {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridNodesView)
-      .then((supported) => {
-        this.hasNodesViewFeatureToggle = supported;
-      });
-  }
 
   public countHosts() {
     return _.chain(this.cluster.connectors)
@@ -68,7 +59,7 @@ export class ClusterCardController implements ng.IComponentController {
       },
       controller: 'ClusterDeregisterController',
       controllerAs: 'clusterDeregister',
-      templateUrl: 'modules/hercules/rename-and-deregister-cluster-section/deregister-dialog.html',
+      template: require('modules/hercules/hs-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     })
     .result
@@ -78,22 +69,20 @@ export class ClusterCardController implements ng.IComponentController {
   }
 
   public openNodes(type: ClusterTargetType, id: string): void {
+    const params = {
+      id: id,
+      backState: 'cluster-list',
+    };
     if (type === 'c_mgmt') {
-      this.$state.go('expressway-cluster.nodes', {
-        id: id,
-      });
+      this.$state.go('expressway-cluster.nodes', params);
     } else if (type === 'mf_mgmt') {
-      this.$state.go('mediafusion-cluster.nodes', {
-        id: id,
-      });
+      this.$state.go('mediafusion-cluster.nodes', params);
     } else if (type === 'hds_app') {
-      this.$state.go('hds-cluster.nodes', {
-        id: id,
-      });
+      this.$state.go('hds-cluster.nodes', params);
     } else if (type === 'ucm_mgmt') {
-      this.$state.go('cucm-cluster.nodes', {
-        id: id,
-      });
+      this.$state.go('cucm-cluster.nodes', params);
+    } else if (type === 'cs_mgmt') {
+      this.$state.go('context-cluster.nodes', params);
     }
   }
 
@@ -105,6 +94,11 @@ export class ClusterCardController implements ng.IComponentController {
       });
     } else if (serviceId === 'squared-fusion-cal') {
       this.$state.go('calendar-service.list', {
+        backState: 'cluster-list',
+        clusterId: clusterId,
+      });
+    } else if (serviceId === 'spark-hybrid-impinterop') {
+      this.$state.go('imp-service.list', {
         backState: 'cluster-list',
         clusterId: clusterId,
       });
@@ -160,11 +154,17 @@ export class ClusterCardController implements ng.IComponentController {
     // schedule but instead upgrade automatically
     return _.includes(['cs_mgmt'], cluster.targetType);
   }
+
+  public showLinkToNodesPage(): boolean {
+    // Doesn't make sense for empty Expressways and EPT
+    return !(this.cluster.extendedProperties.isEmpty && this.cluster.targetType === 'c_mgmt')
+      && this.cluster.targetType !== 'ept';
+  }
 }
 
 export class ClusterCardComponent implements ng.IComponentOptions {
   public controller = ClusterCardController;
-  public templateUrl = 'modules/hercules/cluster-card/hs-cluster-card.component.html';
+  public template = require('modules/hercules/cluster-card/hs-cluster-card.component.html');
   public bindings = {
     cluster: '<',
   };

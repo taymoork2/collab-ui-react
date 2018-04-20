@@ -1,0 +1,16 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+cr-user-csv-export {
+  display: block;
+}
+
+.user-csv-export {
+  .cancel {
+    display: inline-flex;
+    align-items: center;
+
+    .icon-spinner {
+      @include vr-spacing(mr, 0.5);
+    }
+  }
+}

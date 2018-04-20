@@ -1,6 +1,7 @@
 'use strict';
 
 import provisioningModule from './index';
+import { STATUS_UPDATE_EVENT_NAME } from './provisioning.service';
 import { Status } from './provisioning.service';
 
 describe('Controller: ProvisioningController', function () {
@@ -12,8 +13,7 @@ describe('Controller: ProvisioningController', function () {
   };
 
   function initDependencySpies() {
-    spyOn(this.ProvisioningService, 'getOrders').and.callFake(function(param) { return orderParams[param]; });
-    spyOn(this.ProvisioningService, 'updateOrderStatus').and.returnValue(this.$q.resolve(orders));
+    spyOn(this.ProvisioningService, 'getOrders').and.callFake(function (param) { return orderParams[param]; });
     spyOn(this.Notification, 'errorResponse');
   }
 
@@ -22,9 +22,9 @@ describe('Controller: ProvisioningController', function () {
     this.injectDependencies(
       '$controller',
       '$q',
+      '$rootScope',
       '$scope',
       '$state',
-      '$templateCache',
       '$timeout',
       '$translate',
       'Notification',
@@ -44,28 +44,27 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.completedOrders.length).toBe(1);
       expect(this.controller.pendingOrders.length).toBe(3);
     });
-    it('moveTo should update the order status', function() {
-      const order = this.controller.pendingOrders[0];
-
-      expect(this.controller.completedOrders.length).toBe(1);
-      expect(this.controller.pendingOrders.length).toBe(3);
-      expect(order.status).toEqual(Status.PENDING);
-      this.controller.moveTo(order, Status.COMPLETED);
-      this.$scope.$digest();
-      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalledWith(order, Status.COMPLETED);
-      expect(order.status).toEqual(Status.COMPLETED);
-      expect(this.controller.completedOrders.length).toBe(2);
-      expect(this.controller.pendingOrders.length).toBe(2);
-
-    });
   });
   describe('failure handling', () => {
-    it ('should set pending and completed orders to an empty array and display notification if getOrders returns error', function() {
-      this.ProvisioningService.getOrders.and.returnValue(this.$q.reject( { error: 'error' } ));
+    it('should set pending and completed orders to an empty array and display notification if getOrders returns error', function () {
+      this.ProvisioningService.getOrders.and.returnValue(this.$q.reject({ error: 'error' }));
       initController.apply(this);
       expect(this.Notification.errorResponse).toHaveBeenCalled();
       expect(this.controller.completedOrders.length).toBe(0);
       expect(this.controller.pendingOrders.length).toBe(0);
+    });
+  });
+  describe('update order status', () => {
+    it('should update the display once the order status was updated', function () {
+      initController.apply(this);
+      spyOn(this.controller, 'updateOrderStatusInGrid').and.callThrough();
+      const order = _.cloneDeep(this.controller.pendingOrders[1]);
+      order.status = Status.COMPLETED;
+      this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
+      this.$scope.$digest();
+      expect(this.controller.updateOrderStatusInGrid).toHaveBeenCalled();
+      expect(this.controller.completedOrders.length).toBe(2);
+      expect(this.controller.pendingOrders.length).toBe(2);
     });
   });
 });

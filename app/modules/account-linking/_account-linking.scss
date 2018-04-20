@@ -1,0 +1,182 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.link-all-modal {
+  h3, section {
+    text-align: center;
+    margin: 1.5rem;
+  }
+}
+
+.modal-content.link-all-users.dialog {
+  height: 207px;
+  width: 380px;
+  h3 {
+    text-align: center;
+    color: $gray-dark-2;
+  }
+  .modal-info {
+    color: $gray-base;
+  }
+}
+
+.account-linking-side-panel-section {
+
+  .webex-header-image {
+    .icon {
+      font-size: 60px;
+      line-height: 70px;
+      opacity: 0.5;
+    }
+  }
+
+  .webex-site-name {
+    width: 23rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .read-only-site {
+    background-color: $color-yellow-light;
+    border-top: 4px solid $color-yellow-dark;
+    text-align: center;
+    span {
+      display: inline-block;
+    }
+  }
+
+  .errors-in-data {
+    background-color: $color-red-light;
+    border-top: 4px solid $color-yellow-dark;
+    text-align: center;
+    span {
+      display: inline-block;
+    }
+  }
+}
+
+.account-linking {
+  @extend %grid-header;
+  @extend %page-background-white;
+
+  .ui-grid-viewport {
+    height: 70vh !important;
+    background-color: $white !important;
+  }
+
+  .ui-grid-row {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .grid-vcenter {
+    vertical-align: middle;
+  }
+
+  li {
+    a.disabled {
+      color: $gray-light-2;
+      cursor: default;
+    }
+  }
+
+  .loading-sites {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+
+    .loading-sites-spinner {
+      font-size: 2rem;
+    }
+  }
+
+  .waiting {
+    font-size: 0.5rem;
+    opacity: 0.4;
+  }
+
+  .faded {
+    opacity: 0.4;
+  }
+
+  .error-table-entry {
+    color: $color-red-light;
+    opacity: 0.8;
+  }
+
+}
+.account-linking-wizard-custom {
+  height: 0px !important;
+}
+
+.account-linking-wizard {
+
+  .legal-agreement {
+    max-height: 30rem;
+    overflow-y: scroll;
+
+    p {
+      padding-right: 1rem;
+    }
+  }
+
+  .disabled-text {
+    color: $gray-light-2;
+  }
+
+  .wizard-info {
+    color: $gray-base;
+  }
+
+  .wizard-info-title {
+    color: $gray-dark-2;
+  }
+
+  .signAgreementTooltipIcon {
+    font-size: 14px !important;
+  }
+
+  .wizard-title {
+    margin-top: 0rem !important;
+  }
+  h5 {
+    font-weight: bold;
+    padding-bottom: 1rem;
+    padding-top: 0.3rem;
+  }
+  label {
+    font-weight: bold;
+  }
+  .input-info {
+    padding-left: 2rem;
+    p {
+      padding-bottom: 0.1rem;
+    }
+  }
+  p {
+    padding-bottom: 0.5rem;
+  }
+  .center {
+    text-align: center;
+  }
+  .icon {
+    font-size: 6rem;
+  }
+  .icon-info-text {
+    font-size: 2rem;
+  }
+  .icon-circle-check-mark-success {
+    color: $green-base;
+  }
+
+  .domain-right {
+    padding-left: 1rem;
+  }
+
+  .domain {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

@@ -1,42 +1,34 @@
-export class ChartColors {
-  /* @ngInject */
-  constructor() {}
-
+export enum ChartColors {
   // Toolkit Colors
-  public readonly alertsBase: string = '#F96452';
-  public readonly attentionBase: string = '#F5A623';
-  public readonly brandWhite: string = '#FFFFFF';
-  public readonly ctaBase: string = '#43A942';
-  public readonly ctaLight: string = '#8BCA8A';
-  public readonly ctaLighter: string = '#D4ECD4';
-  public readonly grayDarkFour: string = '#292929';
-  public readonly grayDarkThree: string = '#343537';
-  public readonly grayDarkTwo: string = '#4F5051';
-  public readonly grayDarkOne: string = '#6a6b6c';
-  public readonly grayBase: string = '#858688';
-  public readonly grayLightOne: string = '#AEAEAF';
-  public readonly grayLightTwo: string = '#D7D7D8';
-  public readonly grayLightThree: string = '#EBEBEC';
-  public readonly grayLightFour: string = '#F5F5F6';
-  public readonly negativeBase: string = '#F5483F';
-  public readonly negativeDarker: string = '#D03D35';
-  public readonly peopleBase: string = '#14A792';
-  public readonly peopleLight: string = '#6ec9bc';
-  public readonly peopleLighter: string = '#C9EBE6';
-  public readonly primaryBase: string = '#049FD9';
-  public readonly primaryDarker: string = '#0387B8';
-  public readonly primaryLight: string = '#66C5E8';
+  alertsBase = '#F96452',
+  attentionBase = '#F5A623',
+  brandWhite = '#FFFFFF',
+  ctaBase = '#43A942',
+  ctaLight = '#8BCA8A',
+  ctaLighter = '#D4ECD4',
+  grayDarkFour = '#292929',
+  grayDarkThree = '#343537',
+  grayDarkTwo = '#4F5051',
+  grayDarkOne = '#6a6b6c',
+  grayBase = '#858688',
+  grayLightOne = '#AEAEAF',
+  grayLightTwo = '#D7D7D8',
+  grayLightThree = '#EBEBEC',
+  grayLightFour = '#F5F5F6',
+  negativeBase = '#F5483F',
+  negativeDarker = '#D03D35',
+  peopleBase = '#14A792',
+  peopleLight = '#6ec9bc',
+  peopleLighter = '#C9EBE6',
+  primaryBase = '#049FD9',
+  primaryDarker = '#0387B8',
+  primaryLight = '#66C5E8',
 
   // Non-Toolkit Colors
-  public readonly colorPurple: string = '#8E5ACF';
-  public readonly colorLightGreenFill: string = '#017900';
-  public readonly colorLightRedFill: string = '#FF0000';
-  public readonly colorLightYellowFill: string = '#FFA200';
-  public readonly gray: string = '#aaa';
-  public readonly metricDarkGreen: string = '#417505';
+  colorPurple = '#8E5ACF',
+  colorLightGreenFill = '#017900',
+  colorLightRedFill = '#FF0000',
+  colorLightYellowFill = '#FFA200',
+  gray = '#aaa',
+  metricDarkGreen = '#417505',
 }
-
-module.exports = angular
-  .module('core.chartColors', [])
-  .service('chartColors', ChartColors)
-  .name;

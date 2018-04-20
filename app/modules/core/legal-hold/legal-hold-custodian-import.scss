@@ -1,0 +1,25 @@
+legal-hold-custodian-import {
+  .custodianImport__input--hidden {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .custodianImport__input--label {
+    margin-left: .5rem;
+  }
+  .custodianImport__results {
+    &__export-csv {
+      align-self: flex-end;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .custodian-import__table-column--first {
+    width: 20rem;
+    text-align: left;
+  }
+
+}

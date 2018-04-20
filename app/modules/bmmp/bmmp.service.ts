@@ -1,10 +1,12 @@
+import { Config } from 'modules/core/config/config';
+
 export class BmmpService  {
   /* @ngInject */
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private Config,
+    private Config: Config,
     private SessionStorage,
     private StorageKeys,
   ) {}

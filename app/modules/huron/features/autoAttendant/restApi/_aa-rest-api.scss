@@ -1,14 +1,168 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .aa-rest-api-url {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 19rem;
+  width: 25rem;
 }
 
 .aa-rest-api-block {
-  padding-left: 0rem;
+  display: inline-block;
+  resize: vertical;
+  white-space: inline;
 }
 
-.aa-rest-var {
-  padding-bottom: 1rem;
+.aa-rest-spacing {
+  @include vr-spacing(mr, -0.35);
+}
+
+.aa-toggle {
+  width: fit-content;
+}
+.aa-text-overflow.aa-text-overflow {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #F5A623;
+  font-family: $brand-font-regular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: .75rem;
+  line-height: 0.5rem;
+  padding-top: 0.2rem;
+  padding-right: 0.2rem;
+}
+
+.aa-div-click {
+  white-space: nowrap;
+  padding-top: 0.5rem;
+  padding-left: 0rem;
+  padding-bottom: 0.3rem;
+}
+
+.aa-full-warning.aa-full-warning {
+  font-size: .75rem;
+  position: absolute;
+  background-color: #FFF;
+  z-index: 100;
+  border: 0.01rem solid #F5A623;
+  color: #F5A623;
+  line-height: 1.2;
+  margin-top: 0.3rem;
+  white-space: normal;
+  left: 1rem;
+}
+
+.aa-dynamic-var {
+  margin-bottom: 0.2rem;
+}
+
+.aa-static-var {
+  margin-top: 0.2rem;
+  line-height: 1.5rem;
+  word-break: break-all;
+}
+
+.aa-url {
+  background-color: $brand-primary;
+  @include vr-spacing(pl, 0.2);
+  @include vr-spacing(pr, 0.2);
+  @include vr-spacing(pt, 0.1);
+  @include vr-spacing(pb, 0.1);
+  @include vr-spacing(mr, 0.2);
+  color: white;
+  white-space: nowrap;
+  font-weight: bold;
+  display: inline-block;
+  border-radius: 0.2rem;
+  border: 0.1rem solid;
+  border-color: $brand-primary;
+  line-height: 1.75rem;
+  word-wrap: break-word;
+}
+
+.aa-rest-header-text {
+  color: #aeaeaf;
+}
+
+.aa-variable-text {
+  font-size: 1rem;
+  @include vr-spacing(mt, 0.3);
+}
+
+.aa-rest-helper-text {
+  @include vr-spacing(mt, 0.4);
+  color: #aeaeaf;
+}
+
+.aa-rest-value-text {
+  @include vr-spacing(mt, 0.6);
+  font-size: 1rem;
+}
+
+.aa-rest-dynamic-variables {
+  @include vr-spacing(mt, 0.6);
+}
+
+.aa-rest-test-button-spacing {
+  @include vr-spacing(mt, 1.06);
+  @include vr-spacing(mb, 1.06);
+}
+
+.aa-rest-assignment-block {
+  @include vr-spacing(mt, 0);
+  @include vr-spacing(mb, 0);
+}
+
+.var-assignment-table {
+  border-collapse: collapse;
+  border: 0.01rem solid #aeaeaf;
+
+  tr {
+    border-top: none;
+  }
+
+  th {
+    background-color: #ffffff;
+    border-bottom: 0.01rem solid #aeaeaf;
+  }
+
+  th, td {
+    border-right: 0.01rem solid #aeaeaf;
+  }
+}
+
+label {
+  cursor: default;
+}
+
+.aa-rest-margin {
+    @include vr-spacing(mt, 2);
+}
+
+.aa-rest-url-error-message {
+  color: $color-red-base;
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
+
+  .aa-rest-url-error {
+    @include vr-spacing(ml, 1.5);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, 0.4);
+    line-height: 1rem;
+    font-size: .875rem;
+    max-width: 36rem;
+  }
+}
+
+.aa-rest-error-icon::before {
+  @extend %icon-error;
+  font-family: $icon-font-name;
+  float: left;
+  font-size: 1rem;
+}
+
+.aa-rest-url-helper-text {
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
 }

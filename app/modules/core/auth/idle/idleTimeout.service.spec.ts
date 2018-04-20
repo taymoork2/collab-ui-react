@@ -2,7 +2,7 @@ import idleTimeoutModule from './index';
 
 describe('Service: IdleTimeoutService: ', function () {
 
-  let Auth, FeatureToggleService, IdleTimeoutService, Log, Config, $rootScope, $timeout,  $q, $window, $document;
+  let Auth, FeatureToggleService, IdleTimeoutService, Log, Config, $rootScope, $timeout, $q, $window, $document;
 
   beforeEach(() => {
     angular.mock.module(idleTimeoutModule);
@@ -40,24 +40,52 @@ describe('Service: IdleTimeoutService: ', function () {
     spyOn(Auth, 'isLoggedIn').and.returnValue(true);
     spyOn($window.localStorage, 'setItem');
     spyOn($window.localStorage, 'removeItem');
+    spyOn(Config, 'getEnv').and.returnValue('dev');
+  }
+
+  function getArgumentOccuranceNumberInCalls(allCalls, argument) {
+    const callsWithArg = _.filter(allCalls, function (call) {
+      return _.includes(call['args'], argument);
+    });
+    return callsWithArg.length;
   }
 
   describe('Should on initializing', () => {
     beforeEach(() => {
       IdleTimeoutService.init();
-      $rootScope.$broadcast('LOGIN');
+      $rootScope.$broadcast('Core::loginCompleted');
       $rootScope.$digest();
     });
 
     it('wire events on login', () => {
       expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Wiring up events');
-
     });
 
-    it('log user out once the timout expires', () => {
+    it('only do it once regardless of the number of login events', () => {
+      $rootScope.$broadcast('Core::loginCompleted');
+      $rootScope.$digest();
+      $rootScope.$broadcast('Core::loginCompleted');
+      $rootScope.$digest();
+      expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Wiring up events');
+      expect(Log.debug).toHaveBeenCalledTimes(2);
+      expect(getArgumentOccuranceNumberInCalls(Log.debug.calls.all(), 'IDLE TIMEOUT SERVICE: Wiring up events')).toBe(1);
+    });
+
+    it('log user out once the timeout expires', () => {
       $timeout.flush();
       expect(Auth.logout).toHaveBeenCalled();
     });
+
+    it('after timeout expiration restart the timer again after user logs back in', () => {
+      expect(getArgumentOccuranceNumberInCalls(Log.debug.calls.all(), 'IDLE TIMEOUT SERVICE: Wiring up events')).toBe(1);
+      $timeout.flush();
+      expect(Auth.logout).toHaveBeenCalled();
+      expect(getArgumentOccuranceNumberInCalls(Log.debug.calls.all(), 'IDLE TIMEOUT SERVICE: Wiring up events')).toBe(1);
+      $rootScope.$broadcast('Core::loginCompleted');
+      $rootScope.$digest();
+      expect(getArgumentOccuranceNumberInCalls(Log.debug.calls.all(), 'IDLE TIMEOUT SERVICE: Wiring up events')).toBe(2);
+    });
+
     // idleTabTimeout: 1200000, //20 mins
     it('log user out ONLY after the timeout expires without user action', () => {
       expect(Log.debug).toHaveBeenCalledWith('IDLE TIMEOUT SERVICE: Starting Tab Timer');

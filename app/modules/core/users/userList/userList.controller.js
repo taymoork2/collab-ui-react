@@ -9,7 +9,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $templateCache, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -37,14 +37,12 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     $scope.currentUser = null;
     $scope.popup = Notification.popup;
     $scope.filterByAdmin = false;
-    $scope.userPreviewActive = false;
-    $scope.userDetailsActive = false;
     $scope.sort = {
       by: 'name',
       order: 'ascending',
     };
     $scope.placeholder = {
-      name: $translate.instant('usersPage.all'),
+      name: $translate.instant('common.all'),
       filterValue: '',
       count: 0,
     };
@@ -94,6 +92,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     vm.firstOfType = firstOfType;
     vm.isValidThumbnail = Userservice.isValidThumbnail;
     vm.getUserPhoto = Userservice.getUserPhoto;
+    vm.getImageAria = getImageAria;
     vm.showUserDetails = showUserDetails;
     vm.selectRow = selectRow;
 
@@ -117,6 +116,16 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         bind();
         getUserList();
       });
+
+      if ($state.params.preSelectedUserId) {
+        UserOverviewService.getUser($state.params.preSelectedUserId)
+          .then(function (response) {
+            if (response && response.user) {
+              $scope.currentUser = response.user;
+              showUserDetails(response.user);
+            }
+          });
+      }
     }
 
     function onDestroy() {
@@ -128,7 +137,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     function bind() {
       $timeout(function () {
         if ($state.params.showAddUsers === 'add') {
-          $state.go('users.add');
+          $state.go('users.add.manual');
         }
       }, 0);
 
@@ -148,10 +157,6 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
           getUserList();
         }
       });
-    }
-
-    function getTemplate(name) {
-      return $templateCache.get('modules/core/users/userList/templates/' + name + '.html');
     }
 
     function getUserList(startAt) {
@@ -243,7 +248,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       } else {
         //get the users I am searching for
         UserListService.listUsers(startIndex, Config.usersperpage, $scope.sort.by, $scope.sort.order,
-          function (data, status, searchStr) {
+          function (data, status, searchStr, fullResponse) {
             $scope.tooManyUsers = false;
             if (data.success) {
               if ($scope.searchStr === searchStr) {
@@ -304,10 +309,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
                 $scope.tooManyUsers = tooManyUsers;
               } else if (tooManyResults) {
                 Log.debug('Query existing users yielded too many search results. Status: ' + status);
-                Notification.error('usersPage.tooManyResultsError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.tooManyResultsError');
               } else {
                 Log.debug('Query existing users failed. Status: ' + status);
-                Notification.error('usersPage.userListError');
+                Notification.errorWithTrackingId(fullResponse, 'usersPage.userListError');
               }
               deferred.reject(data);
             }
@@ -492,8 +497,12 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function canShowResendInvite(user) {
-      var isHuronUser = Userservice.isHuronUser(user.entitlements);
-      return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser) && !$scope.isCSB;
+      if ($scope.isCSB || $scope.dirsyncEnabled) {
+        return false;
+      } else {
+        var isHuronUser = Userservice.isHuronUser(user.entitlements);
+        return (user.userStatus === 'pending' || user.userStatus === 'error' || isHuronUser);
+      }
     }
 
     function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
@@ -538,7 +547,8 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
       var columnDefs = [{
         field: 'photos',
         displayName: '',
-        cellTemplate: getTemplate('photoCell.tpl'),
+        cellTemplate: require('./templates/photoCell.tpl.html'),
+        headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
         width: 70,
       }, {
         field: 'name.givenName',
@@ -565,11 +575,11 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         id: 'userStatus',
         cellFilter: 'userListFilter',
         displayName: $translate.instant('usersPage.status'),
-        cellTemplate: getTemplate('status.tpl'),
+        cellTemplate: require('./templates/status.tpl.html'),
       }, {
         field: 'action',
         displayName: $translate.instant('usersPage.actionHeader'),
-        cellTemplate: getTemplate('actions.tpl'),
+        cellTemplate: require('./templates/actions.tpl.html'),
       }];
 
       function onRegisterApi(gridApi) {
@@ -601,6 +611,10 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
 
     function deselectRow() {
       $scope.currentUser = null;
+    }
+
+    function getImageAria(user) {
+      return user.displayName + ' ' + $translate.instant('usersPage.userImage');
     }
 
     function selectRow(grid, row) {

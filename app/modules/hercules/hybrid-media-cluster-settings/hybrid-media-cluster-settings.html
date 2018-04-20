@@ -1,0 +1,41 @@
+<div class="fusion-cluster-settings">
+
+  <div class="cs-form">
+    <setting-section  setting="$ctrl.sparkCalls" ng-if="$ctrl.hasMfClusterWizardFeatureToggle">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="mediaFusion.easyConfig.testsparkcalls"></h5>
+          <p class="sub-section__description" translate="mediaFusion.easyConfig.sparkcalldesc"></p>
+          <button class="btn" ng-click="$ctrl.openSetUpModal()">
+              <span translate="mediaFusion.easyConfig.begintest"></span>
+            </button>
+        </div>
+    </setting-section>
+
+    <setting-section setting="$ctrl.upgradeSchedule">
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
+        <p class="sub-section__description" translate="hercules.settings.scheduleUpgrade.description"></p>
+        <hs-upgrade-schedule-configuration only-daily="true" cluster-id="$ctrl.cluster.id"></hs-upgrade-schedule-configuration>
+        <div class="emergency-upgrade-section">
+          <h5 class="sub-section__label" translate="hercules.settings.emergencyUpgrade.mediafusion.title"></h5>
+          <p class="sub-section__description" translate="hercules.settings.emergencyUpgrade.mediafusion.description"></p>
+        </div>
+      </div>
+    </setting-section>
+
+    <sip-call-settings
+      cluster="$ctrl.cluster"
+      is-wizard="false"
+      mf-toggle="$ctrl.hasMfPhaseTwoToggle"
+      mf-trusted-toggle="$ctrl.hasMfTrustedSipToggle"
+      mf-cascade-toggle="$ctrl.hasMfCascadeBwConfigToggle"
+      mf-wizard-toggle="$ctrl.hasMfClusterWizardFeatureToggle">
+    </sip-call-settings>
+
+    <release-channel-section cluster="$ctrl.cluster"></release-channel-section>
+
+    <hs-cluster-section cluster="$ctrl.cluster" deregister-modal-options="$ctrl.deregisterModalOptions">
+    </hs-cluster-section>
+
+  </div>
+</div>

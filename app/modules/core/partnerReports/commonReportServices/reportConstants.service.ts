@@ -56,7 +56,7 @@ export class ReportConstants {
   // Report Filtering All/Engagement/quality
   public filterArray: IFilterObject[] = [{
     id: 'allReports',
-    label: 'reportsPage.all',
+    label: 'common.all',
     selected: true,
     toggle: undefined,
   }, {

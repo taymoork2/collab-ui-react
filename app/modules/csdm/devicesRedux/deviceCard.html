@@ -1,0 +1,81 @@
+<div class="device-card">
+  <div style="display: flex; align-items: center; flex-wrap: wrap">
+    <i
+      ng-if="!device.image && device.type !== 'group' && device.needsActivation"
+      class="icon icon-3x icon-circle-unlock"
+    />
+    <i
+      ng-if="!device.image && device.type !== 'group' && !device.needsActivation"
+      class="icon icon-3x icon-circle-telepresence"
+    />
+    <i
+      ng-if="!device.image && device.type === 'group'"
+      class="icon icon-3x icon-circle-group"
+    />
+    <img ng-if="device.image" ng-src="{{device.image}}">
+    <!--<i-->
+      <!--class="overlay"-->
+      <!--ng-if="device.type !== 'group' && !device.needsActivation"-->
+      <!--ng-class="device.cssColorClass"-->
+    <!--/>-->
+
+    <div class="ellipsis card-items title">
+      <h4 class="ellipsis" ng-bind-html="device.displayName | highlight:lctrl.searchObject:'displayName'"></h4>
+      <div ng-switch on="device.type">
+        <div ng-switch-when="group">
+          <!-- group -->
+          <div class="ellipsis">
+            {{device.count}} devices
+          </div>
+        </div>
+        <div ng-switch-default>
+          <div class="ellipsis" ng-if="lctrl.search && !device.needsActivation">
+            <!-- search -->
+            <span
+              ng-if="device.filterMatch !== 'diagnosticsEvent' && device.filterMatch !='product' && lctrl.deviceProps[device.filterMatch]">
+              {{lctrl.deviceProps[device.filterMatch || 'readableState']}}:
+            </span>
+            <span
+              ng-bind-html="lctrl.getFilterMatchValue(device, lctrl.deviceProps[device.filterMatch] ? device.filterMatch : 'product') | highlight:lctrl.searchObject:device.filterMatch"></span>
+          </div>
+          <div class="ellipsis" ng-if="!lctrl.search && !device.needsActivation">
+            <!-- no search -->
+            <span ng-if="device.hasIssues">
+              {{device.diagnosticsEvents[0].type || device.product}}
+            </span>
+            <span ng-if="!device.hasIssues">
+              {{device.product}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state">
+      <i class="icon" ng-class="[device.cssColorClass, lctrl.getIcon(device)]"/>
+      <!--<i class="icon icon-warning" ng-class="device.cssColorClass"/>-->
+      <!--<i class="icon icon-error" ng-class="device.cssColorClass"/>-->
+      <span class="state" ng-bind-html="device.state.readableState | highlight:lctrl.searchObject:'readableState'"></span></div>
+    <div ng-show="device.supportsCustomTags">
+      <div class="tag-container" ng-show="device.tags && device.tags.length > 0">
+        <span class="tag" ng-repeat="tag in device.tags">
+          <span ng-bind-html="tag | highlight:lctrl.searchObject:'tag'"></span>
+          <!--<i class="icon icon-close" ng-show="!device.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag)"></i>-->
+        </span>
+      </div>
+      <!--<div class="tag-container">-->
+      <!--<span class="tag add-tag" ng-hide="deviceOverview.isAddingTag" ng-click="deviceOverview.isAddingTag = true">-->
+      <!--<span translate="spacesPage.addTag"></span>-->
+      <!--<i class="icon icon-plus"></i>-->
+      <!--</span>-->
+      <!--<input-->
+      <!--type="text"-->
+      <!--placeholder="{{'spacesPage.newCustomTagPlaceholder' | translate}}"-->
+      <!--ng-model="deviceOverview.newTag"-->
+      <!--ng-show="deviceOverview.isAddingTag"-->
+      <!--focus-on="deviceOverview.isAddingTag"-->
+      <!--ng-blur="deviceOverview.addTag()"-->
+      <!--ng-keyup="deviceOverview.addTagOnEnter($event)"/>-->
+      <!--</div>-->
+    </div>
+  </div>
+</div>

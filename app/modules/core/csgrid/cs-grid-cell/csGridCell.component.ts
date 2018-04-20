@@ -23,7 +23,7 @@ class CsGridCellCtrl {
 }
 
 export class CsGridCellComponent implements ng.IComponentOptions {
-  public templateUrl = 'modules/core/csgrid/cs-grid-cell/csGridCell.tpl.html';
+  public template = require('modules/core/csgrid/cs-grid-cell/csGridCell.tpl.html');
   public controller = CsGridCellCtrl;
   public bindings = {
     cellClickFunction: '&',

@@ -1,21 +1,28 @@
-<div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId !== 'ept'">
-  <span ng-if="row.entity.extendedProperties.isEmpty">
+<div class="ui-grid-cell-contents service-status-content" ng-if="grid.appScope.$ctrl.serviceId !== 'ept'" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.goToSidepanel(row)" ng-keypress="grid.appScope.keypressSidepanel(grid, row)">
+  <span ng-if="row.entity.extendedProperties.isEmpty && row.entity.extendedProperties.allowedRedirectTarget">
     <cs-statusindicator ng-model="disabled"></cs-statusindicator>
-    <span translate="hercules.status.no_nodes_registered"></span>
+    <span translate="hercules.fusion.list.complete-registration"></span>
+  </span>
+  <span ng-if="row.entity.extendedProperties.isEmpty && !row.entity.extendedProperties.allowedRedirectTarget && !row.entity.extendedProperties.registrationTimedOut">
+      <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+      <span translate="hercules.status.no_nodes_registered"></span>
+  </span>
+  <span ng-if="row.entity.extendedProperties.registrationTimedOut">
+      <cs-statusindicator ng-model="disabled"></cs-statusindicator>
+      <span translate="hercules.status.registrationTimeout"></span>
   </span>
   <span ng-if="!row.entity.extendedProperties.isEmpty">
-    <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
-    <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
+    <span ng-hide="row.entity.extendedProperties.maintenanceMode === 'on' || row.entity.extendedProperties.maintenanceMode === 'pending'">
+      <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
+      <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
+      <span class="badge badge-{{row.entity.extendedProperties.alarmsBadgeCss}}" ng-if="row.entity.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+    </span>
   </span>
-  <span class="badge badge-{{row.entity.extendedProperties.alarmsBadgeCss}}" ng-if="row.entity.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'on'" class="badge warning" translate="hercules.nodesPage.maintenanceReady"></span>
+  <span ng-if="row.entity.extendedProperties.maintenanceMode === 'pending'" class="badge" translate="hercules.nodesPage.maintenancePending"></span>
   <span ng-if="row.entity.extendedProperties.servicesStatus.state.name === 'not_configured'"> | <span translate="hercules.notifications.configure-connector.action-in-grid"></span></span>
-  <span ng-if="!grid.appScope.$ctrl.hasNodesViewFeatureToggle && row.entity.aggregates.upgradeState === 'upgrading'"> | <span translate="hercules.status.upgrading"></span></span>
-  <span ng-if="!grid.appScope.$ctrl.hasNodesViewFeatureToggle && row.entity.aggregates.provisioning.availablePackageIsUrgent && !row.entity.aggregates.upgradeState === 'upgrading'"> |
-  <span translate="hercules.status.urgentUpgradeAvailable"></span></span>
-  <span ng-if="row.entity.maintenanceModeLabel === 'on'" class="badge warning" translate="hercules.fusion.list.maintenance"></span>
-  <span ng-if="row.entity.maintenanceModeLabel === 'pending'" class="badge" translate="hercules.fusion.list.pendingMaintenance"></span>
 </div>
-<div class="ui-grid-cell-contents" style="padding-top: 1.5rem" ng-if="grid.appScope.$ctrl.serviceId === 'ept'">
+<div class="ui-grid-cell-contents service-status-content" ng-if="grid.appScope.$ctrl.serviceId === 'ept'" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.goToSidepanel(row)" ng-keypress="grid.appScope.keypressSidepanel(grid, row)">
   <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
   <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
 </div>

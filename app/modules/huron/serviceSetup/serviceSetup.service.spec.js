@@ -163,96 +163,56 @@ describe('Service: ServiceSetup', function () {
   });
 
   describe('getDateFormats', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/dateFormats.json').respond(getJSONFixture('huron/json/settings/dateFormat.json'));
-    });
-
     it('should get the Date formats', function () {
       ServiceSetup.getDateFormats().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(3);
+        expect(response.length).toBe(9);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getTimeFormats', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/timeFormat.json').respond(getJSONFixture('huron/json/settings/timeFormats.json'));
-    });
-
     it('should get the Time formats', function () {
       ServiceSetup.getTimeFormats().then(function (response) {
         expect(response).toBeDefined();
         expect(response.length).toBe(2);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getTimeZones', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/jodaTimeZones.json').respond(getJSONFixture('huron/json/timeZones/timeZones.json'));
-    });
-
     it('should get time zones', function () {
       ServiceSetup.getTimeZones().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(472);
+        expect(response.length).toBe(430);
       });
-      $httpBackend.flush();
     });
   });
 
   describe('getSiteLanguages', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/siteLanguages.json').respond(getJSONFixture('huron/json/settings/languages.json'));
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    });
-
     it('should get site default languages & additional languages since userlocale2 feature toggle was enabled', function () {
       ServiceSetup.getSiteLanguages().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(4);
+        expect(response.length).toBe(12);
         var filteredLanguage = _.find(response, { value: 'es_ES' });
         expect(filteredLanguage).toBeDefined();
         var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
         expect(translatedLanguages).toBeDefined();
-        expect(translatedLanguages.length).toBe(4);
+        expect(translatedLanguages.length).toBe(12);
       });
-      $httpBackend.flush();
-    });
-
-    it('should get site default languages only since userlocale2 feature toggle was disabled', function () {
-      FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(false));
-      ServiceSetup.getSiteLanguages().then(function (response) {
-        expect(response).toBeDefined();
-        expect(response.length).toBe(2);
-        var filteredLanguage = _.find(response, { value: 'es_ES' });
-        expect(filteredLanguage).not.toBeDefined();
-        var translatedLanguages = ServiceSetup.getTranslatedSiteLanguages(response);
-        expect(translatedLanguages).toBeDefined();
-        expect(translatedLanguages.length).toBe(2);
-      });
-      $httpBackend.flush();
     });
   });
 
   describe('getSiteCountries', function () {
-    beforeEach(function () {
-      $httpBackend.expectGET('modules/huron/serviceSetup/siteCountries.json').respond(getJSONFixture('huron/json/settings/countries.json'));
-    });
-
     it('should get site countries', function () {
       FeatureToggleService.supports = jasmine.createSpy().and.returnValue($q.resolve(true));
       ServiceSetup.getSiteCountries().then(function (response) {
         expect(response).toBeDefined();
-        expect(response.length).toBe(2);
+        expect(response.length).toBe(16);
         var translatedCountries = ServiceSetup.getTranslatedSiteCountries(response);
         expect(translatedCountries).toBeDefined();
-        expect(translatedCountries.length).toBe(2);
+        expect(translatedCountries.length).toBe(16);
       });
-      $httpBackend.flush();
     });
   });
 

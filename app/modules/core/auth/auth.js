@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $translate, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -68,7 +68,7 @@
         .then(function (responseArray) {
           return _.get(responseArray, '[0]');
         })
-        .catch(handleErrorAndResetAuthinfo);
+        .catch(resetAuthinfoAndRejectResponse);
 
       return deferredAll;
     }
@@ -298,7 +298,7 @@
 
     function initializeAuthinfo(authData) {
       Authinfo.initialize(authData);
-      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin()) {
+      if (Authinfo.isAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isUserAdminUser() || Authinfo.isDeviceAdminUser()) {
         return AccountService.updateAuthinfoAccount().then(function () {
           return authData;
         });
@@ -317,15 +317,9 @@
       }
     }
 
-    function handleErrorAndResetAuthinfo(res) {
+    function resetAuthinfoAndRejectResponse(response) {
       Authinfo.clear();
-      if (res && res.status === 401) {
-        return $q.reject($translate.instant('errors.status401'));
-      }
-      if (res && res.status === 403) {
-        return $q.reject($translate.instant('errors.status403'));
-      }
-      return $q.reject($translate.instant('errors.serverDown'));
+      return $q.reject(response);
     }
 
     // helpers

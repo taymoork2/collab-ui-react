@@ -5,17 +5,19 @@
     .module('Hercules')
     .controller('AddResourceController', AddResourceController);
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function AddResourceController($modal, $modalInstance, $state, $translate, $window, connectorType, firstTimeSetup, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, serviceId) {
+  function AddResourceController($q, $modal, $modalInstance, $state, $scope, $translate, $window, connectorType, options, serviceId, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, Notification, ResourceGroupService, USSService) {
     var vm = this;
     vm.connectors = [];
     vm.warning = warning;
     // Bug in toolkit for cs-input warning
-    //https://wwwin-github.cisco.com/collab-ui/collab-library/issues/79
+    // https://wwwin-github.cisco.com/collab-ui/collab-library/issues/79
     vm.warningMessage = 'DummyMessage';
     vm.hostname = '';
     vm.releaseChannel = 'stable';
+    vm.expresswayClusters = [];
     vm.connectorType = connectorType;
     vm.serviceId = serviceId;
     vm.preregistrationCompletedGoToExpressway = false;
@@ -23,10 +25,10 @@
     vm.gettingResourceGroupInput = false;
     vm.selectedAction = 'new';
     vm.closeSetupModal = closeSetupModal;
-    vm.firstTimeSetup = firstTimeSetup;
-    vm.welcomeScreenAccepted = !firstTimeSetup;
+    vm.firstTimeSetup = options.firstTimeSetup;
+    vm.welcomeScreenAccepted = !options.firstTimeSetup;
     vm.localizedConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.' + vm.connectorType);
-    vm.localizedServiceName = $translate.instant('hercules.serviceNames.' + vm.serviceId);
+    vm.localizedServiceName = $translate.instant('hercules.hybridServiceNames.' + vm.serviceId);
     vm.localizedManagementConnectorName = $translate.instant('hercules.connectorNameFromConnectorType.c_mgmt');
     vm.localizedAddNewExpressway = $translate.instant('hercules.addResourceDialog.registerNewExpressway');
     vm.localizedAddNewExpresswayHelp = $translate.instant('hercules.addResourceDialog.registerNewExpresswayHelp');
@@ -35,6 +37,11 @@
     vm.localizedCannotProvionError = $translate.instant('hercules.addResourceDialog.cannotProvisionConnector', {
       ConnectorName: vm.localizedConnectorName,
     });
+    vm.userStatusesByClustersSummary = [];
+    vm.subscribeStatusesSummary = null;
+    vm.numberOfUsersWithoutService = 0;
+    vm.resourceGroupName = '';
+    vm.hasCapacityFeatureToggle = options.hasCapacityFeatureToggle;
     vm.optionalSelectResourceGroupStep = false;
     vm.chooseClusterName = false;
     vm.validationMessages = {
@@ -57,16 +64,24 @@
       assignNo: $translate.instant('hercules.addResourceDialog.assignNo'),
     };
 
-    vm.provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
-    vm.addPreregisteredClusterToAllowList = addPreregisteredClusterToAllowList;
-    vm.getIconClassForService = getIconClassForService;
-    vm.updateDropdownMenu = updateDropdownMenu;
+    // For unit testing purposes
+    vm._provisionExpresswayWithNewConnector = provisionExpresswayWithNewConnector;
 
+    // INIT
+    extractSummary();
+    vm.subscribeStatusesSummary = USSService.subscribeStatusesSummary('data', extractSummary);
     findAndPopulateExistingExpressways(vm.connectorType);
     FmsOrgSettings.get()
       .then(function (data) {
         vm.releaseChannel = data.expresswayClusterReleaseChannel;
       });
+    $scope.$on('$destroy', function () {
+      vm.subscribeStatusesSummary.cancel();
+    });
+
+    function extractSummary() {
+      vm.userStatusesByClustersSummary = USSService.extractSummaryForClusters(['squared-fusion-uc', 'squared-fusion-cal', 'spark-hybrid-impinterop']);
+    }
 
     vm.preregisterAndProvisionExpressway = function (connectorType) {
       vm.loading = true;
@@ -81,6 +96,10 @@
         .finally(function () {
           vm.loading = false;
         });
+    };
+
+    vm.getServiceNameKey = function (serviceId) {
+      return $translate.instant('hercules.hybridServiceNames.' + serviceId);
     };
 
     function warning() {
@@ -159,6 +178,9 @@
           });
         }
       });
+      vm.expresswayClusters = data.filter(function (cluster) {
+        return cluster.targetType === 'c_mgmt';
+      });
       return allExpressways;
     }
 
@@ -226,17 +248,13 @@
         });
     }
 
-    function getIconClassForService() {
-      return HybridServicesUtilsService.serviceId2Icon(vm.serviceId);
-    }
-
     function closeSetupModal() {
-      if (!firstTimeSetup) {
+      if (!options.firstTimeSetup) {
         $modalInstance.close();
         return;
       }
       $modal.open({
-        templateUrl: 'modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html',
+        template: require('modules/hercules/service-specific-pages/common-expressway-based/confirm-setup-cancel-dialog.html'),
         type: 'dialog',
       })
         .result.then(function (isAborting) {
@@ -265,7 +283,7 @@
 
     vm.completeEnterHostnameScreen = function () {
       vm.chooseClusterName = true;
-      vm.clustername = '';
+      vm.clustername = _.clone(vm.hostname);
     };
 
     vm.inClusterNameSelectionScreen = function () {
@@ -278,6 +296,10 @@
 
     vm.inSelectExistingExpresswayScreen = function () {
       return vm.selectedAction === 'existing' && !vm.provisioningToExistingExpresswayCompleted && vm.welcomeScreenAccepted;
+    };
+
+    vm.cannotGoPastClusterSelection = function () {
+      return !vm.selectedCluster || vm.numberOfUsersWithoutService > 0 || vm.executingDryRun;
     };
 
     vm.completeExistingExpresswayScreen = function () {
@@ -293,9 +315,16 @@
       $window.open('https://' + encodeURIComponent(vm.hostname) + '/fusionregistration');
     };
 
+    vm.isEnterKeypress = function ($event) {
+      return $event.which === KeyCodes.Enter;
+    };
+
     vm.back = function () {
       if (vm.welcomeScreenAccepted) {
         vm.welcomeScreenAccepted = false;
+        vm.chooseClusterName = false;
+        vm.provisioningToExistingExpresswayCompleted = false;
+        vm.preregistrationCompletedGoToExpressway = false;
         return;
       }
       $modalInstance.close('back');
@@ -324,6 +353,69 @@
         vm.preregistrationCompletedGoToExpressway = true;
         vm.gettingResourceGroupInput = false;
       }
+    };
+
+    vm.selectedClusterChanged = function () {
+      if (!options.hasCapacityFeatureToggle) {
+        return;
+      }
+      vm.executingDryRun = true;
+      var resourceGroupId = _.find(vm.expresswayClusters, { id: vm.selectedCluster.value }).resourceGroupId;
+
+      $q.resolve(resourceGroupId)
+        .then(function (resourceGroupId) {
+          if (resourceGroupId) {
+            // Load Resource Group name, used in the warning message
+            return ResourceGroupService.get(resourceGroupId)
+              .then(function (resourceGroup) {
+                vm.resourceGroupName = resourceGroup.name;
+              });
+          } else {
+            vm.resourceGroupName = '';
+            return '';
+          }
+        })
+        .then(function () {
+          // Find all clusters in the relevant resource group (or all clusters without resource group)
+          var relevantClusters = _.filter(vm.expresswayClusters, function (cluster) {
+            return cluster.resourceGroupId === resourceGroupId;
+          });
+
+          var allConnectorsRunningOnExpressways = [
+            'c_cal',
+            'c_ucmc',
+            'c_imp',
+          ];
+          var relevantConnectors = _.filter(allConnectorsRunningOnExpressways, function (connectorType) {
+            // All of the above without the one the admin is trying to add
+            return connectorType !== vm.connectorType;
+          });
+          // Compute as much information as needed about the capacity for the existing services running in the group of clusters
+          // where the cluster the admin selected belongs to
+          var existingServicesInfo = _.map(relevantConnectors, function (connectorType) {
+            var serviceId = HybridServicesUtilsService.connectorType2ServicesId(connectorType)[0];
+            var relevantUserSummaries = _.filter(vm.userStatusesByClustersSummary, { serviceId: serviceId });
+            return {
+              connectorType: connectorType,
+              capacityInfo: HybridServicesExtrasService.getCapacityInformation(relevantClusters, connectorType, relevantUserSummaries),
+            };
+          });
+
+          HybridServicesClusterService.provisionConnectorDryRun(vm.selectedCluster.value, vm.connectorType)
+            .then(function (dryRunData) {
+              vm.numberOfUsersWithoutService = _.reduce(existingServicesInfo, function (acc, info) {
+                var reducedCapacityForTheSelectedCluster = _.get(dryRunData.userCapacitiesBefore, info.connectorType, 0) - _.get(dryRunData.userCapacitiesAfter, info.connectorType, 0);
+                var availableRemainingCapacityForUsers = info.capacityInfo.maxUsers - reducedCapacityForTheSelectedCluster - info.capacityInfo.users;
+                return acc + Math.max(0, -availableRemainingCapacityForUsers);
+              }, 0);
+            })
+            .finally(function () {
+              vm.executingDryRun = false;
+            });
+        })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'hercules.genericFailure');
+        });
     };
   }
 }());

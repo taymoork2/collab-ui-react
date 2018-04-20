@@ -2,7 +2,9 @@ import { IRInternalNumberRange, InternalNumberRange } from 'modules/call/shared/
 
 interface ILocationInternalNumberRangeResource extends ng.resource.IResourceClass<ng.resource.IResource<IRInternalNumberRange>> {}
 interface ICustomerInternalNumberRangeResource extends ng.resource.IResourceClass<ng.resource.IResource<IRInternalNumberRange>> {}
-const PATTERN_USAGE_DEVICE = 'Device';
+const PATTERN_USAGE_DEVICE: string = 'Device';
+const DEFAULT_RANGE_BEGIN_SEED: number = 5;
+const DEFAULT_RANGE_END_SEED: number = 9;
 
 export class InternalNumberRangeService {
   private locationInternalNumberRangeResource: ILocationInternalNumberRangeResource;
@@ -107,5 +109,19 @@ export class InternalNumberRangeService {
       customerId: this.Authinfo.getOrgId(),
       internalNumberRangeId: internalNumberRange.uuid,
     }).$promise;
+  }
+
+  public calculateDefaultExtensionRange(extensionLength: number): InternalNumberRange {
+    const extension: number[] = [DEFAULT_RANGE_BEGIN_SEED];
+    for (let index = 0; index < (extensionLength - 1); index++) {
+      extension.push(0);
+    }
+    const beginNumber: number = _.toSafeInteger(extension.join(''));
+    const endNumber: number = beginNumber + DEFAULT_RANGE_END_SEED;
+
+    return new InternalNumberRange({
+      beginNumber: beginNumber.toString(),
+      endNumber: endNumber.toString(),
+    });
   }
 }

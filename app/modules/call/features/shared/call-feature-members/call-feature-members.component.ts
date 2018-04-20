@@ -1,8 +1,17 @@
 import { CallFeatureMember, CardType } from './call-feature-member';
-import { MemberService, Member, MemberType, USER_PLACE } from 'modules/huron/members';
+import { MemberService, Member, MemberType, USER_PLACE, USER_REAL_USER } from 'modules/huron/members';
 import { FeatureMemberService } from 'modules/huron/features/services';
 import { Line } from 'modules/huron/lines/services/line';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { CardUtils } from 'modules/core/cards';
+import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+
+export enum ComponentType {
+  CALL_PARK = 'CALL_PARK',
+  CALL_PICKUP = 'CALL_PICKUP',
+  HUNT_GROUP = 'HUNT_GROUP',
+  PAGING_GROUP = 'PAGING_GROUP',
+}
 
 class CallFeatureMembersCtrl implements ng.IComponentController {
   public static readonly DISPLAYED_MEMBER_SIZE: number = 10;
@@ -15,6 +24,7 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public memberItemType: string;
   public removeKey: string;
   public removeStr: string;
+  public componentType: ComponentType;
   public showExternalNumbers: boolean;
   public isNew: boolean;
   public dragAndDrop: boolean;
@@ -23,17 +33,29 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   public selectedMember: Member | undefined;
   public errorMemberInput: boolean = false;
   public searchStr: string;
-  public reordering: boolean = false;
-  public dragularInstance;
+  public draggableInstance: DraggableInstance;
+  public location;
+  public memberSearchTemplate: string;
 
   /* @ngInject */
   constructor(
+    private $element: ng.IRootElementService,
     private MemberService: MemberService,
     private FeatureMemberService: FeatureMemberService,
     private $translate: ng.translate.ITranslateService,
     private PhoneNumberService: PhoneNumberService,
-    private dragularService,
-  ) {}
+    private CardUtils: CardUtils,
+    private DraggableService: DraggableService,
+  ) {
+    switch (this.componentType) {
+      case ComponentType.PAGING_GROUP:
+        this.memberSearchTemplate = 'callFeatureMemberWithUsernameTemplate.html';
+        break;
+      default:
+        this.memberSearchTemplate = 'callFeatureMemberWithNumberTemplate.html';
+        break;
+    }
+  }
 
   public $onInit(): void {
     this.memberHint = this.$translate.instant(this.memberHintKey);
@@ -48,12 +70,12 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
   }
 
   private processMemberChanges(memberChanges: ng.IChangesObject<any>): void {
-    this.reordering = false;
     this.displayedMembers = _.take<CallFeatureMember>(memberChanges.currentValue, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
+    this.CardUtils.resize();
   }
 
   public getMemberList(value: string): ng.IPromise<CallFeatureMember[]> {
-    return this.MemberService.getMemberList(value, true).then( members => {
+    return this.MemberService.getMemberList(value, true, undefined, undefined, undefined, undefined, undefined, undefined, _.get(this.location, 'uuid', undefined)).then( members => {
       return this.convertMemberToCallFeatureMember(members);
     });
   }
@@ -89,11 +111,34 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
       case 'number':
         return this.convertAsNumbers(members);
       default: // memberItemType = 'member'
-        return this.convertAsMembers(members);
+        switch (this.componentType) {
+          case ComponentType.PAGING_GROUP:
+            return this.convertAsPagingGroupMembers(members);
+          default:
+            return this.convertAsHuntGroupMembers(members);
+        }
     }
   }
 
-  private convertAsMembers(members: Member[]): CallFeatureMember[] {
+  private convertAsPagingGroupMembers(members: Member[]): CallFeatureMember[] {
+    const filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
+    return _.map(filteredMembers, member => {
+      return new CallFeatureMember({
+        uuid: member.uuid || '',
+        name: this.formatDisplayName(member),
+        showName: true,
+        type: member.type === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+        cardType: CardType.SIMPLE,
+        complexCardType: undefined,
+        number: member.type === USER_REAL_USER ? _.get(member, 'userName') : '',
+        memberItemId: undefined,
+        memberItems: [],
+        thumbnailSrc: undefined,
+      });
+    });
+  }
+
+  private convertAsHuntGroupMembers(members: Member[]): CallFeatureMember[] {
     const filteredMembers = _.filter(members, number => this.isNewMember(number.uuid || ''));
     return _.map(filteredMembers, member => {
       const primaryNumber = this.getPrimaryNumber(member);
@@ -154,11 +199,11 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
     if (member.displayName) {
       return member.displayName;
     } else if (member.firstName && member.lastName) {
-      return member.firstName + ' ' + member.lastName + ' (' + member.userName + ')';
+      return `${member.firstName} ${member.lastName} (${member.userName})`;
     } else if (member.firstName) {
-      return member.firstName + ' (' + member.userName + ')';
+      return `${member.firstName} (${member.userName})`;
     } else if (member.lastName) {
-      return  member.lastName + ' (' + member.userName + ')';
+      return  `${member.lastName} (${member.userName})`;
     } else {
       return member.userName || '';
     }
@@ -234,39 +279,69 @@ class CallFeatureMembersCtrl implements ng.IComponentController {
 
   public onReorderClicked(): void {
     this.searchStr = '';
-    this.reordering = true;
     this.displayedMembers = _.cloneDeep(this.members);
-    this.dragularInstance = this.dragularService('#membersContainer', {
-      containersModel: [this.displayedMembers],
-      moves: () => {
-        return this.reordering;
-      },
-    });
+
+    if (_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance = this.DraggableService.createDraggableInstance({
+        elem: this.$element,
+        identifier: '#membersContainer',
+        transitClass: 'upper-panel',
+        itemIdentifier: '#cardReorder',
+        list: this.displayedMembers,
+      });
+    } else {
+      this.draggableInstance.reordering = true;
+      this.draggableInstance.refreshDragularInstance(this.displayedMembers);
+    }
   }
 
   public onApplyReorderClicked(): void {
-    this.reordering = false;
-    this.dragularInstance.destroy();
+    this.deactivateDraggable();
     this.onMembersChanged(this.displayedMembers);
   }
 
   public onCancelReorderClicked(): void {
-    this.reordering = false;
-    this.dragularInstance.destroy();
+    this.deactivateDraggable();
     this.resetDisplayedMembers();
+  }
+
+  public itemKeypress($event: KeyboardEvent, id: string) {
+    if (!this.isReordering) {
+      return;
+    } else if (_.get(this.draggableInstance, 'keyPress')) {
+      const member = _.find(this.displayedMembers, ['uuid', id]);
+      this.draggableInstance.keyPress($event, member);
+      this.displayedMembers = this.draggableInstance.list;
+    }
+  }
+
+  get isReordering() {
+    return _.get(this.draggableInstance, 'reordering', false);
+  }
+
+  public isSelectedItem(item) {
+    return item === _.get(this.draggableInstance, 'selectedItem');
   }
 
   private resetDisplayedMembers(): void {
     this.displayedMembers = _.take(this.members, CallFeatureMembersCtrl.DISPLAYED_MEMBER_SIZE);
   }
+
+  private deactivateDraggable() {
+    if (!_.isUndefined(this.draggableInstance)) {
+      this.draggableInstance.selectedItem = undefined;
+      this.draggableInstance.reordering = false;
+    }
+  }
 }
 
 export class CallFeatureMembersComponent implements ng.IComponentOptions {
   public controller = CallFeatureMembersCtrl;
-  public templateUrl = 'modules/call/features/shared/call-feature-members/call-feature-members.component.html';
+  public template = require('modules/call/features/shared/call-feature-members/call-feature-members.component.html');
   public bindings = {
     members: '<',
     filterBy: '<',
+    componentType: '<',
     showExternalNumbers: '<',
     isNew: '<',
     memberHintKey: '@',
@@ -275,5 +350,6 @@ export class CallFeatureMembersComponent implements ng.IComponentOptions {
     memberItemType: '@',
     onChangeFn: '&',
     onKeyPressFn: '&',
+    location: '<',
   };
 }

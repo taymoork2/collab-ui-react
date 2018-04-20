@@ -5,25 +5,35 @@
     .module('GSS')
     .controller('GssIframeCtrl', GssIframeCtrl);
 
-  function GssIframeCtrl($modal, $scope, $state, $translate, GSSService, Notification) {
+  function GssIframeCtrl($modal, $scope, $state, $translate, GSSIframeService, Notification, FeatureToggleService, GSSService, UrlConfig) {
     var vm = this;
     var addServiceOptionValue = 'addService';
 
     vm.addService = addService;
     vm.onServiceSelectionChanged = onServiceSelectionChanged;
+
     vm.isLoading = false;
     vm.isCompareVersionLoading = true;
     vm.syncUp = syncUp;
     vm.init = init;
 
-    syncCheck();
+    FeatureToggleService.gssWebexCHPEnabledGetStatus().then(function (isOnCHPWebex) {
+      if (isOnCHPWebex) {
+        GSSIframeService.setGssUrl(UrlConfig.getGssUrlWebexCHP());
+        syncCheck();
+      } else {
+        GSSIframeService.setGssUrl(UrlConfig.getGssUrlAWSCHP());
+        vm.isEqualVersion = true;
+        init();
+      }
+    });
 
     function addService() {
       $modal.open({
         type: 'small',
         controller: 'AddServiceCtrl',
         controllerAs: 'addServiceCtrl',
-        templateUrl: 'modules/gss/services/addService/addService.tpl.html',
+        template: require('modules/gss/services/addService/addService.tpl.html'),
         modalClass: 'status-add-service',
       }).result.then(function () {
         GSSService.getServices()
@@ -74,7 +84,7 @@
     }
 
     function syncCheck() {
-      GSSService.syncCheck().then(function (syncResult) {
+      GSSIframeService.syncCheck().then(function (syncResult) {
         vm.isCompareVersionLoading = false;
         vm.isEqualVersion = syncResult;
         if (vm.isEqualVersion) {
@@ -85,7 +95,7 @@
 
     function syncUp() {
       vm.isLoading = true;
-      GSSService.syncUp().then(function () {
+      GSSIframeService.syncUp().then(function () {
         vm.isEqualVersion = true;
         Notification.success('gss.syncSucceed');
         init();

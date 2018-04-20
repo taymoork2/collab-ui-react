@@ -1,0 +1,128 @@
+<div class="intro">
+  <p translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.intro"></p>
+  <button class="btn btn--primary" ng-click="$ctrl.openDocumentation()">
+    <span translate="servicesOverview.commonPrerequisites.openDocumentation"></span>
+  </button>
+</div>
+<div class="steps-list">
+  <h5 translate="servicesOverview.commonPrerequisites.steps"></h5>
+  <div class="cs-checkbox-group">
+
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.checkboxes.isAwareSetup"
+      id="checkboxConnect1"
+      name="checkboxConnect1"
+      disabled
+      cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.isAwareSetup' | translate}}">
+
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.prepareEdge"
+        id="checkboxConnect2"
+        name="checkboxConnect2"
+        ng-change="$ctrl.processChange('prepareEdge', $ctrl.checkboxes.prepareEdge)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.prepareEdge' | translate}}">
+    <ul class="checklist-help-text">
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.prepareEdgeHelp1"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.prepareEdgeHelp2"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.prepareEdgeHelp3"></li>
+      <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.prepareEdgeHelp4"></li>
+    </ul>
+
+  <p translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.deployPairIntro" class="condition"></p>
+
+  <div class="optional-steps">
+    <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.checkboxes.deployPair"
+        id="checkboxConnect3"
+        name="checkboxConnect3"
+        ng-change="$ctrl.processChange('deployPair', $ctrl.checkboxes.deployPair)"
+        cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.deployPair' | translate}}">
+    <div class="checklist-help-text">
+      <span translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.deployPairHelp1"></span>
+    </div>
+  </div>
+
+  <p translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.alreadyDeployedPairIntro" class="condition"></p>
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.installOrUpgrade"
+    id="checkboxConnect4"
+    name="checkboxConnect4"
+    ng-change="$ctrl.processChange('installOrUpgrade', $ctrl.checkboxes.installOrUpgrade)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.installOrUpgrade' | translate}}">
+  <div class="checklist-help-text">
+    <span translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.installOrUpgradeHelp1"></span>
+  </div>
+
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.downloadDirectoryConnector"
+    id="checkboxConnect5"
+    name="checkboxConnect5"
+    ng-change="$ctrl.processChange('downloadDirectoryConnector', $ctrl.checkboxes.downloadDirectoryConnector)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.downloadDirectoryConnector' | translate}}">
+  <ul class="checklist-help-text">
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.downloadDirectoryConnectorHelp1"></li>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.downloadDirectoryConnectorHelp2"></li>
+  </ul>
+
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.followUCMrequirements"
+    id="checkboxConnect6"
+    name="checkboxConnect6"
+    ng-change="$ctrl.processChange('followUCMrequirements', $ctrl.checkboxes.followUCMrequirements)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.followUCMrequirements' | translate}}">
+  <ul class="checklist-help-text">
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.followUCMrequirementsHelp1"></li>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.followUCMrequirementsHelp2"></li>
+  </ul>
+
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.useSupportedCodecs"
+    id="checkboxConnect7"
+    name="checkboxConnect7"
+    ng-change="$ctrl.processChange('useSupportedCodecs', $ctrl.checkboxes.useSupportedCodecs)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.useSupportedCodecs' | translate}}">
+  <ul class="checklist-help-text">
+    <span translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.useSupportedCodecsHelp1"></span>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.useSupportedCodecsHelp2"></li>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.useSupportedCodecsHelp3"></li>
+  </ul>
+
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.configureSettingsForCTI"
+    id="checkboxConnect8"
+    name="checkboxConnect8"
+    ng-change="$ctrl.processChange('configureSettingsForCTI', $ctrl.checkboxes.configureSettingsForCTI)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.configureSettingsForCTI' | translate}}">
+  <ul class="checklist-help-text">
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.configureSettingsForCTIHelp1"></li>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.configureSettingsForCTIHelp2"></li>
+    <li translate="servicesOverview.cards.hybridCall.prerequisites.connectSetup.configureSettingsForCTIHelp3"></li>
+  </ul>
+
+  <input
+    cs-input
+    type="checkbox"
+    ng-model="$ctrl.checkboxes.configureToAvoidAudioOnly"
+    id="checkboxConnect9"
+    name="checkboxConnect9"
+    ng-change="$ctrl.processChange('configureToAvoidAudioOnly', $ctrl.checkboxes.configureToAvoidAudioOnly)"
+    cs-input-label="{{:: 'servicesOverview.cards.hybridCall.prerequisites.connectSetup.configureToAvoidAudioOnly' | translate}}">
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="sub-section">
+  <h5 class="sub-section__label" translate="globalSettings.deviceBranding.subsectionLabel"></h5>
+  <!--<p class="sub-section__description" translate=""></p>-->
+  <div class="cs-radio-group device-branding">
+    <div class="cs-input-group cs-input-radio">
+      <input type="radio" id="defaultDLogoRadio" ng-model="dbctrl.useDefaultBranding" ng-value="true">
+      <label for="defaultDLogoRadio">
+        <span translate="globalSettings.branding.useDefaultBranding"></span>
+      </label>
+    </div>
+    <div class="cs-input-group cs-input-radio" class="radio-input-spacing">
+      <input type="radio" id="customDLogoRadio" ng-model="dbctrl.useDefaultBranding" ng-value="false">
+      <label for="customDLogoRadio">
+        <span translate="globalSettings.deviceBranding.useCustomBranding"></span>&nbsp;
+        <a ng-click="dbctrl.showDeviceBrandingExample()"
+           translate="globalSettings.deviceBranding.exampleLink"></a>
+      </label>
+      <div class="indent" ng-if="!dbctrl.useDefaultBranding">
+        <div class="device-brand-files">
+          <file-drop class="file" img-file="dbctrl.halfwakeBackground" header="'globalSettings.deviceBranding.halfwakeBackground'">
+          </file-drop>
+          <file-drop class="file midfile" img-file="dbctrl.logolight" header="'globalSettings.deviceBranding.logolight'">
+          </file-drop>
+          <file-drop class="file" img-file="dbctrl.logodark" header="'globalSettings.deviceBranding.logodark'">
+          </file-drop>
+        </div>
+        <div id="best-res" translate="globalSettings.deviceBranding.fileGuide">
+        </div>
+      </div>
+      <button
+        cs-btn
+        id="apply-device-branding"
+        class="btn btn--primary"
+        ng-class="{'ng-hide':!dbctrl.changeInBranding(), indent:!dbctrl.useDefaultBranding}"
+        loading="dbctrl.applyInProgress"
+        ng-disabled="!dbctrl.applyAllowed()"
+        ng-click="dbctrl.applyBranding()">
+        <span translate="common.save"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+

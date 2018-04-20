@@ -18,7 +18,7 @@ export class PrivateTrunkSetupCompleteCtrl implements ng.IComponentController {
 
 export class PrivateTrunkSetupCompleteComponent implements ng.IComponentOptions {
   public controller = PrivateTrunkSetupCompleteCtrl;
-  public templateUrl = 'modules/hercules/private-trunk/private-trunk-setup-complete/private-trunk-setup-complete.html';
+  public template = require('modules/hercules/private-trunk/private-trunk-setup-complete/private-trunk-setup-complete.html');
   public bindings = {
     verifiedDomains: '<',
   };

@@ -77,6 +77,27 @@ export class HuronUserService {
     });
   }
 
+  public getUserV2LineLabel(userId: string): ng.IPromise<string> {
+    return this.getUserV2(userId).then(user => {
+      const firstName = _.get(user, 'firstName');
+      const lastName = _.get(user, 'lastName');
+      let tempLineLabel = '';
+      if (firstName || lastName) {
+        if (firstName) {
+          tempLineLabel = firstName as string;
+          if (lastName) {
+            tempLineLabel = tempLineLabel + ' ' + lastName;
+          }
+        } else if (lastName) {
+          tempLineLabel = lastName as string;
+        }
+      } else {
+        tempLineLabel = _.get(user, 'userName');
+      }
+      return tempLineLabel;
+    });
+  }
+
   public getRemoteDestinations(userId: string): ng.IPromise<any[]> {
     return this.remoteDestinationResource.query({
       customerId: this.Authinfo.getOrgId(),
@@ -100,5 +121,22 @@ export class HuronUserService {
       customerId: this.Authinfo.getOrgId(),
       userId: userId,
     },  data).$promise;
+  }
+
+  public getFullNameFromUser(user: any): string {
+    const firstName = this.getFirstNameFromUser(user);
+    const lastName = this.getLastNameFromUser(user);
+    if (firstName && lastName) {
+      return firstName + ' ' + lastName;
+    }
+    return user.userName;
+  }
+
+  private getFirstNameFromUser(user: any): string {
+    return _.get(user, 'firstName', '');
+  }
+
+  private getLastNameFromUser(user: any): string {
+    return _.get(user, 'lastName', '');
   }
 }

@@ -7,7 +7,7 @@
         clusterId: '<',
       },
       controller: EmergencyUpgradeConfigurationCtrl,
-      templateUrl: 'modules/hercules/emergency-upgrade-configuration/ew-emergency-upgrade-configuration.component.html',
+      template: require('modules/hercules/emergency-upgrade-configuration/ew-emergency-upgrade-configuration.component.html'),
     });
 
   /* @ngInject */

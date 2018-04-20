@@ -31,21 +31,24 @@ describe('FeatureToggleService', function () {
   });
 
   it('should verify that you have a user id', function () {
-    this.FeatureToggleService.getFeaturesForUser().then(function (data) {
-      expect(data).toBe('userId is undefined');
-    });
+    this.FeatureToggleService.getFeaturesForUser().then(fail)
+      .catch(function (data) {
+        expect(data).toBe('id is undefined');
+      });
   });
 
   it('should verify that you have an org id', function () {
-    this.FeatureToggleService.getFeaturesForOrg().then(function (data) {
-      expect(data).toBe('orgId is undefined');
-    });
+    this.FeatureToggleService.getFeaturesForOrg().then(fail)
+      .catch(function (data) {
+        expect(data).toBe('id is undefined');
+      });
   });
 
   it('should verify that you have a feature when querying a user id', function () {
-    this.FeatureToggleService.getFeatureForUser(this.userId).then(function (data) {
-      expect(data).toBe('feature is undefined');
-    });
+    this.FeatureToggleService.getFeatureForUser(this.userId).then(fail)
+      .catch(function (data) {
+        expect(data).toBe('feature is undefined');
+      });
   });
 
   it('should return a 3 set array when it is queried by a user', function () {
@@ -120,9 +123,11 @@ describe('FeatureToggleService', function () {
 
     it('should reject if a feature is not supported while on a current state', function () {
       this.$state.$current.name = 'some-state';
-      var promise = this.FeatureToggleService.stateSupportsFeature('non-existant-feature');
+      this.FeatureToggleService.stateSupportsFeature('non-existant-feature').then(fail)
+        .catch(function (response) {
+          expect(response).toBe('Requested feature is not supported by requested state');
+        });
       this.$httpBackend.flush();
-      expect(promise).toBeRejected();
     });
 
     it('should redirect to login if a feature is not supported and no current state', function () {

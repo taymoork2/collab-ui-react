@@ -5,16 +5,16 @@ describe('Controller: CustomerListCtrl', function () {
   var controller;
 
   var adminJSONFixture = getJSONFixture('core/json/organizations/adminServices.json');
-  var partnerService = getJSONFixture('core/json/partner/partner.service.json');
-  var managedOrgsResponse = partnerService.managedOrgsResponse;
-  var authinfoLicenses = partnerService.authinfoLicenses;
+  var partnerJSONFixture = getJSONFixture('core/json/partner/partner.service.json');
+  var managedOrgsResponse = partnerJSONFixture.managedOrgsResponse;
+  var authinfoLicenses = partnerJSONFixture.authinfoLicenses;
   var orgId = 'b93b10ad-ae24-4abf-9c21-76e8b86faf01';
   var orgName = 'testOrg';
   var testOrg = {
     customerOrgId: '1234-34534-afdagfg-425345-afaf',
     customerName: 'ControllerTestOrg',
     customerEmail: 'customer@cisco.com',
-    daysLeft: NaN,
+    daysLeft: -1,
     communications: {
       isTrial: false,
       volume: 5,
@@ -135,7 +135,7 @@ describe('Controller: CustomerListCtrl', function () {
     }
 
     function setTestDataActive() {
-      testTrialData.daysLeft = NaN;
+      testTrialData.daysLeft = -1;
       testTrialData.communications.isTrial = false;
     }
 
@@ -160,22 +160,22 @@ describe('Controller: CustomerListCtrl', function () {
       setTestDataTrial();
       expect(controller.getUserCountColumnText(testTrialData)).toBe(testTrialData.activeUsers + ' / ' + testTrialData.numUsers);
     });
-
-    it('should return the correct account status', function () {
-      setTestDataExpired();
-      expect(controller.getAccountStatus(testTrialData)).toBe('expired');
-      setTestDataTrial();
-      expect(controller.getAccountStatus(testTrialData)).toBe('trial');
-      setTestDataActive();
-      expect(controller.getAccountStatus(testTrialData)).toBe('active');
-    });
   });
 
   describe('myOrg appears first in orgList', function () {
     beforeEach(initController);
 
     function verifyPartnerOrgServiceObjects(myPartnerOrg) {
-      var expectedServiceObjects = { messaging: 'MS', sparkConferencing: 'CF', communications: 'CO', webexEEConferencing: 'EE', roomSystems: 'SD', sparkBoard: 'SB', care: 'CDC', advanceCare: 'CVC' };
+      var expectedServiceObjects = {
+        messaging: 'MS',
+        sparkConferencing: 'CF',
+        communications: 'CO',
+        webexEEConferencing: 'EE',
+        roomSystems: 'SD',
+        sparkBoard: 'SB',
+        care: 'CDC',
+        advanceCare: 'CVC',
+      };
 
       _.forEach(Object.keys(expectedServiceObjects), function (serviceType) {
         var serviceObject = myPartnerOrg[serviceType];
@@ -245,7 +245,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getCmiV2Url() + '/customers/' + testOrg.customerOrgId + '/numbers?type=external').respond(noNumberResponse);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
@@ -258,7 +258,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + testOrg.customerOrgId).respond(200);
       controller.addNumbers(testOrg);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: testOrg.customerOrgId,
         customerName: testOrg.customerName,
         customerEmail: testOrg.customerEmail,
@@ -281,9 +281,8 @@ describe('Controller: CustomerListCtrl', function () {
   });
 
   describe('filterColumns', function () {
-    it('return 9 items in the filter list without Care with care FT turned off', function () {
+    it('should not have care, premium, or standard in list with care FT turned off', function () {
       initController();
-      expect(controller.filter.options.length).toBe(9);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'sparkBoard',
       }));
@@ -301,7 +300,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show care in the filter list with care FT on', function () {
       FeatureToggleService.atlasCareTrialsGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(10);
+      expect(controller.filter.options.length).toBe(12);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'care',
       }));
@@ -313,7 +312,7 @@ describe('Controller: CustomerListCtrl', function () {
     it('show Pro Pack in the filter list with correct FT on', function () {
       FeatureToggleService.atlasITProPackGetStatus.and.returnValue($q.resolve(true));
       initController();
-      expect(controller.filter.options.length).toBe(11);
+      expect(controller.filter.options.length).toBe(13);
       expect(controller.filter.options).toContain(jasmine.objectContaining({
         value: 'premium',
       }));
@@ -335,7 +334,7 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       var activeFilter = _.find(controller.filter.options, { value: 'trial' });
       expect(activeFilter.count).toBe(2);
     });
@@ -353,15 +352,15 @@ describe('Controller: CustomerListCtrl', function () {
         count: 0,
       }];
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).toHaveBeenCalledWith(Analytics.sections.PREMIUM.eventNames.PREMIUM_FILTER);
       Analytics.trackPremiumEvent.calls.reset();
 
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
 
       controller.filter.options[0].isSelected = false;
-      controller._helpers.updateResultCount(controller.gridOptions.data);
+      controller._helpers.updateResultCount(controller.gridOptions.data, controller.gridOptions.data);
       expect(Analytics.trackPremiumEvent).not.toHaveBeenCalled();
     });
   });
@@ -464,7 +463,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -485,7 +484,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -503,7 +502,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -525,7 +524,7 @@ describe('Controller: CustomerListCtrl', function () {
       $httpBackend.expectGET(HuronConfig.getTerminusV2Url() + '/customers/' + org.customerOrgId).respond(200);
       controller.addNumbers(org);
       $httpBackend.flush();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: org.customerOrgId,
         customerName: org.customerName,
         customerEmail: org.customerEmail,
@@ -542,6 +541,195 @@ describe('Controller: CustomerListCtrl', function () {
       expect(testOrg.customerOrgId).toBe('1234-34534-afdagfg-425345-afaf');
       controller.modifyManagedOrgs(testOrg.customerOrgId);
       expect(PartnerService.modifyManagedOrgs).toHaveBeenCalled();
+    });
+  });
+
+  describe('column sort', function () {
+    var aRow, bRow, cRow, dRow, cs;
+
+    beforeEach(function () {
+      initController();
+      cs = controller._helpers.columnSort;
+      aRow = {
+        entity: {
+          accountStatus: 'trial',
+          customerName: 'Alpha',
+          notes: {
+            daysLeft: 0,
+            sortOrder: PartnerService.customerStatus.NOTE_DAYS_LEFT,
+          },
+          totalLicenses: 0,
+          uniqueServiceCount: 0,
+        },
+      };
+      bRow = {
+        entity: {
+          accountStatus: 'active',
+          customerName: 'Bravo',
+          licenseList: ['MC', 'EE'],
+          notes: {
+            sortOrder: PartnerService.customerStatus.NOTE_DAYS_LEFT,
+            daysLeft: 10,
+          },
+          totalLicenses: 2,
+          uniqueServiceCount: 2,
+        },
+      };
+      cRow = {
+        entity: {
+          accountStatus: 'expired',
+          customerName: 'Charlie',
+          licenseList: ['EE'],
+          notes: {
+            sortOrder: PartnerService.customerStatus.ACTIVE,
+            text: 'Purchased',
+          },
+          totalLicenses: 1,
+          uniqueServiceCount: 1,
+        },
+      };
+      dRow = {
+        entity: {
+          accountStatus: 'expired',
+          customerName: 'Delta',
+          licenseList: [],
+          notes: {
+            daysLeft: -1,
+            sortOrder: PartnerService.customerStatus.CANCELED,
+            text: 'This account has been suspended',
+          },
+          totalLicenses: 0,
+          uniqueServiceCount: 0,
+        },
+      };
+    });
+
+    it('should handle undefined sort arguments', function () {
+      _.forEach(cs, function (sortFunction, sortFunctionKey) {
+        var fakeValue = '1';
+        var fakeRow = {};
+        var columnSortFunction = 'columnSort.' + sortFunctionKey + '()';
+
+        if (sortFunction.length === 2) {
+          expect(sortFunction(undefined, fakeValue)).toBeLessThan(0, columnSortFunction);
+          expect(sortFunction(fakeValue, undefined)).toBeGreaterThan(0, columnSortFunction);
+          expect(sortFunction(undefined, undefined)).toBe(0, columnSortFunction);
+          return;
+        }
+
+        if (sortFunction.length === 4) {
+          expect(sortFunction(undefined, fakeValue, fakeRow, fakeRow)).toBeLessThan(0, columnSortFunction);
+          expect(sortFunction(fakeValue, fakeValue, undefined, fakeRow)).toBeLessThan(0, columnSortFunction);
+          expect(sortFunction(fakeValue, undefined, fakeRow, fakeRow)).toBeGreaterThan(0, columnSortFunction);
+          expect(sortFunction(fakeValue, fakeValue, fakeRow, undefined)).toBeGreaterThan(0, columnSortFunction);
+          expect(sortFunction(undefined, undefined, fakeRow, fakeRow)).toBe(0, columnSortFunction);
+          expect(sortFunction(fakeValue, fakeValue, undefined, undefined)).toBe(0, columnSortFunction);
+          return;
+        }
+
+        fail(columnSortFunction + ' should have 2 or 4 arguments');
+      });
+    });
+
+    it('should alpha-sort on .name', function () {
+      expect(cs.name(aRow.entity.customerName, bRow.entity.customerName)).toBeLessThan(0);
+      expect(cs.name(bRow.entity.customerName, aRow.entity.customerName)).toBeGreaterThan(0);
+      expect(cs.name(cRow.entity.customerName, cRow.entity.customerName)).toBe(0);
+    });
+
+    it('should favor orgName on .namePartnerAtTop', function () {
+      Authinfo.getOrgName.and.returnValue(bRow.entity.customerName);
+
+      // Partner is 'b'
+      expect(cs.namePartnerAtTop(aRow.entity.customerName, bRow.entity.customerName)).toBeGreaterThan(0);
+      expect(cs.namePartnerAtTop(bRow.entity.customerName, aRow.entity.customerName)).toBeLessThan(0);
+      expect(cs.namePartnerAtTop(bRow.entity.customerName, bRow.entity.customerName)).toBe(0);
+      expect(cs.namePartnerAtTop(aRow.entity.customerName, cRow.entity.customerName)).toBeLessThan(0);
+      expect(cs.namePartnerAtTop(cRow.entity.customerName, cRow.entity.customerName)).toBe(0);
+    });
+
+    it('should sort by account status', function () {
+      expect(cs.accountStatus(aRow.entity.accountStatus, bRow.entity.accountStatus)).toBeGreaterThan(0);
+      expect(cs.accountStatus(bRow.entity.accountStatus, aRow.entity.accountStatus)).toBeLessThan(0);
+      expect(cs.accountStatus(bRow.entity.accountStatus, cRow.entity.accountStatus)).toBeGreaterThan(0);
+      expect(cs.accountStatus(cRow.entity.accountStatus, cRow.entity.accountStatus)).toBe(0);
+    });
+
+    it('should sort by license list', function () {
+      expect(cs.license(aRow.entity.totalLicenses, aRow.entity.totalLicenses, aRow, aRow)).toBe(0);
+      expect(cs.license(aRow.entity.totalLicenses, bRow.entity.totalLicenses, aRow, bRow)).toBeLessThan(0);
+      expect(cs.license(bRow.entity.totalLicenses, aRow.entity.totalLicenses, bRow, aRow)).toBeGreaterThan(0);
+      expect(cs.license(bRow.entity.totalLicenses, cRow.entity.totalLicenses, bRow, cRow)).toBeGreaterThan(0);
+      expect(cs.license(cRow.entity.totalLicenses, bRow.entity.totalLicenses, cRow, bRow)).toBeLessThan(0);
+      expect(cs.license(bRow.entity.totalLicenses, bRow.entity.totalLicenses, bRow, bRow)).toBe(0);
+    });
+
+    describe('notes field', function () {
+      it('should alpha-sort by text', function () {
+        expect(cs.notes(cRow.entity.notes, dRow.entity.notes, cRow, dRow)).toBeLessThan(0);
+        expect(cs.notes(dRow.entity.notes, cRow.entity.notes, cRow, dRow)).toBeGreaterThan(0);
+        expect(cs.notes(dRow.entity.notes, dRow.entity.notes, cRow, dRow)).toBe(0);
+      });
+
+      it('should sort by daysLeft when days >= 0', function () {
+        expect(cs.notes(aRow.entity.notes, bRow.entity.notes, aRow, bRow)).toBeGreaterThan(0);
+        expect(cs.notes(bRow.entity.notes, aRow.entity.notes, bRow, aRow)).toBeLessThan(0);
+        bRow.entity.notes.daysLeft = 1;
+        expect(cs.notes(aRow.entity.notes, bRow.entity.notes, aRow, bRow)).toBeGreaterThan(0);
+        bRow.entity.notes.daysLeft = 0;
+        expect(cs.notes(aRow.entity.notes, bRow.entity.notes, aRow, bRow)).toBe(0);
+      });
+
+      it('should sort by type of expired when daysLeft < 0', function () {
+        // expired vs. not expired
+        bRow.entity.notes.daysLeft = -1;
+        bRow.entity.accountStatus = 'expired';
+        expect(cs.notes(aRow.entity.notes, bRow.entity.notes, aRow, bRow)).toBeLessThan(0);
+        expect(cs.notes(bRow.entity.notes, aRow.entity.notes, bRow, aRow)).toBeGreaterThan(0);
+
+        // expired vs. more expired (all in same bucket)
+        dRow.entity.notes.text = 'Expired';
+        dRow.entity.notes.sortOrder = PartnerService.customerStatus.NOTE_DAYS_LEFT;
+        expect(cs.notes(bRow.entity.notes, dRow.entity.notes, bRow, dRow)).toBe(0);
+        bRow.entity.notes.daysLeft = -2;
+        expect(cs.notes(bRow.entity.notes, dRow.entity.notes, bRow, dRow)).toBe(0);
+        expect(cs.notes(dRow.entity.notes, bRow.entity.notes, dRow, bRow)).toBe(0);
+
+        // expired vs. expired within grace period ('b' is within grace)
+        bRow.entity.startDate = new Date();
+        expect(cs.notes(bRow.entity.notes, dRow.entity.notes, bRow, dRow)).toBeLessThan(0);
+        expect(cs.notes(dRow.entity.notes, bRow.entity.notes, dRow, bRow)).toBeGreaterThan(0);
+
+        // expired in grace vs. expired in grace (same bucket)
+        dRow.entity.startDate = new Date();
+        expect(cs.notes(bRow.entity.notes, dRow.entity.notes, bRow, dRow)).toBeGreaterThan(0);
+        expect(cs.notes(bRow.entity.notes, bRow.entity.notes, bRow, bRow)).toBe(0);
+        expect(cs.notes(dRow.entity.notes, bRow.entity.notes, dRow, bRow)).toBeLessThan(0);
+      });
+
+      it('should sort by mixed alpa and date types', function () {
+        // alpha vs. daysLeft > 0
+        expect(cs.notes(aRow.entity.notes, cRow.entity.notes, aRow, cRow)).toBeLessThan(0);
+        expect(cs.notes(cRow.entity.notes, aRow.entity.notes, cRow, aRow)).toBeGreaterThan(0);
+
+        // alpha vs. expired
+        bRow.entity.notes.daysLeft = -1;
+        bRow.entity.accountStatus = 'expired';
+        expect(cs.notes(bRow.entity.notes, cRow.entity.notes, bRow, cRow)).toBeLessThan(0);
+        expect(cs.notes(cRow.entity.notes, bRow.entity.notes, cRow, bRow)).toBeGreaterThan(0);
+
+        // alpha vs. expired within grace period
+        bRow.entity.startDate = new Date();
+        expect(cs.notes(bRow.entity.notes, cRow.entity.notes, bRow, cRow)).toBeLessThan(0);
+        expect(cs.notes(cRow.entity.notes, bRow.entity.notes, cRow, bRow)).toBeGreaterThan(0);
+      });
+    });
+
+    it('should sort by unique service count', function () {
+      expect(cs.service(aRow.entity.uniqueServiceCount, bRow.entity.uniqueServiceCount)).toBeLessThan(0);
+      expect(cs.service(bRow.entity.uniqueServiceCount, aRow.entity.uniqueServiceCount)).toBeGreaterThan(0);
+      expect(cs.service(bRow.entity.uniqueServiceCount, cRow.entity.uniqueServiceCount)).toBeGreaterThan(0);
+      expect(cs.service(cRow.entity.uniqueServiceCount, cRow.entity.uniqueServiceCount)).toBe(0);
     });
   });
 });

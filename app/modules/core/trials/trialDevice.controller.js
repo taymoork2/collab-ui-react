@@ -6,7 +6,7 @@
     .controller('TrialDeviceController', TrialDeviceController);
 
   /* @ngInject */
-  function TrialDeviceController($scope, $stateParams, $translate, Analytics, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
+  function TrialDeviceController($scope, $stateParams, $translate, Analytics, FeatureToggleService, Notification, TrialCallService, TrialDeviceService, TrialRoomSystemService, ValidationService) {
     var vm = this;
 
     var _trialCallData = TrialCallService.getData();
@@ -34,6 +34,7 @@
     vm.canAddRoomSystemDevice = TrialRoomSystemService.canAddRoomSystemDevice(_.get($stateParams, 'details.details'), _trialRoomSystemData.enabled);
 
     vm.getTotalQuantity = getTotalQuantity;
+    vm.getTotalQuantityBeingAdded = getTotalQuantityBeingAdded;
     vm.calcQuantity = calcQuantity;
     vm.calcRelativeQuantity = calcRelativeQuantity;
     vm.skip = skip;
@@ -48,6 +49,7 @@
     vm.areAdditionalDevicesAllowed = areAdditionalDevicesAllowed;
     vm.areTemplateOptionsDisabled = _areTemplateOptionsDisabled;
     vm.getCountriesForSelectedDevices = getCountriesForSelectedDevices;
+    vm.showRoomTrialDevice = showRoomTrialDevice;
     vm.selectedCountryCode = null;
 
     vm.usStates = [];
@@ -55,6 +57,7 @@
     vm.getCountryList = getCountryList;
     vm.getStateList = getStateList;
     vm.countryChanged = countryChanged;
+    vm.roomKitFeatureToggle = false;
 
     vm.validationMessages = {
       sx10: {
@@ -66,6 +69,9 @@
       mx300: {
         trialDeviceQuantityValidator: '',
       },
+      roomKit: {
+        trialDeviceQuantityValidator: '',
+      },
       phone8865: {
         trialDeviceQuantityValidator: '',
       },
@@ -73,6 +79,9 @@
         trialDeviceQuantityValidator: '',
       },
       phone7832: {
+        trialDeviceQuantityValidator: '',
+      },
+      phone8841: {
         trialDeviceQuantityValidator: '',
       },
       phone7841: {
@@ -106,6 +115,9 @@
       MX300: {
         max: vm.deviceLimit.CISCO_MX300.max,
       },
+      roomKit: {
+        max: vm.deviceLimit.CISCO_ROOM_KIT.max,
+      },
     };
 
     if (_.has($stateParams, 'details.details.shippingInformation.country')) {
@@ -135,11 +147,17 @@
     vm.mx300 = _.find(_trialRoomSystemData.details.roomSystems, {
       model: 'CISCO_MX300',
     });
+    vm.roomKit = _.find(_trialRoomSystemData.details.roomSystems, {
+      model: 'CISCO_ROOM_KIT',
+    });
     vm.phone8865 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8865',
     });
     vm.phone8845 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_8845',
+    });
+    vm.phone8841 = _.find(_trialCallData.details.phones, {
+      model: 'CISCO_8841',
     });
     vm.phone7832 = _.find(_trialCallData.details.phones, {
       model: 'CISCO_7832',
@@ -151,8 +169,10 @@
     vm.setQuantity(vm.sx10);
     vm.setQuantity(vm.dx80);
     vm.setQuantity(vm.mx300);
+    vm.setQuantity(vm.roomKit);
     vm.setQuantity(vm.phone8865);
     vm.setQuantity(vm.phone8845);
+    vm.setQuantity(vm.phone8841);
     vm.setQuantity(vm.phone7832);
     vm.setQuantity(vm.phone7841);
 
@@ -194,11 +214,16 @@
     }
 
     function init() {
+      FeatureToggleService.atlasF281TrialRoomKitGetStatus().then(function (toggle) {
+        vm.roomKitFeatureToggle = toggle;
+      });
+
       var limitsPromise = TrialDeviceService.getLimitsPromise();
 
       //if we go back and unselect the service -- zero out the devices
       _resetDevicesIfNeeded(vm.canAddCallDevice, _trialCallData.details.phones);
       _resetDevicesIfNeeded(vm.canAddRoomSystemDevice, _trialRoomSystemData.details.roomSystems);
+
       vm.usStates = vm.getStateList();
       vm.shippingInfo.state = _.find(TrialDeviceService.getStates(), {
         abbr: vm.shippingInfo.state,
@@ -267,7 +292,14 @@
       _trialDeviceData.skipDevices = skipped;
     }
 
+    // this total includes all devices. Added now and previously. Includes saved devices
     function getTotalQuantity() {
+      var quantity = vm.calcQuantity(_trialRoomSystemData.details.roomSystems) + vm.calcQuantity(_trialCallData.details.phones);
+      return quantity;
+    }
+
+    // only counts devices currently added. Used  for enabling the next step.
+    function getTotalQuantityBeingAdded() {
       var quantity = calcRelativeQuantity(_trialRoomSystemData.details.roomSystems, _trialCallData.details.phones);
       return quantity;
     }
@@ -319,8 +351,10 @@
     function _resetDevicesIfNeeded(enabledCondition, devices) {
       if (!enabledCondition) {
         _.forEach(devices, function (device) {
-          device.enabled = false;
-          device.quantity = 0;
+          if (!device.readonly) {
+            device.enabled = false;
+            device.quantity = 0;
+          }
         });
       }
     }
@@ -366,6 +400,17 @@
       return !_.every(devices, {
         quantity: 0,
       });
+    }
+
+    function showRoomTrialDevice(device) {
+      //always show dx80, roomKit only if FT is true, sx10 and mx300 only if is already in trial, or FT is false
+      if (vm[device].model === vm.dx80.model) {
+        return true;
+      } else if (vm[device].model === vm.roomKit.model) {
+        return vm.roomKitFeatureToggle;
+      } else {
+        return !vm.roomKitFeatureToggle || vm[device].quantity > 0;
+      }
     }
   }
 })();

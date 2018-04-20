@@ -5,7 +5,10 @@ import { CallPlacesPage } from '../../pages/callPlaces.page';
 const CallPlaces = new CallPlacesPage();
 
 describe('Huron Functional: add-places', () => {
-  const customer = huronCustomer('add-place');
+  const customer = huronCustomer({
+    test: 'add-place',
+    offers: ['CALL', 'ROOMSYSTEMS'],
+  });
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)
       .then(done);
@@ -25,6 +28,12 @@ describe('Huron Functional: add-places', () => {
     navigation.expectDriverCurrentUrl('places');
   });
 
+  const EXTENSION_304 = '304';
+  const EXTENSION_305 = '305';
+  const PLACE_NABOO = 'Naboo';
+  const PLACE_JEDHA = 'Jedha';
+  const PLACE_EADU = 'Eadu';
+
   describe('Internal Places Section', () => {
     describe('create a new place with Phone Dialing only', () => {
       it('should show an option to add new place', () => {
@@ -33,7 +42,7 @@ describe('Huron Functional: add-places', () => {
       });
       it('should take a new location input and allow to save', () => {
         utils.expectIsDisabled(CallPlaces.nxtBtn);
-        utils.sendKeys(CallPlaces.newPlaceInput, 'Naboo');
+        utils.sendKeys(CallPlaces.newPlaceInput, PLACE_NABOO);
         utils.expectIsEnabled(CallPlaces.nxtBtn);
       });
       it('should go to device selection page and select a device', () => {
@@ -44,7 +53,8 @@ describe('Huron Functional: add-places', () => {
       });
       it('should go to Assign Numbers section and select an extension', () => {
         utils.click(CallPlaces.nxtBtn2);
-        utils.selectDropdown('.csSelect-container[name="internalNumber"]', '304');
+        utils.waitForPresence(CallPlaces.dropdownSelection);
+        utils.selectDropdown('.csSelect-container[name="internalNumber"]', EXTENSION_304);
       });
       it('should go to a final setup patch with a QR', () => {
         utils.click(CallPlaces.nxtBtn3);
@@ -62,7 +72,7 @@ describe('Huron Functional: add-places', () => {
       });
       it('should take a new location input and enable next button', () => {
         utils.expectIsDisabled(CallPlaces.nxtBtn);
-        utils.sendKeys(CallPlaces.newPlaceInput, 'Jedha');
+        utils.sendKeys(CallPlaces.newPlaceInput, PLACE_JEDHA);
         utils.expectIsEnabled(CallPlaces.nxtBtn);
       });
       it('should go to device selection page and select a room', () => {
@@ -92,7 +102,7 @@ describe('Huron Functional: add-places', () => {
       });
       it('should take a new location input and enable next button', () => {
         utils.expectIsDisabled(CallPlaces.nxtBtn);
-        utils.sendKeys(CallPlaces.newPlaceInput, 'Eadu');
+        utils.sendKeys(CallPlaces.newPlaceInput, PLACE_EADU);
         utils.expectIsEnabled(CallPlaces.nxtBtn);
       });
       it('should go to device selection page and select a room', () => {
@@ -108,7 +118,8 @@ describe('Huron Functional: add-places', () => {
       });
       it('should go to Assign Numbers section and select an extension', () => {
         utils.click(CallPlaces.nxtBtn4);
-        utils.selectDropdown('.csSelect-container[name="internalNumber"]', '305');
+        utils.waitForPresence(CallPlaces.dropdownSelection);
+        utils.selectDropdown('.csSelect-container[name="internalNumber"]', EXTENSION_305);
       });
       it('should go to a final setup patch with a QR', () => {
         utils.click(CallPlaces.nxtBtn3);
@@ -123,10 +134,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Naboo (Spark + Spark Call place) setup', () => {
         it('should list newly added place by search', () =>{
           utils.click(CallPlaces.searchPlaces);
-          utils.sendKeys(CallPlaces.searchBar, 'Naboo');
-        });
-        it('should click on newly added place and bring up side menu', () => {
-          utils.click(CallPlaces.clickLocation);
+          utils.searchAndClick(PLACE_NABOO);
         });
 
         describe('Side Panel Options', () => {
@@ -161,7 +169,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Call Forwarding section', () => {
             utils.expectIsDisplayed(CallPlaces.callFwdSct);
@@ -188,10 +196,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Jedha (Spark-only place without PSTN service) setup', () => {
         it('should clear previous search and search for Jedha', () => {
           utils.click(CallPlaces.clearSearchPlace);
-          utils.sendKeys(CallPlaces.searchBar, 'Jedha');
-        });
-        it('should click on newly added place and bring up side menu', () => {
-          utils.click(CallPlaces.clickLocation2);
+          utils.searchAndClick(PLACE_JEDHA);
         });
 
         describe('Side Panel Options', () => {
@@ -220,7 +225,7 @@ describe('Huron Functional: add-places', () => {
       describe('Test Eadu (Spark-only place with PSTN service) setup', () => {
         it('should clear previous search and search for Eadu', () => {
           utils.click(CallPlaces.clearSearchPlace);
-          utils.sendKeys(CallPlaces.searchBar, 'Eadu');
+          utils.searchAndClick(PLACE_EADU);
         });
         it('should click on newly added place and bring up side menu', () => {
           utils.click(CallPlaces.clickLocation3);
@@ -255,7 +260,7 @@ describe('Huron Functional: add-places', () => {
             utils.expectIsDisplayed(CallPlaces.LineConfigPg);
           });
           it('should have Directory Numbers section', () => {
-            utils.expectIsDisplayed(CallPlaces.dirNumSct);
+            utils.expectIsDisplayed(CallPlaces.directoryNumSct);
           });
           it('should have Caller ID section', () => {
             utils.expectIsDisplayed(CallPlaces.callerIdSct);

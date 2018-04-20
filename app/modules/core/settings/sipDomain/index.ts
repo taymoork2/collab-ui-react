@@ -8,9 +8,8 @@ import featureToggleModule from 'modules/core/featureToggle';
 export default angular.module('core.settings.sipDomain', [
   require('angular-cache'),
   require('angular-translate'),
-  require('scripts/app.templates'),
-  require('collab-ui-ng').default,
-  require('modules/core/config/config'),
+  require('@collabui/collab-ui-ng').default,
+  require('modules/core/config/config').default,
   require('modules/hercules/services/service-descriptor.service').default,
   require('modules/core/scripts/services/sparkDomainManagement.service'),
   notificationModule,

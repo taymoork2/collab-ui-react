@@ -147,9 +147,7 @@ class FeatureToggleEditorController implements ng.IComponentController {
 
 //////////////////
 
-const templateUrl = require('modules/core/featureToggle/editor/featureTogglesEditor.html');
-
 export class FeatureToggleEditorComponent implements ng.IComponentOptions {
   public controller = FeatureToggleEditorController;
-  public templateUrl = templateUrl;
+  public template = require('./featureTogglesEditor.html');
 }

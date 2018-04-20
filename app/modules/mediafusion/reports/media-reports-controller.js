@@ -5,11 +5,13 @@
     .module('Mediafusion')
     .controller('MediaReportsController', MediaReportsController);
   /* @ngInject */
-  function MediaReportsController($q, $scope, $translate, $interval, $timeout, MediaClusterServiceV2, UtilizationResourceGraphService, MeetingLocationAdoptionGraphService, ParticipantDistributionResourceGraphService, NumberOfParticipantGraphService, MediaReportsService, Notification, MediaReportsDummyGraphService, MediaSneekPeekResourceService, CallVolumeResourceGraphService, AvailabilityResourceGraphService, ClientTypeAdoptionGraphService, AdoptionCardService, hasHmsTwoDotFiveFeatureToggle) {
+  function MediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClientTypeAdoptionGraphService, ClusterCascadeBandwidthGraphService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, MeetingLocationAdoptionGraphService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService, hasMFCascadeBandwidthFeatureToggle, hasMFMultipleInsightFeatureToggle) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
 
+    vm.hasMFMultipleInsightFeatureToggle = hasMFMultipleInsightFeatureToggle;
+    vm.hasMFCascadeBandwidthFeatureToggle = hasMFCascadeBandwidthFeatureToggle;
     vm.ABORT = 'ABORT';
     vm.EMPTY = 'empty';
     vm.REFRESH = 'refresh';
@@ -19,6 +21,9 @@
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
     vm.numberOfParticipantStatus = vm.REFRESH;
+    vm.cascadebandwidthStatus = vm.REFRESH;
+    vm.clusterCascadebandwidthStatus = vm.REFRESH;
+    vm.streamsBandwidthStatus = vm.REFRESH;
     vm.availabilityStatus = vm.REFRESH;
     vm.clientTypeStatus = vm.REFRESH;
     vm.meetingLocationStatus = vm.REFRESH;
@@ -51,8 +56,11 @@
     vm.redirected_calls_heading = $translate.instant('mediaFusion.metrics.redirectedcalls');
     vm.cluster_availability_heading = $translate.instant('mediaFusion.metrics.overAllAvailability');
     vm.customPlaceholder = $translate.instant('mediaFusion.report.custom');
+    vm.selectedPeriod = $translate.instant('mediaFusion.report.selectedPeriod');
     vm.total_cloud_heading = $translate.instant('mediaFusion.metrics.totalCloud');
     vm.participants = $translate.instant('mediaFusion.metrics.participants');
+    vm.increaseBy = $translate.instant('mediaFusion.metrics.increaseBy');
+    vm.decreasedBy = $translate.instant('mediaFusion.metrics.decreasedBy');
 
     vm.availabilityCardHeading = '';
     vm.clusterAvailabilityCardHeading = $translate.instant('mediaFusion.metrics.clusterAvailabilityCardHeading');
@@ -60,14 +68,17 @@
 
     vm.second_card_heading = vm.cloud_calls_heading;
     vm.redirected_heading = vm.cloud_calls_heading;
-    vm.second_card_value = 0;
+
     vm.hosted_participants_heading = vm.on_prem_participants_heading;
     vm.hosted_heading = vm.on_prem_calls_heading;
     vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
     vm.clusterInServiceOrgDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceOrgDesc');
     vm.clusterInServiceClusterDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceClusterDesc');
+    vm.cascadeBandwidthClusterDesc = $translate.instant('mediaFusion.metrics.cascadeBandwidthClusterDesc');
+    vm.streamsBandwidthDesc = $translate.instant('mediaFusion.metrics.streamsBandwidthDesc');
 
     vm.Map = {};
+    vm.clusterNameMap = {};
     vm.secondCardFooter = {
       isShow: '',
       value: '',
@@ -82,6 +93,7 @@
     vm.clusterUpdate = clusterUpdate;
     vm.clusterUpdateFromTooltip = clusterUpdateFromTooltip;
     vm.timeUpdate = timeUpdate;
+    vm.streamsBandwidthUpdate = streamsBandwidthUpdate;
     vm.setRefreshTabs = setRefreshTabs;
 
     vm.setClusterAvailability = setClusterAvailability;
@@ -135,12 +147,24 @@
     }];
     vm.timeSelected = vm.timeOptions[1];
 
+    vm.streamsBandwidthOptions = [{
+      value: 'all',
+      label: $translate.instant('mediaFusion.metrics.streamsAll'),
+    }, {
+      value: 'receive',
+      label: $translate.instant('mediaFusion.metrics.streamsRx'),
+    }, {
+      value: 'transmit',
+      label: $translate.instant('mediaFusion.metrics.streamsTx'),
+    }];
+    vm.streamsBandwidthSelected = vm.streamsBandwidthOptions[0];
+
     vm.isFlipped = false;
     vm.clientTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.clientTypeDesc');
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.meetsHostTypeDesc = $translate.instant('mediaFusion.metrics.cardDescription.meetsHostType');
     vm.tooltipText = '';
-    vm.cardIndicator = 0;
+    vm.cardIndicatorDiff = 0;
     vm.clusterUnavailablityFlag = false;
 
 
@@ -161,10 +185,14 @@
     vm.clientTypeText = vm.clientTypeSelected.label;
     vm.clientTypeOptions['tooltipClickHandler'] = clientTypeUpdateFromCard;
 
-    vm.hasHmsTwoDotFiveFeatureToggle = hasHmsTwoDotFiveFeatureToggle;
     setRefreshInterval();
     getCluster();
     timeUpdate();
+
+    Orgservice.isTestOrg()
+      .then(function (isTestOrg) {
+        vm.isTestOrg = isTestOrg;
+      });
 
     function loadResourceDatas() {
       deferred.promise.then(function () {
@@ -176,15 +204,27 @@
         setParticipantDistributionData();
         setNumberOfParticipantData();
         setCallVolumeData();
+        if (vm.hasMFCascadeBandwidthFeatureToggle) {
+          loadClusterCascadeGraphs();
+          refreshReportCards();
+        }
       });
     }
 
     function loadAdaptionDatas() {
-      //Adoption changes here
       setClientTypeData();
       setClientTypeCard();
       setMeetingLocationData();
       setMeetingLocationCard();
+    }
+
+    function loadClusterCascadeGraphs() {
+      if (vm.clusterSelected === vm.allClusters) {
+        setCascadeBandwidthData();
+      } else {
+        setClusterCascadeBandwidthData();
+        setStreamsBandwidthData();
+      }
     }
 
     function clusterUpdate() {
@@ -231,6 +271,14 @@
       setRefreshTabs();
     }
 
+    function streamsBandwidthUpdate() {
+      timeUpdate();
+    }
+
+    function refreshReportCards() {
+      CardUtils.resize();
+    }
+
     function setRefreshTabs() {
       $interval.cancel(interval);
       if (vm.displayResources) {
@@ -273,16 +321,18 @@
     }
 
     function getCluster() {
-      MediaClusterServiceV2.getAll()
+      HybridServicesClusterService.getAll()
         .then(function (clusters) {
           vm.clusterOptions.length = 0;
           vm.Map = {};
+          vm.clusterNameMap = {};
           vm.clusters = _.filter(clusters, {
             targetType: 'mf_mgmt',
           });
           _.each(vm.clusters, function (cluster) {
             vm.clusterOptions.push(cluster.name);
             vm.Map[cluster.name] = cluster.id;
+            vm.clusterNameMap[cluster.name] = cluster.name.replace(/\W/g, '').toLowerCase();
           });
           vm.clusterOptions = _.sortBy(vm.clusterOptions, function (cluster) {
             return cluster.toLowerCase();
@@ -299,6 +349,7 @@
 
     function setTotalCallsData() {
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        vm.second_card_value = 0;
         if (vm.clusterId === vm.allClusters) {
           if (response === vm.ABORT) {
             return undefined;
@@ -375,9 +426,15 @@
         vm.cloudOverflowTooltip = checkForTooltip(vm.second_card_value) ? vm.cloudOverflow : '';
 
         var overflow = (vm.cloudOverflow === vm.noData) ? 0 : vm.cloudOverflow;
-        vm.overflowPercentage = (overflow / vm.totalcloudcalls) * 100;
+        vm.overflowPercentage = (vm.totalcloudcalls > 0) ? (overflow / vm.totalcloudcalls) * 100 : 0;
         vm.overflowPercentage = _.round(vm.overflowPercentage, 2);
         setOverflowIndicator();
+      }, function () {
+        vm.onprem = vm.noData;
+        vm.cloudOverflow = vm.noData;
+        vm.total = vm.noData;
+        vm.cloudcalls = vm.noData;
+        vm.second_card_value = vm.noData;
       });
     }
 
@@ -386,9 +443,11 @@
         if (response == vm.ABORT) {
           return undefined;
         } else {
-          vm.cardIndicator = response.data.dataProvider[0].value;
-          if (vm.cardIndicator > 0) {
-            vm.cardIndicator = '+' + vm.cardIndicator;
+          vm.cardIndicatorDiff = response.data.dataProvider[0].value;
+          if (vm.cardIndicatorDiff > 0) {
+            vm.cardIndicator = vm.increaseBy + ' ' + vm.cardIndicatorDiff;
+          } else {
+            vm.cardIndicator = vm.decreasedBy + ' ' + Math.abs(vm.cardIndicatorDiff);
           }
         }
       });
@@ -422,6 +481,9 @@
             vm.totalParticipantschartOptions.noData = false;
           }
         }
+      }, function () {
+        AdoptionCardService.setDummyTotalParticipantsPiechart(false);
+        vm.totalParticipantschartOptions.noData = true;
       });
     }
 
@@ -436,6 +498,9 @@
           AdoptionCardService.setClientTypePiechart(response.data);
           vm.clientTypeschartOptions.noData = false;
         }
+      }, function () {
+        AdoptionCardService.setDummyClientTypePiechart();
+        vm.clientTypeschartOptions.noData = true;
       });
     }
 
@@ -461,6 +526,11 @@
           vm.totMeetingsShort = abbreviateNumber(vm.tot_number_meetings);
           vm.totMeetingsTooltip = checkForTooltip(vm.totMeetingsShort) ? vm.tot_number_meetings : '';
         }
+      }, function () {
+        AdoptionCardService.setDummyNumberOfMeetsOnPremisesPiechart();
+        vm.meetsHostedchartOptions.noData = true;
+        vm.totMeetingsShort = vm.noData;
+        vm.totMeetingsTooltip = '';
       });
     }
 
@@ -483,9 +553,10 @@
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
-      }, function () {
-        Notification.error('mediaFusion.genericError');
-      });
+      })
+        .catch(function (error) {
+          Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
+        });
     }
 
     function setUtilizationData() {
@@ -511,7 +582,7 @@
     }
 
     function setParticipantDistributionData() {
-      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.clusterId).then(function (response) {
+      MediaReportsService.getParticipantDistributionData(vm.timeSelected, vm.clusterId, vm.hasMFMultipleInsightFeatureToggle).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyParticipantDistribution();
         } else {
@@ -577,7 +648,7 @@
     }
 
     function setNumberOfParticipantData() {
-      MediaReportsService.getNumberOfParticipantData(vm.timeSelected).then(function (response) {
+      MediaReportsService.getNumberOfParticipantData(vm.timeSelected, vm.hasMFMultipleInsightFeatureToggle).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyNumberOfParticipant();
         } else {
@@ -595,6 +666,66 @@
         }
       }, function () {
         setDummyNumberOfParticipant();
+      });
+    }
+
+    function setCascadeBandwidthData() {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyCascadeBandwidth();
+        } else {
+          deferred.promise.then(function () {
+            if (_.isUndefined(setCascadeBandwidthGraph(response))) {
+              setDummyCascadeBandwidth();
+            } else {
+              vm.cascadebandwidthStatus = vm.SET;
+            }
+          }, function () {
+            setDummyCascadeBandwidth();
+          });
+        }
+      }, function () {
+        setDummyCascadeBandwidth();
+      });
+    }
+
+    function setClusterCascadeBandwidthData() {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyClusterCascadeBandwidth();
+        } else {
+          deferred.promise.then(function () {
+            if (_.isUndefined(setClusterCascadeBandwidthGraph(response))) {
+              setDummyClusterCascadeBandwidth();
+            } else {
+              vm.clusterCascadebandwidthStatus = vm.SET;
+            }
+          }, function () {
+            setDummyClusterCascadeBandwidth();
+          });
+        }
+      }, function () {
+        setDummyClusterCascadeBandwidth();
+      });
+    }
+
+    function setStreamsBandwidthData() {
+      MediaReportsService.getStreamsBandwidthData(vm.timeSelected, vm.clusterSelected, vm.streamsBandwidthSelected.value).then(function (response) {
+        if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
+          setDummyStreamsBandwidth();
+        } else {
+          deferred.promise.then(function () {
+            if (_.isUndefined(setStreamsBandwidthGraph(response))) {
+              setDummyStreamsBandwidth();
+            } else {
+              vm.streamsBandwidthStatus = vm.SET;
+            }
+          }, function () {
+            setDummyStreamsBandwidth();
+          });
+        }
+      }, function () {
+        setDummyStreamsBandwidth();
       });
     }
 
@@ -650,6 +781,21 @@
       return vm.numberOfParticipantChart;
     }
 
+    function setCascadeBandwidthGraph(response) {
+      vm.cascadeBandwidthChart = CascadebandwidthGraphService.setCascadeBandwidthGraph(response, vm.cascadeBandwidthChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.clusterNameMap);
+      return vm.cascadeBandwidthChart;
+    }
+
+    function setClusterCascadeBandwidthGraph(response) {
+      vm.clusterCascadeBandwidthChart = ClusterCascadeBandwidthGraphService.setClusterCascadeBandwidthGraph(response, vm.clusterCascadeBandwidthChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.clusterNameMap);
+      return vm.clusterCascadeBandwidthChart;
+    }
+
+    function setStreamsBandwidthGraph(response) {
+      vm.streamsBandwidthChart = StreamsBandwidthUsageGraphService.setStreamsBandwidthGraph(response, vm.streamsBandwidthChart, vm.clusterSelected, vm.clusterId, vm.timeSelected, vm.clusterNameMap);
+      return vm.streamsBandwidthChart;
+    }
+
     function setMeetingLocationGraph(response) {
       vm.meetingLocationChart = MeetingLocationAdoptionGraphService.setMeetingLocationGraph(response, vm.meetingLocationChart, vm.timeSelected);
       return vm.meetingLocationChart;
@@ -677,7 +823,7 @@
       vm.participantDistributionStatus = vm.EMPTY;
       var response = {
         graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
-        graphs: MediaReportsDummyGraphService.dummyParticipantDistributionGraph(),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
       };
       setParticipantDistributionGraph(response);
     }
@@ -707,6 +853,33 @@
         graphs: MediaReportsDummyGraphService.dummyNumberOfParticipantGraph(),
       };
       setNumberOfParticipantGraph(response);
+    }
+
+    function setDummyCascadeBandwidth() {
+      vm.cascadebandwidthStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
+      };
+      setCascadeBandwidthGraph(response);
+    }
+
+    function setDummyClusterCascadeBandwidth() {
+      vm.clusterCascadebandwidthStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
+      };
+      setClusterCascadeBandwidthGraph(response);
+    }
+
+    function setDummyStreamsBandwidth() {
+      vm.streamsBandwidthStatus = vm.EMPTY;
+      var response = {
+        graphData: MediaReportsDummyGraphService.dummyLineChartData(vm.timeSelected),
+        graphs: MediaReportsDummyGraphService.dummyClusterLineChartGraph(),
+      };
+      setStreamsBandwidthGraph(response);
     }
 
     function setDummyCallVolume() {

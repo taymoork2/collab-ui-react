@@ -4,6 +4,7 @@
   "assignedResources": [{
     "id": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b",
     "type": "directoryNumber",
+    "number": "1111111",
     "trigger": "incomingCall",
     "uuid": "00097a86-45ef-44a7-aa78-6d32a0ca1d3b"
   }],
@@ -19,6 +20,22 @@
         "url": "file1.avi"
       }
     }, {
+      "doREST": {
+        "id": "fca066b1-4938-4b5f-9870-9e66ad17e0a2",
+        "varList": [
+          "testspark"
+        ]
+      }
+    },
+    {
+      "doREST": {
+        "id": "c9e07049-ab7a-446c-9c48-1956bb83a7a5",
+        "varList": [
+          "testcisco"
+        ]
+      }
+    },
+    {
       "runActionsOnInput": {
         "description": "",
         "prompts": {

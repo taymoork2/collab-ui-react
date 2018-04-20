@@ -23,7 +23,7 @@ class PlaceCallOverview implements ng.IComponentController {
   public isprov3698: boolean = false;
   public primaryLineEnabled: boolean;
   public userPrimaryNumber: PrimaryNumber;
-  public isPrimaryLineFeatureEnabled: boolean = false;
+  public isPrimaryLineFeatureEnabled: boolean = true;
   public primaryLineFeature: IPrimaryLineFeature;
 
   /* @ngInject */
@@ -76,13 +76,11 @@ class PlaceCallOverview implements ng.IComponentController {
   private initServices(): void {
     const promises  = {
       1: this.LineService.getLineList(LineConsumerType.PLACES, this.currentPlace.cisUuid, this.wide),
-      2: this.PrimaryLineService.isPrimaryLineFeatureEnabled(),
-      3: this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid),
+      2: this.PlaceCallOverviewService.getCmiPlaceInfo(this.currentPlace.cisUuid),
     };
     this.$q.all(promises).then( data => {
       this.directoryNumbers = data[1];
-      this.isPrimaryLineFeatureEnabled = data[2];
-      this.userPrimaryNumber = _.get(data[3], 'primaryNumber');
+      this.userPrimaryNumber = _.get(data[2], 'primaryNumber');
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then (() => {
       this.initFeatures();
@@ -92,13 +90,13 @@ class PlaceCallOverview implements ng.IComponentController {
   private initFeatures(): void {
     this.features = [];
     if (this.currentPlace.type === 'huron') {
-      const service: IFeature = {
-        name: this.$translate.instant('telephonyPreview.speedDials'),
-        state: 'speedDials',
+      const phoneButtonLayoutService: IFeature = {
+        name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
+        state: 'phoneButtonLayout',
         detail: undefined,
         actionAvailable: true,
       };
-      this.features.push(service);
+      this.features.push(phoneButtonLayoutService);
 
       const cosService: IFeature = {
         name: this.$translate.instant('serviceSetupModal.cos.title'),
@@ -107,9 +105,7 @@ class PlaceCallOverview implements ng.IComponentController {
         actionAvailable: true,
       };
       this.features.push(cosService);
-    }
 
-    if (this.currentPlace.type === 'huron') {
       const transferService: IFeature = {
         name: this.$translate.instant('telephonyPreview.externalTransfer'),
         state: 'externaltransfer',
@@ -194,5 +190,5 @@ class PlaceCallOverview implements ng.IComponentController {
 
 export class PlaceCallOverviewComponent implements ng.IComponentOptions {
   public controller = PlaceCallOverview;
-  public templateUrl = 'modules/squared/places/callOverview/placeCallOverview.html';
+  public template = require('modules/squared/places/callOverview/placeCallOverview.html');
 }

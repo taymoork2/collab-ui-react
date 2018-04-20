@@ -1,6 +1,6 @@
 @import 'plan-container';
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
 .wizard-plan-review {
   @extend %plan-container;
@@ -40,6 +40,33 @@
 
   .order-and-subscription-numbers {
     padding-bottom: 20px;
+    line-height: 1.4rem;
+    span {
+      font-size: 1rem;
+    }
+  }
+
+  .plan-review-subtitle {
+    margin-bottom: 20px;
+  }
+
+  .row-pending {
+    .column {
+      padding-bottom: 30px;
+    }
+  }
+
+  .plan-review-help {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+
+  .plan-review-help-text {
+    flex-grow: 1;
+    margin-left: 10px;
   }
 
   .pending-details {

@@ -1,0 +1,126 @@
+<div ng-form="companyVoicemailAvrilForm">
+  <label class="sub-section__label" translate="serviceSetupModal.companyVoicemail"></label>
+  <cs-toggle-switch
+    ng-model="$ctrl.companyVoicemailEnabled"
+    toggle-id="companyVoicemailToggle"
+    name="companyVoicemailToggle"
+    size="small"
+    cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)"
+    cs-aria-label="{{::'serviceSetupModal.companyVoicemail' | translate}}">
+  </cs-toggle-switch>
+  <div ng-if="$ctrl.companyVoicemailEnabled" class="save-popup-margin">
+    <label class="control-label" translate="serviceSetupModal.vmDeliveryMethods"></label>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.localAvrilFeatures.VM2T"
+      id="voicemailToPhone"
+      name="voicemailToPhone"
+      ng-change="$ctrl.onVoicemailToPhoneChanged()"
+      cs-input-label="{{::'serviceSetupModal.voicemailToPhoneLabel' | translate}}">
+    <div ng-if="$ctrl.localAvrilFeatures.VM2T" class="indent-left">
+      <p
+        class="description-block"
+        translate="serviceSetupModal.voicemailToPhoneDescriptionText">
+      </p>
+      <div class="medium-5 external-voicemail-number">
+        <cs-select
+          name="companyVoicemailNumber"
+          ng-model="$ctrl.selectedNumber"
+          options="$ctrl.externalNumberOptions"
+          input-placeholder="$ctrl.filterPlaceholder"
+          placeholder="$ctrl.nonePlaceholder"
+          on-change-fn="$ctrl.onVoicemailToPhoneChanged()"
+          filter="true"
+          refresh-data-fn="$ctrl.getNumbers(filter)">
+        </cs-select>
+      </div>
+    </div>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.localAvrilFeatures.VM2E"
+      id="voicemailToEmail"
+      name="voicemailToEmail"`
+      ng-change="$ctrl.onVoicemailFeaturesChanged()"
+      cs-input-label="{{::'serviceSetupModal.voicemailToEmailLabel' | translate}}">
+      <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2E">
+        <input
+          cs-input
+          type="checkbox"
+          id="emailWithAttachment"
+          name="emailWithAttachment"
+          ng-model="$ctrl.localAvrilFeatures.VM2E_Attachment"
+          ng-change="$ctrl.onVoicemailFeaturesChanged()"
+          cs-input-nested="1"
+          cs-input-label="{{:: 'serviceSetupModal.notificationAttached' | translate}}"
+          cs-input-help-text="{{::'serviceSetupModal.voicemailToEmailHelpText' | translate}}">
+        <input ng-if="$ctrl.isLanguageEnglish()"
+          cs-input
+          type="checkbox"
+          id="emailWithTranscript"
+          name="emailWithTranscript"
+          ng-model="$ctrl.localAvrilFeatures.VM2E_Transcript"
+          ng-change="$ctrl.onVoicemailFeaturesChanged()"
+          cs-input-nested="1"
+          cs-input-label="{{:: 'serviceSetupModal.notificationTranscript' | translate}}">
+         <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.localAvrilFeatures.VM2E_TLS"
+          id="useTLS"
+          name="useTLS"
+          ng-change="$ctrl.onVoicemailFeaturesChanged()"
+          cs-input-nested="1"
+          cs-input-label="{{::'serviceSetupModal.vmUseTLS' | translate}}">
+      </div>
+    <div>
+      <div ng-if="$ctrl.avrilI1559">
+        <input
+        cs-input
+        type="checkbox"
+        ng-model="$ctrl.localAvrilFeatures.VM2S"
+        id="voicemailToSpark"
+        name="voicemailToSpark"
+        ng-disabled="!$ctrl.isMessageEntitled"
+        ng-change="$ctrl.onVoicemailFeaturesChanged(value)"
+        cs-input-label="{{::'serviceSetupModal.voicemailToSparkLabel' | translate}}">
+        <div class="cs-checkbox-group" ng-if="$ctrl.localAvrilFeatures.VM2S || !$ctrl.isMessageEntitled">
+          <input
+            cs-input
+            type="checkbox"
+            id="sparkWithAttachment"
+            name="sparkWithAttachment"
+            ng-model="$ctrl.localAvrilFeatures.VM2S_Attachment"
+            ng-disabled="!$ctrl.isMessageEntitled"
+            ng-change="$ctrl.onVoicemailFeaturesChanged()"
+            cs-input-nested="1"
+            cs-input-label="{{:: 'serviceSetupModal.notificationAttached' | translate}}">
+          <input ng-if="$ctrl.isLanguageEnglish()"
+            cs-input
+            type="checkbox"
+            id="sparkWithTranscript"
+            name="sparkWithTranscript"
+            ng-model="$ctrl.localAvrilFeatures.VM2S_Transcript"
+            ng-disabled="!$ctrl.isMessageEntitled"
+            ng-change="$ctrl.onVoicemailFeaturesChanged()"
+            cs-input-nested="1"
+            cs-input-label="{{:: 'serviceSetupModal.notificationTranscript' | translate}}">
+        </div>
+      </div>
+      <div>
+        <label ng-class="{ 'disable-color': !$ctrl.isMessageEntitled}" class="control-label" translate="serviceSetupModal.vmPinManagement"></label>
+        <p ng-class="{ 'disable-color': !$ctrl.isMessageEntitled, 'description-block': $ctrl.isMessageEntitled}" translate="serviceSetupModal.vmPinHelp"></p>
+        <input
+          cs-input
+          type="checkbox"
+          ng-model="$ctrl.localAvrilFeatures.VMOTP"
+          ng-disabled="!$ctrl.isMessageEntitled"
+          id="enableOTP"
+          name="enableOTP"
+          ng-change="$ctrl.onVoicemailFeaturesChanged()"
+          cs-input-label="{{::'serviceSetupModal.vmEnableOTP' | translate}}">
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,17 +6,17 @@ import { USSService, IUserProps } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
 import IWizardData = csdm.IWizardData;
 import { ExternalLinkedAccountHelperService } from '../../devices/services/external-acct-helper.service';
+import { IQService } from 'angular';
 
 class EditCalendarService implements ng.IComponentController {
   private dismiss: Function;
   public emailOfMailbox: string;
-  private initialMailBox: string;
   private wizardData: IWizardData;
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
   public calService = '';
   private initialCalService: string;
-  private isLoading: boolean;
+  public isLoading: boolean;
   public externalCalendarIdentifier: string;
   private isFirstStep: boolean = false;
   public title: string;
@@ -63,6 +63,7 @@ class EditCalendarService implements ng.IComponentController {
     private ResourceGroupService: ResourceGroupService,
     private ServiceDescriptorService: ServiceDescriptorService,
     private USSService: USSService,
+    private $q: IQService,
   ) {
     this.ServiceDescriptorService.getServices()
       .then((services) => {
@@ -85,7 +86,6 @@ class EditCalendarService implements ng.IComponentController {
         }
         if (existingCalLinks) {
           this.calService = existingCalLinks.providerID;
-          this.initialMailBox = existingCalLinks.accountGUID;
           this.emailOfMailbox = existingCalLinks.accountGUID;
         }
       });
@@ -224,7 +224,10 @@ class EditCalendarService implements ng.IComponentController {
           .then(() => {
             const props = this.getUssProps();
             if (props) {
-              this.USSService.updateBulkUserProps([props]).then(() => {
+              this.$q.all({
+                saveRGroup: this.USSService.updateBulkUserProps([props]),
+                ussRefresh: this.USSService.refreshEntitlementsForUser(place.id || ''),
+              }).then(() => {
                 this.dismiss();
                 this.Notification.success('addDeviceWizard.editServices.servicesSaved');
               }, (error) => {
@@ -269,7 +272,7 @@ class EditCalendarService implements ng.IComponentController {
 export class EditCalendarServiceOverviewComponent implements ng.IComponentOptions {
   public controller = EditCalendarService;
   public controllerAs = 'editCalendarService';
-  public templateUrl = 'modules/squared/places/editCalendarService/editCalendarService.tpl.html';
+  public template = require('modules/squared/places/editCalendarService/editCalendarService.tpl.html');
   public bindings = {
     dismiss: '&',
   };

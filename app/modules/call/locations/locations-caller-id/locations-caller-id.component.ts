@@ -13,12 +13,19 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public onNumberFilter: Function;
   public locationCallerIdEnabled: boolean;
+  public size: string;
+  public keyPress: Function;
+  public origCallerId: LocationCallerId;
 
 
   /* @ngInject */
   constructor(
     private PhoneNumberService: PhoneNumberService,
   ) { }
+
+  public $onInit(): void {
+    this.origCallerId = _.cloneDeep(this.callerId);
+  }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const {
@@ -33,6 +40,7 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     }
 
     if (callerId && callerId.currentValue) {
+      this.origCallerId = _.cloneDeep(this.callerId);
       this.locationCallerIdEnabled = true;
       this.selectedNumber = this.PhoneNumberService.getNationalFormat(callerId.currentValue.number);
     } else if (callerId && !callerId.currentValue) {
@@ -41,10 +49,13 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onLocationCallerIdToggled(value: boolean): void {
-    if (value) {
+    if (value && this.origCallerId) {
+      this.onChange(this.origCallerId);
+    } else if (value) {
       this.callerId = new LocationCallerId({
         name: this.companyName,
-        number: null,
+        number: '',
+        uuid: '',
       });
       this.onChange(this.callerId);
     } else {
@@ -73,16 +84,23 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   }
 
   public onChange(callerId: LocationCallerId | null): void {
+    if (callerId && callerId.uuid && !_.isEqual(callerId, this.origCallerId)) {
+      callerId.uuid = undefined;
+    }
     this.onChangeFn({
       callerId: _.cloneDeep(callerId),
     });
+  }
+
+  public evalKeyPress ($event): void {
+    this.keyPress($event);
   }
 
 }
 
 export class LocationCallerIdComponent implements ng.IComponentOptions {
   public controller = LocationCallerIdCtrl;
-  public templateUrl = 'modules/call/locations/locations-caller-id/locations-caller-id.component.html';
+  public template = require('modules/call/locations/locations-caller-id/locations-caller-id.component.html');
   public bindings = {
     showLabel: '<',
     callerId: '<',
@@ -92,5 +110,7 @@ export class LocationCallerIdComponent implements ng.IComponentOptions {
     companyName: '<',
     onNumberFilter: '&',
     onChangeFn: '&',
+    size: '&',
+    keyPress: '&',
   };
 }

@@ -1,20 +1,17 @@
 import testModule from '../index';
 
 describe('Component: gmTdSites', () => {
-  beforeAll(function () {
-    this.preData = getJSONFixture('gemini/common.json');
-  });
-
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', 'UrlConfig', '$httpBackend', '$stateParams', 'gemService', 'Notification', 'TelephonyDomainService', 'PreviousState', '$modal');
+    this.injectDependencies('$q', '$state', '$httpBackend', '$stateParams', 'Notification', 'TelephonyDomainService', 'PreviousState', 'UrlConfig', '$modal');
     initSpies.apply(this);
     initComponent.apply(this);
   });
 
   function initSpies() {
+    this.$httpBackend.whenGET(this.UrlConfig.getGeminiUrl() + 'countries').respond(200);
     spyOn(this.PreviousState, 'go');
-    spyOn(this.Notification, 'notify');
+    spyOn(this.Notification, 'errorResponse');
     spyOn(this.$modal, 'open').and.returnValue({ result: this.$q.resolve() });
     spyOn(this.TelephonyDomainService, 'moveSite').and.returnValue(this.$q.resolve());
   }
@@ -28,8 +25,6 @@ describe('Component: gmTdSites', () => {
         primaryBridgeName: 'thm95',
         backupBridgeId: 7892,
         backupBridgeName: 'thm99',
-        webDomainName: 'hmwd',
-        webDomainId: 20096,
         telephonyDomainSites: [{
           siteId: '858622',
           siteName: 'xiaoyuantest1',
@@ -46,22 +41,14 @@ describe('Component: gmTdSites', () => {
         primaryBridgeName: 'thm95',
         backupBridgeId: 7892,
         backupBridgeName: 'thm99',
-        webDomainName: 'hmwd',
-        webDomainId: 20096,
       }, {
         ccaDomainId: '8a607bdb59baadf5015aaba2d1731b48',
         primaryBridgeId: 7887,
         primaryBridgeName: 'thm95',
         backupBridgeId: 7892,
         backupBridgeName: 'thm99',
-        webDomainName: 'hmwd',
-        webDomainId: 20096,
       }],
     };
-
-    const getCountriesUrl = this.UrlConfig.getGeminiUrl() + 'countries';
-    this.$httpBackend.expectGET(getCountriesUrl).respond(200, this.preData.getCountries);
-    this.$httpBackend.flush();
 
     this.$state.current.data = {};
     this.compileComponent('gmTdSites', {});
@@ -76,9 +63,6 @@ describe('Component: gmTdSites', () => {
 
   describe('Click event', function () {
     it('Should move site successfully when click move site link', function () {
-      const moveSiteResponse = this.preData.common;
-      moveSiteResponse.content.data.returnCode = 0;
-
       const site = {
         siteId: '858622',
         siteUrl: 'xiaoyuantest1.webex.com',
@@ -88,7 +72,7 @@ describe('Component: gmTdSites', () => {
         targetDomainName: 'TD001',
       };
 
-      this.TelephonyDomainService.moveSite.and.returnValue(this.$q.resolve(moveSiteResponse));
+      this.TelephonyDomainService.moveSite.and.returnValue(this.$q.resolve());
       this.controller.onClick(site, targetTd);
       this.$scope.$apply();
 
@@ -96,9 +80,6 @@ describe('Component: gmTdSites', () => {
     });
 
     it('Should move site failed when click move site link', function () {
-      const moveSiteResponse = this.preData.common;
-      moveSiteResponse.content.data.returnCode = 500;
-
       const site = {
         siteId: '858622',
         siteUrl: 'xiaoyuantest1.webex.com',
@@ -108,11 +89,11 @@ describe('Component: gmTdSites', () => {
         targetDomainName: 'TD001',
       };
 
-      this.TelephonyDomainService.moveSite.and.returnValue(this.$q.resolve(moveSiteResponse));
+      this.TelephonyDomainService.moveSite.and.returnValue(this.$q.reject( { status: 404 } ));
       this.controller.onClick(site, targetTd);
       this.$scope.$apply();
 
-      expect(this.Notification.notify).toHaveBeenCalled();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
 

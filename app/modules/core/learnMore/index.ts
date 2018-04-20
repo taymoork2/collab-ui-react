@@ -4,8 +4,7 @@ import { LearnMoreComponent } from './learnMore.component';
 export default angular
   .module('premium.learnMore', [
     require('modules/core/analytics'),
-    require('collab-ui-ng').default,
-    require('scripts/app.templates'),
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('learnMore', new LearnMoreComponent())

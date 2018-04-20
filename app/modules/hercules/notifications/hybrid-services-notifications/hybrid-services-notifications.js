@@ -8,7 +8,7 @@
       },
       controller: HerculesNotificationsController,
       controllerAs: 'notificationController',
-      templateUrl: 'modules/hercules/notifications/hybrid-services-notifications/hybrid-services-notifications.html',
+      template: require('modules/hercules/notifications/hybrid-services-notifications/hybrid-services-notifications.html'),
     });
 
   /* @ngInject */
@@ -118,7 +118,7 @@
       $scope.modal = $modal.open({
         controller: 'ExportUserStatusesController',
         controllerAs: 'exportUserStatusesCtrl',
-        templateUrl: 'modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html',
+        template: require('modules/hercules/service-specific-pages/components/user-status-report/export-user-statuses.html'),
         type: 'small',
         resolve: {
           servicesId: function () {

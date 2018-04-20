@@ -53,6 +53,9 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 # install nvm as-needed
+# - because 'nvm' is installed as a bash function, need to source it in before using it
+# shellcheck disable=SC1090
+[ -s "$HOME/$(get_bash_conf_file)" ] && source "$HOME/$(get_bash_conf_file)"
 if ! is_installed "nvm"; then
     echo "[INFO] \`nvm\` not found, installing:"
     curl -o- "https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh" | bash
@@ -61,9 +64,6 @@ fi
 # install nodejs as-needed
 if ! is_installed "node"; then
     echo "[INFO] \`node\` not found, installing:"
-    # because 'nvm' is installed as a bash function, need to source it in before using it
-    # shellcheck disable=SC1090
-    source "$HOME/$(get_bash_conf_file)"
     nvm install 6
 fi
 

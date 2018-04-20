@@ -5,7 +5,7 @@ import { CallFeaturesPage } from '../pages/callFeatures.page';
 const callFeatures = new CallFeaturesPage();
 
 describe('Huron Functional: call-features', () => {
-  const customer = huronCustomer('call-features');
+  const customer = huronCustomer({ test: 'call-features' });
 
   beforeAll(done => {
     provisioner.provisionCustomerAndLogin(customer)

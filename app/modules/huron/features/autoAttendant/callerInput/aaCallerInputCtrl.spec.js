@@ -20,17 +20,20 @@ describe('Controller: AACallerInputCtrl', function () {
     value: '',
     keys: [
       '0', '1', '4', '5', '6', '7', '8', '9', '#', '*',
-    ] }, {
+    ],
+  }, {
     key: '2',
     value: '',
     keys: [
       '0', '2', '4', '5', '6', '7', '8', '9', '#', '*',
-    ] }, {
+    ],
+  }, {
     key: '3',
     value: '',
     keys: [
       '0', '3', '4', '5', '6', '7', '8', '9', '#', '*',
-    ] }];
+    ],
+  }];
 
   var schedule = 'openHours';
   var index = '0';

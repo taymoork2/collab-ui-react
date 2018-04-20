@@ -1,0 +1,88 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/list-group';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/topbar';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.trialsPanel {
+  padding: 15px;
+  background-color: $brand-white;
+  border-color: $list-group-border;
+  border-width: 1px;
+}
+
+.trials-refresh {
+  left: 50%;
+  position: relative;
+}
+
+.trialHeader {
+  @include vr-spacing(pb, 0.25);
+
+  display: flex;
+  align-items: flex-end;
+
+  > span {
+    color: $gray-dark-2;
+    line-height: inherit;
+
+    ~ span {
+      text-align: center;
+    }
+  }
+}
+
+.trialRow {
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: -.5rem;
+}
+
+.trial-danger-text {
+  color: $brand-danger;
+}
+
+.expiredTrials {
+  @include vr-spacing(pt, 2);
+  @include vr-spacing(pb, 0.5);
+}
+
+.viewAll {
+  @include vr-spacing(pt, 0.5);
+}
+
+.trialTitle {
+  @include vr-spacing(mb, 1);
+
+  font-family: $brand-font-extra-light;
+  color: $top-bar-inverse-link-disabled-color;
+}
+
+.userTitle {
+  @include vr-spacing(mb, 0.75);
+}
+
+.expired {
+  color: $gray-dark;
+  text-align: center;
+}
+
+.trialLicense {
+  color: $gray-base;
+  text-align: center;
+  padding-top: 0px;
+}
+
+.trialDays {
+  color: $gray-base;
+  text-align: center;
+}
+
+.trialbar {
+  height: 6px;
+}
+
+.trials-card {
+  min-height: rem-calc(440);
+}

@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
 
 .device-usage-report-pages {
   @import 'least-most.scss';
@@ -12,8 +12,8 @@
     width: 14rem;
   }
 
-  .cs-card.large,
-  .cs-card.full {
+  .cs-card.cs-card--large,
+  .cs-card.cs-card--full {
     article {
       header {
         padding-left: 1rem;
@@ -164,7 +164,7 @@
   }
 
   .score-card {
-    .full.side-info-card.cs-card {
+    .cs-card--full.side-info-card.cs-card {
       display: block;
     }
   }

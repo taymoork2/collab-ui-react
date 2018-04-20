@@ -1,6 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-  </button>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="{{chooseAccountType.title}}"></h3>
 </div>
 <div class="modal-body device-wizard">
@@ -17,7 +16,7 @@
              ng-click="chooseAccountType.personal()"
              ng-dblclick="chooseAccountType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/user-illustration.png" />
+            <img class="typeImage" type="image" src="/images/devices/user-illustration.png" />
           </div>
           <h4 translate="addDeviceWizard.chooseAccountType.user"></h4>
           <span translate="addDeviceWizard.chooseAccountType.personalUsage"></span>
@@ -29,7 +28,7 @@
              ng-click="chooseAccountType.shared()"
              ng-dblclick="chooseAccountType.next()">
           <div class="typeImageBox">
-            <img class="typeImage" type="image" src="images/devices/places-illustration.png" />
+            <img class="typeImage" type="image" src="/images/devices/places-illustration.png" />
           </div>
           <h4 translate="addDeviceWizard.chooseAccountType.place"></h4>
           <span translate="addDeviceWizard.chooseAccountType.sharedUsage"></span>

@@ -1,8 +1,9 @@
 import callFeatureNameModule from './index';
 
 describe('Component: CallFeatureName', () => {
+  const TITLE = 'div.title';
+  const DESC = 'div.desc';
   const NAME_INPUT = 'input';
-  const HINT_TEXT = 'p.input-description';
 
   beforeEach(function () {
     this.initModules(callFeatureNameModule);
@@ -30,17 +31,17 @@ describe('Component: CallFeatureName', () => {
     beforeEach(initComponent);
 
     it('should have an input', function() {
-      expect(this.view).toContainElement(NAME_INPUT);
+      expect(this.view).toContainElement(TITLE);
     });
 
     it('should have placeholder text', function() {
-      expect(this.view.find(NAME_INPUT)).toHaveAttr('placeholder');
-      expect(this.view.find(NAME_INPUT).attr('placeholder')).toEqual('callPark.namePlaceholder');
+      expect(this.view).toContainElement(TITLE);
+      expect(this.view.find(TITLE).get(0).innerHTML).toEqual('callPark.namePlaceholder');
     });
 
     it('should have hint text', function() {
-      expect(this.view).toContainElement(HINT_TEXT);
-      expect(this.view.find(HINT_TEXT).get(0).innerHTML).toEqual('callPark.nameHint');
+      expect(this.view).toContainElement(DESC);
+      expect(this.view.find(DESC).get(0).innerHTML).toEqual('callPark.nameHint');
     });
 
     // TODO (jlowery): figure out why this doesn't trigger onChangeFn in UT.

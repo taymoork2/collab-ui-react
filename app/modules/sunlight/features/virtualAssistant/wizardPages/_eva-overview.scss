@@ -1,0 +1,23 @@
+.eva-overview-box {
+  @include vr-spacing(p, 1.6875);
+  height: rem-calc(640px);
+  width: rem-calc(612px);
+
+  .learn-more-row {
+    a {
+      font-size: 14px;
+    }
+  }
+
+  h6 {
+    @include vr-spacing(pt, 0.75);
+  }
+
+  h4 {
+    font-weight: bold;
+  }
+
+  img {
+    @include vr-spacing(mt, 2);
+  }
+}

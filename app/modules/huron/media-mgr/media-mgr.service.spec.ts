@@ -1,6 +1,7 @@
 import mediaMgrModule from './index';
 import { IMedia } from './media-mgr.component';
 import { IMediaUpload } from './media-mgr.component';
+import { IVariantMetaDataResponse } from './media-mgr.service';
 
 describe('Service: mediaMgrService', () => {
   beforeEach(function() {
@@ -118,6 +119,51 @@ describe('Service: mediaMgrService', () => {
       this.MediaMgrService.uploadMedia(this.mediaUpload);
       expect(this.MediaMgrService.getUploadUrl).toHaveBeenCalledWith(this.mediaUpload);
 
+    });
+  });
+
+  describe('Download Functionality', function () {
+    afterEach(function () {
+      this.$httpBackend.flush();
+    });
+    it('downloadFromUrl Function', function () {
+
+      this.media = <IMedia> {
+        mediaId: 'abcd-5678',
+        mediaState: 'AVAILABLE',
+        filename: 'media-upload.mp3',
+        description: 'This is my media that was uploaded.',
+        displayName: 'media-upload',
+        duration: '1:10',
+        size: 31243,
+        errorInfo: 'error code',
+      };
+
+      this.getVariantData = <IVariantMetaDataResponse> {
+        createTime: 'Fri Jul 28 17:46:13 UTC 2017',
+        downloadUrl: 'https://sparkcall-mms-int-us-east-1.s3.amazonaws.com/12345/abcd-5678/abcd-5678.raw?X-Amz-Credential=A2DA%2F205',
+        encoding: 'raw',
+        lastModifyTime: 'Fri Jul 28 17:46:17 UTC 2017',
+        locale: 'en_US',
+        md5Sum: '2ca80224c6de3f27c3db8ebc8a7444b3',
+        mediaId: 'abcd-5678',
+        size: 31243,
+        state: 'UPLOADED',
+        transcodeJobId: '',
+        variantId: 'abcd-5678',
+      };
+
+      const data = new ArrayBuffer(31243);
+
+      this.$httpBackend.expectGET(this.HuronConfig.getMmsUrl() + '/organizations/' + this.Authinfo.getOrgId() + '/media/abcd-5678/variants/abcd-5678')
+        .respond(200, this.getVariantData);
+      this.$httpBackend.expectGET(this.getVariantData.downloadUrl)
+        .respond(200, data);
+
+      this.MediaMgrService.downloadFromUrl(this.media)
+      .then(response => {
+        expect(response.status).toBe(200);
+      });
     });
   });
 

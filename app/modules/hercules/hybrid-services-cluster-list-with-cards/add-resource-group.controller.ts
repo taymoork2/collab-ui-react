@@ -2,6 +2,7 @@ import './add-resource-group-modal.scss';
 
 import { Notification } from 'modules/core/notifications';
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { KeyCodes } from 'modules/core/accessibility';
 
 export class AddResourceGroupController {
   public creating = false;
@@ -64,7 +65,7 @@ export class AddResourceGroupController {
   }
 
   public handleKeypress(event): void {
-    if (event.keyCode === 13 && this.canCreate()) {
+    if (event.keyCode === KeyCodes.ENTER && this.canCreate()) {
       this.createResourceGroup();
     }
   }

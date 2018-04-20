@@ -1,32 +1,11 @@
-@import '../../../../node_modules/collab-ui/scss/settings/core';
-@import '../../../../node_modules/collab-ui/scss/settings/page';
-@import '../../../../node_modules/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
-.metricsContent {
-  overflow: hidden !important;
-  padding: 0 !important;
+.customer-reports {
+  @extend %content-subheader;
+
+  .metricsContent {
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
 }
 
-.fullSize {
-  height: 100%;
-  width: 100%;
-}
-
-.sparkMetricsContent {
-  height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height})) !important;
-}
-
-.metrics-loading-icon {
-  margin-top: 10vh;
-  font-size: 7rem;
-}
-
-.metrics-loading-data {
-  margin-top: 1rem;
-  font-size: 1.8rem;
-  font-family: $brand-font-extra-light;
-}
-
-.metrics-loading-description {
-  margin-top: 1rem;
-}

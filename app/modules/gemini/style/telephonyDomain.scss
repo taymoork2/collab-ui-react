@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/settings';
-@import '~collab-ui/scss/objects/tables';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/settings';
+@import '~@collabui/collab-ui/scss/objects/tables';
 
 .gm-td-histories,
 .gm-td-notes-view {
@@ -55,15 +55,45 @@
   }
 }
 
+.gmTdDetails-state {
+  .edit-td-name {
+    display: none;
+  }
+
+  .history-ul {
+    padding-bottom: 48px;
+  }
+}
+
 .gmTdDetails-notes-state,
 .gmTdDetails-sites-state {
   cs-alert-banner {
     display: none;
   }
+
+  .edit-td-name {
+    display: none;
+  }
+
+  .side-panel-container {
+    height: calc(100vh - 90px);
+  }
+
+  .history-ul {
+    padding-bottom: 48px;
+  }
 }
 
 .gmTdNumbersRequest-state,
 .gmTdDetails-gmTdNumbers-state {
+  .edit-td-name {
+    display: block;
+  }
+
+  .nav-expanded {
+    width: calc(100vw - 216px);
+  }
+
   .side-panel {
     z-index: 1000;
 
@@ -82,15 +112,21 @@
       .side-panel-container {
         padding: 0;
         padding-bottom: 50px;
+        width: calc(100vw - 216px);
+        height: calc(100vh - 90px);
 
         .breadcrumb-container {
           padding: 0 1rem;
         }
 
         .grid-his-note {
-          height: calc(100vh - 390px);
+          height: calc(100vh - 350px);
           overflow-y: scroll;
           overflow-x: hidden;
+
+          .grid-refresh {
+            top: 25rem;
+          }
         }
       }
 
@@ -199,9 +235,9 @@
 
   .tn-error-msg {
     &::before {
-      font-family: "Cisco_Toolkit_Icons";
-      color: #f96452;
-      content: '\E0B0';
+      @extend %icon-error;
+      font-family: $icon-font-name;
+      color: $color-alerts-base;
       margin-right: 4px;
       vertical-align: top;
     }

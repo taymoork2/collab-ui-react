@@ -9,6 +9,7 @@
     return filter;
 
     function filter(millis) {
+      // eslint-disable-next-line no-restricted-globals
       if (isNaN(millis) || millis < 1) {
         return '-';
       }

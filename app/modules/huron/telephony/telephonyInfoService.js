@@ -8,7 +8,7 @@
   /* @ngInject */
 
   function TelephonyInfoService($rootScope, $q, $translate, Authinfo, RemoteDestinationService,
-    UserServiceCommon, UserDirectoryNumberService, LocationsService, InternalNumberPoolService, ExternalNumberPool,
+    UserServiceCommon, UserDirectoryNumberService, InternalNumberPoolService, ExternalNumberPool,
     ServiceSetup, DirectoryNumberUserService, DirectoryNumber, HuronCustomer, InternationalDialing) {
     var broadcastEvent = 'telephonyInfoUpdated';
 
@@ -64,7 +64,6 @@
       getTelephonyUserInfo: getTelephonyUserInfo,
       getInternalNumberPool: getInternalNumberPool,
       loadInternalNumberPool: loadInternalNumberPool,
-      loadLocationInternalNumberPool: loadLocationInternalNumberPool,
       getExternalNumberPool: getExternalNumberPool,
       loadExternalNumberPool: loadExternalNumberPool,
       loadExtPoolWithMapping: loadExtPoolWithMapping,
@@ -307,28 +306,6 @@
 
     function getInternalNumberPool() {
       return _.cloneDeep(internalNumberPool);
-    }
-
-    function loadLocationInternalNumberPool(pattern, limit, locationId) {
-      var intNumPool = [];
-      var patternQuery = pattern ? '%' + pattern + '%' : undefined;
-      var patternlimit = limit || undefined;
-      var directorynumber = '';
-      return LocationsService.getLocationInternalNumberPoolList(locationId, directorynumber, 'pattern', patternQuery, patternlimit)
-        .then(function (intPool) {
-          for (var i = 0; i < intPool.length; i++) {
-            var dn = {
-              uuid: intPool[i].uuid,
-              pattern: intPool[i].pattern,
-            };
-            intNumPool.push(dn);
-          }
-          internalNumberPool = intNumPool;
-          return _.cloneDeep(internalNumberPool);
-        }).catch(function (response) {
-          internalNumberPool = [];
-          return $q.reject(response);
-        });
     }
 
     function loadInternalNumberPool(pattern, limit) {

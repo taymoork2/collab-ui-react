@@ -1,70 +1,97 @@
 <div ui-view="header"></div>
-<cs-sp-container>
-  <cs-sp-section>
-    <div class="row">
-      <div class="small-10 columns">
-        <span translate="organizationsPage.dirSync"></span>
+<div class="side-panel-container-view" ui-view="side-panel-container">
+  <cs-sp-container>
+    <cs-sp-section>
+      <div class="row">
+        <div class="small-10 columns">
+          <span translate="organizationsPage.dirSync"></span>
+        </div>
+        <div class="small-2 columns">
+          <span>{{currentOrganization.dirsyncEnabled}}</span>
+        </div>
       </div>
-      <div class="small-2 columns">
-        <span>{{currentOrganization.dirsyncEnabled}}</span>
+      <div class="row">
+        <div class="small-10 columns">
+          <span translate="organizationsPage.sso"></span>
+        </div>
+        <div class="small-2 columns">
+          <span>{{currentOrganization.ssoEnabled}}</span>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="small-10 columns">
-        <span translate="organizationsPage.sso"></span>
+      <div class="row">
+        <div class="small-10 columns" >
+          <span translate="organizationsPage.isEFT"></span>
+        </div>
+        <div class="small-2 columns">
+          <span ng-if="eftToggleLoading">
+            <i class="icon icon-spinner"></i>
+          </span>
+          <cs-toggle-switch
+            ng-if="!eftToggleLoading"
+            ng-model="isEFT"
+            toggle-id="eftToggle"
+            size="small"
+            ng-click="setEftToggle(isEFT)"
+            cs-aria-label="{{::'organizationsPage.isEFT' | translate}}">
+          </cs-toggle-switch>
+        </div>
       </div>
-      <div class="small-2 columns">
-        <span>{{currentOrganization.ssoEnabled}}</span>
+    </cs-sp-section>
+    <cs-sp-section>
+      <div class="section-title-row section-name" translate="organizationsPage.services"></div>
+      <div class="row" ng-repeat="svc in currentOrganization.services">
+        <div class="small-12 columns">
+          <span>{{svc}}</span>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="small-10 columns" >
-        <span translate="organizationsPage.isEFT"></span>
+      <button class="btn btn--primary manage-beta-features-button" ng-click="manageFeatures()">
+        <span translate="organizationsPage.manageBetaFeatures"></span>
+      </button>
+    </cs-sp-section>
+    <cs-sp-section ng-if="showHybridServices">
+      <div class="section-title-row section-name" translate="cloudExtensions.cloudExtensions"></div>
+      <div class="row">
+        <div class="small-10 columns" >
+          <span translate="organizationsPage.allowBetaChannels"></span>
+        </div>
+        <div class="small-2 columns">
+          <cs-toggle-switch
+            ng-model="betaChannel.newAllow"
+            toggle-id="allowBetaReleaseChannelToggle"
+            size="small"
+            ng-click="toggleReleaseChannelAllowed(betaChannel)"
+            cs-aria-label="{{::'organizationsPage.allowBetaChannels' | translate}}">
+          </cs-toggle-switch>
+        </div>
       </div>
-      <div class="small-2 columns">
-        <span ng-if="eftToggleLoading">
-          <i class="icon icon-spinner"></i>
-        </span>
-        <cs-toggle-switch ng-if="!eftToggleLoading" ng-model="isEFT" toggle-id="eftToggle" size="small" ng-click="setEftToggle(isEFT)"></cs-toggle-switch>
+      <div class="row">
+        <div class="small-10 columns" >
+          <span translate="organizationsPage.allowAlphaChannels"></span>
+        </div>
+        <div class="small-2 columns">
+          <cs-toggle-switch
+            ng-model="alphaChannel.newAllow"
+            toggle-id="allowAlphaReleaseChannelToggle"
+            size="small"
+            ng-click="toggleReleaseChannelAllowed(alphaChannel)"
+            cs-aria-label="{{::'organizationsPage.allowAlphaChannels' | translate}}">
+          </cs-toggle-switch>
+        </div>
       </div>
-    </div>
-  </cs-sp-section>
-  <cs-sp-section>
-    <div class="section-title-row section-name" translate="organizationsPage.services"></div>
-    <div class="row" ng-repeat="svc in currentOrganization.services">
-      <div class="small-12 columns">
-        <span>{{svc}}</span>
+      <div class="row">
+        <div class="small-10 columns" >
+          <span translate="organizationsPage.allowLatestChannels"></span>
+        </div>
+        <div class="small-2 columns">
+          <cs-toggle-switch
+            ng-model="latestChannel.newAllow"
+            toggle-id="allowLatestReleaseChannelChannelsToggle"
+            size="small"
+            ng-click="toggleReleaseChannelAllowed(latestChannel)"
+            cs-aria-label="{{::'organizationsPage.allowLatestChannels' | translate}}">
+          </cs-toggle-switch>
+        </div>
       </div>
-    </div>
-    <button class="btn btn--primary manage-beta-features-button" ng-click="manageFeatures()">
-      <span translate="organizationsPage.manageBetaFeatures"></span>
-    </button>
-  </cs-sp-section>
-  <cs-sp-section ng-if="showHybridServices">
-    <div class="section-title-row section-name" translate="cloudExtensions.cloudExtensions"></div>
-    <div class="row">
-      <div class="small-10 columns" >
-        <span translate="organizationsPage.allowBetaChannels"></span>
-      </div>
-      <div class="small-2 columns">
-        <cs-toggle-switch ng-model="betaChannel.newAllow" toggle-id="allowBetaReleaseChannelToggle" size="small" ng-click="toggleReleaseChannelAllowed(betaChannel)"></cs-toggle-switch>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-10 columns" >
-        <span translate="organizationsPage.allowAlphaChannels"></span>
-      </div>
-      <div class="small-2 columns">
-        <cs-toggle-switch ng-model="alphaChannel.newAllow" toggle-id="allowAlphaReleaseChannelToggle" size="small" ng-click="toggleReleaseChannelAllowed(alphaChannel)"></cs-toggle-switch>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-10 columns" >
-        <span translate="organizationsPage.allowLatestChannels"></span>
-      </div>
-      <div class="small-2 columns">
-        <cs-toggle-switch ng-model="latestChannel.newAllow" toggle-id="allowLatestReleaseChannelChannelsToggle" size="small" ng-click="toggleReleaseChannelAllowed(latestChannel)"></cs-toggle-switch>
-      </div>
-    </div>
-  </cs-sp-section>
-</cs-sp-container>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>

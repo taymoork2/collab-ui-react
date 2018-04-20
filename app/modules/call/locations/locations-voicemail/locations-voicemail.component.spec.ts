@@ -4,7 +4,7 @@ import { VoicemailPilotNumber } from 'modules/call/locations/shared';
 describe('Component: LocationsVoicemailComponent', () => {
   const EXTERNAL_VM_CHECKBOX = 'input#externalVoiceMailAccess';
   const EXTERNAL_NUMBER_SELECT = '.csSelect-container[name="externalVoicemailNumber"]';
-  const DROPDOWN_OPTIONS = '.dropdown-menu ul li a';
+  const DROPDOWN_OPTIONS = '.dropdown-menu ul li';
   const DROPDOWN_FILTER = '.dropdown-menu input.select-filter';
   const externalNumberOptions = getJSONFixture('huron/json/settings/externalNumbersOptions.json');
   const GENERATED_VM_PILOT_NUMBER = '+150708071004091414081311041300051000081';

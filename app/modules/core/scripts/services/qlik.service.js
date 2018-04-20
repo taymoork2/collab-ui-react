@@ -8,22 +8,52 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $log, $injector, $q, Config, UrlConfig) {
+  function QlikService($http, $log, /*$injector, */$q, Config, UrlConfig) {
+    var QlikUrlParams = {
+      webexBasic: ['basic_webex_v1', 'webex-report-basic'],
+      webexPremium: ['premium_webex_v1', 'webex-report-premium'],
+      sparkBasic: ['basic_spark_v1', 'spark-report-basic'],
+      sparkPremium: ['premium_spark_v1', 'spark-report-premium'],
+      sparkPartner: ['partner_spark_v1', 'spark-report-partner'],
+      hybridMediaBasic: ['basic_hybrid_media_v1', 'hms-report-full-v1'],
+      webexMEI: ['mei', 'MEI'],
+      webexSystem: ['system_webex_v1', 'webex-report-system'],
+      webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],
+      webexJMS: ['system_webex_v1', 'webex-report-jms'],
+      webexJMT: ['system_webex_v1', 'webex-report-jmt'],
+      license: ['basic_license_v1', 'license'],
+      webexPartner: ['partner_webex_v1', 'webex-report-partner'],
+    };
     var service = {
-      getWebExReportQBSforBaseUrl: getWebExReportQBSforBaseUrl,
-      getWebExReportQBSforPremiumUrl: getWebExReportQBSforPremiumUrl,
-      getWebExReportAppforBaseUrl: getWebExReportAppforBaseUrl,
-      getWebExReportAppforPremiumUrl: getWebExReportAppforPremiumUrl,
-      getSparkReportQBSforBaseUrl: getSparkReportQBSforBaseUrl,
-      getSparkReportQBSforPremiumUrl: getSparkReportQBSforPremiumUrl,
-      getSparkReportAppforBaseUrl: getSparkReportAppforBaseUrl,
-      getSparkReportAppforPremiumUrl: getSparkReportAppforPremiumUrl,
-      getSparkReportQBSforPartnerUrl: getSparkReportQBSforPartnerUrl,
-      getSparkReportAppforPartnerUrl: getSparkReportAppforPartnerUrl,
-      getReportQBSUrl: getReportQBSUrl,
+      getQBSInfo: getQBSInfo,
+      getQlikMashupUrl: getQlikMashupUrl,
+      getProdToBTSQBSInfo: getProdToBTSQBSInfo,
+      callReportQBSBTS: callReportQBSBTS,
     };
 
     return service;
+
+    function getQlikServiceUrl(reportType, viewType, env) {
+      var paramType = reportType + viewType;
+      var qbsParam = QlikUrlParams[paramType][0];
+      if (_.isUndefined(env) || _.isEmpty(env)) {
+        return UrlConfig.getQlikServiceUrl(qbsParam);
+      } else {
+        return UrlConfig.getQlikServiceUrl(env, qbsParam);
+      }
+    }
+
+    function getQlikServiceData(url, data) {
+      return $http.post(url, data).then(extractData).catch(catchError);
+    }
+
+    function getQlikMashupUrl(qrp, reportType, viewType) { //qlik_reverse_proxy
+      var reportsAppUrl = UrlConfig.getQlikReportAppUrl(qrp);
+      var paramType = reportType + viewType;
+      var mashupApp = QlikUrlParams[paramType][1];
+      var mashupAppUrl = mashupApp + '/' + mashupApp + '.html';
+      return reportsAppUrl + mashupAppUrl;
+    }
 
     function extractData(response) {
       return response.data;
@@ -33,13 +63,13 @@
       return $q.reject(error);
     }
 
-    function specifyReportQBS(isError, result, reportType, viewType, data, specifyEnv) {
+    function specifyReportQBS(isError, result, reportType, viewType, data, env) {
       var resultData = _.get(result, 'data', '');
       var siteId = _.get(resultData, 'siteId', '');
 
-      if (Config.getEnv() === 'prod' && (_.get(specifyEnv, 'env', '') !== 'integration') && (isError || siteId === '')) {
+      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
         $log.log('turns to call QBS BTS');
-        return callReportQBSBTS(reportType, viewType, data);
+        return service.callReportQBSBTS(reportType, viewType, data);
       }
 
       if (isError) {
@@ -50,75 +80,30 @@
     }
 
     function callReportQBSBTS(reportType, viewType, data) {
-      var QlikService = $injector.get('QlikService');
-      var getQBSBTSData = _.get(QlikService, 'getReportQBSUrl');
-
-      if (!_.isFunction(getQBSBTSData)) {
-        return;
-      }
-      return getQBSBTSData(reportType, viewType, data, 'integration');
+      return getQBSInfo(reportType, viewType, data, 'integration');
     }
 
-    function getReportQBSUrl(reportType, viewType, data, env) {
+    function getServiceUrl(reportType, viewType, env) {
       var specifyEnv = {};
       if (!_.isUndefined(env)) {
         specifyEnv.env = env;
       }
-      var getReportData = _.get(UrlConfig, 'get' + reportType + 'ReportQBSfor' + viewType + 'Url');
-      if (!_.isFunction(getReportData)) {
-        return;
-      }
-      var url = getReportData(specifyEnv);
-      return $http.post(url, data).then(function (response) {
-        return specifyReportQBS(false, response, reportType, viewType, data, specifyEnv);
+      return getQlikServiceUrl(reportType, viewType, specifyEnv);
+    }
+
+    function getQBSInfo(reportType, viewType, data, env) {
+      var QBSUrl = getServiceUrl(reportType, viewType, env);
+      return getQlikServiceData(QBSUrl, data);
+    }
+
+    function getProdToBTSQBSInfo(reportType, viewType, data, env) {
+      var QBSUrl = getServiceUrl(reportType, viewType, env);
+
+      return $http.post(QBSUrl, data).then(function (response) {
+        return specifyReportQBS(false, response, reportType, viewType, data, env);
       }).catch(function (error) {
-        return specifyReportQBS(true, error, reportType, viewType, data, specifyEnv);
+        return specifyReportQBS(true, error, reportType, viewType, data, env);
       });
-    }
-
-    function getWebExReportQBSforBaseUrl(data) {
-      var url = UrlConfig.getWebExReportQBSforBaseUrl();
-      return $http.post(url, data).then(extractData).catch(catchError);
-    }
-
-    function getWebExReportQBSforPremiumUrl(data) {
-      var url = UrlConfig.getWebExReportQBSforPremiumUrl();
-      return $http.post(url, data).then(extractData).catch(catchError);
-    }
-
-    function getWebExReportAppforBaseUrl(qrp) {
-      return UrlConfig.getWebExReportAppforBaseUrl(qrp);
-    }
-
-    function getWebExReportAppforPremiumUrl(qrp) {
-      return UrlConfig.getWebExReportAppforPremiumUrl(qrp);
-    }
-
-    function getSparkReportQBSforBaseUrl(data) {
-      var url = UrlConfig.getSparkReportQBSforBaseUrl();
-      return $http.post(url, data).then(extractData).catch(catchError);
-    }
-
-    function getSparkReportQBSforPremiumUrl(data) {
-      var url = UrlConfig.getSparkReportQBSforPremiumUrl();
-      return $http.post(url, data).then(extractData).catch(catchError);
-    }
-
-    function getSparkReportAppforBaseUrl(qrp) {
-      return UrlConfig.getSparkReportAppforBaseUrl(qrp);
-    }
-
-    function getSparkReportAppforPremiumUrl(qrp) {
-      return UrlConfig.getSparkReportAppforPremiumUrl(qrp);
-    }
-
-    function getSparkReportQBSforPartnerUrl(data) {
-      var url = UrlConfig.getSparkReportQBSforPartnerUrl();
-      return $http.post(url, data).then(extractData).catch(catchError);
-    }
-
-    function getSparkReportAppforPartnerUrl(qrp) {
-      return UrlConfig.getSparkReportAppforPartnerUrl(qrp);
     }
   }
 }());

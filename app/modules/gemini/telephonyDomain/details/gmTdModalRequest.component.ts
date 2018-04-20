@@ -28,7 +28,6 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
     this.messages = {
       customerName: {
         required: this.$translate.instant('common.invalidRequired'),
-        warning: this.$translate.instant('gemini.invalidCharacters', { field: 'Telephony Domain Name' }),
         maxlength: this.$translate.instant('gemini.inputLengthError', { length: 60, field: 'customer name' }),
       },
       partnerName: { maxlength: this.$translate.instant('gemini.inputLengthError', { length: 50, field: 'partner name' }) },
@@ -36,16 +35,10 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
     };
   }
 
-  public onWarning() {
-    const reg = /[<>~!@#$%^&*=|/<>"{}\[\]:;']+/g;
-    return reg.test(this.data.domainName);
-  }
-
   public getRegions() {
     this.TelephonyDomainService.getRegions()
       .then((res) => {
-        const optionsSource: any = _.get(res, 'content.data.body');
-        this.options = _.map(optionsSource, (item: any) => {
+        this.options = _.map(res, (item: any) => {
           return { value: item.regionId, label: item.regionName };
         });
       })
@@ -67,5 +60,5 @@ class GmTdModalRequestCtrl implements ng.IComponentController {
 export class GmTdModalRequestComponent implements ng.IComponentOptions {
   public bindings = { dismiss: '&', close: '&' };
   public controller = GmTdModalRequestCtrl;
-  public templateUrl = 'modules/gemini/telephonyDomain/details/gmTdModalRequest.html';
+  public template = require('modules/gemini/telephonyDomain/details/gmTdModalRequest.html');
 }

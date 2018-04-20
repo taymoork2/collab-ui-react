@@ -1,0 +1,282 @@
+<div>
+  <div class="license-wrapper">
+    <multiple-subscriptions></multiple-subscriptions>
+    <div class="row full flex-row">
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-message modal-icon-flex-row"></i>
+          <h3 translate="onboardModal.message"></h3>
+        </div>
+      </div>
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-group modal-icon-flex-row"></i>
+          <h3 translate="onboardModal.meeting"></h3>
+        </div>
+      </div>
+      <div class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-call modal-icon-flex-row"></i>
+          <h3 translate="onboardModal.call"></h3>
+        </div>
+      </div>
+      <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-title">
+        <div class="column-header">
+          <i class="icon icon-circle-contact-centre"></i>
+          <h3 translate="onboardModal.contactCenter"></h3>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-subscription-header free" translate="onboardModal.freeCollab"></div>
+    </div>
+    <div class="row full flex-row">
+      <div class="small-4 columns column-free">
+        <div translate="onboardModal.msgFree"></div>
+      </div>
+      <div class="small-4 columns column-free">
+        <div translate="onboardModal.mtgFree"></div>
+      </div>
+      <div class="small-4 columns column-free">
+        <div translate="onboardModal.callFree"></div>
+      </div>
+      <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-free">
+        <div translate="onboardModal.none"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-subscription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
+    </div>
+    <div class="row full flex-row row-licenses">
+      <!-- MESSAGE SERVICES PANEL -->
+      <div id="messaging" class="small-4 columns column-paid">
+        <div class="item-mtg-license" translate="onboardModal.message"></div>
+        <div ng-if="$ctrl.hasAssignableMessageItems()">
+          <div class="entitle-check-grp" ng-repeat="msgFeature in $ctrl.messageFeatures">
+            <div ng-if="msgFeature.licenses">
+              <div class="ckbx" id="paidMsg" ng-if="$ctrl.checkMessageVisibility(msgFeature.licenses, multipleSubscriptions.selectedSubscription)">
+                <div class="cs-checkbox-group">
+                  <input
+                    cs-input
+                    type="checkbox"
+                    ng-model="$ctrl.radioStates.msgRadio"
+                    ng-disabled="$ctrl.disableCheckbox(msgFeature.licenses)"
+                    ng-change="$ctrl.checkLicenseAvailability('MESSAGING', $ctrl.radioStates.msgRadio)"
+                    id="paid-msg"
+                    name="paid-msg"
+                    cs-input-label="{{::'onboardModal.paidCiscoSparkMessaging' | translate}}">
+                  <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                </div>
+              </div>
+              <div ng-if="msgFeature.licenses.length > 1">
+                  <div class="onboard-fieldset"
+                    ng-show="multipleSubscriptions.showLicenses(license.billingServiceId, license.isTrial)"
+                    ng-repeat="license in msgFeature.licenses | filter:$ctrl.isSubscribeable | orderBy:'billingServiceId'">
+                    <cs-checkbox ckid="{{license.licenseId}}" ng-model="license.model"
+                    label="{{'onboardModal.paidCiscoSparkMessaging' | translate}}"></cs-checkbox>
+                    <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="$ctrl.showMessengerInteropToggle()">
+            <div class="pull-left">
+              <input
+                cs-input
+                type="checkbox"
+                ng-model="$ctrl.entitlements.messengerInterop"
+                id="onboard--add-entitlement--messenger-interop"
+                name="onboard--add-entitlement--messenger-interop"
+                cs-input-label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}">
+            </div>
+            <span class="license-entity-tooltip">
+              <i
+                class="icon icon-info icon-offset-l-6px"
+                tooltip="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}"
+                tooltip-trigger="focus mouseenter"
+                tooltip-class="long-msg"
+                tooltip-placement="top"
+                tooltip-animation="false"
+                tabindex="0"
+                aria-label="{{::'usersPage.ciscoSparkJabberInteropTooltip' | translate}}"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- MEETING SERVICES PANEL -->
+      <div id="conference" class="small-4 columns column-paid">
+        <div class="item-mtg-license item-space" ng-if="$ctrl.selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.basicMeetings"></div>
+        <div class="entitle-check-grp" ng-repeat="lic in $ctrl.basicLicenses">
+          <div class="ckbx license-space" id="paidMtg" ng-if="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial) && !lic.site">
+            <div>
+              <input
+                cs-input
+                type="checkbox"
+                id="paid-conf{{$index}}"
+                name="paid-conf-{{lic.billing}}"
+                ng-model="lic.confModel"
+                ng-disabled="$ctrl.disableCheckbox(lic)"
+                ng-change="$ctrl.checkLicenseAvailability('CONFERENCING', lic.confModel)"
+                cs-input-label="{{::'firstTimeWizard.meetingsInSpark' | translate}}">
+              <span class="license-entity under-label-reposition">{{$ctrl.determineLicenseType(lic)}}
+                <span class="license-entity-tooltip">
+                  <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+                      tooltip-html-unsafe="{{::$ctrl.generateLicenseTooltip(lic)}}" tabindex="0" aria-label="{{::$ctrl.generateLicenseTranslation(lic)}}">
+                  </i>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="item-mtg-license item-space" ng-if="$ctrl.selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.advancedMeetings"></div>
+        <div class="entitle-check-grp" ng-repeat="lic in $ctrl.advancedLicenses">
+          <div class="item-mtg" ng-if="lic.site">
+            <div class="license-space" ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
+              <div ng-if="lic.isCISite">
+                <input
+                  cs-input
+                  type="checkbox"
+                  id="{{cfLic.licenseId}}"
+                  class="license-entity-type"
+                  ng-model="cfLic.confModel"
+                  ng-click="$ctrl.checkCMR(cfLic, lic.cmrLic)"
+                  cs-input-label="WebEx {{cfLic.label}}">
+                <span class="license-entity under-label-reposition">{{$ctrl.determineLicenseType(lic)}}
+                  <span class="license-entity-tooltip">
+                    <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+                       tooltip-html-unsafe="{{::$ctrl.generateLicenseTooltip(lic)}}" tabindex="0" aria-label="{{::$ctrl.generateLicenseTranslation(lic)}}">
+                    </i>
+                  </span>
+                </span>
+                <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
+                  <div ng-repeat="cmrLic in lic.cmrLic">
+                    <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;$ctrl.updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
+                  </div>
+                </div>
+              </div>
+              <div ng-if="!lic.isCISite" class="item-webex">
+                <span>WebEx {{cfLic.label}}</span><br>
+                <span class="license-siteUrl">
+                  <a target="_blank"
+                    href="{{lic.siteAdminUrl}}"
+                    id="{{lic.siteUrl}}_siteAdminUrl">
+                    {{::'siteList.siteAdminUrl' | translate}}
+                  </a>
+                </span>
+              </div>
+              <div ng-show="multipleSubscriptions.showLicenses(lic.billing, lic.isTrial)">
+                <span class="under-label-reposition license-siteUrl" ng-if="lic.isCISite">{{lic.site}}</span>
+                <span class="license-siteUrl" ng-if="!lic.isCISite">{{lic.site}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CALL SERVICES PANEL -->
+      <div id="communication" class="small-4 columns column-paid">
+        <div class="item-mtg-license" translate="onboardModal.call"></div>
+        <div class="entitle-check-grp"
+             ng-show="multipleSubscriptions.showLicenses(commFeature.license.billingServiceId, commFeature.license.isTrial)"
+             ng-repeat="commFeature in $ctrl.communicationFeatures"
+             ng-if="commFeature.license.licenseType !== 'advancedCommunication'">
+          <div class="ckbx">
+            <div class="cs-checkbox-group">
+              <input
+                cs-input
+                type="checkbox"
+                id="{{commFeature.license.licenseId}}"
+                ng-change="$ctrl.checkCommLicenseAvailability(commFeature.commRadio, commFeature)"
+                ng-model="commFeature.commRadio"
+                ng-disabled="$ctrl.hybridCallServiceAware || $ctrl.disableCommCheckbox(commFeature)"
+                cs-input-label="{{::'onboardModal.paidSparkCall' | translate}}">
+              <span class="license-entity under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+            </div>
+            <div ng-if="$ctrl.disableCommFeatureAssignment()">
+              <div>
+                <span class="icon icon-warning warning-icon"></span>
+                <span class="service-label" translate="usersPage.addtionalServiceSetupText"></span>
+              </div>
+              <div>
+                <a href ng-click="$ctrl.confirmAdditionalServiceSetup()" translate="usersPage.setUpThisService"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- START - CARE SERVICES PANEL -->
+      <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid">
+        <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
+        <span class="license-entity-tooltip">
+          <i ng-if="!$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          tooltip-html-unsafe="{{::$ctrl.careTooltip()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltip' | translate}}">
+          </i>
+          <i ng-if="$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          tooltip-html-unsafe="{{::$ctrl.careTooltipToggle()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltipToggle' | translate}}">
+          </i>
+        </span>
+        <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses($ctrl.careFeatures)">
+          <div class="ckbx" id="paidCare">
+            <div class="cs-checkbox-group">
+              <fieldset ng-disabled="$ctrl.isCareRadioFieldSetDisabled()">
+                <div class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
+                  <input
+                  cs-input
+                  type="radio"
+                  name="careRadio"
+                  id="user-add--care-services--fake-license"
+                  ng-model="$ctrl.radioStates.careRadio"
+                  value="{{$ctrl.careRadioValue.NONE}}"
+                  cs-input-label="{{::$ctrl.careRadioValue.NONE}}">
+                </div>
+
+                <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition"
+                     tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
+                  <input
+                    cs-input
+                    type="radio"
+                    name="careRadio"
+                    id="{{$ctrl.cdcCareFeature.license.licenseId}}"
+                    ng-model="$ctrl.radioStates.careRadio"
+                    value="{{$ctrl.careRadioValue.K1}}"
+                    cs-input-label="{{::$ctrl.careRadioValue.K1}}">
+                  <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K1 && !$ctrl.currentUserEnablesCall">
+                    <div class="icon icon-warning"></div>
+                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
+                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfoToggle"></span>
+                  </span>
+                </div>
+
+                <div ng-if="$ctrl.isCareAndCVCEnabled" class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
+                  <input
+                    cs-input
+                    type="radio"
+                    name="careVoice"
+                    id="{{$ctrl.cvcCareFeature.license.licenseId}}"
+                    ng-model="$ctrl.radioStates.careRadio"
+                    value="{{$ctrl.careRadioValue.K2}}"
+                    cs-input-label="{{::$ctrl.careRadioValue.K2}}">
+                  <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
+                  <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K2 && !$ctrl.currentUserEnablesCall">
+                    <div class="icon icon-warning"></div>
+                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                      onboardModal.enableCallInfo"></span>
+                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
+                      onboardModal.enableCallInfoToggle"></span>
+                  </span>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END - CARE SERVICES PANEL -->
+    </div>
+  </div>
+</div>

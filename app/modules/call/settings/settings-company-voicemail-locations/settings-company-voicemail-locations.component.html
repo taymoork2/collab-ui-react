@@ -9,6 +9,40 @@
     cs-change="$ctrl.onCompanyVoicemailChange(toggleValue)">
   </cs-toggle-switch>
   <div ng-if="$ctrl.companyVoicemailEnabled && !$ctrl.ftsw" class="cs-checkbox-group settings-voicemail-attachment">
+    <label class="control-label" translate="serviceSetupModal.vmDeliveryMethods"></label>
+    <input
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.externalVoicemailAccess"
+      id="externalVoicemailAccess"
+      name="externalVoicemailAccess"
+      ng-change="$ctrl.onExternalVoicemailAccessChanged()"
+      cs-input-label="{{::'serviceSetupModal.externalVoicemailAccessLabel' | translate}}">
+    <div ng-if="$ctrl.externalVoicemailAccess" class="indent">
+      <p
+        class="description-block"
+        translate="serviceSetupModal.externalNumberDescriptionText">
+      </p>
+      <div class="medium-5 external-voicemail-number">
+        <cs-select
+          name="companyVoicemailNumber"
+          ng-model="$ctrl.selectedNumber"
+          options="$ctrl.externalNumberOptions"
+          input-placeholder="$ctrl.filterPlaceholder"
+          on-change-fn="$ctrl.onCompanyVoicemailNumberChanged()"
+          is-warn="{{$ctrl.missingDirectNumbers}}"
+          warn-msg="{{::'serviceSetupModal.voicemailNoDirectNumbersError' | translate}}"
+          required="true"
+          filter="true"
+          refresh-data-fn="$ctrl.getNumbers(filter)">
+        </cs-select>
+        <p
+          class="help-block"
+          ng-if="!$ctrl.missingDirectNumbers"
+          translate="serviceSetupModal.voicemailPilotHelpText">
+        </p>
+      </div>
+    </div>
     <input
       cs-input
       type="checkbox"

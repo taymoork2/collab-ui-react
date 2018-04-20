@@ -51,7 +51,7 @@ require('./_wizard.scss');
   /* @ngInject */
   function WizardCtrl($controller, $modal,
     $rootScope, $scope, $state, $stateParams, $timeout, $translate,
-    Authinfo, Config, PromiseHook, SessionStorage, SetupWizardService) {
+    Analytics, Authinfo, Config, PromiseHook, SessionStorage, SetupWizardService) {
     var vm = this;
     vm.current = {};
 
@@ -61,15 +61,15 @@ require('./_wizard.scss');
     vm.numberOfSteps = $stateParams.numberOfSteps;
     vm.showStandardModal = $stateParams.showStandardModal;
 
-    vm.termsCheckbox = false;
     vm.isCustomerPartner = isCustomerPartner;
     vm.isFromPartnerLaunch = isFromPartnerLaunch;
     vm.hasDefaultButtons = hasDefaultButtons;
-    vm.helpUrl = (Authinfo.isPartnerAdmin() || Authinfo.isPartnerSalesAdmin()) ? Config.partnerSupportUrl : Config.supportUrl;
+    vm.helpUrl = Config.helpUrl;
 
     vm.getTabController = getTabController;
     vm.getSubTabController = getSubTabController;
     vm.getSubTabTitle = getSubTabTitle;
+    vm.getTitleKey = getTitleKey;
 
     vm.setSubTab = setSubTab;
     vm.resetSubTab = resetSubTab;
@@ -84,6 +84,7 @@ require('./_wizard.scss');
 
     vm.isFirstTab = isFirstTab;
     vm.isLastTab = isLastTab;
+    vm.isMeetingSetupTabOnly = isMeetingSetupTabOnly;
     vm.isFirstStep = isFirstStep;
     vm.isLastStep = isLastStep;
     vm.isFirstTime = isFirstTime;
@@ -105,21 +106,20 @@ require('./_wizard.scss');
     vm.wizardNextLoad = false;
     vm.showSkipTabBtn = false;
 
+    var view = {
+      serviceSetup: 'Service Setup',
+      meetingSettingsModal: 'overview: Meeting Settings Modal',
+    };
+
     // If tabs change (feature support in SetupWizard) and a step is not defined, re-initialize
     $scope.$watchCollection('tabs', function (tabs) {
-      if (tabs && tabs.length > 0 && _.isUndefined(vm.current.step)) {
+      if (tabs && tabs.length > 0 && (_.isUndefined(vm.current.step) || vm.current.step.name === 'select-subscription')) {
         init();
       }
     });
 
     function initCurrent() {
-      if ($stateParams.currentTab) {
-        vm.current.tab = _.find(getTabs(), {
-          name: $stateParams.currentTab,
-        });
-      } else {
-        vm.current.tab = getTabs()[0];
-      }
+      vm.current.tab = getTabs()[0];
 
       if ($stateParams.currentSubTab) {
         vm.current.subTab = _.find(getTab().subTabs, {
@@ -258,6 +258,13 @@ require('./_wizard.scss');
     function nextTab() {
       var tabs = getTabs();
       vm.wizardNextLoad = false;
+
+      // Metrics for IT Decoupling new orders flow: user skips Meeting Settings Tab
+      if (isCurrentTab('meetingSettings') && isFirstStep()) {
+        var properties = { view: _.get($state, 'current.data.firstTimeSetup') ? 'Service Setup' : 'overview: Meeting Settings Modal' };
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.SKIPPED_MEETING_SETTINGS, properties);
+      }
+
       if (_.isArray(tabs)) {
         var tabIndex = tabs.indexOf(getTab());
         $scope.tabs[tabIndex].required = false;
@@ -273,6 +280,12 @@ require('./_wizard.scss');
     }
 
     function previousStep() {
+      var analyticsProperties = {
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+        step: getStepName(),
+        tab: vm.current.tab.name,
+      };
+      Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.BACK, analyticsProperties);
       var steps = getSteps();
       if (_.isArray(steps)) {
         var index = steps.indexOf(getStep());
@@ -285,14 +298,25 @@ require('./_wizard.scss');
     }
 
     function nextStep() {
+      // Assemble call to Analytics service
+      var eventName = '';
+      if (getStepName() === 'init' && isCurrentTab('planReview')) {
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.GET_STARTED;
+      } else {
+        eventName = Analytics.sections.SERVICE_SETUP.eventNames.NEXT;
+      }
+      var analyticsProperties = {
+        view: _.get($state, 'current.data.firstTimeSetup') ? view.serviceSetup : view.meetingSettingsModal,
+        step: getStepName(),
+        tab: vm.current.tab.name,
+      };
+      Analytics.trackServiceSetupSteps(eventName, analyticsProperties);
+
       var subTabControllerAs = _.isUndefined(getSubTab()) ? undefined : getSubTab().controllerAs;
       new PromiseHook($scope, getStepName() + 'Next', getTab().controllerAs, subTabControllerAs).then(function () {
         if (getTab().name === 'enterpriseSettings') {
           if (getStep().name === 'enterpriseSipUrl') {
             $rootScope.$broadcast('wizard-enterprise-sip-url-event');
-          } else if (getStep().name === 'enterprisePmrSetup') {
-            $rootScope.$broadcast('wizard-enterprise-pmr-event');
-            nextStepSuccessful();
           } else {
             nextStepSuccessful();
           }
@@ -348,6 +372,9 @@ require('./_wizard.scss');
 
     function doNotProvisionAndProceedNext() {
       SetupWizardService.setWillNotProvision(true);
+      if (isCurrentTab('provision')) {
+        Analytics.trackServiceSetupSteps(Analytics.sections.SERVICE_SETUP.eventNames.DO_NOT_PROVISION_BUTTON_CLICK, {});
+      }
       nextStep();
     }
 
@@ -372,12 +399,17 @@ require('./_wizard.scss');
     }
 
     function isFirstTab() {
-      return getTabs().indexOf(getTab()) === 0;
+      return getTabs().indexOf(getTab()) === 0 && !isLastTab();
     }
 
     function isLastTab() {
       var tabs = getTabs();
       return tabs.indexOf(getTab()) === tabs.length - 1;
+    }
+
+    function isMeetingSetupTabOnly() {
+      var tabs = getTabs();
+      return tabs.length === 1 && tabs[0].name === 'meetingSettings';
     }
 
     function isFirstStep() {
@@ -414,7 +446,7 @@ require('./_wizard.scss');
     }
 
     function setNextText() {
-      if ((isFirstTab() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isFirstStep() && !isSingleTabSingleStep())) {
+      if ((isFirstTab() && isLastStep() && isFirstTime() && !isCustomerPartner() && !isFromPartnerLaunch()) || (isFirstTab() && isLastStep() && !isSingleTabSingleStep())) {
         vm.nextText = $translate.instant('firstTimeWizard.getStarted');
       } else if (isFirstTime() && isLastTab() && isFirstStep() && hasPendingLicenses()) {
         vm.nextText = $translate.instant('common.provision');
@@ -444,7 +476,7 @@ require('./_wizard.scss');
 
     function openTermsAndConditions() {
       $modal.open({
-        templateUrl: 'modules/core/wizard/termsAndConditions.tpl.html',
+        template: require('modules/core/wizard/termsAndConditions.tpl.html'),
       });
     }
 
@@ -459,11 +491,15 @@ require('./_wizard.scss');
       return false;
     }
 
+    function getTitleKey() {
+      return _.get(vm.current.step, 'title') || _.get(vm.current.tab, 'title');
+    }
+
     $scope.$on('wizardNextText', function (event, action) {
       event.stopPropagation();
-      if (action == 'next') {
+      if (action === 'next') {
         vm.nextText = $translate.instant('common.next');
-      } else if (action == 'finish') {
+      } else if (action === 'finish') {
         vm.nextText = $translate.instant('common.save');
       }
     });
@@ -479,7 +515,7 @@ require('./_wizard.scss');
         finish: '=',
         isFirstTime: '=',
       },
-      templateUrl: 'modules/core/wizard/wizard.tpl.html',
+      template: require('modules/core/wizard/wizard.tpl.html'),
     };
 
     return directive;
@@ -489,7 +525,7 @@ require('./_wizard.scss');
     var directive = {
       require: '^crWizard',
       restrict: 'AE',
-      templateUrl: 'modules/core/wizard/wizardNav.tpl.html',
+      template: require('modules/core/wizard/wizardNav.tpl.html'),
     };
 
     return directive;
@@ -501,7 +537,7 @@ require('./_wizard.scss');
       require: '^crWizard',
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardMain.tpl.html',
+      template: require('modules/core/wizard/wizardMain.tpl.html'),
       link: link,
     };
 
@@ -530,7 +566,7 @@ require('./_wizard.scss');
     var directive = {
       restrict: 'AE',
       scope: true,
-      templateUrl: 'modules/core/wizard/wizardButtons.tpl.html',
+      template: require('modules/core/wizard/wizardButtons.tpl.html'),
       link: link,
     };
 

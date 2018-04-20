@@ -8,7 +8,7 @@ export class SipDestinationTestResultRowComponent implements ng.IComponentOption
       <div ng-if="$ctrl.data.status === 'error'" class="fail"><p translate="hercules.settings.verifySipDestination.failed"></p></div>
     </div>
     <div class="columns medium-6">
-      <p ng-if="$ctrl.data.status === 'error'">{{::'hercules.settings.verifySipDestination.fixes.' + $ctrl.data.type | translate}}</p>
+      <p ng-if="$ctrl.data.status === 'error'" ng-bind-html="'hercules.settings.verifySipDestination.fixes.' + $ctrl.data.type | translate"></p>
     </div>
   </div>
   `;

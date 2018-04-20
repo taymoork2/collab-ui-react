@@ -1,7 +1,7 @@
 <div class="call-locations">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter search-item-fn="$ctrl.searchData(searchStr)" placeholder-text="{{$ctrl.placeholder.name}}" hide-count="true">
+      <cs-searchfilter search-item-fn="$ctrl.searchData(searchStr)" placeholder-text="{{$ctrl.placeholder.name}}" hide-count="true" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
@@ -11,9 +11,9 @@
     </cs-page-sub-header-right>
   </cs-page-sub-header>
 
-  <div ng-if="$ctrl.pageState != 'STATE_NEW_LOCATION'" class="locations-content content-container">
+  <div ng-if="$ctrl.pageState !== 'STATE_NEW_LOCATION'" class="locations-content content-container">
     <!--Show Reload page when all location requests fail-->
-    <div ng-if="$ctrl.pageState == 'STATE_RELOAD'">
+    <div ng-if="$ctrl.pageState === 'STATE_RELOAD'">
       <div class="features-reload">
         <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
         <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
@@ -21,20 +21,22 @@
       </div>
     </div>
     <!--Show Spinner Icon until controller receives data from back-end-->
-    <div grid-spinner="$ctrl.pageState == 'STATE_LOADING'"></div>
+    <div grid-spinner="$ctrl.pageState === 'STATE_LOADING'"></div>
 
     <!-- Show Cards whenever data is received by controller-->
-    <div ng-if="$ctrl.pageState == 'STATE_SHOW_LOCATIONS'">
+    <div ng-if="$ctrl.pageState === 'STATE_SHOW_LOCATIONS'">
       <div class="cs-card-container">
         <cs-card-layout>
-          <cs-card ng-repeat="location in $ctrl.locations" class="small overview-card primary">
+          <cs-card ng-repeat="location in $ctrl.locations" class="cs-card--small overview-card primary">
             <article>
               <header>
                 <i class="icon icon-star" ng-if="location.defaultLocation"></i>
                 <div class="header-with-right-icon">
                   <p class="h4 ellipsis" title="{{location.name}}">{{location.name}}</p>
                   <span cs-dropdown class="actions-menu dropdown pull-right">
-                   <button cs-dropdown-toggle class="btn-none card-action-btn" >
+                   <button cs-dropdown-toggle
+                    class="btn-none card-action-btn"
+                    aria-label="{{:: 'common.toggleMenu' | translate}}">
                     <i class="icon icon-three-dots"></i>
                    </button>
                    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">

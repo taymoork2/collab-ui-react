@@ -1,12 +1,12 @@
 <div align="center">
   <img width="200" height="200" src="https://sqbu-github.cisco.com/storage/user/357/files/92225bf8-07fc-11e7-98eb-41ccb439573b">
   <h1>Atlas UI</h1>
-  <p>Code for the <a href="https://admin.ciscospark.com">Cloud Collaboration Management (CCM) portal</a> front-end<p>
+  <p>Code for the <a href="https://admin.ciscospark.com">Cisco Spark Control Hub</a> front-end<p>
 </div>
 
 ## Project Overview
 
-The CCM portal allows Cisco's customers and partners to do … all sort of things. This project contains the code of its User Interface.
+The Cisco Spark Control Hub portal allows Cisco's customers and partners to do … all sort of things. This project contains the code of its User Interface.
 
 ## Technologies Overview
 
@@ -37,4 +37,5 @@ Do not use Github, UI bugs should be reported in [JIRA](https://jira-eng-chn-sjc
 
 * [Browser support](./browser-support.md)
 * [Everything you need to know about Atlas UI deployments](./deployments.md)
+* [Keyboard Accessibility](./accessibility.md)
 * *more to come*

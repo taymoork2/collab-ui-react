@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* global d3 */
 
   angular.module('csDonut').directive('csDonut', csDonut);
@@ -23,7 +25,7 @@
         //Unique donut id
         $scope.donutId = 'csDonut_' + (Math.floor(Math.random() * 100)).toString();
         //Settings defaults
-        $scope.colours = ['#43a942', '#ebebec'];
+        $scope.colours = [ChartColors.ctaBase, ChartColors.grayLightThree];
         if (!$scope.height) {
           $scope.height = 85;
         }
@@ -38,7 +40,7 @@
           x: 0,
           y: 14,
           content: '',
-          color: '#6A6B6C',
+          color: ChartColors.grayDarkOne,
         };
 
         var colour = d3.scale.category20();
@@ -79,12 +81,12 @@
           if (typeof hideusage !== 'undefined' && hideusage === true) {
             $scope.text.content = '---';
             $scope.colours = ['lightgray'];
-            $scope.text.color = '#6A6B6C';
+            $scope.text.color = ChartColors.grayDarkOne;
             $scope.dataset = [1];
           } else if (typeof unlimited !== 'undefined' && unlimited === true) {
             $scope.text.content = 'Unlimited';
-            $scope.colours = ['#43a942'];
-            $scope.text.color = '#6A6B6C';
+            $scope.colours = [ChartColors.ctaBase];
+            $scope.text.color = ChartColors.grayDarkOne;
             $scope.dataset = [1];
           } else if (typeof value === 'undefined' || typeof max === 'undefined' || value > 9999999 || max > 9999999 || value <= 0 || max <= 0) {
             $scope.text.content = 0;
@@ -93,7 +95,7 @@
           } else {
             var fillValue = max - value;
             $scope.text.content = value;
-            $scope.text.color = '#6A6B6C';
+            $scope.text.color = ChartColors.grayDarkOne;
             $scope.dataset = [value, fillValue];
             if (value > max) {
               $scope.colours = ['#f05d3b'];
@@ -133,7 +135,7 @@
         $scope.clean = function clean(dataset) {
           return dataset.map(function map(value) {
             if ($scope.property) {
-              if (isNaN(Number(value[$scope.property]))) {
+              if (_.isNaN(Number(value[$scope.property]))) {
                 value[$scope.property] = 0;
               } else {
                 value[$scope.property] = Number(value[$scope.property]);
@@ -142,7 +144,7 @@
               return value;
             }
 
-            if (isNaN(Number(value))) {
+            if (_.isNaN(Number(value))) {
               return 0;
             }
 

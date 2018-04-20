@@ -24,21 +24,12 @@
     </table>
   </cs-sp-section>
 
-  <cs-sp-section ng-if="hostDetailsCtrl.actions.length > 0">
-    <div class="section-title-row section-name" translate="hercules.connectors.actions"></div>
-    <ul>
-      <li ng-repeat="action in hostDetailsCtrl.actions">
-        <a ng-if="action.href" target="_blank" ng-href="{{action.href}}">{{::action.textKey | translate }}</a>
-        <a ng-if="action.click" ng-click="action.click()">{{::action.textKey | translate }}</a>
-      </li>
-    </ul>
-  </cs-sp-section>
-
   <cs-sp-section ng-if="hostDetailsCtrl.showNodeLink()">
-    <p></p>
-    <a class="btn btn--white" translate="hercules.connectors.goToNodes" ng-click="$ctrl.goToNodesPage()"></a>
+    <p style="padding-top: .875rem;">
+      <a href class="btn btn--primary" translate="hercules.connectors.goToNodes" ng-click="$ctrl.goToNodesPage()"></a>
+    </p>
   </cs-sp-section>
 
-  <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster" alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
+  <alarm-list-section ng-if="!hostDetailsCtrl.isHybridContextCluster"alarms="hostDetailsCtrl.host.alarms" connector-type="hostDetailsCtrl.host.connectorType"></alarm-list-section>
 
 </cs-sp-container>

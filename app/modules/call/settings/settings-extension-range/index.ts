@@ -11,8 +11,7 @@ export { ExtensionRangeComponent };
 
 export default angular
   .module('call.settings.extension-range', [
-    require('scripts/app.templates'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucExtensionRange', new ExtensionRangeComponent())
