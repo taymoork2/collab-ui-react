@@ -3201,7 +3201,7 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: require('modules/hcs/shared/hcs-base/hcs-shared-base.html'),
+            template: require('modules/hcs/hcs-shared/hcs-base/hcs-shared-base.html'),
             absract: true,
           })
           .state('hcs.shared', {
@@ -3217,7 +3217,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/shared/hcs-base'));
+                  done(require('modules/hcs/hcs-shared/hcs-base'));
                 }, 'hcs-shared-template');
               }),
             },

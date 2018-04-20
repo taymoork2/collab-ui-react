@@ -103,7 +103,7 @@ export interface INodeSummaryItem {
 export interface IHcsClusterSummaryItem {
   uuid: string;
   name: string;
-  hcsNodes: INodeSummaryItem[];
+  nodes: INodeSummaryItem[];
   url?: string;
   sftpServer?: ISftpServerItem;
   status?: string;

@@ -1,4 +1,4 @@
-import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'modules/hcs/shared';
+import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { CardUtils } from 'modules/core/cards';
 
 interface IHeaderTab {

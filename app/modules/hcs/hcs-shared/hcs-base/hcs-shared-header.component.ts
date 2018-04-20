@@ -33,6 +33,6 @@ class HcsSharedHeaderComponentCtrl implements ng.IComponentController {
 
 export class HcsSharedHeaderComponent implements ng.IComponentOptions {
   public controller = HcsSharedHeaderComponentCtrl;
-  public template = require('modules/hcs/shared/hcs-base/hcs-shared-header.component.html');
+  public template = require('modules/hcs/hcs-shared/hcs-base/hcs-shared-header.component.html');
   public bindings = { };
 }

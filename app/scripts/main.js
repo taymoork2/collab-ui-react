@@ -288,8 +288,8 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
-    require('modules/hcs/shared').default,
-    require('modules/hcs/shared/hcs-delete-modal').default,
+    require('modules/hcs/hcs-shared').default,
+    require('modules/hcs/hcs-shared/hcs-delete-modal').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,
@@ -301,7 +301,7 @@
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
-    require('modules/hcs/setup').default,
+    require('modules/hcs/hcs-setup').default,
   ]);
 
   angular.module('ServicesOverview', [

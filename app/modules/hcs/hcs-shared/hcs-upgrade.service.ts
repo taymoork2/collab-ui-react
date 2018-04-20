@@ -1,4 +1,4 @@
-import { ISftpServer } from '../setup/hcs-setup-sftp';
+import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem } from './hcs-upgrade';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {

@@ -1,6 +1,6 @@
-import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/shared';
+import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/hcs-shared';
 import { ICheckbox } from './hcs-setup';
-import { ISoftwareProfile } from 'modules/hcs/shared/hcs-swprofile';
+import { ISoftwareProfile } from 'modules/hcs/hcs-shared/hcs-swprofile';
 import { ISftpServer } from './hcs-setup-sftp';
 import { Notification } from 'modules/core/notifications';
 
@@ -194,7 +194,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
 export class HcsSetupModalComponent implements ng.IComponentOptions {
   public controller = HcsSetupModalCtrl;
-  public template = require('modules/hcs/setup/hcs-setup-modal.component.html');
+  public template = require('modules/hcs/hcs-setup/hcs-setup-modal.component.html');
   public bindings = {
     isFirstTimeSetup: '<',
     currentStepIndex: '<',

@@ -64,7 +64,7 @@ export class HcsSetupSftpController implements ng.IComponentController {
 
 export class HcsSetupSftpComponent implements ng.IComponentOptions {
   public controller = HcsSetupSftpController;
-  public template = require('modules/hcs/setup/hcs-setup-sftp/hcs-setup-sftp.component.html');
+  public template = require('modules/hcs/hcs-setup/hcs-setup-sftp/hcs-setup-sftp.component.html');
   public bindings = {
     sftpServer: '<',
     onChangeFn: '&',

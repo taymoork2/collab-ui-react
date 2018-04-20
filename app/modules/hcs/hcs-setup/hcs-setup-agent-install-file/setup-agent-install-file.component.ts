@@ -1,6 +1,5 @@
 import { TokenMethods } from './tokenMethods';
 import { Notification } from 'modules/core/notifications';
-// import { AgentInstallFileInfo } from 'modules/hcs/setup';
 
 class SetupAgentInstallFileCtrl implements ng.IComponentController {
   private readonly DOMAIN_MAX_LENGTH = 253;
@@ -131,7 +130,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
 
 export class  SetupAgentInstallFileComponent implements ng.IComponentOptions {
   public controller = SetupAgentInstallFileCtrl;
-  public template = require('modules/hcs/setup/agent-install-file/setup-agent-install-file.component.html');
+  public template = require('modules/hcs/hcs-setup/hcs-setup-agent-install-file/setup-agent-install-file.component.html');
   public bindings = {
     onChangeFn: '&',
   };

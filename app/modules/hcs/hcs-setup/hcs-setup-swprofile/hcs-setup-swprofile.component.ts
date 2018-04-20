@@ -1,4 +1,4 @@
-import { ISoftwareProfile } from 'modules/hcs/shared/hcs-swprofile';
+import { ISoftwareProfile } from 'modules/hcs/hcs-shared/hcs-swprofile';
 
 export class HcsSetupSwprofileController implements ng.IComponentController {
   public readonly MAX_LENGTH: number = 50;
@@ -48,7 +48,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
 
 export class HcsSetupSwprofileComponent implements ng.IComponentOptions {
   public controller = HcsSetupSwprofileController;
-  public template = require('modules/hcs/setup/hcs-setup-swprofile/hcs-setup-swprofile.component.html');
+  public template = require('modules/hcs/hcs-setup/hcs-setup-swprofile/hcs-setup-swprofile.component.html');
   public bindings = {
     swprofile: '<',
     onChangeFn: '&',
