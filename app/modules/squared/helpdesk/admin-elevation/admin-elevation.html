@@ -11,8 +11,8 @@
     </div>
     <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" class="info-wrapper">
       <p class="admin-elevation-info" ng-hide="$ctrl.state == 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'INVALID_SIGNATURE'">
-        Do you want to grant Help Desk operator {{$ctrl.helpDeskOperatorName}} temporary Full Admin
-        access to {{$ctrl.orgName}} organization?
+        Do you want to grant Help Desk operator {{$ctrl.helpDeskOperatorName}} temporary full admin
+        access to {{$ctrl.orgName}} organization for 1 hour?
       </p>
     </div>
     <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'INVALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'ERROR'" class="admin-elevation-wrapper">
@@ -22,16 +22,16 @@
       </div>
       <div ng-show="$ctrl.state === 'ELEVATION_DONE'">
         <p class="admin-elevation-info">
-          Help Desk operator {{$ctrl.helpDeskOperatorName}} has been granted Full Admin access to {{$ctrl.orgName}} organization for one hour.
+          Help Desk operator {{$ctrl.helpDeskOperatorName}} was granted full admin access to {{$ctrl.orgName}} organization for 1 hour.
           <br><br>
-          Feel free to close this page.
+          Feel free to close this page and await further instructions.
         </p>
       </div>
       <div ng-show="$ctrl.state === 'REJECTED'">
         <p class="admin-elevation-info">
-          You rejected Help Desk operator {{$ctrl.helpDeskOperatorName}}'s request.
+          You rejected Help Desk operator {{$ctrl.helpDeskOperatorName}}'s request to have temporary full admin access.
           <br><br>
-          If you need to grant new priviliges, ask the operator to request access again.
+          If you need to grant priviliges later, you can ask the operator to resend access request.
         </p>
       </div>
       <div ng-show="$ctrl.state === 'INVALID_SIGNATURE'">
