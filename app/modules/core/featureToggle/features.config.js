@@ -27,6 +27,7 @@ module.exports = {
   atlasDataRetentionSettings: 'atlas-data-retention-settings',
   atlasDeviceExport: 'atlas-device-export',
   atlasDevicesAdvancedSettings: 'atlas-devices-advanced-settings',
+  atlasEdiscoveryJumboReports: 'atlas-ediscovery-jumbo-reports',
   atlasEmailStatus: 'atlas-email-status',
   atlasEmailSuppress: 'atlas-email-suppress',
   atlasEnterpriseDeleteOrg: 'atlas-enterprise-delete-org',
