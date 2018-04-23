@@ -105,6 +105,7 @@ module.exports = {
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
   careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',
+  ccaReports: 'ccaReports',
   ceAllowNolockdown: 'ce-allow-nolockdown',
   clientRingbackV2: 'client-ringback-v2',
   cloudberryPersonalMode: 'ce-enable-personal-mode',
