@@ -182,7 +182,7 @@ describe('In ctCustomerInformationComponent, The controller', () => {
       }],
     };
 
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
     controller.setActiveItem('welcomeHeader');
     expect(controller.activeItem).toEqual(returnObj);
   });
@@ -260,18 +260,20 @@ describe('In ctCustomerInformationComponent, The controller', () => {
   });
 
   it('should validate type for a unique field', function () {
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
     expect(controller.validateType({ id: 'name' })).toEqual(true);
+    expect(controller.validateCategoryTextBoxType({ id: 'name' })).toEqual(true);
   });
 
   it('should identify a duplicate type configured', function () {
     controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;
     expect(controller.validateType({ id: 'name' })).toEqual(false);
+    expect(controller.validateCategoryTextBoxType({ id: 'name' })).toEqual(false);
   });
 
   it('next button should be enabled when required option is selected for category and category is not empty', function () {
     controller.currentState = 'customerInformation';
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = 'testcategory';
     expect(controller.isCustomerInformationPageValid()).toBe(true);
@@ -279,7 +281,7 @@ describe('In ctCustomerInformationComponent, The controller', () => {
 
   it('next button should be enabled when optional is selected for category and category is not empty', function () {
     controller.currentState = 'customerInformation';
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = 'testcategory';
     expect(controller.isCustomerInformationPageValid()).toEqual(true);
@@ -287,7 +289,7 @@ describe('In ctCustomerInformationComponent, The controller', () => {
 
   it('next button should be disabled when required option is selected for category and category is empty', function () {
     controller.currentState = 'customerInformation';
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'required';
     (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = '';
     controller.$onInit();
@@ -297,9 +299,9 @@ describe('In ctCustomerInformationComponent, The controller', () => {
 
   it('next button should be enabled when optional is selected for category and category is empty', function () {
     controller.currentState = 'customerInformation';
-    controller.TemplateWizardService.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
-    (controller.TemplateWizardService.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
-    (controller.TemplateWizardService.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = '';
+    controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
+    (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[0].value = 'optional';
+    (controller.template.configuration.pages.customerInformation.fields['field3']).attributes[4].categoryOptions = '';
     controller.$onInit();
     expect(controller.isCustomerInformationPageValid()).toEqual(true);
   });

@@ -709,16 +709,15 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveUsers": "Convert to free Cisco WebEx MC3 and free Cisco Spark licenses.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Spark account. Your Webex site will be not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Cisco Spark account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveUsers": "Assign users free Cisco WebEx MC3 and free Cisco Spark licenses.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
+    "multMoveUsers": "Convert users to their own free Cisco Spark account.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleMoveOrDelete": "You can either delete your account or convert to free Cisco WebEx MC3 and free Cisco Spark licenses.",
-    "singleUserMove": "You will be assigned free Cisco WebEx MC3 and free Cisco Spark licenses.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or move them to their own accounts and assign them free Cisco WebEx MC3 and free Cisco Spark licenses.",
-    "multiUserMove": "All users will be given their own user accounts and assigned free Cisco WebEx MC3 and free Cisco Spark licenses.",
-    "multiUserDelete": "All users and data will be deleted, including WebEx meeting URLs, meeting recordings, and posts in Cisco Spark spaces.",
+    "singleUserMove": "You will be converted to a free Cisco Spark account.",
+    "multiUserMove": "All users will be converted to their own free Cisco Spark account.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including WebEx meeting URLs, meeting recordings, and posts in Cisco Spark spaces.",
     "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints.",
@@ -1652,6 +1651,7 @@
     "enabled": "Enabled",
     "error": "Error",
     "errors": "Errors",
+    "export": "Export",
     "fieldRequired": "This field is required",
     "finish": "Finish",
     "firstName": "First Name",
@@ -2383,7 +2383,7 @@
       "label": "Capacity: {{capacity}}%",
       "labelNA": "Capacity: N/A",
       "tooltip": "Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
-      "tooltipUnassigned": "<em>Clusters not in a resource group</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
+      "tooltipUnassigned": "<em>Clusters and users<br>(not in a resource group)</em><br>Capacity: {{capacity}}%<br>Users enabled: {{total}}<br>Max capacity: {{max}}",
       "tooltipNA": "Choose a filter on the left to view capacity for clusters that don't belong to a resource group or clusters in specific resources groups",
       "tooltipNoConnectors": "No connectors can host users",
       "allClusters": "All clusters",
@@ -4154,10 +4154,12 @@
   },
   "legalHold": {
     "title": "Legal Matters",
+    "matterName": "Matter Name",
+    "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
+    "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
+    "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
     "matterList": {
       "title": "Matters",
-      "name": "Matter Name",
-      "description": "Description",
       "dateReleased": "Date Released",
       "dateCreated": "Date Created",
       "createdBy": "Created By",
@@ -4172,10 +4174,12 @@
       },
       "new": "Create Matter"
     },
+    "detail": {
+      "release": "Release",
+      "releaseMatter": "Release Matter"
+    },
     "matterNew": {
       "title": "Create Matter",
-      "name": "Matter Name",
-      "description": "Description",
       "optional": "(optional)",
       "addCustodians": "Add Custodians"
     },
@@ -4207,7 +4211,6 @@
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
         "resultCanceled": "User import has been canceled",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
-
       },
       "new": {
         "title": "Add Custodians",
@@ -4227,8 +4230,12 @@
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
         "resultCanceled": "User import has been canceled",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
-
       }
+    },
+    "notifications": {
+      "releaseSuccess": "Matter has been released",
+      "deleteSuccess": "Matter has been deleted",
+      "saveSuccess": "Your matter has been saved"
     }
   },
   "firstTimeWizard": {
@@ -6523,6 +6530,8 @@
       "title": "Hybrid Media",
       "adoption-title": "Adoption",
       "resources-title": "Resources",
+      "historical-title": "Historical",
+      "live-title": "Live",
       "custom": "Custom",
       "selectedPeriod": "selected period",
       "test-org-alert": "Some reports might not have data, because you are using a test organization."
@@ -6555,22 +6564,46 @@
       "successmsg": "You can now register your Hybrid Media Node to Cisco Collaboration cloud.",
       "nodedetails": "Node IP Address/FQDN:",
       "cluster": "Cluster:",
-      "sipcalls": "SIP Calls",
       "sipconfigure": "Configure your optional SIP Calls settings.",
       "sipcheck": "I want to use SIP Calls on this cluster",
       "upgradeschedule": "Upgrade Schedule",
       "completeregister": "1. Complete registration",
       "testconfigure": "2. Test your configuration",
+      "utc": "(UTC)",
+      "sparkcalls": "Spark Calls",
+      "testsparkcalls":"Test Cisco Spark calls",
+      "sparkcalldesc": "Verify whether Cisco Spark calls are landing on this cluster.",
+      "begintest": "Begin test",
+      "sipcalls": "SIP Calls",
+      "verifysipcalls": "Verify SIP calls",
+      "sipcallsdesc": "Verify if SIP calls are landing on this cluster",
+      "removesip": "Remove SIP Calls configuration",
+      "mainteancemodemsg": "Maintenance mode is enabled on all nodes of this cluster,disable maintenance mode  to test {{callType}} calls",
+      "upgrademsg": "Upgrades are currently being installed on this cluster, please try again later.",
+      "unoperationalmsg": "This cluster is not operational, bring at least one node online to test {{callType}} calls",
+      "callwait": "Looking for Calls",
+      "nocalls": "No {{callType}} calls on this cluster in the last 15 minutes.",
+      "sparkcallline1": "Start a call directed at a user near the cluster, and then see if it shows up here. You may also wait  and see if someone else's call automatically lands on this cluster.Users who make the test calls must restart the app to verify.",
+      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Spark Hybrid Media Service</a> and verify that you opened all the necessary ports of your firewall.",
+      "sipcallline1": "Start a SIP call directed at a user near the cluster, and then see if it shows up here. You may also wait and see if someone else's call automatically lands on this cluster.",
+      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Spark Hybrid Media Service</a> <br>if you need further help.",
+      "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Media cluster will not be able to process SIP Calls anymore",
+      "callsuccess": "{{callType}} calls configured correctly",
+      "lastcalldetails": "Last call details",
+      "callfrom": "Call from",
+      "callto": "Call to",
+      "starttime": "Start time",
+      "participant": "Participant",
       "testconfiguremsg": "Once you completed registration, you can test your configuration from the cluster settings.",
-      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration. Hybrid Media<br>will be ready to use as soon as you finish registration.",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud.<br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
+      "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration. Hybrid Media <br> will be ready to use as soon as you finish registration.",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. <br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
     },
     "clusterBandwidth": {
       "success": "Maximum cluster cascade bandwidth saved successfully.",
       "title": "Maximum cluster cascade bandwidth",
       "description": "Enter the maximum bandwidth (in megabits per second) that Hybrid Media Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
       "range": "Enter a value between 5 to 50",
-      "megabytes": "Megabytes"
+      "megabytes": "Mbps"
     },
     "metrics": {
       "today": "Last 24 Hours",
@@ -11030,7 +11063,8 @@
       }
     },
     "clustersList": {
-      "title":"Clusters"
+      "title":"Clusters",
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
     },
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "inventory": {
@@ -11050,7 +11084,6 @@
       "addFile": "Add File",
       "clusterCount": "Number of Clusters",
       "copFile": "COP file",
-      "customerName": "Customer/ Group Name",
       "deleteModal": {
         "title": "Are you sure?",
         "description": "You are about to delete an Agent Install File. You can not undo this action."
@@ -11065,7 +11098,6 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxy IP Address or Domain Name",
       "setupTitle": "Create Agent Install Files",
-      "status": "Status",
       "tarFile": ".tar file",
       "title": "Install Files",
       "nofileTitle": "No Agent Install Files",
@@ -11138,22 +11170,25 @@
     "softwareProfiles": {
       "add": "Add Profile",
       "cer": "Cisco Emergency Responder Version",
-      "cerPlace": "Choose CER Version",
+      "cerPlace": "CER File",
       "cucm": "Cisco Unified Communication Manager Version",
-      "cucmPlace": "Choose CUCM Version",
+      "cucmPlace": "CUCM File",
       "desc": "Add a Software Profile, this profile can be assigned to a customer and used to ensure the versions on their unified communications instances are in sync with approved versions.",
       "expway": "Cisco Expressway Version",
-      "expwayPlace": "Choose Expressway Version",
+      "expwayPlace": "Expressway File",
+      "imp": "Cisco IM&P Version",
+      "impPlace": "IM&P File",
       "name": "Software Profile Name",
       "namePlace": "Enter Profile Name",
       "noneProfile": "No Software profile",
       "noneProfileDesc": "Get started by creating a software profile.",
       "plm": "Cisco Prime License Manager Version",
-      "plmPlace": "Choose PLM Version",
+      "plmPlace": "PLM File",
+      "swVersions": "Software Versions",
       "tabTitle": "Software Profiles",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
-      "ucxnPlace": "Choose UCXN Version"
+      "ucxnPlace": "UCXN File"
     },
     "upgrade": {
       "title": "HCS Upgrade",

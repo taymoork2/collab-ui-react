@@ -14,6 +14,7 @@ var EdiscoverySearchResultDirectiveFactory = require('./ediscovery-search-result
       require('angular-ui-router'),
       require('angular-translate'),
       require('angular-cache'),
+      require('angular-file-saver'),
       require('modules/core/analytics'),
       require('modules/core/featureToggle').default,
       require('modules/core/notifications').default,

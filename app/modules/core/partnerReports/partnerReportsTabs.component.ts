@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 
 class PartnerReportsTabs implements ng.IComponentController {
 
@@ -6,27 +7,39 @@ class PartnerReportsTabs implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
+    private FeatureToggleService: FeatureToggleService,
   ) {}
 
   public $onInit(): void {
-    this.tabs = [
-      {
-        state: `partnerreports.tab.ccaReports.group({ name: 'usage' })`,
-        title: this.$translate.instant(`reportsPage.ccaTab`),
-      },
-    ];
+    this.tabs = [];
 
-    this.FeatureToggleService.atlasPartnerSparkReportsGetStatus().then((isSparkEnabled: boolean): void => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.ccaReports)
+    .then((supported: boolean) => {
+      if (supported === true) {
+        this.tabs.push({
+          state: `partnerreports.tab.ccaReports.group({ name: 'usage' })`,
+          title: this.$translate.instant(`reportsPage.ccaTab`),
+        });
+      }
+    });
+
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPartnerSparkReports)
+    .then((isSparkEnabled: boolean): void => {
       if (isSparkEnabled) {
         this.tabs.unshift({
           state: `partnerreports.tab.spark`,
           title: this.$translate.instant(`reportsPage.sparkReports`),
         });
+      } else {
+        this.tabs.unshift({
+          state: `partnerreports.tab.base`,
+          title: this.$translate.instant(`reportsPage.sparkReports`),
+        });
       }
     });
 
-    this.FeatureToggleService.atlasPartnerWebexReportsGetStatus().then((isPartnerWebexEnabled: boolean): void => {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPartnerWebexReports)
+    .then((isPartnerWebexEnabled: boolean): void => {
       if (isPartnerWebexEnabled) {
         this.tabs.push({
           state: `partnerreports.tab.webexreports.metrics`,

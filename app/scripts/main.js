@@ -219,6 +219,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/user-sidepanel/user-status-messages').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
   ]);
 
   angular.module('HDS', [
@@ -235,6 +236,7 @@
     require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
     require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
     require('modules/mediafusion/media-service-v2/components/first-time-setup').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-email-notification').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
@@ -286,8 +288,8 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
-    require('modules/hcs/shared').default,
-    require('modules/hcs/shared/hcs-delete-modal').default,
+    require('modules/hcs/hcs-shared').default,
+    require('modules/hcs/hcs-shared/hcs-delete-modal').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,
@@ -299,7 +301,7 @@
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
-    require('modules/hcs/setup').default,
+    require('modules/hcs/hcs-setup').default,
   ]);
 
   angular.module('ServicesOverview', [

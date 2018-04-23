@@ -31,10 +31,17 @@ class CustomerReportsHeaderCtrl {
         });
       }
       if (features.isMfEnabled) {
-        this.headerTabs.push({
-          title: this.$translate.instant('mediaFusion.report.title'),
-          state: 'reports.mediaservice',
-        });
+        if (features.isQlikEnabled) {
+          this.headerTabs.push({
+            title: this.$translate.instant('mediaFusion.report.title'),
+            state: 'reports.hybridMedia',
+          });
+        } else {
+          this.headerTabs.push({
+            title: this.$translate.instant('mediaFusion.report.title'),
+            state: 'reports.mediaservice',
+          });
+        }
       }
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
@@ -59,6 +66,7 @@ class CustomerReportsHeaderCtrl {
 
   private promises: any = {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
+    isQlikEnabled: this.FeatureToggleService.atlasHybridMediaServiceQlikReportsGetStatus(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
     autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),

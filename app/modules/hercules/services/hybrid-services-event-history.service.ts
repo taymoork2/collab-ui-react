@@ -167,7 +167,6 @@ export class HybridServicesEventHistoryService {
         }
         return processedEvents;
       })
-      .then((events) => this.addServiceActivationEvents(events, fromTimestamp, toTimestamp, options.orgId))
       .then((events) => {
         events.items = _.orderBy(events.items, (event) => event.timestamp, ['desc']);
         return events;
@@ -182,7 +181,7 @@ export class HybridServicesEventHistoryService {
   /* Auxiliary methods we want to expose  */
 
   public isKnownEventType(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
-    return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event);
+    return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event) || this.isServiceActivationEvent(event);
   }
 
   public isAlarmEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -229,26 +228,6 @@ export class HybridServicesEventHistoryService {
 
   /* Private methods  */
 
-  private addServiceActivationEvents = (existingEvents: IHybridServicesEventHistoryData, fromTime: string, toTime: string, orgId?: string): ng.IPromise<IHybridServicesEventHistoryData> => {
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/events/`;
-    return this.$http
-      .get(url, {
-        params: {
-          type: ['ServiceEnabled', 'ServiceDisabled'],
-          fromTime: fromTime,
-          toTime: toTime,
-        },
-      })
-      .then(this.extractData)
-      .then((rawData: IRawClusterData) => {
-        return {
-          items: _.concat(existingEvents.items, _.map(_.filter((rawData.items), (item) =>  this.isServiceActivationEvent(item)), (event) =>  this.buildServiceActivationEvent(event))),
-          earliestTimestampSearched: existingEvents.earliestTimestampSearched,
-        };
-      })
-      .catch(() => existingEvents);
-  }
-
   private processEvents(events: IRawClusterEvent[]): IHybridServicesEventHistoryItem[] {
     const filteredItems = _.filter(events, (event) => this.isKnownEventType(event));
     let processedEvents: IHybridServicesEventHistoryItem[] = [];
@@ -261,6 +240,9 @@ export class HybridServicesEventHistoryService {
       }
       if (this.isConnectorEvent(event)) {
         processedEvents.push(this.buildConnectorEvent(event));
+      }
+      if (this.isServiceActivationEvent(event)) {
+        processedEvents.push(this.buildServiceActivationEvent(event));
       }
     });
     return processedEvents;

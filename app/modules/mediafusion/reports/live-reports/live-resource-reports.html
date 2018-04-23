@@ -1,0 +1,26 @@
+<div class="media-reports mf-live-reports">
+  <cs-page-sub-header-right>
+      <cs-select id="liveClusterFilter" name="liveClusterFilter" class='live-reorts-select-filter' ng-model="nav.clusterSelected" options="nav.clusterOptions" on-change-fn="nav.clusterUpdate()"></cs-select>
+      <cs-select id="liveTimeFilter" name="liveTimeFilter" class='live-reorts-select-filter' ng-model="nav.timeSelected" options="nav.timeOptions" on-change-fn="nav.timeUpdate()"></cs-select>
+  </cs-page-sub-header-right>
+  <div class="content-container media-reports-container height-compensate">
+    <div class="row" >
+      <cs-alert-banner type="info" closeable="true" ng-if="nav.isTestOrg"><span translate="mediaFusion.report.test-org-alert"></span></cs-alert-banner>
+      <cs-card-layout>
+        <mf-live-report-flip-chart-card parentcntrl="nav" headername="nav.total_participants_heading" tooltip-value="nav.totalcloudTooltip" chart-options="nav.totalParticipantschartOptions" card-class="'three-cards'" card-desc="nav.clientTypeDesc"></mf-live-report-flip-chart-card>
+        <mf-live-report-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.second_card_value" card-class="'three-cards'"></mf-live-report-card>
+        <mf-live-report-flip-card parentcntrl="nav" headername="nav.availabilityCardHeading" value="nav.clusterAvailability" card-class="'three-cards'" tooltip-options="nav.availabilityTooltipOptions" dropdown-present="true"></mf-live-report-flip-card>
+        <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
+        <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
+        <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
+        <uc-media-cascade-bandwith parentcntrl="nav"  ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle"></uc-media-cascade-bandwith>
+        <cs-card class="cs-card--full cascade-card-container" ng-class="{'no-display': nav.clusterSelected === nav.allClusters}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle">
+          <uc-cluster-cascade-bandwith class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-cluster-cascade-bandwith>
+          <uc-streams-bandwidth-usage class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-streams-bandwidth-usage> 
+        </cs-card>
+        <uc-media-availability parentcntrl="nav"></uc-media-availability>
+      </cs-card-layout>
+    </div>
+  </div>
+</div>
+  

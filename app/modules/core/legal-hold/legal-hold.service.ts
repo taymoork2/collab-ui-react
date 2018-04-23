@@ -60,6 +60,10 @@ export class LegalHoldService {
     return this.$http.post(this.getActionUrl(Actions.UPDATE), matter.toJsonData());
   }
 
+  public updateMatter(matter: Matter) {
+    return this.$http.post(this.getActionUrl(Actions.UPDATE), matter.toJsonData());
+  }
+
   public readMatter(orgId: string, caseId: string): IPromise<Matter> {
     return this.$http.get(this.getActionUrl(Actions.READ), {
       params: {

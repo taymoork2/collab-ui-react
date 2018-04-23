@@ -14,8 +14,10 @@ class CtCustomerController extends CtBaseController {
   ) {
 
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
+  public cardMode: string;
   public MediaTypes;
   public activeItem: string;
   public isTypeDuplicate = false;
@@ -60,7 +62,7 @@ class CtCustomerController extends CtBaseController {
   }
 
   private getType(): string {
-    return (this.TemplateWizardService.cardMode) ? this.TemplateWizardService.cardMode : this.selectedMediaType();
+    return (this.cardMode) ? this.cardMode : this.selectedMediaType();
   }
 
   public getCustomerInformationFormFields(): string {
@@ -97,6 +99,10 @@ class CtCustomerController extends CtBaseController {
     this.TemplateWizardService.pageValidationResult.isCustomerInfoPageValid =
       !(selectedType && this.isSelectedTypeDuplicate(selectedType)) && this.isCustomerInformationPageValid();
     return this.TemplateWizardService.pageValidationResult.isCustomerInfoPageValid;
+  }
+
+  public validateCategoryTextBoxType(selectedType): boolean {
+    return !(selectedType && this.isSelectedTypeDuplicate(selectedType));
   }
 
   private isSelectedTypeDuplicate(selectedType) {
@@ -210,7 +216,7 @@ class CtCustomerController extends CtBaseController {
     if (this.selectedMediaType() !== this.MediaTypes.CHAT_PLUS_CALLBACK) {
       return 'customerInformation';
     }
-    const type = this.TemplateWizardService.cardMode || this.selectedMediaType();
+    const type = this.cardMode || this.selectedMediaType();
     switch (type) {
       case 'callback': return 'customerInformationCallback';
       default: return 'customerInformationChat';
@@ -337,7 +343,9 @@ class CtCustomerController extends CtBaseController {
 export class CtCustomerComponent implements ng.IComponentOptions {
   public controller = CtCustomerController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctCustomer.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

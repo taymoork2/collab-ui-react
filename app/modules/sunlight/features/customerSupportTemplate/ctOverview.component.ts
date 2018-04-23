@@ -3,6 +3,7 @@ import { CtBaseController } from './ctBase.controller';
 class CtOverviewController extends CtBaseController {
 
   public overviewCards;
+  private cardMode: string;
   /* @ngInject*/
   constructor(
     public $stateParams: ng.ui.IStateParamsService,
@@ -11,6 +12,7 @@ class CtOverviewController extends CtBaseController {
     public $translate: ng.translate.ITranslateService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -61,6 +63,9 @@ class CtOverviewController extends CtBaseController {
 export class CtOverviewComponent implements ng.IComponentOptions {
   public controller = CtOverviewController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctOverview.tpl.html');
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

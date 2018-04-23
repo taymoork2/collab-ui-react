@@ -1431,6 +1431,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -2318,6 +2319,16 @@
               },
             },
           })
+          .state('reports.live-resource', {
+            url: '/live-resource',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'LiveMediaReportsController',
+                template: require('modules/mediafusion/reports/live-reports/live-resource-reports.html'),
+              },
+            },
+          })
           .state('reports.care', {
             url: '/care',
             views: {
@@ -2349,6 +2360,16 @@
             },
             params: {
               siteUrl: null,
+            },
+          })
+          .state('reports.hybridMedia', {
+            url: '/hybridMediaReports',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'HybridMediaMetricsCtrl',
+                template: require('modules/core/customerReports/hybridMedia/hybridMediaMetrics.tpl.html'),
+              },
             },
           })
           .state('webex-reports-iframe', {
@@ -2547,6 +2568,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -3179,7 +3201,7 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: require('modules/hcs/shared/hcs-base/hcs-shared-base.html'),
+            template: require('modules/hcs/hcs-shared/hcs-base/hcs-shared-base.html'),
             absract: true,
           })
           .state('hcs.shared', {
@@ -3195,7 +3217,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/shared/hcs-base'));
+                  done(require('modules/hcs/hcs-shared/hcs-base'));
                 }, 'hcs-shared-template');
               }),
             },
@@ -3302,6 +3324,24 @@
             parent: 'partner',
             url: '/hcs/swprofilelist',
             template: '<hcs-upgrade-swprofile-list></hcs-upgrade-swprofile-list>',
+          })
+          .state('hcs.swprofile-edit', {
+            url: '/hcs/upgrade/swprofileedit',
+            parent: 'partner',
+            template: '<hcs-upgrade-swprofile-edit swprofile="$resolve.swprofile"></hcs-upgrade-swprofile-edit>',
+            params: {
+              swprofile: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile/hcs-upgrade-swprofile-edit.component'));
+                }, 'hcs-upgrade-swprofile-edit');
+              }),
+              swprofile: /* @ngInject */ function ($stateParams) {
+                return $stateParams.swprofile;
+              },
+            },
           })
           .state('taasSuites', {
             parent: 'main',
@@ -4962,7 +5002,7 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle"></hybrid-media-cluster-settings>',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle" has-mf-cluster-wizard-feature-toggle="$resolve.hasMfClusterWizardFeatureToggle"></hybrid-media-cluster-settings>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
@@ -4975,6 +5015,9 @@
               },
               hasMFCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+              hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
               },
             },
           })
@@ -5701,6 +5744,25 @@
             views: {
               'modal@': {
                 template: '<legal-hold-matter-new dismiss="$dismiss()" class="modal-content legalhold-modal"></legal-hold-matter-new>',
+              },
+            },
+          })
+          .state('legalhold.detail', {
+            parent: 'sidepanel',
+            params: {
+              matter: null,
+              displayName: null,
+            },
+            views: {
+              'sidepanel@': {
+                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter" class="modal-content legalhold-modal"></legal-hold-matter-detail>',
+
+                resolve: {
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
+                  },
+                  displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+                },
               },
             },
           });

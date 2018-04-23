@@ -2,7 +2,7 @@ import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { UserService } from 'modules/core/scripts/services/user.service.js';
 import { LegalHoldService } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
-import { MatterState } from './legal-hold.enums';
+import { MatterState, Events } from './legal-hold.enums';
 import { IMatterJsonDataForDisplay } from './legal-hold.interfaces';
 
 export interface IGridApiScope extends ng.IScope {
@@ -44,6 +44,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
@@ -80,6 +81,9 @@ export class LegalHoldMatterListController implements ng.IComponentController {
   public $onInit(): void {
     this.setGridOptions();
     this.setGridData();
+    this.$rootScope.$on(Events.CHANGED, () => {
+      this.setGridData();
+    });
   }
 
   private setGridOptions(): void {
@@ -88,7 +92,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
       sortable: true,
       cellTooltip: true,
       field: 'matterName',
-      displayName: this.$translate.instant('legalHold.matterList.name'),
+      displayName: this.$translate.instant('legalHold.matterName'),
     }, {
       width: '15%',
       sortable: true,
@@ -100,7 +104,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
       width: '15%',
       sortable: true,
       field: 'matterDescription',
-      displayName: this.$translate.instant('legalHold.matterList.description'),
+      displayName: this.$translate.instant('common.description'),
     }, {
       width: '15%',
       sortable: true,
@@ -221,8 +225,12 @@ export class LegalHoldMatterListController implements ng.IComponentController {
     });
   }
 
-  public showDetail(item) {
-    this.$state.go('legalhold.detail', { caseId: item.caseId });
+  public showDetail(item: IMatterJsonDataForDisplay) {
+    const matter = _.find(this.gridData_, { caseId: item.caseId });
+    this.$state.go('legalhold.detail', {
+      matter: matter,
+      createdByName: item.createdByName,
+    });
   }
 }
 

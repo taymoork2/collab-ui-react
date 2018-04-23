@@ -468,6 +468,7 @@ export class Config {
       'reports.metrics',
       'reports.media',
       'reports.mediaservice',
+      'reports.live-resource',
       'services-overview',
       'cluster-list',
       'media-cluster-details',
