@@ -2,13 +2,6 @@ import adminElevation from './index';
 
 describe('Component: adminElevation', () => {
 
-  /*
-  beforeEach(angular.mock.module(mockDependencies));
-
-  function mockDependencies($provide) {
-  }
-  */
-
   beforeEach(function () {
     this.initModules(adminElevation);
 

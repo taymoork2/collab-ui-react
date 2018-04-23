@@ -2,48 +2,38 @@
   <div class="logo">
     <img src="/images/spark-logo.svg">
   </div>
-  <h4 class="title">Cisco Spark Control Hub</h4>
+  <h4 class="title" translate="helpdesk.adminElevation.title"></h4>
   <div class="admin-elevation-content-view">
     <div ng-show="$ctrl.state === 'INIT'" class="loading">
       <span class="spinner">
         <i class="icon icon-spinner"></i>
       </span>
     </div>
-    <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" class="info-wrapper">
-      <p class="admin-elevation-info" ng-hide="$ctrl.state == 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'INVALID_SIGNATURE'">
-        Do you want to grant Help Desk operator {{$ctrl.helpDeskOperatorName}} temporary full admin
-        access to {{$ctrl.orgName}} organization for 1 hour?
+    <div class="info-wrapper">
+      <p class="admin-elevation-info"
+         ng-hide="$ctrl.state == 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'INVALID_SIGNATURE'"
+         translate="helpdesk.adminElevation.init" translate-values="{helpDeskOperatorName: $ctrl.helpDeskOperatorName, orgName: $ctrl.orgName}">
       </p>
     </div>
     <div ng-show="$ctrl.state === 'VALID_SIGNATURE' || $ctrl.state === 'INVALID_SIGNATURE' || $ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'ERROR'" class="admin-elevation-wrapper">
       <div class="admin-elevation-buttons" ng-hide="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED' || $ctrl.state === 'INVALID_SIGNATURE'">
-        <button ng-click="$ctrl.rejectElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn">Reject</button>
-        <button ng-click="$ctrl.grantElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn btn--primary">Grant</button>
+        <button translate="helpdesk.adminElevation.reject" ng-click="$ctrl.rejectElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn"></button>
+        <button translate="helpdesk.adminElevation.grant" ng-click="$ctrl.grantElevation()" ng-disabled="$ctrl.state === 'ELEVATION_DONE' || $ctrl.state === 'REJECTED'" href="" class="btn btn--primary"></button>
       </div>
       <div ng-show="$ctrl.state === 'ELEVATION_DONE'">
-        <p class="admin-elevation-info">
-          Help Desk operator {{$ctrl.helpDeskOperatorName}} was granted full admin access to {{$ctrl.orgName}} organization for 1 hour.
-          <br><br>
-          Feel free to close this page and await further instructions.
+        <p class="admin-elevation-info" translate="helpdesk.adminElevation.elevationDone" translate-values="{helpDeskOperatorName: $ctrl.helpDeskOperatorName, orgName: $ctrl.orgName}">
         </p>
       </div>
       <div ng-show="$ctrl.state === 'REJECTED'">
-        <p class="admin-elevation-info">
-          You rejected Help Desk operator {{$ctrl.helpDeskOperatorName}}'s request to have temporary full admin access.
-          <br><br>
-          If you need to grant priviliges later, you can ask the operator to resend access request.
+        <p class="admin-elevation-info" translate="helpdesk.adminElevation.elevationRejected" translate-values="{helpDeskOperatorName: $ctrl.helpDeskOperatorName}">
         </p>
       </div>
       <div ng-show="$ctrl.state === 'INVALID_SIGNATURE'">
-        <p class="admin-elevation-info">
-          This page was accessed with invalid parameters or signature has timed out.
-          <br><br>
-          Contact Helpesk Operator for further help.
+        <p class="admin-elevation-info" translate="helpdesk.adminElevation.invalidSignature">
         </p>
       </div>
       <div ng-show="$ctrl.state === 'ERROR'">
-        <p class="admin-elevation-info">
-          An error occured. Contact Help Desk operator for further help.
+        <p class="admin-elevation-info" translate="helpdesk.adminElevation.error">
         </p>
       </div>
     </div>

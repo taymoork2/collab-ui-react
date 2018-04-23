@@ -9413,6 +9413,16 @@
       "fmsError": "Could not read organization's on-premises-based hybrid services statuses.",
       "office365Error": "Could not read organization's cloud-based Office 365 status.",
       "googleCalendarError": "Could not read organization's Google Calendar status."
+    },
+    "adminElevation": {
+      "title": "Cisco Spark Control Hub",
+      "init": "Do you want to grant Help Desk operator {{helpDeskOperatorName}} temporary full admin access to {{orgName}} organization for 1 hour?",
+      "grant": "Grant",
+      "reject": "Reject",
+      "elevationDone": "Help Desk operator {{helpDeskOperatorName}} was granted full admin access to {{orgName}} organization for 1 hour.<br><br>Feel free to close this page and await further instructions.",
+      "elevationRejected": "You rejected Help Desk operator {{helpDeskOperatorName}}'s request to have temporary full admin access.<br><br>If you need to grant priviliges later, you can ask the operator to resend access request.",
+      "invalidSignature": "This page was accessed with invalid parameters or signature has timed out.<br><br>Contact Helpesk Operator for further help.",
+      "error": "An error occured. Contact Help Desk operator for further help."
     }
   },
   "partnerManagement": {
