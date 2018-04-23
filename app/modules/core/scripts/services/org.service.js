@@ -340,12 +340,16 @@
         });
     }
 
+    function returnAllowCustomerSiteManagementApiUrl(orgId) {
+      return UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/allowCustomerSiteManagement';
+    }
+
     function setAllowCustomerSiteManagementSetting(orgId, settings) {
-      if ((_.isUndefined(orgId) && !_.isObject(settings))) {
+      if (_.isUndefined(orgId) || !_.isObject(settings)) {
         return $q.reject('Invalid parameters passed');
       }
 
-      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/allowCustomerSiteManagement';
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
 
       return $http.post(url, settings);
     }
@@ -355,7 +359,7 @@
         return $q.reject('Invalid parameters passed');
       }
 
-      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + 'settings/allowCustomerSiteManagement';
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
 
       return $http.get(url);
     }

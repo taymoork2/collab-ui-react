@@ -18,6 +18,7 @@ describe('orgService', function () {
     );
 
     this.eftSettingRegex = /.*\/settings\/eft\.*/;
+    // Regex used to match call to allowCustomerSiteManagement API
     this.allowCustomerSiteManagementSettingRegex = /.*([a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+)\/settings\/allowCustomerSiteManagement\.*/;
     this.currentOrgId = 'bar';
 
@@ -517,23 +518,9 @@ describe('orgService', function () {
     this.$httpBackend.flush();
   });
 
-  // it('should verify that a proper setting is passed to setAllowCustomerManagmentSetting call', function () {
-  //   var partnerOrgId = '555';
-
-  //   this.Orgservice.setAllowCustomerSiteManagementSetting(partnerOrgId)
-  //     .catch(function (response) {
-  //       expect(response).toBe('Invalid parameters passed');
-  //     });
-  // });
-
-  it('should get the allowCustomerManagment setting for the org', function () {
+  it('should get the allowCustomerManagement setting for the org', function () {
     var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
-    this.$httpBackend.whenGET(this.allowCustomerSiteManagementSettingRegex).respond(200, {
-      data: {
-        allowCustomerSiteManagement: true,
-      },
-    });
-
+    this.$httpBackend.whenGET(this.allowCustomerSiteManagementSettingRegex).respond(200, { allowCustomerSiteManagement: true });
     this.Orgservice.getAllowCustomerSiteManagementSetting(currentOrgId).then(function (response) {
       expect(response.data.allowCustomerSiteManagement).toBe(true);
     });
@@ -541,7 +528,7 @@ describe('orgService', function () {
     this.$httpBackend.flush();
   });
 
-  it('should fail to get the allowCustomerManagment setting for the org', function () {
+  it('should fail to get the allowCustomerManagement setting for the org', function () {
     var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
     this.$httpBackend.whenGET(this.allowCustomerSiteManagementSettingRegex).respond(404);
     this.Orgservice.getAllowCustomerSiteManagementSetting(currentOrgId)

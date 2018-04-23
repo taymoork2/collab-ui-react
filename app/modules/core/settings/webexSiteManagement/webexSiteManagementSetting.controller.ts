@@ -6,8 +6,8 @@ export class WebexSiteManagementController {
   /* @ngInject */
   constructor (private Orgservice, Authinfo, private Notification: Notification) {
     this.orgId = Authinfo.getOrgId();
-    Orgservice.getAllowCustomerSiteManagementSetting(this.orgId).then((data) => {
-      this._allowSiteManagementByCustomer = _.get(data, 'orgSettings.allowSiteManagementByCustomer', true);
+    Orgservice.getAllowCustomerSiteManagementSetting(this.orgId).then((response) => {
+      this._allowSiteManagementByCustomer = _.get(response, 'data.allowCustomerSiteManagement');
     });
   }
 
@@ -18,7 +18,7 @@ export class WebexSiteManagementController {
   set allowSiteManagementByCustomer(value: boolean) {
     this._allowSiteManagementByCustomer = value;
     const setting = {
-      allowSiteManagementByCustomer: value,
+      allowCustomerSiteManagement: value,
     };
 
     this.Orgservice.setAllowCustomerSiteManagementSetting(this.orgId, setting).then(() => {
