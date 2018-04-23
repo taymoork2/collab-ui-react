@@ -18,6 +18,7 @@ describe('orgService', function () {
     );
 
     this.eftSettingRegex = /.*\/settings\/eft\.*/;
+    this.allowCustomerSiteManagementSettingRegex = /.*([a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+-[a-zA-Z0-9_.-]+)\/settings\/allowCustomerSiteManagement\.*/;
     this.currentOrgId = 'bar';
 
     spyOn(this.Log, 'debug');
@@ -510,6 +511,68 @@ describe('orgService', function () {
     var isEFT = true;
     this.$httpBackend.whenPUT(this.eftSettingRegex).respond(404);
     this.Orgservice.setEftSetting(isEFT, currentOrgId).then(fail)
+      .catch(function (response) {
+        expect(response.status).toBe(404);
+      });
+    this.$httpBackend.flush();
+  });
+
+  // it('should verify that a proper setting is passed to setAllowCustomerManagmentSetting call', function () {
+  //   var partnerOrgId = '555';
+
+  //   this.Orgservice.setAllowCustomerSiteManagementSetting(partnerOrgId)
+  //     .catch(function (response) {
+  //       expect(response).toBe('Invalid parameters passed');
+  //     });
+  // });
+
+  it('should get the allowCustomerManagment setting for the org', function () {
+    var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
+    this.$httpBackend.whenGET(this.allowCustomerSiteManagementSettingRegex).respond(200, {
+      data: {
+        allowCustomerSiteManagement: true,
+      },
+    });
+
+    this.Orgservice.getAllowCustomerSiteManagementSetting(currentOrgId).then(function (response) {
+      expect(response.data.allowCustomerSiteManagement).toBe(true);
+    });
+
+    this.$httpBackend.flush();
+  });
+
+  it('should fail to get the allowCustomerManagment setting for the org', function () {
+    var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
+    this.$httpBackend.whenGET(this.allowCustomerSiteManagementSettingRegex).respond(404);
+    this.Orgservice.getAllowCustomerSiteManagementSetting(currentOrgId)
+      .catch(function (response) {
+        expect(response.status).toBe(404);
+      });
+
+    this.$httpBackend.flush();
+  });
+
+  it('should successfully set the allowCustomerManagment setting for the org', function () {
+    var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
+    var payload = {
+      allowCustomerSiteManagement: true,
+    };
+
+    this.$httpBackend.whenPOST(this.allowCustomerSiteManagementSettingRegex).respond(204, {});
+    this.Orgservice.setAllowCustomerSiteManagementSetting(currentOrgId, payload).then(function (response) {
+      expect(response.status).toBe(204);
+    });
+    this.$httpBackend.flush();
+  });
+
+  it('should fail to set the allowCustomerManagment setting for the org', function () {
+    var currentOrgId = '5sf3232-g44gd44-dsgsdg44-dssd4675';
+    var payload = {
+      allowCustomerSiteManagement: true,
+    };
+
+    this.$httpBackend.whenPOST(this.allowCustomerSiteManagementSettingRegex).respond(404);
+    this.Orgservice.setAllowCustomerSiteManagementSetting(currentOrgId, payload)
       .catch(function (response) {
         expect(response.status).toBe(404);
       });

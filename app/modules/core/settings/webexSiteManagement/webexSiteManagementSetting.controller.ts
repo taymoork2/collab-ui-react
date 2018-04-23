@@ -1,7 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 
 export class WebexSiteManagementController {
-  private _allowSiteManagementByCustomer: boolean = true;
+  private _allowSiteManagementByCustomer: boolean = false;
   private orgId: string;
   /* @ngInject */
   constructor (private Orgservice, Authinfo, private Notification: Notification) {

@@ -345,7 +345,7 @@
         return $q.reject('Invalid parameters passed');
       }
 
-      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + 'settings/allowCustomerSiteManagement';
+      var url = UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/allowCustomerSiteManagement';
 
       return $http.post(url, settings);
     }
