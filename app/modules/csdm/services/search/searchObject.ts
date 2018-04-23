@@ -23,7 +23,7 @@ export class SearchObject {
 
   public size: number = 20;
   public from: number = 0;
-  public sortField: string = Aggregate[Aggregate.connectionStatus];
+  public sortField: string = Aggregate[Aggregate.product];
   public sortOrder: string = 'asc';
   public hasError: boolean;
   public lastGoodQuery: SearchElement;
