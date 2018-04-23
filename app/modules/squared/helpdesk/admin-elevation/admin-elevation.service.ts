@@ -8,7 +8,6 @@ export class AdminElevationService {
   }
 
   public validateSignature(orgId: string, signature: string, customerUserId: string, userId: string, timestamp: string): ng.IPromise<any> {
-    this.$log.debug('validateSignature');
     const urlToUse = this.getUrlToUse(orgId, 'elevationrequest/' + userId,
       {
         name: 'signature',
@@ -35,7 +34,6 @@ export class AdminElevationService {
   }
 
   public invalidateSignature(orgId: string, signature: string, userId: string, timestamp: string, customerUserId: string): ng.IPromise<any> {
-    this.$log.debug('invalidateSignature');
     const urlToUse = this.getUrlToUse(orgId, 'elevationrequest/' + userId,
       {
         name: 'signature',
@@ -62,7 +60,6 @@ export class AdminElevationService {
   }
 
   public elevateToAdmin(orgId: string, signature: string, userId: string, timestamp: string, customerUserId: string): ng.IPromise<any> {
-    this.$log.debug('elevateToAdmin');
     const urlToUse = this.getUrlToUse(orgId, 'actions/elevatetofulladmin/invoke');
     return this.$http.post(urlToUse, {
       signature: signature,
@@ -78,7 +75,7 @@ export class AdminElevationService {
   }
 
   private getUrlToUse(orgId: string, partialPath: string, ...params: { name: string, value: string }[]): string {
-    let urlToUse: string = this.UrlConfig.getAdminServiceUrl() + 'helpdesk/organizations/'; // http://10.54.72.13:8080/atlas-server/admin/api/v1/helpdesk/organizations/
+    let urlToUse: string = this.UrlConfig.getAdminServiceUrl() + 'helpdesk/organizations/';
     urlToUse += orgId + '/';
     urlToUse += partialPath;
     if (params.length > 0) {
@@ -87,7 +84,6 @@ export class AdminElevationService {
     _.each(params, (param) => {
       urlToUse += param.name + '=' + param.value + '&';
     });
-    this.$log.debug('urlToUse', urlToUse);
     return urlToUse;
   }
 }

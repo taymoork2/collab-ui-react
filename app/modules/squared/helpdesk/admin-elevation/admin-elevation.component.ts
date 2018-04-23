@@ -25,11 +25,6 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
   constructor(private $log: ng.ILogService,
               private $state: ng.ui.IStateService,
               private AdminElevationService: AdminElevationService) {
-    this.$log.debug('orgId', this.orgId);
-    this.$log.debug('signature', this.signature);
-    this.$log.debug('customerUserId', this.customerUserId);
-    this.$log.debug('userId', this.userId);
-    this.$log.debug('timestamp', this.timestamp);
   }
 
   public $onInit() {
@@ -42,19 +37,14 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
         this.state = ElevationState.validSignature;
       }).catch((error) => {
         this.$log.error('validateSignature', error);
-        // TODO other page ?
         this.state = ElevationState.invalidSignature;
-        // TODO Figure out
-        // this.$state.go('404');
       });
     }
   }
 
   public rejectElevation() {
     this.state = ElevationState.rejected;
-    this.$log.debug('rejectElevation');
-    this.AdminElevationService.invalidateSignature(this.orgId, this.signature, this.userId, this.timestamp, this.customerUserId).then((data) => {
-      this.$log.info('rejectElevation ok', data);
+    this.AdminElevationService.invalidateSignature(this.orgId, this.signature, this.userId, this.timestamp, this.customerUserId).then(() => {
     }).catch((error) => {
       this.state = ElevationState.error;
       this.$log.error('rejectElevation', error);
@@ -62,11 +52,10 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
   }
 
   public grantElevation() {
-    this.$log.debug('grantElevation');
     this.state = ElevationState.elevationDone;
-    this.AdminElevationService.elevateToAdmin(this.orgId, this.signature, this.userId, this.timestamp, this.customerUserId).then((data) => {
-      this.$log.info('grantElevation ok', data);
+    this.AdminElevationService.elevateToAdmin(this.orgId, this.signature, this.userId, this.timestamp, this.customerUserId).then(() => {
     }).catch((error) => {
+      this.state = ElevationState.error;
       this.$log.error('grantElevation', error);
     });
   }
