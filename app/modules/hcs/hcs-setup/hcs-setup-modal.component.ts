@@ -78,6 +78,10 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         }
         break;
       case 2:
+        this.title = 'hcs.installFiles.setupTitle';
+        if (this.hcsSetupModalForm) {
+          this.hcsSetupModalForm.$setPristine();
+        }
         this.nextEnabled = false;
         break;
       case 3:
@@ -147,7 +151,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   }
 
   public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
-    this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0;
+    this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0 && this.hcsSetupModalForm.$valid;
     this.enableSave();
   }
 
