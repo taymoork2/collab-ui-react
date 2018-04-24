@@ -74,8 +74,9 @@
     tab: 'reportTab',
     icon: 'icon-bars',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.spark',
-    link: '/partner/spark',
+    state: 'partnerreports',
+    link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
   }, {
     tab: 'taasOverviewTab',
     icon: 'icon-outline',
@@ -200,8 +201,9 @@
     tab: 'reportTab',
     icon: 'icon-analysis-active',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.spark',
-    link: '/partner/spark',
+    state: 'partnerreports',
+    link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',
