@@ -50,6 +50,16 @@
       margin-top: -1.5rem;
     }
 
+    .spark-assistant-badge {
+      margin-top: -2.5rem;
+      position: absolute;
+      margin-left: 14rem;
+    }
+
+    .tooltip[popup-class="spark-badge-tooltip"] .c-nub {
+      margin-left: 14rem;
+    }
+
     .margin-set {
       margin-top: 1.5rem;
     }
