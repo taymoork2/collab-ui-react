@@ -140,6 +140,14 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     }
 
     function init() {
+      // Display re-branding banner
+      $rootScope.$emit('TOGGLE_HEADER_BANNER', {
+        visible: true,
+        type: 'info',
+        translation: 'rebrand.banner.text',
+        closeable: true,
+      });
+
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -574,6 +582,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       if (_.isFunction(deregisterSsoEnabledListener)) {
         deregisterSsoEnabledListener();
       }
+      $rootScope.$emit('TOGGLE_HEADER_BANNER');
     });
 
     var deregisterSsoEnabledListener = $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {

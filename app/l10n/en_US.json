@@ -11431,5 +11431,10 @@
     "error": {
       "noUsers": "No users found matching this criteria."
     }
+  },
+  "rebrand": {
+    "banner": {
+      "text": "Pardon our dust while Cisco Spark becomes Cisco WebEx Teams. <a href='https://video.cisco.com/detail/video/5772918811001' target='_blank'>Learn more.</a>"
+    }
   }
 }
