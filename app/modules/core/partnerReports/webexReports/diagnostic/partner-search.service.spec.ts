@@ -1,7 +1,7 @@
 import moduleName from './index';
 import * as moment from 'moment-timezone';
 
-describe('Service: SearchService', () => {
+describe('Service: PartnerSearchService', () => {
   beforeAll(function () {
     this.conferenceID = '65241608473282200';
     this.nodeId = '2454212';

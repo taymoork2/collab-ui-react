@@ -80,7 +80,7 @@ class DgcPartnerTab implements ng.IComponentController {
         this.details = details;
 
         if (mbi.status === MeetingInfoStatus.GOING) {
-          this.PartnerSearchService.getServerTime()
+          return this.PartnerSearchService.getServerTime()
             .then((res: IServerTime) => {
               mbi.endTime = _.get(res, 'dateLong');
               this.PartnerSearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
