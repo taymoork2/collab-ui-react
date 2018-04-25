@@ -1,5 +1,5 @@
 import { UserTaskManagerService } from './user-task-manager.service';
-import { TaskListFilterType, TaskType, TaskStatus } from './user-task-manager.constants';
+import { TaskListFilterType, TaskType } from './user-task-manager.constants';
 import { Notification } from 'modules/core/notifications';
 
 interface ICounts {
@@ -228,35 +228,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private populateTaskStatusTranslate(task: ITask) {
-    switch (task.latestExecutionStatus) {
-      case TaskStatus.CREATED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
-        break;
-      case TaskStatus.STARTED:
-      case TaskStatus.STARTING:
-      case TaskStatus.STOPPING:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
-        break;
-      case TaskStatus.ABANDONED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
-        break;
-      case TaskStatus.COMPLETED:
-        if (task.counts.usersFailed > 0) {
-          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
-        } else {
-          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
-        }
-        break;
-      case TaskStatus.FAILED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
-        break;
-      case TaskStatus.STOPPED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
-        break;
-      case TaskStatus.UNKNOWN:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
-        break;
-    }
+    task.statusTranslate = this.UserTaskManagerService.getTaskStatusTranslate(task);
   }
 
   private populateTaskJobType(task: ITask) {
