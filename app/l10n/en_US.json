@@ -6650,7 +6650,7 @@
       "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
       "cascadeBandwidthCardOrgHeading": "Cluster Cascade Bandwidth Usage",
       "cascadeBandwidthCardClusterHeading": "Cascade Bandwidth Usage",
-      "cascadeBandwidthOrgDesc": "Bandwidth used across all hybrid media cluster when cascades are established between on-premises and the cloud.",
+      "cascadeBandwidthOrgDesc": "Total Bandwidth used across all hybrid media cluster when cascades are established between on-premises and the cloud.",
       "cascadeBandwidthClusterDesc": "Tx: Provide bandwidth usage for transmission.<br>Rx: Provide bandwidth usage for receiving.",
       "streamsBandwidthHeading": "Streams Bandwidth Usage",
       "streamsBandwidthDesc": "Audio: Provide bandwidth usage for audio when receiving or transmission.<br>Video: Provide bandwidth usage for video when receiving or transmission.<br>Presentation: Provide bandwidth usage for presentation when receiving or transmission.",

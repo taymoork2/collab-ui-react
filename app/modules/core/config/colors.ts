@@ -14,5 +14,4 @@ export enum Colors {
   '$gray-dark' = '#858688',
   '$color-yellow-base' = '#F0A309',
   '$color-white' = '#FFF',
-  '$color-blue' = '#049FD9',
 }
