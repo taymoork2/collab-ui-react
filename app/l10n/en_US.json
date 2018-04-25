@@ -709,7 +709,7 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Spark account. Your Webex site will be not be converted to a free site and will be deleted.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Spark account. Your Webex site will not be converted to a free site and will be deleted.",
     "singleMoveUsers": "Convert to a free Cisco Spark account.",
     "singleDeleteUsers": "Delete account.",
     "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
