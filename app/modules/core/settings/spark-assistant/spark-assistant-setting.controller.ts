@@ -105,7 +105,7 @@ export class SparkAssistantSettingController {
     .then(response => {
       this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
       const status: string = _.get<string>(response, 'activationStatus').toUpperCase();
-      this.inProgress = (status === ActivationStatusEnum.UNKNOWN);
+      this.inProgress = (status === ActivationStatusEnum.PROCESSING);
       if (this.inProgress) {
         this.Notification.warning('globalSettings.sparkAssistant.progress');
         this.$state.go(this.$state.current, {}, {
@@ -113,7 +113,7 @@ export class SparkAssistantSettingController {
         });
       } else if (status === ActivationStatusEnum.ENABLED || status === ActivationStatusEnum.DISABLED) {
         this.Notification.success('globalSettings.sparkAssistant.success');
-      } else if (status === 'UNKNOWN') {
+      } else if (status === ActivationStatusEnum.UNKNOWN) {
         //TO-DO REMOVE this check once Api is ready, keeping current behavior
         this.Notification.success('globalSettings.sparkAssistant.success');
       }
