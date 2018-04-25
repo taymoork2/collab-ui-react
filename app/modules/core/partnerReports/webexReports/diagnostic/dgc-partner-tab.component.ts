@@ -81,11 +81,11 @@ class DgcPartnerTab implements ng.IComponentController {
 
         if (mbi.status === MeetingInfoStatus.GOING) {
           this.PartnerSearchService.getServerTime()
-          .then((res: IServerTime) => {
-            mbi.endTime = _.get(res, 'dateLong');
-            this.PartnerSearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
-            details.duration_ = this.PartnerSearchService.toMinOrSec(mbi.endTime - mbi.startTime);
-          });
+            .then((res: IServerTime) => {
+              mbi.endTime = _.get(res, 'dateLong');
+              this.PartnerSearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
+              details.duration_ = this.PartnerSearchService.toMinOrSec(mbi.endTime - mbi.startTime);
+            });
         } else {
           details.duration_ = this.PartnerSearchService.toMinOrSec(mbi.duration * 1000);
         }
@@ -122,7 +122,8 @@ class DgcPartnerTab implements ng.IComponentController {
       }
       return {
         key: this.$translate.instant(`webexReports.connectionFields.${key}`),
-        val: this.$translate.instant(`common.${val}`), class: val === ValueTypes.YES,
+        val: this.$translate.instant(`common.${val}`),
+        class: val === ValueTypes.YES,
       };
     });
     return connectionResult;
@@ -164,7 +165,7 @@ class DgcPartnerTab implements ng.IComponentController {
       return {
         class: true,
         val: `${this.$translate.instant('webexReports.duration')} ${moment.duration(duration * 1000).humanize()}`,
-        key: this.$translate.instant(`webexReports.sessionType.sessionType_ ${item.sessionType}`),
+        key: this.$translate.instant(`webexReports.sessionType.sessionType_${item.sessionType}`),
       };
     });
     return {

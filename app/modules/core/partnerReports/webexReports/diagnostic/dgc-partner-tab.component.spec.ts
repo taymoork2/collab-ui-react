@@ -1,6 +1,6 @@
-import Diagnostic from './index';
+import moduleName from './index';
 
-describe('component: dgcPartnerTab', () => {
+describe('Component: DgcPartnerTab', () => {
   beforeAll(function() {
     this.meetingDetail = {
       meetingBasicInfo: {
@@ -22,7 +22,7 @@ describe('component: dgcPartnerTab', () => {
   });
 
   beforeEach(function () {
-    this.initModules(Diagnostic);
+    this.initModules(moduleName);
     this.injectDependencies('$q', 'PartnerSearchService');
 
     initSpies.apply(this);
