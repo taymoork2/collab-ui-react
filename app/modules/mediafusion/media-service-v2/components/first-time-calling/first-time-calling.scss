@@ -1,6 +1,7 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/settings/typography';
 
+.first-time-calling-modal {
   .icon-error {
     color: $color-red-base;
     left: 25rem;
@@ -82,4 +83,4 @@
   .position-error-msg {
     position: absolute !important;
   }
-
+}
