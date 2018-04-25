@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function LiveMediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
+  function LiveMediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -84,6 +84,8 @@
     vm.clusterInServiceClusterDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceClusterDesc');
     vm.cascadeBandwidthClusterDesc = $translate.instant('mediaFusion.metrics.cascadeBandwidthClusterDesc');
     vm.streamsBandwidthDesc = $translate.instant('mediaFusion.metrics.streamsBandwidthDesc');
+    vm.clusterInServiceDesc = $translate.instant('mediaFusion.metrics.cardDescription.clusterInServiceDesc');
+
 
     vm.Map = {};
     vm.clusterNameMap = {};
@@ -117,6 +119,11 @@
       cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
+    vm.clusterinServicechartOptions = {
+      isShow: true,
+      cardChartDiv: 'liveReportDiv',
+      noData: false,
+    };
 
     vm.timeOptions = [{
       value: 0,
@@ -142,6 +149,7 @@
     vm.isFlipped = false;
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.tooltipText = '';
+    vm.clusterinService = [];
     vm.cardIndicatorDiff = 0;
     vm.clusterUnavailablityFlag = false;
 
@@ -440,11 +448,27 @@
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
+        vm.clusterinService = vm.availabilityTooltipOptions.liveArray;
+        setClusterinServiceGraph();
+        //ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
         });
+    }
+    function setClusterinServiceGraph() {
+      if (vm.clusterId === vm.allClusters) {
+        vm.allcluster = true;
+      } else {
+        vm.allcluster = false;
+      }
+      if (vm.clusterinService.length === 0) {
+        vm.clusterinServicechartOptions.noData = true;
+      } else {
+        vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
+        return vm.clusterinServiceChart;
+      }
     }
 
     function setUtilizationData() {

@@ -31,7 +31,7 @@ class CustomerReportsHeaderCtrl {
         });
       }
       if (features.isMfEnabled) {
-        if (features.isQlikEnabled) {
+        if (!features.isQlikEnabled) {
           this.headerTabs.push({
             title: this.$translate.instant('mediaFusion.report.title'),
             state: 'reports.hybridMedia',
