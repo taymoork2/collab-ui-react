@@ -138,20 +138,18 @@ require('./_user-csv.scss');
           return;
         }
 
-        // TO-DO $.csv.toArrays() should not be needed after all checks
-        // been moved to the server side
         csvUsersArray = $.csv.toArrays(vm.model.file);
-        if (!isAtlasCsvImportTaskManagerToggled) {
-          // Check if the file is empty, or if the header is valid
-          // TO-DO This check should be moved to the server side.
-          if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
-            Notification.error('firstTimeWizard.uploadCsvBadFormat');
-            vm.resetFile();
-            return;
-          }
 
-          // Check required email column
-          // TO-DO This check should be moved to the server side.
+        // Check if the file is empty, or if the header is valid
+        if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
+          Notification.error('firstTimeWizard.uploadCsvBadFormat');
+          vm.resetFile();
+          return;
+        }
+
+        // Check required email column
+        // TO-DO This check should be moved to the server side.
+        if (!isAtlasCsvImportTaskManagerToggled) {
           if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
             Notification.error('firstTimeWizard.uploadCsvBadHeaders');
             vm.resetFile();
