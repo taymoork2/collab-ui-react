@@ -34,8 +34,31 @@
 
         <div class="callServiceRow emailsControlsParent">
           <div class="cs-radio-group calendarServiceControls emailControls">
-            <label for="email" translate="addDeviceWizard.editServices.calendarEmail"></label>
-            <input id="email" type="email" autocomplete="off" ng-model="editCalendarService.emailOfMailbox">
+            <label
+              ng-if="editCalendarService.calService !== 'squared-fusion-gcal'"
+              for="email-cal"
+              translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <input
+              ng-if="editCalendarService.calService !== 'squared-fusion-gcal'"
+              id="email-cal"
+              class="calendar-mail-id"
+              type="email"
+              autocomplete="off"
+              maxlength="321"
+              ng-model="editCalendarService.emailOfMailbox">
+            <label
+              ng-if="editCalendarService.calService === 'squared-fusion-cal'"
+              for="email-gcal"
+              translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <input
+              ng-if="editCalendarService.calService === 'squared-fusion-gcal'"
+              id="email-gcal"
+              class="calendar-mail-id"
+              type="text"
+              autocomplete="off"
+              ng-model="editCalendarService.emailOfMailbox"
+              maxlength="321"
+              ng-pattern="/^[^@]+@[^@]+$/">
             <p class="cs-input__help-text" translate="addDeviceWizard.editServices.calendarEmailHelp"></p>
           </div>
         </div>
