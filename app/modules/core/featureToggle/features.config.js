@@ -62,6 +62,7 @@ module.exports = {
   atlasMediaServiceCascadeBwConfig: 'atlas-media-service-cascade-bw-config',
   atlasMediaServiceCascadeBwReport: 'atlas-media-service-cascade-bw-report',
   atlasMediaServiceClusterWizard: 'atlas-media-service-cluster-wizard',
+  atlasMediaServiceFirstTimeCalling: 'atlas-media-service-first-time-calling',
   atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',

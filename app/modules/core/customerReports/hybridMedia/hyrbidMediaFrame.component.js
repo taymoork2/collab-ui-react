@@ -16,6 +16,7 @@ require('./hybrid-media-metrics-frame.scss');
   /* @ngInject */
   function hyrbidMediaFrameController($log, $rootScope, $scope, $timeout, $window, HybridLoadingTimeout) {
     var vm = this;
+    vm.noResource = false;
     var eventListeners = [];
     vm.isIframeLoaded = false;
     vm.messageHandle = messageHandle;
@@ -40,6 +41,7 @@ require('./hybrid-media-metrics-frame.scss');
     function messageHandle(event) {
       if (event.data === 'unfreeze') {
         $log.log('Unfreeze message received.');
+        vm.noResource = true;
         unfreezeState(null, true);
         $timeout.cancel(vm.startLoadReportTimer);
       }

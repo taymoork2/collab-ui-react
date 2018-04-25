@@ -16,7 +16,7 @@ export class SipCallSettingsController implements ng.IComponentController {
   public mfToggle: boolean = false;
   public mfTrustedToggle: boolean = false;
   public mfCascadeToggle: boolean = false;
-  public mfWizardToggle: boolean = false;
+  public mfFirstTimeToggle: boolean = false;
   public sipConfigUrl: string|undefined;
   public trustedsipconfiguration: string|undefined;
   public cascadeBandwidth: number;
@@ -35,7 +35,7 @@ export class SipCallSettingsController implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
-    const { cluster, isWizard, mfToggle, mfTrustedToggle, mfCascadeToggle, mfWizardToggle } = changes;
+    const { cluster, isWizard, mfToggle, mfTrustedToggle, mfCascadeToggle, mfFirstTimeToggle } = changes;
     if (cluster && cluster.currentValue) {
       this.cluster = cluster.currentValue;
       this.HybridServicesClusterService.getProperties(cluster.currentValue.id).then((properties) => {
@@ -59,8 +59,8 @@ export class SipCallSettingsController implements ng.IComponentController {
     if (mfCascadeToggle && mfCascadeToggle.currentValue) {
       this.mfCascadeToggle = mfCascadeToggle.currentValue;
     }
-    if (mfWizardToggle && mfWizardToggle.currentValue) {
-      this.mfWizardToggle = mfWizardToggle.currentValue;
+    if (mfFirstTimeToggle && mfFirstTimeToggle.currentValue) {
+      this.mfFirstTimeToggle = mfFirstTimeToggle.currentValue;
     }
   }
 
@@ -146,7 +146,7 @@ export class SipCallSettingsComponent implements ng.IComponentOptions {
     mfToggle: '<',
     mfTrustedToggle: '<',
     mfCascadeToggle: '<',
-    mfWizardToggle: '<',
+    mfFirstTimeToggle: '<',
     onSipSettingsUpdate: '&?',
     onSipSettingsEnabledCheck: '&?',
   };
