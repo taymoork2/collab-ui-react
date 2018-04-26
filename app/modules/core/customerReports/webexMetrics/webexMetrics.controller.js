@@ -267,7 +267,7 @@
     }
 
     function isReportsChanged(viewType, userInfo) {
-      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
+      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected.toLowerCase()) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
     }
 
     function isMetrics() {
