@@ -4,7 +4,7 @@
     <tab heading="Video" ng-click="$ctrl.onChangeQOS('video')"></tab>
   </tabset>
 
-  <dgc-time-line
+  <dgc-partner-time-line
     source-data="$ctrl.dataSet"
     cmr-data="$ctrl.cmrData"
     pstn-data="$ctrl.pstnData"
@@ -13,7 +13,7 @@
     call-legs-data="$ctrl.callLegsData"
     line-data="$ctrl.lineData"
     tab-type="$ctrl.tabType"
-    ng-if="!$ctrl.loading"></dgc-time-line>
+    ng-if="!$ctrl.loading"></dgc-partner-time-line>
   <div ng-if="$ctrl.loading" class="loading">
     <i class="icon icon-spinner icon-3x"></i>
   </div>

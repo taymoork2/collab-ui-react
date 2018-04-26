@@ -282,7 +282,11 @@ class TimeLine implements ng.IComponentController {
   private drawCrossLine(): void {
     const gridHeight = this.data.gridHorizontalLineNum * this.option.gridHeight;
     const crossLine: Object[] = [];
-    const left4Start = this.timeScale(this.data.startTime) - 3, left4End = this.timeScale(this.data.endTime);
+    let left4Start = this.timeScale(this.data.startTime) - 3;
+    if (left4Start < 0) {
+      left4Start = this.timeScale(this.data.startTime);
+    }
+    const left4End = this.timeScale(this.data.endTime);
     crossLine.push({
       x1: left4Start,
       y1: 0,
@@ -376,9 +380,13 @@ class TimeLine implements ng.IComponentController {
         cx: cx,
         cy: y,
       });
+      let cx_ = cx + r - 1;
+      if (cx_ < 9) {
+        cx_ = 11;
+      }
       g.append('svg:circle').attr({
         r: r,
-        cx: cx + r - 1,
+        cx: cx_,
         cy: y,
       });
 

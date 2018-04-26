@@ -1,22 +1,22 @@
 import { ICallLegs, ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, IParticipant, IObjectDict, IUniqueParticipant } from './partner-search.interfaces';
 
 export enum Platforms {
-  WINDOWS = 0,
-  MAC = 1,
-  SOLARIS = 2,
-  JAVA = 3,
-  LINUX = 4,
-  FLASH = 5,
-  IPHONE = 7,
-  MOBILE_DEVICE = 8,
-  IP_PHONE = 9,
-  TP = 10,
-  BLACK_BERRY = 11,
-  WIN_MOBILE = 12,
-  ANDROID = 13,
-  NOKIA = 14,
-  THIN_CLIENT = 15,
-  PSTN = 25,
+  WINDOWS = '0',
+  MAC = '1',
+  SOLARIS = '2',
+  JAVA = '3',
+  LINUX = '4',
+  FLASH = '5',
+  IPHONE = '7',
+  MOBILE_DEVICE = '8',
+  IP_PHONE = '9',
+  TP = '10',
+  BLACK_BERRY = '11',
+  WIN_MOBILE = '12',
+  ANDROID = '13',
+  NOKIA = '14',
+  THIN_CLIENT = '15',
+  PSTN = '25',
 }
 
 export enum Devices {
@@ -201,7 +201,7 @@ export class PartnerSearchService {
     return arr[num] ? arr[num] : this.$translate.instant('webexReports.other');
   }
 
-  public getPlatform(obj: any): string {// TODO share the code next time
+  public getPlatform(obj: any): number | string {// TODO share the code next time
     if (obj.sessionType === Platforms.PSTN) {
       return Devices.PSTN;
     }
@@ -233,7 +233,7 @@ export class PartnerSearchService {
     return endReason ? this.$translate.instant('webexReports.normal') : this.$translate.instant('webexReports.abnormal');
   }
 
-  public isMobilePlatform(platform: number): boolean {// TODO share the code next time
+  public isMobilePlatform(platform: string): boolean {// TODO share the code next time
     const mobiles = [
       Platforms.IPHONE,
       Platforms.MOBILE_DEVICE,
@@ -246,12 +246,12 @@ export class PartnerSearchService {
   }
 
   public getDevice(obj: any) {// TODO share the code next time
-    const browser = _.parseInt(obj.browser);
-    const platform = _.parseInt(obj.platform);
-    const sessionType = _.parseInt(obj.sessionType);
+    const browser = obj.browser;
+    const platform = obj.platform;
+    const sessionType = obj.sessionType;
     const browser_ = this.getBrowser(browser);
     const platform_ = this.getPlatform(obj);
-    if (this.isMobilePlatform(platform)) {
+    if (this.isMobilePlatform(obj.platform)) {
       return {
         icon: 'icon-mobile-phone',
         name: this.$translate.instant('webexReports.mobilePlatform', { platform: platform_ }),
@@ -287,7 +287,7 @@ export class PartnerSearchService {
   }
 
   public isPcPlatform(platformCode: number): boolean {
-    return platformCode < Platforms.IPHONE;
+    return platformCode < _.parseInt(Platforms.IPHONE);
   }
 
   public getRealDevice(conferenceID: string, nodeID: string): ng.IPromise<ICallType> {

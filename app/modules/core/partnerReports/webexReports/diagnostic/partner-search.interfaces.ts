@@ -68,14 +68,14 @@ export interface IParticipant {
   userName: string;
   duration: number;
   reason: string;
-  platform: number;
+  platform: string;
   browser: string;
   clientIP: string;
   gatewayIP: string;
   userId: string;
   guestId: string;
   conferenceID: string;
-  sessionType: number;
+  sessionType: string;
   nodeId: string;
   phoneNumber: string;
   callInNumber: string;
@@ -127,7 +127,7 @@ export interface IDevice {
   completed: boolean;
   deviceCompleted: boolean;
   device: string;
-  platform: number;
+  platform: string;
   conferenceID: string;
   nodeId: string;
   items: any; //TODO use better type

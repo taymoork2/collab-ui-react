@@ -201,15 +201,15 @@ describe('Service: SearchService', () => {
 
   describe('getPlatform():', () => {
     it('should get correct data when call getPlatform: Mac', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: 0 })).toBe('Mac');
+      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: '0' })).toBe('Mac');
     });
 
     it('should get correct data when call getPlatform: PSTN', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: 25 })).toBe('PSTN');
+      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: '25' })).toBe('PSTN');
     });
 
     it('should get correct data when call getPlatform: Other', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 22, sessionType: 0 })).toBe('webexReports.other');
+      expect(this.PartnerSearchService.getPlatform({ platform: 22, sessionType: '0' })).toBe('webexReports.other');
     });
   });
 
@@ -230,7 +230,7 @@ describe('Service: SearchService', () => {
 
   describe('getDevice():', () => {
     it('should get correct device icon when call getDevice: icon-application', function () {
-      const obj = { browser: 2, platform: 6 };
+      const obj = { browser: '2', platform: '6' };
       const device = this.PartnerSearchService.getDevice(obj);
       expect(device.icon).toBe('icon-application');
     });
