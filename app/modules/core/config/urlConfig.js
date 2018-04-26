@@ -177,10 +177,10 @@
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
     DiagnosticUrl: {
-      dev: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
-      cfe: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
-      integration: 'https://sapmatsbts.webex.com/pcs/api/v2/',
-      prod: 'https://sapmats.webex.com/pcs/api/v2/',
+      dev: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/',
+      prod: 'https://sapmats.webex.com/pcs/api/',
     },
     GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',

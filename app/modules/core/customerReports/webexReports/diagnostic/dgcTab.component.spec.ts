@@ -14,8 +14,9 @@ describe('Component: dgcTab', () => {
         createdTime: 1484789489000,
         conferenceId: '69162350665578622',
       },
-      features: { chat: null, poll: 1 },
-      connection: { voIP: 'yes', video: 'no' },
+      features: { chat: null, poll: 1, appShare: 1 },
+      connection: { voIP: 'yes', video: 'no', nbr2: 'yes' },
+      sessions: [{ sessionType: '4', duration: 4000 }],
     };
     this.nameSection = '.meeting-room-name h3';
   });

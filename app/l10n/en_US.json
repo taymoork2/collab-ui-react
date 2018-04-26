@@ -878,15 +878,39 @@
     "to": "to",
     "end": "End",
     "audio": "Audio",
+    "video": "Video",
     "start": "Start",
     "hostID": "Host ID",
     "details": "Details",
     "created": "Meeting Created",
     "duration": "Duration",
-    "minute": "Min",
-    "second": "Sec",
-    "minutes": "Mins",
-    "seconds": "Secs",
+    "normal": "Normal",
+    "abnormal": "Abnormal",
+    "other": "Other",
+    "mobilePlatform": "Mobile: {{platform}}",
+    "thinClient": "Thin Client",
+    "phone": "Phone",
+    "voipQuality": "VoIP Quality",
+    "videoQuality": "Video Quality",
+    "cmrQuallity": "CMR Quality",
+    "pstnQuality": "PSTN Quality",
+    "latency": "Latency",
+    "packetLoss": "Packet Loss",
+    "mosScore": "MOS Score",
+    "callType": "Call Type",
+    "callIn": "Call In",
+    "callBack": "Call Back",
+    "features": "Features",
+    "screenShare": "Screen Share",
+    "recording": "Recording",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "notAvailable": "Not Available",
+    "notEnabled": "Not Enabled",
+    "joinTime": "Join Time",
+    "endPointLoading": "Endpoint loading...",
+    "notUsed": "Not Used",
     "hostName": "Host Name",
     "site": "Site Name(ID)",
     "hostEmail": "Host Email",
@@ -907,6 +931,47 @@
     "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
     "end-date-tooltip": "The start date must not be greater than the end date",
+    "timelineChartLegend": {
+      "joinMeetingTime": "Join Meeting Time is calculated in seconds.",
+      "jmtQuality": {
+        "good": "Good: < 10 seconds",
+        "fair": "Fair: 10-20 seconds",
+        "poor": "Poor: > 20 seconds",
+        "NA": "Not Available: No information"
+      },
+      "voip": "VoIP quality are measures with latency and packet loss.",
+      "voipQuality": {
+        "good": "Packet loss < 3.0% and latency < 300ms = Good",
+        "fair": "If neither of the above, then the quality is Fair",
+        "poor": "Packet loss > 5.0% and latency > 400ms = Poor"
+      },
+      "pstn": "PSTN quality is measured by a MOS Score.",
+      "pstnQuality": {
+        "good": "Scores of 4.0-5.0 are Good",
+        "fair": "3.0-3.9 are Fair",
+        "poor": "Below 3.0 are Poor"
+      },
+      "video": "Video quality are measures with latency and packet loss.",
+      "videoQuality": {
+        "good": "If neither of the above, then the quality is Good",
+        "poor": "Packet loss > 5.0% or latency > 400ms = Poor"
+      }
+    },
+    "featureHelper": {
+      "audioHelper": "Audio types used during the meeting.",
+      "videoHelper": "If video was used during the meeting.",
+      "screenShareHelper": "Shows the total number of minutes a screen or application was shared during the meeting.",
+      "recordingHelper": "Shows the duration of the meeting recording."
+    },
+    "participantsTable": {
+      "userName": "User Name",
+      "startDate": "Start Date",
+      "duration": "Duration",
+      "endpoint": "Endpoint",
+      "clientIP": "Client IP",
+      "gatewayIP": "Gateway IP",
+      "endReason": "End Reason"
+    },
     "searchGridHeader": {
       "status": "Status",
       "endTime": "End Date",
@@ -1793,6 +1858,11 @@
     "seconds": "{time, plural, =1{# second} other{# seconds}}",
     "minutes": "{time, plural, =1{# minute} other{# minutes}}",
     "hours": "{time, plural, =1{# hour} other{# hours}}",
+    "capitalized": {
+      "seconds": "{time, plural, =1{# Second} other{# Seconds}}",
+      "minutes": "{time, plural, =1{# Minute} other{# Minutes}}",
+      "hours": "{time, plural, =1{# Hour} other{# Hours}}"
+    },
     "abbreviatedCap": {
       "seconds": "{time, plural, =1{# Sec} other{# Secs}}",
       "minutes": "{time, plural, =1{# Min} other{# Mins}}"

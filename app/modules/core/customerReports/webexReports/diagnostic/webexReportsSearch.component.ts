@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
 import { KeyCodes } from 'modules/core/accessibility';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 const DATERANGE = 6;
 export interface IGridApiScope extends ng.IScope {
@@ -36,6 +37,7 @@ class WebexReportsSearch implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
+    private ProPackService: ProPackService,
   ) {
     this.gridData = [];
     this.timeZone = this.SearchService.getGuess('');
@@ -44,12 +46,18 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.initDateRange();
-    this.setGridOptions();
-    this.Analytics.trackEvent(this.SearchService.featureName, {});
-    if (this.searchStr) {
-      this.startSearch();
-    }
+    this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
+      if (isProPackEnabled) {
+        this.initDateRange();
+        this.setGridOptions();
+        this.Analytics.trackEvent(this.SearchService.featureName, {});
+        if (this.searchStr) {
+          this.startSearch();
+        }
+      } else {
+        this.$state.go('login');
+      }
+    });
   }
 
   public showDetail(item) {
@@ -60,11 +68,13 @@ class WebexReportsSearch implements ng.IComponentController {
 
   public onKeySearch($event: KeyboardEvent) {
     if ($event.which === KeyCodes.ENTER) {
+      this.searchStr = _.trim(($event.target as HTMLInputElement).value);
       this.startSearch();
     }
   }
 
-  public onBlur() {
+  public onBlur($event: KeyboardEvent) {
+    this.searchStr = _.trim(($event.target as HTMLInputElement).value);
     if (this.searchStr === this.storeData.searchStr) {
       return ;
     }
