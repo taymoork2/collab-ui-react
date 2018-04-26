@@ -3,7 +3,7 @@
 
   // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
   var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
-  var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
+  var HealthStatusID = require('./overview.keys').HealthStatusID;
 
   angular
     .module('Core')
@@ -30,7 +30,7 @@
 
         card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {
-            if (component.id === HealthStatusIDs.SPARK_CARE) {
+            if (component.id === HealthStatusID.SPARK_CARE) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
               card.healthStatusAria = card.helper.mapStatusAria(card.healthStatus, component.status);
             }

@@ -1,5 +1,5 @@
 import testModule from './index';
-import { HealthStatusIDs, OverviewEvents } from 'modules/core/overview/overview.keys';
+import { HealthStatusID, OverviewEvent } from 'modules/core/overview/overview.keys';
 
 describe('Component: licenseCard', () => {
   beforeEach(function () {
@@ -18,16 +18,14 @@ describe('Component: licenseCard', () => {
     this.$scope.l10nTitle = 'translate.title';
     this.$scope.l10nDefaultMessage = 'translate.noLicenses';
     this.$scope.l10nLicenseDescription = 'translate.userLicenses';
-    this.$scope.lcClass = 'license-type-icon';
-    this.$scope.licenseType = ['CONFERENCING'];
+    this.$scope.headerClass = 'license-type-icon';
+    this.$scope.licenseTypes = ['CONFERENCING'];
     this.$scope.loading = false;
     this.$scope.settingsUrlObject = {
-      someLicensesFn: function (l) {
-        return l.siteUrl;
-      },
+      requireSites: true,
       url: '/site-list',
     };
-    this.$scope.statusId = HealthStatusIDs.SparkCall;
+    this.$scope.statusId = HealthStatusID.SparkCall;
   });
 
   function initComponent(): void {
@@ -35,8 +33,8 @@ describe('Component: licenseCard', () => {
       l10nTitle: this.$scope.l10nTitle,
       l10nDefaultMessage: this.$scope.l10nDefaultMessage,
       l10nLicenseDescription: this.$scope.l10nLicenseDescription,
-      lcClass: this.$scope.lcClass,
-      licenseType: 'licenseType',
+      headerClass: this.$scope.headerClass,
+      licenseTypes: 'licenseTypes',
       loading: 'loading',
       settingsUrlObject: 'settingsUrlObject',
       statusId: this.$scope.statusId,
@@ -71,10 +69,10 @@ describe('Component: licenseCard', () => {
 
     it('should display license data and health information after broadcasts', function () {
       initComponent.call(this);
-      this.$rootScope.$emit(OverviewEvents.SUBSCRIPTIONS_LOADED_EVENT, this.subscriptions);
-      this.$rootScope.$emit(OverviewEvents.HEALTH_STATUS_LOADED_EVENT, {
+      this.$rootScope.$emit(OverviewEvent.SUBSCRIPTIONS_LOADED_EVENT, this.subscriptions);
+      this.$rootScope.$emit(OverviewEvent.HEALTH_STATUS_LOADED_EVENT, {
         components: [{
-          id: HealthStatusIDs.SparkCall,
+          id: HealthStatusID.SparkCall,
           status: 'operational',
         }],
       });

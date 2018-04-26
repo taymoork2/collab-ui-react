@@ -46,19 +46,10 @@ describe('HealthService', function () {
 
   describe('getHealthCheck', function () {
     it('should return success is true when API returns successfully', function () {
-      this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl()).respond(200, { fakeData: true });
+      const fakeData = { fakeData: true };
+      this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl()).respond(200, fakeData);
       this.HealthService.getHealthCheck().then((healthData) => {
-        expect(healthData.success).toBe(true);
-        expect(healthData.status).toBe(200);
-      });
-      this.$httpBackend.flush();
-    });
-
-    it('should return success is false when API call fails', function () {
-      this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl()).respond(500);
-      this.HealthService.getHealthCheck().then((healthData) => {
-        expect(healthData.success).toBe(false);
-        expect(healthData.status).toBe(500);
+        expect(healthData).toEqual(fakeData);
       });
       this.$httpBackend.flush();
     });

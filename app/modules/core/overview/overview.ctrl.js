@@ -2,9 +2,7 @@ require('./_overview.scss');
 var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
 var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
 var OfferName = require('modules/core/shared/offer-name').OfferName;
-var OfferType = require('modules/core/shared/offer-name').OfferType;
-var OverviewEvents = require('./overview.keys').OverviewEvents;
-var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
+var OverviewEvent = require('./overview.keys').OverviewEvent;
 
 (function () {
   'use strict';
@@ -69,62 +67,15 @@ var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
 
-    FeatureToggleService.supports(FeatureToggleService.features.hI1484).then(function (supported) {
-      var callSettingsUrl = '/services/call-settings';
-      if (supported) {
-        callSettingsUrl = '/services/call-settings-location';
-      }
-
-      // license-card info added here to allow for maintaining card order
-      // TODO: all the cards need to be converted to components, not just the license-cards
-      // and code cleaned up here and in the html so that we're no longer using ng-include
-      vm.cards = [{
-        defaultMessage: 'overview.cards.message.notEnabledText',
-        icon: 'icon-circle-message',
-        licenseDescription: 'overview.totalUserLicenses',
-        statusId: HealthStatusIDs.SparkMessage,
-        title: 'overview.cards.message.title',
-        // accepts either OfferType or OfferName
-        offerType: [OfferType.MESSAGING],
-      }, {
-        defaultMessage: 'overview.cards.meeting.notEnabledText',
-        icon: 'icon-circle-group',
-        licenseDescription: 'overview.totalUserLicenses',
-        statusId: HealthStatusIDs.SparkMeeting,
-        title: 'overview.cards.meeting.title',
-        offerType: [OfferType.CONFERENCING],
-        // check the license-card.keys for the interface ISettingsUrlObject
-        settingsUrlObject: {
-          requireSites: true,
-          url: '/site-list',
-        },
-      }, {
-        defaultMessage: 'overview.cards.call.notEnabledText',
-        icon: 'icon-circle-call',
-        licenseDescription: 'overview.totalUserLicenses',
-        statusId: HealthStatusIDs.SparkCall,
-        title: 'overview.cards.call.title',
-        offerType: [OfferType.COMMUNICATION],
-        settingsUrlObject: {
-          url: callSettingsUrl,
-        },
-      },
+    vm.cards = [
+      OverviewCardFactory.getMessageCard(),
+      OverviewCardFactory.getMeetingCard(),
+      OverviewCardFactory.getCallCard(),
       OverviewCardFactory.createCareCard(),
-      {
-        defaultMessage: 'overview.cards.roomSystem.notEnabledText',
-        icon: 'icon-circle-telepresence',
-        licenseDescription: 'overview.totalLicenses',
-        statusId: HealthStatusIDs.SparkMeeting,
-        title: 'overview.cards.roomSystem.title',
-        offerType: [OfferName.SD],
-        settingsUrlObject: {
-          url: '/devices',
-        },
-      },
+      OverviewCardFactory.getRoomsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard(),
-      ];
-    });
+    ];
 
     vm.notifications = [];
     vm.pstnToSNotification = null;
@@ -358,7 +309,7 @@ var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
         .then(function (subscriptions) {
           // timeout to prevent event from firing before page finishes loading
           $timeout(function () {
-            $rootScope.$emit(OverviewEvents.SUBSCRIPTIONS_LOADED_EVENT, subscriptions);
+            $rootScope.$emit(OverviewEvent.SUBSCRIPTIONS_LOADED_EVENT, subscriptions);
             vm.loadingSubscriptions = false;
           });
 
@@ -526,7 +477,7 @@ var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
       HealthService.getHealthCheck().then(function (healthData) {
         $timeout(function () {
           // timeout to prevent event from firing before page finishes loading
-          $rootScope.$emit(OverviewEvents.HEALTH_STATUS_LOADED_EVENT, healthData);
+          $rootScope.$emit(OverviewEvent.HEALTH_STATUS_LOADED_EVENT, healthData);
 
           // TODO: this is left in for now for the Care card, which needs to be updated to a component
           forwardEvent('healthStatusUpdatedHandler', healthData);

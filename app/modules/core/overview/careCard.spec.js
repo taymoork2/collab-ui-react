@@ -1,4 +1,4 @@
-var HealthStatusIDs = require('./overview.keys').HealthStatusIDs;
+var HealthStatusID = require('./overview.keys').HealthStatusID;
 
 describe('OverviewCareCard', function () {
   var OverviewCareCard, $rootScope;
@@ -44,7 +44,7 @@ describe('OverviewCareCard', function () {
     expect(card.showHealth).toBe(true);
     var data = {
       components: [{
-        id: HealthStatusIDs.SPARK_CARE,
+        id: HealthStatusID.SPARK_CARE,
         status: 'partial_outage',
       }],
     };

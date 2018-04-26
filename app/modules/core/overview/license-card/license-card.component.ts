@@ -1,10 +1,10 @@
 import { OfferName, OfferType } from 'modules/core/shared/offer-name';
-import { OverviewEvents } from 'modules/core/overview/overview.keys';
+import { OverviewEvent } from 'modules/core/overview/overview.keys';
 import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptionsInterfaces';
 import { HealthStatus, IHealthComponent, IHealthObject, ISettingsUrlObject, LicenseCardHelperService } from './index';
 
 class LicenseCardController implements ng.IComponentController {
-  public licenseType: string[];
+  public licenseTypes: string[];
   public statusId: string;
   public settingsUrlObject?: ISettingsUrlObject;
 
@@ -16,42 +16,42 @@ class LicenseCardController implements ng.IComponentController {
 
   private healthData?: IHealthObject;
   private licenseList: IOfferData[] = [];
+  private subscriptionsLoadedEvent: Function;
+  private healthDataLoadedEvent: Function;
 
   /* @ngInject */
   constructor(
     private $rootScope: ng.IRootScopeService,
-    private $scope: ng.IScope,
     private LicenseCardHelperService: LicenseCardHelperService,
     private UrlConfig,
   ) {}
 
+  public $onDestroy() {
+    this.subscriptionsLoadedEvent();
+    this.healthDataLoadedEvent();
+  }
+
   public $onInit() {
-    const subscriptionsLoadedEvent = this.$rootScope.$on(OverviewEvents.SUBSCRIPTIONS_LOADED_EVENT, (_event, subscriptions) => {
-      this.totalLicenses = 0;
-      this.licenseList = _.flatMap(subscriptions, (subscription) => subscription.licenses);
-
-      _.forEach(this.licenseList, (license: IOfferData) => {
-        if (this.licenseMatchesType(license)) {
-          this.totalLicenses += license.volume;
-        }
-      });
+    this.subscriptionsLoadedEvent = this.$rootScope.$on(OverviewEvent.SUBSCRIPTIONS_LOADED_EVENT, (_event, subscriptions) => {
+      const allLicenses = _.flatMap(subscriptions, (subscription) => subscription.licenses);
+      this.licenseList = _.filter(allLicenses, (license: IOfferData) => this.licenseMatchesType(license));
+      this.totalLicenses = _.sumBy(this.licenseList, license => license.volume);
     });
 
-    const healthDataLoadedEvent = this.$rootScope.$on(OverviewEvents.HEALTH_STATUS_LOADED_EVENT, (_event, healthData: IHealthObject) => {
+    this.healthDataLoadedEvent = this.$rootScope.$on(OverviewEvent.HEALTH_STATUS_LOADED_EVENT, (_event, healthData?: IHealthObject) => {
       this.healthData = healthData;
-
-      if (!_.isUndefined(this.healthData)) {
-        _.each(this.healthData!.components, (component: IHealthComponent) => {
-          if (component.id === this.statusId) {
-            this.healthStatusAria = this.LicenseCardHelperService.mapStatusAria(this.healthStatus, component.status);
-            this.healthStatus = this.LicenseCardHelperService.mapStatus(this.healthStatus, component.status);
-          }
-        });
+      if (!this.healthData) {
+        return;
       }
-    });
 
-    this.$scope.$on('$destroy', subscriptionsLoadedEvent);
-    this.$scope.$on('$destroy', healthDataLoadedEvent);
+      const component: IHealthComponent = _.find(this.healthData.components, { id: this.statusId });
+      if (!component) {
+        return;
+      }
+
+      this.healthStatusAria = this.LicenseCardHelperService.mapStatusAria(this.healthStatus, component.status);
+      this.healthStatus = this.LicenseCardHelperService.mapStatus(this.healthStatus, component.status);
+    });
   }
 
   public displaySettingsUrl(): boolean {
@@ -76,13 +76,21 @@ class LicenseCardController implements ng.IComponentController {
   }
 
   private licenseMatchesType(license: IOfferData): boolean {
-    return _.some(this.licenseType, (type) => {
-      // if the card's licenseType(s) is/are a valid OfferType or OfferName and the license isn't cancelled/suspended,
-      // then the license is valid for this card
-      return ((!_.isUndefined(OfferType[type]) && OfferType[type] === license.licenseType) ||
-        (!_.isUndefined(OfferName[type]) && OfferName[type] === license.offerName)) &&
-        !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
+    return _.some(this.licenseTypes, (type) => {
+      return (this.licenseMatchesOfferType(license, type) || this.licenseMatchesOfferName(license, type)) && this.isLicenseStatusValid(license);
     });
+  }
+
+  private licenseMatchesOfferType(license: IOfferData, type: string): boolean {
+    return !!OfferType[type] && OfferType[type] === license.licenseType;
+  }
+
+  private licenseMatchesOfferName(license: IOfferData, type: string): boolean {
+    return !!OfferName[type] && OfferName[type] === license.offerName;
+  }
+
+  private isLicenseStatusValid(license: IOfferData) {
+    return !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
   }
 }
 
@@ -93,8 +101,8 @@ export class LicenseCardComponent implements ng.IComponentOptions {
     l10nTitle: '@',
     l10nDefaultMessage: '@',
     l10nLicenseDescription: '@',
-    lcClass: '@?',
-    licenseType: '<',
+    headerClass: '@?',
+    licenseTypes: '<',
     loading: '<',
     settingsUrlObject: '<?',
     statusId: '@',

@@ -1,4 +1,4 @@
-export enum HealthStatusIDs {
+export enum HealthStatusID {
   //Spark
   SparkMeeting = 'lkjcjdfgfnbk',
   SparkMessage = '4z5sdybd2jxy',
@@ -11,7 +11,7 @@ export enum HealthStatusIDs {
   SPARK_CARE = 'gfg7cvjszyw0',
 }
 
-export enum OverviewEvents {
+export enum OverviewEvent {
   SUBSCRIPTIONS_LOADED_EVENT = 'CustomerOverview::Subscriptions_Loaded_Event',
   HEALTH_STATUS_LOADED_EVENT = 'CustomerOverview::Health_Status_Loaded_Event',
 }

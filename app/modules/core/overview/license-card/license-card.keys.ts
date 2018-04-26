@@ -1,4 +1,4 @@
-export enum StatusTypes {
+export enum StatusType {
   DANGER = 'danger',
   DEGRADED_PERFORMANCE = 'degraded_performance',
   OPERATIONAL = 'operational',
@@ -13,7 +13,7 @@ export interface IHealthObject {
 
 export interface IHealthComponent {
   id: string;
-  status: string;
+  status: StatusType;
 }
 
 export interface ISettingsUrlObject {
@@ -21,4 +21,4 @@ export interface ISettingsUrlObject {
   url: string;
 }
 
-export type HealthStatus = StatusTypes.DANGER | StatusTypes.SUCCESS | StatusTypes.WARNING;
+export type HealthStatus = StatusType.DANGER | StatusType.SUCCESS | StatusType.WARNING;
