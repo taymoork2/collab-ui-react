@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Ta hand om",
-        "notEnabledText": "Använd Cisco Sparks hjälptjänster för att samarbeta med din kund. Anpassa hjälpgränssnitt med konfigurationsguiden."
+        "notEnabledText": "Använd Cisco Webex hjälptjänster för att samarbeta med din kund. Anpassa hjälpgränssnitt med konfigurationsguiden."
       },
       "roomSystem": {
         "title": "Rumsenheter",
         "currentTitle": "Online den här veckan",
         "previousTitle": "Förra veckan:",
         "enableDevices": "Aktivera enheter",
-        "notEnabledText": "Mötesrumsenheter integreras sömlöst med Cisco Spark-appen."
+        "notEnabledText": "Mötesrumsenheter integreras sömlöst med Cisco Webex Teams-appen."
       },
       "hybrid": {
         "title": "Hybrid-tjänster",
         "googleCalendarError": "Kunde inte nå tjänsten för Google Kalender. Dess status kan rapporteras felaktigt under den här sessionen.",
         "o365CalendarError": "Kunde inte nå tjänsten för Office 365. Dess status kan rapporteras felaktigt under den här sessionen.",
-        "herculesError": "Kunde inte nå tjänsten för Cisco Spark Hybrid-tjänster.",
+        "herculesError": "Kunde inte nå tjänsten för Cisco Webex Hybrid-tjänster.",
         "herculesErrorAuthentication": "Det gick inte att bekräfta partneradministratörens åtkomsträttigheter i kundorganisationen. Detta kan röra sig om ett cachelagringsproblem. Prova att logga ut och in igen och kontakta Ciscos support om problemet kvarstår.",
-        "notEnabledText": "Hybrid-tjänster låter dig integrera interna system med Cisco Spark-plattformen.",
-        "notEnabledTextNew": "Hybrid-tjänster låter dig integrera interna system med Cisco Spark-plattformen.",
+        "notEnabledText": "Hybrid-tjänster låter dig integrera interna system med Cisco Webex-plattformen.",
         "notEnabledActionText": "Mer information",
         "serviceHeader": "Status",
         "services": {

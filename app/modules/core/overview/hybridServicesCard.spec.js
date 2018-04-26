@@ -135,9 +135,9 @@ describe('OverviewHybridServicesCard', function () {
   });
 
   // 2017 name update --> feature toggle removed
-  it('notEnabledText should be "overview.cards.hybrid.notEnabledTextNew" by default', function () {
+  it('notEnabledText should be "overview.cards.hybrid.notEnabledText" by default', function () {
     var card = this.OverviewHybridServicesCard.createCard();
     this.$rootScope.$apply();
-    expect(card.notEnabledText).toEqual('overview.cards.hybrid.notEnabledTextNew');
+    expect(card.notEnabledText).toEqual('overview.cards.hybrid.notEnabledText');
   });
 });

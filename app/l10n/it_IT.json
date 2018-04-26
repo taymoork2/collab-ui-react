@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Assistenza",
-        "notEnabledText": "Utilizzare i servizi Assistenza Cisco Spark per collaborare con il proprio cliente. Personalizzare le interfacce di Assistenza utilizzando la procedura di configurazione guidata."
+        "notEnabledText": "Utilizzare i servizi Assistenza Cisco Webex per collaborare con il proprio cliente. Personalizzare le interfacce di Assistenza utilizzando la procedura di configurazione guidata."
       },
       "roomSystem": {
         "title": "Dispositivi sala",
         "currentTitle": "Online questa settimana",
         "previousTitle": "Ultima settimana:",
         "enableDevices": "Abilita dispositivi",
-        "notEnabledText": "I dispositivi di sala riunioni si integrano perfettamente nell'app Cisco Spark."
+        "notEnabledText": "I dispositivi di sala riunioni si integrano perfettamente nell'app Cisco Webex Teams."
       },
       "hybrid": {
         "title": "Servizi Hybrid",
         "googleCalendarError": "Impossibile raggiungere il servizio per Google Calendar. Il relativo stato potrebbe essere riportato in modo non corretto durante la sessione.",
         "o365CalendarError": "Impossibile raggiungere il servizio per Office 365. Il relativo stato potrebbe essere riportato in modo non corretto durante la sessione.",
-        "herculesError": "Impossibile raggiungere il servizio per Cisco Spark Hybrid Services.",
+        "herculesError": "Impossibile raggiungere il servizio per Cisco Webex Hybrid Services.",
         "herculesErrorAuthentication": "Impossibile convalidare i diritti di accesso dell'amministratore partner nell'organizzazione del cliente. Ciò può indicare un problema di memorizzazione nella cache. Provare a scollegarsi e ricollegarsi e, se il problema permane, contattare il supporto Cisco.",
-        "notEnabledText": "I servizi ibridi consentono di integrare i sistemi locali nella piattaforma Cisco Spark.",
-        "notEnabledTextNew": "I servizi ibridi consentono di integrare i sistemi locali nella piattaforma Cisco Spark.",
+        "notEnabledText": "I servizi ibridi consentono di integrare i sistemi locali nella piattaforma Cisco Webex.",
         "notEnabledActionText": "Ulteriori informazioni",
         "serviceHeader": "Stato",
         "services": {

@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "使用 Cisco Spark Care 服務與您的客戶協作。使用設定精靈來自訂 Care 介面。"
+        "notEnabledText": "使用 Cisco Webex Care 服務與您的客戶協作。使用設定精靈來自訂 Care 介面。"
       },
       "roomSystem": {
         "title": "協作室裝置",
         "currentTitle": "本週在線",
         "previousTitle": "上週：",
         "enableDevices": "啟用裝置",
-        "notEnabledText": "會議室裝置與 Cisco Spark 應用程式無縫整合。"
+        "notEnabledText": "會議室裝置與 Cisco Webex Teams 應用程式無縫整合。"
       },
       "hybrid": {
         "title": "Hybrid Service",
         "googleCalendarError": "無法存取 Google 日曆的服務。在此階段作業期間，可能錯誤地報告了其狀態。",
         "o365CalendarError": "無法存取 Office 365 的服務。在此階段作業期間，可能錯誤地報告了其狀態。",
-        "herculesError": "無法存取 Cisco Spark Hybrid Services 的服務。",
+        "herculesError": "無法存取 Cisco Webex Hybrid Services 的服務。",
         "herculesErrorAuthentication": "無法驗證合作夥伴管理員在客戶組織中的存取權。這可能指示快取問題。請嘗試登出並重新登入，如果問題依然存在，請聯絡 Cisco 技術支援。",
-        "notEnabledText": "Hybrid Service 可讓您將內部部署系統與 Cisco Spark 平台相整合。",
-        "notEnabledTextNew": "Hybrid Service 可讓您將內部部署系統與 Cisco Spark 平台相整合。",
+        "notEnabledText": "Hybrid Service 可讓您將內部部署系統與 Cisco Webex 平台相整合。",
         "notEnabledActionText": "瞭解更多",
         "serviceHeader": "狀態",
         "services": {

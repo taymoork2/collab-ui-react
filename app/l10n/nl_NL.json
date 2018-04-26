@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Gebruik Cisco Spark Care-services om met uw klant samen te werken. Pas Care-interfaces aan via de configuratiewizard."
+        "notEnabledText": "Gebruik Cisco Webex Care-services om met uw klant samen te werken. Pas Care-interfaces aan via de configuratiewizard."
       },
       "roomSystem": {
         "title": "Ruimteapparaten",
         "currentTitle": "Deze week online",
         "previousTitle": "Afgelopen week:",
         "enableDevices": "Apparaten inschakelen",
-        "notEnabledText": "Vergaderruimteapparaten naadloos geïntegreerd met de Cisco Spark-app."
+        "notEnabledText": "Vergaderruimteapparaten naadloos geïntegreerd met de Cisco Webex Teams-app."
       },
       "hybrid": {
         "title": "Hybride services",
         "googleCalendarError": "Kan de service voor Google Agenda niet bereiken. De status daarvan wordt mogelijk onnauwkeurig gerapporteerd tijdens deze sessie.",
         "o365CalendarError": "Kan de service voor Office 365 niet bereiken. De status daarvan wordt mogelijk onnauwkeurig gerapporteerd tijdens deze sessie.",
-        "herculesError": "Kan de service voor Cisco Spark hybride services niet bereiken.",
+        "herculesError": "Kan de service voor Cisco Webex hybride services niet bereiken.",
         "herculesErrorAuthentication": "Kan beheerdersrechten van partner in klantorganisatie niet valideren. Dit kan wijzen op een cacheprobleem. Meld u af en opnieuw aan, en neem contact op met de klantenondersteuning van Cisco als het probleem zich blijft voordoen.",
-        "notEnabledText": "Met hybride services kunt u systemen op locatie integreren met het Cisco Spark Platform.",
-        "notEnabledTextNew": "Met hybride services kunt u systemen op locatie integreren met het Cisco Spark Platform.",
+        "notEnabledText": "Met hybride services kunt u systemen op locatie integreren met het Cisco Webex Platform.",
         "notEnabledActionText": "Meer info",
         "serviceHeader": "Status",
         "services": {

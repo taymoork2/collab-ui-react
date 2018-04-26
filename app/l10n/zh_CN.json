@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "服务",
-        "notEnabledText": "使用 Cisco Spark Care 服务与您的客户协作。使用配置向导定制 Care 界面。"
+        "notEnabledText": "使用 Cisco Webex Care 服务与您的客户协作。使用配置向导定制 Care 界面。"
       },
       "roomSystem": {
         "title": "协作室设备",
         "currentTitle": "本周在线",
         "previousTitle": "上周：",
         "enableDevices": "启用服务",
-        "notEnabledText": "会议室设备与 Cisco Spark 应用程序之间无缝集成。"
+        "notEnabledText": "会议室设备与 Cisco Webex Teams 应用程序之间无缝集成。"
       },
       "hybrid": {
         "title": "混合服务",
         "googleCalendarError": "无法访问用于 Google Calendar 的服务。其状态在此会话期间可能无法准确地报告。",
         "o365CalendarError": "无法访问用于 Office 365 的服务。其状态在此会话期间可能无法准确地报告。",
-        "herculesError": "无法访问用于 Cisco Spark 混合服务的服务。",
+        "herculesError": "无法访问用于 Cisco Webex 混合服务的服务。",
         "herculesErrorAuthentication": "无法验证客户组织中合作伙伴管理员的访问权限。这可能表明存在缓存问题。请尝试注销，然后再登录，如果问题仍然出现，请联系 Cisco 支持人员。",
-        "notEnabledText": "混合服务让您能够将本地部署系统与 Cisco Spark 平台相集成。",
-        "notEnabledTextNew": "混合服务让您能够将本地部署系统与 Cisco Spark 平台相集成。",
+        "notEnabledText": "混合服务让您能够将本地部署系统与 Cisco Webex 平台相集成。",
         "notEnabledActionText": "了解详情",
         "serviceHeader": "状态",
         "services": {
