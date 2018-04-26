@@ -1,15 +1,18 @@
 import legalHoldModuleName from './index';
-import { LegalHoldService } from './legal-hold.service';
+import { LegalHoldService, GetUserBy } from './legal-hold.service';
 import { Actions } from './legal-hold.service';
 import { Matter } from './matter.model';
 import { ICustodian } from './legal-hold.interfaces';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
+
 import { UrlConfig } from 'modules/core/config/urlConfig';
 
 type Test = atlas.test.IServiceTest<{
   Authinfo: Authinfo;
   LegalHoldService: LegalHoldService;
   UrlConfig: UrlConfig;
+  Userservice;
+
 }>;
 
 describe('Service: LegalHoldService', () => {
@@ -20,14 +23,27 @@ describe('Service: LegalHoldService', () => {
       'Authinfo',
       'LegalHoldService',
       'UrlConfig',
+      'Userservice',
     );
 
     this.matterList = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'));
-    this.URL = 'https://atlas-intb.ciscospark.com/admin/api/v1/retention/api/v1/admin/onhold/matter?operationType=';
+    this.URL = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=';
     this.getUserUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/user?email=';
+    this.userserviceUser = {
+      id: '123',
+      name: {
+        givenName: 'Jane',
+        familyName: 'Doe',
+      },
+      emails: [{
+        value: 'someone@somewhere.net',
+      }],
+      orgId: '12345',
+    };
 
     spyOn(this.Authinfo, 'getUserId').and.returnValue('user123');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+    spyOn(this.Userservice, 'getUserAsPromise').and.returnValue(this.$q.resolve({ data: this.userserviceUser }));
     installPromiseMatchers();
   });
 
@@ -49,16 +65,20 @@ describe('Service: LegalHoldService', () => {
     });
 
     it('should release the matter', function (this: Test) {
-      const releaseDate = new Date(2018, 1, 5);
-      const matter = new Matter('org123', 'case123', 'user123', releaseDate, 'matterName', 'matterDesc', releaseDate);
+      const dateReleased = new Date(2018, 1, 5);
+      const matter = new Matter('org123', 'case123', 'user123', dateReleased, 'matterName', 'matterDesc', dateReleased);
       this.$httpBackend.expectPOST(`${this.URL}${Actions.UPDATE}`).respond(200);
-      expect(this.LegalHoldService.releaseMatter(matter, releaseDate)).toBeResolved();
+      expect(this.LegalHoldService.releaseMatter(matter, dateReleased)).toBeResolved();
     });
 
     it('should read the matter', function (this: Test) {
       const matter = this.matterList[1];
       const resultMatter = Matter.matterFromResponseData(matter);
-      this.$httpBackend.expectGET(`${this.URL}${Actions.READ}&orgId=123&caseId=case456`).respond(200, matter);
+      const params = {
+        orgId: '123',
+        caseId: 'case456',
+      };
+      this.$httpBackend.expectPOST(`${this.URL}${Actions.READ}`, params).respond(200, matter);
       expect(this.LegalHoldService.readMatter('123', 'case456')).toBeResolvedWith(resultMatter);
     });
 
@@ -77,8 +97,12 @@ describe('Service: LegalHoldService', () => {
       const expParams = {
         orgId: '123',
       };
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.LIST_MATTERS_FOR_ORG}`, expParams).respond(200, this.matterList);
-      expect(this.LegalHoldService.listMatters('123')).toBeResolvedWith(this.matterList);
+      this.$httpBackend.expectPOST(`${this.URL}${Actions.LIST_MATTERS_FOR_ORG}`, expParams).respond(200, { mattersAssociatedWithOrg: this.matterList });
+      this.LegalHoldService.listMatters('123')
+        .then(result => {
+          expect(_.size(result)).toBe(_.size(this.matterList));
+        });
+      this.$httpBackend.flush();
     });
 
     it('should get user listing for a matter', function (this: Test) {
@@ -129,7 +153,7 @@ describe('Service: LegalHoldService', () => {
   describe('Retrieving user info from email address', function (this: Test) {
     it('and reject if user is not found', function () {
       this.$httpBackend.expectGET(this.getUserUrl + 'test1%40gmail.com').respond(404, { status: 'error' });
-      expect(this.LegalHoldService.getCustodian('12345', 'test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ error: 'legalHold.custodianImport.errorUserNotFound' }));
+      expect(this.LegalHoldService.getCustodian('12345', GetUserBy.EMAIL, 'test1@gmail.com')).toBeRejectedWith(jasmine.objectContaining({ error: 'legalHold.custodianImport.errorUserNotFound' }));
     });
 
     it('should return userId and first and last names if user is found', function () {
@@ -148,7 +172,29 @@ describe('Service: LegalHoldService', () => {
         otherProp: 'something else',
       };
       this.$httpBackend.expectGET(this.getUserUrl + 'test%40gmail.com').respond(200, expResponse);
-      expect(this.LegalHoldService.getCustodian('12345', 'test@gmail.com')).toBeResolvedWith(expResult);
+      expect(this.LegalHoldService.getCustodian('12345', GetUserBy.EMAIL, 'test@gmail.com')).toBeResolvedWith(expResult);
+    });
+
+    it('should find a user by id', function () {
+      expect(this.LegalHoldService.getCustodian('12345', GetUserBy.ID, '123')).toBeResolvedWith(jasmine.objectContaining({ firstName: 'Jane' }));
+    });
+  });
+
+  describe('Convert user chunk function', function () {
+    it('should take an 2-d array of userIds or emails and return users and errors', function () {
+      spyOn(this.LegalHoldService, 'getCustodian').and.callFake(function () {
+        if (arguments[2] === 'validUser@test.com') {
+          return this.$q.resolve({ userId: '12345' });
+        } else {
+          return this.$q.reject({ error: 'someError' });
+        }
+      });
+
+      const arr = [['validUser@test.com', '12345'], ['validUser@test.com', '12345'], ['12345', '12345'], ['validUser@test.com']];
+      this.LegalHoldService.convertUsersChunk(arr, GetUserBy.ID).then(result => {
+        expect(result.success.length).toBe(3);
+        expect(result.error.length).toBe(4);
+      });
     });
   });
 });

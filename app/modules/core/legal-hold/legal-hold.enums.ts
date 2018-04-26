@@ -30,6 +30,8 @@ export enum ImportResultStatus {
 }
 
 export enum Events {
-  CHANGED = 'Core::matterUpdated',
+  CHANGED = 'LegalHold::matterUpdated',
+  CANCEL_CONVERT = 'LegalHold:: cancelUserConversion',
+  UPDATE_CONVERT_PROGRESS = 'LegalHold::updateConvertProgress',
 }
 
