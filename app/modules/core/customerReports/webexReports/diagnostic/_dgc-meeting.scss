@@ -1,206 +1,294 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/settings/page';
-@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
-
 
 .dgc-meeting {
-    @extend %page-content-padding;
-    $content-padding-size: 1rem;
-    $room-title-height: 2.5rem;
-    $room-info-height: 2rem;
-    $grid-title-height: 4.3rem;
     background-color: $white;
-    min-height: 100vh;
-    overflow: hidden;
+    height: 100vh;
 
-    .overview {
-      padding: 0 0.5rem;
-
-      .meeting-room-name {
-        display: flex;
-        align-items: baseline;
-        color: $gray-dark-1;
-        height: $room-title-height;
-  
-        h3 {
-          display: flex;
-          align-items: flex-end;
-        }
-        .detailInfo {
-          display: flex;
-          align-items: flex-end;
-          color: $gray-base;
-          margin-left: 1.25rem;
-  
-          span {
-            padding-left: 0.275rem;
+    .page-header__left {
+      span {
+        a {
+          &:focus {
+            outline: none;
+            box-shadow: none;
           }
         }
       }
-  
+    }
+    .content-container {
+      .overview {
+        background-color: $white;
+        padding: 1.8rem 2rem;
+        overflow-x: auto;
+      }
+
+      .meeting-room-name {
+        padding: 5px 0;
+        color: $gray-dark-1;
+
+        h3 {
+          display: inline-block;
+        }
+        small {
+          margin-left: 20px;
+        }
+        .detailInfo {
+          color: $gray-base;
+          font-size: 14px;
+          font-weight: 300;
+
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+
       .room-information {
         width: 100%;
-        height: $room-info-height;
         overflow: hidden;
-        display: flex;
-  
+        padding-top: 0.5rem;
+
         h6 {
-          display: flex;
-          flex: 1;
-          justify-content: flex-start;
-          align-content: center;
-          align-items: flex-end;
+          float: left;
+          width: 16%;
+          margin: 0;
+          padding: 0 0.5rem 0 0;
           color: $gray-dark-1;
+          box-sizing: border-box;
+
+          span {
+            font-size: 14px;
+            line-height: 16px;
+
+            &:first-child {
+              padding-bottom: 0.5rem;
+            }
+          }
+
+          &:last-child {
+            width: 20%;
+            padding: 0;
+          }
         }
-  
-        .value {
-          padding-left: 0.5rem;
+
+        .blue-color {
+          padding-left: 8px;
           color: $color-blue-darker;
         }
       }
-  
-      .timeline {
-        padding: $content-padding-size 0;
-  
-        .tab-content {
-          border: 0;
-        }
-        .timeline-tab {
-          position: relative;
-          width: 100%;
-          height: 35px;
-          margin-bottom: 1rem;
-  
-          .nav-pills {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            margin-left: -70px;
-            text-align: center;
-            display: flex;
-  
-            > li {
-              display: inline-block;
-              float: none;
-              margin: 0;
-              padding: 0;
-  
-              > a {
-                border: 1px solid $color-blue-base;
-                border-radius: 4px;
-                background: $white;
-                color: $color-blue-base;
-                padding: 1px 15px;
-                box-shadow: none;
-  
-                &:hover {
-                  background-color: $color-blue-base;
-                  color: $white;
-                }
-              }
-  
-              &.active {
-                > a {
-                  color: $white;
-                  background-color: $color-blue-base;
-                }
-              }
-  
-              &:first-child {
-                > a {
-                  border-top-right-radius: 0;
-                  border-bottom-right-radius: 0;
-                }
-              }
-  
-              &:last-child {
-                > a {
-                  border-top-left-radius: 0;
-                  border-bottom-left-radius: 0;
-                }
-              }
-            }
-          }
-        }
+    }
+
+    .timeline {
+      margin-top: 10px;
+      padding: 0 2rem;
+
+      .tab-content {
+        border: 0;
       }
-  
-      .meeting-overview {
-        padding-top: $content-padding-size;
-        border-top: 1px solid $gray-light-3;
-        background-color: $white;
-  
-        h4 {
-          padding-top: 0rem;
-        }
-  
-        .features{
-          height: 30px; 
-          text-align: left; 
-          font-size: 1rem;
-          margin-top: 10px;
-        }
-  
-        .overviewInfo {
-          width: 100%;
-          padding-top: 1rem;
-          margin: 0;
-  
-          &:after{
-            display:block;
-            content:"";
-            height:0;
-            clear:both;
-            overflow:hidden;
-          }
-  
-          li {
-            float: left;
-            width: 255px;
-            height: 100px;
-            padding-bottom: 1rem;
-            list-style-type: none;
-  
-            h6 {
-              display: flex;
-              color: $black;
-              padding-bottom: 0.5rem;
-  
-              .title{
-                display: flex;
-                align-items: center;
-              }
-  
-              i{
-                display: flex;
-                align-items: center;
-                color: $gray-base;
-                font-size: 0.75 rem;
-                padding-left: 0.7rem;
+      .timeline-tab {
+        position: relative;
+        width: 100%;
+        height: 35px;
+        margin-bottom: 1rem;
+
+        .nav-pills {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          margin-left: -70px;
+          text-align: center;
+          display: flex;
+
+          > li {
+            display: inline-block;
+            float: none;
+            margin: 0;
+            padding: 0;
+
+            > a {
+              border: 1px solid $color-blue-base;
+              border-radius: 4px;
+              background: $white;
+              color: $color-blue-base;
+              padding: 1px 15px;
+              box-shadow: none;
+
+              &:hover {
+                background-color: $color-blue-base;
+                color: $white;
               }
             }
-  
-            p {
-              color: $gray-base;
-              &.green-color {
-                color: $color-green-base;
+
+            &.active {
+              > a {
+                color: $white;
+                background-color: $color-blue-base;
+              }
+            }
+
+            &:first-child {
+              > a {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+              }
+            }
+
+            &:last-child {
+              > a {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
               }
             }
           }
         }
       }
     }
-    
+
+    .meeting-overview {
+      padding: 1.8rem 2rem 0rem;
+      border-top: 1px solid $gray-light-3;
+      margin-top: 1rem;
+      background-color: $white;
+
+      h4 {
+        padding-top: 0rem;
+      }
+
+      .features{
+        height: 30px; 
+        text-align: left; 
+        font-size: 1rem;
+        margin-top: 10px;
+      }
+
+      .overviewInfo {
+        width: 100%;
+        padding-top: 1rem;
+        margin: 0;
+
+        &:after{
+          display:block;
+          content:"";
+          height:0;
+          clear:both;
+          overflow:hidden;
+        }
+
+        li {
+          float: left;
+          width: 255px;
+          height: 100px;
+          padding-bottom: 1rem;
+          list-style-type: none;
+
+          h6 {
+            position: relative;
+            height: 2rem;
+            line-height: 2rem;
+            font-size: 0.8rem;
+            color: $black;
+            padding-bottom: 0.5rem;
+
+            .title{
+              float: left;
+            }
+
+            i{
+              float: left;
+              color: $gray-base;
+              font-size: 0.75 rem;
+              padding: 9px 0 0 9px;
+            }
+          }
+
+          p {
+            color: $gray-base;
+            line-height:24px;
+
+            &.green-color {
+              color: $color-green-base;
+            }
+          }
+        }
+      }
+    }
+
+    .sessionInfo {
+      width: 100%;
+      padding: 0 2rem;
+      background: $white;
+      box-sizing: border-box;
+      overflow: hidden;
+
+      .title {
+        position: relative;
+        padding-left: 1.8rem;
+        border: none;
+        outline: none;
+        box-shadow: none;
+
+        &:before {
+          position: absolute;
+          top: -2px;
+          color: $gray-base;
+          font-size: 2rem;
+        }
+
+        span {
+          font-family: CiscoSansTT Light,Helvetica Neue,Helvetica,Arial,sans-serif;
+          font-size: 1.25rem;
+        }
+      }
+
+      .icon-chevron-right {
+        &::before {
+          left: -2px;
+        }
+      }
+
+      .icon-chevron-down {
+        &::before {
+          left: -16px;
+        }
+      }
+
+      .info-box {
+        width: 100%;
+        overflow: hidden;
+
+        ul {
+          margin: 0;
+        }
+
+        li {
+          float: left;
+          height: 48px;
+          box-sizing: border-box;
+          list-style-type: none;
+          padding-right: 2rem;
+
+          small {
+            color: $gray-base;
+          }
+
+          .green-color {
+            color: $color-green-base;
+          }
+        }
+
+        .note {
+          padding-bottom: 1rem;
+          color: $black;
+          font-weight: bold;
+        }
+      }
+
+
+    }
     .participants {
         margin: 0;
         h5 {
-          height: $grid-title-height;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-        }
-
-        .gridStyle {
-          height: calc(100vh - #{$content-padding-size * 2} - #{$grid-title-height + $room-info-height + $room-title-height} - #{$page-header-height});
+          padding: 24px;
         }
     }
 
