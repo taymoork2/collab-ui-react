@@ -5784,7 +5784,28 @@
                 },
               },
             },
+          })
+          .state('legalhold.custodians-manage', {
+            parent: 'modal',
+            params: {
+              mode: null,
+              caseId: null,
+            },
+            views: {
+              'modal@': {
+                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode" class="modal-content legalhold-modal"></legal-hold-custodians-manage>',
+                resolve: {
+                  caseId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.caseId;
+                  },
+                  mode: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.mode;
+                  },
+                },
+              },
+            },
           });
+
         $stateProvider
           .state('partnerManagement-main', {
             parent: 'mainLazyLoad',
