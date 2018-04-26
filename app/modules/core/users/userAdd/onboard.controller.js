@@ -475,10 +475,14 @@ require('./_user-add.scss');
     };
 
     function initToggles() {
-      FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (supports) {
-          $scope.ishI1484 = supports;
-        });
+      var promises = {
+        ishI1484: FeatureToggleService.hI1484GetStatus(),
+        isAtlasF3745PortAssignableServices: FeatureToggleService.atlasF3745PortAssignableServicesGetStatus(),
+      };
+      return $q.all(promises).then(function (features) {
+        $scope.ishI1484 = features.ishI1484;
+        $scope.isAtlasF3745PortAssignableServices = features.isAtlasF3745PortAssignableServices;
+      });
     }
 
     $scope.editServicesSave = function () {
@@ -633,6 +637,7 @@ require('./_user-add.scss');
     $scope.cvcCareFeature = [];
     $scope.licenses = [];
     $scope.licenseStatus = [];
+    $scope.sortedSubscriptions = {};
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
@@ -933,7 +938,11 @@ require('./_user-add.scss');
                 return _.startsWith(license, 'CO_') && validCallLicenses.indexOf(license) !== -1;
               });
             }
-
+            // Set subscriptions for assignable-services
+            $scope.sortedSubscriptions = _.reject(licenseUsages, function (licenseUsage) {
+              return MessengerInteropService.subscriptionIsMessengerOnly(licenseUsage);
+            });
+            $scope.sortedSubscriptions = _.sortBy(licenseUsages, 'subscriptionId');
             _.forEach($scope.communicationFeatures, function (commFeature) {
               // Set current communication license checkbox
               if (!_.isUndefined(commFeature.license.licenseId) &&
