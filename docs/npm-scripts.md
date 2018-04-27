@@ -150,17 +150,9 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 
 * Serves the static content from the `dist` directory
 
-### `yarn ts-spec-delete`
-
-* Backwards-compatible utility to delete old compiled TypeScript spec files in the `app` directory
-
 ### `yarn tslint`
 
 * Run tslint on entire project
-
-### `yarn typings`
-
-* Reinstalls TypeScript definitions from `typings.json`
 
 ### `yarn webdriver`
 
