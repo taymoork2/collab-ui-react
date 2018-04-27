@@ -11126,7 +11126,24 @@
     "agentInstallFiles": "Agent Install Files",
     "cardTitle": "Hosted Collaboration Service",
     "clusterDetail": {
+      "addCustomerModal": {
+        "title": "Add new customer",
+        "enterCustomerNamePlaceholder": "Enter Customer Name",
+        "chooseTemplatePlaceholder": "Choose Template",
+        "customerExistsErrorMessage": "This customer already exists"
+      },
+      "nodeStatus": {
+        "active":"Active",
+        "needsAcceptance":"Needs acceptance",
+        "needsAssigned":"Needs assigned"
+      },
       "settings": {
+        "inventoryName": {
+          "addCustomer": "Add Customer",
+          "customerSelectLabel": "Customer",
+          "customerSelectPlaceholder": "Select a Customer",
+          "sectionHeader": "Inventory Name"
+        },
         "sftpLocation": {
           "sectionHeader": "Default SFTP Location",
           "sftpSelectLabel": "Choose the default SFTP Location for this cluster."
@@ -11134,18 +11151,26 @@
         "nodes": {
           "accept": "Accept",
           "sectionHeader": "Nodes",
-          "verificationCode": "Verification Code"
+          "verificationCode": "Verification Code",
+          "publisher": "Publisher",
+          "subscriber": "Subscriber"
         },
         "clustername": {
           "clusterInputLabel": "Enter a new name for the cluster.",
+          "enterClusterName": "Enter cluster name here",
           "sectionHeader": "Cluster Name"
         }
+      },
+      "editNodeSftpModal": {
+        "title": "Edit SFTP Server",
+        "selectLabel": "Choose the SFTP server for {{nodeName}}"
       }
     },
     "clustersList": {
       "title":"Clusters",
       "errorGetClusters": "Error fetching clusters information for {{customerName}}"
     },
+    "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "inventory": {
       "title": "Inventory",
@@ -11267,6 +11292,7 @@
       "plmPlace": "PLM File",
       "swVersions": "Software Versions",
       "tabTitle": "Software Profiles",
+      "template": "Software Version Template",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "UCXN File"
