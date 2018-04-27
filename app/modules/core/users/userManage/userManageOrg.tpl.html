@@ -171,7 +171,8 @@
           <h4 translate="userManage.org.bulkLabelNew"></h4>
         </cr-action-card-header>
         <cr-action-card-section>
-          <h6 translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
+          <h6 cr-feature-toggle feature-hide="atlas-csv-import-task-manager" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
+          <h6 cr-feature-toggle feature-show="atlas-csv-import-task-manager" translate="userManage.org.bulkDetailsNewBatch"></h6>
         </cr-action-card-section>
         <cr-action-card-footer>
           <cr-user-csv-export

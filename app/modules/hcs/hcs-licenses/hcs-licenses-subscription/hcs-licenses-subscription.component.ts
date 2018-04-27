@@ -1,5 +1,5 @@
 import { IGridApi } from 'ui-grid';
-import { HcsCustomerLicense, HcsCustomerReport, IHcsCustomerReport, IHcsLicense } from 'modules/hcs/shared';
+import { HcsCustomerLicense, HcsCustomerReport, IHcsCustomerReport, IHcsLicense } from 'modules/hcs/hcs-shared';
 type ITab = {
   title: string;
   state: string;

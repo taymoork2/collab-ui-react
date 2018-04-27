@@ -1,0 +1,49 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.hd-admin-elevation-wrapper {
+  border: thin solid $gray-light-2;
+  border-radius: 14px;
+  background-color: $white;
+  width: 32%;
+  margin: 2rem auto;
+  min-height: 36rem;
+
+  .logo {
+    width: 20%;
+    margin: 4rem auto 1rem auto;
+  }
+
+  .title {
+    text-align: center;
+    color: $gray-light-1;
+    margin-bottom: 4rem;
+  }
+
+  .admin-elevation-content-view {
+    width: 64%;
+    margin: 0 auto;
+
+    .loading {
+      margin: 4rem auto;
+      background-color: $white;
+
+      .spinner {
+        font-size: 3rem;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+      }
+    }
+    .admin-elevation-info {
+      text-align: center;
+      color: $gray-base;
+      margin: 2rem auto;
+    }
+    .admin-elevation-buttons {
+      margin: 0 auto;
+      text-align: center;
+      margin-bottom: 6rem;
+      margin-top: 4rem;
+    }
+  }
+}

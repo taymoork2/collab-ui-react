@@ -263,7 +263,7 @@ export class SetupWizardService {
   }
 
   public hasPendingCCAUserPackage(): boolean {
-    return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+    return !_.isUndefined(this.getPendingCCAUserPackage());
   }
 
   public getActiveTSPAudioPackage(): ITSPLicense {
@@ -276,6 +276,10 @@ export class SetupWizardService {
 
   public getActiveCCAUserPackage(): ICCASPLicense {
     return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+  }
+
+  public getPendingCCAUserPackage(): ICCASPLicense {
+    return <ICCASPLicense>_.find(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCAUser });
   }
 
   public getPendingAuthinfoSubscriptions(): IPendingOrderSubscription[] {

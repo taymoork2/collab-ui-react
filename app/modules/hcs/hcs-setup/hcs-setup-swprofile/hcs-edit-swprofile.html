@@ -1,0 +1,111 @@
+<div ng-form="$ctrl.hcsSwprofileForm">
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="hcs.softwareProfiles.name"></h4>
+    </div>
+    <div class="section__content">
+      <input
+        cs-input
+        type="text"
+        ng-model="$ctrl.swprofile.name"
+        id="profileName"
+        name="profileName"
+        required="true"
+        ng-maxlength="$ctrl.MAX_LENGTH"
+        cs-input-messages="$ctrl.errors"
+        ng-change="$ctrl.processChange()"
+        placeholder="{{:: 'hcs.softwareProfiles.namePlace' | translate}}">
+    </div>
+  </div>
+  <div class="cs-form__section">
+    <div class="section__info">
+      <h4 class="section__title" translate="hcs.softwareProfiles.swVersions"></h4>
+    </div>
+    <div class="section__content">
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.cucm"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="cucmVer"
+            ng-model="$ctrl.profileSelected.cucmVer"
+            options="$ctrl.versions.cucm"
+            placeholder="$ctrl.placeholder.cucm"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange()">
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.imp"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="impVer"
+            ng-model="$ctrl.profileSelected.impVer"
+            options="$ctrl.versions.imp"
+            placeholder="$ctrl.placeholder.imp"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange()">
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.ucxn"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="ucxnVer"
+            ng-model="$ctrl.profileSelected.ucxnVer"
+            options="$ctrl.versions.ucxn"
+            placeholder="$ctrl.placeholder.ucxn"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange()">
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.plm"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="plmVer"
+            ng-model="$ctrl.profileSelected.plmVer"
+            placeholder="$ctrl.placeholder.plm"
+            options="$ctrl.versions.plm"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange()">
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.cer"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="cerVer"
+            ng-model="$ctrl.profileSelected.cerVer"
+            placeholder="$ctrl.placeholder.cer"
+            options="$ctrl.versions.cer"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange(">
+          </cs-select>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cs-input__label" translate="hcs.softwareProfiles.expway"></label>
+        <div class="medium-8 large-8 hcs-profile__select">
+          <cs-select
+            name="expwayVer"
+            ng-model="$ctrl.profileSelected.expwayVer"
+            placeholder="$ctrl.placeholder.expway"
+            options="$ctrl.versions.expway"
+            combo="true"
+            searchable-combo="true"
+            ng-change="$ctrl.processChange()">
+          </cs-select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

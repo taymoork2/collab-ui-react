@@ -158,5 +158,73 @@ describe('deviceList component', () => {
 
       expect(controller.showMultipleDeviceWarning).toBe(false);
     });
+
+    it('should not show multiple device warning when list has two devices that are Webex Voice and Webex Share', () => {
+      const controller = initController();
+      const deviceList = [
+        {
+          product: 'Cisco Webex Voice',
+        },
+        {
+          product: 'Cisco Webex Share',
+        },
+      ];
+      controller.ownerType = 'place';
+      controller.placeType = 'cloudberry';
+      controller.showCorrectElements(deviceList);
+
+      expect(controller.showMultipleDeviceWarning).toBe(false);
+    });
+
+    it('should not show multiple device warning when list has two devices that are Webex Share and Webex Voice', () => {
+      const controller = initController();
+      const deviceList = [
+        {
+          product: 'Cisco Webex Share',
+        },
+        {
+          product: 'Cisco Webex Voice',
+        },
+      ];
+      controller.ownerType = 'place';
+      controller.placeType = 'cloudberry';
+      controller.showCorrectElements(deviceList);
+
+      expect(controller.showMultipleDeviceWarning).toBe(false);
+    });
+
+    it('should not show multiple device warning when list has two devices that are Spark Voice and Webex Share', () => {
+      const controller = initController();
+      const deviceList = [
+        {
+          product: 'Cisco Spark Voice',
+        },
+        {
+          product: 'Cisco Webex Share',
+        },
+      ];
+      controller.ownerType = 'place';
+      controller.placeType = 'cloudberry';
+      controller.showCorrectElements(deviceList);
+
+      expect(controller.showMultipleDeviceWarning).toBe(false);
+    });
+
+    it('should not show multiple device warning when list has two devices that are Spark Share and Webex Voice', () => {
+      const controller = initController();
+      const deviceList = [
+        {
+          product: 'Cisco Spark Share',
+        },
+        {
+          product: 'Cisco Webex Voice',
+        },
+      ];
+      controller.ownerType = 'place';
+      controller.placeType = 'cloudberry';
+      controller.showCorrectElements(deviceList);
+
+      expect(controller.showMultipleDeviceWarning).toBe(false);
+    });
   });
 });

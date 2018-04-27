@@ -197,6 +197,7 @@
      * @param {(string|number)} params.orgId - org id of users to search for (default: logged-in user's org id)
      * @param {Object} params.filter - params object passed through to 'mkFilterExpr()'
      * @param {Object} params.ci - params object passed through to the underlying '$http.get()' request
+     * @param {Object} params.noErrorNotificationOnReject - set to true to prevent error notification if '$http.get()' rejects
      * @see {@link mkFilterExpr}
      * @see {@link https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Query+Users}
      */
@@ -216,7 +217,11 @@
         params: _.get(params, 'ci'),
       })
         .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'usersPage.loadError');
+          var useErrorNotification = !_.get(params, 'noErrorNotificationOnReject');
+          if (useErrorNotification) {
+            Notification.errorWithTrackingId(response, 'usersPage.loadError');
+          }
+          return $q.reject(response);
         });
     }
 

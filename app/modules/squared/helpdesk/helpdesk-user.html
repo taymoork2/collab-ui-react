@@ -126,6 +126,26 @@
         </div>
       </div>
 
+      <div cr-feature-toggle feature-show="atlas-helpesk-admin-elevation" ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()" class="row">
+        <div class="medium-5 columns details-heading">
+          <span>{{'helpdesk.requestFullAdminAccessToOrg' | translate}}:</span>
+          <i
+            class="icon icon-info"
+            tooltip-html-unsafe="{{:: 'helpdesk.requestFullAdminAccessToOrgTooltip' | translate}}"
+            tooltip-placement="right"
+            tooltip-class="email-status"
+            tooltip-trigger="mouseover focus"
+            tabindex="0"></i>
+        </div>
+        <div class="medium-7 columns details-value">
+          <span ng-if="helpdeskUserCtrl.requestFullAdminAccessToOrg" style="padding-right: 1rem">{{helpdeskUserCtrl.requestFullAdminAccessToOrg}}</span>
+          <button class="action secondary small details-button" type="button"
+                  ng-click="helpdeskUserCtrl.confirmRequestForFullAdminAccessModal()" translate="helpdesk.sendRequestForFullAdminAccess"
+                  ng-if="helpdeskUserCtrl.showSendRequestForFullAdminAccess()">
+          </button>
+        </div>
+      </div>
+
       <div class="row">
         <div class="medium-5 columns details-heading">
           <span>{{'helpdesk.phoneNumbers' | translate}}:</span>

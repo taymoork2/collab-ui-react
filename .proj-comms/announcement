@@ -1,5 +1,13 @@
 ## Notice to all contributors:
 
+2018-04-18:
+
+To assist the migration effort of the project codebase towards TypeScript,
+addition of new '*.js' files under the './app' directory is no longer allowed.
+Please ensure any new logic is written in TS going forward.
+
+2018-03-06:
+
 There have been a couple changes to unit test execution:
 
 - code coverage is disabled by default

@@ -43,7 +43,9 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     SunlightUtilitiesService,
     TrialService,
     UrlConfig,
-    WebExSiteService) {
+    WebExSiteService,
+    SparkAssistantService
+  ) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
@@ -327,6 +329,16 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
 
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
+      });
+
+      FeatureToggleService.atlasSparkAssistantGetStatus().then(function (toggle) {
+        if (toggle) {
+          SparkAssistantService.getSpeechServiceOptIn().then(function (response) {
+            if (_.get(response, 'activationStatus').toUpperCase() === 'ENABLED') {
+              vm.notifications.push(OverviewNotificationFactory.createSparkAssistantNotification());
+            }
+          });
+        }
       });
     }
 

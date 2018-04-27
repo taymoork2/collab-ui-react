@@ -87,6 +87,7 @@ export class UserTaskManagerService {
   constructor(
     private $http: ng.IHttpService,
     private $interval: ng.IIntervalService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private UrlConfig,
   ) {}
@@ -141,6 +142,40 @@ export class UserTaskManagerService {
       date: isDateValid ? date.format('ll') : '',
       time: isDateValid ? date.format('LT') : '',
     };
+  }
+
+  public getTaskStatusTranslate(task: ITask): string {
+    let statusTranslate = '';
+    switch (task.latestExecutionStatus) {
+      case TaskStatus.CREATED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
+        break;
+      case TaskStatus.STARTED:
+      case TaskStatus.STARTING:
+      case TaskStatus.STOPPING:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
+        break;
+      case TaskStatus.ABANDONED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
+        break;
+      case TaskStatus.COMPLETED:
+        if (task.counts.usersFailed > 0) {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
+        } else {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
+        }
+        break;
+      case TaskStatus.FAILED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
+        break;
+      case TaskStatus.STOPPED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
+        break;
+      case TaskStatus.UNKNOWN:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
+        break;
+    }
+    return statusTranslate;
   }
 
   public isTaskPending(status: string): boolean {

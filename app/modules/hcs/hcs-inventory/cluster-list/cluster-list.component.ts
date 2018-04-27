@@ -1,6 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/shared/hcs-upgrade';
-import { HcsUpgradeService } from 'modules/hcs/shared';
+import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/hcs-shared/hcs-upgrade';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 
 interface IHeaderTab {
@@ -98,8 +98,8 @@ export class ClusterListCtrl implements ng.IComponentController {
     //function to get cluster data from response object
     _.each(clustersData, (cluster: IHcsClusterSummaryItem) => {
       const applicationList: IApplicationItem[] = [];
-      if (!_.isUndefined(cluster.hcsNodes)) {
-        _.each(cluster.hcsNodes, (node: INodeSummaryItem) => {
+      if (!_.isUndefined(cluster.nodes)) {
+        _.each(cluster.nodes, (node: INodeSummaryItem) => {
           const index = _.findIndex(applicationList, (application: any) => application.name === node.typeApplication);
           if (index === -1) {
             const applicationItem: IApplicationItem = {

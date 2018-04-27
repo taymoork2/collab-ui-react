@@ -1,7 +1,11 @@
+.partner-reports .partner-reports-webex-tabs .content-container {
+  padding: 0;
+}
 .partner-reports-webex {
   height: 100%;
 
   .metrics-content {
     height: 100%;
+    overflow: hidden;
   }
 }
