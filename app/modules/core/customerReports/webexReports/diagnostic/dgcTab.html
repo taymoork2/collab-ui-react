@@ -11,35 +11,35 @@
     <i class="icon icon-spinner icon-3x"></i>
   </div>
 
-  <div class="content-container" ng-if="!$ctrl.loading">
-    <div class="overview">
+  <div class="overview">
+    <div class="content-container" ng-if="!$ctrl.loading">
       <div class="meeting-room-name">
-        <h3 ng-bind="$ctrl.details.meetingName"></h3>
-        <small class="detailInfo">{{::'webexReports.meetingNumber' | translate}}: <span ng-bind="$ctrl.details.meetingNumber"></span></small>
-        <small class="detailInfo">{{::'webexReports.searchGridHeader.conferenceID' | translate}}: <span ng-bind="$ctrl.details.conferenceId"></span></small>
-        <small ng-if="$ctrl.details.status === 1"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></small>
+        <h3 ng-bind="::$ctrl.details.meetingName"></h3>
+        <h6 class="detailInfo">{{::'webexReports.meetingNumber' | translate}}: <span ng-bind="$ctrl.details.meetingNumber"></span></h6>
+        <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceID' | translate}}: <span ng-bind="$ctrl.details.conferenceId"></span></h6>
+        <h6 ng-if="$ctrl.details.status === 1"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
       </div>
-
+  
       <div class="room-information">
         <h6>
           <span translate="webexReports.searchGridHeader.startTime"></span>
-          <span class="blue-color" ng-bind="$ctrl.details.startDate"></span>
+          <span class="value" ng-bind="::$ctrl.details.startDate"></span>
         </h6>
         <h6>
           <span translate="webexReports.start"></span>
-          <span class="blue-color" ng-bind="$ctrl.details.startTime_"></span>
+          <span class="value" ng-bind="::$ctrl.details.startTime_"></span>
         </h6>
         <h6>
           <span ng-hide="$ctrl.details.status === 1" translate="webexReports.end"></span>
-          <span class="blue-color" ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></span>
+          <span class="value" ng-bind="::$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></span>
         </h6>
         <h6>
           <span translate="webexReports.duration"></span>
-          <span class="blue-color" ng-bind="$ctrl.details.duration_"></span>
+          <span class="value" ng-bind="::$ctrl.details.duration_"></span>
         </h6>
         <h6>
           <span translate="webexReports.participants"></span>
-          <span class="blue-color" ng-bind="$ctrl.details.numberOfParticipants"></span>
+          <span class="value" ng-bind="::$ctrl.details.numberOfParticipants"></span>
         </h6>
       </div>
     <div ui-view="tabContent" class="tabContent"></div>
