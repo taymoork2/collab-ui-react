@@ -1,6 +1,6 @@
 import { WebexVersionSettingComponent } from './webex-version.component';
 
-export default angular.module('core.settings.webexversion', [
+export default angular.module('core.settings.webex.webexversion', [
   require('@collabui/collab-ui-ng').default,
   require('modules/core/partnerProfile/branding').default,
 ])

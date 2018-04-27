@@ -14,7 +14,6 @@ export class BrandingSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
   public controllerAs = 'bctrl';
   public bindings = {
-    showVersion: '<',
     showBranding: '<',
   };
   public template = require('modules/core/partnerProfile/branding/branding.tpl.html');

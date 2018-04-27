@@ -80,12 +80,20 @@
 
       span {
         font-family: $brand-font-light;
-        margin-left: 0.05rem;
       }
     }
 
-    #webex_client_versions_label_and_dropdown .row {
-      margin-top: 2.5rem;
+    .webex_allow_customer_site_management_label_and_checkbox {
+      margin-bottom: 2rem;
+
+      h4 {
+        font-size: 1rem;
+        font-family: $brand-font-light;
+        margin-bottom: 1rem;
+      }
+      p {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 

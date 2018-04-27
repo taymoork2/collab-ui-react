@@ -1,4 +1,4 @@
-import { SettingSection } from '../settingSection';
+import { SettingSection } from '../../settingSection';
 
 const BrandingCtrl = require('modules/core/partnerProfile/branding/brandingCtrl');
 
@@ -13,11 +13,7 @@ export class WebexVersionSetting extends SettingSection {
 
 export class WebexVersionSettingComponent implements ng.IComponentOptions {
   public controller = BrandingCtrl;
-  public bindings = {
-    showVersion: '<',
-    showBranding: '<',
-  };
   public controllerAs = 'bctrl';
-  public template = require('modules/core/partnerProfile/branding/branding.tpl.html');
+  public template = require('modules/core/settings/webex/webexVersion/webex-version.html');
   public transclude = true;
 }

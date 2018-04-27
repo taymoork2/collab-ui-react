@@ -79,7 +79,6 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
     brand.initWbxClientVersions();
 
     //set by binding. used in settings page.
-    brand.showClientVersions = _.isUndefined(brand.showVersion) ? true : brand.showVersion;
     brand.showBranding = _.isUndefined(brand.showBranding) ? true : brand.showBranding;
   };
 

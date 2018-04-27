@@ -66,51 +66,6 @@
             <span translate="partnerProfile.allowCustomerLogo"></span>
             <a href="javascript:void(0);" ng-click="bctrl.showBrandingExample('Tenant')" translate="branding.exampleLink"></a>
           </label>
-
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <div ng-if="bctrl.showClientVersions">
-      <div class="row form-spacing" id="webex_client_versions_label_and_dropdown">
-        <div class="small-12 columns">
-          <div class="row collapse" ng-if="bctrl.isPartner">
-            <p>
-              <h4 translate="partnerProfile.webexClientVersion"></h4>
-              <p
-                translate="partnerProfile.WbxClientVersionOnlyOnNewSites"
-                class="columns small-10 body-small">
-              </p>
-              <span class="badge"></span>
-            </p>
-            <cs-select
-              id="webex_client_version_drop_down"
-              ng-model="bctrl.wbxclientversionselected"
-              options="bctrl.wbxclientversions"
-              placeholder="bctrl.wbxclientversionplaceholder"
-              on-change-fn="bctrl.wbxclientversionselectchanged(bctrl.wbxclientversionselected)"
-              is-disabled="bctrl.useLatestWbxVersion">
-            </cs-select>
-            <p
-              ng-if="(bctrl.wbxclientVersionInvalid) && (!bctrl.useLatestWbxVersion)"
-              class="columns small-10 body-smallest">
-              <font color="red">{{bctrl.wbxclientVersionInvalidError}}</font>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="row form-spacing" ng-if="bctrl.isPartner">
-        <div class="small-12 columns cs-checkbox-group">
-          <input
-            cs-input
-            type="checkbox"
-            id="useLatestWbxVersion"
-            name="useLatestWbxVersion"
-            ng-model="bctrl.useLatestWbxVersion"
-            ng-change="bctrl.toggleWebexSelectLatestVersionAlways(bctrl.useLatestWbxVersion)"
-            cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}">
-        </div>
       </div>
     </div>
   </div>

@@ -8926,6 +8926,9 @@
         "customBrandLogo": "Custom brand logo (dark) applied"
       }
     },
+    "webex": {
+      "title": "Webex"
+    },
     "webexVersion": {
       "title": "Webex Version"
     },

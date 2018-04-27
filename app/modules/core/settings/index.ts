@@ -15,8 +15,8 @@ import externalCommunicationModule from './externalCommunication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
-import webexVersionModule from './webexVersion';
-import webexSiteManagement from './webexSiteManagement';
+import webexVersionModule from './webex/webexVersion';
+import webexSiteManagement from './webex/webexSiteManagement';
 import sparkAssistantModule from './spark-assistant';
 
 export default angular.module('core.settings', [
