@@ -4,8 +4,8 @@ function ex_usage {
     >&2 echo "usage: $(basename "$0") <usr_label>"
     >&2 echo ""
     >&2 echo "ex."
-    >&2 echo "  # get feature-toggle info for 'atlas-f3745-auto-assign-licenses' for account 'account-admin'"
-    >&2 echo "  $(basename "$0") account-admin atlas-f3745-auto-assign-licenses"
+    >&2 echo "  # get feature-toggle info for 'atlas-email-suppress' for account 'account-admin'"
+    >&2 echo "  $(basename "$0") account-admin atlas-email-suppress"
 }
 
 # early out if looking for usage
