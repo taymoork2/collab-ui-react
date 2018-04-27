@@ -714,6 +714,7 @@
     "singleMoveUsers": "Convert to a free Cisco Spark account.",
     "singleDeleteUsers": "Delete account.",
     "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
+    "multiUserDelete": "All users and data will be deleted, including WebEx meeting URLs, meeting recordings, and posts in Cisco Spark spaces.",
     "multMoveUsers": "Convert users to their own free Cisco Spark account.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
