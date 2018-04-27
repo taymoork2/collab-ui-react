@@ -6272,7 +6272,7 @@
     "noAdmin": "No administrator privileges",
     "deviceAdmin": "Device Administrator",
     "salesAdmin": "Sales Administrator",
-    "userAdmin": "User Administrator",
+    "userAdmin": "User and Device Administrator",
     "billingAdmin": "Billing Administrator",
     "supportAdmin": "Support Administrator",
     "analytics": "Analytics &amp; Reports",
