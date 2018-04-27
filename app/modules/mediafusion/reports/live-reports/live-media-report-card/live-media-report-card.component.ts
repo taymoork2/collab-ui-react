@@ -9,7 +9,7 @@ export class LiveMediaReportCard implements ng.IComponentOptions {
     chartOptions: '<',
     cardClass: '=',
     cardDesc: '=',
-    isorg: '=',
+    isorg: '<',
     tooltipValue: '=',
     dropdownPresent: '=',
   };

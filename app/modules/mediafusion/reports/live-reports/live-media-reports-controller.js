@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function LiveMediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
+  function LiveMediaReportsController($interval, $log, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -120,9 +120,9 @@
       noData: false,
     };
     vm.clusterinServicechartOptions = {
-      isShow: true,
+      isShow: false,
       cardChartDiv: 'liveReportDiv',
-      noData: false,
+      noData: '',
     };
 
     vm.timeOptions = [{
@@ -439,8 +439,8 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
-          setSneekPeekData();
         }
+        setSneekPeekData();
       });
     }
 
@@ -463,12 +463,13 @@
       } else {
         vm.allcluster = false;
       }
-      if (vm.clusterinService.length === 0) {
-        vm.clusterinServicechartOptions.noData = true;
-      } else {
-        vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
-        return vm.clusterinServiceChart;
-      }
+      $log.log('allcluster' + vm.allcluster);
+      $log.log('vm.clusterinServicechartOptions.noData' + vm.clusterinService.length);
+      $log.log('clusterAvailability' + vm.clusterAvailability);
+      vm.clusterinServicechartOptions.noData = vm.clusterAvailability;
+      vm.clusterinServicechartOptions.isShow = true;
+      vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
+      return vm.clusterinServiceChart;
     }
 
     function setUtilizationData() {

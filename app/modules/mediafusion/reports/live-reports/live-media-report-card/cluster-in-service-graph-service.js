@@ -6,7 +6,7 @@
   //var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function ClusterInServiceGraphService() {
+  function ClusterInServiceGraphService($rootScope) {
     var vm = this;
     vm.liveReportDiv = 'liveReportDiv';
     return {
@@ -29,19 +29,21 @@
           }
         }
       }, ['serial']);
-      var chart = AmCharts.makeChart(vm.liveReportDiv, {
+      var chartData = {
         type: 'serial',
         //theme: 'light',
         dataProvider: data,
         valueAxes: [{
           gridColor: '#FFFFFF',
-          //gridAlpha: 0.2,
+          axisAlpha: 0.2,
+          gridAlpha: 0,
           dashLength: 0,
+          //integersOnly: true,
           maximum: 100,
-          minimum: 0,
+          labelFunction: formatLabel,
         }],
         //gridAboveGraphs: true,
-        startDuration: 0,
+        startDuration: 1,
         graphs: [{
           balloonText: '[[category]]: <b>[[value]]</b>',
           fillAlphas: 0.8,
@@ -49,20 +51,23 @@
           type: 'column',
           valueField: 'value',
           autoColor: true,
+          showHandOnHover: true,
         }],
         chartCursor: {
           cursorAlpha: 0,
           zoomable: false,
           //valueLineBalloonEnabled: true,
           //valueLineEnabled: true,
-          categoryBalloonEnabled: true,
+          categoryBalloonEnabled: false,
         },
         categoryField: 'key',
         categoryAxis: {
           gridPosition: 'start',
+          axisAlpha: 0.1,
           gridAlpha: 0,
+          position: 'left',
           tickPosition: 'start',
-          //tickLength: 20,
+          //tickLength: 2,
           labelsEnabled: false,
         },
         /*export: {
@@ -71,62 +76,21 @@
         balloon: {
           enabled: true,
         },*/
-      });
-      /*var chart = AmCharts.makeChart(vm.liveReportDiv, {
-        type: 'serial',
-        //theme: 'light',
-        /*legend: {
-          horizontalGap: 10,
-          maxColumns: 1,
-          position: 'right',
-          //"useGraphSettings": true,
-          markerSize: 10,
+      };
+      //chartData.graph.showHandOnHover = true;
+      chartData.listeners = [{
+        event: 'clickGraphItem',
+        method: function (event) {
+          $rootScope.$broadcast('clusterClickEvent', {
+            data: event.item.category,
+          });
         },
-        dataProvider: data,
-        valueAxes: [{
-          //"stackType": "regular",
-          axisAlpha: 0.3,
-          gridAlpha: 0,
-        }],
-        graphs: tempData,
-        categoryField: 'key',
-        categoryAxis: {
-          gridPosition: 'start',
-          axisAlpha: 0,
-          gridAlpha: 0,
-          position: 'left',
-        },
-        export: {
-          enabled: true,
-        },
-
-      });
-      /*chart.legend = CommonReportsGraphService.getBaseVariable(vm.LEGEND);
-      if (chart.graphs[0].lineColor === chart.grayLightTwo) {
-        chart.legend.color = chart.grayDarkThree;
-      }
-      chart.legend.labelText = '[[title]]';
-      chart.legend.useGraphSettings = true;*/
-
-      /*chart.legend.listeners = [{
-        event: 'hideItem',
-        method: legendHandler,
-      }, {
-        event: 'showItem',
-        method: legendHandler,
-      }];*/
+      }];
+      var chart = AmCharts.makeChart(vm.liveReportDiv, chartData);
       return chart;
     }
-
-    /*function graph(data) {
-      var tempData = [];
-      _.each(data, function (value) {
-        value.labelText = '<span>[[value]]</span>';
-        value.type = 'column';
-        value.valueField = 'value';
-        tempData.push(value);
-        return tempData;
-      });
-    }*/
+    function formatLabel(label) {
+      return label + '%';
+    }
   }
 })();

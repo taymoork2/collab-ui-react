@@ -30,7 +30,7 @@ class CustomerReportsHeaderCtrl {
           state: 'reports.spark',
         });
       }
-      if (features.isQlikEnabled) {
+      if (!features.isQlikEnabled) {
         this.headerTabs.push({
           title: this.$translate.instant('mediaFusion.report.title'),
           state: 'reports.hybridMedia',
