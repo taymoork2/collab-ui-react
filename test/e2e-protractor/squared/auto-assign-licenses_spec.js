@@ -19,7 +19,7 @@ const helper = require('../../api_sanity/test_helper.js');
 let bearerToken;
 const testUserEmail1 = utils.randomTestGmail();
 const testUserEmail2 = utils.randomTestGmail();
-const testAccountKey = 'ft--atlas-f3745-auto-assign-licenses';
+const testAccountKey = 'auto-assign-licenses';
 
 describe('Auto-Assign Licenses', function () {
   it('should login as a customer full admin', function () {
