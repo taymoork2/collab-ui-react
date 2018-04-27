@@ -39,12 +39,7 @@ describe('Manage Users - CSV File -', function () {
   it('should select bulk upload/modify users', function () {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    if (featureToggle.features.atlasF3745AutoAssignLicenses) {
-      utils.click(manageUsersPage.actionCards.csvAddOrModifyUsers);
-    } else {
-      utils.click(manageUsersPage.select.radio.orgBulk);
-      utils.click(manageUsersPage.buttons.next);
-    }
+    utils.click(manageUsersPage.actionCards.csvAddOrModifyUsers);
     if (featureToggle.features.atlasEmailSuppress) {
       utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
       utils.click(manageUsersPage.buttons.next);
