@@ -1,7 +1,7 @@
 import moduleName from './index';
 import * as moment from 'moment-timezone';
 
-describe('Service: PartnerSearchService', () => {
+describe('Service: SearchService', () => {
   beforeAll(function () {
     this.conferenceID = '65241608473282200';
     this.nodeId = '2454212';
@@ -157,7 +157,7 @@ describe('Service: PartnerSearchService', () => {
     expect(wm.status).toBe('Ended');
   });
 
-  xit('should get correct data when call utcDateByTimezone', function () {
+  it('should get correct data when call utcDateByTimezone', function () {
     const data = '2017-08-02 07:44:30.0';
     moment.tz.setDefault('Asia/Shanghai');
     this.PartnerSearchService.setStorage('timeZone', 'Asia/Shanghai');
@@ -201,15 +201,15 @@ describe('Service: PartnerSearchService', () => {
 
   describe('getPlatform():', () => {
     it('should get correct data when call getPlatform: Mac', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: 0 })).toBe('Mac');
+      expect(this.PartnerSearchService.getPlatform({ platform: '1', sessionType: '0' })).toBe('Mac');
     });
 
     it('should get correct data when call getPlatform: PSTN', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 1, sessionType: 25 })).toBe('PSTN');
+      expect(this.PartnerSearchService.getPlatform({ platform: '1', sessionType: '25' })).toBe('PSTN');
     });
 
     it('should get correct data when call getPlatform: Other', function () {
-      expect(this.PartnerSearchService.getPlatform({ platform: 22, sessionType: 0 })).toBe('webexReports.other');
+      expect(this.PartnerSearchService.getPlatform({ platform: '22', sessionType: '0' })).toBe('webexReports.other');
     });
   });
 
@@ -230,7 +230,7 @@ describe('Service: PartnerSearchService', () => {
 
   describe('getDevice():', () => {
     it('should get correct device icon when call getDevice: icon-application', function () {
-      const obj = { browser: 2, platform: 6 };
+      const obj = { browser: '2', platform: '6' };
       const device = this.PartnerSearchService.getDevice(obj);
       expect(device.icon).toBe('icon-application');
     });

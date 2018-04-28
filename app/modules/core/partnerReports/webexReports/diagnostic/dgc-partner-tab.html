@@ -14,8 +14,8 @@
   <div class="content-container" ng-if="!$ctrl.loading">
     <div class="meeting-room-name">
       <h3>{{$ctrl.details.meetingName}}</h3>
-      <h6 class="detailInfo">{{::'webexReports.meetingNumber' | translate}} <span>{{$ctrl.details.meetingNumber}}</span></h6>
-      <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceID' | translate}} <span>{{$ctrl.details.conferenceId}}</span></h6>
+      <h6 class="detailInfo">{{::'webexReports.meetingNumberTitle' | translate}} <span>{{$ctrl.details.meetingNumber}}</span></h6>
+      <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceIDTitle' | translate}} <span>{{$ctrl.details.conferenceId}}</span></h6>
       <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
     </div>
 
@@ -42,4 +42,5 @@
       </h6>
     </div>
     <div ui-view="tabContent" class="tabContent"></div>
+  </div>
 </div>

@@ -3028,7 +3028,7 @@
             url: '/diagnostics/meeting/:cid',
             views: {
               tabContent: {
-                template: '<dgc-partner-tab-meetingdetail></dgc-partner-tab-meetingdetail>',
+                template: '<dgc-partner-tab-meeting-detail></dgc-partner-tab-meeting-detail>',
               },
             },
           })

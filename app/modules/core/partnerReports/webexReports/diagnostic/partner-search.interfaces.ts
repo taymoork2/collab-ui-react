@@ -48,7 +48,8 @@ export interface IMeeting {
 export interface ICallType {
   completed: boolean;
   description: string;
-  items: object[];
+  deviceType: string;
+  items: any[]; //TODO use better type
 }
 
 export interface IUniqueParticipant {
@@ -58,7 +59,7 @@ export interface IUniqueParticipant {
   platform: string;
   browser: string;
   userName: string;
-  participants: object[];
+  participants: IParticipant[];
 }
 
 export interface IParticipant {
@@ -76,6 +77,12 @@ export interface IParticipant {
   conferenceID: string;
   sessionType: string;
   nodeId: string;
+  phoneNumber: string;
+  callInNumber: string;
+  callType: string;
+  callInType: string;
+  device: string;
+  joinTime_: string;
 }
 
 export interface IJoinTime {
@@ -87,12 +94,12 @@ export interface IJoinTime {
   jmtQuality: string;
 }
 
-export interface IQos {
+export interface IObjectDict {
   [key: string]: object;
 }
 
-interface IObjectDict {
-  [key: string]: object;
+export interface IAnyDict {
+  [key: string]: any;
 }
 
 export type ISessionDetailItem = IObjectDict & {
@@ -114,4 +121,23 @@ export interface ICallLegs {
 export interface IServerTime {
   timestamp: number;
   dateLong: number;
+}
+
+export interface IDevice {
+  completed: boolean;
+  deviceCompleted: boolean;
+  device: string;
+  platform: string;
+  conferenceID: string;
+  nodeId: string;
+  items: any; //TODO use better type
+}
+
+export interface IUniqueData {
+  enableStartPoint: boolean;
+  x1: number;
+  y1: number;
+  guestId: string;
+  userId: string;
+  joinTime: number;
 }
