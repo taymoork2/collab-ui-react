@@ -207,6 +207,7 @@
           IBM: 'Partner Marketplace',
           ATLAS_TRIALS: 'Partner-Led Trial',
           CCW: 'Cisco Commerce',
+          CCW_CDC: 'CCE',
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace',
