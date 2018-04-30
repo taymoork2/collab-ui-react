@@ -35,7 +35,7 @@
       <td>{{::event.resourceName}}</td>
       <td ng-if="event.username">{{::event.username}}</td>
       <td ng-if="!event.username">{{::event.userId}}</td>
-      <td>{{::$ctrl.formatTime(event.timestamp)}}</td>
+      <td nowrap>{{::$ctrl.formatTime(event.timestamp)}}</td>
     </tr>
   </tbody>
 </table>

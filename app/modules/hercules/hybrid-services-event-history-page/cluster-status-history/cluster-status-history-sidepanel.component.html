@@ -56,7 +56,50 @@
 
     <!--Connector events-->
     <div ng-if="$ctrl.isConnectorEvent($ctrl.eventItem)">
+      <div ng-if="$ctrl.eventItem.type === 'ConnectorCreated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.createdHelpText"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+      </div>
 
+      <div ng-if="$ctrl.eventItem.type === 'ConnectorUpdated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpText"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+
+        <div ng-if="$ctrl.eventItem.connectorDetails.oldRegistrationState && $ctrl.eventItem.connectorDetails.registrationState ">
+          <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpTextRegistrationState"
+                translate-values="{ oldRegistrationState: $ctrl.eventItem.connectorDetails.oldRegistrationState, registrationState: $ctrl.eventItem.connectorDetails.oldRegistrationState }"></span>
+          </p>
+        </div>
+
+        <div ng-if="$ctrl.eventItem.connectorDetails.maintenanceMode && $ctrl.eventItem.connectorDetails.oldMaintenanceMode ">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpTextMaintenanceMode"
+                translate-values="{ oldMaintenanceMode: $ctrl.eventItem.connectorDetails.oldMaintenanceMode, maintenanceMode: $ctrl.eventItem.connectorDetails.maintenanceMode }"></span>
+        </p>
+      </div>
+
+        <div ng-if="$ctrl.eventItem.connectorDetails.clusterId && $ctrl.eventItem.connectorDetails.oldClusterId ">
+          <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpTextClusterId"
+                translate-values="{ oldClusterId: $ctrl.eventItem.connectorDetails.oldClusterId, clusterId: $ctrl.eventItem.connectorDetails.clusterId }"></span>
+          </p>
+        </div>
+
+        <div ng-if="$ctrl.eventItem.connectorDetails.upgradeState && $ctrl.eventItem.connectorDetails.oldUpgradeState ">
+          <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpTextUpgradeState"
+                translate-values="{ oldUpgradeState: $ctrl.eventItem.connectorDetails.oldUpgradeState, upgradeState: $ctrl.eventItem.connectorDetails.upgradeState }"></span>
+          </p>
+        </div>
+
+      </div>
+
+    <div ng-if="$ctrl.eventItem.type === 'ConnectorStateUpdated'">
       <div ng-if="$ctrl.eventItem.connectorStatus === 'not_installed'">
         <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.connectorEvents.not_installed"
@@ -124,6 +167,7 @@
         </p>
       </div>
 
+      </div>
     </div>
 
     <!-- Cluster events -->
@@ -265,6 +309,80 @@
         <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.clusterEvents.changedReleaseChannelHelp">
           </span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ClusterCreated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.created"
+                translate-values="{ username: $ctrl.eventItem.username, clusterName: $ctrl.eventItem.clusterDetails.name}">
+          </span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ClusterDeleted'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.deleted"
+                translate-values="{ username: $ctrl.eventItem.username, clusterName: $ctrl.eventItem.clusterDetails.name}">
+          </span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Resource group events-->
+    <div ng-if="$ctrl.isResourceGroupEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'ResourceGroupCreated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.resourceGroupEvents.createdHelpText"
+                translate-values="{ username: $ctrl.eventItem.username, resourceGroupName: $ctrl.eventItem.resourceGroupDetails.name, releaseChannel: $ctrl.eventItem.resourceGroupDetails.releaseChannel}"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ResourceGroupUpdated'">
+        <p class="hybrid-service-description">
+          <span
+                translate="hercules.eventHistory.sidepanel.resourceGroupEvents.updatedHelpTextIntro"
+                translate-values="{ username: $ctrl.eventItem.username, resourceGroupName: $ctrl.eventItem.resourceGroupDetails.name}"></span>
+        </p>
+
+        <p class="hybrid-service-description">
+          <span heh ehj
+                translate="hercules.eventHistory.sidepanel.resourceGroupEvents.updatedHelpTextIntroNoName"
+                translate-values="{ username: $ctrl.eventItem.username"></span>
+        </p>
+
+        <p class="hybrid-service-description">
+          <span ng-if="$ctrl.eventItem.resourceGroupDetails.oldName && $ctrl.eventItem.resourceGroupDetails.name"
+                translate="hercules.eventHistory.sidepanel.resourceGroupEvents.updatedHelpTextNameChanged"
+                translate-values="{ oldName: $ctrl.eventItem.resourceGroupDetails.oldName, newName: $ctrl.eventItem.resourceGroupDetails.name }">
+          </span>
+        </p>
+        <p>
+          <span ng-if="$ctrl.eventItem.resourceGroupDetails.oldReleaseChannel && $ctrl.eventItem.resourceGroupDetails.releaseChannel "
+                translate="hercules.eventHistory.sidepanel.resourceGroupEvents.updatedHelpTextReleaseChannelChanged"
+                translate-values="{ oldReleaseChannel: $ctrl.eventItem.resourceGroupDetails.oldReleaseChannel, newReleaseChannel: $ctrl.eventItem.resourceGroupDetails.releaseChannel }">
+          </span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ResourceGroupDeleted'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.resourceGroupEvents.deletedHelpText"
+                translate-values="{ username: $ctrl.eventItem.username, resourceGroupName: $ctrl.eventItem.resourceGroupDetails.oldName}"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Host events-->
+    <div ng-if="$ctrl.isHostEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'HostUpdated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.hostEvents.updatedHelpText"
+                translate-values="{ username: $ctrl.eventItem.username, oldMaintenanceMode: $ctrl.eventItem.hostDetails.oldMaintenanceMode, maintenanceMode: $ctrl.eventItem.hostDetails.maintenanceMode}"></span>
         </p>
       </div>
 

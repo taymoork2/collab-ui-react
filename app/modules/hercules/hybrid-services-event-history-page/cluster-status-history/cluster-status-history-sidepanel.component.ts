@@ -27,6 +27,8 @@ class HybridServicesClusterStatusHistorySidepanelCtrl implements ng.IComponentCo
   public isClusterEvent = (eventItem: IHybridServicesEventHistoryItem): boolean => this.HybridServicesEventHistoryService.isClusterEvent(eventItem);
   public isConnectorEvent = (eventItem: IHybridServicesEventHistoryItem): boolean => this.HybridServicesEventHistoryService.isConnectorEvent(eventItem);
   public isServiceActivationEvent = (eventItem: IHybridServicesEventHistoryItem): boolean => this.HybridServicesEventHistoryService.isServiceActivationEvent(eventItem);
+  public isResourceGroupEvent = (eventItem: IHybridServicesEventHistoryItem): boolean => this.HybridServicesEventHistoryService.isResourceGroupEvent(eventItem);
+  public isHostEvent = (eventItem: IHybridServicesEventHistoryItem): boolean => this.HybridServicesEventHistoryService.isHostEvent(eventItem);
 
   public performedByHuman(eventItem: IHybridServicesEventHistoryItem): boolean {
     return eventItem.principalType === 'PERSON';

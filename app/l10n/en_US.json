@@ -3689,6 +3689,8 @@
         "dateSince": "Since"
       },
       "connectorProvisioned": "Cluster has been provisioned with {{connectorName}} version {{newVersion}}",
+      "clusterCreated": "Cluster {{clusterName}} has been created",
+      "clusterDeleted": "Cluster {{clusterName}} has been deleted",
       "connectorDeprovisioned": "{{connectorName}} has been removed from cluster",
       "connectorProvisioningChanged": "{{connectorName}} upgrade to {{newVersion}} initiated",
       "serviceEnabled": "{{serviceName}} has been enabled",
@@ -3727,7 +3729,21 @@
         "cluster": "Cluster",
         "connector": "Connector",
         "alarm": "Alarm",
-        "service": "Service"
+        "service": "Service",
+        "resourceGroup": "Resource Group",
+        "host": "Host"
+      },
+      "resourceGroupEvents": {
+        "created": "Resource group {{resourceGroupName}} has been created.",
+        "updated": "Resource group {{resourceGroupName}} has been updated.",
+        "deleted": "Resource group {{resourceGroupName}} has been deleted."
+      },
+      "hostEvents": {
+        "updated": "Host has been updated."
+      },
+      "connectorEvents": {
+        "updated": "{{connectorType}} updated.",
+        "created": "{{connectorType}} created."
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3776,7 +3792,9 @@
           "removedResourceGroup": "The cluster is no longer part of a Resource Group. The cluster was previously part of {{oldGroup}}.",
           "changedReleaseChannel": "{{username}} changed the cluster's Release Channel.",
           "oldAndNewReleaseChannel": "The new Release Channel is: <strong>{{newReleaseChannel}}</strong>. The old Release Channel was: {{oldReleaseChannel}}.",
-          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel."
+          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel.",
+          "created": "{{username}} created the cluster {{clusterName}}.",
+          "deleted": "{{username}} deleted the cluster {{clusterName}}."
         },
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} has activated {{serviceName}} in the Cisco Webex organization. This usually happens when an admin user registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
@@ -3797,6 +3815,24 @@
           "timestamp": "Timestamp:",
           "userId": "User ID:",
           "trackingId": "Tracking ID:"
+        },
+        "resourceGroupEvents": {
+          "createdHelpText": "<strong>{{username}}</strong> has created <strong>{{resourceGroupName}}</strong> with release channel <strong>{{releaseChannel}}</strong>.",
+          "updatedHelpTextIntro": "<strong>{{username}}</strong> has updated the resource group.",
+          "updatedHelpTextNameChanged": "The resource group name was changed from <strong>{{oldName}}</strong> to <strong>{{newName}}</strong>",
+          "updatedHelpTextReleaseChannelChanged": "The release channel was changed from <strong>{{oldReleaseChannel}}</strong> to <strong>{{newReleaseChannel}}</strong>",
+          "deletedHelpText": "<strong>{{username}}</strong> has deleted resource group <strong>{{resourceGroupName}}</strong>."
+        },
+        "hostEvents": {
+          "updatedHelpText": "<strong>{{username}}</strong> has updated the host. The maintenance mode was changed from <strong>{{oldMaintenanceMode}}</strong> to <strong>{{maintenanceMode}}</strong>."
+        },
+        "connectorUpdatedEvents": {
+          "updatedHelpText" : "{{localizedConnectorName}} has been updated.",
+          "updatedHelpTextRegistrationState" : "Registration state changed from <strong>{{oldRegistrationState}}</strong> to <strong>{{registrationState}}</strong>.",
+          "updatedHelpTextMaintenanceMode" : "Maintenance mode changed from <strong>{{maintenanceMode}}</strong> to <strong>{{oldMaintenanceMode}}</strong>.",
+          "updatedHelpTextClusterId" : "Cluster Id changed from <strong>{{oldClusterId}}</strong> to <strong>{{clusterId}}</strong>.",
+          "updatedHelpTextUpgradeState" : "Upgrade state changed from <strong>{{oldUpgradeState}}</strong> to <strong>{{upgradeState}}</strong>.",
+          "createdHelpText" : "{{localizedConnectorName}} has been created."
         }
       }
     }

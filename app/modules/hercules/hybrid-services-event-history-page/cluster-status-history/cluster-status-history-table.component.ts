@@ -52,6 +52,7 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
         this.allEvents = _.clone(data.items);
       })
       .catch((error) => {
+        console.log(error);
         this.Notification.errorWithTrackingId(error, 'hercules.eventHistory.cannotReadEventData');
       })
       .finally(() => {
@@ -88,8 +89,9 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public formatTime = (timestamp: string): string => this.HybridServicesI18NService.getLocalTimestamp(timestamp);
 
   public parseServiceForCluster(connectorType: ConnectorType | 'all'): string {
+    console.log('connectorType=', connectorType)
     if (connectorType === 'all') {
-      return this.$translate.instant(`hercules.eventHistory.allServices`);
+      return this.$translate.instant(`hercules.eventHistory.filters.allServices`);
     }
     const serviceId = this.HybridServicesUtilsService.connectorType2ServicesId(connectorType)[0];
     return this.$translate.instant(`hercules.serviceNames.${serviceId}`);
@@ -113,6 +115,10 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       return this.$translate.instant('hercules.eventHistory.eventClasses.connector');
     } else if (this.HybridServicesEventHistoryService.isServiceActivationEvent(eventItem)) {
       return this.$translate.instant('hercules.eventHistory.eventClasses.service');
+    } else if (this.HybridServicesEventHistoryService.isResourceGroupEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.resourceGroup');
+    } else if (this.HybridServicesEventHistoryService.isHostEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.host');
     }
     return this.$translate.instant('common.unknown');
   }

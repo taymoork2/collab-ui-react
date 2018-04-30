@@ -6,7 +6,12 @@ import resourceGroupServiceModuleName, { ResourceGroupService } from './resource
 import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
 
-export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmDebounced' | 'AlarmRaisedNotificationSent' | 'AlarmResolvedNotificationSent' | 'ClusterUpdated'| 'ConnectorStateUpdated' | 'UpgradeSchedule' | 'c_ucmcVersion' | 'c_calVersion' | 'c_mgmtVersion' | 'c_impVersion' | 'clusterRenamed' | 'resourceGroupChanged' | 'releaseChannelChanged' | 'ServiceEnabled' | 'ServiceDisabled';
+export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmDebounced' | 'AlarmRaisedNotificationSent'
+  | 'AlarmResolvedNotificationSent' | 'ClusterUpdated'| 'ConnectorStateUpdated' | 'UpgradeSchedule'
+  | 'c_ucmcVersion' | 'c_calVersion' | 'c_mgmtVersion' | 'c_impVersion' | 'clusterRenamed'
+  | 'resourceGroupChanged' | 'releaseChannelChanged' | 'ServiceEnabled' | 'ServiceDisabled' | 'ClusterCreated'
+  | 'ClusterDeleted' | 'ResourceGroupCreated' | 'ResourceGroupUpdated' | 'ResourceGroupDeleted' | 'HostUpdated'
+  | 'ConnectorUpdated' | 'ConnectorCreated';
 
 export interface IHybridServicesEventHistoryData {
   earliestTimestampSearched: string;
@@ -54,6 +59,26 @@ export interface IHybridServicesEventHistoryItem {
     releaseChannel?: string;
     oldReleaseChannel?: string;
   };
+  resourceGroupDetails?: {
+    name?: string;
+    oldName?: string;
+    releaseChannel?: string;
+    oldReleaseChannel?: string;
+  };
+  hostDetails?: {
+    maintenanceMode?: string;
+    oldMaintenanceMode?: string;
+  };
+  connectorDetails?: {
+    registrationState?: string;
+    oldRegistrationState?: string;
+    maintenanceMode?: string;
+    oldMaintenanceMode?: string;
+    clusterId?: string;
+    oldClusterId?: string;
+    upgradeState?: string;
+    oldUpgradeState?: string;
+  };
 }
 
 interface IRawClusterEvent {
@@ -69,9 +94,11 @@ interface IRawClusterEvent {
     upgradeSchedule?: IUpgradeSchedule;
     oldUpgradeSchedule?: IUpgradeSchedule;
     clusterId: string;
+    oldClusterId: string;
     connectorId?: string;
     hostname: string;
     connectorType?: ConnectorType | 'all';
+    targetType?: ConnectorType | 'all';
     title?: string;
     oldTitle?: string;
     currentState?: {
@@ -94,6 +121,14 @@ interface IRawClusterEvent {
     oldName?: string;
     resourceGroupId?: string;
     oldResourceGroupId?: string;
+    releaseChannel?: string;
+    oldReleaseChannel?: string;
+    maintenanceMode?: string;
+    oldMaintenanceMode?: string;
+    registrationState?: string;
+    oldRegistrationState?: string;
+    upgradeState?: string;
+    oldUpgradeState?: string;
   };
   timestamp: string;
 }
@@ -151,8 +186,8 @@ export class HybridServicesEventHistoryService {
         params: {
           clusterId: options.clusterId,
           fromTime: fromTimestamp,
-          hostSerial: options.hostSerial,
-          serviceId: options.serviceId,
+          hostSerial: undefined,
+          serviceId: undefined,
           toTime: toTimestamp,
         },
       })
@@ -181,7 +216,8 @@ export class HybridServicesEventHistoryService {
   /* Auxiliary methods we want to expose  */
 
   public isKnownEventType(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
-    return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event) || this.isServiceActivationEvent(event);
+    return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event)
+      || this.isServiceActivationEvent(event) || this.isResourceGroupEvent(event) || this.isHostEvent(event);
   }
 
   public isAlarmEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -201,7 +237,20 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
-    return type === 'ClusterUpdated' || type === 'UpgradeSchedule' || type === 'c_ucmcVersion' || type === 'c_calVersion' || type === 'c_mgmtVersion' || type === 'c_impVersion' || type === 'clusterRenamed' || type === 'resourceGroupChanged' || type === 'releaseChannelChanged';
+    return type === 'ClusterUpdated' || type === 'UpgradeSchedule' || type === 'c_ucmcVersion'
+      || type === 'c_calVersion' || type === 'c_mgmtVersion' || type === 'c_impVersion'
+      || type === 'clusterRenamed' || type === 'resourceGroupChanged' || type === 'releaseChannelChanged'
+      || type === 'ClusterCreated' || type === 'ClusterDeleted';
+  }
+
+  public isResourceGroupEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
+    let type: EventType;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    } else {
+      type = (<IHybridServicesEventHistoryItem>event).type;
+    }
+    return type === 'ResourceGroupCreated' || type === 'ResourceGroupUpdated' || type === 'ResourceGroupDeleted';
   }
 
   public isConnectorEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -211,7 +260,7 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
-    return type === 'ConnectorStateUpdated';
+    return type === 'ConnectorStateUpdated' || type === 'ConnectorUpdated' || type === 'ConnectorCreated';
   }
 
   public isServiceActivationEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -222,6 +271,16 @@ export class HybridServicesEventHistoryService {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
     return type === 'ServiceEnabled' || type === 'ServiceDisabled';
+  }
+
+  public isHostEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
+    let type: EventType;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    } else {
+      type = (<IHybridServicesEventHistoryItem>event).type;
+    }
+    return type === 'HostUpdated';
   }
 
   /////////////////////
@@ -243,6 +302,12 @@ export class HybridServicesEventHistoryService {
       }
       if (this.isServiceActivationEvent(event)) {
         processedEvents.push(this.buildServiceActivationEvent(event));
+      }
+      if (this.isResourceGroupEvent(event)) {
+        processedEvents.push(this.buildResourceGroupEvent(event));
+      }
+      if (this.isHostEvent(event)) {
+        processedEvents.push(this.buildHostEvent(event));
       }
     });
     return processedEvents;
@@ -286,55 +351,71 @@ export class HybridServicesEventHistoryService {
 
     const formattedEvents: IHybridServicesEventHistoryItem[] = [];
 
-    if ((event.payload.upgradeSchedule || event.payload.oldUpgradeSchedule) && !_.isEqual(event.payload.upgradeSchedule, event.payload.oldUpgradeSchedule)) {
-      let previousValue = '';
-      let newValue = '';
-      const urgent = this.$translate.instant('hercules.clusterHistoryTable.urgentUpgrades');
+    if (event.payload.type === 'ClusterCreated') {
+      const name = _.get(event, 'payload.name', '');
+      formattedEvents.push(this.processClusterItem(event, event.payload.type, name, this.$translate.instant(`hercules.eventHistory.clusterCreated`, {
+        clusterName: name,
+      })));
+    } else if (event.payload.type === 'ClusterDeleted') {
+      const name = _.get(event, 'payload.oldName', '');
+      formattedEvents.push(this.processClusterItem(event, event.payload.type, name, this.$translate.instant(`hercules.eventHistory.clusterDeleted`, {
+        clusterName: name,
+      })));
+    } else if (event.payload.type === 'ClusterUpdated') {
+      if ((event.payload.upgradeSchedule || event.payload.oldUpgradeSchedule) && !_.isEqual(event.payload.upgradeSchedule, event.payload.oldUpgradeSchedule)) {
+        let previousValue = '';
+        let newValue = '';
+        const urgent = this.$translate.instant('hercules.clusterHistoryTable.urgentUpgrades');
 
-      if (event.payload.oldUpgradeSchedule) {
-        previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.oldUpgradeSchedule)}, ${event.payload.oldUpgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
+        if (event.payload.oldUpgradeSchedule) {
+          previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.oldUpgradeSchedule)}, ${event.payload.oldUpgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
+        }
+        if (event.payload.upgradeSchedule) {
+          newValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.upgradeSchedule)}, ${event.payload.upgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.upgradeSchedule.urgentScheduleTime)}`;
+        }
+        formattedEvents.push(this.processClusterUpdateItem(event, 'UpgradeSchedule', previousValue, newValue));
       }
-      if (event.payload.upgradeSchedule) {
-        newValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.upgradeSchedule)}, ${event.payload.upgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.upgradeSchedule.urgentScheduleTime)}`;
-      }
-      formattedEvents.push(this.processClusterUpdateItem(event, 'UpgradeSchedule', previousValue, newValue));
-    }
 
-    if (event.payload.softwareVersions || event.payload.oldSoftwareVersions) {
-      if (event.payload.softwareVersions && event.payload.softwareVersions.c_ucmc || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_ucmc) {
-        formattedEvents.push(this.processClusterUpdateItem(event, 'c_ucmcVersion', _.get(event, 'payload.oldSoftwareVersions.c_ucmc', ''), _.get(event, 'payload.softwareVersions.c_ucmc', '')));
+      if (event.payload.softwareVersions || event.payload.oldSoftwareVersions) {
+        if (event.payload.softwareVersions && event.payload.softwareVersions.c_ucmc || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_ucmc) {
+          formattedEvents.push(this.processClusterUpdateItem(event, 'c_ucmcVersion', _.get(event, 'payload.oldSoftwareVersions.c_ucmc', ''), _.get(event, 'payload.softwareVersions.c_ucmc', '')));
+        }
+        if (event.payload.softwareVersions && event.payload.softwareVersions.c_cal || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_cal) {
+          formattedEvents.push(this.processClusterUpdateItem(event, 'c_calVersion', _.get(event, 'payload.oldSoftwareVersions.c_cal', ''), _.get(event, 'payload.softwareVersions.c_cal', '')));
+        }
+        if (event.payload.softwareVersions && event.payload.softwareVersions.c_mgmt || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_mgmt) {
+          formattedEvents.push(this.processClusterUpdateItem(event, 'c_mgmtVersion', _.get(event, 'payload.oldSoftwareVersions.c_mgmt', ''), _.get(event, 'payload.softwareVersions.c_mgmt', '')));
+        }
+        if (event.payload.softwareVersions && event.payload.softwareVersions.c_imp || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_imp) {
+          formattedEvents.push(this.processClusterUpdateItem(event, 'c_impVersion', _.get(event, 'payload.oldSoftwareVersions.c_imp', ''), _.get(event, 'payload.softwareVersions.c_imp', '')));
+        }
       }
-      if (event.payload.softwareVersions && event.payload.softwareVersions.c_cal || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_cal) {
-        formattedEvents.push(this.processClusterUpdateItem(event, 'c_calVersion', _.get(event, 'payload.oldSoftwareVersions.c_cal', ''), _.get(event, 'payload.softwareVersions.c_cal', '')));
-      }
-      if (event.payload.softwareVersions && event.payload.softwareVersions.c_mgmt || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_mgmt) {
-        formattedEvents.push(this.processClusterUpdateItem(event, 'c_mgmtVersion', _.get(event, 'payload.oldSoftwareVersions.c_mgmt', ''), _.get(event, 'payload.softwareVersions.c_mgmt', '')));
-      }
-      if (event.payload.softwareVersions && event.payload.softwareVersions.c_imp || event.payload.oldSoftwareVersions && event.payload.oldSoftwareVersions.c_imp) {
-        formattedEvents.push(this.processClusterUpdateItem(event, 'c_impVersion', _.get(event, 'payload.oldSoftwareVersions.c_imp', ''), _.get(event, 'payload.softwareVersions.c_imp', '')));
-      }
-    }
 
-    if (event.payload.name !== event.payload.oldName) {
-      formattedEvents.push(this.processClusterUpdateItem(event, 'clusterRenamed', _.get(event, 'payload.oldName', ''), _.get(event, 'payload.name', '')));
-    }
+      if (event.payload.name !== event.payload.oldName) {
+        formattedEvents.push(this.processClusterUpdateItem(event, 'clusterRenamed', _.get(event, 'payload.oldName', ''), _.get(event, 'payload.name', '')));
+      }
 
-    if (event.payload.resourceGroupId !== event.payload.oldResourceGroupId) {
-      formattedEvents.push(this.processClusterUpdateItem(event, 'resourceGroupChanged', _.get(event, 'payload.oldResourceGroupId', ''), _.get(event, 'payload.resourceGroupId', '')));
-    }
+      if (event.payload.resourceGroupId !== event.payload.oldResourceGroupId) {
+        formattedEvents.push(this.processClusterUpdateItem(event, 'resourceGroupChanged', _.get(event, 'payload.oldResourceGroupId', ''), _.get(event, 'payload.resourceGroupId', '')));
+      }
 
-    if (event.payload.releaseChannel !== event.payload.oldReleaseChannel) {
-      formattedEvents.push(this.processClusterUpdateItem(event, 'releaseChannelChanged', _.get(event, 'payload.oldReleaseChannel', ''), _.get(event, 'payload.releaseChannel', '')));
+      if (event.payload.releaseChannel !== event.payload.oldReleaseChannel) {
+        formattedEvents.push(this.processClusterUpdateItem(event, 'releaseChannelChanged', _.get(event, 'payload.oldReleaseChannel', ''), _.get(event, 'payload.releaseChannel', '')));
+      }
     }
 
     return formattedEvents;
   }
 
   private buildConnectorEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let resName = _.get(event, 'payload.currentState.hostname', '');
+    if (event.payload.type === 'ConnectorUpdated' || event.payload.type === 'ConnectorCreated') {
+      resName = _.get(event, 'payload.connectorId', '');
+    }
     return {
       principalType: event.context.principalType,
       userId: _.get(event, 'context.principalId'),
-      type: 'ConnectorStateUpdated',
+      type: event.payload.type,
       connectorType: _.get(event, 'payload.connectorType', 'all'),
       connectorId: event.payload.connectorId,
       timestamp: event.timestamp,
@@ -342,10 +423,80 @@ export class HybridServicesEventHistoryService {
       severity: 'NONE',
       title: this.buildConnectorEventTitle(event) || '',
       hostname: _.get(event, 'payload.currentState.hostname', ''),
-      resourceName: _.get(event, 'payload.currentState.hostname', ''),
+      resourceName: resName,
       connectorStatus: this.getConnectorStateUpdatedType(event),
       softwareVersion: event.payload.version,
+      connectorDetails: {
+        registrationState: event.payload.registrationState,
+        oldRegistrationState: event.payload.oldRegistrationState,
+        maintenanceMode: event.payload.maintenanceMode,
+        oldMaintenanceMode: event.payload.oldMaintenanceMode,
+        clusterId: event.payload.clusterId,
+        oldClusterId: event.payload.oldClusterId,
+        upgradeState: event.payload.upgradeState,
+        oldUpgradeState: event.payload.oldUpgradeState,
+      },
     };
+  }
+
+  private buildResourceGroupEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let title: string = '';
+    if (event.payload.type === 'ResourceGroupCreated') {
+      title = this.$translate.instant(`hercules.eventHistory.resourceGroupEvents.created`, {
+        serviceName: event.payload.name,
+      });
+    } else if (event.payload.type === 'ResourceGroupUpdated') {
+      title = this.$translate.instant(`hercules.eventHistory.resourceGroupEvents.updated`, {
+        serviceName: event.payload.name,
+      });
+    } else if (event.payload.type === 'ResourceGroupDeleted') {
+      title = this.$translate.instant(`hercules.eventHistory.resourceGroupEvents.deleted`, {
+        serviceName: event.payload.name,
+      });
+    }
+
+    return {
+      principalType: event.context.principalType,
+      userId: _.get(event, 'context.principalId'),
+      type: event.payload.type,
+      connectorType: 'all',
+      serviceId: event.payload.serviceId,
+      timestamp: event.timestamp,
+      trackingId: event.context.trackingId,
+      severity: 'NONE',
+      title: title,
+      resourceName: this.$translate.instant('hercules.eventHistory.allResources'),
+      resourceGroupDetails: {
+        name: event.payload.name,
+        oldName:  event.payload.oldName,
+        releaseChannel: event.payload.releaseChannel,
+        oldReleaseChannel: event.payload.oldReleaseChannel,
+      }};
+  }
+
+  private buildHostEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let title: string = '';
+    if (event.payload.type === 'HostUpdated') {
+      title = this.$translate.instant(`hercules.eventHistory.hostEvents.updated`, {
+        serviceName: event.payload.name,
+      });
+    }
+
+    return {
+      principalType: event.context.principalType,
+      userId: _.get(event, 'context.principalId'),
+      type: event.payload.type,
+      connectorType: 'all',
+      // serviceId: event.payload.serviceId,
+      timestamp: event.timestamp,
+      trackingId: event.context.trackingId,
+      severity: 'NONE',
+      title: title,
+      resourceName: this.$translate.instant('hercules.eventHistory.allResources'),
+      hostDetails: {
+        maintenanceMode: event.payload.maintenanceMode,
+        oldMaintenanceMode:  event.payload.oldMaintenanceMode,
+      }};
   }
 
   private buildServiceActivationEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
@@ -374,6 +525,26 @@ export class HybridServicesEventHistoryService {
     };
   }
 
+
+  private processClusterItem(event: IRawClusterEvent, type: EventType, name: string, title: string): IHybridServicesEventHistoryItem {
+    event.payload.type = type;
+    return {
+      principalType: event.context.principalType,
+      type: type,
+      userId: _.get(event, 'context.principalId'),
+      timestamp: event.timestamp,
+      trackingId: event.context.trackingId,
+      connectorType: _.get(event, 'payload.targetType', 'all'),
+      severity: 'NONE',
+      title: title,
+      clusterId: event.payload.clusterId,
+      resourceName: event.payload.clusterId,
+      clusterDetails: {
+        name: name,
+      }
+    };
+  }
+
   private processClusterUpdateItem(event: IRawClusterEvent, type: EventType, previousValue: string, newValue: string): IHybridServicesEventHistoryItem {
     let clusterDetails;
 
@@ -393,6 +564,7 @@ export class HybridServicesEventHistoryService {
         releaseChannel: this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${newValue}`),
       };
     }
+
     event.payload.type = type;
     return {
       principalType: event.context.principalType,
@@ -430,6 +602,11 @@ export class HybridServicesEventHistoryService {
     if (event.payload.type === 'UpgradeSchedule') {
       return this.$translate.instant(`hercules.eventHistory.newUpgradeSchedule`, {
         newSchedule: newValue,
+      });
+    }
+    if (event.payload.type === 'ClusterCreated') {
+      return this.$translate.instant(`hercules.eventHistory.clusterCreated`, {
+        clusterName: newValue,
       });
     }
     if (event.payload.type === 'resourceGroupChanged') {
@@ -504,50 +681,61 @@ export class HybridServicesEventHistoryService {
   }
 
   private buildConnectorEventTitle(event: IRawClusterEvent): string | undefined {
-    const modifiedState = this.getConnectorStateUpdatedType(event) || undefined;
     const localizedConnectorName = this.$translate.instant('hercules.connectorNameFromConnectorType.' + event.payload.connectorType);
-    if (modifiedState === 'downloading') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.downloading', {
+
+    if (event.payload.type === 'ConnectorUpdated') {
+      return this.$translate.instant('hercules.eventHistory.connectorEvents.updated', {
         connectorType: localizedConnectorName,
       });
-    }
-    if (modifiedState === 'installing') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.installing', {
+    } else if (event.payload.type === 'ConnectorCreated') {
+      return this.$translate.instant('hercules.eventHistory.connectorEvents.created', {
         connectorType: localizedConnectorName,
       });
+    } else if (event.payload.type === 'ConnectorStateUpdated') {
+      const modifiedState = this.getConnectorStateUpdatedType(event) || undefined;
+      if (modifiedState === 'downloading') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.downloading', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'installing') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.installing', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'not_installed') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_installed', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'not_configured') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_configured', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'disabled') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.disabled', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'initializing') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_initialized', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'not_operational') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_operational', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'running') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.running', {
+          connectorType: localizedConnectorName,
+          version: event.payload.version,
+        });
+      }
+      return modifiedState;
     }
-    if (modifiedState === 'not_installed') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_installed', {
-        connectorType: localizedConnectorName,
-      });
-    }
-    if (modifiedState === 'not_configured') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_configured', {
-        connectorType: localizedConnectorName,
-      });
-    }
-    if (modifiedState === 'disabled') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.disabled', {
-        connectorType: localizedConnectorName,
-      });
-    }
-    if (modifiedState === 'initializing') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_initialized', {
-        connectorType: localizedConnectorName,
-      });
-    }
-    if (modifiedState === 'not_operational') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.not_operational', {
-        connectorType: localizedConnectorName,
-      });
-    }
-    if (modifiedState === 'running') {
-      return this.$translate.instant('hercules.eventHistory.connectorEventTitles.running', {
-        connectorType: localizedConnectorName,
-        version: event.payload.version,
-      });
-    }
-    return modifiedState;
   }
 
   private addUsernames(formattedData: IHybridServicesEventHistoryData): ng.IPromise<IHybridServicesEventHistoryData> {
@@ -597,7 +785,10 @@ export class HybridServicesEventHistoryService {
         });
         events.items = _.map(events.items, (item) => {
           if (item.clusterId) {
-            item.clusterName = item.resourceName = _.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId).clusterName || this.$translate.instant('common.unknown');
+            const cluster = _.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId);
+            if (cluster !== undefined) {
+              item.clusterName = item.resourceName =_.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId).clusterName || this.$translate.instant('common.unknown');
+            }
           }
           return item;
         });
@@ -633,7 +824,6 @@ export class HybridServicesEventHistoryService {
       return this.$q.resolve(events);
     }
   }
-
 }
 
 export default angular
