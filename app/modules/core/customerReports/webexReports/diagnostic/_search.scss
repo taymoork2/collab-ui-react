@@ -92,11 +92,11 @@
   }
 }
 
-.content-container .meeting-list {
+.content-container.meeting-list {
   position: relative;
   background: $white;
-  padding-left: 0 !important;// FIXME: track down and remove need for '!important'
-  padding-right: 0 !important;// FIXME: track down and remove need for '!important'
+  padding-left: 0;
+  padding-right: 0;
   overflow: hidden;
   height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
 
