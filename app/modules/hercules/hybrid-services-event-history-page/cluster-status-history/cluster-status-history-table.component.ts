@@ -81,6 +81,8 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       fromDate = moment().subtract(2, 'days').toISOString();
     } else if (timeFilter === 'last_week') {
       fromDate = moment().subtract(7, 'days').toISOString();
+    } else if (timeFilter === 'last_30_days') {
+      fromDate = moment().subtract(30, 'days').toISOString();
     }
     return [fromDate, toDate];
   }

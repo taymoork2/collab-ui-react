@@ -6,7 +6,7 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 
 export interface ITimeFilterOptions {
   label: string;
-  value: 'last_day' | 'last_2_days' | 'last_week';
+  value: 'last_day' | 'last_2_days' | 'last_week' | 'last_30_days';
 }
 
 interface IClusterOption {

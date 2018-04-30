@@ -28,16 +28,6 @@
         </p>
       </div>
 
-      <div ng-if="$ctrl.eventItem.type === 'AlarmDebounced'">
-        <p class="hybrid-service-description">
-          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmDebounced"
-                translate-values="{ title: $ctrl.eventItem.alarmDetails.title, hostname: $ctrl.eventItem.hostname }"></span>
-        </p>
-        <p class="hybrid-service-description">
-          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmDebounced-help"></span>
-        </p>
-      </div>
-
       <div ng-if="$ctrl.eventItem.type === 'AlarmRaisedNotificationSent'">
         <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmRaisedNotificationSent"

@@ -6,7 +6,7 @@ import resourceGroupServiceModuleName, { ResourceGroupService } from './resource
 import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
 
-export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmDebounced' | 'AlarmRaisedNotificationSent'
+export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmRaisedNotificationSent'
   | 'AlarmResolvedNotificationSent' | 'ClusterUpdated'| 'ConnectorStateUpdated' | 'UpgradeSchedule'
   | 'c_ucmcVersion' | 'c_calVersion' | 'c_mgmtVersion' | 'c_impVersion' | 'clusterRenamed'
   | 'resourceGroupChanged' | 'releaseChannelChanged' | 'ServiceEnabled' | 'ServiceDisabled' | 'ClusterCreated'
@@ -246,7 +246,7 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
-    return type === 'AlarmRaised' || type === 'AlarmResolved' || type === 'AlarmDebounced' || type === 'AlarmRaisedNotificationSent' || type === 'AlarmResolvedNotificationSent';
+    return type === 'AlarmRaised' || type === 'AlarmResolved' || type === 'AlarmRaisedNotificationSent' || type === 'AlarmResolvedNotificationSent';
   }
 
   public isClusterEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -381,8 +381,6 @@ export class HybridServicesEventHistoryService {
     } else if (event.payload.type === 'AlarmResolvedNotificationSent') {
       title = this.$translate.instant('hercules.eventHistory.sidepanel.alarmEvents.alarmResolvedEmailsSentTitle');
       severity = 'alert';
-    } else if (event.payload.type === 'AlarmDebounced') {
-      severity = 'IGNORED';
     }
     return {
       principalType: event.context.principalType,
