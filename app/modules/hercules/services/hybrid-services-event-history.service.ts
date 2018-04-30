@@ -86,11 +86,11 @@ export interface IHybridServicesEventHistoryItem {
   };
   machineAccountDetails?: {
     entitlements?: string;
-    roles?:string;
+    roles?: string;
   };
   mailSubscriberDetails?: {
     oldUserList?: string;
-    newUserList?:string;
+    newUserList?: string;
   };
 }
 
@@ -144,9 +144,9 @@ interface IRawClusterEvent {
     oldUpgradeState?: string;
     ttlInSeconds?: number;
     entitlements?: string;
-    roles?:string;
-    oldUserList?:string;
-    newUserList?:string;
+    roles?: string;
+    oldUserList?: string;
+    newUserList?: string;
   };
   timestamp: string;
 }
@@ -236,7 +236,7 @@ export class HybridServicesEventHistoryService {
   public isKnownEventType(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
     return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event)
       || this.isServiceActivationEvent(event) || this.isResourceGroupEvent(event) || this.isHostEvent(event)
-      || this.isRedirectTargetEvent(event) || this.isMachineAccountEvent(event) || this.isMailSubscriberEvent(event);
+      || this.isRedirectTargetEvent(event) || this.isMachineAccountEvent(event) || this.isMailSubscriberEvent(event);
   }
 
   public isAlarmEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -469,7 +469,7 @@ export class HybridServicesEventHistoryService {
   private buildConnectorEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
     let resName = _.get(event, 'payload.currentState.hostname', '');
     if (event.payload.type === 'ConnectorUpdated' || event.payload.type === 'ConnectorCreated'
-      || event.payload.type === 'ConnectorDeregistered' || event.payload.type === 'ConnectorRemoved') {
+      || event.payload.type === 'ConnectorDeregistered' || event.payload.type === 'ConnectorRemoved') {
       resName = _.get(event, 'payload.connectorId', '');
     }
     return {
@@ -926,7 +926,7 @@ export class HybridServicesEventHistoryService {
           if (item.clusterId) {
             const cluster = _.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId);
             if (cluster !== undefined) {
-              item.clusterName = item.resourceName =_.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId).clusterName || this.$translate.instant('common.unknown');
+              item.clusterName = item.resourceName = _.find(allClusterNames, (cluster) => cluster.clusterId === item.clusterId).clusterName || this.$translate.instant('common.unknown');
             }
           }
           return item;
