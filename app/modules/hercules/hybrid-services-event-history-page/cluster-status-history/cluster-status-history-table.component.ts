@@ -89,7 +89,6 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public formatTime = (timestamp: string): string => this.HybridServicesI18NService.getLocalTimestamp(timestamp);
 
   public parseServiceForCluster(connectorType: ConnectorType | 'all'): string {
-    console.log('connectorType=', connectorType)
     if (connectorType === 'all') {
       return this.$translate.instant(`hercules.eventHistory.filters.allServices`);
     }
@@ -119,6 +118,12 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       return this.$translate.instant('hercules.eventHistory.eventClasses.resourceGroup');
     } else if (this.HybridServicesEventHistoryService.isHostEvent(eventItem)) {
       return this.$translate.instant('hercules.eventHistory.eventClasses.host');
+    } else if (this.HybridServicesEventHistoryService.isRedirectTargetEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.redirectTarget');
+    } else if (this.HybridServicesEventHistoryService.isMachineAccountEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.machineAccount');
+    } else if (this.HybridServicesEventHistoryService.isMailSubscriberEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.mail');
     }
     return this.$translate.instant('common.unknown');
   }

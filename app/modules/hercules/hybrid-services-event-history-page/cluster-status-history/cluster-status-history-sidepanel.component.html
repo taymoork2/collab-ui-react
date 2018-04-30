@@ -56,6 +56,21 @@
 
     <!--Connector events-->
     <div ng-if="$ctrl.isConnectorEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'ConnectorDeregistered'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.deregisteredHelpText"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ConnectorRemoved'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.removedHelpText"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+      </div>
+
       <div ng-if="$ctrl.eventItem.type === 'ConnectorCreated'">
         <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.createdHelpText"
@@ -383,6 +398,49 @@
         <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.hostEvents.updatedHelpText"
                 translate-values="{ username: $ctrl.eventItem.username, oldMaintenanceMode: $ctrl.eventItem.hostDetails.oldMaintenanceMode, maintenanceMode: $ctrl.eventItem.hostDetails.maintenanceMode}"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Redirect Target events-->
+    <div ng-if="$ctrl.isRedirectTargetEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'RedirectTargetCreated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.redirectTargetEvents.createdHelpText"
+                translate-values="{ username: $ctrl.eventItem.username, hostName: $ctrl.eventItem.redirectTargetDetails.hostname, ttl: $ctrl.eventItem.redirectTargetDetails.ttlInSeconds}"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'RedirectTargetDeleted'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.redirectTargetEvents.deletedHelpText"
+                translate-values="{ username: $ctrl.eventItem.username, hostName: $ctrl.eventItem.redirectTargetDetails.hostname}"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Machine Account events-->
+    <div ng-if="$ctrl.isMachineAccountEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'MachineAccountCreated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.machineAccountEvents.createdHelpText"
+                translate-values="{entitlements: $ctrl.eventItem.machineAccountDetails.entitlements, roles:$ctrl.eventItem.machineAccountDetails.roles}"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Mail events-->
+    <div ng-if="$ctrl.isMailSubscriberEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'MailSubscriberListUpdated'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.mailSubscriberEvents.updatedHelpText"
+                translate-values="{username: $ctrl.eventItem.username, oldUserList:$ctrl.eventItem.mailSubscriberDetails.oldUserList, newUserList:$ctrl.eventItem.mailSubscriberDetails.newUserList}"></span>
         </p>
       </div>
 

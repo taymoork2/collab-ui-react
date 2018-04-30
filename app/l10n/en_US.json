@@ -3731,7 +3731,10 @@
         "alarm": "Alarm",
         "service": "Service",
         "resourceGroup": "Resource Group",
-        "host": "Host"
+        "host": "Host",
+        "redirectTarget": "Redirect Target",
+        "machineAccount": "Machine Account",
+        "mail": "Mail"
       },
       "resourceGroupEvents": {
         "created": "Resource group {{resourceGroupName}} has been created.",
@@ -3743,7 +3746,19 @@
       },
       "connectorEvents": {
         "updated": "{{connectorType}} updated.",
-        "created": "{{connectorType}} created."
+        "created": "{{connectorType}} created.",
+        "deregistered": "{{connectorType}} de-registered.",
+        "removed": "{{connectorType}} removed."
+      },
+      "redirectTargetEvents": {
+        "created": "Redirect target created.",
+        "deleted": "Redirect target deleted."
+      },
+      "machineAccountEvents": {
+        "created": "Machine account created."
+      },
+      "mailSubscriberEvents": {
+        "updated": "Mail subscriber list updated."
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3817,14 +3832,14 @@
           "trackingId": "Tracking ID:"
         },
         "resourceGroupEvents": {
-          "createdHelpText": "<strong>{{username}}</strong> has created <strong>{{resourceGroupName}}</strong> with release channel <strong>{{releaseChannel}}</strong>.",
-          "updatedHelpTextIntro": "<strong>{{username}}</strong> has updated the resource group.",
+          "createdHelpText": "{{username}} has created <strong>{{resourceGroupName}}</strong> with release channel <strong>{{releaseChannel}}</strong>.",
+          "updatedHelpTextIntro": "{{username}} has updated the resource group.",
           "updatedHelpTextNameChanged": "The resource group name was changed from <strong>{{oldName}}</strong> to <strong>{{newName}}</strong>",
           "updatedHelpTextReleaseChannelChanged": "The release channel was changed from <strong>{{oldReleaseChannel}}</strong> to <strong>{{newReleaseChannel}}</strong>",
-          "deletedHelpText": "<strong>{{username}}</strong> has deleted resource group <strong>{{resourceGroupName}}</strong>."
+          "deletedHelpText": "{{username}} has deleted resource group <strong>{{resourceGroupName}}</strong>."
         },
         "hostEvents": {
-          "updatedHelpText": "<strong>{{username}}</strong> has updated the host. The maintenance mode was changed from <strong>{{oldMaintenanceMode}}</strong> to <strong>{{maintenanceMode}}</strong>."
+          "updatedHelpText": "{{username}} has updated the host. The maintenance mode was changed from <strong>{{oldMaintenanceMode}}</strong> to <strong>{{maintenanceMode}}</strong>."
         },
         "connectorUpdatedEvents": {
           "updatedHelpText" : "{{localizedConnectorName}} has been updated.",
@@ -3832,7 +3847,19 @@
           "updatedHelpTextMaintenanceMode" : "Maintenance mode changed from <strong>{{maintenanceMode}}</strong> to <strong>{{oldMaintenanceMode}}</strong>.",
           "updatedHelpTextClusterId" : "Cluster Id changed from <strong>{{oldClusterId}}</strong> to <strong>{{clusterId}}</strong>.",
           "updatedHelpTextUpgradeState" : "Upgrade state changed from <strong>{{oldUpgradeState}}</strong> to <strong>{{upgradeState}}</strong>.",
-          "createdHelpText" : "{{localizedConnectorName}} has been created."
+          "createdHelpText" : "{{localizedConnectorName}} has been created.",
+          "deregisteredHelpText" : "{{localizedConnectorName}} has been de-registered.",
+          "removedHelpText" : "{{localizedConnectorName}} has been removed."
+        },
+        "redirectTargetEvents" : {
+          "createdHelpText" : "{{username}} has created the redirect target for {{hostName}}. The redirect target is valid for {{ttl}} seconds.",
+          "deletedHelpText" : "{{username}} has deleted the redirect target for {{hostName}}."
+        },
+        "machineAccountEvents" : {
+          "createdHelpText" : "A machine account was created with entitlements {{entitlements}} and roles {{roles}}."
+        },
+        "mailSubscriberEvents" : {
+          "updatedHelpText" : "{{username}} updated the mail subscriber list from {{oldUserList}} to {{newUserList}}."
         }
       }
     }

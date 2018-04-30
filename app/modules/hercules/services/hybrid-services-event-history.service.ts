@@ -11,7 +11,8 @@ export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmDebounced' | 'Al
   | 'c_ucmcVersion' | 'c_calVersion' | 'c_mgmtVersion' | 'c_impVersion' | 'clusterRenamed'
   | 'resourceGroupChanged' | 'releaseChannelChanged' | 'ServiceEnabled' | 'ServiceDisabled' | 'ClusterCreated'
   | 'ClusterDeleted' | 'ResourceGroupCreated' | 'ResourceGroupUpdated' | 'ResourceGroupDeleted' | 'HostUpdated'
-  | 'ConnectorUpdated' | 'ConnectorCreated';
+  | 'ConnectorUpdated' | 'ConnectorCreated' | 'ConnectorDeregistered' | 'ConnectorRemoved' | 'RedirectTargetCreated'
+  | 'RedirectTargetDeleted' | 'MachineAccountCreated' | 'MailSubscriberListUpdated';
 
 export interface IHybridServicesEventHistoryData {
   earliestTimestampSearched: string;
@@ -79,6 +80,18 @@ export interface IHybridServicesEventHistoryItem {
     upgradeState?: string;
     oldUpgradeState?: string;
   };
+  redirectTargetDetails?: {
+    hostname?: string;
+    ttlInSeconds?: number;
+  };
+  machineAccountDetails?: {
+    entitlements?: string;
+    roles?:string;
+  };
+  mailSubscriberDetails?: {
+    oldUserList?: string;
+    newUserList?:string;
+  };
 }
 
 interface IRawClusterEvent {
@@ -129,6 +142,11 @@ interface IRawClusterEvent {
     oldRegistrationState?: string;
     upgradeState?: string;
     oldUpgradeState?: string;
+    ttlInSeconds?: number;
+    entitlements?: string;
+    roles?:string;
+    oldUserList?:string;
+    newUserList?:string;
   };
   timestamp: string;
 }
@@ -217,7 +235,8 @@ export class HybridServicesEventHistoryService {
 
   public isKnownEventType(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
     return this.isAlarmEvent(event) || this.isClusterEvent(event) || this.isConnectorEvent(event)
-      || this.isServiceActivationEvent(event) || this.isResourceGroupEvent(event) || this.isHostEvent(event);
+      || this.isServiceActivationEvent(event) || this.isResourceGroupEvent(event) || this.isHostEvent(event)
+      || this.isRedirectTargetEvent(event) || this.isMachineAccountEvent(event) || this.isMailSubscriberEvent(event);
   }
 
   public isAlarmEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -260,7 +279,8 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
-    return type === 'ConnectorStateUpdated' || type === 'ConnectorUpdated' || type === 'ConnectorCreated';
+    return type === 'ConnectorStateUpdated' || type === 'ConnectorUpdated' || type === 'ConnectorCreated'
+      || type === 'ConnectorDeregistered' || type === 'ConnectorRemoved';
   }
 
   public isServiceActivationEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -281,6 +301,36 @@ export class HybridServicesEventHistoryService {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
     return type === 'HostUpdated';
+  }
+
+  public isRedirectTargetEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
+    let type: EventType;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    } else {
+      type = (<IHybridServicesEventHistoryItem>event).type;
+    }
+    return type === 'RedirectTargetCreated' || type === 'RedirectTargetDeleted';
+  }
+
+  public isMachineAccountEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
+    let type: EventType;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    } else {
+      type = (<IHybridServicesEventHistoryItem>event).type;
+    }
+    return type === 'MachineAccountCreated';
+  }
+
+  public isMailSubscriberEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
+    let type: EventType;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    } else {
+      type = (<IHybridServicesEventHistoryItem>event).type;
+    }
+    return type === 'MailSubscriberListUpdated';
   }
 
   /////////////////////
@@ -308,6 +358,15 @@ export class HybridServicesEventHistoryService {
       }
       if (this.isHostEvent(event)) {
         processedEvents.push(this.buildHostEvent(event));
+      }
+      if (this.isRedirectTargetEvent(event)) {
+        processedEvents.push(this.buildRedirectTargetEvent(event));
+      }
+      if (this.isMachineAccountEvent(event)) {
+        processedEvents.push(this.buildMachineAccountEvent(event));
+      }
+      if (this.isMailSubscriberEvent(event)) {
+        processedEvents.push(this.buildMailSubscriberEvent(event));
       }
     });
     return processedEvents;
@@ -409,7 +468,8 @@ export class HybridServicesEventHistoryService {
 
   private buildConnectorEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
     let resName = _.get(event, 'payload.currentState.hostname', '');
-    if (event.payload.type === 'ConnectorUpdated' || event.payload.type === 'ConnectorCreated') {
+    if (event.payload.type === 'ConnectorUpdated' || event.payload.type === 'ConnectorCreated'
+      || event.payload.type === 'ConnectorDeregistered' || event.payload.type === 'ConnectorRemoved') {
       resName = _.get(event, 'payload.connectorId', '');
     }
     return {
@@ -487,7 +547,6 @@ export class HybridServicesEventHistoryService {
       userId: _.get(event, 'context.principalId'),
       type: event.payload.type,
       connectorType: 'all',
-      // serviceId: event.payload.serviceId,
       timestamp: event.timestamp,
       trackingId: event.context.trackingId,
       severity: 'NONE',
@@ -496,6 +555,78 @@ export class HybridServicesEventHistoryService {
       hostDetails: {
         maintenanceMode: event.payload.maintenanceMode,
         oldMaintenanceMode:  event.payload.oldMaintenanceMode,
+      }};
+  }
+
+  private buildRedirectTargetEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let title: string = '';
+    if (event.payload.type === 'RedirectTargetCreated') {
+      title = this.$translate.instant(`hercules.eventHistory.redirectTargetEvents.created`);
+    } else if (event.payload.type === 'RedirectTargetDeleted') {
+      title = this.$translate.instant(`hercules.eventHistory.redirectTargetEvents.deleted`);
+    }
+
+    return {
+      principalType: event.context.principalType,
+      userId: _.get(event, 'context.principalId'),
+      type: event.payload.type,
+      connectorType: 'all',
+      timestamp: event.timestamp,
+      clusterId: event.payload.clusterId,
+      trackingId: event.context.trackingId,
+      severity: 'NONE',
+      title: title,
+      resourceName: this.$translate.instant('hercules.eventHistory.allResources'),
+      redirectTargetDetails: {
+        hostname: event.payload.hostname,
+        ttlInSeconds:  event.payload.ttlInSeconds,
+      }};
+  }
+
+  private buildMachineAccountEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let title: string = '';
+    if (event.payload.type === 'MachineAccountCreated') {
+      title = this.$translate.instant(`hercules.eventHistory.machineAccountEvents.created`);
+    }
+
+    return {
+      principalType: event.context.principalType,
+      userId: _.get(event, 'context.principalId'),
+      type: event.payload.type,
+      connectorType: _.get(event, 'payload.targetType', 'all'),
+      timestamp: event.timestamp,
+      clusterId: event.payload.clusterId,
+      trackingId: event.context.trackingId,
+      severity: 'NONE',
+      title: title,
+      resourceName: event.payload.clusterId,
+      machineAccountDetails: {
+        entitlements: event.payload.entitlements,
+        roles: event.payload.roles,
+      }};
+  }
+
+  private buildMailSubscriberEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
+    let title: string = '';
+    if (event.payload.type === 'MailSubscriberListUpdated') {
+      title = this.$translate.instant(`hercules.eventHistory.mailSubscriberEvents.updated`);
+    }
+
+    return {
+      principalType: event.context.principalType,
+      userId: _.get(event, 'context.principalId'),
+      type: event.payload.type,
+      connectorType: this.HybridServicesUtilsService.serviceId2ConnectorType(event.payload.serviceId) || 'all',
+      timestamp: event.timestamp,
+      clusterId: event.payload.clusterId,
+      trackingId: event.context.trackingId,
+      serviceId: event.payload.serviceId,
+      severity: 'NONE',
+      title: title,
+      resourceName: this.$translate.instant('hercules.eventHistory.allResources'),
+      mailSubscriberDetails: {
+        oldUserList: event.payload.oldUserList,
+        newUserList: event.payload.newUserList,
       }};
   }
 
@@ -541,7 +672,7 @@ export class HybridServicesEventHistoryService {
       resourceName: event.payload.clusterId,
       clusterDetails: {
         name: name,
-      }
+      },
     };
   }
 
@@ -689,6 +820,14 @@ export class HybridServicesEventHistoryService {
       });
     } else if (event.payload.type === 'ConnectorCreated') {
       return this.$translate.instant('hercules.eventHistory.connectorEvents.created', {
+        connectorType: localizedConnectorName,
+      });
+    } else if (event.payload.type === 'ConnectorRemoved') {
+      return this.$translate.instant('hercules.eventHistory.connectorEvents.removed', {
+        connectorType: localizedConnectorName,
+      });
+    } else if (event.payload.type === 'ConnectorDeregistered') {
+      return this.$translate.instant('hercules.eventHistory.connectorEvents.deregistered', {
         connectorType: localizedConnectorName,
       });
     } else if (event.payload.type === 'ConnectorStateUpdated') {
