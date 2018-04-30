@@ -4,6 +4,7 @@
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);
+  //TODO: Check if this is necessary once cluster list api is enabled
   min-height: rem-calc(1000);
   background-color: $color-white;
 
