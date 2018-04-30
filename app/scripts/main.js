@@ -109,6 +109,7 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/legal-hold').default,
     require('modules/core/organizations/organization-delete').default,
+    require('modules/core/siteList').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -256,6 +257,8 @@
 
   angular.module('WebExApp', [
     'Core',
+    require('modules/webex/apiGateway').default,
+    require('modules/webex/restApi').default,
     require('modules/webex/utils').default,
     require('modules/webex/xmlApi').default,
     require('modules/webex/webexClientVersions/webexClientVersion.svc'),

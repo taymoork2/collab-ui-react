@@ -1,8 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').service('WebExApiGatewayConstsService', WebExApiGatewayConstsService);
-
+  /* @ngInject */
   function WebExApiGatewayConstsService() {
     this.csvRequests = {
       csvStatus: 'csvStatus',
@@ -81,4 +80,6 @@
       this.csvStates.importCompletedWithErr,
     ]; // csvStatusTypes[]
   } // end top level function
+
+  module.exports = WebExApiGatewayConstsService;
 })();

@@ -7557,9 +7557,20 @@
     "deleteSiteTooltip": "Delete Site",
     "pendingActionBadge": "Pending action",
     "unavailable": "Unavailable",
-    "licenseUnavailableTooltip": "License information is unavailable while site action is pending"
+    "licenseUnavailableTooltip": "License information is unavailable while site action is pending",
+    "clickToEdit": "Click on a site to edit it"
   },
   "webexSiteManagement": {
+    "manageSite": "Manage Webex Site",
+    "configureSite": "Configure Site",
+    "deleteSite": "Delete Site",
+    "partnerHelpMsg": "The ability to delete this site or redistribute licenses between sites has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to delete this site or to redistribute licenses between sites.",
+    "webexUsers": "Webex Users",
+    "bulkManageUsers": "Bulk Manage Users",
+    "reports": "Reports",
+    "viewReports": "View Webex Site Reports",
+    "pending": "Pending Action",
+    "pendingActionMsg": "A change was made to this site (Add, Delete or Redistribute licenses) and it is pending until Webex servers have been updated. This may take up to 24 hours. You cannot make any more changes to this site until the pending action completes.",
     "transferSitesCopy": "You can create one or more WebEx sites",
     "redistributeLicenses": "Redistribute Licenses",
     "redistributeLicensesDesc": "Please indicate how many licenses to put on each site",
@@ -7595,9 +7606,10 @@
     "addSiteRejectNoSubscription": "You cannot add site because you have no active WebEx subscriptions",
     "addSiteRejectPending": "You cannot add another site since provisioning for the previous action on this subscription is still pending. You will be able to add another site once provisioning is complete",
     "addSiteSelectPending": "You cannot add another site since provisioning for the previous action on this subscription is still pending. You will be able to add another site once provisioning is complete",
+    "addSiteSelectNoManagement": "Adding sites to this subscription has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to add sites to this subscription.",
     "addSiteSuccessToaster": "Site add process initiated.",
     "addSiteSuccessModalTitle": "Site add process initiated.",
-    "addSiteSuccessModalBody": "Sites that were added will not be available immediately. It may take up to 24 hours for the sites to be provisioned and appear in the WebEx sites list inside Spark Control Hub.",
+    "addSiteSuccessModalBody": "Sites that were added will not be available immediately. It may take up to 24 hours to provision Sites where users are being managed through Webex Site Admin, and up to 5 days for Sites which have audio being provided by a Cisco partner.",
     "addSiteFailureToaster": "Attempt to add site failed, please try again later.",
     "addSiteFailureModalTitle": "Site was not added",
     "addSiteFailureModalBody": "Attempt to add site failed, please try again later."

@@ -1998,10 +1998,34 @@
             url: '/not-linked',
             views: {
               tabContent: {
-                controllerAs: 'siteList',
-                controller: 'WebExSiteRowCtrl',
-                template: require('modules/core/siteList/siteList.tpl.html'),
+                template: '<site-list hide-linked="$resolve.accountLinkingPhase2"></site-list>',
               },
+            },
+          })
+          .state('site-list.not-linked.detail', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<site-detail selected-site="$resolve.selectedSite" on-delete="$resolve.onDelete(license)" on-redistribute="$resolve.onRedistribute(license)"></site-detail>',
+              },
+            },
+            params: {
+              selectedSite: undefined,
+              onDelete: undefined,
+              onRedistribute: undefined,
+            },
+            data: {},
+            resolve: {
+              selectedSite: /*@ngInject */ function ($stateParams) {
+                return $stateParams['selectedSite'];
+              },
+              onDelete: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onDelete'];
+              },
+              onRedistribute: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onRedistribute'];
+              },
+              displayName: translateDisplayName('webexSiteManagement.manageSite'),
             },
           })
           .state('site-list.linked', {

@@ -1,13 +1,18 @@
-'use strict';
+// TODO: this file needs to be revisited to:
+// - add missing return types for functions
+// - add missing types for function args
+// - replace instances of `any` with better TS types as-appropriate
+import testModule from './index';
 
-describe('Service: WebExSiteRowService', function () {
-  var $httpBackend, $rootScope, $q, Auth, Authinfo, deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus, FeatureToggleService, SetupWizardService, UrlConfig, WebExApiGatewayConstsService, WebExApiGatewayService, WebExSiteRowService, WebExUtilsFact;
+describe('Service: SiteListService', () => {
+  let deferred_licenseInfo, deferredIsSiteSupportsIframe, deferredCsvStatus;
+  const customers = _.cloneDeep(getJSONFixture('core/json/customerSubscriptions/customerResponseTest.json').customers);
 
   afterEach(function () {
-    $httpBackend = $rootScope = $q = Auth = Authinfo = deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = FeatureToggleService = SetupWizardService = UrlConfig = WebExApiGatewayConstsService = WebExApiGatewayService = WebExSiteRowService = WebExUtilsFact = undefined;
+    deferred_licenseInfo = deferredIsSiteSupportsIframe = deferredCsvStatus = undefined;
   });
 
-  var fakeSiteRow1 = {
+  let fakeSiteRow1: any = {
     label: 'Meeting Center 200',
     value: 1,
     name: 'confRadio',
@@ -60,7 +65,7 @@ describe('Service: WebExSiteRowService', function () {
     $$hashKey: 'uiGrid-0007',
     showCSVIconAndResults: true,
   };
-  var fakeSiteRow2 = {
+  let fakeSiteRow2: any = {
     label: 'Meeting Center 200',
     value: 1,
     name: 'confRadio',
@@ -135,7 +140,7 @@ describe('Service: WebExSiteRowService', function () {
     $$hashKey: 'uiGrid-0009',
     showCSVIconAndResults: true,
   };
-  var pendingStatusSubscriptions = [
+  const pendingStatusSubscriptions = [
     {
       externalSubscriptionId: 'WX-12345',
       pendingServiceOrderUUID: 'abcd-12345',
@@ -145,7 +150,7 @@ describe('Service: WebExSiteRowService', function () {
       pendingServiceOrderUUID: 'efgh-67890',
     },
   ];
-  var returnedServiceStatuses1 = {
+  const returnedServiceStatuses1 = {
     serviceStatus: [
       {
         siteUrl: 'abc.webex.com',
@@ -161,7 +166,7 @@ describe('Service: WebExSiteRowService', function () {
       },
     ],
   };
-  var returnedServiceStatuses2 = {
+  const returnedServiceStatuses2 = {
     serviceStatus: [
       {
         siteUrl: 'sjsite04.webex.com',
@@ -182,27 +187,27 @@ describe('Service: WebExSiteRowService', function () {
       },
     ],
   };
-  var confServices = getJSONFixture('core/json/authInfo/webexLicenses.json');
+  const confServices = _.cloneDeep(getJSONFixture('core/json/authInfo/webexLicenses.json'));
 
-  // var fakeConferenceService1 = {
-  //   "label": "Meeting Center 200",
-  //   "value": 1,
-  //   "name": "confRadio",
-  //   "license": {
-  //     "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_cisjsite031.webex.com",
-  //     "offerName": "MC",
-  //     "licenseType": "CONFERENCING",
-  //     "billingServiceId": "1446768353",
-  //     "features": ["cloudmeetings"],
-  //     "volume": 25,
-  //     "isTrial": false,
-  //     "status": "ACTIVE",
-  //     "capacity": 200,
-  //     "siteUrl": "cisjsite031.webex.com"
-  //   },
-  //   "isCustomerPartner": false
-  // };
-  var fakeConferenceService2 = {
+//  var fakeConferenceService1 = {
+//    "label": "Meeting Center 200",
+//    "value": 1,
+//    "name": "confRadio",
+//    "license": {
+//      "licenseId": "MC_5320533d-da5d-4f92-b95e-1a42567c55a0_cisjsite031.webex.com",
+//      "offerName": "MC",
+//      "licenseType": "CONFERENCING",
+//      "billingServiceId": "1446768353",
+//      "features": ["cloudmeetings"],
+//      "volume": 25,
+//      "isTrial": false,
+//      "status": "ACTIVE",
+//      "capacity": 200,
+//      "siteUrl": "cisjsite031.webex.com"
+//    },
+//    "isCustomerPartner": false
+//  };
+  let fakeConferenceService2: any = {
     label: 'Meeting Center 200',
     value: 1,
     name: 'confRadio',
@@ -220,10 +225,9 @@ describe('Service: WebExSiteRowService', function () {
     },
     isCustomerPartner: false,
   };
-  //var fakeConferenceServicesArray = [fakeConferenceService1, fakeConferenceService2];
-  var fakeConferenceServicesArray = [fakeConferenceService2];
+  let fakeConferenceServicesArray: any[] | undefined = [fakeConferenceService2];
 
-  var fake_allSitesLicenseInfo = [{
+  let fake_allSitesLicenseInfo: any = [{
     webexSite: 'sjsite04.webex.com',
     siteHasMCLicense: true,
     offerCode: 'MC',
@@ -244,31 +248,30 @@ describe('Service: WebExSiteRowService', function () {
     fakeSiteRow1 = fakeSiteRow2 = fakeConferenceService2 = fakeConferenceServicesArray = fake_allSitesLicenseInfo = undefined;
   });
 
-  beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('Huron'));
-  beforeEach(angular.mock.module('Sunlight'));
-  beforeEach(angular.mock.module('WebExApp'));
+  beforeEach(function () {
+    this.initModules(testModule);
+    this.injectDependencies(
+      '$httpBackend',
+      '$q',
+      '$rootScope',
+      'Auth',
+      'Authinfo',
+      'FeatureToggleService',
+      'SetupWizardService',
+      'SiteListService',
+      'UrlConfig',
+      'WebExApiGatewayConstsService',
+      'WebExApiGatewayService',
+      'WebExUtilsFact',
+    );
+  });
 
-  beforeEach(inject(function (_$httpBackend_, _$rootScope_, _$q_, _Auth_, _Authinfo_, _FeatureToggleService_, _SetupWizardService_, _UrlConfig_, _WebExApiGatewayService_, _WebExApiGatewayConstsService_, _WebExSiteRowService_, _WebExUtilsFact_) {
-    Auth = _Auth_;
-    Authinfo = _Authinfo_;
-    WebExSiteRowService = _WebExSiteRowService_;
-    FeatureToggleService = _FeatureToggleService_;
-    SetupWizardService = _SetupWizardService_;
-    UrlConfig = _UrlConfig_;
-    WebExApiGatewayService = _WebExApiGatewayService_;
-    WebExApiGatewayConstsService = _WebExApiGatewayConstsService_;
-    WebExUtilsFact = _WebExUtilsFact_;
+  beforeEach(function () {
+    deferred_licenseInfo = this.$q.defer();
+    deferredIsSiteSupportsIframe = this.$q.defer();
+    deferredCsvStatus = this.$q.defer();
 
-    $httpBackend = _$httpBackend_;
-    $rootScope = _$rootScope_;
-    $q = _$q_;
-
-    deferred_licenseInfo = $q.defer();
-    deferredIsSiteSupportsIframe = $q.defer();
-    deferredCsvStatus = $q.defer();
-
-    WebExApiGatewayConstsService.csvStates = {
+    this.WebExApiGatewayConstsService.csvStates = {
       authTokenError: 'authTokenError',
       none: 'none',
       exportInProgress: 'exportInProgress',
@@ -279,69 +282,68 @@ describe('Service: WebExSiteRowService', function () {
       importCompletedWithErr: 'importCompletedWithErr',
     };
 
-    WebExApiGatewayConstsService.csvStatusTypes = [
-      WebExApiGatewayConstsService.csvStates.none,
-      WebExApiGatewayConstsService.csvStates.exportInProgress,
-      WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
-      WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
-      WebExApiGatewayConstsService.csvStates.importInProgress,
-      WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
-      WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
+    this.WebExApiGatewayConstsService.csvStatusTypes = [
+      this.WebExApiGatewayConstsService.csvStates.none,
+      this.WebExApiGatewayConstsService.csvStates.exportInProgress,
+      this.WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
+      this.WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
+      this.WebExApiGatewayConstsService.csvStates.importInProgress,
+      this.WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
+      this.WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
     ];
 
-    spyOn(Auth, 'redirectToLogin');
-    spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
-    spyOn(Authinfo, 'getPrimaryEmail').and.returnValue('nobody@nowhere.com');
-    spyOn(Authinfo, 'getUserName').and.returnValue('bob@nonmatching-email.com');
-    spyOn(FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue($q.resolve(true));
-    spyOn(Authinfo, 'getCustomerAdminEmail').and.returnValue('bob@nonmatching-email.com');
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
-    spyOn(WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
-    spyOn(WebExUtilsFact, 'getAllSitesWebexLicenseInfo').and.returnValue(deferred_licenseInfo.promise);
-    spyOn(WebExUtilsFact, 'isCIEnabledSite').and.callFake(function (siteUrl) {
+    spyOn(this.Auth, 'redirectToLogin');
+    spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(fakeConferenceServicesArray);
+    spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue(customers);
+    spyOn(this.Authinfo, 'getPrimaryEmail').and.returnValue('nobody@nowhere.com');
+    spyOn(this.Authinfo, 'getUserName').and.returnValue('bob@nonmatching-email.com');
+    spyOn(this.FeatureToggleService, 'atlasWebexAddSiteGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.Authinfo, 'getCustomerAdminEmail').and.returnValue('bob@nonmatching-email.com');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+    spyOn(this.WebExApiGatewayService, 'siteFunctions').and.returnValue(deferredIsSiteSupportsIframe.promise);
+    spyOn(this.WebExApiGatewayService, 'csvStatus').and.returnValue(deferredCsvStatus.promise);
+    spyOn(this.WebExUtilsFact, 'getAllSitesWebexLicenseInfo').and.returnValue(deferred_licenseInfo.promise);
+    spyOn(this.WebExUtilsFact, 'isCIEnabledSite').and.callFake(function (siteUrl) {
       if (siteUrl === 'sjsite04.webex.com') {
         return true;
       } else if (siteUrl === 't30citestprov9.webex.com') {
         return false;
       }
     });
-    spyOn(SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
+    spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(confServices);
     installPromiseMatchers();
-  }));
+  });
 
-  ////////
-
-  it('can correctly initialize WebExSiteRowService', function () {
-    expect(WebExSiteRowService).toBeDefined();
+  it('can correctly initialize SiteListService', function () {
+    expect(this.SiteListService).toBeDefined();
   });
 
   it('can correctly populate site rows', function () {
-    WebExSiteRowService.addSiteRow(fakeSiteRow1);
-    WebExSiteRowService.addSiteRow(fakeSiteRow2);
-    var siteRowArray = WebExSiteRowService.getSiteRows();
+    this.SiteListService.addSiteRow(fakeSiteRow1);
+    this.SiteListService.addSiteRow(fakeSiteRow2);
+    const siteRowArray = this.SiteListService.getSiteRows();
     expect(siteRowArray.length).toBe(2);
   });
 
   it('can correctly get specified site row', function () {
-    WebExSiteRowService.addSiteRow(fakeSiteRow1);
-    WebExSiteRowService.addSiteRow(fakeSiteRow2);
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    this.SiteListService.addSiteRow(fakeSiteRow1);
+    this.SiteListService.addSiteRow(fakeSiteRow2);
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
     expect(searchResult.license.licenseId).toBe('MC_66e1a7c9-3549-442f-942f-41a53b020689_sjsite04.webex.com');
   });
 
   it('can correctly create site list grid', function () {
-    WebExSiteRowService.getConferenceServices();
+    this.SiteListService.getConferenceServices();
 
-    var siteRowArray = WebExSiteRowService.getSiteRows();
+    const siteRowArray = this.SiteListService.getSiteRows();
     expect(siteRowArray.length).toBe(1);
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
     expect(searchResult.license.licenseId).toBe('MC_66e1a7c9-3549-442f-942f-41a53b020689_sjsite04.webex.com');
   });
 
   it('can correctly create site list grid with linked site', function () {
-    var fakeLinkedConferenceService = {
+    const fakeLinkedConferenceService = {
       label: 'Meeting Center 200',
       value: 1,
       name: 'confRadio',
@@ -359,22 +361,41 @@ describe('Service: WebExSiteRowService', function () {
       },
       isCustomerPartner: false,
     };
-    spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([fakeLinkedConferenceService]);
+    spyOn(this.Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue([fakeLinkedConferenceService]);
 
-    WebExSiteRowService.getLinkedConferenceServices();
+    this.SiteListService.getLinkedConferenceServices();
 
-    var siteRowArray = WebExSiteRowService.getSiteRows();
+    const siteRowArray = this.SiteListService.getSiteRows();
     expect(siteRowArray.length).toBe(1);
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite07.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite07.webex.com');
     expect(searchResult.isLinkedSite).toBeTruthy();
+  });
+
+  it('should get list of managed webex sites', function() {
+    const sites = [{ siteUrl: 'atlastest2.dmz.webex.com', subscriptionId: 'Subscription-2' }];
+    const managedSites = this.SiteListService.getManagedSites();
+    expect(this.Authinfo.getCustomerAccounts).toHaveBeenCalled();
+    expect(sites).toEqual(managedSites);
+  });
+
+  it('should have managed site', function() {
+    const siteUrl = 'atlastest2.dmz.webex.com';
+    const managedSite = this.SiteListService.canManageSite(siteUrl);
+    expect(managedSite).toBe(true);
+  });
+
+  it('should have managed subscription', function() {
+    const subscriptionId = 'Subscription-2';
+    const managedSubscription = this.SiteListService.canManageSubscription(subscriptionId);
+    expect(managedSubscription).toBe(true);
   });
 
   /////////// isIframeSupported, isAdminReportEnabled flags' tests ////////////
 
   it('can process isIframeSupported=false and isAdminReportEnabled=false', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -385,9 +406,9 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: false,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     expect(searchResult.isIframeSupported).toEqual(false);
     expect(searchResult.isAdminReportEnabled).toEqual(false);
@@ -398,8 +419,8 @@ describe('Service: WebExSiteRowService', function () {
   });
 
   it('can process isIframeSupported=false and isAdminReportEnabled=true', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -410,9 +431,9 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: false,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     expect(searchResult.isIframeSupported).toEqual(false);
     expect(searchResult.isAdminReportEnabled).toEqual(true);
@@ -423,8 +444,8 @@ describe('Service: WebExSiteRowService', function () {
   });
 
   it('can process isIframeSupported=true and isAdminReportEnabled=false', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -435,9 +456,9 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: false,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     expect(searchResult.isIframeSupported).toEqual(true);
     expect(searchResult.isAdminReportEnabled).toEqual(false);
@@ -448,8 +469,8 @@ describe('Service: WebExSiteRowService', function () {
   });
 
   it('can process isIframeSupported=true and isAdminReportEnabled=true', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -460,9 +481,9 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: false,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     expect(searchResult.isIframeSupported).toEqual(true);
     expect(searchResult.isAdminReportEnabled).toEqual(true);
@@ -475,8 +496,8 @@ describe('Service: WebExSiteRowService', function () {
   /////////// CSV Tests ///////////
 
   it('can set up csv status polling', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -487,16 +508,16 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: true,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     expect(searchResult.csvPollIntervalObj).not.toEqual(null);
   });
 
   it('can process csvStatus="none"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -509,22 +530,22 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.none,
+      status: this.WebExApiGatewayConstsService.csvStates.none,
       completionDetails: null,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.none);
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.none);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="exportInProgress"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -537,23 +558,23 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.exportInProgress,
+      status: this.WebExApiGatewayConstsService.csvStates.exportInProgress,
       completionDetails: null,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportInProgress);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.exportInProgress);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="exportCompletedNoErr"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -566,23 +587,23 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
+      status: this.WebExApiGatewayConstsService.csvStates.exportCompletedNoErr,
       completionDetails: {},
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.exportCompletedNoErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="exportCompletedWithErr"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -595,23 +616,23 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
+      status: this.WebExApiGatewayConstsService.csvStates.exportCompletedWithErr,
       completionDetails: {},
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.exportCompletedWithErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="importInProgress"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -624,23 +645,23 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.importInProgress,
+      status: this.WebExApiGatewayConstsService.csvStates.importInProgress,
       completionDetails: null,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importInProgress);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.importInProgress);
     expect(searchResult.csvStatusObj.completionDetails).toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="importCompletedNoErr"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -653,23 +674,23 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
+      status: this.WebExApiGatewayConstsService.csvStates.importCompletedNoErr,
       completionDetails: {},
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.importCompletedNoErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
   });
 
   it('can process csvStatus="importCompletedWithErr"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -682,15 +703,15 @@ describe('Service: WebExSiteRowService', function () {
 
     deferredCsvStatus.resolve({
       siteUrl: 'sjsite04.webex.com',
-      status: WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
+      status: this.WebExApiGatewayConstsService.csvStates.importCompletedWithErr,
       completionDetails: {},
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
-    expect(searchResult.csvStatusObj.status).toEqual(WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
+    expect(searchResult.csvStatusObj.status).toEqual(this.WebExApiGatewayConstsService.csvStates.importCompletedWithErr);
     expect(searchResult.csvStatusObj.completionDetails).not.toEqual(null);
 
     expect(searchResult.showCSVInfo).toEqual(true);
@@ -699,8 +720,8 @@ describe('Service: WebExSiteRowService', function () {
   // TODO: restore this after CSCvd83672 is deployed to WebEx production
   // - see also: https://jira-eng-chn-sjc1.cisco.com/jira/projects/ATLAS/issues/ATLAS-2022
   xit('can process "Auth token is invalid"', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -719,14 +740,14 @@ describe('Service: WebExSiteRowService', function () {
       completionDetails: null,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    expect(Auth.redirectToLogin).toHaveBeenCalled();
+    expect(this.Auth.redirectToLogin).toHaveBeenCalled();
   });
 
   it('can process multiple licensed services', function () {
-    WebExSiteRowService.getConferenceServices();
-    WebExSiteRowService.configureGrid();
+    this.SiteListService.getConferenceServices();
+    this.SiteListService.configureGrid();
 
     deferred_licenseInfo.resolve(fake_allSitesLicenseInfo);
 
@@ -737,9 +758,9 @@ describe('Service: WebExSiteRowService', function () {
       isCSVSupported: true,
     });
 
-    $rootScope.$apply();
+    this.$rootScope.$apply();
 
-    var searchResult = WebExSiteRowService.getSiteRow('sjsite04.webex.com');
+    const searchResult = this.SiteListService.getSiteRow('sjsite04.webex.com');
 
     // sjsite04.webex.com has MC 200 and CMR 100 licenses
     expect(searchResult.MCLicensed).toBe(true);
@@ -751,88 +772,50 @@ describe('Service: WebExSiteRowService', function () {
 
   //test to determine CI sites
   it('can correctly determine CI sites and display the actions column in sitelist page', function () {
-    var fakeSiteUrl = 'sjsite04.webex.com';
-    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    const fakeSiteUrl = 'sjsite04.webex.com';
+    const searchResult = this.WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
     expect(searchResult).toBe(true);
 
-    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
-      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
-      expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    this.WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
+      expect(this.SiteListService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(this.SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     });
   });
 
   it('can correctly determine non CI sites and give cross launch link in the actions column', function () {
-    var fakeSiteUrl = 't30citestprov9.webex.com';
-    var searchResult = WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
+    const fakeSiteUrl = 't30citestprov9.webex.com';
+    const searchResult = this.WebExUtilsFact.isCIEnabledSite(fakeSiteUrl);
     expect(searchResult).toBe(false);
 
-    WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
-      expect(WebExSiteRowService.siteFunctionsSuccess).toHaveBeenCalled();
-      expect(WebExSiteRowService.updateCSVStatusInRow).not.toHaveBeenCalled();
+    this.WebExApiGatewayService.siteFunctions(fakeSiteUrl).then(function () {
+      expect(this.SiteListService.siteFunctionsSuccess).toHaveBeenCalled();
+      expect(this.SiteListService.updateCSVStatusInRow).not.toHaveBeenCalled();
     });
   });
 
   it('can group licenses by sites correctly', function () {
-    var sites = WebExSiteRowService.getLicensesInSubscriptionGroupedBySites();
+    const sites = this.SiteListService.getLicensesInSubscriptionGroupedBySites();
     expect(_.keys(sites).length).toEqual(3);
   });
 
-  describe('shouldShowSiteManagement() function', function () {
-    it('should return TRUE the logged in user\'s email or customer admin email matches the pattern supplied', function () {
-      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
-      Authinfo.getCustomerAdminEmail.and.returnValue('ordersimp-alina@mailinator.com');
-      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
-      promise.then(function (result) {
-        expect(result).toBeTruthy();
-      });
-      expect(promise).toBeResolved();
-    });
-
-    it('should return FALSE if the logged in user\'s PrimaryEmail or CustomerAdminEmail or UserName does NOT match the pattern supplied AND FT is false', function () {
-      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
-      Authinfo.getUserName.and.returnValue('bob@nonmatching-email.com');
-      Authinfo.getCustomerAdminEmail.and.returnValue('another@nonmatching-email.com');
-      var promise = WebExSiteRowService.shouldShowSiteManagement('^ordersimp-.*@mailinator.com');
-      promise.then(function (result) {
-        expect(result).toBeFalsy();
-      });
-      expect(promise).toBeResolved();
-    });
-
-    it('will return TRUE if \'atlasWebexAddSiteGetStatus\' FT is enabled whoever logged in user is', function () {
-      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
-      promise.then(function (result) {
-        expect(result).toBeTruthy();
-      });
-      expect(promise).toBeResolved();
-    });
-
-    it('will return FALSE  if \'atlasWebexAddSiteGetStatus\' FT is disabled and the pattern does not match', function () {
-      FeatureToggleService.atlasWebexAddSiteGetStatus.and.returnValue($q.resolve(false));
-      var promise = WebExSiteRowService.shouldShowSiteManagement('doesnotmatterwhatpattern');
-      promise.then(function (result) {
-        expect(result).toBeFalsy();
-      });
-      expect(promise).toBeResolved();
-    });
-  });
-  describe('For sites with pending action', function () {
+  describe('For sites with pending action', () => {
     beforeEach(function () {
-      spyOn(SetupWizardService, 'getPendingAuthinfoSubscriptions').and.returnValue(pendingStatusSubscriptions);
-      spyOn(UrlConfig, 'getAdminServiceUrl').and.returnValue('adminServiceUrl/');
-      $httpBackend.expect('GET', 'adminServiceUrl/orders/abcd-12345').respond(returnedServiceStatuses1);
-      $httpBackend.expect('GET', 'adminServiceUrl/orders/efgh-67890').respond(returnedServiceStatuses2);
+      spyOn(this.SetupWizardService, 'getPendingAuthinfoSubscriptions').and.returnValue(pendingStatusSubscriptions);
+      spyOn(this.UrlConfig, 'getAdminServiceUrl').and.returnValue('adminServiceUrl/');
+      this.$httpBackend.expect('GET', 'adminServiceUrl/orders/abcd-12345').respond(returnedServiceStatuses1);
+      this.$httpBackend.expect('GET', 'adminServiceUrl/orders/efgh-67890').respond(returnedServiceStatuses2);
     });
     afterEach(function () {
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+      this.$httpBackend.verifyNoOutstandingExpectation();
+      this.$httpBackend.verifyNoOutstandingRequest();
     });
 
     it('displays them as pending action', function () {
-      WebExSiteRowService.initSiteRows();
-      $httpBackend.flush();
-      expect(WebExSiteRowService.siteRows.gridData.length).toBe(3);
-      expect(WebExSiteRowService.siteRows.gridData[0].isPending).toBe(true);
+      this.SiteListService.initSiteRows();
+      this.$httpBackend.flush();
+      expect(this.SiteListService.siteRows.gridData.length).toBe(3);
+      expect(this.SiteListService.siteRows.gridData[0].isPending).toBe(true);
     });
   });
+
 });
