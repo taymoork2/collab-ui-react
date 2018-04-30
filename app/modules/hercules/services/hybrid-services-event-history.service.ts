@@ -204,8 +204,8 @@ export class HybridServicesEventHistoryService {
         params: {
           clusterId: options.clusterId,
           fromTime: fromTimestamp,
-          hostSerial: undefined,
-          serviceId: undefined,
+          hostSerial: options.hostSerial,
+          serviceId: options.serviceId,
           toTime: toTimestamp,
         },
       })
