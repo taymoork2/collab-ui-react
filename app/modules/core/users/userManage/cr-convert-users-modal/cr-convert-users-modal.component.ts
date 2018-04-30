@@ -30,7 +30,6 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public scopeData: IOnboardScopeForUsersConvert;
 
   public ftF7208: boolean;
-  public ftF3745: boolean;
   public readonly POTENTIAL = 'potential';
   public readonly PENDING = 'pending';
   public conversionStatusMap: IConversionStatus[];
@@ -150,12 +149,8 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.addGridColumns(this.gridPotentialUsers);
     this.addGridColumns(this.gridPendingUsers);
 
-    this.$q.all({
-      f3745: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF3745AutoAssignLicenses),
-      f7208: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF7208GDPRConvertUser),
-    }).then(features => {
-      this.ftF3745 = features.f3745;
-      this.ftF7208 = features.f7208;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF7208GDPRConvertUser).then(supported => {
+      this.ftF7208 = supported;
       this.getUnlicensedUsers();
     });
   }
