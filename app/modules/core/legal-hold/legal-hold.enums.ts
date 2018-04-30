@@ -31,7 +31,7 @@ export enum ImportResultStatus {
 
 export enum Events {
   CHANGED = 'LegalHold::matterUpdated',
-  CANCEL_CONVERT = 'LegalHold:: cancelUserConversion',
-  UPDATE_CONVERT_PROGRESS = 'LegalHold::updateConvertProgress',
+  CONVERSION_CANCEL_INITIATED = 'LegalHold::custodianConversionCancelSignalled',
+  CONVERSION_CHUNK_PROCESSED = 'LegalHold::custodianConversionChunkProcessed',
 }
 

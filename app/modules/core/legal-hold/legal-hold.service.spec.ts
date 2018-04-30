@@ -4,7 +4,6 @@ import { Actions } from './legal-hold.service';
 import { Matter } from './matter.model';
 import { ICustodian } from './legal-hold.interfaces';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
-
 import { UrlConfig } from 'modules/core/config/urlConfig';
 
 type Test = atlas.test.IServiceTest<{
@@ -12,7 +11,7 @@ type Test = atlas.test.IServiceTest<{
   LegalHoldService: LegalHoldService;
   UrlConfig: UrlConfig;
   Userservice;
-
+  $rootScope: ng.IRootScopeService;
 }>;
 
 describe('Service: LegalHoldService', () => {
@@ -24,6 +23,7 @@ describe('Service: LegalHoldService', () => {
       'LegalHoldService',
       'UrlConfig',
       'Userservice',
+      '$rootScope',
     );
 
     this.matterList = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'));
@@ -180,8 +180,10 @@ describe('Service: LegalHoldService', () => {
     });
   });
 
-  describe('Convert user chunk function', function () {
-    it('should take an 2-d array of userIds or emails and return users and errors', function () {
+  describe('Convert user chunk function', () => {
+    let userArr;
+    beforeEach(function () {
+      userArr =  [['validUser@test.com', '12345'], ['validUser@test.com', '12345'], ['12345', '12345'], ['validUser@test.com']];
       spyOn(this.LegalHoldService, 'getCustodian').and.callFake(function () {
         if (arguments[2] === 'validUser@test.com') {
           return this.$q.resolve({ userId: '12345' });
@@ -189,12 +191,30 @@ describe('Service: LegalHoldService', () => {
           return this.$q.reject({ error: 'someError' });
         }
       });
-
-      const arr = [['validUser@test.com', '12345'], ['validUser@test.com', '12345'], ['12345', '12345'], ['validUser@test.com']];
-      this.LegalHoldService.convertUsersChunk(arr, GetUserBy.ID).then(result => {
+    });
+    it('should take an 2-d array of userIds or emails and return users and errors', function () {
+      this.LegalHoldService.convertUsersChunk(userArr, GetUserBy.ID).then(result => {
         expect(result.success.length).toBe(3);
         expect(result.error.length).toBe(4);
-      });
+      })
+        .catch(fail);
+      this.$rootScope.$apply();
+    });
+    it('should interrup user conversion proccess, should reject and reset the cancel flag when cancelImport is called', function () {
+      this.LegalHoldService.cancelConvertUsers();
+      this.LegalHoldService.convertUsersChunk(userArr, GetUserBy.ID)
+        .then(fail)
+        .catch(e => {
+          expect(e).toBe('legalHold.custodianImport.errorCanceledByUser');
+        });
+      this.$rootScope.$apply();
+      this.LegalHoldService.convertUsersChunk(userArr,  GetUserBy.ID)
+        .then(result => {
+          expect(result.success.length).toBe(3);
+          expect(result.error.length).toBe(4);
+        })
+        .catch(fail);
+      this.$rootScope.$apply();
     });
   });
 });

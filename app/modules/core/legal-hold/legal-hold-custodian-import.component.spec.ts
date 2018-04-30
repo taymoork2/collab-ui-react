@@ -187,7 +187,7 @@ describe('Component: legalHoldCustodianImport', () => {
         });
       expect(promise).toBeResolved();
       expect(this.controller.resultStatus).toBe(ImportResultStatus.SUCCESS);
-      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith([[ '12345', '12345' ]]);
+      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith([ '12345', '12345' ]);
     });
   });
 

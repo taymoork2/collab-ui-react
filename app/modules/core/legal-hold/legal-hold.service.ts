@@ -79,7 +79,7 @@ export class LegalHoldService {
       orgId: orgId,
       caseId: caseId,
     };
-    return this.$http.post(this.getActionUrl(Actions.READ), data).then(res => Matter.matterFromResponseData(<IMatterJsonData>res.data));
+    return this.$http.post<IMatterJsonData>(this.getActionUrl(Actions.READ), data).then(res => Matter.matterFromResponseData(res.data));
   }
 
   public deleteMatter(orgId: string, caseId: string) {
@@ -107,9 +107,6 @@ export class LegalHoldService {
     return this.$http.post(this.getActionUrl(Actions.ADD_USERS), data)
       .then(() => {
         return this.readMatter(orgId, caseId);
-      })
-      .catch((e) => {
-        return e;
       });
   }
 
@@ -153,6 +150,7 @@ export class LegalHoldService {
   }): IPromise<IImportResult> {
 
     if (this.shouldCancel) {
+      this.shouldCancel = false;
       return this.$q.reject(`legalHold.custodianImport.${CustodianImportErrors.CANCELED}`);
     }
     // don't want to time out if this takes long
@@ -172,7 +170,7 @@ export class LegalHoldService {
         });
     });
     return this.$q.all(getCustodiansInChunkPromiseArr).then(() => {
-      this.$rootScope.$emit(Events.UPDATE_CONVERT_PROGRESS); //setUploadProgress();
+      this.$rootScope.$emit(Events.CONVERSION_CHUNK_PROCESSED); //setUploadProgress();
       if (csvEmailsOrIdsArray.length > 1) {
         csvEmailsOrIdsArray.shift();
         return this.convertUsersChunk(csvEmailsOrIdsArray, getUserBy, returnResult);
@@ -233,12 +231,10 @@ export class LegalHoldService {
 
 
   public getCustodian(orgId: string, searchType: GetUserBy, queryParam: string): ng.IPromise<ICustodian> {
-
     if (searchType === GetUserBy.ID) {
       return this.getCustodianById(orgId, queryParam);
-    } else {
-      return this.getCustodianByEmailAddress(orgId, queryParam);
     }
+    return this.getCustodianByEmailAddress(orgId, queryParam);
   }
 
   private massageMatterListForDisplay(data: IMatterJsonData[]): IMatterJsonDataForDisplay[] {
