@@ -3,7 +3,7 @@ import './banner.scss';
 
 export default angular
   .module('core.crBanner', [
-    'core.authinfo',
+    require('angular-translate'),
     require('@collabui/collab-ui-ng').default,
   ])
   .component('crBanner', new BannerComponent())

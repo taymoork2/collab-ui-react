@@ -128,7 +128,7 @@ export class LearnMoreOverviewComponent implements ng.IComponentOptions {
 }
 
 export class LearnMoreReportsComponent implements ng.IComponentOptions {
-  public template = `<div class="reports-bmmp-banner" ng-if="$ctrl.show()" ng-class="{ 'readonly': $ctrl.isReadOnly }">
+  public template = `<div class="reports-bmmp-banner cs-alert-banner--info" ng-if="$ctrl.show()" ng-class="{ 'readonly': $ctrl.isReadOnly }">
     <div class="cisco-bmmp-marketing-closeable-widget"
       data-application-page="reports"
       data-widget-location="top-bar"

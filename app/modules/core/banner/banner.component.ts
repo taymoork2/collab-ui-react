@@ -1,3 +1,5 @@
+import { CoreEvent } from 'modules/core/shared/event.constants';
+
 class BannerController implements ng.IComponentController {
   /* @ngInject */
   constructor(
@@ -13,7 +15,7 @@ class BannerController implements ng.IComponentController {
   private destroyListener: Function;
 
   public $onInit() {
-    this.destroyListener = this.$rootScope.$on('TOGGLE_HEADER_BANNER', (_event, data): void => {
+    this.destroyListener = this.$rootScope.$on(CoreEvent.HEADER_BANNER_TOGGLED, (_event, data): void => {
       if (_.get(data, 'visible', false)) {
         this.isVisible = true;
         this.iconCss = _.get(data, 'iconCss');

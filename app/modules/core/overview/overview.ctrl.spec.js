@@ -1,4 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   beforeEach(function () {
     this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
@@ -193,7 +195,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should have created re-brand banner', function () {
-      expect(this.$rootScope.$emit).toHaveBeenCalledWith('TOGGLE_HEADER_BANNER', {
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith(CoreEvent.HEADER_BANNER_TOGGLED, {
         visible: true,
         type: 'info',
         translation: 'rebrand.banner.text',
