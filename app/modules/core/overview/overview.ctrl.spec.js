@@ -1,4 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   beforeEach(function () {
     this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
@@ -68,6 +70,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
     spyOn(this.Authinfo, 'isMessageEntitled').and.returnValue(false);
     spyOn(this.Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(this.$rootScope, '$emit');
 
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve());
     spyOn(this.HybridServicesFlagService, 'readFlags').and.returnValue(this.$q.resolve([{
@@ -189,6 +192,15 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should have properly set trialDaysLeft', function () {
       expect(this.controller.trialDaysLeft).toEqual(1);
+    });
+
+    it('should have created re-brand banner', function () {
+      expect(this.$rootScope.$emit).toHaveBeenCalledWith(CoreEvent.HEADER_BANNER_TOGGLED, {
+        visible: true,
+        type: 'info',
+        translation: 'rebrand.banner.text',
+        closeable: true,
+      });
     });
   });
 
