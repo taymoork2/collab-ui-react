@@ -16,7 +16,7 @@
       on-change-fn="$ctrl.selectHcsService(selected)">
     </setup-service-selection >
     <setup-agent-install-file ng-if="$ctrl.currentStepIndex === 2"
-      on-change-fn="$ctrl.setAgentInstallFile(fileName, httpProxyList)">
+      on-change-fn="$ctrl.setAgentInstallFile(hcsInstallable)">
     </setup-agent-install-file >
     <hcs-setup-sftp ng-if="$ctrl.currentStepIndex === 3 && $ctrl.hcsServices.upgrade || $ctrl.isSftp"
       sftp-server="$ctrl.sftpServer"

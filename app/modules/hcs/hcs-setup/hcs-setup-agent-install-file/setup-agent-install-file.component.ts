@@ -65,11 +65,11 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   public createdToken(e): void {
     if (e.attrs.duplicate) {
       this.$timeout(() => {
-        const tokens = this.getTokens();
-        tokens.splice(_.findLastIndex(tokens, { value: _.get(e.attrs, 'value') }), 1);
+        let tokens = this.getTokens();
+        tokens = tokens.splice(_.findLastIndex(tokens, { value: _.get(e.attrs, 'value') }), 1);
         this.Notification.error('hcs.installFiles.duplicateProxy');
-        this.setTokens(tokens.map(function (tokens) {
-          return tokens.value;
+        this.setTokens(tokens.map(function (token) {
+          return token.value;
         }));
       });
     } else if (!this.validateHttpProxyAddress(e.attrs.value)) {
@@ -79,7 +79,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
       this.setInstallFileInfo();
     } else {
       if (this.httpProxyTokens.indexOf(e.attrs.value) === -1) {
-        this.httpProxyTokens.push(e.attrs);
+        this.httpProxyTokens.push(e.attrs.value);
         this.setInstallFileInfo();
       }
       this.setPlaceholderText('');
@@ -97,7 +97,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
     if (!this.validateHttpProxyAddress(e.attrs.value)) {
       this.invalidCount--;
     }
-    const index = _.findIndex(this.httpProxyTokens, (item) => item.value === e.attrs.value);
+    const index = _.findIndex(this.httpProxyTokens, (item) => item === e.attrs.value);
     if (index > -1) {
       this.httpProxyTokens.splice(index, 1);
     }
@@ -108,10 +108,10 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
     const ipdomain = _.split(value, ':', 2);
     const ip = _.split(ipdomain[0], '.');
     const regex = new RegExp(/^(([a-zA-Z0-9\-]{1,63}[\.]))+([A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z])$/g);
-    const ipregex = new RegExp(/^(\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b)$/g); //To-Do ipaddress validations
+    const ipregex = new RegExp(/^(\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b)$/g);
     let portValid = true;
 
-    if (ipdomain[1] && !_.inRange(_.toNumber(ipdomain[1]), this.MIN_PORT, this.MAX_PORT)) {
+    if (_.toNumber(ipdomain[1]) && !_.inRange(_.toNumber(ipdomain[1]), this.MIN_PORT, this.MAX_PORT)) {
       portValid = false;
       this.Notification.error('hcs.installFiles.invalidPortError', {
         min: this.MIN_PORT,
@@ -131,7 +131,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   }
 
   public validateFileName(file: string): boolean {
-    const regex = new RegExp(/^([0-9a-zA-Z]+[^\b\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|\"\'\s])+$/g);
+    const regex = new RegExp(/(^[\w]*[^\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|\"\'\s][\w]*)/g);
     return regex.test(file);
   }
 
@@ -153,8 +153,10 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
       this.form.$setValidity('', false, this.form);
     }
     this.onChangeFn({
-      fileName: this.fileName,
-      httpProxyList: this.httpProxyTokens,
+      hcsInstallable: {
+        label: this.fileName,
+        proxies: this.httpProxyTokens,
+      },
     });
   }
 }

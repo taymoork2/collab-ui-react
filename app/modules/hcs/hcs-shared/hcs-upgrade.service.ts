@@ -1,5 +1,6 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem } from './hcs-upgrade';
+import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
@@ -11,10 +12,21 @@ interface IClusterResource extends ng.resource.IResourceClass<ng.resource.IResou
 
 interface ICustomerClustersResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCustomerClusters>> {}
 
+interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
+}
+
+interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.resource.IResource<IApplicationVersion>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
+}
+
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
   private clusterResource: IClusterResource;
   private customerClustersResource: ICustomerClustersResource;
+  private swProfileResource: ISwProfileResource;
+  private appVersionResource: IApplicationVersionResource;
+
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
@@ -38,6 +50,7 @@ export class HcsUpgradeService {
     };
     const queryAction: ng.resource.IActionDescriptor = {
       method: 'GET',
+      isArray: true,
       headers: {
         Authorization: BASIC_AUTH_VAL,
       },
@@ -75,6 +88,18 @@ export class HcsUpgradeService {
         save: saveAction,
         get: getAction,
       });
+
+    this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofile/:id', {},
+      {
+        update: updateAction,
+        save: saveAction,
+        get: getAction,
+      });
+
+    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {},
+      {
+        get: getAction,
+      });
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -104,8 +129,8 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public listSftpServers(): ng.IPromise <any[]> {
-    return this.sftpServerResource.query({
+  public listSftpServers(): ng.IPromise <any> {
+    return this.sftpServerResource.get({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise;
   }
@@ -139,5 +164,42 @@ export class HcsUpgradeService {
     }).$promise.then(response => {
       return response.clusters;
     });
+  }
+
+  public createSwProfile(swProfile: ISoftwareProfile): ng.IPromise<any> {
+    return this.swProfileResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+    }, swProfile).$promise;
+  }
+
+  public getSwProfile(_id: string): ng.IPromise<ISoftwareProfile> {
+    return this.swProfileResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      id: _id,
+    }).$promise;
+  }
+
+  public updateSwProfile(_id: string, swProfile: ISoftwareProfile): ng.IPromise<any>  {
+    return this.swProfileResource.update({
+      partnerId: this.Authinfo.getOrgId(),
+      id: _id,
+    }, swProfile).$promise;
+  }
+
+  public deleteSwProfile(_id: string): ng.IPromise<any> {
+    return this.swProfileResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      id: _id,
+    }).$promise;
+  }
+
+  public listSwProfiles(): ng.IPromise <any[]> {
+    return this.swProfileResource.query({
+      partnerId: this.Authinfo.getOrgId(),
+    }).$promise;
+  }
+
+  public listAppVersions(): ng.IPromise <IApplicationVersion> {
+    return this.appVersionResource.get().$promise;
   }
 }
