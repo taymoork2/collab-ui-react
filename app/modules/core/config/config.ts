@@ -95,6 +95,7 @@ export class Config {
 
   public readonly entitlements = {
     huron: 'ciscouc',
+    broadCloud: 'ciscobc',
     squared: 'webex-squared',
     fusion_uc: 'squared-fusion-uc',
     fusion_cal: 'squared-fusion-cal',

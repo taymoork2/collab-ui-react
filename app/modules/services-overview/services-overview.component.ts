@@ -25,7 +25,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   private cards: ServicesOverviewCard[] = [
     new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
     new ServicesOverviewMeetingCard(this.Authinfo),
-    new ServicesOverviewCallCard(this.Authinfo, this.Config),
+    new ServicesOverviewCallCard(this.Authinfo),
     new ServicesOverviewCareCard(this.Authinfo),
   ];
 
