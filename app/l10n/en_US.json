@@ -11149,7 +11149,8 @@
         },
         "sftpLocation": {
           "sectionHeader": "Default SFTP Location",
-          "sftpSelectLabel": "Choose the default SFTP Location for this cluster."
+          "sftpSelectLabel": "Choose the default SFTP Location for this cluster.",
+          "sftpPlaceholder": "Select a server"
         },
         "nodes": {
           "accept": "Accept",

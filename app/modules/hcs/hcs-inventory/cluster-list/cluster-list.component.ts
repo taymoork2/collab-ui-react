@@ -82,7 +82,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   }
 
   public cardSelected(cluster: IClusterItem): void {
-    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: cluster.id, clusterName: cluster.name });
+    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: cluster.id });
   }
 
   public closeCard(cluster: IClusterItem, $event: Event): void {

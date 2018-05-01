@@ -3275,12 +3275,11 @@
           .state('hcs.clusterDetail', {
             url: '/hcs/inventory/:groupId/cluster/:clusterId',
             parent: 'partner',
-            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
+            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
             params: {
               groupId: '',
               groupType: '',
               clusterId: '',
-              clusterName: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
@@ -3291,9 +3290,6 @@
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              clusterName: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterName;
               },
             },
           })

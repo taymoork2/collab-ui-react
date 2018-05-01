@@ -1,8 +1,11 @@
-import { IHcsInstallables } from './hcs-controller';
+import { IHcsInstallables, IControllerNode } from './hcs-controller';
+type IHcsNodeListResource = IControllerNode[] & ng.resource.IResourceArray<IControllerNode>;
 interface IInstallablesResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsInstallables>> {}
+interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListResource> {}
 
 export class HcsControllerService {
   private installablesResource: IInstallablesResource;
+  private nodeListResource: INodeListResource;
 
   /* @ngInject */
   constructor(
@@ -15,6 +18,13 @@ export class HcsControllerService {
 
     const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
+    const postAction: ng.resource.IActionDescriptor = {
+      method: 'POST',
+      isArray: true,
       headers: {
         Authorization: BASIC_AUTH_VAL,
       },
@@ -46,6 +56,14 @@ export class HcsControllerService {
         delete: deleteAction,
         get: getAction,
       });
+
+    this.nodeListResource = this.$resource<IHcsNodeListResource>(BASE_URL + 'inventory/organizations/:partnerId/lists/nodes', {},
+      {
+        save: postAction,
+        query: queryAction,
+        delete: deleteAction,
+        get: getAction,
+      });
   }
 
   public createAgentInstallFile(installable: IHcsInstallables): ng.IPromise<any> {
@@ -73,6 +91,17 @@ export class HcsControllerService {
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(resp => {
       return resp;
+    });
+  }
+
+  //It is a post action that returns data hence the name getNodesStatus
+  public getNodesStatus(nodeIds: string[]): ng.IPromise<IControllerNode[]> {
+    return this.nodeListResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+    }, {
+      nodeIds: nodeIds,
+    } ).$promise.then(response => {
+      return response;
     });
   }
 }
