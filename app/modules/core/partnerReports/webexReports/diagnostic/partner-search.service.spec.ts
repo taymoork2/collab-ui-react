@@ -22,7 +22,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings`;
     this.$httpBackend.expectPOST(url).respond(200, mockData);
     this.PartnerSearchService.getMeetings()
-      .then( res => expect(res.length).toBe(1) );
+      .then(res => expect(res.length).toBe(1));
 
     this.$httpBackend.flush();
   });
@@ -32,7 +32,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/meeting-detail`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getMeetingDetail(this.conferenceID)
-      .then( res => expect(res.features).toBeDefined() );
+      .then(res => expect(res.features).toBeDefined());
 
     this.$httpBackend.flush();
   });
@@ -42,7 +42,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/unique-participants`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getUniqueParticipants(this.conferenceID)
-      .then( res => expect(_.size(res)).toBe(2) );
+      .then(res => expect(_.size(res)).toBe(2));
 
     this.$httpBackend.flush();
   });
@@ -52,7 +52,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/participants`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getParticipants(this.conferenceID)
-      .then( res => expect(res[0].joinTime).toBeDefined());
+      .then(res => expect(res[0].joinTime).toBeDefined());
 
     this.$httpBackend.flush();
   });
@@ -63,7 +63,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/${qosName}?nodeIds=${this.nodeId}`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getQOS(this.conferenceID, this.nodeId, qosName)
-      .then( res => expect(res[this.nodeId]).toBeDefined());
+      .then(res => expect(res[this.nodeId]).toBeDefined());
 
     this.$httpBackend.flush();
   });
@@ -73,7 +73,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/call-legs`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getCallLegs(this.conferenceID)
-      .then( res => expect(res['tahoeInfo']).toBeDefined())
+      .then(res => expect(res['tahoeInfo']).toBeDefined())
       .catch(fail);
 
     this.$httpBackend.flush();
@@ -128,7 +128,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/participants/join-meeting-time`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getJoinMeetingTime(this.conferenceID)
-      .then( res => expect(res[0].userId).toBeDefined());
+      .then(res => expect(res[0].userId).toBeDefined());
 
     this.$httpBackend.flush();
   });
@@ -138,7 +138,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v2/server`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getServerTime()
-      .then( res => expect(res.dateLong).toBe('2017-12-12'));
+      .then(res => expect(res.dateLong).toBe('2017-12-12'));
 
     this.$httpBackend.flush();
   });
@@ -281,7 +281,7 @@ describe('Service: SearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/participants/${this.nodeId}/device`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.PartnerSearchService.getRealDevice(this.conferenceID, this.nodeId)
-      .then( res => expect(res.items[0].deviceType).toBe('SIP'))
+      .then(res => expect(res.items[0].deviceType).toBe('SIP'))
       .catch(fail);
 
     this.$httpBackend.flush();
