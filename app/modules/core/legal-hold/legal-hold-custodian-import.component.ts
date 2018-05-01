@@ -1,12 +1,9 @@
-
-import { Authinfo } from 'modules/core/scripts/services/authinfo';
-import { Config } from 'modules/core/config/config';
 import { ITableField } from 'modules/core/shared/cr-table';
 import { IToolkitModalService } from 'modules/core/modal';
-import { LegalHoldService } from './legal-hold.service';
+import { LegalHoldService, GetUserBy } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { ICustodian, IImportComponentApi, IImportResult } from './legal-hold.interfaces';
-import { ImportMode, CustodianImportErrors, ImportStep, ImportResultStatus } from './legal-hold.enums';
+import { ImportMode, ImportStep, ImportResultStatus } from './legal-hold.enums';
 
 
 export class LegalHoldCustodianImportController implements ng.IComponentController {
@@ -74,20 +71,14 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     displayResults: this.displayResults.bind(this),
   };
 
-
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
-    private $q: ng.IQService,
-    private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
-    private Authinfo: Authinfo,
-    private Config: Config,
     private Notification: Notification,
     private LegalHoldService: LegalHoldService,
     private ModalService: IToolkitModalService,
-
   ) {
   }
 
@@ -165,6 +156,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     };
     this.ModalService.open(params).result.then(() => {
       this.shouldCancel = true;
+      this.LegalHoldService.cancelConvertUsers();
       this.progressLabel = this.$translate.instant('common.cancelingEllipsis');
     });
 
@@ -216,7 +208,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     const emailsArray = _.flatten(this.csvEmailsArray);
     const chunkedArray = _.chunk(emailsArray, LegalHoldCustodianImportController.DEFAULTS.importChunkSize);
     this.totalChunks = chunkedArray.length;
-    return this.convertUsersChunk(chunkedArray)
+    return this.LegalHoldService.convertUsersChunk(chunkedArray, GetUserBy.EMAIL)
       .then((result) => {
         this.setResults(true, result);
       })
@@ -256,45 +248,6 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     this.onConversionCompleted({ custodianLists: custodiansIds });
   }
 
-  // this is a recursive function that processes emails one chunk at a time.
-  // the reason for using recursion is to wait for the server call to complete
-  // before sending additional data in order to avoid the server overload and
-  // facilitate the cancelation as an alternative to recursion/polling
-
-  private convertUsersChunk(csvEmailsArray: string[][], returnResult = {
-    success: <ICustodian[]>[],
-    error: <ICustodian[]>[],
-  }): IPromise<IImportResult> {
-
-    if (this.shouldCancel) {
-      return this.$q.reject(`legalHold.custodianImport.${CustodianImportErrors.CANCELED}`);
-    }
-    // don't want to time out if this takes long
-    this.$rootScope.$emit(this.Config.idleTabKeepAliveEvent);
-    //create promise array out of the service calls for the chunk
-    const getCustodiansInChunkPromiseArr = _.map(csvEmailsArray[0], (user: string) => {
-      return this.LegalHoldService.getCustodian(this.Authinfo.getOrgId(), user.trim())
-        .then((result: ICustodian) => {
-          if ((result).error) {
-            returnResult.error.push(result);
-          } else {
-            returnResult.success.push(result);
-          }
-        })
-        .catch((notFoundUser: ICustodian) => {
-          returnResult.error.push(notFoundUser);
-        });
-    });
-    return this.$q.all(getCustodiansInChunkPromiseArr).then(() => {
-      this.setUploadProgress();
-      if (csvEmailsArray.length > 1) {
-        csvEmailsArray.shift();
-        return this.convertUsersChunk(csvEmailsArray, returnResult);
-      } else {
-        return returnResult;
-      }
-    });
-  }
   public setUploadProgress(): void {
     this.chunks = this.chunks + 1;
     this.progress = Math.round((90.0 * this.chunks) / this.totalChunks);

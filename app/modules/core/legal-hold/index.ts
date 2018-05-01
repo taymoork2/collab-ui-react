@@ -15,7 +15,7 @@ import { LegalHoldMatterNewComponent } from './legal-hold-matter-new.component';
 import { LegalHoldMatterListComponent } from './legal-hold-matter-list.component';
 import { LegalHoldMatterDetailComponent } from './legal-hold-matter-detail.component';
 export default angular
-  .module('core.legal-hold', [
+  .module('legal-hold', [
     authinfoModuleName,
     configModuleName,
     coreSharedTableModuleName,
