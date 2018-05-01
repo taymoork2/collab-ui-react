@@ -22,6 +22,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     public HcsSetupModalService: HcsSetupModalService,
     private $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,
+  //  private HcsUpgradeService: HcsUpgradeService,
   ) {}
 
   public $onInit() {
@@ -40,6 +41,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     this.swprofileList = [{
       uuid: 'ver10',
       name: 'HCS Profile 10.0',
+      url: 'test',
     }, {
       uuid: 'ver105',
       name: 'HCS Profile 10.5',
