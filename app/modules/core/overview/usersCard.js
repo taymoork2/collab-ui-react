@@ -46,9 +46,9 @@
                 card.pendingConversions = 0;
                 _.forEach(data.resources, function (user) {
                   if (user.conversionStatus === 'IMMEDIATE' || user.conversionStatus === 'DELAYED') {
-                    card.potentialConversions++;
+                    card.potentialConversions += 1;
                   } else if (user.conversionStatus == 'TRANSIENT') {
-                    card.pendingConversions++;
+                    card.pendingConversions += 1;
                   }
                 });
                 card.usersToConvert = card.pendingConversions + card.potentialConversions;

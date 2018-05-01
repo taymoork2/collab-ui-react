@@ -513,6 +513,7 @@
     "getCareEntitlementsErrorForuser": "Failed to get care entitlements for user",
     "result": {
       "200": "entitled successfully",
+      "202": "licensing deferred until migration",
       "404": "does not exist",
       "408": "may not have been entitled; there was a timeout while waiting for the response. Check back later to verify the user's entitlements.",
       "409": "entitlement previously updated",

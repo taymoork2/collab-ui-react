@@ -2,7 +2,7 @@
 
 .users-convert-results {
   display: flex;
-  min-height: 600px;
+  min-height: 37.5rem;
   flex-direction: column;
 
   &__bottom-space--50 {
@@ -15,7 +15,7 @@
 
   .results-container {
     display: inline-flex;
-    min-height: 123px;
+    min-height: 7.6875rem;
 
     .result {
       flex: 1;
@@ -29,7 +29,7 @@
       &.converted-users {
         margin-right: 0.75rem;
         h1 {
-          line-height: 48px;
+          line-height: 3rem;
           color: $brand-success;
           &.disabled {
             color: $gray-light;
@@ -39,7 +39,7 @@
 
       &.pending-users {
         h1 {
-          line-height: 48px;
+          line-height: 3rem;
           color: $color-orange-base;
           &.disabled {
             color: $gray-light;
@@ -55,7 +55,7 @@
 
   .results-total {
     align-self: center;
-    margin: 20px 0;
+    margin: 1.25rem 0;
   }
 
   .table-header {

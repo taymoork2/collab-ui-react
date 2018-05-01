@@ -462,6 +462,7 @@ export default class OnboardService {
     _.reduce(response.data.userResponse, (_result, userResponseItem) => {
       const userResult: IParsedOnboardedUserResult = {
         email: userResponseItem.email,
+        message: userResponseItem.message,
       };
 
       const httpStatus = userResponseItem.httpStatus;
@@ -474,6 +475,7 @@ export default class OnboardService {
           } else {
             _result.convertedUsers.push(userResponseItem.email);
           }
+          // drop-through...
         case HttpStatus.CREATED: {
           if (httpStatus !== HttpStatus.OK) {
             _result.numAddedUsers++;
@@ -482,6 +484,15 @@ export default class OnboardService {
           userResult.alertType = AlertType.SUCCESS;
           break;
         }
+        case HttpStatus.ACCEPTED:
+          if (userResponseItem.message === '600002') {
+            // migration of a 'delayed conversion' user
+            _result.pendingUsers.push(userResponseItem.email);
+            userResult.message = this.$translate.instant('onboardModal.result.202');
+            userResult.alertType = AlertType.SUCCESS;
+          }
+          break;
+
         case HttpStatus.NOT_FOUND: {
           userResult.message = this.$translate.instant('onboardModal.result.404');
           userResult.alertType = AlertType.DANGER;
@@ -567,15 +578,13 @@ export default class OnboardService {
     const resultList = _.flatMap(responses, response => response.resultList);
     const errors = _.compact(_.map(resultList, result => result.errorMsg!));
     const warnings = _.compact(_.map(resultList, result => result.warningMsg!));
-    const converted = _.flatMap(responses, response => response.convertedUsers);
-    const pending = _.flatMap(responses, response => response.pendingUsers);
 
     return {
       numUpdatedUsers: numUpdatedUsers,
       numAddedUsers: numAddedUsers,
       // F7208,
-      convertedUsers: _.union(converted, converted), // remove possible dupes
-      pendingUsers: _.union(pending, pending), // remove possible dupes
+      convertedUsers: _.uniq(_.compact(_.flatMap(responses, response => response.convertedUsers))),
+      pendingUsers: _.uniq(_.compact(_.flatMap(responses, response => response.pendingUsers))),
       results: {
         resultList: resultList,
         errors: errors,

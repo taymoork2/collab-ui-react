@@ -58,9 +58,9 @@ export class CrAddUsersResultsController implements ng.IComponentController {
       // push row data
       if (_.isArray(this.convertedUsers)) {
         this.convertedUsers.sort();
-        _.forEach(this.convertedUsers, function (o) {
+        _.forEach(this.convertedUsers, function (convertedUser) {
           csv.push({
-            email: o || '',
+            email: convertedUser,
             status: statusConverted,
           });
         });
@@ -69,9 +69,9 @@ export class CrAddUsersResultsController implements ng.IComponentController {
       // push row data
       if (_.isArray(this.pendingUsers)) {
         this.pendingUsers.sort();
-        _.forEach(this.pendingUsers, function (o) {
+        _.forEach(this.pendingUsers, function (pendingUser) {
           csv.push({
-            email: o || '',
+            email: pendingUser,
             status: statusPending,
           });
         });
