@@ -4228,6 +4228,7 @@
   "legalHold": {
     "title": "Legal Matters",
     "matterName": "Matter Name",
+    "manageCustodiansTitle": "Manage Custodians",
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
