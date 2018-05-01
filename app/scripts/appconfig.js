@@ -5762,7 +5762,7 @@
             parent: 'modal',
             views: {
               'modal@': {
-                template: '<legal-hold-matter-new dismiss="$dismiss()" class="modal-content legalhold-modal"></legal-hold-matter-new>',
+                template: '<legal-hold-matter-new dismiss="$dismiss()"></legal-hold-matter-new>',
               },
             },
           })
@@ -5774,7 +5774,7 @@
             },
             views: {
               'sidepanel@': {
-                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter" class="modal-content legalhold-modal"></legal-hold-matter-detail>',
+                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter"></legal-hold-matter-detail>',
 
                 resolve: {
                   matter: /* @ngInject */ function ($stateParams) {
@@ -5793,7 +5793,7 @@
             },
             views: {
               'modal@': {
-                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode" class="modal-content legalhold-modal"></legal-hold-custodians-manage>',
+                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode"></legal-hold-custodians-manage>',
                 resolve: {
                   caseId: /* @ngInject */ function ($stateParams) {
                     return $stateParams.caseId;

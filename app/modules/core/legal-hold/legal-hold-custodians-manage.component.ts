@@ -3,6 +3,7 @@ import { Notification } from 'modules/core/notifications';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { ImportMode, Events } from './legal-hold.enums';
 import { IImportComponentApi } from './legal-hold.interfaces';
+import { Matter } from './matter.model';
 
 export class LegalHoldCustodiansManageController implements ng.IComponentController {
   public caseId: string;
@@ -15,7 +16,6 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
     private Authinfo: Authinfo,
     private Notification: Notification,
@@ -36,11 +36,10 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   }
 
   public updateCustodians(custodianList: string[]): ng.IPromise<void> {
-    const userUpdateDeferred = this.$q.defer();
-    userUpdateDeferred.promise = (this.mode === ImportMode.ADD) ?
+    const promise: ng.IPromise<Matter> = (this.mode === ImportMode.ADD) ?
       this.LegalHoldService.addUsersToMatter(this.Authinfo.getOrgId(), this.caseId, custodianList)
       : this.LegalHoldService.removeUsersFromMatter(this.Authinfo.getOrgId(), this.caseId, custodianList);
-    return userUpdateDeferred.promise.then(() => {
+    return promise.then(() => {
       this.isDone = true;
       this.importComponentApi.displayResults();
       this.$rootScope.$emit(Events.CHANGED, [this.caseId] );

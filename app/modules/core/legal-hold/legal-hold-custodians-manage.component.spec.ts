@@ -4,7 +4,6 @@ import { ImportMode, Events } from './legal-hold.enums';
 import { LegalHoldCustodianImportComponent } from './legal-hold-custodian-import.component';
 
 type Test = atlas.test.IComponentTest<LegalHoldCustodiansManageController, {
-  $componentController,
   $q;
   $rootScope;
   Authinfo;
@@ -29,7 +28,6 @@ describe('Component: legalHoldMatterDetail', () => {
     );
 
     this.injectDependencies(
-      '$componentController',
       '$q',
       '$rootScope',
       'Authinfo',
@@ -59,26 +57,26 @@ describe('Component: legalHoldMatterDetail', () => {
     };
   }
 
-  function getChildBindings(this: Test): {} {
-    return this.components.legalHoldCustodianImport.bindings[0];
+  function getChildBindings(_this: Test) {
+    return _this.components.legalHoldCustodianImport.bindings[0];
   }
 
   describe('initial state', () => {
     it('should pass the mode correctly to the child control', function (this: Test) {
       initComponent.apply(this);
-      let childBindings = getChildBindings.apply(this);
-      expect(childBindings['mode']).toBe(ImportMode.ADD);
+      let childBindings = getChildBindings(this);
+      expect(childBindings.mode).toBe(ImportMode.ADD);
       this.$scope.mode = ImportMode.REMOVE;
       initComponent.apply(this);
-      childBindings = getChildBindings.apply(this);
-      expect(childBindings['mode']).toBe(ImportMode.REMOVE);
+      childBindings = getChildBindings(this);
+      expect(childBindings.mode).toBe(ImportMode.REMOVE);
     });
   });
 
   describe('updating custodians', () => {
     beforeEach(initComponent);
     it('should call the appropriate back end function for update', function (this: Test) {
-      this.view.controller('legalHoldCustodiansManage').updateCustodians();
+      this.controller.updateCustodians([]);
       expect(this.LegalHoldService.addUsersToMatter).toHaveBeenCalled();
       this.$scope.mode = ImportMode.REMOVE;
       initComponent.apply(this);
@@ -87,8 +85,8 @@ describe('Component: legalHoldMatterDetail', () => {
     });
 
     it('on successful update resolve and emit an appropriate event', function (this: Test) {
-      this.view.controller('legalHoldCustodiansManage').updateCustodians();
-      expect(this.view.controller('legalHoldCustodiansManage').updateCustodians()).toBeResolved();
+      const promise: ng.IPromise<any> = this.controller.updateCustodians([]);
+      expect(promise).toBeResolved();
       const eventArgs = this.$rootScope.$emit.calls.mostRecent().args;
       expect(eventArgs[0]).toBe(Events.CHANGED);
       expect(eventArgs[1]).toEqual([this.$scope.caseId]);
@@ -97,8 +95,8 @@ describe('Component: legalHoldMatterDetail', () => {
 
     it('on update failure should display notification and not emit event', function (this: Test) {
       this.LegalHoldService.addUsersToMatter.and.returnValue(this.$q.reject());
-      this.view.controller('legalHoldCustodiansManage').updateCustodians();
-      expect(this.view.controller('legalHoldCustodiansManage').updateCustodians()).toBeResolved();
+      const promise: ng.IPromise<any> = this.controller.updateCustodians([]);
+      expect(promise).toBeResolved();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
       expect(this.$rootScope.$emit).not.toHaveBeenCalledWith();
     });
