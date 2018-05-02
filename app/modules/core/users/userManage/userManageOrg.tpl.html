@@ -3,79 +3,7 @@
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<!-- Does NOT have AtlasF3745AutoAssignToggle assigned -->
-<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-body">
-  <form name="userModifyUsersForm" class="row collapse user-manage__row">
-    <div class="columns medium-5">
-      <h4 translate="userManage.org.typeLabel"></h4>
-      <p translate="userManage.org.typeInstructions"></p>
-    </div>
-    <div class="columns medium-7">
-      <div class="cs-radio-group">
-        <ul>
-          <li class="user-manage__manage-type-list-item">
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-manual"
-              name="importUsers"
-              ng-value="umoc.ManageType.MANUAL"
-              cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
-          </li>
-          <li class="user-manage__manage-type-list-item">
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-bulk"
-              name="importUsers"
-              ng-value="umoc.ManageType.BULK"
-              cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
-            <cr-user-csv-export
-              class="user-manage__manage-type-list-item-indent"
-              as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-              use-csv-download-directive="true">
-            </cr-user-csv-export>
-          </li>
-          <li class="user-manage__manage-type-list-item">
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-advanced"
-              name="importUsers"
-              ng-value="umoc.ManageType.ADVANCED_NO_DS"
-              cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
-          </li>
-          <li class="user-manage__manage-type-list-item">
-            <input cs-input type="radio"
-              ng-if="umoc.convertableUsers"
-              ng-model="umoc.manageType"
-              id="org-convert"
-              name="importUsers"
-              ng-value="umoc.ManageType.CONVERT"
-              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
-            <input cs-input type="radio" disabled
-              ng-if="!umoc.convertableUsers"
-              ng-model="umoc.manageType"
-              id="org-convert"
-              name="importUsers"
-              ng-value="'convert'"
-              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
-          </li>
-        </ul>
-      </div>
-    </div>
-  </form>
-</div>
-
-<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="umoc.cancelModal()"><span translate="common.cancel"></span></button>
-  <button type="button" class="btn btn--primary" ng-click="umoc.onNext()"><span translate="common.next"></span></button>
-</div>
-
-<!-- Does have AtlasF3745AutoAssignToggle -->
-<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body">
+<div class="modal-body">
   <div class="row collapse user-manage__row" ng-if="!umoc.isUserAdminUser">
     <div class="columns medium-5">
       <h4 translate="userManage.org.activeDirectory"></h4>
@@ -181,4 +109,4 @@
   </div>
 </div>
 
-<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-footer"></div>
+<div class="modal-footer"></div>

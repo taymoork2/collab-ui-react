@@ -5,7 +5,7 @@
   module.exports = UserManageOrgController;
 
   /* @ngInject */
-  function UserManageOrgController($q, $state, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, FeatureToggleService, Notification, OnboardService, Orgservice, UserCsvService, UserManageService) {
+  function UserManageOrgController($q, $state, Analytics, Authinfo, AutoAssignTemplateModel, AutoAssignTemplateService, DirSyncService, Notification, OnboardService, Orgservice, UserCsvService, UserManageService) {
     var DEFAULT_AUTO_ASSIGN_TEMPLATE = AutoAssignTemplateService.DEFAULT;
     var SUCCESS = 'success';
     var vm = this;
@@ -26,7 +26,6 @@
     vm.handleDirSyncService = handleDirSyncService;
     vm.onNext = onNext;
     vm.convertableUsers = false;
-    vm.isAtlasF3745AutoAssignToggle = false;
     vm.autoAssignTemplates = {};
 
     Object.defineProperties(vm, {
@@ -57,7 +56,6 @@
       },
     });
 
-    vm.initFeatureToggles = initFeatureToggles;
     vm.initConvertableUsers = initConvertableUsers;
     vm.isUserAdminUser = Authinfo.isUserAdminUser();
 
@@ -69,19 +67,8 @@
     function onInit() {
       initAutoAssignModel();
       initConvertableUsers();
-      initFeatureToggles()
-        .then(function () {
-          initDefaultAutoAssignTemplate();
-          initOrgSettingForAutoAssignTemplates();
-        });
-    }
-
-    function initFeatureToggles() {
-      return $q.all({
-        atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
-      }).then(function (toggles) {
-        vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
-      });
+      initDefaultAutoAssignTemplate();
+      initOrgSettingForAutoAssignTemplates();
     }
 
     function initAutoAssignModel() {
@@ -98,9 +85,6 @@
     }
 
     function initDefaultAutoAssignTemplate() {
-      if (!vm.isAtlasF3745AutoAssignToggle) {
-        return;
-      }
       AutoAssignTemplateService.getDefaultTemplate()
         .then(function (defaultTemplate) {
           _.set(vm.autoAssignTemplates, DEFAULT_AUTO_ASSIGN_TEMPLATE, defaultTemplate);
@@ -111,9 +95,6 @@
     }
 
     function initOrgSettingForAutoAssignTemplates() {
-      if (!vm.isAtlasF3745AutoAssignToggle) {
-        return;
-      }
       isOrgEnabledForAutoAssignTemplates = false;
       AutoAssignTemplateService.isEnabledForOrg()
         .catch(_.noop)

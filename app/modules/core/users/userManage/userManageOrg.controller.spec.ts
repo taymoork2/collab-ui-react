@@ -59,7 +59,6 @@ describe('UserManageOrgController', () => {
       });
     });
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
-    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
 
     initController.call(this);
   }
@@ -75,7 +74,6 @@ describe('UserManageOrgController', () => {
         foo: 'bar',
       }]),
     } = spies;
-    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(isEnabledForOrg);
     spyOn(this.AutoAssignTemplateService, 'getTemplates').and.returnValue(getTemplates);
 
@@ -173,15 +171,6 @@ describe('UserManageOrgController', () => {
     });
   });
 
-  describe('initFeatureToggles():', function () {
-    it('should fetch feature toggles"', function () {
-      spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus');
-      initController.call(this);
-      this.controller.initFeatureToggles();
-      expect(this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus).toHaveBeenCalled();
-    });
-  });
-
   describe('initConvertableUsers():', function () {
     it('should call "Orgservice.getUnlicensedUsers()"', function () {
       spyOn(this.Orgservice, 'getUnlicensedUsers');
@@ -192,12 +181,6 @@ describe('UserManageOrgController', () => {
   });
 
   describe('initDefaultAutoAssignTemplate():', function () {
-    it('should call early out if "isAtlasF3745AutoAssignToggle" is not true', function () {
-      initControllerAndDefaults.call(this);
-
-      expect(this.controller.initDefaultAutoAssignTemplate()).toBe(undefined);
-    });
-
     it('should set "autoAssignTemplates" property if "AutoAssignTemplateService.getTemplates()" responds with appropriate data', function () {
       initControllerAndAutoAssignFeatureToggleOn.call(this);
 
