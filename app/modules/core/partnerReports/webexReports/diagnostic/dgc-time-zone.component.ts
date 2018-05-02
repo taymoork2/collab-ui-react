@@ -1,6 +1,6 @@
 import { PartnerSearchService } from './partner-search.service';
 
-class TimeZone implements ng.IComponentController {
+class TimeZoneController implements ng.IComponentController {
   public timeZone: string;
   public selected: string;
   public options: string[];
@@ -20,14 +20,20 @@ class TimeZone implements ng.IComponentController {
     this.setSelected();
   }
 
-  public onChangeTz(tz): void {
+  public onChangeTz(tz: string): void {
+    const arr = this.getTimeZone(tz);
+    if (arr && arr.length > 0) {
+      this.onChangeFn({ timeZone: arr[1] });
+    }
+  }
+
+  private getTimeZone(tz: string): string[] {
     const reg = /\(GMT\s[+-01]{2}\d:[\d]{2}\)\s([\w\d\/\-_]{2,})/;
     if (!reg.test(tz)) {
-      return;
+      return [];
     }
-
     const arr = tz.match(reg);
-    this.onChangeFn({ timeZone: arr[1] });
+    return arr ? arr : [];
   }
 
   private setSelected(): void {
@@ -46,7 +52,7 @@ class TimeZone implements ng.IComponentController {
 }
 
 export class DgcTimeZoneComponent implements ng.IComponentOptions {
-  public controller = TimeZone;
+  public controller = TimeZoneController;
   public bindings = { timeZone: '<', onChangeFn: '&' };
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/time-zone.html');
+  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-time-zone.html');
 }
