@@ -8,6 +8,7 @@ type Test = atlas.test.IComponentTest<CrConvertUsersModalController, {
   Analytics;
   Authinfo;
   AutoAssignTemplateModel;
+  AutoAssignTemplateService;
   DirSyncService;
   FeatureToggleService;
   OnboardStore;
@@ -25,6 +26,7 @@ describe('Component: crConvertUsersModal:', () => {
       'Analytics',
       'Authinfo',
       'AutoAssignTemplateModel',
+      'AutoAssignTemplateService',
       'FeatureToggleService',
       'DirSyncService',
       'OnboardStore',
@@ -43,7 +45,7 @@ describe('Component: crConvertUsersModal:', () => {
     };
 
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(callback => {
-      callback(this.mock.unlicensedUsers, 200);
+      callback(this.mock.unlicensedUsers);
     });
   }
 
@@ -216,18 +218,29 @@ describe('Component: crConvertUsersModal:', () => {
     });
 
     describe('F7208 GDPR feature', function () {
+      beforeEach(function () {
+        const convertUsers =  _.cloneDeep(getJSONFixture('core/json/organizations/convertUsers.json'));
+        convertUsers.success = true; // org service appends this property on HTTP 200 response
+
+        this.Orgservice.getUnlicensedUsers.and.callFake(callback => {
+          callback(convertUsers);
+        });
+      });
+
       it('should set ftF7208 to true when feature toggle on', function (this: Test) {
         this.FeatureToggleService.supports.and.callFake(toggle => {
           return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
         });
         this.compileComponent('crConvertUsersModal', {});
+        initFakeGridApi.call(this);
         expect(this.controller.ftF7208).toBe(true);
-        expect(this.controller.getPotentialUsersList().length).toBe(0);
-        expect(this.controller.getPendingUsersList().length).toBe(0);
+        expect(this.controller.getPotentialUsersList().length).toBe(10);
+        expect(this.controller.getPendingUsersList().length).toBe(2);
       });
 
       it('should set ftF7208 to false when feature toggle off', function (this: Test) {
         this.compileComponent('crConvertUsersModal', {});
+        initFakeGridApi.call(this);
         expect(this.controller.ftF7208).toBe(false);
         expect(this.controller.getPendingUsersList().length).toBe(0);
         expect(this.controller.getPotentialUsersList().length).toBe(0);
@@ -246,14 +259,14 @@ describe('Component: crConvertUsersModal:', () => {
           expect(this.controller.getSelectedTab()).toBe(this.controller.POTENTIAL); // default selection
           expect(this.controller.isPotentialTabSelected()).toBe(true);
           expect(this.controller.isPendingTabSelected()).toBe(false);
-          expect(this.controller.getSelectedListCount()).toBe(0);
+          expect(this.controller.getSelectedListCount()).toBe(10);
 
           this.controller.selectTab(this.controller.PENDING);
           this.$scope.$apply();
           expect(this.controller.getSelectedTab()).toBe(this.controller.PENDING);
           expect(this.controller.isPotentialTabSelected()).toBe(false);
           expect(this.controller.isPendingTabSelected()).toBe(true);
-          expect(this.controller.getSelectedListCount()).toBe(0);
+          expect(this.controller.getSelectedListCount()).toBe(2);
         });
       });
     });

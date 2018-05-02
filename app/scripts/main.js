@@ -106,6 +106,7 @@
     require('modules/gemini/reports').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
+    require('modules/core/overview/usersCard'),
     require('modules/core/legal-hold').default,
     require('modules/core/organizations/organization-delete').default,
   ])

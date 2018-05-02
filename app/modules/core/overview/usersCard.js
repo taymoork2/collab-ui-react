@@ -1,12 +1,24 @@
 (function () {
   'use strict';
 
-  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
-  var usersCardTemplatePath = require('ngtemplate-loader?module=Core!./usersCard.tpl.html');
+  module.exports = angular
+    .module('core.overview.usersCard', [
+      require('angular-translate'),
+      require('modules/core/config/config').default,
+      require('modules/core/featureToggle').default,
+      require('modules/core/modal').default,
+      require('modules/core/multi-dirsync').default,
+      require('modules/core/scripts/services/accountorgservice'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/org.service'),
+      require('modules/core/users/shared/auto-assign-template').default,
+      require('modules/core/scripts/services/userlist.service'),
+    ])
+    .factory('OverviewUsersCard', OverviewUsersCard)
+    .name;
 
-  angular
-    .module('Core')
-    .factory('OverviewUsersCard', OverviewUsersCard);
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var usersCardTemplatePath = require('ngtemplate-loader?module=core.overview.usersCard!./usersCard.tpl.html');
 
   /* @ngInject */
   function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Authinfo, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice, UserListService) {
@@ -213,13 +225,7 @@
         };
 
         card.showEditAutoAssignTemplateModal = function () {
-          $state.go('users.list').then(function () {
-            $timeout(function () {
-              AutoAssignTemplateService.gotoEditAutoAssignTemplate({
-                isEditTemplateMode: card.hasAutoAssignDefaultTemplate,
-              });
-            });
-          });
+          AutoAssignTemplateService.showEditAutoAssignTemplateModal();
         };
 
         card.getAutoAssignLicensesStatusCssClass = function () {
