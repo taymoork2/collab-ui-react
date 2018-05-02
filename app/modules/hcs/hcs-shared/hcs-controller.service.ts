@@ -60,9 +60,6 @@ export class HcsControllerService {
     this.nodeListResource = this.$resource<IHcsNodeListResource>(BASE_URL + 'inventory/organizations/:partnerId/lists/nodes', {},
       {
         save: postAction,
-        query: queryAction,
-        delete: deleteAction,
-        get: getAction,
       });
   }
 
