@@ -76,29 +76,7 @@
 
 <!-- Does have AtlasF3745AutoAssignToggle -->
 <div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body">
-  <div class="row collapse user-manage__row" ng-if="!umoc.multiDirSyncToggle">
-    <div class="columns medium-5">
-      <h4 translate="userManage.org.activeDirectory"></h4>
-    </div>
-    <div class="columns medium-7">
-      <h5 translate="userManage.org.directorySynchronization"></h5>
-      <div class="user-manage__text--margin">
-        <cs-statusindicator ng-model="umoc.dirSyncStatus">
-        </cs-statusindicator>
-        <span class="h6" ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></span>
-        <span class="h6" ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></span>
-      </div>
-      <p class="user-manage__text--margin">
-        <a href
-          ng-if="!umoc.isUserAdminUser"
-          ng-click="umoc.handleDirSyncService()"
-          translate="{{ umoc.dirSyncText }}">
-        </a>
-      </p>
-    </div>
-  </div>
-
-  <div class="row collapse user-manage__row" ng-if="umoc.multiDirSyncToggle && !umoc.isUserAdminUser">
+  <div class="row collapse user-manage__row" ng-if="!umoc.isUserAdminUser">
     <div class="columns medium-5">
       <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
@@ -109,7 +87,8 @@
     </div>
   </div>
 
-  <hr class="user-manage__hr" ng-if="(umoc.multiDirSyncToggle && !umoc.isUserAdminUser) || !umoc.multiDirSyncToggle">
+  <hr class="user-manage__hr" ng-if="!umoc.isUserAdminUser">
+
   <div class="row collapse user-manage__row auto-assign">
     <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>
