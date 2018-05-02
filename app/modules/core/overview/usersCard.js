@@ -224,22 +224,8 @@
           });
         };
 
-        // helper for external use of this method
-        card.extShowAutoAssignModal = function () {
-          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
-            card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
-            card.showEditAutoAssignTemplateModal();
-          });
-        };
-
         card.showEditAutoAssignTemplateModal = function () {
-          $state.go('users.list').then(function () {
-            $timeout(function () {
-              AutoAssignTemplateService.gotoEditAutoAssignTemplate({
-                isEditTemplateMode: card.hasAutoAssignDefaultTemplate,
-              });
-            });
-          });
+          AutoAssignTemplateService.showEditAutoAssignTemplateModal();
         };
 
         card.getAutoAssignLicensesStatusCssClass = function () {

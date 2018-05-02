@@ -1,10 +1,10 @@
 import { Analytics } from 'modules/core/analytics';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.model';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 import { DirSyncService } from 'modules/core/featureToggle/dirSync.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IOnboardScopeForUsersConvert, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
-import { OverviewUsersCard } from 'modules/core/overview/usersCard';
 
 interface IConversionStatus {
   type: string;
@@ -54,12 +54,12 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private Analytics: Analytics,
     private Authinfo,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private DirSyncService: DirSyncService,
     private FeatureToggleService: FeatureToggleService,
     private OnboardStore: OnboardStore,
     private Orgservice,
     private uiGridConstants: uiGrid.IUiGridConstants,
-    private OverviewUsersCard: OverviewUsersCard,
   ) {
   }
 
@@ -331,11 +331,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public showAutoAssignModal(): void {
-    const card = this.OverviewUsersCard.createCard();
-    if (_.isFunction(_.get(card, 'extShowAutoAssignModal'))) {
-      delete this.scopeData.selectedState; // dialog going away, clear scope data
-      card.extShowAutoAssignModal();
-    }
+    this.AutoAssignTemplateService.showEditAutoAssignTemplateModal();
   }
 }
 

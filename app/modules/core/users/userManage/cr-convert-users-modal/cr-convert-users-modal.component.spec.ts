@@ -8,6 +8,7 @@ type Test = atlas.test.IComponentTest<CrConvertUsersModalController, {
   Analytics;
   Authinfo;
   AutoAssignTemplateModel;
+  AutoAssignTemplateService;
   DirSyncService;
   FeatureToggleService;
   OnboardStore;
@@ -17,7 +18,7 @@ type Test = atlas.test.IComponentTest<CrConvertUsersModalController, {
 
 describe('Component: crConvertUsersModal:', () => {
   beforeEach(function (this: Test) {
-    this.initModules(moduleName, 'core.overview.usersCard');
+    this.initModules(moduleName);
     this.injectDependencies(
       '$scope',
       '$state',
@@ -25,6 +26,7 @@ describe('Component: crConvertUsersModal:', () => {
       'Analytics',
       'Authinfo',
       'AutoAssignTemplateModel',
+      'AutoAssignTemplateService',
       'FeatureToggleService',
       'DirSyncService',
       'OnboardStore',
