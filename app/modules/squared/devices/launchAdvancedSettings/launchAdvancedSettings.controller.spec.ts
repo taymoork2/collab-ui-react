@@ -55,7 +55,7 @@ describe('LaunchAdvancedSettingsController', () => {
 
   beforeEach(() => {
     state.device = {
-      software: 'Spark Room OS 2016-11-30 a487137',
+      software: 'RoomOS 2016-11-30 a487137',
       isOnline: true,
       ip: '1.1.1.1',
       cisUuid: 'cisUuidcisUuidcisUuid',
@@ -74,7 +74,7 @@ describe('LaunchAdvancedSettingsController', () => {
       describe('+supported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Room OS 2017-11-30 a487137';
+          state.device.software = 'RoomOS 2017-11-30 a487137';
           initController(state.device);
           state.$timeout.flush();
         });

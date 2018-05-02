@@ -118,7 +118,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
       displayName: this.$translate.instant('legalHold.matterList.custodians'),
     }, {
       cellTooltip: true,
-      field: 'releaseDate',
+      field: 'dateReleased',
       type: 'date',
       cellFilter: 'date:\'MM/dd/yyyy\'',
       displayName: this.$translate.instant('legalHold.matterList.dateReleased'),

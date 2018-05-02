@@ -151,12 +151,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         utils.click(manageUsersPage.buttons.manageUsers);
       });
       it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-        if (featureToggle.features.atlasF3745AutoAssignLicenses) {
-          utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
-        } else {
-          utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
-          utils.click(manageUsersPage.buttons.next);
-        }
+        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
         if (featureToggle.features.atlasEmailSuppress) {
           utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
           utils.click(manageUsersPage.buttons.next);

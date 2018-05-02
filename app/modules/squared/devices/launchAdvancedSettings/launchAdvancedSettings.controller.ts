@@ -54,7 +54,7 @@ class LaunchAdvancedSettingsController {
 
   private getInitialState(device) {
 
-    if (!_.startsWith(device.software, 'Spark Room OS')) {
+    if (!_.startsWith(device.software, 'Spark Room OS') && !_.startsWith(device.software, 'RoomOS')) {
       return this.states.unsupportedSoftwareVersion;
     }
 

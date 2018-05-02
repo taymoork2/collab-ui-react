@@ -714,6 +714,7 @@
     "singleMoveUsers": "Convert to a free Cisco Spark account.",
     "singleDeleteUsers": "Delete account.",
     "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
+    "multiUserDelete": "All users and data will be deleted, including WebEx meeting URLs, meeting recordings, and posts in Cisco Spark spaces.",
     "multMoveUsers": "Convert users to their own free Cisco Spark account.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
@@ -735,6 +736,7 @@
   },
   "reportsPage": {
     "loadingData": "Loading Data",
+    "notFound": "Resource not Found",
     "loadingDescription": "For best results, allow reports to finish loading.",
     "pageTitle": "Reports",
     "ccaTab": "CCA",
@@ -4226,6 +4228,7 @@
   "legalHold": {
     "title": "Legal Matters",
     "matterName": "Matter Name",
+    "manageCustodiansTitle": "Manage Custodians",
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
@@ -6620,7 +6623,7 @@
       "enterCluster": "Create a new cluster",
       "noCluster": "No eligible clusters found",
       "clusterHelpText": "We reccomend using the geografical location of the cluster as a name",
-      "clusterExistError": "Cluster already exists,try a different Cluster Name",
+      "clusterExistError": "Cluster already exists, try a different Cluster Name",
       "existingCluster": "Select an existing cluster",
       "invalidip": "Invalid FQDN or IP address",
       "mediaNode": "Media node",
@@ -6638,6 +6641,7 @@
       "sipconfigure": "Configure your optional SIP Calls settings.",
       "sipcheck": "I want to use SIP Calls on this cluster",
       "upgradeschedule": "Upgrade Schedule",
+      "completeregisterofcluster": "Complete registration",
       "completeregister": "1. Complete registration",
       "testconfigure": "2. Test your configuration",
       "utc": "(UTC)",
@@ -6719,7 +6723,7 @@
       "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
       "cascadeBandwidthCardOrgHeading": "Cluster Cascade Bandwidth Usage",
       "cascadeBandwidthCardClusterHeading": "Cascade Bandwidth Usage",
-      "cascadeBandwidthOrgDesc": "Cluster Cascade Bandwidth Graph",
+      "cascadeBandwidthOrgDesc": "Total bandwidth used across all hybrid media cluster when cascades are established between on-premises and the cloud.",
       "cascadeBandwidthClusterDesc": "Tx: Provide bandwidth usage for transmission.<br>Rx: Provide bandwidth usage for receiving.",
       "streamsBandwidthHeading": "Streams Bandwidth Usage",
       "streamsBandwidthDesc": "Audio: Provide bandwidth usage for audio when receiving or transmission.<br>Video: Provide bandwidth usage for video when receiving or transmission.<br>Presentation: Provide bandwidth usage for presentation when receiving or transmission.",
@@ -8829,6 +8833,8 @@
     "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
+    "totalLicenses": "Total Licenses",
+    "totalUserLicenses": "Total User Licenses",
     "cards": {
       "broadsoft" : {
         "title": "BroadSoft BroadCloud",
@@ -8851,7 +8857,7 @@
       },
       "message": {
         "title": "Message",
-        "notEnabledText": " Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "notEnabledText": "Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
         "currentTitle": "New spaces this week",
         "previousTitle": "Last week:"
       },
@@ -11123,7 +11129,24 @@
     "agentInstallFiles": "Agent Install Files",
     "cardTitle": "Hosted Collaboration Service",
     "clusterDetail": {
+      "addCustomerModal": {
+        "title": "Add new customer",
+        "enterCustomerNamePlaceholder": "Enter Customer Name",
+        "chooseTemplatePlaceholder": "Choose Template",
+        "customerExistsErrorMessage": "This customer already exists"
+      },
+      "nodeStatus": {
+        "active":"Active",
+        "needsAcceptance":"Needs acceptance",
+        "needsAssigned":"Needs assigned"
+      },
       "settings": {
+        "inventoryName": {
+          "addCustomer": "Add Customer",
+          "customerSelectLabel": "Customer",
+          "customerSelectPlaceholder": "Select a Customer",
+          "sectionHeader": "Inventory Name"
+        },
         "sftpLocation": {
           "sectionHeader": "Default SFTP Location",
           "sftpSelectLabel": "Choose the default SFTP Location for this cluster."
@@ -11131,18 +11154,26 @@
         "nodes": {
           "accept": "Accept",
           "sectionHeader": "Nodes",
-          "verificationCode": "Verification Code"
+          "verificationCode": "Verification Code",
+          "publisher": "Publisher",
+          "subscriber": "Subscriber"
         },
         "clustername": {
           "clusterInputLabel": "Enter a new name for the cluster.",
+          "enterClusterName": "Enter cluster name here",
           "sectionHeader": "Cluster Name"
         }
+      },
+      "editNodeSftpModal": {
+        "title": "Edit SFTP Server",
+        "selectLabel": "Choose the SFTP server for {{nodeName}}"
       }
     },
     "clustersList": {
       "title":"Clusters",
       "errorGetClusters": "Error fetching clusters information for {{customerName}}"
     },
+    "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
     "inventory": {
       "title": "Inventory",
@@ -11176,6 +11207,8 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxies for the Agent separated by commas",
       "setupTitle": "Create Agent Install Files",
+      "success": "Agent Install File creation request successfully submitted",
+      "error": "Agent Install File creation request failed",
       "tarFile": ".tar file",
       "title": "Install Files",
       "nofileTitle": "No Agent Install Files",
@@ -11262,8 +11295,11 @@
       "noneProfileDesc": "Get started by creating a software profile.",
       "plm": "Cisco Prime License Manager Version",
       "plmPlace": "PLM File",
+      "success": "Software Profile has been successfully created",
+      "error": "Software Profile creation failed",
       "swVersions": "Software Versions",
       "tabTitle": "Software Profiles",
+      "template": "Software Version Template",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
       "ucxnPlace": "UCXN File"
@@ -11401,6 +11437,11 @@
     },
     "error": {
       "noUsers": "No users found matching this criteria."
+    }
+  },
+  "rebrand": {
+    "banner": {
+      "text": "Pardon our dust while Cisco Spark becomes Cisco Webex Teams. <a href='https://video.cisco.com/detail/video/5772918811001' target='_blank'>Learn more.</a>"
     }
   }
 }

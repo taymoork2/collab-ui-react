@@ -425,12 +425,12 @@ describe('Controller: HelpdeskOrgController', function () {
       expect(orgController.orderSystems).toEqual(['Partner Marketplace', 'Partner Marketplace']);
     });
 
-    it('shows names based on two known orderingTool codes', function () {
-      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ orderingTool: 'DIGITAL_RIVER' }, { orderingTool: 'CCW' }, { orderingTool: 'CCW_CSB' }]));
+    it('shows names based on four known orderingTool codes', function () {
+      spyOn(HelpdeskService, 'getServiceOrders').and.returnValue(q.resolve([{ orderingTool: 'DIGITAL_RIVER' }, { orderingTool: 'CCW' }, { orderingTool: 'CCW_CSB' }, { orderingTool: 'CCW_CDC' }]));
       $scope.$apply();
       orgController.findServiceOrders('12345');
-      expect(orgController.orderSystems.length).toBe(3);
-      expect(orgController.orderSystems).toEqual(['Cisco Online Marketplace', 'Cisco Commerce', 'Cisco Commerce']);
+      expect(orgController.orderSystems.length).toBe(4);
+      expect(orgController.orderSystems).toEqual(['Cisco Online Marketplace', 'Cisco Commerce', 'Cisco Commerce', 'CCE']);
     });
 
     it('shows actual value from service order if unknown orderingTool code', function () {

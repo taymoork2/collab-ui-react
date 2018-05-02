@@ -1,4 +1,5 @@
 import testModule from './index';
+import { CoreEvent } from 'modules/core/shared/event.constants';
 
 describe('Component: Banner', function () {
 
@@ -8,13 +9,11 @@ describe('Component: Banner', function () {
       '$componentController',
       '$rootScope',
       '$scope',
-      'Authinfo',
     );
 
     spyOn(this.$rootScope, '$on').and.callThrough();
-    spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(false);
 
-    this.broadcast = 'TOGGLE_HEADER_BANNER';
+    this.broadcast = CoreEvent.HEADER_BANNER_TOGGLED;
     this.iconCss = 'icon-warning';
     this.translation = 'subscriptions.overageWarning';
     this.type = 'danger';
@@ -23,7 +22,6 @@ describe('Component: Banner', function () {
       this.controller = this.$componentController('crBanner', {
         $rootScope: this.$rootScope,
         $scope: this.$scope,
-        Authinfo: this.Authinfo,
       }, {});
       this.controller.$onInit();
     };
@@ -37,7 +35,6 @@ describe('Component: Banner', function () {
     this.initController();
 
     expect(this.controller.iconCss).toBeUndefined();
-    expect(this.controller.isReadonly).toBeFalsy();
     expect(this.controller.isVisible).toBeFalsy();
     expect(this.controller.type).toBeUndefined();
     expect(this.controller.translation).toBeUndefined();
@@ -52,14 +49,15 @@ describe('Component: Banner', function () {
       iconCss: this.iconCss,
       translation: this.translation,
       type: this.type,
+      closeable: true,
       visible: true,
     });
 
     expect(this.controller.iconCss).toEqual(this.iconCss);
-    expect(this.controller.isReadonly).toBeFalsy();
     expect(this.controller.isVisible).toBeTruthy();
     expect(this.controller.type).toEqual(this.type);
     expect(this.controller.translation).toEqual(this.translation);
+    expect(this.controller.closeable).toBeTruthy();
 
     this.$rootScope.$broadcast(this.broadcast);
     expect(this.controller.isVisible).toBeFalsy();
@@ -76,6 +74,7 @@ describe('Component: Banner', function () {
       iconCss: this.iconCss,
       translation: this.translation,
       type: this.type,
+      closeable: true,
       visible: true,
     });
     this.$scope.$apply();

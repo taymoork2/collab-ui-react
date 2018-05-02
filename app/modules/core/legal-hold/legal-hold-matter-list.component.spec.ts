@@ -116,7 +116,7 @@ describe('Component: legalHoldMatterList', () => {
       const gridData = _.get(this.controller.gridOptions, 'data', []);
       expect(this.controller.gridData_.length).toBe(3);
       expect(gridData.length).toBe(2);
-      expect(_.every(gridData, { matterState: 'ACTIVE' })).toBeTruthy();
+      expect(_.every(gridData, { matterState: 'active' })).toBeTruthy();
       expect(this.controller.currentFilter).toEqual(this.controller.filters[1]);
     });
 

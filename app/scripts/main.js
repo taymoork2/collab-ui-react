@@ -55,6 +55,7 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/health-monitor').default,
     require('modules/core/account').default,
     require('modules/core/banner').default,
     require('modules/core/csgrid').default,
@@ -66,6 +67,7 @@
     require('modules/core/learnMore').default,
     require('modules/core/scrollIndicator').default,
     require('modules/core/gridSpinner').default,
+    require('modules/core/overview/license-card').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/user.service'),
     require('modules/core/scripts/services/userlist.service'),
@@ -82,6 +84,7 @@
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
     require('modules/core/partnerReports/webexReports').default,
+    require('modules/core/partnerReports/webexReports/diagnostic').default,
     require('modules/core/partnerProfile/branding').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module

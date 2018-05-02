@@ -2,17 +2,40 @@
   class="huron-tabs"
   title-name="{{$ctrl.clusterDetail.clusterName}}"
   back="$ctrl.back"
-  js-back="$ctrl.back"
-  back-url="$ctrl.backState"
-  back-params="$ctrl.backParameters"
+  back-fxn="$ctrl.onBack()"
   back-aria-label="{{::'common.back' | translate}}">
 </cs-page-header>
-<div class="hcs-cluster-settings">
+<div class="hcs-cluster-settings hcs-container">
   <div class="loading-container" ng-if="$ctrl.loading">
     <i class="icon icon-spinner"></i>
   </div>
 
-  <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="hcs-cluster-settings-main-container">
+  <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="hcs-cluster-settings-main-container cs-form content-container">
+    <!-- Inventory Name -->
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="hcs.clusterDetail.settings.inventoryName.sectionHeader"></h4>
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <label class="sub-section__label" translate="hcs.clusterDetail.settings.inventoryName.customerSelectLabel"></label>
+          <div class="display-flex">
+            <div class="medium-6">
+              <cs-select
+              name="clusterCustomerSelect"
+              ng-model="$ctrl.customerSelected"
+              options="$ctrl.customerList"
+              combo="true"
+              searchable-combo="true"
+              refresh-data-fn="$ctrl.onCustomerSearch(searchItem)"
+              placeholder="$ctrl.customerSelectPlaceholder">
+              </cs-select>
+              <button class="btn btn--primary" ng-click="$ctrl.addCustomerModal()" translate="hcs.clusterDetail.settings.inventoryName.addCustomer"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- SFTP Location -->
     <div class="cs-form__section">
       <div class="section__info">
@@ -20,7 +43,6 @@
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <label class="sub-section__label" translate="hcs.clusterDetail.settings.sftpLocation.sftpSelectLabel"></label>
           <div class="display-flex">
             <div class="medium-6">
               <cs-select
@@ -44,38 +66,67 @@
         <div class="sub-section">
           <cs-card-layout>
             <cs-card class="cs-card--large" ng-repeat="node in $ctrl.clusterDetail.nodes">
-              <article ng-click="$ctrl.cardSelected()" hover-delay>
+              <article>
                 <header class="node-header">
                   <div class="header-with-right-icon">
-                    <h5 class="node-name" title="Node Name">{{node.name}}<span class="node-type h6">{{node.type}}</span></h5>
-                    <div class="right card-icon-div">
+                    <h5 class="node-name" title="Node Name">{{node.name}}</h5>
+                    <div class="right card-icon-div" ng-if="node.status.toLowerCase() === $ctrl.statusActive.toLowerCase()">
                       <button type="button" class="close node-close"
                         ng-click="$ctrl.closeCard()"
                         ng-keydown=""
                         aria-label="{{::'common.delete' | translate}}"></button>
                     </div>
                   </div>
-                  <p class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.verificationCode}}</p>
+                  <div class="row node-type">
+                    <div class="columns medium-2">
+                      {{node.type}}
+                    </div>
+                    <div class="columns medium-10 ">
+                      {{(node.isPublisher ? 'hcs.clusterDetail.settings.nodes.publisher' : 'hcs.clusterDetail.settings.nodes.subscriber') | translate}}
+                    </div>
+                  </div>
                 </header>
                 <section class="card-body">
                   <div class="card-section">
-                    <div class="card-section-item node-status" ng-switch="node.status">
-                        <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
-                        <i ng-switch-when="Needs acceptance" class="icon icon-circle status-indicator warning"></i>
-                        <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
-                      {{node.status}}
-                    </div>
-                    <div class="card-section-item node-ip body-small">{{node.ip}}</div>
-                    <div class="row">
-                      <div class="card-section-item node-sftp columns medium-8">{{node.sftpLocation}}<span><a class="edit" translate="common.edit"></a></span></div>
-                      <div class="columns medium-4" ng-if="node.status === 'Needs acceptance'">
-                        <button class="btn btn--primary" ng-click="$ctrl.acceptNode()">
-                          <span translate="hcs.clusterDetail.settings.nodes.accept"></span>
-                        </button>
-                      </div>
+                    <div class="card-section-item row">
+                      <div class="h6 node-sftp columns medium-2">{{node.sftpLocation}}</div>
+                      <div class="h6 node-ip body-small columns medium-8">{{node.ip}}</div>
+                      <div class="columns medium-2"><i class="icon icon-edit" ng-click="$ctrl.editNodeSftp(node)" aria-label="{{:: 'common.edit' | translate}}"></i></a></div>
                     </div>
                   </div>
                 </section>
+                <footer class="node-footer">
+                  <div class="row">
+                    <div class="columns medium-8">
+                      <i class="icon icon-info-outline"></i>
+                      <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.verificationCode}}</span>
+                    </div>
+                    <div class="columns medium-4">
+                      <div ng-if="node.status.toLowerCase() === $ctrl.statusNeedsAcceptance.toLowerCase()">
+                        <button class="btn btn--circle btn--small btn--white btn--primary" ng-click="$ctrl.acceptNode(node)">
+                          <span class="icon icon-check"></span>
+                        </button>
+                        <button class="btn btn--circle btn--small btn--white" ng-click="$ctrl.rejectNode(node)">
+                          <span class="icon icon-close"></span>
+                        </button>
+                      </div>
+                      <div class="h5 card-section-item node-status" ng-switch="node.status.toLowerCase()" ng-if="node.status.toLowerCase() !== $ctrl.statusNeedsAcceptance.toLowerCase()">
+                          <div ng-switch-when="needs assigned">
+                            <i class="icon icon-circle status-indicator danger"></i>
+                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needsAssigned' | translate}}</span>
+                          </div>
+                          <div ng-switch-when="needs acceptance">
+                            <i class="icon icon-circle status-indicator warning"></i>
+                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needsAcceptance' | translate}}</span>
+                          </div>
+                          <div ng-switch-when="active">
+                            <i class="icon icon-circle status-indicator success"></i>
+                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.active' | translate}}</span>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </footer>
               </article>
             </cs-card>
           </cs-card-layout>
@@ -89,14 +140,13 @@
       </div>
       <div class="section__content">
         <div class="sub-section">
-          <label class="sub-section__label" translate="hcs.clusterDetail.settings.clustername.clusterInputLabel"></label>
           <div class="display-flex">
             <div class="medium-6">
               <input
                 cs-input
                 type="text"
                 name="clusterNameInput"
-                placeholder="Enter cluster name here"
+                placeholder="{{:: $ctrl.clusterNamePlaceholder}}"
                 ng-model="$ctrl.clusterDetail.clusterName"
                 cs-input-messages="$ctrl.clusterNameInputMessages"
                 ng-required="true">
@@ -106,5 +156,9 @@
       </div>
     </div>
     <br />
+    <div class="cs-form__section save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+        <button ng-click="$ctrl.cancel()" translate="common.cancel"></button>
+        <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.saveClusterDetailChanges()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
+      </div>
   </form>
 </div>

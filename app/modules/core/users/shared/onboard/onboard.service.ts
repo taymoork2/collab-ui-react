@@ -155,9 +155,6 @@ export default class OnboardService {
   }
 
   public validateTokens(scopeData): ng.IPromise<void> {
-    // TODO (f3745): rm this if determined not-needed
-    // wizardNextText();
-
     return this.$timeout(() => {
       //reset the invalid count
       scopeData.invalidcount = 0;
