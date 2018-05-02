@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { CoreEvent } from 'modules/core/shared/event.constants';
 
 interface ITooltipData {
   tooltip?: string;
@@ -14,7 +15,7 @@ interface ITooltipData {
 }
 
 export class MySubscriptionCtrl implements ng.IController {
-  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
+  private readonly HEADER_BROADCAST = CoreEvent.HEADER_BANNER_TOGGLED;
 
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];

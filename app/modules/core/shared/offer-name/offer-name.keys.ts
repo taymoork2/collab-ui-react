@@ -27,3 +27,9 @@ export enum AdvancedMeetingOfferName {
   SC = OfferName.SC,   // Support Center (WebEx)
   TC = OfferName.TC,   // Training Center (WebEx)
 }
+
+export enum OfferType {
+  COMMUNICATION = 'COMMUNICATION',
+  CONFERENCING = 'CONFERENCING',
+  MESSAGING = 'MESSAGING',
+}

@@ -4232,6 +4232,7 @@
   "legalHold": {
     "title": "Legal Matters",
     "matterName": "Matter Name",
+    "manageCustodiansTitle": "Manage Custodians",
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
@@ -8836,6 +8837,8 @@
     "telstraMarketplace": "Telstra Apps Marketplace",
     "toSubscribe": "to subscribe",
     "nonotifications": "Currently, there are no notifications to display.",
+    "totalLicenses": "Total Licenses",
+    "totalUserLicenses": "Total User Licenses",
     "cards": {
       "broadsoft" : {
         "title": "BroadSoft BroadCloud",
@@ -8858,7 +8861,7 @@
       },
       "message": {
         "title": "Message",
-        "notEnabledText": " Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
+        "notEnabledText": "Use Team Spaces with content storage to easily collaborate from any device to any user inside or outside your organization.",
         "currentTitle": "New spaces this week",
         "previousTitle": "Last week:"
       },
@@ -11208,6 +11211,8 @@
       "invalidPortError": "Port can be 0 or range between {{min}} and {{max}}",
       "placeholderHttpProxy": "Enter HTTP Proxies for the Agent separated by commas",
       "setupTitle": "Create Agent Install Files",
+      "success": "Agent Install File creation request successfully submitted",
+      "error": "Agent Install File creation request failed",
       "tarFile": ".tar file",
       "title": "Install Files",
       "nofileTitle": "No Agent Install Files",
@@ -11294,6 +11299,8 @@
       "noneProfileDesc": "Get started by creating a software profile.",
       "plm": "Cisco Prime License Manager Version",
       "plmPlace": "PLM File",
+      "success": "Software Profile has been successfully created",
+      "error": "Software Profile creation failed",
       "swVersions": "Software Versions",
       "tabTitle": "Software Profiles",
       "template": "Software Version Template",
@@ -11434,6 +11441,11 @@
     },
     "error": {
       "noUsers": "No users found matching this criteria."
+    }
+  },
+  "rebrand": {
+    "banner": {
+      "text": "Pardon our dust while Cisco Spark becomes Cisco Webex Teams. <a href='https://video.cisco.com/detail/video/5772918811001' target='_blank'>Learn more.</a>"
     }
   }
 }

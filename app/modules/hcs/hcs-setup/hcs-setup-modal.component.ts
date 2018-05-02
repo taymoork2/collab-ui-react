@@ -1,4 +1,4 @@
-import { HcsSetupModalService, HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { HcsSetupModalService, HcsUpgradeService, HcsControllerService, IHcsInstallables } from 'modules/hcs/hcs-shared';
 import { ICheckbox } from './hcs-setup';
 import { ISoftwareProfile } from 'modules/hcs/hcs-shared/hcs-swprofile';
 import { ISftpServer } from './hcs-setup-sftp';
@@ -10,6 +10,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
+  public agentInstallFile: IHcsInstallables;
   public sftpServer: ISftpServer;
   public softwareProfile: ISoftwareProfile;
   public nextEnabled: boolean = false;
@@ -26,6 +27,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   constructor(
     private HcsSetupModalService: HcsSetupModalService,
     private HcsUpgradeService: HcsUpgradeService,
+    private HcsControllerService: HcsControllerService,
     private Notification: Notification,
     private $state: ng.ui.IStateService,
   ) {
@@ -85,6 +87,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         this.nextEnabled = false;
         break;
       case 3:
+        this.createInstallFile();
         if (!this.hcsServices.upgrade) {
           this.title = 'hcs.setup.finish';
           this.cancelRemoved = true;
@@ -129,7 +132,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         }
       })
       .catch(e => {
-        this.Notification.error(e, 'hcs.sftp.error');
+        this.Notification.error('hcs.sftp.error', { message: e });
         this.loading = false;
         if (!this.isFirstTimeSetup) {
           this.dismissModal();
@@ -137,7 +140,26 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       });
   }
 
-  public createInstallFile(): void {} //To-do
+  public createInstallFile(): void {
+    this.HcsControllerService.createAgentInstallFile(this.agentInstallFile)
+    .then(() => {
+      this.Notification.success('hcs.installFiles.success');
+      this.loading = false;
+      if (!this.isFirstTimeSetup) {
+        this.$state.go(this.$state.current, {}, {
+          reload: true,
+        });
+        this.dismissModal();
+      }
+    })
+    .catch(e => {
+      this.Notification.error('hcs.installFiles.error', { message: e });
+      this.loading = false;
+      if (!this.isFirstTimeSetup) {
+        this.dismissModal();
+      }
+    });
+  }
 
   public createSoftwareProfile(): void {} //To-do
 
@@ -150,8 +172,9 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     this.hcsServices = selected;
   }
 
-  public setAgentInstallFile(fileName: string, httpProxyList: string[]): void {
-    this.nextEnabled = !_.isEmpty(fileName) && !_.isUndefined(httpProxyList) && httpProxyList.length > 0 && this.hcsSetupModalForm.$valid;
+  public setAgentInstallFile(installable: IHcsInstallables): void {
+    this.nextEnabled = !_.isUndefined(installable) && !_.isUndefined(installable.proxies) && installable.proxies.length > 0 && this.hcsSetupModalForm.$valid;
+    this.agentInstallFile = installable;
     this.enableSave();
   }
 

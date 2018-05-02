@@ -1,0 +1,11 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+license-card {
+  .license-spinner {
+    margin-top: rem-calc(50);
+  }
+
+  .spinner-section {
+    overflow: visible;
+  }
+}

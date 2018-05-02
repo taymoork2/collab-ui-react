@@ -1,4 +1,5 @@
-import { ISoftwareProfile } from 'modules/hcs/hcs-shared/hcs-swprofile';
+import { ISoftwareProfile, IApplicationVersion } from 'modules/hcs/hcs-shared/hcs-swprofile';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
 
 export class HcsSetupSwprofileController implements ng.IComponentController {
   public readonly MAX_LENGTH: number = 50;
@@ -8,6 +9,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   public hcsProfileForm: ng.IFormController;
   public errors: Object;
   public swprofile: ISoftwareProfile;
+  public allVersions: IApplicationVersion[];
   public versions = {
     cucm: [ 'UCSInstall_UCOS_11.5.1.15074-1.sgn.iso', 'UCSInstall_UCOS_10.5.1.15074-1.sgn.iso',  'UCSInstall_UCOS_10.6.1.15074-1.sgn.iso'],
     imp: [ 'UCSInstall_CUP_12.0.1.11900-4.sgn.iso', 'UCSInstall_CUP_10.0.1.11900-4.sgn.iso', 'UCSInstall_CUP_10.5.1.11900-4.sgn.iso'],
@@ -20,6 +22,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   /* @ngInject */
   constructor(
     public $translate: ng.translate.ITranslateService,
+    private HcsUpgradeService: HcsUpgradeService,
   ) {
   }
 
@@ -37,6 +40,14 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
         max: this.MAX_LENGTH,
       }),
     };
+
+    this.listAppVersions();
+  }
+
+  public listAppVersions(): void {
+    this.HcsUpgradeService.listAppVersions().then(resp => {
+      this.allVersions = _.get(resp, 'applicationVersions');
+    });
   }
 
   public processChange() {
