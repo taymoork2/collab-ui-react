@@ -13,7 +13,7 @@ enum QualityType {
   NA = 'N/A',
 }
 
-class TimeLine implements ng.IComponentController {
+class TimeLineController implements ng.IComponentController {
   private tip: d3;
   private svg: d3;
   private option: IAnyDict;
@@ -715,8 +715,8 @@ class TimeLine implements ng.IComponentController {
   }
 }
 
-export class DgcTimeLineComponent implements ng.IComponentOptions {
-  public controller = TimeLine;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/time-line-template.html');
+export class DgcPartnerTimeLineComponent implements ng.IComponentOptions {
+  public controller = TimeLineController;
+  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-time-line-template.html');
   public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', tabType: '<', lineData: '<' };
 }

@@ -79,7 +79,7 @@ describe('Component: DgcPartnerTimeLine', () => {
     expect(this.view.find('.timelineSvg')).toExist();
   });
 
-  it('should get no error', function () {
+  it('should get no throw error', function () {
     this.sourceData.lines = [];
     mockLines.call(this, 4);
     const bindings = {
@@ -170,5 +170,4 @@ describe('Component: DgcPartnerTimeLine', () => {
       expect(mockData.values['jmtQuality']).toBe('Poor');
     });
   });
-
 });
