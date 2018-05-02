@@ -1,6 +1,7 @@
 import { PartnerSearchService } from './partner-search.service';
 
 class TimeZoneController implements ng.IComponentController {
+  private readonly GMT_REGEX = /\(GMT\s[+-01]{2}\d:[\d]{2}\)\s([\w\d\/\-_]{2,})/;
   public timeZone: string;
   public selected: string;
   public options: string[];
@@ -21,19 +22,22 @@ class TimeZoneController implements ng.IComponentController {
   }
 
   public onChangeTz(tz: string): void {
-    const arr = this.getTimeZone(tz);
-    if (arr && arr.length > 0) {
-      this.onChangeFn({ timeZone: arr[1] });
+    const timeZones = this.getTimeZone(tz);
+    if (!_.isEmpty(timeZones)) {
+      this.onChangeFn({ timeZone: timeZones[1] });
     }
   }
 
   private getTimeZone(tz: string): string[] {
-    const reg = /\(GMT\s[+-01]{2}\d:[\d]{2}\)\s([\w\d\/\-_]{2,})/;
-    if (!reg.test(tz)) {
+    if (!this.isGmt(tz)) {
       return [];
     }
-    const arr = tz.match(reg);
-    return arr ? arr : [];
+    const timeZones = tz.match(this.GMT_REGEX);
+    return timeZones ? timeZones : [];
+  }
+
+  private isGmt(tz: string): boolean {
+    return this.GMT_REGEX.test(tz);
   }
 
   private setSelected(): void {
@@ -42,7 +46,7 @@ class TimeZoneController implements ng.IComponentController {
 
   private getOptions(): void {
     const tzs = this.PartnerSearchService.getNames('');
-    this.options = _.map(tzs, (item: string) => this.formatTz(item));
+    this.options = _.map(tzs, (tz: string) => this.formatTz(tz));
   }
 
   private formatTz(tz: string): string {
@@ -53,6 +57,6 @@ class TimeZoneController implements ng.IComponentController {
 
 export class DgcPartnerTimeZoneComponent implements ng.IComponentOptions {
   public controller = TimeZoneController;
-  public bindings = { timeZone: '<', onChangeFn: '&' };
   public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-time-zone.html');
+  public bindings = { timeZone: '<', onChangeFn: '&' };
 }

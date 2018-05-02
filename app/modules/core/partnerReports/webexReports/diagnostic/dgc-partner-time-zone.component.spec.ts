@@ -18,4 +18,10 @@ describe('Component: DgcPartnerTimeZone', () => {
     const arr = this.controller.getTimeZone('(GMT +00:00) Africa/Abidjan');
     expect(arr[1]).toBe('Africa/Abidjan');
   });
+
+  it('should return true if a string matches a proper GMT timezone format', function () {
+    initComponent.call(this);
+    expect(this.controller.isGmt('(GMT +00:00) Africa/Abidjan')).toBe(true);
+    expect(this.controller.isGmt('GMT ++10:99 c1x/ab')).toBe(false);
+  });
 });
