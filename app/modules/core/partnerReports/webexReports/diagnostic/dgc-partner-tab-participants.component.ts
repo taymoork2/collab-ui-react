@@ -6,7 +6,7 @@ export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
-class Participants implements ng.IComponentController {
+class ParticipantsController implements ng.IComponentController {
 
   public gridData: any; //TODO use base type
   public gridOptions = {};
@@ -145,7 +145,7 @@ class Participants implements ng.IComponentController {
   }
 }
 
-export class ParticipantsComponent implements ng.IComponentOptions {
-  public controller = Participants;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/tab-participants.html');
+export class DgcPartnerTabParticipantsComponent implements ng.IComponentOptions {
+  public controller = ParticipantsController;
+  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-tab-participants.html');
 }
