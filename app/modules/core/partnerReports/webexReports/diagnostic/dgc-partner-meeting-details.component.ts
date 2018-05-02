@@ -27,7 +27,7 @@ enum MosType {
   POOR = 0,
 }
 
-class MeetingDetails implements ng.IComponentController {
+class MeetingDetailsController implements ng.IComponentController {
   public data: any; //TODO use better type
   public dataSet: object;
   public overview: object;
@@ -486,15 +486,15 @@ class MeetingDetails implements ng.IComponentController {
   }
 
   private getFilterIds(res: IUniqueParticipant[], type: string = QosType.PSTN): string {
-    const arr = type === QosType.PSTN ?
-    _.filter(res, (item: IUniqueParticipant) => !(item.sessionType === Platforms.WINDOWS && item.platform === Platforms.TP))
+    const arr = type === QosType.PSTN
+    ? _.filter(res, (item: IUniqueParticipant) => !(item.sessionType === Platforms.WINDOWS && item.platform === Platforms.TP))
     : _.filter(res, (item: IUniqueParticipant) => item.sessionType === Platforms.WINDOWS && item.platform === Platforms.TP);
     const lines = _.map(arr, (item) => this.formatLine(_.get(item, 'participants')));
     return this.getAllIds(lines);
   }
 }
 
-export class MeetingDetailsComponent implements ng.IComponentOptions {
-  public controller = MeetingDetails;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/tab-meeting-details.html');
+export class DgcPartnerMeetingDetailsComponent implements ng.IComponentOptions {
+  public controller = MeetingDetailsController;
+  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-meeting-details.html');
 }
