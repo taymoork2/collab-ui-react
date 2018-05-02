@@ -9,6 +9,7 @@ interface ICsvRow {
 
 export class CrAddUsersResultsController implements ng.IComponentController {
 
+  public convertUsersFlow: boolean;
   public numAddedUsers: number;
   public numUpdatedUsers: number;
   public convertedUsers: string[];
@@ -86,6 +87,7 @@ export class CrAddUsersResultsComponent implements ng.IComponentOptions {
   public controller = CrAddUsersResultsController;
   public template = require('./cr-add-users-results.html');
   public bindings = {
+    convertUsersFlow: '<',
     numAddedUsers: '<',
     numUpdatedUsers: '<',
     convertedUsers: '<',

@@ -1,5 +1,5 @@
 <!-- F7208 enabled -->
-<div ng-if="$ctrl.ftF7208" class="users-convert-results">
+<div ng-if="$ctrl.ftF7208 && $ctrl.convertUsersFlow" class="users-convert-results">
   <h4 class="users-convert-results__bottom-space--50" translate="convertUsersModal.results.subTitle"></h4>
   <div class="users-convert-results__bottom-space--500">
     <h6 translate="convertUsersModal.results.desc" translate-value-count="14" translate-interpolation="messageformat"></h6>
@@ -69,7 +69,7 @@
   </div>
 </div>
 <!-- F7208 disabled -->
-<div ng-if="!$ctrl.ftF7208" class="users-upload-results">
+<div ng-if="!$ctrl.ftF7208 || !$ctrl.convertUsersFlow" class="users-upload-results">
   <i ng-if="$ctrl.results.errors.length === 0" class="icon icon-check-mark-success"></i>
   <div class="results-container">
     <div class="result new-users" ng-class="{disabled: $ctrl.numAddedUsers === 0}">
