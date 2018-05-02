@@ -167,6 +167,11 @@ export enum SearchStorage {
   WEBEX_ONE_MEETING = 'webexOneMeeting',
 }
 
+interface IVersion {
+  osVersion: string;
+  browserVersion: string;
+}
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -333,7 +338,7 @@ export class SearchService {
     }
 
     if (platform < 7) {
-      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: `${platform_}: ${browser_}` };
+      return browser === 2 ? { icon: 'icon-application', name: 'Client' } : { icon: 'icon-browser', name: `${platform_}: ${browser_}`, platform: platform_, browser: browser_ };
     }
 
     return { icon: '', name: this.$translate.instant('webexReports.other') };
@@ -348,13 +353,30 @@ export class SearchService {
     if (!duration) {
       return '';
     }
-    const hours = moment.duration(duration * 1000).get('hours');
-    let minutes: any = moment.duration(duration * 1000).get('minutes');
-    let seconds: any = moment.duration(duration * 1000).get('seconds');
-    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    seconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    const momentDuration = moment.duration(duration * 1000);
+    const days = momentDuration.days();
+    let hours = momentDuration.hours();
+    if (days > 0) {
+      hours += days * 24;
+    }
+    const minutes = momentDuration.minutes();
+    const seconds = momentDuration.seconds();
 
-    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+    const durationStr: string[] = [];
+    if (hours) {
+      durationStr.push(`${hours}`);
+    }
+    durationStr.push(this.prefixZero(minutes));
+    durationStr.push(this.prefixZero(seconds));
+    return durationStr.join(':');
+  }
+
+  private prefixZero(data: number): string {
+    if (data > 9) {
+      return `${data}`;
+    } else {
+      return `0${data}`;
+    }
   }
 
   private extractData<T>(response: ng.IHttpResponse<T>): T {
@@ -388,5 +410,15 @@ export class SearchService {
 
   public getData(): IDataStorage {
     return this.data;
+  }
+
+  public getClientVersion(key: string): IVersion {
+    const empty = {
+      osVersion: '',
+      browserVersion: '',
+    };
+    const clientVersions = this.getStorage('ClientVersion');
+    const clientVersion: IVersion = _.get(clientVersions, key);
+    return clientVersion ? clientVersion : empty;
   }
 }

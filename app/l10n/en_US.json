@@ -882,7 +882,7 @@
     "phone": "Phone",
     "voipQuality": "VoIP Quality",
     "videoQuality": "Video Quality",
-    "cmrQuallity": "CMR Quality",
+    "cmrQuality": "CMR Quality",
     "pstnQuality": "PSTN Quality",
     "latency": "Latency",
     "packetLoss": "Packet Loss",

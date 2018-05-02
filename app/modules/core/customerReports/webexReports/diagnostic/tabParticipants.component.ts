@@ -1,6 +1,7 @@
-import './_search.scss';
-import { SearchService, Platforms } from './searchService';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
+import { SearchService, Platforms } from './searchService';
+import './_search.scss';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -20,11 +21,12 @@ class Participants implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $scope: IGridApiScope,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private SearchService: SearchService,
-    private $stateParams: ng.ui.IStateParamsService,
-    private $translate: ng.translate.ITranslateService,
-    private $timeout: ng.ITimeoutService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.platformCellTemplate = require('modules/core/customerReports/webexReports/diagnostic/platform-cell-template.html');
@@ -32,11 +34,14 @@ class Participants implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.getParticipants();
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8105ClientVersion)
+      .then((isSupport: boolean) => {
+        this.getParticipants(isSupport);
+      });
     this.setGridOptions();
   }
 
-  private getParticipants(): void {
+  private getParticipants(isSupportClientVersion: boolean): void {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         this.gridData = _.map(res, (item: any) => {
@@ -44,10 +49,19 @@ class Participants implements ng.IComponentController {
           if (item.platform === Platforms.TP && !device.name) {
             device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
           }
+          let deviceName = _.get(device, 'name');
+          if (!(item.platform === Platforms.TP || item.sessionType === Platforms.PSTN) && isSupportClientVersion) {
+            const devicePlatform = _.get(device, 'platform');
+            const deviceBrowser = _.get(device, 'browser');
+            if (devicePlatform && deviceBrowser) {
+              const clientVersion = this.SearchService.getClientVersion(`${item.userId}_${item.userName}`);
+              deviceName = `${devicePlatform} ${clientVersion.osVersion}: ${deviceBrowser} ${clientVersion.browserVersion}`;
+            }
+          }
           return _.assignIn({}, item, {
             phoneNumber: this.SearchService.getPhoneNumber(item.phoneNumber),
             callInNumber: this.SearchService.getPhoneNumber(item.callInNumber),
-            platform_: _.get(device, 'name'),
+            platform_: deviceName,
             duration: this.SearchService.getDuration(item.duration),
             endReason: this.SearchService.getParticipantEndReson(item.reason),
             startDate: this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),

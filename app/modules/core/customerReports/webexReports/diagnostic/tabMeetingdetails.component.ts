@@ -71,7 +71,7 @@ class Meetingdetails implements ng.IComponentController {
         this.SearchService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
         const timeZone = this.SearchService.getStorage('timeZone');
         const wom = this.SearchService.getStorage('webexOneMeeting');
-        const lines = _.map(res, (item) => this.formateLine(_.get(item, 'participants')));
+        const lines = _.map(res, (item) => this.formatLine(_.get(item, 'participants')));
         this.dataSet = { lines: lines, endTime: _.get(wom, 'endTime'), startTime: _.get(wom, 'startTime'), offset: this.SearchService.getOffset(timeZone) };
         this.meetingEndTime = wom['endTime'] * 1;
 
@@ -98,10 +98,20 @@ class Meetingdetails implements ng.IComponentController {
       .then(res => {
         this.circleColor = res;
         this.SearchService.setStorage(SearchStorage.JOIN_MEETING_TIMES, res);
+        const clientVersion = {};
+        _.forEach(res, (item) => {
+          const key = `${item.userId}_${item.userName}`;
+          clientVersion[key] = {
+            osVersion: item.osVersion,
+            browserVersion: item.browserVersion,
+          };
+        });
+        this.SearchService.setStorage('ClientVersion', clientVersion);
+        this.circleColor = res;
       });
   }
 
-  private formateLine(lines) {
+  private formatLine(lines) {
     const wom = this.SearchService.getStorage('webexOneMeeting');
     return _.forEach(lines, (item) => {
       const endTime = _.get(wom, 'endTime');
@@ -117,6 +127,7 @@ class Meetingdetails implements ng.IComponentController {
 
       item.enableStartPoint = enableStartPoint;
       item.cid = item.callerId ? item.callerId : '';
+      item.clientKey = `${item.userId}_${item.userName}`;
       item.leaveTime = leaveTime;
       item.platform_ = platform_;
       item.device = _.get(device, 'name');
@@ -460,7 +471,7 @@ class Meetingdetails implements ng.IComponentController {
     const arr = type === 'pstn' ?
     _.filter(res, (item: any) => !(_.parseInt(item.sessionType) === 0 && _.parseInt(item.platform) === 10))
     : _.filter(res, (item: any) => _.parseInt(item.sessionType) === 0 && _.parseInt(item.platform) === 10);
-    const lines = _.map(arr, (item) => this.formateLine(_.get(item, 'participants')));
+    const lines = _.map(arr, (item) => this.formatLine(_.get(item, 'participants')));
     return this.getAllIds(lines);
   }
 
