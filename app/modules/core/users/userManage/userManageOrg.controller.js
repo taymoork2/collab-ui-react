@@ -79,10 +79,8 @@
     function initFeatureToggles() {
       return $q.all({
         atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
-        multiDirSyncToggle: FeatureToggleService.atlasF6980MultiDirSyncManageUsersGetStatus(),
       }).then(function (toggles) {
         vm.isAtlasF3745AutoAssignToggle = toggles.atlasF3745AutoAssignLicenses;
-        vm.multiDirSyncToggle = toggles.multiDirSyncToggle;
       });
     }
 
