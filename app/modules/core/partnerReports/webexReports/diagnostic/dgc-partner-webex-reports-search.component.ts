@@ -9,7 +9,7 @@ export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
-class WebexReportsSearch implements ng.IComponentController {
+class WebexReportsSearchController implements ng.IComponentController {
   public gridData: any; //TODO use base type
   public gridOptions: {};
   public endDate: string;
@@ -246,7 +246,7 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 }
 
-export class DgcWebexReportsSearchComponent implements ng.IComponentOptions {
-  public controller = WebexReportsSearch;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/webex-reports-search.html');
+export class DgcPartnerWebexReportsSearchComponent implements ng.IComponentOptions {
+  public controller = WebexReportsSearchController;
+  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-webex-reports-search.html');
 }
