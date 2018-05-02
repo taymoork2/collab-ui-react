@@ -211,6 +211,7 @@
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace',
+          ATLAS_SITE_MGMT: 'Cisco Commerce',
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
