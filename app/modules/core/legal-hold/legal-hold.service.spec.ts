@@ -27,7 +27,8 @@ describe('Service: LegalHoldService', () => {
     );
 
     this.matterList = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'));
-    this.URL = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=';
+    this.matterUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=';
+    this.matterUsersUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/users?operationType=';
     this.getUserUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/user?email=';
     this.userserviceUser = {
       id: '123',
@@ -60,14 +61,14 @@ describe('Service: LegalHoldService', () => {
         caseId: 'case123',
       };
       matter.caseId = 'case123';
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.CREATE}`).respond(200, data);
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.CREATE}`).respond(200, data);
       expect(this.LegalHoldService.createMatter(this.matterList[1]['orgId'], this.matterList[1]['matterName'], this.matterList[1]['matterDescription'], this.matterList[1]['creationDate'], this.matterList[1]['usersUUIDList'])).toBeResolvedWith(matter);
     });
 
     it('should release the matter', function (this: Test) {
       const dateReleased = new Date(2018, 1, 5);
       const matter = new Matter('org123', 'case123', 'user123', dateReleased, 'matterName', 'matterDesc', dateReleased);
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.UPDATE}`).respond(200);
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.UPDATE}`).respond(200);
       expect(this.LegalHoldService.releaseMatter(matter, dateReleased)).toBeResolved();
     });
 
@@ -78,7 +79,7 @@ describe('Service: LegalHoldService', () => {
         orgId: '123',
         caseId: 'case456',
       };
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.READ}`, params).respond(200, matter);
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.READ}`, params).respond(200, matter);
       expect(this.LegalHoldService.readMatter('123', 'case456')).toBeResolvedWith(resultMatter);
     });
 
@@ -87,9 +88,9 @@ describe('Service: LegalHoldService', () => {
         orgId: '123',
         caseId: 'case456',
       };
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.DELETE}`, expParams).respond(200);
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.DELETE}`, expParams).respond(200);
       expect(this.LegalHoldService.deleteMatter('123', 'case456')).toBeResolved();
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.DELETE}`, expParams).respond(500);
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.DELETE}`, expParams).respond(500);
       expect(this.LegalHoldService.deleteMatter('123', 'case456')).toBeRejected();
     });
 
@@ -97,7 +98,7 @@ describe('Service: LegalHoldService', () => {
       const expParams = {
         orgId: '123',
       };
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.LIST_MATTERS_FOR_ORG}`, expParams).respond(200, { mattersAssociatedWithOrg: this.matterList });
+      this.$httpBackend.expectPOST(`${this.matterUrl}${Actions.LIST_MATTERS_FOR_ORG}`, expParams).respond(200, { mattersAssociatedWithOrg: this.matterList });
       this.LegalHoldService.listMatters('123')
         .then(result => {
           expect(_.size(result)).toBe(_.size(this.matterList));
@@ -111,7 +112,7 @@ describe('Service: LegalHoldService', () => {
         caseId: 'case123',
       };
       const expReturn = this.matterList[0].usersUUIDList;
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.LIST_USERS}`, expParams).respond(200, this.matterList[0].usersUUIDList);
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.LIST_USERS}`, expParams).respond(200, this.matterList[0].usersUUIDList);
       expect(this.LegalHoldService.listUsersInMatter('123', 'case123')).toBeResolvedWith(expReturn);
     });
 
@@ -122,7 +123,7 @@ describe('Service: LegalHoldService', () => {
         usersUUIDList: ['uu123', 'uu124'],
       };
       spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.matterList[0]);
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.ADD_USERS}`, expParams).respond(200, this.matterList);
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.ADD_USERS}`, expParams).respond(200, this.matterList);
       expect(this.LegalHoldService.addUsersToMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolvedWith(this.matterList[0]);
     });
 
@@ -133,7 +134,7 @@ describe('Service: LegalHoldService', () => {
         usersUUIDList: ['uu123', 'uu124'],
       };
       spyOn(this.LegalHoldService, 'readMatter').and.returnValue(this.matterList[0]);
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.REMOVE_USERS}`, expParams).respond(200, this.matterList);
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.REMOVE_USERS}`, expParams).respond(200, this.matterList);
       expect(this.LegalHoldService.removeUsersFromMatter('123', 'case123', ['uu123', 'uu124'])).toBeResolved();
     });
 
@@ -145,7 +146,7 @@ describe('Service: LegalHoldService', () => {
       const expReturn = [
         '123', '456',
       ];
-      this.$httpBackend.expectPOST(`${this.URL}${Actions.LIST_MATTERS_FOR_USER}`, expParams).respond(200, expReturn);
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.LIST_MATTERS_FOR_USER}`, expParams).respond(200, expReturn);
       expect(this.LegalHoldService.listMatterIdsForUser('123', 'user123')).toBeResolvedWith(expReturn);
     });
   });
