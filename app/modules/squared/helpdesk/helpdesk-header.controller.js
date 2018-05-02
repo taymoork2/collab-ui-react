@@ -1,8 +1,10 @@
 (function () {
   'use strict';
 
+  var HealthStatusType = require('modules/core/health-monitor').HealthStatusType;
+
   /* @ngInject */
-  function HelpdeskHeaderController($interval, $scope, $translate, HelpdeskSearchHistoryService, HelpdeskSparkStatusService, UrlConfig) {
+  function HelpdeskHeaderController($interval, $scope, $translate, HealthService, HelpdeskSearchHistoryService, UrlConfig) {
     var vm = this;
     vm.clearSearchHistory = clearSearchHistory;
     vm.populateHistory = populateHistory;
@@ -33,10 +35,37 @@
     }
 
     function getHealthMetrics() {
-      HelpdeskSparkStatusService.getHealthStatuses().then(function (result) {
-        vm.healthMetrics = result;
-        vm.overallSparkStatus = HelpdeskSparkStatusService.highestSeverity(vm.healthMetrics);
+      HealthService.getHealthCheck().then(function (data) {
+        vm.healthMetrics = data.components;
+        vm.overallSparkStatus = getHighestSeverity(vm.healthMetrics);
       });
+    }
+
+    function getHighestSeverity(healthStatuses) {
+      var degraded_performance = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.DEGRADED_PERFORMANCE;
+      });
+      var error = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.ERROR;
+      });
+      var warning = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.WARNING;
+      });
+      var major_outage = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.MAJOR_OUTAGE;
+      });
+      var partialOutage = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.PARTIAL_OUTAGE;
+      });
+      var operational = _.find(healthStatuses, function (data) {
+        return data.status === HealthStatusType.OPERATIONAL;
+      });
+
+      var highestSeverity = error || major_outage || warning || partialOutage || degraded_performance || operational;
+      if (highestSeverity) {
+        return highestSeverity.status;
+      }
+      return HealthStatusType.UNKNOWN;
     }
   }
 
