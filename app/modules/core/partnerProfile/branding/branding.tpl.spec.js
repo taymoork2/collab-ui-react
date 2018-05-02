@@ -4,20 +4,19 @@ var testModule = require('./index').default;
 
 describe('Template: branding', function () {
   var $scope, $controller, controller, $q, $compile, view;
-  var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, WebexClientVersion, Authinfo;
+  var Notification, Orgservice, UserListService, BrandService, FeatureToggleService, Authinfo;
 
   var PARTNER_LOGO_RADIO = 'partnerLogoRadio';
   var CUSTOM_LOGO_RADIO = 'customLogoRadio';
 
   var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
-  var USE_LATEST_WEBEX_CHECKBOX = '#useLatestWbxVersion';
 
   afterEach(function () {
     if (view) {
       view.remove();
     }
     $scope = $controller = controller = $q = $compile = view = undefined;
-    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = WebexClientVersion = Authinfo = undefined;
+    Notification = Orgservice = UserListService = BrandService = FeatureToggleService = Authinfo = undefined;
   });
 
   beforeEach(angular.mock.module(testModule));
@@ -25,7 +24,7 @@ describe('Template: branding', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies($rootScope, _$controller_, _$q_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _WebexClientVersion_, _Authinfo_) {
+  function dependencies($rootScope, _$controller_, _$q_, _$compile_, _Notification_, _Orgservice_, _UserListService_, _BrandService_, _FeatureToggleService_, _Authinfo_) {
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
@@ -35,7 +34,6 @@ describe('Template: branding', function () {
     UserListService = _UserListService_;
     BrandService = _BrandService_;
     FeatureToggleService = _FeatureToggleService_;
-    WebexClientVersion = _WebexClientVersion_;
     Authinfo = _Authinfo_;
   }
 
@@ -53,10 +51,6 @@ describe('Template: branding', function () {
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(WebexClientVersion, 'getWbxClientVersions').and.returnValue($q.resolve(['version-1', 'version-2']));
-    spyOn(WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue($q.resolve());
-    spyOn(WebexClientVersion, 'getTemplate').and.returnValue($q.resolve());
-    spyOn(WebexClientVersion, 'postOrPutTemplate').and.returnValue($q.resolve());
     spyOn(Authinfo, 'isPartner');
   }
 
@@ -81,14 +75,6 @@ describe('Template: branding', function () {
     });
   });
 
-  describe('client versions dropdown', function () {
-    beforeEach(compileView);
-    it('client versions drop down to exist', function () {
-      var clientVersionsDropDown = view.find('#' + 'webex_client_version_drop_down');
-      expect(clientVersionsDropDown).not.toBe(null);
-    });
-  });
-
   describe('Direct Customer Admin', function () {
     beforeEach(compileView);
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));
@@ -101,7 +87,6 @@ describe('Template: branding', function () {
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
     it('Allow logo checkbox should have an appropriate label', verifyCheckboxAndLabel(ALLOW_LOGO_CHECKBOX));
-    it('Use latest version checkbox should have an appropriate label', verifyCheckboxAndLabel(USE_LATEST_WEBEX_CHECKBOX));
 
     describe('Save function should benn called', function () {
       it('by clicking allow logo checkbox', function () {
