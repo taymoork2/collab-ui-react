@@ -72,7 +72,7 @@
           licenseDescription: 'overview.totalLicenses',
           statusId: HealthStatusID.SparkMeeting,
           title: 'overview.cards.roomSystem.title',
-          offerType: [OfferName.SD],
+          offerType: [OfferName.SD, OfferName.SB],
           settingsUrlObject: {
             url: '/devices',
           },

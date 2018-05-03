@@ -1,3 +1,5 @@
+import './cr-add-users-results.scss';
+
 import { CrAddUsersResultsComponent } from './cr-add-users-results.component';
 import * as analyticsModuleName from 'modules/core/analytics';
 import onboardModuleName from 'modules/core/users/shared/onboard';

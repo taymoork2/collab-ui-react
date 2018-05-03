@@ -1,6 +1,6 @@
 <cs-page-header
   class="huron-tabs"
-  title-name="{{$ctrl.clusterDetail.clusterName}}"
+  title-name="{{$ctrl.clusterDetail.name}}"
   back="$ctrl.back"
   back-fxn="$ctrl.onBack()"
   back-aria-label="{{::'common.back' | translate}}">
@@ -50,6 +50,7 @@
                 ng-model="$ctrl.sftpLocationSelected"
                 options="$ctrl.clusterDetail.sftpLocations"
                 on-change-fn="$ctrl.onSftpLocationChanged()"
+                placeholder="$ctrl.sftpSelectPlaceholder"
                 filter="false">
               </cs-select>
             </div>
@@ -69,7 +70,7 @@
               <article>
                 <header class="node-header">
                   <div class="header-with-right-icon">
-                    <h5 class="node-name" title="Node Name">{{node.name}}</h5>
+                    <h5 class="node-name" title="Node Name">{{node.hostname}}</h5>
                     <div class="right card-icon-div" ng-if="node.status.toLowerCase() === $ctrl.statusActive.toLowerCase()">
                       <button type="button" class="close node-close"
                         ng-click="$ctrl.closeCard()"
@@ -79,18 +80,18 @@
                   </div>
                   <div class="row node-type">
                     <div class="columns medium-2">
-                      {{node.type}}
+                      {{node.application}}
                     </div>
                     <div class="columns medium-10 ">
-                      {{(node.isPublisher ? 'hcs.clusterDetail.settings.nodes.publisher' : 'hcs.clusterDetail.settings.nodes.subscriber') | translate}}
+                      {{(node.publisher ? 'hcs.clusterDetail.settings.nodes.publisher' : 'hcs.clusterDetail.settings.nodes.subscriber') | translate}}
                     </div>
                   </div>
                 </header>
                 <section class="card-body">
                   <div class="card-section">
                     <div class="card-section-item row">
-                      <div class="h6 node-sftp columns medium-2">{{node.sftpLocation}}</div>
-                      <div class="h6 node-ip body-small columns medium-8">{{node.ip}}</div>
+                      <div class="h6 node-sftp columns medium-2">{{node.sftpServer ? node.sftpServer.name : ($ctrl.clusterDetail.sftpServer ? $ctrl.clusterDetail.sftpServer.name : 'common.none' | translate)}}</div>
+                      <div class="h6 node-ip body-small columns medium-8" ng-if="node.sftpServer">{{node.ipAddress}}</div>
                       <div class="columns medium-2"><i class="icon icon-edit" ng-click="$ctrl.editNodeSftp(node)" aria-label="{{:: 'common.edit' | translate}}"></i></a></div>
                     </div>
                   </div>
@@ -147,7 +148,7 @@
                 type="text"
                 name="clusterNameInput"
                 placeholder="{{:: $ctrl.clusterNamePlaceholder}}"
-                ng-model="$ctrl.clusterDetail.clusterName"
+                ng-model="$ctrl.clusterName"
                 cs-input-messages="$ctrl.clusterNameInputMessages"
                 ng-required="true">
             </div>

@@ -11,7 +11,7 @@
       <a
         aria-label="{{::$ctrl.l10nTitle | translate}} {{$ctrl.totalLicenses}} {{::$ctrl.l10nLicenseDescription | translate}}"
         ui-sref="my-company.subscriptions">
-        {{$ctrl.totalLicenses}}
+        {{$ctrl.totalLicenses | number}}
       </a>
     </div>
     <div translate="{{::$ctrl.l10nLicenseDescription}}"></div>

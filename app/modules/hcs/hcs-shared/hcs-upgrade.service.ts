@@ -75,7 +75,7 @@ export class HcsUpgradeService {
         query: queryAction,
         delete: deleteAction,
       });
-    this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterid', {},
+    this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId', {},
       {
         update: updateAction,
         save: saveAction,
@@ -139,7 +139,9 @@ export class HcsUpgradeService {
     return this.clusterResource.get({
       partnerId: this.Authinfo.getOrgId(),
       clusterId: _clusterId,
-    }).$promise;
+    }).$promise.then(response => {
+      return response;
+    });
   }
 
   public updateCluster(_clusterId: string, cluster: IHcsCluster) {

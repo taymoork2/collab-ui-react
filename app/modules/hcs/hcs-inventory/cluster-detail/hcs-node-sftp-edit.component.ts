@@ -1,4 +1,5 @@
 import { ISelectOption } from '../shared/hcs-inventory';
+import { IHcsNode } from 'modules/hcs/hcs-shared/hcs-upgrade';
 
 export class HcsNodeSftpEditComponent implements ng.IComponentOptions {
   public controller = HcsNodeSftpEditCtrl;
@@ -16,7 +17,7 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
   public saveSftp: Function;
   public sftpLocationSelected: ISelectOption;
   public sftpLocations: ISelectOption[];
-  public node;
+  public node: IHcsNode;
 
   /* @ngInject */
   constructor() {}
@@ -26,10 +27,14 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.sftpLocationSelected = {
-      label: this.node.sftpLocation,
-      value: this.node.sftpLocation,
-    };
+    if (this.node.sftpServer) {
+      this.sftpLocationSelected = {
+        label: this.node.sftpServer.name,
+        value: this.node.sftpServer.sftpServerUuid,
+      };
+    } else {
+      this.sftpLocationSelected = { label: '', value: '' };
+    }
   }
 
   public save() {

@@ -211,6 +211,7 @@
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace',
+          ATLAS_SITE_MGMT: 'Cisco Commerce',
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
@@ -223,7 +224,7 @@
     }
 
     function findAdminUsers(org) {
-      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
+      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 250).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('common.showAllAdminUsers', {
           numUsers: users.length,

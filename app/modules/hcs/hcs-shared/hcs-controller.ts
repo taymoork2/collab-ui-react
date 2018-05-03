@@ -15,6 +15,29 @@ export interface IHcsInstallables {
   fileInfo?: IFileInfo[];
 }
 
+export interface IControllerNode {
+  uuid: string;
+  hostname: string;
+  ipAddress: string;
+  applicationType: string;
+  partnerOrgId: string;
+  customerOrgId: string | null;
+  agent: IAgent;
+  nodeStatus: string;
+}
+
+export interface IAgent {
+  uuid: string;
+  agentVersion: string;
+  agentType: string;
+  verificationCode: string;
+  machineAccountUuid: string | null;
+  lastAuthMethod: string;
+  lastCheckIn: string;
+  installed: string;
+  verified: string | null;
+}
+
 export class FileInfo implements IFileInfo {
   public uuid: string;
   public fileName: string;

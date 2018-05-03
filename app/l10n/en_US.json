@@ -194,22 +194,14 @@
   },
   "userManage": {
     "org": {
-      "typeLabel": "Add or Modify Users",
-      "typeInstructions": "Select a method to upload and/or modify users and the services they use.",
-      "manualLabel": "Manually add or modify users",
       "manualLabelNew": "Manually Add or Modify Users",
       "manualLabelTemplateEnabled": "Manually Add Users",
-      "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
       "manualDetailsTemplateEnabled": "Add up {{maxUsersInManual}} users.",
       "dirSyncModifyAll": "Modify All Synchronized Users",
-      "bulkLabel": "Export and import users with a CSV file",
       "bulkLabelNew": "CSV Add or Modify Users",
-      "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "bulkDetailsNew": "Add or modify up to {{maxUsersInCSV}} users with a CSV file.",
       "bulkDetailsNewBatch": "Add or modify users with a CSV file.",
-      "advancedLabel": "Enable directory synchronization",
-      "advancedDetails": "Synchronize users from Active Directory.",
       "convertLabel": "Convert Users",
       "convertDetails": "Search for users who have signed up on their own for Cisco Spark and convert them into your company.",
       "convertUnavailable": "There are no users to convert.",
@@ -513,6 +505,7 @@
     "getCareEntitlementsErrorForuser": "Failed to get care entitlements for user",
     "result": {
       "200": "entitled successfully",
+      "202": "licensing deferred until migration",
       "404": "does not exist",
       "408": "may not have been entitled; there was a timeout while waiting for the response. Check back later to verify the user's entitlements.",
       "409": "entitlement previously updated",
@@ -11153,7 +11146,8 @@
         },
         "sftpLocation": {
           "sectionHeader": "Default SFTP Location",
-          "sftpSelectLabel": "Choose the default SFTP Location for this cluster."
+          "sftpSelectLabel": "Choose the default SFTP Location for this cluster.",
+          "sftpPlaceholder": "Select a server"
         },
         "nodes": {
           "accept": "Accept",
@@ -11202,8 +11196,8 @@
       },
       "description": "Create an Agent Install File (.cop file).  This file will need to be installed on each Unified Communications instance or PLM that you would like to manage with HCS features.  This creation can take serveral minutes.  Once complete, it will be available on the Agent Install File Page to download and install.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
-      "enterFileName": "Enter a file name",
-      "fileName": "File Name",
+      "enterFileName": "Enter a file label",
+      "fileName": "File Label",
       "httpProxies": "HTTP Proxies",
       "httpProxy": "HTTP Proxy",
       "httpProxyDesc": "Enter HTTP Proxies for the Agent to allow access to the cloud services. Specifying multiple proxies will make the Agent to be used more widely. ",
@@ -11422,7 +11416,8 @@
     "subTitle": "Select Users for Conversion",
     "desc": "Selected users will be sent a conversion invite email. Users without any recent activity or in <strong>Pending</strong> status will be converted immediately. Users who do not take any action will be converted after {count, plural, =1{# day} other{# days}}.",
     "csv": "CSV",
-    "csvFilename": "unlicensed_users.csv",
+    "csvFilename": "users_pending_conversion.csv",
+    "csvResultsFilename": "users_converted_results.csv",
     "tab": {
       "potential": "Potential Conversion {{count}}",
       "pending": "Pending Conversion {{count}}"
@@ -11436,11 +11431,21 @@
       "immediate": "Immediate Conversion",
       "delayed": "Delayed Conversion"
     },
+    "convertedStatus": {
+      "converted": "Converted",
+      "pending": "Pending"
+    },
     "banner": {
-      "text": "Manage users' licenses more conveniently, <a href=\"{{href}}\" target=\"_blank\">configure Auto Assign</a>"
+      "text": "Manage users' licenses more conveniently, <a href ng-click='{{click}}'>configure Auto Assign</a>"
     },
     "error": {
       "noUsers": "No users found matching this criteria."
+    },
+    "results": {
+      "subTitle": "Conversion Results",
+      "desc": "<strong>Pending Conversion</strong> users were sent a conversion invite email. Users with <strong>Pending</strong> status were converted immediately. Users who don't take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+      "usersConverted": "Users converted",
+      "usersPending": "Pending Conversion"
     }
   },
   "rebrand": {

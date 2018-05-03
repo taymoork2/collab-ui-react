@@ -131,7 +131,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   }
 
   public validateFileName(file: string): boolean {
-    const regex = new RegExp(/(^[\w]*[^\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|\"\'\s][\w]*)/g);
+    const regex = new RegExp(/(^[\w]*[^\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|\"\'\s]*[\w]*)$/g);
     return regex.test(file);
   }
 
