@@ -9,6 +9,7 @@ import * as userServiceModuleName from 'modules/core/scripts/services/user.servi
 import serviceDescriptorModuleName from 'modules/hercules/services/service-descriptor.service';
 import cloudConnectorServiceModuleName from 'modules/hercules/services/calendar-cloud-connector.service';
 import csdmServices from '../services/index';
+import { DeviceCountComponent } from './device-count.component';
 
 export default angular
   .module('Csdm.devices', [
@@ -29,6 +30,7 @@ export default angular
   .component('deviceSearch', new DeviceSearchComponent())
   .component('deviceList', new DeviceListComponent())
   .component('deviceChart', new ChartComponent())
+  .component('deviceCount', new DeviceCountComponent())
   .controller('DevicesReduxCtrl', DevicesCtrl)
   .component('devicesRedux', new DevicesComponent())
   .filter('highlight', highlightFilter)
