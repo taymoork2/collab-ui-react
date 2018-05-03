@@ -19,9 +19,15 @@ describe('Component: DgcPartnerTimeZone', () => {
     expect(arr).toBe('Africa/Abidjan');
   });
 
-  it('should return true if a string matches a proper GMT timezone format', function () {
+  it('should return true if a string has GMT prefix', function () {
     initComponent.call(this);
-    expect(this.controller.hasGmtPrefix('(GMT +00:00) Africa/Abidjan')).toBe(true);
-    expect(this.controller.hasGmtPrefix('GMT ++10:99 c1x/ab')).toBe(false);
+    expect(this.controller.hasGmtPrefix('(GMT +00:00) xxx')).toBe(true);
+    expect(this.controller.hasGmtPrefix('GMT ++10:99 xxx')).toBe(false);
+  });
+
+  it('should return true if a string has timeZone suffix', function () {
+    initComponent.call(this);
+    expect(this.controller.hasTimeZoneSuffix('xxx Africa/Abidjan')).toBe(true);
+    expect(this.controller.hasTimeZoneSuffix('xxx c1x/ab')).toBe(false);
   });
 });
