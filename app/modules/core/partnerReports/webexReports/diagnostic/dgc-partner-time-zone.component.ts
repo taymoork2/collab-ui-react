@@ -1,7 +1,8 @@
 import { PartnerSearchService } from './partner-search.service';
 
 class TimeZoneController implements ng.IComponentController {
-  private readonly GMT_REGEX = /\(GMT\s[+-01]{2}\d:[\d]{2}\)\s([\w\d\/\-_]{2,})/;
+  private readonly GMT_PREFIX_REGEX = /^\(GMT [+-]\d\d:\d\d\)/;
+  private readonly TIME_ZONE_SUFFIX_REGEX = /[A-Z][a-z]+\/[A-Z][a-z]+$/;
   public timeZone: string;
   public selected: string;
   public options: string[];
@@ -22,22 +23,24 @@ class TimeZoneController implements ng.IComponentController {
   }
 
   public onChangeTz(tz: string): void {
-    const timeZones = this.getTimeZone(tz);
-    if (!_.isEmpty(timeZones)) {
-      this.onChangeFn({ timeZone: timeZones[1] });
-    }
+    const timeZone = this.getTimeZone(tz);
+    this.onChangeFn({ timeZone: timeZone });
   }
 
-  private getTimeZone(tz: string): string[] {
-    if (!this.hasGmtPrefix(tz)) {
-      return [];
+  private getTimeZone(tz: string): string | undefined {
+    if (!this.hasGmtPrefix(tz) || !this.hasTimeZoneSuffix(tz)) {
+      return;
     }
-    const timeZones = tz.match(this.GMT_REGEX);
-    return timeZones ? timeZones : [];
+    const timeZones = tz.match(this.TIME_ZONE_SUFFIX_REGEX);
+    return timeZones ? timeZones[0] : undefined;
   }
 
   private hasGmtPrefix(tz: string): boolean {
-    return this.GMT_REGEX.test(tz);
+    return this.GMT_PREFIX_REGEX.test(tz);
+  }
+
+  private hasTimeZoneSuffix(tz: string): boolean {
+    return this.TIME_ZONE_SUFFIX_REGEX.test(tz);
   }
 
   private setSelected(): void {

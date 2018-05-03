@@ -16,7 +16,7 @@ describe('Component: DgcPartnerTimeZone', () => {
   it('should get correct timeZone', function () {
     initComponent.call(this);
     const arr = this.controller.getTimeZone('(GMT +00:00) Africa/Abidjan');
-    expect(arr[1]).toBe('Africa/Abidjan');
+    expect(arr).toBe('Africa/Abidjan');
   });
 
   it('should return true if a string matches a proper GMT timezone format', function () {
