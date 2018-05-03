@@ -27,6 +27,8 @@
     vm.REFRESH = 'refresh';
     vm.SET = 'set';
     vm.liveReports = true;
+    vm.type = 'live';
+    vm.exportDiv = 'cs-export-div';
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
@@ -122,6 +124,7 @@
     vm.clusterinServicechartOptions = {
       isShow: false,
       cardChartDiv: 'liveReportDiv',
+      exportDiv: 'total-calls-export-div',
       noData: '',
     };
 
@@ -398,6 +401,7 @@
 
     function setTotalCallsPie() {
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+        response.data.callsOnPremise = 500;
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data)) {
@@ -420,7 +424,7 @@
             AdoptionCardService.setDummyTotalParticipantsPiechart(true);
             vm.totalParticipantschartOptions.noData = false;
           } else {
-            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster);
+            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster, vm.type);
             vm.totalParticipantschartOptions.noData = false;
           }
         }

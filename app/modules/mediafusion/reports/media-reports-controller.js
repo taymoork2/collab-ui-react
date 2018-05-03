@@ -16,6 +16,7 @@
     vm.EMPTY = 'empty';
     vm.REFRESH = 'refresh';
     vm.SET = 'set';
+    vm.type = 'historical';
 
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
@@ -477,7 +478,7 @@
             AdoptionCardService.setDummyTotalParticipantsPiechart(true);
             vm.totalParticipantschartOptions.noData = false;
           } else {
-            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster);
+            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster, vm.type);
             vm.totalParticipantschartOptions.noData = false;
           }
         }

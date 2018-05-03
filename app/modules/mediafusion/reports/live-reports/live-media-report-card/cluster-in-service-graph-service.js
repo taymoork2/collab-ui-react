@@ -6,9 +6,10 @@
   //var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function ClusterInServiceGraphService($rootScope) {
+  function ClusterInServiceGraphService($rootScope, $translate) {
     var vm = this;
     vm.liveReportDiv = 'liveReportDiv';
+    vm.exportDiv = 'cs-export-div';
     return {
       setClusterInService: setClusterInService,
     };
@@ -39,7 +40,9 @@
           gridAlpha: 0,
           dashLength: 0,
           //integersOnly: true,
-          maximum: 100,
+          //maximum: 100,
+          //minimum: 0.1,
+          //minMaxMultiplier: 1.5,
           labelFunction: formatLabel,
         }],
         //gridAboveGraphs: true,
@@ -56,6 +59,7 @@
         chartCursor: {
           cursorAlpha: 0,
           zoomable: false,
+          oneBalloonOnly: false,
           //valueLineBalloonEnabled: true,
           //valueLineEnabled: true,
           categoryBalloonEnabled: false,
@@ -70,12 +74,24 @@
           //tickLength: 2,
           labelsEnabled: false,
         },
-        /*export: {
+        export: {
           enabled: true,
+          divId: vm.exportDiv,
+          fileName: 'fileName',
+          libs: {
+            autoLoad: false,
+          },
+          menu: [{
+            class: 'export-main',
+            label: $translate.instant('reportsPage.downloadOptions'),
+            title: $translate.instant('reportsPage.saveAs'),
+            menu: ['save.data', 'PNG', 'JPG', 'PDF', 'CSV', 'XLSX'],
+          }],
         },
         balloon: {
           enabled: true,
-        },*/
+          fixedPosition: true,
+        },
       };
       //chartData.graph.showHandOnHover = true;
       chartData.listeners = [{
@@ -87,6 +103,11 @@
         },
       }];
       var chart = AmCharts.makeChart(vm.liveReportDiv, chartData);
+      /*chart.addListener('rollOverGraphItem', function (event) {
+        var b = 'document.getElementById(balloon)';
+        b.innerHTML = event.item.category + ': <b>' + event.item.values.value + '</b>';
+        b.style.display = 'block';
+      });*/
       return chart;
     }
     function formatLabel(label) {

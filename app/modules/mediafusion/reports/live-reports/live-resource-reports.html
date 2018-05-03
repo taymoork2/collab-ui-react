@@ -12,7 +12,7 @@
         <uc-live-media-report-card parentcntrl="nav" headername="nav.availabilityCardHeading" value="nav.clusterAvailability" isorg="nav.allcluster" chart-options="nav.clusterinServicechartOptions" card-class="'three-cards'" card-desc="nav.clusterInServiceDesc"></uc-live-media-report-card>
         <!--uc-live-media-report-card parentcntrl="nav" headername="nav.availabilityCardHeading" value="nav.clusterAvailability" card-class="'three-cards'" chart-options="nav.clusterinServicechartOptions" dropdown-present="true"></uc-live-media-report-card-->
         <!--mf-live-report-flip-card parentcntrl="nav" headername="nav.availabilityCardHeading" value="nav.clusterAvailability" card-class="'three-cards'" tooltip-options="nav.availabilityTooltipOptions" dropdown-present="true"></mf-live-report-flip-card-->
-        <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
+        <uc-media-utilization parentcntrl="nav" type="nav.type"></uc-media-utilization>
         <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
         <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
         <uc-media-cascade-bandwith parentcntrl="nav"  ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle"></uc-media-cascade-bandwith>

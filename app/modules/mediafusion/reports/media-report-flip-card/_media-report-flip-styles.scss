@@ -53,6 +53,21 @@
   vertical-align: top;
   outline: none;
 }
+.flip .card .backgraph {
+  transform: rotateY(-180deg);
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 1px 2px 1px rgba(52, 53, 55, 0.18);
+  color: #6a6b6c;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column;
+  vertical-align: top;
+  outline: none;
+}
 
 .media-flip-icon {
   outline: none !important;
