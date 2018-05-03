@@ -1,37 +1,31 @@
-<div class="form-spacing" id="webex_client_versions_label_and_dropdown">
-  <div ng-if="bctrl.isPartner">
-    <p>
-      <h4 translate="partnerProfile.webexClientVersion"></h4>
-      <p
-        translate="partnerProfile.WbxClientVersionOnlyOnNewSites"
-        class="small-10 body-small">
-      </p>
-      <span class="badge"></span>
-    </p>
-    <cs-select
-      id="webex_client_version_drop_down"
-      ng-model="bctrl.wbxclientversionselected"
-      options="bctrl.wbxclientversions"
-      placeholder="bctrl.wbxclientversionplaceholder"
-      on-change-fn="bctrl.wbxclientversionselectchanged(bctrl.wbxclientversionselected)"
-      is-disabled="bctrl.useLatestWbxVersion">
-    </cs-select>
-    <p
-      ng-if="(bctrl.wbxclientVersionInvalid) && (!bctrl.useLatestWbxVersion)"
-      class="body-smallest">
-      <font color="red">{{bctrl.wbxclientVersionInvalidError}}</font>
-    </p>
+<div class="form-spacing webex-client-versions__label-and-dropdown">
+  <h4 translate="partnerProfile.webexClientVersion"></h4>
+  <div class="row collapse">
+    <p class="columns small-10 body-small" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></p>
   </div>
-</div>
-<div class="form-spacing" ng-if="bctrl.isPartner">
+  <span class="badge"></span>
+  <div class="row collapse">
+    <div class="columns medium-6">
+      <cs-select
+        class="webex-client-version__dropdown"
+        ng-model="$ctrl.wbxclientversionselected"
+        ng-model-options="{ debounce: 2000 }"
+        options="$ctrl.wbxclientversions"
+        placeholder="$ctrl.wbxclientversionplaceholder"
+        on-change-fn="$ctrl.wbxclientversionselectchanged()"
+        is-disabled="$ctrl.useLatestWbxVersion">
+      </cs-select>
+    </div>
+  </div>
+  <p class="body-smallest webex-client-version__error" ng-if="$ctrl.wbxclientVersionInvalid && !$ctrl.useLatestWbxVersion">{{$ctrl.wbxclientVersionInvalidError}}</p>
   <div class="cs-checkbox-group">
     <input
       cs-input
       type="checkbox"
-      id="useLatestWbxVersion"
-      name="useLatestWbxVersion"
-      ng-model="bctrl.useLatestWbxVersion"
-      ng-change="bctrl.toggleWebexSelectLatestVersionAlways(bctrl.useLatestWbxVersion)"
+      id="latest-webex-version__checkbox"
+      ng-model="$ctrl.useLatestWbxVersion"
+      ng-model-options="{ debounce: 100 }"
+      ng-change="$ctrl.toggleWebexSelectLatestVersionAlways()"
       cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}">
   </div>
 </div>

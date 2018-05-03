@@ -71,15 +71,20 @@
     }
 
     #brandingLogoPanel,
-    #webex_client_versions_label_and_dropdown {
+    .webex-client-versions__label-and-dropdown {
       h4 {
         font-size: 1rem;
         font-family: $brand-font-light;
         margin-bottom: 0.5rem;
       }
 
-      #webex_client_version_drop_down {
-        max-width: 260px;
+      .webex-client-version__dropdown {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .webex-client-version__error {
+        color: $red;
       }
 
       span {
@@ -87,7 +92,7 @@
       }
     }
 
-    .webex_allow_customer_site_management_label_and_checkbox {
+    .webex-allow-customer-site-management__label-and-checkbox {
       margin-bottom: 2rem;
 
       h4 {

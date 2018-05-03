@@ -10,6 +10,6 @@ export class WebexSetting extends SettingSection {
 }
 
 export class WebexSettingsWrapper implements ng.IComponentOptions {
-  public template = require('modules/core/settings/webex/webex-settings-wrapper.html');
-  public transclude = { webexSiteManagement: 'webexSiteManagement', webexVersion: 'webexVersion' };
+  public template = require('./webex-settings-wrapper.html');
+  public transclude = { webexSiteManagement: 'webexSiteManagementSetting', webexVersion: 'webexVersionSetting' };
 }

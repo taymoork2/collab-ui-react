@@ -68,13 +68,6 @@ describe('Template: branding', function () {
     compileView();
   }
 
-  describe('pre conditions', function () {
-    beforeEach(compileView);
-    it('Verify show branding is set', function () {
-      expect(controller.showBranding).toBe(true);
-    });
-  });
-
   describe('Direct Customer Admin', function () {
     beforeEach(compileView);
     it('Partner logo radio should not exist', verifyRadioNotExist(PARTNER_LOGO_RADIO));

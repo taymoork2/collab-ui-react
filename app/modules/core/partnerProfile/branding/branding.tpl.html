@@ -1,6 +1,6 @@
 <ng-form name="brandingForm" isolate-form="partnerProfileForm" class="branding branding-wording">
   <!-- branding logo upload -->
-  <div ng-if="bctrl.showBranding && (bctrl.isPartner || bctrl.allowCustomerLogos || bctrl.isDirectCustomer)">
+  <div ng-if="bctrl.isPartner || bctrl.allowCustomerLogos || bctrl.isDirectCustomer">
     <div id="brandingLogoPanel" class="small-12 columns optional-row">
       <h4 translate="branding.customTitle"></h4>
       <div class="form-spacing form-group">
