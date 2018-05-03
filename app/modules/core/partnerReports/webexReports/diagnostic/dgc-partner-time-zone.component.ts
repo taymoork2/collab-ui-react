@@ -29,14 +29,14 @@ class TimeZoneController implements ng.IComponentController {
   }
 
   private getTimeZone(tz: string): string[] {
-    if (!this.isGmt(tz)) {
+    if (!this.hasGmtPrefix(tz)) {
       return [];
     }
     const timeZones = tz.match(this.GMT_REGEX);
     return timeZones ? timeZones : [];
   }
 
-  private isGmt(tz: string): boolean {
+  private hasGmtPrefix(tz: string): boolean {
     return this.GMT_REGEX.test(tz);
   }
 
