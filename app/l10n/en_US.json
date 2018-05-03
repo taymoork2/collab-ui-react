@@ -1399,6 +1399,12 @@
       }
     }
   },
+  "troubleshootingPage": {
+    "title": "Troubleshooting",
+    "tabs": {
+      "meeting": "Meeting"
+    }
+  },
   "provisioningConsole": {
     "provisioningConsole": "Provisioning Console",
     "orderNumber": "Order Number",

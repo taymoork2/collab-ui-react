@@ -9,7 +9,7 @@ require('./_support.scss');
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, HealthService, Log, LogService, ModalService, Notification, Orgservice, PageParam, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $modal, $q, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, HealthService, Log, LogService, ModalService, Notification, Orgservice, PageParam, ProPackService, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = $translate.instant('supportPage.byCisco');
@@ -135,6 +135,24 @@ require('./_support.scss');
       title: $translate.instant('supportPage.tabs.status'),
       state: 'support.status',
     }];
+
+    var promises = {
+      isProPackEnabled: ProPackService.hasProPackEnabled(),
+      isUX3: FeatureToggleService.diagnosticF8193UX3GetStatus(),
+    };
+    $q.all(promises).then(function (features) {
+      if (features.isUX3 && features.isProPackEnabled) {
+        $scope.showMeetingTab = true;
+        $scope.tabs.splice(0, 0, {
+          title: $translate.instant('troubleshootingPage.tabs.meeting'),
+          state: 'support.meeting',
+        });
+      } else {
+        if ($state.current.name === 'support.meeting') {
+          $state.go('support.status');
+        }
+      }
+    });
 
     if (Authinfo.isInDelegatedAdministrationOrg() && !Authinfo.isHelpDeskAndComplianceUserOnly()) {
       $scope.tabs.push({

@@ -2377,6 +2377,14 @@
               },
             },
           })
+          .state('support.meeting', {
+            url: '/meeting',
+            views: {
+              supportPane: {
+                template: '<support-meeting-component></support-meeting-component>',
+              },
+            },
+          })
           .state('support.status', {
             url: '/status',
             views: {

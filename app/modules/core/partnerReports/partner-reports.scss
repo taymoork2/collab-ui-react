@@ -99,4 +99,12 @@
     @include vr-spacing(mh, 0.75);
     width: vr-adjust(125);
   }
+
+  .content-container {
+    .meeting-list {
+      height: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }

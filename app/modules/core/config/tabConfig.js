@@ -77,11 +77,11 @@
     state: 'taas',
     link: '/partner/taas',
   }, {
-    tab: 'supportTab',
+    tab: 'troubleshootingTab',
     icon: 'icon-support',
-    title: 'tabs.supportTab',
-    link: '/support/status',
-    state: 'support.status',
+    title: 'tabs.troubleshootingTab',
+    link: '/support/meeting',
+    state: 'support.meeting',
   }, {
     tab: 'settingsTab',
     icon: 'icon-settings',
@@ -202,9 +202,9 @@
   }, {
     tab: 'supportTab',
     icon: 'icon-diagnostics-active',
-    title: 'tabs.supportTab',
-    link: '/support/status',
-    state: 'support.status',
+    title: 'tabs.troubleshootingTab',
+    link: '/support/meeting',
+    state: 'support.meeting',
     iconClass: 'icon-outline',
   }, {
     tab: 'settingsTab',

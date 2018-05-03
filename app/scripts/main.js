@@ -130,6 +130,7 @@
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
     require('modules/squared/devices/addDeviceNew/Wizard').default,
+    require('modules/squared/support/support-meeting.component').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);

@@ -438,6 +438,7 @@
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
         isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
         isProPackEnabled: ProPackService.hasProPackEnabled(),
+        isUX3: FeatureToggleService.diagnosticF8193UX3GetStatus(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
@@ -448,7 +449,7 @@
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
-          if (features.isProPackEnabled) {
+          if (features.isProPackEnabled && !features.isUX3) {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
           } else {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics);

@@ -66,7 +66,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     this.searchStr = this.WebexReportsUtilService.getStorage(SearchStorage.SEARCH_STRING);
 
     this.dataService = this.PartnerSearchService;
-    if (this.$state.current.name === 'reports.webex-metrics.diagnostics') {
+    if (this.$state.current.name === 'reports.webex-metrics.diagnostics' || this.$state.current.name === 'support.meeting') {
       this.isPartnerRole = false;
       this.dataService = this.CustomerSearchService;
     }
