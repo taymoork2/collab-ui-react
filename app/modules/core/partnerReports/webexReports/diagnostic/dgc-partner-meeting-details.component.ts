@@ -1,31 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms, Quality, QualityRange } from './partner-search.service';
 import { IJoinTime, ISessionDetail, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
-
-enum TabType {
-  AUDIO = 'Audio',
-  VIDEO = 'Video',
-}
-
-enum QualityType {
-  GOOD = 'Good',
-  FAIR = 'Fair',
-  POOR = 'Poor',
-  NA = 'NA',
-}
-
-enum QosType {
-  VOIP = 'voip',
-  VIDEO = 'video',
-  CMR = 'cmr',
-  PSTN = 'pstn',
-}
-
-enum MosType {
-  GOOD = 4,
-  FAIR = 3,
-  POOR = 0,
-}
+import { MosType, QualityType, QosType, TabType } from './partner-meeting.enum';
 
 class MeetingDetailsController implements ng.IComponentController {
   public data: any; //TODO use better type
