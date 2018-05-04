@@ -11421,7 +11421,8 @@
     "tableHeader": {
       "name": "Display Name",
       "email": "Email Address",
-      "status": "Status"
+      "status": "Status",
+      "eligible": "Eligible For"
     },
     "status": {
       "immediate": "Immediate Conversion",
