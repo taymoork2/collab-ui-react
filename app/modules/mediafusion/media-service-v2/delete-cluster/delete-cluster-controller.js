@@ -116,7 +116,6 @@
             loopPromises.push(deferred.promise.catch(recoverPromise));
             deferred.resolve(toCluster);
           } else {
-            //var promise = HybridServicesClusterService.preregisterCluster(toClusterName, 'stable', 'mf_mgmt');
             var promise = updatePropertiesofCluster(toClusterName);
             loopPromises.push(promise.catch(recoverPromise));
           }

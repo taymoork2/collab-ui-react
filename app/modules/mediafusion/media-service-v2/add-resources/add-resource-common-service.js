@@ -177,7 +177,7 @@
         type: 'mf.group',
         name: 'qosPropertySet',
         properties: {
-          'mf.qos': 'false',
+          'mf.qos': 'true',
         },
       };
       MediaClusterServiceV2.createPropertySet(payLoad)

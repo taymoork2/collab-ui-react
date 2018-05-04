@@ -187,7 +187,7 @@ export class AddResourceSectionService {
       type: 'mf.group',
       name: 'qosPropertySet',
       properties: {
-        'mf.qos': 'false',
+        'mf.qos': 'true',
       },
     };
     return this.MediaClusterServiceV2.createPropertySet(qospayLoad)

@@ -64,6 +64,7 @@ module.exports = {
   atlasMediaServiceFirstTimeCalling: 'atlas-media-service-first-time-calling',
   atlasMediaServiceMultipleInsights: 'atlas-media-service-multiple-insights',
   atlasMediaServicePhaseTwo: 'atlas-media-service-phase-two',
+  atlasMediaServiceQos: 'atlas-media-service-qos',
   atlasMediaServiceTrustedSIP: 'atlas-media-service-trusted-sip',
   atlasMyCompanyBillingTab: 'atlas-my-company-billing-tab',
   atlasNewCiDataModel: 'atlas-new-ci-data-model',

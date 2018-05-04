@@ -45,7 +45,7 @@ class QosSectionCtrl implements ng.IComponentController {
        if (this.isWizard) {
          this.enableQos = true;
        } else {
-         this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
+         this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', true);
        }
        this.MediaClusterServiceV2.getPropertySets()
         .then((propertySets) => {
@@ -73,7 +73,7 @@ class QosSectionCtrl implements ng.IComponentController {
           type: 'mf.group',
           name: 'qosPropertySet',
           properties: {
-            'mf.qos': 'false',
+            'mf.qos': 'true',
           },
         };
         this.MediaClusterServiceV2.createPropertySet(payLoad)
