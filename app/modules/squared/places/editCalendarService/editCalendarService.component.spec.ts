@@ -1,4 +1,5 @@
 import editCalendarService from './index';
+import { ValidationState } from '../external-linked-account-validation/base-external-linked-account-unique-safe';
 
 describe('EditCalendarService component:', () => {
   const FUSION_CAL_ENTITLEMENT = 'squared-fusion-cal';
@@ -247,6 +248,7 @@ describe('EditCalendarService component:', () => {
       beforeEach(() => {
         state.controller.calService = FUSION_GCAL_ENTITLEMENT;
         state.controller.emailOfMailbox = email;
+        state.controller.currentValidationState = ValidationState.Success;
       });
       it('should set externalIdentifier to exchange', () => {
         spyOn(state.wizardData, 'next');

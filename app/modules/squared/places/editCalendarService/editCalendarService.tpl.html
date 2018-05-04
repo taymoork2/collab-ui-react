@@ -33,33 +33,45 @@
         </div>
 
         <div class="callServiceRow emailsControlsParent">
-          <div class="cs-radio-group calendarServiceControls emailControls">
+          <div class="cs-radio-group calendarServiceControls emailControls" ng-class="editCalendarService.currentValidationState">
             <label
               ng-if="editCalendarService.calService !== 'squared-fusion-gcal'"
               for="email-cal"
               translate="addDeviceWizard.editServices.calendarEmail"></label>
-            <input
-              ng-if="editCalendarService.calService !== 'squared-fusion-gcal'"
-              id="email-cal"
-              class="calendar-mail-id"
-              type="email"
-              autocomplete="off"
-              maxlength="321"
-              ng-model="editCalendarService.emailOfMailbox">
+            <div class="input-with-spinner" ng-if="editCalendarService.calService !== 'squared-fusion-gcal'">
+              <input
+                id="email-cal"
+                class="calendar-mail-id"
+                type="email"
+                autocomplete="off"
+                maxlength="321"
+                ng-keyup="editCalendarService.onEmailOfMailboxInputKeyUp()"
+                ng-model="editCalendarService.emailOfMailbox">
+              <div ng-if="editCalendarService.isValidating">
+                <i class="icon icon icon-spinner"></i>
+              </div>
+            </div>
             <label
-              ng-if="editCalendarService.calService === 'squared-fusion-cal'"
+              ng-if="editCalendarService.calService === 'squared-fusion-gcal'"
               for="email-gcal"
               translate="addDeviceWizard.editServices.calendarEmail"></label>
-            <input
-              ng-if="editCalendarService.calService === 'squared-fusion-gcal'"
-              id="email-gcal"
-              class="calendar-mail-id"
-              type="text"
-              autocomplete="off"
-              ng-model="editCalendarService.emailOfMailbox"
-              maxlength="321"
-              ng-pattern="/^[^@]+@[^@]+$/">
-            <p class="cs-input__help-text" translate="addDeviceWizard.editServices.calendarEmailHelp"></p>
+            <div class="input-with-spinner" ng-if="editCalendarService.calService === 'squared-fusion-gcal'">
+              <input
+                id="email-gcal"
+                class="calendar-mail-id"
+                type="text"
+                autocomplete="off"
+                ng-keyup="editCalendarService.onEmailOfMailboxInputKeyUp()"
+                ng-model="editCalendarService.emailOfMailbox"
+                maxlength="321"
+                ng-pattern="/^[^@]+@[^@]+$/">
+              <div ng-if="editCalendarService.isValidating">
+                <i class="icon icon icon-spinner"></i>
+              </div>
+            </div>
+            <div class="cs-input__messages">
+              <div class="message" ng-bind-html="editCalendarService.currentValidationMessage"></div>
+            </div>
           </div>
         </div>
 
