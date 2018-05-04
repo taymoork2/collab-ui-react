@@ -6393,18 +6393,18 @@
       "title": "Set up Hybrid Calendar Service",
       "whichCalendar": "Which calendar provider do you want to use?",
       "mailAddressInvalidFormat": "Invalid format. Enter a valid email address.",
-      "mailAddressBelongsToUser": "This email address is already associated with the Webex user <b>{{accountDisplayName}}</b>.<br>The email address should be for the calendar mailbox of this place, not another Webex user or place.",
-      "mailAddressBelongsToPlace": "This email address is already associated with the place <b>{{accountDisplayName}}</b>.<br>The email address should be for the calendar mailbox of the place you are configuring, not another Webex user or place."
+      "mailAddressBelongsToUser": "This email address is already associated with the Webex user <b>{{accountDisplayName}}</b>.<br>The email address must belong to the calendar mailbox of this place, not another Webex user or place.",
+      "mailAddressBelongsToPlace": "This email address is already associated with the place <b>{{accountDisplayName}}</b>.<br>The email address must belong to the calendar mailbox of the place, not another Webex user or place."
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Set up Hybrid Call Service Connect",
       "step1": "To represent this place in Cisco Unified Communications Manager, create a 'user account' for the place with an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
-      "mailId": "Mail ID",
-      "mailIdInvalidFormat": "Invalid format. Enter a valid mail ID.",
-      "mailIdBelongsToUser": "This is the email address of Webex user <b>{{accountDisplayName}}</b>.<br>The 'user account' in Cisco Unified Communications Manager should represent this place, not a Webex user.",
-      "mailIdBelongsToPlace": "This Mail ID is already associated with the place <b>{{accountDisplayName}}</b>.<br>Only one place can connect to one Unified CM account."
+      "mailId": "Mail ID from Unified CM",
+      "mailIdInvalidFormat": "Invalid format. Enter a valid Mail ID from Unified CM.",
+      "mailIdBelongsToUser": "This is the email address of Webex user <b>{{accountDisplayName}}</b>.<br>The 'user account' in Unified CM must represent this place, not a Webex user.",
+      "mailIdBelongsToPlace": "This Mail ID from Unified CM is already associated with the place <b>{{accountDisplayName}}</b>.<br>Only one place can connect to one Unified CM account."
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
