@@ -18,49 +18,45 @@ describe('Component: Banner', function () {
     this.translation = 'subscriptions.overageWarning';
     this.type = 'danger';
 
-    this.initController = (): void => {
-      this.controller = this.$componentController('crBanner', {
-        $rootScope: this.$rootScope,
-        $scope: this.$scope,
-      }, {});
-      this.controller.$onInit();
-    };
-
     this.initComponent = (): void => {
       this.compileComponent('crBanner', {});
     };
   });
 
   it('should initialize with default values', function () {
-    this.initController();
+    this.initComponent();
 
-    expect(this.controller.iconCss).toBeUndefined();
-    expect(this.controller.isVisible).toBeFalsy();
-    expect(this.controller.type).toBeUndefined();
-    expect(this.controller.translation).toBeUndefined();
-
+    expect(_.size(this.controller.bannerList)).toBe(1);
+    expect(this.controller.bannerList[0].name).toBe('REBRAND_BANNER_NAME');
     expect(this.$rootScope.$on).toHaveBeenCalledWith(this.broadcast, jasmine.any(Function));
   });
 
   it('should set variables as expected on broadcast', function () {
-    this.initController();
+    this.initComponent();
 
     this.$rootScope.$broadcast(this.broadcast, {
+      name: 'TEST_BANNER_NAME',
       iconCss: this.iconCss,
       translation: this.translation,
       type: this.type,
       closeable: true,
-      visible: true,
+      isVisible: true,
     });
+    this.$scope.$apply();
 
-    expect(this.controller.iconCss).toEqual(this.iconCss);
-    expect(this.controller.isVisible).toBeTruthy();
-    expect(this.controller.type).toEqual(this.type);
-    expect(this.controller.translation).toEqual(this.translation);
-    expect(this.controller.closeable).toBeTruthy();
+    expect(_.size(this.controller.bannerList)).toBe(2);
+    const testBanner = _.cloneDeep(this.controller.bannerList[1]);
+    expect(testBanner.iconCss).toEqual(this.iconCss);
+    expect(testBanner.isVisible).toBeTruthy();
+    expect(testBanner.type).toEqual(this.type);
+    expect(testBanner.translation).toEqual(this.translation);
+    expect(testBanner.closeable).toBeTruthy();
 
-    this.$rootScope.$broadcast(this.broadcast);
-    expect(this.controller.isVisible).toBeFalsy();
+    this.$rootScope.$broadcast(this.broadcast, {
+      name: 'TEST_BANNER_NAME',
+    });
+    this.$scope.$apply();
+    expect(_.size(this.controller.bannerList)).toBe(1);
   });
 
   it('html should react as expected', function () {
@@ -68,14 +64,13 @@ describe('Component: Banner', function () {
     const icon = `span.icon.${this.iconCss}`;
     this.initComponent();
 
-    expect(this.view).not.toContainElement(banner);
-
     this.$rootScope.$broadcast(this.broadcast, {
+      name: 'TEST_BANNER_NAME',
       iconCss: this.iconCss,
       translation: this.translation,
       type: this.type,
       closeable: true,
-      visible: true,
+      isVisible: true,
     });
     this.$scope.$apply();
 
