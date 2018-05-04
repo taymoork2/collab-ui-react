@@ -6601,6 +6601,12 @@
       "success": "Video quality setting was set successfully.",
       "error": "Error in saving video quality setting. Please revert the change and try again later."
     },
+    "qos": {
+      "title": "QoS",
+      "description": "Extended Port Range for QoS",
+      "success": "Extended Port Range for QoS setting was set successfully.",
+      "error": "Error in saving Extended Port Range for QoS setting. Please revert the change and try again later."
+    },
     "report": {
       "title": "Hybrid Media",
       "adoption-title": "Adoption",

@@ -77,12 +77,22 @@
                   vm.videoPropertySet = _.filter(propertySets, {
                     name: 'videoQualityPropertySet',
                   });
+                  vm.qosPropertySet = _.filter(propertySets, {
+                    name: 'qosPropertySet',
+                  });
                   if (vm.videoPropertySet.length > 0) {
                     var clusterPayload = {
                       assignedClusters: vm.selectedClusterId,
                     };
                     // Assign it the property set with cluster list
                     MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+                  }
+                  if (vm.qosPropertySet.length > 0) {
+                    var clusterQosPayload = {
+                      assignedClusters: vm.selectedClusterId,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
                   }
                 }
               });
@@ -150,6 +160,7 @@
                 Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
               });
           });
+        createQosProperty();
         whiteListHost(hostName, vm.selectedClusterId);
       }, function (error) {
         deferred.reject();
@@ -161,6 +172,28 @@
       return deferred.promise;
     }
 
+    function createQosProperty() {
+      var payLoad = {
+        type: 'mf.group',
+        name: 'qosPropertySet',
+        properties: {
+          'mf.qos': 'false',
+        },
+      };
+      MediaClusterServiceV2.createPropertySet(payLoad)
+        .then(function (response) {
+          vm.qosPropertySetId = response.data.id;
+          var clusterPayload = {
+            assignedClusters: vm.selectedClusterId,
+          };
+          // Assign it the property set with cluster id
+          MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySetId, clusterPayload)
+            .then('', function (err) {
+              Notification.errorWithTrackingId(err, 'mediaFusion.qos.error');
+            });
+        });
+    }
+
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
@@ -169,6 +202,7 @@
       createFirstTimeSetupCluster: createFirstTimeSetupCluster,
       enableMediaService: enableMediaService,
       validateHostName: validateHostName,
+      createQosProperty: createQosProperty,
     };
   }
   angular

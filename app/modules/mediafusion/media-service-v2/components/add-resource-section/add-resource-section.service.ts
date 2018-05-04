@@ -29,11 +29,13 @@ export class AddResourceSectionService {
   public ovaType: string = '1';
   public noProceed: boolean = false;
   public proPackEnabled: boolean;
+  public qosPropertySetId = null;
   public selectedCluster: string = '';
   private selectedClusterId: string;
   public showDownloadableOption: boolean;
   public radio: string = '1';
   public releaseChannel: string = 'stable';
+  public videoPropertySetId = null;
   public yesProceed: boolean;
 
   private getClusterList() {
@@ -90,13 +92,29 @@ export class AddResourceSectionService {
                 const videoPropertySet = _.filter(propertySets, {
                   name: 'videoQualityPropertySet',
                 });
+                const qosPropertySet = _.filter(propertySets, {
+                  name: 'qosPropertySet',
+                });
                 if (videoPropertySet.length > 0) {
                   const clusterPayload = {
                     assignedClusters: this.selectedClusterId,
                   };
                   // Assign it the property set with cluster list
                   this.MediaClusterServiceV2.updatePropertySetById(videoPropertySet[0]['id'], clusterPayload);
+                } else if (videoPropertySet.length === 0) {
+                  this.videoPropertySetsForOrg();
                 }
+                if (qosPropertySet.length > 0) {
+                  const clusterQosPayload = {
+                    assignedClusters: this.selectedClusterId,
+                  };
+                  // Assign it the property set with cluster list
+                  this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet[0]['id'], clusterQosPayload);
+                } else if (qosPropertySet.length === 0) {
+                  this.qosPropertySetsForOrg();
+                }
+              } else if (propertySets.length === 0) {
+                this.propertySetsForOrg();
               }
             });
           return this.whiteListHost(hostName, this.selectedClusterId);
@@ -137,5 +155,51 @@ export class AddResourceSectionService {
 
   public enableMediaService() {
     return this.MediaServiceActivationV2.enableMediaService(this.currentServiceId);
+  }
+
+  private propertySetsForOrg() {
+    this.videoPropertySetsForOrg();
+    this.qosPropertySetsForOrg();
+  }
+
+  private videoPropertySetsForOrg() {
+    const payLoad = {
+      type: 'mf.group',
+      name: 'videoQualityPropertySet',
+      properties: {
+        'mf.videoQuality': 'false',
+      },
+    };
+    return this.MediaClusterServiceV2.createPropertySet(payLoad)
+          .then((response) => {
+            this.videoPropertySetId = response.data.id;
+            const clusterPayload = {
+              assignedClusters: _.map(this.clusters, 'id'),
+            };
+            this.MediaClusterServiceV2.updatePropertySetById(this.videoPropertySetId, clusterPayload)
+              .catch((error) => {
+                this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
+              });
+          });
+  }
+  private qosPropertySetsForOrg() {
+    const qospayLoad = {
+      type: 'mf.group',
+      name: 'qosPropertySet',
+      properties: {
+        'mf.qos': 'false',
+      },
+    };
+    return this.MediaClusterServiceV2.createPropertySet(qospayLoad)
+          .then((response) => {
+            this.qosPropertySetId = response.data.id;
+            const qosclusterPayload = {
+              assignedClusters: _.map(this.clusters, 'id'),
+            };
+            this.MediaClusterServiceV2.updatePropertySetById(this.qosPropertySetId, qosclusterPayload)
+              .catch((error) => {
+                this.Notification.errorWithTrackingId(error, 'mediaFusion.qos.error');
+              });
+          });
   }
 }

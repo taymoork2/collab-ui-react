@@ -6,13 +6,15 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
     vm.isSipSettingsEnabled = true;
     vm.videoQuality = false;
+    vm.qosValue = true;
     vm.videoPropertySetId = null;
+    vm.qosPropertySetId = null;
     vm.closeSetupModal = closeSetupModal;
     vm.createCluster = createCluster;
     vm.clusterlist = [];
@@ -28,6 +30,7 @@
     vm.clusterNameUpdated = clusterNameUpdated;
     vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
     vm.videoQualityUpdated = videoQualityUpdated;
+    vm.qosUpdated = qosUpdated;
     vm.releaseChannelUpdated = releaseChannelUpdated;
     vm.canGoNext = canGoNext;
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
@@ -119,6 +122,7 @@
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality) && vm.firstTimeSetup) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
+          if (!_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.videoPropertySetId);
           if (vm.hasMfFeatureToggle && vm.sipSettingEnabled) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle && vm.sipSettingEnabled) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
           if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth) && vm.sipSettingEnabled) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
@@ -142,6 +146,12 @@
       if (!_.isUndefined(response.videoQuality)) {
         vm.videoQuality = response.videoQuality;
         vm.videoPropertySetId = response.videoPropertySetId;
+      }
+    }
+    function qosUpdated(response) {
+      if (!_.isUndefined(response.qos)) {
+        vm.qosValue = response.qos;
+        vm.qosPropertySetId = response.qosPropertySetId;
       }
     }
 
