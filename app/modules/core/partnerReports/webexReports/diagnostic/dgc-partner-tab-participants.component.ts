@@ -39,18 +39,18 @@ class ParticipantsController implements ng.IComponentController {
   private getParticipants(): void {
     this.PartnerSearchService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
-        this.gridData = _.map(res, (item: IParticipant) => {
-          const device = this.PartnerSearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
-          if (item.platform === Platforms.TP && !device.name) {
+        this.gridData = _.map(res, (participant: IParticipant) => {
+          const device = this.PartnerSearchService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
+          if (participant.platform === Platforms.TP && !device.name) {
             device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
           }
-          return _.assignIn({}, item, {
-            phoneNumber: this.PartnerSearchService.getPhoneNumber(item.phoneNumber),
-            callInNumber: this.PartnerSearchService.getPhoneNumber(item.callInNumber),
+          return _.assignIn({}, participant, {
+            phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
+            callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
             platform_: _.get(device, 'name'),
-            duration: this.PartnerSearchService.getDuration(item.duration),
-            endReason: this.PartnerSearchService.getParticipantEndReason(item.reason),
-            startDate: this.PartnerSearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+            duration: this.PartnerSearchService.getDuration(participant.duration),
+            endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
+            startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
           });
         });
         this.loading = false;
@@ -70,12 +70,12 @@ class ParticipantsController implements ng.IComponentController {
       if (item.platform === Platforms.TP && !item.deviceCompleted) {
         this.deviceLoaded = false;
         this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
-        .then((res: any) => {
-          if (res.completed) {
-            item.device = this.updateDevice(res);
-          }
-          item.deviceCompleted = res.completed;
-        });
+          .then((res: any) => {
+            if (res.completed) {
+              item.device = this.updateDevice(res);
+            }
+            item.deviceCompleted = res.completed;
+          });
       }
     });
 
@@ -88,7 +88,7 @@ class ParticipantsController implements ng.IComponentController {
   }
 
   private updateDevice(deviceInfo: IDevice): string {
-    if (deviceInfo.items && deviceInfo.items.length > 0) {
+    if (!_.isEmpty( deviceInfo.items)) {
       const device = deviceInfo.items[0].deviceType;
       return device;
     }
