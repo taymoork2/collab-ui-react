@@ -1774,6 +1774,7 @@
     "postpone": "Postpone",
     "previous": "Previous",
     "primary": "Primary",
+    "print": "Print",
     "proceed": "Proceed",
     "processingEllipsis": "Processing...",
     "proPackTooltip": "This premium feature is available with Pro Pack. Contact your partner to learn more.",
@@ -1936,7 +1937,7 @@
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex clients, and place calls to others' work phones from their Cisco Webex clients.",
     "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
     "setUpDevices": "Activate your devices when they arrive.",
-    "setUpSharedDevices": "Activate your room devices when they arrive.",
+    "setUpSharedDevices": "Activate your Cisco Webex devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Webex Boards when they arrive.",
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Setup PMR Now",
@@ -2355,7 +2356,7 @@
     "rebootDeviceConfText": "Are you sure you want to reboot this device?",
     "nothingHere": "No devices yet",
     "nothingHerePlaces": "No places yet",
-    "noDevices": "After you activate Cisco desk phones and room devices, you'll see them listed here.",
+    "noDevices": "After you activate Webex devices, you'll see them listed here.",
     "noneFound": "No devices found",
     "tryAgain": "Try another search.",
     "searchFailedTitle": "Failed to load devices",
@@ -2364,7 +2365,7 @@
     "failedToLoadAllDevicesDetails": "Some of your devices might not be shown in the list. Try again later.<br>Error Tracking ID: {{trackingID}}",
     "licenseWarningTitle": "License",
     "licenseWarningHeader": "There is a problem with the license for this service.",
-    "licenseSuspendedWarning": "Your room device licenses are suspended.",
+    "licenseSuspendedWarning": "Your Cisco Webex device licenses are suspended.",
     "retrieveDevicesFail": "Failed to load device information",
     "retrieveKemFail": "Failed to retrieve key expansion module count.",
     "emergencyTitle": "Emergency Services",
@@ -2399,12 +2400,12 @@
       "launchAdvancedSettings": "Launch Advanced Settings",
       "connecting": "Connecting to Advanced Settings on {name}'s {product}...",
       "connectingTitle": "{name}'s {product}",
-      "offlineHeader": "This room device is offline",
-      "offlineMessage": "To access Advanced Settings, check that the room device is turned on and connected to the network, then try again.",
-      "oldSoftwareMessage": "Advanced Settings are not currently available on the software version your room device is running.",
+      "offlineHeader": "This device is offline",
+      "offlineMessage": "To access Advanced Settings, check that the device is turned on and connected to the network, then try again.",
+      "oldSoftwareMessage": "Advanced Settings are not currently available on the software version your device is running.",
       "unavailableHeader": "Advanced Settings Unavailable",
-      "unavailableMessage": "Connecting to the room device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the room device.",
-      "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the room device."
+      "unavailableMessage": "Connecting to the device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the device.",
+      "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the device."
     },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
     "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
@@ -6296,23 +6297,21 @@
   "addDeviceWizard": {
     "newDevice": "New Device",
     "newCode": "New Code",
-    "qrCode": "qr code graphic",
     "confirmRoomDeviceOnly": {
-      "roomDeviceOnly": "Room device activation only",
-      "noSparkCallWarning": "This user can only activate Cisco Spark room devices. Before they can activate a desk phone, you must enable the Cisco Spark call service for them from the Users page."
+      "roomDeviceOnly": "Limited Activation Code",
+      "noSparkCallWarning": "This user cannot activate Cisco IP Phones. To be able to do this, you must enable Webex Calling for them from the Users page."
     },
     "chooseDeviceType": {
       "deviceType": "What kind of device do you want to set up?",
       "deviceTypeInstructions": "A new device requires a unique activation code to be input during setup. What kind of device do you want to activate?",
       "deviceTypeNewPlace": "What kind of device do you want to set up in this place?",
-      "ciscoPhone": "Cisco Phone",
-      "deskPhone": "Desk Phone",
+      "ciscoPhone": "Cisco IP Phone",
       "deskPhoneExamplesExtra": "e.g. Cisco 8845, 8865, 8800 and Analog Telephone Adapter ports",
-      "deskPhoneLicenseWarning": "Your organization must purchase Cisco Webex Calling licenses first. Contact your partner or Cisco Sales for more information.",
+      "deskPhoneLicenseWarning": "Your organization must purchase Webex Calling licenses first. Contact your partner or Cisco Sales for more information.",
       "otherCiscoDevice": "Other Cisco Webex device",
-      "roomSystem": "Room Device",
+      "roomSystem": "Cisco Webex device",
       "roomSystemExamplesExpanded": "e.g. Cisco Webex Board, Room Kit, DX, MX and SX series",
-      "roomSystemLicenseWarning": "Your organization must purchase Cisco Webex Device licenses first. Contact your partner or Cisco Sales for more information."
+      "roomSystemLicenseWarning": "Your organization must purchase Webex Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "Assign to a user or a place?",
@@ -6324,9 +6323,9 @@
     },
     "choosePersonal": {
       "existingOrNewUser": "Assign to an existing user or a new user?",
-      "existingOrNewUserInstructions": "Creating a user with a desk phone requires a Cisco Spark Call license. Proceeding acknowledges that a Cisco Spark Call license will be assigned to this user, if they do not have one already.",
+      "existingOrNewUserInstructions": "Creating a user with a Cisco IP Phone requires a Webex Calling license. Proceeding acknowledges that a Webex Calling license will be assigned to this user, if they do not have one already.",
       "whichUser": "Which user will this device belong to?",
-      "existingUserInstructions": "If the user you are searching for isn’t listed, it is because they don’t have Cisco Spark Call service assigned to them. To assign Spark Call to a user, first find them in the Users page and then select Edit Services.",
+      "existingUserInstructions": "If the user you are searching for isn’t listed, it is because they don’t have Webex Calling assigned to them. To assign Webex Calling to a user, first find them in the Users page and then select Edit Services.",
       "searchForUser": "Search for a user",
       "newUser": "New User",
       "newUserInstructions": "Please enter the user’s information.",
@@ -6334,29 +6333,29 @@
       "lastNameExample": "e.g. Smith",
       "emailExample": "e.g. johnsmith@example.com",
       "invalidEmailAddress": "Invalid Email Address",
-      "noUserFound": "No users found with Cisco Spark Call service"
+      "noUserFound": "No users found with Webex Calling"
     },
     "chooseSharedSpace": {
       "existingOrNewPlace": "Assign to an existing place or a new place?",
-      "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple desk phones to the same place - all phones in that place will then share the same calling configuration. For example, desk phones will share the same lines.",
+      "existingOrNewPlaceDeskPhoneInstructions": "Select existing place if the previous code for this place has been lost or has expired. You can also add multiple Cisco IP Phones to the same place - all phones in that place will then share the same calling configuration. For example, IP phones will share the same lines.",
       "existingOrNewPlaceCollaborationDeviceInstructions": "Select existing place if the previous code for this place has been lost or has expired.",
       "existingOrNewPlaceMultipleDevicesInstructions": "Select existing place if the previous code for this place has been lost or has expired, or to have multiple devices in a place.",
       "existingOrNewCloudberryPlaceMultipleDevicesInstructions": "Select existing place to activate a new device if the previous code for this place has been lost or has expired, or to have multiple devices in a place. If you put multiple devices in a place that are not designed to work together, it may create interference issues.",
       "existingPlace": "Existing Place",
       "whichPlace": "Which existing place will the device be assigned to?",
-      "existingDeskPhonePlaceInstructions": "Select from the below places. Only desk phone places are shown since desk phones and room devices cannot share the same place.",
-      "existingCollaborationDevicePlaceInstructions": "Only empty room device places are shown since there is a maximum of one room device in a place, and desk phones and room devices cannot share the same place.",
+      "existingDeskPhonePlaceInstructions": "Select from the below places. Only places for Cisco IP Phones are shown since IP phones and other Webex devices cannot share the same place.",
+      "existingCollaborationDevicePlaceInstructions": "Only empty places, that are not for Cisco IP Phones, are shown since IP phones and other Webex devices cannot share the same place, and there is a maximum of one device in a place.",
       "existingRoomDevicePlaceMultipleRoomDeviceInstructions": "Note that if you put multiple devices in a place that are not designed to work together, it could create interference issues between them.",
-      "existingPlaceInstructions": "A room device place can only contain one device, so existing room device places with an activated device will not be shown.",
+      "existingPlaceInstructions": "Places containing devices that are not Cisco IP Phones will not be shown, since you can only have one of these devices in a place.",
       "selectPlace": "Search for a place",
       "newPlace": "New Place",
       "placeLocation": "Where will this device be located?",
       "newPlaceInstructions": "What would you like to call the place that this device will be assigned to?",
-      "newPlaceOnlyInstructions": "What would you like to call the place that this room device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
+      "newPlaceOnlyInstructions": "What would you like to call the place that this Webex device will be assigned to? A place represents a physical location such as a meeting room, a lobby or a factory floor.",
       "insertRoomName": "Insert name of device location, e.g. 'Reception' or 'Boardroom'",
-      "noExistingPlaces": "There is no Cisco Spark place in your organization. Create a new place instead.",
-      "noExistingHuronPlaces": "There is no desk phone place in your organization. Create a new place instead.",
-      "noExistingCloudberryPlaces": "There is no room device place in your organization. Create a new place instead."
+      "noExistingPlaces": "No places have been created in your organization. Create a new place instead.",
+      "noExistingHuronPlaces": "There are no existing places for Cisco IP Phones in your organization. Create a new place instead.",
+      "noExistingCloudberryPlaces": "There are no existing places for other Webex devices in your organization. Create a new place instead."
     },
     "newSharedSpace": {
       "title": "Add Place",
@@ -6374,11 +6373,11 @@
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
-      "sparkOnly": "Cisco Webex Teams only (default)",
+      "sparkOnly": "Free Calling (default)",
       "sparkOnlyHelp": "Calls to and from this place, paired with the Cisco Webex Teams app or through SIP addresses.",
-      "sparkCall": "Webex Teams + Webex Calling",
+      "sparkCall": "Cisco Webex Calling",
       "sparkCallHelp": "App pairing, SIP dialing, and additional PSTN service from a Cisco Webex preferred media provider.",
-      "sparkCallConnect": "Webex Teams + Webex Hybrid Call Service Connect",
+      "sparkCallConnect": "Cisco Webex Hybrid Call Service Connect",
       "sparkCallConnectHelp": "App pairing, SIP dialing, and additional PSTN service from the existing premises (Unified CM, Business Edition) or an HCS partner.",
       "servicesSaved": "Services updated successfully",
       "calendar": "Calendar",
@@ -6412,39 +6411,21 @@
       "onceActivePersonalDevice": "Once the device has been successfully activated, you will be able to find and configure it in Users or Devices.",
       "onceActiveSharedDevice": "Once the device has been successfully activated, you will be able to find and configure it in Places or Devices.",
       "expires": "Expires {{expiryDate}}",
-      "codeOnlyForPhones": "This code can only be used to activate Cisco Phones",
-      "codeOnlyForRoomDevices": "This code cannot be used to activate Cisco Phones",
+      "codeOnlyForPhones": "This code can only be used to activate Cisco IP Phones",
+      "codeOnlyForRoomDevices": "This code cannot be used to activate Cisco IP Phones",
       "searchAnotherUser": "Or search for another user",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
       "failedResourceGroup": "Failed to set the resource group on the service(s). Please set in from the service setting on the place. It failed with the following reason:",
       "problemGeneratingCode": "There was a problem generating your activation code.",
-      "pressRetry": "Please press Retry to try again."
+      "pressRetry": "Please press Retry to try again.",
+      "emailSuccessTitle": "Email sent",
+      "emailSuccess": "Activation code has been sent to {{address}}",
+      "emailError": "Failed to send activation code to {{address}}",
+      "clipboardSuccessTitle": "Copied to clipboard",
+      "clipboardSuccess": "Activation code has been copied to the clipboard.",
+      "clipboardErrorTitle": "Not copied to clipboard",
+      "clipboardError": "Failed to copy activation code to the clipboard."
     }
-  },
-  "generateActivationCodeModal": {
-    "title": "Activation Code",
-    "activateBody": "Plug in the desk phone belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
-    "activateBodyExtra": "Plug in the desk phone or analog telephone adapter belonging to <b>{{belongsTo}}</b> and enter the activation code when prompted or use the device camera to scan the QR code, if possible. A new activation code can be created from the Users page after this code expires.",
-    "emailCode": "Email",
-    "copyToClipboard": "Copy",
-    "print": "Print",
-    "send": "Send",
-    "to": "To",
-    "subject": "Subject",
-    "subjectContent": "Activate your Cisco Spark UC device",
-    "message": "Message",
-    "expires": "Expires: {{date}}",
-    "expiration": "({{timeLeft}} from now)",
-    "clipboardFallback": "Press cmd+c to copy the text below.",
-    "emailSuccessTitle": "Email sent",
-    "emailSuccess": "Activation code has been sent to {{address}}",
-    "emailError": "Failed to send activation code to {{address}}",
-    "clipboardSuccessTitle": "Copied to clipboard",
-    "clipboardSuccess": "Activation code has been copied to the clipboard.",
-    "clipboardErrorTitle": "Not copied to clipboard",
-    "clipboardError": "Failed to copy activation code to the clipboard.",
-    "generateErrorNotFound": "Please unlicense and relicense this Cisco Spark Call user. Contact support if the problem persists.",
-    "generateError": "Unable to generate activation code. Please try again."
   },
   "devicesClipboard": {
     "successTitle": "Copied to clipboard",
@@ -7658,15 +7639,15 @@
     "errorCodes": {
       "mediaprotocol": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Webex Services</a>."
       },
       "tcpmediafallback": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Webex Services</a>."
       },
       "mediablockingdetected": {
         "type": "Network Ports Blocked",
-        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Spark Services (Administrators)</a>."
+        "message": "Firewall may be blocking media on UDP and TCP. Call quality may be impacted. For information regarding the network port requirements see the article <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>Network Requirements for Cisco Webex Services</a>."
       },
       "temperaturecheck": {
         "type": "High temperature",
@@ -7682,7 +7663,7 @@
       },
       "soontobedeactivated": {
         "type": "Device credentials will soon expire",
-        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid it losing its Spark activation."
+        "message": "This device has been offline for several weeks. Make sure it comes online within {{expireInDays}} days to avoid it losing its Webex activation."
       },
       "ntpstatus": {
         "type": "Time Server Not Reachable",
@@ -7710,7 +7691,7 @@
       },
       "touchpanelconnection": {
         "type": "Touch Panel Required",
-        "message": "There is no touch panel connected to the room device. Check the cable connecting the touch panel to the room device."
+        "message": "There is no touch panel connected to the device. Check the cable connecting the touch panel to the device."
       },
       "networkquality": {
         "type": "Packet Loss Detected",
@@ -7955,11 +7936,11 @@
     "bigOrgSearchText": "The place list is not displayed because there are more than 1000 places",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
-    "sparkCall": "Cisco Webex Teams + Cisco Webex Calling",
-    "sparkOnly": "Cisco Webex Teams only",
-    "sparkCallConnect": "Cisco Webex Teams + Cisco Webex Hybrid Calling",
+    "sparkCall": "Cisco Webex Calling",
+    "sparkOnly": "Free Calling",
+    "sparkCallConnect": "Cisco Webex Hybrid Call",
     "placeAdd": "Add Place",
-    "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
+    "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a Webex Board 55 or a reception with shared IP phones.",
     "placesUses": "Places can contain shared devices. You'll be able to view your places here - and the devices and configurations that belong to them.",
     "deletePlace": "Delete Place",
     "deletePlaceConfText": "Are you sure you want to delete {{ placeName }}?",
@@ -8931,7 +8912,7 @@
       "removeFile": "Remove",
       "fileGuide": "For best results, logos should be transparent png files, without padding and 272x272px. Recommended brand image image size is 3840x2160 (1920x1080 minimum), png or jpeg.",
       "failedToSave": "Failed to save",
-      "fileApplied": "Applied to all room devices.",
+      "fileApplied": "Applied",
       "uploading": "Uploading...",
       "uploaded": "Uploaded",
       "uploadFailed": "Upload Failed",
@@ -9410,8 +9391,8 @@
       "search-criterias-title": "Search Criteria",
       "search-criterias-users": "<strong>Users</strong>: Email, Name (First, Last), Phone Number and Display Name (requires two words with at least three characters each)",
       "search-criterias-customers": "<strong>Customers</strong>: Display Name (requires at least three characters)",
-      "search-criterias-devices": "<strong>Devices</strong>: For Cisco Spark Call devices: SEP number or phone number. For Spark Room Devices: Display Name, Serial or MAC Address.",
-      "search-criterias-note": "Note: To search for any Cisco Spark system or device, you must first select a customer.",
+      "search-criterias-devices": "<strong>Devices</strong>: For Cisco IP Phones: SEP number or phone number. For other Webex devices: Display Name, Serial or MAC Address.",
+      "search-criterias-note": "Note: To search for any device, you must first select a customer.",
       "narrow-title": "Select a Customer",
       "narrow-info": "To filter a search to one customer only, start at the main search tool page and search for the customer by display name. Then click <i class='icon icon-search'></i> in the customer's search result card.",
       "referTo": "Refer to",
@@ -9437,11 +9418,11 @@
     "sendCode": "Send Code",
     "usage": "{{usage}} of {{volume}} in use",
     "numbers": "Numbers",
-    "noDeviceEntitlements": "Device search not applicable. The customer is neither entitled to Cloudberry nor to Cisco Spark Call.",
+    "noDeviceEntitlements": "Device search not applicable. The customer has no device licenses.",
     "noDeviceEntitlementsCustomerOrg": "Device search not applicable.",
     "applyOrgFilterPleaseWait": "Applying filter, please wait...",
     "noMoreResults": "Max results limit reached. Try a different search.",
-    "huronNotActivated": "Unable to search for Cisco Spark Call devices. The voice service is not activated for this customer.",
+    "huronNotActivated": "Unable to search for Cisco IP Phones. The voice service is not activated for this customer.",
     "primary": "Primary",
     "shared": "Shared",
     "primaryShared": "Primary Shared",
@@ -10926,10 +10907,10 @@
   },
   "machineTypes": {
     "bot": "Bot",
-    "lyra_space": "Room Device Place",
+    "lyra_space": "Cisco Webex Device Place",
     "robot": "Robot",
-    "spark_integration": "Cisco Spark Integration",
-    "room": "Desk Phone Place"
+    "spark_integration": "Cisco Webex Integration",
+    "room": "Cisco IP Phone Place"
   },
   "deviceSettings": {
     "title": "Device Settings",

@@ -73,13 +73,7 @@
       vm.place = undefined;
 
       return vm.filteredView.setCurrentSearch(searchStr).then(function (promiseValue) {
-        return _.map(promiseValue.slice(0, maxResCount), function (place) {
-          place.readablePlaceType = (
-            place.type === 'huron' ?
-              $translate.instant('machineTypes.room') :
-              $translate.instant('machineTypes.lyra_space'));
-          return place;
-        });
+        return promiseValue.slice(0, maxResCount);
       });
     };
 

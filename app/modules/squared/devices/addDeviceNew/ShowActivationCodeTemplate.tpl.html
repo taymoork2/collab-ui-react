@@ -23,7 +23,7 @@
         <img class="qrCodeImage"
              ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
              data-ng-src="data:image/PNG;base64,{{showActivationCode.qrCode}}"
-             aria-label="{{::'addDeviceWizard.qrCode' | translate}}"
+             aria-label="{{showActivationCode.friendlyActivationCode}}"
              tabindex="0">
         <div class="activation-code">
           <h2 tabindex="0">
@@ -41,16 +41,16 @@
       <div class="qrCodeSection">
         <div class="qrCodeButtons">
           <a href sq-clipboard="showActivationCode.friendlyActivationCode">
-            <span translate="generateActivationCodeModal.copyToClipboard"></span>
+            <span translate="common.copy"></span>
           </a>
 
           <a href ng-disabled="genAuthCode.showEmail"
             ng-click="showActivationCode.activateEmail()"
-            translate="generateActivationCodeModal.emailCode">
+            translate="common.email">
           </a>
 
           <a href cr-print print-element-id="printActivationCode">
-            <span translate="generateActivationCodeModal.print"></span>
+            <span translate="common.print"></span>
           </a>
         </div>
 
