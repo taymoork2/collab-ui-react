@@ -1832,7 +1832,7 @@
     "lastUpdated": "Forrige synkronisering",
     "notifications": "Varsler",
     "todo": "Huskeliste",
-    "setUpYourTrial": "Sette opp avansert Cisco Spark-samtale og starte prøveperioden.",
+    "setUpYourTrial": "Sette opp avansert Cisco Webex-samtale og starte prøveperioden.",
     "beginTrial": "Begynne prøveperiode",
     "status": "Status",
     "statusGreen": "Status grønn",
@@ -1841,16 +1841,16 @@
     "spark": "Cisco Spark",
     "sso": "Engangspålogging (SSO)",
     "goSetupCloudSipUri": "Gå hit for å fullføre denne konfigurasjonen",
-    "setupCloudSipUriMessage": "Din organisasjons SIP-adresse for Cisco Spark er ikke definert. Denne verdien kreves for at deler av samtalefunksjonaliteten skal fungere riktig.",
+    "setupCloudSipUriMessage": "Din organisasjons SIP-adresse for Cisco Webex er ikke definert. Denne verdien kreves for at deler av samtalefunksjonaliteten skal fungere riktig.",
     "dirsync": "Katalogsynkronisering",
-    "setUpCalendarService": "Hybridkalender er tilgjengelig. Bruk @WebEx eller @Spark i et møtested for å sette inn «bli med»-detaljer, vise kommende møter i Cisco Spark-appen og muliggjøre å bli med ved å trykke på én knapp (OBTP).",
-    "setUpGoogleCalendarService": "Hybridkalender (Google) er tilgjengelig. Bruk @WebEx eller @Spark i et møtested for å sette inn «bli med»-detaljer, vise kommende møter i Cisco Spark-appen og oppgi en knapp som trykkes (OBTP) for å bli med.",
-    "setUpCallAwareService": "Samtaletjenesten Aware er tilgjengelig. Brukere kan umiddelbart dele skrivebordene fra sine Cisco Spark-klienter mens de er i samtale.",
-    "setUpCallConnectService": "Samtaletjenesten Connect er tilgjengelig. Brukere kan besvare anrop til sine jobbtelefoner på sine Cisco Spark-klienter, og foreta anrop til andres jobbtelefoner fra sine Cisco Spark-klienter.",
-    "setUpHybridMessaging": "Hybridmeldingstjenesten er tilgjengelig. Koble Cisco Spark til direktemeldings- og tilstedeværelsestjenestene, slik at Cisco Spark-brukere og Cisco Jabber-brukere kan sende direktemeldinger til hverandre.",
+    "setUpCalendarService": "Hybridkalender er tilgjengelig. Bruk @WebEx eller @Spark i et møtested for å sette inn «bli med»-detaljer, vise kommende møter i Cisco Webex Teams-appen og muliggjøre å bli med ved å trykke på én knapp (OBTP).",
+    "setUpGoogleCalendarService": "Hybridkalender (Google) er tilgjengelig. Bruk @WebEx eller @Spark i et møtested for å sette inn «bli med»-detaljer, vise kommende møter i Cisco Webex Teams-appen og oppgi en knapp som trykkes (OBTP) for å bli med.",
+    "setUpCallAwareService": "Samtaletjenesten Aware er tilgjengelig. Brukere kan umiddelbart dele skrivebordene fra sine Cisco Webex-klienter mens de er i samtale.",
+    "setUpCallConnectService": "Samtaletjenesten Connect er tilgjengelig. Brukere kan besvare anrop til sine jobbtelefoner på sine Cisco Webex-klienter, og foreta anrop til andres jobbtelefoner fra sine Cisco Webex-klienter.",
+    "setUpHybridMessaging": "Hybridmeldingstjenesten er tilgjengelig. Koble Cisco Webex Teams til direktemeldings- og tilstedeværelsestjenestene, slik at Cisco Webex Teams-brukere og Cisco Jabber-brukere kan sende direktemeldinger til hverandre.",
     "setUpDevices": "Aktiver enhetene når de ankommer.",
     "setUpSharedDevices": "Aktiver rom-enhetene dine når de ankommer.",
-    "setUpSparkBoardDevices": "Aktiver Cisco Spark Boards dine når de ankommer.",
+    "setUpSparkBoardDevices": "Aktiver Cisco Webex Boards dine når de ankommer.",
     "setUpPMRDescription": "Personlig møterom-funksjonen har blitt lagt til ditt abonnement.",
     "setUpPMRUrl": "Sette opp PMR nå",
     "setupPMRsiteNameModalTitle": "Oppsett av personlig møterom",
@@ -1860,10 +1860,10 @@
     "setUpHybridDataSecurity": "Opprett en lokal sikkerhetssone med hybrid-datasikkerhet.",
     "careLicenseMsgMissingText": "Melding er obligatorisk for Care-tjenester. For å aktivere Melding,",
     "careLicenseCallMissingText": "Anrop er obligatorisk for talebaserte Care-tjenester. For å aktivere Anrop,",
-    "careLicenseCallMissingTextToggle": "Hvis du vil bruke Spark Care-samtalefunksjoner, må du kontakte partner for å aktivere Spark-samtale eller sette opp Hybridsamtale og SIP Trunk for bedrifter.",
+    "careLicenseCallMissingTextToggle": "Hvis du vil bruke Cisco Webex Care-samtalefunksjoner, må du kontakte partner for å aktivere Cisco Webex-samtale eller sette opp Hybridsamtale og SIP Trunk for bedrifter.",
     "careLicenseMsgAndCallMissingText": "Melding og Anrop er obligatoriske for Care-tjenester som henholdsvis chat og talehandlinger. For å aktivere Melding og Anrop,",
     "careLicenseLinkText": "ta kontakt med partneren din eller Cisco salg.",
-    "proPackNotification": "Utnytt den fulle kraften i Spark Control Hub med Pro-pakken.",
+    "proPackNotification": "Utnytt den fulle kraften i Cisco Webex Control Hub med Pro-pakken.",
     "callServiceHighAvailability": "Hybridsamtaletjeneste er konfigurert, men én eller flere klynger har bare en enkel node som kjører Call Connector. Installasjonen oppfyller ikke kravene for høy tilgjengelighet.",
     "callServiceHighAvailabilityLink": "Åpen dokumentasjon",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "Bruk den med Google Calendar eller Office365.",
@@ -1873,8 +1873,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Bruk den med Exchange eller Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Bruk den med Exchange.",
     "setUpAllCalendarsNoneIsSetup": "Bruk den med Exchange, Google Calendar eller Office365.",
-    "setUpCarePrimaryNotification": "Organisasjonen din er aktivert for Cisco Spark Care.",
-    "setUpCareSecondaryNotification": "Det ser ikke ut som om du har konfigurert Cisco Spark Care ennå.",
+    "setUpCarePrimaryNotification": "Organisasjonen din er aktivert for Cisco Webex Care.",
+    "setUpCareSecondaryNotification": "Det ser ikke ut som om du har konfigurert Cisco Webex Care ennå.",
     "setUpCareLinkText": "Oppsett av Care selvbetjeningstjeneste",
     "autoAssignText": "Administrer lisenser på en produktiv måte med malen for automatisk tilordning.",
     "autoAssignLink": "Konfigurer nå"
@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Care selvbetjeningstjeneste",
-        "notEnabledText": "Bruk Cisco Spark støtte for å samarbeide med kunden din. Tilpass selvbetjeningsgrensesnitt med konfigurasjonsveilederen."
+        "notEnabledText": "Bruk Cisco Webex støtte for å samarbeide med kunden din. Tilpass selvbetjeningsgrensesnitt med konfigurasjonsveilederen."
       },
       "roomSystem": {
         "title": "Rom-enheter",
         "currentTitle": "Pålogget denne uken",
         "previousTitle": "Forrige uke:",
         "enableDevices": "Aktiver enheter",
-        "notEnabledText": "Møterom-enheter sømløst integrert med Cisco Spark-appen."
+        "notEnabledText": "Møterom-enheter sømløst integrert med Cisco Webex Teams-appen."
       },
       "hybrid": {
         "title": "Hybridtjenester",
         "googleCalendarError": "Kunne ikke nå tjenesten for Google Calendar. Det er mulig at statusen for den vil bli unøyaktig rapportert under denne økten.",
         "o365CalendarError": "Kunne ikke nå tjenesten for Office 365. Det er mulig at statusen for den vil bli unøyaktig rapportert under denne økten.",
-        "herculesError": "Kunne ikke nå tjenesten for Cisco Spark-hybridtjenester.",
+        "herculesError": "Kunne ikke nå tjenesten for Cisco Webex-hybridtjenester.",
         "herculesErrorAuthentication": "Kan ikke validere partneradministratorens rettigheter i kundeorganisasjonen. Dette kan indikere et hurtigbufferproblem. Prøv å logge av og på igjen, og ta kontakt med Cisco brukerstøtte hvis problemet vedvarer.",
-        "notEnabledText": "Hybridtjenester lar deg integrere lokale systemer med Cisco Spark-plattformen.",
-        "notEnabledTextNew": "Hybridtjenester lar deg integrere lokale systemer med Cisco Spark-plattformen.",
+        "notEnabledText": "Hybridtjenester lar deg integrere lokale systemer med Cisco Webex-plattformen.",
         "notEnabledActionText": "Finn ut mer",
         "serviceHeader": "Status",
         "services": {
@@ -10743,11 +10742,11 @@
     "banner": {
       "pre": "WebEx-bruker:",
       "link": "Koble brukerne dine",
-      "post": "til Cisco Spark – en ny måte å oppleve WebEx-møter på"
+      "post": "til Cisco Webex Teams – en ny måte å oppleve WebEx-møter på"
     },
     "notification": {
       "linkText": "Komme i gang",
-      "infoText": "Koble kontoene dine til Cisco Spark – en ny måte å oppleve WebEx-møter på"
+      "infoText": "Koble kontoene dine til Cisco Webex Teams – en ny måte å oppleve WebEx-møter på"
     },
     "errors": {
       "setAccountLinkingModeError": "Innstilling av koblingsmodus for kontoen mislyktes med : {{message}}",
