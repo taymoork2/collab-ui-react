@@ -1,6 +1,7 @@
 import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { CardUtils } from 'modules/core/cards';
 import { IToolkitModalService } from 'modules/core/modal';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
 
 interface IHeaderTab {
   title: string;
@@ -22,7 +23,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     public HcsSetupModalService: HcsSetupModalService,
     private $state: ng.ui.IStateService,
     public $modal: IToolkitModalService,
-  //  private HcsUpgradeService: HcsUpgradeService,
+    private HcsUpgradeService: HcsUpgradeService,
   ) {}
 
   public $onInit() {
@@ -34,27 +35,14 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
       state: `hcs.swprofilelist`,
     });
     this.listSwProfile();
-    this.currentList = this.swprofileList;
   }
 
   public listSwProfile(): void {
-    this.swprofileList = [{
-      uuid: 'ver10',
-      name: 'HCS Profile 10.0',
-      url: 'test',
-    }, {
-      uuid: 'ver105',
-      name: 'HCS Profile 10.5',
-    }, {
-      uuid: 'ver11',
-      name: 'HCS Profile 11',
-    }, {
-      uuid: 'ver115',
-      name: 'HCS Profile 11.5',
-    }, {
-      uuid: 'ver12',
-      name: 'HCS Profile 12',
-    }];
+    this.HcsUpgradeService.listSoftwareProfiles().then(data => {
+      this.swprofileList = _.get(data, 'softwareProfiles');
+      this.currentList = this.swprofileList;
+    });
+
   }
 
   public filteredList(searchStr: string): void {

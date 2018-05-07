@@ -3,7 +3,7 @@
   <input
     cs-input
     type="text"
-    ng-model="$ctrl.profileSelected.name"
+    ng-model="$ctrl.selectedProfile.name"
     id="profileName"
     name="profileName"
     required="true"
@@ -17,12 +17,12 @@
     <div class="medium-8 large-8 hcs-profile__select">
       <cs-select
         name="cucmVer"
-        ng-model="$ctrl.profileSelected.cucmVer"
+        ng-model="$ctrl.selectedVersion.cucm"
         options="$ctrl.versions.cucm"
         placeholder="$ctrl.placeholder.cucm"
         combo="true"
         searchable-combo="true"
-        ng-change="$ctrl.processChange()">
+        ng-change="$ctrl.processChange('CUCM', $ctrl.selectedVersion.cucm)">
       </cs-select>
     </div>
   </div>
@@ -31,12 +31,12 @@
       <div class="medium-8 large-8 hcs-profile__select">
         <cs-select
           name="impVer"
-          ng-model="$ctrl.profileSelected.impVer"
+          ng-model="$ctrl.selectedVersion.imp"
           options="$ctrl.versions.imp"
           placeholder="$ctrl.placeholder.imp"
           combo="true"
           searchable-combo="true"
-          ng-change="$ctrl.processChange()">
+          ng-change="$ctrl.processChange('IM&P', $ctrl.selectedVersion.imp)">
         </cs-select>
       </div>
     </div>
@@ -45,55 +45,57 @@
     <div class="medium-8 large-8 hcs-profile__select">
       <cs-select
         name="ucxnVer"
-        ng-model="$ctrl.profileSelected.ucxnVer"
+        ng-model="$ctrl.selectedProfile.ucxn"
         options="$ctrl.versions.ucxn"
         placeholder="$ctrl.placeholder.ucxn"
         combo="true"
         searchable-combo="true"
-        ng-change="$ctrl.processChange()">
+        ng-change="$ctrl.processChange('UCXN', $ctrl.selectedVersion.ucxn)">
       </cs-select>
     </div>
   </div>
-  <div class="row">
-    <label class="cs-input__label" translate="hcs.softwareProfiles.plm"></label>
-    <div class="medium-8 large-8 hcs-profile__select">
-      <cs-select
-        name="plmVer"
-        ng-model="$ctrl.profileSelected.plmVer"
-        placeholder="$ctrl.placeholder.plm"
-        options="$ctrl.versions.plm"
-        combo="true"
-        searchable-combo="true"
-        ng-change="$ctrl.processChange()">
-      </cs-select>
+  <div ng-if="$ctrl.hcsToggle2">
+    <div class="row">
+      <label class="cs-input__label" translate="hcs.softwareProfiles.plm"></label>
+      <div class="medium-8 large-8 hcs-profile__select">
+        <cs-select
+          name="plmVer"
+          ng-model="$ctrl.selectedProfile.plmVer"
+          placeholder="$ctrl.placeholder.plm"
+          options="$ctrl.versions.plm"
+          combo="true"
+          searchable-combo="true"
+          ng-change="$ctrl.processChange()">
+        </cs-select>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <label class="cs-input__label" translate="hcs.softwareProfiles.cer"></label>
-    <div class="medium-8 large-8 hcs-profile__select">
-      <cs-select
-        name="cerVer"
-        ng-model="$ctrl.profileSelected.cerVer"
-        placeholder="$ctrl.placeholder.cer"
-        options="$ctrl.versions.cer"
-        combo="true"
-        searchable-combo="true"
-        ng-change="$ctrl.processChange(">
-      </cs-select>
+    <div class="row">
+      <label class="cs-input__label" translate="hcs.softwareProfiles.cer"></label>
+      <div class="medium-8 large-8 hcs-profile__select">
+        <cs-select
+          name="cerVer"
+          ng-model="$ctrl.selectedProfile.cerVer"
+          placeholder="$ctrl.placeholder.cer"
+          options="$ctrl.versions.cer"
+          combo="true"
+          searchable-combo="true"
+          ng-change="$ctrl.processChange(">
+        </cs-select>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <label class="cs-input__label" translate="hcs.softwareProfiles.expway"></label>
-    <div class="medium-8 large-8 hcs-profile__select">
-      <cs-select
-        name="expwayVer"
-        ng-model="$ctrl.profileSelected.expwayVer"
-        placeholder="$ctrl.placeholder.expway"
-        options="$ctrl.versions.expway"
-        combo="true"
-        searchable-combo="true"
-        ng-change="$ctrl.processChange()">
-      </cs-select>
+    <div class="row">
+      <label class="cs-input__label" translate="hcs.softwareProfiles.expway"></label>
+      <div class="medium-8 large-8 hcs-profile__select">
+        <cs-select
+          name="expwayVer"
+          ng-model="$ctrl.selectedProfile.expwayVer"
+          placeholder="$ctrl.placeholder.expway"
+          options="$ctrl.versions.expway"
+          combo="true"
+          searchable-combo="true"
+          ng-change="$ctrl.processChange()">
+        </cs-select>
+      </div>
     </div>
   </div>
  </div>

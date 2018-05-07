@@ -1,3 +1,13 @@
+export enum EApplicationTypes {
+  CUCM = 'CUCM',
+  IMP = 'CUP',
+  CUC = 'CUC',
+  EXPY = 'EXPRESSWAY',
+  PLM = 'PLM',
+  CUCM_PLM = 'CUCM_PLM',
+  CER = 'CER',
+}
+
 export interface IHcsCluster {
   uuid: string;
   name: string;

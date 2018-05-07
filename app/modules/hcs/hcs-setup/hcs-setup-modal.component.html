@@ -23,7 +23,7 @@
       on-change-fn="$ctrl.setSftpServer(sftpServer)">
     </hcs-setup-sftp>
     <hcs-setup-swprofile ng-if="$ctrl.currentStepIndex === 4"
-      on-change-fn="$ctrl.setSoftwareProfile(profile)">
+      on-change-fn="$ctrl.setSoftwareProfile(swprofile)">
     </hcs-setup-swprofile>
     <hcs-setup-finish ng-if="$ctrl.currentStepIndex === 3 && !$ctrl.isSftp && !$ctrl.hcsServices.upgrade || $ctrl.currentStepIndex === 5">
     </hcs-setup-finish>
