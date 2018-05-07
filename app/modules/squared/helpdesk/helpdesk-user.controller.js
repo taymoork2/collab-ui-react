@@ -39,6 +39,9 @@
     vm.hybridServicesCard = {};
     vm.keyPressHandler = keyPressHandler;
     vm.sendCode = sendCode;
+    vm.confirmRequestForFullAdminAccessModal = confirmRequestForFullAdminAccessModal;
+    vm.showSendRequestForFullAdminAccess = showSendRequestForFullAdminAccess;
+    vm.sendRequestForFullAdminAccess = sendRequestForFullAdminAccess;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
     vm.isCare = false;
@@ -86,6 +89,36 @@
           }
         })
         .catch(vm._helpers.notifyError);
+    }
+
+    function showSendRequestForFullAdminAccess() {
+      if (vm.user !== undefined && vm.user.roles !== undefined) {
+        return vm.user.roles.length > 0 && vm.user.roles.includes('id_full_admin') && vm.user.orgId !== Authinfo.getUserOrgId();
+      }
+      return false;
+    }
+
+    function confirmRequestForFullAdminAccessModal() {
+      $modal.open({
+        controller: function () {
+          var ctrl = this;
+          ctrl.customerDisplayName = vm.user.displayName;
+        },
+        controllerAs: 'ctrl',
+        type: 'dialog',
+        template: require('modules/squared/helpdesk/helpdesk-confirm-full-admin-elevation.html'),
+      }).result.then(function () {
+        sendRequestForFullAdminAccess();
+      });
+    }
+
+    function sendRequestForFullAdminAccess() {
+      HelpdeskService.sendRequestForFullAdminAccess(vm.user.id, vm.user.orgId).then(function () {
+        Notification.success('helpdesk.requestFullAdminSentSuccess', {
+          customerUser: vm.user.displayName,
+        });
+        vm.sendRequestForFullAdminAccess = false;
+      }, vm._helpers.notifyError);
     }
 
     function sendCode() {

@@ -1,5 +1,5 @@
-import { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/shared';
-import { SftpServer } from '../../setup/hcs-setup-sftp';
+import { HcsUpgradeService, HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/hcs-shared';
+import { SftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { CardUtils } from 'modules/core/cards';
 import { IToolkitModalService } from 'modules/core/modal';
 

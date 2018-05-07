@@ -207,6 +207,9 @@ export class SearchTranslator {
     product: {
       tKey: 'spacesPage.typeHeader',
     },
+    software: {
+      tKey: 'deviceOverviewPage.software',
+    },
     mac: {
       tKey: 'deviceOverviewPage.macAddr',
     },

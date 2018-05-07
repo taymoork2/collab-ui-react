@@ -33,7 +33,7 @@ export class SetupWizardService {
   private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
-  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
+  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW_CDC', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
 
   /* @ngInject */
   constructor(
@@ -85,7 +85,7 @@ export class SetupWizardService {
 
   public hasPendingCCWSubscriptions(): boolean {
     return this.hasPendingServiceOrder() && _.some(this.pendingSubscriptions, function (sub) {
-      return sub.orderingTool && _.includes(['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'], sub.orderingTool);
+      return sub.orderingTool && _.includes(['CCW', 'CCW_CDC', 'CCW_CSB', 'ATLAS_SITE_MGMT'], sub.orderingTool);
     });
   }
 
@@ -263,7 +263,7 @@ export class SetupWizardService {
   }
 
   public hasPendingCCAUserPackage(): boolean {
-    return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+    return !_.isUndefined(this.getPendingCCAUserPackage());
   }
 
   public getActiveTSPAudioPackage(): ITSPLicense {
@@ -276,6 +276,10 @@ export class SetupWizardService {
 
   public getActiveCCAUserPackage(): ICCASPLicense {
     return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+  }
+
+  public getPendingCCAUserPackage(): ICCASPLicense {
+    return <ICCASPLicense>_.find(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCAUser });
   }
 
   public getPendingAuthinfoSubscriptions(): IPendingOrderSubscription[] {

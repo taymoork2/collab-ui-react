@@ -1832,7 +1832,7 @@
     "lastUpdated": "Sync terakhir",
     "notifications": "Pemberitahuan",
     "todo": "Wajib dilakukan",
-    "setUpYourTrial": "Atur Panggilan Cisco Spark Lanjutan untuk memulai uji coba.",
+    "setUpYourTrial": "Atur Panggilan Cisco Webex Lanjutan untuk memulai uji coba.",
     "beginTrial": "Mulai Percobaan",
     "status": "Status",
     "statusGreen": "Status Hijau",
@@ -1841,16 +1841,16 @@
     "spark": "Cisco Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Masuk ke sini untuk menyelesaikan konfigurasi ini",
-    "setupCloudSipUriMessage": "Alamat SIP Cisco Spark organisasi Anda tidak ditetapkan. Nilai ini diperlukan untuk beberapa fungsi panggilan agar berfungsi dengan benar.",
+    "setupCloudSipUriMessage": "Alamat SIP Cisco Webex organisasi Anda tidak ditetapkan. Nilai ini diperlukan untuk beberapa fungsi panggilan agar berfungsi dengan benar.",
     "dirsync": "Sinkronisasi Direktori",
-    "setUpCalendarService": "Kalender Hybrid tersedia. Gunakan @WebEx atau @Spark di lokasi rapat untuk memasukkan perincian bergabung, menampilkan rapat mendatang di aplikasi Cisco Spark, dan menyediakan Satu Tombol Tekan (OBTP) untuk Bergabung.",
-    "setUpGoogleCalendarService": "Kalender Hybrid (Google) tersedia. Gunakan @WebEx atau @Spark di lokasi rapat untuk memasukkan perincian bergabung, menampilkan rapat mendatang di aplikasi Cisco Spark, dan menyediakan Satu Tombol Tekan (OBTP) untuk Bergabung.",
-    "setUpCallAwareService": "Layanan Panggilan Aware tersedia. Pengguna dapat dengan cepat membagikan desktop dari klien Cisco Spark saat dalam panggilan.",
-    "setUpCallConnectService": "Layanan Panggilan Connect tersedia. Pengguna dapat menjawab panggilan ke telepon kantor pada klien Cisco Spark dan menyambungkan panggilan ke telepon kantor lain dari klien Cisco Spark.",
-    "setUpHybridMessaging": "Layanan Pesan Hybrid tersedia. Sambungkan Cisco Spark ke IM dan Layanan Kehadiran, sehingga pengguna Cisco Spark dan Cisco Jabber dapat saling mengirim pesan langsung.",
+    "setUpCalendarService": "Kalender Hybrid tersedia. Gunakan @WebEx atau @Spark di lokasi rapat untuk memasukkan perincian bergabung, menampilkan rapat mendatang di aplikasi Cisco Webex Teams, dan menyediakan Satu Tombol Tekan (OBTP) untuk Bergabung.",
+    "setUpGoogleCalendarService": "Kalender Hybrid (Google) tersedia. Gunakan @WebEx atau @Spark di lokasi rapat untuk memasukkan perincian bergabung, menampilkan rapat mendatang di aplikasi Cisco Webex Teams, dan menyediakan Satu Tombol Tekan (OBTP) untuk Bergabung.",
+    "setUpCallAwareService": "Layanan Panggilan Aware tersedia. Pengguna dapat dengan cepat membagikan desktop dari klien Cisco Webex saat dalam panggilan.",
+    "setUpCallConnectService": "Layanan Panggilan Connect tersedia. Pengguna dapat menjawab panggilan ke telepon kantor pada klien Cisco Webex dan menyambungkan panggilan ke telepon kantor lain dari klien Cisco Webex.",
+    "setUpHybridMessaging": "Layanan Pesan Hybrid tersedia. Sambungkan Cisco Webex Teams ke IM dan Layanan Kehadiran, sehingga pengguna Cisco Webex Teams dan Cisco Jabber dapat saling mengirim pesan langsung.",
     "setUpDevices": "Aktifkan perangkat Anda saat tugas datang.",
     "setUpSharedDevices": "Aktifkan perangkat kamar Anda saat siap digunakan.",
-    "setUpSparkBoardDevices": "Aktifkan Papan Tulis Cisco Spark Anda saat siap digunakan.",
+    "setUpSparkBoardDevices": "Aktifkan Papan Tulis Cisco Webex Anda saat siap digunakan.",
     "setUpPMRDescription": "Fitur Kamar Rapat Pribadi telah ditambahkan ke langganan Anda.",
     "setUpPMRUrl": "Atur Kamar Rapat Pribadi Sekarang",
     "setupPMRsiteNameModalTitle": "Persiapan Kamar Rapat Pribadi",
@@ -1860,10 +1860,10 @@
     "setUpHybridDataSecurity": "Buat pengaturan keamanan di lokasi dengan Keamanan Data Hybrid.",
     "careLicenseMsgMissingText": "Pesan diwajibkan untuk layanan Care. Untuk mengaktifkan Pesan,",
     "careLicenseCallMissingText": "Panggilan diwajibkan untuk layanan Care berbasis suara. Untuk mengaktifkan Panggilan,",
-    "careLicenseCallMissingTextToggle": "Untuk menggunakan fitur suara Spark Care, hubungi mitra untuk mengaktifkan Panggilan Spark atau Panggilan Hybrid Penyiapan dan Enterprise SIP Trunking.",
+    "careLicenseCallMissingTextToggle": "Untuk menggunakan fitur suara Cisco Webex Care, hubungi mitra untuk mengaktifkan Panggilan Cisco Webex atau Panggilan Hybrid Penyiapan dan Enterprise SIP Trunking.",
     "careLicenseMsgAndCallMissingText": "Pesan dan Panggilan diwajibkan untuk layanan Care seperti, secara berturut-turut, percakapan dan suara. Untuk mengaktifkan Pesan dan Panggilan,",
     "careLicenseLinkText": "hubungi mitra Anda atau penjualan Cisco.",
-    "proPackNotification": "Dapatkan kekuatan penuh dari Hub Kontrol Spark dengan Paket Pro.",
+    "proPackNotification": "Dapatkan kekuatan penuh dari Hub Kontrol Cisco Webex dengan Paket Pro.",
     "callServiceHighAvailability": "Layanan Panggilan Hybrid telah dikonfigurasi, namun satu atau beberapa klaster hanya memiliki satu nodus yang menjalankan Konektor Panggilan. Edisi Anda tidak memenuhi persyaratan untuk tingkat ketersediaan yang tinggi.",
     "callServiceHighAvailabilityLink": "Buka Dokumentasi",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "Gunakan dengan Google Kalender atau Office365.",
@@ -1873,8 +1873,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Gunakan dengan Exchange atau Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Gunakan dengan Exchange.",
     "setUpAllCalendarsNoneIsSetup": "Gunakan dengan Exchange, Google Kalender, atau Office365.",
-    "setUpCarePrimaryNotification": "Organisasi Anda mengaktifkan layanan Cisco Spark Care.",
-    "setUpCareSecondaryNotification": "Sepertinya Anda belum menyiapkan Cisco Spark Care!",
+    "setUpCarePrimaryNotification": "Organisasi Anda mengaktifkan layanan Cisco Webex Care.",
+    "setUpCareSecondaryNotification": "Sepertinya Anda belum menyiapkan Cisco Webex Care!",
     "setUpCareLinkText": "Siapkan Layanan Care",
     "autoAssignText": "Kelola lisensi Anda secara produktif dengan templat Tetapkan Otomatis.",
     "autoAssignLink": "Siapkan Sekarang"
@@ -6116,11 +6116,11 @@
       "deskPhone": "Telepon Meja",
       "deskPhoneExamples": "Contoh Cisco 8845, 8865 dan 8800",
       "deskPhoneExamplesExtra": "Contoh Cisco 8845, 8865, 8800 dan port Adaptor Telepon Analog",
-      "deskPhoneLicenseWarning": "Organisasi Anda harus membeli lisensi Panggilan Spark terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut.",
-      "otherCiscoDevice": "Perangkat Cisco lainnya",
+      "deskPhoneLicenseWarning": "Organisasi Anda harus membeli lisensi Panggilan Cisco Webex terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut.",
+      "otherCiscoDevice": "Perangkat Cisco Webex lainnya",
       "roomSystem": "Perangkat Kamar",
-      "roomSystemExamplesExpanded": "Misalnya seri Cisco Spark Board, Suara, Bagikan, Kit Kamar, DX, MX, dan SX",
-      "roomSystemLicenseWarning": "Organisasi Anda harus membeli lisensi Perangkat Kamar Cisco Spark terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut."
+      "roomSystemExamplesExpanded": "Misalnya seri Cisco Webex Board, Suara, Bagikan, Kit Kamar, DX, MX, dan SX",
+      "roomSystemLicenseWarning": "Organisasi Anda harus membeli lisensi Perangkat Kamar Cisco Webex terlebih dulu. Hubungi mitra atau divisi Penjualan Cisco untuk informasi lebih lanjut."
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "Tetapkan ke pengguna atau tempat?",
@@ -6182,11 +6182,11 @@
     },
     "editServices": {
       "whichServices": "Layanan mana yang diperlukan di tempat ini?",
-      "sparkOnly": "Hanya Cisco Spark (standar)",
-      "sparkOnlyHelp": "Panggilan ke dan dari tempat ini, dipasangkan dengan aplikasi Cisco Spark atau melalui alamat SIP.",
-      "sparkCall": "Cisco Spark + Panggilan Cisco Spark",
-      "sparkCallHelp": "Penyandingan aplikasi, panggilan SIP, dan layanan PSTN tambahan dari penyedia media yang disetujui oleh Cisco Spark.",
-      "sparkCallConnect": "Cisco Spark + Sambungan Layanan Panggilan Hybrid Cisco Spark",
+      "sparkOnly": "Hanya Cisco Webex Teams (standar)",
+      "sparkOnlyHelp": "Panggilan ke dan dari tempat ini, dipasangkan dengan aplikasi Cisco Webex Teams atau melalui alamat SIP.",
+      "sparkCall": "Webex Teams + Panggilan Webex",
+      "sparkCallHelp": "Penyandingan aplikasi, panggilan SIP, dan layanan PSTN tambahan dari penyedia media yang disetujui oleh Cisco Webex.",
+      "sparkCallConnect": "Webex Teams + Sambungan Layanan Panggilan Hybrid Webex",
       "sparkCallConnectHelp": "Penyandingan aplikasi, panggilan SIP, dan layanan PSTN tambahan dari tempat yang ada (Unified CM, Business Edition), atau mitra HCS.",
       "servicesSaved": "Layanan berhasil diperbarui",
       "calendar": "Kalender",
@@ -7721,9 +7721,9 @@
     "bigOrgSearchText": "Daftar tempat tidak ditampilkan karena terdapat lebih dari 1000 tempat",
     "actionHeader": "Tindakan",
     "servicesHeader": "Layanan",
-    "sparkCall": "Cisco Spark + Panggilan Cisco Spark",
-    "sparkOnly": "Hanya Cisco Spark",
-    "sparkCallConnect": "Cisco Spark + Panggilan Hybrid Cisco Spark",
+    "sparkCall": "Cisco Webex Teams + Panggilan Cisco Webex",
+    "sparkOnly": "Hanya Cisco Webex Teams",
+    "sparkCallConnect": "Cisco Webex Teams + Panggilan Hybrid Cisco Webex",
     "placeAdd": "Tambah Tempat",
     "placesDefinition": "Tempat mewakili lokasi fisik berisi perangkat yang tidak dimiliki oleh pengguna tertentu, seperti ruang pertemuan dengan perangkat kamar atau ruang tamu dengan telepon bersama.",
     "placesUses": "Tempat dapat mengandung perangkat bersama. Anda akan dapat melihat tempat Anda di sini - serta perangkat dan konfigurasi mereka.",
@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Gunakan layanan Cisco Spark Care untuk berkolaborasi dengan pelanggan. Sesuaikan antarmuka care menggunakan panduan pengaturan."
+        "notEnabledText": "Gunakan layanan Cisco Webex Care untuk berkolaborasi dengan pelanggan. Sesuaikan antarmuka care menggunakan panduan pengaturan."
       },
       "roomSystem": {
         "title": "Perangkat Kamar",
         "currentTitle": "Online pekan ini",
         "previousTitle": "Minggu lalu:",
         "enableDevices": "Aktifkan Perangkat",
-        "notEnabledText": "Sistem kamar rapat terintegrasi dengan baik dengan aplikasi Cisco Spark."
+        "notEnabledText": "Sistem kamar rapat terintegrasi dengan baik dengan aplikasi Cisco Webex Teams."
       },
       "hybrid": {
         "title": "Layanan Hybrid",
         "googleCalendarError": "Tidak dapat menjangkau layanan untuk Google Kalender. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
         "o365CalendarError": "Tidak dapat menjangkau layanan untuk Office 365. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
-        "herculesError": "Tidak dapat menjangkau layanan untuk Layanan Hybrid Cisco Spark.",
+        "herculesError": "Tidak dapat menjangkau layanan untuk Layanan Hybrid Cisco Webex.",
         "herculesErrorAuthentication": "Tidak dapat memvalidasi hak akses admin mitra dalam organisasi pelanggan. Ini dapat menunjukkan masalah penangkapan. Coba keluar dan masuk lagi, dan hubungi dukungan Cisco jika masalahnya masih berlanjut.",
-        "notEnabledText": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Spark.",
-        "notEnabledTextNew": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Spark.",
+        "notEnabledText": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Webex.",
         "notEnabledActionText": "Pelajari Selengkapnya",
         "serviceHeader": "Status",
         "services": {
@@ -10743,11 +10742,11 @@
     "banner": {
       "pre": "Pengguna WebEx:",
       "link": "Tautkan pengguna Anda",
-      "post": "ke Cisco Spark - Cara baru untuk merasakan rapat WebEx"
+      "post": "ke Cisco Webex Teams - Cara baru untuk merasakan rapat WebEx"
     },
     "notification": {
       "linkText": "Memulai",
-      "infoText": "Tautkan akun Anda ke Cisco Spark - Cara baru untuk merasakan WebEx Meetings"
+      "infoText": "Tautkan akun Anda ke Cisco Webex Teams - Cara baru untuk merasakan WebEx Meetings"
     },
     "errors": {
       "setAccountLinkingModeError": "Gagal Mengatur Mode Penautan Akun dengan: {{message}}",

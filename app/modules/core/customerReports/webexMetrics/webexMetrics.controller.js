@@ -267,7 +267,7 @@
     }
 
     function isReportsChanged(viewType, userInfo) {
-      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
+      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected.toLowerCase()) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
     }
 
     function isMetrics() {
@@ -440,6 +440,7 @@
         isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
         isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
+        isProPackEnabled: ProPackService.hasProPackEnabled(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
@@ -450,7 +451,11 @@
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
-          vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          if (features.isProPackEnabled) {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          } else {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics);
+          }
         }
         /*if (features.isMEIOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.mei);

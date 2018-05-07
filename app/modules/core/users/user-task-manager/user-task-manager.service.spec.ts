@@ -152,6 +152,13 @@ describe('Service: UserTaskManagerService', () => {
     it('should show canceled task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskCanceled('ABANDONED')).toBe(true);
     });
+
+    it('should get the correct status translation', function (this: Test) {
+      const completedWithErrors: ITask = this.testTasks.completedWithErrorsStatus;
+      const failed: ITask = this.testTasks.failedStatus;
+      expect(this.UserTaskManagerService.getTaskStatusTranslate(completedWithErrors)).toBe('userTaskManagerModal.taskStatus.completedWithErrors');
+      expect(this.UserTaskManagerService.getTaskStatusTranslate(failed)).toBe('userTaskManagerModal.taskStatus.failed');
+    });
   });
 
   describe('Date and Time', () => {

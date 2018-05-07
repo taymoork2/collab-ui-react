@@ -4,10 +4,10 @@
   "caseId": "284cf4cd-eea7-4c8c-83ee-67d88fc6eab2",
   "createdBy": "384cf4cd-eea7-4c8c-83ee-67d88fc6eab3",
   "creationDate": "1999-09-15T01:00:00.000+0100",
-  "releaseDate": "2000-09-15T01:00:00.000+0100",
+  "datereleased": "2000-09-15T01:00:00.000+0100",
   "matterName": "Unauthorized Release of Assets",
   "matterDescription": "Investigate who released information on current team assets.",
-  "matterState": "RELEASED",
+  "matterState": "released",
   "usersUUIDList": [
     "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
@@ -21,7 +21,7 @@
   "creationDate": "1999-09-15T01:00:00.000+0100",
   "matterName": "Unauthorized Release of Assets22",
   "matterDescription": "Investigate who released information on current team assets.",
-  "matterState": "ACTIVE",
+  "matterState": "active",
   "usersUUIDList": [
     "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
@@ -35,7 +35,7 @@
   "creationDate": "1999-09-15T01:00:00.000+0100",
   "matterName": "Unauthorized Release of AssetsMine",
   "matterDescription": "Investigate who released information on current team assets.",
-  "matterState": "ACTIVE",
+  "matterState": "active",
   "usersUUIDList": [
     "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
     "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",

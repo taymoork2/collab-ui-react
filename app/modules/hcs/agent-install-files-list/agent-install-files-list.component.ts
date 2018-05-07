@@ -1,14 +1,8 @@
-import { HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/shared/';
+import { HcsSetupModalService, HcsSetupModalSelect, HcsControllerService } from 'modules/hcs/hcs-shared/';
 import { IToolkitModalService } from 'modules/core/modal';
-
-interface IInstallFileObject {
-  id: string;
-  name: string;
-  version: string;
-  httpProxies: string[];
-  copFileLink?: string;
-  tarFileLink?: string;
-}
+import { IHcsInstallables } from 'modules/hcs/hcs-shared';
+import { Notification } from 'modules/core/notifications';
+import { CardUtils } from 'modules/core/cards';
 
 export class InstallFilesComponent implements ng.IComponentOptions {
   public controller = InstallFilesCtrl;
@@ -16,69 +10,48 @@ export class InstallFilesComponent implements ng.IComponentOptions {
 }
 
 export class InstallFilesCtrl implements ng.IComponentController {
-  public installFilesList: IInstallFileObject[] = [];
-  public installFileToBeDeleted: IInstallFileObject;
+  public installFilesList: IHcsInstallables[] = [];
+  public allInstallFilesList: IHcsInstallables[] = [];
 
   /* @ngInject */
   constructor(
     private HcsSetupModalService: HcsSetupModalService,
     private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
+    private HcsControllerService: HcsControllerService,
+    private Notification: Notification,
+    public CardUtils: CardUtils,
   ) {}
 
   public $onInit(): void {
-    this.installFilesList.push({
-      id: 'ax1234b',
-      name: 'Atlanta-dc1',
-      version: 'v20171130',
-      httpProxies: ['192.168.1.9:8088', '10.94.148.12:8080'],
-    }, {
-      id: 'ax1234v',
-      name: 'Atlanta-dc2',
-      version: 'v20171130',
-      httpProxies: ['192.168.1.9:8088', '10.94.148.12:8080'],
-    }, {
-      id: 'ax1234n',
-      name: 'Louisville-dc1',
-      version: 'v20171450',
-      httpProxies: ['182.41.33.7:8079', '130.80.4.4:8079', '10.84.3.3:8070'],
-    }, {
-      id: 'ax1234o',
-      name: 'Louisville-dc2',
-      version: 'v20171450',
-      httpProxies: ['192.168.1.9:8088', '10.94.148.12:8080'],
-    }, {
-      id: 'ax1234t',
-      name: 'London-dc1',
-      version: 'v20171130',
-      httpProxies: ['192.168.1.9:8088', '10.94.148.12:8080'],
-    }, {
-      id: 'ax1234s',
-      name: 'London-dc1',
-      version: 'v20171450',
-      httpProxies: ['182.41.33.7:8079'],
+    this.listAgentInstallFiles();
+  }
+
+  public listAgentInstallFiles(): void {
+    this.HcsControllerService.listAgentInstallFile().then(resp => {
+      this.allInstallFilesList = resp;
+      this.installFilesList = _.cloneDeep(this.allInstallFilesList);
+      this.setFileInfo();
     });
   }
 
-  public proxieRange(min: number, max: number, step: number): number[] {
-    step = step || 1;
-    let input: number[];
-    input = [];
-    for (let i = min; i <= max; i += step) {
-      input.push(i);
-    }
-    return input;
+  public setFileInfo(): void {
+    _.forEach(this.installFilesList, (file) => {
+      this.HcsControllerService.getAgentInstallFile(file.uuid)
+      .then(resp => {
+        file.fileInfo = _.get(resp, 'files');
+      });
+    });
   }
 
-  public closeCard(installFile: IInstallFileObject, $event: Event): void {
+  public deleteCard(uuid: string, $event: Event): void {
     $event.preventDefault();
     $event.stopImmediatePropagation();
-    this.installFileToBeDeleted = installFile;
     this.$modal.open({
       template: '<hcs-delete-modal delete-fn="$ctrl.deleteFn()" dismiss="$dismiss()" modal-title="$ctrl.title" modal-description="$ctrl.description"></hcs-delete-modal>',
       controller: () => {
         return {
-          deleteFn: () => this.deleteAgentInstallFile(),
+          deleteFn: () => this.deleteAgentInstallFile(uuid),
           title: this.$translate.instant('hcs.installFiles.deleteModal.title'),
           description: this.$translate.instant('hcs.installFiles.deleteModal.description'),
         };
@@ -89,13 +62,32 @@ export class InstallFilesCtrl implements ng.IComponentController {
     });
   }
 
-  public cardSelected(): void {}
-
-  public deleteAgentInstallFile(): void {
-    //delete intsall file && update install file list
+  public deleteAgentInstallFile(uuid): void {
+    this.HcsControllerService.deleteAgentInstallFile(uuid)
+    .then(() => {
+      this.listAgentInstallFiles();
+      this.reInstantiateMasonry();
+    })
+    .catch( error => {
+      this.Notification.error('hcs.installFiles.error', error.data);
+    });
   }
 
   public addAgentInstallFile(): void {
     this.HcsSetupModalService.openSetupModal(false, HcsSetupModalSelect.AgentInstallFileSetup);
+  }
+
+  public reInstantiateMasonry(): void {
+    this.CardUtils.resize();
+  }
+
+  public filteredList(searchStr: string): void {
+    if (_.isEmpty(searchStr)) {
+      this.installFilesList = this.allInstallFilesList;
+    }
+    this.installFilesList = _.filter(this.allInstallFilesList, file => {
+      return file.label.toLowerCase().indexOf(searchStr.toLowerCase()) !== -1;
+    });
+    this.reInstantiateMasonry();
   }
 }

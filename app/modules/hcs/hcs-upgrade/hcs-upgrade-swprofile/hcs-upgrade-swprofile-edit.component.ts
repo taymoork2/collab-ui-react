@@ -1,4 +1,4 @@
-import { ISoftwareProfile } from 'modules/hcs/shared';
+import { ISoftwareProfile } from 'modules/hcs/hcs-shared';
 
 export class HcsUpgradeSwprofileEditCtrl implements ng.IComponentController {
 

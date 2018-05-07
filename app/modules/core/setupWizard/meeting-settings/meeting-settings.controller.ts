@@ -132,10 +132,9 @@ export class MeetingSettingsCtrl {
       }
     }
     if (this.SetupWizardService.hasPendingCCAUserPackage()) {
-      const activeCCAUserPackage = this.SetupWizardService.getActiveCCAUserPackage();
-      if (activeCCAUserPackage) {
-        this.audioPartnerName = activeCCAUserPackage.ccaspPartnerName;
-      }
+      const active = _.get(this.SetupWizardService.getActiveCCAUserPackage(), 'ccaspPartnerName', null);
+      const pending = _.get(this.SetupWizardService.getPendingCCAUserPackage(), 'ccaspPartnerName', null);
+      this.audioPartnerName = active || pending;
     }
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
@@ -465,7 +464,7 @@ export class MeetingSettingsCtrl {
     audioPartnerDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
       partner: this.audioPartnerName,
       service: audioPartnerDisplay,
-    });
+    }, undefined, undefined, 'sceParameters');
 
     return audioPartnerDisplay;
   }

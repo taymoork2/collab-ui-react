@@ -137,6 +137,9 @@ class DeviceList implements ng.IComponentController {
           };
           return o;
         },
+        getUknownImageFile: (row: uiGrid.IGridRow) => {
+          return row.isSelected ? 'images/devices-hi/unknown-thumb-w.svg' : 'images/devices-hi/unknown-thumb-b.svg';
+        },
       },
       onRegisterApi: (gridApi: IGridApi) => {
         this.gridApi = gridApi;
@@ -178,23 +181,25 @@ class DeviceList implements ng.IComponentController {
           enableSorting: false,
           headerCellTemplate: require('modules/csdm/templates/_selectionHeaderTpl.html'),
         }, {
-          field: 'displayName',
-          displayName: this.$translate.instant('spacesPage.nameHeader'),
-          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
+          field: 'product',
+          displayName: this.$translate.instant('spacesPage.typeHeader'),
+          cellTemplate: require('modules/csdm/templates/_productTpl.html'),
           suppressRemoveSort: true,
-        }, {
-          field: 'connectionStatus',
-          displayName: this.$translate.instant('spacesPage.statusHeader'),
-          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
+          maxWidth: 370,
           sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
             direction: 'asc',
             priority: 0,
           },
-          suppressRemoveSort: true,
         }, {
-          field: 'product',
-          displayName: this.$translate.instant('spacesPage.typeHeader'),
-          cellTemplate: require('modules/csdm/templates/_productTpl.html'),
+          field: 'connectionStatus',
+          displayName: this.$translate.instant('spacesPage.statusHeader'),
+          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
+          suppressRemoveSort: true,
+          maxWidth: 250,
+        }, {
+          field: 'displayName',
+          displayName: this.$translate.instant('spacesPage.nameHeader'),
+          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
           suppressRemoveSort: true,
         }],
     };
@@ -286,6 +291,18 @@ class DeviceList implements ng.IComponentController {
     this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.DELETE_ASK,
       {
         mainAction: BulkActionName.DELETE_ASK,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
+  }
+
+  public bulkExport() {
+    this.$state.go('deviceBulkFlow.export', {
+      selectedDevices: this.selectedDevices,
+    });
+    this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.EXPORT_ASK,
+      {
+        mainAction: BulkActionName.EXPORT_ASK,
         selectedDevices: _.size(this.selectedDevices),
         totalSearchHits: this.searchHits.total,
       });

@@ -155,9 +155,6 @@ export default class OnboardService {
   }
 
   public validateTokens(scopeData): ng.IPromise<void> {
-    // TODO (f3745): rm this if determined not-needed
-    // wizardNextText();
-
     return this.$timeout(() => {
       //reset the invalid count
       scopeData.invalidcount = 0;
@@ -235,6 +232,9 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],  // list of parsed results for onboarding of each user
       numUpdatedUsers: 0,                              // count of users successfully modified
       numAddedUsers: 0,                                // count of new users successfully added
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
 
     // notes:
@@ -455,10 +455,14 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],
       numUpdatedUsers: 0,
       numAddedUsers: 0,
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
     _.reduce(response.data.userResponse, (_result, userResponseItem) => {
       const userResult: IParsedOnboardedUserResult = {
         email: userResponseItem.email,
+        message: userResponseItem.message,
       };
 
       const httpStatus = userResponseItem.httpStatus;
@@ -466,6 +470,12 @@ export default class OnboardService {
       switch (httpStatus) {
         case HttpStatus.OK:
           _result.numUpdatedUsers++;
+          if (userResponseItem.message === '100002') {
+            _result.pendingUsers.push(userResponseItem.email);
+          } else {
+            _result.convertedUsers.push(userResponseItem.email);
+          }
+          // drop-through...
         case HttpStatus.CREATED: {
           if (httpStatus !== HttpStatus.OK) {
             _result.numAddedUsers++;
@@ -474,6 +484,15 @@ export default class OnboardService {
           userResult.alertType = AlertType.SUCCESS;
           break;
         }
+        case HttpStatus.ACCEPTED:
+          if (userResponseItem.message === '600002') {
+            // migration of a 'delayed conversion' user
+            _result.pendingUsers.push(userResponseItem.email);
+            userResult.message = this.$translate.instant('onboardModal.result.202');
+            userResult.alertType = AlertType.SUCCESS;
+          }
+          break;
+
         case HttpStatus.NOT_FOUND: {
           userResult.message = this.$translate.instant('onboardModal.result.404');
           userResult.alertType = AlertType.DANGER;
@@ -523,15 +542,25 @@ export default class OnboardService {
       resultList: [] as IParsedOnboardedUserResult[],
       numUpdatedUsers: 0,
       numAddedUsers: 0,
+      // F7208
+      convertedUsers: [] as string[],
+      pendingUsers: [] as string[],
     };
     _.reduce(response.data.userResponse, (_result, migratedUser) => {
       const userResult: IParsedOnboardedUserResult = {
         email: migratedUser.email,
         httpStatus: migratedUser.httpStatus,
+        message: migratedUser.message,
       };
       if (userResult.httpStatus === HttpStatus.OK) {
         _result.numUpdatedUsers++;
         userResult.alertType = AlertType.SUCCESS;
+        // F7208
+        if (userResult.message === '100002') {
+          _result.pendingUsers.push(userResult.email);
+        } else {
+          _result.convertedUsers.push(userResult.email);
+        }
       } else {
         userResult.errorMsg = `${migratedUser.email} ${this.$translate.instant('homePage.convertError')}`;
         userResult.alertType = AlertType.DANGER;
@@ -549,9 +578,13 @@ export default class OnboardService {
     const resultList = _.flatMap(responses, response => response.resultList);
     const errors = _.compact(_.map(resultList, result => result.errorMsg!));
     const warnings = _.compact(_.map(resultList, result => result.warningMsg!));
+
     return {
       numUpdatedUsers: numUpdatedUsers,
       numAddedUsers: numAddedUsers,
+      // F7208,
+      convertedUsers: _.uniq(_.compact(_.flatMap(responses, response => response.convertedUsers))),
+      pendingUsers: _.uniq(_.compact(_.flatMap(responses, response => response.pendingUsers))),
       results: {
         resultList: resultList,
         errors: errors,

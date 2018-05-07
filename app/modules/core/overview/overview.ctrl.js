@@ -1,5 +1,7 @@
 require('./_overview.scss');
 var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+var OfferName = require('modules/core/shared/offer-name').OfferName;
+var OverviewEvent = require('./overview.keys').OverviewEvent;
 
 (function () {
   'use strict';
@@ -9,11 +11,13 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q,
+  function OverviewCtrl(
+    $location,
+    $q,
     $rootScope,
     $scope,
     $state,
-    $location,
+    $timeout,
     Authinfo,
     AutoAssignTemplateService,
     CardUtils,
@@ -21,19 +25,20 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     Config,
     EvaService,
     FeatureToggleService,
+    HealthService,
     HybridServicesClusterService,
     HybridServicesFlagService,
     HybridServicesUtilsService,
     LearnMoreBannerService,
     LinkedSitesService,
-    Log, Notification,
+    Log,
+    Notification,
     Orgservice,
     OverviewCardFactory,
     OverviewNotificationFactory,
     PrivateTrunkService,
     ProPackService,
     PstnService,
-    ReportsService,
     ServiceDescriptorService,
     SetupWizardService,
     SsoCertificateExpirationNotificationService,
@@ -43,13 +48,16 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     SunlightUtilitiesService,
     TrialService,
     UrlConfig,
-    WebExSiteService) {
+    WebExSiteService,
+    SparkAssistantService
+  ) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
     var proPackPurchased = false;
 
+    vm.loadingSubscriptions = true;
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
@@ -59,11 +67,11 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
 
     vm.cards = [
-      OverviewCardFactory.createMessageCard(),
-      OverviewCardFactory.createMeetingCard($scope),
-      OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.getMessageCard(),
+      OverviewCardFactory.getMeetingCard(),
+      OverviewCardFactory.getCallCard(),
       OverviewCardFactory.createCareCard(),
-      OverviewCardFactory.createRoomSystemsCard(),
+      OverviewCardFactory.getRoomsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard(),
     ];
@@ -138,6 +146,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     }
 
     function init() {
+      getHealthStatus();
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
@@ -286,27 +295,32 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
-      Orgservice.getLicensesUsage()
+
+      Orgservice.getInternallyManagedSubscriptions()
         .then(function (subscriptions) {
+          // timeout to prevent event from firing before page finishes loading
+          $timeout(function () {
+            $rootScope.$emit(OverviewEvent.SUBSCRIPTIONS_LOADED_EVENT, subscriptions);
+            vm.loadingSubscriptions = false;
+          });
+
           var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
-          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SD]);
+          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', OfferName.SD]);
           var sharedDevicesUsage = _.sumBy(sharedDeviceLicenses, 'usage');
           var showSharedDevicesNotification = sharedDeviceLicenses.length > 0 && sharedDevicesUsage === 0;
-          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SB]);
+          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', OfferName.SB]);
           var sparkBoardUsage = _.sumBy(sparkBoardLicenses, 'usage');
           var showSparkBoardNotification = sparkBoardLicenses.length > 0 && sparkBoardUsage === 0;
-          if (showSharedDevicesNotification || showSparkBoardNotification) {
-            setRoomSystemEnabledDevice(true);
-            if (showSharedDevicesNotification && showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-            } else if (showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-            } else {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-            }
-          } else {
-            setRoomSystemEnabledDevice(false);
+
+          if (showSharedDevicesNotification && showSparkBoardNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+          } else if (showSparkBoardNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+          } else if (showSharedDevicesNotification) {
+            vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
           }
+        }).catch(function () {
+          vm.loadingSubscriptions = false;
         });
 
       FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
@@ -327,6 +341,16 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
 
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
+      });
+
+      FeatureToggleService.atlasSparkAssistantGetStatus().then(function (toggle) {
+        if (toggle) {
+          SparkAssistantService.getSpeechServiceOptIn().then(function (response) {
+            if (_.get(response, 'activationStatus').toUpperCase() === 'ENABLED') {
+              vm.notifications.push(OverviewNotificationFactory.createSparkAssistantNotification());
+            }
+          });
+        }
       });
     }
 
@@ -440,6 +464,18 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       }
     }
 
+    function getHealthStatus() {
+      HealthService.getHealthCheck().then(function (healthData) {
+        $timeout(function () {
+          // timeout to prevent event from firing before page finishes loading
+          $rootScope.$emit(OverviewEvent.HEALTH_STATUS_LOADED_EVENT, healthData);
+
+          // TODO: this is left in for now for the Care card, which needs to be updated to a component
+          forwardEvent('healthStatusUpdatedHandler', healthData);
+        });
+      });
+    }
+
     function onPstnEsaDisclaimerAccept() {
       if (vm.esaDisclaimerNotification !== null) {
         dismissNotification(vm.esaDisclaimerNotification);
@@ -475,12 +511,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
           name: 'overview.cards.users.title',
         });
       }
-    }
-
-    function setRoomSystemEnabledDevice(isDeviceEnabled) {
-      (_.find(vm.cards, function (card) {
-        return card.name === 'overview.cards.roomSystem.title';
-      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
@@ -530,8 +560,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
-    ReportsService.getOverviewMetrics(true);
-
     if (Authinfo.isCare()) {
       SunlightReportService.getOverviewData();
     }
@@ -543,8 +571,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
-
-    ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {

@@ -1,6 +1,6 @@
 export enum MatterState {
-  ACTIVE = 'ACTIVE',
-  RELEASED = 'RELEASED',
+  ACTIVE = 'active',
+  RELEASED = 'released',
 }
 
 export enum ImportMode {
@@ -30,6 +30,8 @@ export enum ImportResultStatus {
 }
 
 export enum Events {
-  CHANGED = 'Core::matterUpdated',
+  CHANGED = 'LegalHold::matterUpdated',
+  CONVERSION_CANCEL_INITIATED = 'LegalHold::custodianConversionCancelSignalled',
+  CONVERSION_CHUNK_PROCESSED = 'LegalHold::custodianConversionChunkProcessed',
 }
 

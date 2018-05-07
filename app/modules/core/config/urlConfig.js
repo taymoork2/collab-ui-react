@@ -177,10 +177,10 @@
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
     DiagnosticUrl: {
-      dev: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
-      cfe: 'https://maestroqa.qa.webex.com/pcsdemo/pcs/api/v2/',
-      integration: 'https://sapmatsbts.webex.com/pcs/api/v2/',
-      prod: 'https://sapmats.webex.com/pcs/api/v2/',
+      dev: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/',
+      prod: 'https://sapmats.webex.com/pcs/api/',
     },
     GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
@@ -273,9 +273,9 @@
       prod: 'https://media-manager.produs1.ciscoccservice.com/media-manager/v1/',
     },
     AdminBatchServiceUrl: {
-      dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
+      dev: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
+      cfe: 'https://admin-batch-service-loada.ciscospark.com/api/v1',
+      integration: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
       prod: 'https://admin-batch-service-a.wbx2.com/api/v1',
     },
     SpeechServiceUrl: {

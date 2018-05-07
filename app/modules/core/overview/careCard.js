@@ -3,13 +3,14 @@
 
   // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
   var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
+  var HealthStatusID = require('./overview.keys').HealthStatusID;
 
   angular
     .module('Core')
     .factory('OverviewCareCard', OverviewCareCard);
 
   /* @ngInject */
-  function OverviewCareCard(OverviewHelper, Authinfo) {
+  function OverviewCareCard(LicenseCardHelperService, Authinfo) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -24,12 +25,12 @@
         card.notEnabledText = 'overview.cards.care.notEnabledText';
         card.notEnabledFooter = 'overview.contactPartner';
         card.settingsUrl = '/services/careDetails/settings';
-        card.helper = OverviewHelper;
+        card.helper = LicenseCardHelperService;
         card.showHealth = true;
 
         card.healthStatusUpdatedHandler = function (data) {
           _.each(data.components, function (component) {
-            if (component.id === card.helper.statusIds.SPARK_CARE) {
+            if (component.id === HealthStatusID.SPARK_CARE) {
               card.healthStatus = card.helper.mapStatus(card.healthStatus, component.status);
               card.healthStatusAria = card.helper.mapStatusAria(card.healthStatus, component.status);
             }
@@ -62,7 +63,7 @@
 
         function filterLicenses(licenses) {
           return _.filter(licenses, function (license) {
-            return license.licenseType === 'CARE' && card.helper.isntCancelledOrSuspended(license);
+            return license.licenseType === 'CARE' && !(license.status === 'CANCELLED' || license.status === 'SUSPENDED');
           });
         }
 

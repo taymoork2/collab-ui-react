@@ -1,3 +1,5 @@
+var HealthStatusID = require('./overview.keys').HealthStatusID;
+
 describe('OverviewCareCard', function () {
   var OverviewCareCard, $rootScope;
   var dummyStats = getJSONFixture('sunlight/json/features/careReport/sunlightReportStats.json');
@@ -42,7 +44,7 @@ describe('OverviewCareCard', function () {
     expect(card.showHealth).toBe(true);
     var data = {
       components: [{
-        id: card.helper.statusIds.SPARK_CARE,
+        id: HealthStatusID.SPARK_CARE,
         status: 'partial_outage',
       }],
     };

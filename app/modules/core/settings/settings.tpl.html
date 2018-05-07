@@ -65,9 +65,12 @@
     <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
       <support-setting></support-setting>
     </setting-section>
-    <setting-section setting="settingsCtrl.webexSiteManagement" cr-feature-toggle feature-show="atlas-webex-site-management-setting" ng-if="settingsCtrl.webexSiteManagement">
-      <webex-site-management-setting></webex-site-management-setting>
-    </setting-section>
+
+    <div class="setting-section" cr-feature-toggle feature-show="atlas-webex-site-management-setting" ng-if="settingsCtrl.webexSiteManagement">
+      <setting-section setting="settingsCtrl.webexSiteManagement">
+        <webex-site-management-setting></webex-site-management-setting>
+      </setting-section>
+    </div>
 
     <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
       <retention-setting></retention-setting>

@@ -45,7 +45,8 @@ export class DeviceSearchConverter {
 
 export class Device implements IIdentifiableDevice {
   public image: string;
-  private imageFileName: string;
+  private imageFilename: string;
+  public imageThumb: string | null;
   public tags: string[];
   public description: string;
   public cssColorClass: string;
@@ -64,7 +65,7 @@ export class Device implements IIdentifiableDevice {
   }
 
   private static init(deviceHelper: DeviceHelper, device: Device) {
-    device.image = 'images/devices-hi/' + (device.imageFileName || 'unknown.png');
+    device.image = 'images/devices-hi/' + (device.imageFilename || 'unknown.png');
     device.cssColorClass = DeviceHelper.getCssColorClass(device);
     device.ip = device.ip || DeviceHelper.getIp(device);
     device.state = deviceHelper.getState(device);
@@ -78,12 +79,14 @@ export class Device implements IIdentifiableDevice {
 
   private static initAsHuron(device: Device) {
     device.isHuronDevice = true;
+    device.imageThumb = device.imageFilename ? `images/devices-hi/transparent/${device.imageFilename}` : null;
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
     device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device);
   }
 
   private static initAsCloudberry(device: Device) {
     device.isCloudberryDevice = true;
+    device.imageThumb = device.imageFilename ? device.image : null;
     device.tags = DeviceHelper.getTags(device.description);
   }
 

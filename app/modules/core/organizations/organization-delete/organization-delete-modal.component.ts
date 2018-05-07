@@ -8,8 +8,8 @@ class OrganizationDeleteModalController {
     DELETE_ORG: 'delete',
   };
   public readonly actions = {
-    MOVE: 'move',
-    DELETE: 'delete',
+    MOVE: 'Move',
+    DELETE: 'Delete',
   };
   public state: string = this.states.USER_ACTION;
   public action: string = this.actions.MOVE;
@@ -149,6 +149,7 @@ class OrganizationDeleteModalController {
     this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
       organizationId: orgId,
       customerType: this.customerType,
+      deleteType: this.action,
     });
     this.dismiss();
     this.openAccountClosedModal();

@@ -3,6 +3,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 
 class HybridMediaInactiveCardController implements ng.IComponentController {
   public hasMfClusterWizardFeatureToggle: boolean = false;
+  public hasMfFirstTimeCallingFeatureToggle: boolean = false;
   public hasMfFeatureToggle: boolean = false;
   public hasMfSIPFeatureToggle: boolean = false;
   public hasMfCascadeBwConfigToggle: boolean = false;
@@ -29,6 +30,9 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceClusterWizard).then( (supported) => {
       this.hasMfClusterWizardFeatureToggle = supported;
     });
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceFirstTimeCalling).then( (supported) => {
+      this.hasMfFirstTimeCallingFeatureToggle = supported;
+    });
   }
 
   public openPrerequisites(): void {
@@ -49,6 +53,7 @@ class HybridMediaInactiveCardController implements ng.IComponentController {
           hasMfSIPFeatureToggle: this.hasMfSIPFeatureToggle,
           hasMfCascadeBwConfigToggle: this.hasMfCascadeBwConfigToggle,
           hasMfClusterWizardFeatureToggle: this.hasMfClusterWizardFeatureToggle,
+          hasMfFirstTimeCallingFeatureToggle: this.hasMfFirstTimeCallingFeatureToggle,
         },
         type: 'modal',
         controller: 'ClusterCreationWizardController',

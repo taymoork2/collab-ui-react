@@ -39,12 +39,7 @@ describe('Onboard users with Message Service', function () {
     it('should select manually add/modify users', function () {
       utils.click(navigation.usersTab);
       utils.click(manageUsersPage.buttons.manageUsers);
-      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
-        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
-      } else {
-        utils.click(manageUsersPage.select.radio.orgManual);
-        utils.click(manageUsersPage.buttons.next);
-      }
+      utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
       if (featureToggle.features.atlasEmailSuppress) {
         utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
         utils.click(manageUsersPage.buttons.next);

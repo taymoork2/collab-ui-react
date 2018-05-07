@@ -1,5 +1,6 @@
-import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'modules/hcs/shared';
+import { HcsSetupModalService, HcsSetupModalSelect, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { CardUtils } from 'modules/core/cards';
+import { IToolkitModalService } from 'modules/core/modal';
 
 interface IHeaderTab {
   title: string;
@@ -20,7 +21,8 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     public CardUtils: CardUtils,
     public HcsSetupModalService: HcsSetupModalService,
     private $state: ng.ui.IStateService,
-    // public $modal: IToolkitModalService,
+    public $modal: IToolkitModalService,
+  //  private HcsUpgradeService: HcsUpgradeService,
   ) {}
 
   public $onInit() {
@@ -39,6 +41,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     this.swprofileList = [{
       uuid: 'ver10',
       name: 'HCS Profile 10.0',
+      url: 'test',
     }, {
       uuid: 'ver105',
       name: 'HCS Profile 10.5',
@@ -71,7 +74,28 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
   public addSwProfile(): void {
     this.HcsSetupModalService.openSetupModal(false, HcsSetupModalSelect.SoftwareProfileSetup);
   }
-  public deleteSwProfile(): void {}
+
+  public deleteSwProfile( swProfile: ISoftwareProfile, $event: Event): void {
+    $event.preventDefault();
+    $event.stopImmediatePropagation();
+    this.$modal.open({
+      template: '<hcs-delete-modal delete-fn="$ctrl.deleteFn()" dismiss="$dismiss()" modal-title="$ctrl.title" modal-description="$ctrl.description"></hcs-delete-modal>',
+      controller: () => {
+        return {
+          deleteFn: () => this.deleteSwProfileService(),
+          title: this.$translate.instant('common.delete') + ' ' + swProfile.name + '?',
+          description: this.$translate.instant('hcs.sftp.deleteModalDesc'),
+        };
+      },
+      modalClass: 'hcs-delete-modal-class',
+      controllerAs: '$ctrl',
+      type: 'dialog',
+    }).result.then(() => {
+      this.reInstantiateMasonry();
+    });
+  }
+
+  public deleteSwProfileService(): void {}
 
   public editSwProfile(swprofile: ISoftwareProfile): void {
     this.$state.go('hcs.swprofile-edit', { swprofile: swprofile });

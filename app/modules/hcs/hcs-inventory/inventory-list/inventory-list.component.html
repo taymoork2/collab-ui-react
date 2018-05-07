@@ -28,28 +28,28 @@
               <div class="columns medium-6">
                 {{inventory.name ? inventory.name : ('common.unassigned' | translate)}}
               </div>
-              <div class="columns medium-5" ng-switch="inventory.status">
-                <div ng-switch-when="Needs Assigned">
+              <div class="columns medium-5" ng-switch="inventory.status.toLowerCase()">
+                <div ng-switch-when="needs assigned">
                   <i class="icon icon-circle status-indicator danger"></i>
                   <span class="h6">{{::'hcs.inventory.status.needsAssigned' | translate}}</span>
                 </div>
-                <div ng-switch-when="Nodes need Accepted">
+                <div ng-switch-when="nodes need accepted">
                   <i class="icon icon-circle status-indicator warning"></i>
                   <span class="h6">{{::'hcs.inventory.status.nodesNeedAccepted' | translate}}</span>
                 </div>
-                <div ng-switch-when="Software update needed">
+                <div ng-switch-when="software update needed">
                   <i class="icon icon-circle status-indicator warning"></i>
                   <span class="h6">{{::'hcs.inventory.status.softwareUpdateNeeded' | translate}}</span>
                 </div>
-                <div ng-switch-when="Operational">
+                <div ng-switch-when="operational">
                   <i class="icon icon-circle status-indicator success"></i>
                   <span class="h6">{{::'hcs.inventory.status.operational' | translate}}</span>
                 </div>
-                <div ng-switch-when="Agent Offline">
+                <div ng-switch-when="agent offline">
                   <i class="icon icon-circle status-indicator danger"></i>
                   <span class="h6">{{::'hcs.inventory.status.agentoffline' | translate}}</span>
                 </div>
-                <div ng-switch-when="Failed Upgrade">
+                <div ng-switch-when="failed upgrade">
                   <i class="icon icon-circle status-indicator danger"></i>
                   <span class="h6">{{::'hcs.inventory.status.failedUpgrade' | translate}}</span>
                 </div>

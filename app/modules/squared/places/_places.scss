@@ -172,7 +172,7 @@
   }
   .calendarServiceControls.emailControls {
     width: 100%;
-    #email {
+    .calendar-mail-id {
       min-width: 310px;
       width: 45%;
     }
@@ -192,6 +192,28 @@
     }
     .csSelect-container {
       width: 45%;
+    }
+  }
+  .callServiceControls.emailControls, .calendarServiceControls.emailControls {
+    .input-with-spinner {
+      display: flex;
+      align-items: center;
+      .icon-spinner {
+        margin: 2px 0 0 8px;
+      }
+    }
+    &.success {
+      input,
+      textarea,
+      select {
+        background-color: $green-pastel;
+        &:focus, &:not(:hover) {
+          border-color: $green;
+        }
+        &:focus, &:focus &:hover {
+          background-color: $white;
+        }
+      }
     }
   }
   @media screen and (max-width: 640px) {

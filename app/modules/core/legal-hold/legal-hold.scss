@@ -1,5 +1,5 @@
-@import './legal-hold-matter-new';
 @import './legal-hold-custodian-import';
+@import 'styles/partials/mixins';
 // algendel TODO: z-index should be addressed in toolkit. Revisit ASAP
 //the way I understand that the z-index in the toolkit is left over from the old implementation
 //if it can be removed this will not be needed.
@@ -8,4 +8,8 @@
   .side-panel-full-height {
     z-index: 1051;
   }
+}
+
+legal-hold-custodians-manage, legal-hold-matter-new {
+    @include keep-flex-container(column);
 }

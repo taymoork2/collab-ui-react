@@ -6,6 +6,19 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
+<cs-page-sub-header ng-hide="$ctrl.groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+  <cs-page-sub-header-right class="row">
+    <div class="columns medium-2 hcs-right-header-filter">
+        <cs-select
+        name="softwareVersionSelect"
+        ng-model="$ctrl.softwareVersionSelected"
+        options="$ctrl.softwareVersionProfiles"
+        on-change-fn="$ctrl.onSoftwareVersionChanged()"
+        filter="false">
+    </div>
+    </cs-select>
+  </cs-page-sub-header-right>
+</cs-page-sub-header>
 <div class="cs-card-container cluster-list-container">
   <cs-card-layout>
     <cs-card class="cs-card--small header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
@@ -13,7 +26,7 @@
         <header>
           <div class="header-with-right-icon">
             <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
-            <div class="right card-icon-div ">
+            <div class="right card-icon-div "  ng-if="groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
               <button type="button" class="close"
                 ng-click="$ctrl.closeCard((cluster), $event)"
                 ng-keydown=""

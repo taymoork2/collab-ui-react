@@ -30,18 +30,16 @@ class CustomerReportsHeaderCtrl {
           state: 'reports.spark',
         });
       }
-      if (features.isMfEnabled) {
-        if (features.isQlikEnabled) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.hybridMedia',
-          });
-        } else {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.mediaservice',
-          });
-        }
+      if (features.isQlikEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.hybridMedia',
+        });
+      } else if (features.isMfEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.mediaservice',
+        });
       }
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),

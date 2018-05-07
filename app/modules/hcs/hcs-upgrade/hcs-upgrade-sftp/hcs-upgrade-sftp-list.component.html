@@ -6,14 +6,14 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<div class="hcs-no-data" ng-if="$ctrl.currentSftpList.length === 0">
+<div class="hcs-no-data" ng-if="$ctrl.sftpList.length === 0">
   <h2 translate="hcs.sftp.noneSftp"></h2>
   <h5 translate="hcs.sftp.noneSftpDesc"></h5>
   <button class="btn btn--primary btn--large" ng-click="$ctrl.addSftp()">
     <span translate="hcs.sftp.add"></span>
   </button>
 </div>
-<div ng-if="$ctrl.currentSftpList.length>0">
+<div ng-if="$ctrl.sftpList.length>0">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter search-item-fn="$ctrl.filteredList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">

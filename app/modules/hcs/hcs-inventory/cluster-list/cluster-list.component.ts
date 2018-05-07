@@ -1,12 +1,10 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/shared/hcs-upgrade';
-import { HcsUpgradeService } from 'modules/hcs/shared';
+import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/hcs-shared/hcs-upgrade';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
+import { ISelectOption, IHeaderTab } from '../shared/hcs-inventory';
 
-interface IHeaderTab {
-  title: string;
-  state: string;
-}
+const GROUP_TYPE_UNASSIGNED: string = 'Unassigned';
 
 export class ClusterListComponent implements ng.IComponentOptions {
   public controller = ClusterListCtrl;
@@ -28,6 +26,9 @@ export class ClusterListCtrl implements ng.IComponentController {
 
   public clusterToBeDeleted: IClusterItem;
   public customerId: string | undefined;
+  public softwareVersionSelected: ISelectOption | null;
+  public softwareVersionProfiles: ISelectOption[] | null;
+  public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
 
   /* @ngInject */
   constructor(
@@ -48,15 +49,29 @@ export class ClusterListCtrl implements ng.IComponentController {
     });
 
     this.clusterList = [];
+    this.softwareVersionSelected = null;
+    this.softwareVersionProfiles = [];
 
-    if (this.groupType === 'unassigned') {
-      //get customer name from api
+    if (this.groupType === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
       this.customerId = undefined;
     } else {
-      //get customer name from api
+      //TODO: get customer name from api
       this.groupName = 'Betty\'s Flower Shop';
       this.customerId = this.groupId;
+
+      //TODO: get software template selected for the customer.
+      this.softwareVersionSelected = { label: 'template2', value: 't2' };
+
+      //TODO: get software template available for partner
+      this.softwareVersionProfiles = [{
+        label: 'template1',
+        value: 't1',
+      }, {
+        label: 'template2',
+        value: 't2',
+      }];
+
     }
     this.HcsUpgradeService.listClusters(this.customerId).then((clusters: IHcsClusterSummaryItem[]) => {
       this.initClusterList(clusters);
@@ -67,7 +82,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   }
 
   public cardSelected(cluster: IClusterItem): void {
-    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: cluster.id, clusterName: cluster.name });
+    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: cluster.id });
   }
 
   public closeCard(cluster: IClusterItem, $event: Event): void {
@@ -98,8 +113,8 @@ export class ClusterListCtrl implements ng.IComponentController {
     //function to get cluster data from response object
     _.each(clustersData, (cluster: IHcsClusterSummaryItem) => {
       const applicationList: IApplicationItem[] = [];
-      if (!_.isUndefined(cluster.hcsNodes)) {
-        _.each(cluster.hcsNodes, (node: INodeSummaryItem) => {
+      if (!_.isUndefined(cluster.nodes)) {
+        _.each(cluster.nodes, (node: INodeSummaryItem) => {
           const index = _.findIndex(applicationList, (application: any) => application.name === node.typeApplication);
           if (index === -1) {
             const applicationItem: IApplicationItem = {
@@ -120,5 +135,13 @@ export class ClusterListCtrl implements ng.IComponentController {
       };
       this.clusterList.push(clusterItem);
     });
+  }
+
+  public onSoftwareVersionChanged() {
+  }
+
+
+  public saveSoftwareProfile() {
+
   }
 }

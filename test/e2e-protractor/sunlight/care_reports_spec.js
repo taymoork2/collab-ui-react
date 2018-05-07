@@ -1,6 +1,7 @@
 'use strict';
 
-describe('Care Reports', function () {
+// Unstable test, see https://jira-eng-sjc12.cisco.com/jira/browse/SL-1580
+xdescribe('Care Reports', function () {
   it('should login', function () {
     login.login('contactcenter-admin');
   });

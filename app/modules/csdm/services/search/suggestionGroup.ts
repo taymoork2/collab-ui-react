@@ -371,7 +371,7 @@ export class BelongsToGroup extends SuggestionGroupBase {
   }
 
   constructor(private searchTranslator: SearchTranslator) {
-    super(searchTranslator, { permanentRank: 8, field: QueryParser.Field_Displayname });
+    super(searchTranslator, { permanentRank: SuggestionRanking.initialGroupRate(QueryParser.Field_Displayname), field: QueryParser.Field_Displayname });
     this.readableField = this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname);
   }
 
