@@ -47,6 +47,11 @@
     on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
+  <qos-section 
+    is-wizard="true"
+    on-qos-update="clusterCreationWizard.qosUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 5">
+  </qos-section>
   <cluster-creation-final
     cluster="clusterCreationWizard.clusterName"
     host="clusterCreationWizard.hostName"

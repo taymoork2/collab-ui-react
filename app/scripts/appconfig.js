@@ -5703,6 +5703,11 @@
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
+            resolve: {
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
+              },
+            },
           });
 
         $stateProvider
