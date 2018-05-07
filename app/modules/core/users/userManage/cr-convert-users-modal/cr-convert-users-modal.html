@@ -28,7 +28,7 @@
   </div>
 </div>
 <!-- ********** UI for orgs with atlasF7208GDPRConvertUser -->
-<cs-alert-banner ng-if="$ctrl.ftF7208" type="warning" closeable="true">
+<cs-alert-banner ng-if="$ctrl.ftF7208 && $ctrl.showAutoAssignBanner" type="warning" closeable="true">
   <span translate="convertUsersModal.banner.text" translate-value-click="$ctrl.showAutoAssignModal()" translate-compile></span>
 </cs-alert-banner>
 <div ng-if="$ctrl.ftF7208" class="modal-body">
@@ -71,7 +71,7 @@
   </div>
   <div class="unlicensed-user-list" ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0)">
     <div ng-if="$ctrl.isPotentialTabSelected()" class="gridStyle grid-checkbox" ui-grid="$ctrl.gridPotentialUsers" ui-grid-selection ui-grid-save-state></div>
-    <div ng-if="$ctrl.isPendingTabSelected()" class="gridStyle" ui-grid="$ctrl.gridPendingUsers" ui-grid-selection ui-grid-save-state></div>
+    <div ng-if="$ctrl.isPendingTabSelected()" class="gridStyle" ui-grid="$ctrl.gridPendingUsers" ui-grid-save-state></div>
   </div>
   <div class="noUnlicensedUsers" ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() <= 0)">
     <h3 class="convert-users__bottom-space--50" translate="convertUsersModal.error.noUsers"></h3>

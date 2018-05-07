@@ -1832,7 +1832,7 @@
     "lastUpdated": "Última sincronización",
     "notifications": "Notificaciones",
     "todo": "Actividades",
-    "setUpYourTrial": "Configure la llamada avanzada de Cisco Spark para iniciar su prueba.",
+    "setUpYourTrial": "Configure la llamada avanzada de Cisco Webex para iniciar su prueba.",
     "beginTrial": "Comenzar prueba",
     "status": "Estado",
     "statusGreen": "Estado Verde",
@@ -1841,16 +1841,16 @@
     "spark": "Cisco Spark",
     "sso": "Inicio de sesión único (SSO)",
     "goSetupCloudSipUri": "Vaya aquí para finalizar esta configuración",
-    "setupCloudSipUriMessage": "La dirección SIP de Cisco Spark de su organización no está definida. Se requiere este valor para que algunas funcionalidades de llamadas funcionen correctamente.",
+    "setupCloudSipUriMessage": "La dirección SIP de Cisco Webex de su organización no está definida. Se requiere este valor para que algunas funcionalidades de llamadas funcionen correctamente.",
     "dirsync": "Sincronización de directorios",
-    "setUpCalendarService": "El calendario híbrido está disponible. Utilice @WebEx o @Spark en la ubicación de una reunión para insertar detalles para entrar, mostrar reuniones próximas en la aplicación Cisco Spark y proporcionar Un botón para pulsar (OBTP) para entrar.",
-    "setUpGoogleCalendarService": "El calendario híbrido (Google) está disponible. Utilice @WebEx o @Spark en la ubicación de una reunión para insertar detalles para entrar, mostrar reuniones próximas en la aplicación Cisco Spark y proporcionar Un botón para pulsar (OBTP) para entrar.",
-    "setUpCallAwareService": "La alerta del servicio de llamadas está disponible. Los usuarios pueden compartir instantáneamente su escritorio de sus clientes de Cisco Spark durante una llamada.",
-    "setUpCallConnectService": "La conexión del servicio de llamadas está disponible. Los usuarios pueden responder las llamadas a su teléfono laboral en sus clientes de Cisco Spark, y realizar llamadas a otros teléfonos laborales de sus clientes de Cisco Spark.",
-    "setUpHybridMessaging": "El servicio de mensajes híbridos está disponible. Conecte Cisco Spark al servicio de presencia y MI para que los usuarios de Cisco Spark y Cisco Jabber puedan enviarse mensajes directos entre sí.",
+    "setUpCalendarService": "El calendario híbrido está disponible. Utilice @WebEx o @Spark en la ubicación de una reunión para insertar detalles para entrar, mostrar reuniones próximas en la aplicación Cisco Webex Teams y proporcionar Un botón para pulsar (OBTP) para entrar.",
+    "setUpGoogleCalendarService": "El calendario híbrido (Google) está disponible. Utilice @WebEx o @Spark en la ubicación de una reunión para insertar detalles para entrar, mostrar reuniones próximas en la aplicación Cisco Webex Teams y proporcionar Un botón para pulsar (OBTP) para entrar.",
+    "setUpCallAwareService": "La alerta del servicio de llamadas está disponible. Los usuarios pueden compartir instantáneamente su escritorio de sus clientes de Cisco Webex durante una llamada.",
+    "setUpCallConnectService": "La conexión del servicio de llamadas está disponible. Los usuarios pueden responder las llamadas a su teléfono laboral en sus clientes de Cisco Webex, y realizar llamadas a otros teléfonos laborales de sus clientes de Cisco Webex.",
+    "setUpHybridMessaging": "El servicio de mensajes híbridos está disponible. Conecte Cisco Webex Teams al servicio de presencia y MI para que los usuarios de Cisco Webex Teams y Cisco Jabber puedan enviarse mensajes directos entre sí.",
     "setUpDevices": "Active sus dispositivos cuando lleguen.",
     "setUpSharedDevices": "Active sus dispositivos de sala cuando lleguen.",
-    "setUpSparkBoardDevices": "Active sus Cisco Spark Boards cuando lleguen.",
+    "setUpSparkBoardDevices": "Active sus Cisco Webex Boards cuando lleguen.",
     "setUpPMRDescription": "La característica de salas de reuniones personales (PMR) se ha agregado a su suscripción.",
     "setUpPMRUrl": "Configure la PMR ahora",
     "setupPMRsiteNameModalTitle": "Configuración de la sala de reuniones personales",
@@ -1860,10 +1860,10 @@
     "setUpHybridDataSecurity": "Cree un dominio de seguridad local con el servicio de Seguridad de datos híbridos.",
     "careLicenseMsgMissingText": "El mensaje es obligatorio para los servicios de Atención. Para habilitar el mensaje,",
     "careLicenseCallMissingText": "La llamada es obligatoria para los servicios de Atención basados en voz. Para habilitar la llamada,",
-    "careLicenseCallMissingTextToggle": "Para usar las características de voz de atención de Spark, póngase en contacto para habilitar las llamadas de Spark o configurar las llamadas híbridas y los enlaces troncales empresariales.",
+    "careLicenseCallMissingTextToggle": "Para usar las características de voz de atención de Cisco Webex, póngase en contacto para habilitar las llamadas de Cisco Webex o configurar las llamadas híbridas y los enlaces troncales empresariales.",
     "careLicenseMsgAndCallMissingText": "El mensaje y la llamada son obligatorios para los servicios de Atención como el chat y la interacción por voz respectivamente. Para habilitar el mensaje y la llamada,",
     "careLicenseLinkText": "comuníquese con su socio o con ventas de Cisco.",
-    "proPackNotification": "Obtenga toda la capacidad del Concentrador de control de Spark con el paquete profesional.",
+    "proPackNotification": "Obtenga toda la capacidad del Concentrador de control de Cisco Webex con el paquete profesional.",
     "callServiceHighAvailability": "El servicio híbrido de llamadas está configurado, pero uno o más grupos tienen un solo nodo ejecutando el Conector de llamadas. Su implementación no cumple con los requisitos para alta disponibilidad.",
     "callServiceHighAvailabilityLink": "Abrir documentación",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "Utilícelo con Google Calendar u Office365.",
@@ -1873,8 +1873,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Utilícelo con Exchange u Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Utilícelo con Exchange.",
     "setUpAllCalendarsNoneIsSetup": "Utilícelo con Exchange, Google Calendar u Office365.",
-    "setUpCarePrimaryNotification": "Su organización está habilitada para la atención de Cisco Spark.",
-    "setUpCareSecondaryNotification": "Parece que todavía no ha configurado la atención de Cisco Spark.",
+    "setUpCarePrimaryNotification": "Su organización está habilitada para la atención de Cisco Webex.",
+    "setUpCareSecondaryNotification": "Parece que todavía no ha configurado la atención de Cisco Webex.",
     "setUpCareLinkText": "Configurar servicio de atención",
     "autoAssignText": "Administre sus licencias de manera productiva con la plantilla de asignación automática.",
     "autoAssignLink": "Configurar ahora"
@@ -6116,11 +6116,11 @@
       "deskPhone": "Teléfono de escritorio",
       "deskPhoneExamples": "P. ej.: Cisco 8845, 8865 y 8800",
       "deskPhoneExamplesExtra": "P. ej.: Cisco 8845, 8865, 8800 y puertos del adaptador de teléfono analógico",
-      "deskPhoneLicenseWarning": "Su organización debe comprar licencias de llamadas de Cisco Spark primero. Comuníquese con su socio o con Ventas de Cisco para obtener más información.",
-      "otherCiscoDevice": "Otro dispositivo de Cisco",
+      "deskPhoneLicenseWarning": "Su organización debe comprar licencias de llamadas de Cisco Webex primero. Comuníquese con su socio o con Ventas de Cisco para obtener más información.",
+      "otherCiscoDevice": "Otro dispositivo de Cisco Webex",
       "roomSystem": "Dispositivo de sala",
-      "roomSystemExamplesExpanded": "P. ej.: Cisco Spark Board, Kit de salas, Uso compartido, Voz, y las series DX, MX y SX",
-      "roomSystemLicenseWarning": "Su organización primero debe comprar licencias para dispositivos de sala de Cisco Spark. Comuníquese con su socio o con el Departamento de Ventas de Cisco para obtener más información."
+      "roomSystemExamplesExpanded": "P. ej.: Cisco Webex Board, Kit de salas, Uso compartido, Voz, y las series DX, MX y SX",
+      "roomSystemLicenseWarning": "Su organización primero debe comprar licencias para dispositivos de sala de Cisco Webex. Comuníquese con su socio o con el Departamento de Ventas de Cisco para obtener más información."
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "¿Asignar a un usuario o a un lugar?",
@@ -6182,11 +6182,11 @@
     },
     "editServices": {
       "whichServices": "¿Qué servicio se necesita en este lugar?",
-      "sparkOnly": "Solo Cisco Spark (predeterminado)",
-      "sparkOnlyHelp": "Llamadas desde y hacia este lugar, emparejadas con la aplicación Cisco Spark o a través de direcciones SIP.",
-      "sparkCall": "Cisco Spark + Llamadas de Cisco Spark",
-      "sparkCallHelp": "Emparejamiento de aplicaciones, marcado SIP y servicio PSTN adicional de un proveedor de medios preferido de Cisco Spark.",
-      "sparkCallConnect": "Cisco Spark + Conexión del servicio de llamadas híbridas de Cisco Spark",
+      "sparkOnly": "Solo Cisco Webex Teams (predeterminado)",
+      "sparkOnlyHelp": "Llamadas desde y hacia este lugar, emparejadas con la aplicación Cisco Webex Teams o a través de direcciones SIP.",
+      "sparkCall": "Webex Teams + Llamadas de Webex",
+      "sparkCallHelp": "Emparejamiento de aplicaciones, marcado SIP y servicio PSTN adicional de un proveedor de medios preferido de Cisco Webex.",
+      "sparkCallConnect": "Webex Teams + Conexión del servicio de llamadas híbridas de Webex",
       "sparkCallConnectHelp": "Emparejamiento de aplicaciones, marcado SIP y servicio PSTN adicional de las instalaciones existentes (Unified CM, Business Edition) o un socio de soluciones de colaboración alojadas (HCS).",
       "servicesSaved": "Los servicios se actualizaron correctamente",
       "calendar": "Calendario",
@@ -7721,9 +7721,9 @@
     "bigOrgSearchText": "La lista de lugares no se muestra porque hay más de 1000 lugares",
     "actionHeader": "Acciones",
     "servicesHeader": "Servicios",
-    "sparkCall": "Cisco Spark + Llamadas de Cisco Spark",
-    "sparkOnly": "Solo Cisco Spark",
-    "sparkCallConnect": "Cisco Spark + Llamadas híbridas de Cisco Spark",
+    "sparkCall": "Cisco Webex Teams + Llamadas de Cisco Webex",
+    "sparkOnly": "Solo Cisco Webex Teams",
+    "sparkCallConnect": "Cisco Webex Teams + Llamadas híbridas de Cisco Webex",
     "placeAdd": "Agregar lugar",
     "placesDefinition": "Un lugar representa una ubicación física que contiene un dispositivo que no es propiedad de un usuario específico, como una sala de reuniones con un dispositivo de sala o una recepción con teléfonos compartidos.",
     "placesUses": "Los lugares pueden contener dispositivos compartidos. Podrá ver sus lugares aquí, y los dispositivos y las configuraciones que pertenecen a ellos.",
@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Atención",
-        "notEnabledText": "Use los servicios de atención de Cisco Spark para colaborar con su cliente. Personalice las interfaces de atención usando el asistente de configuración."
+        "notEnabledText": "Use los servicios de atención de Cisco Webex para colaborar con su cliente. Personalice las interfaces de atención usando el asistente de configuración."
       },
       "roomSystem": {
         "title": "Dispositivos de sala",
         "currentTitle": "En línea esta semana",
         "previousTitle": "Semana pasada:",
         "enableDevices": "Habilitar dispositivos",
-        "notEnabledText": "Dispositivos de salas de reuniones integrados a la perfección con la aplicación Cisco Spark."
+        "notEnabledText": "Dispositivos de salas de reuniones integrados a la perfección con la aplicación Cisco Webex Teams."
       },
       "hybrid": {
         "title": "Servicios híbridos",
         "googleCalendarError": "No se pudo conectar con el servicio de Google Calendar. Es posible que el estado se informe en forma incorrecta durante la sesión.",
         "o365CalendarError": "No se pudo conectar con el servicio de Office 365. Es posible que el estado se informe en forma incorrecta durante la sesión.",
-        "herculesError": "No se pudo conectar con el servicio de los Servicios híbridos de Cisco Spark.",
+        "herculesError": "No se pudo conectar con el servicio de los Servicios híbridos de Cisco Webex.",
         "herculesErrorAuthentication": "No fue posible validar los derechos de acceso del administrador de socios en la organización del cliente. Esto podría deberse a un problema de almacenamiento en caché. Cierre la sesión y vuelva a iniciar sesión. Póngase en contacto con el soporte de Cisco si el problema continúa.",
-        "notEnabledText": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Spark.",
-        "notEnabledTextNew": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Spark.",
+        "notEnabledText": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Webex.",
         "notEnabledActionText": "Obtener más información",
         "serviceHeader": "Estado",
         "services": {
@@ -10743,11 +10742,11 @@
     "banner": {
       "pre": "Usuario de WebEx:",
       "link": "Vincule sus usuarios",
-      "post": "a Cisco Spark: una nueva forma de experimentar las reuniones de WebEx"
+      "post": "a Cisco Webex Teams: una nueva forma de experimentar las reuniones de WebEx"
     },
     "notification": {
       "linkText": "Cómo comenzar",
-      "infoText": "Vincule sus cuentas con Cisco Spark: una nueva forma de experimentar las reuniones de WebEx"
+      "infoText": "Vincule sus cuentas con Cisco Webex Teams: una nueva forma de experimentar las reuniones de WebEx"
     },
     "errors": {
       "setAccountLinkingModeError": "Error en el modo de enlace de configuración de cuenta: {{message}}",

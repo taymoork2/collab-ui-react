@@ -137,6 +137,9 @@ class DeviceList implements ng.IComponentController {
           };
           return o;
         },
+        getUknownImageFile: (row: uiGrid.IGridRow) => {
+          return row.isSelected ? 'images/devices-hi/unknown-thumb-w.svg' : 'images/devices-hi/unknown-thumb-b.svg';
+        },
       },
       onRegisterApi: (gridApi: IGridApi) => {
         this.gridApi = gridApi;

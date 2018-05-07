@@ -1,0 +1,4 @@
+<cs-alert-banner ng-repeat="banner in $ctrl.bannerList track by $index" class="header-banner" ng-if="banner.isVisible && $ctrl.showInTheState(banner)" type="{{banner.type}}" closeable="{{banner.closeable}}">
+  <span ng-if="banner.iconCss" class="icon" ng-class="banner.iconCss"></span>
+  <span translate="{{banner.translation}}"></span>
+</cs-alert-banner>

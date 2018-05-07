@@ -22,8 +22,7 @@
     <!-- F7208 GDPR disabled -->
     <div class="convert-text" ng-if="!card.features.atlasF7208GDPRConvertUser">
       <div ng-if="!card.showLicenseCard">
-        <span class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
-        <span translate="overview.cards.users.convertText" id="convertText"></span>
+        <span class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;<span translate="overview.cards.users.convertText" id="convertText"></span>
       </div>
       <div ng-if="card.showLicenseCard">
         <span translate="overview.cards.users.unassignedLicenses"
@@ -56,12 +55,10 @@
       <!-- F7208 GDPR enabled-->
       <div ng-if="card.features.atlasF7208GDPRConvertUser">
         <div ng-if="!card.showLicenseCard">
-          <span class="convert-nr h4">{{(card.potentialConversions | number) || 'N/A'}}</span>&nbsp;
-          <span class="h6" translate="overview.cards.users.potentialConversions"></span>
+          <span class="convert-nr h4">{{(card.potentialConversions | number) || 'N/A'}}</span>&nbsp;<span class="h6" translate="overview.cards.users.potentialConversions"></span>
         </div>
         <div ng-if="!card.showLicenseCard">
-          <span class="convert-pending h4">{{(card.pendingConversions | number) || 'N/A'}}</span>&nbsp;
-          <span class="h6" translate="overview.cards.users.pendingConversions"></span>
+          <span class="convert-pending h4">{{(card.pendingConversions | number) || 'N/A'}}</span>&nbsp;<span class="h6" translate="overview.cards.users.pendingConversions"></span>
         </div>
         <div ng-if="card.showLicenseCard">
           <div class="convert-nr h4">{{card.licenseNumber}}</div>

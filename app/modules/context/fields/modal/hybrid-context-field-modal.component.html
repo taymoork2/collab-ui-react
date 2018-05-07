@@ -1,17 +1,14 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldPage.createNew"></h3>
-  <h3 ng-if="!$ctrl.createMode"
-    class="modal-title"
-    tooltip-class="context-tooltip"
-    tooltip-trigger="mouseenter focus"
-    tooltip-placement="bottom"
-    tooltip-animation="true"
-    tooltip="{{$ctrl.fieldData.id}}"
-    aria-label="{{$ctrl.fieldData.id}}"
-    tabindex="0">
-    <span translate="context.dictionary.update"></span>
-    <span>{{$ctrl.fieldData.id}}</span>
+  <h3 ng-if="!$ctrl.createMode" class="modal-title">
+    <text-tooltip
+      tt-tooltip-class="context-tooltip"
+      tt-tooltip-placement="bottom"
+      tt-tooltip="{{$ctrl.fieldData.id}}">
+      <span translate="context.dictionary.update"></span>
+      <span>{{$ctrl.fieldData.id}}</span>
+    </text-tooltip>
   </h3>
 </div>
 <div class="modal-body context-modal-body">

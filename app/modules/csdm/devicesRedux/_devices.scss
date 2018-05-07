@@ -35,8 +35,18 @@
     padding: 0 16px 0 20px;
 
     .type_image {
+      flex-shrink: 0;
       width: 35px;
       height: 35px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .unknown_type_image {
+      flex-shrink: 0;
+      width: 35px;
+      height: 35px;
+      padding: 4px;
       margin-top: 5px;
       margin-bottom: 5px;
     }

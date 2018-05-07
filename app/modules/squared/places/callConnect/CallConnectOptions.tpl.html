@@ -19,10 +19,23 @@
       <span class="circle">3</span>
       <div class="callServiceControls">
         <label translate="addDeviceWizard.sparkCallConnect.step3"></label>
-        <div class="cs-radio-group callServiceControls emailControls">
-          <label for="email" translate="addDeviceWizard.sparkCallConnect.mailId"></label>
-          <input id="email" type="email" autocomplete="off" ng-model="callConnectOptions.mailID">
-          <p class="cs-input__help-text" translate="addDeviceWizard.sparkCallConnect.mailIdHelp"></p>
+        <div class="cs-input-group callServiceControls emailControls" ng-class="callConnectOptions.currentValidationState">
+          <label class="cs-label" for="email" translate="addDeviceWizard.sparkCallConnect.mailId"></label>
+          <div class="input-with-spinner">
+            <input
+              class="cs-input"
+              id="email"
+              type="email"
+              autocomplete="off"
+              ng-keyup="callConnectOptions.onMailIDInputKeyUp()"
+              ng-model="callConnectOptions.mailID">
+            <div ng-if="callConnectOptions.isValidating">
+              <i class="icon icon icon-spinner"></i>
+            </div>
+          </div>
+          <div class="cs-input__messages">
+            <div class="message" ng-bind-html="callConnectOptions.currentValidationMessage"></div>
+          </div>
         </div>
       </div>
 

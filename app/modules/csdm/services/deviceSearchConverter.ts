@@ -46,7 +46,7 @@ export class DeviceSearchConverter {
 export class Device implements IIdentifiableDevice {
   public image: string;
   private imageFilename: string;
-  public imageThumb: string;
+  public imageThumb: string | null;
   public tags: string[];
   public description: string;
   public cssColorClass: string;
@@ -79,14 +79,14 @@ export class Device implements IIdentifiableDevice {
 
   private static initAsHuron(device: Device) {
     device.isHuronDevice = true;
-    device.imageThumb = `images/devices-hi/transparent/${device.imageFilename  || 'unknown.png'}`;
+    device.imageThumb = device.imageFilename ? `images/devices-hi/transparent/${device.imageFilename}` : null;
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
     device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device);
   }
 
   private static initAsCloudberry(device: Device) {
     device.isCloudberryDevice = true;
-    device.imageThumb = device.image;
+    device.imageThumb = device.imageFilename ? device.image : null;
     device.tags = DeviceHelper.getTags(device.description);
   }
 

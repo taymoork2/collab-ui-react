@@ -194,22 +194,14 @@
   },
   "userManage": {
     "org": {
-      "typeLabel": "Add or Modify Users",
-      "typeInstructions": "Select a method to upload and/or modify users and the services they use.",
-      "manualLabel": "Manually add or modify users",
       "manualLabelNew": "Manually Add or Modify Users",
       "manualLabelTemplateEnabled": "Manually Add Users",
-      "manualDetails": "All you need are email addresses to add and/or edit up to {{maxUsersInManual}} users.",
       "manualDetailsNew": "Add or Modify up to {{maxUsersInManual}} users.",
       "manualDetailsTemplateEnabled": "Add up {{maxUsersInManual}} users.",
       "dirSyncModifyAll": "Modify All Synchronized Users",
-      "bulkLabel": "Export and import users with a CSV file",
       "bulkLabelNew": "CSV Add or Modify Users",
-      "bulkDetails": "Best method for adding and editing up to {{maxUsersInCSV}} users at the same time.",
       "bulkDetailsNew": "Add or modify up to {{maxUsersInCSV}} users with a CSV file.",
       "bulkDetailsNewBatch": "Add or modify users with a CSV file.",
-      "advancedLabel": "Enable directory synchronization",
-      "advancedDetails": "Synchronize users from Active Directory.",
       "convertLabel": "Convert Users",
       "convertDetails": "Search for users who have signed up on their own for Cisco Spark and convert them into your company.",
       "convertUnavailable": "There are no users to convert.",
@@ -1927,7 +1919,7 @@
     "lastUpdated": "Last sync",
     "notifications": "Notifications",
     "todo": "To-do",
-    "setUpYourTrial": "Set up Advanced Cisco Spark Call to start your trial.",
+    "setUpYourTrial": "Set up Advanced Cisco Webex Calling to start your trial.",
     "beginTrial": "Begin Trial",
     "status": "Status",
     "statusGreen": "Status Green",
@@ -1936,16 +1928,16 @@
     "spark": "Cisco Spark",
     "sso": "Single Sign On (SSO)",
     "goSetupCloudSipUri": "Go here to finish this configuration",
-    "setupCloudSipUriMessage": "Your organization's Cisco Spark SIP Address is not defined. This value is required for some call functionality to work correctly.",
+    "setupCloudSipUriMessage": "Your organization's Cisco Webex SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
-    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
-    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Spark clients while on a call.",
-    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Spark clients, and place calls to others' work phones from their Cisco Spark clients.",
-    "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other.",
+    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Webex clients while on a call.",
+    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex clients, and place calls to others' work phones from their Cisco Webex clients.",
+    "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your room devices when they arrive.",
-    "setUpSparkBoardDevices": "Activate your Cisco Spark Boards when they arrive.",
+    "setUpSparkBoardDevices": "Activate your Cisco Webex Boards when they arrive.",
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Setup PMR Now",
     "setupPMRsiteNameModalTitle": "Personal Meeting Room Setup",
@@ -1955,10 +1947,10 @@
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
-    "careLicenseCallMissingTextToggle": "To use Spark Care voice features, contact partner to enable Spark Call or Setup Hybrid Call and Enterprise SIP Trunking.",
+    "careLicenseCallMissingTextToggle": "To use Cisco Webex Care voice features, contact partner to enable Cisco Webex Calling or Setup Hybrid Call and Enterprise SIP Trunking.",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
-    "proPackNotification": "Unleash the full power of the Spark Control Hub with Pro Pack.",
+    "proPackNotification": "Unleash the full power of the Cisco Webex Control Hub with Pro Pack.",
     "callServiceHighAvailability": "Hybrid Call Service is configured, but one or more clusters only has a single node running Call Connector. Your deployment does not meet the requirements for high availability.",
     "callServiceHighAvailabilityLink": "Open Documentation",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "Use it with Google Calendar or Office365.",
@@ -1968,14 +1960,14 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Use it with Exchange or Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Use it with Exchange.",
     "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
-    "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Spark Care.",
-    "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Spark Care yet!",
+    "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Webex Care.",
+    "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Webex Care yet!",
     "setUpCareLinkText": "Setup Care Service",
     "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
     "autoAssignLink": "Set Up Now",
     "goToEditNow": "Edit Now",
-    "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Spark space. Edit <b>{{name}}</b> to select a new default space.",
-    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Spark space. Contact <b>{{owner}}</b> to assign a new default space."
+    "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Webex space. Edit <b>{{name}}</b> to select a new default space.",
+    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Webex space. Contact <b>{{owner}}</b> to assign a new default space."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -6316,11 +6308,11 @@
       "ciscoPhone": "Cisco Phone",
       "deskPhone": "Desk Phone",
       "deskPhoneExamplesExtra": "e.g. Cisco 8845, 8865, 8800 and Analog Telephone Adapter ports",
-      "deskPhoneLicenseWarning": "Your organization must purchase Cisco Spark Call licenses first. Contact your partner or Cisco Sales for more information.",
-      "otherCiscoDevice": "Other Cisco device",
+      "deskPhoneLicenseWarning": "Your organization must purchase Cisco Webex Calling licenses first. Contact your partner or Cisco Sales for more information.",
+      "otherCiscoDevice": "Other Cisco Webex device",
       "roomSystem": "Room Device",
-      "roomSystemExamplesExpanded": "e.g. Cisco Spark Board, Room Kit, DX, MX and SX series",
-      "roomSystemLicenseWarning": "Your organization must purchase Cisco Spark Room Device licenses first. Contact your partner or Cisco Sales for more information."
+      "roomSystemExamplesExpanded": "e.g. Cisco Webex Board, Room Kit, DX, MX and SX series",
+      "roomSystemLicenseWarning": "Your organization must purchase Cisco Webex Device licenses first. Contact your partner or Cisco Sales for more information."
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "Assign to a user or a place?",
@@ -6382,11 +6374,11 @@
     },
     "editServices": {
       "whichServices": "Which service is needed in this place?",
-      "sparkOnly": "Cisco Spark only (default)",
-      "sparkOnlyHelp": "Calls to and from this place, paired with the Cisco Spark app or through SIP addresses.",
-      "sparkCall": "Cisco Spark + Cisco Spark Calling",
-      "sparkCallHelp": "App pairing, SIP dialing, and additional PSTN service from a Cisco Spark preferred media provider.",
-      "sparkCallConnect": "Cisco Spark + Cisco Spark Hybrid Call Service Connect",
+      "sparkOnly": "Cisco Webex Teams only (default)",
+      "sparkOnlyHelp": "Calls to and from this place, paired with the Cisco Webex Teams app or through SIP addresses.",
+      "sparkCall": "Webex Teams + Webex Calling",
+      "sparkCallHelp": "App pairing, SIP dialing, and additional PSTN service from a Cisco Webex preferred media provider.",
+      "sparkCallConnect": "Webex Teams + Webex Hybrid Call Service Connect",
       "sparkCallConnectHelp": "App pairing, SIP dialing, and additional PSTN service from the existing premises (Unified CM, Business Edition) or an HCS partner.",
       "servicesSaved": "Services updated successfully",
       "calendar": "Calendar",
@@ -6395,20 +6387,24 @@
       "exchangeHelp": "This is enabling exchange calendar",
       "googleTitle": "Google calendar",
       "googleHelp": "This is enabling google calendar",
-      "calendarEmail": "Email address of the calendar mailbox",
-      "calendarEmailHelp": "This should not be an email address already used on another place, and should not belong to a user."
+      "calendarEmail": "Email address of the calendar mailbox"
     },
     "editCalendarService": {
       "title": "Set up Hybrid Calendar Service",
-      "whichCalendar": "Which calendar provider do you want to use?"
+      "whichCalendar": "Which calendar provider do you want to use?",
+      "mailAddressInvalidFormat": "Invalid format. Enter a valid email address.",
+      "mailAddressBelongsToUser": "This email address is already associated with the Webex user <b>{{accountDisplayName}}</b>.<br>The email address must belong to the calendar mailbox of this place, not another Webex user or place.",
+      "mailAddressBelongsToPlace": "This email address is already associated with the place <b>{{accountDisplayName}}</b>.<br>The email address must belong to the calendar mailbox of the place, not another Webex user or place."
     },
     "sparkCallConnect": {
       "editSettingsTitle": "Set up Hybrid Call Service Connect",
-      "step1": "In Cisco Unified Communications Manager, create a user account and an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
+      "step1": "To represent this place in Cisco Unified Communications Manager, create a 'user account' for the place with an associated line. These items will represent this place. <a href='https://www.cisco.com/go/hybrid-services'>See the documentation for help.</a>",
       "step2": "Find the Mail ID for the user account.<br>a) Sign into Cisco Unified CM Administration<br>b) Choose User Management > End User, and then find and click the account.<br>The Mail ID is under ‘User Information’.",
       "step3": "Enter the Mail ID below to connect this place to the existing Unified CM account.<br>This Mail ID ensures that the correct user account is connected with this place for hybrid calling.",
-      "mailId": "Mail ID",
-      "mailIdHelp": "This should not be a Mail ID already used on another place, and should not be an email address that belongs to a user."
+      "mailId": "Mail ID from Unified CM",
+      "mailIdInvalidFormat": "Invalid format. Enter a valid Mail ID from Unified CM.",
+      "mailIdBelongsToUser": "This is the email address of Webex user <b>{{accountDisplayName}}</b>.<br>The 'user account' in Unified CM must represent this place, not a Webex user.",
+      "mailIdBelongsToPlace": "This Mail ID from Unified CM is already associated with the place <b>{{accountDisplayName}}</b>.<br>Only one place can connect to one Unified CM account."
     },
     "showActivationCode": {
       "activationCode": "Activation Code",
@@ -7965,9 +7961,9 @@
     "bigOrgSearchText": "The place list is not displayed because there are more than 1000 places",
     "actionHeader": "Actions",
     "servicesHeader": "Services",
-    "sparkCall": "Cisco Spark + Cisco Spark Calling",
-    "sparkOnly": "Cisco Spark only",
-    "sparkCallConnect": "Cisco Spark + Cisco Spark Hybrid Calling",
+    "sparkCall": "Cisco Webex Teams + Cisco Webex Calling",
+    "sparkOnly": "Cisco Webex Teams only",
+    "sparkCallConnect": "Cisco Webex Teams + Cisco Webex Hybrid Calling",
     "placeAdd": "Add Place",
     "placesDefinition": "A place represents a physical location containing a device not owned by a specific user, such as a meeting room with a room device or a reception with shared phones.",
     "placesUses": "Places can contain shared devices. You'll be able to view your places here - and the devices and configurations that belong to them.",
@@ -8881,23 +8877,22 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Use Cisco Spark Care services to collaborate with your customer. Customize care interfaces using the configuration wizard."
+        "notEnabledText": "Use Cisco Webex Care services to collaborate with your customer. Customize care interfaces using the configuration wizard."
       },
       "roomSystem": {
         "title": "Room Devices",
         "currentTitle": "Online this week",
         "previousTitle": "Last week:",
         "enableDevices": "Enable Devices",
-        "notEnabledText": "Meeting room devices seamlessly integrated with the Cisco Spark app."
+        "notEnabledText": "Meeting room devices seamlessly integrated with the Cisco Webex Teams app."
       },
       "hybrid": {
         "title": "Hybrid Services",
         "googleCalendarError": "Could not reach the service for Google Calendar. Its status may be reported inaccurately during this session.",
         "o365CalendarError": "Could not reach the service for Office 365. Its status may be reported inaccurately during this session.",
-        "herculesError": "Could not reach the service for Cisco Spark Hybrid Services.",
+        "herculesError": "Could not reach the service for Cisco Webex Hybrid Services.",
         "herculesErrorAuthentication": "Could not validate partner admin's access rights in customer organization. This could indicate a caching problem. Try logging out and in again, and contact Cisco support if the problem persists.",
-        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
-        "notEnabledTextNew": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Spark Platform.",
+        "notEnabledText": "Hybrid Services allows you to integrate your on-premises systems with the Cisco Webex Platform.",
         "notEnabledActionText": "Learn More",
         "serviceHeader": "Status",
         "services": {
@@ -11012,11 +11007,11 @@
     "banner": {
       "pre": "WebEx user:",
       "link": "Link your users",
-      "post": "to Cisco Spark - A new way to experience WebEx meetings"
+      "post": "to Cisco Webex Teams - A new way to experience WebEx meetings"
     },
     "notification": {
       "linkText": "Get Started",
-      "infoText": "Link your accounts to Cisco Spark - A new way to experience WebEx meetings"
+      "infoText": "Link your accounts to Cisco Webex Teams - A new way to experience WebEx meetings"
     },
     "errors": {
       "setAccountLinkingModeError": "Setting Account Linking Mode Failed with : {{message}}",
@@ -11435,7 +11430,8 @@
     "tableHeader": {
       "name": "Display Name",
       "email": "Email Address",
-      "status": "Status"
+      "status": "Status",
+      "eligible": "Eligible For"
     },
     "status": {
       "immediate": "Immediate Conversion",

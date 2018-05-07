@@ -1,3 +1,4 @@
+import bannerModuleName from './banner';
 import crIconInfoModuleName from './cr-icon-info';
 import crProgressbarModuleName from './cr-progressbar';
 import multiStepModalModuleName from './multi-step-modal';
@@ -14,6 +15,7 @@ export { StringUtilService };
 
 export default angular
   .module('core.shared', [
+    bannerModuleName,
     crIconInfoModuleName,
     crProgressbarModuleName,
     multiStepModalModuleName,

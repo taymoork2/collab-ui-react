@@ -1832,7 +1832,7 @@
     "lastUpdated": "上次同步",
     "notifications": "通知",
     "todo": "待办事项",
-    "setUpYourTrial": "设置高级 Cisco Spark 呼叫以开始试用。",
+    "setUpYourTrial": "设置高级 Cisco Webex 呼叫以开始试用。",
     "beginTrial": "开始试用",
     "status": "状态",
     "statusGreen": "绿色状态",
@@ -1841,16 +1841,16 @@
     "spark": "Cisco Spark",
     "sso": "单点登录 (SSO)",
     "goSetupCloudSipUri": "转至此处可完成该配置",
-    "setupCloudSipUriMessage": "未定义您的组织的 Cisco Spark SIP 地址。某些呼叫功能需要此值才能正常运行。",
+    "setupCloudSipUriMessage": "未定义您的组织的 Cisco Webex SIP 地址。某些呼叫功能需要此值才能正常运行。",
     "dirsync": "目录同步",
-    "setUpCalendarService": "混合日历可用。在会议位置中使用 @WebEx 或 @Spark 来插入加入详情，在 Cisco Spark 应用程序中显示即将召开的会议，并提供用于加入的一键通 (OBTP) 按钮。",
-    "setUpGoogleCalendarService": "混合日历 (Google) 可用。在会议位置中使用 @WebEx 或 @Spark 来插入加入详情，在 Cisco Spark 应用程序中显示即将召开的会议，并提供用于加入的一键通 (OBTP) 按钮。",
-    "setUpCallAwareService": "“呼叫服务感知”可用。用户在呼叫时可以即时共享 Cisco Spark 客户端的桌面。",
-    "setUpCallConnectService": "“呼叫服务连接”可用。用户可以在 Cisco Spark 客户端应答工作电话呼叫，以及从 Cisco Spark 客户端拨打其他人的工作电话。",
-    "setUpHybridMessaging": "混合消息服务可用。将 Cisco Spark 连接到 IM 和在线状态服务，以使 Cisco Spark 用户和 Cisco Jabber 用户可以相互定向发送消息。",
+    "setUpCalendarService": "混合日历可用。在会议位置中使用 @WebEx 或 @Spark 来插入加入详情，在 Cisco Webex Teams 应用程序中显示即将召开的会议，并提供用于加入的一键通 (OBTP) 按钮。",
+    "setUpGoogleCalendarService": "混合日历 (Google) 可用。在会议位置中使用 @WebEx 或 @Spark 来插入加入详情，在 Cisco Webex Teams 应用程序中显示即将召开的会议，并提供用于加入的一键通 (OBTP) 按钮。",
+    "setUpCallAwareService": "“呼叫服务感知”可用。用户在呼叫时可以即时共享 Cisco Webex 客户端的桌面。",
+    "setUpCallConnectService": "“呼叫服务连接”可用。用户可以在 Cisco Webex 客户端应答工作电话呼叫，以及从 Cisco Webex 客户端拨打其他人的工作电话。",
+    "setUpHybridMessaging": "混合消息服务可用。将 Cisco Webex Teams 连接到 IM 和在线状态服务，以使 Cisco Webex Teams 用户和 Cisco Jabber 用户可以相互定向发送消息。",
     "setUpDevices": "在您的设备到达时激活。",
     "setUpSharedDevices": "在您的协作室设备到达时激活。",
-    "setUpSparkBoardDevices": "在您的 Cisco Spark Board 到达时激活。",
+    "setUpSparkBoardDevices": "在您的 Cisco Webex Board 到达时激活。",
     "setUpPMRDescription": "已将“个人会议室”功能添加到您的订阅。",
     "setUpPMRUrl": "立即设置 PMR",
     "setupPMRsiteNameModalTitle": "个人会议室设置",
@@ -1860,10 +1860,10 @@
     "setUpHybridDataSecurity": "使用混合数据安全服务创建本地部署的安全域。",
     "careLicenseMsgMissingText": "“消息”对于 Care 服务是必需的。要启用“消息”，",
     "careLicenseCallMissingText": "“呼叫”对于基于语音的 Care 服务是必需的。要启用“呼叫”，",
-    "careLicenseCallMissingTextToggle": "要使用 Spark Care 语音功能，请联系合作伙伴启用 Spark 呼叫或设置混合呼叫和企业 SIP 中继。",
+    "careLicenseCallMissingTextToggle": "要使用 Cisco Webex Care 语音功能，请联系合作伙伴启用 Cisco Webex 呼叫或设置混合呼叫和企业 SIP 中继。",
     "careLicenseMsgAndCallMissingText": "“消息”和“呼叫”各自对于聊天和语音交互之类的 Care 服务是必需的。要启用“消息”和“呼叫”，",
     "careLicenseLinkText": "请联系您的合作伙伴或 Cisco 销售部门。",
-    "proPackNotification": "通过 Pro Pack 发挥 Spark Control Hub 的全部作用。",
+    "proPackNotification": "通过 Pro Pack 发挥 Cisco Webex Control Hub 的全部作用。",
     "callServiceHighAvailability": "已配置混合呼叫服务，但是一个或多个集群只有一个节点在运行 Call Connector。您的部署不符合高可用性要求。",
     "callServiceHighAvailabilityLink": "打开文档",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "将其与 Google Calendar 或 Office365 配合使用。",
@@ -1873,8 +1873,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "将其与 Exchange 或 Office365 配合使用。",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "将其与 Exchange 配合使用。",
     "setUpAllCalendarsNoneIsSetup": "将其与 Exchange、Google Calendar 或 Office365 配合使用。",
-    "setUpCarePrimaryNotification": "您的组织已启用 Cisco Spark Care。",
-    "setUpCareSecondaryNotification": "您似乎尚未设置 Cisco Spark Care！",
+    "setUpCarePrimaryNotification": "您的组织已启用 Cisco Webex Care。",
+    "setUpCareSecondaryNotification": "您似乎尚未设置 Cisco Webex Care！",
     "setUpCareLinkText": "设置 Care 服务",
     "autoAssignText": "借助自动分配模板，高效地管理您的许可证。",
     "autoAssignLink": "现在设置"
@@ -6116,11 +6116,11 @@
       "deskPhone": "座机",
       "deskPhoneExamples": "例如 Cisco 8845、8865 和 8800",
       "deskPhoneExamplesExtra": "例如 Cisco 8845、8865、8800 和模拟电话适配器端口",
-      "deskPhoneLicenseWarning": "您的组织必须先购买 Cisco Spark 呼叫许可证。请联系您的合作伙伴或 Cisco 销售人员以了解更多信息。",
-      "otherCiscoDevice": "其他 Cisco 设备",
+      "deskPhoneLicenseWarning": "您的组织必须先购买 Cisco Webex 呼叫许可证。请联系您的合作伙伴或 Cisco 销售人员以了解更多信息。",
+      "otherCiscoDevice": "其他 Cisco Webex 设备",
       "roomSystem": "协作室设备",
-      "roomSystemExamplesExpanded": "例如 Cisco Spark Board、Voice、Share、Room Kit、DX、MX 和 SX 系列",
-      "roomSystemLicenseWarning": "您的组织必须先购买 Cisco Spark 协作室设备许可证。请联系您的合作伙伴或 Cisco 销售人员以了解更多信息。"
+      "roomSystemExamplesExpanded": "例如 Cisco Webex Board、Voice、Share、Room Kit、DX、MX 和 SX 系列",
+      "roomSystemLicenseWarning": "您的组织必须先购买 Cisco Webex 协作室设备许可证。请联系您的合作伙伴或 Cisco 销售人员以了解更多信息。"
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "分配给用户还是地方？",
@@ -6182,11 +6182,11 @@
     },
     "editServices": {
       "whichServices": "该地方需要哪一项服务？",
-      "sparkOnly": "仅 Cisco Spark（缺省）",
-      "sparkOnlyHelp": "通过与 Cisco Spark 应用程序配对或使用 SIP 地址与该地方进行往来呼叫。",
-      "sparkCall": "Cisco Spark + Cisco Spark 呼叫",
-      "sparkCallHelp": "应用程序配对、SIP 拨号和 Cisco Spark 首选的媒体提供商提供的额外 PSTN 服务。",
-      "sparkCallConnect": "Cisco Spark + Cisco Spark 混合呼叫服务连接",
+      "sparkOnly": "仅 Cisco Webex Teams（缺省）",
+      "sparkOnlyHelp": "通过与 Cisco Webex Teams 应用程序配对或使用 SIP 地址与该地方进行往来呼叫。",
+      "sparkCall": "Webex Teams + Webex 呼叫",
+      "sparkCallHelp": "应用程序配对、SIP 拨号和 Cisco Webex 首选的媒体提供商提供的额外 PSTN 服务。",
+      "sparkCallConnect": "Webex Teams + Webex 混合呼叫服务连接",
       "sparkCallConnectHelp": "应用程序配对、SIP 拨号和现有本地部署（商业版 Unified CM）或 HCS 合作伙伴提供的额外 PSTN 服务。",
       "servicesSaved": "服务更新成功",
       "calendar": "日历",
@@ -7721,9 +7721,9 @@
     "bigOrgSearchText": "地方列表并未显示，因为共有 1000 多个地方",
     "actionHeader": "操作",
     "servicesHeader": "服务",
-    "sparkCall": "Cisco Spark + Cisco Spark 呼叫",
-    "sparkOnly": "仅 Cisco Spark",
-    "sparkCallConnect": "Cisco Spark + Cisco Spark 混合呼叫",
+    "sparkCall": "Cisco Webex Teams + Cisco Webex 呼叫",
+    "sparkOnly": "仅 Cisco Webex Teams",
+    "sparkCallConnect": "Cisco Webex Teams + Cisco Webex 混合呼叫",
     "placeAdd": "添加地方",
     "placesDefinition": "一个地方代表一个包含不为特定用户所拥有的设备的物理位置，如配备协作室设备的会议室或配备共享电话的接待区。",
     "placesUses": "地方可以包含共享的设备。您将能够在此处看到您的地方，以及属于这些地方的设备和配置。",
@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "服务",
-        "notEnabledText": "使用 Cisco Spark Care 服务与您的客户协作。使用配置向导定制 Care 界面。"
+        "notEnabledText": "使用 Cisco Webex Care 服务与您的客户协作。使用配置向导定制 Care 界面。"
       },
       "roomSystem": {
         "title": "协作室设备",
         "currentTitle": "本周在线",
         "previousTitle": "上周：",
         "enableDevices": "启用服务",
-        "notEnabledText": "会议室设备与 Cisco Spark 应用程序之间无缝集成。"
+        "notEnabledText": "会议室设备与 Cisco Webex Teams 应用程序之间无缝集成。"
       },
       "hybrid": {
         "title": "混合服务",
         "googleCalendarError": "无法访问用于 Google Calendar 的服务。其状态在此会话期间可能无法准确地报告。",
         "o365CalendarError": "无法访问用于 Office 365 的服务。其状态在此会话期间可能无法准确地报告。",
-        "herculesError": "无法访问用于 Cisco Spark 混合服务的服务。",
+        "herculesError": "无法访问用于 Cisco Webex 混合服务的服务。",
         "herculesErrorAuthentication": "无法验证客户组织中合作伙伴管理员的访问权限。这可能表明存在缓存问题。请尝试注销，然后再登录，如果问题仍然出现，请联系 Cisco 支持人员。",
-        "notEnabledText": "混合服务让您能够将本地部署系统与 Cisco Spark 平台相集成。",
-        "notEnabledTextNew": "混合服务让您能够将本地部署系统与 Cisco Spark 平台相集成。",
+        "notEnabledText": "混合服务让您能够将本地部署系统与 Cisco Webex 平台相集成。",
         "notEnabledActionText": "了解详情",
         "serviceHeader": "状态",
         "services": {
@@ -10743,11 +10742,11 @@
     "banner": {
       "pre": "WebEx 用户：",
       "link": "将用户关联到",
-      "post": "Cisco Spark - 体验 WebEx 会议的新方式"
+      "post": "Cisco Webex Teams - 体验 WebEx 会议的新方式"
     },
     "notification": {
       "linkText": "入门",
-      "infoText": "将帐户关联到 Cisco Spark - 体验 WebEx 会议的新方式"
+      "infoText": "将帐户关联到 Cisco Webex Teams - 体验 WebEx 会议的新方式"
     },
     "errors": {
       "setAccountLinkingModeError": "设置帐户关联模式失败，并显示：{{message}}",
