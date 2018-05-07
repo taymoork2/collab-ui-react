@@ -3,7 +3,11 @@
     <article class="face front" ng-class="{'no-display': isFlipped}">
       <div class="metrics-header reports-header" ng-hide=$ctrl.isorg> {{$ctrl.headername}}</div>
       <div class="metrics-header reports-header" ng-hide=!$ctrl.isorg> {{$ctrl.headername}} {{$ctrl.value}}</div>
-      <div id="cs-export-div"></div>
+      <div id="cs-export-div">
+      <button class="btn" ng-click="$ctrl.refreshReportCards()">
+          <span translate="common.ok"></span>
+      </button>
+    </div>
       <section>
         <div class="metrics-info">
           <div class="spinner-position" ng-if="!$ctrl.chartOptions.isShow">
@@ -11,10 +15,8 @@
               <h5><i class='icon icon-spinner icon-2x'></i></h5>
             </p>
           </div>
-          <!--div class="no-data" ng-class="{'no-display': $ctrl.chartOptions.noData !== $ctrl.parentcntrl.noData}">{{$ctrl.value}}</div-->
+        <div  ng-if="!$ctrl.isorg && $ctrl.chartOptions.isShow" ng-class="{'no-data': $ctrl.value === $ctrl.parentcntrl.noData, 'call-counts': !$ctrl.isorg && $ctrl.value !== $ctrl.parentcntrl.noData && $ctrl.chartOptions.isShow}">{{$ctrl.value}}</div>
           <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': !$ctrl.isorg}">
-          <div class="no-data" ng-show="!$ctrl.isorg">{{$ctrl.value}}</div>
-          <div class="call-counts" ng-show="!$ctrl.isorg && $ctrl.value !== $ctrl.parentcntrl.noData">{{$ctrl.value}}</div>
         </div>
       </section>
       <i class='icon icon-info-outline media-flip-icon' ng-click="isFlipped=true"></i>

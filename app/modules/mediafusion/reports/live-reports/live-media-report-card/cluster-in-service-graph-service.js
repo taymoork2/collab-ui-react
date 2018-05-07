@@ -10,6 +10,7 @@
     var vm = this;
     vm.liveReportDiv = 'liveReportDiv';
     vm.exportDiv = 'cs-export-div';
+    vm.resize = resize;
     return {
       setClusterInService: setClusterInService,
     };
@@ -108,10 +109,25 @@
         b.innerHTML = event.item.category + ': <b>' + event.item.values.value + '</b>';
         b.style.display = 'block';
       });*/
+      vm.parentchart = chart;
       return chart;
     }
     function formatLabel(label) {
       return label + '%';
+    }
+    function resize() {
+      AmCharts.addInitHandler(function (chart) {
+        // set base values
+        //var categoryWidth = 25;
+
+        // calculate bottom margin based on number of data points
+        //var chartHeight = categoryWidth * chart.dataProvider.length;
+
+        // set the value
+        chart.div.style.height = 400 + 'px';
+        chart.div.style.width = 250 + 'px';
+      }, ['serial']);
+      setClusterInService();
     }
   }
 })();
