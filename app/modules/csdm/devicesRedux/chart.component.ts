@@ -12,7 +12,6 @@ class Chart implements ng.IComponentController {
   public chart: AmCharts.AmChart;
   public legend: IBuckedDataChart[] = [];
   private baseChart = 'chartArea';
-  public chartTitle: string;
 
   private Colors = require('modules/core/config/colors').Colors;
 
@@ -29,8 +28,7 @@ class Chart implements ng.IComponentController {
 
   }
 
-  public $onChanges(onChangesObj: IOnChangesObject) {
-    onChangesObj = onChangesObj;
+  public $onChanges(_onChangesObj: IOnChangesObject) {
     if (!this.searchResult) {
       return;
     }
@@ -39,16 +37,8 @@ class Chart implements ng.IComponentController {
     });
     this.updateGraph(this.pickAggregate(this.currentAggregations, 'connectionStatus'), this.searchResult.hits.total,
       'key', 'docCount');
-    this.setChartTitle(this.searchResult);
   }
 
-  private setChartTitle(data?: SearchResult) {
-    if (!data || !data.hits) {
-      this.chartTitle = '';
-      return;
-    }
-    this.chartTitle = this.$translate.instant('spacesPage.chart.total', { totalValue: data.hits.total });
-  }
 
   private updateGraph(incommingData?: BucketHolder, totalHits: number = 0, _titleField = 'name', valueField = 'value') {
     if (!incommingData) {
@@ -78,7 +68,7 @@ class Chart implements ng.IComponentController {
       marginTop: 0,
       autoMargins: false,
       pullOutRadius: '0%',
-      innerRadius: '32%',
+      innerRadius: '82%',
       theme: 'light',
       allLabels: [],
       balloon: { enabled: false },
