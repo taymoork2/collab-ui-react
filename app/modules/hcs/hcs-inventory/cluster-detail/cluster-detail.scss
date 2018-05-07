@@ -4,16 +4,17 @@
 .section__content.node__info {
   width: 75%;
   .cs-card article {
-    height: rem-calc(200);
+    min-height: rem-calc(200);
     header.node-header {
       padding: 1rem 0.5rem 0.5rem 1.25rem;
+      border-bottom: 1px solid $gray-light-3;
       .node-name {
         padding-left: 0rem;
         color: $gray-dark-4;
       }
       .node-type {
         color: $gray-base;
-        .columns.medium-2 {
+        .columns.medium-3 {
           padding-left: 0rem;
         }
       }
@@ -30,7 +31,7 @@
       .card-section {
         .card-section-item {
           font-weight: 200;
-          .node-sftp {
+          .node-sftp-container {
             padding-left: 0rem;
             color: $gray-dark-4;
           }
@@ -44,7 +45,7 @@
               color: $color-primary;
             }
           }
-          .node-ip {
+          .node-sftp {
             color: $gray-base;
           }
         }
@@ -87,4 +88,8 @@
       }
     }
   }
+}
+
+.hcs-container.cs-form__section:last-child {
+  padding-bottom: rem-calc(16);
 }

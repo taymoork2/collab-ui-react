@@ -11121,6 +11121,7 @@
       },
       "nodeStatus": {
         "active":"Active",
+        "inactive": "Inactive",
         "needsAcceptance":"Needs acceptance",
         "needsAssigned":"Needs assigned"
       },
@@ -11197,7 +11198,7 @@
       "tarFile": ".tar file",
       "title": "Install Files",
       "nofileTitle": "No Agent Install Files",
-      "nofileDescription": "Get stated by creating an Agent Install File. These files can take some time to become available"
+      "nofileDescription": "Get started by creating an Agent Install File. These files can take some time to become available"
     },
     "license": {
       "all": "All",

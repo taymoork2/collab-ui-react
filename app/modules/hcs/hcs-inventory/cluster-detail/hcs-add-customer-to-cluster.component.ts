@@ -28,6 +28,9 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   ) {}
 
   public cancel() {
+    this.addCustomerToCluster({
+      customerName: undefined,
+      softwareProfile: undefined});
     this.dismiss();
   }
 

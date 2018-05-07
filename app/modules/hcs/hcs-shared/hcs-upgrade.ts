@@ -147,3 +147,18 @@ export interface IHcsCustomerClusters {
   clusters: IHcsClusterSummaryItem[];
   paging: IHcsPaging;
 }
+
+export interface ISftpServer {
+  uuid: string;
+  name: string;
+  server: string;
+  path: string;
+  userName: string;
+  url: string;
+}
+
+export interface ISftpServersObject {
+  url: string;
+  sftpServers: ISftpServer[];
+  paging: IHcsPaging;
+}

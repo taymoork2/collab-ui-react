@@ -18,9 +18,12 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
   public sftpLocationSelected: ISelectOption;
   public sftpLocations: ISelectOption[];
   public node: IHcsNode;
+  public sftpSelectPlaceholder: string;
 
   /* @ngInject */
-  constructor() {}
+  constructor(
+    private $translate: ng.translate.ITranslateService,
+  ) {}
 
   public cancel() {
     this.dismiss();
@@ -35,6 +38,7 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
     } else {
       this.sftpLocationSelected = { label: '', value: '' };
     }
+    this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
   }
 
   public save() {

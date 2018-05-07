@@ -132,7 +132,9 @@ export class HcsUpgradeService {
   public listSftpServers(): ng.IPromise <any> {
     return this.sftpServerResource.get({
       partnerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise.then(response => {
+      return response;
+    });
   }
 
   public getCluster(_clusterId: string): ng.IPromise<IHcsCluster> {
