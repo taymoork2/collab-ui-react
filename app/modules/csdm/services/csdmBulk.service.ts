@@ -10,7 +10,7 @@ export class CsdmBulkService {
 
   /* @ngInject */
   constructor(private $http: IHttpService, private $q: IQService, private UrlConfig,
-              private DeviceSearchTranslator: SearchTranslator, private Authinfo) {
+              private DeviceSearchTranslator: SearchTranslator, private Authinfo, private FileSaver) {
 
   }
 
@@ -36,6 +36,30 @@ export class CsdmBulkService {
           : { type: 'longRun', sleepTimeInMilliSeconds: 111 },
         async: true,
       });
+  }
+
+  public export(deviceUris: string[], fields: string[]): IPromise<boolean> {
+    const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/bulk/export/';
+    const exportCanceler = this.$q.defer();
+    return this.$http.post(url, {
+      fields: fields,
+      deviceUris: deviceUris,
+    }, {
+      responseType: 'arraybuffer',
+      headers: {
+        Accept: 'text/csv',
+      }
+      ,
+      timeout: exportCanceler.promise,
+    }).then((response) => {
+      const data = response.data;
+      const fileName = 'devices.csv';
+      const file = new Blob([data], {
+        type: 'text/csv',
+      });
+      this.FileSaver.saveAs(file, fileName);
+      return true;
+    });
   }
 
   public getJobStatus(jobUrl: string): IHttpPromise<IBulkResponse> {

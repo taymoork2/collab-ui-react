@@ -17,7 +17,7 @@
             <input id="searchFilter"
                    type="text"
                    ng-model="$ctrl.searchStr"
-                   ng-blur="$ctrl.onBlur();"
+                   ng-blur="$ctrl.onBlur($event);"
                    ng-keyup="$ctrl.onKeySearch($event)"
                    placeholder="{{::'webexReports.placeholder-text' | translate}}" >
             <i class="icon icon-exit-outline clear" ng-click="$ctrl.searchStr = ''; $ctrl.store.searchStr = ''; $ctrl.gridData = []; "></i>
@@ -37,6 +37,7 @@
               aria-label="{{$ctrl.errMsg.datePickerAriaLabel}}">
 
               <cs-datepicker
+                ng-if="$ctrl.startDate"
                 ng-model="$ctrl.startDate"
                 placeholder="{{::'webexReports.placeholder-date' | translate}}"
                 first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
@@ -48,6 +49,7 @@
           <div class="tk-example-datepicker end-time">
             <div class="example-indent" ng-click="$ctrl.onChangeDate()">
               <cs-datepicker
+                ng-if="$ctrl.endDate"
                 ng-model="$ctrl.endDate"
                 placeholder="{{::'webexReports.placeholder-date' | translate}}"
                 first-enabled-date="{{$ctrl.dateRange.end.firstEnableDate}}"

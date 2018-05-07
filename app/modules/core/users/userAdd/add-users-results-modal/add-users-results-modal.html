@@ -4,8 +4,11 @@
   custom-finish="$ctrl.goToUsersPage()"
   custom-finish-l10n-label="{{:: $ctrl.customFinishL10nLabel }}">
   <cr-add-users-results
+    convert-users-flow="$ctrl.convertUsersFlow"
     num-added-users="$ctrl.numAddedUsers"
     num-updated-users="$ctrl.numUpdatedUsers"
+    converted-users="$ctrl.convertedUsers"
+    pending-users="$ctrl.pendingUsers"
     results="$ctrl.results"
     ></cr-add-users-results>
 </multi-step-modal>

@@ -191,6 +191,10 @@ require('./_user-add.scss');
     function initResults() {
       $scope.numUpdatedUsers = 0;
       $scope.numAddedUsers = 0;
+      // F7208
+      $scope.convertedUsers = [];
+      $scope.pendingUsers = [];
+
       $scope.results = {
         resultList: [],
         errors: [],
@@ -201,6 +205,10 @@ require('./_user-add.scss');
     function populateScopeBindingsFromAggregateResult(aggregateResult) {
       $scope.numUpdatedUsers = aggregateResult.numUpdatedUsers;
       $scope.numAddedUsers = aggregateResult.numAddedUsers;
+      // F7208
+      $scope.convertedUsers = aggregateResult.convertedUsers;
+      $scope.pendingUsers = aggregateResult.pendingUsers;
+
       $scope.results.resultList = aggregateResult.results.resultList;
       $scope.results.errors = aggregateResult.results.errors;
       $scope.results.warnings = aggregateResult.results.warnings;
@@ -1740,6 +1748,8 @@ require('./_user-add.scss');
           convertUsersFlow: OnboardStore['users.convert'].convertUsersFlow,
           numUpdatedUsers: $scope.numUpdatedUsers,
           numAddedUsers: $scope.numAddedUsers,
+          convertedUsers: $scope.convertedUsers,
+          pendingUsers: $scope.pendingUsers,
           results: $scope.results,
         });
       }).finally(function () {

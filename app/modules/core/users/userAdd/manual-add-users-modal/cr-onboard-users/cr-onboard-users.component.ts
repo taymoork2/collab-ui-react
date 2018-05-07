@@ -68,8 +68,6 @@ export class CrOnboardUsersController implements ng.IComponentController {
           this.validateProposedUser(e);
         }
         this.sortTokens();
-        // TODO (f3745): rm this if determined not-needed
-        // wizardNextText();
         this.checkPlaceholder();
       },
       edittoken: (e) => {
@@ -85,8 +83,6 @@ export class CrOnboardUsersController implements ng.IComponentController {
           (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
         }).then(() => {
           this.sortTokens();
-          // TODO (f3745): rm this if determined not-needed
-          // wizardNextText();
           this.checkPlaceholder();
         });
       },
@@ -119,8 +115,6 @@ export class CrOnboardUsersController implements ng.IComponentController {
 
   public clearPanel(): void {
     this.resetUsersfield();
-    // TODO (f3745): rm this if determined not-needed
-    //initResults();
   }
 
   private resetUsersfield(): void {

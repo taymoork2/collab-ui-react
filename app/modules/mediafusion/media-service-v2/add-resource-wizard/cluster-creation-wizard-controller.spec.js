@@ -13,6 +13,7 @@ describe('ClusterCreationWizardController', function () {
       'HybridMediaEmailNotificationService',
       'HybridMediaReleaseChannelService',
       'HybridMediaUpgradeScheduleService',
+      'QosSectionService',
       'SipRegistrationSectionService',
       'TrustedSipSectionService',
       'VideoQualitySectionService'
@@ -24,6 +25,7 @@ describe('ClusterCreationWizardController', function () {
     spyOn(this.HybridMediaEmailNotificationService, 'saveEmailSubscribers').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaReleaseChannelService, 'saveReleaseChannel').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridMediaUpgradeScheduleService, 'updateUpgradeScheduleAndUI').and.returnValue(this.$q.resolve({}));
+    spyOn(this.QosSectionService, 'setQos').and.returnValue(this.$q.resolve({}));
     spyOn(this.SipRegistrationSectionService, 'saveSipTrunkUrl').and.returnValue(this.$q.resolve({}));
     spyOn(this.TrustedSipSectionService, 'saveSipConfigurations').and.returnValue(this.$q.resolve({}));
     spyOn(this.VideoQualitySectionService, 'setVideoQuality').and.returnValue(this.$q.resolve({}));
@@ -41,6 +43,7 @@ describe('ClusterCreationWizardController', function () {
         HybridMediaEmailNotificationService: this.HybridMediaEmailNotificationService,
         HybridMediaReleaseChannelService: this.HybridMediaReleaseChannelService,
         HybridMediaUpgradeScheduleService: this.HybridMediaUpgradeScheduleService,
+        QosSectionService: this.QosSectionService,
         SipRegistrationSectionService: this.SipRegistrationSectionService,
         TrustedSipSectionService: this.TrustedSipSectionService,
         VideoQualitySectionService: this.VideoQualitySectionService,
@@ -48,6 +51,7 @@ describe('ClusterCreationWizardController', function () {
         yesProceed: true,
         hasMfCascadeBwConfigToggle: true,
         hasMfClusterWizardFeatureToggle: true,
+        hasMfFirstTimeCallingFeatureToggle: true,
         hasMfFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
       });

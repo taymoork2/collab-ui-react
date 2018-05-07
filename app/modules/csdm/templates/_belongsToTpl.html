@@ -6,6 +6,6 @@
     <i class="icon icon-user"></i>
   </span>
   <img ng-if="row.entity.accountType === 'PERSON' && row.entity.thumbnailUrl" class="user-img account_avatar" ng-src="{{row.entity.thumbnailUrl}}"/>
-  <span class="belongs-to" title="{{row.entity.displayName}}" ng-bind-html="row.entity.displayName | highlightFromSearch:grid.appScope.searchObject():'displayname'">
+  <span class="belongs-to column-text" title="{{row.entity.displayName}}" ng-bind-html="row.entity.displayName | highlightFromSearch:grid.appScope.searchObject():'displayname'">
   </span>
 </div>

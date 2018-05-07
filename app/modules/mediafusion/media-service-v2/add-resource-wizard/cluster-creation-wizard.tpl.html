@@ -24,7 +24,7 @@
     mf-toggle="clusterCreationWizard.hasMfFeatureToggle"
     mf-trusted-toggle="clusterCreationWizard.hasMfSIPFeatureToggle"
     mf-cascade-toggle="clusterCreationWizard.hasMfCascadeBwConfigToggle"
-    mf-wizard-toggle="clusterCreationWizard.hasMfClusterWizardFeatureToggle"
+    mf-first-time-toggle="clusterCreationWizard.hasMfFirstTimeCallingFeatureToggle"
     on-sip-settings-update="clusterCreationWizard.sipSettingsUpdated(response)"
     on-sip-settings-enabled-check="clusterCreationWizard.sipSettingsEnabledCheck(response)"
     ng-show="clusterCreationWizard.currentStep === 3">
@@ -47,9 +47,15 @@
     on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
+  <qos-section 
+    is-wizard="true"
+    on-qos-update="clusterCreationWizard.qosUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 5">
+  </qos-section>
   <cluster-creation-final
     cluster="clusterCreationWizard.clusterName"
     host="clusterCreationWizard.hostName"
+    mf-first-time-toggle="clusterCreationWizard.hasMfFirstTimeCallingFeatureToggle"
     ng-show="clusterCreationWizard.currentStep === 6">
   </cluster-creation-final>
   <hybrid-media-entitlement-failure

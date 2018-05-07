@@ -545,6 +545,9 @@
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);
       },
+      isBroadCloud: function () {
+        return isEntitled(Config.entitlements.broadCloud);
+      },
       isFusion: function () {
         return isEntitled(Config.entitlements.fusion_mgmt);
       },

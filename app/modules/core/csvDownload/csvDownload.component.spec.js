@@ -159,7 +159,7 @@ describe('csvDownload', function () {
         type: 'user',
         filename: 'exported_users.csv',
       }]);
-      expect(this.view.find('span:first')).toHaveAttr('tooltip', 'usersPage.csvBtnTitle');
+      expect(this.view.find('icon-tooltip')).toHaveAttr('tt-tooltip-text', 'usersPage.csvBtnTitle');
     });
   });
 

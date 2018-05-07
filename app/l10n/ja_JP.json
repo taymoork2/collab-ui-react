@@ -1832,7 +1832,7 @@
     "lastUpdated": "前回の同期",
     "notifications": "通知",
     "todo": "To-do",
-    "setUpYourTrial": "高度な Cisco Spark 通話のセットアップを行い、トライアルを開始します。",
+    "setUpYourTrial": "高度な Cisco Webex 通話のセットアップを行い、トライアルを開始します。",
     "beginTrial": "トライアルの開始",
     "status": "ステータス",
     "statusGreen": "ステータス 緑",
@@ -1841,16 +1841,16 @@
     "spark": "Cisco Spark",
     "sso": "シングル サインオン (SSO)",
     "goSetupCloudSipUri": "ここに移動してこの構成を完了してください",
-    "setupCloudSipUriMessage": "組織の Cisco Spark SIP アドレスが定義されていません。一部の通話機能が正しく機能するために、この値が必要です。",
+    "setupCloudSipUriMessage": "組織の Cisco Webex SIP アドレスが定義されていません。一部の通話機能が正しく機能するために、この値が必要です。",
     "dirsync": "ディレクトリ同期",
-    "setUpCalendarService": "ハイブリッド カレンダーを使用できます。ミーティングのロケーションに @WebEx または @Spark を使用すると、参加方法の詳細が挿入されます。また、Cisco Spark アプリに今後予定されているミーティングとして表示され、ワンボタン機能 (OBTP: One Button To Push) を使用してミーティングに参加できます。",
-    "setUpGoogleCalendarService": "ハイブリッド カレンダー (Google) を使用できます。ミーティングのロケーションに @WebEx または @Spark を使用すると、参加方法の詳細が挿入されます。また、Cisco Spark アプリに今後予定されているミーティングとして表示され、ワンボタン機能 (OBTP: One Button To Push) を使用してミーティングに参加できます。",
-    "setUpCallAwareService": "通話サービス認識を利用することができます。ユーザーは通話中でも Cisco Spark クライアントから簡単にデスクトップを共有することができます。",
-    "setUpCallConnectService": "Call Service Connect を利用することができます。ユーザーは Cisco Spark クライアントで会社の電話を受けたり、社内の他の電話にかけたりすることができます。",
-    "setUpHybridMessaging": "ハイブリッドメッセージサービスを利用することができます。Cisco Spark を IM &amp; プレゼンスサービスに接続すると、Cisco Spark ユーザーと Cisco Jabber ユーザーとの間でダイレクトメッセージを送受信できるようになります。",
+    "setUpCalendarService": "ハイブリッド カレンダーを使用できます。ミーティングのロケーションに @WebEx または @Spark を使用すると、参加方法の詳細が挿入されます。また、Cisco Webex Teams アプリに今後予定されているミーティングとして表示され、ワンボタン機能 (OBTP: One Button To Push) を使用してミーティングに参加できます。",
+    "setUpGoogleCalendarService": "ハイブリッド カレンダー (Google) を使用できます。ミーティングのロケーションに @WebEx または @Spark を使用すると、参加方法の詳細が挿入されます。また、Cisco Webex Teams アプリに今後予定されているミーティングとして表示され、ワンボタン機能 (OBTP: One Button To Push) を使用してミーティングに参加できます。",
+    "setUpCallAwareService": "通話サービス認識を利用することができます。ユーザーは通話中でも Cisco Webex クライアントから簡単にデスクトップを共有することができます。",
+    "setUpCallConnectService": "Call Service Connect を利用することができます。ユーザーは Cisco Webex クライアントで会社の電話を受けたり、社内の他の電話にかけたりすることができます。",
+    "setUpHybridMessaging": "ハイブリッドメッセージサービスを利用することができます。Cisco Webex Teams を IM &amp; プレゼンスサービスに接続すると、Cisco Webex Teams ユーザーと Cisco Jabber ユーザーとの間でダイレクトメッセージを送受信できるようになります。",
     "setUpDevices": "デバイスを受け取り次第、アクティベートします。",
     "setUpSharedDevices": "ビデオ会議端末を受け取り次第、アクティベートします。",
-    "setUpSparkBoardDevices": "Cisco Spark Board を受け取り次第、アクティベートします。",
+    "setUpSparkBoardDevices": "Cisco Webex Board を受け取り次第、アクティベートします。",
     "setUpPMRDescription": "パーソナル会議室機能があなたのサブスクリプションに追加されました。",
     "setUpPMRUrl": "今すぐ PMR をセットアップ",
     "setupPMRsiteNameModalTitle": "パーソナル会議室のセットアップ",
@@ -1860,10 +1860,10 @@
     "setUpHybridDataSecurity": "ハイブリッド データ セキュリティを使用してオンプレミスのセキュリティ領域を作成します。",
     "careLicenseMsgMissingText": "Care サービスにはメッセージ機能が必須です。メッセージを有効にするには、",
     "careLicenseCallMissingText": "Care サービスには通話機能が必須です。通話を有効にするには、",
-    "careLicenseCallMissingTextToggle": "Spark Care 音声機能を使用するには、パートナーに連絡して Spark コールを有効にするか、ハイブリッド通話およびエンタープライズ プライベート トランキングをセットアップしてください。",
+    "careLicenseCallMissingTextToggle": "Cisco Webex Care 音声機能を使用するには、パートナーに連絡して Cisco Webex コールを有効にするか、ハイブリッド通話およびエンタープライズ プライベート トランキングをセットアップしてください。",
     "careLicenseMsgAndCallMissingText": "Care サービスでチャットや音声によるやり取りを行うには、それぞれメッセージと通話機能が必須です。メッセージと通話を有効にするには、",
     "careLicenseLinkText": "パートナーまたは Cisco セールスに連絡してください。",
-    "proPackNotification": "Pro Pack を使用すると、Spark Control Hub の能力を最大限に活用できます。",
+    "proPackNotification": "Pro Pack を使用すると、Cisco Webex Control Hub の能力を最大限に活用できます。",
     "callServiceHighAvailability": "ハイブリッド通話サービスは構成されていますが、1 つまたは複数のクラスターにおいて、通話コネクタを実行する単一のノードが使用されています。このような展開は高い可用性を実現するための必要条件を満たしていません。",
     "callServiceHighAvailabilityLink": "ドキュメントを開く",
     "setUpAllCalendarsOnlyExpresswayBasedIsSetup": "Google カレンダーまたは Office365 と共に使用してください。",
@@ -1873,8 +1873,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Exchange または Office365 と共に使用してください。",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Exchange と共に使用してください。",
     "setUpAllCalendarsNoneIsSetup": "Exchange、Google カレンダーまたは Office365 と共に使用してください。",
-    "setUpCarePrimaryNotification": "あなたの組織は Cisco Spark Care が有効になっています。",
-    "setUpCareSecondaryNotification": "Cisco Spark Care がまだセットアップされていないようです。",
+    "setUpCarePrimaryNotification": "あなたの組織は Cisco Webex Care が有効になっています。",
+    "setUpCareSecondaryNotification": "Cisco Webex Care がまだセットアップされていないようです。",
     "setUpCareLinkText": "Care サービスのセットアップ",
     "autoAssignText": "自動割り当てテンプレートを使用して効率的にライセンスを管理できます。",
     "autoAssignLink": "今すぐセットアップ"
@@ -6116,11 +6116,11 @@
       "deskPhone": "卓上電話",
       "deskPhoneExamples": "例: Cisco 8845、8865 および 8800",
       "deskPhoneExamplesExtra": "例: 8845、8865、8800 および ATA ポート",
-      "deskPhoneLicenseWarning": "卓上電話を使用する場合、組織は Cisco Spark 通話ライセンスを購入することが求められます。詳細は、パートナーまたは Cisco セールスにお問い合わせください。",
-      "otherCiscoDevice": "その他の Cisco デバイス",
+      "deskPhoneLicenseWarning": "卓上電話を使用する場合、組織は Cisco Webex 通話ライセンスを購入することが求められます。詳細は、パートナーまたは Cisco セールスにお問い合わせください。",
+      "otherCiscoDevice": "その他の Cisco Webex デバイス",
       "roomSystem": "会議室デバイス",
-      "roomSystemExamplesExpanded": "例: Cisco Spark Board、音声、共有、Cisco Spark Room Kit、DX、MX および SX シリーズ",
-      "roomSystemLicenseWarning": "会議室システムを使用する場合、組織は最初に Cisco Spark ビデオ会議端末ライセンスを購入することが求められます。詳細は、パートナーまたは Cisco セールスにお問い合わせください。"
+      "roomSystemExamplesExpanded": "例: Cisco Webex Board、音声、共有、Cisco Webex Room Kit、DX、MX および SX シリーズ",
+      "roomSystemLicenseWarning": "会議室システムを使用する場合、組織は最初に Cisco Webex ビデオ会議端末ライセンスを購入することが求められます。詳細は、パートナーまたは Cisco セールスにお問い合わせください。"
     },
     "chooseAccountType": {
       "assignToUserOrPlace": "ユーザーまたは場所に割り当てますか?",
@@ -6182,11 +6182,11 @@
     },
     "editServices": {
       "whichServices": "この場所ではどのサービスが必要ですか?",
-      "sparkOnly": "Cisco Spark のみ (デフォルト)",
-      "sparkOnlyHelp": "Cisco Spark アプリとペアリングするか、SIP アドレスを使用して、この場所での発信および着信が可能です。",
-      "sparkCall": "Cisco Spark + Cisco Spark 通話",
-      "sparkCallHelp": "アプリのペアリング、SIP ダイヤル、Cisco Spark 対応メディア プロバイダーからの追加 PSTN サービス。",
-      "sparkCallConnect": "Cisco Spark + Cisco Spark Hybrid Call Service Connect",
+      "sparkOnly": "Cisco Webex Teams のみ (デフォルト)",
+      "sparkOnlyHelp": "Cisco Webex Teams アプリとペアリングするか、SIP アドレスを使用して、この場所での発信および着信が可能です。",
+      "sparkCall": "Webex Teams + Webex 通話",
+      "sparkCallHelp": "アプリのペアリング、SIP ダイヤル、Cisco Webex 対応メディア プロバイダーからの追加 PSTN サービス。",
+      "sparkCallConnect": "Webex Teams + Webex Hybrid Call Service Connect",
       "sparkCallConnectHelp": "アプリのペアリング、SIP ダイヤル、および既存のプレミスからの 追加の PSTN サービス (Unified CM、Business Edition) または HCS パートナー。",
       "servicesSaved": "サービスは正常に更新されました",
       "calendar": "カレンダー",
@@ -7721,9 +7721,9 @@
     "bigOrgSearchText": "1000 件以上の場所が存在するため、場所のリストは表示されません",
     "actionHeader": "アクション",
     "servicesHeader": "サービス",
-    "sparkCall": "Cisco Spark + Cisco Spark 通話",
-    "sparkOnly": "Cisco Spark のみ",
-    "sparkCallConnect": "Cisco Spark + Cisco Spark ハイブリッド通話",
+    "sparkCall": "Cisco Webex Teams + Cisco Webex 通話",
+    "sparkOnly": "Cisco Webex Teams のみ",
+    "sparkCallConnect": "Cisco Webex Teams + Cisco Webex ハイブリッド通話",
     "placeAdd": "場所の追加",
     "placesDefinition": "特定のユーザーに所有されていないデバイスを含む物理的な場所 (例えばビデオ会議端末のある会議室、または共有電話のあるレセプション)。",
     "placesUses": "場所には共有デバイスを含むことができます。ここで自分の場所と、それぞれの場所に所属するデバイスと構成を見ることができます。",
@@ -8649,23 +8649,22 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Cisco Spark Care サービスを利用して顧客とコラボレーションを行います。構成ウィザードを使用して Care インターフェイスをカスタマイズしてください。"
+        "notEnabledText": "Cisco Webex Care サービスを利用して顧客とコラボレーションを行います。構成ウィザードを使用して Care インターフェイスをカスタマイズしてください。"
       },
       "roomSystem": {
         "title": "会議室デバイス",
         "currentTitle": "今週のオンライン",
         "previousTitle": "先週:",
         "enableDevices": "デバイスの有効化",
-        "notEnabledText": "会議室デバイスは Cisco Spark アプリとシームレスに連携しています。"
+        "notEnabledText": "会議室デバイスは Cisco Webex Teams アプリとシームレスに連携しています。"
       },
       "hybrid": {
         "title": "ハイブリッド サービス",
         "googleCalendarError": "Google カレンダーのためのサービスに到達できませんでした。このセッション中に報告されたサービスのステータスが不正確である可能性があります。",
         "o365CalendarError": "Office 365 のためのサービスに到達できませんでした。このセッション中に報告されたサービスのステータスが不正確である可能性があります。",
-        "herculesError": "Cisco Spark ハイブリッド サービスのためのサービスに到達できませんでした。",
+        "herculesError": "Cisco Webex ハイブリッド サービスのためのサービスに到達できませんでした。",
         "herculesErrorAuthentication": "顧客組織におけるパートナー管理者のアクセス権を検証できませんでした。キャッシングに問題がある可能性があります。いったんログアウトしてから再度ログインしてみるか、引き続き問題が発生する場合は Cisco サポートに連絡してください。",
-        "notEnabledText": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Spark Platform に統合できるようになります。",
-        "notEnabledTextNew": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Spark Platform に統合できるようになります。",
+        "notEnabledText": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Webex Platform に統合できるようになります。",
         "notEnabledActionText": "さらに詳しく",
         "serviceHeader": "ステータス",
         "services": {
@@ -10743,11 +10742,11 @@
     "banner": {
       "pre": "WebEx ユーザー：",
       "link": "ユーザーをリンクする",
-      "post": "Cisco Spark - WebEx ミーティングを体験する新しい方法"
+      "post": "Cisco Webex Teams - WebEx ミーティングを体験する新しい方法"
     },
     "notification": {
       "linkText": "始めましょう",
-      "infoText": "Cisco Spark にアカウントをリンクする - WebEx ミーティングを体験する新しい方法"
+      "infoText": "Cisco Webex Teams にアカウントをリンクする - WebEx ミーティングを体験する新しい方法"
     },
     "errors": {
       "setAccountLinkingModeError": "アカウントリンクモードの設定に失敗しました : {{message}}",

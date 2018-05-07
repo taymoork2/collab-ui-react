@@ -7,9 +7,12 @@
 </div>
 
 <div ng-show="$ctrl.isIframeLoaded" id="iframeContainer" name="iframeContainer" class="fullSize">
-  <iframe id="hybridMediaIframeContainer" name="hybridMediaIframeContainer" load-event on-load-event="$ctrl.onIframeLoad({elem: elem})"
+  <iframe id="hybridMediaIframeContainer" ng-show="$ctrl.noResource" name="hybridMediaIframeContainer" load-event on-load-event="$ctrl.onIframeLoad({elem: elem})"
     class="fullSize mfSize" frameborder="0">
   </iframe>
+  <div ng-show="!$ctrl.noResource">
+      <p class="h3 metrics-loading-data no-resource-msg" translate="reportsPage.notFound"></p>
+  </div>
   <form id="iframeForm" name="$ctrl.iframeForm" action={{$ctrl.data.trustIframeUrl}} method="get" hidden target="hybridMediaIframeContainer">
     <!--{{$ctrl.data.appId}}  basic_hybrid_media_engagement_v1 basic_hms_full_v1-->
     <input id="appid" name="appid" type="hidden" value={{$ctrl.data.appId}} />
@@ -27,3 +30,4 @@
     </button>
   </form>
 </div>
+

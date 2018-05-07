@@ -5,7 +5,7 @@ export interface IMatterJsonData {
   createdBy: string;
   caseId: string;
   creationDate: Date;
-  releaseDate?: Date;
+  dateReleased?: Date;
   matterName: string;
   matterDescription: string;
   matterState?: MatterState;

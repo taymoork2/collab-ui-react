@@ -2,7 +2,7 @@ import { MatterState } from './legal-hold.enums';
 import { IMatterJsonData } from './legal-hold.interfaces';
 
 export class Matter {
-  public releaseDate: Date | undefined;
+  public dateReleased: Date | undefined;
   public state: MatterState = MatterState.ACTIVE;
   public userList?: string[];
 
@@ -13,11 +13,11 @@ export class Matter {
     public creationDate: Date,
     public name: string,
     public description: string,
-    releaseDate?: Date,
+    dateReleased?: Date,
   ) {
     this.creationDate = creationDate;
-    if (releaseDate) {
-      this.releaseDate = this.releaseDate;
+    if (dateReleased) {
+      this.dateReleased = this.dateReleased;
       this.state = MatterState.RELEASED;
     } else {
       this.state = MatterState.ACTIVE;
@@ -30,7 +30,7 @@ export class Matter {
       caseId: this.caseId,
       createdBy: this.createdBy,
       creationDate: this.creationDate,
-      releaseDate: this.releaseDate,
+      dateReleased: this.dateReleased,
       matterName: this.name,
       matterDescription: this.description,
       matterState: this.state,
@@ -51,8 +51,8 @@ export class Matter {
     return matter;
   }
 
-  public releaseMatter(releaseDate: Date) {
+  public releaseMatter(dateReleased: Date) {
     this.state = MatterState.RELEASED;
-    this.releaseDate = releaseDate;
+    this.dateReleased = dateReleased;
   }
 }

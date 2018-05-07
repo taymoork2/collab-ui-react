@@ -95,6 +95,7 @@ export class Config {
 
   public readonly entitlements = {
     huron: 'ciscouc',
+    broadCloud: 'ciscobc',
     squared: 'webex-squared',
     fusion_uc: 'squared-fusion-uc',
     fusion_cal: 'squared-fusion-cal',
@@ -529,7 +530,7 @@ export class Config {
   };
 
   // These states do not require a role/service check
-  public readonly publicStates = ['unauthorized', '404', 'csadmin'];
+  public readonly publicStates = ['unauthorized', '404', 'csadmin', 'helpdesk-admin-elevation'];
   public readonly ciscoOnly = ['billing'];
 
   // rolestates are modified in the constructor and can't be readonly

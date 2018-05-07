@@ -1,0 +1,28 @@
+<div class="cr-csv-download" ng-hide="$ctrl.isHidden">
+  <div>
+    <a href
+      ng-click="$ctrl.downloadCsv()"
+      aria-label="{{::$ctrl.downloadTranslation}}">
+      <span ng-if="$ctrl.anchorText">{{::$ctrl.anchorText}}</span>
+      <span class="icon-container"
+        ng-if="!$ctrl.anchorText"
+        tabindex="0"
+        aria-label="{{$ctrl.downloadTranslation}}">
+        <i ng-show="!$ctrl.downloading"
+          class="icon"
+          ng-class="$ctrl.iconClass"></i>
+      </span>
+    </a>
+  </div>
+  <div class="status-container"
+    ng-if="$ctrl.downloading"
+    tooltip-placement="bottom"
+    tooltip="{{$ctrl.downloadingMessage}}"
+    tooltip-animation="false"
+    tooltip-append-to-body="true"
+    tooltip-trigger="focus mouseenter"
+    aria-label="{{$ctrl.downloadingMessage}}">
+    <i class="icon icon-spinner"></i>
+    <span class='status-message'>{{::$ctrl.statusMessage}}</span>
+  </div>
+</div>

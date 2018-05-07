@@ -138,6 +138,10 @@
       return service._helpers.mkAttrsSwValExpr(['userName', 'name.givenName', 'name.familyName', 'displayName'], searchStr);
     }
 
+    function mkEmailEqualsWithExpr(searchStr) {
+      return service._helpers.mkAttrEqValsExpr('userName', searchStr);
+    }
+
     /**
      * Helper function for combining multiple CI query expressions into one.
      *
@@ -156,6 +160,7 @@
       var defaultExpr = CI_QUERY.ACTIVE_EQ_TRUE;
 
       var nameStartsWith = _.get(filterParams, 'nameStartsWith');
+      var emailEquals = _.get(filterParams, 'emailEquals');
       var allRoles = _.get(filterParams, 'allRoles');
       var allEntitlements = _.get(filterParams, 'allEntitlements');
       var useUnboundedResultsHack = _.get(filterParams, 'useUnboundedResultsHack');
@@ -170,6 +175,10 @@
 
       if (nameStartsWith && isAdequateSearchStr) {
         exprList.push(mkNameStartsWithExpr(nameStartsWith));
+      }
+
+      if (emailEquals) {
+        exprList.push(mkEmailEqualsWithExpr(emailEquals));
       }
 
       if (allRoles) {

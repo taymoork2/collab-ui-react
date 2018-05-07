@@ -1,5 +1,6 @@
 import { Analytics } from 'modules/core/analytics';
 import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.model';
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.service';
 import { DirSyncService } from 'modules/core/featureToggle/dirSync.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IOnboardScopeForUsersConvert, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
@@ -17,24 +18,29 @@ interface ICsvRow {
   status: string;
 }
 
+const DELAY_100_MS = 100;
+const DELAY_200_MS = 200;
+
 export class CrConvertUsersModalController implements ng.IComponentController {
   public convertGridOptions: uiGrid.IGridOptions;
   public dismiss: Function;
   public gridApi: uiGrid.IGridApi;
+  public pendingGridApi: uiGrid.IGridApi;
   public isDirSyncEnabled: boolean;
   public readOnly: boolean;
   public showSearch: boolean;
   public timer: ng.IPromise<void> | undefined;
   public unlicensed: number;
   public scopeData: IOnboardScopeForUsersConvert;
+  public showAutoAssignBanner = true;
 
   public ftF7208: boolean;
   public readonly POTENTIAL = 'potential';
   public readonly PENDING = 'pending';
   public conversionStatusMap: IConversionStatus[];
-  public daysToConvert: number = 14;  // How many days does a user have to convert their account?
+  public daysToConvert = 14;  // How many days does a user have to convert their account?
 
-  private selectedTab: string = this.POTENTIAL;
+  private selectedTab = this.POTENTIAL;
   private gridPotentialUsers: uiGrid.IGridOptions;
   private gridPendingUsers: uiGrid.IGridOptions;
 
@@ -53,6 +59,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private Analytics: Analytics,
     private Authinfo,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private DirSyncService: DirSyncService,
     private FeatureToggleService: FeatureToggleService,
     private OnboardStore: OnboardStore,
@@ -62,11 +69,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    const DELAY_100_MS = 100;
-    const DELAY_200_MS = 200;
-
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
+    this.OnboardStore.resetStatesAsNeeded(OnboardCtrlBoundUIStates.USERS_CONVERT);
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_CONVERT];
+
     this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.convertGridOptions = {
       data: undefined,
@@ -81,12 +87,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       saveSelection: true,
       onRegisterApi: (gridApi: uiGrid.IGridApi) => {
         this.gridApi = gridApi;
-        if (this.scopeData.selectedState) {
-          this.$timeout(() => {
-            this.gridApi.saveState.restore(this.$scope, this.scopeData.selectedState);
-          }, DELAY_100_MS);
-        }
-        this.$timeout(this.gridApi.core.handleWindowResize, DELAY_200_MS);
+        this.restoreConvertList();
       },
       columnDefs: [{
         field: 'displayName',
@@ -106,7 +107,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.conversionStatusMap = [
       { type: this.POTENTIAL, key: 'IMMEDIATE', cellVal: this.$translate.instant('convertUsersModal.status.immediate') },
       { type: this.POTENTIAL, key: 'DELAYED', cellVal: this.$translate.instant('convertUsersModal.status.delayed') },
-      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return _.get(user, 'meta.created'); } },
+      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return new Date(_.get(user, 'meta.accountStatusSetTime.transient')).toLocaleString(); } },
     ];
 
     // grid option data
@@ -120,13 +121,9 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       // piggy back on existing convert user code
       onRegisterApi: gridApi => {
         this.gridApi = gridApi;
-        if (this.scopeData.selectedState) {
-          this.$timeout(() => {
-            this.gridApi.saveState.restore(this.$scope, this.scopeData.selectedState);
-          }, DELAY_100_MS);
-        }
-        this.$timeout(gridApi.core.handleWindowResize, DELAY_200_MS);
+        this.restoreConvertList();
       },
+      saveRowIdentity: (rowEntity => rowEntity.userName) as any,
     };
 
     this.gridPendingUsers = {
@@ -136,13 +133,23 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       enableRowHeaderSelection: false,
       enableRowSelection: false,
       enableColumnMenus: false,
-      onRegisterApi: gridApi => {
-        this.gridApi = gridApi;
+      onRegisterApi: (gridApi) => {
+        this.pendingGridApi = gridApi;
+        if (this.scopeData.pendingGridState) {
+          this.$timeout(() => {
+            this.pendingGridApi.saveState.restore(this.$scope, this.scopeData.pendingGridState);
+          }, DELAY_100_MS);
+        }
+        this.$timeout(this.pendingGridApi.core.handleWindowResize, DELAY_200_MS);
       },
     };
 
-    this.addGridColumns(this.gridPotentialUsers);
-    this.addGridColumns(this.gridPendingUsers);
+    this.addGridColumns(this.gridPotentialUsers, true);
+    this.addGridColumns(this.gridPendingUsers, false);
+
+    this.AutoAssignTemplateService.isEnabledForOrg().then(isActivated => {
+      this.showAutoAssignBanner = !isActivated;
+    });
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasF7208GDPRConvertUser).then(supported => {
       this.ftF7208 = supported;
@@ -151,7 +158,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   // helper function for building grid options
-  private addGridColumns(grid): void {
+  private addGridColumns(grid, isPotentialList): void {
     grid.columnDefs = [{
       field: 'displayName',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
@@ -160,16 +167,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       displayName: this.$translate.instant('convertUsersModal.tableHeader.email'),
       sort: {
         direction: this.uiGridConstants.ASC,
-        priority: 0,
       },
-      sortCellFiltered: true,
     }, {
       field: 'statusText',
-      displayName: this.$translate.instant('convertUsersModal.tableHeader.status'),
-      sort: {
-        priority: 0,
-      },
-      sortCellFiltered: true,
+      displayName: this.$translate.instant((isPotentialList) ? 'convertUsersModal.tableHeader.eligible' : 'convertUsersModal.tableHeader.status'),
     }];
   }
 
@@ -246,12 +247,18 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public selectTab(tab): boolean {
-    if ([this.PENDING, this.POTENTIAL].indexOf(tab) !== -1) {
-      this.saveConvertList();
-      this.selectedTab = tab;
-      return true;
+    switch (tab) {
+      case this.PENDING:
+      case this.POTENTIAL:
+        this.saveConvertList();
+        break;
+
+      default:
+        return false;
     }
-    return false;
+
+    this.selectedTab = tab;
+    return true;
   }
 
   public get convertUsersReadOnly(): boolean {
@@ -260,6 +267,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
   public getUnlicensedUsers(): void {
     this.showSearch = false;
+    this.saveConvertList();
 
     // TODO: port 'Orgservice.getUnlicensedUsers()' to use promise-based callbacks
     this.Orgservice.getUnlicensedUsers(data => {
@@ -307,9 +315,31 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.$state.go('users.manage.picker');
   }
 
+  public restoreConvertList(): void {
+    if (_.get(this, 'pendingGridApi.saveState')) {
+      this.pendingGridApi.saveState.restore(this.$scope, this.scopeData.pendingGridState);
+    }
+
+    if (_.get(this, 'gridApi.saveState')) {
+      if (this.scopeData.selectedState) {
+        this.$timeout(() => {
+          this.gridApi.saveState.restore(this.$scope, this.scopeData.selectedState);
+        }, DELAY_100_MS);
+      }
+      this.$timeout(this.gridApi.core.handleWindowResize, DELAY_200_MS);
+    }
+  }
+
   public saveConvertList(): void {
-    this.scopeData.selectedState = this.gridApi.saveState.save();
-    this.scopeData.convertSelectedList = this.gridApi.selection.getSelectedRows();
+    if (_.get(this, 'pendingGridApi.saveState')) {
+      this.scopeData.pendingGridState = this.pendingGridApi.saveState.save();
+    }
+
+    if (_.get(this, 'gridApi.saveState')) {
+      this.scopeData.selectedState = this.gridApi.saveState.save();
+      this.scopeData.convertSelectedList = this.gridApi.selection.getSelectedRows();
+    }
+
     this.scopeData.convertUsersFlow = true;
   }
 
@@ -329,6 +359,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   public dismissModal(): void {
     this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
     this.dismiss();
+  }
+
+  public showAutoAssignModal(): void {
+    this.AutoAssignTemplateService.showEditAutoAssignTemplateModal();
   }
 }
 

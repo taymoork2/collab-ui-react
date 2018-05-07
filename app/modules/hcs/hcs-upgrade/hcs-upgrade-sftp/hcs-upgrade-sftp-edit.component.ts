@@ -1,5 +1,5 @@
-import { HcsUpgradeService } from 'modules/hcs/shared';
-import { ISftpServer } from '../../setup/hcs-setup-sftp';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { Notification } from 'modules/core/notifications';
 
 export class HcsUpgradeSftpEditCtrl implements ng.IComponentController {

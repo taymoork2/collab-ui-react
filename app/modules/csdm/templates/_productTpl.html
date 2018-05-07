@@ -1,5 +1,7 @@
-<div class="ui-grid-cell-contents" ng-click="grid.appScope.selectRow(grid, row)">
-  <span title="{{row.entity.product}}">
-    <span ng-bind-html="row.entity.product | highlightFromSearch:grid.appScope.searchObject():'product'"></span><span class="feature-status" ng-if="row.entity.addOnModuleCount > 0"> + {{row.entity.addOnModuleCount}} {{ :: 'deviceOverviewPage.kem' | translate }}</span>
+<div class="grid-contents grid-cell-image-text" ng-click="grid.appScope.selectRow(grid, row)">
+  <img ng-if="row.entity.imageThumb" class="type_image" ng-src="{{row.entity.imageThumb}}"/>
+  <img ng-if="!row.entity.imageThumb" class="unknown_type_image" ng-src="{{ grid.appScope.getUknownImageFile(row) }}"/>
+  <span class="column-text" ng-bind-html="row.entity.product | highlightFromSearch:grid.appScope.searchObject():'product'">
+    <span class="feature-status" ng-if="row.entity.addOnModuleCount > 0">+ {{row.entity.addOnModuleCount}} {{ :: 'deviceOverviewPage.kem' | translate }}</span>
   </span>
 </div>

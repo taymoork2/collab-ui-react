@@ -42,7 +42,7 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
-  'ft--atlas-f3745-auto-assign-licenses': {
+  'auto-assign-licenses': {
     user: 'atlaswebe2e+ft--atlas-f3745-auto-assign-licenses@gmail.com',
     pass: 'Cisco123!',
     org: '8078642f-ab1a-4740-bd0a-61738ea76bf0',

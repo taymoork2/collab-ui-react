@@ -6,6 +6,7 @@ describe('HealthService', function () {
     this.injectDependencies(
       '$httpBackend',
       'HealthService',
+      'UrlConfig',
     );
 
     this.pingRegex = /.*\/ping\.*/;
@@ -39,6 +40,17 @@ describe('HealthService', function () {
         expect(response.status).toBe(404);
       });
 
+      this.$httpBackend.flush();
+    });
+  });
+
+  describe('getHealthCheck', function () {
+    it('should return success is true when API returns successfully', function () {
+      const fakeData = { fakeData: true };
+      this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl()).respond(200, fakeData);
+      this.HealthService.getHealthCheck().then((healthData) => {
+        expect(healthData).toEqual(fakeData);
+      });
       this.$httpBackend.flush();
     });
   });

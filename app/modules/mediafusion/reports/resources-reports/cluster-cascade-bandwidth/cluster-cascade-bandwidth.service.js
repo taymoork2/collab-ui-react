@@ -77,7 +77,7 @@
       }
       var valueAxes = [CommonReportsGraphService.getBaseVariable(vm.GUIDEAXIS)];
       vm.dateSelected = daterange;
-      valueAxes[0].integersOnly = true;
+      valueAxes[0].integersOnly = false;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
       valueAxes[0].minimum = 0;

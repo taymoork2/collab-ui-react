@@ -1,6 +1,7 @@
 import { BulkComponent } from './bulk.component';
 import { BulkModalComponent } from './bulkModal.component';
 import { BulkDeleteComponent } from './bulkDelete.component';
+import { BulkExportComponent } from './bulkExport.component';
 
 require('./_bulk.scss');
 
@@ -16,4 +17,5 @@ export default angular
   .component('bulk', new BulkComponent())
   .component('bulkModal', new BulkModalComponent())
   .component('bulkDelete', new BulkDeleteComponent())
+  .component('bulkExport', new BulkExportComponent())
   .name;

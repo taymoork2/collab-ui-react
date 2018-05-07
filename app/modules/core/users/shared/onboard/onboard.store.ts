@@ -27,6 +27,7 @@ export interface IOnboardScopeForUsersConvert {
   convertUsersFlow: boolean;
   searchStr: string;
   selectedState: any; // TODO (mipark2): better type
+  pendingGridState: any; // TODO (mipark2): better type
 }
 
 export enum OnboardCtrlBoundUIStates {
@@ -107,6 +108,7 @@ export default class OnboardStore {
       convertUsersFlow: false,
       searchStr: '',
       selectedState: undefined,
+      pendingGridState: undefined,
     };
   }
 }

@@ -34,6 +34,23 @@
     align-items: center;
     padding: 0 16px 0 20px;
 
+    .type_image {
+      flex-shrink: 0;
+      width: 35px;
+      height: 35px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .unknown_type_image {
+      flex-shrink: 0;
+      width: 35px;
+      height: 35px;
+      padding: 4px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
     .user-img,
     .space_avatar {
       margin: 0;
@@ -56,14 +73,12 @@
       }
     }
 
-    .belongs-to {
+    .column-text {
+      margin-left: 12px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-  }
-  .grid-cell-image-text > * {
-    margin-left: 12px;
   }
 
   .ui-grid-row:not(:hover):not(.ui-grid-row-selected) {

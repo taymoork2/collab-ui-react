@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <button type="button"
+    class="close"
+    ng-click="$ctrl.cancelModal()"
+    aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title"
+    translate="legalHold.manageCustodiansTitle"></h3>
+</div>
+<div class="modal-body">
+  <legal-hold-custodian-import mode="$ctrl.mode"
+    on-file-validation="$ctrl.setFileValid(isValid)"
+    on-conversion-completed="$ctrl.updateCustodians(custodianLists)"
+    on-import-init="$ctrl.importComponentApi=importComponentApi;">
+  </legal-hold-custodian-import>
+</div>
+<div class="modal-footer">
+  <button class="btn"
+    ng-show="!$ctrl.isDone"
+    ng-click="$ctrl.cancelModal()">
+    <span translate="common.cancel"></span>
+  </button>
+  <button class="btn btn--primary"
+    ng-show="$ctrl.isDone"
+    ng-click="$ctrl.cancelModal()">
+    <span translate="common.done"></span>
+  </button>
+  <button class="btn btn--primary"
+    ng-show="!$ctrl.isDone"
+    ng-click="$ctrl.startImport()"
+    ng-disabled="!$ctrl.isFileValid"
+    type="button"
+    cs-btn>
+    <span translate="common.save"></span>
+  </button>
+</div>

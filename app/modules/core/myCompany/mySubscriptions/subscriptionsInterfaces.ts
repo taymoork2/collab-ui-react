@@ -40,6 +40,7 @@ export interface IOfferData {
   licenseModel: string;
   offerName: string;
   siteUrl?: string;
+  status?: string;
   tooltip?: string;
   tooltipAriaLabel?: string;
   totalUsage?: number;

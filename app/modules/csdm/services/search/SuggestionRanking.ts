@@ -18,11 +18,13 @@ export class SuggestionRanking {
 
   public static initialGroupRate(field: string) {
     switch (field) {
-      case QueryParser.Field_Tag:
-        return 7;
-      case QueryParser.Field_ConnectionStatus:
-        return 6;
       case QueryParser.Field_Product:
+        return 8;
+      case QueryParser.Field_ConnectionStatus:
+        return 7;
+      case QueryParser.Field_Displayname:
+        return 6;
+      case QueryParser.Field_Tag:
         return 5;
       case QueryParser.Field_ErrorCodes:
         return 4;

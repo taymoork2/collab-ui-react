@@ -6,6 +6,8 @@ export class AddUsersResultsModalController implements ng.IComponentController {
   public dismiss: Function;
   public numAddedUsers: number;
   public numUpdatedUsers: number;
+  public convertedUsers: string[];
+  public pendingUsers: string[];
   public results: IOnboardedUsersResultsErrorsAndWarnings;
 
   /* @ngInject */
@@ -50,6 +52,8 @@ export class AddUsersResultsModalComponent implements ng.IComponentOptions {
     dismiss: '&',
     numUpdatedUsers: '<',
     numAddedUsers: '<',
+    convertedUsers: '<',
+    pendingUsers: '<',
     results: '<',
   };
 }

@@ -1,17 +1,14 @@
 import { Notification } from 'modules/core/notifications';
 
 export class WebexSiteManagementController {
-  private _allowSiteManagementByCustomer: boolean = true;
+  private _allowSiteManagementByCustomer: boolean = false;
   private orgId: string;
   /* @ngInject */
   constructor (private Orgservice, Authinfo, private Notification: Notification) {
     this.orgId = Authinfo.getOrgId();
-    const params = {
-      basicInfo: true,
-    };
-    Orgservice.getOrg((data) => {
-      this._allowSiteManagementByCustomer = _.get(data, 'orgSettings.allowSiteManagementByCustomer', true);
-    }, this.orgId, params);
+    Orgservice.getAllowCustomerSiteManagementSetting(this.orgId).then((response) => {
+      this._allowSiteManagementByCustomer = _.get(response, 'data.allowCustomerSiteManagement');
+    });
   }
 
   get allowSiteManagementByCustomer(): boolean {
@@ -20,10 +17,11 @@ export class WebexSiteManagementController {
 
   set allowSiteManagementByCustomer(value: boolean) {
     this._allowSiteManagementByCustomer = value;
-    const settings = {
-      allowSiteManagementByCustomer: value,
+    const setting = {
+      allowCustomerSiteManagement: value,
     };
-    this.Orgservice.setOrgSettings(this.orgId, settings).then(() => {
+
+    this.Orgservice.setAllowCustomerSiteManagementSetting(this.orgId, setting).then(() => {
       this.Notification.success('globalSettings.webexSiteManagement.siteManagementSettingUpdated');
     }).catch(response => {
       this.Notification.errorResponse(response);
