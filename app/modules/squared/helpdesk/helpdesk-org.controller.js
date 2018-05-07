@@ -220,6 +220,7 @@
           }
           vm.orderSystems.push(orderingSystemTypes[vm.orderingTool] || order.orderingTool);
         });
+        vm.orderSystems = _.uniqWith(vm.orderSystems, _.isEqual);
       }, vm._helpers.notifyError);
     }
 
