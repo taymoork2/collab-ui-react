@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Usługa Care",
-        "notEnabledText": "Współpracuj z klientem, korzystając z usług Cisco Webex Care. Dostosuj interfejsy obsługi za pomocą kreatora konfiguracji."
+        "notEnabledText": "Współpracuj z klientem, korzystając z usług Cisco Spark Care. Dostosuj interfejsy obsługi za pomocą kreatora konfiguracji."
       },
       "roomSystem": {
         "title": "Urządzenia pokoju",
         "currentTitle": "Online w tym tygodniu",
         "previousTitle": "Ostatni tydzień:",
         "enableDevices": "Włącz urządzenia",
-        "notEnabledText": "Urządzenia pokoju spotkań są w sposób niewidoczny zintegrowane z aplikacją Cisco Webex Teams."
+        "notEnabledText": "Urządzenia pokoju spotkań są w sposób niewidoczny zintegrowane z aplikacją Cisco Spark."
       },
       "hybrid": {
         "title": "Usługi hybrydowe",
         "googleCalendarError": "Nie udało się nawiązać połączenia z usługą dla Kalendarza Google. W trakcie tej sesji status usługi może być wskazywany nieprawidłowo.",
         "o365CalendarError": "Nie udało się nawiązać połączenia z usługą dla Office 365. W trakcie tej sesji status usługi może być wskazywany nieprawidłowo.",
-        "herculesError": "Nie udało się nawiązać połączenia z usługą dla usług hybrydowych Cisco Webex.",
+        "herculesError": "Nie udało się nawiązać połączenia z usługą dla usług hybrydowych Cisco Spark.",
         "herculesErrorAuthentication": "Nie można sprawdzić poprawności uprawnień dostępu administratora partnera w organizacji klienta. Przyczyną może być problem z buforowaniem. Wyloguj się i zaloguj ponownie. Jeśli problem nadal występuje, skontaktuj się z pomocą techniczną Cisco.",
-        "notEnabledText": "Usługi hybrydowe umożliwiają zintegrowanie systemów lokalnych z platformą Cisco Webex Control.",
+        "notEnabledText": "Usługi hybrydowe umożliwiają zintegrowanie systemów lokalnych z platformą Cisco Spark Control.",
+        "notEnabledTextNew": "Usługi hybrydowe umożliwiają zintegrowanie systemów lokalnych z platformą Cisco Spark Control.",
         "notEnabledActionText": "Dowiedz się więcej",
         "serviceHeader": "Stan",
         "services": {

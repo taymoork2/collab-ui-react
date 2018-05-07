@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Bakım",
-        "notEnabledText": "Müşterinizle iş birliği yapmak için Cisco Webex Bakım hizmetlerini kullanın. Yapılandırma sihirbazını kullanarak bakım arayüzlerini özelleştirin."
+        "notEnabledText": "Müşterinizle iş birliği yapmak için Cisco Spark Bakım hizmetlerini kullanın. Yapılandırma sihirbazını kullanarak bakım arayüzlerini özelleştirin."
       },
       "roomSystem": {
         "title": "Toplantı Odası Cihazları",
         "currentTitle": "Bu hafta çevrimiçi",
         "previousTitle": "Geçtiğimiz hafta:",
         "enableDevices": "Cihazları Etkinleştir",
-        "notEnabledText": "Toplantı odası cihazları Cisco Webex Teams uygulamasıyla sorunsuz tümleştirildi."
+        "notEnabledText": "Toplantı odası cihazları Cisco Spark uygulamasıyla sorunsuz tümleştirildi."
       },
       "hybrid": {
         "title": "Karma Hizmetler",
         "googleCalendarError": "Google Takvim hizmetine ulaşılamadı. Durumu bu oturum sırasında hatalı bildirilmiş olabilir.",
         "o365CalendarError": "Office 365 hizmetine ulaşılamadı. Durumu bu oturum sırasında hatalı bildirilmiş olabilir.",
-        "herculesError": "Cisco Webex Karma Hizmetleri’ne ulaşılamadı.",
+        "herculesError": "Cisco Spark Karma Hizmetleri’ne ulaşılamadı.",
         "herculesErrorAuthentication": "Müşteri kuruluşunda iş ortağı yöneticisinin erişim hakları doğrulanamadı. Bu, önbelleğe alma sorunu olduğunu gösterebilir. Oturumu kapatıp tekrar açmayı deneyin ve sorun devam ederse Cisco desteği ile irtibata geçin.",
-        "notEnabledText": "Karma Hizmetler, şirket içi sistemlerinizi Cisco Webex Platformuna entegre etmenize imkan tanır.",
+        "notEnabledText": "Karma Hizmetler, şirket içi sistemlerinizi Cisco Spark Platformuna entegre etmenize imkan tanır.",
+        "notEnabledTextNew": "Karma Hizmetler, şirket içi sistemlerinizi Cisco Spark Platformuna entegre etmenize imkan tanır.",
         "notEnabledActionText": "Daha Fazla Bilgi",
         "serviceHeader": "Durum",
         "services": {

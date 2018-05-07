@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Assistance",
-        "notEnabledText": "Utilisez les services de l’assistance Cisco Webex pour collaborer avec votre client. Personnalisez les interfaces d’assistance à l’aide de l’assistant de configuration."
+        "notEnabledText": "Utilisez les services de l’assistance Cisco Spark pour collaborer avec votre client. Personnalisez les interfaces d’assistance à l’aide de l’assistant de configuration."
       },
       "roomSystem": {
         "title": "Appareils de la salle",
         "currentTitle": "En ligne cette semaine",
         "previousTitle": "La semaine dernière :",
         "enableDevices": "Activer appareils",
-        "notEnabledText": "Les appareils de salle en réunion s’intègrent parfaitement avec l’application Cisco Webex Teams."
+        "notEnabledText": "Les appareils de salle en réunion s’intègrent parfaitement avec l’application Cisco Spark."
       },
       "hybrid": {
         "title": "Services hybrides",
         "googleCalendarError": "Impossible d’atteindre le service de Google Calendar. Son état pourrait être signalé de façon erronée au cours de cette session.",
         "o365CalendarError": "Impossible d’atteindre le service d’Office 365. Son état pourrait être signalé de façon erronée au cours de cette session.",
-        "herculesError": "Impossible de se connecter aux Services hybrides Cisco Webex.",
+        "herculesError": "Impossible de se connecter aux Services hybrides Cisco Spark.",
         "herculesErrorAuthentication": "Impossible de valider les droits d’accès de l’administrateur partenaire dans l’organisation du client. Cela peut indiquer un problème de mise en antémémoire. Essayez de fermer votre session et d’en ouvrir une autre et communiquez avec l’assistance Cisco si le problème persiste.",
-        "notEnabledText": "Les Services hybrides vous permettent d’intégrer vos systèmes sur site à la plateforme de gestion Cisco Webex.",
+        "notEnabledText": "Les Services hybrides vous permettent d’intégrer vos systèmes sur site à la plateforme de gestion Cisco Spark.",
+        "notEnabledTextNew": "Les Services hybrides vous permettent d’intégrer vos systèmes sur site à la plateforme de gestion Cisco Spark.",
         "notEnabledActionText": "Pour en savoir plus",
         "serviceHeader": "Statut",
         "services": {

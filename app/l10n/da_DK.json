@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Omhu",
-        "notEnabledText": "Brug Cisco Webex Care-tjenester til at samarbejde med din kunde. Brugertilpas Care-grænseflader ved brug af konfigurationsguiden."
+        "notEnabledText": "Brug Cisco Spark Care-tjenester til at samarbejde med din kunde. Brugertilpas Care-grænseflader ved brug af konfigurationsguiden."
       },
       "roomSystem": {
         "title": "Rumenheder",
         "currentTitle": "Online denne uge",
         "previousTitle": "Sidste uge:",
         "enableDevices": "Aktiver enheder",
-        "notEnabledText": "Mødelokaleenheder blev integreret med Cisco Webex Teams-appen uden problemer."
+        "notEnabledText": "Mødelokaleenheder blev integreret med Cisco Spark-appen uden problemer."
       },
       "hybrid": {
         "title": "Hybrid-tjenester",
         "googleCalendarError": "Kunne ikke få adgang til tjenesten for Google Kalender. Dens status kan blive rapporteret unøjagtigt under denne session.",
         "o365CalendarError": "Kunne ikke få adgang til tjenesten for Office 365. Dens status kan blive rapporteret unøjagtigt under denne session.",
-        "herculesError": "Kunne ikke få adgang til tjenesten for Cisco Webex Hybrid-tjenester.",
+        "herculesError": "Kunne ikke få adgang til tjenesten for Cisco Spark Hybrid-tjenester.",
         "herculesErrorAuthentication": "Kunne ikke validere partneradministratorens adgangsrettigheder i kundeorganisationen. Dette kan indikere et caching-problem. Prøv at logge ud og ind igen, og kontakt Cisco Support, hvis problemet fortsætter.",
-        "notEnabledText": "Hybrid-tjenesterne gør det muligt for dig at integrere dine lokale systemer med Cisco Webex-platformen.",
+        "notEnabledText": "Hybrid-tjenesterne gør det muligt for dig at integrere dine lokale systemer med Cisco Spark-platformen.",
+        "notEnabledTextNew": "Hybrid-tjenesterne gør det muligt for dig at integrere dine lokale systemer med Cisco Spark-platformen.",
         "notEnabledActionText": "Få mere at vide",
         "serviceHeader": "Status",
         "services": {

@@ -8650,22 +8650,23 @@
       },
       "care": {
         "title": "Servicio de atención al cliente",
-        "notEnabledText": "Utilice el servicio de atención al cliente de Cisco Webex para colaborar con sus clientes. Personalice la interfaz del servicio de atención al cliente con el asistente de configuración."
+        "notEnabledText": "Utilice el servicio de atención al cliente de Cisco Spark para colaborar con sus clientes. Personalice la interfaz del servicio de atención al cliente con el asistente de configuración."
       },
       "roomSystem": {
         "title": "Dispositivos de sala",
         "currentTitle": "En línea esta semana",
         "previousTitle": "La semana pasada:",
         "enableDevices": "Activar dispositivos",
-        "notEnabledText": "Los dispositivos de sala de reuniones se integran sin problemas con la aplicación de Cisco Webex Teams."
+        "notEnabledText": "Los dispositivos de sala de reuniones se integran sin problemas con la aplicación de Cisco Spark."
       },
       "hybrid": {
         "title": "Servicios híbridos",
         "googleCalendarError": "No se ha podido acceder al servicio de Google Calendar. Puede que su estado aparezca de manera incorrecta durante esta sesión.",
         "o365CalendarError": "No se ha podido acceder al servicio de Office 365. Puede que su estado aparezca de manera incorrecta durante esta sesión.",
-        "herculesError": "No se ha podido acceder al servicio los servicios híbridos de Cisco Webex.",
+        "herculesError": "No se ha podido acceder al servicio los servicios híbridos de Cisco Spark.",
         "herculesErrorAuthentication": "No se han podido validar los derechos de acceso de administrador de socios en la organización del cliente. Esto podría indicar un problema de caché. Intente cerrar sesión y volver a iniciarla, y póngase en contacto con el Soporte de Cisco si el problema persiste.",
-        "notEnabledText": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Webex.",
+        "notEnabledText": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Spark.",
+        "notEnabledTextNew": "Los servicios híbridos le permiten integrar los sistemas locales con la plataforma de Cisco Spark.",
         "notEnabledActionText": "Más información",
         "serviceHeader": "Estado",
         "services": {

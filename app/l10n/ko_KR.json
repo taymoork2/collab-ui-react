@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "케어",
-        "notEnabledText": "Cisco Webex 케어 서비스를 사용하여 고객과 협업하십시오. 구성 마법사를 사용하여 케어 인터페이스를 사용자 정의하십시오."
+        "notEnabledText": "Cisco Spark 케어 서비스를 사용하여 고객과 협업하십시오. 구성 마법사를 사용하여 케어 인터페이스를 사용자 정의하십시오."
       },
       "roomSystem": {
         "title": "회의실 장치",
         "currentTitle": "이번 주 온라인",
         "previousTitle": "지난주:",
         "enableDevices": "장치 활성화",
-        "notEnabledText": "미팅 룸 장치가 Cisco Webex Teams 앱과 원활하게 통합되었습니다."
+        "notEnabledText": "미팅 룸 장치가 Cisco Spark 앱과 원활하게 통합되었습니다."
       },
       "hybrid": {
         "title": "하이브리드 서비스",
         "googleCalendarError": "Google 캘린더의 서비스에 연결하지 못했습니다. 이 세션 중에 상태가 올바르지 않게 보고될 수도 있습니다.",
         "o365CalendarError": "Office 365의 서비스에 연결하지 못했습니다. 이 세션 중에 상태가 올바르지 않게 보고될 수도 있습니다.",
-        "herculesError": "Cisco Webex 하이브리드 서비스의 서비스에 연결하지 못했습니다.",
+        "herculesError": "Cisco Spark 하이브리드 서비스의 서비스에 연결하지 못했습니다.",
         "herculesErrorAuthentication": "고객 조직에서 파트너 관리의 액세스 권한에 대한 유효성을 검증하지 못했습니다. 캐싱 문제가 발생한 것일 수 있습니다. 로그아웃하고 다시 로그인해 본 후 문제가 지속되면 Cisco 지원으로 문의하십시오.",
-        "notEnabledText": "하이브리드 서비스는 온-프레미스 시스템을 Cisco Webex Platform 플랫폼에 통합할 수 있도록 합니다.",
+        "notEnabledText": "하이브리드 서비스는 온-프레미스 시스템을 Cisco Spark 플랫폼에 통합할 수 있도록 합니다.",
+        "notEnabledTextNew": "하이브리드 서비스는 온-프레미스 시스템을 Cisco Spark 플랫폼에 통합할 수 있도록 합니다.",
         "notEnabledActionText": "자세한 내용",
         "serviceHeader": "상태",
         "services": {

@@ -27,7 +27,7 @@
             atlasOffice365Support: FeatureToggleService.atlasOffice365SupportGetStatus(),
             hybridImp: FeatureToggleService.atlasHybridImpGetStatus(),
           }).then(function (featureToggles) {
-            card.notEnabledText = 'overview.cards.hybrid.notEnabledText';
+            card.notEnabledText = 'overview.cards.hybrid.notEnabledTextNew';
 
             return HybridServicesUtilsService.allSettled({
               clusterList: HybridServicesClusterService.getAll(),

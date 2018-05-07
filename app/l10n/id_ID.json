@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Gunakan layanan Cisco Webex Care untuk berkolaborasi dengan pelanggan. Sesuaikan antarmuka care menggunakan panduan pengaturan."
+        "notEnabledText": "Gunakan layanan Cisco Spark Care untuk berkolaborasi dengan pelanggan. Sesuaikan antarmuka care menggunakan panduan pengaturan."
       },
       "roomSystem": {
         "title": "Perangkat Kamar",
         "currentTitle": "Online pekan ini",
         "previousTitle": "Minggu lalu:",
         "enableDevices": "Aktifkan Perangkat",
-        "notEnabledText": "Sistem kamar rapat terintegrasi dengan baik dengan aplikasi Cisco Webex Teams."
+        "notEnabledText": "Sistem kamar rapat terintegrasi dengan baik dengan aplikasi Cisco Spark."
       },
       "hybrid": {
         "title": "Layanan Hybrid",
         "googleCalendarError": "Tidak dapat menjangkau layanan untuk Google Kalender. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
         "o365CalendarError": "Tidak dapat menjangkau layanan untuk Office 365. Statusnya mungkin dilaporkan tidak akurat selama sesi ini.",
-        "herculesError": "Tidak dapat menjangkau layanan untuk Layanan Hybrid Cisco Webex.",
+        "herculesError": "Tidak dapat menjangkau layanan untuk Layanan Hybrid Cisco Spark.",
         "herculesErrorAuthentication": "Tidak dapat memvalidasi hak akses admin mitra dalam organisasi pelanggan. Ini dapat menunjukkan masalah penangkapan. Coba keluar dan masuk lagi, dan hubungi dukungan Cisco jika masalahnya masih berlanjut.",
-        "notEnabledText": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Webex.",
+        "notEnabledText": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Spark.",
+        "notEnabledTextNew": "Layanan Hybrid memungkinkan Anda mengintegrasikan sistem lokal dengan Platform Cisco Spark.",
         "notEnabledActionText": "Pelajari Selengkapnya",
         "serviceHeader": "Status",
         "services": {

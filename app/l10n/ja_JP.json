@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Cisco Webex Care サービスを利用して顧客とコラボレーションを行います。構成ウィザードを使用して Care インターフェイスをカスタマイズしてください。"
+        "notEnabledText": "Cisco Spark Care サービスを利用して顧客とコラボレーションを行います。構成ウィザードを使用して Care インターフェイスをカスタマイズしてください。"
       },
       "roomSystem": {
         "title": "会議室デバイス",
         "currentTitle": "今週のオンライン",
         "previousTitle": "先週:",
         "enableDevices": "デバイスの有効化",
-        "notEnabledText": "会議室デバイスは Cisco Webex Teams アプリとシームレスに連携しています。"
+        "notEnabledText": "会議室デバイスは Cisco Spark アプリとシームレスに連携しています。"
       },
       "hybrid": {
         "title": "ハイブリッド サービス",
         "googleCalendarError": "Google カレンダーのためのサービスに到達できませんでした。このセッション中に報告されたサービスのステータスが不正確である可能性があります。",
         "o365CalendarError": "Office 365 のためのサービスに到達できませんでした。このセッション中に報告されたサービスのステータスが不正確である可能性があります。",
-        "herculesError": "Cisco Webex ハイブリッド サービスのためのサービスに到達できませんでした。",
+        "herculesError": "Cisco Spark ハイブリッド サービスのためのサービスに到達できませんでした。",
         "herculesErrorAuthentication": "顧客組織におけるパートナー管理者のアクセス権を検証できませんでした。キャッシングに問題がある可能性があります。いったんログアウトしてから再度ログインしてみるか、引き続き問題が発生する場合は Cisco サポートに連絡してください。",
-        "notEnabledText": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Webex Platform に統合できるようになります。",
+        "notEnabledText": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Spark Platform に統合できるようになります。",
+        "notEnabledTextNew": "ハイブリッド サービスを使用すると、オンプレミスのシステムを Cisco Spark Platform に統合できるようになります。",
         "notEnabledActionText": "さらに詳しく",
         "serviceHeader": "ステータス",
         "services": {

@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Care selvbetjeningstjeneste",
-        "notEnabledText": "Bruk Cisco Webex støtte for å samarbeide med kunden din. Tilpass selvbetjeningsgrensesnitt med konfigurasjonsveilederen."
+        "notEnabledText": "Bruk Cisco Spark støtte for å samarbeide med kunden din. Tilpass selvbetjeningsgrensesnitt med konfigurasjonsveilederen."
       },
       "roomSystem": {
         "title": "Rom-enheter",
         "currentTitle": "Pålogget denne uken",
         "previousTitle": "Forrige uke:",
         "enableDevices": "Aktiver enheter",
-        "notEnabledText": "Møterom-enheter sømløst integrert med Cisco Webex Teams-appen."
+        "notEnabledText": "Møterom-enheter sømløst integrert med Cisco Spark-appen."
       },
       "hybrid": {
         "title": "Hybridtjenester",
         "googleCalendarError": "Kunne ikke nå tjenesten for Google Calendar. Det er mulig at statusen for den vil bli unøyaktig rapportert under denne økten.",
         "o365CalendarError": "Kunne ikke nå tjenesten for Office 365. Det er mulig at statusen for den vil bli unøyaktig rapportert under denne økten.",
-        "herculesError": "Kunne ikke nå tjenesten for Cisco Webex-hybridtjenester.",
+        "herculesError": "Kunne ikke nå tjenesten for Cisco Spark-hybridtjenester.",
         "herculesErrorAuthentication": "Kan ikke validere partneradministratorens rettigheter i kundeorganisasjonen. Dette kan indikere et hurtigbufferproblem. Prøv å logge av og på igjen, og ta kontakt med Cisco brukerstøtte hvis problemet vedvarer.",
-        "notEnabledText": "Hybridtjenester lar deg integrere lokale systemer med Cisco Webex-plattformen.",
+        "notEnabledText": "Hybridtjenester lar deg integrere lokale systemer med Cisco Spark-plattformen.",
+        "notEnabledTextNew": "Hybridtjenester lar deg integrere lokale systemer med Cisco Spark-plattformen.",
         "notEnabledActionText": "Finn ut mer",
         "serviceHeader": "Status",
         "services": {

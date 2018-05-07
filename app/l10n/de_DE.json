@@ -8649,22 +8649,23 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Nutzen Sie Cisco Webex Care-Services, um mit Ihren Kunden zusammenzuarbeiten. Passen Sie Care-Oberflächen mithilfe des Konfigurationsassistenten an."
+        "notEnabledText": "Nutzen Sie Cisco Spark Care-Services, um mit Ihren Kunden zusammenzuarbeiten. Passen Sie Care-Oberflächen mithilfe des Konfigurationsassistenten an."
       },
       "roomSystem": {
         "title": "Raumgeräte",
         "currentTitle": "Diese Woche online",
         "previousTitle": "Letzte Woche:",
         "enableDevices": "Geräte aktivieren",
-        "notEnabledText": "Meetingraum-Geräte nahtlos in der Cisco Webex Teams-App integriert."
+        "notEnabledText": "Meetingraum-Geräte nahtlos in der Cisco Spark-App integriert."
       },
       "hybrid": {
         "title": "Hybrid-Dienste",
         "googleCalendarError": "Der Dienst für den Google-Kalender konnte nicht abgerufen werden. Dessen Status wird während dieser Sitzung möglicherweise nicht korrekt berichtet.",
         "o365CalendarError": "Der Dienst für Office 365 konnte nicht abgerufen werden. Dessen Status wird während dieser Sitzung möglicherweise nicht korrekt berichtet.",
-        "herculesError": "Der Dienst für Cisco Webex-Hybriddienste wurde nicht erreicht.",
+        "herculesError": "Der Dienst für Cisco Spark-Hybriddienste wurde nicht erreicht.",
         "herculesErrorAuthentication": "Die Zugriffsrechte des Partneradministrators in der Kundenorganisation konnten nicht überprüft werden. Dies kann auf ein Caching-Problem hindeuten. Melden Sie sich ab und wieder an, und wenden Sie sich an Cisco Support, falls das Problem weiterhin besteht.",
-        "notEnabledText": "Hybriddienste erlauben Ihnen die Integration von Systemen vor Ort in die Cisco Webex-Plattform.",
+        "notEnabledText": "Hybriddienste erlauben Ihnen die Integration von Systemen vor Ort in die Cisco Spark-Plattform.",
+        "notEnabledTextNew": "Hybriddienste erlauben Ihnen die Integration von Systemen vor Ort in die Cisco Spark-Plattform.",
         "notEnabledActionText": "Mehr erfahren",
         "serviceHeader": "Status",
         "services": {
