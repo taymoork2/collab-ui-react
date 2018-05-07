@@ -2419,7 +2419,7 @@
       "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
     },
     "chart": {
-      "total": "Total: {{totalValue}}"
+      "deviceFound": "{deviceCount, plural, =1{Device} other{Devices}} found"
     }
   },
   "hercules": {

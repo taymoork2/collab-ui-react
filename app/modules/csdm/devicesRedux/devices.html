@@ -14,15 +14,18 @@
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
     <cs-page-sub-header ng-hide="devices.emptydatasource()">
-      <!--<cs-page-sub-header-left>-->
-        <device-search search-object="devices.searchObject"
-                       is-searching="devices.issearching"
-                       search-interaction="devices.searchInteraction"
-                       search-result-changed="devices.searchResultChanged(result)"></device-search>
+      <device-search search-object="devices.searchObject"
+                     is-searching="devices.issearching"
+                     search-interaction="devices.searchInteraction"
+                     search-result-changed="devices.searchResultChanged(result)"></device-search>
+      <div class="spacer count-spacer"></div>
+      <device-count search-result="devices.searchResult"></device-count>
+      <div class="spacer"></div>
       <device-chart search-result="devices.searchResult"
                     search-object="devices.searchObject"
                     pie-chart-clicked="devices.addToSearch(searchElement, true)"></device-chart>
       <!--</cs-page-sub-header-left>-->
+      <div class="spacer2"></div>
       <div class="new-export">
         <span
           ng-if="devices.deviceExportFeature"
