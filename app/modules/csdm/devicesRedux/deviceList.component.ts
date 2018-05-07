@@ -296,6 +296,18 @@ class DeviceList implements ng.IComponentController {
       });
   }
 
+  public bulkExport() {
+    this.$state.go('deviceBulkFlow.export', {
+      selectedDevices: this.selectedDevices,
+    });
+    this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.EXPORT_ASK,
+      {
+        mainAction: BulkActionName.EXPORT_ASK,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
+  }
+
   public expandDevice(device) {
     if (this.devicePlaceLink && device.accountType === 'MACHINE') {
       this.$state.go('place-overview.csdmDevice', {

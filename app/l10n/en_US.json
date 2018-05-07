@@ -2411,7 +2411,7 @@
     "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
     "export": {
       "deviceExportTitle": "Export Device Attributes to CSV",
-      "deviceExportDescription": "Gathering data for export may take a while. During this time you cannon sign out or refresh your browser, or the export will be cancelled.",
+      "deviceExportDescription": "Gathering data for export may take a while. During this time you cannot sign out or refresh your browser, or the export will be cancelled.",
       "export": "Export",
       "deviceExportInProgress": "Exporting Device Attributes to CSV",
       "exportCompleted": "Export completed",
@@ -6238,7 +6238,7 @@
   },
   "deviceOverviewPage": {
     "software": "Software",
-    "serial": "Serial",
+    "serial": "Serial Number",
     "ipAddr": "IP Address",
     "networkConnectivity": "Network Connectivity",
     "macAddr": "MAC Address",
@@ -11381,7 +11381,6 @@
     "xDevicesSelected": "{{nDevices}} devices selected",
     "deleteDevicesTitle": "Delete Devices",
     "deleteDevices": "Delete devices",
-    "exportAsCSV": "Export as CSV",
     "editDevices": "Edit devices",
     "deleteDevicesAreYouSure": "Are you sure you want to delete {{nDevices}} devices?",
     "deleteDeviceAreYouSure": "Are you sure you want to delete this device?",
@@ -11389,7 +11388,12 @@
     "deleteEmptyPlaces": "Delete resulting empty places",
     "deleteEmptyPlacesExplanation": "If the last device in a place is deleted, that place will also be deleted.",
     "deleted": "Deleted",
-    "pollProgressError": "Failures while retrieving the bulk progress"
+    "pollProgressError": "Failures while retrieving the bulk progress",
+    "exportData": {
+      "exportAsCSV": "Export as CSV",
+      "deviceExport1Description": "Export device attributes for 1 device",
+      "deviceExportMoreDescription": "Export device attributes for {{nDevices}} devices"
+    }
   },
   "convertUsersModal": {
     "title": "Convert Users",

@@ -268,6 +268,8 @@
           DELETE: 'bulk delete',
           DELETE_ASK: 'bulk delete ask',
           DELETE_FAKE: 'bulk delete fake',
+          EXPORT: 'bulk export',
+          EXPORT_ASK: 'bulk export ask',
           SELECT: 'bulk select',
           SELECT_ALL: 'bulk select all',
         },

@@ -2946,6 +2946,22 @@
               title: 'deviceBulk.deleteDevicesTitle',
             },
           })
+          .state('deviceBulkFlow.export', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<bulk-export ui-view dismiss="$dismiss()"></bulk-export>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-bulk-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevices: [],
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
