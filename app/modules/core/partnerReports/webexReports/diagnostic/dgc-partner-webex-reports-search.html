@@ -37,6 +37,7 @@
               aria-label="{{$ctrl.errMsg.datePickerAriaLabel}}">
 
               <cs-datepicker
+                ng-if="$ctrl.startDate"
                 ng-model="$ctrl.startDate"
                 placeholder="{{::'webexReports.placeholder-date' | translate}}"
                 first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
@@ -48,6 +49,7 @@
           <div class="tk-example-datepicker end-time">
             <div class="example-indent" ng-click="$ctrl.onChangeDate()">
               <cs-datepicker
+                ng-if="$ctrl.endDate"
                 ng-model="$ctrl.endDate"
                 placeholder="{{::'webexReports.placeholder-date' | translate}}"
                 first-enabled-date="{{$ctrl.dateRange.end.firstEnableDate}}"
