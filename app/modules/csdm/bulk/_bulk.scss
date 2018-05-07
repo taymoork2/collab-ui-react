@@ -16,6 +16,9 @@
       height: auto !important;
       bulk-delete {
         max-height: 345px;
+       }
+      bulk-export {
+        max-height: 620px;
       }
       bulk-modal {
         max-height: 700px;
