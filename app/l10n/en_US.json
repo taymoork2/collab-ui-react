@@ -11391,8 +11391,7 @@
     "pollProgressError": "Failures while retrieving the bulk progress",
     "exportData": {
       "exportAsCSV": "Export as CSV",
-      "deviceExport1Description": "Export device attributes for 1 device",
-      "deviceExportMoreDescription": "Export device attributes for {{nDevices}} devices"
+      "deviceExportDescription": "{nDevices, plural, =1{Export device attributes for 1 device} other{Export device attributes for # devices}}"
     }
   },
   "convertUsersModal": {

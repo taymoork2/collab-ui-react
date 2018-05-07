@@ -5,11 +5,8 @@
 
 <div class="modal-body">
   <h5 class="lead"
-      ng-if="$ctrl.numberOfDevices === 1"
-      translate="deviceBulk.exportData.deviceExport1Description"></h5>
-  <h5 class="lead"
-      ng-if="$ctrl.numberOfDevices > 1"
-      translate="deviceBulk.exportData.deviceExportMoreDescription"
+      translate="deviceBulk.exportData.deviceExportDescription"
+      translate-interpolation="messageformat"
       translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
   <br>
   <label ng-repeat="(key, val) in $ctrl.fields">
