@@ -17,6 +17,7 @@ import { WebexVersionSetting } from './webex/webexVersion/webex-version.componen
 import { WebexSiteManagementSetting } from './webex/webexSiteManagement/webex-site-management-setting.component';
 import { WebexSetting } from './webex/webex-settings-wrapper.component';
 import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
+import { ProximitySetting } from './proximity/proximity.component';
 
 export class SettingsCtrl {
 
@@ -37,6 +38,7 @@ export class SettingsCtrl {
   public webexVersion: SettingSection;
   public webexSiteManagement: SettingSection;
   public sparkAssistant: SettingSection;
+  public proximity: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -80,6 +82,7 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       this.initSparkAssistant();
+      this.initProximitySetting();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
@@ -164,6 +167,14 @@ export class SettingsCtrl {
         });
       } else {
         this.initOldBranding(true);
+      }
+    });
+  }
+
+  private initProximitySetting() {
+    this.FeatureToggleService.csdmProximityOptInGetStatus().then(toggle => {
+      if (toggle) {
+        this.proximity = new ProximitySetting();
       }
     });
   }

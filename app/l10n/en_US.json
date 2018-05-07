@@ -1772,6 +1772,7 @@
     "result": "Result",
     "retry": "Retry",
     "reload": "Reload",
+    "reviewSetting": "Review Setting",
     "save": "Save",
     "saveLabel": "Do you want to save your changes?",
     "search": "Search",
@@ -1949,7 +1950,8 @@
     "autoAssignLink": "Set Up Now",
     "goToEditNow": "Edit Now",
     "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Webex Teams space. Edit <b>{{name}}</b> to select a new default space.",
-    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Webex Teams space. Contact <b>{{owner}}</b> to assign a new default space."
+    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Webex Teams space. Contact <b>{{owner}}</b> to assign a new default space.",
+    "optInToWifiProximity": "Make sharing content on Webex devices easier by enabling Wi-Fi-based device suggestions."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -8948,6 +8950,16 @@
     },
     "webex": {
       "title": "Webex"
+    },
+    "proximity": {
+      "title": "Device Discovery",
+      "description": "Helps users find nearby Webex devices for sharing content.",
+      "subsectionLabel": "Wi-Fi-based device suggestions",
+      "modalTitle": "Enable Wi-Fi-based device suggestions?",
+      "wifiOptInLabel": "Provide device suggestions based on Wi-Fi connectivity",
+      "wifiOptInDescription": "Recommended to provide the best meeting room experience. When ultrasound connectivity doesn't work, Webex Teams suggests nearby devices that are available to users. This doesn't store any information that would identify users.<br><a href:''>Learn more about Wi-Fi-based device suggestions</a>",
+      "enableItNow": "Do you want to enable this setting?",
+      "optOutButton": "Don't enable"
     },
     "webexVersion": {
       "title": "Webex Version"

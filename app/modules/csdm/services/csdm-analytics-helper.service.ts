@@ -12,6 +12,8 @@ export interface ICsdmAnalyticHelper {
   trackBulkExport(params: IExportParam);
 
   trackExpandDevice(selectedDevices: number, device: csdm.IDevice);
+
+  trackWifiOptInAction(action: WifiProximityAction, actionParam: IProximityActionParam);
 }
 
 interface IBulkParam {
@@ -25,6 +27,11 @@ interface IExportParam extends IBulkParam {
   selectedExportFields?: string[];
 }
 
+export interface IProximityActionParam {
+  originator?: string;
+  performer: string;
+}
+
 export class CsdmAnalyticsValues {
   //action source
   public static MOUSE = 'MOUSE';
@@ -35,10 +42,21 @@ export class CsdmAnalyticsValues {
   //actions
   public static INITIAL_SEARCH = 'INITIAL_SEARCH';
   public static SEARCH = 'SEARCH';
+
+  public static ORIGINATOR_NOTIFICATION = 'NOTIFICATION';
+  public static ORIGINATOR_SETTING = 'SETTING';
+
+  public static PERFORMER_MODAL = 'MODAL';
+  public static PERFORMER_SETTING = CsdmAnalyticsValues.ORIGINATOR_SETTING;
+  public static PERFORMER_NOTIFICATION = CsdmAnalyticsValues.ORIGINATOR_NOTIFICATION;
 }
 
 export enum BulkActionName {
   COMPLETE, DELETE, DELETE_FAKE, DELETE_ASK, SELECT, SELECT_ALL, EXPORT, EXPORT_ASK,
+}
+
+export enum WifiProximityAction {
+  OPT_IN, OPT_OUT, SHOW_MODAL,
 }
 
 export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
@@ -47,6 +65,8 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
   private lastResultSize: number;
   private lastQueryCount: number;
   private lastMainAction: BulkActionName;
+
+  private lastProximityOriginator: string;
 
   /* @ngInject */
   constructor(private Analytics) {
@@ -154,5 +174,18 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
       default:
         return this.Analytics.sections.DEVICE_BULK.eventNames.BULK;
     }
+  }
+
+  private getProximityActionName(actionName: WifiProximityAction): string {
+    return actionName.toString();
+  }
+
+  public trackWifiOptInAction(action: WifiProximityAction, { originator = this.lastProximityOriginator, performer }: IProximityActionParam) {
+    this.lastProximityOriginator = originator;
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE.eventNames.PROXIMITY, {
+      proximity_action: this.getProximityActionName(action),
+      proximity_originator: originator,
+      proximity_performer: performer,
+    });
   }
 }

@@ -49,6 +49,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     TrialService,
     UrlConfig,
     WebExSiteService,
+    WifiProximityService,
     SparkAssistantService
   ) {
     var vm = this;
@@ -149,6 +150,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       getHealthStatus();
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
+      getWifiProximityOptInStatus();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
         vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
         resizeNotifications();
@@ -503,6 +505,22 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
             }
           });
         });
+    }
+
+    function getWifiProximityOptInStatus() {
+      if (Authinfo.isCustomerLaunchedFromPartner() || !Authinfo.isCustomerAdmin()) {
+        return;
+      }
+      FeatureToggleService.csdmProximityOptInGetStatus().then(function (optInToggle) {
+        if (!optInToggle) {
+          return;
+        }
+        WifiProximityService.getOptInStatusEverSet().then(function (optInIsEverSet) {
+          if (!optInIsEverSet) {
+            vm.notifications.push(OverviewNotificationFactory.createWifiProximityOptInNotification());
+          }
+        });
+      });
     }
 
     function removeCardUserTitle() {
