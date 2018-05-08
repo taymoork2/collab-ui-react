@@ -2,11 +2,13 @@
   <div class="card" ng-class="{'flipped':isFlipped, 'card-on-top': $ctrl.dropdownPresent === true}">
     <article class="face front" ng-class="{'no-display': isFlipped}">
       <div class="metrics-header reports-header" ng-hide=$ctrl.isorg> {{$ctrl.headername}}</div>
-      <div class="metrics-header reports-header" ng-hide=!$ctrl.isorg> {{$ctrl.headername}} {{$ctrl.value}}</div>
+      <div class="metrics-header reports-header" ng-hide=!$ctrl.isorg> {{$ctrl.headername}}
+        <span class="reports-header-value">{{$ctrl.value}} </span>
+      </div>
       <div id="cs-export-div">
-      <button class="btn" ng-click="$ctrl.refreshReportCards()">
+      <!--button class="btn" ng-click="$ctrl.refreshReportCards()">
           <span translate="common.ok"></span>
-      </button>
+      </button-->
     </div>
       <section>
         <div class="metrics-info">

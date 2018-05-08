@@ -78,7 +78,7 @@
         export: {
           enabled: true,
           divId: vm.exportDiv,
-          fileName: 'fileName',
+          fileName: 'Cluster_in_Service_' + new Date(),
           libs: {
             autoLoad: false,
           },
