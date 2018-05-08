@@ -7591,7 +7591,7 @@
     "deleteSiteNote": "Note: Site deletion may take time to be reflected in all systems.",
     "deleteSiteModalTitle": "Delete WebEx Site?",
     "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
-    "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
+    "deleteSiteModalBody2": "All data related to this site will be lost and this action cannot be undone. Make sure you have downloaded all recordings that you want to retain before deleting the site.",
     "deleteSiteRejectModalTitle": "Cannot Delete Site",
     "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
     "deleteSiteRejectModalBodyPending": "You cannot delete this site since provisioning for the previous action on this subscription is still pending. You will be able to delete this site once provisioning is complete",

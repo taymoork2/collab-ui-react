@@ -21,7 +21,7 @@ class SitesGridComponentCtrl implements ng.IComponentController {
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    if (changes.sites && changes.sites.currentValue && !changes.sites.isFirstChange) {
+    if (changes.sites && changes.sites.currentValue && !changes.sites.isFirstChange()) {
       this.sites = changes.sites.currentValue;
       this.gridConfig.data = this.sites;
       this.gridApi.core.notifyDataChange(this.uiGridConstants.dataChange.ALL);
