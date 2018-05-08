@@ -50,7 +50,7 @@
   <qos-section 
     is-wizard="true"
     on-qos-update="clusterCreationWizard.qosUpdated(response)"
-    ng-show="clusterCreationWizard.currentStep === 5">
+    ng-show="clusterCreationWizard.currentStep === 5 && clusterCreationWizard.hasMfQosFeatureToggle">
   </qos-section>
   <cluster-creation-final
     cluster="clusterCreationWizard.clusterName"

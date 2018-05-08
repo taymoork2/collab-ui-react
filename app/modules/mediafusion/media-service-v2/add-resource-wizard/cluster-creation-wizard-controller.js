@@ -6,7 +6,7 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
@@ -38,6 +38,7 @@
     vm.hasMfCascadeBwConfigToggle = hasMfCascadeBwConfigToggle;
     vm.hasMfClusterWizardFeatureToggle = hasMfClusterWizardFeatureToggle;
     vm.hasMfFirstTimeCallingFeatureToggle = hasMfFirstTimeCallingFeatureToggle;
+    vm.hasMfQosFeatureToggle = hasMfQosFeatureToggle;
     vm.sipSettingsUpdated = sipSettingsUpdated;
     vm.sipSettingsEnabledCheck = sipSettingsEnabledCheck;
     vm.totalSteps = 7;

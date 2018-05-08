@@ -53,6 +53,7 @@ describe('ClusterCreationWizardController', function () {
         hasMfClusterWizardFeatureToggle: true,
         hasMfFirstTimeCallingFeatureToggle: true,
         hasMfFeatureToggle: true,
+        hasMfQosFeatureToggle: true,
         hasMfSIPFeatureToggle: true,
       });
       this.$scope.$apply();
