@@ -59,6 +59,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   private totalChunks: number;
 
   public errorData: ICustodian[] = [];
+  public csvErrorData: ICustodian[] = [];
   private csvEmailsArray: string[]; // emails uploaded from csv. Data to be converted
   public result: IImportResult | undefined;
   private shouldCancel = false; // triggers cancelation
@@ -66,6 +67,9 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   public progressLabel = this.$translate.instant('common.uploadingEllipsis');
 
   public CSV_IMPORT_HEADER = this.$translate.instant('common.emailAddress');
+  public exportTemplate = [{
+    [this.CSV_IMPORT_HEADER]: '',
+  }];
   public api: IImportComponentApi = {
     convertEmailsToUsers: this.convertEmailsToUsers.bind(this),
     displayResults: this.displayResults.bind(this),
@@ -254,6 +258,11 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
 
   public displayResults(): void {
     this.errorData = this.getErrorsForDisplay();
+    this.csvErrorData = _.cloneDeep(this.errorData);
+    this.csvErrorData.unshift({
+      emailAddress: this.$translate.instant('common.emailAddress'),
+      error: this.$translate.instant('common.error'),
+    });
     this.progress = 100;
     this.$timeout(() => {
       this.currentStep = ImportStep.RESULT;
@@ -262,16 +271,6 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
 
   public getTemplate(): string[][] {
     return [[this.CSV_IMPORT_HEADER]];
-  }
-
-  // display/export error results
-  public getErrorsForCsv(): ICustodian[] {
-    const errors = this.getErrorsForDisplay();
-    errors.unshift({
-      emailAddress: this.$translate.instant('common.emailAddress'),
-      error: this.$translate.instant('common.error'),
-    });
-    return errors;
   }
 
   // there might be additional logic needed - hence the function
