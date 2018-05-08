@@ -6581,9 +6581,9 @@
     },
     "qos": {
       "title": "QoS",
-      "description": " Enable Extended Port Range for QoS",
-      "success": "Extended Port Range for QoS setting was set successfully.",
-      "error": "Error in saving Extended Port Range for QoS setting. Please revert the change and try again later."
+      "description": "Enable extended port range for QoS",
+      "success": "Extended port range for QoS setting was set successfully.",
+      "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
     },
     "report": {
       "title": "Hybrid Media",
