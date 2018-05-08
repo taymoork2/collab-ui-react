@@ -18,7 +18,7 @@
         if (customerOrgId || partnerOrgId) {
           return Authinfo.getOrgName();
         } else if (Utils.isAdminPage()) {
-          return $translate.instant('index.newAppTitle');
+          return $translate.instant('index.appTitle');
         } else {
           return $translate.instant('index.genericTitle');
         }

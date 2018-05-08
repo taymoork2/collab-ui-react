@@ -613,8 +613,7 @@
     "welcome": "Welcome!",
     "feedback": "Feedback",
     "logout": "Sign Out",
-    "appTitle": "Cloud Collaboration Management",
-    "newAppTitle": "Cisco Webex Control Hub",
+    "appTitle": "Cisco Webex Control Hub",
     "proAppTitle": "Cisco Webex Control Hub Pro",
     "genericTitle": "Cisco Webex Teams",
     "search": "Search users by name or email",
@@ -6630,8 +6629,8 @@
       "testconfigure": "2. Test your configuration",
       "utc": "(UTC)",
       "sparkcalls": "Webex Calling",
-      "testsparkcalls":"Test Cisco Webex calling",
-      "sparkcalldesc": "Verify whether Cisco Webex calling are landing on this cluster.",
+      "testsparkcalls":"Test Cisco Webex Calling",
+      "sparkcalldesc": "Verify whether Cisco Webex calling is landing on this cluster.",
       "begintest": "Begin test",
       "sipcalls": "SIP Calls",
       "verifysipcalls": "Verify SIP calls",
@@ -8952,7 +8951,7 @@
     "webexSiteManagement": {
       "title": "Webex Meetings Sites",
       "subsectionLabel": "Allow customers to manage Webex Meetings Sites",
-      "subsectionDescription": "Customers can add, edit and delete Webex Meetings sites in the customer portal of Cisco Spark Control Hub. Disabling this option will remove the user interface for managing Webex Meetings sites for all of your customers.",
+      "subsectionDescription": "Customers can add, edit and delete Webex Meetings sites in the customer portal of Cisco Webex Control Hub. Disabling this option will remove the user interface for managing Webex Meetings sites for all of your customers.",
       "allowSiteManagementByCustomer": "Allow customers to manage Webex Meetings sites",
       "siteManagementSettingUpdated": "Webex Site Management by customer setting has been updated"
     },
@@ -11108,7 +11107,7 @@
       "exceptions": "Exceptions",
       "exceptionsTooltip": "Users from consumer email domains (e.g. gmail.com, outlook.com, etc.) or from domains that are not verified by the admin will allways receive an email to ensure they are who they say they are.",
       "receiveEmailMoreInfo": "Note",
-      "receiveEmailInfo": "If you already have domains verified in Cisco Spark Control Hub, users in those domains will not receive emails.",
+      "receiveEmailInfo": "If you already have domains verified in Cisco Webex Control Hub, users in those domains will not receive emails.",
       "signAgreementNote": "Info",
       "signAgreementTooltip": "Your Webex Meetings Site is not entitled to utilize Sign Legal Agreement. Contact Cisco Collaboration Help for information concerning your Webex Meetings Site's entitlement to Sign Legal Agreement."
     },
