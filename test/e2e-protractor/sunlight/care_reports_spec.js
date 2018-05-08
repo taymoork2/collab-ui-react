@@ -1,7 +1,7 @@
 'use strict';
 
 // Unstable test, see https://jira-eng-sjc12.cisco.com/jira/browse/SL-1580
-xdescribe('Care Reports', function () {
+describe('Care Reports', function () {
   it('should login', function () {
     login.login('contactcenter-admin');
   });
@@ -53,7 +53,7 @@ xdescribe('Care Reports', function () {
       utils.expectIsDisplayed(reports.taskAggregateGraph);
     });
 
-    it('should not show Task Aggregate report for past days', function () {
+    xit('should not show Task Aggregate report for past days', function () {
       reports.clickFilter(reports.timeSelectCare);
       utils.click(reports.getOption(reports.timeSelectCare, time[2]));
 

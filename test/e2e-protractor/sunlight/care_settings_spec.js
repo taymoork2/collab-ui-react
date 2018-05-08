@@ -1,7 +1,7 @@
 'use strict';
 
 // Unstable test, see https://jira-eng-sjc12.cisco.com/jira/browse/SL-1580
-xdescribe('On Care settings page, a Care admin should be able to ', function () {
+describe('On Care settings page, a Care admin should be able to ', function () {
   beforeAll(function () {
     login.login('contactcenter-admin', '#/services/careDetails/settings');
   });
@@ -19,7 +19,7 @@ xdescribe('On Care settings page, a Care admin should be able to ', function () 
     utils.isSelected(careSettingsPage.chatToVideoToggle);
   });
 
-  it('save the org chat configurations', function () {
+  xit('save the org chat configurations', function () {
     toggleChatCount();
     validateSubmitConfiguration();
   });
