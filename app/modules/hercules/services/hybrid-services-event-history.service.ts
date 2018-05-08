@@ -5,6 +5,7 @@ import { HybridServicesUtilsService } from './hybrid-services-utils.service';
 import resourceGroupServiceModuleName, { ResourceGroupService } from './resource-group.service';
 import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
 import * as userServiceModuleName from 'modules/core/scripts/services/user.service.js';
+import moment = require('moment');
 
 export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmRaisedNotificationSent'
   | 'AlarmResolvedNotificationSent' | 'ClusterUpdated'| 'ConnectorStateUpdated' | 'UpgradeSchedule'
@@ -17,6 +18,9 @@ export type EventType = 'AlarmRaised' | 'AlarmResolved' | 'AlarmRaisedNotificati
 export interface IHybridServicesEventHistoryData {
   earliestTimestampSearched: string;
   items: IHybridServicesEventHistoryItem[];
+  paging: {
+    next: string;
+  };
 }
 
 export interface IHybridServicesEventHistoryItem {
@@ -195,25 +199,75 @@ export class HybridServicesEventHistoryService {
     return res.data;
   }
 
-  public getAllEvents(options: IGetAllEventsOptions): ng.IPromise<IHybridServicesEventHistoryData> {
+
+  public getAllEvents(options: IGetAllEventsOptions, next: string | undefined, updateItems: (items: IHybridServicesEventHistoryItem[]) => void, items: IHybridServicesEventHistoryItem[] | undefined): ng.IPromise<IHybridServicesEventHistoryData | null | undefined> {
     const fromTimestamp = options.eventsSince || moment().subtract(7, 'days').toISOString();
     const toTimestamp = options.eventsTo || moment().toISOString();
-    const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${options.orgId || this.Authinfo.getOrgId()}/events/`;
+    let url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${options.orgId || this.Authinfo.getOrgId()}/events/`;
+
+    console.log('next=', next);
+    const diffInHours = moment(toTimestamp).diff(moment(fromTimestamp)) / (60000 * 60);
+    console.log(diffInHours);
+
+
+    if (diffInHours > 24 * 7) {
+      // If we are asking the API for more than 7 days, we need to issue several request
+      // using the pagination feature
+
+      let tempOptions: IGetAllEventsOptions | null = options;
+      if (next !== undefined) {
+        url = next;
+        console.log('url=', url);
+        tempOptions = null;
+      }
+      return this.getEvents(url, tempOptions, moment(toTimestamp).subtract(7, 'days').toISOString(), toTimestamp)
+        .then((response) => {
+          console.log(moment('earliest=', response.earliestTimestampSearched));
+          console.log(moment('eventsSince=', options.eventsSince));
+          if (moment(response.earliestTimestampSearched) > moment(options.eventsSince)) {
+            items = items ? items.concat(response.items) : [];
+            console.log('service says items.length=', items.length);
+            updateItems(items);
+            console.log('iterating with url=', response.paging.next);
+
+            return this.getAllEvents(options, response.paging.next, updateItems, items);
+            // return this.$q.resolve(this.getAllEvents(options, response.paging.next));
+          }
+          // return this.$q.resolve(null);
+          let processedEvents: IHybridServicesEventHistoryData | null = null;
+          if (items) {
+            processedEvents = {
+              earliestTimestampSearched: response.earliestTimestampSearched,
+              items: items,
+              paging: response.paging,
+            };
+          }
+
+          return this.$q.resolve(processedEvents);
+          // return this.$q.resolve(this.getEvents(url, tempOptions, undefined, undefined));
+        });
+    } else {
+      return this.getEvents(url, options, fromTimestamp, toTimestamp);
+    }
+  }
+
+  private getEvents(url: string, options: IGetAllEventsOptions | null, fromTimestamp: string | undefined, toTimestamp: string | undefined) {
     return this.$http
       .get(url, {
-        params: {
+        params: options ? {
           clusterId: options.clusterId,
           fromTime: fromTimestamp,
           hostSerial: options.hostSerial,
           serviceId: options.serviceId,
           toTime: toTimestamp,
-        },
+        } : null,
       })
       .then(this.extractData)
       .then((rawData: IRawClusterData) => {
         const processedEvents: IHybridServicesEventHistoryData = {
           earliestTimestampSearched: rawData.earliestTimestampSearched,
           items: [],
+          paging: rawData.paging,
         };
         if (rawData.items) {
           processedEvents.items = this.processEvents(rawData.items);
@@ -229,7 +283,7 @@ export class HybridServicesEventHistoryService {
       .then((events) => this.addUsernames(events));
   }
 
-  /////////////////////
+/////////////////////
 
   /* Auxiliary methods we want to expose  */
 
