@@ -27,13 +27,6 @@
     state: 'partnercustomers',
     link: '/partner/customers',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-user',
     title: 'tabs.userTab',
@@ -56,7 +49,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'partner-services-overview',
-    feature: 'atlas-hosted-cloud-service',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
     link: '/partner/services-overview',
   }, {
     tab: 'deviceTab',
@@ -149,13 +142,6 @@
     link: '/partner/customers',
     iconClass: 'icon-outline',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-people-active',
     title: 'tabs.userTab',
@@ -181,7 +167,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'partner-services-overview',
-    feature: 'atlas-hosted-cloud-service',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
     link: '/partner/services-overview',
   }, {
     tab: 'deviceTab',
