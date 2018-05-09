@@ -126,6 +126,10 @@ class Chart implements ng.IComponentController {
       }).value();
   }
 
+  public someSelected() {
+    return _.some(this.legend, 'selected');
+  }
+
   private setChartLabelsAndColors(data: BucketHolder) {
     _.each(data.buckets, (bucket: { key: string, name: string, color: string, visibleLegend: boolean }) => {
       bucket.name = this.$translate.instant(`CsdmStatus.${data.bucketName}.${_.toUpper(bucket.key)}`);

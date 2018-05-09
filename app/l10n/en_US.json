@@ -2340,6 +2340,7 @@
     "searchError": "The search input is not recognized.",
     "allDevices": "Anything",
     "containingQuery": "containing {{query}}",
+    "equalsQuery": "equals {{query}}",
     "query": "{{query}}",
     "typeHeader": "Type",
     "nameHeader": "Belongs to",
@@ -2420,7 +2421,8 @@
       "deviceExportFailedOrCancelled": "Device Export failed or was cancelled."
     },
     "chart": {
-      "deviceFound": "{deviceCount, plural, =1{Device} other{Devices}} found"
+      "deviceFound": "{deviceCount, plural, =1{Device} other{Devices}} found",
+      "deviceTotal": "{deviceCount, plural, =1{Device} other{Devices}} in total"
     }
   },
   "hercules": {

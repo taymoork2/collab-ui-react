@@ -4,6 +4,7 @@ import { IOnChangesObject } from 'angular';
 class DeviceCount implements ng.IComponentController {
   public chartTitle: string;
   public deviceCount: number;
+  public isSearch: boolean;
 
   //bindings:
   public searchResult?: SearchResult;
@@ -15,6 +16,7 @@ class DeviceCount implements ng.IComponentController {
     }
     this.chartTitle = `${data.hits.total}`;
     this.deviceCount = data.hits.total;
+    this.isSearch = !!data.query;
   }
 
   public $onChanges(_onChangesObj: IOnChangesObject) {

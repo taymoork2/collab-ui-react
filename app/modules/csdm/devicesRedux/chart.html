@@ -4,10 +4,10 @@
 
     <table class="legend">
       <tr ng-repeat="legend in chart.legend" ng-click="chart.legendClick(legend)"
-          ng-class="{selected: legend.selected, none: legend.docCount === 0}">
+          ng-class="{selected: legend.selected, none: !legend.selected && legend.docCount === 0 && chart.someSelected()}">
         <td><div class="oval" ng-class="legend.color"></div></td>
         <td class="text">{{legend.text}}</td>
-        <td class="number"><strong  ng-show="legend.docCount>0">{{legend.docCount}}</strong></td>
+        <td class="number"><div  ng-hide="!legend.selected && legend.docCount === 0 && chart.someSelected()">{{legend.docCount}}</div></td>
       </tr>
     </table>
   </div>
