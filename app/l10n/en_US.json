@@ -3031,6 +3031,7 @@
         "certificatesModalHeading": "Remove Certificate",
         "sipDomainHeading": "SIP Destination",
         "defaultSipDomainHeading": "Default SIP Destination",
+        "sipDomainDescription": "Add a SIP Destination to establish a mutual TLS connection to your Expressway-E.",
         "defaultSipDomainDescription": "Add a default SIP Destination to establish a mutual TLS connection to your Expressway-E. Your default SIP Destination applies to all hybrid call clusters unless you override it in the cluster settings.",
         "sipDomainPlaceholder": "sipmtls.example.com",
         "sipDestinationsOverview": {
