@@ -1,6 +1,5 @@
 require('./_overview.scss');
 var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
-var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
 var OfferName = require('modules/core/shared/offer-name').OfferName;
 var OverviewEvent = require('./overview.keys').OverviewEvent;
 
@@ -147,14 +146,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     }
 
     function init() {
-      // Display re-branding banner
-      $rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
-        visible: true,
-        type: 'info',
-        translation: 'rebrand.banner.text',
-        closeable: true,
-      });
-
       getHealthStatus();
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
@@ -597,7 +588,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       if (_.isFunction(deregisterSsoEnabledListener)) {
         deregisterSsoEnabledListener();
       }
-      $rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED);
     });
 
     var deregisterSsoEnabledListener = $rootScope.$watch('ssoEnabled', function (newValue, oldValue) {

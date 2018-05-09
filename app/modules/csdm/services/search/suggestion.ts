@@ -1,6 +1,7 @@
 import { SearchElement } from './searchElement';
 import { ISuggestionGroup } from './suggestionGroup';
 import { SuggestionRanking } from './SuggestionRanking';
+import { SearchTranslator } from './searchTranslator';
 
 export interface ISuggestionEntry {
   field?: string;
@@ -19,10 +20,11 @@ export interface ISuggestionAndGroupForUi extends ISuggestionEntry {
 export interface ISuggestionForUi extends ISuggestionAndGroupForUi {
   readonly translatedText?: string;
   readonly count?: number;
+  readonly surroundCursorWithQuotes?: boolean;
 }
 
 export interface ISuggestion extends ISuggestionForUi {
-  recalculateRankAndHighlight(workingElement: SearchElement | null, baseLineRank?: number);
+  recalculateRankAndHighlight(workingElement: SearchElement | null, translator: SearchTranslator, baseLineRank?: number);
 
   setActiveByHoverAndGetParent(active: boolean): IActiveSuggestion | undefined;
 
@@ -46,6 +48,7 @@ export class Suggestion implements ISuggestionForUi, ISuggestionAndGroupForUi, I
   public activeByKeyboard: boolean;
 
   public searchString: string;
+  public surroundCursorWithQuotes?: boolean;
   public readableField: string;
   public field?: string;
   public translatedText?: string;
@@ -58,23 +61,13 @@ export class Suggestion implements ISuggestionForUi, ISuggestionAndGroupForUi, I
   public permanentRank?: number;
   public hidden?: boolean;
 
-  constructor(private parent: ISuggestionGroup, { searchString, readableField, field, translatedText, textTranslationKey, textTranslationParams, count, isFieldSuggestion, isInputBased, permanentRank = undefined }: ISuggestionParam) {
-    this.searchString = searchString;
-    this.readableField = readableField;
-    this.field = _.toLower(field);
-    this.textTranslationKey = textTranslationKey;
-    this.textTranslationParams = textTranslationParams;
-    this.translatedText = translatedText;
-    this.count = count;
-    this.isFieldSuggestion = isFieldSuggestion;
-    this.isInputBased = isInputBased;
-    this.permanentRank = permanentRank;
+  constructor(private parent: ISuggestionGroup, params: ISuggestionParam) {
+    _.assignIn(this, params);
+    this.field = _.toLower(params.field);
   }
 
-  public recalculateRankAndHighlight(workingElement: SearchElement | null, baseLineRank?: number) {
-    // const { translatedText, rank: rank } =  this.highlighter.highlightAndRank(this.translatedText, this.textTranslationParams, workingElement, baseLineRank || 0);
-    // this.translatedText = translatedText;
-    this.rank = this.permanentRank || SuggestionRanking.rankSuggestion(this, workingElement, baseLineRank);
+  public recalculateRankAndHighlight(workingElement: SearchElement | null, translator: SearchTranslator, baseLineRank?: number) {
+    this.rank = this.permanentRank || SuggestionRanking.rankSuggestion(this, workingElement, baseLineRank, translator);
     this.hidden = this.rank === 0;
   }
 

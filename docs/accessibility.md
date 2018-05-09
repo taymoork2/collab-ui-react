@@ -97,6 +97,7 @@ It's important that everything in the tabindex be announced by screen readers.  
   </li>
 </ul>
 ```
+
 ## Toolkit Keyboard Navigation Integration
 
 Currently the toolkit is not fully keyboard accessible.  When encountering problems with keyboard accessibility on Atlas, please verify whether the issues are stemming from a toolkit component, such as cs-select or cs-searchfield, and open a Jira detailing the issues with the component encountered, which page on Atlas it can be reproduced on, and what the correct keyboard interaction for this component should be.  Issues with the toolkit may include components that are not keyboard navigable, or are not fully keyboard navigable, or components that are lacking aria-labels.
@@ -284,23 +285,29 @@ Example:
 
 ### Tooltips
 
+NOTICE: For streamlining the accessibility process, check out the new [tooltip components](#tooltip-wrapper-components) which wrap around the collab-ui-ng tooltip.
+
 Similar to popovers, tooltips are not automatically added to the tabindex, nor do they automatically react to receiving keyboard focus.  Please ensure that all tooltips on the page have `focus` included as a `tooltip-trigger`, a `tabindex` of 0 and an `aria-label` that matches the displayed text of the tooltip.  In cases where the tooltip displays html in addition to the text, the text provided to the `aria-label` should not include the html elements.
 
 Examples:
 ```html
 <!-- Regular tooltip -->
-<i class="icon info-icon"
-  tooltip="{{::'tooltip.demo' | translate}}"
-  tooltip-trigger="focus mouseenter"
+<i
+  aria-label="{{::'tooltip.demo' | translate}}"
+  class="icon info-icon"
+  role="tooltip"
   tabindex="0"
-  aria-label="{{::'tooltip.demo' | translate}}"></i>
+  tooltip="{{::'tooltip.demo' | translate}}"
+  tooltip-trigger="focus mouseenter"></i>
 
 <!-- Tooltip with html -->
-<i class="icon info-icon"
-  tooltip-html-unsafe="{{::$ctrl.getUnsafeHtml()}}"
-  tooltip-trigger="focus mouseenter"
+<i
+  aria-label="{{::$ctrl.getTextOnly()}}"
+  class="icon info-icon"
+  role="tooltip"
   tabindex="0"
-  aria-label="{{::$ctrl.getTextOnly()}}"></i>
+  tooltip-html-unsafe="{{::$ctrl.getUnsafeHtml()}}"
+  tooltip-trigger="focus mouseenter"></i>
 ```
 
 ## Accessibility Service
@@ -418,6 +425,82 @@ public isSelectedItem(item: IListItem): boolean {
   </cs-card-member>
 </div>
 ```
+
+## Tooltip Wrapper Components
+
+Because of how many tags go in to creating an accessible tooltip, wrapper components are being created to streamline the tooltip creation process.
+
+Commonalities between tooltip components:
+* All tooltips are added to the tabindex by default, but will include an optional tabindex override: `tt-tabindex`.
+* `aria-label` will only need to be provided in the cases where the tooltip text includes html; these should be passed in using `tt-aria-label`.
+* Tooltips will default to `role="tooltip"` unless a click function or `tt-href` is provided; then it will be set to `role="button"`.  Do not use `ng-click` to append the click function.  Use `on-click-fn` instead.
+* `tooltip-trigger` is set to `mouseover focus` by default and cannot be modified.
+* `tt-tooltip-placement`, `tt-tooltip-append-to-body`, `tt-tooltip-animation` and `tt-tooltip-class` are pass-throughs to the tooltip tags of the same name (minus the `tt-`) in the [collab-ui tooltip](#tooltips).
+* All tooltips will share the following bindings:
+```typescript
+public bindings = {
+  ttAriaLabel: '@?',            // optional aria-label text
+  ttClass: '@?',                // optional icon class names; defaults to icon-information
+  ttTabindex: '<?',             // optional tabindex override
+  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng
+  ttTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng
+  ttTooltipClass: '@?',         // same as tooltip-class from collab-ui-ng
+  ttTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng
+  ttTooltipText: '@',           // safe text for the tooltip to display, used for the aria-label if cs-aria-label is undefined
+  ttTooltipUnsafeText: '@?',    // unsafe text passed into tooltip-html-unsafe; should be used in conjunction with cs-aria-label
+  onClickFn: '&?',              // optional click function if tooltip doubles as button; changes role from 'tooltip' to 'button' when present
+};
+```
+
+### icon-tooltip
+
+The majority of our tooltips have icon only triggers.  `icon-tooltip` is used specifically for these cases and defaults to the `icon-information` class for the trigger icon, as this appears to be one of the most used tooltip trigger icons.
+
+Examples:
+* The minimum effort for an accessible tooltip.  Creates an `icon-information` trigger tooltip with the `tooltip-text` used both in the tooltip itself and as the `aria-label`.
+```html
+<icon-tooltip tt-tooltip-text="{{::'common.tooltip' | translate}}"></icon-tooltip>
+```
+* The minimum effort for an `html-unsafe` tooltip.  Creates an `icon-information` trigger tooltip but requires separate values for the tooltip text and the `aria-label`.
+```html
+<icon-tooltip
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+</icon-tooltip>
+```
+
+### text-tooltip
+
+`text-tooltip` is used specifically for tooltips with text triggers.  These are not to be used for button tooltips (those will use [button-tooltip](#button-tooltip) below), though a click function can still be attached using `on-click-fn`.
+
+Examples:
+* The minimum effort for an accessible tooltip.
+```html
+<text-tooltip
+  tt-tooltip-text="{{::'common.tooltip' | translate}}">
+  <span translate="transcluded.text"><span>
+</text-tooltip>
+```
+* The minimum effort for an `html-unsafe` tooltip.
+```html
+<text-tooltip
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+  <span translate="transcluded.text"><span>
+</text-tooltip>
+```
+
+### link-tooltip
+
+TODO: create tooltip that requires an href value
+
+### button-tooltip
+
+TODO: create tooltip with button trigger
+
+### text-input-tooltip
+
+TODO: create tooltip with text input trigger
 
 ---
 

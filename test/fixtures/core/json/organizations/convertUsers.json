@@ -1,0 +1,315 @@
+{
+  "totalResults": 12,
+  "itemsPerPage": 0,
+  "startIndex": 0,
+  "resources": [
+    {
+      "id": "08c0af1d-82db-4ee2-9bd2-8b3e55dbb77b",
+      "userName": "isvtest4@testctg.com",
+      "displayName": "isvtest4@testctg.com",
+      "meta": {
+        "created": "2017-08-10T23:43:42.242Z",
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/08c0af1d-82db-4ee2-9bd2-8b3e55dbb77b"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1502408622440\"}"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "9fdac4bb-a36b-4d3a-99cd-6b1fdfdec981",
+      "userName": "joefoo@testctg.com",
+      "displayName": "joefoo@testctg.com",
+      "meta": {
+        "created": "2018-03-02T23:49:12.655Z",
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/9fdac4bb-a36b-4d3a-99cd-6b1fdfdec981"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1520034552781\"}"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "5a5fd80c-7c23-4283-9f9a-d7275928a560",
+      "userName": "joefoo2@testctg.com",
+      "displayName": "joefoo2@testctg.com",
+      "meta": {
+        "created": "2018-03-02T23:50:55.345Z",
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/5a5fd80c-7c23-4283-9f9a-d7275928a560"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": true,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "3bacc721-aec9-4f93-9061-ae05b21ae577",
+      "userName": "pratibha.harkuni+test123@testctg.com",
+      "displayName": "pratibha.harkuni+test123@testctg.com",
+      "meta": {
+        "created": "2018-04-12T21:24:34.714Z",
+        "accountStatusSetTime": {
+          "pending": "2018-04-12T21:24:34.712Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/3bacc721-aec9-4f93-9061-ae05b21ae577"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1523568274947\"}"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "3c5f80d6-08b1-4a31-8868-7058a7448924",
+      "userName": "mrmccann+test1@testctg.com",
+      "displayName": "T",
+      "meta": {
+        "created": "2018-04-13T00:30:52.955Z",
+        "accountStatusSetTime": {
+          "active": "2018-04-13T00:36:19.856Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/3c5f80d6-08b1-4a31-8868-7058a7448924"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1523579453209\"}"
+      ],
+      "accountStatus": [
+        "active"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "DELAYED"
+    },
+    {
+      "id": "a5a0cdcc-8fae-49c2-b3b8-b84d44b45c77",
+      "userName": "mrmccann+test2@testctg.com",
+      "displayName": "A",
+      "meta": {
+        "created": "2018-04-13T04:53:56.889Z",
+        "lastLoginTime": "2018-04-13T04:56:55.445Z",
+        "accountStatusSetTime": {
+          "transient": "2018-04-13T04:55:59.722Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/a5a0cdcc-8fae-49c2-b3b8-b84d44b45c77"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1523595237026\"}"
+      ],
+      "accountStatus": [
+        "transient"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "TRANSIENT"
+    },
+    {
+      "id": "d948c4bc-572c-4b32-95c0-27f440114be4",
+      "userName": "nwooler+500@testctg.com",
+      "displayName": "nwooler+500@testctg.com",
+      "meta": {
+        "created": "2018-04-18T12:26:09.105Z",
+        "accountStatusSetTime": {
+          "pending": "2018-04-18T12:26:09.105Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/d948c4bc-572c-4b32-95c0-27f440114be4"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": true,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "008aec84-9872-4bc5-8846-401e09655fde",
+      "userName": "nwooler+450@testctg.com",
+      "meta": {
+        "created": "2018-04-18T12:31:14.528Z",
+        "accountStatusSetTime": {
+          "pending": "2018-04-18T12:31:14.528Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/008aec84-9872-4bc5-8846-401e09655fde"
+      },
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": true,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "11503d5e-1737-4688-b459-c636790b5ee9",
+      "userName": "mrmccann+testint@testctg.com",
+      "displayName": "T",
+      "meta": {
+        "created": "2018-04-18T17:09:02.885Z",
+        "accountStatusSetTime": {
+          "transient": "2018-04-18T17:14:32.409Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/11503d5e-1737-4688-b459-c636790b5ee9"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1524071343128\"}"
+      ],
+      "accountStatus": [
+        "transient"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "TRANSIENT"
+    },
+    {
+      "id": "719da3d8-b301-467f-85f9-300b644f87e3",
+      "userName": "nancy.jiao@testctg.com",
+      "displayName": "Nancy Jiao CI Test",
+      "meta": {
+        "created": "2018-04-20T21:20:40.362Z",
+        "lastLoginTime": "2018-04-20T21:41:11.842Z",
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/719da3d8-b301-467f-85f9-300b644f87e3"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1524259240621\"}"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "DELAYED"
+    },
+    {
+      "id": "29299da0-baee-4e48-83a4-9a96f164d934",
+      "userName": "andra.tran@testctg.com",
+      "displayName": "andra.tran@testctg.com",
+      "meta": {
+        "created": "2018-04-20T22:03:37.322Z",
+        "accountStatusSetTime": {
+          "pending": "2018-04-20T22:03:37.321Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/29299da0-baee-4e48-83a4-9a96f164d934"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1524261817481\"}"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "IMMEDIATE"
+    },
+    {
+      "id": "1f301838-85f3-4e96-8509-543781dd8b19",
+      "userName": "srathnak@testctg.com",
+      "displayName": "srathnak@testctg.com",
+      "meta": {
+        "created": "2018-04-21T08:49:50.709Z",
+        "accountStatusSetTime": {
+          "pending": "2018-04-21T08:49:50.708Z"
+        },
+        "organizationID": "consumer",
+        "uri": "https://identity.webex.com/identity/scim/consumer/v1/Users/1f301838-85f3-4e96-8509-543781dd8b19"
+      },
+      "entitlements": [
+        "squared-call-initiation",
+        "spark",
+        "webex-squared"
+      ],
+      "userSettings": [
+        "{\"spark.signUpDate\":\"1524300590857\"}"
+      ],
+      "accountStatus": [
+        "pending"
+      ],
+      "active": true,
+      "orgId": "consumer",
+      "invitePending": false,
+      "conversionStatus": "IMMEDIATE"
+    }
+  ]
+}

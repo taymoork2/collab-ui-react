@@ -3,6 +3,7 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
+import { ServicesOverviewCCACard } from './cloud/cca-card';
 
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
@@ -27,6 +28,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     new ServicesOverviewMeetingCard(this.Authinfo),
     new ServicesOverviewCallCard(this.Authinfo),
     new ServicesOverviewCareCard(this.Authinfo),
+    new ServicesOverviewCCACard(),
   ];
 
   private urlParams: ng.ui.IStateParamsService;
@@ -83,6 +85,7 @@ export class ServicesOverviewController implements ng.IComponentController {
       hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
       huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
       hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
+      geminiCCA: this.FeatureToggleService.supports(this.FeatureToggleService.features.gemServicesTab),
     });
 
     features
@@ -91,6 +94,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
         this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
         this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
+        this.forwardEvent('geminiCCAToggleEventHandler', response.geminiCCA);
 
         // Used by hybrid cards
         this.hasCapacityFeatureToggle = response.atlasHybridCapacity;

@@ -1,5 +1,6 @@
 import testModule from './index';
-import { HealthStatusID, OverviewEvent } from 'modules/core/overview/overview.keys';
+import { OverviewEvent } from 'modules/core/overview/overview.keys';
+import { HealthStatusID } from 'modules/core/health-monitor';
 
 describe('Component: licenseCard', () => {
   beforeEach(function () {

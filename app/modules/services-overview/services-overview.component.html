@@ -11,6 +11,11 @@
       <article ng-include="card.template"></article>
     </cs-card>
   </cs-card-layout>
+  <cs-card-layout block-view="true" ng-if="$ctrl.isPartnerAdmin()">
+    <cs-card class="cs-card--small" ng-class="card.cardClass" ng-repeat="card in $ctrl.getCloudCards()" ng-if="card.isPartner && card.display">
+      <article ng-include="card.template"></article>
+    </cs-card>
+  </cs-card-layout>
   <div ng-if="$ctrl.loadingHybridServicesCards">
     <h5><span translate="servicesOverview.hybridServices"></span></h5>
     <span class="icon icon-spinner icon-2x"></span>

@@ -93,6 +93,19 @@ describe('LaunchAdvancedSettingsController', () => {
         });
       });
 
+      describe('+re-branded supported sw', () => {
+
+        beforeEach(() => {
+          state.device.software = 'RoomOS 2017-11-30 a487137';
+          initController(state.device);
+          state.$timeout.flush();
+        });
+
+        it('should start in the connect state.', () => {
+          expect(state.controller.state).toEqual(state.controller.states.connect);
+        });
+      });
+
       describe('+unsupported sw', () => {
 
         beforeEach(() => {
@@ -125,10 +138,22 @@ describe('LaunchAdvancedSettingsController', () => {
         });
       });
 
+      describe('+re-branded supported sw', () => {
+        beforeEach(() => {
+          state.device.software = 'RoomOS 2016-11-30 a487137';
+          initController(state.device);
+          state.$timeout.flush();
+        });
+
+        it('should be in the offline state.', () => {
+          expect(state.controller.state).toEqual(state.controller.states.offline);
+        });
+      });
+
       describe('+unsupported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Unsupported Room OS 2012-11-30 a4d7137';
+          state.device.software = 'Spark Unsupported RoomOS 2012-11-30 a4d7137';
           initController(state.device);
           state.$timeout.flush();
         });

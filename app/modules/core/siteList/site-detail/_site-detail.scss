@@ -1,0 +1,41 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+site-detail {
+
+  .attention-color {
+    color: $color-attention-base;
+  }
+
+  .error-color {
+    color: $color-alerts-base;
+  }
+
+  .feature-list {
+    .configure-sites {
+      li {
+        margin: 1rem 0;
+      }
+    }
+  }
+
+  .feature-inline {
+    a {
+      .feature-name {
+        color: inherit;
+      }
+    }
+  }
+
+  .grid-text-top {
+    vertical-align: text-top;
+  }
+
+  .message {
+    margin-top: 1rem;
+  }
+
+}
+

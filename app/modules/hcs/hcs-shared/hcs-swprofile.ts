@@ -9,11 +9,11 @@ export interface IFileData {
   fileName?: string;
 }
 
-export interface ISoftwareProfileAppVersion extends IFileData {
+export interface ISoftwareAppVersion extends IFileData {
   typeApplication: string;
 }
 
-export class SoftwareProfileAppVersion implements ISoftwareProfileAppVersion {
+export class SoftwareAppVersion implements ISoftwareAppVersion {
   public typeApplication: string;
   public uuid: string;
   public version?: string;
@@ -21,8 +21,8 @@ export class SoftwareProfileAppVersion implements ISoftwareProfileAppVersion {
   constructor (obj: {
     typeApplication: '',
     uuid: '',
-    version?: '',
-    fileName?: '',
+    version: '',
+    fileName: '',
   }) {
     this.typeApplication = obj.typeApplication;
     this.uuid = obj.uuid;
@@ -35,26 +35,29 @@ export interface ISoftwareProfile {
   name: string;
   uuid?: string;
   url?: string;
-  applicationVersions?: ISoftwareProfileAppVersion[];
+  applicationVersions?: SoftwareAppVersion[] | null;
 }
 
-export interface ISoftwareVersions {
-  name: string;
-  versions: ISoftwareProfileAppVersion[];
+export interface ISoftwareVersion {
+  typeApplication: string;
+  uuid: string;
 }
+
 
 export class SoftwareProfile implements ISoftwareProfile {
   public name: string;
   public uuid?: string;
   public url?: string;
-  public applicationVersions?: ISoftwareProfileAppVersion[];
+  public applicationVersions?: SoftwareAppVersion[] | null;
   constructor (obj: {
     name: '',
     uuid?: '',
     url?: '',
+    applicationVersions: SoftwareAppVersion[],
   }) {
     this.name = obj.name;
     this.uuid = obj.uuid;
     this.url = obj.url;
+    this.applicationVersions = obj.applicationVersions;
   }
 }

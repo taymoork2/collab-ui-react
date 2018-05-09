@@ -24,7 +24,7 @@ describe('SuggestionRanking', () => {
       });
       const so = SearchObject.createWithQuery(new QueryParser(this.searchTranslator), '');
       so.setWorkingElementText(query);
-      const rank = SuggestionRanking.rankSuggestion(this.suggestion, so.getWorkingElement(), -1);
+      const rank = SuggestionRanking.rankSuggestion(this.suggestion, so.getWorkingElement(), -1, this.searchTranslator);
       expect(rank).toBe(expectedRank);
     };
   });

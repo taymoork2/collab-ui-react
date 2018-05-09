@@ -18,6 +18,11 @@ export enum GetUserBy {
   EMAIL =  'email',
 }
 
+export enum OperationObject {
+  USERS = 'users',
+  MATTER = 'matter',
+}
+
 export class LegalHoldService {
   private adminServiceUrl: string;
   private shouldCancel = false;
@@ -36,8 +41,8 @@ export class LegalHoldService {
     this.adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
   }
 
-  private getActionUrl(action: Actions): string {
-    return `https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=${action}`;
+  private getActionUrl(action: Actions, operationObject: OperationObject = OperationObject.MATTER): string {
+    return `https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/${operationObject}?operationType=${action}`;
   }
 
   private getUserUrl(userEmailAddress: string): string {
@@ -104,7 +109,7 @@ export class LegalHoldService {
       caseId: caseId,
       usersUUIDList: usersUUIDList,
     };
-    return this.$http.post(this.getActionUrl(Actions.ADD_USERS), data)
+    return this.$http.post(this.getActionUrl(Actions.ADD_USERS, OperationObject.USERS), data)
       .then(() => {
         return this.readMatter(orgId, caseId);
       });
@@ -116,7 +121,7 @@ export class LegalHoldService {
       caseId: caseId,
       usersUUIDList: usersUUIDList,
     };
-    return this.$http.post(this.getActionUrl(Actions.REMOVE_USERS), data)
+    return this.$http.post(this.getActionUrl(Actions.REMOVE_USERS, OperationObject.USERS), data)
       .then(() => this.readMatter(orgId, caseId));
   }
 
@@ -125,7 +130,7 @@ export class LegalHoldService {
       orgId: orgId,
       caseId: caseId,
     };
-    return (this.$http.post(this.getActionUrl(Actions.LIST_USERS), data))
+    return (this.$http.post(this.getActionUrl(Actions.LIST_USERS, OperationObject.USERS), data))
       .then(result => <string[]>result.data);
   }
 
@@ -134,7 +139,7 @@ export class LegalHoldService {
       orgId: orgId,
       userUUID: userUUID,
     };
-    return this.$http.post(this.getActionUrl(Actions.LIST_MATTERS_FOR_USER), data)
+    return this.$http.post(this.getActionUrl(Actions.LIST_MATTERS_FOR_USER, OperationObject.USERS), data)
       .then(result => <string[]>result.data);
   }
 

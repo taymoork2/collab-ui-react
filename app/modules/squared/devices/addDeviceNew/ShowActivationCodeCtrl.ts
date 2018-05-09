@@ -174,17 +174,17 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
 
   public onCopySuccess() {
     this.Notification.success(
-      'generateActivationCodeModal.clipboardSuccess',
+      'showActivationCode.clipboardSuccess',
       undefined,
-      'generateActivationCodeModal.clipboardSuccessTitle',
+      'showActivationCode.clipboardSuccessTitle',
     );
   }
 
   public onCopyError() {
     this.Notification.error(
-      'generateActivationCodeModal.clipboardError',
+      'showActivationCode.clipboardError',
       undefined,
-      'generateActivationCodeModal.clipboardErrorTitle',
+      'showActivationCode.clipboardErrorTitle',
     );
   }
 
@@ -361,16 +361,16 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
   public sendActivationCodeEmail() {
     const onEmailSent = () => {
       this.Notification.notify(
-        [this.$translate.instant('generateActivationCodeModal.emailSuccess', {
+        [this.$translate.instant('showActivationCode.emailSuccess', {
           address: this.selectedUser.email,
         })],
         'success',
-        this.$translate.instant('generateActivationCodeModal.emailSuccessTitle'),
+        this.$translate.instant('showActivationCode.emailSuccessTitle'),
       );
     };
     const onEmailSendFailure = (error) => {
       this.Notification.errorResponse(error,
-        'generateActivationCodeModal.emailError',
+        'showActivationCode.emailError',
         {
           address: this.selectedUser.email,
         });

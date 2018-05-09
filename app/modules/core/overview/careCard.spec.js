@@ -1,4 +1,4 @@
-var HealthStatusID = require('./overview.keys').HealthStatusID;
+var HealthStatusID = require('modules/core/health-monitor').HealthStatusID;
 
 describe('OverviewCareCard', function () {
   var OverviewCareCard, $rootScope;

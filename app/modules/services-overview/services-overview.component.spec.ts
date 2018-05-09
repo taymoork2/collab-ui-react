@@ -88,9 +88,10 @@ describe('ServicesOverviewController', () => {
     it('should create 4 cloud cards', () => {
       initController();
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: false }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: true }).length).toBe(1);
     });
 
     it('should load the webex site list', () => {

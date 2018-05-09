@@ -7,7 +7,7 @@
 
   var OfferName = require('modules/core/shared/offer-name').OfferName;
   var OfferType = require('modules/core/shared/offer-name').OfferType;
-  var HealthStatusID = require('./overview.keys').HealthStatusID;
+  var HealthStatusID = require('modules/core/health-monitor').HealthStatusID;
 
   /* @ngInject */
   function OverviewCardFactory(FeatureToggleService, OverviewBroadsoftCard, OverviewHybridServicesCard, OverviewUsersCard, OverviewCareCard) {
@@ -72,7 +72,7 @@
           licenseDescription: 'overview.totalLicenses',
           statusId: HealthStatusID.SparkMeeting,
           title: 'overview.cards.roomSystem.title',
-          offerType: [OfferName.SD],
+          offerType: [OfferName.SD, OfferName.SB],
           settingsUrlObject: {
             url: '/devices',
           },

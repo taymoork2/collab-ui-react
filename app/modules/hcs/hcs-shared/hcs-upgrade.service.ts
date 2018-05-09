@@ -75,7 +75,7 @@ export class HcsUpgradeService {
         query: queryAction,
         delete: deleteAction,
       });
-    this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterid', {},
+    this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId', {},
       {
         update: updateAction,
         save: saveAction,
@@ -89,11 +89,12 @@ export class HcsUpgradeService {
         get: getAction,
       });
 
-    this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofile/:id', {},
+    this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {},
       {
         update: updateAction,
         save: saveAction,
         get: getAction,
+        query: queryAction,
       });
 
     this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {},
@@ -132,14 +133,18 @@ export class HcsUpgradeService {
   public listSftpServers(): ng.IPromise <any> {
     return this.sftpServerResource.get({
       partnerId: this.Authinfo.getOrgId(),
-    }).$promise;
+    }).$promise.then(response => {
+      return response;
+    });
   }
 
   public getCluster(_clusterId: string): ng.IPromise<IHcsCluster> {
     return this.clusterResource.get({
       partnerId: this.Authinfo.getOrgId(),
       clusterId: _clusterId,
-    }).$promise;
+    }).$promise.then(response => {
+      return response;
+    });
   }
 
   public updateCluster(_clusterId: string, cluster: IHcsCluster) {
@@ -166,35 +171,35 @@ export class HcsUpgradeService {
     });
   }
 
-  public createSwProfile(swProfile: ISoftwareProfile): ng.IPromise<any> {
+  public createSoftwareProfile(swProfile: ISoftwareProfile): ng.IPromise<any> {
     return this.swProfileResource.save({
       partnerId: this.Authinfo.getOrgId(),
     }, swProfile).$promise;
   }
 
-  public getSwProfile(_id: string): ng.IPromise<ISoftwareProfile> {
+  public getSoftwareProfile(_id: string): ng.IPromise<ISoftwareProfile> {
     return this.swProfileResource.get({
       partnerId: this.Authinfo.getOrgId(),
       id: _id,
     }).$promise;
   }
 
-  public updateSwProfile(_id: string, swProfile: ISoftwareProfile): ng.IPromise<any>  {
+  public updateSoftwareProfile(swProfile: ISoftwareProfile): ng.IPromise<any>  {
     return this.swProfileResource.update({
       partnerId: this.Authinfo.getOrgId(),
-      id: _id,
+      id: swProfile.uuid,
     }, swProfile).$promise;
   }
 
-  public deleteSwProfile(_id: string): ng.IPromise<any> {
+  public deleteSoftwareProfile(_id: string): ng.IPromise<any> {
     return this.swProfileResource.delete({
       partnerId: this.Authinfo.getOrgId(),
       id: _id,
     }).$promise;
   }
 
-  public listSwProfiles(): ng.IPromise <any[]> {
-    return this.swProfileResource.query({
+  public listSoftwareProfiles(): ng.IPromise <any> {
+    return this.swProfileResource.get({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise;
   }

@@ -9,6 +9,8 @@ export interface ICsdmAnalyticHelper {
 
   trackBulkAction(action: BulkActionName, params: IBulkParam);
 
+  trackBulkExport(params: IExportParam);
+
   trackExpandDevice(selectedDevices: number, device: csdm.IDevice);
 }
 
@@ -17,6 +19,10 @@ interface IBulkParam {
   selectedDevices?: number;
   totalSearchHits?: number;
   totalSuccessSize?: number;
+}
+
+interface IExportParam extends IBulkParam {
+  selectedExportFields?: string[];
 }
 
 export class CsdmAnalyticsValues {
@@ -32,10 +38,11 @@ export class CsdmAnalyticsValues {
 }
 
 export enum BulkActionName {
-  COMPLETE, DELETE, DELETE_FAKE, DELETE_ASK, SELECT, SELECT_ALL,
+  COMPLETE, DELETE, DELETE_FAKE, DELETE_ASK, SELECT, SELECT_ALL, EXPORT, EXPORT_ASK,
 }
 
 export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
+
   private lastSelectionSize: number;
   private lastResultSize: number;
   private lastQueryCount: number;
@@ -99,6 +106,20 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
     });
   }
 
+  public trackBulkExport({ mainAction = this.lastMainAction, selectedDevices = this.lastSelectionSize, totalSuccessSize, totalSearchHits = this.lastResultSize, selectedExportFields }: IExportParam) {
+    this.Analytics.trackEvent(this.getActionName(mainAction), {
+      bulk_action: this.getActionName(mainAction),
+      bulk_size: selectedDevices,
+      bulk_success: totalSuccessSize,
+      query_result: totalSearchHits,
+      query_count: this.lastQueryCount,
+      selectedExportFields: selectedExportFields,
+    });
+    this.lastResultSize = totalSearchHits;
+    this.lastSelectionSize = selectedDevices;
+    this.lastMainAction = mainAction;
+  }
+
   public trackBulkAction(action: BulkActionName, { mainAction = this.lastMainAction, selectedDevices = this.lastSelectionSize, totalSuccessSize, totalSearchHits = this.lastResultSize }: IBulkParam) {
     this.Analytics.trackEvent(this.getActionName(action), {
       bulk_action: this.getActionName(mainAction),
@@ -122,6 +143,10 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
         return this.Analytics.sections.DEVICE_BULK.eventNames.DELETE_ASK;
       case BulkActionName.DELETE_FAKE:
         return this.Analytics.sections.DEVICE_BULK.eventNames.DELETE_FAKE;
+      case BulkActionName.EXPORT:
+        return this.Analytics.sections.DEVICE_BULK.eventNames.EXPORT;
+      case BulkActionName.EXPORT_ASK:
+        return this.Analytics.sections.DEVICE_BULK.eventNames.EXPORT_ASK;
       case BulkActionName.SELECT:
         return this.Analytics.sections.DEVICE_BULK.eventNames.SELECT;
       case BulkActionName.SELECT_ALL:

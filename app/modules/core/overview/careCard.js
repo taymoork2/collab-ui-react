@@ -3,7 +3,7 @@
 
   // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
   var genericCardTemplatePath = require('ngtemplate-loader?module=Core!./genericCard.tpl.html');
-  var HealthStatusID = require('./overview.keys').HealthStatusID;
+  var HealthStatusID = require('modules/core/health-monitor').HealthStatusID;
 
   angular
     .module('Core')

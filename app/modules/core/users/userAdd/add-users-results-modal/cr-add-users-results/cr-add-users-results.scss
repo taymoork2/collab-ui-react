@@ -1,0 +1,155 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.users-convert-results {
+  display: flex;
+  min-height: 37.5rem;
+  flex-direction: column;
+
+  &__bottom-space--50 {
+    margin-bottom: 0.5rem;
+  }
+
+  &__bottom-space--500 {
+    margin-bottom: 5rem;
+  }
+
+  .results-container {
+    display: inline-flex;
+    min-height: 7.6875rem;
+
+    .result {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-lightest;
+      position: relative;
+
+      &.converted-users {
+        margin-right: 0.75rem;
+        h1 {
+          line-height: 3rem;
+          color: $brand-success;
+          &.disabled {
+            color: $gray-light;
+          }
+        }
+      }
+
+      &.pending-users {
+        h1 {
+          line-height: 3rem;
+          color: $color-orange-base;
+          &.disabled {
+            color: $gray-light;
+          }
+        }
+      }
+
+      &.error-users {
+        color: $brand-danger;
+      }
+    }
+  }
+
+  .results-total {
+    align-self: center;
+    margin: 1.25rem 0;
+  }
+
+  // ***** $TODO(brspence)
+
+  .table-header {
+    border: $gray-light solid 1px;
+    border-bottom: 0;
+    overflow-y: hidden !important;
+
+    .table {
+      border-color: $gray-lightest;
+    }
+
+    .table-bordered > thead > tr > th {
+      background-color: $gray-lightest;
+      color: $gray-darker;
+      height: 44px;
+      padding: 14px;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  .table-body {
+    border: $gray-light solid 1px;
+    border-top: 0;
+    position: relative;
+    top: -1px;
+
+    .table {
+      border-width: 0;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .table-bordered > tbody > tr > td {
+      color: $brand-danger;
+      height: 44px;
+      padding: 14px;
+    }
+
+    .table-bordered > tbody > tr {
+      border-top: none;
+      border-bottom: $gray-lighter solid 1px;
+    }
+
+    .table-bordered > tbody > tr:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  .warning-table {
+    .table-bordered > tbody > tr > td {
+      color: $brand-warning;
+    }
+  }
+
+  .error-table {
+    min-height: 46px;
+    max-height: 100%;
+    min-width: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table-bordered > thead > tr > th,
+    .table-bordered > thead > tr > td,
+    .table-bordered > tbody > tr > th,
+    .table-bordered > tbody > tr > td {
+      border-bottom-width: 1px;
+      border-right: $gray-light solid 1px;
+      font-size: 15px;
+    }
+
+    .table-bordered > thead > tr > th:last-of-type,
+    .table-bordered > tbody > tr > td:last-of-type {
+      border-right: none;
+    }
+
+    .table-bordered > thead > tr:last-of-type > th,
+    .table-bordered > tbody > tr:last-of-type > td {
+      border-bottom-width: 0;
+    }
+
+    .table-bordered > thead > tr > th,
+    .table-bordered > tbody > tr > td {
+      border-right: $gray-light solid 1px;
+      border-left: none;
+      border-top: none;
+    }
+  }
+}

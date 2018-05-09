@@ -9,6 +9,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       '$scope',
       '$state',
       'HybridServicesClusterService',
+      'MediaClusterServiceV2',
       'DeactivateMediaService');
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');

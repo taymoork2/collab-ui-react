@@ -11,7 +11,9 @@ describe('Controller: MediaServiceSettingsControllerV2', function () {
   }
 
   beforeEach(inject(function ($controller) {
-    controller = $controller('MediaServiceSettingsControllerV2', {});
+    controller = $controller('MediaServiceSettingsControllerV2', {
+      hasMfQosFeatureToggle: true,
+    });
   }));
 
   it('controller should be defined', function () {
