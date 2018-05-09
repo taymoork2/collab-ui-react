@@ -557,7 +557,11 @@ class TimeLineController implements ng.IComponentController {
     });
   }
 
-  private drawColorLineSegment(lineNode: d3, startTime: number, endTime: number, cls: string, options: object = {}): void {
+  private drawColorLineSegment(lineNode: d3, startTime: number, endTime: number, cls: string, options: {
+    nodeId?: string,
+    source?: string,
+    tooltip?: string,
+  }): void {
     if (!lineNode.size()) {
       return;
     }
@@ -640,7 +644,7 @@ class TimeLineController implements ng.IComponentController {
     this.showTip(template, top, left);
   }
 
-  private showTip(tooltip: string, top: number, left: number): void {
+  private showTip(tooltip: string | undefined, top: number, left: number): void {
     if (!tooltip) {
       return;
     }
