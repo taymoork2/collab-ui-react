@@ -1,7 +1,13 @@
 import { OfferName, OfferType } from 'modules/core/shared/offer-name';
 import { OverviewEvent } from 'modules/core/overview/overview.keys';
 import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptionsInterfaces';
-import { HealthStatus, IHealthComponent, IHealthObject, ISettingsUrlObject, LicenseCardHelperService } from './index';
+import { LicenseCardHelperService } from './index';
+import { HealthStatus, IHealthComponent, IHealthObject } from 'modules/core/health-monitor';
+
+interface ISettingsUrlObject {
+  requireSites?: boolean;
+  url: string;
+}
 
 class LicenseCardController implements ng.IComponentController {
   public licenseTypes: string[];

@@ -1,14 +1,20 @@
 import { ISoftwareProfile } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { Notification } from 'modules/core/notifications';
 
 export class HcsUpgradeSwprofileEditCtrl implements ng.IComponentController {
 
   public back: boolean = true;
-  public backState: string = 'hcs.sftplist';
+  public backState: string = 'hcs.swprofilelist';
   public swprofile: ISoftwareProfile;
+  public saveSwprofile: ISoftwareProfile;
+  public selectedProfile: ISoftwareProfile;
   public form: ng.IFormController;
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
+    private HcsUpgradeService: HcsUpgradeService,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -17,12 +23,20 @@ export class HcsUpgradeSwprofileEditCtrl implements ng.IComponentController {
     }
   }
 
-  public saveSwProfile(): void {
+  public saveSoftwareProfile(): void {
+    this.form.$setPristine();
+    this.HcsUpgradeService.updateSoftwareProfile(this.selectedProfile)
+    .then(() => {
+      this.Notification.success('hcs.softwareProfiles.successupdate');
+    })
+    .catch(e => {
+      this.Notification.error(e.message, 'hcs.softwareProfiles.errorupdate');
+    });
 
   }
 
-  public setSwProfile(): void {
-
+  public setSoftwareProfile(swprofile: ISoftwareProfile): void {
+    this.selectedProfile = swprofile;
   }
 
   public cancel(): void {

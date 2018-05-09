@@ -3,11 +3,13 @@ require('./_support.scss');
 (function () {
   'use strict';
 
+  var HealthStatusType = require('modules/core/health-monitor').HealthStatusType;
+
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, HealthService, Log, LogService, ModalService, Notification, Orgservice, PageParam, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = $translate.instant('supportPage.byCisco');
@@ -159,21 +161,15 @@ require('./_support.scss');
     };
 
     var getHealthMetrics = function () {
-      ReportsService.healthMonitor(function (data, status) {
-        if (data.success) {
-          $scope.healthMetrics = data.components;
-          $scope.healthyStatus = true;
+      HealthService.getHealthCheck().then(function (data) {
+        $scope.healthMetrics = data.components;
 
-          // check Squared for error
-          for (var health in $scope.healthMetrics) {
-            if ($scope.healthMetrics[health].status !== 'operational') {
-              $scope.healthyStatus = false;
-              return;
-            }
-          }
-        } else {
-          Log.debug('Get health metrics failed. Status: ' + status);
-        }
+        // check Squared for error
+        $scope.healthyStatus = _.every($scope.healthMetrics, function (healthMetric) {
+          return healthMetric.status === HealthStatusType.OPERATIONAL;
+        });
+      }).catch(function (error) {
+        Log.debug('Get health metrics failed. Status: ' + error.status);
       });
     };
 

@@ -3,14 +3,14 @@
     <cs-page-sub-header-left>
       <div class="grid-filter" ng-class="{'dropdown' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
         <div class="dropdown-toggle filter" ng-if="breakpoint === 'screen-xs' || breakpoint === 'screen-sm'">
-          <span class="name" ng-class="{'active' : nav.displayQlik}" translate="mediaFusion.report.historical-title"></span>
+          <span class="name" ng-class="{'active' : nav.displayQlik}" translate="mediaFusion.report.metrics-title"></span>
           <span class="name" ng-class="{'active' : nav.displayLiveResource}" translate="mediaFusion.report.live-title"></span>
           <i class="icon icon-chevron-down"></i>
         </div>
         <ul ng-class="{'dropdown-menu dropdown-primary' : breakpoint === 'screen-xs' || breakpoint === 'screen-sm' }">
           <li id="qlikReportsLi" class="filter" ng-class="{'active' : nav.displayQlik}" ng-click="nav.changeTabs(true, false);">
             <a id="adoptionReports">
-              <span class="name" translate="mediaFusion.report.historical-title"></span>
+              <span class="name" translate="mediaFusion.report.metrics-title"></span>
             </a>
           </li>
           <li id="resourceReportsLi" class="filter" ng-class="{'active' : nav.displayLiveResource}" ng-click="nav.changeTabs(false, true);">

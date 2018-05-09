@@ -31,6 +31,7 @@ export interface ICardParams {
   setupMode?: boolean;
   infoIcon?: string;
   infoText?: string;
+  isPartner?: boolean;
 }
 
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
@@ -51,6 +52,7 @@ export abstract class ServicesOverviewCard {
   public setupMode: boolean;
   public infoIcon: string;
   public infoText: string;
+  public isPartner: boolean;
 
   public getCardType() {
     return this.cardType;
@@ -76,6 +78,7 @@ export abstract class ServicesOverviewCard {
     setupMode = false,
     infoIcon = '',
     infoText = '',
+    isPartner = false,
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;
@@ -88,5 +91,6 @@ export abstract class ServicesOverviewCard {
     this.setupMode = setupMode;
     this.infoIcon = infoIcon;
     this.infoText = infoText;
+    this.isPartner = isPartner;
   }
 }

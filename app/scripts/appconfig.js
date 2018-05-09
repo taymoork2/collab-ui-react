@@ -1998,10 +1998,34 @@
             url: '/not-linked',
             views: {
               tabContent: {
-                controllerAs: 'siteList',
-                controller: 'WebExSiteRowCtrl',
-                template: require('modules/core/siteList/siteList.tpl.html'),
+                template: '<site-list hide-linked="$resolve.accountLinkingPhase2"></site-list>',
               },
+            },
+          })
+          .state('site-list.not-linked.detail', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<site-detail selected-site="$resolve.selectedSite" on-delete="$resolve.onDelete(license)" on-redistribute="$resolve.onRedistribute(license)"></site-detail>',
+              },
+            },
+            params: {
+              selectedSite: undefined,
+              onDelete: undefined,
+              onRedistribute: undefined,
+            },
+            data: {},
+            resolve: {
+              selectedSite: /*@ngInject */ function ($stateParams) {
+                return $stateParams['selectedSite'];
+              },
+              onDelete: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onDelete'];
+              },
+              onRedistribute: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onRedistribute'];
+              },
+              displayName: translateDisplayName('webexSiteManagement.manageSite'),
             },
           })
           .state('site-list.linked', {
@@ -2944,6 +2968,22 @@
               selectedDevices: [],
               devicesDeleted: null,
               title: 'deviceBulk.deleteDevicesTitle',
+            },
+          })
+          .state('deviceBulkFlow.export', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<bulk-export ui-view dismiss="$dismiss()"></bulk-export>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-bulk-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevices: [],
             },
           })
           .state('device-overview.emergencyServices', {
@@ -5183,6 +5223,9 @@
               hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
               },
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
+              },
             },
             params: {
               wizard: null,
@@ -5663,6 +5706,9 @@
               hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
+              },
               hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
               },
@@ -5702,6 +5748,11 @@
             },
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
+            },
+            resolve: {
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
+              },
             },
           });
 

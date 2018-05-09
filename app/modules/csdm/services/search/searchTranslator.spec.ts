@@ -230,7 +230,7 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateTo('ip', 'translated.deviceoverviewpage.ipaddr');
       expectFieldToTranslateTo('description', 'description');
       expectFieldToTranslateTo('productfamily', 'productfamily');
-      expectFieldToTranslateTo('software', 'software');
+      expectFieldToTranslateTo('software', 'translated.deviceoverviewpage.software');
       expectFieldToTranslateTo('upgradechannel', 'translated.devicesettings.softwareupgradechannel');
       expectFieldToTranslateTo('product', 'translated.spacespage.typeheader');
       expectFieldToTranslateTo('connectionstatus', 'translated.spacespage.statusheader');
@@ -275,7 +275,7 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateToDisplayName('ip', 'translated.deviceOverviewPage.ipAddr');
       expectFieldToTranslateToDisplayName('description', 'description');
       expectFieldToTranslateToDisplayName('productfamily', 'productfamily');
-      expectFieldToTranslateToDisplayName('software', 'software');
+      expectFieldToTranslateToDisplayName('software', 'translated.deviceOverviewPage.software');
       expectFieldToTranslateToDisplayName('upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
       expectFieldToTranslateToDisplayName('product', 'translated.spacesPage.typeHeader');
       expectFieldToTranslateToDisplayName('connectionstatus', 'translated.spacesPage.statusHeader');
@@ -321,6 +321,7 @@ describe('SearchTranslator', () => {
       expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
       expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
       expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.software', 'software');
     });
 
     it('should translate supported search fields case insensitive', function () {

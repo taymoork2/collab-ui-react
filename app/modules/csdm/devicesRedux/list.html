@@ -30,6 +30,12 @@
        tooltip-animation="true"
        aria-label="{{ 'deviceBulk.deleteDevices' | translate }}"
        ng-click="lctrl.bulkDelete()"></i>
+    <i class="icon icon-download export-button"
+       ng-show="!lctrl.selectAllSpinner && lctrl.bulkSelectionCount >= 1"
+       tooltip="{{ 'deviceBulk.exportData.exportAsCSV' | translate }}"
+       tooltip-animation="true"
+       aria-label="{{ 'deviceBulk.exportData.exportAsCSV' | translate }}"
+       ng-click="lctrl.bulkExport()"></i>
   </div>
   <cs-grid class="gridStyle" grid-api="lctrl.gridApi" grid-options="lctrl.gridOptions"></cs-grid>
   <div class="loadmorecontainer">

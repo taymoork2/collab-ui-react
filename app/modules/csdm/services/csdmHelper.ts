@@ -190,7 +190,7 @@ export class DeviceHelper {
 
   public getLocalizedType(type) {
     if (type === 'huron') {
-      return this.t('addDeviceWizard.chooseDeviceType.deskPhone');
+      return this.t('addDeviceWizard.chooseDeviceType.ciscoPhone');
     }
     return this.t('addDeviceWizard.chooseDeviceType.roomSystem');
   }

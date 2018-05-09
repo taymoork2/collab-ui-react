@@ -22,6 +22,7 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/accessibility/tooltips').default,
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd').default,
@@ -57,7 +58,6 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/health-monitor').default,
     require('modules/core/account').default,
-    require('modules/core/banner').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -109,6 +109,7 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/legal-hold').default,
     require('modules/core/organizations/organization-delete').default,
+    require('modules/core/siteList').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -246,6 +247,7 @@
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-entitlement-failure').default,
+    require('modules/mediafusion/media-service-v2/components/qos-section').default,
     require('modules/mediafusion/media-service-v2/components/sip-call-settings').default,
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
     require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
@@ -255,6 +257,8 @@
 
   angular.module('WebExApp', [
     'Core',
+    require('modules/webex/apiGateway').default,
+    require('modules/webex/restApi').default,
     require('modules/webex/utils').default,
     require('modules/webex/xmlApi').default,
     require('modules/webex/webexClientVersions/webexClientVersion.svc'),

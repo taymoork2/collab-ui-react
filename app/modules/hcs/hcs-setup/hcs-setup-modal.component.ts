@@ -161,7 +161,26 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     });
   }
 
-  public createSoftwareProfile(): void {} //To-do
+  public createSoftwareProfile(): void {
+    this.HcsUpgradeService.createSoftwareProfile(this.softwareProfile)
+    .then(() => {
+      this.Notification.success('hcs.softwareProfiles.success');
+      this.loading = false;
+      if (!this.isFirstTimeSetup) {
+        this.$state.go(this.$state.current, {}, {
+          reload: true,
+        });
+        this.dismissModal();
+      }
+    })
+    .catch(e => {
+      this.Notification.error('hcs.softwareProfiles.error', { message: e });
+      this.loading = false;
+      if (!this.isFirstTimeSetup) {
+        this.dismissModal();
+      }
+    });
+  }
 
   public disableNext(): boolean  {
     return !this.nextEnabled;
@@ -193,6 +212,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   public setSoftwareProfile(profile: ISoftwareProfile) {
     this.nextEnabled = ( profile && this.hcsSetupModalForm.$valid);
     this.softwareProfile = profile;
+    this.enableSave();
   }
 
   public dismissModal(): void {

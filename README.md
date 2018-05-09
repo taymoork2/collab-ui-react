@@ -29,7 +29,7 @@ Adherence is mandatory. Please refactor non-compliant code.
   GitHub provides an easy-to-use tool for reviewing and maintaining commit history by linking commits
   with their associated pull requests.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.
-  * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
+  * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/es5-deprecated/es5)
   * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
   * [CSS BEMS-style naming](http://getbem.com/naming/)
   * [Commit Guidelines](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes)

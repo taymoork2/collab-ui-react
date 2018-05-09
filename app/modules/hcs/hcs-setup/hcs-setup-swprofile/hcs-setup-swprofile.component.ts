@@ -1,25 +1,52 @@
-import { ISoftwareProfile, IApplicationVersion } from 'modules/hcs/hcs-shared/hcs-swprofile';
+import { ISoftwareProfile, SoftwareProfile, IApplicationVersion, ISoftwareAppVersion } from 'modules/hcs/hcs-shared/hcs-swprofile';
 import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { EApplicationTypes } from 'modules/hcs/hcs-shared/hcs-upgrade';
+
+interface IVersions {
+  cucm: string[];
+  imp: string[];
+  ucxn: string[];
+  plm: string[];
+  cer: string[];
+  expway: string[];
+}
+interface ISelectedVersion {
+  cucm: string;
+  imp: string;
+  ucxn: string;
+  plm: string;
+  cer: string;
+  expway: string;
+}
 
 export class HcsSetupSwprofileController implements ng.IComponentController {
   public readonly MAX_LENGTH: number = 50;
-  public profileSelected: ISoftwareProfile;
+  public selectedProfile: SoftwareProfile;
   public onChangeFn: Function;
   public placeholder: any;
   public hcsProfileForm: ng.IFormController;
   public errors: Object;
   public swprofile: ISoftwareProfile;
   public allVersions: IApplicationVersion[];
-  public versions = {
-    cucm: [ 'UCSInstall_UCOS_11.5.1.15074-1.sgn.iso', 'UCSInstall_UCOS_10.5.1.15074-1.sgn.iso',  'UCSInstall_UCOS_10.6.1.15074-1.sgn.iso'],
-    imp: [ 'UCSInstall_CUP_12.0.1.11900-4.sgn.iso', 'UCSInstall_CUP_10.0.1.11900-4.sgn.iso', 'UCSInstall_CUP_10.5.1.11900-4.sgn.iso'],
-    ucxn: ['UCSInstall_CUC_12.0.1.21900-10.sgn.iso', 'UCSInstall_CUC_11.0.1.21900-10.sgn.iso'],
-    plm: ['	CiscoPrimeLM_64bitLnx_11.5.1.12900-4.sgn.iso', 'CiscoPrimeLM_64bitLnx_11.0.1.12900-4.sgn.iso'],
-    cer: ['10.0'],
-    expway: ['9.5'],
+  public hcstoggle2: boolean = false;
+  public versions: IVersions = {
+    cucm: [],
+    imp: [],
+    ucxn: [],
+    plm: [],
+    cer: [],
+    expway: [],
+  };
+  public selectedVersion: ISelectedVersion = {
+    cucm: '',
+    imp: '',
+    ucxn: '',
+    plm: '',
+    cer: '',
+    expway: '',
   };
 
-  /* @ngInject */
+   /* @ngInject */
   constructor(
     public $translate: ng.translate.ITranslateService,
     private HcsUpgradeService: HcsUpgradeService,
@@ -40,19 +67,52 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
         max: this.MAX_LENGTH,
       }),
     };
-
+    if (!_.isUndefined(this.swprofile)) {
+      this.HcsUpgradeService.getSoftwareProfile(_.get(this.swprofile, 'uuid'))
+      .then(resp => {
+        this.swprofile = _.clone(resp);
+        this.selectedProfile = _.clone(this.swprofile);
+        const appVersions: IApplicationVersion[] = _.get(this.selectedProfile, 'applicationVersions');
+        this.selectedVersion = {
+          cucm: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUCM]), 'fileName'),
+          imp: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.IMP]), 'fileName'),
+          ucxn: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUC]), 'fileName'),
+          plm: '',
+          cer: '',
+          expway: '',
+        };
+      });
+    }
     this.listAppVersions();
   }
 
   public listAppVersions(): void {
     this.HcsUpgradeService.listAppVersions().then(resp => {
       this.allVersions = _.get(resp, 'applicationVersions');
+      this.versions.cucm = _.map(this.getAppVersion(EApplicationTypes.CUCM), 'fileName');
+      this.versions.imp = _.map(this.getAppVersion(EApplicationTypes.IMP), 'fileName');
+      this.versions.ucxn = _.map(this.getAppVersion(EApplicationTypes.CUC), 'fileName');
     });
   }
 
-  public processChange() {
+  public getAppVersion(appType: string): any[] {
+    return _.get(_.find(this.allVersions, item => item.typeApplication === appType), 'fileData');
+  }
+
+  public processChange(typeApp: string, name: string) {
+    if (_.isUndefined(this.selectedProfile.applicationVersions)) {
+      this.selectedProfile.applicationVersions = [];
+    } else if (this.selectedProfile.applicationVersions) {
+      const ver: ISoftwareAppVersion = _.find(this.getAppVersion(typeApp), { fileName: name });
+      const appVer: ISoftwareAppVersion = _.find(this.selectedProfile.applicationVersions, { typeApplication: typeApp });
+      if (appVer) {
+        appVer.uuid = ver.uuid;
+      } else if (ver) {
+        this.selectedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
+      }
+    }
     this.onChangeFn({
-      profile: this.profileSelected,
+      swprofile: this.selectedProfile,
     });
   }
 }

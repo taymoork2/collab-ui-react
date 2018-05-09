@@ -28,6 +28,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   public customerId: string | undefined;
   public softwareVersionSelected: ISelectOption | null;
   public softwareVersionProfiles: ISelectOption[] | null;
+  public loading: boolean;
   public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
 
   /* @ngInject */
@@ -40,6 +41,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   ) {}
 
   public $onInit() {
+    this.loading = true;
     this.tabs.push({
       title: this.$translate.instant('hcs.clustersList.title'),
       state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
@@ -75,6 +77,9 @@ export class ClusterListCtrl implements ng.IComponentController {
     }
     this.HcsUpgradeService.listClusters(this.customerId).then((clusters: IHcsClusterSummaryItem[]) => {
       this.initClusterList(clusters);
+    })
+    .then(() => {
+      this.loading = false;
     })
     .catch(() => {
       this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });

@@ -20,8 +20,11 @@
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div class="cs-card-container cluster-list-container">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
   <cs-card-layout>
-    <cs-card class="cs-card--small header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
+    <cs-card ng-if="!$ctrl.loading" class="cs-card--small header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
       <article  ng-click="$ctrl.cardSelected(cluster)" hover-delay>
         <header>
           <div class="header-with-right-icon">
@@ -38,7 +41,7 @@
           <div class="card-section">
             <div  ng-repeat="application in cluster.applications">
               <span class="application-name h5">{{application.name}}</span>
-              <span class="application-node-count h5">{{application.count}} nodes</span>
+              <span class="application-node-count h5">{{application.count}} {{application.count >1 ? 'nodes' : 'node'}}</span>
             </div>
           </div>
         </section>

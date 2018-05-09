@@ -3,7 +3,6 @@ import { LicenseCardHelperService } from './license-card-helper.service';
 import './license-card.scss';
 
 export { LicenseCardHelperService };
-export * from './license-card.keys';
 
 export default angular
   .module('core.overview.licenseCard', [

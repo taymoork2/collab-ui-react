@@ -48,11 +48,18 @@
             </div>
           </section>
           <footer class="install-file-footer">
-            <span class="footer-item">
+            <!-- <span class="footer-item">
               <a href ><span translate="hcs.installFiles.tarFile"></span></a>
-            </span>
-            <span class="footer-item">
-              <a ng-href="{{installFile.fileInfo[0].downloadUrl}}" translate="hcs.installFiles.copFile"></a>
+            </span> -->
+            <span>
+              <span class="footer-creating" ng-if="!installFile.fileInfo[0]">
+              <span translate="hcs.installFiles.creating"></span>
+                <i class="icon icon-download"/>
+              </span>
+              <span class="footer-item" ng-if="installFile.fileInfo[0]">
+                <i class="icon icon-download icon-color"/>
+                <a ng-if="installFile.fileInfo[0]" ng-href="{{installFile.fileInfo[0].downloadUrl}}" translate="hcs.installFiles.copFile"></a>
+              </span>
             </span>
           </footer>
         </article>

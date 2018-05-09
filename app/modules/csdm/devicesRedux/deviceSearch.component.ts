@@ -70,7 +70,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     this.performSearch(this.searchObject, initialSearch ? Caller.initialSearchAndAggregator : Caller.searchOrLoadMore);
     this.$timeout(() => {
       //DOM has finished rendering
-      this.setFocusToInputField();
+      DeviceSearch.setFocusToInputField();
     });
     this.searchInteraction.receiver = this;
   }
@@ -118,7 +118,7 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
     const rootPill = bullet.getRootPill();
     this.searchObject.hasError = false;
     this.searchObject.setWorkingElementText(rootPill.toQuery(this.DeviceSearchTranslator));
-    this.setFocusToInputField();
+    DeviceSearch.setFocusToInputField();
     rootPill.setBeingEdited(true);
     this.suggestions.updateBasedOnInput(this.searchObject);
   }
@@ -138,10 +138,10 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.$state.sidepanel.close();
     }
     this.interactedWithSearch = true;
-    this.setFocusToInputField();
+    DeviceSearch.setFocusToInputField();
   }
 
-  private setFocusToInputField() {
+  private static setFocusToInputField() {
     angular.element('#searchFilterInput').focus();
   }
 
@@ -188,7 +188,15 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
         this.searchObject.setWorkingElementText(suggestion.searchString);
         this.searchChange(true);
         this.suggestions.updateBasedOnInput(this.searchObject);
-        this.setFocusToInputField();
+        DeviceSearch.setFocusToInputField();
+        this.$timeout(() => {
+          //DOM has finished rendering
+          if (suggestion.surroundCursorWithQuotes) {
+            const inputField = angular.element('#searchFilterInput');
+            const target = inputField[0] as HTMLInputElement;
+            DeviceSearch.addQuotesAtCursor(target, true);
+          }
+        });
         return;
       }
     }
@@ -252,20 +260,14 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       switch ($keyEvent.key) {
         case '"':
           if (!this.searchObject.hasError) {
-            if (!target.value[target.selectionEnd!]) {
-              const selectionStart = target.selectionStart!;
-              target.value = [target.value.slice(0, selectionStart), '"', target.value.slice(target.selectionEnd!)].join('');
-              target.selectionEnd = selectionStart;
-            } else if (target.value[target.selectionEnd!] === '"') {
-              target.selectionEnd! += 1;
-              return false;
-            }
+            DeviceSearch.addQuotesAtCursor(target, false);
           }
           break;
         case '(':
           if (!target.value[target.selectionEnd!]) {
             const selectionStart = target.selectionStart!;
-            target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd!)].join('');
+            target.value = [target.value.slice(0, selectionStart), ')', target.value.slice(target.selectionEnd!)].join(
+              '');
             target.selectionEnd = selectionStart;
           }
           break;
@@ -276,6 +278,17 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
           }
           break;
       }
+    }
+  }
+
+  private static addQuotesAtCursor(target: HTMLInputElement, surroundWithQuotes: boolean) {
+    if (!target.value[target.selectionEnd!]) {
+      const selectionStart = target.selectionStart!;
+      target.value = `${target.value.slice(0, selectionStart)}${surroundWithQuotes ? '""' : '"'}${target.value.slice(target.selectionEnd!)}`;
+      target.selectionEnd = selectionStart + (surroundWithQuotes ? 1 : 0);
+    } else if (target.value[target.selectionEnd!] === '"') {
+      target.selectionEnd! += 1;
+      return false;
     }
   }
 
@@ -291,7 +304,8 @@ export class DeviceSearch implements ng.IComponentController, ISearchHandler, IB
       this.isSearching = false;
       this.CsdmAnalyticsHelper.trackSearchAction(caller === Caller.aggregator
         ? CsdmAnalyticsValues.INITIAL_SEARCH
-        : CsdmAnalyticsValues.SEARCH, search, response && response.data && response.data.hits.total || 0, this.queryCounter++);
+        : CsdmAnalyticsValues.SEARCH, search, response && response.data && response.data.hits.total || 0,
+        this.queryCounter++);
     }).catch(e => {
       if (e.xhrStatus !== 'abort') {
         this.isSearching = false;
