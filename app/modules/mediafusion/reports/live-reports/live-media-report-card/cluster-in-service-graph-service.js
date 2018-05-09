@@ -3,20 +3,16 @@
 
   angular.module('Mediafusion').service('ClusterInServiceGraphService', ClusterInServiceGraphService);
 
-  //var ChartColors = require('modules/core/config/chartColors').ChartColors;
-
   /* @ngInject */
   function ClusterInServiceGraphService($rootScope, $translate) {
     var vm = this;
     vm.liveReportDiv = 'liveReportDiv';
     vm.exportDiv = 'cs-export-div';
-    vm.resize = resize;
     return {
       setClusterInService: setClusterInService,
     };
 
     function setClusterInService(data) {
-      //var tempData = graph(data);
       AmCharts.addInitHandler(function (chart) {
         // check if there are graphs with autoColor: true set
         for (var i = 0; i < chart.graphs.length; i++) {
@@ -33,26 +29,25 @@
       }, ['serial']);
       var chartData = {
         type: 'serial',
-        //theme: 'light',
         dataProvider: data,
         valueAxes: [{
           gridColor: '#FFFFFF',
           axisAlpha: 0.2,
           gridAlpha: 0,
           dashLength: 0,
-          //integersOnly: true,
-          //maximum: 100,
-          //minimum: 0.1,
-          //minMaxMultiplier: 1.5,
+          maximum: 100,
+          minimum: 0,
           labelFunction: formatLabel,
         }],
-        //gridAboveGraphs: true,
         startDuration: 1,
         graphs: [{
           balloonText: '[[category]]: <b>[[value]]</b>',
           fillAlphas: 0.8,
           lineAlpha: 0.2,
           type: 'column',
+          labelText: '[[value]]',
+          labelPosition: 'middle',
+          color: '#000000',
           valueField: 'value',
           autoColor: true,
           showHandOnHover: true,
@@ -61,8 +56,6 @@
           cursorAlpha: 0,
           zoomable: false,
           oneBalloonOnly: false,
-          //valueLineBalloonEnabled: true,
-          //valueLineEnabled: true,
           categoryBalloonEnabled: false,
         },
         categoryField: 'key',
@@ -72,8 +65,8 @@
           gridAlpha: 0,
           position: 'left',
           tickPosition: 'start',
-          //tickLength: 2,
-          labelsEnabled: false,
+          labelsEnabled: true,
+          color: '#FFFFFF',
         },
         export: {
           enabled: true,
@@ -94,7 +87,6 @@
           fixedPosition: true,
         },
       };
-      //chartData.graph.showHandOnHover = true;
       chartData.listeners = [{
         event: 'clickGraphItem',
         method: function (event) {
@@ -104,30 +96,10 @@
         },
       }];
       var chart = AmCharts.makeChart(vm.liveReportDiv, chartData);
-      /*chart.addListener('rollOverGraphItem', function (event) {
-        var b = 'document.getElementById(balloon)';
-        b.innerHTML = event.item.category + ': <b>' + event.item.values.value + '</b>';
-        b.style.display = 'block';
-      });*/
-      vm.parentchart = chart;
       return chart;
     }
     function formatLabel(label) {
       return label + '%';
-    }
-    function resize() {
-      AmCharts.addInitHandler(function (chart) {
-        // set base values
-        //var categoryWidth = 25;
-
-        // calculate bottom margin based on number of data points
-        //var chartHeight = categoryWidth * chart.dataProvider.length;
-
-        // set the value
-        chart.div.style.height = 400 + 'px';
-        chart.div.style.width = 250 + 'px';
-      }, ['serial']);
-      setClusterInService();
     }
   }
 })();

@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function LiveMediaReportsController($interval, $log, $q, $scope, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
+  function LiveMediaReportsController($interval, $q, $scope, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -204,9 +204,6 @@
         vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
       loadResourceDatas();
-      /*$timeout(function () {
-        angular.element('#resourceReportsLi').triggerHandler('click');
-      }, 0);*/
     }
 
     $scope.$on('clusterClickEvent', function (event, data) {
@@ -401,7 +398,6 @@
 
     function setTotalCallsPie() {
       MediaReportsService.getTotalCallsData(vm.timeSelected, vm.clusterSelected).then(function (response) {
-        response.data.callsOnPremise = 500;
         if (response === vm.ABORT) {
           return undefined;
         } else if (_.isUndefined(response.data)) {
@@ -454,7 +450,6 @@
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
         vm.clusterinService = vm.availabilityTooltipOptions.liveArray;
         setClusterinServiceGraph();
-        //ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       })
         .catch(function (error) {
@@ -467,11 +462,8 @@
       } else {
         vm.allcluster = false;
       }
-      $log.log('allcluster' + vm.allcluster);
-      $log.log('vm.clusterinServicechartOptions.noData' + vm.clusterinService.length);
-      $log.log('clusterAvailability' + vm.clusterAvailability);
-      vm.clusterinServicechartOptions.noData = vm.clusterAvailability;
       vm.clusterinServicechartOptions.isShow = true;
+      vm.clusterinServicechartOptions.noData = vm.clusterAvailability;
       vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
       return vm.clusterinServiceChart;
     }

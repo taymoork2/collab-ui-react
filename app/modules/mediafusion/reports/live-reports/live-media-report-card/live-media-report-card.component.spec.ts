@@ -1,7 +1,7 @@
-describe('Component: ucMediaReportCard', () => {
+describe('Component: ucLiveMediaReportCard', () => {
   beforeEach(function () {
     this.initModules('Mediafusion');
-    this.compileComponent('ucMediaReportCard');
+    this.compileComponent('ucLiveMediaReportCard');
   });
   xit('Replaces the element with the appropriate content', function () {
     expect(this.view.html()).toContain('metrics-info');
