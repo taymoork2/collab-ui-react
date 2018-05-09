@@ -3,6 +3,8 @@
 
   angular.module('Mediafusion').service('ClusterInServiceGraphService', ClusterInServiceGraphService);
 
+  var ChartColors = require('modules/core/config/chartColors').ChartColors;
+
   /* @ngInject */
   function ClusterInServiceGraphService($rootScope, $translate) {
     var vm = this;
@@ -31,7 +33,7 @@
         type: 'serial',
         dataProvider: data,
         valueAxes: [{
-          gridColor: '#FFFFFF',
+          gridColor: ChartColors.brandWhite,
           axisAlpha: 0.2,
           gridAlpha: 0,
           dashLength: 0,
@@ -47,7 +49,6 @@
           type: 'column',
           labelText: '[[value]]',
           labelPosition: 'middle',
-          color: '#000000',
           valueField: 'value',
           autoColor: true,
           showHandOnHover: true,
@@ -66,7 +67,7 @@
           position: 'left',
           tickPosition: 'start',
           labelsEnabled: true,
-          color: '#FFFFFF',
+          color: ChartColors.brandWhite,
         },
         export: {
           enabled: true,

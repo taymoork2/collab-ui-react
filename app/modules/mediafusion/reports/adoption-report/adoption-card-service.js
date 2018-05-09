@@ -117,7 +117,7 @@
         chartData.export = {
           enabled: true,
           divId: vm.exportDiv,
-          fileName: 'fileName',
+          fileName: 'total_calls_' + new Date(),
           libs: {
             autoLoad: false,
           },
