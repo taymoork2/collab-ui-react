@@ -11,6 +11,7 @@ class CustomerReportsHeaderCtrl {
     private WebexMetricsService,
     private $translate: ng.translate.ITranslateService,
   ) {
+
     if (this.Authinfo.isCare()) {
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.careTab'),
@@ -29,7 +30,12 @@ class CustomerReportsHeaderCtrl {
           state: 'reports.spark',
         });
       }
-      if (features.isMfEnabled) {
+      if (features.isQlikEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.hybridMedia',
+        });
+      } else if (features.isMfEnabled) {
         this.headerTabs.push({
           title: this.$translate.instant('mediaFusion.report.title'),
           state: 'reports.mediaservice',
@@ -39,6 +45,12 @@ class CustomerReportsHeaderCtrl {
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
+      if (features.autoLicenseEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.autoLicense'),
+          state: 'reports.autoLicense',
+        });
+      }
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }
@@ -52,8 +64,10 @@ class CustomerReportsHeaderCtrl {
 
   private promises: any = {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
+    isQlikEnabled: this.FeatureToggleService.atlasHybridMediaServiceQlikReportsGetStatus(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
+    autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),
   };
 
   public checkWebex(): void {
