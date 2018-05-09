@@ -1,21 +1,32 @@
 import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms, Quality, QualityRange } from './partner-search.service';
-import { IJoinTime, ISessionDetail, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
+import { IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
 import { MosType, QualityType, QosType, TabType } from './partner-meeting.enum';
 
+interface IDataStore {
+  retryTimes: number;
+  voip: object;
+  video: object;
+  pstn: object;
+  cmr: object;
+  voipReqTimes: number;
+  videoReqTimes: number;
+  pstnReqTimes: number;
+  cmrReqTimes: number;
+  currentQos: string;
+}
+
+const LATENCY_SHOWUP = 999;
+const LOSSRATE_SHOWUP = 9.9;
 class MeetingDetailsController implements ng.IComponentController {
-  public data: any; //TODO use better type
+  public data: IDataStore;
   public dataSet: object;
   public overview: object;
-  public cmrData: object;
-  public pstnData: object;
-  public callLegsData: object;
-  public lineColor: object;
-  public circleColor: object;
+  public circleColor: IJoinTime;
   public conferenceID: string;
   public tabType = TabType.AUDIO;
   public loading = true;
-  public lineData = {};
+  public lineData: object;
   public QOS_TYPE = QosType;
   private audioLines = {};
   private videoLines = {};
@@ -42,10 +53,6 @@ class MeetingDetailsController implements ng.IComponentController {
       pstnReqTimes: 0,
       cmrReqTimes: 0,
       retryTimes: 4,
-      voipTimer: null,
-      videoTimer: null,
-      pstnTimer: null,
-      cmrTimer: null,
       currentQos: QosType.VOIP,
     };
   }
@@ -69,7 +76,8 @@ class MeetingDetailsController implements ng.IComponentController {
       .then((res: IUniqueParticipant[]) => {
         const timeZone = this.PartnerSearchService.getStorage('timeZone');
         const wom = this.PartnerSearchService.getStorage('webexOneMeeting');
-        const lines: IParticipant[] = _.map(res, (item) => this.formatLine(_.get(item, 'participants')));
+        const lines: IParticipant[][] = this.parseUniqueParticipants(res);
+
         this.dataSet = {
           lines: lines,
           endTime: _.get(wom, 'endTime'),
@@ -87,27 +95,33 @@ class MeetingDetailsController implements ng.IComponentController {
         this.getVideoSessionDetail(ids);
         this.getPSTNSessionDetail(pstnIds);
         this.getCMRSessionDetail(cmrIds);
-
-        this.loading = false;
       })
       .catch((err) => {
-        this.loading = false;
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      })
+      .finally(() => {
+        this.loading = false;
       });
+  }
+
+  private parseUniqueParticipants(res: IUniqueParticipant[]): IParticipant[][] {
+    return _.map(res, uniqueParticipant => {
+      return this.formatLine(_.get(uniqueParticipant, 'participants'));
+    });
   }
 
   private getJoinMeetingTime(): void {
     this.PartnerSearchService.getJoinMeetingTime(this.conferenceID)
-      .then((res: IJoinTime) => this.circleColor = res );
+      .then((res: IJoinTime) => this.circleColor = res);
   }
 
-  private formatLine(lines: any) {//TODO use better type
+  private formatLine(lines: IParticipant[]): IParticipant[] {
     const wom = this.PartnerSearchService.getStorage('webexOneMeeting');
-    return _.forEach(lines, (item) => {
+    return _.map(lines, (line: any) => { //TODO use better type
       const endTime = _.get(wom, 'endTime');
-      const leaveTime = (!item.leaveTime || item.leaveTime > endTime) ? endTime : item.leaveTime;
-      const device = this.PartnerSearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
-      const platform_ = this.PartnerSearchService.getPlatform({ platform: item.platform, sessionType: item.sessionType });
+      const leaveTime = (!line.leaveTime || line.leaveTime > endTime) ? endTime : line.leaveTime;
+      const device = this.PartnerSearchService.getDevice({ platform: line.platform, browser: line.browser, sessionType: line.sessionType });
+      const platform_ = this.PartnerSearchService.getPlatform({ platform: line.platform, sessionType: line.sessionType });
       const mobiles = [
         Platforms.IPHONE,
         Platforms.MOBILE_DEVICE,
@@ -118,21 +132,22 @@ class MeetingDetailsController implements ng.IComponentController {
       ];
 
       let enableStartPoint = true;
-      const logUserId = item.logUserId * 1;
-      if (item.sessionType === Platforms.PSTN && logUserId) {
+      const logUserId = line.logUserId * 1;
+      if (line.sessionType === Platforms.PSTN && logUserId) {
         enableStartPoint = false;
       }
 
-      item.enableStartPoint = enableStartPoint;
-      item.cid = item.callerId ? item.callerId : '';
-      item.leaveTime = leaveTime;
-      item.platform_ = platform_;
-      item.device = _.get(device, 'name');
-      item.deviceIcon = _.get(device, 'icon');
-      item.browser_ = this.PartnerSearchService.getBrowser(_.parseInt(item.browser));
-      item.joinTime_ = this.PartnerSearchService.timestampToDate(item.joinTime, 'h:mm A');
-      item.mobile = _.includes(mobiles, item.platform) ? platform_ : '';
-      item.duration = item.duration ? item.duration : _.round((item.leaveTime - item.joinTime) / 1000);
+      line.enableStartPoint = enableStartPoint;
+      line.cid = line.callerId ? line.callerId : '';
+      line.leaveTime = leaveTime;
+      line.platform_ = platform_;
+      line.device = _.get(device, 'name');
+      line.deviceIcon = _.get(device, 'icon');
+      line.browser_ = this.PartnerSearchService.getBrowser(_.parseInt(line.browser));
+      line.joinTime_ = this.PartnerSearchService.timestampToDate(line.joinTime, 'h:mm A');
+      line.mobile = _.includes(mobiles, line.platform) ? platform_ : '';
+      line.duration = line.duration ? line.duration : _.round((line.leaveTime - line.joinTime) / 1000);
+      return line;
     });
   }
 
@@ -141,40 +156,48 @@ class MeetingDetailsController implements ng.IComponentController {
       return;
     }
     this.PartnerSearchService.getVoipSessionDetail(this.conferenceID, ids)
-      .then(res => {
+      .then((res: ISessionDetail) => {
         const retryIds: string[] = [];
-        const details = this.audioLines;
-        _.forEach(res.items, item => {
-          if (!details[item.key]) {
-            details[item.key] = [];
-          }
-          if (item.completed) {
-            _.forEach(item.items, detailItem => {
-              this.audioEnabled.VoIP = true;
-              const detail = {};
-              detail['startTime'] = detailItem.startTime * 1;
-              detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-              detail['qualities'] = [];
-              _.forEach(detailItem.mmpQuality, quality => {
-                detail['qualities'].push({
-                  startTime: quality.startTime * 1,
-                  endTime: quality.endTime * 1,
-                  quality: this.parseVoipQuality(quality.lossrates, quality.rtts),
-                  tooltip: this.parseVoipTooltip(quality.lossrates, quality.rtts),
-                  source: QosType.VOIP,
-                });
-              });
-              details[item.key].push(detail);
-            });
-          } else {
-            retryIds.push(item.key);
-          }
-        });
-        this.audioLines = details;
+        this.parseVoipSession(res, retryIds);
         this.setData();
-
         this.retryRequest(QosType.VOIP, this.getVoipSessionDetail, retryIds);
       });
+  }
+
+  private parseVoipSession(sessions: ISessionDetail, retryIds: string[]): void {
+    const details = this.audioLines;
+    _.forEach(sessions.items, (session: ISessionDetailItem) => {
+      if (!details[session.key]) {
+        details[session.key] = [];
+      }
+      if (session.completed) {
+        _.forEach(session.items, detailItem => {
+          this.audioEnabled.VoIP = true;
+          const detail = this.parseVoipQualities(detailItem);
+          details[session.key].push(detail);
+        });
+      } else {
+        retryIds.push(session.key);
+      }
+    });
+    this.audioLines = details;
+  }
+
+  private parseVoipQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: object }): object {
+    const detail = {};
+    detail['startTime'] = detailItem.startTime * 1;
+    detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
+    detail['qualities'] = [];
+    _.forEach(detailItem.mmpQuality, quality => {
+      detail['qualities'].push({
+        startTime: quality.startTime * 1,
+        endTime: quality.endTime * 1,
+        quality: this.parseVoipQuality(quality.lossrates, quality.rtts),
+        tooltip: this.parseVoipTooltip(quality.lossrates, quality.rtts),
+        source: QosType.VOIP,
+      });
+    });
+    return detail;
   }
 
   private getVideoSessionDetail(ids: string): void {
@@ -184,38 +207,46 @@ class MeetingDetailsController implements ng.IComponentController {
     this.PartnerSearchService.getVideoSessionDetail(this.conferenceID, ids)
       .then((res: ISessionDetail) => {
         const retryIds: string[] = [];
-        const details = this.videoLines;
-        _.forEach(res.items, item => {
-          if (!details[item.key]) {
-            details[item.key] = [];
-          }
-          if (item.completed) {
-            _.forEach(item.items, detailItem => {
-              this.videoEnabled = true;
-              const detail = {};
-              detail['startTime'] = detailItem.startTime * 1;
-              detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-              detail['qualities'] = [];
-              _.forEach(detailItem.mmpQuality, quality => {
-                detail['qualities'].push({
-                  startTime: quality.startTime * 1,
-                  endTime: quality.endTime * 1,
-                  quality: this.parseVideoQuality(quality.lossrates, quality.rtts),
-                  tooltip: this.parseVideoTooltip(quality.lossrates, quality.rtts),
-                  source: QosType.VIDEO,
-                });
-              });
-              details[item.key].push(detail);
-            });
-          } else {
-            retryIds.push(item.key);
-          }
-        });
-        this.videoLines = details;
+        this.parseVideoSession(res, retryIds);
         this.setData();
-
         this.retryRequest(QosType.VIDEO, this.getVideoSessionDetail, retryIds);
       });
+  }
+
+  private parseVideoSession(sessions: ISessionDetail, retryIds: string[]): void {
+    const details = this.videoLines;
+    _.forEach(sessions.items, (session: ISessionDetailItem) => {
+      if (!details[session.key]) {
+        details[session.key] = [];
+      }
+      if (session.completed) {
+        _.forEach(session.items, detailItem => {
+          this.videoEnabled = true;
+          const detail = this.parseVideoQualities(detailItem);
+          details[session.key].push(detail);
+        });
+      } else {
+        retryIds.push(session.key);
+      }
+    });
+    this.videoLines = details;
+  }
+
+  private parseVideoQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: object }): object {
+    const detail = {};
+    detail['startTime'] = detailItem.startTime * 1;
+    detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
+    detail['qualities'] = [];
+    _.forEach(detailItem.mmpQuality, quality => {
+      detail['qualities'].push({
+        startTime: quality.startTime * 1,
+        endTime: quality.endTime * 1,
+        quality: this.parseVideoQuality(quality.lossrates, quality.rtts),
+        tooltip: this.parseVideoTooltip(quality.lossrates, quality.rtts),
+        source: QosType.VIDEO,
+      });
+    });
+    return detail;
   }
 
   private getPSTNSessionDetail(pstnIds: string): void {
@@ -225,40 +256,49 @@ class MeetingDetailsController implements ng.IComponentController {
     this.PartnerSearchService.getPSTNSessionDetail(this.conferenceID, pstnIds)
       .then((res: ISessionDetail) => {
         const retryIds: string[] = [];
-        const details = this.audioLines;
-        _.forEach(res.items, item => {
-          if (item.completed) {
-            _.forEach(item.items, detailItem => {
-              const key = `${detailItem.callId}_${item.key}`;
-              if (!details[key]) {
-                details[key] = [];
-              }
-              this.audioEnabled.PSTN = true;
-              const detail = {};
-              detail['cid'] = detailItem.callId;
-              detail['startTime'] = detailItem.startTime * 1;
-              detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-              detail['qualities'] = [];
-              _.forEach(detailItem.tahoeQuality, quality => {
-                detail['qualities'].push({
-                  startTime: quality.startTime * 1,
-                  endTime: quality.endTime * 1,
-                  quality: this.parsePSTNQuality(quality.audioMos),
-                  tooltip: this.parsePSTNTooltip(quality.audioMos, detailItem.callType),
-                  source: QosType.PSTN,
-                });
-              });
-              details[key].push(detail);
-            });
-          } else {
-            retryIds.push(item.key);
-          }
-        });
-        this.audioLines = details;
+        this.parsePSTNSession(res, retryIds);
         this.setData();
-
         this.retryRequest(QosType.PSTN, this.getPSTNSessionDetail, retryIds);
       });
+  }
+
+  private parsePSTNSession(sessions: ISessionDetail, retryIds: string[]): void {
+    const details = this.audioLines;
+    _.forEach(sessions.items, (session: ISessionDetailItem) => {
+      if (session.completed) {
+        _.forEach(session.items, detailItem => {
+          const key = `${detailItem.callId}_${session.key}`;
+          if (!details[key]) {
+            details[key] = [];
+          }
+          this.audioEnabled.PSTN = true;
+          const detail = this.parsePSTNQualities(detailItem);
+          details[key].push(detail);
+        });
+      } else {
+        retryIds.push(session.key);
+      }
+    });
+    this.audioLines = details;
+  }
+
+  private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: object }): object {
+    const detail = {};
+    detail['cid'] = detailItem.callId;
+    detail['startTime'] = detailItem.startTime * 1;
+    detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
+    detail['qualities'] = [];
+
+    _.forEach(detailItem.tahoeQuality, quality => {
+      detail['qualities'].push({
+        startTime: quality.startTime * 1,
+        endTime: quality.endTime * 1,
+        quality: this.parsePSTNQuality(quality.audioMos),
+        tooltip: this.parsePSTNTooltip(quality.audioMos, detailItem.callType),
+        source: QosType.PSTN,
+      });
+    });
+    return detail;
   }
 
   private getCMRSessionDetail(cmrIds: string): void {
@@ -268,61 +308,74 @@ class MeetingDetailsController implements ng.IComponentController {
     this.PartnerSearchService.getCMRSessionDetail(this.conferenceID, cmrIds)
       .then((res: ISessionDetail) => {
         const retryIds: string[] = [];
-        const audioDetails = this.audioLines;
-        const videoDetails = this.videoLines;
-        _.forEach(res.items, item => {
-          if (!audioDetails[item.key]) {
-            audioDetails[item.key] = [];
-          }
-          if (!videoDetails[item.key]) {
-            videoDetails[item.key] = [];
-          }
-          if (item.completed) {
-            _.forEach(item.items, detailItem => {
-              const audioDetail = {};
-              audioDetail['startTime'] = detailItem.connectionStartTime * 1;
-              audioDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
-              audioDetail['qualities'] = [];
-              _.forEach(detailItem.audioQos, audioQuality => {
-                _.forEach(audioQuality.values, audioQualityValue => {
-                  audioDetail['qualities'].push({
-                    startTime: audioQualityValue.startTime * 1,
-                    endTime: audioQualityValue.endTime * 1,
-                    quality: this.parseVoipQuality(audioQualityValue.lossRate, audioQualityValue.packetLoss),
-                    source: QosType.CMR,
-                    tooltip: this.parseVoipTooltip(audioQualityValue.lossRate, audioQualityValue.packetLoss, 'CMR'),
-                  });
-                });
-              });
-              audioDetails[item.key].push(audioDetail);
-
-              const videoDetail = {};
-              videoDetail['startTime'] = detailItem.connectionStartTime * 1;
-              videoDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
-              videoDetail['qualities'] = [];
-              _.forEach(detailItem.videoQos, videoQuality => {
-                _.forEach(videoQuality.values, videoQualityValue => {
-                  videoDetail['qualities'].push({
-                    startTime: videoQualityValue.startTime * 1,
-                    endTime: videoQualityValue.endTime * 1,
-                    quality: this.parseVideoQuality(videoQualityValue.lossRate, videoQualityValue.packetLoss),
-                    source: QosType.CMR,
-                    tooltip: this.parseVideoTooltip(videoQualityValue.lossRate, videoQualityValue.packetLoss, 'CMR'),
-                  });
-                });
-              });
-              videoDetails[item.key].push(videoDetail);
-            });
-          } else {
-            retryIds.push(item.key);
-          }
-        });
-        this.audioLines = audioDetails;
-        this.videoLines = videoDetails;
+        this.parseCMRQualities(res, retryIds);
         this.setData();
-
         this.retryRequest(QosType.CMR, this.getCMRSessionDetail, retryIds);
       });
+  }
+
+  private parseCMRQualities(sessions: ISessionDetail, retryIds: string[]): void {
+    const audioDetails = this.audioLines;
+    const videoDetails = this.videoLines;
+    _.forEach(sessions.items, (session: ISessionDetailItem) => {
+      if (!audioDetails[session.key]) {
+        audioDetails[session.key] = [];
+      }
+      if (!videoDetails[session.key]) {
+        videoDetails[session.key] = [];
+      }
+      if (session.completed) {
+        _.forEach(session.items, detailItem => {
+          const audioDetail = this.parseAudioDetailQualities(detailItem);
+          audioDetails[session.key].push(audioDetail);
+
+          const videoDetail = this.parseVideoDetailQualities(detailItem);
+          videoDetails[session.key].push(videoDetail);
+        });
+      } else {
+        retryIds.push(session.key);
+      }
+    });
+    this.audioLines = audioDetails;
+    this.videoLines = videoDetails;
+  }
+
+  private parseAudioDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, audioQos: object }): object {
+    const audioDetail = {};
+    audioDetail['startTime'] = detailItem.connectionStartTime * 1;
+    audioDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
+    audioDetail['qualities'] = [];
+    _.forEach(detailItem.audioQos, audioQuality => {
+      _.forEach(audioQuality.values, audioQualityValue => {
+        audioDetail['qualities'].push({
+          startTime: audioQualityValue.startTime * 1,
+          endTime: audioQualityValue.endTime * 1,
+          quality: this.parseVoipQuality(audioQualityValue.lossRate, audioQualityValue.packetLoss),
+          source: QosType.CMR,
+          tooltip: this.parseVoipTooltip(audioQualityValue.lossRate, audioQualityValue.packetLoss, 'CMR'),
+        });
+      });
+    });
+    return audioDetail;
+  }
+
+  private parseVideoDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, videoQos: object }): object {
+    const videoDetail = {};
+    videoDetail['startTime'] = detailItem.connectionStartTime * 1;
+    videoDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
+    videoDetail['qualities'] = [];
+    _.forEach(detailItem.videoQos, videoQuality => {
+      _.forEach(videoQuality.values, videoQualityValue => {
+        videoDetail['qualities'].push({
+          startTime: videoQualityValue.startTime * 1,
+          endTime: videoQualityValue.endTime * 1,
+          quality: this.parseVideoQuality(videoQualityValue.lossRate, videoQualityValue.packetLoss),
+          source: QosType.CMR,
+          tooltip: this.parseVideoTooltip(videoQualityValue.lossRate, videoQualityValue.packetLoss, 'CMR'),
+        });
+      });
+    });
+    return videoDetail;
   }
 
   private parseVoipQuality(lossrates: number, rtts: string): number {
@@ -348,10 +401,10 @@ class MeetingDetailsController implements ng.IComponentController {
       value: this.qualityLabels[qualityIndex],
     }, {
       key: this.$translate.instant('webexReports.latency'),
-      value: latency > 999 ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
+      value: latency > LATENCY_SHOWUP ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
     }, {
       key: this.$translate.instant('webexReports.packetLoss'),
-      value: lossRate > 9.9 ? '> 10%' : `${_.round(lossRate, 2)}%`,
+      value: lossRate > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate, 2)}%`,
     }];
     return this.formatTooltip(items);
   }
@@ -368,7 +421,7 @@ class MeetingDetailsController implements ng.IComponentController {
     return qualityIndex;
   }
 
-  private parseVideoTooltip(lossrates, rtts, aliasKey?: string): string {
+  private parseVideoTooltip(lossrates: number, rtts: string, aliasKey?: string): string {
     const qualityIndex = this.parseVideoQuality(lossrates, rtts) - 1;
     const lossRate = lossrates * 1;
     const latency = _.parseInt(rtts);
@@ -377,10 +430,10 @@ class MeetingDetailsController implements ng.IComponentController {
       value: this.qualityLabels[qualityIndex],
     }, {
       key: this.$translate.instant('webexReports.latency'),
-      value: latency > 999 ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
+      value: latency > LATENCY_SHOWUP ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
     }, {
       key: this.$translate.instant('webexReports.packetLoss'),
-      value: lossRate > 9.9 ? '> 10%' : `${_.round(lossRate, 2)}%`,
+      value: lossRate > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate, 2)}%`,
     }];
     return this.formatTooltip(items);
   }
@@ -423,13 +476,12 @@ class MeetingDetailsController implements ng.IComponentController {
     }
   }
 
-  private formatTooltip(items: object): string {
-    let tooltip: string = '';
-    _.forEach(items, item => {
-      const cls = item.class ? item.class : '';
-      const text = item.value ? `: ${item.value}` : '';
-      tooltip += `<p class="${cls}"><span>${item.key}</span>${text}</p>`;
-    });
+  private formatTooltip(msgs: { key?: string; value?: string | number; class?: string; }[]): string {
+    const tooltip = _.reduce(msgs, (template_, msg) => {
+      const cls = msg.class ? msg.class : '';
+      const text = msg.value ? `: ${msg.value}` : '';
+      return template_ += `<p class="${cls}"><span>${msg.key}</span>${text}</p>`;
+    }, '');
     return tooltip;
   }
 
@@ -455,17 +507,20 @@ class MeetingDetailsController implements ng.IComponentController {
     this.overview['videoSession'] = videoTypes.join();
   }
 
-  private getAllIds(lines: IParticipant[]): string {
-    let arr = [];
-    _.map(lines, (item: any) => arr = _.concat(arr, item));
-    return _.join(_.union(_.map(arr, (item) => _.get(item, 'nodeId'))));
+  private getAllIds(lines: IParticipant[][]): string {
+    let parts: IParticipant[] = [];
+    _.forEach(lines, (line: IParticipant) => {
+      parts = _.concat(parts, line);
+    });
+    const nodeIds = _.map(parts, (part) => _.get(part, 'nodeId'));
+    return _.join(_.union(nodeIds));
   }
 
-  private getFilterIds(res: IUniqueParticipant[], type: string = QosType.PSTN): string {
-    const arr = type === QosType.PSTN
-    ? _.filter(res, (item: IUniqueParticipant) => !(item.sessionType === Platforms.WINDOWS && item.platform === Platforms.TP))
-    : _.filter(res, (item: IUniqueParticipant) => item.sessionType === Platforms.WINDOWS && item.platform === Platforms.TP);
-    const lines = _.map(arr, (item) => this.formatLine(_.get(item, 'participants')));
+  private getFilterIds(participants: IUniqueParticipant[], type: string = QosType.PSTN): string {
+    const lineData = type === QosType.PSTN
+      ? _.filter(participants, (participant: IUniqueParticipant) => !(participant.sessionType === Platforms.WINDOWS && participant.platform === Platforms.TP))
+      : _.filter(participants, (participant: IUniqueParticipant) => participant.sessionType === Platforms.WINDOWS && participant.platform === Platforms.TP);
+    const lines = _.map(lineData, (line) => this.formatLine(_.get(line, 'participants')));
     return this.getAllIds(lines);
   }
 }
