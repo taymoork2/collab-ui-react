@@ -2027,7 +2027,7 @@
   "serviceSetupModal": {
     "regionalSettings": "Regional Settings",
     "preferredLanguage": "Preferred Language",
-    "preferredLanguageDescription": "Specify the language to use for Cisco Spark Call Services. Preferred language only applies to new users.",
+    "preferredLanguageDescription": "Specify the language to use for Cisco Webex Calling Services. Preferred language only applies to new users.",
     "preferredLanguagePlaceholder": "Select your language",
     "defaultCountry": "Default Country",
     "defaultTones": "Default Tones",
@@ -2202,7 +2202,7 @@
       "mobileTitle": "Mobile Dialing",
       "mobileDesc": "Choose whether users are allowed to dial mobile numbers",
       "internationalTitle": "International Dialing",
-      "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Cisco Spark Call inherit this setting by default.",
+      "internationalDesc": "Choose whether users are allowed to dial international numbers. Users and Places with Cisco Webex Calling Services inherit this setting by default.",
       "premiumTitle": "Premium Dialing",
       "premiumDesc": "Choose whether users are allowed to dial numbers that are charged for dialing out. These include numbers starting with {{premiumNumbers}}.",
       "neverAllow": "Never Allow",
@@ -2532,7 +2532,7 @@
       "selectClusterPlaceholder": "Select an Expressway cluster…",
       "selectClusterPlaceholderNoneFound": "No eligible clusters found",
       "enterDisplayName": "Enter a display name for the Expressway cluster",
-      "nameHelptext": "The cluster name is used for display purposes in Cisco Spark Control Hub.",
+      "nameHelptext": "The cluster name is used for display purposes in Cisco Webex Control Hub.",
       "clusternameWatermark": "Enter cluster name…",
       "cannotCreateCluster": "Could not create cluster. Please try again later.",
       "cannotProvisionConnector": "Could not provision {{ConnectorName}}. Try again later.",
@@ -2578,7 +2578,7 @@
       "title": "Deactivate {{serviceName}}",
       "intro": "You are about to remove {{serviceName}} from the Expressway cluster {{clusterName}}.",
       "settingsWillBeWiped": "This action will remove {{connectorName}} and delete all of the connector's local settings.",
-      "notDeregistered": "{{clusterName}} will still be registered to Cisco Collaboration Cloud, and the Expressway cluster can still be used for hosting Hybrid Services.",
+      "notDeregistered": "{{clusterName}} will still be registered to Webex, and the Expressway cluster can still be used for hosting Hybrid Services.",
       "lastClusterWarning": "This is the last cluster that's running {{connectorName}} for this organization. If you deactivate {{connectorName}}, the service will be unavailable for your users until you add more resources. To completely deactivate the service for this organization and its users, go to the {{serviceName}} settings page."
     },
     "clusters": {
@@ -2750,7 +2750,7 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to the Cisco Collaboration Cloud. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
+      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -2774,13 +2774,13 @@
         "spark-hybrid-impinterop": "Message"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-uc": "Users can share content from the Webex Teams app during a call from their work phones and view their call history in the app.",
+        "squared-fusion-cal": "Add @spark to an invitation to create a Webex Teams room for your meeting. Add @webex to attach your WebEx Personal Room.",
         "squared-fusion-cal-place": "Calendar Service enables One Button To Push (OBTP) capabilities for meetings in a place",
-        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
-        "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Spark room for your meeting. Add @webex to attach your WebEx Personal Room.",
-        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other."
+        "squared-fusion-gcal": "Add @spark to an invitation to create a Webex Teams room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-o365": "Add @spark to an invitation to create a Webex Teams room for your meeting. Add @webex to attach your WebEx Personal Room.",
+        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Webex Teams app. Users can call their colleagues from either their phones or the app, too.",
+        "spark-hybrid-impinterop": "Connect Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other."
       },
       "preferredWebExSite": "WebEx Site",
       "calendarType": "Calendar Type",
@@ -2880,7 +2880,7 @@
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
-      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Cisco Collaboration Cloud.",
+      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Webex.",
       "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Are you sure? Service-related features will be removed for users.",
       "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
@@ -3012,8 +3012,8 @@
       },
       "call": {
         "domainVerification": "Domain Verification",
-        "aware": "Users can share content from the Cisco Spark app during a call from their work phones and view their call history in the app.",
-        "connect": "Users' incoming calls will ring their work phones and the Cisco Spark app. Users can call their colleagues from either their phones or the app, too.",
+        "aware": "Users can share content from the Webex Teams app during a call from their work phones and view their call history in the app.",
+        "connect": "Users' incoming calls will ring their work phones and the Webex Teams app. Users can call their colleagues from either their phones or the app, too.",
         "certificatesCannotRead": "Could not read certificate list.",
         "certificatesCannotDelete": "Could not delete certificate. Try again later",
         "certificatesDeleted": "Certificate deleted successfully.",
@@ -3377,7 +3377,7 @@
       "renameGroup": "Rename",
       "renameGroupDescription": "Rename the resource group",
       "removeGroup": "Remove",
-      "removeGroupDescription": "Remove the resource group from Cisco Collaboration Cloud.",
+      "removeGroupDescription": "Remove the resource group from Webex.",
       "groupNameCannotByEmpty": "Resource group name cannot be empty",
       "groupNameSaved": "Rename successful",
       "duplicateName": "A resource group with that name already exists. Please choose another name.",
@@ -3630,7 +3630,7 @@
       "subtitleReAuth": "Office 365 re-authorization",
       "line1": "The Hybrid Calendar Service needs permission to access Office 365 on behalf of your users.",
       "line2": "Click <strong>Authorize</strong> to sign in to Microsoft and accept permissions for the service.",
-      "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.ciscospark.com\">admin.ciscospark.com</a> and start this process again."
+      "line3": "After you accept, your browser should redirect you back here. If you’re not redirected shortly, return to <a target=\"_blank\" href=\"https://admin.webex.com\">admin.webex.com</a> and start this process again."
     },
     "office365SuccessModal": {
       "test": {
@@ -6611,7 +6611,7 @@
       "existingCluster": "Select an existing cluster",
       "invalidip": "Invalid FQDN or IP address",
       "mediaNode": "Media node",
-      "mediaNodeMessage": "Enter the FQDN or IP address of the Hybrid Media Node that you want to register with Cisco Collaboration Cloud.",
+      "mediaNodeMessage": "Enter the FQDN or IP address of the Hybrid Media Node that you want to register with Webex.",
       "enterNode": "Enter FQDN or IP address",
       "requiredclusterconfig": "Required Cluster Configuration",
       "optionalclusterconfig": "Optional Cluster Configuration",
@@ -6619,7 +6619,7 @@
       "finaltitle": "Finish Hybrid Media Registration",
       "toNode": "Go to Node",
       "serviceconfig": "Service Configuration",
-      "successmsg": "You can now register your Hybrid Media Node to Cisco Collaboration cloud.",
+      "successmsg": "You can now register your Hybrid Media Node to Webex.",
       "nodedetails": "Node IP Address/FQDN:",
       "cluster": "Cluster:",
       "sipconfigure": "Configure your optional SIP Calls settings.",
@@ -6655,7 +6655,7 @@
       "participant": "Participant",
       "testconfiguremsg": "Once you completed registration, you can test your configuration from the cluster settings.",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration. Hybrid Media <br> will be ready to use as soon as you finish registration.",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. <br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to Webex. <br> Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}"
     },
     "clusterBandwidth": {
       "success": "Maximum cluster cascade bandwidth saved successfully.",
@@ -6878,7 +6878,7 @@
       "register": "Go To Node",
       "cluster-placeholder": "Create or select cluster",
       "hostname-placeholder": "Enter FQDN or IP address",
-      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to the Cisco Collaboration Cloud. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
+      "grant-registration-success-header-old-cluster": "You can now register your Hybrid Media Node to Webex. Node IP Address/FQDN: {{hostname}} Cluster: {{clustername}}",
       "grant-success-information": "Go to your Hybrid Media Node within one hour to finish registration.",
       "titleV2": "Register Hybrid Media Node",
       "text1V2": "Create a new or select an existing Hybrid Media Cluster where you want to add the Hybrid Media Node.",
@@ -8737,7 +8737,7 @@
     "confirmButton": "Cancel Creation",
     "continueButton": "Continue Creation",
     "callsToSparkAppTitle": "Hunt Group calls to Cisco Spark App",
-    "callsToSparkAppLabel": "Simultaneously send Hunt Group calls to members’ Cisco Spark app",
+    "callsToSparkAppLabel": "Simultaneously send Hunt Group calls to members’ Cisco Webex Teams",
     "memberFetchFailure": "Unable to get members.",
     "huntGroupFetchFailure": "Failed to fetch hunt group details '{{huntGroupName}}'.",
     "invalidMember": "Select at least one member",
@@ -9721,14 +9721,14 @@
       },
       "message": {
         "title": "Message",
-        "description": "Cisco Spark configurations for your organization and individuals.",
+        "description": "Cisco Webex Teams configurations for your organization and individuals.",
         "buttons": {
           "webexMessenger": "WebEx Messenger"
         }
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meeting Center and Cisco Spark configurations for your organization and individuals.",
+        "description": "WebEx Meeting Center and Cisco Webex Teams configurations for your organization and individuals.",
         "SPDescription": "WebEx Meeting Center and Cisco Spark configurations.",
         "pmrText": "Configure your Personal Meeting Room",
         "viewWebExSites": "View WebEx Sites"
@@ -9767,7 +9767,7 @@
       },
       "hybridCalendar": {
         "title": "Hybrid Calendar",
-        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Spark app, and provide One Button to Push (OBTP) to Join.",
+        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Webex Teams, and provide One Button to Push (OBTP) to Join.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -9784,7 +9784,7 @@
           "runSupportedExchange": "Install or make sure you're running a supported version of Microsoft Exchange or Office 365, as described in the hybrid calendar deployment documentation.",
           "ensureActiveDirectory": "Ensure that users are listed in Active Directory and have a discoverable mailbox in the organization's Exchange server",
           "providePortAccess": "Provide the following port access:",
-          "providePortAccessHelp1": "HTTPS or secure web sockets outbound from Expressway to *.ciscospark.com, *.wbx2.com, and *.webex.com: TCP port 443 (secure)",
+          "providePortAccessHelp1": "HTTPS or secure web sockets outbound from Expressway to *.wbx2.com and *.webex.com: TCP port 443 (secure)",
           "providePortAccessHelp2": "EWS outbound from Expressway to Exchange: TCP port 443 (secure) or TCP port 80 (nonsecure) ",
           "providePortAccessHelp3": "LDAP outbound from Expressway to Active Directory: TCP port 636 (secure) or TCP port 389 (nonsecure)",
           "providePortAccessHelp4": "Microsoft Global Catalog search: TCP port 3269 (for Global Catalog search secured by SSL) or TCP port 3268 (for unsecured Global Catalog search).",
@@ -9800,9 +9800,9 @@
           "title": "Hybrid Calendar (Google) Prerequisites",
           "intro": "Use this checklist alongside the Google Calendar deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service in your G Suite organization.",
           "gSuiteOrganization": "A Google G Suite organization (formerly Google Apps for Work) with Google accounts for all users in the organization",
-          "webExSite": "Cisco WebEx site: Minimum versions of WebEx for @webex scheduling and WebEx Meeting Center Video for One Button to Push (OBTP) on room devices.",
-          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
-          "matchingEmails": "User email addresses that are exact matches in Cisco Spark, WebEx, and Google.",
+          "webExSite": "Cisco Webex site: Minimum versions of Webex for @webex scheduling and Webex Meeting Center Video for One Button to Push (OBTP) on room devices.",
+          "sparkOrganization": "A Webex organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "User email addresses that are exact matches in Cisco Webex Teams, WebEx, and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
           "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
         },
@@ -9811,8 +9811,8 @@
           "intro": "Use this checklist alongside the Office 365 deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar in your Office 365 organization.",
           "officeOrganization": "An Office 365 organization with Exchange Online accounts for users in the organization. During setup, you must be able to sign in as a Global administrator to grant application permissions",
           "webExSite": "For @webex scheduling, a Cisco WebEx site on WBS31 or later",
-          "sparkOrganization": "A Cisco Spark organization with a minimum of Basic Meetings and Business Messaging (M1)",
-          "matchingEmails": "Users must have activated Cisco Spark accounts, with email addresses that are exact matches in Cisco Spark, WebEx, and Exchange Online"
+          "sparkOrganization": "A Webex organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "matchingEmails": "Users must have activated Cisco Webex Teams accounts, with email addresses that are exact matches in Webex Teams, WebEx, and Exchange Online"
         }
       },
       "hybridTesting": {
@@ -9822,7 +9822,7 @@
       },
       "hybridCall": {
         "title": "Hybrid Call",
-        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Cisco Spark app to screen share, place and receive calls.",
+        "description": "Brings cloud capabilities to Cisco Unified CM desk phone users, such as using the Webex Teams app to screen share, place and receive calls.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -9849,7 +9849,7 @@
             "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Aware in your organization.",
             "tabHeading": "Hybrid Call Service Aware ({{checked}}/{{total}})",
             "determineCertificateTrust": "Determine your certificate trust method (manual or automatic)",
-            "registerAllDomains": "Register all the domains (directory URIs and email addresses) to Cisco Spark",
+            "registerAllDomains": "Register all the domains (directory URIs and email addresses) to Webex",
             "registerAllDomainsHelp1": "Ensure that the subject alternate names (SANs) belong to the registered domains",
             "installOrUpgradeUCM": "Install or upgrade to the minimum supported version of Cisco Unified Communications Manager, as described in \"Requirements for Hybrid Services\" in the deployment guide",
             "configureRouting": "Configure of the following:",
@@ -9866,7 +9866,7 @@
             "intro": "Hybrid Call Connect is an optional feature of Hybrid Call. Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequsites necessary for deploying Hybrid Call Service Connect in your organization.",
             "tabHeading": "Hybrid Call Service Connect ({{checked}}/{{total}})",
             "isAwareSetup": "Hybrid Call Service Aware must be deployed and configured",
-            "prepareEdge": "Prepare your Expressway-E for the mutual TLS connection between Cisco Spark and your call control environment",
+            "prepareEdge": "Prepare your Expressway-E for the mutual TLS connection between Webex and your call control environment",
             "prepareEdgeHelp1": "For an SRV record (multiple Expressway-E for redundancy): If you have an existing SRV, allow the time to request a dedicated SRV for Hybird Call Service Connect.",
             "prepareEdgeHelp2": "Request that port 5062 be open on the enterprise firewall.",
             "prepareEdgeHelp3": "Make sure the port is open to and from the Internet.",
@@ -9879,15 +9879,15 @@
             "installOrUpgradeHelp1": "You can reuse a B2B or MRA pair. You cannot use a Jabber Guest Expressway pair.",
             "downloadDirectoryConnector": "(Optional) Download the latest Directory Connector software and use it to import user attributes from your Active Directory:",
             "downloadDirectoryConnectorHelp1": "Enterprise work phone numbers",
-            "downloadDirectoryConnectorHelp2": "Email addresses – These must match the user's Cisco Spark email address.",
+            "downloadDirectoryConnectorHelp2": "Email addresses – These must match the user's Webex email address.",
             "followUCMrequirements": "Follow these Cisco Unified Communication Manager requirements",
             "followUCMrequirementsHelp1": "Install or upgrade your Cisco Unified Communications Manager to the minimum supported version, a described in \"Requirements for Hybrid Services\" in the deployment guide",
-            "followUCMrequirementsHelp2": "Prepare your licensing for CTI remote devices (CTI-RD) or Cisco Spark remote devices (Spark-RD).",
+            "followUCMrequirementsHelp2": "Prepare your licensing for CTI remote devices (CTI-RD) or Webex remote devices (Webex-RD).",
             "useSupportedCodecs": "Use supported codecs",
-            "useSupportedCodecsHelp1": "Cisco Spark supports the following codecs:",
+            "useSupportedCodecsHelp1": "Webex supports the following codecs:",
             "useSupportedCodecsHelp2": "Audio—G.711, G.722, AAC-LD",
             "useSupportedCodecsHelp3": "Video—H.264",
-            "configureSettingsForCTI": "Configure the following settings to be used for CTI remote device (CTI-RD or Spark-RD)",
+            "configureSettingsForCTI": "Configure the following settings to be used for CTI remote device (CTI-RD or Webex-RD)",
             "configureSettingsForCTIHelp1": "Device Pools",
             "configureSettingsForCTIHelp2": "Locations",
             "configureSettingsForCTIHelp3": "Calling search spaces",
@@ -10015,7 +10015,7 @@
         "hybridDestination": "Use one or more Expressway-E configured for Hybrid Call Connect ",
         "addSipDestination": "Add SIP destination",
         "certificateTitle": "Certificates",
-        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Cisco Collaboration Cloud default trust list</a>",
+        "certDescNew": "Use certificates provided from the <a href=\"{{href}}\" target=\"_blank\">Webex default trust list</a>",
         "upload": "or upload your own. If you use your own, make sure the hostnames are on a verified domain",
         "click": ". For help, <a href=\"{{href}}\" target=\"_blank\">click here</a>.",
         "certificateDefault": "Default Cisco Certificates",
@@ -10023,7 +10023,7 @@
         "inactiveHelp": "The default trust list is ignored if you upload your own certificates. ",
         "restore": "Restore default certificates.",
         "certificateDefaultList": "Cisco Collaboration default trust list",
-        "certificateDefaultListNew": "Cisco Collaboration Cloud default trust list",
+        "certificateDefaultListNew": "Webex default trust list",
         "certificateCustom": "Upload your own certificate",
         "view": "View",
         "dragAndDropKeyFileHere": "Drag and drop the certificate file here or ",
