@@ -89,7 +89,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       };
     }
 
-    //TODO: get list of customers for partner
     this.initCustomerList();
 
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
@@ -165,6 +164,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public initCustomerList(): void {
     this.customerSelectOptions = [];
     this.customerList = [];
+    //TODO: get list of customers for partner from ci.
     this.HcsControllerService.getHcsCustomers()
     .then((hcsCustomers: IHcsCustomer[]) => {
       _.forEach(hcsCustomers, (hcsCustomer) => {
