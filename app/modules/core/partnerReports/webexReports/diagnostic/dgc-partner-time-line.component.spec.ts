@@ -64,7 +64,7 @@ describe('Component: DgcPartnerTimeLine', () => {
       line.joinTime += i;
       line.userName += i;
       this.sourceData.lines.push(line);
-      i++;
+      i += 1;
     }
   }
 

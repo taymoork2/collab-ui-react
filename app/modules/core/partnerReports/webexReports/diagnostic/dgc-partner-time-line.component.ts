@@ -24,6 +24,8 @@ interface IGridOption {
   height?: number;
 }
 
+const DEFAULT_RADIUS = 9;
+const DEFAULT_RECT_WIDTH = 17;
 class TimeLineController implements ng.IComponentController {
   private tip: d3;
   private svg: d3;
@@ -43,6 +45,7 @@ class TimeLineController implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $element: ng.IRootElementService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private PartnerSearchService: PartnerSearchService,
   ) {
@@ -69,21 +72,19 @@ class TimeLineController implements ng.IComponentController {
   public $onInit(): void {
     this.initParameters();
     this.initChart();
-    this.debouncedOnChange = _.debounce(this.debouncedOnChange, 500);
-  }
-
-  private debouncedOnChange(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    const { circleColor, lineData } = changes;
-    if (_.get(circleColor, 'currentValue')) {
-      this.updateStartPoints(_.get(circleColor, 'currentValue'));
-    }
-    if (_.get(lineData, 'currentValue')) {
-      this.drawColorLines(_.get(lineData, 'currentValue'));
-    }
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    this.debouncedOnChange(changes);
+    const { circleColor, lineData } = changes;
+    this.$timeout(() => {
+      if (_.get(circleColor, 'currentValue')) {
+        this.updateStartPoints(_.get(circleColor, 'currentValue'));
+      }
+
+      if (_.get(lineData, 'currentValue')) {
+        this.drawColorLines(_.get(lineData, 'currentValue'));
+      }
+    }, 500);
   }
 
   private initParameters(): void {
@@ -93,7 +94,7 @@ class TimeLineController implements ng.IComponentController {
     if (!this.sourceData.lines) {
       this.sourceData.lines = [];
     }
-    this.data.gridHorizontalLineNum = this.getGridHorizontalLineHum();
+    this.data.gridHorizontalLineNum = this.getGridHorizontalLineNum();
     this.data.startTime = this.sourceData.startTime;
     this.data.endTime = this.sourceData.endTime;
 
@@ -303,18 +304,19 @@ class TimeLineController implements ng.IComponentController {
 
   private updateDevice(deviceInfo: ICallType, msgArr: object[], index: number): string {
     let device = '';
-    if (deviceInfo.completed) {
-      if (!_.isEmpty(deviceInfo.items)) {
-        device = deviceInfo.items[0].deviceType;
-      } else {
-        device = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
-      }
-      msgArr[1] = { key: device }; //replace loading text to show device info
-
-      const tipTop = index * this.option.gridHeight + 50;
-      const tipLeft = this.option.paddingLeft - 20;
-      this.makeTips(msgArr, tipTop, tipLeft);
+    if (!deviceInfo.completed) {
+      return device;
     }
+    if (!_.isEmpty(deviceInfo.items)) {
+      device = deviceInfo.items[0].deviceType;
+    } else {
+      device = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+    }
+    msgArr[1] = { key: device }; //replace loading text to show device info
+
+    const tipTop = index * this.option.gridHeight + 50;
+    const tipLeft = this.option.paddingLeft - 20;
+    this.makeTips(msgArr, tipTop, tipLeft);
     return device;
   }
 
@@ -405,7 +407,6 @@ class TimeLineController implements ng.IComponentController {
 
   private drawStartPoints(): void {
     const jmtNode = d3.select('g.jmtPoint');
-    const DEFAULT_RADIUS = 9;
     const data = this.getUniqueData(false);
     _.forEach(data, (line: IUniqueData) => {
       if (!line.enableStartPoint) {
@@ -446,44 +447,45 @@ class TimeLineController implements ng.IComponentController {
     _.forEach(joinMeetingDatas, (joinMeetingData: any) => {//TODO use better type
       let jmtQuality = '';
       const joinMeetingTime = joinMeetingData['joinMeetingTime'];
-      if (joinMeetingTime) {
-        const jmt = Math.floor(joinMeetingTime * 1);
-        const pointNode = d3.select(`#myStartPoint${joinMeetingData.guestId}-${joinMeetingData.userId}-${joinMeetingData.joinTime}`);
-        if (pointNode.size()) {
-          let cx = pointNode.attr('cx') * 1, cy = pointNode.attr('cy') * 1;
-
-          if (jmt < 10) {
-            jmtQuality = QualityType.GOOD;
-            this.updatePointNodeGoodQuality(pointNode, { jmt, jmtQuality });
-          } else if (jmt >= 10 && jmt <= 20) {
-            jmtQuality = QualityType.FAIR;
-            cx += 2;
-            cy -= 1;
-            this.updatePointNodeFairQuality(pointNode, { jmt, jmtQuality, cx, cy });
-          } else {
-            jmtQuality = QualityType.POOR;
-            const DEFAULT_RECT_WIDTH = 17;
-            cx -= 1;
-            cy -= DEFAULT_RECT_WIDTH / 2;
-            this.updatePointNodePoorQuality(pointNode, { jmt, jmtQuality, cx, cy, rectWidth: DEFAULT_RECT_WIDTH });
-          }
-
-          pointNode.on('mouseover', () => {
-            let jmtVal = '';
-            jmtVal = this.$translate.instant('time.seconds', { time: jmt }, 'messageformat');
-
-            const msgArr = [
-              { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (jmtQuality ? `: ${jmtQuality} ` : '') },
-              { key: jmtVal },
-            ];
-
-            const tipTop = cy + 12;
-            const tipLeft = cx + 158;
-            this.makeTips(msgArr, tipTop, tipLeft);
-          })
-          .on('mouseout', () => this.hideTip());
-        }
+      if (!joinMeetingTime) {
+        return;
       }
+      const jmt = Math.floor(joinMeetingTime * 1);
+      const pointNode = d3.select(`#myStartPoint${joinMeetingData.guestId}-${joinMeetingData.userId}-${joinMeetingData.joinTime}`);
+      if (!pointNode.size()) {
+        return;
+      }
+
+      let cx = pointNode.attr('cx') * 1, cy = pointNode.attr('cy') * 1;
+      if (jmt < 10) {
+        jmtQuality = QualityType.GOOD;
+        this.updatePointNodeGoodQuality(pointNode, { jmt, jmtQuality });
+      } else if (jmt >= 10 && jmt <= 20) {
+        jmtQuality = QualityType.FAIR;
+        cx += 2;
+        cy -= 1;
+        this.updatePointNodeFairQuality(pointNode, { jmt, jmtQuality, cx, cy });
+      } else {
+        jmtQuality = QualityType.POOR;
+        cx -= 1;
+        cy -= DEFAULT_RECT_WIDTH / 2;
+        this.updatePointNodePoorQuality(pointNode, { jmt, jmtQuality, cx, cy, rectWidth: DEFAULT_RECT_WIDTH });
+      }
+
+      pointNode.on('mouseover', () => {
+        let jmtVal = '';
+        jmtVal = this.$translate.instant('time.seconds', { time: jmt }, 'messageformat');
+
+        const msgArr = [
+          { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (jmtQuality ? `: ${jmtQuality} ` : '') },
+          { key: jmtVal },
+        ];
+
+        const tipTop = cy + 12;
+        const tipLeft = cx + 158;
+        this.makeTips(msgArr, tipTop, tipLeft);
+      })
+      .on('mouseout', () => this.hideTip());
     });
   }
 
@@ -524,7 +526,7 @@ class TimeLineController implements ng.IComponentController {
     rectWidth?: number,
     rectRadius?: number,
   }): void {
-    const { jmt, jmtQuality, cx, cy, rectWidth = 17, rectRadius = 2 } = options;
+    const { jmt, jmtQuality, cx, cy, rectWidth = DEFAULT_RECT_WIDTH, rectRadius = 2 } = options;
     pointNode.selectAll('circle').remove();
     pointNode.append('rect').attr({
       width: rectWidth,
@@ -539,61 +541,63 @@ class TimeLineController implements ng.IComponentController {
 
   private drawColorLines(lines: object): void {
     _.forEach(lines, (line, nodeId) => {
-      if (!_.isEmpty(line)) {
-        _.forEach(line, lineItem => {
-          const nodeId_ = lineItem.cid ? nodeId : `_${nodeId}`;
-          const enterNode = d3.select(`#myEnter${nodeId_}`);
-          this.drawColorLineSegment(enterNode, lineItem.startTime, lineItem.endTime, 'defaultLine', { nodeId: nodeId_ });
-
-          const colorNode = d3.select(`#myColor${nodeId_}`);
-          _.forEach(lineItem.qualities, qualityItem => {
-            this.drawColorLineSegment(colorNode, qualityItem.startTime, qualityItem.endTime, this.lineColorCls[qualityItem.quality - 1], { source: qualityItem.source, tooltip: qualityItem.tooltip, nodeId: nodeId_ });
-          });
-        });
+      if (_.isEmpty(line)) {
+        return;
       }
+      _.forEach(line, lineItem => {
+        const nodeId_ = lineItem.cid ? nodeId : `_${nodeId}`;
+        const enterNode = d3.select(`#myEnter${nodeId_}`);
+        this.drawColorLineSegment(enterNode, lineItem.startTime, lineItem.endTime, 'defaultLine', { nodeId: nodeId_ });
+
+        const colorNode = d3.select(`#myColor${nodeId_}`);
+        _.forEach(lineItem.qualities, qualityItem => {
+          this.drawColorLineSegment(colorNode, qualityItem.startTime, qualityItem.endTime, this.lineColorCls[qualityItem.quality - 1], { source: qualityItem.source, tooltip: qualityItem.tooltip, nodeId: nodeId_ });
+        });
+      });
     });
   }
 
   private drawColorLineSegment(lineNode: d3, startTime: number, endTime: number, cls: string, options: object = {}): void {
-    if (lineNode.size()) {
-      const start = lineNode.attr('start') * 1;
-      const end = lineNode.attr('end') * 1;
-      if (startTime < start) {
-        startTime = start;
-      }
-      if (endTime > end) {
-        endTime = end;
-      }
-      const yIndex = lineNode.attr('yIndex') * 1;
-      const x1 = this.timeScale(startTime);
-      const y = (yIndex + 1) * this.option.gridHeight;
-      const x2 = this.timeScale(endTime);
-      const id = `c_${options['nodeId']}_${startTime}_${endTime}`;
-      lineNode.append('svg:line')
-        .attr({
-          id: id,
-          x1: x1,
-          y1: y,
-          x2: x2,
-          y2: y,
-          class: cls,
-          start: startTime,
-          end: endTime,
-          source: options['source'],
-        })
-        .on('mouseover', () => {
-          const dx = (x1 + x2) / 2;
-          this.showTip(options['tooltip'], y + 16, dx + this.option.paddingLeft);
-          d3.select(`#${id}`).attr('style', 'stroke-width: 5;');
-        })
-        .on('mouseout', () => {
-          this.hideTip();
-          d3.select(`#${id}`).attr('style', null);
-        });
+    if (!lineNode.size()) {
+      return;
     }
+    const start = lineNode.attr('start') * 1;
+    const end = lineNode.attr('end') * 1;
+    if (startTime < start) {
+      startTime = start;
+    }
+    if (endTime > end) {
+      endTime = end;
+    }
+    const yIndex = lineNode.attr('yIndex') * 1;
+    const x1 = this.timeScale(startTime);
+    const y = (yIndex + 1) * this.option.gridHeight;
+    const x2 = this.timeScale(endTime);
+    const id = `c_${options['nodeId']}_${startTime}_${endTime}`;
+    lineNode.append('svg:line')
+      .attr({
+        id: id,
+        x1: x1,
+        y1: y,
+        x2: x2,
+        y2: y,
+        class: cls,
+        start: startTime,
+        end: endTime,
+        source: options['source'],
+      })
+      .on('mouseover', () => {
+        const dx = (x1 + x2) / 2;
+        this.showTip(options['tooltip'], y + 16, dx + this.option.paddingLeft);
+        d3.select(`#${id}`).attr('style', 'stroke-width: 5;');
+      })
+      .on('mouseout', () => {
+        this.hideTip();
+        d3.select(`#${id}`).attr('style', null);
+      });
   }
 
-  private drawLine(nodeName: string, data: Object[]): void {
+  private drawLine(nodeName: string, data: object[]): void {
     const g = this.svg.select(nodeName);
     return g.selectAll(nodeName)
       .data(data)
@@ -609,7 +613,7 @@ class TimeLineController implements ng.IComponentController {
       .attr('end', item => item.end ? item.end : '');
   }
 
-  private getGridHorizontalLineHum(): number {
+  private getGridHorizontalLineNum(): number {
     return this.sourceData.lines.length + 1 > this.data.gridHorizontalLineNum ? this.sourceData.lines.length + 1 : this.data.gridHorizontalLineNum;
   }
 
@@ -637,20 +641,21 @@ class TimeLineController implements ng.IComponentController {
   }
 
   private showTip(tooltip: string, top: number, left: number): void {
-    if (tooltip) {
-      this.tip.html(tooltip)
-        .classed('Tooltip-bottom', true)
-        .style('display', 'block')
-        .style('z-index', 1500);
-
-      const leftOffset = this.tip.style('width').replace('px', '');
-      const topOffset = this.tip.style('height').replace('px', '');
-      this.tip.transition()
-        .duration(500)
-        .style('opacity', 1)
-        .style('top', () => (top - topOffset) + 'px' )
-        .style('left', () => (left - leftOffset / 2) + 'px' );
+    if (!tooltip) {
+      return;
     }
+    this.tip.html(tooltip)
+    .classed('Tooltip-bottom', true)
+    .style('display', 'block')
+    .style('z-index', 1500);
+
+    const leftOffset = this.tip.style('width').replace('px', '');
+    const topOffset = this.tip.style('height').replace('px', '');
+    this.tip.transition()
+      .duration(500)
+      .style('opacity', 1)
+      .style('top', () => (top - topOffset) + 'px' )
+      .style('left', () => (left - leftOffset / 2) + 'px' );
   }
 
   private hideTip(): void {
@@ -714,7 +719,7 @@ class TimeLineController implements ng.IComponentController {
 
   private drawCircle(node: d3, class_: string, pos: d3): object {
     return node.append('circle')
-      .attr('r', 9)
+      .attr('r', DEFAULT_RADIUS)
       .attr('class', class_)
       .attr('transform', `translate(${pos.x}, ${pos.y})`);
   }
@@ -731,7 +736,7 @@ class TimeLineController implements ng.IComponentController {
 
   private drawSquare(node: d3, pos: d3): object {
     return node.append('rect')
-      .attr('width', 17)
+      .attr('width', DEFAULT_RECT_WIDTH)
       .attr('height', 17)
       .attr('rx', 2)
       .attr('ry', 2)
@@ -797,5 +802,11 @@ class TimeLineController implements ng.IComponentController {
 export class DgcPartnerTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLineController;
   public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-time-line.html');
-  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', tabType: '<', lineData: '<' };
+  public bindings = {
+    sourceData: '<',
+    lineColor: '<',
+    circleColor: '<',
+    tabType: '<',
+    lineData: '<',
+  };
 }
