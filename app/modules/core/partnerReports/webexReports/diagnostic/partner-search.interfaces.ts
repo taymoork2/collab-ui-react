@@ -28,6 +28,8 @@ export interface IMeetingDetail extends IMeetingBasicInfo {
   screenShare_: string;
   recording: number;
   recording_: string;
+  status_?: string;
+  Duration?: string;
 }
 
 export interface ISession {
