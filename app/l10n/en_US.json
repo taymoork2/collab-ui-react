@@ -830,7 +830,7 @@
       "deviceOptions": {
         "all": "All",
         "roomSystems": "Cisco Spark Room Kit, DX, MX and SX series",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Export Device Usage Attributes to CSV",
