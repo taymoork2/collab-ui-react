@@ -84,6 +84,39 @@ describe('Component: WebexSiteLicensesComponent', function () {
       expect(result).toEqual(200);
     });
 
+    it('should set default site license value when only site', function () {
+      const sitesArray = [
+        { quantity: 10, siteUrl: 'site1' },
+      ];
+      const distributedLicensesArray = [];
+      const centerDetails = [
+        { serviceName: 'MC', quantity: 150 },
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.centerDetails = _.clone(centerDetails);
+      this.controller.constructDistributedSitesArray();
+      this.$scope.$apply();
+      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(150);
+    });
+
+    it('should set site license to zero when more then one site', function () {
+      const sitesArray = [
+        { quantity: 10, siteUrl: 'site1' },
+        { quantity: 20, siteUrl: 'site1' },
+      ];
+      const distributedLicensesArray = [];
+      const centerDetails = [
+        { serviceName: 'MC', quantity: 150 },
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.centerDetails = _.clone(centerDetails);
+      this.controller.constructDistributedSitesArray();
+      this.$scope.$apply();
+      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(0);
+    });
+
     it('should calculate license quantity for sites correctly', function () {
       const sitesArray = [
         { quantity: 1, siteUrl: 'site1' },
