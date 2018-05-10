@@ -45,7 +45,6 @@ class TimeLineController implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $element: ng.IRootElementService,
-    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private PartnerSearchService: PartnerSearchService,
   ) {
@@ -67,24 +66,19 @@ class TimeLineController implements ng.IComponentController {
       gridHeight: 35.5,
       top: 30,
     };
-  }
-
-  public $onInit(): void {
     this.initParameters();
     this.initChart();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { circleColor, lineData } = changes;
-    this.$timeout(() => {
-      if (_.get(circleColor, 'currentValue')) {
-        this.updateStartPoints(_.get(circleColor, 'currentValue'));
-      }
+    if (_.get(circleColor, 'currentValue')) {
+      this.updateStartPoints(_.get(circleColor, 'currentValue'));
+    }
 
-      if (_.get(lineData, 'currentValue')) {
-        this.drawColorLines(_.get(lineData, 'currentValue'));
-      }
-    }, 500);
+    if (_.get(lineData, 'currentValue')) {
+      this.drawColorLines(_.get(lineData, 'currentValue'));
+    }
   }
 
   private initParameters(): void {
