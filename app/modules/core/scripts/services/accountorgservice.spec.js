@@ -23,49 +23,6 @@ describe('Service : AccountOrgService', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  // Organization validity checks
-
-  describe('it should catch illegal parameter passes and', function () {
-    it('should verify that a valid OrgID is passed to getAppSecurity and setAppSecurity', function () {
-      this.AccountOrgService.getAppSecurity().then(fail)
-        .catch(function (response) {
-          expect(response).toBe('A Valid organization ID must be Entered');
-        });
-
-      this.AccountOrgService.setAppSecurity().then(fail)
-        .catch(function (response) {
-          expect(response).toBe('A Valid organization ID must be Entered');
-        });
-    });
-  });
-
-  describe('App Security ', function () {
-    //App Security Setter check
-    it('should set Appsecurity setting to clientSecurityPolicy', function () {
-      this.$httpBackend.whenPUT(this.appSecurityRegex).respond([200, {}]);
-
-      this.AccountOrgService.setAppSecurity(this.Authinfo.getOrgId(), true).then(function (response) {
-        expect(response.status).toEqual(200);
-      });
-      this.$httpBackend.flush();
-    });
-
-    //App Security Getter check
-    it('should get Appsecurity setting from clientSecurityPolicy', function () {
-      this.$httpBackend.whenGET(this.appSecurityRegex).respond(function () {
-        var data = {
-          clientSecurityPolicy: true,
-        };
-        return [200, data];
-      });
-
-      this.AccountOrgService.getAppSecurity(this.Authinfo.getOrgId()).then(function (response) {
-        expect(response.data.clientSecurityPolicy).toBe(true);
-      });
-      this.$httpBackend.flush();
-    });
-  });
-
   describe('Block External Communication ', function () {
     //Block External Communcation Setter check
     it('should set blcok external communication setting', function () {

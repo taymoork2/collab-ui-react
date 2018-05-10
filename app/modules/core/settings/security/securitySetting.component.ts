@@ -1,4 +1,7 @@
 import { ProPackSettingSection } from '../proPackSettingSection';
+import { Notification } from 'modules/core/notifications';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 export class SecuritySetting extends ProPackSettingSection {
 
@@ -9,11 +12,7 @@ export class SecuritySetting extends ProPackSettingSection {
   }
 }
 
-interface IGetAppSecurityResponse {
-  clientSecurityPolicy: boolean;
-}
-
-export class SecuritySettingController {
+export class SecuritySettingController implements ng.IComponentController {
 
   private _isSparkClientSecurityEnabled: boolean;
   public isSparkClientSecurityLoaded: boolean = false;
@@ -23,19 +22,21 @@ export class SecuritySettingController {
 
   /* @ngInject */
   constructor(
-    private $q,
-    private AccountOrgService,
+    private $q: ng.IQService,
     private Authinfo,
-    private ProPackService,
-    private Notification,
-  ) {
+    private Notification: Notification,
+    private OrgSettingsService: OrgSettingsService,
+    private ProPackService: ProPackService,
+  ) {}
+
+  public $onInit() {
     this.orgId = this.Authinfo.getOrgId();
     this.loadSetting();
   }
 
   private loadSetting() {
     const promises = {
-      security: this.AccountOrgService.getAppSecurity(this.orgId),
+      security: this.OrgSettingsService.getClientSecurityPolicy(this.orgId),
       proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
@@ -46,11 +47,9 @@ export class SecuritySettingController {
       }).catch(_.noop);
   }
 
-  private appSecuritySettingLoaded(response: ng.IHttpResponse<IGetAppSecurityResponse>) {
-    if (_.has(response, 'data.clientSecurityPolicy')) {
-      this._isSparkClientSecurityEnabled = _.get<boolean>(response, 'data.clientSecurityPolicy');
-      this.isSparkClientSecurityLoaded = true;
-    }
+  private appSecuritySettingLoaded(isEnabled: boolean): void {
+    this._isSparkClientSecurityEnabled = isEnabled;
+    this.isSparkClientSecurityLoaded = true;
   }
 
   get isSparkClientSecurityEnabled(): boolean {
@@ -65,7 +64,7 @@ export class SecuritySettingController {
   public updateSparkClientSecuritySetting() {
     if (this._isSparkClientSecurityEnabled !== undefined) {
       // Calls AppSecuritySetting service to update device security enforcement
-      this.AccountOrgService.setAppSecurity(this.orgId, this._isSparkClientSecurityEnabled)
+      this.OrgSettingsService.setClientSecurityPolicy(this.orgId, this._isSparkClientSecurityEnabled)
         .then(() => {
           this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
         })

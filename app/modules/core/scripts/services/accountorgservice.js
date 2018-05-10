@@ -23,8 +23,6 @@
       getServices: getServices,
       addMessengerInterop: addMessengerInterop,
       deleteMessengerInterop: deleteMessengerInterop,
-      getAppSecurity: getAppSecurity,
-      setAppSecurity: setAppSecurity,
       getBlockExternalCommunication: getBlockExternalCommunication,
       setBlockExternalCommunication: setBlockExternalCommunication,
       getFileSharingControl: getFileSharingControl,
@@ -72,29 +70,6 @@
       var url = getServicesUrl(org) + '/messengerInterop';
 
       return $http.delete(url);
-    }
-
-    // Get the account App Security Status from the clientSecurityPolicy API(boolean)
-    function getAppSecurity(org) {
-      if (!org || org === '') {
-        return $q.reject('A Valid organization ID must be Entered');
-      }
-      var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
-
-      return $http.get(url);
-    }
-
-    // Sets the updated App Security Status to clientSecurityPolicy API on Save button event
-    function setAppSecurity(org, appSecurityStatus) {
-      if (!org || org === '') {
-        return $q.reject('A Valid organization ID must be Entered');
-      }
-
-      var url = getDeviceSettingsUrl(org) + '/clientSecurityPolicy';
-
-      return $http.put(url, {
-        clientSecurityPolicy: appSecurityStatus,
-      });
     }
 
     // Get block external communication from the blockExternalCommunications API(boolean)

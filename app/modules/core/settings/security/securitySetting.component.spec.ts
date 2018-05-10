@@ -1,11 +1,13 @@
 import testModule from './index';
 import { SecuritySettingController } from './securitySetting.component';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 type Test = atlas.test.IComponentTest<SecuritySettingController, {
   $q: ng.IQService,
-  AccountOrgService,
   Authinfo,
-  ProPackService,
+  OrgSettingsService: OrgSettingsService,
+  ProPackService: ProPackService,
 }>;
 
 describe('Component: SecuritySettingController', () => {
@@ -14,37 +16,38 @@ describe('Component: SecuritySettingController', () => {
     this.initModules(testModule);
     this.injectDependencies(
       '$q',
-      'AccountOrgService',
       'Authinfo',
+      'OrgSettingsService',
       'ProPackService',
     );
-
-    spyOn(this.AccountOrgService, 'getAppSecurity');
-    spyOn(this.AccountOrgService, 'setAppSecurity');
-    spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue(this.$q.resolve(false));
 
     this.initComponent = () => {
       this.compileComponent('securitySetting', {});
     };
 
-    this.initSetAppSec = () => {
-      this.AccountOrgService.setAppSecurity.and.returnValue(this.$q.resolve({}));
-    };
-
-    this.initGetAppSecWithResult = (result: any) => {
-      this.AccountOrgService.getAppSecurity.and.returnValue(this.$q.resolve(result));
-    };
-
-    this.initGetAppSecReject = () => {
-      this.AccountOrgService.getAppSecurity.and.returnValue(this.$q.reject({}));
+    this.initSpies = (spies: {
+      getClientSecurityPolicy?,
+      setClientSecurityPolicy?,
+      hasProPackPurchasedOrNotEnabled?,
+    } = {}) => {
+      const {
+        getClientSecurityPolicy = this.$q.resolve(true),
+        setClientSecurityPolicy = this.$q.resolve(),
+        hasProPackPurchasedOrNotEnabled = this.$q.resolve(false),
+      } = spies;
+      spyOn(this.OrgSettingsService, 'getClientSecurityPolicy').and.returnValue(getClientSecurityPolicy);
+      spyOn(this.OrgSettingsService, 'setClientSecurityPolicy').and.returnValue(setClientSecurityPolicy);
+      spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue(hasProPackPurchasedOrNotEnabled);
     };
   });
 
   describe('contructor()', () => {
 
-    describe('when getAppSecurity fail', () => {
+    describe('when getClientSecurityPolicy fails', () => {
       beforeEach(function (this: Test) {
-        this.initGetAppSecReject();
+        this.initSpies({
+          getClientSecurityPolicy: this.$q.reject({}),
+        });
         this.initComponent();
       });
 
@@ -54,33 +57,11 @@ describe('Component: SecuritySettingController', () => {
       });
     });
 
-    describe('when getAppSecurity return bad object', () => {
+    describe('when getClientSecurityPolicy resolves true', () => {
       beforeEach(function (this: Test) {
-        this.initGetAppSecWithResult({ whatsthis: false });
-        this.initComponent();
-      });
-
-      it('should not set dataloaded and no value for isSparkClientSecurityEnabled', function (this: Test) {
-        expect(this.controller.isSparkClientSecurityEnabled).toBeFalsy();
-        expect(this.controller.isSparkClientSecurityLoaded).toBeFalsy();
-      });
-    });
-
-    describe('when getAppSecurity return a bad data object', () => {
-      beforeEach(function (this: Test) {
-        this.initGetAppSecWithResult({ data: { whatsthis: false } });
-        this.initComponent();
-      });
-
-      it('should not set dataloaded and no value for isSparkClientSecurityEnabled', function (this: Test) {
-        expect(this.controller.isSparkClientSecurityEnabled).toBeFalsy();
-        expect(this.controller.isSparkClientSecurityLoaded).toBeFalsy();
-      });
-    });
-
-    describe('when getAppSecurity return clientSecurityPolicy set to true', () => {
-      beforeEach(function (this: Test) {
-        this.initGetAppSecWithResult({ data: { clientSecurityPolicy: true } });
+        this.initSpies({
+          getClientSecurityPolicy: this.$q.resolve(true),
+        });
         this.initComponent();
       });
 
@@ -90,9 +71,11 @@ describe('Component: SecuritySettingController', () => {
       });
     });
 
-    describe('when getAppSecurity return clientSecurityPolicy set to false', () => {
+    describe('when getClientSecurityPolicy resolves false', () => {
       beforeEach(function (this: Test) {
-        this.initGetAppSecWithResult({ data: { clientSecurityPolicy: false } });
+        this.initSpies({
+          getClientSecurityPolicy: this.$q.resolve(false),
+        });
         this.initComponent();
       });
 
@@ -106,26 +89,27 @@ describe('Component: SecuritySettingController', () => {
 
   describe('updateSparkClientSecuritySetting', () => {
     beforeEach(function (this: Test) {
-      this.initGetAppSecWithResult({ data: { clientSecurityPolicy: false } });
-      this.initSetAppSec();
+      this.initSpies({
+        getClientSecurityPolicy: this.$q.resolve(false),
+      });
       this.initComponent();
     });
 
-    it('should call AccountOrgService to save the value true', function (this: Test) {
+    it('should call OrgSettingsService to save the value true', function (this: Test) {
       this.controller.isSparkClientSecurityEnabled = true;
 
       this.controller.updateSparkClientSecuritySetting();
 
-      expect(this.AccountOrgService.setAppSecurity)
+      expect(this.OrgSettingsService.setClientSecurityPolicy)
         .toHaveBeenCalledWith(this.Authinfo.getOrgId(), true);
     });
 
-    it('should call AccountOrgService to save the value false', function (this: Test) {
+    it('should call OrgSettingsService to save the value false', function (this: Test) {
       this.controller.isSparkClientSecurityEnabled = false;
 
       this.controller.updateSparkClientSecuritySetting();
 
-      expect(this.AccountOrgService.setAppSecurity)
+      expect(this.OrgSettingsService.setClientSecurityPolicy)
         .toHaveBeenCalledWith(this.Authinfo.getOrgId(), false);
     });
   });
