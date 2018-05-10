@@ -218,8 +218,10 @@ describe('Component: crConvertUsersModal:', () => {
     });
 
     describe('F7208 GDPR feature', function () {
+      let convertUsers;
+
       beforeEach(function () {
-        const convertUsers =  _.cloneDeep(getJSONFixture('core/json/organizations/convertUsers.json'));
+        convertUsers = _.cloneDeep(getJSONFixture('core/json/organizations/convertUsers.json'));
         convertUsers.success = true; // org service appends this property on HTTP 200 response
 
         this.Orgservice.getUnlicensedUsers.and.callFake(callback => {
@@ -246,7 +248,7 @@ describe('Component: crConvertUsersModal:', () => {
         expect(this.controller.getPotentialUsersList().length).toBe(0);
       });
 
-      describe('tab switching', function (this: Test) {
+      describe('modal UX', function (this: Test) {
         beforeEach(function () {
           this.FeatureToggleService.supports.and.callFake(toggle => {
             return this.$q.resolve(toggle === this.FeatureToggleService.features.atlasF7208GDPRConvertUser);
@@ -267,6 +269,23 @@ describe('Component: crConvertUsersModal:', () => {
           expect(this.controller.isPotentialTabSelected()).toBe(false);
           expect(this.controller.isPendingTabSelected()).toBe(true);
           expect(this.controller.getSelectedListCount()).toBe(2);
+        });
+
+        it('should sort "pending" status column by dates rather than cellVals', function (this: Test) {
+          this.controller.selectTab(this.controller.PENDING);
+          this.$scope.$apply();
+
+          const statusCol: any = _.find((this.controller.gridPendingUsers.columnDefs) as any, { field: 'statusText' });
+          const fnSort: Function = statusCol.sortingAlgorithm;
+
+          expect(fnSort()).toBe(0);
+          expect(fnSort('1', '2')).toBe(0);
+
+          const user = { entity: _.find(convertUsers.resources, { userName: 'mrmccann+testint@testctg.com' }) };
+          const userLater = { entity: _.find(convertUsers.resources, { userName: 'mrmccann+test2@testctg.com' }) };
+          expect(fnSort('1', '2', user, userLater)).toBeGreaterThan(0);
+          expect(fnSort('1', '2', userLater, user)).toBeLessThan(0);
+          expect(fnSort('1', '2', user, user)).toBe(0);
         });
       });
     });
