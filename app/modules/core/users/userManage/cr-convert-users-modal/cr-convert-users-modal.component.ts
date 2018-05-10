@@ -312,7 +312,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public goToManageUsers(): void {
-    this.$state.go('users.manage.picker');
+    this.$state.go('users.manage.org');
   }
 
   public restoreConvertList(): void {

@@ -217,7 +217,7 @@ require('./_user-add.scss');
 
     var rootState = $previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
+      rootState = 'users.manage.org';
     }
     $scope.onBack = function (state) {
       var goToState = state || rootState;

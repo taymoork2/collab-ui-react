@@ -1029,10 +1029,10 @@ describe('userCsv.controller', function () {
       initController.apply(this);
     });
 
-    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+    it('should go to users.manage.org when previous state is users.manage.emailSuppress', function () {
       this.controller.onBack();
       this.$scope.$apply();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
     });
   });
 

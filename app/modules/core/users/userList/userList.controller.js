@@ -663,7 +663,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function onManageUsers() {
-      $state.go('users.manage.picker');
+      $state.go('users.manage.org');
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

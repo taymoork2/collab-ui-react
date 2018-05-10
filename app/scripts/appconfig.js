@@ -980,10 +980,6 @@
           })
 
           ///////////////////////////
-          .state('users.manage.picker', {
-            controller: 'UserManageModalPickerController',
-            template: '<div class="user-manage-picker__center-spinner"><i class="icon icon-spinner icon-5x"></i></div>',
-          })
           .state('users.manage', {
             abstract: true,
             parent: 'modal',
@@ -1064,13 +1060,13 @@
           .state('users.manage.edit-auto-assign-template-modal', {
             template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
-              prevState: 'users.manage.picker',
+              prevState: 'users.manage.org',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
               userEntitlementsStateData: null,
             }),
             params: {
-              prevState: 'users.manage.picker',
+              prevState: 'users.manage.org',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
               userEntitlementsStateData: null,

@@ -162,7 +162,7 @@ export class AutoAssignTemplateService {
     const {
       autoAssignTemplateData,
       isEditTemplateMode = true,
-      prevState = 'users.manage.picker',
+      prevState = 'users.manage.org',
     } = options;
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
       autoAssignTemplateData,
