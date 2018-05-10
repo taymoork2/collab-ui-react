@@ -470,8 +470,8 @@
     "paidMsg": "Message",
     "paidCiscoSparkMessaging": "Cisco Webex Teams",
     "paidConf": "Meeting 25 Party",
-    "paidCiscoSparkMeetings": "Cisco Webex 25 party Meetings",
-    "paidAdvancedConferencing": "Advanced Meetings",
+    "paidCiscoSparkMeetings": "Webex team meetings",
+    "paidAdvancedConferencing": "Webex Meetings",
     "paidComm": "Call",
     "paidCommHybrid": "Hybrid Call",
     "paidSparkCall": "Cisco Webex Calling",
@@ -829,7 +829,7 @@
       "selectModelsToFilterOn": "Select models to filter on",
       "deviceOptions": {
         "all": "All",
-        "roomSystems": "Cisco Spark Room Kit, DX, MX and SX series",
+        "roomSystems": "Cisco Webex Room Kit, DX, MX and SX series",
         "sparkBoard": "Cisco Webex Board"
       },
       "export": {
@@ -3949,7 +3949,6 @@
       "yesProceed": "Yes, I’m ready to register my Hybrid Data Security Node.",
       "noProceed": "No, I need to install and configure the software.",
       "noProceed-helptext": "(Software will automatically download)",
-      "noInfo": "Install and configure the software on your server and return to Cisco Cloud Collaboration Management to register your Hybrid Data Security Node.",
       "noInfoNew": "Install and configure the software on your server and return to Cisco {{appTitle}} to register your Hybrid Data Security Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova'>Try Again.</a>",
       "noDesc1": "For important information and step-by-step installation instructions, see the ",
@@ -4473,8 +4472,8 @@
     "userManagementViaWebex": "User management via Webex Meetings Site Admin",
     "theseWillBeYourWebExSites": "These will be your {{siteCount}} Webex Meetings sites. If you do not have any more new sites to add, simply click Next.",
     "thisWillBeYourWebExSite": "This will be your Webex Meetings site. If you do not have any more new sites to add, simply click Next.",
-    "basicMeetings": "Basic Meetings",
-    "advancedMeetings": "Advanced Meetings",
+    "basicMeetings": "Webex Teams",
+    "advancedMeetings": "Webex Meetings",
     "sharedLicense": "Shared Meetings License",
     "namedLicense": "Named User License",
     "namedLicenseTooltip": "Each Named User license allows 1 user to be entitled as a meeting host. Named users can hold unlimited meetings.",
@@ -4485,7 +4484,7 @@
     "careTooltipToggle": "You must have Cisco Webex Teams license to use Webex Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "Webex-provided Audio",
-    "meetingsInSpark": "Cisco Webex 25 party Meetings",
+    "meetingsInSpark": "Webex team meetings",
     "call": "Call",
     "care": "Care",
     "roomSystems": "Room Devices",
@@ -6895,7 +6894,6 @@
       "fullOva-helpText": "(Full capacity and used for production deployment of Hybrid Media)",
       "demoOva-helpText": "(Limited capacity, lifespan, and lower CPU requirement for demo deployment of Hybrid Media)",
       "noProceed-helptext": "(Software will automatically download)",
-      "noInfo": "Install and configure the software on your server and return to {{appTitle}} to register your Hybrid Media Node.",
       "noInfoNew": "Install and configure the software on your server and return to {{appTitle}} to register your Hybrid Media Node.",
       "noRetryInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Try Again.</a>",
       "noRetryDemoInfo": "Software did not automatically download? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova'>Try Again.</a>",
@@ -9158,7 +9156,7 @@
     "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
-      "CF": "Cisco Webex 25 Party Meetings",
+      "CF": "Webex Team Meetings",
       "MC": "Webex Meeting Center",
       "SC": "Webex Support Center",
       "TC": "Webex Training Center",
@@ -9804,7 +9802,7 @@
           "intro": "Use this checklist alongside the Google Calendar deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service in your G Suite organization.",
           "gSuiteOrganization": "A Google G Suite organization (formerly Google Apps for Work) with Google accounts for all users in the organization",
           "webExSite": "Cisco Webex Meetings site: Minimum versions of Webex for @webex scheduling and Webex Meetings Center Video for One Button to Push (OBTP) on room devices.",
-          "sparkOrganization": "A Cisco Webex organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "sparkOrganization": "A Cisco Webex organization with a minimum of Webex Teams and Business Messaging (M1)",
           "matchingEmails": "User email addresses that are exact matches in Cisco Webex Teams and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
           "removeHangouts": "(Optional) Remove Google Hangouts in Meeting Events"
@@ -9814,7 +9812,7 @@
           "intro": "Use this checklist alongside the Office 365 deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar in your Office 365 organization.",
           "officeOrganization": "An Office 365 organization with Exchange Online accounts for users in the organization. During setup, you must be able to sign in as a Global administrator to grant application permissions",
           "webExSite": "For @webex scheduling, a Cisco Webex Meetings site on WBS31 or later",
-          "sparkOrganization": "A Cisco Webex organization with a minimum of Basic Meetings and Business Messaging (M1)",
+          "sparkOrganization": "A Cisco Webex organization with a minimum of Webex Teams and Business Messaging (M1)",
           "matchingEmails": "Users must have activated Cisco Webex accounts, with email addresses that are exact matches in Cisco Webex Teams and Exchange Online"
         }
       },
