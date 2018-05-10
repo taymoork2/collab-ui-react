@@ -4,7 +4,7 @@
          cr-file-drop
          file="csv.model.file"
          file-name="csv.model.fileName"
-         file-max-size="10"
+         file-max-size="{{csv.maxCsvFileSize}}"
          file-max-size-error="csv.onFileSizeError()"
          file-type="text/csv, application/csv, application/vnd.ms-excel"
          file-suffix="csv"
@@ -21,7 +21,7 @@
           cr-file-read
           file="csv.model.file"
           file-name="csv.model.fileName"
-          file-max-size="10"
+          file-max-size="{{csv.maxCsvFileSize}}"
           file-max-size-error="csv.onFileSizeError()"
           file-type="text/csv, application/csv, application/vnd.ms-excel"
           file-suffix="csv"

@@ -32,6 +32,7 @@
       chunkSizeWithSparkCall: 2,
       chunkSizeWithoutSparkCall: 10,
       maxUsersInCSV: 1100,
+      newMaxUsersInCSV: 100000,
     };
 
     return service;
