@@ -32,22 +32,13 @@ require('./_user-manage.scss');
   /////////////////////////
 
   /* @ngInject */
-  function UserManageModalPickerController($state, $q, DirSyncService) {
+  function UserManageModalPickerController($state) {
     var vm = this;
-
     vm.onInit = onInit;
-
     vm.onInit();
 
-    //////////////////
     function onInit() {
-      var promises = {
-        dirSyncPromise: (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve()),
-      };
-
-      $q.all(promises).then(function (response) {
-        $state.go('users.manage.org');
-      });
+      $state.go('users.manage.org');
     }
   }
 }
