@@ -4,8 +4,7 @@ require('./_user-manage.scss');
   'use strict';
 
   angular.module('Core')
-    .controller('UserManageModalController', UserManageModalController)
-    .controller('UserManageModalPickerController', UserManageModalPickerController);
+    .controller('UserManageModalController', UserManageModalController);
 
   ///////////////////////////
 
@@ -18,27 +17,12 @@ require('./_user-manage.scss');
 
     vm.onInit();
 
-    ///////////////////////
-
     function onInit() {
     }
 
     function cancelModal() {
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
       $state.modal.dismiss();
-    }
-  }
-
-  /////////////////////////
-
-  /* @ngInject */
-  function UserManageModalPickerController($state) {
-    var vm = this;
-    vm.onInit = onInit;
-    vm.onInit();
-
-    function onInit() {
-      $state.go('users.manage.org');
     }
   }
 }
