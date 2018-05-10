@@ -46,12 +46,7 @@ require('./_user-manage.scss');
       };
 
       $q.all(promises).then(function (response) {
-        // Should not got to activedir state when the feature toggle is active
-        if (DirSyncService.isDirSyncEnabled() && !true) {
-          $state.go('users.manage.activedir');
-        } else {
-          $state.go('users.manage.org');
-        }
+        $state.go('users.manage.org');
       });
     }
   }
