@@ -1,11 +1,10 @@
 {
   "loginPage": {
-    "title": "Cisco Spark Control Hub",
-    "titleNew": "Cisco Spark Control Hub",
-    "titlePro": "Cisco Spark Control Hub Pro",
+    "titleNew": "Cisco Webex Control Hub",
+    "titlePro": "Cisco Webex Control Hub Pro",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Spark Services you accept the Terms of Service and Privacy Statement.",
+    "license": "By using Cisco Webex Teams Services you accept the Terms of Service and Privacy Statement.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
     "copyright": "Cisco and/or affiliates. All rights reserved.",
@@ -7596,7 +7595,7 @@
     "deleteSiteNote": "Note: Site deletion may take time to be reflected in all systems.",
     "deleteSiteModalTitle": "Delete WebEx Site?",
     "deleteSiteModalBody": "Are you sure you want to delete <strong>{{siteUrl}}</strong>?",
-    "deleteSiteModalBody2": "All data related to the site will be lost and this action can not be undone.",
+    "deleteSiteModalBody2": "All data related to this site will be lost and this action cannot be undone. Make sure you have downloaded all recordings that you want to retain before deleting the site.",
     "deleteSiteRejectModalTitle": "Cannot Delete Site",
     "deleteSiteRejectModalBodyOnlySite": "You cannot delete the last site in a subscription",
     "deleteSiteRejectModalBodyPending": "You cannot delete this site since provisioning for the previous action on this subscription is still pending. You will be able to delete this site once provisioning is complete",

@@ -205,7 +205,7 @@ export class SiteListService {
 
         if (!siteRowExists) {
           conferenceService.showCSVInfo = false;
-          conferenceService.csvStatusObj = null;
+          conferenceService.csvStatusObj = {};
           conferenceService.csvPollIntervalObj = null;
           conferenceService.showCSVIconAndResults = true;
 
