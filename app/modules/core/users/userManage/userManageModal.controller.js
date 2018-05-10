@@ -32,7 +32,7 @@ require('./_user-manage.scss');
   /////////////////////////
 
   /* @ngInject */
-  function UserManageModalPickerController($state, $q, DirSyncService, FeatureToggleService) {
+  function UserManageModalPickerController($state, $q, DirSyncService) {
     var vm = this;
 
     vm.onInit = onInit;
@@ -43,12 +43,11 @@ require('./_user-manage.scss');
     function onInit() {
       var promises = {
         dirSyncPromise: (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve()),
-        autoAssignPromise: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
       };
 
       $q.all(promises).then(function (response) {
         // Should not got to activedir state when the feature toggle is active
-        if (DirSyncService.isDirSyncEnabled() && !response.autoAssignPromise) {
+        if (DirSyncService.isDirSyncEnabled() && !true) {
           $state.go('users.manage.activedir');
         } else {
           $state.go('users.manage.org');
