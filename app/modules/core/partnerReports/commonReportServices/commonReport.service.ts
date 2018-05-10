@@ -3,7 +3,6 @@ import {
   ITimespan,
   IIntervalQuery,
   ICustomerIntervalQuery,
-  IReportsCustomer,
   IReportTypeQuery,
   ITypeQuery,
 } from '../partnerReportInterfaces';
@@ -22,7 +21,6 @@ export class CommonReportService {
   private readonly SCOUNT: string = '&spanCount=';
   private readonly STYPE: string = '&spanType=';
   private readonly CVIEW: string = '&isCustomerView=true';
-  private readonly ORGID: string = '&orgId=';
 
   /* @ngInject */
   constructor(
@@ -50,28 +48,6 @@ export class CommonReportService {
 
   private getQuery(options: any): string {
     return this.ICOUNT + options.intervalCount + this.ITYPE + options.intervalType + this.SCOUNT + options.spanCount + this.STYPE + options.spanType + this.CACHE + options.cache;
-  }
-
-  private getCustomerQuery(customers: IReportsCustomer[]): string {
-    let url: string = '';
-    _.forEach(customers, (customer) => {
-      url += this.ORGID + customer.value;
-    });
-    return url;
-  }
-
-  public getPartnerReport(options: IIntervalQuery, customers: IReportsCustomer[] | undefined, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    let url = this.urlBase + options.action + '/managedOrgs/' + options.type + '?' + this.getQuery(options);
-    if (customers) {
-      url += this.getCustomerQuery(customers);
-    }
-    return this.getService(url, cancelPromise);
-  }
-
-  // TODO: remove unnecessary IIntervalQuery options once API stops requiring them
-  public getPartnerReportByReportType(options: IReportTypeQuery, extraOptions: IIntervalQuery, customers: IReportsCustomer[], cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
-    const url = this.urlBase + options.action + '/managedOrgs/' + options.type + this.TYPE + options.reportType + this.getQuery(extraOptions) + this.getCustomerQuery(customers);
-    return this.getService(url, cancelPromise);
   }
 
   public getCustomerReport(options: ICustomerIntervalQuery, cancelPromise: ng.IDeferred<any>): ng.IHttpPromise<any> {
