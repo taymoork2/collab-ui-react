@@ -6,7 +6,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, $translate, $rootScope) {
+  function UtilizationResourceGraphService(CommonReportsGraphService, $translate, $rootScope, $log) {
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
     vm.exportDiv = 'utilization-export-div';
@@ -27,6 +27,7 @@
 
     vm.timeDiff = null;
     vm.dateSelected = null;
+    vm.testgraphs = null;
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -36,6 +37,9 @@
       var isDummy = false;
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
+      vm.testgraphs = graphs;
+      $log.log('graphs' + JSON.stringify(vm.testgraphs));
+      vm.counter = 0;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else {
@@ -229,6 +233,26 @@
     }
 
     function legendHandler(evt) {
+      _.forEach(vm.testgraphs, function (grap) {
+        if (grap.title === evt.dataItem.title && evt.type === 'hideItem') {
+          grap.legendtracker = false;
+        } else if (grap.title === evt.dataItem.title && evt.type === 'showItem') {
+          grap.legendtracker = true;
+        }
+      });
+      var cluster = false;
+      _.forEach(vm.testgraphs, function (grap) {
+        if (!grap.legendtracker && !_.isUndefined(grap.legendtracker)) {
+          cluster = true;
+        } else if (grap.title !== vm.allOff) {
+          cluster = false;
+        }
+      });
+      _.forEach(evt.chart.graphs, function (grap) {
+        if (cluster && grap.title === vm.allOff) {
+          grap.title = vm.allOn;
+        }
+      });
       if (evt.dataItem.title === vm.allOff) {
         evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
