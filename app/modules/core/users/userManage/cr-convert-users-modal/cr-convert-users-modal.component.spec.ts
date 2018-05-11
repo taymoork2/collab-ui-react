@@ -218,14 +218,12 @@ describe('Component: crConvertUsersModal:', () => {
     });
 
     describe('F7208 GDPR feature', function () {
-      let convertUsers;
-
       beforeEach(function () {
-        convertUsers = _.cloneDeep(getJSONFixture('core/json/organizations/convertUsers.json'));
-        convertUsers.success = true; // org service appends this property on HTTP 200 response
+        this.convertUsers = _.cloneDeep(getJSONFixture('core/json/organizations/convertUsers.json'));
+        this.convertUsers.success = true; // org service appends this property on HTTP 200 response
 
         this.Orgservice.getUnlicensedUsers.and.callFake(callback => {
-          callback(convertUsers);
+          callback(this.convertUsers);
         });
       });
 
@@ -275,14 +273,14 @@ describe('Component: crConvertUsersModal:', () => {
           this.controller.selectTab(this.controller.PENDING);
           this.$scope.$apply();
 
-          const statusCol: any = _.find((this.controller.gridPendingUsers.columnDefs) as any, { field: 'statusText' });
-          const fnSort: Function = statusCol.sortingAlgorithm;
+          const statusCol = _.find(this.controller.gridPendingUsers.columnDefs!, { field: 'statusText' });
+          const fnSort: Function = statusCol.sortingAlgorithm!;
 
           expect(fnSort()).toBe(0);
           expect(fnSort('1', '2')).toBe(0);
 
-          const user = { entity: _.find(convertUsers.resources, { userName: 'mrmccann+testint@testctg.com' }) };
-          const userLater = { entity: _.find(convertUsers.resources, { userName: 'mrmccann+test2@testctg.com' }) };
+          const user = { entity: _.find(this.convertUsers.resources, { userName: 'mrmccann+testint@testctg.com' }) };
+          const userLater = { entity: _.find(this.convertUsers.resources, { userName: 'mrmccann+test2@testctg.com' }) };
           expect(fnSort('1', '2', user, userLater)).toBeGreaterThan(0);
           expect(fnSort('1', '2', userLater, user)).toBeLessThan(0);
           expect(fnSort('1', '2', user, user)).toBe(0);

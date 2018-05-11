@@ -122,7 +122,8 @@ export class CrConvertUsersModalController implements ng.IComponentController {
             // error condition, no transient property present
             return this.$translate.instant('convertUsersModal.status.unknown');
           }
-          return this.$translate.instant('convertUsersModal.status.autoConvert', { count: Math.max(this.daysToConvert - moment().diff(convertDate, 'days'), 0) }, 'messageformat');
+          const remainingDays = Math.max(this.daysToConvert - moment().diff(convertDate, 'days'), 0);
+          return this.$translate.instant('convertUsersModal.status.autoConvert', { count: remainingDays }, 'messageformat');
         },
       },
     ];
@@ -175,7 +176,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   // helper function for building grid options
-  private addGridColumns(grid, isPotentialList): void {
+  private addGridColumns(grid: uiGrid.IGridOptions, isPotentialList: boolean): void {
     grid.columnDefs = [{
       field: 'displayName',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
@@ -192,14 +193,10 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
     // Pending uses sort algo for status...
     if (!isPotentialList) {
-      const statusCol: any = _.find(grid.columnDefs, { field: 'statusText' });
+      const statusCol = _.find(grid.columnDefs, { field: 'statusText' });
       if (!_.isUndefined(statusCol)) {
         statusCol.displayName = this.$translate.instant('convertUsersModal.tableHeader.status');
-        statusCol.sortingAlgorithm = (a, b, rowA, rowB) => {
-          // no-op to avoid TS6133 - 'a'/'b' is declared but its value is never read...
-          if (_.isUndefined(a) || _.isUndefined(b)) {
-            return 0;
-          }
+        statusCol.sortingAlgorithm = (_a, _b, rowA, rowB) => {
           const dateA = moment(_.get(rowA, 'entity.meta.accountStatusSetTime.transient'));
           const dateB = moment(_.get(rowB, 'entity.meta.accountStatusSetTime.transient'));
           return dateA.diff(dateB);
