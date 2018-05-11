@@ -154,7 +154,7 @@ export class PartnerSearchService {
     return this.data[key];
   }
 
-  public getStorage(key: string) {// TODO share the code next time
+  public getStorage(key: string): any {// TODO share the code next time
     return _.get(this.data, key);
   }
 
@@ -299,13 +299,23 @@ export class PartnerSearchService {
     if (!duration) {
       return '';
     }
-    const hours = moment.duration(duration * 1000).hours();
-    const minutes = moment.duration(duration * 1000).minutes();
-    const seconds = moment.duration(duration * 1000).seconds();
-    const minutes_ = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const seconds_ = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    const momentDuration = moment.duration(duration * 1000);
+    const days = momentDuration.days();
+    let hours = momentDuration.hours();
+    if (days > 0) {
+      hours += days * 24;
+    }
+    const minutes = this.prefixZero(momentDuration.minutes());
+    const seconds = this.prefixZero(momentDuration.seconds());
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+  }
 
-    return hours ? `${hours}:${minutes_}:${seconds_}` : `${minutes_}:${seconds_}`;
+  private prefixZero(data: number): string {
+    if (data > 9) {
+      return `${data}`;
+    } else {
+      return `0${data}`;
+    }
   }
 
   private extractData<T>(response: ng.IHttpResponse<T>): T {

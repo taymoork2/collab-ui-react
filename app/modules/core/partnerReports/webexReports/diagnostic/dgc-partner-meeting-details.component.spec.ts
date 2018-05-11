@@ -9,8 +9,34 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
       overview: { status: 2, conferenceId: '81296856363088285', createTime_: '2017-11-11' },
     };
     this.uniqueParticipants = [
-      { userName: 'Felix', platform: '7', sessionType: '25', participants: [{ joinTime: 1515039409000, userName: 'Felix', browser: 2, nodeId: 16789507 }] },
-      { userName: 'Felix2', platform: '10', sessionType: '0', participants: [{ joinTime: 1515039320000, leaveTime: 1515039920000, userName: 'Felix2', duration: 600, browser: 2, nodeId: 16797697 }] },
+      {
+        userName: 'Felix',
+        platform: '7',
+        sessionType: '25',
+        participants: [
+          {
+            joinTime: 1515039409000,
+            userName: 'Felix',
+            browser: 2,
+            nodeId: 16789507,
+          },
+        ],
+      },
+      {
+        userName: 'Felix2',
+        platform: '10',
+        sessionType: '0',
+        participants: [
+          {
+            joinTime: 1515039320000,
+            leaveTime: 1515039920000,
+            userName: 'Felix2',
+            duration: 600,
+            browser: 2,
+            nodeId: 16797697,
+          },
+        ],
+      },
     ];
     this.pstnQOS = {
       16789507: {
@@ -145,7 +171,21 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
   });
 
   it('should retry to get voip session detail when data not completed', function () {
-    const mockData = { items: [{ key: '50335745', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    const mockData = {
+      items: [
+        {
+          key: '50335745',
+          completed: false,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [],
+            },
+          ],
+        },
+      ],
+    };
     spyOn(this.PartnerSearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVoipSessionDetail('');
@@ -180,7 +220,21 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
   });
 
   it('should get video session detail when data not completed', function () {
-    const mockData = { items: [{ key: '50335759', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    const mockData = {
+      items: [
+        {
+          key: '50335759',
+          completed: false,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [],
+            },
+          ],
+        },
+      ],
+    };
     spyOn(this.PartnerSearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVideoSessionDetail('');

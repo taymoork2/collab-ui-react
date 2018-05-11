@@ -20,16 +20,16 @@ const LATENCY_SHOWUP = 999;
 const LOSSRATE_SHOWUP = 9.9;
 class MeetingDetailsController implements ng.IComponentController {
   public data: IDataStore;
-  public dataSet: object;
-  public overview: object;
+  public dataSet: { lines: IParticipant[][], endTime: number, startTime: number, offset: string };
+  public overview: { audioSession: string, videoSession: string };
   public circleColor: IJoinTime;
   public conferenceID: string;
   public tabType = TabType.AUDIO;
   public loading = true;
-  public lineData: object;
+  public lineData: IUniqueParticipant;
   public QOS_TYPE = QosType;
-  private audioLines = {};
-  private videoLines = {};
+  private audioLines: IUniqueParticipant;
+  private videoLines: IUniqueParticipant;
   private audioEnabled = { PSTN: false, VoIP: false };
   private videoEnabled = false;
   private meetingEndTime: number;
@@ -165,7 +165,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private parseVoipSession(sessions: ISessionDetail, retryIds: string[]): void {
-    const details = this.audioLines;
+    const details = this.audioLines || {};
     _.forEach(sessions.items, (session: ISessionDetailItem) => {
       if (!details[session.key]) {
         details[session.key] = [];
@@ -214,7 +214,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private parseVideoSession(sessions: ISessionDetail, retryIds: string[]): void {
-    const details = this.videoLines;
+    const details = this.videoLines || {};
     _.forEach(sessions.items, (session: ISessionDetailItem) => {
       if (!details[session.key]) {
         details[session.key] = [];
@@ -263,7 +263,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private parsePSTNSession(sessions: ISessionDetail, retryIds: string[]): void {
-    const details = this.audioLines;
+    const details = this.audioLines || {};
     _.forEach(sessions.items, (session: ISessionDetailItem) => {
       if (session.completed) {
         _.forEach(session.items, detailItem => {
@@ -315,8 +315,8 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private parseCMRQualities(sessions: ISessionDetail, retryIds: string[]): void {
-    const audioDetails = this.audioLines;
-    const videoDetails = this.videoLines;
+    const audioDetails = this.audioLines || {};
+    const videoDetails = this.videoLines || {};
     _.forEach(sessions.items, (session: ISessionDetailItem) => {
       if (!audioDetails[session.key]) {
         audioDetails[session.key] = [];
