@@ -6,7 +6,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function UtilizationResourceGraphService(CommonReportsGraphService, $translate, $rootScope, $log) {
+  function UtilizationResourceGraphService($rootScope, $translate, CommonReportsGraphService, MediaReportsService) {
     var vm = this;
     vm.utilizationdiv = 'utilizationdiv';
     vm.exportDiv = 'utilization-export-div';
@@ -27,7 +27,6 @@
 
     vm.timeDiff = null;
     vm.dateSelected = null;
-    vm.testgraphs = null;
 
     return {
       setUtilizationGraph: setUtilizationGraph,
@@ -37,8 +36,7 @@
       var isDummy = false;
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
-      vm.testgraphs = graphs;
-      $log.log('graphs' + JSON.stringify(vm.testgraphs));
+      vm.legendGraphs = graphs;
       vm.counter = 0;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
@@ -233,27 +231,11 @@
     }
 
     function legendHandler(evt) {
-      _.forEach(vm.testgraphs, function (grap) {
-        if (grap.title === evt.dataItem.title && evt.type === 'hideItem') {
-          grap.legendtracker = false;
-        } else if (grap.title === evt.dataItem.title && evt.type === 'showItem') {
-          grap.legendtracker = true;
-        }
-      });
-      var cluster = false;
-      _.forEach(vm.testgraphs, function (grap) {
-        if (!grap.legendtracker && !_.isUndefined(grap.legendtracker)) {
-          cluster = true;
-        } else if (grap.title !== vm.allOff) {
-          cluster = false;
-        }
-      });
-      _.forEach(evt.chart.graphs, function (grap) {
-        if (cluster && grap.title === vm.allOff) {
-          grap.title = vm.allOn;
-        }
-      });
+      MediaReportsService.legendHandlerForGraphs(vm.legendGraphs, evt);
       if (evt.dataItem.title === vm.allOff) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = false;
+        });
         evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
           if (graph.title != vm.allOn) {
@@ -263,6 +245,9 @@
           }
         });
       } else if (evt.dataItem.title === vm.allOn) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = true;
+        });
         evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);
