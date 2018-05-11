@@ -100,21 +100,6 @@ describe('Test sunlight Util Service for admin profile', function () {
       this.$scope.$digest();
     });
 
-    it('should get getAAOnboardStatus for non care voice entitled org', function () {
-      this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
-      this.Authinfo.isCareVoice.and.returnValue(false);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.UNKNOWN);
-      expect(aaOnboardStatus).toBe(this.status.SUCCESS);
-    });
-
-    it('should get getAAOnboardStatus for care voice entitled org', function () {
-      this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.status.FAILURE);
-      expect(aaOnboardStatus).toBe(this.status.FAILURE);
-    });
-
     it('should get isCareSetup for cs not onboarded', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
@@ -152,32 +137,19 @@ describe('Test sunlight Util Service for admin profile', function () {
     });
 
     it('should get CareOnboardStatusForAdmin positive', function () {
-      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS,
-      this.status.SUCCESS)).toBe(true);
+      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS, this.status.SUCCESS,
+        this.status.SUCCESS)).toBe(true);
     });
 
     it('should get CareOnboardStatusForAdmin when careVoice not enabled', function () {
       this.Authinfo.isCareVoice.and.returnValue(false);
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS,
-      this.status.SUCCESS , this.status.UNKNOWN, this.status.SUCCESS)).toBe(true);
+      this.status.SUCCESS, this.status.SUCCESS)).toBe(true);
     });
 
     it('should get getCareOnboardStatusForAdmin negative', function () {
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.UNKNOWN,
-        this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
-    });
-
-    it('should get getAAOnboardStatus for non care voice entitled org', function () {
-      this.Authinfo.isCareVoice.and.returnValue(false);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.FAILURE);
-      expect(aaOnboardStatus).toBe(this.status.SUCCESS);
-    });
-
-    it('should get getAAOnboardStatus for care voice entitled org', function () {
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.FAILURE);
-      expect(aaOnboardStatus).toBe(this.FAILURE);
+        this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
     });
 
     it('should test that snoozeTime is Up  ', function () {
