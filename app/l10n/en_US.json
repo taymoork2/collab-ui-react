@@ -1692,6 +1692,7 @@
     "enabled": "Enabled",
     "error": "Error",
     "errors": "Errors",
+    "errorMessage": "The following error {{error}}",
     "export": "Export",
     "fieldRequired": "This field is required",
     "finish": "Finish",
@@ -11149,8 +11150,20 @@
       "nodeStatus": {
         "active":"Active",
         "inactive": "Inactive",
-        "needsAcceptance":"Needs acceptance",
-        "needsAssigned":"Needs assigned"
+        "needsAcceptance":"Needs Acceptance",
+        "needsAssigned":"Needs assigned",
+        "operational": "Operational",
+        "agentOffline": "Agent Offline",
+        "swProfileNotCoverAll": "Software profile does not cover all application",
+        "swVersionMismatch": "Software profile version mismatch",
+        "swUpgradeNeeded": "Software Upgrade Needed",
+        "needToUpdateBatchNumber": "Need to Update Batch Number",
+        "upgradeScheduled": "Upgrade Scheduled",
+        "upgradeInProgress": "Upgrade in progress",
+        "failedUpgrade": "Failed Upgrade",
+        "unassigned": "Unassigned",
+        "swProfileNotAssigned": "Software profile not Assigned",
+        "noAgentRunning": "No Agent Running"
       },
       "settings": {
         "inventoryName": {
@@ -11160,8 +11173,8 @@
           "sectionHeader": "Inventory Name"
         },
         "sftpLocation": {
-          "sectionHeader": "Default SFTP Location",
-          "sftpSelectLabel": "Choose the default SFTP Location for this cluster.",
+          "sectionHeader": "Default SFTP Server",
+          "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
           "sftpPlaceholder": "Select a server"
         },
         "nodes": {

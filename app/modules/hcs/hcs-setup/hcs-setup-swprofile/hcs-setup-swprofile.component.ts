@@ -87,7 +87,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
       });
     }
     if (this.$state.current.name !== 'swprofilelist') {
-      this.changedProfile = new SoftwareProfile({ name: '', applicationVersions: [] });
+      this.changedProfile = new SoftwareProfile({ name: '', uuid: '', applicationVersions: [] });
     }
     this.listAppVersions();
   }

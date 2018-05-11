@@ -50,6 +50,9 @@
       span {
         float: right;
         color: $gray-dark-4;
+        i.icon.icon-circle.status-indicator {
+          margin-right: rem-calc(4);
+        }
       }
     }
   }
