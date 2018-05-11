@@ -11412,12 +11412,15 @@
     "tableHeader": {
       "name": "Display Name",
       "email": "Email Address",
-      "status": "Status",
-      "eligible": "Eligible For"
+      "status": "Auto Convert In",
+      "eligible": "Eligible For",
+      "transient": "Transient Date" 
     },
     "status": {
       "immediate": "Immediate Conversion",
-      "delayed": "Delayed Conversion"
+      "delayed": "Delayed Conversion",
+      "autoConvert": "{count, plural, =0{next 24 hours} =1{# day} other{# days}}",
+      "unknown": "Unknown"
     },
     "convertedStatus": {
       "converted": "Converted",
