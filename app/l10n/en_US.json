@@ -385,6 +385,7 @@
     "title": "Tasks",
     "viewAllTasks": "View all tasks",
     "submitCsvError": "An error occurred submitting the CSV file.",
+    "csvFileChecksumError": "An error occurred while checking the checksum of the CSV file. Please try upload the CSV file again.",
     "cancelCsvError": "An error occurred canceling the CSV import.",
     "csvImport": "CSV Import",
     "backgroundTasksRunning": "Background tasks running...",

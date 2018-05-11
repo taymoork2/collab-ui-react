@@ -200,6 +200,7 @@ require('./_user-csv.scss');
           job: {
             fileName: vm.model.fileName,
             fileData: vm.model.file,
+            fileChecksum: vm.model.fileChecksum,
             exactMatchCsv: vm.model.enableRemove,
           },
         });

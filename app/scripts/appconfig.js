@@ -1222,6 +1222,7 @@
               job: {
                 fileName: undefined,
                 fileData: undefined,
+                fileChecksum: undefined,
                 exactMatchCsv: undefined,
               },
               task: undefined,
