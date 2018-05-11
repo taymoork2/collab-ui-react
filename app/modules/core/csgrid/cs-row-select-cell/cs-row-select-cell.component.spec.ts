@@ -1,4 +1,4 @@
-import testModule from 'modules/core/csgrid/index';
+import testModule from 'modules/core/csgrid';
 import { KeyCodes } from 'modules/core/accessibility';
 
 describe('Component: csRowSelectCell', () => {
@@ -60,7 +60,7 @@ describe('Component: csRowSelectCell', () => {
 
     // because this grid column type only works with multi-select, the mouse click event is taken care of by
     // ui-grid's row selection but the keyboard event is not
-    this.view.find(CHECKBOX)[0].triggerHandler({
+    this.controller.selectRowKeypress({
       type: 'keypress',
       which: KeyCodes.ENTER,
     });

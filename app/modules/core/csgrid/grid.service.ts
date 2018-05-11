@@ -7,15 +7,6 @@ export class GridService {
     private uiGridSelectionService,
   ) {}
 
-  public enforceSelectAllState(gridApi: uiGrid.IGridApi) {
-    const selectAllState = gridApi.selection.getSelectAllState();
-    if (selectAllState) {
-      this.$timeout(() => {
-        gridApi.selection.selectAllVisibleRows();
-      });
-    }
-  }
-
   public getDefaultSelectColumn(ariaLabel: string): uiGrid.IColumnDef {
     return {
       cellTemplate: `<cs-row-select-cell cs-aria-label="${ariaLabel}" grid="grid" row="row"></cs-row-select-cell>`,

@@ -1,4 +1,4 @@
-import { GridService } from '../index';
+import { GridService } from 'modules/core/csgrid';
 
 class CsGridCellCtrl {
   public cellClickFunction?: Function;

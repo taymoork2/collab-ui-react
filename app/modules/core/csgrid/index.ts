@@ -1,6 +1,6 @@
 import { CsGridComponent } from './csGrid.component';
 import { CsGridCellComponent } from './cs-grid-cell/csGridCell.component';
-import { GridService } from 'modules/core/csgrid/cs-grid.service';
+import { GridService } from 'modules/core/csgrid/grid.service';
 import { RowSelectCellComponent } from './cs-row-select-cell/cs-row-select-cell.component';
 import './cs-grid.scss';
 import './cs-grid-cell/cs-grid-cell.scss';

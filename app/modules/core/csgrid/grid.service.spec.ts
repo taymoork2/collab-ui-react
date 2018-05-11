@@ -56,36 +56,4 @@ describe('Service: GridService -', () => {
     expect(gridApi.selection.clearSelectedRows).toHaveBeenCalledTimes(1);
     expect(gridApi.selection.selectAllVisibleRows).toHaveBeenCalledTimes(1);
   });
-
-  describe('enforceSelectAllState should call getSelectAllState', function () {
-    it('and should not call selectAllVisibleRows when getSelectAllState returns false', function () {
-      const gridApi = {
-        selection: {
-          getSelectAllState: jasmine.createSpy('getSelectAllState').and.returnValue(false),
-          selectAllVisibleRows: jasmine.createSpy('selectAllVisibleRows'),
-        },
-      };
-
-      this.GridService.enforceSelectAllState(gridApi);
-
-      expect(gridApi.selection.getSelectAllState).toHaveBeenCalledTimes(1);
-      this.$timeout.flush();
-      expect(gridApi.selection.selectAllVisibleRows).not.toHaveBeenCalled();
-    });
-
-    it('and should also call selectAllVisibleRows when getSelectAllState returns true', function () {
-      const gridApi = {
-        selection: {
-          getSelectAllState: jasmine.createSpy('getSelectAllState').and.returnValue(true),
-          selectAllVisibleRows: jasmine.createSpy('selectAllVisibleRows'),
-        },
-      };
-
-      this.GridService.enforceSelectAllState(gridApi);
-
-      expect(gridApi.selection.getSelectAllState).toHaveBeenCalledTimes(1);
-      this.$timeout.flush();
-      expect(gridApi.selection.selectAllVisibleRows).toHaveBeenCalledTimes(1);
-    });
-  });
 });

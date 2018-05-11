@@ -22,7 +22,7 @@ When converting an existing grid from `ui-grid` to cs-grid, please keep in mind 
 
 ### gridApi
 
-gridApi is the set of APIs used by `ui-grid` and are accessed when the grid is first initialized via the function `gridOptions.onRegisterApi`.  If the controller for the page where the grid is located needs to manipulate the grid directly, then onRegisterApi needs to be set on the controller's gridOptions.  However, the gridApi variable needs to be passed in separately to `cs-grid`.  Otherwise `cs-grid` will over-write `gridOptions.onRegisterApi` in order to ensure that it has access to the gridApi.
+gridApi is the set of APIs used by `ui-grid` and are accessed when the grid is first initialized via the function `gridOptions.onRegisterApi`.  If the controller for the page where the grid is located needs to manipulate the grid directly, then onRegisterApi needs to be set on the controller's gridOptions.  However, the gridApi variable needs to be passed in separately to `cs-grid`.  Otherwise `cs-grid` will overwrite `gridOptions.onRegisterApi` in order to ensure that it has access to the gridApi.
 
 Example of function for retrieving gridApi:
 ```javascript
@@ -77,7 +77,7 @@ This boolean value should be set as true if the icon and/or text in the grid cel
 
 ### grid
 
-`grid `should be the `uiGrid.IGridInstance` instance provided by `ui-grid`
+`grid` should be the `uiGrid.IGridInstance` instance provided by `ui-grid`
 
 ### row
 
@@ -101,7 +101,7 @@ The requirements for cs-row-select-cell are similar to, but simpler than, the `c
 
 Example:
 ```typescript
-this.GridService.enableRowHeaderSelection('{{:: row.entity.name.firstName}} {{:: row.entity.name.lastName}}');
+this.GridService.getDefaultSelectColumn('{{:: row.entity.name.firstName}} {{:: row.entity.name.lastName}}');
 ```
 
 ### grid
@@ -118,25 +118,16 @@ NOTE: Again, do not use `cs-row-select-cell` directly for creating row selection
 
 `GridService` is a series of helper functions for controlling grid functions.
 
-### enforceSelectAllState
-
-When utilizing a grid with rows selectable via checkbox, the `select all` checkbox setting does not carry over when there is external filtering.  `enforceSelectAllState` checks the `select all` state and enforces it on `$timeout`.  The function requires the grid's `gridApi` be passed in.
-
-Example:
-```typescript
-this.GridService.enforceSelectAllState(this.gridApi);
-```
-
 ### getDefaultSelectColumn
 
 `getDefaultSelectColumn` should only be used when creating a multiSelect grid (in `gridOptions` set `multiSelect` to `true` as it defaults to `false` using `cs-grid`).  It requires that an `ariaLabel` variable be passed in, which is then used as the template for the row checkbox `aria-labels`.  The header cell checkbox `aria-label` will default to `common.selectAll`.  `getDefaultSelectColumn` will then return a `uiGrid.IColumnDef` instance for a row select column where the header checkbox selects all rows and the row checkboxes selects that row only.
 
-Note: The Select Column behaves and appears visually indistinguishable from the column inserted by `ui-grid`'s `enableRowHeaderSelection`.  However, the column provided by `enableRowHeaderSelection` does not include `aria-label` or `aria-checked` (also the role is announced as `button` instead of `checkbox`), making `enableRowHeaderSelection` incompatible with screen reader accesibility.
+Note: The Select Column behaves and appears visually indistinguishable from the column inserted by `ui-grid`'s `getDefaultSelectColumn`.  However, the column provided by `getDefaultSelectColumn` does not include `aria-label` or `aria-checked` (also the role is announced as `button` instead of `checkbox`), making `getDefaultSelectColumn` incompatible with screen reader accessibility.
 
 Example:
 ```typescript
 grid.columnDefs = [];
-grid.columnDefs.push(this.GridService.enableRowHeaderSelection('{{:: row.entity.name.firstName}} {{:: row.entity.name.lastName}}'));
+grid.columnDefs.push(this.GridService.getDefaultSelectColumn('{{:: row.entity.name.firstName}} {{:: row.entity.name.lastName}}'));
 
 // the function itself looks like:
 public getDefaultSelectColumn(ariaLabel: string): uiGrid.IColumnDef {

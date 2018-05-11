@@ -19,9 +19,14 @@
       ng-model="$ctrl.scopeData.searchStr"
       ng-change="$ctrl.filterList($ctrl.scopeData.searchStr)">
   </div>
-  <div class="unlicensed-user-list" ng-if="$ctrl.unlicensed > 0">
-    <div class="gridStyle grid-checkbox" ui-grid="$ctrl.convertGridOptions" ui-grid-selection ui-grid-save-state></div>
-  </div>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.unlicensed > 0"
+    grid-api="$ctrl.gridApi"
+    grid-class="grid-checkbox ui-grid"
+    grid-options="$ctrl.convertGridOptions"
+    spinner="false">
+  </cs-grid>
   <div class="noUnlicensedUsers" ng-if="$ctrl.unlicensed === 0">
     <h2 translate="usersPage.convertUserNoneFound"></h2>
     <h3 translate="usersPage.convertUserTryAgain"></h3>
@@ -69,10 +74,21 @@
       </csv-simple-export>
     </div>
   </div>
-  <div class="unlicensed-user-list" ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0)">
-    <div ng-if="$ctrl.isPotentialTabSelected()" class="gridStyle grid-checkbox" ui-grid="$ctrl.gridPotentialUsers" ui-grid-selection ui-grid-save-state></div>
-    <div ng-if="$ctrl.isPendingTabSelected()" class="gridStyle" ui-grid="$ctrl.gridPendingUsers" ui-grid-save-state></div>
-  </div>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0) && $ctrl.isPotentialTabSelected()"
+    grid-api="$ctrl.gridApi"
+    grid-class="grid-checkbox"
+    grid-options="$ctrl.gridPotentialUsers"
+    spinner="false">
+  </cs-grid>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0) && $ctrl.isPendingTabSelected()"
+    grid-api="$ctrl.gridApi"
+    grid-options="$ctrl.gridPendingUsers"
+    spinner="false">
+  </cs-grid>
   <div class="noUnlicensedUsers" ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() <= 0)">
     <h3 class="convert-users__bottom-space--50" translate="convertUsersModal.error.noUsers"></h3>
     <h4 ng-show="$ctrl.scopeData.searchStr.length > 0" translate="usersPage.convertUserTryAgain"></h4>
@@ -80,10 +96,20 @@
 </div>
 <!-- ************ end F7208 dependent UI -->
 <div class="modal-footer">
-  <button ng-if="$ctrl.manageUsers" type="button" id="btnBack" class="btn" ng-click="$ctrl.goToManageUsers()"><span translate="common.back"></span></button>
-  <button ng-show="!$ctrl.convertUsersReadOnly  && !$ctrl.isPendingTabSelected()" id="convertNextButton" class="btn btn--lg btn--primary pull-right" ng-click="$ctrl.onClickNext()" ng-disabled="$ctrl.convertDisabled()">
-    <span translate="common.next"></span>
+  <button type="button"
+    class="btn"
+    id="btnBack"
+    ng-if="$ctrl.manageUsers"
+    ng-click="$ctrl.goToManageUsers()"
+    translate="common.back">
   </button>
-  <button ng-if="$ctrl.convertUsersReadOnly" class="btn btn--primary" translate="common.ok" ng-click="$ctrl.dismissModal()">
+  <button
+    id="convertNextButton"
+    class="btn btn--lg btn--primary pull-right"
+    ng-if="!$ctrl.convertUsersReadOnly  && !$ctrl.isPendingTabSelected()"
+    ng-click="$ctrl.onClickNext()"
+    ng-disabled="$ctrl.convertDisabled()"
+    translate="common.next">
   </button>
+  <button ng-if="$ctrl.convertUsersReadOnly" class="btn btn--primary" translate="common.ok" ng-click="$ctrl.dismissModal()"></button>
 </div>
