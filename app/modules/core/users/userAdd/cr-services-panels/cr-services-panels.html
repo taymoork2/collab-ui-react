@@ -218,57 +218,25 @@
           <div class="ckbx" id="paidCare">
             <div class="cs-checkbox-group">
               <fieldset ng-disabled="$ctrl.isCareRadioFieldSetDisabled()">
-                <div class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
-                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
-                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
-                  <input
-                  cs-input
-                  type="radio"
-                  name="careRadio"
-                  id="user-add--care-services--fake-license"
-                  ng-model="$ctrl.radioStates.careRadio"
-                  value="{{$ctrl.careRadioValue.NONE}}"
-                  cs-input-label="{{::$ctrl.careRadioValue.NONE}}">
-                </div>
-
                 <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition"
                      tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
                      tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
                      aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
                   <input
                     cs-input
-                    type="radio"
-                    name="careRadio"
-                    id="{{$ctrl.cdcCareFeature.license.licenseId}}"
+                    type="checkbox"
                     ng-model="$ctrl.radioStates.careRadio"
-                    value="{{$ctrl.careRadioValue.K1}}"
+                    ng-true-value="'{{$ctrl.careRadioValue.K1}}'"
+                    ng-false-value="'{{$ctrl.careRadioValue.NONE}}'"
+                    ng-checked="$ctrl.radioStates.isK1Enabled"
+                    id="{{$ctrl.cdcCareFeature.license.licenseId}}"
+                    name="careRadio"
                     cs-input-label="{{::$ctrl.careRadioValue.K1}}">
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                   <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K1 && !$ctrl.currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
                     <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
                     <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfoToggle"></span>
-                  </span>
-                </div>
-
-                <div ng-if="$ctrl.isCareAndCVCEnabled" class="under-careradio-reposition" tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
-                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
-                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
-                  <input
-                    cs-input
-                    type="radio"
-                    name="careVoice"
-                    id="{{$ctrl.cvcCareFeature.license.licenseId}}"
-                    ng-model="$ctrl.radioStates.careRadio"
-                    value="{{$ctrl.careRadioValue.K2}}"
-                    cs-input-label="{{::$ctrl.careRadioValue.K2}}">
-                  <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
-                  <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K2 && !$ctrl.currentUserEnablesCall">
-                    <div class="icon icon-warning"></div>
-                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
-                      onboardModal.enableCallInfo"></span>
-                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="
-                      onboardModal.enableCallInfoToggle"></span>
                   </span>
                 </div>
               </fieldset>
