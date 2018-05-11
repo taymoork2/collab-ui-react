@@ -11252,7 +11252,7 @@
       "passwordMismatch": "The password entered does not match",
       "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
-      "successupdate": "SFTP server has been successfully updated",
+      "successUpdate": "SFTP server has been successfully updated",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"
@@ -11264,6 +11264,7 @@
       "cucm": "Cisco Unified Communication Manager Version",
       "cucmPlace": "CUCM File",
       "desc": "Add a Software Profile, this profile can be assigned to a customer and used to ensure the versions on their unified communications instances are in sync with approved versions.",
+      "deleteModalDesc": "Delete Software Profile",
       "expway": "Cisco Expressway Version",
       "expwayPlace": "Expressway File",
       "imp": "Cisco IM&P Version",

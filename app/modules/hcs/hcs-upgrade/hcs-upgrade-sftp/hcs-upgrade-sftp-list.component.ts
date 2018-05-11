@@ -87,9 +87,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   }
 
   public deleteSftpService(sftp: SftpServer) {
-    this.HcsUpgradeService.deleteSftpServer(sftp.uuid).then(() => {
-      this.listSftpServers();
-    });
+    this.HcsUpgradeService.deleteSftpServer(sftp.uuid).then(() => this.listSftpServers());
   }
 
   public editSftp(sftp: SftpServer): void {
