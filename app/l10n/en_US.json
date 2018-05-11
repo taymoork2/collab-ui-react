@@ -6580,7 +6580,8 @@
     },
     "qos": {
       "title": "QoS",
-      "description": "Enable extended port range for QoS",
+      "fulltitle": "Extended port range for QoS",
+      "description": "Enable extended port range for QoS. Disabling the port range will result in lose of QoS functionality.",
       "success": "Extended port range for QoS setting was set successfully.",
       "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
     },
