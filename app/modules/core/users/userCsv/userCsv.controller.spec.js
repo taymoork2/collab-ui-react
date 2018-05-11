@@ -1035,4 +1035,29 @@ describe('userCsv.controller', function () {
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
     });
   });
+
+  describe('Import CSV with new batch service', function () {
+    beforeEach(function () {
+      var _this = this;
+      this.FeatureToggleService.atlasCsvImportTaskManagerGetStatus.and.callFake(function () {
+        return _this.$q.resolve(true);
+      });
+      initController.apply(this);
+    });
+
+    it('should go to users.csv.task-manager', function () {
+      this.controller.model.fileName = 'fileName.csv';
+      this.controller.model.file = 'csvContent';
+      this.controller.model.enableRemove = true;
+      this.controller.startUpload();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith('users.csv.task-manager', {
+        job: {
+          fileName: 'fileName.csv',
+          fileData: 'csvContent',
+          exactMatchCsv: true,
+        },
+      });
+    });
+  });
 });

@@ -21,6 +21,7 @@ require('./_user-csv.scss');
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
     vm.isLoading = true;
+    vm.maxCsvFileSize = 10;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -48,6 +49,9 @@ require('./_user-csv.scss');
       isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
       isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
       orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
+
+      vm.maxCsvFileSize = (isAtlasCsvImportTaskManagerToggled) ? 250 : 10;
+      maxUsers = (isAtlasCsvImportTaskManagerToggled) ? UserCsvService.newMaxUsersInCSV : UserCsvService.maxUsersInCSV;
     }).catch(function (response) {
       Notification.errorResponse(response);
     }).finally(function () {
@@ -116,9 +120,7 @@ require('./_user-csv.scss');
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      if (!isAtlasCsvImportTaskManagerToggled) {
-        Notification.error('firstTimeWizard.csvMaxSizeError');
-      }
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
@@ -148,29 +150,22 @@ require('./_user-csv.scss');
         }
 
         // Check required email column
-        // TO-DO This check should be moved to the server side.
-        if (!isAtlasCsvImportTaskManagerToggled) {
-          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
-            Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-            vm.resetFile();
-            return;
-          }
+        if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+          Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+          vm.resetFile();
+          return;
         }
 
         csvHeaders = csvUsersArray.shift();
 
         // Check if exceeds the max user size
-        // TO-DO This check should be moved to the server side.
-        if (!isAtlasCsvImportTaskManagerToggled) {
-          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
-            warnCsvUserCount();
-            vm.resetFile();
-            return;
-          }
+        if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+          warnCsvUserCount();
+          vm.resetFile();
+          return;
         }
 
         // Check column name mis-match
-        // TO-DO This check should be moved to the server side.
         var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
         if (mismatchHeaderName) {
           Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
@@ -199,6 +194,7 @@ require('./_user-csv.scss');
     };
 
     vm.startUpload = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
       if (isAtlasCsvImportTaskManagerToggled) {
         $state.go('users.csv.task-manager', {
           job: {
@@ -208,7 +204,6 @@ require('./_user-csv.scss');
           },
         });
       } else {
-        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
         beforeSubmitCsv().then(function () {
           bulkSaveWithIndividualLicenses();
           $state.go('users.csv.results');

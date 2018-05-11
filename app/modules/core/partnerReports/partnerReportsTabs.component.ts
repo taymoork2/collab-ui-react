@@ -1,4 +1,5 @@
 import { FeatureToggleService } from 'modules/core/featureToggle';
+import './partner-reports.scss';
 
 class PartnerReportsTabs implements ng.IComponentController {
   public tabs;
