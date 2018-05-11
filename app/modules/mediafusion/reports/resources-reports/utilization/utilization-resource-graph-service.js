@@ -37,7 +37,6 @@
       var data = response.graphData;
       var graphs = getClusterName(response.graphs, clusterMap);
       vm.legendGraphs = graphs;
-      vm.counter = 0;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else {
