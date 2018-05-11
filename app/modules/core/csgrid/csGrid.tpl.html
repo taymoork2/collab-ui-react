@@ -1,10 +1,12 @@
 <div
   id="{{::$ctrl.name}}"
   class="gridStyle"
+  ng-class="$ctrl.gridClass"
   ui-grid="$ctrl.gridOptions"
   ui-grid-selection
   ui-grid-infinite-scroll
   ui-grid-resize-columns
+  ui-grid-save-state
   ui-grid-move-columns
   grid-spinner="$ctrl.spinner">
 </div>

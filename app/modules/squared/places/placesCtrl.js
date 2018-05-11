@@ -4,11 +4,13 @@ require('../devices/_devices.scss');
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   angular.module('Squared')
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService, CloudConnectorService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridService, CloudConnectorService) {
         var vm = this;
 
         vm.data = [];
@@ -122,7 +124,7 @@ require('../devices/_devices.scss');
         };
 
         vm.selectRow = function (grid, row) {
-          GridCellService.selectRow(grid, row);
+          GridService.selectRow(grid, row);
           vm.showPlaceDetails(row.entity);
         };
 
@@ -226,7 +228,7 @@ require('../devices/_devices.scss');
         };
 
         vm.keyboardDeletePlace = function ($event, place) {
-          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+          if ($event.keyCode === KeyCodes.ENTER || $event.keyCode === KeyCodes.SPACE) {
             vm.deletePlace($event, place);
           } else {
             $event.stopPropagation();
