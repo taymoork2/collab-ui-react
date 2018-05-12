@@ -8,7 +8,7 @@
           TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
         -->
         <article ng-if="card.template" ng-include="card.template"></article>
-        <article ng-if="!card.template">
+        <article ng-if="!card.template && !card.isMeetingCard">
           <license-card
             l10n-default-message="{{::card.defaultMessage}}"
             l10n-license-description="{{::card.licenseDescription}}"
@@ -19,6 +19,9 @@
             settings-url-object="card.settingsUrlObject"
             status-id="{{::card.statusId}}">
           </license-card>
+        </article>
+        <article ng-if="!card.template && card.isMeetingCard">
+          <meeting-card loading="overview.loadingSubscriptions"></meeting-card>
         </article>
       </cs-card>
     </cs-card-layout>

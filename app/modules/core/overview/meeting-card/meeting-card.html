@@ -1,0 +1,62 @@
+<header>
+  <div class="overview-header">
+    <i class="icon icon-circle-group"></i>
+    <span translate="overview.cards.meeting.title"></span>
+  </div>
+</header>
+
+<section ng-if="$ctrl.hasLicenses() && !$ctrl.loading && !$ctrl.isProvisioningOrNeedsWebexSetup()">
+  <div class="overview-info">
+    <div class="overview-count">
+      <a
+        aria-label="{{::'overview.cards.meeting.title' | translate}} {{$ctrl.totalLicenses}} {{::'overview.totalUserLicenses' | translate}}"
+        ui-sref="my-company.subscriptions">
+        {{$ctrl.totalLicenses | number}}
+      </a>
+    </div>
+    <div translate="overview.totalUserLicenses"></div>
+  </div>
+</section>
+<section class="disabled-section" ng-if="!$ctrl.hasLicenses() && !$ctrl.loading && !$ctrl.isProvisioningOrNeedsWebexSetup()">
+  <span translate="overview.cards.meeting.notEnabledText"></span>
+</section>
+
+<div ng-if="$ctrl.isProvisioningOrNeedsWebexSetup()" class="overview-info">
+  <section ng-if="$ctrl.needsWebExSetup">
+    <i class="icon icon-warning warning-specs"></i>
+    <h5 class="meetings-detail-spacing" translate="overview.cards.meeting.meetingsNotSetUp"></h5>
+    <a href ng-click="$ctrl.showMeetingSettings()" translate="overview.cards.meeting.setupMeetingService"></a>
+  </section>
+  <section ng-if="$ctrl.isProvisioning">
+    <i class="icon icon-priority priority-specs"></i>
+    <h5 class="meetings-detail-spacing" translate="overview.cards.meeting.serviceProvisioning"></h5>
+  </section>
+</div>
+
+<section class="disabled-section spinner-section" ng-if="$ctrl.loading && !$ctrl.isProvisioningOrNeedsWebexSetup()">
+  <div class="license-spinner">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
+</section>
+
+<footer class="footer-menu overview-footer-content-trial overview-footer-content" ng-if="$ctrl.hasLicenses() && !$ctrl.loading">
+  <span class="footer-content">
+    <a
+      aria-label="{{'overview.cards.meeting.title' | translate}} {{$ctrl.healthStatusAria}}"
+      class="monitoring-cell"
+      ng-href="{{$ctrl.statusPageUrl}}"
+      ng-if="$ctrl.showHealth()"
+      target="_blank">
+      <cs-statusindicator ng-model="$ctrl.healthStatus"></cs-statusindicator>
+    </a>
+  </span>
+  &nbsp;
+  <span class="footer-icons" ng-if="$ctrl.displaySettingsUrl()">
+    <a ng-href="{{$ctrl.settingsUrlObject.url}}" aria-label="{{'overview.cards.meeting.title' | translate}} {{'common.settings' | translate}}">
+      <i class="icon icon-settings"></i>
+    </a>
+  </span>
+</footer>
+<footer class="disabled-footer" ng-if="!$ctrl.hasLicenses() && !$ctrl.loading && !$ctrl.isProvisioningOrNeedsWebexSetup()">
+  <p translate="overview.contactPartner"></p>
+</footer>
