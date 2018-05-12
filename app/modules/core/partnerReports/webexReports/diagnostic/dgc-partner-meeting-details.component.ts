@@ -16,13 +16,23 @@ interface IDataStore {
   currentQos: string;
 }
 
+interface IQuality {
+  audioMos: string;
+  startTime: number;
+  endTime: number;
+  lossrates: string;
+  rtts: string;
+  lossRate: string;
+  packetLoss: string;
+}
+
 const LATENCY_SHOWUP = 999;
 const LOSSRATE_SHOWUP = 9.9;
 class MeetingDetailsController implements ng.IComponentController {
   public data: IDataStore;
   public dataSet: { lines: IParticipant[][], endTime: number, startTime: number, offset: string };
   public overview: { audioSession: string, videoSession: string };
-  public circleColor: IJoinTime;
+  public circleJoinTime: IJoinTime;
   public conferenceID: string;
   public tabType = TabType.AUDIO;
   public loading = true;
@@ -75,26 +85,26 @@ class MeetingDetailsController implements ng.IComponentController {
     this.PartnerSearchService.getUniqueParticipants(this.conferenceID)
       .then((res: IUniqueParticipant[]) => {
         const timeZone = this.PartnerSearchService.getStorage('timeZone');
-        const wom = this.PartnerSearchService.getStorage('webexOneMeeting');
+        const webexOneMeeting = this.PartnerSearchService.getStorage('webexOneMeeting');
         const lines: IParticipant[][] = this.parseUniqueParticipants(res);
 
         this.dataSet = {
           lines: lines,
-          endTime: _.get(wom, 'endTime'),
-          startTime: _.get(wom, 'startTime'),
+          endTime: _.get(webexOneMeeting, 'endTime'),
+          startTime: _.get(webexOneMeeting, 'startTime'),
           offset: this.PartnerSearchService.getOffset(timeZone),
         };
-        this.meetingEndTime = wom['endTime'] * 1;
+        this.meetingEndTime = webexOneMeeting['endTime'] * 1;
 
-        const ids = this.getAllIds(lines);
-        const pstnIds = this.getFilterIds(res);
-        const cmrIds = this.getFilterIds(res, QosType.CMR);
+        const nodeIds = this.getAllIds(lines);
+        const pstnNodeIds = this.getFilterIds(res);
+        const cmrNodeIds = this.getFilterIds(res, QosType.CMR);
 
         this.getJoinMeetingTime();
-        this.getVoipSessionDetail(ids);
-        this.getVideoSessionDetail(ids);
-        this.getPSTNSessionDetail(pstnIds);
-        this.getCMRSessionDetail(cmrIds);
+        this.getVoipSessionDetail(nodeIds);
+        this.getVideoSessionDetail(nodeIds);
+        this.getPSTNSessionDetail(pstnNodeIds);
+        this.getCMRSessionDetail(cmrNodeIds);
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
@@ -104,18 +114,18 @@ class MeetingDetailsController implements ng.IComponentController {
       });
   }
 
-  private parseUniqueParticipants(res: IUniqueParticipant[]): IParticipant[][] {
-    return _.map(res, uniqueParticipant => {
-      return this.formatLine(_.get(uniqueParticipant, 'participants'));
+  private parseUniqueParticipants(uniqueParticipants: IUniqueParticipant[]): IParticipant[][] {
+    return _.map(uniqueParticipants, uniqueParticipant => {
+      return this.formatLines(_.get(uniqueParticipant, 'participants'));
     });
   }
 
   private getJoinMeetingTime(): void {
     this.PartnerSearchService.getJoinMeetingTime(this.conferenceID)
-      .then((res: IJoinTime) => this.circleColor = res);
+      .then((res: IJoinTime) => this.circleJoinTime = res);
   }
 
-  private formatLine(lines: IParticipant[]): IParticipant[] {
+  private formatLines(lines: IParticipant[]): IParticipant[] {
     const wom = this.PartnerSearchService.getStorage('webexOneMeeting');
     return _.map(lines, (line: any) => { //TODO use better type
       const endTime = _.get(wom, 'endTime');
@@ -151,39 +161,40 @@ class MeetingDetailsController implements ng.IComponentController {
     });
   }
 
-  private getVoipSessionDetail(ids: string): void {
-    if (!_.size(ids)) {
+  private getVoipSessionDetail(nodeIds: string): void {
+    if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getVoipSessionDetail(this.conferenceID, ids)
+    this.PartnerSearchService.getVoipSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
-        const retryIds: string[] = [];
-        this.parseVoipSession(res, retryIds);
+        const retryIds = this.parseVoipSession(res);
         this.setData();
         this.retryRequest(QosType.VOIP, this.getVoipSessionDetail, retryIds);
       });
   }
 
-  private parseVoipSession(sessions: ISessionDetail, retryIds: string[]): void {
+  private parseVoipSession(sessionDetail: ISessionDetail): string[] {
+    const retryIds: string[] = [];
     const details = this.audioLines || {};
-    _.forEach(sessions.items, (session: ISessionDetailItem) => {
-      if (!details[session.key]) {
-        details[session.key] = [];
+    _.forEach(sessionDetail.items, (item: ISessionDetailItem) => {
+      if (!details[item.key]) {
+        details[item.key] = [];
       }
-      if (session.completed) {
-        _.forEach(session.items, detailItem => {
+      if (item.completed) {
+        _.forEach(item.items, detailItem => {
           this.audioEnabled.VoIP = true;
           const detail = this.parseVoipQualities(detailItem);
-          details[session.key].push(detail);
+          details[item.key].push(detail);
         });
       } else {
-        retryIds.push(session.key);
+        retryIds.push(item.key);
       }
     });
     this.audioLines = details;
+    return retryIds;
   }
 
-  private parseVoipQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: object }): object {
+  private parseVoipQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): object {
     const detail = {};
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
@@ -200,39 +211,40 @@ class MeetingDetailsController implements ng.IComponentController {
     return detail;
   }
 
-  private getVideoSessionDetail(ids: string): void {
-    if (!_.size(ids)) {
+  private getVideoSessionDetail(nodeIds: string): void {
+    if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getVideoSessionDetail(this.conferenceID, ids)
+    this.PartnerSearchService.getVideoSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
-        const retryIds: string[] = [];
-        this.parseVideoSession(res, retryIds);
+        const retryIds = this.parseVideoSession(res);
         this.setData();
         this.retryRequest(QosType.VIDEO, this.getVideoSessionDetail, retryIds);
       });
   }
 
-  private parseVideoSession(sessions: ISessionDetail, retryIds: string[]): void {
+  private parseVideoSession(sessionDetail: ISessionDetail): string[] {
+    const retryIds: string[] = [];
     const details = this.videoLines || {};
-    _.forEach(sessions.items, (session: ISessionDetailItem) => {
-      if (!details[session.key]) {
-        details[session.key] = [];
+    _.forEach(sessionDetail.items, (item: ISessionDetailItem) => {
+      if (!details[item.key]) {
+        details[item.key] = [];
       }
-      if (session.completed) {
-        _.forEach(session.items, detailItem => {
+      if (item.completed) {
+        _.forEach(item.items, detailItem => {
           this.videoEnabled = true;
           const detail = this.parseVideoQualities(detailItem);
-          details[session.key].push(detail);
+          details[item.key].push(detail);
         });
       } else {
-        retryIds.push(session.key);
+        retryIds.push(item.key);
       }
     });
     this.videoLines = details;
+    return retryIds;
   }
 
-  private parseVideoQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: object }): object {
+  private parseVideoQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): object {
     const detail = {};
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
@@ -249,25 +261,25 @@ class MeetingDetailsController implements ng.IComponentController {
     return detail;
   }
 
-  private getPSTNSessionDetail(pstnIds: string): void {
-    if (!_.size(pstnIds)) {
+  private getPSTNSessionDetail(nodeIds: string): void {
+    if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getPSTNSessionDetail(this.conferenceID, pstnIds)
+    this.PartnerSearchService.getPSTNSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
-        const retryIds: string[] = [];
-        this.parsePSTNSession(res, retryIds);
+        const retryIds = this.parsePSTNSession(res);
         this.setData();
         this.retryRequest(QosType.PSTN, this.getPSTNSessionDetail, retryIds);
       });
   }
 
-  private parsePSTNSession(sessions: ISessionDetail, retryIds: string[]): void {
+  private parsePSTNSession(sessionDetail: ISessionDetail): string[] {
+    const retryIds: string[] = [];
     const details = this.audioLines || {};
-    _.forEach(sessions.items, (session: ISessionDetailItem) => {
-      if (session.completed) {
-        _.forEach(session.items, detailItem => {
-          const key = `${detailItem.callId}_${session.key}`;
+    _.forEach(sessionDetail.items, (item: ISessionDetailItem) => {
+      if (item.completed) {
+        _.forEach(item.items, detailItem => {
+          const key = `${detailItem.callId}_${item.key}`;
           if (!details[key]) {
             details[key] = [];
           }
@@ -276,13 +288,14 @@ class MeetingDetailsController implements ng.IComponentController {
           details[key].push(detail);
         });
       } else {
-        retryIds.push(session.key);
+        retryIds.push(item.key);
       }
     });
     this.audioLines = details;
+    return retryIds;
   }
 
-  private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: object }): object {
+  private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: IQuality[] }): object {
     const detail = {};
     detail['cid'] = detailItem.callId;
     detail['startTime'] = detailItem.startTime * 1;
@@ -301,23 +314,23 @@ class MeetingDetailsController implements ng.IComponentController {
     return detail;
   }
 
-  private getCMRSessionDetail(cmrIds: string): void {
-    if (!_.size(cmrIds)) {
+  private getCMRSessionDetail(nodeIds: string): void {
+    if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getCMRSessionDetail(this.conferenceID, cmrIds)
+    this.PartnerSearchService.getCMRSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
-        const retryIds: string[] = [];
-        this.parseCMRQualities(res, retryIds);
+        const retryIds = this.parseCMRQualities(res);
         this.setData();
         this.retryRequest(QosType.CMR, this.getCMRSessionDetail, retryIds);
       });
   }
 
-  private parseCMRQualities(sessions: ISessionDetail, retryIds: string[]): void {
+  private parseCMRQualities(sessionDetail: ISessionDetail): string[] {
+    const retryIds: string[] = [];
     const audioDetails = this.audioLines || {};
     const videoDetails = this.videoLines || {};
-    _.forEach(sessions.items, (session: ISessionDetailItem) => {
+    _.forEach(sessionDetail.items, (session: ISessionDetailItem) => {
       if (!audioDetails[session.key]) {
         audioDetails[session.key] = [];
       }
@@ -338,9 +351,10 @@ class MeetingDetailsController implements ng.IComponentController {
     });
     this.audioLines = audioDetails;
     this.videoLines = videoDetails;
+    return retryIds;
   }
 
-  private parseAudioDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, audioQos: object }): object {
+  private parseAudioDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, audioQos: { values: IQuality[] }[] }): object {
     const audioDetail = {};
     audioDetail['startTime'] = detailItem.connectionStartTime * 1;
     audioDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
@@ -359,7 +373,7 @@ class MeetingDetailsController implements ng.IComponentController {
     return audioDetail;
   }
 
-  private parseVideoDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, videoQos: object }): object {
+  private parseVideoDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, videoQos: { values: IQuality[] }[] }): object {
     const videoDetail = {};
     videoDetail['startTime'] = detailItem.connectionStartTime * 1;
     videoDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
@@ -378,13 +392,13 @@ class MeetingDetailsController implements ng.IComponentController {
     return videoDetail;
   }
 
-  private parseVoipQuality(lossrates: number, rtts: string): number {
-    const lossRate = lossrates * 1;
+  private parseVoipQuality(lossRate: string, rtts: string): number {
+    const lossRate_ = parseFloat(lossRate);
     const latency = _.parseInt(rtts);
     let qualityIndex = Quality.NA;
-    if (lossRate < QualityRange.LOWER_LOSSRATE && latency < QualityRange.LOWER_LATENCY) {
+    if (lossRate_ < QualityRange.LOWER_LOSSRATE && latency < QualityRange.LOWER_LATENCY) {
       qualityIndex = Quality.GOOD;
-    } else if (lossRate > QualityRange.UPPER_LOSSRATE && latency > QualityRange.UPPER_LATENCY) {
+    } else if (lossRate_ > QualityRange.UPPER_LOSSRATE && latency > QualityRange.UPPER_LATENCY) {
       qualityIndex = Quality.POOR;
     } else {
       qualityIndex = Quality.FAIR;
@@ -392,9 +406,9 @@ class MeetingDetailsController implements ng.IComponentController {
     return qualityIndex;
   }
 
-  private parseVoipTooltip(lossrates: number, rtts: string, aliasKey?: string): string {
-    const qualityIndex = this.parseVoipQuality(lossrates, rtts) - 1;
-    const lossRate = lossrates * 1;
+  private parseVoipTooltip(lossRate: string, rtts: string, aliasKey?: string): string {
+    const lossRate_ = parseFloat(lossRate);
+    const qualityIndex = this.parseVoipQuality(lossRate, rtts) - 1;
     const latency = _.parseInt(rtts);
     const items = [{
       key: aliasKey ? this.$translate.instant('webexReports.cmrQuality') : this.$translate.instant('webexReports.voipQuality'),
@@ -404,16 +418,16 @@ class MeetingDetailsController implements ng.IComponentController {
       value: latency > LATENCY_SHOWUP ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
     }, {
       key: this.$translate.instant('webexReports.packetLoss'),
-      value: lossRate > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate, 2)}%`,
+      value: lossRate_ > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate_, 2)}%`,
     }];
     return this.formatTooltip(items);
   }
 
-  private parseVideoQuality(lossrates: number, rtts: string): number {
-    const lossRate = lossrates * 1;
+  private parseVideoQuality(lossRate: string, rtts: string): number {
+    const lossRate_ = parseFloat(lossRate);
     const latency = _.parseInt(rtts);
     let qualityIndex = Quality.NA;
-    if (lossRate > QualityRange.UPPER_LOSSRATE || latency > QualityRange.UPPER_LATENCY) {
+    if (lossRate_ > QualityRange.UPPER_LOSSRATE || latency > QualityRange.UPPER_LATENCY) {
       qualityIndex = Quality.POOR;
     } else {
       qualityIndex = Quality.GOOD;
@@ -421,9 +435,9 @@ class MeetingDetailsController implements ng.IComponentController {
     return qualityIndex;
   }
 
-  private parseVideoTooltip(lossrates: number, rtts: string, aliasKey?: string): string {
-    const qualityIndex = this.parseVideoQuality(lossrates, rtts) - 1;
-    const lossRate = lossrates * 1;
+  private parseVideoTooltip(lossRate: string, rtts: string, aliasKey?: string): string {
+    const qualityIndex = this.parseVideoQuality(lossRate, rtts) - 1;
+    const lossRate_ = parseFloat(lossRate);
     const latency = _.parseInt(rtts);
     const items = [{
       key: aliasKey ? this.$translate.instant('webexReports.cmrQuality') : this.$translate.instant('webexReports.videoQuality'),
@@ -433,25 +447,26 @@ class MeetingDetailsController implements ng.IComponentController {
       value: latency > LATENCY_SHOWUP ? `> ${this.$translate.instant('time.capitalized.seconds', { time: 1 }, 'messageformat')}` : `${latency} ms`,
     }, {
       key: this.$translate.instant('webexReports.packetLoss'),
-      value: lossRate > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate, 2)}%`,
+      value: lossRate_ > LOSSRATE_SHOWUP ? '> 10%' : `${_.round(lossRate_, 2)}%`,
     }];
     return this.formatTooltip(items);
   }
 
-  private parsePSTNQuality(audioMos: number): number {
-    let qualityIndex = Quality.NA;
-    const mos = audioMos * 1;
+  private parsePSTNQuality(audioMos: string): number {
+    const mos = _.parseInt(audioMos);
     if (mos >= MosType.GOOD) {
-      qualityIndex = Quality.GOOD;
-    } else if (mos < MosType.FAIR && mos > MosType.POOR) {
-      qualityIndex = Quality.POOR;
-    } else {
-      qualityIndex = Quality.FAIR;
+      return MosType.GOOD;
     }
-    return qualityIndex;
+    if (mos >= MosType.FAIR) {
+      return MosType.FAIR;
+    }
+    if (mos > MosType.POOR) {
+      return MosType.POOR;
+    }
+    return Quality.NA;
   }
 
-  private parsePSTNTooltip(audioMos: number, callType: string): string {
+  private parsePSTNTooltip(audioMos: string, callType: string): string {
     const qualityIndex = this.parsePSTNQuality(audioMos) - 1;
     const items = [{
       key: this.$translate.instant('webexReports.pstnQuality'),
@@ -476,7 +491,7 @@ class MeetingDetailsController implements ng.IComponentController {
     }
   }
 
-  private formatTooltip(msgs: { key?: string; value?: string | number; class?: string; }[]): string {
+  private formatTooltip(msgs: { key: string; value?: string | number; class?: string; }[]): string {
     const tooltip = _.reduce(msgs, (template_, msg) => {
       const cls = msg.class ? msg.class : '';
       const text = msg.value ? `: ${msg.value}` : '';
@@ -492,27 +507,23 @@ class MeetingDetailsController implements ng.IComponentController {
       this.lineData = _.cloneDeep(this.videoLines);
     }
 
-    const audioTypes: string[] = [], videoTypes: string[] = [];
+    const audioTypes: string[] = [];
     _.forEach(this.audioEnabled, (isEnabled: boolean, key: string) => {
       if (isEnabled) {
         audioTypes.push(key);
       }
     });
-    if (this.videoEnabled) {
-      videoTypes.push(this.$translate.instant('common.yes'));
-    } else {
-      videoTypes.push(this.$translate.instant('common.no'));
-    }
+    const videoEnabledStr = this.videoEnabled ? this.$translate.instant('common.yes') : this.$translate.instant('common.no');
     this.overview['audioSession'] = audioTypes.join(` ${this.$translate.instant('common.and')} `);
-    this.overview['videoSession'] = videoTypes.join();
+    this.overview['videoSession'] = videoEnabledStr;
   }
 
   private getAllIds(lines: IParticipant[][]): string {
-    let parts: IParticipant[] = [];
-    _.forEach(lines, (line: IParticipant) => {
-      parts = _.concat(parts, line);
+    let participants: IParticipant[] = [];
+    _.forEach(lines, (line: IParticipant[]) => {
+      participants = _.concat(participants, line);
     });
-    const nodeIds = _.map(parts, (part) => _.get(part, 'nodeId'));
+    const nodeIds = _.map(participants, (part) => _.get(part, 'nodeId'));
     return _.join(_.union(nodeIds));
   }
 
@@ -520,7 +531,7 @@ class MeetingDetailsController implements ng.IComponentController {
     const lineData = type === QosType.PSTN
       ? _.filter(participants, (participant: IUniqueParticipant) => !(participant.sessionType === Platforms.WINDOWS && participant.platform === Platforms.TP))
       : _.filter(participants, (participant: IUniqueParticipant) => participant.sessionType === Platforms.WINDOWS && participant.platform === Platforms.TP);
-    const lines = _.map(lineData, (line) => this.formatLine(_.get(line, 'participants')));
+    const lines = _.map(lineData, (line) => this.formatLines(_.get(line, 'participants')));
     return this.getAllIds(lines);
   }
 }
