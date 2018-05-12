@@ -2,7 +2,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { ISelectOption } from '../shared/hcs-inventory';
 import { HcsUpgradeService, HcsControllerService } from 'modules/hcs/hcs-shared';
 import { IHcsCluster, IHcsNode, ISftpServersObject } from 'modules/hcs/hcs-shared/hcs-upgrade';
-import { IControllerNode } from 'modules/hcs/hcs-shared/hcs-controller';
+import { IControllerNode, IHcsCustomer, HcsCustomer } from 'modules/hcs/hcs-shared/hcs-controller';
 import { Notification } from 'modules/core/notifications';
 
 enum HcsModalTypeSelect {
@@ -40,7 +40,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public form: IClusterDetailsForm;
   public sftpLocationSelected: ISelectOption;
   public customerSelected: ISelectOption;
-  public customerList: ISelectOption[];
+  public customerSelectOptions: ISelectOption[];
+  public customerList: IHcsCustomer[];
   public customerSelectPlaceholder: string;
   public clusterNameInputMessages: Object;
   public clusterNamePlaceholder: string;
@@ -51,6 +52,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public loading: boolean;
   public sftpSelectPlaceholder: string;
   public sftpServersList: ISelectOption[];
+  private timer: any;
+  private timeoutVal: number;
 
   /* @ngInject */
   constructor(
@@ -58,13 +61,16 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $log: ng.ILogService,
     private $modal: IToolkitModalService,
+    private $timeout: ng.ITimeoutService,
     private HcsUpgradeService: HcsUpgradeService,
     private HcsControllerService: HcsControllerService,
     private Notification: Notification,
-  ) {}
+  ) {
+    this.timer = 0;
+    this.timeoutVal = 1000;
+  }
 
   public $onInit(): void {
-    this.loading = true;
     this.clusterNameInputMessages = {
       required: this.$translate.instant('common.invalidRequired'),
     };
@@ -83,17 +89,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       };
     }
 
-    //TODO: get list of customers for partner
-    this.customerList = [{
-      label: 'Betty\'s Flower Shop',
-      value: '1234',
-    },
-    {
-      label: 'Susan\'s Mixing Company',
-      value: '4567',
-    }];
-
-    this.customerList.push({ label: 'Add Customer', value: '0000' });
+    this.initCustomerList();
 
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
 
@@ -102,7 +98,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     this.initClusterDetails();
   }
 
-  public initClusterDetails() {
+  public initClusterDetails(): void {
+    this.loading = true;
     this.HcsUpgradeService.getCluster(this.clusterId).then((cluster: IHcsCluster) => {
       this.initSelectedSftpServer(cluster);
       return this.getNodeList(cluster.nodes);
@@ -113,6 +110,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       }
     })
     .then((nodeList: IControllerNode[]) => {
+      //Node Status logic
       if (nodeList) {
         if (this.clusterDetail.nodes) {
           _.forEach(this.clusterDetail.nodes, (upgradeNode) => {
@@ -124,14 +122,16 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           });
         }
       }
-      this.loading = false;
     })
     .catch((err) => {
       this.Notification.error(err);
+    })
+    .finally(() => {
+      this.loading = false;
     });
   }
 
-  public initSelectedSftpServer(cluster: IHcsCluster) {
+  public initSelectedSftpServer(cluster: IHcsCluster): void {
     this.clusterDetail = cluster;
     this.clusterName = this.clusterDetail.name;
     if (this.clusterDetail.sftpServer) {
@@ -144,7 +144,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     }
   }
 
-  public initSftpServers() {
+  public initSftpServers(): void {
     this.sftpServersList = [];
     this.HcsUpgradeService.listSftpServers()
       .then((sftpObject: ISftpServersObject) => {
@@ -161,6 +161,30 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       });
   }
 
+  public initCustomerList(): void {
+    this.customerSelectOptions = [];
+    this.customerList = [];
+    //TODO: get list of customers for partner from ci.
+    this.HcsControllerService.getHcsCustomers()
+    .then((hcsCustomers: IHcsCustomer[]) => {
+      _.forEach(hcsCustomers, (hcsCustomer) => {
+        const customer = new HcsCustomer(hcsCustomer);
+        this.customerList.push(customer);
+        const customerSelectOption = {
+          label: customer.name,
+          value: customer.uuid,
+        };
+        this.customerSelectOptions.push(customerSelectOption);
+      });
+    })
+    .catch((err) => {
+      this.Notification.error(err);
+    })
+    .finally(() => {
+      this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
+    });
+  }
+
   public getNodeList(nodeList: IHcsNode[] | null): string[] | null {
     if (nodeList) {
       const nodeArray: string[] = [];
@@ -175,12 +199,12 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     }
   }
 
-  public onSftpLocationChanged() {
+  public onSftpLocationChanged(): void {
   }
 
-  public onCustomerChanged() {
+  public onCustomerChanged(): void {
     this.$log.log('On customer change', this.customerSelected);
-    if (this.customerSelected.value === '0000') {
+    if (this.customerSelected.value === 'addCustomer') {
       this.addCustomerModal();
     }
   }
@@ -199,10 +223,10 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       controller: () => {
         if (modalType === HcsModalTypeSelect.editSftp) {
           return {
-            saveSftp: (node: IHcsNode, sftp) => this.saveNodeSftp(node, sftp),
+            refreshData: () => this.initClusterDetails(),
             modalType: modalType,
             node: node,
-            sftpLocations: this.sftpServersList,
+            sftpServers: this.sftpServersList,
           };
         } else if (modalType === HcsModalTypeSelect.addCustomer) {
           return {
@@ -217,19 +241,15 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     });
   }
 
-  public saveNodeSftp(node: IHcsNode, sftp: ISelectOption) {
-    this.$log.log(node, sftp);
-  }
-
-  public editNodeSftp(node: IHcsNode) {
+  public editNodeSftp(node: IHcsNode): void {
     this.openEditModal(HcsModalTypeSelect.editSftp, node);
   }
 
-  public addCustomerModal() {
+  public addCustomerModal(): void {
     this.openEditModal(HcsModalTypeSelect.addCustomer);
   }
 
-  public addCustomerToCluster(customerName: string | undefined, softwareProfile: ISelectOption | undefined) {
+  public addCustomerToCluster(customerName: string | undefined, softwareProfile: ISelectOption | undefined): void {
     this.$log.log(customerName, JSON.stringify(softwareProfile));
     if (customerName) {
       //add customer to controller
@@ -250,7 +270,27 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     }
   }
 
-  public onCustomerSearch(filter) {
-    this.$log.log('on search', filter);
+  public onCustomerSearch(filter: string): void {
+    if (this.timer) {
+      this.$timeout.cancel(this.timer);
+      this.timer = 0;
+    }
+    this.timer = this.$timeout(() => {
+      //to start search, search string should be greater than 3.
+      if ( filter.length > 2 || filter === '') {
+        //TODO: Make call to api for search. write logic to send to 2 servers
+        this.customerSelectOptions = [];
+        _.forEach(this.customerList, (customer) => {
+          if (_.includes(customer.name.toLowerCase(), filter.toLowerCase())) {
+            const customerSelectOption = {
+              label: customer.name,
+              value: customer.uuid,
+            };
+            this.customerSelectOptions.push(customerSelectOption);
+          }
+        });
+        this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
+      }
+    }, this.timeoutVal);
   }
 }

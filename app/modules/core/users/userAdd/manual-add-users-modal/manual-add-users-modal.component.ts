@@ -65,9 +65,9 @@ export class ManualAddUsersModalController implements ng.IComponentController {
 
   public back(state?): void {
     // notes:
-    // - as of 2018-01-11, stepping back from the 'users.add.manual' state should always go to 'users.manage.picker'
+    // - as of 2018-05-10, stepping back from the 'users.add.manual' state should always go to 'users.manage.org'
     // - contact @mipark2 if edge-cases exist that require otherwise
-    const rootState = 'users.manage.picker';
+    const rootState = 'users.manage.org';
     const goToState = state || rootState;
     this.Analytics.trackAddUsers(this.Analytics.eventNames.BACK, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL, { emailEntryMethod: this.Analytics.sections.ADD_USERS.manualMethods[this.model.userInputOption.toString()] });
     this.$state.go(goToState);

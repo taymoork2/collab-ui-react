@@ -3,13 +3,13 @@
   <input
     cs-input
     type="text"
-    ng-model="$ctrl.selectedProfile.name"
+    ng-model="$ctrl.changedProfile.name"
     id="profileName"
     name="profileName"
     required="true"
     ng-maxlength="$ctrl.MAX_LENGTH"
     cs-input-messages="$ctrl.errors"
-    ng-change="$ctrl.processChange()"
+    ng-change="$ctrl.processName()"
     placeholder="{{:: 'hcs.softwareProfiles.namePlace' | translate}}"
     cs-input-label="{{:: 'hcs.softwareProfiles.name' | translate}}">
   <div class="row">
@@ -36,7 +36,7 @@
           placeholder="$ctrl.placeholder.imp"
           combo="true"
           searchable-combo="true"
-          ng-change="$ctrl.processChange('IM&P', $ctrl.selectedVersion.imp)">
+          ng-change="$ctrl.processChange('CUP', $ctrl.selectedVersion.imp)">
         </cs-select>
       </div>
     </div>
@@ -45,12 +45,12 @@
     <div class="medium-8 large-8 hcs-profile__select">
       <cs-select
         name="ucxnVer"
-        ng-model="$ctrl.selectedProfile.ucxn"
+        ng-model="$ctrl.selectedVersion.ucxn"
         options="$ctrl.versions.ucxn"
         placeholder="$ctrl.placeholder.ucxn"
         combo="true"
         searchable-combo="true"
-        ng-change="$ctrl.processChange('UCXN', $ctrl.selectedVersion.ucxn)">
+        ng-change="$ctrl.processChange('CUC', $ctrl.selectedVersion.ucxn)">
       </cs-select>
     </div>
   </div>
@@ -60,12 +60,12 @@
       <div class="medium-8 large-8 hcs-profile__select">
         <cs-select
           name="plmVer"
-          ng-model="$ctrl.selectedProfile.plmVer"
+          ng-model="$ctrl.selectedVersion.plmVer"
           placeholder="$ctrl.placeholder.plm"
           options="$ctrl.versions.plm"
           combo="true"
           searchable-combo="true"
-          ng-change="$ctrl.processChange()">
+          ng-change="$ctrl.processChange('plm', $ctrl.selectedVersion.plm)">
         </cs-select>
       </div>
     </div>
@@ -74,12 +74,12 @@
       <div class="medium-8 large-8 hcs-profile__select">
         <cs-select
           name="cerVer"
-          ng-model="$ctrl.selectedProfile.cerVer"
+          ng-model="$ctrl.selectedVersion.cerVer"
           placeholder="$ctrl.placeholder.cer"
           options="$ctrl.versions.cer"
           combo="true"
           searchable-combo="true"
-          ng-change="$ctrl.processChange(">
+          ng-change="$ctrl.processChange('cer', $ctrl.selectedVersion.cer)">
         </cs-select>
       </div>
     </div>
@@ -88,12 +88,12 @@
       <div class="medium-8 large-8 hcs-profile__select">
         <cs-select
           name="expwayVer"
-          ng-model="$ctrl.selectedProfile.expwayVer"
+          ng-model="$ctrl.selectedVersion.expwayVer"
           placeholder="$ctrl.placeholder.expway"
           options="$ctrl.versions.expway"
           combo="true"
           searchable-combo="true"
-          ng-change="$ctrl.processChange()">
+          ng-change="$ctrl.processChange('', $ctrl.selectedVersion.expwayVer)">
         </cs-select>
       </div>
     </div>

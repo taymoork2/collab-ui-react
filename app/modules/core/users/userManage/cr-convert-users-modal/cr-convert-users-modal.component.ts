@@ -5,6 +5,7 @@ import { DirSyncService } from 'modules/core/featureToggle/dirSync.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IOnboardScopeForUsersConvert, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
+import * as moment from 'moment';
 
 interface IConversionStatus {
   type: string;
@@ -42,7 +43,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
   private selectedTab = this.POTENTIAL;
   private gridPotentialUsers: uiGrid.IGridOptions;
-  private gridPendingUsers: uiGrid.IGridOptions;
+  public gridPendingUsers: uiGrid.IGridOptions;
 
   /* @ngInject */
   constructor(
@@ -105,9 +106,26 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
     // F7208 - convert users Modal work...
     this.conversionStatusMap = [
-      { type: this.POTENTIAL, key: 'IMMEDIATE', cellVal: this.$translate.instant('convertUsersModal.status.immediate') },
-      { type: this.POTENTIAL, key: 'DELAYED', cellVal: this.$translate.instant('convertUsersModal.status.delayed') },
-      { type: this.PENDING, key: 'TRANSIENT', cellVal: user => { return new Date(_.get(user, 'meta.accountStatusSetTime.transient')).toLocaleString(); } },
+      { type: this.POTENTIAL,
+        key: 'IMMEDIATE',
+        cellVal: this.$translate.instant('convertUsersModal.status.immediate'),
+      }, {
+        type: this.POTENTIAL,
+        key: 'DELAYED',
+        cellVal: this.$translate.instant('convertUsersModal.status.delayed'),
+      }, {
+        type: this.PENDING,
+        key: 'TRANSIENT',
+        cellVal: user => {
+          const convertDate = new Date(_.get(user, 'meta.accountStatusSetTime.transient'));
+          if (_.isUndefined(convertDate)) {
+            // error condition, no transient property present
+            return this.$translate.instant('convertUsersModal.status.unknown');
+          }
+          const remainingDays = Math.max(this.daysToConvert - moment().diff(convertDate, 'days'), 0);
+          return this.$translate.instant('convertUsersModal.status.autoConvert', { count: remainingDays }, 'messageformat');
+        },
+      },
     ];
 
     // grid option data
@@ -158,7 +176,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   // helper function for building grid options
-  private addGridColumns(grid, isPotentialList): void {
+  private addGridColumns(grid: uiGrid.IGridOptions, isPotentialList: boolean): void {
     grid.columnDefs = [{
       field: 'displayName',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
@@ -170,8 +188,21 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       },
     }, {
       field: 'statusText',
-      displayName: this.$translate.instant((isPotentialList) ? 'convertUsersModal.tableHeader.eligible' : 'convertUsersModal.tableHeader.status'),
+      displayName: this.$translate.instant('convertUsersModal.tableHeader.eligible'),
     }];
+
+    // Pending uses sort algo for status...
+    if (!isPotentialList) {
+      const statusCol = _.find(grid.columnDefs, { field: 'statusText' });
+      if (!_.isUndefined(statusCol)) {
+        statusCol.displayName = this.$translate.instant('convertUsersModal.tableHeader.status');
+        statusCol.sortingAlgorithm = (_a, _b, rowA, rowB) => {
+          const dateA = moment(_.get(rowA, 'entity.meta.accountStatusSetTime.transient'));
+          const dateB = moment(_.get(rowB, 'entity.meta.accountStatusSetTime.transient'));
+          return dateA.diff(dateB);
+        };
+      }
+    }
   }
 
   public exportCSV(): ng.IPromise<ICsvRow[]> {
@@ -182,15 +213,16 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       csv.push({
         name: this.$translate.instant('convertUsersModal.tableHeader.name'),
         email: this.$translate.instant('convertUsersModal.tableHeader.email'),
-        status: this.$translate.instant('convertUsersModal.tableHeader.status'),
+        status: this.$translate.instant('convertUsersModal.tableHeader.transient'),
       });
 
       // push row data
       _.forEach(this.getPendingUsersList(), function (o) {
+        const transientDate = new Date(_.get(o, 'meta.accountStatusSetTime.transient'));
         csv.push({
           name: o.displayName || '',
           email: o.userName || '',
-          status: o.statusText || '',
+          status: transientDate.toLocaleString(),
         });
       });
 
@@ -312,7 +344,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
   }
 
   public goToManageUsers(): void {
-    this.$state.go('users.manage.picker');
+    this.$state.go('users.manage.org');
   }
 
   public restoreConvertList(): void {

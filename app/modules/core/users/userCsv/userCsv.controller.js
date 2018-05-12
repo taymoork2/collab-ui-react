@@ -186,7 +186,7 @@ require('./_user-csv.scss');
 
     var rootState = $previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
+      rootState = 'users.manage.org';
     }
     vm.onBack = function () {
       Analytics.trackAddUsers(Analytics.eventNames.BACK);

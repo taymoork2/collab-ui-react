@@ -24,7 +24,7 @@
               <cs-select
               name="clusterCustomerSelect"
               ng-model="$ctrl.customerSelected"
-              options="$ctrl.customerList"
+              options="$ctrl.customerSelectOptions"
               filter="true"
               refresh-data-fn="$ctrl.onCustomerSearch(filter)"
               on-change-fn="$ctrl.onCustomerChanged()"

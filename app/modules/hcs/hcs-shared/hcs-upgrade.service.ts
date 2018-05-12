@@ -1,5 +1,5 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
-import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem } from './hcs-upgrade';
+import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem } from './hcs-upgrade';
 import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
@@ -8,6 +8,10 @@ interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IRe
 
 interface IClusterResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCluster>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IHcsCluster>>;
+}
+
+interface INodeResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServerItem>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServerItem>>;
 }
 
 interface ICustomerClustersResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCustomerClusters>> {}
@@ -26,6 +30,7 @@ export class HcsUpgradeService {
   private customerClustersResource: ICustomerClustersResource;
   private swProfileResource: ISwProfileResource;
   private appVersionResource: IApplicationVersionResource;
+  private nodeResource: INodeResource;
 
   /* @ngInject */
   constructor(
@@ -101,6 +106,10 @@ export class HcsUpgradeService {
       {
         get: getAction,
       });
+
+    this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {
+      update: updateAction,
+    });
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -204,7 +213,14 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public listAppVersions(): ng.IPromise <IApplicationVersion> {
+  public listAppVersions(): ng.IPromise<IApplicationVersion> {
     return this.appVersionResource.get().$promise;
+  }
+
+  public updateNodeSftp(nodeId: string, sftp: ISftpServerItem): ng.IPromise<any> {
+    return this.nodeResource.update({
+      partnerId: this.Authinfo.getOrgId(),
+      nodeId: nodeId,
+    }, sftp).$promise;
   }
 }

@@ -4,7 +4,7 @@ export class AutoAttendantPage {
     this.repeatMenu = 'Repeat this Menu';
     this.playSubmenu = 'Play Submenu';
     this.goBack = 'Go Back';
-    this.routeToQueue = 'Route to Cisco Spark Care';
+    this.routeToQueue = 'Route to Cisco Webex Care';
     this.key0 = '0';
     this.key1 = '1';
     this.key2 = '2';

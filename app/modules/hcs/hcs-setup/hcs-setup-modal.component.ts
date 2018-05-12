@@ -109,6 +109,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         }
         break;
       case HcsSetupModalCtrl.MAX_INDEX:
+        this.createSoftwareProfile();
         this.cancelRemoved = true;
         this.finish = true;
         this.finishDisable = false;

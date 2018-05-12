@@ -76,6 +76,7 @@ require('./_user-add.scss');
       msgRadio: false,
       careRadio: $scope.careRadioValue.NONE,
       initialCareRadioState: $scope.careRadioValue.NONE, // For generating Metrics
+      isK1Enabled: false,
     };
 
     $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
@@ -216,7 +217,7 @@ require('./_user-add.scss');
 
     var rootState = $previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
+      rootState = 'users.manage.org';
     }
     $scope.onBack = function (state) {
       var goToState = state || rootState;
@@ -749,6 +750,15 @@ require('./_user-add.scss');
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
       } else {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
+      }
+      initCareCheckbox();
+    }
+
+    function initCareCheckbox() {
+      if ($scope.radioStates.careRadio === $scope.careRadioValue.NONE || $scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+        $scope.radioStates.isK1Enabled = false;
+      } else {
+        $scope.radioStates.isK1Enabled = true;
       }
     }
 

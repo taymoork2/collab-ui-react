@@ -219,7 +219,7 @@
           // TODO: reverify after angular-ui-router upgrade
           $state.go('users.list').then(function () {
             $timeout(function () {
-              $state.go('users.manage.picker');
+              $state.go('users.manage.org');
             });
           });
         };

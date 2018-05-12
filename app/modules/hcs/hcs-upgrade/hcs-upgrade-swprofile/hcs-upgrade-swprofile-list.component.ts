@@ -70,9 +70,9 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
       template: '<hcs-delete-modal delete-fn="$ctrl.deleteFn()" dismiss="$dismiss()" modal-title="$ctrl.title" modal-description="$ctrl.description"></hcs-delete-modal>',
       controller: () => {
         return {
-          deleteFn: () => this.deleteSwProfileService(),
+          deleteFn: () => this.deleteSwProfileService(_.get(swProfile, 'uuid')),
           title: this.$translate.instant('common.delete') + ' ' + swProfile.name + '?',
-          description: this.$translate.instant('hcs.sftp.deleteModalDesc'),
+          description: this.$translate.instant('hcs.softwareProfiles.deleteModalDesc'),
         };
       },
       modalClass: 'hcs-delete-modal-class',
@@ -83,7 +83,9 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
     });
   }
 
-  public deleteSwProfileService(): void {}
+  public deleteSwProfileService(uuid: string): void {
+    this.HcsUpgradeService.deleteSoftwareProfile(uuid).then(() => this.listSwProfile());
+  }
 
   public editSwProfile(swprofile: ISoftwareProfile): void {
     this.$state.go('hcs.swprofile-edit', { swprofile: swprofile });

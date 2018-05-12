@@ -41,7 +41,7 @@
               <p class="h4" title="Card Name">{{swprofile.name}}</p>
               <div class="right card-icon-div">
                 <button type="button" class="close"
-                  ng-click="$ctrl.deleteSwProfile()"
+                  ng-click="$ctrl.deleteSwProfile(swprofile, $event)"
                   ng-keydown=""
                   aria-label="{{::'common.delete' | translate}}"></button>
               </div>

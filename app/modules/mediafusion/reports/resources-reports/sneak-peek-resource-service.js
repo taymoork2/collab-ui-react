@@ -14,6 +14,7 @@
     function getClusterAvailabilitySneekPeekValues(response, clusterMap, clusterAvailability, clusterId) {
       var values = [];
       var valuesArray = [];
+      var liveArray = response;
       var isShow, cluster_name;
       _.each(response.data, function (val) {
         cluster_name = _.findKey(clusterMap, function (clusterValue) {
@@ -23,6 +24,8 @@
           values.push({ key: cluster_name, value: val.value });
         }
       });
+      liveArray = values;
+      liveArray = _.sortBy(liveArray, ['key'], ['asc']);
       values = _.orderBy(values, ['value'], ['asc']);
       _.each(values, function (clusterList) {
         var c_name = clusterList.key;
@@ -37,6 +40,7 @@
       var availabilityTooltipOptions = {
         isShow: isShow,
         values: valuesArray,
+        liveArray: liveArray,
       };
       return availabilityTooltipOptions;
     }

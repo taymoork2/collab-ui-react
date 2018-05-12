@@ -121,19 +121,19 @@ var manageUsersPage = function () {
     assignableServices: {
       licenses: {
         messaging: {
-          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Spark Messaging')).first(),
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Webex Messaging')).first(),
           firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="MS_"]')).first(),
         },
         meeting: {
-          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="CF_"]', 'Cisco Spark 25 party Meetings')).first(),
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="CF_"]', 'Cisco Webex 25 party Meetings')).first(),
           firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="CF_"]')).first(),
         },
       },
     },
     templateSummary: {
       summary: element(by.css('auto-assign-template-summary')),
-      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark Messaging')),
-      meetingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Spark 25 party Meetings')),
+      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Webex Messaging')),
+      meetingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Webex 25 party Meetings')),
     },
   };
 };
