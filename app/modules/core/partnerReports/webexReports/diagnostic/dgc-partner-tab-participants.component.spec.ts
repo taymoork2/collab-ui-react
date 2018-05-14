@@ -11,7 +11,7 @@ describe('Component: DgcPartnerTabParticipants', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService', 'Notification');
+    this.injectDependencies('$q', 'Notification', 'PartnerSearchService');
 
     initSpies.apply(this);
   });

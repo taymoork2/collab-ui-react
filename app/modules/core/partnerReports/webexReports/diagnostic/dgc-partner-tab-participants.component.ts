@@ -1,14 +1,13 @@
 import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms } from './partner-search.service';
-import { IDevice, IParticipant } from './partner-search.interfaces';
+import { ICallType, IParticipant } from './partner-search.interfaces';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
 class ParticipantsController implements ng.IComponentController {
-
-  public gridData: any; //TODO use base type
+  public gridData: IParticipant[];
   public gridOptions = {};
   public conferenceID: string;
   public loading = true;
@@ -39,38 +38,42 @@ class ParticipantsController implements ng.IComponentController {
   private getParticipants(): void {
     this.PartnerSearchService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
-        this.gridData = _.map(res, (participant: IParticipant) => {
-          const device = this.PartnerSearchService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
-          if (participant.platform === Platforms.TP && !device.name) {
-            device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
-          }
-          return _.assignIn({}, participant, {
-            phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
-            callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
-            platform_: _.get(device, 'name'),
-            duration: this.PartnerSearchService.getDuration(participant.duration),
-            endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
-            startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
-          });
-        });
-        this.loading = false;
+        this.gridData = this.getGridData(res);
         this.setGridOptions();
-
         this.detectAndUpdateDevice();
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
-        this.loading = true;
+      })
+      .finally(() => {
+        this.loading = false;
       });
+  }
+
+  private getGridData(participants: IParticipant[]): IParticipant[] {
+    return _.map(participants, (participant: IParticipant) => {
+      const device = this.PartnerSearchService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
+      if (participant.platform === Platforms.TP && !device.name) {
+        device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+      }
+      return _.assignIn({}, participant, {
+        phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
+        callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
+        platform_: _.get(device, 'name'),
+        duration: this.PartnerSearchService.getDuration(participant.duration),
+        endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
+        startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+      });
+    });
   }
 
   private detectAndUpdateDevice(): void {
     this.deviceLoaded = true;
-    this.gridData.forEach((item: IDevice) => {
+    this.gridData.forEach((item: ICallType) => {
       if (item.platform === Platforms.TP && !item.deviceCompleted) {
         this.deviceLoaded = false;
         this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
-          .then((res: any) => {
+          .then((res: ICallType) => {
             if (res.completed) {
               item.device = this.updateDevice(res);
             }
@@ -87,8 +90,8 @@ class ParticipantsController implements ng.IComponentController {
     }
   }
 
-  private updateDevice(deviceInfo: IDevice): string {
-    if (!_.isEmpty( deviceInfo.items)) {
+  private updateDevice(deviceInfo: ICallType): string {
+    if (!_.isEmpty(deviceInfo.items)) {
       const device = deviceInfo.items[0].deviceType;
       return device;
     }
