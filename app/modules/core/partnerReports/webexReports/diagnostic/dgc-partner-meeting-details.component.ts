@@ -26,6 +26,18 @@ interface IQuality {
   packetLoss: string;
 }
 
+interface IQualitySet {
+  startTime?: number;
+  endTime?: number;
+  qualities: {
+    startTime: number;
+    endTime: number;
+    quality: number;
+    tooltip: string,
+    source: string,
+  }[];
+}
+
 const LATENCY_SHOWUP = 999;
 const LOSSRATE_SHOWUP = 9.9;
 class MeetingDetailsController implements ng.IComponentController {
@@ -78,6 +90,12 @@ class MeetingDetailsController implements ng.IComponentController {
     this.data.currentQos = qos;
     this.tabType = qos === QosType.VOIP ? TabType.AUDIO : TabType.VIDEO;
     this.setData();
+
+    /**
+     * Improve the user experience, when users click the switch button,
+     * we need to give user a loading response in time.
+     * the loading state is not response to the page if without timeout
+     */
     this.$timeout(() => this.loading = false, 200);
   }
 
@@ -194,11 +212,10 @@ class MeetingDetailsController implements ng.IComponentController {
     return retryIds;
   }
 
-  private parseVoipQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): object {
-    const detail = {};
+  private parseVoipQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): IQualitySet {
+    const detail: IQualitySet = { qualities: [] };
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-    detail['qualities'] = [];
     _.forEach(detailItem.mmpQuality, quality => {
       detail['qualities'].push({
         startTime: quality.startTime * 1,
@@ -244,11 +261,10 @@ class MeetingDetailsController implements ng.IComponentController {
     return retryIds;
   }
 
-  private parseVideoQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): object {
-    const detail = {};
+  private parseVideoQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, mmpQuality: IQuality[] }): IQualitySet {
+    const detail: IQualitySet = { qualities: [] };
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-    detail['qualities'] = [];
     _.forEach(detailItem.mmpQuality, quality => {
       detail['qualities'].push({
         startTime: quality.startTime * 1,
@@ -295,12 +311,11 @@ class MeetingDetailsController implements ng.IComponentController {
     return retryIds;
   }
 
-  private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: IQuality[] }): object {
-    const detail = {};
+  private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: IQuality[] }): IQualitySet {
+    const detail: IQualitySet  = { qualities: [] };
     detail['cid'] = detailItem.callId;
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
-    detail['qualities'] = [];
 
     _.forEach(detailItem.tahoeQuality, quality => {
       detail['qualities'].push({
@@ -354,11 +369,10 @@ class MeetingDetailsController implements ng.IComponentController {
     return retryIds;
   }
 
-  private parseAudioDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, audioQos: { values: IQuality[] }[] }): object {
-    const audioDetail = {};
+  private parseAudioDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, audioQos: { values: IQuality[] }[] }): IQualitySet {
+    const audioDetail: IQualitySet = { qualities: [] };
     audioDetail['startTime'] = detailItem.connectionStartTime * 1;
     audioDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
-    audioDetail['qualities'] = [];
     _.forEach(detailItem.audioQos, audioQuality => {
       _.forEach(audioQuality.values, audioQualityValue => {
         audioDetail['qualities'].push({
@@ -373,11 +387,10 @@ class MeetingDetailsController implements ng.IComponentController {
     return audioDetail;
   }
 
-  private parseVideoDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, videoQos: { values: IQuality[] }[] }): object {
-    const videoDetail = {};
+  private parseVideoDetailQualities(detailItem: { connectionStartTime: number, connectEndTime: number, videoQos: { values: IQuality[] }[] }): IQualitySet {
+    const videoDetail: IQualitySet = { qualities: [] };
     videoDetail['startTime'] = detailItem.connectionStartTime * 1;
     videoDetail['endTime'] = detailItem.connectEndTime ? detailItem.connectEndTime * 1 : this.meetingEndTime;
-    videoDetail['qualities'] = [];
     _.forEach(detailItem.videoQos, videoQuality => {
       _.forEach(videoQuality.values, videoQualityValue => {
         videoDetail['qualities'].push({

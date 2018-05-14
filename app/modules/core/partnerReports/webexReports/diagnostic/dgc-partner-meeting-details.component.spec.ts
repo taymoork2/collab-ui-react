@@ -108,7 +108,7 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService', 'Notification', '$timeout');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService');
 
     this.PartnerSearchService.setStorage('webexOneMeeting', this.meeting);
   });
@@ -337,13 +337,15 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     expect(this.controller.audioLines['40337718'].length).toBe(0);
   });
 
-  it('should retry to send request', function () {
-    initComponent.call(this);
-    const mockData = { key: '0' };
-    const mockFn = function(param) { mockData.key = param; };
-    this.controller.retryRequest('voip', mockFn, ['40337718']);
-    this.$timeout.flush();
-    expect(mockData.key).toBe('40337718');
+  describe('retryRequest():', () => {
+    it('should retry to send request', function () {
+      initComponent.call(this);
+      const mockData = { key: '0' };
+      const mockFn = function(param) { mockData.key = param; };
+      this.controller.retryRequest('voip', mockFn, ['40337718']);
+      this.$timeout.flush();
+      expect(mockData.key).toBe('40337718');
+    });
   });
 
   describe('parseVoipQuality():', () => {
