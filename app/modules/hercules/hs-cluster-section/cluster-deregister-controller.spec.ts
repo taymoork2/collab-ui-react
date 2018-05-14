@@ -34,7 +34,7 @@ describe('ClusterDeregisterController', function () {
   });
 
   describe('Hybrid Services', function () {
-    it('should call the correct backend when deleting a hybrid media node', function () {
+    it('should call the correct backend when deleting a Video Mesh node', function () {
       this.initController({
         id: '456',
         targetType: 'mf_mgmt',

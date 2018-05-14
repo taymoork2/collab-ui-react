@@ -34,11 +34,11 @@ var MediaServicePage = function () {
   this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));
   this.emailNotificationsHeading = element(by.cssContainingText('.sub-section__label', 'Email Notifications'));
   this.videoQualityHeading = element(by.cssContainingText('.sub-section__label', 'Video Quality'));
-  this.deactivateServiceHeading = element(by.cssContainingText('.sub-section__label', 'Deactivate Hybrid Media Service'));
+  this.deactivateServiceHeading = element(by.cssContainingText('.sub-section__label', 'Deactivate Video Mesh Service'));
   this.documentationAndSoftware = element(by.cssContainingText('.sub-section__label', 'Documentation'));
   this.deactivateButton = element(by.cssContainingText('button', 'Deactivate'));
   this.emailNotificationInput = element(by.css('input[type="email"]'));
-  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Hybrid Media Service'));
+  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Video Mesh Service'));
   this.deactivateServiceModalCancelButton = element(by.css('button[ng-click="disableServiceDialog.cancel()"]'));
   this.invalidEmailTag = element(by.css('.invalid-tag'));
   this.clusterFirstTr = element(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows track by $index').row(0));
@@ -64,7 +64,7 @@ var MediaServicePage = function () {
   this.unifiedCMSIPTrunkTitle = element(by.cssContainingText('.section__title', 'Unified CM SIP Trunk'));
   this.clusterDeleteClusterTitle = element(by.cssContainingText('.section__title', 'Cluster'));
   this.deleteClusterButton = element(by.css('button[ng-click="$ctrl.deregisterCluster()"]'));
-  this.deleteClusterModalHeader = element(by.cssContainingText('.modal-title', 'Delete Hybrid Media Cluster'));
+  this.deleteClusterModalHeader = element(by.cssContainingText('.modal-title', 'Delete Video Mesh Cluster'));
   this.deleteClusterModalCancel = element(by.css('button[ng-click="$dismiss()"]'));
   this.adoptionTab = element(by.id('adoptionReports'));
   this.totallMeetsHeader = element(by.cssContainingText('.metrics-header', 'Total Number of Meetings'));
