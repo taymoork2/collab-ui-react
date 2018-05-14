@@ -1,5 +1,6 @@
 import { OfferType } from 'modules/core/shared/offer-name';
 import { OverviewEvent } from 'modules/core/overview/overview.keys';
+import { WebexProvisioningEvent } from 'modules/core/overview/provisioning.keys';
 import { LicenseCardHelperService } from 'modules/core/overview/license-card';
 import { HealthStatusID } from 'modules/core/health-monitor';
 import { LicenseCardController, ISettingsUrlObject } from 'modules/core/overview/license-card/license-card.component';
@@ -42,7 +43,7 @@ class MeetingCardController extends LicenseCardController {
     });
 
     this.deregisterProvisioningEventHandler = this.$rootScope.$on(OverviewEvent.MEETING_SETTINGS_PROVISIONING_STATUS, (_event, productProvStatus) => {
-      if (_.some(productProvStatus, { status: 'PENDING_PARM', productName: 'WX' })) {
+      if (_.some(productProvStatus, { status: WebexProvisioningEvent.STATUS_PENDING_PARM, productName: WebexProvisioningEvent.WEBEX_PRODUCT_NAME })) {
         this.needsWebExSetup = true;
       } else if (this.someMeetingsAreNotProvisioned(productProvStatus)) {
         this.isProvisioning = true;
@@ -51,8 +52,8 @@ class MeetingCardController extends LicenseCardController {
   }
 
   private someMeetingsAreNotProvisioned(productProvStatus) {
-    return _.some(productProvStatus, function (status: any) {
-      return status.productName === 'WX' && status.status !== 'PROVISIONED';
+    return _.some(productProvStatus, (status: any) => {
+      return status.productName === 'WX' && status.status !== WebexProvisioningEvent.STATUS_PROVISIONED;
     });
   }
 

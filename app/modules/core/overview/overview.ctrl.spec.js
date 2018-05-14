@@ -179,7 +179,6 @@ describe('Controller: OverviewCtrl', function () {
         return card.name || card.title;
       });
       expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.care.title')).toBeTruthy();
