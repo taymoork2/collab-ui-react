@@ -70,7 +70,7 @@
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
         userInfo: 'user_info=%s',
       },
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=',
+      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=',
     };
 
     return {
@@ -213,7 +213,7 @@
     }
 
     function getOauthServiceType() {
-      return 'spark';
+      return 'common';
     }
   }
 }());
