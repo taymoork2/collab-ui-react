@@ -1,17 +1,30 @@
-<div class="messagebox-backdrop">
-  <div class="message-box">
-    <section class="message-box__content">
-      <i class="message-box__icon icon-circle-comp-negative"></i>
-      <h3 class="message-box__title message-box__title--alert" translate="loginErrorPage.title"></h3>
-      <h5 class="message-box__details" translate="loginErrorPage.text"></h5>
-    </section>
-    <footer class="message-box__footer">
-      <p>
-        <button cs-btn class="btn btn--people btn--large message-box__btn" role="button" ng-click="stateRedirect.logout()" loading="stateRedirect.loading">
-          <span translate="stateRedirect.tryAgainButton"></span>
-        </button>
-      </p>
-      <i class="icon icon-cisco-logo icon-2x"></i>
-    </footer>
+<cui-panel type="message">
+  <div class="cui-panel__main">
+    <div class="cui-panel__image">
+      <i class="icon icon-circle-comp-negative"></i>
+    </div>
+    <h3 class="cui-panel__title" translate="loginErrorPage.title"></h3>
+    <h5 class="cui-panel__message" translate="loginErrorPage.text"></h5>
+    <div class="cui-panel__cta">
+      <button
+        cs-btn
+        class="cui-button cui-button--blue"
+        role="button"
+        ng-click="stateRedirect.logout()"
+        loading="stateRedirect.loading">
+        <span translate="stateRedirect.tryAgainButton"></span>
+      </button>
+    </div>
   </div>
-</div>
+
+  <div class="cui-panel__footer">
+    <div class="footer__logo">
+      <i class="icon icon-cisco-logo"></i>
+    </div>
+    <div class="footer__copyright">
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> |
+      <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a>
+      &copy; 2018 {{ 'loginPage.copyright' | translate }}
+    </div>
+  </div>
+</cui-panel>
