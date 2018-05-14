@@ -140,7 +140,7 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     spyOn(this.PartnerSearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getJoinMeetingTime();
-    expect(this.controller.circleColor['50335745']).toBe('Good');
+    expect(this.controller.circleJoinTime['50335745']).toBe('Good');
   });
 
   it('should get voip session detail when data completed', function () {
@@ -366,10 +366,9 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
     it('should get pstn quality: Fail', function () {
       initComponent.call(this);
-      expect(this.controller.parsePSTNQuality(0)).toBe(2);
+      expect(this.controller.parsePSTNQuality(3)).toBe(2);
     });
   });
-
 
   describe('parseVideoQuality():', () => {
     it('should get video quality: Poor', function () {

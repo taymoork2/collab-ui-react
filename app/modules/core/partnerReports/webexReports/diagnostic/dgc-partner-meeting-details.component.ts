@@ -455,13 +455,13 @@ class MeetingDetailsController implements ng.IComponentController {
   private parsePSTNQuality(audioMos: string): number {
     const mos = _.parseInt(audioMos);
     if (mos >= MosType.GOOD) {
-      return MosType.GOOD;
+      return Quality.GOOD;
     }
     if (mos >= MosType.FAIR) {
-      return MosType.FAIR;
+      return Quality.FAIR;
     }
-    if (mos > MosType.POOR) {
-      return MosType.POOR;
+    if (mos >= MosType.POOR) {
+      return Quality.POOR;
     }
     return Quality.NA;
   }
