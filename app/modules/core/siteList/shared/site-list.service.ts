@@ -4,17 +4,12 @@
 // - replace instances of `any` with better TS types as-appropriate
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
-interface IManagedSite {
-  siteUrl: string;
-  subscriptionId: string;
-}
-
 // TODO: The state fetching and mutation flow go against best practices.
 // Need to refactor into pure functions and a loosely coupled api.
 export class SiteListService {
 
   public siteRows: any;
-  public managedSites: IManagedSite[];
+  public managedSubscriptions: string[];
 
   /* @ngInject */
   constructor(
@@ -49,7 +44,7 @@ export class SiteListService {
     }
     this.getPendingSiteUrls();
     this.configureGrid();
-    this.managedSites = this.getManagedSites();
+    this.managedSubscriptions = this.getManagedSubscriptions();
   }
 
   public addSiteRow(newSiteRow) {
@@ -73,31 +68,20 @@ export class SiteListService {
   }
 
   /**
-   * Webex site is managed by logged in account.
-   */
-  public canManageSite(siteUrl: string): boolean {
-    // TODO: Remove once data structures are guaranteed to be in sync (i.e Observables)
-    if (_.isUndefined(this.managedSites)) {
-      this.managedSites = this.getManagedSites();
-    }
-    return _.some(this.managedSites, (site) => site.siteUrl === siteUrl);
-  }
-
-  /**
    * Subscription is managed by logged in account.
    */
   public canManageSubscription(subscriptionId: string): boolean {
     // TODO: Remove once data structures are guaranteed to be in sync (i.e Observables)
-    if (_.isUndefined(this.managedSites)) {
-      this.managedSites = this.getManagedSites();
+    if (_.isUndefined(this.managedSubscriptions)) {
+      this.managedSubscriptions = this.getManagedSubscriptions();
     }
-    return _.some(this.managedSites, (site) => site.subscriptionId === subscriptionId);
+    return _.includes(this.managedSubscriptions, subscriptionId);
   }
 
   /**
    * Sites current account has permission to manage (allowSiteManagement).
    */
-  public getManagedSites(): IManagedSite[] {
+  public getManagedSubscriptions(): string[] {
     return _
       .chain(this.Authinfo.getCustomerAccounts())
       .filter((customerAccount) => customerAccount.allowSiteManagement === true)
@@ -112,12 +96,8 @@ export class SiteListService {
         }
         return licenses;
       }, [])
-      .flatMap((license: any) => ({
-        siteUrl: license.siteUrl,
-        subscriptionId: license.billingServiceId,
-      }))
-      .filter(site => !_.isUndefined(site.siteUrl))
-      .uniqBy('siteUrl')
+      .flatMap((license: any) => license.billingServiceId)
+      .uniq()
       .value();
   }
 

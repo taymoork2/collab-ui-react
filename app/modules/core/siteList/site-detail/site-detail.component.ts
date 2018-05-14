@@ -17,7 +17,7 @@ class SiteDetailComponentCtrl implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.canManage = this.SiteListService.canManageSite(this.selectedSite.siteUrl);
+    this.canManage = this.SiteListService.canManageSubscription(this.selectedSite.license.billingServiceId);
     this.isEnterpriseSubscription = this.SiteListService.isSubscriptionEnterprise(this.selectedSite.license);
   }
 
