@@ -8402,6 +8402,16 @@
         "virtualAssistantSelector": "Customer Virtual Assistant",
         "virtualAssistantSelectText": "Select ..."
       },
+      "statusMessage": {
+        "title": "Status Messages",
+        "desc": "Configure the status messages to be sent to customer on Messages app",
+        "waiting": "Waiting",
+        "waitingDefault": "Let me find someone to help you.",
+        "waitingHelpText": "Customers see this while waiting for an agent to respond to their message. If you are using a Customer Virtual Assistant, this message indicates transition from automated support to human interaction.",
+        "leftTheChat": "Left the Chat",
+        "leftTheChatDefault": "Your conversation with the agent is now closed. Send a new message when you are ready to ask another question.",
+        "leftTheChatHelpText": "Customers see this when an agent exits the chat and ends the interaction."
+      },
       "summary": {
         "abcDesc": "You have configured {{ name }}.\nClick Finish to save the configuration.",
         "abcDescEdit": "You have edited {{ name }}.\nClick Finish to save the configuration.",
