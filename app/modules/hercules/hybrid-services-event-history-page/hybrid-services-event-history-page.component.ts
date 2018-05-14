@@ -243,11 +243,9 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     return this.HybridServicesClusterService.getAll()
       .then((clusters) => {
         let clusterOptions = _.clone(this.defaultClusterOptions);
-        console.log('')
         // Add clusters to menu items and, and at the same time
         // populate the "nodes" and "services" properties which will serve for the other dropdowns
         _.forEach(clusters, cluster => {
-          console.log('cluster.name', cluster.name);
           const services: IServiceOption[] = _.chain(cluster.connectors)
             .map(connector => ({
               // label: this.$translate.instant(`hercules.shortConnectorNameFromConnectorType.${connector.connectorType}`),

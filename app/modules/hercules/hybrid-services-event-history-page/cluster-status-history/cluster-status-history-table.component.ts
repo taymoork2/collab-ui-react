@@ -50,16 +50,13 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     const updateItems = (items: IHybridServicesEventHistoryItem[]) => {
       this.allEvents = items;
       this.loadingPage = false;
-      console.log('updateItems called !!!!, this.allEvents.length=', this.allEvents.length);
     };
 
     this.HybridServicesEventHistoryService.getAllEvents(options, undefined, updateItems, undefined)
       .then((data) => {
-        data ? console.log('data lenght=', data.items.length) : console.log('data empty !!!!!');
         this.allEvents = _.clone(data ? data.items : []);
       })
       .catch((error) => {
-        console.log(error);
         this.Notification.errorWithTrackingId(error, 'hercules.eventHistory.cannotReadEventData');
       })
       .finally(() => {

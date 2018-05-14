@@ -204,11 +204,7 @@ export class HybridServicesEventHistoryService {
     const fromTimestamp = options.eventsSince || moment().subtract(7, 'days').toISOString();
     const toTimestamp = options.eventsTo || moment().toISOString();
     let url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${options.orgId || this.Authinfo.getOrgId()}/events/`;
-
-    console.log('next=', next);
     const diffInHours = moment(toTimestamp).diff(moment(fromTimestamp)) / (60000 * 60);
-    console.log(diffInHours);
-
 
     if (diffInHours > 24 * 7) {
       // If we are asking the API for more than 7 days, we need to issue several request
@@ -217,23 +213,16 @@ export class HybridServicesEventHistoryService {
       let tempOptions: IGetAllEventsOptions | null = options;
       if (next !== undefined) {
         url = next;
-        console.log('url=', url);
         tempOptions = null;
       }
       return this.getEvents(url, tempOptions, moment(toTimestamp).subtract(7, 'days').toISOString(), toTimestamp)
         .then((response) => {
-          console.log(moment('earliest=', response.earliestTimestampSearched));
-          console.log(moment('eventsSince=', options.eventsSince));
           if (moment(response.earliestTimestampSearched) > moment(options.eventsSince)) {
             items = items ? items.concat(response.items) : [];
-            console.log('service says items.length=', items.length);
             updateItems(items);
-            console.log('iterating with url=', response.paging.next);
 
             return this.getAllEvents(options, response.paging.next, updateItems, items);
-            // return this.$q.resolve(this.getAllEvents(options, response.paging.next));
           }
-          // return this.$q.resolve(null);
           let processedEvents: IHybridServicesEventHistoryData | null = null;
           if (items) {
             processedEvents = {
@@ -244,7 +233,6 @@ export class HybridServicesEventHistoryService {
           }
 
           return this.$q.resolve(processedEvents);
-          // return this.$q.resolve(this.getEvents(url, tempOptions, undefined, undefined));
         });
     } else {
       return this.getEvents(url, options, fromTimestamp, toTimestamp);
