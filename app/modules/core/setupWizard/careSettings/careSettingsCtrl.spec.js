@@ -90,7 +90,6 @@ describe('CareSettingsCtrl', function () {
     this.$httpBackend.flush();
 
     this.SunlightConfigService.onboardJwtApp.and.returnValue(this.$q.reject({ status: 404 }));
-    //spyOn(this.SunlightConfigService, 'aaOnboard').and.returnValue(this.$q.resolve('fake aaOnboard response'));
     expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
     this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
     this.controller.onboardToCare();

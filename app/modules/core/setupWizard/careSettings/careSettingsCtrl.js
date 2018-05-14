@@ -167,7 +167,6 @@ var HttpStatus = require('http-status-codes');
     function getOnboardingStatus(result) {
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      //vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
       if (vm.careSetupDoneByAdmin) {
         onboardingStatus = onboardingDoneByAdminStatus(result);
       } else {
@@ -196,9 +195,7 @@ var HttpStatus = require('http-status-codes');
       var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
-      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+      } else {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
