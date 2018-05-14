@@ -35,6 +35,10 @@ var VirtualAssistantTemplateCreation = function () {
   // Avatar upload/preview
   this.avatarUpload = element(by.id('avatarUpload'));
   this.avatarPreview = element(by.id('avatarPreview'));
+  
+  // Dialogflow Input Context
+  this.dialogflowInputContextForm = element(by.id('fieldsetFormId'));
+  this.dialogflowInputContextFieldInput1 = element(by.id('fieldInput1'));
 
   // Summary Page
   this.finishBtn = element(by.id('vaSetupFinishBtn'));

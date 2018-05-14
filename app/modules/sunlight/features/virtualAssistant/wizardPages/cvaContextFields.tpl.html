@@ -1,0 +1,89 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('contextFields.title')}}</span>
+  </div>
+  <div>
+    <h6 class="h6 ct-title-desc">{{$ctrl.getText('contextFields.descStart')}}
+      <a href="http://www.cisco.com/go/cva-integrate" target="_blank">{{$ctrl.getText('contextFields.descLearnMoreLink')}}</a>
+      <span>{{$ctrl.getText('contextFields.descFinal')}}</span>
+    </h6>
+  </div>
+  <div class="modal-body context-va-body context-va-box">
+    <form id="fieldsetFormId" name="fieldsetForm" autocomplete="off">
+        <div class="context-modal-content">
+          <!-- Search fields typeahead input box or error messages-->
+         <div class="typeahead-search">
+            <div class="default-state cs-input-group">
+              <span>
+                <i class="icon icon-search"></i>
+                <input id="fieldInput1" ng-model="$ctrl.cvaInputContext.selectedField" class="context-search-input"
+                  ng-class="{'error': $ctrl.error}"
+                  typeahead="field for field in $ctrl.cvaInputContext.allSelectableFields | filter:{id:$viewValue}"
+                  typeahead-template-url="fieldTemplate.html"
+                  typeahead-on-select="$ctrl.cvaInputContext.selectField($item)"
+                  placeholder="{{$ctrl.getText('contextFields.searchText')}}"
+                  typeahead-wait-ms="500"
+                  ng-disabled="!$ctrl.cvaInputContext.isEnableFieldSelection()"
+                  focus-on/>
+              </span>
+            </div>
+            <script type="text/ng-template" id="fieldTemplate.html">
+              <div class="field-drop-down">
+                <span class="field-drop-down-id" ng-bind-html="match.label.id | typeaheadHighlight:query" ng-if="match.label.id"></span>
+                <span class="field-drop-down-fieldinfo" ng-bind-html="match.label.fieldInfo | typeaheadHighlight:query" ng-if="match.label.fieldInfo"></span>
+              </div>
+            </script>
+          </div>
+
+          <!-- If load of fields failed, then, show error and allow for retry -->
+          <div  ng-if="$ctrl.cvaInputContext.isLoadFailure()" class="context-retry-error">
+            <i class="icon icon-error"></i>
+            <span translate="context.dictionary.fieldsetPage.loadFailure" class="failure-message"></span>
+            <button translate="common.retry" class="retry-action" ng-click="$ctrl.cvaInputContext.fetchData()" ng-disabled="$ctrl.cvaInputContext.fetchInProgress"></button>
+          </div>
+
+          <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
+          <div class="no-results">
+            <span ng-if="$ctrl.cvaInputContext.noMatches()" translate="context.dictionary.fieldPage.noneFound"></span>
+            <span ng-if="$ctrl.cvaInputContext.noMoreFields()" translate="context.dictionary.fieldsetPage.noFields"></span>
+            <span ng-if="$ctrl.cvaInputContext.isMaxFields()" translate="context.dictionary.fieldPage.limitReached"></span>
+          </div>
+
+          <!-- List of selected fields -->
+          <div class="conditionalScroll">
+            <div ng-repeat="field in $ctrl.cvaInputContext.associatedFields">
+              <div class="field-list-item-wrapper">
+                <div class="btn btn--white btn--expand field-list-item" enabled>
+                  <span class="column-one">{{field.contextFieldId}}</span>
+                  <span class="column-two">
+                    <div>
+                      <input id="fieldInpu3"
+                             autocomplete="off"
+                             ng-model="field.contextAssociation"
+                             placeholder="Enter Dialogflow context name here"
+                             ng-change="$ctrl.cvaInputContext.validateInput(field)"
+                             ng-class="!$ctrl.cvaInputContext.isLineError(field.contextFieldId) ? 'context-input' : 'context-input-error'"
+                             required
+                             focus-on/>
+                    </div>
+                    <div class="context-va-error"
+                            ng_if="$ctrl.cvaInputContext.isLineError(field.contextFieldId)"
+                            ng-switch="$ctrl.cvaInputContext.getLineError(field.contextFieldId)"
+                            block-view="true">
+                          <i class="icon icon-error"></i>
+                          <span ng-switch-when="errorMaxContextLength"> {{$ctrl.getText('contextFields.errorMaxContextLength')}}</span>
+                          <span ng-switch-when="errorMinContextLength"> {{$ctrl.getText('contextFields.errorMinContextLength')}}</span>
+                          <span ng-switch-when="errorInvalidCharacters"> {{$ctrl.getText('contextFields.errorInvalidCharacters')}}</span>
+                    </div>
+                  </span>
+                  <span class="column-three">
+                    <i ng-click="$ctrl.cvaInputContext.removeFieldFromList(field, fieldsetForm)" class="icon icon-exit"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
