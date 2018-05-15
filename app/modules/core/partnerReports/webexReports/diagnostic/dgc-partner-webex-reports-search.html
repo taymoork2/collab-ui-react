@@ -20,12 +20,12 @@
                    ng-blur="$ctrl.onBlur();"
                    ng-keyup="$ctrl.onKeySearch($event)"
                    placeholder="{{::'webexReports.placeholder-text' | translate}}" >
-            <i class="icon icon-exit-outline clear" ng-click="$ctrl.searchStr = ''; $ctrl.store.searchStr = ''; $ctrl.gridData = []; "></i>
+            <i class="icon icon-exit-outline clear" ng-click="$ctrl.onClickClearIcon();"></i>
           </div>
         </div>
         <i class="icon icon-cal data-icon-i" ng-show="!$ctrl.isDatePickerShow" ng-click="$ctrl.isDatePickerShow = !$ctrl.isDatePickerShow" ></i>
         <span ng-show="$ctrl.isDatePickerShow"  class="span-flex ng-hide">
-          <div class="tk-example-datepicker start-time" >
+          <div class="start-time" >
             <div class="example-indent"
               ng-click="$ctrl.onChangeDate()"
               tooltip-class="tn-search-error"
@@ -46,7 +46,7 @@
             </div>
           </div>
           <span class="data-span" translate="webexReports.to"></span>
-          <div class="tk-example-datepicker end-time">
+          <div class="end-time">
             <div class="example-indent" ng-click="$ctrl.onChangeDate()">
               <cs-datepicker
                 ng-if="$ctrl.endDate"
@@ -66,13 +66,10 @@
         ></dgc-partner-time-zone>
       </div>
     </div>
-
     <div class="gridStyle col-md-12" ui-grid="$ctrl.gridOptions" ui-grid-selection></div>
-
     <div class="grid-refresh" ng-if="$ctrl.isLoadingShow">
       <i class="icon icon-spinner icon-3x"></i>
     </div>
-
     <div class="search-info" ng-show="!$ctrl.gridData.length && !$ctrl.isLoadingShow">
       <h2 translate="webexReports.search-info-title"></h2>
       <h4 translate="webexReports.search-info"></h4>

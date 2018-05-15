@@ -1,7 +1,7 @@
 <div class="timeline">
   <tabset type="pills" class="timeline-tab">
-    <tab heading="{{'webexReports.audio' | translate}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VOIP)"></tab>
-    <tab heading="{{'webexReports.video' | translate}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VIDEO)"></tab>
+    <tab heading="{{::('webexReports.audio' | translate)}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VOIP)"></tab>
+    <tab heading="{{::('webexReports.video' | translate)}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VIDEO)"></tab>
   </tabset>
 
   <dgc-partner-time-line
@@ -9,7 +9,7 @@
     cmr-data="$ctrl.cmrData"
     pstn-data="$ctrl.pstnData"
     line-color="$ctrl.lineColor"
-    circle-color="$ctrl.circleColor"
+    circle-color="$ctrl.circleJoinTime"
     call-legs-data="$ctrl.callLegsData"
     line-data="$ctrl.lineData"
     tab-type="$ctrl.tabType"
@@ -24,7 +24,7 @@
   <ul class="overviewInfo">
     <li>
       <h6 translate="webexReports.created"></h6>
-      <p><span >{{$ctrl.overview.createTime_}}</span></p>
+      <p><span>{{$ctrl.overview.createTime_}}</span></p>
     </li>
     <li>
       <h6 translate="webexReports.site"></h6>
@@ -81,7 +81,7 @@
               tooltip-placement="top">
             </i>
         </h6>
-        <p class="{{$ctrl.overview.screenShare ? 'green-color' : ''}}">{{$ctrl.overview.screenShare_}}</p>
+        <p ng-class="{ 'green-color': $ctrl.overview.screenShare}">{{::$ctrl.overview.screenShare_}}</p>
       </li>
       <li>
         <h6>
@@ -91,7 +91,7 @@
               tooltip-placement="top">
             </i>
         </h6>
-        <p class="{{$ctrl.overview.recording ? 'green-color' : ''}}">{{$ctrl.overview.recording_}}</p>
+        <p ng-class="{ 'green-color': $ctrl.overview.recording}">{{::$ctrl.overview.recording_}}</p>
       </li>
   </ul>
 </div>
