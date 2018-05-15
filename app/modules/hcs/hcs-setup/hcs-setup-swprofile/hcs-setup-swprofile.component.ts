@@ -114,7 +114,12 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   public processChange(typeApp: string, name: string) {
     if (!_.isUndefined(this.changedProfile) && this.changedProfile.applicationVersions) {
       const ver: ISoftwareAppVersion = _.find(this.getAppVersion(typeApp), { fileName: name });
-      this.changedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
+      const appVer: ISoftwareAppVersion = _.find(this.changedProfile.applicationVersions, { typeApplication: typeApp });
+      if (appVer) {
+        appVer.uuid = ver.uuid;
+      } else {
+        this.changedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
+      }
     }
     this.onChangeFn({
       swprofile: this.changedProfile,

@@ -75,6 +75,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   private fileData: string;
   private fileName: string;
+  private fileChecksum: string;
   private exactMatchCsv = false;
   private requestedTaskId?: string;
 
@@ -133,6 +134,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.requestedTaskId = _.get(this.activeTask, 'id');
     this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
     this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
+    this.fileChecksum = _.get<string>(this.$stateParams, 'job.fileChecksum', undefined);
     this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
     this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
   }
@@ -142,7 +144,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       return this.$q.resolve();
     }
 
-    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
+    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.fileChecksum, this.exactMatchCsv)
       .then(importedTask => {
         this.activeTask = importedTask;
         this.requestedTaskId = importedTask.id;

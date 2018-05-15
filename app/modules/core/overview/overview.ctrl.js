@@ -535,6 +535,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
 
         SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
           forwardEvent('provisioningEventHandler', productProvStatus);
+          $rootScope.$emit(OverviewEvent.MEETING_SETTINGS_PROVISIONING_STATUS, productProvStatus);
         });
       }
     }

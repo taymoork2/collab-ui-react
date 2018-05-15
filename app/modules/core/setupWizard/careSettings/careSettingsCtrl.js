@@ -24,7 +24,6 @@ var HttpStatus = require('http-status-codes');
 
     vm.defaultQueueStatus = vm.status.UNKNOWN;
     vm.csOnboardingStatus = vm.status.UNKNOWN;
-    vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
     vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
     vm.cesOnboardingStatus = vm.status.UNKNOWN;
@@ -43,14 +42,6 @@ var HttpStatus = require('http-status-codes');
         promises.onBoardCS.then(function (result) {
           if (result.status === HttpStatus.ACCEPTED) {
             vm.csOnboardingStatus = vm.status.SUCCESS;
-          }
-        }).catch(_.noop);
-      }
-      if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
-        promises.onBoardAA = SunlightConfigService.aaOnboard();
-        promises.onBoardAA.then(function (result) {
-          if (result.status === HttpStatus.NO_CONTENT) {
-            vm.aaOnboardingStatus = vm.status.SUCCESS;
           }
         }).catch(_.noop);
       }
@@ -129,51 +120,11 @@ var HttpStatus = require('http-status-codes');
       poller.then(processTimeout);
     }
 
-    function startPollingForAA() {
-      if (!_.isUndefined(poller)) return;
-
-      vm.errorCount = 0;
-      poller = $interval(setViewModelStateForAAOnboardToCare, pollInterval, pollRetryCount);
-      poller.then(processTimeout);
-    }
-
     function stopPolling() {
       if (!_.isUndefined(poller)) {
         $interval.cancel(poller);
         poller = undefined;
       }
-    }
-
-    function onboardAAToCare() {
-      FeatureToggleService.supports(FeatureToggleService.features.huronAAContextService).then(function (results) {
-        if (results) {
-          AutoAttendantConfigService.cesOnboard().then(function (result) {
-            if (result.status === HttpStatus.NO_CONTENT) {
-              startPollingForAA();
-            } else if (result.status === 226) {
-              Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-              vm.state = vm.ONBOARDED;
-              enableNext();
-            }
-          })
-            .catch(function (error) {
-              if (error.status === 409) {
-                startPollingForAA();
-              } else {
-                vm.state = vm.NOT_ONBOARDED;
-                Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
-              }
-            });
-        } else {
-          Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-          vm.state = vm.ONBOARDED;
-          enableNext();
-        }
-      })
-        .catch(function () {
-          Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
-          vm.state = vm.NOT_ONBOARDED;
-        });
     }
 
     function processOnboardStatus() {
@@ -182,7 +133,9 @@ var HttpStatus = require('http-status-codes');
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
             stopPolling();
-            onboardAAToCare();
+            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
+            vm.state = vm.ONBOARDED;
+            enableNext();
             break;
           case vm.status.FAILURE:
             Notification.errorWithTrackingId(result, $translate.instant('firstTimeWizard.setUpCareFailure'));
@@ -214,7 +167,6 @@ var HttpStatus = require('http-status-codes');
     function getOnboardingStatus(result) {
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
       if (vm.careSetupDoneByAdmin) {
         onboardingStatus = onboardingDoneByAdminStatus(result);
       } else {
@@ -225,16 +177,12 @@ var HttpStatus = require('http-status-codes');
 
     function onboardingDoneByAdminStatus(result) {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
-      var aaOnboarded = onboardingStatusForAA();
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
       vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
-        && aaOnboarded === vm.status.SUCCESS) {
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
-      } else if (aaOnboarded !== vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = aaOnboarded;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
@@ -247,22 +195,10 @@ var HttpStatus = require('http-status-codes');
       var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = onboardingStatusForAA();
-      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+      } else {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
-    }
-
-    function onboardingStatusForAA() {
-      var status;
-      if (Authinfo.isCareVoice()) {
-        status = vm.aaOnboardingStatus;
-      } else {
-        status = vm.status.SUCCESS;
-      }
-      return status;
     }
 
     function enableNext() {
@@ -317,41 +253,6 @@ var HttpStatus = require('http-status-codes');
       } else {
         setVmStateFromSunlightState();
       }
-    }
-
-    function setViewModelStateForAAOnboardToCare() {
-      AutoAttendantConfigService.getCSConfig().then(function (result) {
-        var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus', vm.status.UNKNOWN);
-        switch (csOnboardingStatusForAA) {
-          case vm.status.SUCCESS:
-            Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
-            vm.state = vm.ONBOARDED;
-            enableNext();
-            break;
-          case vm.status.FAILURE:
-            vm.state = vm.NOT_ONBOARDED;
-            Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
-            stopPolling();
-            break;
-          case vm.status.INITIALIZING:
-            vm.state = vm.IN_PROGRESS;
-            break;
-          default:
-            Notification.errorWithTrackingId($translate.instant('firstTimeWizard.setUpCareFailure'));
-            vm.state = vm.NOT_ONBOARDED;
-            stopPolling();
-        }
-      })
-        .catch(function (error) {
-          if (error.status !== 404) {
-            Log.debug('Fetching Care setup status failed for AA: ', error);
-            if (vm.errorCount++ >= pollErrorCount) {
-              vm.state = vm.NOT_ONBOARDED;
-              Notification.errorWithTrackingId(error, $translate.instant('firstTimeWizard.setUpCareFailure'));
-              stopPolling();
-            }
-          }
-        });
     }
 
     function setVmStateFromSunlightState() {

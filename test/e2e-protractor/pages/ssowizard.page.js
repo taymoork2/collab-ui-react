@@ -37,7 +37,7 @@ var SSOWizardPage = function () {
   };
 
   this.expectSSOSucceeded = function () {
-    return expect($('.message-box__title').getText()).toContain('Single Sign-on succeeded.');
+    return expect($('.cui-panel__title').getText()).toContain('Single Sign-on succeeded.');
   };
 };
 

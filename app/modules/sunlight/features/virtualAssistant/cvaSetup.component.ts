@@ -31,7 +31,6 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   public maxTokenLength = 128;
   public tokenForm: ng.IFormController;
-  private tokenFormErrors = {};
 
   public template = {
     templateId: '',
@@ -172,52 +171,6 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       case 'vaSummary':
         this.unsetFocus();
         return 'hidden';
-    }
-  }
-
-  /**
-   * called when page corresponding to newState is loaded event
-   * @param {string} newState
-   */
-  public onPageLoaded(newState: string): void {
-    if (newState === 'cvaAccessToken' &&
-      this.isAccessTokenInvalid() &&
-      !_.isEmpty(this.tokenFormErrors) &&
-      !_.isEmpty(this.tokenForm)) {
-      // We've already visited this page and it had errors, so reinstate the messages for them. JIRA CA-104
-
-      const controller = this;
-      controller.tokenForm.tokenInput.$setValidity('invalidToken', false);
-      _.keys(controller.tokenFormErrors).forEach( function (key) {
-        controller.tokenForm.$error[key] = controller.tokenFormErrors[key];
-      });
-      controller.tokenFormErrors = {}; //Clear out as they've served their purpose
-    }
-
-    this.template.configuration.pages[newState].startTimeInMillis = Date.now();
-  }
-
-  /**
-   * conduct certain actions for the just before moving to previous page from another.
-   * @param {string} currentState State before moving to previous page.
-   */
-  public beforePreviousPage(currentState: string): void {
-    if (currentState === 'cvaAccessToken' &&
-      this.isAccessTokenInvalid() &&
-      !_.isEmpty(this.tokenForm)) {
-      // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
-
-      const controller = this;
-      _.keys(controller.tokenForm.$error).forEach(function (key) {
-        controller.tokenFormErrors[key] = controller.tokenForm.$error[key];
-      });
-    }
-    if (currentState === 'name' &&
-      _.isEmpty(this.template.configuration.pages.name.nameValue) &&
-      !_.isEmpty(this.nameForm) &&
-      !this.nameForm.$valid) {
-      //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.name.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
 

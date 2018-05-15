@@ -1,5 +1,5 @@
 import testModule from './index';
-import { WebexSiteManagementController } from './webexSiteManagementSetting.controller';
+import { WebexSiteManagementController } from './webex-site-management-setting.controller';
 
 describe('Controller: WebexSiteManagementController', function () {
   beforeEach(function () {

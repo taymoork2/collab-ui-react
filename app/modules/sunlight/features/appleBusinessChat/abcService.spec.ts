@@ -4,12 +4,15 @@ describe('Apple Business Chat Service', () => {
 
   const SERVICE_URL = 'testApp.ciscoservice.com/media-manager/v1/';
   const TEST_ORG_ID = 'my-test-org';
+  const TEST_WAITING_MESSAGE = 'test waiting message';
+  const TEST_LEFT_CHAT_MESSAGE = 'test left chat message';
+  const TEST_DEFAULT_MESSAGE = 'test default message';
   const TEST_ABC_NAME = 'test name';
   const TEST_CVA_ID = 'my-test-cva';
   const TEST_BUSINESS_ID = 'my-business-id';
   const ABC_CONFIG_URL = 'abc/config/organization/' + TEST_ORG_ID + '/businessId/' + TEST_BUSINESS_ID;
   const ABC_CONFIG_URL_REGEX = new RegExp('.*/' + ABC_CONFIG_URL);
-  let AbcService: AbcService, $httpBackend, $state;
+  let AbcService: AbcService, $httpBackend, $state, $translate;
 
   const spiedUrlConfig = {
     getMediaManagerUrl: jasmine.createSpy('getMediaManagerUrl').and.returnValue(SERVICE_URL),
@@ -35,6 +38,11 @@ describe('Apple Business Chat Service', () => {
     name: TEST_ABC_NAME,
     cvaId: TEST_CVA_ID,
     queueIds: [TEST_ORG_ID],
+    statusMessages: [{
+      locale: 'en-us',
+      waitingMessage: TEST_WAITING_MESSAGE,
+      leftChatMessage: TEST_LEFT_CHAT_MESSAGE,
+    }],
   };
 
   beforeEach(function () {
@@ -47,15 +55,17 @@ describe('Apple Business Chat Service', () => {
     });
   });
 
-  beforeEach(inject(function (_$httpBackend_, _AbcService_, _$state_) {
+  beforeEach(inject(function (_$httpBackend_, _AbcService_, _$state_, _$translate_) {
     $httpBackend = _$httpBackend_;
     AbcService = _AbcService_;
     $state = _$state_;
+    $translate = _$translate_;
   }));
 
   afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
+    $httpBackend = $state = $translate = undefined;
   });
 
   it('service Card goto Service should do just that', function () {
@@ -67,16 +77,34 @@ describe('Apple Business Chat Service', () => {
   });
 
   describe('addAbcConfig', () => {
-    it('should return after successful create', () => {
-      $httpBackend.expectPOST(ABC_CONFIG_URL_REGEX, {
-        name: TEST_ABC_NAME,
-        queueIds: [TEST_ORG_ID],
-      })
-      .respond(201, {}, { location: ABC_CONFIG_URL });
-
+    it('should return successful', () => {
+      $httpBackend.expectPOST(ABC_CONFIG_URL_REGEX, abcData).respond(201, {}, { location: ABC_CONFIG_URL });
       const expectedResponse = { businessId: TEST_BUSINESS_ID };
       let result = {};
-      AbcService.addAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID)
+      AbcService.addAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, TEST_WAITING_MESSAGE, TEST_LEFT_CHAT_MESSAGE, TEST_CVA_ID)
+        .then(function (response) {
+          result = { businessId: response.businessId };
+        });
+      $httpBackend.flush();
+      expect(result).toEqual(expectedResponse);
+    });
+
+    it('should return successful when there is neither waiting message nor left chat message defined', () => {
+      spyOn($translate, 'instant').and.returnValue(TEST_DEFAULT_MESSAGE);
+      const abcData2 = {
+        name: TEST_ABC_NAME,
+        cvaId: TEST_CVA_ID,
+        queueIds: [TEST_ORG_ID],
+        statusMessages: [{
+          locale: 'en-us',
+          waitingMessage: TEST_DEFAULT_MESSAGE,
+          leftChatMessage: TEST_DEFAULT_MESSAGE,
+        }],
+      };
+      $httpBackend.expectPOST(ABC_CONFIG_URL_REGEX, abcData2).respond(201, {}, { location: ABC_CONFIG_URL });
+      const expectedResponse = { businessId: TEST_BUSINESS_ID };
+      let result = {};
+      AbcService.addAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, '', '', TEST_CVA_ID)
         .then(function (response) {
           result = { businessId: response.businessId };
         });
@@ -86,7 +114,7 @@ describe('Apple Business Chat Service', () => {
 
     it('should reject if create fails', () => {
       $httpBackend.expectPOST(ABC_CONFIG_URL_REGEX, abcData).respond(500);
-      AbcService.addAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, TEST_CVA_ID)
+      AbcService.addAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, TEST_WAITING_MESSAGE, TEST_LEFT_CHAT_MESSAGE, TEST_CVA_ID)
         .then(function () {
           fail('AbcService.addAbcConfig should have rejected');
         }, function (errorResponse) {
@@ -122,13 +150,27 @@ describe('Apple Business Chat Service', () => {
   });
 
   describe('updateAbcConfig', () => {
-    it('should return after successful update', () => {
-      $httpBackend.expectPUT(ABC_CONFIG_URL_REGEX, abcData)
-        .respond(200, {}, { location: ABC_CONFIG_URL });
-      AbcService.updateAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, TEST_CVA_ID).catch(fail);
+    it('should return successful', () => {
+      $httpBackend.expectPUT(ABC_CONFIG_URL_REGEX, abcData).respond(200, {}, { location: ABC_CONFIG_URL });
+      AbcService.updateAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, TEST_WAITING_MESSAGE, TEST_LEFT_CHAT_MESSAGE, TEST_CVA_ID).catch(fail);
       $httpBackend.flush();
     });
-
+    it('should return successful when there is neither waiting message nor left chat message defined', () => {
+      spyOn($translate, 'instant').and.returnValue(TEST_DEFAULT_MESSAGE);
+      const abcData2 = {
+        name: TEST_ABC_NAME,
+        cvaId: TEST_CVA_ID,
+        queueIds: [TEST_ORG_ID],
+        statusMessages: [{
+          locale: 'en-us',
+          waitingMessage: TEST_DEFAULT_MESSAGE,
+          leftChatMessage: TEST_DEFAULT_MESSAGE,
+        }],
+      };
+      $httpBackend.expectPUT(ABC_CONFIG_URL_REGEX, abcData2).respond(200, {}, { location: ABC_CONFIG_URL });
+      AbcService.updateAbcConfig(TEST_BUSINESS_ID, TEST_ABC_NAME, TEST_ORG_ID, '', '', TEST_CVA_ID).catch(fail);
+      $httpBackend.flush();
+    });
   });
 
   describe('listAbcConfig', () => {

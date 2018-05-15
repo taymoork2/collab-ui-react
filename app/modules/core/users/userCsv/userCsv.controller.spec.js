@@ -1048,6 +1048,7 @@ describe('userCsv.controller', function () {
     it('should go to users.csv.task-manager', function () {
       this.controller.model.fileName = 'fileName.csv';
       this.controller.model.file = 'csvContent';
+      this.controller.model.fileChecksum = 'fileChecksum';
       this.controller.model.enableRemove = true;
       this.controller.startUpload();
       this.$scope.$apply();
@@ -1055,6 +1056,7 @@ describe('userCsv.controller', function () {
         job: {
           fileName: 'fileName.csv',
           fileData: 'csvContent',
+          fileChecksum: 'fileChecksum',
           exactMatchCsv: true,
         },
       });

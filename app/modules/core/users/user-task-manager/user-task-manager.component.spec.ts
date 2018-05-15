@@ -151,6 +151,7 @@ describe('Component: userTaskManager', () => {
       this.$stateParams.job = {
         fileName: 'AllSparkCall.csv',
         fileData: 'CSV content',
+        fileChecksum: 'fileChecksum',
         exactMatchCsv: true,
       };
     });
@@ -162,7 +163,7 @@ describe('Component: userTaskManager', () => {
 
     it('the task should be added and set as active', function (this: Test) {
       expect(this.UserTaskManagerService.submitCsvImportTask)
-        .toHaveBeenCalledWith('AllSparkCall.csv', 'CSV content', true);
+        .toHaveBeenCalledWith('AllSparkCall.csv', 'CSV content', 'fileChecksum', true);
 
       expect(this.components.userTaskListFilter.bindings[0].filter).toBe(TaskListFilterType.ACTIVE);
       expect(this.components.userTaskList.bindings[0].task).toEqual(this.taskList[2]);

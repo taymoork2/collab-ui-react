@@ -372,17 +372,11 @@ describe('Service: SiteListService', () => {
     expect(searchResult.isLinkedSite).toBeTruthy();
   });
 
-  it('should get list of managed webex sites', function() {
-    const sites = [{ siteUrl: 'atlastest2.dmz.webex.com', subscriptionId: 'Subscription-2' }];
-    const managedSites = this.SiteListService.getManagedSites();
+  it('should get list of managed webex subscriptions', function() {
+    const subscriptions = ['Subscription-2'];
+    const managedSubscriptions = this.SiteListService.getManagedSubscriptions();
     expect(this.Authinfo.getCustomerAccounts).toHaveBeenCalled();
-    expect(sites).toEqual(managedSites);
-  });
-
-  it('should have managed site', function() {
-    const siteUrl = 'atlastest2.dmz.webex.com';
-    const managedSite = this.SiteListService.canManageSite(siteUrl);
-    expect(managedSite).toBe(true);
+    expect(subscriptions).toEqual(managedSubscriptions);
   });
 
   it('should have managed subscription', function() {

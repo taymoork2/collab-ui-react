@@ -4,12 +4,12 @@ import { IOfferData } from 'modules/core/myCompany/mySubscriptions/subscriptions
 import { LicenseCardHelperService } from './index';
 import { HealthStatus, IHealthComponent, IHealthObject } from 'modules/core/health-monitor';
 
-interface ISettingsUrlObject {
+export interface ISettingsUrlObject {
   requireSites?: boolean;
   url: string;
 }
 
-class LicenseCardController implements ng.IComponentController {
+export class LicenseCardController implements ng.IComponentController {
   public licenseTypes: string[];
   public statusId: string;
   public settingsUrlObject?: ISettingsUrlObject;
@@ -27,7 +27,7 @@ class LicenseCardController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $rootScope: ng.IRootScopeService,
+    protected $rootScope: ng.IRootScopeService,
     private LicenseCardHelperService: LicenseCardHelperService,
     private UrlConfig,
   ) {}
