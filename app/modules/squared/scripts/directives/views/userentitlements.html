@@ -2,7 +2,7 @@
   <div class="entitle-preview-grp">
     <div class="entitle-check-grp" ng-repeat="key in entitlementsKeys" ng-if="isServiceAllowed(key)&&key&&key !== 'jabberMessenger'">
       <div class="user-entitlement">
-        <cs-checkbox class="user-entitlement__checkbox" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{getServiceName(key)}}"></cs-checkbox>
+        <cs-checkbox class="user-entitlement__checkbox" ckid="{{'chk_'+key}}" ng-model="entitlements[key]" label="{{::'onboardModal.ciscoSparkJabberInterop' | translate}}"></cs-checkbox>
         <span class="user-entitlement__tooltip" ng-switch="key">
           <i
             ng-switch-when="messengerInterop"
