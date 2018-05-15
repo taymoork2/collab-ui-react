@@ -197,9 +197,22 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       if (!_.isUndefined(statusCol)) {
         statusCol.displayName = this.$translate.instant('convertUsersModal.tableHeader.status');
         statusCol.sortingAlgorithm = (_a, _b, rowA, rowB) => {
-          const dateA = moment(_.get(rowA, 'entity.meta.accountStatusSetTime.transient'));
-          const dateB = moment(_.get(rowB, 'entity.meta.accountStatusSetTime.transient'));
-          return dateA.diff(dateB);
+          const aTime = _.get(rowA, 'entity.meta.accountStatusSetTime.transient');
+          const bTime = _.get(rowB, 'entity.meta.accountStatusSetTime.transient');
+          const aUnavailable = !aTime;
+          const bUnavailable = !bTime;
+
+          if (aUnavailable && bUnavailable) {
+            return 0;
+          } else if (aUnavailable) {
+            return -1;
+          } else if (bUnavailable) {
+            return 1;
+          }
+
+          const aDate = moment(aTime);
+          const bDate = moment(bTime);
+          return aDate.diff(bDate);
         };
       }
     }
