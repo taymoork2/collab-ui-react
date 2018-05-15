@@ -11,7 +11,7 @@
     });
 
   /* @ngInject */
-  function LiveMediaReportsController($interval, $q, $scope, $timeout, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
+  function LiveMediaReportsController($interval, $q, $scope, $translate, AdoptionCardService, AvailabilityResourceGraphService, CallVolumeResourceGraphService, CardUtils, CascadebandwidthGraphService, ClusterCascadeBandwidthGraphService, ClusterInServiceGraphService, FeatureToggleService, HybridServicesClusterService, MediaReportsDummyGraphService, MediaReportsService, MediaSneekPeekResourceService, Notification, NumberOfParticipantGraphService, Orgservice, ParticipantDistributionResourceGraphService, StreamsBandwidthUsageGraphService, UtilizationResourceGraphService) {
     var vm = this;
     var interval = null;
     var deferred = $q.defer();
@@ -27,6 +27,8 @@
     vm.REFRESH = 'refresh';
     vm.SET = 'set';
     vm.liveReports = true;
+    vm.type = 'live';
+    vm.exportDiv = 'cs-export-div';
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
@@ -84,6 +86,8 @@
     vm.clusterInServiceClusterDesc = $translate.instant('mediaFusion.metrics.graphDescription.clusterInServiceClusterDesc');
     vm.cascadeBandwidthClusterDesc = $translate.instant('mediaFusion.metrics.cascadeBandwidthClusterDesc');
     vm.streamsBandwidthDesc = $translate.instant('mediaFusion.metrics.streamsBandwidthDesc');
+    vm.clusterInServiceDesc = $translate.instant('mediaFusion.metrics.cardDescription.clusterInServiceDesc');
+
 
     vm.Map = {};
     vm.clusterNameMap = {};
@@ -117,6 +121,12 @@
       cardChartDiv: 'totalParticipantsChartDiv',
       noData: false,
     };
+    vm.clusterinServicechartOptions = {
+      isShow: false,
+      cardChartDiv: 'liveReportDiv',
+      exportDiv: 'total-calls-export-div',
+      noData: '',
+    };
 
     vm.timeOptions = [{
       value: 0,
@@ -142,6 +152,7 @@
     vm.isFlipped = false;
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
     vm.tooltipText = '';
+    vm.clusterinService = [];
     vm.cardIndicatorDiff = 0;
     vm.clusterUnavailablityFlag = false;
 
@@ -193,9 +204,6 @@
         vm.availabilityCardHeading = vm.clusterAvailabilityCardHeading;
       }
       loadResourceDatas();
-      $timeout(function () {
-        angular.element('#resourceReportsLi').triggerHandler('click');
-      }, 0);
     }
 
     $scope.$on('clusterClickEvent', function (event, data) {
@@ -412,7 +420,7 @@
             AdoptionCardService.setDummyTotalParticipantsPiechart(true);
             vm.totalParticipantschartOptions.noData = false;
           } else {
-            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster);
+            AdoptionCardService.setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster, vm.type);
             vm.totalParticipantschartOptions.noData = false;
           }
         }
@@ -431,8 +439,8 @@
           vm.clusterAvailability = vm.noData;
         } else {
           vm.clusterAvailability = response.data.availabilityPercent + vm.percentage;
-          setSneekPeekData();
         }
+        setSneekPeekData();
       });
     }
 
@@ -440,11 +448,24 @@
       MediaReportsService.getClusterAvailabilityTooltip(vm.timeSelected).then(function (response) {
         vm.availabilityTooltipOptions = MediaSneekPeekResourceService.getClusterAvailabilitySneekPeekValues(response, vm.Map, vm.clusterAvailability, vm.clusterId);
         vm.tooltipText = vm.availabilityTooltipOptions.values[0];
+        vm.clusterinService = vm.availabilityTooltipOptions.liveArray;
+        setClusterinServiceGraph();
         vm.availabilityTooltipOptions['tooltipClickHandler'] = clusterUpdateFromTooltip;
       })
         .catch(function (error) {
           Notification.errorWithTrackingId(error, 'mediaFusion.genericError');
         });
+    }
+    function setClusterinServiceGraph() {
+      if (vm.clusterId === vm.allClusters) {
+        vm.allcluster = true;
+      } else {
+        vm.allcluster = false;
+      }
+      vm.clusterinServicechartOptions.isShow = true;
+      vm.clusterinServicechartOptions.noData = vm.clusterAvailability;
+      vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
+      return vm.clusterinServiceChart;
     }
 
     function setUtilizationData() {

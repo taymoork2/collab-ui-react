@@ -1,6 +1,23 @@
 export interface IWebexSite {
   adminEmailParam: string;
   advancedSettings: string;
+  csvStatusObj: {
+    siteUrl: string,
+    isMockResult: boolean,
+    status: string,
+    details: {
+      jobType: number,
+      request: number,
+      errorLogLink: string,
+      created: string,
+      started: string,
+      finished: string,
+      totalRecords: number,
+      successRecords: number,
+      failedRecords: number,
+      exportFileLink: string,
+    },
+  };
   isAdminReportEnabled: boolean;
   isCI: boolean;
   isCSVSupported: boolean;

@@ -31,7 +31,7 @@ class SiteListComponentCtrl implements ng.IComponentController {
   public subscriptions: any[];
 
   public get showAddSite(): boolean {
-    return !_.isEmpty(this.SiteListService.managedSites) &&
+    return !_.isEmpty(this.SiteListService.managedSubscriptions) &&
       this.SiteListService.canAddSite();
   }
 

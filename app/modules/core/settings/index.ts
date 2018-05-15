@@ -15,8 +15,7 @@ import externalCommunicationModule from './externalCommunication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
-import webexVersionModule from './webexVersion';
-import webexSiteManagement from './webexSiteManagement';
+import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
 
 export default angular.module('core.settings', [
@@ -35,8 +34,7 @@ export default angular.module('core.settings', [
   domainsModule,
   sipDomainModule,
   supportSectionModule,
-  webexVersionModule,
-  webexSiteManagement,
+  webexModule,
   sparkAssistantModule,
   multiDirSyncModule,
 ])

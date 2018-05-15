@@ -16,6 +16,10 @@ const CareAppleBusinessChatPage = function () {
   //cva page
   this.cvaDropdown = element(by.id('virtualAssistantSelect'));
 
+  //status message page
+  this.waitingMessage = element(by.name('waitingMessageInput'));
+  this.leftChatMessage = element(by.name('leftChatMessageInput'));
+
   // Summary Page
   this.finishBtn = element(by.id('abcSetupFinishBtn'));
 };

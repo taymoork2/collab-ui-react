@@ -1,7 +1,8 @@
 <cs-card id='participant-distribution-card' class="cs-card--full media-metrics-report-card">
   <article class="media-service-card header-padding">
     <graphheader>
-        <span class='report-section-header' translate='mediaFusion.metrics.participantDistributionTitle'></span>
+        <span class='report-section-header' translate='mediaFusion.metrics.participantDistributionTitle' ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"></span>
+        <span class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle' ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"></span>
         <i class='icon icon-info-outline icon-large'
           ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"
           tabindex="0"

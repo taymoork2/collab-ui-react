@@ -32,6 +32,7 @@ describe('Service: UserTaskManagerService', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     this.URL = `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard`;
     this.UPLOAD_URL = `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/uploadurl`;
+    this.DOWNLOAD_URL = `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/downloadurl`;
 
     installPromiseMatchers();
 
@@ -66,23 +67,54 @@ describe('Service: UserTaskManagerService', () => {
     it('should submit a csv import task', function (this: Test) {
       const myFilename = 'myFilename';
       const fileData = 'fileData';
+      const fileChecksum = 'fileChecksum';
       const exactMatch = true;
 
       const tempUploadUrl = 'tempUploadUrl';
       const uniqueFileName = 'uniqueFileName';
+      const md5 = 'fileChecksum';
       this.$httpBackend.expectGET(`${this.UPLOAD_URL}?filename=${myFilename}`).respond({
         tempUrl: tempUploadUrl,
         uniqueFileName: uniqueFileName,
       });
       this.$httpBackend.expectPUT(tempUploadUrl, fileData).respond(200);
+      this.$httpBackend.expectGET(`${this.DOWNLOAD_URL}?filename=${uniqueFileName}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+        md5: md5,
+      });
       this.$httpBackend.expectPOST(this.URL, {
         exactMatchCsv: exactMatch,
         csvFile: uniqueFileName,
         useLocalFile: false,
       }).respond(this.taskList[0]);
 
-      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, exactMatch);
+      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, fileChecksum, exactMatch);
       expect(promise).toBeResolvedWith(this.taskList[0]);
+    });
+
+    it('should reject submitting a csv import task if the checksum is wrong', function (this: Test) {
+      const myFilename = 'myFilename';
+      const fileData = 'fileData';
+      const fileChecksum = 'fileChecksum';
+      const exactMatch = true;
+
+      const tempUploadUrl = 'tempUploadUrl';
+      const uniqueFileName = 'uniqueFileName';
+      const md5 = 'wrongFileChecksum';
+      this.$httpBackend.expectGET(`${this.UPLOAD_URL}?filename=${myFilename}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+      });
+      this.$httpBackend.expectPUT(tempUploadUrl, fileData).respond(200);
+      this.$httpBackend.expectGET(`${this.DOWNLOAD_URL}?filename=${uniqueFileName}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+        md5: md5,
+      });
+
+      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, fileChecksum, exactMatch);
+      expect(promise).toBeRejectedWith('userTaskManagerModal.csvFileChecksumError');
     });
 
     it('should get task errors', function (this: Test) {

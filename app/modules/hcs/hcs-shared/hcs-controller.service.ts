@@ -1,11 +1,13 @@
-import { IHcsInstallables, IControllerNode } from './hcs-controller';
-type IHcsNodeListResource = IControllerNode[] & ng.resource.IResourceArray<IControllerNode>;
+import { IHcsInstallables, IControllerNode, IHcsCustomer } from './hcs-controller';
+type IHcsNodeListType = IControllerNode[] & ng.resource.IResourceArray<IControllerNode>;
 interface IInstallablesResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsInstallables>> {}
-interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListResource> {}
+interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListType> {}
+interface IHcsCustomerListResource extends ng.resource.IResourceClass<IHcsCustomer> {}
 
 export class HcsControllerService {
   private installablesResource: IInstallablesResource;
   private nodeListResource: INodeListResource;
+  private customerListResource: IHcsCustomerListResource;
 
   /* @ngInject */
   constructor(
@@ -57,9 +59,14 @@ export class HcsControllerService {
         get: getAction,
       });
 
-    this.nodeListResource = this.$resource<IHcsNodeListResource>(BASE_URL + 'inventory/organizations/:partnerId/lists/nodes', {},
+    this.nodeListResource = this.$resource<IHcsNodeListType>(BASE_URL + 'inventory/organizations/:partnerId/lists/nodes', {},
       {
         save: postAction,
+      });
+
+    this.customerListResource = this.$resource<IHcsCustomer>(BASE_URL + 'partners/:partnerId/customers', {},
+      {
+        query: queryAction,
       });
   }
 
@@ -98,6 +105,14 @@ export class HcsControllerService {
     }, {
       nodeIds: nodeIds,
     } ).$promise.then(response => {
+      return response;
+    });
+  }
+
+  public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
+    return this.customerListResource.query({
+      partnerId: this.Authinfo.getOrgId(),
+    }).$promise.then(response => {
       return response;
     });
   }

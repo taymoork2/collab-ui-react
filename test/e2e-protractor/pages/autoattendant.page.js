@@ -4,7 +4,7 @@ var AutoAttendantPage = function () {
   this.repeatMenu = 'Repeat this Menu';
   this.playSubmenu = 'Play Submenu';
   this.goBack = 'Go Back';
-  this.routeToQueue = 'Route to Cisco Spark Care';
+  this.routeToQueue = 'Route to Cisco Webex Care';
   this.routeToHuntGroup = 'Route to Hunt Group';
   this.key0 = '0';
   this.key1 = '1';
@@ -21,7 +21,7 @@ var AutoAttendantPage = function () {
   this.selectPhoneNumberViaRouteCall = this.routeCall.element(by.name('selectPhoneNumber'));
   this.selectPhoneDropDownViaRouteCall = this.selectPhoneNumberViaRouteCall.element(by.css('div.dropdown-menu')).element(by.linkText('Telephone Number'));
   this.selectExtensionViaRouteCall = this.selectPhoneNumberViaRouteCall.element(by.css('div.dropdown-menu')).element(by.linkText('Extension'));
-  
+
   this.phoneNumberActionTarget = element(by.css('div.aa-route-action')).element(by.name('phoneinput'));
   this.extensionActionTarget = element(by.css('div.aa-route-action')).element(by.name('routeToExtension'));
 

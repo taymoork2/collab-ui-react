@@ -42,16 +42,7 @@
       },
       getMeetingCard: function () {
         return {
-          defaultMessage: 'overview.cards.meeting.notEnabledText',
-          icon: 'icon-circle-group',
-          licenseDescription: 'overview.totalUserLicenses',
-          statusId: HealthStatusID.SparkMeeting,
-          title: 'overview.cards.meeting.title',
-          offerType: [OfferType.CONFERENCING],
-          settingsUrlObject: {
-            requireSites: true,
-            url: '/site-list',
-          },
+          isMeetingCard: true,
         };
       },
       getMessageCard: function () {

@@ -31,8 +31,11 @@ class AbcSetupCtrl extends CommonSetupCtrl {
   public states;
   public currentState = '';
   public maxNameLength = 250;
+  public maxInputLength50 = 50;
+  public maxInputLength250 = 250;
   public validateNameChars = /[<>]/i;
   public businessIdForm: ng.IFormController;
+  public statusMessagesForm: ng.IFormController;
 
   private businessId: string;
 
@@ -63,6 +66,13 @@ class AbcSetupCtrl extends CommonSetupCtrl {
           configuredCVAs: [<any>{}],
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_CVA_SELECTION_PAGE,
+        },
+        abcStatusMessages: {
+          enabled: true,
+          waitingMessage: this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.waitingDefault'),
+          leftChatMessage: this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.leftTheChatDefault'),
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.APPLE_BUSINESS_CHAT.eventNames.ABC_STATUS_MESSAGE,
         },
         abcSummary: {
           enabled: true,
@@ -114,6 +124,8 @@ class AbcSetupCtrl extends CommonSetupCtrl {
       this.template.configuration.pages.abcBusinessId.value = this.$stateParams.template.id;
       this.template.configuration.pages.abcBusinessId.enabled = false;
       this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.abcStatusMessages.waitingMessage = this.$stateParams.template.statusMessages[0].waitingMessage;
+      this.template.configuration.pages.abcStatusMessages.leftChatMessage = this.$stateParams.template.statusMessages[0].leftChatMessage;
     }
     this.loadCvaList();
   }
@@ -187,22 +199,10 @@ class AbcSetupCtrl extends CommonSetupCtrl {
         return this.isNamePageValid();
       case 'abcCvaSelection':
         return true;
+      case 'abcStatusMessages':
+        return this.isStatusMessagesValid();
       case 'abcSummary':
         return 'hidden';
-    }
-  }
-
-  /**
-   * conduct certain actions for the just before moving to previous page from another.
-   * @param {string} currentState State before moving to previous page.
-   */
-  public beforePreviousPage(currentState: string): void {
-    if (currentState === 'name' &&
-      _.isEmpty(this.template.configuration.pages.name.nameValue) &&
-      !_.isEmpty(this.nameForm) &&
-      !this.nameForm.$valid) {
-      //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.name.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
 
@@ -216,9 +216,36 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     controller.templateButtonText = this.$translate.instant('common.finish');
     controller.retryButtonDisabled = false;
     controller.$timeout(function () {
-      controller.beforePreviousPage(controller.currentState);
       controller.currentState = controller.getAdjacentEnabledState(controller.getPageIndex(), -1);
     }, controller.animationTimeout);
+  }
+
+  public isWaitingMessageValid(): boolean {
+    const waitingMessage = (this.template.configuration.pages.abcStatusMessages.waitingMessage || '').trim();
+    const isWaitingLengthValid = (_.get(waitingMessage, 'length', 0) <= this.maxInputLength50);
+    const areWaitingCharsValid = !RegExp(this.validateNameChars).test(waitingMessage);
+
+    if (this.statusMessagesForm) {
+      this.statusMessagesForm.waitingMessageInput.$setValidity('maxlength', isWaitingLengthValid);
+      this.statusMessagesForm.waitingMessageInput.$setValidity('invalidInput', areWaitingCharsValid);
+    }
+
+    return (isWaitingLengthValid && areWaitingCharsValid);
+  }
+
+  public isLeftChatMessageValid(): boolean {
+    const leftChatMessage = (this.template.configuration.pages.abcStatusMessages.leftChatMessage || '').trim();
+    const isLeftChatLengthValid = (_.get(leftChatMessage, 'length', 0) <= this.maxInputLength250);
+    const areLeftChatCharsValid = !RegExp(this.validateNameChars).test(leftChatMessage);
+    if (this.statusMessagesForm) {
+      this.statusMessagesForm.leftChatMessageInput.$setValidity('maxlength', isLeftChatLengthValid);
+      this.statusMessagesForm.leftChatMessageInput.$setValidity('invalidInput', areLeftChatCharsValid);
+    }
+    return (isLeftChatLengthValid && areLeftChatCharsValid);
+  }
+
+  public isStatusMessagesValid(): boolean {
+    return this.isWaitingMessageValid() && this.isLeftChatMessageValid();
   }
 
   public isNameValid(): boolean {
@@ -273,11 +300,13 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     const businessId = this.template.configuration.pages.abcBusinessId.value.trim();
     const name = this.template.configuration.pages.name.nameValue.trim();
     const cvaId = this.template.configuration.pages.abcCvaSelection.selectedCVA.id;
+    const waitingMessage = this.template.configuration.pages.abcStatusMessages.waitingMessage.trim();
+    const leftChatMessage = this.template.configuration.pages.abcStatusMessages.leftChatMessage.trim();
     this.creatingTemplate = true;
     if (this.isEditFeature) {
-      this.updateFeature(businessId, name, this.orgId, cvaId);
+      this.updateFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cvaId);
     } else {
-      this.createFeature(businessId, name, this.orgId, cvaId);
+      this.createFeature(businessId, name, this.orgId, waitingMessage, leftChatMessage, cvaId);
     }
   }
 
@@ -288,9 +317,9 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    * @param orgId
    * @param cvaId optional
    */
-  private updateFeature(businessId: string, name: string, orgId: string, cvaId?: string): void {
+  private updateFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): void {
     const controller = this;
-    controller.service.updateAbcConfig(businessId, name, orgId, cvaId)
+    controller.service.updateAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cvaId)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.writeMetrics();
@@ -310,9 +339,9 @@ class AbcSetupCtrl extends CommonSetupCtrl {
    * @param orgId
    * @param cvaId optional
    */
-  private createFeature(businessId: string, name: string, orgId: string, cvaId?: string): void {
+  private createFeature(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): void {
     const controller = this;
-    controller.service.addAbcConfig(businessId, name, orgId, cvaId)
+    controller.service.addAbcConfig(businessId, name, orgId, waitingMessage, leftChatMessage, cvaId)
       .then(function () {
         controller.handleFeatureCreation();
         controller.writeMetrics();

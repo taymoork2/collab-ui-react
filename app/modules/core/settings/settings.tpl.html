@@ -53,24 +53,21 @@
 
     <setting-section setting="settingsCtrl.brandingWrapper" ng-if="settingsCtrl.brandingWrapper">
       <branding-setting-wrapper show-application-branding-title="settingsCtrl.brandingWrapper.branding">
-        <branding-setting show-version="false" show-branding="true" ng-if="settingsCtrl.brandingWrapper.branding"></branding-setting>
+        <branding-setting ng-if="settingsCtrl.brandingWrapper.branding"></branding-setting>
         <device-branding-setting ng-if="settingsCtrl.brandingWrapper.deviceBranding && !settingsCtrl.brandingWrapper.isPartner" ></device-branding-setting>
       </branding-setting-wrapper>
-    </setting-section>
-
-    <setting-section setting="settingsCtrl.webexVersion" ng-if="settingsCtrl.webexVersion">
-      <webex-version-setting class="setting webexversion" show-version="true" show-branding="false"></webex-version-setting>
     </setting-section>
 
     <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
       <support-setting></support-setting>
     </setting-section>
 
-    <div class="setting-section" cr-feature-toggle feature-show="atlas-webex-site-management-setting" ng-if="settingsCtrl.webexSiteManagement">
-      <setting-section setting="settingsCtrl.webexSiteManagement">
-        <webex-site-management-setting></webex-site-management-setting>
-      </setting-section>
-    </div>
+    <setting-section setting="settingsCtrl.webexSettingsWrapper" ng-if="settingsCtrl.webexSettingsWrapper">
+      <webex-settings-wrapper>
+        <webex-site-management-setting cr-feature-toggle feature-show="atlas-webex-site-management-setting"></webex-site-management-setting>
+        <webex-version-setting></webex-version-setting>
+      </webex-settings-wrapper>
+    </setting-section>
 
     <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
       <retention-setting></retention-setting>

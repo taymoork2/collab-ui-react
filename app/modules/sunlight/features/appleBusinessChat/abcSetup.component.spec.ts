@@ -26,11 +26,22 @@ describe('Care ABC Setup Component', () => {
     },
     {
       enabled: true,
+      name: 'abcStatusMessages',
+      previousButtonState: true,
+      nextButtonState: true,
+    },
+    {
+      enabled: true,
       name: 'abcSummary',
       previousButtonState: true,
       nextButtonState: 'hidden',
     },
   ];
+
+  const BUSINESS_ID_PAGE_INDEX = 0;
+  const NAME_PAGE_INDEX = 1;
+  const STATUS_MESSAGES_PAGE_INDEX = 3;
+
   const expectedPageTemplate = {
     templateId: jasmine.any(String),
     name: jasmine.any(String),
@@ -117,8 +128,8 @@ describe('Care ABC Setup Component', () => {
 
   function checkStateOfNavigationButtons(pageIndex: number, previousButtonState: any, nextButtonState: any): void {
     controller.currentState = controller.states[pageIndex];
-    expect(controller.previousButton()).toEqual(previousButtonState);
-    expect(controller.nextButton()).toEqual(nextButtonState);
+    expect(controller.previousButton()).toEqual(previousButtonState, 'previous button is not in a right state');
+    expect(controller.nextButton()).toEqual(nextButtonState, 'next button is not in a right state');
   }
 
   describe('get and cancel', function () {
@@ -201,6 +212,8 @@ describe('Care ABC Setup Component', () => {
     pages.forEach(function (expectedPage, index) {
       it(expectedPage.name + ': previous button should be ' + (expectedPage.previousButtonState ? 'Enabled' : 'Disabled') +
         ' and next button should be ' + (expectedPage.nextButtonState ? 'Enabled' : 'Disabled'), function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = '';
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = '';
         checkStateOfNavigationButtons(index, expectedPage.previousButtonState, expectedPage.nextButtonState);
       });
 
@@ -221,8 +234,6 @@ describe('Care ABC Setup Component', () => {
   };
 
   describe('Field Checks on the', function () {
-    const NAME_PAGE_INDEX = 1;
-    const BUSINESS_ID_PAGE_INDEX = 0;
 
     describe('Business Id Page', function () {
       const testBusinessId = '12345';
@@ -297,6 +308,56 @@ describe('Care ABC Setup Component', () => {
       it('should have the next button disabled when name value is only spaces', function () {
         controller.template.configuration.pages.name.nameValue = '  ';
         checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
+      });
+    });
+
+    describe('Status Messages Page', function () {
+      beforeEach(function () {
+        controller.currentState = controller.states[STATUS_MESSAGES_PAGE_INDEX];
+      });
+
+      it('should have the next button enabled when waiting message and left chat message are empty', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = '';
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = '';
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, true);
+      });
+
+      it('should have the next button enabled when waiting message is not empty', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = 'Waiting for an agent';
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, true);
+      });
+
+      it('should have the next button disabled when waiting message is too long', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = _.repeat('X', controller.maxInputLength50);
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, true);
+
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = _.repeat('X', controller.maxInputLength50 + 1);
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, false);
+      });
+
+      it('should have the next button enabled when waiting message has invalid character', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = 'Waiting <>for an agent';
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, false);
+      });
+
+      it('should have the next button enabled when left chat message is not empty', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = '';
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = 'Left chat';
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, true);
+      });
+
+      it('should have the next button disabled when left chat message is too long', function () {
+        controller.template.configuration.pages.abcStatusMessages.waitingMessage = '';
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = _.repeat('X', controller.maxInputLength250);
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, true);
+
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = _.repeat('X', controller.maxInputLength250 + 1);
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, false);
+      });
+
+      it('should have the next button enabled when left chat message has invalid character', function () {
+        controller.template.configuration.pages.abcStatusMessages.leftChatMessage = 'Left<>chat';
+        checkStateOfNavigationButtons(STATUS_MESSAGES_PAGE_INDEX, true, false);
       });
     });
   });

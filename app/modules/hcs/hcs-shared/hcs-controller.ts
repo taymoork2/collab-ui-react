@@ -82,3 +82,28 @@ export class HcsInstallables implements IHcsInstallables {
     this.fileInfo = obj.fileInfo;
   }
 }
+
+export interface IHcsCustomer {
+  uuid: string;
+  name: string;
+  customerOrgId: string | null;
+  partnerOrgId: string;
+}
+
+export class HcsCustomer implements IHcsCustomer {
+  public uuid: string;
+  public name: string;
+  public customerOrgId: string | null;
+  public partnerOrgId: string;
+  constructor(obj: IHcsCustomer = {
+    uuid: '',
+    name: '',
+    customerOrgId: null,
+    partnerOrgId: '',
+  }) {
+    this.uuid = obj.uuid;
+    this.name = obj.name;
+    this.customerOrgId = obj.customerOrgId;
+    this.partnerOrgId = obj.partnerOrgId;
+  }
+}

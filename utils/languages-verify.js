@@ -27,7 +27,7 @@ const STATIC_ACROSS_LANGUAGES_KEY_LIST = [
   'reportsPage.usageReports.deviceOptions.sparkBoard',
   'trials.sparkBoardSystem',
   'customerPage.sparkBoard',
-  'filters.sparkBoard',
+  'customerPage.filters.sparkBoard',
   'mediaFusion.metrics.clientType.board',
   'subscriptions.licenseTypes.SB',
   'helpdesk.licenseDisplayNames.SB',

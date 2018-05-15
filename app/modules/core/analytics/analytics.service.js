@@ -247,6 +247,7 @@
           ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
           ABC_NAME_PAGE: 'ABC Name',
           ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_STATUS_MESSAGE: 'ABC Status Message',
           ABC_SUMMARY_PAGE: 'ABC Summary',
           ABC_START_FINISH: 'ABC the entire wizard',
           ABC_CREATE_SUCCESS: 'ABC created',

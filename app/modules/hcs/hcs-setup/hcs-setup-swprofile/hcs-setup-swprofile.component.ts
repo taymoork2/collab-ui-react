@@ -22,6 +22,7 @@ interface ISelectedVersion {
 export class HcsSetupSwprofileController implements ng.IComponentController {
   public readonly MAX_LENGTH: number = 50;
   public selectedProfile: SoftwareProfile;
+  public changedProfile: SoftwareProfile;
   public onChangeFn: Function;
   public placeholder: any;
   public hcsProfileForm: ng.IFormController;
@@ -50,6 +51,7 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   constructor(
     public $translate: ng.translate.ITranslateService,
     private HcsUpgradeService: HcsUpgradeService,
+    private $state: ng.ui.IStateService,
   ) {
   }
 
@@ -67,11 +69,12 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
         max: this.MAX_LENGTH,
       }),
     };
-    if (!_.isUndefined(this.swprofile)) {
+    if (!_.isUndefined(this.swprofile) && this.swprofile) {
       this.HcsUpgradeService.getSoftwareProfile(_.get(this.swprofile, 'uuid'))
       .then(resp => {
-        this.swprofile = _.clone(resp);
-        this.selectedProfile = _.clone(this.swprofile);
+        this.selectedProfile = _.clone(resp);
+        this.changedProfile = _.clone(this.selectedProfile);
+        this.changedProfile.applicationVersions = [];
         const appVersions: IApplicationVersion[] = _.get(this.selectedProfile, 'applicationVersions');
         this.selectedVersion = {
           cucm: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUCM]), 'fileName'),
@@ -82,6 +85,9 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
           expway: '',
         };
       });
+    }
+    if (this.$state.current.name !== 'swprofilelist') {
+      this.changedProfile = new SoftwareProfile({ name: '', applicationVersions: [] });
     }
     this.listAppVersions();
   }
@@ -99,20 +105,24 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
     return _.get(_.find(this.allVersions, item => item.typeApplication === appType), 'fileData');
   }
 
+  public processName(): void {
+    this.onChangeFn({
+      swprofile: this.changedProfile,
+    });
+  }
+
   public processChange(typeApp: string, name: string) {
-    if (_.isUndefined(this.selectedProfile.applicationVersions)) {
-      this.selectedProfile.applicationVersions = [];
-    } else if (this.selectedProfile.applicationVersions) {
+    if (!_.isUndefined(this.changedProfile) && this.changedProfile.applicationVersions) {
       const ver: ISoftwareAppVersion = _.find(this.getAppVersion(typeApp), { fileName: name });
-      const appVer: ISoftwareAppVersion = _.find(this.selectedProfile.applicationVersions, { typeApplication: typeApp });
+      const appVer: ISoftwareAppVersion = _.find(this.changedProfile.applicationVersions, { typeApplication: typeApp });
       if (appVer) {
         appVer.uuid = ver.uuid;
-      } else if (ver) {
-        this.selectedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
+      } else {
+        this.changedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
       }
     }
     this.onChangeFn({
-      swprofile: this.selectedProfile,
+      swprofile: this.changedProfile,
     });
   }
 }

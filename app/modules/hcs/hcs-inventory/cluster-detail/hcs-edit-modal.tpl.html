@@ -1,2 +1,2 @@
-<hcs-node-sftp-edit ng-if="$ctrl.modalType === 0" class="hcs-modal-component" save-sftp="$ctrl.saveSftp(node, sftp)" dismiss="$dismiss()" node="$ctrl.node" sftp-locations="$ctrl.sftpLocations"></hcs-node-sftp-edit>
+<hcs-node-sftp-edit ng-if="$ctrl.modalType === 0" class="hcs-modal-component" refresh-Data="$ctrl.refreshData()" dismiss="$dismiss()" node="$ctrl.node" sftp-servers="$ctrl.sftpServers"></hcs-node-sftp-edit>
 <hcs-add-customer-to-cluster ng-if="$ctrl.modalType === 1" class="hcs-modal-component" dismiss="$dismiss()" add-customer-to-cluster="$ctrl.addCustomerToCluster(customerName, softwareProfile)"></hcs-add-customer-to-cluster>
