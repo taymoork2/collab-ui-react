@@ -104,7 +104,6 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
 
   describe('change date event:', () => {
     it('should update when change date:blur', function () {
-      spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
       spyOn(this.PartnerSearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
       initComponent.call(this);
       this.view.find(this.input).val('355602502').change().triggerHandler('blur');
