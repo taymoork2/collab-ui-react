@@ -170,7 +170,9 @@ describe('Component: legalHoldCustodianImport', () => {
     });
 
     it('if Cancel modal is closed with \'no\' the cancelation should not happen', function (this: Test) {
-      this.ModalService.open.and.returnValue({ result: this.$q.reject() });
+      this.ModalService.open.and.callFake(() => {
+        return { result: this.$q.reject() };
+      });
       this.LegalHoldService.convertUsersChunk.and.returnValue(this.$q.resolve({
         success: [{ userId: '12345' }, { userId: '12345' }],
         error: [],

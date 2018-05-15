@@ -72,6 +72,8 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.Authinfo, 'isSquaredUC').and.returnValue(false);
     spyOn(this.$rootScope, '$emit');
 
+    spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
+
     spyOn(this.HybridServicesClusterService, 'getAll').and.returnValue(this.$q.resolve());
     spyOn(this.HybridServicesFlagService, 'readFlags').and.returnValue(this.$q.resolve([{
       name: 'fms.services.squared-fusion-cal.acknowledged',
@@ -485,13 +487,12 @@ describe('Controller: OverviewCtrl', function () {
   describe('Expert Virtual Assistant notification', function () {
     var TOTAL_NOTIFICATIONS = 8;
     it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
-      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve({ name: 'evaTest' }));
+      this.EvaService.getMissingDefaultSpaceEva.and.returnValue(this.$q.resolve({ name: 'evaTest' }));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
     });
 
     it('should not display the Expert Virtual Assistant Notification', function () {
-      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
     });
