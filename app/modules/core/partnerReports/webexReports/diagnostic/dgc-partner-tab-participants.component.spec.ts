@@ -28,7 +28,7 @@ describe('Component: DgcPartnerTabParticipants', () => {
   it('should not loading when call getParticipants', function () {
     this.PartnerSearchService.getParticipants.and.returnValue(this.$q.resolve(this.participants));
     initComponent.call(this);
-    expect(this.controller.loading).toBe(false);
+    expect(this.controller.gridData).toHaveLength(2);
   });
 
   it('should call Notification.errorResponse when response status is 404', function () {

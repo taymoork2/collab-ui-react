@@ -2,13 +2,13 @@ import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms } from './partner-search.service';
 import { ICallType, IParticipant } from './partner-search.interfaces';
 
-export interface IGridApiScope extends ng.IScope {
+interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
-class ParticipantsController implements ng.IComponentController {
+class DgcPartnerTabParticipantsController implements ng.IComponentController {
   public gridData: IParticipant[];
-  public gridOptions = {};
+  public gridOptions: uiGrid.IGridOptions = {};
   public conferenceID: string;
   public loading = true;
   public deviceLoaded = false;
@@ -32,7 +32,6 @@ class ParticipantsController implements ng.IComponentController {
 
   public $onInit(): void {
     this.getParticipants();
-    this.setGridOptions();
   }
 
   private getParticipants(): void {
@@ -75,7 +74,7 @@ class ParticipantsController implements ng.IComponentController {
         this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
           .then((res: ICallType) => {
             if (res.completed) {
-              item.device = this.updateDevice(res);
+              item.device = this.updateDeviceType(res);
             }
             item.deviceCompleted = res.completed;
           });
@@ -90,16 +89,15 @@ class ParticipantsController implements ng.IComponentController {
     }
   }
 
-  private updateDevice(deviceInfo: ICallType): string {
+  private updateDeviceType(deviceInfo: ICallType): string {
     if (!_.isEmpty(deviceInfo.items)) {
-      const device = deviceInfo.items[0].deviceType;
-      return device;
+      return deviceInfo.items[0].deviceType;
     }
     return this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
   }
 
   private setGridOptions(): void {
-    const columnDefs = [{
+    const columnDefs: uiGrid.IColumnDef[] = [{
       width: '16%',
       cellTooltip: true,
       field: 'userName',
@@ -149,6 +147,6 @@ class ParticipantsController implements ng.IComponentController {
 }
 
 export class DgcPartnerTabParticipantsComponent implements ng.IComponentOptions {
-  public controller = ParticipantsController;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/dgc-partner-tab-participants.html');
+  public controller = DgcPartnerTabParticipantsController;
+  public template = require('./dgc-partner-tab-participants.html');
 }
