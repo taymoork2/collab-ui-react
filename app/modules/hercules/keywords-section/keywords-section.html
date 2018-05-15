@@ -1,0 +1,42 @@
+<setting-section setting="$ctrl.generalSectionTexts" ng-if="$ctrl.isCalendarService() && $ctrl.hasCalsvcDefaultActionFeatureToggle" class="needs-border-top">
+  <div class="sub-section">
+    <form id="defaultCalendarActionForm">
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="hercules.settings.defaultCalendarWebexActionHeading"></h5>
+        <p class="sub-section__description" translate="hercules.settings.setDefaultCalendarWebexAction"></p>
+        <div class="row remove-margins">
+          <div class="large-6 columns">
+            <cs-select
+              ng-model="$ctrl.defaultCalendarWebexAction"
+              options="$ctrl.defaultCalendarWebexActionOptions"
+              placeholder="$ctrl.defaultCalendarActionSelectPlaceholder"
+            >
+            </cs-select>
+          </div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <h5 class="sub-section__label" translate="hercules.settings.defaultCalendarMeetActionHeading"></h5>
+        <p class="sub-section__description" translate="hercules.settings.setDefaultCalendarMeetAction"></p>
+        <div class="row remove-margins">
+          <div class="large-6 columns">
+            <cs-select
+              ng-model="$ctrl.defaultCalendarMeetAction"
+              options="$ctrl.defaultCalendarMeetActionOptions"
+              placeholder="$ctrl.defaultCalendarActionSelectPlaceholder"
+            >
+            </cs-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <button
+          class="btn btn--cta"
+          ng-click="$ctrl.setDefaultCalendarAction()"
+          translate="common.save">
+        </button>
+      </div>
+    </form>
+  </div>
+</setting-section>

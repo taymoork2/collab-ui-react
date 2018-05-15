@@ -104,6 +104,7 @@ module.exports = {
   callMultiDevice: 'call-multi-device',
   calsvcDetectCmrLoc: 'calsvc_detect_cmr_loc',
   calsvcOneButtonToPushInterval: 'calsvc-OneButtonToPush-interval',
+  calsvcDefaultAction: 'calsvc-default-action',
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
   careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',

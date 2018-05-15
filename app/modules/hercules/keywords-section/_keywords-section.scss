@@ -1,0 +1,52 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+
+keywords-section {
+  display: block;
+
+  tags-input.ng-invalid .tags {
+    border-color: $color-alerts-base;
+    box-shadow: none;
+  }
+
+  tags-input .tags {
+    border-radius: 4px;
+    box-shadow: none;
+    border-color: $gray-light-2;
+
+    &:hover {
+      border-color: $gray-light-1;
+    }
+
+    &.focused {
+      box-shadow: none;
+      border-color: $color-primary-darker;
+    }
+
+    .tag-item {
+      background: $brand-primary-light;
+      border: 0;
+      color: $brand-white;
+      line-height: 24px;
+
+      .remove-button {
+        color: $brand-white;
+      }
+    }
+
+    .input.invalid-tag {
+      color: $brand-danger;
+    }
+  }
+
+  .remove-margins {
+    margin-left: -0.5rem !important;
+    margin-right: -0.5rem !important;
+  }
+
+  .custom-line-height {
+    line-height: 2.3;
+    font-family: $brand-font-light;
+    font-size: 0.875rem;
+  }
+}
