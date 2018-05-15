@@ -74,7 +74,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
         this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
           .then((res: ICallType) => {
             if (res.completed) {
-              item.device = this.updateDeviceType(res);
+              item.device = this.getDeviceType(res);
             }
             item.deviceCompleted = res.completed;
           });
@@ -89,7 +89,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     }
   }
 
-  private updateDeviceType(deviceInfo: ICallType): string {
+  private getDeviceType(deviceInfo: ICallType): string {
     if (!_.isEmpty(deviceInfo.items)) {
       return deviceInfo.items[0].deviceType;
     }
