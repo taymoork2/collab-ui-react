@@ -170,7 +170,8 @@ describe('OverviewUsersCard', function () {
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 
-          expect(this.card.usersOnboarded).toBe('overview.cards.users.onboardError');
+          expect(this.card.isOnboardingError).toBe(true);
+          expect(this.card.usersOnboardedError).toBe('overview.cards.users.onboardError');
         });
       });
 

@@ -34,6 +34,7 @@
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
+        card.isOnboardingError = false;
         card.showLicenseCard = false;
         card.isDirsyncEnabled = false;
         card.deferredFT = $q.defer(); // only process unlicensed data after featureToggles resolve
@@ -71,6 +72,14 @@
           var params = {
             orgId: Authinfo.getOrgId(),
             noErrorNotificationOnReject: true,
+            startIndex: 0,
+            count: 100,
+            sortBy: 'name',
+            sortOrder: 'ascending',
+            filter: {
+              nameStartsWith: '',
+              useUnboundedResultsHack: true,
+            },
           };
           UserListService.listUsersAsPromise(params).then(function (response) {
             card.usersOnboarded = response.data.totalResults;
@@ -79,7 +88,8 @@
             if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
               card.usersOnboarded = '3000+';
             } else {
-              card.usersOnboarded = $translate.instant('overview.cards.users.onboardError');
+              card.isOnboardingError = true;
+              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
             }
           });
         }
