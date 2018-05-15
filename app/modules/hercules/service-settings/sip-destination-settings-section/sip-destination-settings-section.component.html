@@ -4,7 +4,10 @@
       <span class="sub-section__label" ng-if="!$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.sipDomainHeading"></span>
       <span class="sub-section__label" ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.defaultSipDomainHeading"></span>
     </p>
-    <p translate="hercules.settings.call.defaultSipDomainDescription"></p>
+    <p class="sub-section__description">
+      <span ng-if="$!ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.sipDomainDescription"></span>
+      <span ng-if="$ctrl.hasHybridGlobalCallServiceConnectFeature" translate="hercules.settings.call.defaultSipDomainDescription"></span>
+    </p>
     <sip-destination-input sip-destination="$ctrl.sipDestination"></sip-destination-input>
   </div>
 </div>

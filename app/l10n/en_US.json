@@ -188,7 +188,7 @@
     "careAddUserRoleError": "Error adding roles to user.",
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
-    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Webex Messaging and Jabber. Provide access for Jabber users to Cisco Webex Messaging spaces. Changes can take up to 24 hours.",
+    "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Webex Teams and Jabber. Provide access for Jabber users to Cisco Webex Teams spaces. Changes can take up to 24 hours.",
     "userImage": "User Image"
   },
   "userManage": {
@@ -430,7 +430,7 @@
     "switchMetadataSuccess": "Successfully switched to the new SSO metadata."
   },
   "onboardModal": {
-    "ciscoSparkJabberInterop": "Cisco Webex / Jabber Interop",
+    "ciscoSparkJabberInterop": "Cisco Webex Teams / Jabber Interop",
     "spark": "Cisco Webex Teams",
     "webex": "Webex",
     "calling": "Calling",
@@ -468,7 +468,7 @@
     "none": "None",
     "freeContactCenter": "Free Chat",
     "paidMsg": "Message",
-    "paidCiscoSparkMessaging": "Cisco Webex Messaging",
+    "paidCiscoSparkMessaging": "Cisco Webex Teams",
     "paidConf": "Meeting 25 Party",
     "paidCiscoSparkMeetings": "Cisco Webex 25 party Meetings",
     "paidAdvancedConferencing": "Advanced Meetings",
@@ -1136,12 +1136,12 @@
     "mostActiveUsers": "Most Active Users in the {{time}}",
     "registeredUsers": "Registered Users",
     "squaredActivity": "Total Activity",
-    "sparkMessages": "Cisco Spark Messages",
+    "sparkMessages": "Cisco Webex Teams",
     "user": "User",
     "users": "Users",
     "search": "Search",
-    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Spark app. In this report you can compare the total number of registered users to the number of active users.",
-    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
+    "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Cisco Webex Teams app. In this report you can compare the total number of registered users to the number of active users.",
+    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or Webex Teams messages and searched based on the user name.",
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "missingUsersError": "Some user data could not be retrieved. For assistance, click your username on the top right and submit feedback to contact support.",
@@ -1912,11 +1912,11 @@
     "goSetupCloudSipUri": "Go here to finish this configuration",
     "setupCloudSipUriMessage": "Your organization's Cisco Webex SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Messaging app, and provide One Button to Push (OBTP) to Join.",
-    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Messaging app, and provide One Button to Push (OBTP) to Join.",
-    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Webex Mesaging clients while on a call.",
-    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex Messaging clients, and place calls to others' work phones from their Cisco Webex Messaging clients.",
-    "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Messaging to IM and Presence Service, so that Cisco Webex Messaging users and Cisco Jabber users can direct message each other.",
+    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Webex Teams clients while on a call.",
+    "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex Teams clients, and place calls to others' work phones from their Cisco Webex Teams clients.",
+    "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
     "setUpDevices": "Activate your devices when they arrive.",
     "setUpSharedDevices": "Activate your Cisco Webex devices when they arrive.",
     "setUpSparkBoardDevices": "Activate your Cisco Webex Boards when they arrive.",
@@ -1948,8 +1948,8 @@
     "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
     "autoAssignLink": "Set Up Now",
     "goToEditNow": "Edit Now",
-    "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Webex space. Edit <b>{{name}}</b> to select a new default space.",
-    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Webex space. Contact <b>{{owner}}</b> to assign a new default space."
+    "evaMissingDefaultSpace": "The Expert Virtual Assistant <b>{{name}}</b> was removed from its default Cisco Webex Teams space. Edit <b>{{name}}</b> to select a new default space.",
+    "evaMissingDefaultSpaceAndNoPermission": "The Expert Virtual Assistant was removed from its default Cisco Webex Teams space. Contact <b>{{owner}}</b> to assign a new default space."
   },
   "inviteModal": {
     "title": "Service Entitlement",
@@ -2724,7 +2724,7 @@
     },
     "serviceDescriptions": {
       "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
-      "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Webex room. Add @webex to attach a Webex link to your invitation.",
+      "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Webex Teams room. Add @webex to attach a Webex link to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
       "squared-fusion-ec": "",
@@ -2755,13 +2755,13 @@
         "spark-hybrid-impinterop": "Message"
       },
       "serviceDescriptions": {
-        "squared-fusion-uc": "Users can share content from the Cisco Webex Message app during a call from their work phones and view their call history in the app.",
-        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Webex room for your meeting. Add @webex to attach your Webex Personal Room.",
+        "squared-fusion-uc": "Users can share content from the Cisco Webex Teams app during a call from their work phones and view their call history in the app.",
+        "squared-fusion-cal": "Add @spark to an invitation to create a Cisco Webex Teams room for your meeting. Add @webex to attach your Webex Personal Room.",
         "squared-fusion-cal-place": "Calendar Service enables One Button To Push (OBTP) capabilities for meetings in a place",
-        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Webex room for your meeting. Add @webex to attach your Webex Personal Room.",
-        "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Webex room for your meeting. Add @webex to attach your Webex Personal Room.",
-        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Webex Message app. Users can call their colleagues from either their phones or the app, too.",
-        "spark-hybrid-impinterop": "Connect Cisco Webex to IM and Presence Service, so that Cisco Webex users and Cisco Jabber users can direct message each other."
+        "squared-fusion-gcal": "Add @spark to an invitation to create a Cisco Webex Teams room for your meeting. Add @webex to attach your Webex Personal Room.",
+        "squared-fusion-o365": "Add @spark to an invitation to create a Cisco Webex Teams room for your meeting. Add @webex to attach your Webex Personal Room.",
+        "squared-fusion-ec": "Users' incoming calls will ring their work phones and the Cisco Webex Teams app. Users can call their colleagues from either their phones or the app, too.",
+        "spark-hybrid-impinterop": "Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other."
       },
       "preferredWebExSite": "Webex Meetings Site",
       "calendarType": "Calendar Type",
@@ -2898,7 +2898,7 @@
     },
     "hybridCallServiceTestCallTool": {
       "header": "Test Call",
-      "description": "Begin a test call with another Cisco Webex user for troubleshooting Call Service Connect configuration.",
+      "description": "Begin a test call with another Cisco Webex Teams user for troubleshooting Call Service Connect configuration.",
       "testCallButton": "Test Call",
       "modal": {
         "header": "Test Call",
@@ -3018,6 +3018,7 @@
         "certificatesModalHeading": "Remove Certificate",
         "sipDomainHeading": "SIP Destination",
         "defaultSipDomainHeading": "Default SIP Destination",
+        "sipDomainDescription": "Add a SIP Destination to establish a mutual TLS connection to your Expressway-E.",
         "defaultSipDomainDescription": "Add a default SIP Destination to establish a mutual TLS connection to your Expressway-E. Your default SIP Destination applies to all hybrid call clusters unless you override it in the cluster settings.",
         "sipDomainPlaceholder": "sipmtls.example.com",
         "sipDestinationsOverview": {
@@ -3054,7 +3055,7 @@
         "types": {
           "Answered": "Answered",
           "CallerDoesntHaveEmail": "Caller Doesn't Have Email",
-          "CallerIsntSquared": "Caller Isn't Cisco Webex User",
+          "CallerIsntSquared": "Caller Isn't Cisco Webex Teams User",
           "CloudURIMissingOnCaller": "Cloud URI Missing On Caller",
           "Connecting": "Connecting",
           "DNSHostNameFound": "DNS Hostname Found",
@@ -4392,7 +4393,7 @@
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
     "message": "Message",
-    "ciscoSparkMessaging": "Cisco Webex Messaging",
+    "ciscoSparkMessaging": "Cisco Webex Teams",
     "meeting": "Meeting",
     "setupMeetingService": "Set up meeting service",
     "setupWebexMeetingSites": "Set up Webex Meetings Sites",
@@ -4480,8 +4481,8 @@
     "sharedLicenses": "Shared Meetings Licenses",
     "sharedLicenseTooltip": "Each Shared Meetings license allows up to 250 users to be entitled as meeting hosts. Shared Meetings hosts can hold unlimited meetings but not exceed 1 concurrent meeting per Shared Meetings license.",
     "namedLicenses": "Named User Licenses",
-    "careTooltip": "All Care users require Cisco Webex Messaging license as a prerequisite. Additionally, they require Cisco Webex Calling license for voice-based interactions.",
-    "careTooltipToggle": "You must have Cisco Webex Messaging license to use Webex Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
+    "careTooltip": "All Care users require Cisco Webex Teams license as a prerequisite. Additionally, they require Cisco Webex Calling license for voice-based interactions.",
+    "careTooltipToggle": "You must have Cisco Webex Teams license to use Webex Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "Webex-provided Audio",
     "meetingsInSpark": "Cisco Webex 25 party Meetings",
@@ -7069,7 +7070,7 @@
     "advancedLinkLabel": "Advanced Settings"
   },
   "webexCommon": {
-    "logoAltText": "Cisco Webex",
+    "logoAltText": "Cisco Webex Teams",
     "breadcrumbsAltText": "You are here"
   },
   "webexSiteListTabs": {
@@ -8020,18 +8021,18 @@
       "sectionTitle": "Options",
       "sectionDescr": "Control how Webex Messenger works with Cisco Webex Teams."
     },
-    "jabberInteropHeading": "Cisco Webex / Jabber Interop",
-    "jabberInteropTooltip": "Messaging between Cisco Webex and Jabber.",
+    "jabberInteropHeading": "Cisco Webex Teams / Jabber Interop",
+    "jabberInteropTooltip": "Messaging between Cisco Webex Teams and Jabber.",
     "jabberInteropUpdateSuccessful": "Jabber Interop updated successfully.",
     "authRedirectHeading": "Redirect Messenger Users to Common Identity Login Flow",
     "authRedirectTooltip": "If enabled, users will login to Common Identity. If disabled, users will login to Messenger.",
     "pwdSyncHeading": "Sync Passwords From Messenger",
-    "pwdSyncTooltip": "If enabled, user password changes through Jabber client or through OrgAdmin will be synchronized over to their Cisco Webex accounts. If disabled, user password changes through Jabber client or through OrgAdmin remain in Messenger.",
-    "sparkEntHeading": "Enable Free Cisco Webex for Messenger Users",
+    "pwdSyncTooltip": "If enabled, user password changes through Jabber client or through OrgAdmin will be synchronized over to their Cisco Webex Teams accounts. If disabled, user password changes through Jabber client or through OrgAdmin remain in Messenger.",
+    "sparkEntHeading": "Enable Free Cisco Webex Teams for Messenger Users",
     "sparkEntTooltip": "If enabled, all users in your Messenger organization will be given access to Free Webex. If disabled, only Administrators will be given access to Free Webex.",
-    "usrDisHeading": "Disabling of Messenger Users reflects in Cisco Webex",
+    "usrDisHeading": "Disabling of Messenger Users reflects in Cisco Webex Teams",
     "usrDisTooltip": "If enabled, users disabled in OrgAdmin will be disabled in Webex.  If disabled, disabling a user in OrgAdmin will not disable the user in Webex.",
-    "usrDelHeading": "Remove of Messenger Users reflects in Cisco Webex",
+    "usrDelHeading": "Remove of Messenger Users reflects in Cisco Webex Teams",
     "usrDelTooltip": "If enabled, users deleted in OrgAdmin will be deleted in Webex. If disabled, users deleted in OrgAdmin will not be deleted in Webex.",
     "errorAuthFailed": "Authorization failed: ",
     "errorFailedCheckingCIEntitlements": "Failed checking user entitlements from Common Identity: ",
@@ -8978,7 +8979,7 @@
     },
     "retention": {
       "title": "Retention",
-      "subsectionLabel": "Cisco Spark Message Data",
+      "subsectionLabel": "Cisco Webex Teams Data",
       "subsectionDescription": "Set amount of time before accumulated user data is retired and removed from the system. <br/> There is a 5GB total storage limit per user.  After limit is reached, older data will be removed first.",
       "retentionOption": "Past {{number}} months",
       "indefiniteRetentionOption": "Indefinitely",
@@ -8987,7 +8988,7 @@
       "customRetentionOption": "Custom retention time between 1 and 120 months",
       "customRetentionMonths": "months",
       "modalTitle": "Update Retention Time",
-      "modalBody1": "Are you sure you want to update the retention time for Cisco Spark Message to a shorter period?",
+      "modalBody1": "Are you sure you want to update the retention time for Cisco Webex Teams to a shorter period?",
       "modalBody2": "Any additional data older than the new time period will be deleted.",
       "notificationSuccess": "Settings successfully updated.",
       "notificationFailure": "Failed to change retention period setting."
@@ -9006,8 +9007,8 @@
     },
     "security": {
       "title": "Security",
-      "subsectionLabel": "Cisco Spark Client Security",
-      "description": "Users can only launch the Cisco Spark app on mobile devices protected with lock screens."
+      "subsectionLabel": "Cisco Webex Teams Client Security",
+      "description": "Users can only launch the Cisco Webex Teams app on mobile devices protected with lock screens."
     },
     "sparkAssistant": {
       "title": "Cisco Webex Assistant",
@@ -9028,7 +9029,7 @@
       "title": "External Communication",
       "subsectionLabel": "Messaging",
       "subsectionDescription": "Secure your organization's data by blocking external messaging.",
-      "description": "Block your users from inviting external contacts to Cisco Spark spaces and prevent your users from joining external Cisco Spark spaces."
+      "description": "Block your users from inviting external contacts to Cisco Webex Teams spaces and prevent your users from joining external Cisco Webex Teams spaces."
     },
     "fileSharingControl": {
       "title": "File Sharing Control",
@@ -9049,7 +9050,7 @@
     "support": {
       "title": "Support",
       "subsectionLabel": "Problem Reports",
-      "subsectionDescription": "Define support options in the Cisco Spark app.",
+      "subsectionDescription": "Define support options in the Cisco Webex Teams app.",
       "problemReportsToCustomUrl": "Send problem reports to a custom URL",
       "problemReportsTextPlaceholder": "Enter additional support contact information here, like phone numbers or email addresses",
       "helpSiteLabel": "Help Site",
@@ -9204,7 +9205,7 @@
       "useFree": {
         "header": "Use Free Cisco Webex",
         "meetings": "Free Cisco Webex Meetings with 3 people",
-        "messaging": "Free Cisco Webex Messaging",
+        "messaging": "Free Cisco Webex Teams",
         "button": "Use Free"
       },
       "deleteAccount": {
@@ -9333,11 +9334,11 @@
     "claimedDomain": "Claimed Domains",
     "hybridServices": "Hybrid Services",
     "entitlements": {
-      "webex-squared": "Free Cisco Webex Messaging",
+      "webex-squared": "Free Cisco Webex Teams",
       "squared-syncup.paid": "25 Party Meetings",
       "squared-syncup.free": "Free 3 Party Cisco Webex Meetings",
       "squared-room-moderation.paid": "Standard Team Spaces",
-      "squared-room-moderation.free": "Free Cisco Webex Messaging",
+      "squared-room-moderation.free": "Free Cisco Webex Teams",
       "ciscouc.paid": "Advanced Cisco Webex Calling",
       "ciscouc.free": "Free 1:1 Cisco Webex Calling",
       "meetings": "Webex Meetings (Webex 11)",
@@ -9649,7 +9650,7 @@
       "remove": "Remove",
       "description": "You are about to remove the following domain:",
       "preventLockoutError": "Removing your own domain will prevent you from logging in.",
-      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Cisco Spark services. You will not be able the add any new users that belong to this domain."
+      "warning": "Users that belong to this domain will be locked out and will not be able to log in or use Cisco Webex services. You will not be able the add any new users that belong to this domain."
     },
     "unclaim": {
       "header": "Release Domain Claim",
@@ -9661,7 +9662,7 @@
       "header": "Verify Domain",
       "verifyThis": "Before you verify",
       "beforeVerify": "you must copy and paste this DNS verification token to the TXT record section to prove that you own the domain:",
-      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Cisco Spark services. Also, you will not be able to add any new users that belong to unverified domains.",
+      "warning": "It is important to verify all domains. Users that don't belong to a verified domain will be locked out immediately. Those users will not be able to log in or use Cisco Webex services. Also, you will not be able to add any new users that belong to unverified domains.",
       "verify": "Verify",
       "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Learn more</a> about how to enter the DNS verification token."
     },
@@ -9925,7 +9926,7 @@
       },
       "hybridImp": {
         "title": "Hybrid Message",
-        "description": "Connect Cisco Spark to IM and Presence Service, so that Cisco Spark users and Cisco Jabber users can direct message each other.",
+        "description": "Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -11436,7 +11437,7 @@
       "email": "Email Address",
       "status": "Auto Convert In",
       "eligible": "Eligible For",
-      "transient": "Transient Date" 
+      "transient": "Transient Date"
     },
     "status": {
       "immediate": "Immediate Conversion",

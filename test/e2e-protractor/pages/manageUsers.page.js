@@ -121,7 +121,7 @@ var manageUsersPage = function () {
     assignableServices: {
       licenses: {
         messaging: {
-          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Webex Messaging')).first(),
+          firstLicense: element.all(by.cssContainingText('assignable-services label[for^="MS_"]', 'Cisco Webex Teams')).first(),
           firstLicenseCheckbox: element.all(by.css('assignable-services input[type="checkbox"][name^="MS_"]')).first(),
         },
         meeting: {
@@ -132,7 +132,7 @@ var manageUsersPage = function () {
     },
     templateSummary: {
       summary: element(by.css('auto-assign-template-summary')),
-      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Webex Messaging')),
+      messagingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Webex Teams')),
       meetingItem: element(by.cssContainingText('auto-assign-template-summary h6', 'Cisco Webex 25 party Meetings')),
     },
   };
