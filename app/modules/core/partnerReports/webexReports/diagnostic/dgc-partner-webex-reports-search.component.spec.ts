@@ -8,15 +8,15 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
         conferenceID: 50190706068695610,
         status: 2,
         meetingName: 'mcmeeting_20161017075425',
-        endTime_: '2017-08-09 10:30:33',
-        StartTime_: '2017-08-07 10:30:33',
+        endTime: '2017-08-09 10:30:33',
+        startTime: '2017-08-07 10:30:33',
       },
       {
         conferenceID: 1011112787,
         status: 1,
         meetingName: 'zhan xuguangs Webex Meeting',
-        endTime_: '2017-08-09 10:30:33',
-        StartTime_: '2017-08-07 10:30:33',
+        endTime: '2017-08-09 10:30:33',
+        startTime: '2017-08-07 10:30:33',
       },
     ];
     this.item = {
@@ -90,7 +90,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
 
     initComponent.call(this);
     this.view.find(this.input).val('zoncao@cisco.com').change().triggerHandler('blur');
-    spyOn(this.controller.gridOptions, 'data').and.returnValue(this.controller.gridData);
+    expect(this.controller.gridData.length).toBe(2);
   });
 
   it('should show the empty data for the grid when search with incorrect email or incorrect meeting number then trigger blur event', function () {
@@ -99,6 +99,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     initComponent.call(this);
     this.controller.errMsg = {};
     this.view.find(this.input).val('23423432ad').change().triggerHandler('blur');
+    expect(this.controller.gridData.length).toBe(0);
     expect(this.controller.errMsg.search).toBe('<i class="icon icon-warning"></i> Please enter the correct email or meeting number');
   });
 
@@ -117,7 +118,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
       expect(this.controller.gridData.length).toBe(2);
     });
 
-    it('should update when date illegality', function() {
+    it('should update when date inputs are invalid', function() {
       spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
       spyOn(this.PartnerSearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
       initComponent.call(this);
@@ -127,11 +128,11 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
       this.controller.onChangeDate();
       this.controller.searchStr = '355602502';
       this.controller.startSearch();
-      expect(this.controller.errMsg.datePicker).toEqual('<i class="icon icon-warning"></i> The start date must not be greater than the end date');
+      expect(this.controller.errMsg.datePicker).toBe('<i class="icon icon-warning"></i> The start date must not be greater than the end date');
     });
   });
 
-  it('should notify in message for non 200 http status', function() {
+  it('should error notify if PartnerSearchService.getMeetings() rejects', function() {
     spyOn(this.PartnerSearchService, 'getStorage').and.returnValue('23423432');
     spyOn(this.PartnerSearchService, 'getMeetings').and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
@@ -140,14 +141,35 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
 
   it('should change timeZone: onChangeTz', function () {
     initComponent.call(this);
-    this.controller.gridData = this.meetingSearch;
+    this.controller.gridData = [{ endTime: '2017-08-09 10:30:33', startTime: '2017-08-07 10:30:33' }];
+    expect(this.controller.gridData[0].startTime_).toBeUndefined();
     this.controller.onChangeTz('Asia/Shanghai');
-    expect(this.controller.gridData[0].startTime_).toBeDefined();
+    expect(this.controller.gridData[0].startTime_).toBe('2017-08-07 06:30:33 PM');
   });
 
   it('should call $state.go', function () {
     initComponent.call(this);
-    this.controller.showDetail({ id: 111 });
-    expect(this.$state.go).toHaveBeenCalled();
+    this.controller.showDetail({ conferenceID: 111 });
+    expect(this.$state.go).toHaveBeenCalledWith('partnerreports.dgc.meetingdetail', { cid: 111 });
+  });
+
+  describe('isValidEmail():', () => {
+    it('should return true if passed a string that matches an email-like format, false otherwise', function () {
+      initComponent.call(this);
+      expect(this.controller.isValidEmail('foo@bar.com')).toBe(true);
+      expect(this.controller.isValidEmail('f1@b.ar')).toBe(true);
+      expect(this.controller.isValidEmail('f@b.ar')).toBe(false);
+      expect(this.controller.isValidEmail('foo@a.r')).toBe(false);
+    });
+  });
+
+  describe('isValidDigitCode():', () => {
+    it('should return true if passed a string that matches number, false otherwise', function () {
+      initComponent.call(this);
+      expect(this.controller.isValidDigitCode('42344')).toBe(true);
+      expect(this.controller.isValidDigitCode('09438')).toBe(true);
+      expect(this.controller.isValidDigitCode('r4545')).toBe(false);
+      expect(this.controller.isValidDigitCode('234y56')).toBe(false);
+    });
   });
 });

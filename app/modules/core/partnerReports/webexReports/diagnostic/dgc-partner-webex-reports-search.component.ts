@@ -5,7 +5,7 @@ import { IMeetingDetail } from './partner-search.interfaces';
 import { PartnerSearchService } from './partner-search.service';
 
 const DATERANGE = 6;
-export interface IGridApiScope extends ng.IScope {
+interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
@@ -20,7 +20,7 @@ interface IDateRange {
   };
 }
 
-class WebexReportsSearchController implements ng.IComponentController {
+class DgcPartnerWebexReportsSearchController implements ng.IComponentController {
   public gridData: IMeetingDetail[];
   public gridOptions: uiGrid.IGridOptions = {};
   public endDate: string;
@@ -33,14 +33,12 @@ class WebexReportsSearchController implements ng.IComponentController {
   public isLoadingShow = false;
   public isDatePickerShow = false;
 
-  private flag = true;
   private today: string;
   private email: string;
   private meetingNumber: string;
 
   /* @ngInject */
   public constructor(
-    private $log: ng.ILogService,
     private $scope: IGridApiScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
@@ -59,7 +57,6 @@ class WebexReportsSearchController implements ng.IComponentController {
     this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
       .then((isPartnerWebexEnabled: boolean): void => {
         if (!isPartnerWebexEnabled) {
-          this.$log.log('webex report for partner webex disabled');
           this.$state.go('login');
         } else {
           this.initDateRange();
@@ -140,17 +137,28 @@ class WebexReportsSearchController implements ng.IComponentController {
     this.dateRange.end = this.dateRange.start;
   }
 
-  private startSearch(): void {
-    const digitalReg = /^([\d]{8,10}|([\d]{1,4}[\s]?){3})$/;
-    const emailReg = /^[\w\d]([\w\d.-])+@([\w\d-])+\.([\w\d-]){2,}/;
+  private isValidEmail(testStr: string): boolean {
+    const USER_COMPONENT = '^[\\w\\d]([\\w\\d.-])+';
+    const DOMAIN_PREFIX = '([\\w\\d-])+';
+    const DOT = '\\.';
+    const DOMAIN_SUFFIX = '([\\w\\d-]){2,}';
+    const emailRegex = new RegExp(`${USER_COMPONENT}@${DOMAIN_PREFIX}${DOT}${DOMAIN_SUFFIX}`);
+    return emailRegex.test(testStr);
+  }
 
-    this.flag = false;
+  private isValidDigitCode(testStr: string): boolean {
+    const digitalReg = /^([\d]{8,10}|([\d]{1,4}[\s]?){3})$/;
+    return digitalReg.test(testStr);
+  }
+
+  private startSearch(): void {
     this.gridData = [];
     this.errMsg.ariaLabel = '';
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
-
-    if ((!emailReg.test(this.searchStr) && !digitalReg.test(this.searchStr)) || this.searchStr === '') {
+    const isValidEmail = this.isValidEmail(this.searchStr);
+    const isValidDigital = this.isValidDigitCode(this.searchStr);
+    if (!isValidEmail && !isValidDigital) {
       this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');
       this.errMsg.search = `<i class="icon icon-warning"></i> ${this.errMsg.ariaLabel}`;
       return;
@@ -160,13 +168,12 @@ class WebexReportsSearchController implements ng.IComponentController {
       return;
     }
 
-    this.flag = true;
-    if (emailReg.test(this.searchStr)) {
+    if (isValidEmail) {
       this.email = this.searchStr;
       this.meetingNumber = '';
     }
 
-    if (digitalReg.test(this.searchStr)) {
+    if (isValidDigital) {
       this.email = '';
       this.meetingNumber = this.searchStr;
     }
@@ -194,7 +201,7 @@ class WebexReportsSearchController implements ng.IComponentController {
           meeting.startTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.startTime);
           return meeting;
         });
-        this.gridData = this.flag ? meetingList : [];
+        this.gridData = meetingList;
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
@@ -265,6 +272,6 @@ class WebexReportsSearchController implements ng.IComponentController {
 }
 
 export class DgcPartnerWebexReportsSearchComponent implements ng.IComponentOptions {
-  public controller = WebexReportsSearchController;
+  public controller = DgcPartnerWebexReportsSearchController;
   public template = require('./dgc-partner-webex-reports-search.html');
 }
