@@ -54,7 +54,7 @@
         <div ng-class="planReview.getGridColumnClassName()" class="columns column-title">
           <div class="column-header">
             <i class="icon icon-circle-message"></i>
-            <h3 translate="firstTimeWizard.message"></h3>
+            <h3 translate="firstTimeWizard.messaging"></h3>
           </div>
         </div>
         <div ng-class="planReview.getGridColumnClassName()" class="columns column-title">
@@ -66,7 +66,7 @@
         <div ng-class="planReview.getGridColumnClassName()" class="columns column-title">
           <div class="column-header">
             <i class="icon icon-circle-call"></i>
-            <h3 translate="firstTimeWizard.call"></h3>
+            <h3 translate="firstTimeWizard.calling"></h3>
           </div>
         </div>
         <div ng-if="planReview.isCareEnabled" id="careHeader" class="small-3 columns column-title">
@@ -103,7 +103,7 @@
             translate-values="{days: planReview.trial.trialPeriod}"></div>
           <div ng-class="{'column-paid' : !planReview.messagingServices.isNewTrial, 'column-trial' : planReview.messagingServices.isNewTrial}">
             <div ng-if="multipleSubscriptions.showSection(planReview.messagingServices.services)" class="item-msg-license">
-              <span translate="firstTimeWizard.message"></span>
+              <span translate="firstTimeWizard.messaging"></span>
             </div>
             <div class="item-paid"
               ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
@@ -124,13 +124,16 @@
             translate-values="{days: planReview.trial.trialPeriod}">
           </div>
           <div ng-class="{'column-mtg' : !planReview.confServices.isNewTrial, 'column-trial' : planReview.confServices.isNewTrial}">
-            <div ng-if="planReview.selectedSubscriptionHasBasicLicenses(multipleSubscriptions.selectedSubscription)" class="item-mtg-license">
-              <span translate="firstTimeWizard.basicMeetings"></span>
+            <div class="item-mtg-license">
+              <span translate="firstTimeWizard.meetings"></span>
             </div>
-            <div ng-repeat="service in planReview.confServices.services track by $index" ng-if="service.license.offerName === 'CF'">
-              <!-- show license details for standard 25-party meetings-->
-              <div class="item-paid" ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)">
-                <div class="product-entity-reposition" translate="firstTimeWizard.meetingsInSpark"></div>
+            <div ng-if="service.license.offerName === 'CF'"
+              ng-repeat="service in planReview.confServices.services track by $index">
+              <div ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
+                class="item-paid">
+                <div class="product-entity-reposition"
+                 translate="firstTimeWizard.meetingsInSpark">
+                </div>
                 <div class="quantity-mtg-details product-entity-reposition">
                   <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
                   <span class="license-entity-tooltip">
@@ -146,19 +149,18 @@
                 </div>
               </div>
             </div>
-            <div ng-if="planReview.selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription)" class="item-mtg-license">
-              <span translate="firstTimeWizard.advancedMeetings"></span>
-            </div>
-            <div class="item-mtg"
-              ng-if="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial)"
-              ng-repeat="services in planReview.advancedMeetings track by $index">
+            <div ng-if="multipleSubscriptions.showLicenses(services[0].license.billingServiceId, services[0].license.isTrial)"
+              ng-repeat="services in planReview.advancedMeetings track by $index"
+              class="item-mtg">
               <div class="sub-item" ng-repeat="service in services track by $index">
                 <div ng-if="service.license.isTrial || planReview.confServices.isNewTrial" class="badge badge-warning" translate="firstTimeWizard.trial"></div>
                 <div class="item-webex product-entity-reposition">
                   {{'firstTimeWizard.webex' | translate}} {{service.label}}
                 </div>
                 <div class="quantity-mtg-details product-entity-reposition">
-                  <span class="license-type">{{service.license.volume}} {{planReview.determineLicenseType(service)}}</span>
+                  <span class="license-type">
+                    {{service.license.volume}} {{planReview.determineLicenseType(service)}}
+                  </span>
                   <span class="license-entity-tooltip">
                     <i class="icon icon-info"
                       tooltip-trigger="focus mouseenter"
@@ -170,7 +172,9 @@
                     </i>
                   </span>
                 </div>
-                <div class="license-siteUrl product-entity-reposition">{{service.license.siteUrl}}</div>
+                <div class="license-siteUrl product-entity-reposition">
+                  {{service.license.siteUrl}}
+                </div>
                 <div class="license-siteUrl" ng-if="service.license.isCI === false">
                   <a target="_blank"
                     href="{{service.license.siteAdminUrl}}"
@@ -188,7 +192,7 @@
             translate-values="{days: planReview.trial.trialPeriod}"></div>
           <div ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
             <div ng-if="multipleSubscriptions.showSection(planReview.commServices.services)" class="item-call-license">
-              <span translate="firstTimeWizard.call"></span>
+              <span translate="firstTimeWizard.calling"></span>
             </div>
             <div class="item-paid"
               ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"

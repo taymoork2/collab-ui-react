@@ -128,12 +128,12 @@
           licenses: meetingLicenses,
         },
         {
-          title: $translate.instant('firstTimeWizard.call'),
+          title: $translate.instant('firstTimeWizard.calling'),
           icon: 'icon-circle-call',
           licenses: SetupWizardService.getPendingCallLicenses(),
         },
         {
-          title: $translate.instant('firstTimeWizard.message'),
+          title: $translate.instant('firstTimeWizard.messaging'),
           icon: 'icon-circle-message',
           licenses: SetupWizardService.getPendingMessageLicenses(),
         },
