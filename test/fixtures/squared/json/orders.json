@@ -7,7 +7,11 @@
   "orderReceived": "2017-04-07 13:18:22.739",
   "lastModified": "2017-04-07 11:18:22.739",
   "customerName": "Designit Oslo",
-  "adminEmail": "osl-infrastructure@designit.com"
+  "adminEmail": "osl-infrastructure@designit.com",
+  "queueReceived": "2017-04-07 13:23:22.739",
+  "assignedTo": "Not Assigned",
+  "queueCompleted": "",
+  "completedBy":""
 }, {
   "webOrderID": "8484478473871",
   "orderUUID": "1d8dcfba-619e-11e7-9488-8484478473871",
@@ -17,7 +21,11 @@
   "orderReceived": "2017-02-01 08:18:12.739",
   "lastModified": "2017-02-01 08:18:12.739",
   "customerName": "Designit Aarhus",
-  "adminEmail": "aar-infrastructure@designit.com"
+  "adminEmail": "aar-infrastructure@designit.com",
+  "queueReceived": "2017-02-01 08:18:15.739",
+  "assignedTo": "fakegmuser+hd",
+  "queueCompleted": "",
+  "completedBy":""
 }, {
   "webOrderID": "4873483748373",
   "orderUUID": "1d8dcfba-619e-11e7-9488-4873483748373",
@@ -27,7 +35,11 @@
   "orderReceived": "2017-04-11 14:51:17.419",
   "lastModified": "2017-04-12 14:51:17.419",
   "customerName": "Hastwo Services",
-  "adminEmail": "atlastestlos@gmail.com"
+  "adminEmail": "atlastestlos@gmail.com",
+  "queueReceived": "2017-04-07 13:23:22.739",
+  "assignedTo": "Not Assigned",
+  "queueCompleted": "",
+  "completedBy":""
 }, {
   "webOrderID": "4873483748373",
   "orderUUID": "1d8dcfba-619e-11e7-9488-4873483748373",
@@ -37,7 +49,11 @@
   "orderReceived": "2016-04-11 14:51:17.419",
   "lastModified": "2016-04-12 14:51:17.419",
   "customerName": "Hasone Service",
-  "adminEmail": "atlastestlos2@gmail.com"
+  "adminEmail": "atlastestlos2@gmail.com",
+  "queueReceived": "2017-04-07 13:23:22.739",
+  "assignedTo": "Not Assigned",
+  "queueCompleted": "",
+  "completedBy":""
 }, {
   "webOrderID": "9348734666437",
   "orderUUID": "1d8dcfba-619e-11e7-9488-9348734666437",
@@ -47,5 +63,9 @@
   "orderReceived": "2017-06-12 14:21:17.419",
   "lastModified": "2017-07-12 14:41:17.409",
   "customerName": "Random company",
-  "adminEmail": "osl@designit.com"
+  "adminEmail": "osl@designit.com",
+  "queueReceived": "2017-04-07 13:23:22.739",
+  "assignedTo": "fakegmuser+hd",
+  "queueCompleted": "2017-04-07 13:23:22.739",
+  "completedBy":"fakegmuser+hd"
 }]

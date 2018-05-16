@@ -13,6 +13,7 @@ describe('Controller: ProvisioningDetailsController', function () {
     spyOn(this.ProvisioningService, 'getOrder').and.returnValue(this.$q.resolve(order_detail));
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
     spyOn(this.ProvisioningService, 'updateOrderStatus').and.returnValue(this.$q.resolve(orders));
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   }
 
   function init() {
@@ -25,6 +26,7 @@ describe('Controller: ProvisioningDetailsController', function () {
       '$state',
       '$stateParams',
       '$timeout',
+      'FeatureToggleService',
       'ProvisioningService');
     initDependencySpies.apply(this);
   }
@@ -73,7 +75,7 @@ describe('Controller: ProvisioningDetailsController', function () {
       expect(order.status).toEqual(Status.PENDING);
       this.controller.moveTo(order, Status.COMPLETED);
       this.$scope.$digest();
-      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalledWith(order, Status.COMPLETED);
+      expect(this.ProvisioningService.updateOrderStatus).toHaveBeenCalledWith(order, Status.COMPLETED, null);
       expect(order.status).toEqual(Status.COMPLETED);
       expect(this.$rootScope.$broadcast).toHaveBeenCalledWith(STATUS_UPDATE_EVENT_NAME, order);
     });

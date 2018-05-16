@@ -15,6 +15,7 @@ describe('Controller: ProvisioningController', function () {
   function initDependencySpies() {
     spyOn(this.ProvisioningService, 'getOrders').and.callFake(function (param) { return orderParams[param]; });
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   }
 
   function init() {
@@ -28,6 +29,7 @@ describe('Controller: ProvisioningController', function () {
       '$timeout',
       '$translate',
       'Notification',
+      'FeatureToggleService',
       'ProvisioningService');
     initDependencySpies.apply(this);
     initController.apply(this);

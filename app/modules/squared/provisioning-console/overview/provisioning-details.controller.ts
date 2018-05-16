@@ -2,6 +2,8 @@ import { ProvisioningService } from './../provisioning.service';
 import { Status } from './../provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
+import { FeatureToggleService } from 'modules/core/featureToggle';
+import { IOrder } from '..';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -30,6 +32,7 @@ export class ProvisioningDetailsController {
   public status = Status;
   public isShowRaw = false;
   public orderContent;
+  private featureToggleFlag: boolean;
   public customerInfo = {
     customerName: '-',
     customerEmail: '-',
@@ -52,8 +55,11 @@ export class ProvisioningDetailsController {
     private $rootScope,
     private $stateParams,
     private $translate,
+    private Authinfo,
+    private $q: ng.IQService,
     private Notification: Notification,
-    private ProvisioningService: ProvisioningService) {
+    private ProvisioningService: ProvisioningService,
+    private FeatureToggleService: FeatureToggleService ) {
     this.order = this.$stateParams.order;
     this.items = {};
     this.init();
@@ -140,12 +146,27 @@ export class ProvisioningDetailsController {
   */
   public moveTo(order, newStatus: Status): void {
     this.isLoading = true;
-    this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus)
-    .then((result) => {
+    const userName = this.Authinfo.getUserName();
+    this.$q.all (
+      {updateOrderPromise: this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus, userName ),
+        featureTogglePromise: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole) })
+    .then( promises => {
+      this.featureToggleFlag = promises.featureTogglePromise.valueOf();
+      const result: IOrder = promises.updateOrderPromise;
       if (result) {
         this.order.status = newStatus;
-        this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
+        if (this.featureToggleFlag) {
+          if (newStatus === Status.PENDING) {
+            this.order.assignedTo = result.assignedTo;
+          } else if ( newStatus === Status.PROGRESS ) {
+            this.order.assignedTo = result.assignedTo;
+          } else if ( newStatus === Status.COMPLETED ) {
+            this.order.completedBy = result.assignedTo;
+            this.order.queueCompleted = result.queueCompleted;
+          }
+        }
       }
+      this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
     })
     .catch((error) => {
       this.Notification.errorResponse(error);
