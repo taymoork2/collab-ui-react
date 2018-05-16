@@ -193,13 +193,13 @@ describe('Service: Customer Reports Service', function () {
           const date: string = moment().tz(this.defaults.timezone).subtract(i, this.defaults.DAY).format();
           item.details[date] = 5 * i;
           graph.unshift({
-            date: moment(date).format(this.defaults.dayFormat),
+            date: moment(date).tz(this.defaults.timezone).format(this.defaults.dayFormat),
             totalRegisteredDevices: 5 * i,
           });
 
           if (_.isUndefined(endpoints.graphData[0].graph[i - 1])) {
             endpoints.graphData[0].graph.unshift({
-              date: moment(date).format(this.defaults.dayFormat),
+              date: moment(date).tz(this.defaults.timezone).format(this.defaults.dayFormat),
               totalRegisteredDevices: 5 * devicesData.length * i,
             });
           }
