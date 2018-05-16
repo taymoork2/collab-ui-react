@@ -6,7 +6,7 @@ import {
 } from './csv-upload-results.component';
 import { CrProgressbarComponent } from 'modules/core/shared/cr-progressbar/cr-progressbar.component';
 import { CrUsersErrorResultsComponent } from 'modules/core/users/shared/cr-users-error-results/cr-users-error-results.component';
-import { CrUsersTileTotalsComponent } from 'modules/core/users/shared/cr-users-tile-totals/cr-users-tile-totals.component';
+import { CrTotalTileComponent } from '../../shared/cr-total-tile/cr-total-tile.component';
 
 type Test = atlas.test.IComponentTest<CsvUploadResultsCtrl, {
   UserTaskManagerService: UserTaskManagerService;
@@ -15,26 +15,26 @@ type Test = atlas.test.IComponentTest<CsvUploadResultsCtrl, {
 }, {
   crProgressbar: atlas.test.IComponentSpy<CrProgressbarComponent>;
   crUsersErrorResults: atlas.test.IComponentSpy<CrUsersErrorResultsComponent>;
-  crUsersTileTotals: atlas.test.IComponentSpy<CrUsersTileTotalsComponent>;
+  crTotalTile: atlas.test.IComponentSpy<CrTotalTileComponent>;
 }>;
 
 describe('Component: csvUploadResults', () => {
   const PANEL_TITLE = 'h4.csv-upload-results__title';
   const PROGRESSBAR = 'cr-progressbar';
   const IMPORT_STATUS = '.csv-upload-results__description';
-  const USERS_TILE_TOTALS = 'cr-users-tile-totals';
+  const TOTAL_TILE_CONTAINER = 'cr-total-tile-container';
   const ERROR_LINE_BREAK = '.csv-upload-results__line-break';
   const ERROR_TABLE = 'cr-users-error-results';
 
   beforeEach(function (this: Test) {
     this.crProgressbar = this.spyOnComponent('crProgressbar');
     this.crUsersErrorResults = this.spyOnComponent('crUsersErrorResults');
-    this.crUsersTileTotals = this.spyOnComponent('crUsersTileTotals');
+    this.crTotalTile = this.spyOnComponent('crTotalTile');
     this.initModules(
       userTaskManagerModalModuleName,
       this.crProgressbar,
       this.crUsersErrorResults,
-      this.crUsersTileTotals,
+      this.crTotalTile,
     );
     this.injectDependencies(
       'UserTaskManagerService',
@@ -67,12 +67,21 @@ describe('Component: csvUploadResults', () => {
     expect(this.controller.startedBy).toBe('User Me (user.me@gmail.com)');
   });
 
-  describe('crUsersTileTotals', () => {
+  describe('crTotalTile', () => {
     it('should bind data from the active task', function (this: Test) {
-      expect(this.view.find(USERS_TILE_TOTALS)).toExist();
-      expect(this.crUsersTileTotals.bindings[0].newTotal).toBe(10);
-      expect(this.crUsersTileTotals.bindings[0].updatedTotal).toBe(10);
-      expect(this.crUsersTileTotals.bindings[0].errorTotal).toBe(10);
+      expect(this.view.find(TOTAL_TILE_CONTAINER)).toExist();
+
+      expect(this.crTotalTile.bindings[0].totalValue).toBe(5);
+      expect(this.crTotalTile.bindings[0].totalColor).toBe('green');
+      expect(this.crTotalTile.bindings[0].l10nLabel).toBe('userManage.bulk.newUsers');
+
+      expect(this.crTotalTile.bindings[1].totalValue).toBe(10);
+      expect(this.crTotalTile.bindings[1].totalColor).toBe('blue');
+      expect(this.crTotalTile.bindings[1].l10nLabel).toBe('userManage.bulk.existingUsers');
+
+      expect(this.crTotalTile.bindings[2].totalValue).toBe(15);
+      expect(this.crTotalTile.bindings[2].totalColor).toBe('red');
+      expect(this.crTotalTile.bindings[2].l10nLabel).toBe('userManage.bulk.errorUsers');
     });
   });
 
