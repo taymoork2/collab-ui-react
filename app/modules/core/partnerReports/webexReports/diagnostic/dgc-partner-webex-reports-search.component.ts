@@ -69,7 +69,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
       });
   }
 
-  public showDetail(item: any): void {
+  public showDetail(item: IMeetingDetail): void {
     this.PartnerSearchService.setStorage('webexMeeting', item);
     this.PartnerSearchService.setStorage('searchStr', this.searchStr);
     this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
@@ -147,8 +147,13 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private isValidDigitCode(testStr: string): boolean {
-    const digitalReg = /^([\d]{8,10}|([\d]{1,4}[\s]?){3})$/;
-    return digitalReg.test(testStr);
+    const DIGITS_8_TO_10 = '^[\\d]{8,10}';
+    const DIGITS_1_TO_4 = '[\\d]{1,4}';
+    const OPTIONAL_SPACE = '[\\s]?';
+    const ACCEPTABLE_CODE_OPTION_1 = `${DIGITS_8_TO_10}`;
+    const ACCEPTABLE_CODE_OPTION_2 = `(${DIGITS_1_TO_4}${OPTIONAL_SPACE}){3}`;
+    const digitalCodeRegex = new RegExp(`^(${ACCEPTABLE_CODE_OPTION_1}|${ACCEPTABLE_CODE_OPTION_2})$`);
+    return digitalCodeRegex.test(testStr);
   }
 
   private startSearch(): void {
@@ -263,7 +268,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
       enableVerticalScrollbar: 0,
       enableHorizontalScrollbar: 0,
       onRegisterApi: (gridApi) => {
-        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+        gridApi.selection.on.rowSelectionChanged(this.$scope, (row: {entity: IMeetingDetail}) => {
           this.showDetail(row.entity);
         });
       },
