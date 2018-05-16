@@ -248,6 +248,12 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
+    ProximityServiceUrl: {
+      dev: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      cfe: 'https://proximity-loada.ciscospark.com/proximity/api/v1/ping',
+      integration: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      prod: 'https://proximity-a.wbx2.com/proximity/api/v1',
+    },
     QlikServiceUrl: {
       dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',

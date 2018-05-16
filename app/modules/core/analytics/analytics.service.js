@@ -261,6 +261,12 @@
           VIEW_INVOICE: 'Online: View Invoice',
         },
       },
+      DEVICE: {
+        name: 'Device',
+        eventNames: {
+          PROXIMITY: 'wifi proximity',
+        },
+      },
       DEVICE_BULK: {
         name: 'Bulk device',
         eventNames: {

@@ -5,6 +5,7 @@ import { SearchTranslator } from './search/searchTranslator';
 import { SearchRequestCompressor } from './search/searchRequestCompressor';
 import { CsdmBulkService } from './csdmBulk.service';
 import { CsdmAnalyticsHelper } from './csdm-analytics-helper.service';
+import { WifiProximityService } from './wifiProximity.service';
 
 export default angular
   .module('Csdm.services', [
@@ -21,4 +22,5 @@ export default angular
   .service('DeviceSearchConverter', DeviceSearchConverter)
   .service('DeviceSearchTranslator', SearchTranslator)
   .service('SearchRequestCompressor', SearchRequestCompressor)
+  .service('WifiProximityService', WifiProximityService)
   .name;
