@@ -109,7 +109,7 @@ describe('HybridServiceClusterList controller', () => {
       spyOn($state, 'go');
     });
 
-    it('should automatically open the Hybrid Media cluster sidepanel if a clusterId is provided', () => {
+    it('should automatically open the Video Mesh cluster sidepanel if a clusterId is provided', () => {
       ctrl = initController('squared-fusion-media', clusterId);
       ctrl.$onInit();
       ctrl.clusterListGridOptions.onRegisterApi(gridApiMock);
