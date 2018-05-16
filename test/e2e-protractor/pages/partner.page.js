@@ -115,7 +115,7 @@ var PartnerHomePage = function () {
   this.closeBtnOnModal = element(by.id('modal-close'));
   this.videoModal = element(by.id('videoId'));
   this.webexSiteURL = element(by.id('siteUrl'));
-  this.openMeetingSidePanelLink = element(by.cssContainingText('.feature-name', 'Meeting 25 Party'));
+  this.openMeetingSidePanelLink = element(by.cssContainingText('.feature-name', 'Webex Team Meetings'));
 
   this.viewAllLink = element(by.id('viewAllLink'));
   this.customerList = element(by.id('customerListPanel'));

@@ -185,8 +185,8 @@ var UsersPage = function () {
   this.messageServiceFree = element(by.cssContainingText('.feature-label', 'Cisco Webex Teams Free Messaging'));
   this.meetingServiceFree = element(by.cssContainingText('.feature-label', 'Cisco Webex Free Meetings'));
 
-  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Messaging'));
-  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Meeting'));
+  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Cisco Webex Teams'));
+  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Cisco Webex Team Meetings'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
