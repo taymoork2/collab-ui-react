@@ -4,7 +4,7 @@ import { SearchHits } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
-import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
+import { GridService } from 'modules/core/csgrid';
 import IDevice = csdm.IDevice;
 import { Device, DeviceSearchConverter, IIdentifiableDevice } from '../services/deviceSearchConverter';
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
@@ -45,7 +45,7 @@ class DeviceList implements ng.IComponentController {
               private $scope,
               private $window: Window,
               private Notification,
-              private GridCellService: GridCellService,
+              private GridService: GridService,
               private DeviceSearchConverter: DeviceSearchConverter,
               private FeatureToggleService,
               Authinfo) {
@@ -72,7 +72,7 @@ class DeviceList implements ng.IComponentController {
           return this.searchObject;
         },
         selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
-          this.GridCellService.selectRow(grid, row);
+          this.GridService.selectRow(grid, row);
           this.expandDevice(row.entity);
         },
         expandDevice: (device: IDevice) => {

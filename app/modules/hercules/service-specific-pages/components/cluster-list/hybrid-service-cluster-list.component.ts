@@ -1,7 +1,7 @@
 import { ConnectorType, HybridServiceId, IExtendedClusterServiceStatus, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import enterprisePrivateTrunkServiceModuleName, { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import hybridServicesUtilsServiceModuleName, { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
-import gridModuleName, { GridCellService } from 'modules/core/csgrid';
+import gridModuleName, { GridService } from 'modules/core/csgrid';
 import './_hybrid-service-cluster-list.scss';
 import hybridServicesClusterStatesServiceModuleName, { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import hybridServiceClusterServiceModuleName, { HighLevelStatusForService, HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
@@ -50,7 +50,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
-    private GridCellService: GridCellService,
+    private GridService: GridService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
@@ -82,7 +82,7 @@ export class HybridServiceClusterListCtrl implements ng.IComponentController {
           this.goToSidepanel(row.entity.id);
         },
         keypressSidepanel: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow) => {
-          this.GridCellService.selectRow(grid, row);
+          this.GridService.selectRow(grid, row);
           this.goToSidepanel(row.entity.id);
         },
       },

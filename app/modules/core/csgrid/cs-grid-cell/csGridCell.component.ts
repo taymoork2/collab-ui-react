@@ -1,4 +1,4 @@
-import { GridCellService } from './gridCell.service';
+import { GridService } from 'modules/core/csgrid';
 
 class CsGridCellCtrl {
   public cellClickFunction?: Function;
@@ -10,11 +10,11 @@ class CsGridCellCtrl {
 
   /* @ngInject */
   constructor(
-    private GridCellService: GridCellService,
+    private GridService: GridService,
   ) {}
 
   public click(): void {
-    this.GridCellService.selectRow(this.grid, this.row);
+    this.GridService.selectRow(this.grid, this.row);
 
     if (_.isFunction(this.cellClickFunction)) {
       this.cellClickFunction(this.row.entity);

@@ -4,6 +4,7 @@ import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign
 import { DirSyncService } from 'modules/core/featureToggle/dirSync.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IOnboardScopeForUsersConvert, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
+import { GridService } from 'modules/core/csgrid';
 import OnboardStore from 'modules/core/users/shared/onboard/onboard.store';
 import * as moment from 'moment';
 
@@ -63,11 +64,11 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     private AutoAssignTemplateService: AutoAssignTemplateService,
     private DirSyncService: DirSyncService,
     private FeatureToggleService: FeatureToggleService,
+    private GridService: GridService,
     private OnboardStore: OnboardStore,
     private Orgservice,
     private uiGridConstants: uiGrid.IUiGridConstants,
-  ) {
-  }
+  ) { }
 
   public $onInit(): void {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
@@ -79,29 +80,17 @@ export class CrConvertUsersModalController implements ng.IComponentController {
       data: undefined,
       appScopeProvider: this,
       rowHeight: 45,
-      enableHorizontalScrollbar: 0,
-      selectionRowHeaderWidth: 50,
-      enableRowHeaderSelection: !this.convertUsersReadOnly,
+      multiSelect: !this.convertUsersReadOnly,
       enableFullRowSelection: !this.convertUsersReadOnly,
+      enableRowSelection: !this.convertUsersReadOnly,
       useExternalSorting: false,
-      enableColumnMenus: false,
       saveSelection: true,
       onRegisterApi: (gridApi: uiGrid.IGridApi) => {
         this.gridApi = gridApi;
         this.restoreConvertList();
       },
-      columnDefs: [{
-        field: 'displayName',
-        displayName: this.$translate.instant('usersPage.displayNameHeader'),
-      }, {
-        field: 'userName',
-        displayName: this.$translate.instant('homePage.emailAddress'),
-        sort: {
-          direction: 'desc',
-          priority: 0,
-        },
-        sortCellFiltered: true,
-      }],
+      columnDefs: this.getColumnDefs(),
+      saveRowIdentity: (rowEntity => rowEntity.userName) as any,
     };
 
     // F7208 - convert users Modal work...
@@ -132,9 +121,9 @@ export class CrConvertUsersModalController implements ng.IComponentController {
     this.gridPotentialUsers = {
       data: undefined,
       rowHeight: 45,
-      enableHorizontalScrollbar: 0,
+      multiSelect: true,
       enableFullRowSelection: true,
-      selectionRowHeaderWidth: 50,
+      enableRowSelection: true,
       enableColumnMenus: false,
       // piggy back on existing convert user code
       onRegisterApi: gridApi => {
@@ -177,19 +166,28 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
   // helper function for building grid options
   private addGridColumns(grid: uiGrid.IGridOptions, isPotentialList: boolean): void {
-    grid.columnDefs = [{
+    grid.columnDefs = [];
+
+    // if multiSelect is allowed on the grid, then add the checkbox row
+    if (_.get(grid, 'multiSelect', false)) {
+      grid.columnDefs.push(this.GridService.getDefaultSelectColumn('{{::row.entity.displayName}} {{::row.entity.userName}} {{::row.entity.statusText}}'));
+    }
+
+    grid.columnDefs.push({
       field: 'displayName',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.name'),
-    }, {
+    });
+    grid.columnDefs.push({
       field: 'userName',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.email'),
       sort: {
         direction: this.uiGridConstants.ASC,
       },
-    }, {
+    });
+    grid.columnDefs.push({
       field: 'statusText',
       displayName: this.$translate.instant('convertUsersModal.tableHeader.eligible'),
-    }];
+    });
 
     // Pending uses sort algo for status...
     if (!isPotentialList) {
@@ -371,7 +369,7 @@ export class CrConvertUsersModalController implements ng.IComponentController {
           this.gridApi.saveState.restore(this.$scope, this.scopeData.selectedState);
         }, DELAY_100_MS);
       }
-      this.$timeout(this.gridApi.core.handleWindowResize, DELAY_200_MS);
+      this.GridService.handleResize(this.gridApi, DELAY_200_MS);
     }
   }
 
@@ -408,6 +406,33 @@ export class CrConvertUsersModalController implements ng.IComponentController {
 
   public showAutoAssignModal(): void {
     this.AutoAssignTemplateService.showEditAutoAssignTemplateModal();
+  }
+
+  private get displayNameColumn() {
+    return {
+      field: 'displayName',
+      displayName: this.$translate.instant('usersPage.displayNameHeader'),
+    };
+  }
+
+  private get userNameColumn() {
+    return {
+      field: 'userName',
+      displayName: this.$translate.instant('homePage.emailAddress'),
+      sort: {
+        direction: 'desc',
+        priority: 0,
+      },
+      sortCellFiltered: true,
+    };
+  }
+
+  private getColumnDefs(): uiGrid.IColumnDef[] {
+    if (this.convertUsersReadOnly) {
+      return [ this.displayNameColumn, this.userNameColumn ];
+    } else {
+      return [this.GridService.getDefaultSelectColumn('{{::row.entity.displayName}} {{::row.entity.userName}}'), this.displayNameColumn, this.userNameColumn ];
+    }
   }
 }
 
