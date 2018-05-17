@@ -14,12 +14,13 @@
             ng-class="{'error': $ctrl.errMsg.search !==''}">
 
             <i class="icon icon-search" ng-click="$ctrl.onGetSearch();"></i>
+            <!-- TODO Consider using <cs-searchfilter> instead -->
             <input id="searchFilter"
-                   type="text"
-                   ng-model="$ctrl.searchStr"
-                   ng-blur="$ctrl.onBlur();"
-                   ng-keyup="$ctrl.onKeySearch($event)"
-                   placeholder="{{::'webexReports.placeholder-text' | translate}}" >
+              type="text"
+              ng-model="$ctrl.searchStr"
+              ng-blur="$ctrl.onBlur();"
+              ng-keyup="$ctrl.onKeySearch($event)"
+              placeholder="{{::'webexReports.placeholder-text' | translate}}" >
             <i class="icon icon-exit-outline clear" ng-click="$ctrl.onClickClearIcon();"></i>
           </div>
         </div>
