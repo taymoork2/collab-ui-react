@@ -1,16 +1,17 @@
 
 import { ExternalCommunicationSettingComponent } from './externalCommunicationSetting.component';
 
-import notificationModule from 'modules/core/notifications';
-import ProPack from 'modules/core/proPack';
+import notificationModuleName from 'modules/core/notifications';
+import orgSettingsModuleName from 'modules/core/shared/org-settings';
+import proPackModuleName from 'modules/core/proPack';
 
 export default angular.module('core.settings.externalCommunication', [
   require('angular-cache'),
   require('@collabui/collab-ui-ng').default,
-  require('modules/core/scripts/services/accountorgservice'),
   require('modules/core/scripts/services/authinfo'),
-  ProPack,
-  notificationModule,
+  notificationModuleName,
+  orgSettingsModuleName,
+  proPackModuleName,
 ])
   .component('externalCommunicationSetting', new ExternalCommunicationSettingComponent())
   .name;

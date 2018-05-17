@@ -23,33 +23,6 @@ describe('Service : AccountOrgService', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('Block External Communication ', function () {
-    //Block External Communcation Setter check
-    it('should set blcok external communication setting', function () {
-      this.$httpBackend.whenPUT(this.blockExternalCommuncationRegex).respond([200, {}]);
-
-      this.AccountOrgService.setBlockExternalCommunication(this.Authinfo.getOrgId(), true).then(function (response) {
-        expect(response.status).toEqual(200);
-      });
-      this.$httpBackend.flush();
-    });
-
-    //Block External Communcation Setter Getter check
-    it('should get blcok external communication setting', function () {
-      this.$httpBackend.whenGET(this.blockExternalCommuncationRegex).respond(function () {
-        var data = {
-          blockExternalCommunications: true,
-        };
-        return [200, data];
-      });
-
-      this.AccountOrgService.getBlockExternalCommunication(this.Authinfo.getOrgId()).then(function (blockExternalCommunication) {
-        expect(blockExternalCommunication).toBe(true);
-      });
-      this.$httpBackend.flush();
-    });
-  });
-
   describe('File Sharing Control ', function () {
     beforeEach(function () {
       this.$httpBackend.whenGET(this.fileSharingControlRegex).respond({

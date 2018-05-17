@@ -1,10 +1,11 @@
 import testModuleName from './index';
 import { ExternalCommunicationSettingController } from './externalCommunicationSetting.component';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 type Test = atlas.test.IComponentTest<ExternalCommunicationSettingController, {
-  AccountOrgService,
   Authinfo,
+  OrgSettingsService: OrgSettingsService,
   ProPackService: ProPackService,
 }>;
 
@@ -15,34 +16,34 @@ describe('Controller: ExternalCommunicationSettingController', () => {
     this.injectDependencies(
       '$q',
       '$scope',
-      'AccountOrgService',
+      'OrgSettingsService',
       'Authinfo',
       'ProPackService',
     );
 
     this.initComponent = () => this.compileComponent('externalCommunicationSetting', {});
     this.initSpies = (spies: {
-      getBlockExternalCommunication?,
-      setBlockExternalCommunication?,
+      getBlockExternalCommunications?,
+      setBlockExternalCommunications?,
       hasProPackPurchasedOrNotEnabled?,
     } = {}) => {
       const {
-        getBlockExternalCommunication = this.$q.resolve(false),
-        setBlockExternalCommunication = this.$q.resolve(false),
+        getBlockExternalCommunications = this.$q.resolve(false),
+        setBlockExternalCommunications = this.$q.resolve(false),
         hasProPackPurchasedOrNotEnabled = this.$q.resolve(true),
       } = spies;
-      spyOn(this.AccountOrgService, 'getBlockExternalCommunication').and.returnValue(getBlockExternalCommunication);
-      spyOn(this.AccountOrgService, 'setBlockExternalCommunication').and.returnValue(setBlockExternalCommunication);
+      spyOn(this.OrgSettingsService, 'getBlockExternalCommunications').and.returnValue(getBlockExternalCommunications);
+      spyOn(this.OrgSettingsService, 'setBlockExternalCommunications').and.returnValue(setBlockExternalCommunications);
       spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue(hasProPackPurchasedOrNotEnabled);
     };
   });
 
   describe('constructor()', () => {
 
-    describe('when getBlockExternalCommunication fail', () => {
+    describe('when getBlockExternalCommunications fail', () => {
       beforeEach(function (this: Test) {
         this.initSpies({
-          getBlockExternalCommunication: this.$q.reject(),
+          getBlockExternalCommunications: this.$q.reject(),
         });
         this.initComponent();
       });
@@ -53,10 +54,10 @@ describe('Controller: ExternalCommunicationSettingController', () => {
       });
     });
 
-    describe('when getBlockExternalCommunication return blockExternalCommunications set to true', () => {
+    describe('when getBlockExternalCommunications return blockExternalCommunications set to true', () => {
       beforeEach(function (this: Test) {
         this.initSpies({
-          getBlockExternalCommunication: this.$q.resolve(true),
+          getBlockExternalCommunications: this.$q.resolve(true),
         });
         this.initComponent();
       });
@@ -67,10 +68,10 @@ describe('Controller: ExternalCommunicationSettingController', () => {
       });
     });
 
-    describe('when getBlockExternalCommunication return blockExternalCommunications set to false', () => {
+    describe('when getBlockExternalCommunications return blockExternalCommunications set to false', () => {
       beforeEach(function (this: Test) {
         this.initSpies({
-          getBlockExternalCommunication: this.$q.resolve(false),
+          getBlockExternalCommunications: this.$q.resolve(false),
         });
         this.initComponent();
       });
@@ -85,27 +86,27 @@ describe('Controller: ExternalCommunicationSettingController', () => {
   describe('updateBlockExternalCommunicationSetting', () => {
     beforeEach(function (this: Test) {
       this.initSpies({
-        getBlockExternalCommunication: this.$q.resolve(false),
-        setBlockExternalCommunication: this.$q.resolve(),
+        getBlockExternalCommunications: this.$q.resolve(false),
+        setBlockExternalCommunications: this.$q.resolve(),
       });
       this.initComponent();
     });
 
-    it('should call AccountOrgService to save the value true', function (this: Test) {
+    it('should call OrgSettingsService to save the value true', function (this: Test) {
       this.controller.isBlockExternalCommunication = true;
 
       this.controller.updateBlockExternalCommunicationSetting();
 
-      expect(this.AccountOrgService.setBlockExternalCommunication)
+      expect(this.OrgSettingsService.setBlockExternalCommunications)
         .toHaveBeenCalledWith(this.Authinfo.getOrgId(), true);
     });
 
-    it('should call AccountOrgService to save the value false', function (this: Test) {
+    it('should call OrgSettingsService to save the value false', function (this: Test) {
       this.controller.isBlockExternalCommunication = false;
 
       this.controller.updateBlockExternalCommunicationSetting();
 
-      expect(this.AccountOrgService.setBlockExternalCommunication)
+      expect(this.OrgSettingsService.setBlockExternalCommunications)
         .toHaveBeenCalledWith(this.Authinfo.getOrgId(), false);
     });
   });

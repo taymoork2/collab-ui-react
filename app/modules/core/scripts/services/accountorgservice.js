@@ -23,8 +23,6 @@
       getServices: getServices,
       addMessengerInterop: addMessengerInterop,
       deleteMessengerInterop: deleteMessengerInterop,
-      getBlockExternalCommunication: getBlockExternalCommunication,
-      setBlockExternalCommunication: setBlockExternalCommunication,
       getFileSharingControl: getFileSharingControl,
       setFileSharingControl: setFileSharingControl,
     };
@@ -70,31 +68,6 @@
       var url = getServicesUrl(org) + '/messengerInterop';
 
       return $http.delete(url);
-    }
-
-    // Get block external communication from the blockExternalCommunications API(boolean)
-    function getBlockExternalCommunication(org) {
-      if (!org || org === '') {
-        return $q.reject('A Valid organization ID must be Entered');
-      }
-      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
-
-      return $http.get(url).then(function (response) {
-        return _.get(response, 'data.blockExternalCommunications', false);
-      });
-    }
-
-    // Sets block external communication to blockExternalCommunications API
-    function setBlockExternalCommunication(org, blockExternalCommunication) {
-      if (!org || org === '') {
-        return $q.reject('A Valid organization ID must be Entered');
-      }
-
-      var url = getDeviceSettingsUrl(org) + '/blockExternalCommunications';
-
-      return $http.put(url, {
-        blockExternalCommunications: blockExternalCommunication,
-      });
     }
 
     // Get FileSharingControl from the FileSharingControl API(boolean)

@@ -1,4 +1,7 @@
 import { ProPackSettingSection } from '../proPackSettingSection';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { Notification } from 'modules/core/notifications';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 export class ExternalCommunicationSettingController {
 
@@ -10,11 +13,11 @@ export class ExternalCommunicationSettingController {
 
   /* @ngInject */
   constructor(
-    private $q,
-    private AccountOrgService,
+    private $q: ng.IQService,
     private Authinfo,
-    private ProPackService,
-    private Notification,
+    private Notification: Notification,
+    private OrgSettingsService: OrgSettingsService,
+    private ProPackService: ProPackService,
   ) {
   }
 
@@ -25,7 +28,7 @@ export class ExternalCommunicationSettingController {
 
   private loadSetting() {
     const promises = {
-      blockExternalCommunication: this.AccountOrgService.getBlockExternalCommunication(this.orgId),
+      blockExternalCommunication: this.OrgSettingsService.getBlockExternalCommunications(this.orgId),
       proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
@@ -53,7 +56,7 @@ export class ExternalCommunicationSettingController {
 
   public updateBlockExternalCommunicationSetting() {
     if (this._isBlockExternalCommunication !== undefined) {
-      this.AccountOrgService.setBlockExternalCommunication(this.orgId, this._isBlockExternalCommunication)
+      this.OrgSettingsService.setBlockExternalCommunications(this.orgId, this._isBlockExternalCommunication)
         .then(() => {
           this.Notification.success('firstTimeWizard.messengerExternalCommunicationSuccess');
         })
