@@ -696,19 +696,19 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Spark account. Your Webex site will not be converted to a free site and will be deleted.",
-    "singleMoveUsers": "Convert to a free Cisco Spark account.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Webex account. Your Webex site will not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Cisco Webex account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
-    "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
-    "multMoveUsers": "Convert users to their own free Cisco Spark account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Webex account.",
+    "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Webex Teams spaces.",
+    "multMoveUsers": "Convert users to their own free Cisco Webex account.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleUserMove": "You will be converted to a free Cisco Spark account.",
-    "multiUserMove": "All users will be converted to their own free Cisco Spark account.",
+    "singleUserMove": "You will be converted to a free Cisco Webex account.",
+    "multiUserMove": "All users will be converted to their own free Cisco Webex account.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
-    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints.",
+    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Webex Boards and Cisco TelePresence video conferencing endpoints.",
     "customerPermission": "You have your customer's permission to delete their organization.",
     "accountClosedTitle": "Your account is closed.",
     "accountClosedBody": "To resubscribe, please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
@@ -1027,7 +1027,7 @@
     "sharedMeetingReport": "Shared Meetings Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
     "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
-    "sharedMeetingNote": "PLEASE NOTE concurrent Cisco Spark Meetings are not yet included in this report, but will be added soon.",
+    "sharedMeetingNote": "PLEASE NOTE concurrent Cisco Webex Meetings are not yet included in this report, but will be added soon.",
     "concurrentMeetingsTitle": "Actual number of peak concurrent meetings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
@@ -2600,8 +2600,8 @@
       "connected": "Connected"
     },
     "userSidepanel": {
-      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
-      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Spark.",
+      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Webex. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
+      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Webex.",
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
@@ -5554,7 +5554,7 @@
     "privatePstnFinalized": "‘Private PSTN Trunk’ selection finalized.",
     "privatePstnNumbersImported": "‘Private PSTN Trunk’ {count, plural, =1{number} other{numbers}} imported.",
     "checkOrderStatus": "Check Order Status",
-    "launchPortal": "Setup Cisco Spark Service",
+    "launchPortal": "Setup Cisco Webex Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
@@ -8435,7 +8435,7 @@
     },
     "virtualAssistant": {
       "featureText": {
-        "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
+        "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Webex Teams.",
         "virtualAssistant": "Virtual Assistant"
       },
       "cva": {
@@ -8755,7 +8755,7 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "startTrial": "To start a Cisco Spark trial you must create an account.",
+      "startTrial": "To start a Cisco Webex trial you must create an account.",
       "enterEmail": "Please enter account email address",
       "emailPlaceholder": "Enter email address",
       "validation": {
@@ -8788,18 +8788,18 @@
       "submitError": "An error occurred while submitting the order."
     },
     "drOnboardQuestion": {
-      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Cisco Spark services?"
+      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Cisco Webex services?"
     },
     "drConfirmAdminOrg": {
       "useDifferentName": "Use Different Name",
       "companyAndOrg1": "We have matched your email address to the following organization:",
-      "companyAndOrg2": "Would you like to assign the Cisco Spark services to this organization?"
+      "companyAndOrg2": "Would you like to assign the Cisco Webex services to this organization?"
     },
     "drOnboardEnterAdminEmail": {
-      "adminEmailLabel": "Please enter the email address of the person who will be managing the Cisco Spark services"
+      "adminEmailLabel": "Please enter the email address of the person who will be managing the Cisco Webex services"
     },
     "orgName": {
-      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Cisco Spark services, etc.",
+      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Cisco Webex services, etc.",
       "enterOrgName": "Enter Company Name",
       "missingOrgName": "The Company Name is missing."
     },
@@ -8810,7 +8810,7 @@
       "choice1b": "Once you have been assigned admin privileges you can restart the process by clicking on the button in the Welcome email again or going to the <Screen 15> page.",
       "choice2": "Allow the Admin of this organization to manage the service(s) I purchased",
       "choice3a": "Create a new organization to manage the service(s)",
-      "choice3b": "Note you will not be able to assign Cisco Spark licenses you just purchased to anyone in your current organization if you choose this option."
+      "choice3b": "Note you will not be able to assign Cisco Webex licenses you just purchased to anyone in your current organization if you choose this option."
     },
     "validation": {
       "missingSKU": "The order is missing a SKU.",
@@ -8818,7 +8818,7 @@
       "unexpectedError": "Unexpected error"
     },
     "restrictedPage": "Restricted Page",
-    "ciscoSpark": "Cisco Spark",
+    "ciscoSpark": "Cisco Webex",
     "emailLabel": "Enter your email address:",
     "submitButton": "Submit",
     "activateButton": "Activate",
@@ -11092,7 +11092,7 @@
       "verifyHow": "How do you verify a user?",
       "verifyAccounts": "Verify Accounts",
       "noEmails": "Don't want users to receive linking emails?",
-      "noEmailsP1": "When you verify Cisco Spark accounts, invited users will not receive an email. No user action is required.",
+      "noEmailsP1": "When you verify Cisco Webex accounts, invited users will not receive an email. No user action is required.",
       "noEmailsP2": "If you don't want your users to receive an email, click \"Verify\" below and you will see the following options:",
       "noEmailsP3": "Verify Domain",
       "noEmailsP4": "by entering a TXT record in your DNS.",
@@ -11104,7 +11104,7 @@
       "verifyDomainsHeader": "Verify Domains",
       "verifyDomains": "Verify your domain and ensure the security and integrity of your organization. Users belonging to verified domains will not be sent an email to verify their email address.",
       "legalAgreement": "Sign a Legal Agreement that allows your organization to verify your domains within a grace period. Cisco gives you a 3 month grace period to add a TXT record to your DNS so as to prove ownership of the domain.",
-      "verifyDomainsToken": "Cisco provides a token to add to your Domain Host’s DNS TXT record. Cisco confirms that you own the domain by checking for this token on your DNS server. Once the verification is completed, go to Webex Meetings Site Administration and begin inviting users to Cisco Spark. Users in Verified Domains will not receive linking emails.",
+      "verifyDomainsToken": "Cisco provides a token to add to your Domain Host’s DNS TXT record. Cisco confirms that you own the domain by checking for this token on your DNS server. Once the verification is completed, go to Webex Meetings Site Administration and begin inviting users to Cisco Webex. Users in Verified Domains will not receive linking emails.",
       "signAgreement": "Sign Legal Agreement",
       "verifyNow": "Verify Now",
       "webExDomains": "Webex Domains",
@@ -11117,7 +11117,7 @@
       "fetchingDomainsTxt": "It may take several minutes to get the full list of your domains.",
       "linkAccounts": "Link Accounts",
       "linkAccountsTxt": "You're about to be directed to Webex Meetings Site Administration where you can begin to link your Webex Meetings accounts to Cisco Webex Teams.",
-      "ciscoSparkAgreement": "Cisco Spark Agreement",
+      "ciscoSparkAgreement": "Cisco Webex Agreement",
       "ciscoSparkAgreementTxt": "Please read the agreement thoroughly and accept below. This will give you 3 months to verify you own the domains by entering a TXT record in your DNS.",
       "verifyDomainsTxt": "You're about to go to the page where you can verify your domain. Once the verification is complete, you must invite users from Webex Meetings Site Administration. Invited users belonging to verified domains will not receive an email.",
       "startLinkingAccounts": "Start Linking Accounts",
