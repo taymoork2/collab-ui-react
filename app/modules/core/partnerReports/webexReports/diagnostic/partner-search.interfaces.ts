@@ -7,7 +7,7 @@ export interface IMeetingBasicInfo {
 }
 
 export interface IMeetingDetail extends IMeetingBasicInfo {
-  conferenceId: string;
+  conferenceID: string;
   hostEmail: string;
   hostId: string;
   hostName: string;
