@@ -1,5 +1,4 @@
-import { ProvisioningService } from './../provisioning.service';
-import { Status , STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
+import { ProvisioningService, Status , STATUS_UPDATE_EVENT_NAME } from 'modules/squared/provisioning-console/provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 

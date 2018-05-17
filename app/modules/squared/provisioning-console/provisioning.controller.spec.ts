@@ -44,7 +44,20 @@ describe('Controller: ProvisioningController', function () {
   describe('init controller', () => {
     it('should populate completed and pending orders', function () {
       expect(this.controller.completedOrders.length).toBe(1);
+      expect(_.has(this.controller.pendingOrders[0], 'lastModified')).toBeTruthy();
       expect(this.controller.pendingOrders.length).toBe(3);
+    });
+  });
+  describe('init new controller', () => {
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    });
+    it('should contain new fields like assignedTo, queueReceived, queueCompleted, completedBy', function() {
+      expect(_.has(this.controller.completedOrders[0], 'queueReceived')).toBeTruthy();
+      expect(_.has(this.controller.completedOrders[0], 'queueCompleted')).toBeTruthy();
+      expect(_.has(this.controller.completedOrders[0], 'completedBy')).toBeTruthy();
+      expect(_.has(this.controller.pendingOrders[0], 'assignedTo')).toBeTruthy();
+      expect(_.has(this.controller.pendingOrders[0], 'queueReceived')).toBeTruthy();
     });
   });
   describe('failure handling', () => {
