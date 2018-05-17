@@ -3,7 +3,7 @@
     cs-input
     type="checkbox"
     id="blockExternalCommunication"
-    ng-model="externalCommunicationCtrl.isBlockExternalCommunication"
+    ng-model="$ctrl.isBlockExternalCommunication"
     cs-input-label="{{::'globalSettings.externalCommunication.description'|translate}}"
-    ng-disabled="!externalCommunicationCtrl.isBlockExternalCommunicationSettingLoaded || !externalCommunicationCtrl.isProPackPurchased">
+    ng-disabled="!$ctrl.isBlockExternalCommunicationSettingLoaded || !$ctrl.isProPackPurchased">
 </div>
