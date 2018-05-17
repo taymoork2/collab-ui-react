@@ -24,16 +24,16 @@
   <ul class="overviewInfo">
     <li>
       <h6 translate="webexReports.created"></h6>
-      <p><span>{{$ctrl.overview.createTime_}}</span></p>
+      <p><span>{{::$ctrl.overview.createTime_}}</span></p>
     </li>
     <li>
       <h6 translate="webexReports.site"></h6>
-      <p>{{$ctrl.overview.siteName}}</p>
-      <p>({{$ctrl.overview.siteId}})</p>
+      <p>{{::$ctrl.overview.siteName}}</p>
+      <p>({{::$ctrl.overview.siteId}})</p>
     </li>
     <li>
       <h6 translate="webexReports.meetingType"></h6>
-      <p>{{$ctrl.overview.meetingType}}</p>
+      <p>{{::$ctrl.overview.meetingType}}</p>
     </li>
     <li ng-if="$ctrl.overview.audioSession">
       <h6>
@@ -43,7 +43,7 @@
           tooltip-placement="top">
         </i>
       </h6>
-      <p>{{$ctrl.overview.audioSession}}</p>
+      <p>{{::$ctrl.overview.audioSession}}</p>
     </li>
     <li ng-if="$ctrl.overview.videoSession">
       <h6>
@@ -53,21 +53,21 @@
             tooltip-placement="top">
           </i>
       </h6>
-      <p>{{$ctrl.overview.videoSession}}</p>
+      <p>{{::$ctrl.overview.videoSession}}</p>
     </li>
   </ul>
   <ul class="overviewInfo">
     <li>
       <h6 translate="webexReports.hostName"></h6>
-      <p>{{$ctrl.overview.hostName}}</p>
+      <p>{{::$ctrl.overview.hostName}}</p>
     </li>
     <li>
       <h6 translate="webexReports.hostID"></h6>
-      <p>{{$ctrl.overview.hostId}}</p>
+      <p>{{::$ctrl.overview.hostId}}</p>
     </li>
     <li>
       <h6 translate="webexReports.hostEmail"></h6>
-      <p>{{$ctrl.overview.hostEmail}}</p>
+      <p>{{::$ctrl.overview.hostEmail}}</p>
     </li>
   </ul>
 
