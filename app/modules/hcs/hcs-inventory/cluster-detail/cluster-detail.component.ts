@@ -51,7 +51,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   private timer: any;
   private timeoutVal: number;
 
-  public statusActive: Object = {
+  public status: Object = {
     operational: STATUS_OPERATIONAL,
     nodeNeedsAcceptance: STATUS_NODES_NEED_ACCEPTANCE,
     noAgentRunning: STATUS_NO_AGENT_RUNNING,

@@ -71,7 +71,7 @@
                 <header class="node-header">
                   <div class="header-with-right-icon">
                     <h5 class="node-name" title="Node Name">{{node.hostname}}</h5>
-                    <div class="right card-icon-div" ng-if="node.status.toLowerCase() === $ctrl.status.active.toLowerCase()">
+                    <div class="right card-icon-div" ng-if="node.status.toLowerCase() !== $ctrl.status.nodeNeedsAcceptance.toLowerCase()">
                       <button type="button" class="close node-close"
                         ng-click="$ctrl.closeCard()"
                         ng-keydown=""
