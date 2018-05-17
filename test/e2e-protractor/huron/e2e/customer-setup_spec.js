@@ -182,7 +182,7 @@ describe('Huron Functional: e2e-customer-setup', () => {
         utils.click(manageUsersPage.buttons.next);
         utils.expectIsDisplayed(AddUser.sparkCallRadio);
       });
-      it('should select Cisco Spark Call', () => {
+      it('should select Cisco Webex Calling', () => {
         utils.expectIsEnabled(manageUsersPage.buttons.save);
         utils.click(AddUser.sparkCallRadio);
         utils.expectIsEnabled(manageUsersPage.buttons.next);

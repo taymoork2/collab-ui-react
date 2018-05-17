@@ -75,7 +75,7 @@ describe('Huron Functional: adding-huntgroup', () => {
       utils.click(manageUsersPage.buttons.next);
     });
 
-    it('should select Cisco Spark Call', () => {
+    it('should select Cisco Webex Calling', () => {
       utils.expectIsEnabled(manageUsersPage.buttons.save);
       utils.waitForPresence(addUser.sparkCallRadio, 6000);
       utils.click(addUser.sparkCallRadio);
