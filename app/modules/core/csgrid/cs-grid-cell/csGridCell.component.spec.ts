@@ -3,9 +3,9 @@ import testModule from 'modules/core/csgrid/index';
 describe('Component: csGridCell', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$componentController', 'GridCellService');
+    this.injectDependencies('$componentController', 'GridService');
 
-    spyOn(this.GridCellService, 'selectRow');
+    spyOn(this.GridService, 'selectRow');
 
     this.cellClickFunction = jasmine.createSpy('cellClickFunction');
     this.cellValue = 'dummy.string';
@@ -25,6 +25,6 @@ describe('Component: csGridCell', () => {
   it('should call cellClickFunction on click() if cellClickFunction is defined', function () {
     this.controller.click(this.row.entity);
     expect(this.cellClickFunction).toHaveBeenCalledWith(this.row.entity);
-    expect(this.GridCellService.selectRow).toHaveBeenCalled();
+    expect(this.GridService.selectRow).toHaveBeenCalled();
   });
 });

@@ -13,46 +13,6 @@
     margin-bottom: 5rem;
   }
 
-  .results-container {
-    display: inline-flex;
-    min-height: 7.6875rem;
-
-    .result {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $gray-lightest;
-      position: relative;
-
-      &.converted-users {
-        margin-right: 0.75rem;
-        h1 {
-          line-height: 3rem;
-          color: $brand-success;
-          &.disabled {
-            color: $gray-light;
-          }
-        }
-      }
-
-      &.pending-users {
-        h1 {
-          line-height: 3rem;
-          color: $color-orange-base;
-          &.disabled {
-            color: $gray-light;
-          }
-        }
-      }
-
-      &.error-users {
-        color: $brand-danger;
-      }
-    }
-  }
-
   .results-total {
     align-self: center;
     margin: 1.25rem 0;

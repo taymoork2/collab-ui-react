@@ -59,7 +59,7 @@
       });
     }
 
-    /* Only used for Hybrid Media nodes  */
+    /* Only used for Video Mesh nodes  */
     function showReassignHostDialog() {
       $modal.open({
         resolve: {
@@ -81,7 +81,7 @@
         });
     }
 
-    /* Only used for Hybrid Media nodes and Hybrid Data Security nodes  */
+    /* Only used for Video Mesh nodes and Hybrid Data Security nodes  */
     function showDeregisterHostDialog() {
       $modal.open({
         resolve: {

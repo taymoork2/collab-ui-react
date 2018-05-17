@@ -276,11 +276,12 @@ describe('Component: crConvertUsersModal:', () => {
           const statusCol = _.find(this.controller.gridPendingUsers.columnDefs!, { field: 'statusText' });
           const fnSort: Function = statusCol.sortingAlgorithm!;
 
-          expect(fnSort()).toBe(0);
-          expect(fnSort('1', '2')).toBe(0);
-
           const user = { entity: _.find(this.convertUsers.resources, { userName: 'mrmccann+testint@testctg.com' }) };
           const userLater = { entity: _.find(this.convertUsers.resources, { userName: 'mrmccann+test2@testctg.com' }) };
+          expect(fnSort()).toBe(0);
+          expect(fnSort('1', '2')).toBe(0);
+          expect(fnSort('1', '2', undefined, user)).toBeLessThan(0);
+          expect(fnSort('1', '2', user, undefined)).toBeGreaterThan(0);
           expect(fnSort('1', '2', user, userLater)).toBeGreaterThan(0);
           expect(fnSort('1', '2', userLater, user)).toBeLessThan(0);
           expect(fnSort('1', '2', user, user)).toBe(0);

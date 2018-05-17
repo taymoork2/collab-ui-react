@@ -11,6 +11,7 @@ import waitingIntervalModuleName from './waiting-interval';
 import { RetryingPromiseService } from './retrying-promise.service';
 export { RetryingPromiseService };
 import { StringUtilService } from './string-util.service';
+import crTotalTileModuleName from './cr-total-tile';
 export { StringUtilService };
 
 export default angular
@@ -18,6 +19,7 @@ export default angular
     bannerModuleName,
     crIconInfoModuleName,
     crProgressbarModuleName,
+    crTotalTileModuleName,
     multiStepModalModuleName,
     offerNameModuleName,
     runningTaskStatusModuleName,

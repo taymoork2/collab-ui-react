@@ -740,6 +740,14 @@
               showSettings: null,
             },
           })
+          .state('settings.proximity', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<proximity-modal ui-view dismiss="$dismiss()"></proximity-modal>',
+              },
+            },
+          })
           .state('profile', {
             url: '/profile',
             template: require('modules/core/partnerProfile/partnerProfile.tpl.html'),

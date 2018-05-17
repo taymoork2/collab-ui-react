@@ -133,8 +133,8 @@
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
           VISIT_CALL_USER_LIST: 'Visit Hybrid Call Service User List',
-          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
-          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+          VISIT_MEDIA_LIST: 'Visit Video Mesh Service Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Video Mesh Service Settings',
           VISIT_NODE_LIST_SETTINGS: 'Visit Hybrid Nodes List',
           OPEN_CONNECTOR_UPGRADE_MODAL: 'Open Connector Upgrade Modal',
           START_CONNECTOR_UPGRADE: 'Start Connector Upgrade',
@@ -259,6 +259,12 @@
         eventNames: {
           FREEMIUM: 'Online: Downgrade to Freemium',
           VIEW_INVOICE: 'Online: View Invoice',
+        },
+      },
+      DEVICE: {
+        name: 'Device',
+        eventNames: {
+          PROXIMITY: 'wifi proximity',
         },
       },
       DEVICE_BULK: {

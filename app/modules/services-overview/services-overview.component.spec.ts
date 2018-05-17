@@ -150,7 +150,7 @@ describe('ServicesOverviewController', () => {
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-gcal']);
     });
 
-    it('should display Hybrid Media if the org is entitled to it and the user is full_admin or readonly_admin', () => {
+    it('should display Video Mesh if the org is entitled to it and the user is full_admin or readonly_admin', () => {
       isFusionMedia.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
       initController();
@@ -246,7 +246,7 @@ describe('ServicesOverviewController', () => {
       expect(ctrl._servicesActive).toEqual([]);
     });
 
-    it('should consider Hybrid Media active, if the service is setup', () => {
+    it('should consider Video Mesh active, if the service is setup', () => {
       getStatusForService.and.returnValue($q.resolve([{
         enabled: true,
         id: 'squared-fusion-media',

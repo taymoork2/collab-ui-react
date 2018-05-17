@@ -275,7 +275,7 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(
             currentEditedElement.getCommonField()),
           field: this.field,
-          textTranslationKey: 'spacesPage.containingQuery',
+          textTranslationKey: currentEditedElement.type === FieldQuery.QueryTypeExact ? 'spacesPage.equalsQuery' : 'spacesPage.containingQuery',
           textTranslationParams: {
             query: (currentEditedElement as FieldQuery).toQueryComponents(this.searchTranslator).query,
           },
@@ -423,7 +423,7 @@ export class BelongsToGroup extends SuggestionGroupBase {
           searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.getQueryWithoutField()}`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
           field: QueryParser.Field_Displayname,
-          textTranslationKey: 'spacesPage.containingQuery',
+          textTranslationKey: currentEditedElement.type === FieldQuery.QueryTypeExact ? 'spacesPage.equalsQuery' : 'spacesPage.containingQuery',
           textTranslationParams: {
             query: currentEditedElement.toQueryComponents(this.searchTranslator).query || '...',
           },

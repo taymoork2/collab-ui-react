@@ -36,13 +36,14 @@
     </button>
   </div>
   <div ng-if="card.features.atlasF3745AutoAssignLicenses" class="columns medium-6 onboard-block">
-    <div>
+    <div ng-if="!card.isOnboardingError">
       <span class="onboard-nr h4">{{ card.usersOnboarded }}</span>
     </div>
-    <div class="onboard-users-text">
-      <span translate="overview.cards.users.onboardText"></span>
+    <div class="onboard-users-text h6">
+      <span ng-if="!card.isOnboardingError" translate="overview.cards.users.onboardText"></span>
+      <span ng-if="card.isOnboardingError">{{ card.usersOnboardedError }}</span>
     </div>
-    <div ng-if="card.features.autoLicense">
+    <div class="onboard-users-link" ng-if="card.features.autoLicense">
       <a ui-sref="reports" translate="reports.title"></a>
       <!-- TODO: Enable onboarding link when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
       <a href="/my-company/onboarding" ui-sref="my-company-onboarding">
