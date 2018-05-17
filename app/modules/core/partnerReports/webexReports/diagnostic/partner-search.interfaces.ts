@@ -52,7 +52,9 @@ export interface ICallType extends IParticipant {
   deviceCompleted: boolean;
   description?: string;
   deviceType?: string;
-  items: any; //TODO use better type
+  items: {
+    deviceType: string;
+  };
 }
 
 export interface IUniqueParticipant {
