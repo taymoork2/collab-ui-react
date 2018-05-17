@@ -261,6 +261,6 @@ export class DomainManagementService {
         .value();
       verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
       this.$http.put(this._sunlightConfigUrl, { allowedOrigins : verifiedDomains });
-    });
+    }).catch(_.noop);
   }
 }

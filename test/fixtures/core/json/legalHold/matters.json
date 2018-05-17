@@ -1,0 +1,44 @@
+[
+  {
+  "orgId": "184cf4cd-eea7-4c8c-83ee-67d88fc6eab1",
+  "caseId": "284cf4cd-eea7-4c8c-83ee-67d88fc6eab2",
+  "createdBy": "384cf4cd-eea7-4c8c-83ee-67d88fc6eab3",
+  "creationDate": "1999-09-15T01:00:00.000+0100",
+  "datereleased": "2000-09-15T01:00:00.000+0100",
+  "matterName": "Unauthorized Release of Assets",
+  "matterDescription": "Investigate who released information on current team assets.",
+  "matterState": "released",
+  "usersUUIDList": [
+    "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "724cf4cd-eea7-4c8c-83ee-67d88fc6eab5"
+  ]
+},
+{
+  "orgId": "184cf4cd-eea7-4c8c-83ee-67d88fc6eab2",
+  "caseId": "284cf4cd-eea7-4c8c-83ee-67d88fc6eab3",
+  "createdBy": "384cf4cd-eea7-4c8c-83ee-67d88fc6eab4",
+  "creationDate": "1999-09-15T01:00:00.000+0100",
+  "matterName": "Unauthorized Release of Assets22",
+  "matterDescription": "Investigate who released information on current team assets.",
+  "matterState": "active",
+  "usersUUIDList": [
+    "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "724cf4cd-eea7-4c8c-83ee-67d88fc6eab5"
+  ]
+},
+{
+  "orgId": "184cf4cd-eea7-4c8c-83ee-67d88fc6eab2",
+  "caseId": "284cf4cd-eea7-4c8c-83ee-67d88fc6ea13",
+  "createdBy": "e6004e7c-b883-49b1-a76d-1c36634607d3",
+  "creationDate": "1999-09-15T01:00:00.000+0100",
+  "matterName": "Unauthorized Release of AssetsMine",
+  "matterDescription": "Investigate who released information on current team assets.",
+  "matterState": "active",
+  "usersUUIDList": [
+    "704cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "714cf4cd-eea7-4c8c-83ee-67d88fc6eab5",
+    "724cf4cd-eea7-4c8c-83ee-67d88fc6eab5"
+  ]
+}]

@@ -1,170 +1,112 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="umoc.cancelModal()" id="closeManageUsers" aria-label="{{::'common.close' | translate}}"></button>
+  <button type="button" class="close" ng-click="umoc.cancelModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<!-- Does NOT have AtlasF3745AutoAssignToggle assigned -->
-<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage">
-  <form name="userModifyUsersForm">
+<div class="modal-body">
+  <div class="row collapse user-manage__row" ng-if="!umoc.isUserAdminUser">
     <div class="columns medium-5">
-      <h4 translate="userManage.org.typeLabel"></h4>
-      <p class="columns medium-10" translate="userManage.org.typeInstructions"></p>
+      <h4 translate="userManage.org.activeDirectory"></h4>
     </div>
     <div class="columns medium-7">
-      <div class="cs-radio-group">
-        <ul>
-          <li>
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-manual"
-              name="importUsers"
-              ng-value="umoc.ManageType.MANUAL"
-              cs-input-label="{{::'userManage.org.manualLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.manualDetails'|translate: {maxUsersInManual: umoc.maxUsersInManual} }}">
-          </li>
-          <li>
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-bulk"
-              name="importUsers"
-              ng-value="umoc.ManageType.BULK"
-              cs-input-label="{{::'userManage.org.bulkLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.bulkDetails'|translate: {maxUsersInCSV: umoc.maxUsersInCSV} }}">
-            <p class="csv-export-link csv-export-link--not-auto-assign">
-              <cr-user-csv-export
-                as-link="{{::'userManage.bulk.exportUserList'|translate}}"
-                use-csv-download-directive="true">
-              </cr-user-csv-export>
-            </p>
-          </li>
-          <li>
-            <input cs-input type="radio"
-              ng-model="umoc.manageType"
-              id="org-advanced"
-              name="importUsers"
-              ng-value="umoc.ManageType.ADVANCED_NO_DS"
-              cs-input-label="{{::'userManage.org.advancedLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.advancedDetails'|translate}}">
-          </li>
-          <li>
-            <input cs-input type="radio"
-              ng-if="umoc.convertableUsers"
-              ng-model="umoc.manageType"
-              id="org-convert"
-              name="importUsers"
-              ng-value="umoc.ManageType.CONVERT"
-              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.convertDetails'|translate}}">
-            <input cs-input type="radio" disabled
-              ng-if="!umoc.convertableUsers"
-              ng-model="umoc.manageType"
-              id="org-convert"
-              name="importUsers"
-              ng-value="'convert'"
-              cs-input-label="{{::'userManage.org.convertLabel'|translate}}"
-              cs-input-help-text="{{::'userManage.org.convertUnavailable'|translate}}">
-          </li>
-        </ul>
-      </div>
-    </div>
-  </form>
-</div>
-
-<div ng-if="!umoc.isAtlasF3745AutoAssignToggle" class="modal-footer">
-  <button type="button" id="btnClear" class="btn" ng-click="umoc.cancelModal()"><span translate="common.cancel"></span></button>
-  <button type="button" class="btn btn--primary" ng-click="umoc.onNext()"><span translate="common.next"></span></button>
-</div>
-
-<!-- Does have AtlasF3745AutoAssignToggle -->
-<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-body user-manage">
-  <div class="row" ng-if="!umoc.multiDirSyncToggle">
-    <div class="columns medium-4 manage-modal-header">
-      <h4 translate="userManage.org.activeDirectory"></h4>
-    </div>
-    <div class="columns medium-8 manage-modal-label sync-status">
-      <h5 translate="userManage.org.directorySynchronization"></h5>
-      <span class="manage-modal-detail ds-sync">
-        <i class="icon icon-circle icon-circle-manage"
-          ng-class="{'working': umoc.isDirSyncEnabled, 'disabled': !umoc.isDirSyncEnabled}">
-        </i>
-        <h6 ng-if="umoc.isDirSyncEnabled" translate="common.enabled"></h6>
-        <h6 ng-if="!umoc.isDirSyncEnabled" translate="common.disabled"></h6>
-      </span>
-      <h6 class="manage-modal-detail--link"
-        ng-click="umoc.handleDirSyncService()"
-        translate="{{ umoc.dirSyncText }}">
-      </h6>
+      <multi-dirsync-section
+        on-enable-click="umoc.onNext(umoc.ManageType.ADVANCED_NO_DS)">
+      </multi-dirsync-section>
     </div>
   </div>
 
-  <div class="row" ng-if="umoc.multiDirSyncToggle && !umoc.isUserAdminUser">
-    <div class="columns medium-4 manage-modal-header">
-      <h4 translate="userManage.org.activeDirectory"></h4>
-    </div>
-    <div class="columns medium-8 manage-modal-label sync-status">
-      <multi-dirsync-section></multi-dirsync-section>
-    </div>
-  </div>
+  <hr class="user-manage__hr" ng-if="!umoc.isUserAdminUser">
 
-  <hr>
-  <div class="row">
-    <div class="columns medium-4 manage-modal-header">
+  <div class="row collapse user-manage__row auto-assign">
+    <div class="columns medium-5">
       <h4 translate="userManage.org.licenses"></h4>
     </div>
-    <div class="columns manage-modal-label sync-status"
-      ng-class="{'medium-3': umoc.hasDefaultAutoAssignTemplate(), 'medium-8': !umoc.hasDefaultAutoAssignTemplate()}">
-      <h5 translate="userManage.org.autoAssignLicenses"></h5>
-      <span ng-if="umoc.hasDefaultAutoAssignTemplate()" class="manage-modal-detail ds-sync">
-        <i class="icon icon-circle icon-circle-manage"
-          ng-class="{'working': umoc.isDefaultAutoAssignTemplateActivated(),
-          'disabled': !umoc.isDefaultAutoAssignTemplateActivated()}">
-        </i>
-        <h6 ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></h6>
-        <h6 ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></h6>
-      </span>
-      <h6 ng-if="!umoc.hasDefaultAutoAssignTemplate()"
-        ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
-        class="manage-modal-detail manage-modal-detail--link"
-        translate="userManage.org.setUpAutoAssignTemplate">
-      </h6>
-    </div>
-    <auto-assign-template-manage-options
-      ng-if="umoc.hasDefaultAutoAssignTemplate()"
-      auto-assign-templates="umoc.autoAssignTemplates"
-      on-delete="umoc.recvDelete()"
-      on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)"
-      is-template-active="umoc.isDefaultAutoAssignTemplateActivated()">
-    </auto-assign-template-manage-options>
-  </div>
-  <hr>
-  <div class="row">
-    <h4 class="columns manage-modal-header" translate="userManage.org.modifyUsers"></h4>
-    <div class="columns medium-4 modify-users-section" ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
-      <h4 class="modify-users-section--label" translate="userManage.org.manualLabelNew"></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.manualDetailsNew" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
-    </div>
-    <div class="columns medium-4 modify-users-section modify-users-section--middle-box"
-      ng-click="umoc.onNext(umoc.ManageType.BULK)">
-      <h4 class="modify-users-section--label" translate="userManage.org.bulkLabelNew"></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
-      <p class="csv-export-link">
-        <cr-user-csv-export as-link="{{::'userManage.bulk.exportUserList'|translate}}" ng-click="$event.stopPropagation()"
-          use-csv-download-directive="true">
-        </cr-user-csv-export>
+    <div class="columns medium-7">
+      <div class="user-manage__auto-assign-title-row">
+        <h5 translate="userManage.org.autoAssignLicenses"></h5>
+        <auto-assign-template-manage-options
+          class="user-manage__auto-assign-title-action"
+          ng-if="umoc.hasDefaultAutoAssignTemplate()"
+          auto-assign-templates="umoc.autoAssignTemplates"
+          on-delete="umoc.recvDelete()"
+          on-activate-toggle="umoc.toggleActivateForDefaultAutoAssignTemplate(isActivated)"
+          is-template-active="umoc.isDefaultAutoAssignTemplateActivated()">
+        </auto-assign-template-manage-options>
+      </div>
+      <div ng-if="umoc.hasDefaultAutoAssignTemplate()"
+        class="user-manage__text--margin">
+        <cs-statusindicator ng-model="umoc.defaultAutoAssignTemplateActivatedStatus">
+        </cs-statusindicator>
+        <span class="h6" ng-if="umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.activated"></span>
+        <span class="h6" ng-if="!umoc.isDefaultAutoAssignTemplateActivated()" translate="common.keys.deactivated"></span>
+      </div>
+      <p ng-if="!umoc.hasDefaultAutoAssignTemplate()"
+        class="user-manage__text--margin">
+        <a href
+          class="auto-assign__setup-link"
+          ng-click="umoc.onNext(umoc.ManageType.AUTO_ASSIGN_TEMPLATE)"
+          translate="userManage.org.setUpAutoAssignTemplate">
+        </a>
       </p>
     </div>
-    <div ng-if="umoc.convertableUsers" class="columns medium-4 modify-users-section modify-users-section--right-box"
-      ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
-      <h4 class="modify-users-section--label" translate="userManage.org.convertLabel" ></h4>
-      <h6 class="modify-users-section--details" translate="userManage.org.convertDetails"></h6>
+  </div>
+  <hr class="user-manage__hr">
+  <div class="row collapse user-manage__row">
+    <div class="columns medium-12 user-manage__modify-users-title">
+      <h4 translate="userManage.org.modifyUsers"></h4>
     </div>
-    <div class="modify-users-section--right-box">
-      <div ng-if="!umoc.convertableUsers" class="columns medium-4 modify-users-section">
-        <h4 class="modify-users-section--label modify-users-section--disabled" translate="userManage.org.convertLabel" ></h4>
-        <h6 class="modify-users-section--disabled" translate="userManage.org.convertUnavailable"></h6>
-      </div>
-    </div>
+    <cr-action-cards-container class="columns medium-12">
+      <cr-action-card ng-click="umoc.onNext(umoc.ManageType.MANUAL)">
+        <cr-action-card-header>
+          <h4 translate="{{ umoc.manualLabelText }}"></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 translate="{{ umoc.manualDetailsText }}" translate-values="{maxUsersInManual: umoc.maxUsersInManual}"></h6>
+        </cr-action-card-section>
+        <cr-action-card-footer>
+          <p>
+            <a href
+              ng-if="umoc.isDirSyncEnabled"
+              ng-click="umoc.onNext(umoc.ManageType.ADVANCED_DS)"
+              translate="userManage.org.dirSyncModifyAll">
+            </a>
+          </p>
+        </cr-action-card-footer>
+      </cr-action-card>
+      <cr-action-card ng-click="umoc.onNext(umoc.ManageType.BULK)">
+        <cr-action-card-header>
+          <h4 translate="userManage.org.bulkLabelNew"></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 cr-feature-toggle feature-hide="atlas-csv-import-task-manager" translate="userManage.org.bulkDetailsNew" translate-values="{maxUsersInCSV: umoc.maxUsersInCSV}"></h6>
+          <h6 cr-feature-toggle feature-show="atlas-csv-import-task-manager" translate="userManage.org.bulkDetailsNewBatch"></h6>
+        </cr-action-card-section>
+        <cr-action-card-footer>
+          <cr-user-csv-export
+            as-link="{{::'userManage.bulk.exportUserList'|translate}}"
+            ng-click="$event.stopPropagation()"
+            use-csv-download-directive="true">
+          </cr-user-csv-export>
+        </cr-action-card-footer>
+      </cr-action-card>
+      <cr-action-card ng-if="umoc.convertableUsers" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
+        <cr-action-card-header>
+          <h4 translate="userManage.org.convertLabel" ></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 translate="userManage.org.convertDetails"></h6>
+        </cr-action-card-section>
+      </cr-action-card>
+      <cr-action-card ng-if="!umoc.convertableUsers">
+        <cr-action-card-header>
+          <h4 class="user-manage__text--disabled" translate="userManage.org.convertLabel" ></h4>
+        </cr-action-card-header>
+        <cr-action-card-section>
+          <h6 class="user-manage__text--disabled" translate="userManage.org.convertUnavailable"></h6>
+        </cr-action-card-section>
+      </cr-action-card>
+    </cr-action-cards-container>
   </div>
 </div>
 
-<div ng-if="umoc.isAtlasF3745AutoAssignToggle" class="modal-footer"></div>
+<div class="modal-footer"></div>

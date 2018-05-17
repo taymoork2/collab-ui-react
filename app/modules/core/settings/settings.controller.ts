@@ -13,8 +13,11 @@ import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
-import { WebexVersionSetting } from './webexVersion/webex-version.component';
+import { WebexVersionSetting } from './webex/webexVersion/webex-version.component';
+import { WebexSiteManagementSetting } from './webex/webexSiteManagement/webex-site-management-setting.component';
+import { WebexSetting } from './webex/webex-settings-wrapper.component';
 import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
+import { ProximitySetting } from './proximity/proximity.component';
 
 export class SettingsCtrl {
 
@@ -31,8 +34,11 @@ export class SettingsCtrl {
   public externalCommunication: SettingSection;
   public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
+  public webexSettingsWrapper: SettingSection;
   public webexVersion: SettingSection;
+  public webexSiteManagement: SettingSection;
   public sparkAssistant: SettingSection;
+  public proximity: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -76,12 +82,15 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       this.initSparkAssistant();
+      this.initProximitySetting();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
         this.initFileSharingControl();
         this.initRetention();
       }
+    } else {
+      this.initWebex();
     }
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
@@ -112,6 +121,12 @@ export class SettingsCtrl {
     }
   }
 
+  private initWebex() {
+    this.webexSettingsWrapper = new WebexSetting();
+    this.webexVersion = new WebexVersionSetting();
+    this.webexSiteManagement = new WebexSiteManagementSetting();
+  }
+
   private initBranding() {
     this.initDeviceBranding();
   }
@@ -135,6 +150,8 @@ export class SettingsCtrl {
           defered.resolve(true);
         }
         defered.resolve(false);
+      }).catch(() => {
+        defered.resolve(false);
       });
     } else {
       defered.resolve(false);
@@ -147,12 +164,17 @@ export class SettingsCtrl {
       if (toggle) {
         this.initOldBranding(false).then((showBranding: boolean) => {
           this.brandingWrapper = new DeviceBrandingSetting(this.Authinfo.isPartner(), showBranding);
-          if (showBranding && this.Authinfo.isPartner()) {
-            this.webexVersion = new WebexVersionSetting();
-          }
         });
       } else {
         this.initOldBranding(true);
+      }
+    });
+  }
+
+  private initProximitySetting() {
+    this.FeatureToggleService.csdmProximityOptInGetStatus().then(toggle => {
+      if (toggle) {
+        this.proximity = new ProximitySetting();
       }
     });
   }

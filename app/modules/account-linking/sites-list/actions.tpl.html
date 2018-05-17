@@ -1,9 +1,14 @@
 <div class="grid-contents" ng-click="grid.appScope.selectRow(grid, row)">
   <span cs-dropdown class="actions-menu">
-    <button cs-dropdown-toggle id="actionsButton" class="btn--none dropdown-toggle icon icon-three-dots"
-            ng-click="$event.stopPropagation();" ng-keydown="$event.stopPropagation();" ng-class="dropdown-toggle">
+    <button cs-dropdown-toggle
+      id="actionsButton"
+      class="btn--none dropdown-toggle icon icon-three-dots"
+      ng-click="$event.stopPropagation();"
+      ng-keydown="$event.stopPropagation();"
+      ng-class="dropdown-toggle"
+      aria-label="{{:: 'common.toggleMenu' | translate}}">
     </button>
-    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+    <ul cs-dropdown-menu style="height: fit-content;" class="dropdown-menu dropdown-primary" role="menu">
 
       <li>
         <a href

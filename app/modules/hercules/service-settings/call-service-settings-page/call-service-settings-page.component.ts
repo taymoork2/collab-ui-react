@@ -35,7 +35,7 @@ class CallServiceSettingsPageComponentCtrl implements ng.IComponentController {
       .catch((response) => {
         this.Notification.errorWithTrackingId(response, 'hercules.genericFailure');
       });
-    this.Analytics.trackHSNavigation(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
+    this.Analytics.trackHybridServiceEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_CALL_SETTINGS);
   }
 
   /* Callback from the hs-enable-disable-call-service-connect component  */

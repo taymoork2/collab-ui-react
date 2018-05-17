@@ -8,7 +8,9 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       '$q',
       '$scope',
       '$state',
-      'HybridServicesClusterService');
+      'HybridServicesClusterService',
+      'MediaClusterServiceV2',
+      'DeactivateMediaService');
 
     this.jsonData = getJSONFixture('mediafusion/json/delete-cluster.json');
     this.selectString = 'Select a cluster';
@@ -18,6 +20,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
     spyOn(this.HybridServicesClusterService, 'moveEcpNode').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridServicesClusterService, 'preregisterCluster').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.DeactivateMediaService, 'deactivateHybridMediaService').and.returnValue(this.$q.resolve({}));
     spyOn(this.$state, 'go');
 
     this.$modalInstance = {

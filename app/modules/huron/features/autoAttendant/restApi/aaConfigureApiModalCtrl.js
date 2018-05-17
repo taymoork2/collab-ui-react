@@ -166,7 +166,7 @@
 
     function getDynamicVariables() {
       dynamicVariablesList = [];
-      var dynamVarList = _.get(vm.menuEntry, 'actions[0].dynamicList', '');
+      var dynamVarList = _.get(vm.menuEntry, 'actions[0].url', '');
       _.forEach(dynamVarList, function (entry) {
         if (entry.isDynamic) {
           if (!_.includes(AACommonService.getprePopulatedSessionVariablesList(), (_.get(entry, 'action.eval.value', '')))) {
@@ -312,7 +312,7 @@
 
     function createDynamicList(dynamicList, finalDynamicList) {
       var opt;
-      if (_.isEmpty(dynamicList)) {
+      if (_.isEmpty(dynamicList) && !dynamicList.childNodes.length > 0) {
         opt = createAction('', false, '');
         finalDynamicList.push(opt);
       } else if (!vm.isDynamicToggle()) {
@@ -336,6 +336,10 @@
             case 'AA-INSERTION-ELEMENT':
               var attributes;
               if (_.isEqual(node.nodeName, 'SPAN')) {
+                if (!_.includes(node.className, 'aa-insertion-element')) {
+                  opt = createAction(node.innerText, false, '');
+                  break;
+                }
                 attributes = node.parentElement.attributes;
               } else {
                 attributes = node.attributes;

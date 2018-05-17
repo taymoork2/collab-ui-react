@@ -1,4 +1,29 @@
-.add-resource {
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+.add-hybrid-resource-modal {
+  .alert-container {
+    margin-left: 1.875rem;
+    > div {
+      display: flex;
+    }
+
+    .icon-warning {
+      color: $color-yellow-base;
+    }
+
+    .icon-error {
+      color: $brand-danger;
+    }
+
+    .alert-text-container {
+      margin-left: 0.5rem;
+    }
+  }
+  
+  .alert-text-container > p {
+    font-size: 13px;
+  }
+
   button {
     margin-left: 0.5rem;
     transition: initial;
@@ -12,17 +37,12 @@
     margin-top: 10px;
   }
 
-  p {
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
-
   li.hostlist {
     margin-left: 30px;
   }
 
   .addResourceModalInput {
-    margin-left: 30px;
+    margin-left: 1.875rem;
     width: 70%;
     transition: initial;
 
@@ -38,7 +58,31 @@
 
   .privacy {
     bottom: 12px;
-    color: $gray-light-1;
+    color: $gray-dark-1;
+  }
+
+  .body-small {
+    color: $gray-dark-1;
+  }
+
+  .icon-information {
+    color: $color-blue-base;
+    vertical-align: -5px;
+    font-size: 20px;
+  }
+
+  // For the rip-off of app/modules/hercules/notifications/cloud-alarms-dropdown/_hs-cloud-alarms-dropdown.scss
+  .notification-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1875rem 0.3rem;
+    color: #fff;
+    font-size: 8px;
+    border-radius: 2rem;
+    background-color: $color-cta-base;
+  }
+  .notification-label {
+    padding-left: 0.25rem;
   }
 }
 

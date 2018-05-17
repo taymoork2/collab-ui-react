@@ -146,7 +146,7 @@
     }
 
     function isSystemFeatureToggleOn() {
-      return FeatureToggleService.webexSystemGetStatus();
+      return FeatureToggleService.webexSystemGetStatus() && Authinfo.isCisco();
     }
 
     function getConferenceServicesWithoutSiteUrls() {

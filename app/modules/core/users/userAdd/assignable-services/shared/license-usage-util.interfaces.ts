@@ -1,9 +1,5 @@
-import { OfferName } from 'modules/core/shared';
-
-export enum AssignableServicesItemCategory {
-  LICENSE = 'LICENSE',
-  SUBSCRIPTION = 'SUBSCRIPTION',
-}
+import { OfferName } from 'modules/core/shared/offer-name';
+import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export enum LicenseStatus {
   ACTIVE = 'ACTIVE',
@@ -13,10 +9,13 @@ export enum LicenseStatus {
 
 export interface ILicenseUsage {
   billingServiceId: string;
+  isCIUnifiedSite: boolean;
   licenseId: string;
   offerName: OfferName;
   siteUrl: string;
   status: LicenseStatus;
+  usage: number;
+  volume: number;
 }
 
 export interface ILicenseUsageMap {
@@ -28,9 +27,14 @@ export interface ISubscription {
   licenses: ILicenseUsage[];
 }
 
-export interface IAssignableLicenseCheckboxState {
-  isSelected: boolean;
-  isDisabled: boolean;
+// TODO (mipark2): relocate these types to a more appropriate location (e.g. 'assignable-services.interfaces.ts'?)
+export enum AssignableServicesItemCategory {
+  LICENSE = 'LICENSE',
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  USER_ENTITLEMENT = 'USER_ENTITLEMENT',
+}
+
+export interface IAssignableLicenseCheckboxState extends ICrCheckboxItemState {
   license: ILicenseUsage;
 }
 

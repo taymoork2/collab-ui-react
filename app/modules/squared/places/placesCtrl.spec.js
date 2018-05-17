@@ -1,3 +1,5 @@
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Controller: PlacesCtrl', function () {
   beforeEach(function () {
     this.initModules('Core', 'Squared');
@@ -11,7 +13,7 @@ describe('Controller: PlacesCtrl', function () {
       'Authinfo',
       'CsdmDataModelService',
       'FeatureToggleService',
-      'GridCellService',
+      'GridService',
       'RemPlaceModal',
       'ServiceDescriptorService',
       'Userservice'
@@ -20,13 +22,11 @@ describe('Controller: PlacesCtrl', function () {
     this.accounts = getJSONFixture('squared/json/accounts.json');
     this.url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy';
 
-    spyOn(this.GridCellService, 'selectRow');
+    spyOn(this.GridService, 'selectRow');
     spyOn(this.Userservice, 'getUser');
     spyOn(this.$state, 'go');
     spyOn(this.RemPlaceModal, 'open');
-    spyOn(this.FeatureToggleService, 'csdmATAGetStatus').and.returnValue(this.$q.resolve());
     spyOn(this.FeatureToggleService, 'csdmHybridCallGetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'csdmPlaceCalendarGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([]));
     spyOn(this.CsdmDataModelService, 'subscribeToChanges').and.returnValue(true);
 
@@ -68,7 +68,7 @@ describe('Controller: PlacesCtrl', function () {
           this.entity = { place: 'place' };
           this.placeOverview = 'place-overview';
           this.event = {
-            keyCode: this.GridCellService.ENTER,
+            keyCode: KeyCodes.ENTER,
             stopPropagation: jasmine.createSpy('stopPropagation'),
           };
         });
@@ -100,9 +100,9 @@ describe('Controller: PlacesCtrl', function () {
           });
         });
 
-        it('selectRow should call showPlaceDetails and GridCellService.selectRow', function () {
+        it('selectRow should call showPlaceDetails and GridService.selectRow', function () {
           this.controller.selectRow({}, { entity: this.entity });
-          expect(this.GridCellService.selectRow).toHaveBeenCalled();
+          expect(this.GridService.selectRow).toHaveBeenCalled();
           expect(this.controller.currentPlace).toEqual(this.entity);
           expect(this.$state.go).toHaveBeenCalledWith(this.placeOverview, {
             currentPlace: this.entity,
@@ -255,7 +255,6 @@ describe('Controller: PlacesCtrl', function () {
           this.adminUserName = 'adminUserName';
           this.adminCisUuid = 'adminCisUuid';
           this.adminOrgId = 'adminOrgId';
-          this.controller.showATA = true;
           this.controller.adminUserDetails = {
             firstName: this.adminFirstName,
             lastName: this.adminLastName,
@@ -278,8 +277,6 @@ describe('Controller: PlacesCtrl', function () {
           var wizardState = this.$state.go.calls.mostRecent().args[1].wizard.state().data;
           expect(wizardState.title).toBe('addDeviceWizard.newSharedSpace.title');
           expect(wizardState.function).toBe('addPlace');
-          expect(wizardState.showATA).toBe(true);
-          expect(wizardState.csdmHybridCalendarFeature).toBe(true);
           expect(wizardState.csdmHybridCallFeature).toBe(true);
           expect(wizardState.admin.firstName).toBe(this.adminFirstName);
           expect(wizardState.admin.lastName).toBe(this.adminLastName);

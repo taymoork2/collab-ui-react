@@ -38,11 +38,14 @@
     function setResult(node, actionType, result, insertionElementID) {
       if (!_.isEqual(vm.elementText, result.variable.label) || !_.isEqual(vm.readAs, result.readAs.value)) {
         vm.elementText = result.variable.label;
-        vm.readAs = result.readAs.value;
         actionType.value = result.variable.value;
-        actionType.as = vm.readAs;
+        if (!_.isEqual($scope.aaElementType, 'REST')) {
+          vm.readAs = result.readAs.value;
+          actionType.as = vm.readAs;
+        }
         var ele = '<aa-insertion-element element-text="' + actionType.value + '" read-as="' + actionType.as + '" element-id="' + insertionElementID + '"id="' + insertionElementID + '" aa-element-type="' + $scope.aaElementType + '"></aa-insertion-element>';
         node.htmlModel = encodeURIComponent(ele);
+        $rootScope.$broadcast('CE Updated');
       }
     }
 
@@ -69,7 +72,6 @@
                 .then(function (result) {
                   setResult(node, actionType, result, insertionElementID);
                   AACommonService.setSayMessageStatus(true);
-                  $rootScope.$broadcast('CE Updated');
                 });
           }
         }
@@ -149,6 +151,12 @@
               actionEntry = action.queueSettings.periodicAnnouncement;
               return true;
             }
+          }
+        } else if (action.name === 'doREST') {
+          if (checkForElementId(menuEntry.actions[0].url, elementId)) {
+            _.set(menuEntry.actions[0], 'dynamicList', menuEntry.actions[0].url);
+            actionEntry = menuEntry;
+            return true;
           }
         } else {
           if (checkForElementId(menuEntry.actions[0].dynamicList, elementId)) {

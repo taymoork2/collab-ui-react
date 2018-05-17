@@ -25,9 +25,6 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
       },
     };
     this.$scope.onDelete = _.noop;
-    this.stateData = {};
-    _.set(this.stateData, 'LICENSE', {});
-    _.set(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', undefined);
   });
 
   beforeEach(function () {
@@ -47,7 +44,7 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
     it('should render a toggle button, a drop-down menu, and three menu items', function () {
       expect(this.view.find('button[cs-dropdown-toggle]')).toExist();
       expect(this.view.find('ul[cs-dropdown-menu]')).toExist();
-      expect(this.view.find('li.menu-item').length).toBe(3);
+      expect(this.view.find('li').length).toBe(3);
       expect(this.view.find(Options.MODIFY)).toExist();
       expect(this.view.find(Options.ACTIVATE)).toExist();
       expect(this.view.find(Options.DEACTIVATE)).not.toExist();
@@ -67,10 +64,12 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
     spyOn(this.ModalService, 'open').and.returnValue({
       result: this.$q.resolve(true),
     });
+    spyOn(this.AutoAssignTemplateService, 'deactivateTemplate').and.returnValue(this.$q.resolve());
     spyOn(this.AutoAssignTemplateService, 'deleteTemplate').and.returnValue(this.$q.resolve());
     spyOn(this.Notification, 'success');
 
     this.view.find(Options.DELETE).click();
+    expect(this.AutoAssignTemplateService.deactivateTemplate).toHaveBeenCalled();
     expect(this.AutoAssignTemplateService.deleteTemplate).toHaveBeenCalledWith('fake-template-id');
     expect(this.Notification.success).toHaveBeenCalledWith('userManage.org.deleteAutoAssignModal.deleteSuccess');
     expect(this.$scope.onDeleteSpy).toHaveBeenCalled();

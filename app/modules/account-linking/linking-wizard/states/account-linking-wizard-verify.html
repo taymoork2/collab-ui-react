@@ -1,47 +1,46 @@
 <div class="modal-body">
-
   <div class="row">
     <div class="columns medium-4">
-      <h4>Verify Domains</h4>
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.verifyDomainsHeader"></h4>
       <p>
-        Verify your domain and ensure the security and integrity of your organization.
-        Users belonging to verified domains will not be sent an email to verify their email address.
+        <span class="wizard-info" translate="accountLinking.wizard.verifyDomains"></span>
+        <a href="#"
+          tooltip-placement="right"
+          tooltip-html-unsafe="{{:: 'accountLinking.wizard.exceptionsTooltip' | translate}}"
+          translate="accountLinking.wizard.exceptions">
+        </a>
       </p>
-      <p>Exceptions</p>
     </div>
     <div class="columns medium-5 medium-offset-1">
       <div class="align-top">
-
-          <input cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement"
-                 cs-input-label="Sign Agreement">
-
-        <p class="input-info">
-          Sign a legal agreement that allows your organization to verify your domains with a pending status.
-        You have 3 months to add the TXT record to your DNS and prove that you have ownership of the domain.</p>
-
-        <input cs-input type="radio" ng-model="$ctrl.selection" id="verifyNow" name="verifyNow" value="verifyNow"
-               cs-input-label="Verify Now"/>
-
-        <p  class="input-info">
-          We provide a token to add to your domain host's DNS TXT record. We confirm that you own the domain by checking for this token on te DNS server.
-          Once The verification is completed, go to WebEx Site Administration and invite users to Cisco Spark.
+        <div class="row collapse">
+          <div class="columns medium-6">
+            <input ng-disabled="!$ctrl.siteInfo.supportAgreementLinkingMode" cs-input type="radio" ng-model="$ctrl.selection" id="signAgreement" name="signAgreement" value="signAgreement" cs-input-label="{{:: 'accountLinking.wizard.signAgreement' | translate}}">
+          </div>
+          <div class="columns medium-6">
+            <a href="#"
+               ng-hide="$ctrl.siteInfo.supportAgreementLinkingMode"
+               tooltip-placement="bottom-right"
+               tooltip-html-unsafe="{{:: 'accountLinking.wizard.signAgreementTooltip' | translate}}">
+              <span class="signAgreementTooltipIcon icon icon-info"></span>
+            </a>
+          </div>
+        </div>
+        <p class="wizard-info" ng-show="!$ctrl.siteInfo.supportAgreementLinkingMode">
         </p>
+        <p ng-class="{'disabled-text': !$ctrl.siteInfo.supportAgreementLinkingMode, 'wizard-info': $ctrl.siteInfo.supportAgreementLinkingMode}" translate="accountLinking.wizard.legalAgreement"></p>
+
+        <input cs-input type="radio" ng-model="$ctrl.selection" id="verifyNow" name="verifyNow" value="verifyNow" cs-input-label="{{:: 'accountLinking.wizard.verifyNow' | translate}}" />
+        <p class="wizard-info" translate="accountLinking.wizard.verifyDomainsToken"></p>
       </div>
     </div>
     <div class="columns medium-2"></div>
   </div>
-
 </div>
 
 <div class="modal-footer">
-  <button class="btn"
-          ng-click="$ctrl.backFunc()"
-          translate="common.back">
+  <button class="btn" ng-click="$ctrl.backFunc()" translate="common.back">
   </button>
-  <button ng-disabled="!$ctrl.showNext()"
-          id="accountLinkingVerifyNextButton"
-          class="btn btn--primary"
-          ng-click="$ctrl.next()"
-          translate="common.next">
+  <button ng-disabled="!$ctrl.showNext()" id="accountLinkingVerifyNextButton" class="btn btn--primary" ng-click="$ctrl.next()" translate="common.next">
   </button>
 </div>

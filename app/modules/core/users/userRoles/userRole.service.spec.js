@@ -4,12 +4,13 @@
 //DO NOT use export KTEST__MODULAR=true, this module is not self-contrained
 
 describe('Service: UserRoleService:', function () {
-  var $http, Authinfo, Config, UrlConfig, UserRoleService;
+  var $http, $httpBackend, Authinfo, Config, UrlConfig, UserRoleService;
 
   beforeEach(angular.mock.module('Core'));
 
-  beforeEach(inject(function (_$http_, _Authinfo_, _Config_, _UrlConfig_) {
+  beforeEach(inject(function (_$http_, _$httpBackend_, _Authinfo_, _Config_, _UrlConfig_) {
     $http = _$http_;
+    $httpBackend = _$httpBackend_;
     Authinfo = _Authinfo_;
     Config = _Config_;
     UrlConfig = _UrlConfig_;
@@ -90,6 +91,43 @@ describe('Service: UserRoleService:', function () {
         }]);
       });
     });
+
+    describe('getCCARoles():', function () {
+      afterEach(function () {
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
+      });
+
+      it('should return CCA roles and generate correct keys which starts with "CCA_" according role names', function () {
+        $httpBackend.expectGET(/.*\/serviceRoles/).respond({
+          total: 2,
+          data: [
+            {
+              serviceId: 'cca-portal',
+              roles: [
+                {
+                  name: 'cca-portal.configuration_write',
+                  displayName: 'Configuration (Full Privilege)',
+                },
+                {
+                  name: 'cca-portal.configuration_read',
+                  displayName: 'Configuration (Read Only)',
+                },
+              ],
+            },
+          ],
+        });
+
+        var roles = [];
+        UserRoleService.getCCARoles().then(function (d) {
+          roles = d;
+        });
+        $httpBackend.flush();
+        expect(roles.length).toBe(2);
+        expect(roles[0].key).toBe('CCA_Configuration_Write');
+        expect(roles[1].key).toBe('CCA_Configuration_Read');
+      });
+    });
   });
 
   describe('helper functions:', function () {
@@ -97,6 +135,29 @@ describe('Service: UserRoleService:', function () {
       it('should return an atlas backend url using the org id provided', function () {
         expect(UserRoleService._helpers.getUsersRolesUrl({ orgId: 'fake-org-id-1' }))
           .toBe('http://fake-atlas-backend-url/organization/fake-org-id-1/users/roles');
+      });
+    });
+
+    describe('getOrgServiceRolesUrl():', function () {
+      it('should return an atlas backend url using the org id provided', function () {
+        expect(UserRoleService._helpers.getOrgServiceRolesUrl({ orgId: 'fake-org-id-1' }))
+          .toBe('http://fake-atlas-backend-url/organization/fake-org-id-1/serviceRoles');
+      });
+    });
+
+    describe('toCCARoleName():', function () {
+      it('should convert role name correctly', function () {
+        expect(UserRoleService._helpers.toCCARoleName('cca-portal.configuration_write')).toBe('CCA_Configuration_Write');
+      });
+    });
+
+    describe('toCCARoleTooltip():', function () {
+      it('should get CCA role tooltip according to description correctly', function () {
+        var roleDescription = 'Search for possible fraudulent meetings only';
+        expect(UserRoleService._helpers.toCCARoleTooltip(roleDescription)).toBe(roleDescription);
+
+        var roleDescriptionWithSemicolon = 'View and submit telephony; View CCA reports';
+        expect(UserRoleService._helpers.toCCARoleTooltip(roleDescriptionWithSemicolon)).toContain('<ul');
       });
     });
 

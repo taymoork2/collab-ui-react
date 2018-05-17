@@ -1,0 +1,10 @@
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.partner-reports-webex-tabs {
+  @extend %content-subheader; // this will size your nested .content-container
+
+  .metrics-content {
+    overflow: hidden !important; // FIXME: track down and remove need for '!important'
+    padding: 0 !important;
+  }
+}

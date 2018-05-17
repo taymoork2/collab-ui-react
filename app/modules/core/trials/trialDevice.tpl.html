@@ -22,13 +22,11 @@
         <p>
           <span translate="trialModal.call.deviceTrialLimitReachedA"></span>
           <span>
-            <a ng-href
-              translate="trialModal.call.activeDeviceTrial"
-              tooltip="{{::'trialModal.call.activeDeviceTrialTip' | translate}}"
-              tooltip-trigger="mouseenter focus"
-              tooltip-placement="top"
-              aria-label="{{::'trialModal.call.activeDeviceTrialTip' | translate}}"
-              tooltip-animation="false"></a>
+            <text-tooltip
+              tt-tooltip-animation="false"
+              tt-tooltip-text="{{::'trialModal.call.activeDeviceTrialTip' | translate}}">
+              <span translate="trialModal.call.activeDeviceTrial"></span>
+            </text-tooltip>
           </span>
           <span translate="trialModal.call.deviceTrialLimitReachedB" translate-values="{number: callTrial.maxTrials}"></span>
         </p>
@@ -492,7 +490,7 @@
     translate="common.back">
   </button>
   <button id="trial--devices--startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading"
-      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || callTrial.getTotalQuantityBeingAdded()== 0)">
+      ng-click="trialForm.$setPristine(true); callTrial.skip(!callTrial.areAdditionalDevicesAllowed()); trial.nextStep()" ng-disabled="callTrial.areAdditionalDevicesAllowed() && (trialForm.$invalid || callTrial.getTotalQuantityBeingAdded() === 0)">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
     </span>

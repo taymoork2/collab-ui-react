@@ -20,7 +20,7 @@
           features="$ctrl.services"
           on-feature-click="$ctrl.clickService(feature)">
         </feature-list>
-        <hybrid-cloudberry-section place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.anyHybridServiceToggle() && $ctrl.hasHybridEntitlements()"></hybrid-cloudberry-section>
+        <hybrid-cloudberry-section place="$ctrl.getCurrentPlace" eservice="$ctrl.editCloudberryServices" ng-if="$ctrl.hasHybridEntitlements()"></hybrid-cloudberry-section>
       </cs-sp-section>
 
       <cs-sp-section>
@@ -37,7 +37,7 @@
         <div class="feature-list">
           <ul>
               <li class="feature" ng-if="$ctrl.showLocations()">
-                <a ng-click="$ctrl.openPanel()">
+                <a href ng-click="$ctrl.openPanel()">
                   <span class="feature-name" translate="usersPreview.location"></span>
                   <span class="feature-details feature-label feature-status">{{$ctrl.placeLocation}}</span>
                     <i class="feature-arrow"></i>

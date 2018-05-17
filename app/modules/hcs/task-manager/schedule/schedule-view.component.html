@@ -1,13 +1,13 @@
 <div class="partner-schedule-view">
-    <cs-page-header title-name="Test Schedule" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-header title-name="Test Schedule" back="true" back-url="$ctrl.backState" back-aria-label="{{::'common.back' | translate}}"></cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-left>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
-        <button class="btn btn--people" ng-click="$ctrl.createSchedule()" ng-disabled="true" translate="hcs.taas.scheduleView.scheduleCreate"></button>
+        <button class="btn btn--people" ng-click="$ctrl.createSchedule()" ng-disabled="true" translate="hcs.taas.scheduleView.scheduleCreate"></button> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="schedule-content content-container">
+    <div ng-if="$ctrl.pageState !== $ctrl.STATE_NEW" class="schedule-content content-container">
       <!-- Show Reload page when all location requests fail-->
       <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
         <div class="features-reload">

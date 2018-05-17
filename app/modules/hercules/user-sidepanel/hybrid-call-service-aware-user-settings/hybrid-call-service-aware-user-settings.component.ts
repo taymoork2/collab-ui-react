@@ -6,6 +6,9 @@ import { HybridServiceUserSidepanelHelperService, IEntitlementNameAndState } fro
 import { Notification } from 'modules/core/notifications/notification.service';
 import { USSService, IUserStatusWithExtendedMessages } from 'modules/hercules/services/uss.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { IToolkitModalService } from 'modules/core/modal';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController {
 
@@ -17,70 +20,82 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   private userEmailAddress: string;
   public isInvitePending: boolean;
   private allUserEntitlements: HybridServiceId[];
+  private serviceIsEnabledInFMS: boolean;
 
   public entitledToggle: boolean = false;
   public userIsCurrentlyEntitled: boolean = false;
   public newEntitlementValue: boolean | undefined;
 
   public userStatusAware: IUserStatusWithExtendedMessages | undefined;
-  private userStatusConnect: IUserStatusWithExtendedMessages | undefined;
+  public userStatusConnect: IUserStatusWithExtendedMessages | undefined;
   public lastStateChangeText: string = '';
 
   public connectorId: string;
   public directoryUri: string;
-  public domainVerificationError = false;
+  public primaryDn: string;
+  public telephoneNumber: string;
+  public ucmCluster: string;
 
-  private entitlementUpdatedCallback: Function;
+  public domainVerificationError = false;
+  public resourceGroupId: string;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private DomainManagementService: DomainManagementService,
-    private ModalService,
+    private ModalService: IToolkitModalService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
+    private ServiceDescriptorService: ServiceDescriptorService,
     private UCCService: UCCService,
     private UriVerificationService: UriVerificationService,
     private USSService: USSService,
+    private UserOverviewService: UserOverviewService,
   ) { }
 
   public $onInit() {
-    if (this.userId) {
-      this.getDataFromUSS(this.userId);
-    }
+    this.getServiceSetupStatus();
   }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
-    const { userId, userEmailAddress,  entitlementUpdatedCallback, isInvitePending, allUserEntitlements } = changes;
+    const { userId, userEmailAddress } = changes;
     if (userId && userId.currentValue) {
       this.userId = userId.currentValue;
-      this.getDataFromUSS(this.userId);
+      this.getUserData(this.userId);
     }
     if (userEmailAddress && userEmailAddress.currentValue) {
       this.userEmailAddress = userEmailAddress.currentValue;
-    }
-    if (entitlementUpdatedCallback && entitlementUpdatedCallback.currentValue) {
-      this.entitlementUpdatedCallback = entitlementUpdatedCallback.currentValue;
-    }
-    if (isInvitePending && isInvitePending.currentValue) {
-      this.isInvitePending = isInvitePending.currentValue;
-    }
-    if (allUserEntitlements && allUserEntitlements.currentValue) {
-      this.allUserEntitlements = allUserEntitlements.currentValue;
-      this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-uc');
     }
   }
 
   private userHasEntitlement = (entitlement: HybridServiceId): boolean => this.allUserEntitlements && this.allUserEntitlements.indexOf(entitlement) > -1;
 
-  private getDataFromUSS(userId: string): ng.IPromise<void> {
+  private getServiceSetupStatus(): ng.IPromise<void> {
+    return this.ServiceDescriptorService.isServiceEnabled('squared-fusion-uc')
+      .then((isSetup) => {
+        this.serviceIsEnabledInFMS = isSetup;
+      })
+      .catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'hercules.userSidepanel.errorMessages.cannotReadOrgDataFromFMS');
+      });
+  }
+
+  private getUserData(userId) {
     this.loadingPage = true;
-    return this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId)
-      .then(([userStatusAware, userStatusConnect]) => {
+    const promises: ng.IPromise<any>[] = [
+      this.UserOverviewService.getUser(userId),
+      this.HybridServiceUserSidepanelHelperService.getDataFromUSS(userId),
+    ];
+    return this.$q.all(promises)
+      .then(([commonIdentityUserData, [userStatusAware, userStatusConnect]]) => {
+        this.allUserEntitlements = commonIdentityUserData.user.entitlements;
+        this.isInvitePending = !this.UserOverviewService.userHasActivatedAccountInCommonIdentity(commonIdentityUserData.user);
         this.userStatusAware = userStatusAware;
         this.userStatusConnect = userStatusConnect;
+        this.entitledToggle = this.userIsCurrentlyEntitled = this.userHasEntitlement('squared-fusion-uc');
       })
       .then(() => {
         if (this.userStatusAware && this.userStatusAware.connectorId) {
@@ -89,6 +104,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
         if (this.userStatusAware && this.userStatusAware.lastStateChange) {
           this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatusAware.lastStateChange);
+        }
+
+        if (this.userStatusAware && this.userStatusAware.resourceGroupId) {
+          this.resourceGroupId = this.userStatusAware.resourceGroupId;
         }
 
         if (this.userIsCurrentlyEntitled && this.userStatusAware) {
@@ -115,7 +134,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     this.UCCService.getUserDiscovery(userId)
       .then((userDiscovery: IUserDiscoveryInfo) => {
         this.directoryUri = userDiscovery.directoryURI;
-        if (this.directoryUri) {
+        this.primaryDn = userDiscovery.primaryDn;
+        this.telephoneNumber = userDiscovery.telephoneNumber;
+        this.ucmCluster = userDiscovery.UCMInfo && userDiscovery.UCMInfo.ClusterFQDN;
+        if (this.directoryUri || this.primaryDn || this.telephoneNumber) {
           this.DomainManagementService.getVerifiedDomains()
             .then((domainList) => {
               if (!this.UriVerificationService.isDomainVerified(domainList, this.directoryUri)) {
@@ -128,6 +150,10 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
   public getStatus(status) {
     return this.USSService.decorateWithStatus(status);
+  }
+
+  public isServiceEnabledInFMS(): boolean {
+    return this.serviceIsEnabledInFMS;
   }
 
   public navigateToCallSettings () {
@@ -162,15 +188,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       .then(() => {
         this.userIsCurrentlyEntitled = !!this.newEntitlementValue;
         this.newEntitlementValue = undefined;
-        this.loadingPage = true;
-        return this.getDataFromUSS(this.userId)
-          .then(() => {
-            this.entitlementUpdatedCallback({
-              options: {
-                entitledToAware: this.userIsCurrentlyEntitled,
-              },
-            });
-          });
+        return this.getUserData(this.userId);
       })
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {
@@ -220,8 +238,5 @@ export class HybridCallServiceAwareUserSettingsComponent implements ng.IComponen
   public bindings = {
     userId: '<',
     userEmailAddress: '<',
-    entitlementUpdatedCallback: '&',
-    isInvitePending: '<',
-    allUserEntitlements: '<',
   };
 }

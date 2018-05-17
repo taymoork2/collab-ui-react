@@ -7,14 +7,15 @@
 
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
-  function MediaReportsService($http, $translate, Authinfo, Notification, UrlConfig, InsightGraphService) {
+  function MediaReportsService($http, $translate, Authinfo, InsightGraphService, Notification, UrlConfig) {
     var vm = this;
-
     vm.urlBase = UrlConfig.getAthenaServiceUrl() + '/organizations/' + Authinfo.getOrgId();
     vm.allClusters = $translate.instant('mediaFusion.metrics.allclusters');
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
     vm.clientTypeTranMap = {
       ANDROID: $translate.instant('mediaFusion.metrics.clientType.android'),
       BLACKBERRY: $translate.instant('mediaFusion.metrics.clientType.blackberry'),
@@ -187,7 +188,7 @@
 
     function getParticipantDistributionData(time, cluster, multipleinsight) {
       if (multipleinsight) {
-        vm.callDistributionUrl = '/clusters_call_volume_with_multiple_insights';//url for multiple insight
+        vm.callDistributionUrl = '/clusters_call_volume_with_multiple_insights';
       } else {
         vm.callDistributionUrl = '/clusters_call_volume_with_insights';
       }
@@ -205,6 +206,46 @@
         }
       }, function (error) {
         return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallParticipantDistributionGraphError'), returnData);
+      });
+    }
+
+    function getCascadeBandwidthData(time, cluster) {
+      vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster';
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      var clusterName = cluster === vm.allClusters ? cluster : cluster.replace(/\W/g, '').toLowerCase();
+      return $http.get(vm.urlBase + getQuerys(vm.cascadeBandwidthUrl, clusterName, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
+      });
+    }
+
+    function getStreamsBandwidthData(time, cluster, streamsBandwidthSelected) {
+      vm.streamsBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/media/' + streamsBandwidthSelected;
+      var returnData = {
+        graphData: [],
+        graphs: [],
+      };
+      var clusterName = cluster.replace(/\W/g, '').toLowerCase();
+      return $http.get(vm.urlBase + getQuerys(vm.streamsBandwidthUrl, clusterName, time)).then(function (response) {
+        if (!_.isUndefined(response) && !_.isUndefined(response.data) && !_.isUndefined(response.data.chartData) && _.isArray(response.data.chartData) && !_.isUndefined(response.data)) {
+          returnData.graphData.push(response.data.chartData);
+          var adjustedData = adjustLineGraphData(response.data.chartData, returnData, response.data.startTime, response.data.endTime, response.data.graphs);
+          return InsightGraphService.getAdjustedInsightData(adjustedData);
+        } else {
+          return returnData;
+        }
+      }, function (error) {
+        return returnErrorCheck(error, $translate.instant('mediaFusion.metrics.overallUtilizationGraphError'), returnData);
       });
     }
 
@@ -228,8 +269,12 @@
       });
     }
 
-    function getNumberOfParticipantData(time) {
-      vm.numberOfParticipantUrl = '/participants_activity_with_insights';
+    function getNumberOfParticipantData(time, multipleinsight) {
+      if (multipleinsight) {
+        vm.numberOfParticipantUrl = '/participants_activity_with_multiple_insights';//url for multiple insight
+      } else {
+        vm.numberOfParticipantUrl = '/participants_activity_with_insights';
+      }
       var returnData = {
         graphData: [],
         graphs: [],
@@ -382,12 +427,44 @@
       }
     }
 
+    function legendHandlerForGraphs(graphs, event) {
+      vm.legendGraphs = graphs;
+      var evt = event;
+      var cluster = false;
+      _.forEach(vm.legendGraphs, function (graph) {
+        if (graph.title === evt.dataItem.title && evt.type === 'hideItem') {
+          graph.legendtracker = false;
+        } else if (graph.title === evt.dataItem.title && evt.type === 'showItem') {
+          graph.legendtracker = true;
+        }
+      });
+      _.forEach(vm.legendGraphs, function (graph) {
+        if (!graph.legendtracker && !_.isUndefined(graph.legendtracker)) {
+          cluster = true;
+        } else if (graph.title !== vm.allOff) {
+          cluster = false;
+          return cluster;
+        }
+      });
+      _.forEach(evt.chart.graphs, function (graph) {
+        if (cluster && graph.title === vm.allOff) {
+          graph.title = vm.allOn;
+          evt.chart.showGraph(graph);
+        } else if (!cluster && graph.title === vm.allOn) {
+          graph.title = vm.allOff;
+          evt.chart.showGraph(graph);
+        }
+      });
+    }
+
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
       getParticipantDistributionData: getParticipantDistributionData,
       getAvailabilityData: getAvailabilityData,
       getClusterAvailabilityData: getClusterAvailabilityData,
+      getCascadeBandwidthData: getCascadeBandwidthData,
+      getStreamsBandwidthData: getStreamsBandwidthData,
       getTotalCallsData: getTotalCallsData,
       getClusterAvailabilityTooltip: getClusterAvailabilityTooltip,
       getHostedOnPremisesTooltip: getHostedOnPremisesTooltip,
@@ -397,6 +474,7 @@
       getNumberOfParticipantData: getNumberOfParticipantData,
       getMeetingLocationCardData: getMeetingLocationCardData,
       getOverflowIndicator: getOverflowIndicator,
+      legendHandlerForGraphs: legendHandlerForGraphs,
     };
   }
 })();

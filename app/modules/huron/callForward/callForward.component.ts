@@ -35,8 +35,8 @@ class CallForwardCtrl implements ng.IComponentController {
   public isError: boolean = false;
   public errorMsg: {};
 
-  private inputTranslations: ICallDestinationTranslate;
-  private customNumberValidationPatern: RegExp;
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
 
  /* @ngInject */
   constructor(

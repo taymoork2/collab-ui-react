@@ -66,7 +66,7 @@ describe('Huron Functional: user-line-settings', () => {
     utils.sendKeys(callUserPage.usersList.searchFilter, USERS[0].email + protractor.Key.ENTER);
     utils.click(callUserPage.usersList.userFirstName);
     utils.expectIsDisplayed(users.servicesPanel);
-    utils.expectIsDisplayed(users.communicationsService);
+    utils.expectIsDisplayed(users.communicationService);
   });
   it('should navigate to call details view', () => {
     utils.click(users.communicationsService);

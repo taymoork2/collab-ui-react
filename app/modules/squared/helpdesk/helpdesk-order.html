@@ -1,7 +1,7 @@
-<div class="helpdesk-details" ng-keyup="helpdeskUserCtrl.keyPressHandler($event)" tabindex="1">
+<div class="helpdesk-details" ng-keyup="helpdeskUserCtrl.keyPressHandler($event)">
   <div class="row head full">
     <div class="columns large-12">
-      <a ui-sref="helpdesk.search">
+      <a ui-sref="helpdesk.search" focus-on>
         <i class="icon icon-back icon-lg"></i>
         <span translate="helpdesk.backToSearchResults"></span>
       </a>
@@ -96,11 +96,14 @@
           <a href class="custom-spacing" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo && helpdeskOrderCtrl.accountActivated !== true" translate="helpdesk.editAdminEmail"
              ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
           <a href translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.CUSTOMER)"></a>
-          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}"
+          <i
+            tooltip-html-unsafe="{{::'helpdesk.resendTooltip' | translate}}"
             tooltip-placement="right"
             tooltip-trigger="mouseenter focus"
             class="icon icon-information icon-lg blue-icon-info"
-            tabindex="0"></i>
+            tabindex="0"
+            aria-label="{{::'helpdesk.resendTooltip' | translate}}">
+          </i>
         </div>
         <div class="large-5 columns details-value" ng-show="helpdeskOrderCtrl.showCustomerEmailEditView">
           <input ng-model="helpdeskOrderCtrl.customerAdminEmail" class="edit-box-style custom-spacing">
@@ -119,14 +122,20 @@
           <span class="custom-spacing">{{helpdeskOrderCtrl.lastProvisioningContact}}</span>
         </div>
         <div class="large-3 columns details-value" ng-if="helpdeskOrderCtrl.canEditResendProvisioningContact() && !helpdeskOrderCtrl.showProvisioningContactEditView">
-          <a  href class="custom-spacing" translate="helpdesk.editAdminEmail" ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo"
-              ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
+          <a href class="custom-spacing"
+            translate="helpdesk.editAdminEmail"
+            ng-if="helpdeskOrderCtrl.hasPermissionToEditInfo"
+            ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PROVISIONING)">
+          </a>
           <a href translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PROVISIONING)"></a>
-          <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}"
+          <i
+            tooltip-html-unsafe="{{::'helpdesk.resendTooltip' | translate}}"
             tooltip-placement="right"
             tooltip-trigger="mouseenter focus"
             class="icon icon-information icon-lg blue-icon-info"
-            tabindex="0"></i>
+            tabindex="0"
+            aria-label="{{::'helpdesk.resendTooltip' | translate}}">
+          </i>
         </div>
         <div class="large-5 columns details-value" ng-show="helpdeskOrderCtrl.showProvisioningContactEditView">
           <input ng-model="helpdeskOrderCtrl.lastProvisioningContact" class="edit-box-style custom-spacing">
@@ -183,11 +192,14 @@
             <a href class="custom-spacing" translate="helpdesk.editAdminEmail" ng-if="::helpdeskOrderCtrl.hasPermissionToEditInfo"
                ng-click="helpdeskOrderCtrl.showEmailEditView(helpdeskOrderCtrl.emailTypes.PARTNER)"></a>
             <a href translate="helpdesk.resendAdminEmail" ng-click="helpdeskOrderCtrl.resendAdminEmail(helpdeskOrderCtrl.emailTypes.PARTNER)"></a>
-            <i tooltip-html-unsafe="{{'helpdesk.resendTooltip' | translate}}"
+            <i
+              tooltip-html-unsafe="{{::'helpdesk.resendTooltip' | translate}}"
               tooltip-placement="right"
               tooltip-trigger="mouseenter focus"
               class="icon icon-information icon-lg blue-icon-info"
-              tabindex="0"></i>
+              tabindex="0"
+              aria-label="{{::'helpdesk.resendTooltip' | translate}}">
+            </i>
           </div>
           <div class="large-5 columns details-value" ng-show="helpdeskOrderCtrl.showPartnerEmailEditView">
             <input ng-model="helpdeskOrderCtrl.partnerAdminEmail" class="edit-box-style custom-spacing">
@@ -222,12 +234,14 @@
         </div>
         <div class="large-5 columns details-value">
           <span>{{helpdeskOrderCtrl.order.orderStatus}}</span>
-          <i tooltip-html-unsafe="{{'helpdesk.usedForDebugging' | translate}}"
-            aria-label="{{'helpdesk.usedForDebugging' | translate}}"
+          <i
+            tooltip-html-unsafe="{{::'helpdesk.usedForDebugging' | translate}}"
+            aria-label="{{::'helpdesk.usedForDebugging' | translate}}"
             tooltip-placement="right"
             tooltip-trigger="mouseenter focus"
             class="icon icon-information icon-lg blue-icon-info"
-            tabindex="0"></i>
+            tabindex="0">
+          </i>
         </div>
         <div class="large-3">
         </div>

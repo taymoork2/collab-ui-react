@@ -1,8 +1,8 @@
-<cs-page-header title-name="{{$ctrl.cluster.name}}" back="true" back-url="$ctrl.backState"></cs-page-header>
+<cs-page-header title-name="{{$ctrl.cluster.name}}" back="true" back-url="$ctrl.backState" back-aria-label="{{::'common.back' | translate}}"></cs-page-header>
 <div class="fusion-cluster-settings">
-  <hs-rename-and-deregister-cluster-section
-      cluster="$ctrl.cluster"
-      show-rename-section="true"
-      on-name-update="$ctrl.nameUpdated(name)">
-  </hs-rename-and-deregister-cluster-section>
+  <hs-cluster-section
+    cluster="$ctrl.cluster"
+    show-rename-section="true"
+    on-name-update="$ctrl.nameUpdated(name)">
+  </hs-cluster-section>
 </div>

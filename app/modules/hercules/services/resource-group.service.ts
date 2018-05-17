@@ -1,6 +1,10 @@
 import { ConnectorType, ICluster, IResourceGroup, IReleaseChannelsResponse } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 
+import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
+import * as urlConfigModuleName from 'modules/core/config/urlConfig';
+import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
+
 export interface IResourceGroupOptionPair {
   label: string;
   value: string;
@@ -47,7 +51,11 @@ export class ResourceGroupService {
 
   public remove(resourceGroupId: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
     return this.$http.delete<EmptyHTTPResponse>(`${this.UrlConfig.getHerculesUrlV2()}/organizations/${orgId || this.Authinfo.getOrgId()}/resourceGroups/${resourceGroupId}`)
-      .then(this.extractDataFromResponse);
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.HybridServicesClusterService.clearCache();
+        return res;
+      });
   }
 
   public setName(resourceGroupId: string, name: string, orgId?: string): ng.IPromise<EmptyHTTPResponse> {
@@ -141,6 +149,12 @@ export class ResourceGroupService {
 }
 
 export default angular
-  .module('hercules.resource-group-service', [])
+  .module('hercules.resource-group-service', [
+    require('angular-translate'),
+    require('@collabui/collab-ui-ng').default,
+    authinfoModuleName,
+    hybridServicesClusterServiceModuleName,
+    urlConfigModuleName,
+  ])
   .service('ResourceGroupService', ResourceGroupService)
   .name;

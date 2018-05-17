@@ -1,7 +1,7 @@
 class HybridServicesIsInvitePendingWarningComponentCtrl implements ng.IComponentController {
 
-  private isEntitled: boolean;
-  private wasEntitled: boolean;
+  public isEntitled: boolean;
+  public wasEntitled: boolean;
   public serviceName: string;
 
   /* @ngInject */
@@ -25,12 +25,9 @@ class HybridServicesIsInvitePendingWarningComponentCtrl implements ng.IComponent
 }
 
 export class HybridServicesIsInvitePendingWarningComponent implements ng.IComponentOptions {
-  public template = `<div ng-hide="!$ctrl.isEntitled && $ctrl.wasEntitled" class="hybrid-services-warning-message">
-        <i class="icon icon-warning"></i>
-        <p class="hybrid-services-message">
-          <span ng-if="!$ctrl.isEntitled && !$ctrl.wasEntitled" translate="hercules.userSidepanel.warningInvitePendingNotEntitled" translate-values="{ ServiceName: $ctrl.serviceName }"></span>
-          <span ng-if="$ctrl.isEntitled" translate="hercules.userSidepanel.warningInvitePendingActivation"></span>
-        </p>
+  public template = `<div ng-hide="!$ctrl.isEntitled && $ctrl.wasEntitled">
+        <hybrid-services-sidepanel-message ng-if="!$ctrl.isEntitled && !$ctrl.wasEntitled" severity="'warning'" translation-key="'hercules.userSidepanel.warningInvitePendingNotEntitled'" translate-replacements="{ ServiceName: $ctrl.serviceName }"></hybrid-services-sidepanel-message>
+        <hybrid-services-sidepanel-message ng-if="$ctrl.isEntitled" severity="'warning'" translation-key="'hercules.userSidepanel.warningInvitePendingActivation'"></hybrid-services-sidepanel-message>
       </div>`;
   public controller = HybridServicesIsInvitePendingWarningComponentCtrl;
   public bindings = {

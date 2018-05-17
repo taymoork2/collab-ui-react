@@ -11,11 +11,9 @@ describe('Service: Common Report Service', () => {
     this.initModules(reportServices);
     this.injectDependencies('$httpBackend', 'CommonReportService', 'Notification');
 
-    this.customerData = getJSONFixture('core/json/partnerReports/customerResponse.json');
     this.defaults = getJSONFixture('core/json/partnerReports/commonReportService.json');
 
     this.cacheValue = (parseInt(moment.utc().format('H'), 10) >= 8);
-    this.customers = this.customerData.customerOptions;
     this.filter = _.cloneDeep(this.defaults.timeFilter);
     this.today = new Date().toISOString();
     this.message = 'dummyMessage';
@@ -38,22 +36,6 @@ describe('Service: Common Report Service', () => {
   });
 
   describe('report fetch functions:', function () {
-    it('getPartnerReport should fetch report data', function () {
-      this.$httpBackend.whenGET(this.defaults.dummyUrls[0].replace('{{cache}}', this.cacheValue)).respond({});
-      this.CommonReportService.getPartnerReport(this.queryOne, this.customers, undefined).then(function (response) {
-        expect(response.data).toEqual({});
-      });
-      this.$httpBackend.flush();
-    });
-
-    it('getPartnerReportByReportType should fetch report data', function () {
-      this.$httpBackend.whenGET(this.defaults.dummyUrls[1].replace('{{cache}}', this.cacheValue)).respond({});
-      this.CommonReportService.getPartnerReportByReportType(this.queryTwo, this.queryOne, this.customers, undefined).then(function (response) {
-        expect(response.data).toEqual({});
-      });
-      this.$httpBackend.flush();
-    });
-
     it('getCustomerReport should fetch report data', function () {
       this.$httpBackend.whenGET(this.defaults.dummyUrls[2].replace('{{cache}}', this.cacheValue)).respond({});
       this.CommonReportService.getCustomerReport(this.queryThree, undefined).then(function (response) {

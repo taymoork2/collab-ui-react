@@ -20,33 +20,37 @@
                           ng-model="careSetupAssistant.template.configuration.routingLabel"
                           value="{{evaData.value}}"
                           id="{{evaData.id}}"
-                          name="{{evaData.Name}}"
+                          name="{{evaData.name}}"
                           cs-input-label="{{evaData.label}}"
                           ng-change="careSetupAssistant.onEscalationOptionChange(evaData.value)"
                           ng-disabled="evaData.isDisabled"
                           ng-click="careSetupAssistant.setRequiredValue()"
                           >
                           <span class="ct-info-icon" ng-if="!evaData.isDisabled">
-                            <i tooltip-html-unsafe={{evaData.tooltipHtml}}
-                               tooltip-placement="top"
-                               tooltip-trigger="focus mouseenter"
-                               class="body-small icon icon-info"
-                               tabindex="0"></i>
+                            <i
+                              tooltip-html-unsafe={{evaData.tooltipHtml}}
+                              tooltip-placement="top"
+                              tooltip-trigger="focus mouseenter"
+                              class="body-small icon icon-info"
+                              tabindex="0"
+                              aria-label={{evaData.tooltipHtml}}>
+                            </i>
                           </span>
                       </div>
                       <div>
-                          <p ng-class="(evaData.isDisabled) ? 'body-small ct-info-disabled ' : 'body-small ct-info'">{{evaData.desc}}</p>
+                        <p ng-class="(evaData.isDisabled) ? 'body-small ct-info-disabled ' : 'body-small ct-info'">{{evaData.desc}}</p>
                       </div>
                   </div>
                   </div>
                   <div class="org-setting-info" ng-if="!careSetupAssistant.evaConfig.isEvaConfigured">
                     <span class="icon-wrapper">
-                     <i class="icon icon-info"></i>
+                      <i class="icon icon-info"></i>
                     </span>
                     <span class="body-small setting-info ng-binding" translate="careChatTpl.evaSettingInfo"></span>
                   </div>
                   <div class="h6 eva-enabled-info" ng-if="careSetupAssistant.evaConfig.isEvaConfigured">
-                    <a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a><span  class="msg" translate="careChatTpl.evaEnabledSettingInfo"></span>
+                    <a ng-href="{{careSetupAssistant.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
+                    <span class="msg" translate="careChatTpl.evaEnabledSettingInfo"></span>
                   </div>
               </section>
           </article>

@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { SearchService } from './searchService';
 import { Notification } from 'modules/core/notifications';
 import { KeyCodes } from 'modules/core/accessibility';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 const DATERANGE = 6;
 export interface IGridApiScope extends ng.IScope {
@@ -36,6 +37,7 @@ class WebexReportsSearch implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
+    private ProPackService: ProPackService,
   ) {
     this.gridData = [];
     this.timeZone = this.SearchService.getGuess('');
@@ -44,12 +46,18 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.initDateRange();
-    this.setGridOptions();
-    this.Analytics.trackEvent(this.SearchService.featureName, {});
-    if (this.searchStr) {
-      this.startSearch();
-    }
+    this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
+      if (isProPackEnabled) {
+        this.initDateRange();
+        this.setGridOptions();
+        this.Analytics.trackEvent(this.SearchService.featureName, {});
+        if (this.searchStr) {
+          this.startSearch();
+        }
+      } else {
+        this.$state.go('login');
+      }
+    });
   }
 
   public showDetail(item) {
@@ -60,11 +68,13 @@ class WebexReportsSearch implements ng.IComponentController {
 
   public onKeySearch($event: KeyboardEvent) {
     if ($event.which === KeyCodes.ENTER) {
+      this.searchStr = _.trim(($event.target as HTMLInputElement).value);
       this.startSearch();
     }
   }
 
-  public onBlur() {
+  public onBlur($event: KeyboardEvent) {
+    this.searchStr = _.trim(($event.target as HTMLInputElement).value);
     if (this.searchStr === this.storeData.searchStr) {
       return ;
     }
@@ -79,11 +89,13 @@ class WebexReportsSearch implements ng.IComponentController {
     if (this.startDate === this.storeData.startDate && this.endDate === this.storeData.endDate) {
       return ;
     }
+    this.errMsg.datePickerAriaLabel = '';
     this.errMsg.datePicker = '';
     this.storeData.endDate = this.endDate;
     this.storeData.startDate = this.startDate;
     if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
-      this.errMsg.datePicker = '<i class="icon icon-warning"></i> ' + this.$translate.instant('webexReports.end-date-tooltip');
+      this.errMsg.datePickerAriaLabel = this.$translate.instant('webexReports.end-date-tooltip');
+      this.errMsg.datePicker = `<i class="icon icon-warning"></i> ${this.errMsg.datePickerAriaLabel}`;
     }
     this.startSearch();
   }
@@ -117,11 +129,13 @@ class WebexReportsSearch implements ng.IComponentController {
 
     this.flag = false;
     this.gridData = [];
+    this.errMsg.ariaLabel = '';
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
 
     if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
-      this.errMsg.search = '<i class="icon icon-warning"></i> ' + this.$translate.instant('webexReports.searchError');
+      this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');
+      this.errMsg.search = `<i class="icon icon-warning"></i> ${this.errMsg.ariaLabel}`;
       return ;
     }
 
@@ -208,7 +222,7 @@ class WebexReportsSearch implements ng.IComponentController {
       <div class="ui-grid-cell-contents" col-index="renderIndex">
       <span>Number of <br>Participants</span>
       <span ui-grid-visible="col.sort.direction">
-      <i ng-class="{ \'ui-grid-icon-up-dir\': col.sort.direction == asc, \'ui-grid-icon-down-dir\': col.sort.direction == desc, \'ui-grid-icon-blank\': !col.sort.direction }"></i>
+      <i ng-class="{ \'ui-grid-icon-up-dir\': col.sort.direction === asc, \'ui-grid-icon-down-dir\': col.sort.direction == desc, \'ui-grid-icon-blank\': !col.sort.direction }"></i>
       </span></div></div>`,
     }, {
       width: '7%',

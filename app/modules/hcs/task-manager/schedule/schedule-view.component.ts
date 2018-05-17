@@ -19,16 +19,17 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
   public pageState: State = State.Loading;
   public backState = 'taasSuites';
   public schedule: HtmSchedule[] = [];
+
   private scheduleListData;
 
   /* @ngInject */
   constructor(
     public HcsTestManagerService: TaskManagerService,
     public $modal: IToolkitModalService,
-    private $state: ng.ui.IStateService,
     public $translate: ng.translate.ITranslateService,
     public $q: ng.IQService,
 
+    private $state: ng.ui.IStateService,
     private Notification: Notification,
     ) {}
 
@@ -147,7 +148,7 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
       schedule.name = scheduled.name + '_COPY';
     }
     this.HcsTestManagerService.createSchedule(schedule),
-    this.Notification.success('hcs.taas.suite.successRun', undefined, 'hcs.taas.suite.successTitle');
+    this.Notification.success('hcs.taas.suiteView.successRun', undefined, 'hcs.taas.suiteView.successTitle');
   }
 
   public convertMonth(month: string): string {

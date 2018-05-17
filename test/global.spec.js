@@ -2,6 +2,7 @@
 
 /* eslint no-restricted-globals:0 */
 
+var looserKebabCase = require('../utils/looser-kebab-case');
 var consoleWarn = console.warn;
 console.warn = function () {
   consoleWarn.apply(console, arguments);
@@ -169,7 +170,7 @@ beforeEach(function () {
    * @returns {string} A template string suitable for compiling
    */
   this.buildComponentTemplateString = function (componentName, componentParamsObj) {
-    var component = _.kebabCase(componentName);
+    var component = looserKebabCase(componentName);
     var componentParams = '';
     this.injectDependencies('$scope'); // just in case we have objects to inject
     // save this.$scope to be accessible inside _.reduce()
@@ -185,7 +186,7 @@ beforeEach(function () {
         } else {
           valueString = value;
         }
-        result += ' ' + _.kebabCase(key) + '="' + valueString + '"';
+        result += ' ' + looserKebabCase(key) + '="' + valueString + '"';
         return result;
       }, '');
     }
@@ -194,7 +195,7 @@ beforeEach(function () {
   };
 
   // Inspired by https://velesin.io/2016/08/23/unit-testing-angular-1-5-components/
-  this.spyOnComponent = function (name) {
+  this.spyOnComponent = function (name, options) {
     function componentSpy($provide) {
       componentSpy.bindings = [];
 
@@ -208,7 +209,7 @@ beforeEach(function () {
         component.controller = function () {
           componentSpy.bindings.push(this);
         };
-
+        _.assignIn(component, options);
         return $delegate;
       });
     }

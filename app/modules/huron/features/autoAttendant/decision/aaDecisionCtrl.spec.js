@@ -3,6 +3,7 @@
 describe('Controller: AADecisionCtrl', function () {
   var featureToggleService;
   var aaCommonService;
+  var autoAttendantHybridCareService;
   var aaQueueService;
   var controller;
   var AAUiModelService, AAModelService, AutoAttendantCeMenuModelService;
@@ -48,7 +49,7 @@ describe('Controller: AADecisionCtrl', function () {
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_, _AACesOnboardHelperService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, $q, _AAUiModelService_, _AAModelService_, _AASessionVariableService_, _AutoAttendantCeMenuModelService_, _FeatureToggleService_, _AACommonService_, _QueueHelperService_, _AutoAttendantHybridCareService_, _AACesOnboardHelperService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     q = $q;
@@ -82,6 +83,7 @@ describe('Controller: AADecisionCtrl', function () {
     AACesOnboardHelperService = _AACesOnboardHelperService_;
     aaQueueService = _QueueHelperService_;
     AASessionVariableService = _AASessionVariableService_;
+    autoAttendantHybridCareService = _AutoAttendantHybridCareService_;
 
     AAUiModelService = _AAUiModelService_;
     AAModelService = _AAModelService_;
@@ -120,6 +122,7 @@ describe('Controller: AADecisionCtrl', function () {
     menu = null;
     action = null;
     AACesOnboardHelperService = null;
+    autoAttendantHybridCareService = null;
   });
 
   describe('Conditional tests', function () {
@@ -134,6 +137,7 @@ describe('Controller: AADecisionCtrl', function () {
           csOnboardingStatus: 'SUCCESS',
         }));
       }));
+
 
       it('should add decision action object menuEntry and have 6 if options and 5 then options', function () {
         var c;
@@ -152,6 +156,37 @@ describe('Controller: AADecisionCtrl', function () {
         expect(c.isWarn).toEqual(false);
         expect(c.ifOptions.length).toEqual(7);
         expect(c.thenOptions.length).toEqual(5);
+      });
+
+      it('should not add sparkcall options when hybrid toggle is enabled and sparkCall is not configured', function () {
+        var c;
+        var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+
+        spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(false);
+        spyOn(aaCommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+        aaUiModel['openHours'].addEntryAt(0, menu);
+
+        c = controller('AADecisionCtrl', {
+          $scope: $scope,
+        });
+
+        $scope.$apply();
+        expect(c.thenOptions.length).toBe(3);
+      });
+
+      it('should add spark call options when hybrid toggle is enabled and sparkCall is also configured', function () {
+        var c;
+        var menu = AutoAttendantCeMenuModelService.newCeMenuEntry();
+        spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(true);
+        spyOn(aaCommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+        aaUiModel['openHours'].addEntryAt(0, menu);
+
+        c = controller('AADecisionCtrl', {
+          $scope: $scope,
+        });
+
+        $scope.$apply();
+        expect(c.thenOptions.length).toBe(5);
       });
     });
 
@@ -518,6 +553,7 @@ describe('Controller: AADecisionCtrl', function () {
   describe('Variable is deleted', function () {
     beforeEach(inject(function () {
       spyOn(AASessionVariableService, 'getSessionVariables').and.returnValue(q.resolve([]));
+      spyOn(AASessionVariableService, 'getSessionVariablesOfDependentCeOnly').and.returnValue(q.resolve());
       spyOn(aaCommonService, 'collectThisCeActionValue').and.returnValue([]);
     }));
 

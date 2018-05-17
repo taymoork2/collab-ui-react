@@ -1,0 +1,31 @@
+<div class="form-spacing webex-client-versions__label-and-dropdown">
+  <h4 translate="partnerProfile.webexClientVersion"></h4>
+  <div class="row collapse">
+    <p class="columns small-10 body-small" translate="partnerProfile.WbxClientVersionOnlyOnNewSites"></p>
+  </div>
+  <span class="badge"></span>
+  <div class="row collapse">
+    <div class="columns medium-6">
+      <cs-select
+        class="webex-client-version__dropdown"
+        ng-model="$ctrl.wbxclientversionselected"
+        ng-model-options="{ debounce: 2000 }"
+        options="$ctrl.wbxclientversions"
+        placeholder="$ctrl.wbxclientversionplaceholder"
+        on-change-fn="$ctrl.wbxclientversionselectchanged()"
+        is-disabled="$ctrl.useLatestWbxVersion">
+      </cs-select>
+    </div>
+  </div>
+  <p class="body-smallest webex-client-version__error" ng-if="$ctrl.wbxclientVersionInvalid && !$ctrl.useLatestWbxVersion">{{$ctrl.wbxclientVersionInvalidError}}</p>
+  <div class="cs-checkbox-group">
+    <input
+      cs-input
+      type="checkbox"
+      id="latest-webex-version__checkbox"
+      ng-model="$ctrl.useLatestWbxVersion"
+      ng-model-options="{ debounce: 100 }"
+      ng-change="$ctrl.toggleWebexSelectLatestVersionAlways()"
+      cs-input-label="{{::'partnerProfile.alwaysProvisionWithLatest' | translate}}">
+  </div>
+</div>

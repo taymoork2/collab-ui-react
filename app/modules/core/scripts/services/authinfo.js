@@ -53,6 +53,7 @@
         userOrgId: null,
         commPartnerOrgId: null,
         roomPartnerOrgId: null,
+        carePartnerOrgId: null,
         customerAdminEmail: null,
       };
     }
@@ -207,6 +208,9 @@
                   hasCVCOffer = true;
                 }
                 careLicenses.push(service);
+
+                // store the partner for Care license
+                authData.carePartnerOrgId = license.partnerOrgId;
                 break;
               case Config.licenseTypes.CMR:
                 service = new ServiceFeature($translate.instant('onboardModal.cmr'), accountIndex + 1, 'cmrRadio', license);
@@ -252,6 +256,10 @@
       getRoomPartnerOrgId: function () {
         // The orgId of the partner who enabled SHARED_DEVICES license
         return authData.roomPartnerOrgId;
+      },
+      getCarePartnerOrgId: function () {
+        // The orgId of the partner who enabled CARE license
+        return authData.carePartnerOrgId;
       },
       // When partner logs in, it will be the partner admin email
       // but partner admin chooses to login to customer portal it will be customer admin email
@@ -355,14 +363,27 @@
 
         var roles = authData.roles;
         var services = authData.services || [];
-        var view = (_.includes(roles, 'PARTNER_ADMIN') || _.includes(roles, 'PARTNER_USER')) ? 'partner' : 'customer';
+        var isPartnerUser = _.includes(roles, 'PARTNER_USER');
+        var view = (_.includes(roles, 'PARTNER_ADMIN') || isPartnerUser) ? 'partner' : 'customer';
+
+        var parentState = state.split('.')[0];
+        var parentIsSupport = parentState === 'support';
+        var stateAllowedByARole = _.some(roles, function (role) {
+          return _.chain(Config.roleStates)
+            .get(role)
+            .includes(parentState)
+            .value();
+        });
 
         // check if the state is part of the restricted list for this view
         if (_.includes(Config.restrictedStates[view], state)) {
+          // If a state is usually restricted by view, but is allowed by user/device admin roles,
+          // then a Partner_User may view that state
+          if (isPartnerUser && this.isUserOrDeviceAdmin() && stateAllowedByARole) {
+            return true;
+          }
           return false;
         }
-
-        var parentState = state.split('.')[0];
         // if the state is in the allowed list, all good
         if (_.includes(Config.publicStates, parentState)) {
           return true;
@@ -374,24 +395,19 @@
         }
 
         // allow the support state in the special case where the user is exclusively Help Desk AND a Compliance User
-        if (parentState === 'support' && this.isHelpDeskAndComplianceUserOnly()) {
+        // or when the user has a partial admin role and helpdesk
+        if (parentIsSupport && (this.isHelpDeskAndComplianceUserOnly() || (this.isHelpDeskUser() && this.isPartialAdmin()))) {
           return true;
         }
 
         // if the state is in the allowed list of one or the user's role, all good
-        var stateAllowedByARole = _.some(roles, function (role) {
-          return _.chain(Config.roleStates)
-            .get(role)
-            .includes(parentState)
-            .value();
-        });
         if (stateAllowedByARole) {
           return true;
         }
 
-        // if the state is in the allowed list of one or the user's service, and the user is not
+        // if the state is in the allowed list of one of the user's service, and the user is not
         // a User_Admin or Device_Admin, all good
-        if (!this.isUserAdminUser() && !this.isDeviceAdminUser()) {
+        if (!this.isUserOrDeviceAdmin()) {
           var stateAllowedByAService = _.some(services, function (service) {
             return _.chain(Config.serviceStates)
               .get(service.ciName)
@@ -414,11 +430,21 @@
       isReadOnlyAdmin: function () {
         return this.hasRole('Readonly_Admin') && !this.isAdmin();
       },
+      isPartialAdmin: function () {
+        // partial admins can only see some pages
+        return (this.hasRole(Config.roles.device_admin) ||
+          this.hasRole(Config.roles.support) ||
+          this.hasRole(Config.roles.user_admin)) &&
+          !this.isAdmin();
+      },
+      isUserOrDeviceAdmin: function () {
+        return this.hasRole(Config.roles.device_admin) || this.hasRole(Config.roles.user_admin);
+      },
       isCustomerAdmin: function () {
         return this.hasRole(Config.roles.full_admin);
       },
       isOnline: function () {
-        return _.eq(authData.customerType, 'Online');
+        return !this.isPartner() && !this.isPartnerSalesAdmin() && _.eq(authData.customerType, 'Online');
       },
       isPending: function () {
         return _.eq(authData.customerType, 'Pending');
@@ -463,13 +489,13 @@
         return this.hasRole('WX2_SquaredInviter');
       },
       isSupportUser: function () {
-        return this.hasRole('Support') && !this.isAdmin();
+        return this.hasRole(Config.roles.support) && !this.isAdmin();
       },
       isUserAdminUser: function () {
-        return this.hasRole('User_Admin') && !this.isAdmin();
+        return this.hasRole(Config.roles.user_admin) && !this.isAdmin();
       },
       isDeviceAdminUser: function () {
-        return this.hasRole('Device_Admin') && !this.isAdmin();
+        return this.hasRole(Config.roles.device_admin) && !this.isAdmin();
       },
       isTechSupport: function () {
         return this.hasRole('Tech_Support');
@@ -481,7 +507,7 @@
         var roles = this.getRoles();
         if (roles && this.isHelpDeskUser()) {
           return _.every(roles, function (role) {
-            return role == Config.roles.helpdesk || role == 'PARTNER_USER' || role == 'User';
+            return role === Config.roles.helpdesk || role === 'PARTNER_USER' || role === 'User';
           });
         }
         return false;
@@ -493,7 +519,7 @@
         var roles = this.getRoles();
         if (roles && this.isComplianceUser()) {
           return _.every(roles, function (role) {
-            return role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
+            return role === Config.roles.compliance_user || role === 'PARTNER_USER' || role === 'User';
           });
         }
         return false;
@@ -502,7 +528,7 @@
         var roles = this.getRoles();
         if (roles && this.isHelpDeskUser() && this.isComplianceUser()) {
           return _.every(roles, function (role) {
-            return role == Config.roles.helpdesk || role == Config.roles.compliance_user || role == 'PARTNER_USER' || role == 'User';
+            return role === Config.roles.helpdesk || role === Config.roles.compliance_user || role === 'PARTNER_USER' || role === 'User';
           });
         }
         return false;
@@ -513,8 +539,14 @@
       hasCallLicense: function () {
         return isLicensed(Config.licenseTypes.COMMUNICATION);
       },
+      hasCareLicense: function () {
+        return isLicensed(Config.licenseTypes.CARE);
+      },
       isSquaredUC: function () {
         return isEntitled(Config.entitlements.huron);
+      },
+      isBroadCloud: function () {
+        return isEntitled(Config.entitlements.broadCloud);
       },
       isFusion: function () {
         return isEntitled(Config.entitlements.fusion_mgmt);
@@ -541,7 +573,9 @@
         return isEntitled(Config.entitlements.hds);
       },
       isDeviceMgmt: function () {
-        return isEntitled(Config.entitlements.room_system);
+        // All orgs should now have access to device management regardless off entitlements.
+        // TODO (bnordlun): remove usage eventually.
+        return true;
       },
       isWebexSquared: function () {
         return isEntitled(Config.entitlements.squared);
@@ -591,6 +625,15 @@
           return license.offerName === Config.offerCodes.MGMTPRO;
         });
       },
+      isOnlineCustomer: function () {
+        return _.some(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlineOnlyCustomer: function () {
+        return _.every(this.getCustomerAccounts(), { customerType: 'Online' });
+      },
+      isOnlinePaid: function () {
+        return _.some(this.getSubscriptions(), { orderingTool: 'DIGITAL_RIVER' });
+      },
       getLicenseIsTrial: function (licenseType, entitlement) {
         var isTrial = _.chain(authData.licenses)
           .reduce(function (isTrial, license) {
@@ -612,7 +655,7 @@
         if (this.isPartner()) {
           return this.getOrgId();
         }
-        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getOrgId();
+        return this.getCommPartnerOrgId() || this.getRoomPartnerOrgId() || this.getCarePartnerOrgId() || this.getOrgId();
       },
       addEntitlement: function (entitlementObj) {
         var entitlement = _.get(entitlementObj, 'ciName');

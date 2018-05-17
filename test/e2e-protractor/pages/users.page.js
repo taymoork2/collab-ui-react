@@ -50,6 +50,7 @@ var UsersPage = function () {
   this.closeSidePanel = element(by.css('.panel-close'));
   this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
   this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
+  this.communicationService = element.all(by.cssContainingText('.feature', 'Call')).first().element(by.css('.feature-arrow'));
   this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
   this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
@@ -64,7 +65,6 @@ var UsersPage = function () {
 
   this.addUsers = element(by.id('addUsers'));
   this.addUsersField = element(by.id('usersfield-tokenfield'));
-  this.closeAddUsers = element(by.id('closeAddUser'));
   this.invalid = element(by.css('.invalid'));
   this.close = element(by.css('.close'));
 
@@ -141,10 +141,7 @@ var UsersPage = function () {
   this.titleField = element(by.id('titleField'));
   this.userTab = element(by.id('usertab'));
 
-  // TODO: rename 'rolesChevron' to something more appropriate
-  // - as of 2017-08-18, this 'a#rolesChevron' does NOT navigate to a UI state that offers anything
-  //   to do with role-management, only first/last/display name management
-  this.rolesChevron = element(by.css('#rolesChevron .header-title'));
+  this.userEditIcon = element(by.css('.header-title .icon-edit'));
 
   this.breadcrumb = {};
   this.breadcrumb.overview = element(by.cssContainingText('ul.breadcrumbs li a', 'Overview'));
@@ -254,9 +251,7 @@ var UsersPage = function () {
   this.createUser = function (userName) {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-    utils.click(manageUsersPage.select.radio.orgManual);
-    utils.click(manageUsersPage.buttons.next);
+    utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
     if (featureToggle.features.atlasEmailSuppress) {
       utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
       utils.click(manageUsersPage.buttons.next);
@@ -281,6 +276,18 @@ var UsersPage = function () {
     utils.expectIsNotDisplayed(users.manageDialog);
 
     utils.search(alias);
+  };
+
+  this.createUserWithAutoAssignTemplate = function (testUserEmail) {
+    utils.click(navigation.usersTab);
+    utils.click(manageUsersPage.buttons.manageUsers);
+    utils.click(manageUsersPage.actionCards.manualAddUsers);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(this.addUsersField);
+    utils.sendKeys(this.addUsersField, testUserEmail + protractor.Key.ENTER);
+    utils.click(manageUsersPage.buttons.next);
+    utils.click(manageUsersPage.buttons.save);
+    utils.click(manageUsersPage.buttons.finish);
   };
 
   this.clickServiceCheckbox = function (alias, expectedMsgState, expectedMtgState, clickService) {
@@ -322,7 +329,7 @@ var UsersPage = function () {
     var userList = _.chain(0)
       .range(25)
       .map(function (n) {
-        var randomAddress = utils.randomTestGmailwithSalt('CSV');
+        var randomAddress = utils.randomTestGmailWithSalt('CSV');
         fileText += 'Test,User_' + (1000 + n) + ',Test User,' + randomAddress + ',f,t,t,f\r\n';
         return randomAddress;
       })

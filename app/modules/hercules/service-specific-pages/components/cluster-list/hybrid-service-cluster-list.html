@@ -1,4 +1,28 @@
-<div class="hercules-clusters-list">
+<div ng-if="$ctrl.showResourceGroupBar()" class="resource-group-bar">
+  <div class="select-container" ng-show="$ctrl.showSelect()">
+    <p translate="hercules.capacity.filterLabel"></p>
+    <form id="resourceGroupForm">
+      <cs-select
+        ng-model="$ctrl.selectedOption"
+        options="$ctrl.options"
+        on-change-fn="$ctrl.updateUI(value)"
+        required="true"
+        >
+      </cs-select>
+    </form>
+  </div>
+  <div class="capacity-container">
+    <div class="capacity-na" ng-if="$ctrl.showCapacityNA()">
+      <div ng-if="$ctrl.maxUsers !== 0" tooltip="{{::'hercules.capacity.tooltipNA'|translate}}" tooltip-placement="bottom" translate="hercules.capacity.labelNA"></div>
+      <div ng-if="$ctrl.maxUsers === 0" tooltip="{{::'hercules.capacity.tooltipNoConnectors'|translate}}" tooltip-placement="bottom" translate="hercules.capacity.labelNA"></div>
+    </div>
+    <div class="capacity-active" ng-if="!$ctrl.showCapacityNA()" tooltip-html-unsafe="{{$ctrl.tooltip}}" tooltip-placement="bottom">
+      <div class="capacity-label" translate="hercules.capacity.label" translate-value-capacity="{{$ctrl.capacity}}"></div>
+      <div class="progressbar-container"><progressbar max="100" value="$ctrl.capacity" type="{{$ctrl.progressBarType}}"></progressbar></div>
+    </div>
+  </div>
+</div>
+<div class="js-hercules-clusters-list">
   <div ng-if="$ctrl.firstLoad" class="loading-list">
     <span class="spinner-example--large">
       <i class="icon icon-spinner"></i>

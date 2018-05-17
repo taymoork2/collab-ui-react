@@ -35,7 +35,7 @@
   </div>
 
   <!-- done import status -->
-  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.csvData.model.processProgress == 100">
+  <div class="flex-item-no-resize upload-progress upload-complete" ng-show="$ctrl.csvData.model.processProgress === 100">
       <span class="progressbar-label">
         <span class="progressbar-label" translate="userManage.bulk.import.completedAt"
               translate-values="{ filename: $ctrl.csvData.model.fileName }"></span>
@@ -67,8 +67,14 @@
         <h5 translate="userManage.bulk.errorUsers"></h5>
         <p>
           <span translate="userManage.bulk.import.errorResolveInstructions"></span>
-          <span class="icon icon-info" tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
-                tooltip-placement="top"></span>
+          <span
+            class="icon icon-info"
+            tabindex="0"
+            tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
+            tooltip-placement="top"
+            tooltip-trigger="focus mouseenter"
+            aria-label="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}">
+          </span>
         </p>
         <div class="error-download" ng-disabled="$ctrl.csvData.model.isProcessing">
           <csv-download type="error" filename="errors.csv" no-icon="false" analytics-eventname="{{$ctrl.DOWNLOAD_ERRORS}}"

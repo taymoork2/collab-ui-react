@@ -11,10 +11,11 @@
     </feature-list>
   </cs-sp-section>
   <hybrid-services-user-sidepanel-section user="userOverview.currentUser"></hybrid-services-user-sidepanel-section>
+  <linked-sites-user-sidepanel-section user="userOverview.currentUser"></linked-sites-user-sidepanel-section>
   <roles-and-security-menu-item></roles-and-security-menu-item>
   <uc-devices ng-if="userOverview.showDevices"></uc-devices>
   <uc-user-details
-    ng-show="userOverview.hasSparkCall"
+    ng-if="userOverview.hasSparkCall"
     details="userOverview.userDetailList"
     on-user-detail-click="userOverview.clickUserDetailsService(userDetail)"
     user-details="userOverview.currentUser"></uc-user-details>

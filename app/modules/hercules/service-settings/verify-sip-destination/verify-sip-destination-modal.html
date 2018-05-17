@@ -3,9 +3,6 @@
   <h4 class="modal-title" translate="hercules.settings.verifySipDestination.title"></h4>
 </div>
 <div class="modal-body new-verify-sip-destination-modal">
-  <div ng-if="vm.resultSet.type === 'error'">
-    <span class="fail" translate="hercules.settings.verifySipDestination.fixes.NoDNSHopsFound"></span>
-  </div>
   <div ng-if="vm.resultSet.type === 'ip'">
     <div class="row collapse padding-adjustment">
         <div class="columns medium-12" translate="hercules.settings.verifySipDestination.IPAddressLookup"></div>

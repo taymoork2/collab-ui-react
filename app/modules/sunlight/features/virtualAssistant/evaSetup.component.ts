@@ -23,6 +23,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     name: '',
     ownerId: '',
     ownerDetails: {},
+    missingDefaultSpace: false,
     configuration: {
       mediaType: this.EvaService.evaServiceCard.type,
       pages: {
@@ -31,7 +32,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.EVA_OVERVIEW_PAGE,
         },
-        vaName: {
+        name: {
           enabled: true,
           nameValue: '',
           startTimeInMillis: 0,
@@ -46,6 +47,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
         vaAvatar: {
           enabled: true,
           fileValue: '',
+          oldFileValue: '',
           avatarError: this.avatarErrorType.NO_ERROR,
           uploadCanceled: false,
           avatarImageSrc: '/images/evaAvatarDefaultIcon.png',
@@ -79,22 +81,23 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   /* @ngInject*/
   constructor(
+    public $element: ng.IRootElementService,
+    public $modal: IToolkitModalService,
     public $scope: ng.IScope,
     public $state: ng.ui.IStateService,
     public $stateParams: ng.ui.IStateParamsService,
-    public $modal: IToolkitModalService,
-    public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
-    private EvaService,
-    private SparkService,
-    public Authinfo,
+    public $translate: ng.translate.ITranslateService,
+    public $window: ng.IWindowService,
     public Analytics,
-    public Notification,
-    public UrlConfig,
+    public Authinfo,
     public CTService,
-    public $window,
+    private EvaService,
+    public Notification,
+    private SparkService,
+    public UrlConfig,
   ) {
-    super($scope, $state, $modal, $translate, $timeout, Authinfo, Analytics, Notification, UrlConfig, CTService, $window);
+    super($element, $modal, $scope, $state, $timeout, $translate, $window, Analytics, Authinfo, CTService, Notification, UrlConfig);
     this.service = this.EvaService;
     // states == pages in order as found in storage template
     this.states = Object.keys(this.template.configuration.pages);
@@ -109,16 +112,18 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     if (this.$stateParams.isEditFeature) {
       this.isEditFeature = true;
       this.template.templateId = this.$stateParams.template.id;
-      this.template.configuration.pages.vaName.nameValue = this.$stateParams.template.name;
+      this.template.configuration.pages.name.nameValue = this.$stateParams.template.name;
       const emailAddress = this.$stateParams.template.email;
       this.template.configuration.pages.evaEmail.value = emailAddress.substring(0, emailAddress.indexOf('@'));
       this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id = this.$stateParams.template.defaultSpaceId;
       this.template.ownerId = this.$stateParams.template.ownerId;
       this.template.ownerDetails = this.$stateParams.template.ownerDetails;
+      this.template.missingDefaultSpace = this.$stateParams.template.missingDefaultSpace || this.EvaService.isMissingDefaultSpace(this.$stateParams.template);
 
-      if (this.$stateParams.template.icon) {
+      if (this.$stateParams.template.iconURL) {
         this.avatarUploadState = this.avatarState.PREVIEW;
-        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
+        this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.iconURL;
+        this.template.configuration.pages.vaAvatar.oldFileValue = this.$stateParams.template.iconURL;
       }
     }
     this.loadDefaultSpaceOptions();
@@ -132,7 +137,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     switch (this.currentState) {
       case 'evaOverview':
         return true;
-      case 'vaName':
+      case 'name':
         return this.isNamePageValid();
       case 'evaEmail':
         return this.isEmailPageValid();
@@ -224,17 +229,18 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public submitFeature(): void {
-    const name = this.template.configuration.pages.vaName.nameValue.trim();
+    const name = this.template.configuration.pages.name.nameValue.trim();
     const emailPrefix = this.template.configuration.pages.evaEmail.value.trim();
     const email = `${emailPrefix}@sparkbot.io`;
     this.creatingTemplate = true;
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     const defaultSpaceId = this.template.configuration.pages.evaDefaultSpace.selectedDefaultSpace.id;
     if (this.isEditFeature) {
-      const result = this.EvaService.getWarningIfNotOwner(this.template);
-      if (!result.valid) {
+      const access = this.EvaService.canIEditThisEva(this.template);
+      if (!access) {
         this.handleUserAccessForEditError();
-        this.Notification.warning(result.warning.message, result.warning.args);
+        const owner = this.EvaService.getEvaOwner(this.template);
+        this.Notification.warning(this.EvaService.evaServiceCard.editDeleteWarning, { owner });
       } else {
         this.updateFeature(this.template.templateId, name, this.orgId, email, defaultSpaceId, avatarDataUrl);
       }
@@ -277,7 +283,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNameValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     const isLengthValid = (_.get(name, 'length', 0) <= this.maxNameLength);
 
     if (this.nameForm && name) {
@@ -288,7 +294,7 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   public isNamePageValid(): boolean {
-    const name = (this.template.configuration.pages.vaName.nameValue || '').trim();
+    const name = (this.template.configuration.pages.name.nameValue || '').trim();
     return name !== '' && this.isNameValid();
   }
 
@@ -310,12 +316,29 @@ class ExpertVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     const controller = this;
     controller.service.updateExpertAssistant(templateId, name, orgId, email, defaultSpaceId, avatarDataUrl)
       .then(function () {
-        controller.handleFeatureUpdate();
-        controller.writeMetrics();
+        // Update the icon only if it has changed
+        if (avatarDataUrl !== controller.template.configuration.pages.vaAvatar.oldFileValue) {
+          controller.service.updateExpertAssistantIcon(templateId, orgId, avatarDataUrl)
+            .then(function () {
+              controller.handleFeatureUpdate();
+              controller.writeMetrics();
+            })
+            .catch(function (response) {
+              controller.handleFeatureError(response);
+              controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+                featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+              });
+            });
+        } else {
+          controller.handleFeatureUpdate();
+          controller.writeMetrics();
+        }
       })
       .catch(function (response) {
         controller.handleFeatureError(response);
-        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'));
+        controller.Notification.errorWithTrackingId(response, controller.getMessageKey('messages.updateConfigFailureText'), {
+          featureName: controller.$translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
+        });
       });
   }
 }

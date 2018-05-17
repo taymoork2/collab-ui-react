@@ -3,8 +3,6 @@
 
   /* global Uint8Array:false */
 
-  angular.module('WebExApp').service('WebExApiGatewayService', WebExApiGatewayService);
-
   /* @ngInject */
   function WebExApiGatewayService(
     $q,
@@ -464,4 +462,6 @@
       return deferredIsSiteSupportsIframe.promise;
     }; // siteFunctions()
   } // end top level function
+
+  module.exports = WebExApiGatewayService;
 })();

@@ -1,14 +1,14 @@
 <div class="partner-suite-view">
-    <cs-page-header title-name="Test Resources" back="true" back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-header title-name="Test Resources" back="true" back-url="$ctrl.backState" back-aria-label="{{::'common.back' | translate}}"></cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-left>
       </cs-page-sub-header-left>
       <cs-page-sub-header-right>
         <!-- Add Nav tabs here -->
-        <button class="btn btn--people" ng-click="$ctrl.createResource()" translate="hcs.taas.resourcesView.createResource"></button>
+        <button class="btn btn--people" ng-click="$ctrl.createResource()" translate="hcs.taas.resourcesView.createResource" ng-disabled="true"></button> <!-- disabled for demos, this isn't fully functioning yet, but want to show it as feature -->
       </cs-page-sub-header-right>
     </cs-page-sub-header>
-    <div ng-if="$ctrl.pageState != $ctrl.STATE_NEW" class="suite-content content-container">
+    <div ng-if="$ctrl.pageState !== $ctrl.STATE_NEW" class="suite-content content-container">
       <!-- Show Reload page when all location requests fail-->
       <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
         <div class="features-reload">

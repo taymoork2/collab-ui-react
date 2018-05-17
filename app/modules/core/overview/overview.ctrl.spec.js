@@ -1,6 +1,6 @@
 describe('Controller: OverviewCtrl', function () {
   beforeEach(function () {
-    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules');
+    this.initModules('Core', 'Huron', 'Sunlight', 'Hercules', 'Accountlinking');
     this.injectDependencies(
       '$controller',
       '$filter',
@@ -9,10 +9,13 @@ describe('Controller: OverviewCtrl', function () {
       '$rootScope',
       '$scope',
       '$state',
+      '$location',
       '$translate',
       'Authinfo',
+      'AutoAssignTemplateService',
       'Config',
       'FeatureToggleService',
+      'HealthService',
       'HybridServicesClusterService',
       'HybridServicesFlagService',
       'PrivateTrunkService',
@@ -21,13 +24,15 @@ describe('Controller: OverviewCtrl', function () {
       'Orgservice',
       'OverviewNotificationFactory',
       'PstnService',
-      'ReportsService',
       'ServiceDescriptorService',
       'SetupWizardService',
       'SunlightReportService',
       'SunlightUtilitiesService',
       'LocalStorage',
-      'TrialService'
+      'TrialService',
+      'LinkedSitesService',
+      'EvaService',
+      'SsoCertificateService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -36,6 +41,7 @@ describe('Controller: OverviewCtrl', function () {
     this.usageOnlySharedDevicesFixture = getJSONFixture('core/json/organizations/usageOnlySharedDevices.json');
     this.services = getJSONFixture('squared/json/services.json');
     this.PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
+    this.certificateTestData = _.cloneDeep(getJSONFixture('core/json/sso/test-certificates.json'));
 
     spyOn(this.Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue([{
       license: {
@@ -75,15 +81,21 @@ describe('Controller: OverviewCtrl', function () {
       raised: false,
     }]));
 
+    spyOn(this.HealthService, 'getHealthCheck').and.returnValue(this.$q.resolve({
+      success: true,
+      status: 200,
+    }));
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
+    spyOn(this.FeatureToggleService, 'atlasSsoCertificateUpdateGetStatus').and.returnValue(this.$q.resolve(true));
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
-    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
+    spyOn(this.Orgservice, 'getInternallyManagedSubscriptions').and.returnValue(this.$q.resolve(this.orgServiceJSONFixture.getLicensesUsage.singleSub));
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(_.noop);
     spyOn(this.Orgservice, 'getOrg').and.returnValue(this.$q.resolve({ data: getOrgNoSip }));
 
@@ -96,8 +108,6 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.SunlightUtilitiesService, 'isCareSetup').and.returnValue(this.$q.resolve(true));
 
-    spyOn(this.ReportsService, 'getOverviewMetrics').and.callFake(_.noop);
-    spyOn(this.ReportsService, 'healthMonitor').and.callFake(_.noop);
     spyOn(this.SunlightReportService, 'getOverviewData').and.returnValue({});
     spyOn(this.SetupWizardService, 'hasPendingServiceOrder').and.returnValue(true);
     spyOn(this.SetupWizardService, 'hasPendingCCWSubscriptions').and.returnValue(true);
@@ -108,14 +118,13 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
     spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
-
-
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
         $rootScope: this.$rootScope,
         $scope: this.$scope,
         $state: this.$state,
+        $location: this.$location,
         $translate: this.$translate,
         Authinfo: this.Authinfo,
         Config: this.Config,
@@ -128,20 +137,22 @@ describe('Controller: OverviewCtrl', function () {
         Orgservice: this.Orgservice,
         OverviewNotificationFactory: this.OverviewNotificationFactory,
         PstnService: this.PstnService,
-        ReportsService: this.ReportsService,
         ServiceDescriptorService: this.ServiceDescriptorService,
         SunlightReportService: this.SunlightReportService,
         SunlightUtilitiesService: this.SunlightUtilitiesService,
         SunlightConfigService: this.SunlightConfigService,
         LocalStorage: this.LocalStorage,
         TrialService: this.TrialService,
+        LinkedSitesService: this.LinkedSitesService,
+        EvaService: this.EvaService,
+        SsoCertificateService: this.SsoCertificateService,
       });
       this.$scope.$apply();
     };
 
     this.getCard = function (filter) {
       return _(this.controller.cards).filter(function (card) {
-        return card.name == filter;
+        return card.name === filter;
       }).head();
     };
   });
@@ -165,10 +176,9 @@ describe('Controller: OverviewCtrl', function () {
       expect(this.controller.cards).toBeDefined();
 
       var cardnames = _.map(this.controller.cards, function (card) {
-        return card.name;
+        return card.name || card.title;
       });
       expect(_.includes(cardnames, 'overview.cards.message.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.meeting.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.roomSystem.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.care.title')).toBeTruthy();
@@ -179,38 +189,6 @@ describe('Controller: OverviewCtrl', function () {
 
     it('should have properly set trialDaysLeft', function () {
       expect(this.controller.trialDaysLeft).toEqual(1);
-    });
-  });
-
-  describe('Enable Devices', function () {
-    beforeEach(function () {
-      this.Orgservice.getLicensesUsage.and.returnValue(this.$q.resolve(this.usageOnlySharedDevicesFixture));
-      this.initController();
-    });
-
-    it('should call do something', function () {
-      var roomSystemsCard = this.getCard('overview.cards.roomSystem.title');
-      expect(roomSystemsCard.isDeviceEnabled).toBeTruthy();
-    });
-  });
-
-  describe('Callcard with healthStatus Event', function () {
-    beforeEach(function () {
-      this.initController();
-    });
-
-    it('should update its status', function () {
-      var callCard = this.getCard('overview.cards.call.title');
-
-      callCard.healthStatusUpdatedHandler({
-        components: [{
-          name: 'Spark Call',
-          status: 'error',
-          id: 'gfg7cvjszyw0',
-        }],
-      });
-
-      expect(callCard.healthStatus).toEqual('danger');
     });
   });
 
@@ -464,9 +442,73 @@ describe('Controller: OverviewCtrl', function () {
   describe('Auto Assign Notification - set up now', function () {
     it('should not display if atlasF3745AutoAssignLicenses is false', function () {
       var TOTAL_NOTIFICATIONS = 7;
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false)); // not relevant, just the original scenario
       this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('AccountLinking20 notification', function () {
+    it('should not be displayed if no sites need configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+
+    it('should be displayed if one or several sites needs configuration', function () {
+      var TOTAL_NOTIFICATIONS = 8;
+      spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+  });
+
+  describe('Expert Virtual Assistant notification', function () {
+    var TOTAL_NOTIFICATIONS = 8;
+    it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve({ name: 'evaTest' }));
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
+    });
+
+    it('should not display the Expert Virtual Assistant Notification', function () {
+      spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
+      this.initController();
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('updateSsoCertificateNow search param', function () {
+    it('should be removed if present', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      this.initController();
+      expect(this.$location.search).toHaveBeenCalledWith('updateSsoCertificateNow', null);
+    });
+
+    it('should open sso-certificate.sso-certificate-check dialog', function () {
+      spyOn(this.$location, 'search').and.returnValue({
+        updateSsoCertificateNow: 'true',
+      });
+      var orgData = _.cloneDeep(this.orgServiceJSONFixture.getOrgNoSip);
+      orgData.ssoEnabled = true;
+      this.Orgservice.getOrg.and.returnValue(this.$q.resolve({ data: orgData }));
+
+      var orgCertificates = _.cloneDeep(this.certificateTestData.orgCertificates);
+      orgCertificates.expirationDate = moment().format(); // make sure the expiration date is today
+
+      spyOn(this.SsoCertificateService, 'getOrgCertificates').and.returnValue(this.$q.resolve(orgCertificates));
+      spyOn(this.$state, 'go').and.callFake(_.noop);
+
+      this.initController();
+      expect(this.$state.go).toHaveBeenCalledWith('sso-certificate.sso-certificate-check');
     });
   });
 });

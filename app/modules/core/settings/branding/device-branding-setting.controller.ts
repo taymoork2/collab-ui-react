@@ -1,7 +1,10 @@
-
-import { CsdmConfigurationService } from '../../../squared/devices/services/CsdmConfigurationService';
+import { CsdmConfigurationService, IConfigRule } from '../../../squared/devices/services/CsdmConfigurationService';
 
 export class DeviceBrandingController implements ng.IComponentController {
+  private static brandingLogoRule = 'userinterface.branding';
+  private static halfwakeBrandingRule = 'userinterface.halfwakebranding';
+  private static halfwakeBackgroundRule = 'userinterface.halfwakebackground';
+
   get useDefaultBranding(): boolean {
     return this._useDefaultBranding;
   }
@@ -24,7 +27,7 @@ export class DeviceBrandingController implements ng.IComponentController {
   public logodark: ImgFile;
   private _useDefaultBranding = true;
   private useDefaultBrandingInitialValue = true;
-  private applyInProgress = false;
+  public applyInProgress = false;
 
   /* @ngInject */
   constructor(private Upload, private $q: ng.IQService, private Notification, private $state,
@@ -39,30 +42,32 @@ export class DeviceBrandingController implements ng.IComponentController {
   }
 
   public $onInit() {
-    this.CsdmConfigurationService.getRuleForOrg('branding')
-      .then((brandingSetting) => {
-        this.setFilesFromBrandingSetting(brandingSetting, false);
-      })
-      .catch((response) => {
-        if (response && response.status === 404) {
-          this.setFilesFromBrandingSetting({}, false);
-        }
-      });
+    this.$q.all({
+      wakeup: DeviceBrandingController.fetchRule(this.CsdmConfigurationService.getRuleForOrg(DeviceBrandingController.halfwakeBackgroundRule)),
+      logoLight: DeviceBrandingController.fetchRule(this.CsdmConfigurationService.getRuleForOrg(DeviceBrandingController.halfwakeBrandingRule)),
+      logoDark: DeviceBrandingController.fetchRule(this.CsdmConfigurationService.getRuleForOrg(DeviceBrandingController.brandingLogoRule)),
+    }).then(p => {
+      this.setFilesFromBrandingSetting(p, false);
+
+    }).catch(r => {
+      if (r && r.status === 404) {
+        this.setFilesFromBrandingSetting(null, false);
+      }
+    });
   }
 
-  private setFilesFromBrandingSetting(brandingSetting, reset) {
+  private setFilesFromBrandingSetting(brandingSetting: IBrandingRules | null, reset) {
     if (reset) {
       this.resetFiles();
     }
-    if (brandingSetting && brandingSetting.value) {
-
-      this.logolight.url = <string>_.get(brandingSetting.value, 'logoLight.url');
+    if (brandingSetting && (brandingSetting.logoDark || brandingSetting.logoLight || brandingSetting.wakeup)) {
+      this.logolight.url = _.get<string>(brandingSetting, 'logoLight.value.url');
       this.logolight.changed = false;
       this.logolight.fetchTempDownloadUrl();
-      this.logodark.url = <string>_.get(brandingSetting.value, 'logoDark.url');
+      this.logodark.url = _.get<string>(brandingSetting, 'logoDark.value.url');
       this.logodark.changed = false;
       this.logodark.fetchTempDownloadUrl();
-      this.halfwakeBackground.url = <string>_.get(brandingSetting.value, 'halfwakeBackground.url');
+      this.halfwakeBackground.url = _.get<string>(brandingSetting, 'wakeup.value.url');
       this.halfwakeBackground.changed = false;
       this.halfwakeBackground.fetchTempDownloadUrl();
       this._useDefaultBranding = false;
@@ -98,7 +103,7 @@ export class DeviceBrandingController implements ng.IComponentController {
       .then(() => {
         return this.saveBrandingConfig();
       })
-      .then((setting) => {
+      .then((setting: IBrandingRules) => {
         return this.$q.all({
           wakeup: this.cleanOld(this.halfwakeBackground),
           logolight: this.cleanOld(this.logolight),
@@ -106,8 +111,11 @@ export class DeviceBrandingController implements ng.IComponentController {
           settings: this.$q.resolve(setting),
         });
       })
-      .then((results) => {
-        this.setFilesFromBrandingSetting(_.get(results, 'settings.data'), true);
+      .then((results: { settings: IBrandingRules }) => {
+        this.setFilesFromBrandingSetting(results.settings, true);
+        return this.CsdmConfigurationService.notifyOrgSetting();
+      })
+      .then(() => {
         this.Notification.success('partnerProfile.processing');
       })
       .catch((error) => {
@@ -118,24 +126,49 @@ export class DeviceBrandingController implements ng.IComponentController {
       });
   }
 
-  public saveBrandingConfig() {
+  public saveBrandingConfig(): IPromise<IBrandingRules> {
     this.applyInProgress = true;
     if (this.useDefaultBranding) {
-      return this.CsdmConfigurationService.deleteRuleForOrg('branding')
-        .then(() => {
-          return {};
-        });
+      return this.$q.all({
+        wakeup: this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBackgroundRule),
+        logoLight: this.generateDeleteRulePromise(DeviceBrandingController.halfwakeBrandingRule),
+        logoDark: this.generateDeleteRulePromise(DeviceBrandingController.brandingLogoRule),
+      });
     } else {
-      return this.CsdmConfigurationService.updateRuleForOrg('branding',
-        {
-          logoLight: this.logolight.url ? { url: this.logolight.url } : undefined,
-          logoDark: this.logodark.url ? { url: this.logodark.url } : undefined,
-          halfwakeBackground: this.halfwakeBackground.url ? { url: this.halfwakeBackground.url } : undefined,
-        })
-        .then((setting) => {
-          return setting;
-        });
+      return this.$q.all({
+        wakeup: this.generateSavePromise(this.halfwakeBackground, DeviceBrandingController.halfwakeBackgroundRule),
+        logoLight: this.generateSavePromise(this.logolight, DeviceBrandingController.halfwakeBrandingRule),
+        logoDark: this.generateSavePromise(this.logodark, DeviceBrandingController.brandingLogoRule),
+      }).then((rules: IBrandingRules) => {
+        return rules;
+      });
     }
+  }
+
+  private generateSavePromise(imgFile: ImgFile, fileType: string): IPromise<IConfigRule<IBrandingRule> | null> {
+    return imgFile.url
+      ? imgFile.changed
+        ? this.generateUpdateRulePromise(fileType, imgFile.url)
+        : this.$q.resolve(null)
+      : this.generateDeleteRulePromise(fileType);
+  }
+
+  private generateDeleteRulePromise(type: string): IPromise<null> {
+    return this.CsdmConfigurationService.deleteRuleForOrg(type)
+      .then(() => {
+        return null;
+      }, () => null);
+  }
+
+  private generateUpdateRulePromise(type: string, url: string) {
+    return this.CsdmConfigurationService.updateRuleForOrg<IBrandingRule>(type,
+      {
+        source: 'Spark',
+        url: url,
+      })
+      .then(p => {
+        return p.data;
+      });
   }
 
   private generateUploadPromise(imgFile: ImgFile) {
@@ -154,6 +187,29 @@ export class DeviceBrandingController implements ng.IComponentController {
     }
     return imgFile.deleteOrig();
   }
+
+  private static fetchRule(getRulePromise: ng.IPromise<any>): ng.IPromise<IConfigRule<IBrandingRule>> {
+    return getRulePromise.then(
+      r => r,
+      error => {
+        if (error.status === 404) {
+          return null;
+        }
+        throw error;
+      },
+    );
+  }
+}
+
+interface IBrandingRule {
+  source: string;
+  url: string;
+}
+
+interface IBrandingRules {
+  wakeup: IConfigRule<IBrandingRule> | null;
+  logoLight: IConfigRule<IBrandingRule> | null;
+  logoDark: IConfigRule<IBrandingRule> | null;
 }
 
 export class ImgFile {

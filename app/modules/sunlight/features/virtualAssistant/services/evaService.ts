@@ -10,15 +10,17 @@ export class EvaService {
   public evaServiceCard = {
     id: 'expertVirtualAssistant',
     type: 'expertVirtualAssistant',
-    mediaType: 'virtualAssistant', // for filter
     code: this.getMessageKey('featureText.code'),
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
-    icons: ['icon-bot-two'],
+    icons: ['icon-bot-five'],
+    style: 'virtual-assistant-icon',
     color: 'feature-va-color',
     disabled: false,
     disabledTooltip:  this.getMessageKey('featureText.disabledTooltip'),
     editDeleteWarning: this.getMessageKey('featureText.nonAdminEditDeleteWarning'),
+    noDefaultSpaceWarning: this.getMessageKey('featureText.noDefaultSpaceWarning'),
+    noDefaultSpaceAndNoAccess: this.getMessageKey('featureText.nonAdminNoDefaultSpace'),
     goToService: this.goToService.bind(this),
   };
 
@@ -43,6 +45,7 @@ export class EvaService {
     private UrlConfig,
     private $q: ng.IQService,
     private SparkService,
+    private CareFeatureList,
   ) {
   }
 
@@ -122,26 +125,6 @@ export class EvaService {
       return { items: expertAssistants.items };
     });
   }
-  /**
-   * obtain resource for Expert Virtual Assistant Stats API Rest calls.
-   * @param orgId
-   * @param expertAssistantId
-   * @returns {IConfigurationResource}
-   */
-  private getExpertAssistantStatsResource(orgId: string, expertAssistantId?: string): IConfigurationResource {
-    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
-    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/stats/:expertAssistantId', {
-      orgId: orgId,
-      expertAssistantId: expertAssistantId,
-    }, {
-      update: {
-        method: 'PUT',
-      },
-      save: {
-        method: 'POST',
-      },
-    });
-  }
 
   /**
    * list all Expert Virtual Assistants for orgId
@@ -219,47 +202,60 @@ export class EvaService {
    * @param orgId
    * @param email
    * @param defaultSpaceId
-   * @param iconUrl URL to avatar icon file
    * returns {ng.IPromise<any>} promise
    */
-  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string, iconUrl?: string): ng.IPromise<void> {
+  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string): ng.IPromise<void> {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
       .update({
         name: name,
         email: email,
         defaultSpaceId: defaultSpaceId,
-        icon: iconUrl,
       }).$promise;
   }
 
   /**
-   * get a list of expert virutal assistant spaces
-   * @param expertAssistantId
+   * obtain resource for Expert Virtual Assistant Icon Update API Rest call.
    * @param orgId
-   * returns {ng.IPromise<any>} promise
+   * @param expertAssistantId
+   * @returns {IConfigurationResource}
    */
-  public getExpertAssistantSpaces(expertAssistantId: string, orgId: string): ng.IPromise<any> {
-    return this.getExpertAssistantStatsResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
-      .get().$promise;
+  private getExpertAssistantIconResource(orgId: string, expertAssistantId: string): IConfigurationResource {
+    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/:expertAssistantId/icon', {
+      orgId,
+      expertAssistantId,
+    }, {
+      update: {
+        method: 'PUT',
+      },
+    });
   }
 
   /**
-   * Check passed feature: if user isn't owner then indicate invalid with warning
-   *  otherwise indicate valid
-   * @param feature
-   * @returns {{valid: boolean; warning?: {message: string; args: any}}}
+   * update icon of an identified expert virtual assistant
+   * @param expertAssistantId
+   * @param orgId
+   * @param iconUrl URL to avatar icon file
+   * returns {ng.IPromise<any>} promise
    */
-  public getWarningIfNotOwner(feature: any): { valid: boolean, warning?: { message: string, args: any } } {
-    if (feature.ownerId === this.SparkService.getMyPersonId()) {
-      return { valid: true };
-    }
-    return {
-      valid: false,
-      warning: {
-        message: this.evaServiceCard.editDeleteWarning,
-        args: { owner: _.get(feature, 'ownerDetails.displayName', '') },
-      },
-    };
+  public updateExpertAssistantIcon(expertAssistantId: string, orgId: string, iconUrl: string): ng.IPromise<void> {
+    return this.getExpertAssistantIconResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .update({
+        icon: iconUrl,
+      }).$promise;
+  }
+
+  public canIEditThisEva(feature: any): boolean {
+    return feature.ownerId === this.SparkService.getMyPersonId();
+  }
+
+  /**
+   * Return the name of the admin that created this Expert Virtual Assistant
+   * @param feature
+   * @returns {string}
+   */
+  public getEvaOwner(feature: any): string {
+    return _.get(feature, 'ownerDetails.displayName', '');
   }
 
   /**
@@ -273,13 +269,13 @@ export class EvaService {
     const formattedList = _.map(list.items, function (item: any) {
       item.templateId = item.id;
       if (!item.name) {
-        item.name = item.templateId;
+        item.name = service.getFeatureName();
       }
-      item.mediaType = service.evaServiceCard.mediaType;
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
       item.templates = [];
+      item.filterValue = service.CareFeatureList.filterConstants.virtualAssistant;
       return item;
     });
     return _.sortBy(formattedList, function (item: any) {
@@ -337,6 +333,18 @@ export class EvaService {
       };
       fileReader.readAsDataURL(fileObject);
     });
+  }
+
+  public getMissingDefaultSpaceEva(orgId?: string): ng.IPromise<any> {
+    const service = this;
+    return this.listExpertAssistants(orgId || this.Authinfo.getOrgId())
+      .then(function (expertAssistants) {
+        return _.find(expertAssistants.items, service.isMissingDefaultSpace);
+      });
+  }
+
+  public isMissingDefaultSpace(feature: any) {
+    return !_.find(feature.spaces, 'default');
   }
 }
 export default angular

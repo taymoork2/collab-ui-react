@@ -11,6 +11,12 @@
       "8909455b-3018-44c6-adfd-2840978bb5c1": 5,
       "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
       "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": "Redirected by Cluster 5,1001",
+      "bullet_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": "round",
+      "insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17": "Redirected by Cluster 2,1001",
+      "bullet_fc0a6cc1-98e6-42d8-b366-d6e82e426c17": "round",
+      "insight_548d05ce-99ac-4d78-a926-3f18afd88064": "Redirected by Cluster 6,1001",
+      "bullet_548d05ce-99ac-4d78-a926-3f18afd88064": "round",
       "7b315667-1808-40c8-b263-a9c2f9782b16": 1,
       "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
       "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,
@@ -96,6 +102,24 @@
   ],
   "graphs": [
     {
+      "title": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+      "valueField": "3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+      "bulletField": "bullet_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef",
+      "descriptionField": "insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef"
+    },
+    {
+      "title": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17",
+      "valueField": "fc0a6cc1-98e6-42d8-b366-d6e82e426c17",
+      "bulletField": "bullet_fc0a6cc1-98e6-42d8-b366-d6e82e426c17",
+      "descriptionField": "insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17"
+    },
+    {
+      "title": "548d05ce-99ac-4d78-a926-3f18afd88064",
+      "valueField": "548d05ce-99ac-4d78-a926-3f18afd88064",
+      "bulletField": "bullet_548d05ce-99ac-4d78-a926-3f18afd88064",
+      "descriptionField": "insight_548d05ce-99ac-4d78-a926-3f18afd88064"
+    },
+    {
       "title": "7b315667-1808-40c8-b263-a9c2f9782b16",
       "valueField": "7b315667-1808-40c8-b263-a9c2f9782b16"
     },
@@ -157,6 +181,12 @@
       "8909455b-3018-44c6-adfd-2840978bb5c1": 5,
       "82d4ff8b-9de5-41c5-9cf8-cdb23140e83d": 9,
       "539ac9e5-943e-4e96-bfc5-b12cac060bcc": 2,
+      "insight_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": "Redirected by Cluster: 5<br>Cloud Connectivity Issues",
+      "bullet_3968ec71-8075-4ef9-b9e9-18f2eb8c1fef": "images/mf_insight_16.png",
+      "insight_fc0a6cc1-98e6-42d8-b366-d6e82e426c17": "Redirected by Cluster: 2<br>Cloud Connectivity Issues",
+      "bullet_fc0a6cc1-98e6-42d8-b366-d6e82e426c17": "images/mf_insight_16.png",
+      "insight_548d05ce-99ac-4d78-a926-3f18afd88064": "Redirected by Cluster: 6<br>Cloud Connectivity Issues",
+      "bullet_548d05ce-99ac-4d78-a926-3f18afd88064": "images/mf_insight_16.png",
       "7b315667-1808-40c8-b263-a9c2f9782b16": 1,
       "f9ab1f5c-ce9f-4453-8f34-e86ed3bf9678": 2,
       "f0efaeb6-e06a-478d-9f76-56ba7f71ccb7": 2,

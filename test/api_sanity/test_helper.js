@@ -42,7 +42,7 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
-  'ft--atlas-f3745-auto-assign-licenses': {
+  'auto-assign-licenses': {
     user: 'atlaswebe2e+ft--atlas-f3745-auto-assign-licenses@gmail.com',
     pass: 'Cisco123!',
     org: '8078642f-ab1a-4740-bd0a-61738ea76bf0',
@@ -70,22 +70,27 @@ var auth = {
   'huron-ui-test-partner': {
     user: 'huron.ui.test.partner@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1238': {
     user: 'huron.ui.test.partner+hi1238@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1484': {
     user: 'huron.ui.test.partner+hi1484@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-cos-trial': {
+    user: 'huron.ui.test.partner+hcostrial@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-prod': {
     user: 'huron.ui.test.partner+production@gmail.com',
     pass: 'Cisco@1234!',
-    org: 'b93be93e-5f57-4977-9db9-3d1e6dc12dca',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'invite-admin': {
     user: 'pbr-invite-user@squared2webex.com',
@@ -361,8 +366,29 @@ var getAccessToken = function (req, code) {
   });
 };
 
+var deleteThisOrgToken = function (req, token, user) {
+  return new Promise(function (resolve, reject) {
+    var orgId = auth[user].org
+    var options = {
+      url: `https://idbroker.webex.com/idb/oauth2/v1/tokens?orgid=${orgId}&clientid=${clientId}`,
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Host': 'idbroker.webex.com',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    };
+    req.delete(options, function (err, res, body) {
+      if (err) {
+        console.error(err, body);
+        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res ? res.statusCode : undefined)));
+      }
+      resolve();
+    });
+  });
+};
+
 module.exports = {
-  getBearerToken: function (user, callback) {
+  getBearerToken: function (user) {
     var creds = auth[user];
     if (!creds) {
       var message = 'Credentials for ' + user + ' not found';
@@ -381,7 +407,6 @@ module.exports = {
       .then(function (authCode) {
         return getAccessToken(req, authCode);
       })
-      .then(callback)
       .catch(function (error) {
         console.error('Unable to get bearer token.', error);
         return Promise.reject(error);
@@ -393,6 +418,19 @@ module.exports = {
     } catch (_error) {
       throw new Error('Unable to parse JSON: ' + data);
     }
+  },
+  deleteAllOrgTokens: function (token, user) {
+    var creds = auth[user];
+    if (!creds) {
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
+    }
+    return deleteThisOrgToken(request, token, user)
+      .catch(function (error) {
+        console.error('Unable to get remove token.', error);
+        return Promise.reject(error)
+      });
   },
   auth: auth,
 };

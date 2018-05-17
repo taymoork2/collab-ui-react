@@ -4,7 +4,14 @@
     <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.targetType) && $ctrl.node.maintenanceMode === 'off'">
       <a ng-click="$ctrl.enableMaintenanceMode($ctrl.node)">
         <span translate="hercules.nodesPage.enableMaintenanceMode"></span>
-        <i class="icon icon-question-circle help-item" tooltip-placement="left" tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}" tooltip-append-to-body="true"></i>
+        <i class="icon icon-question-circle help-item"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}"
+          tooltip-append-to-body="true"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.nodesPage.maintenanceModeTooltip' | translate}}">
+        </i>
       </a>
     </li>
     <li ng-if="$ctrl.displayMaintenanceModeMenuItem($ctrl.targetType) && $ctrl.node.maintenanceMode !== 'off'">
@@ -41,7 +48,14 @@
     <li ng-if="$ctrl.displayDisabledRemoveNodeMenuItemWithDeregisterInfo($ctrl.targetType, $ctrl.numberOfClusterNodes)">
       <a class="unclickable">
         <span translate="hercules.nodesPage.removeNode" class="disabled-link"></span>
-        <i class="icon icon-question-circle help-item" tooltip-placement="left" tooltip="{{::'hercules.nodesPage.removeNodeTooltip' | translate}}" tooltip-append-to-body="true"></i>
+        <i class="icon icon-question-circle help-item"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.nodesPage.removeNodeTooltip' | translate}}"
+          tooltip-append-to-body="true"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.nodesPage.removeNodeTooltip' | translate}}">
+        </i>
       </a>
     </li>
     <li ng-if="$ctrl.displayActiveRemoveNodeMenuItem($ctrl.targetType, $ctrl.node, $ctrl.numberOfClusterNodes)">

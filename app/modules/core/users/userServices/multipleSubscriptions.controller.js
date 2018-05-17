@@ -15,6 +15,7 @@
     vm.roomSystemsExist = false;
     vm.showLicenses = showLicenses;
     vm.showCareLicenses = showCareLicenses;
+    vm.showSection = showSection;
 
     init();
 
@@ -64,6 +65,12 @@
       }
 
       return vm.oneBilling || isSelected || isTrialSubscription;
+    }
+
+    function showSection(services) {
+      return _.some(services, function (service) {
+        return vm.showLicenses(service.license.billingServiceId, service.license.isTrial);
+      });
     }
   }
 })();

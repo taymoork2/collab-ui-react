@@ -33,7 +33,7 @@ class EnableUsersModalController implements ng.IComponentController {
     this.dismiss();
     this.$state.go('users.list')
       .then(() => {
-        this.$state.go('users.manage.picker');
+        this.$state.go('users.manage.org');
       });
   }
 }

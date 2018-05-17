@@ -6,6 +6,8 @@ import { Notification } from 'modules/core/notifications';
 import { QueryParser } from '../services/search/queryParser';
 import { SearchTranslator } from '../services/search/searchTranslator';
 import { SearchElement } from '../services/search/searchElement';
+import { SearchLinkExpiredkError, SearchRequestCompressor } from '../services/search/searchRequestCompressor';
+import { CloudConnectorService } from '../../hercules/services/calendar-cloud-connector.service';
 
 require('./_devices.scss');
 
@@ -21,13 +23,11 @@ export class DevicesCtrl implements ng.IComponentController {
   //region for add device/place button
   private showPersonal = false;
   public addDeviceIsDisabled = true;
-  private showATA: boolean;
   private hybridCallEnabledOnOrg: boolean;
   private hybridCalendarEnabledOnOrg: boolean;
-  private csdmHybridCalendarFeature: boolean;
   private csdmHybridCallFeature: boolean;
   private csdmMultipleDevicesPerPlaceFeature: boolean;
-  private deviceExportFeature: boolean;
+  public deviceExportFeature: boolean;
   public exporting: boolean;
   private exportProgressDialog: ng.ui.bootstrap.IModalServiceInstance;
   private adminUserDetails: {
@@ -44,16 +44,21 @@ export class DevicesCtrl implements ng.IComponentController {
   constructor(private $modal: IToolkitModalService,
               AccountOrgService,
               private DeviceExportService,
-              private $translate: ng.translate.ITranslateService,
+              $translate: ng.translate.ITranslateService,
               private Notification: Notification,
               private WizardFactory,
               private $state,
+              private $scope,
               private FeatureToggleService,
               private $q,
               private Userservice,
               private DeviceSearchTranslator: SearchTranslator,
               private ServiceDescriptorService,
-              private Authinfo) {
+              private Authinfo,
+              private CloudConnectorService: CloudConnectorService,
+              private SearchRequestCompressor: SearchRequestCompressor,
+              $stateParams,
+              ) {
     this.initForAddButton();
     AccountOrgService.getAccount(Authinfo.getOrgId())
       .then((response) => {
@@ -67,6 +72,30 @@ export class DevicesCtrl implements ng.IComponentController {
       });
 
     this._searchObject = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), '');
+
+    this.$scope.$on('$stateChangeStart', (_event, toState, toParams) => {
+      if (toState.name === 'devices.search' || toState.name === 'devices') {
+        this.updateSearchObjectFromUrlParam(toParams.q);
+        this.searchInteraction.searchChange(true);
+      }
+    });
+
+    try {
+      this.updateSearchObjectFromUrlParam($stateParams.q);
+    } catch (e) {
+      if (e instanceof SearchLinkExpiredkError) {
+        this.Notification.warning(e.messageKey);
+      } else {
+        this.Notification.warning('spacesPage.searchLinkBad');
+      }
+    }
+  }
+
+  private updateSearchObjectFromUrlParam(urlParamValue: string) {
+    const query = urlParamValue;
+    const se = query ? this.SearchRequestCompressor.decompress(query) : undefined;
+    this._searchObject.setQuery(se ? se.toQuery() : '', se);
+    this._searchObject.setWorkingElementText('');
   }
 
   get searchResult(): SearchResult {
@@ -139,14 +168,11 @@ export class DevicesCtrl implements ng.IComponentController {
     if (percent === 100) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      const title = this.$translate.instant('spacesPage.export.exportCompleted');
-      const text = this.$translate.instant('spacesPage.export.deviceListReadyForDownload');
-      this.Notification.success(text, title);
+      this.Notification.success('spacesPage.export.deviceListReadyForDownload', undefined, 'spacesPage.export.exportCompleted');
     } else if (percent === -1) {
       this.exportProgressDialog.close();
       this.exporting = false;
-      const warn = this.$translate.instant('spacesPage.export.deviceExportFailedOrCancelled');
-      this.Notification.warning(warn);
+      this.Notification.warning('spacesPage.export.deviceExportFailedOrCancelled');
     }
   }
 
@@ -159,6 +185,14 @@ export class DevicesCtrl implements ng.IComponentController {
   }
 
   public searchResultChanged(result: SearchResult) {
+    if (this.searchObject.lastGoodQuery) {
+      const compressedQuery = this.SearchRequestCompressor.compress(this.searchObject.lastGoodQuery);
+      if (this.$state.current.name === 'devices.search' || this.$state.current.name === 'device-overview' || compressedQuery) {
+        this.$state.transitionTo('devices.search', { q: compressedQuery },
+          { reload: false, inherit: true, notify: false });
+      }
+    }
+
     if (result && result.hits && result.hits.total > 0) {
       this.devicesHaveBeenSeen = true;
     }
@@ -169,11 +203,7 @@ export class DevicesCtrl implements ng.IComponentController {
     this.fetchAsyncSettings();
   }
 
-  //TODO this is a duplicate from devices.controller.ts in squared  extract to class or maintain
   private fetchAsyncSettings() {
-    const ataPromise = this.FeatureToggleService.csdmATAGetStatus().then((result: boolean) => {
-      this.showATA = result;
-    });
     const hybridPromise = this.FeatureToggleService.csdmHybridCallGetStatus().then((feature: boolean) => {
       this.csdmHybridCallFeature = feature;
     });
@@ -181,21 +211,28 @@ export class DevicesCtrl implements ng.IComponentController {
     const personalPromise = this.FeatureToggleService.cloudberryPersonalModeGetStatus().then((showPersonal: boolean) => {
       this.showPersonal = showPersonal;
     });
-    const placeCalendarPromise = this.FeatureToggleService.csdmPlaceCalendarGetStatus().then((feature: boolean) => {
-      this.csdmHybridCalendarFeature = feature;
-    });
     const anyCalendarEnabledPromise = this.ServiceDescriptorService.getServices().then((services) => {
-      this.hybridCalendarEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-gcal' || service.id === 'squared-fusion-cal';
       }).some().value();
       this.hybridCallEnabledOnOrg = _.chain(this.ServiceDescriptorService.filterEnabledServices(services)).filter((service) => {
         return service.id === 'squared-fusion-uc';
       }).some().value();
     });
+    const office365Promise = this.FeatureToggleService.atlasOffice365SupportGetStatus().then(feature => {
+      if (feature) {
+        return this.CloudConnectorService.getService('squared-fusion-o365').then(service => {
+          this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+        });
+      }
+    });
+    const googleCalendarPromise = this.CloudConnectorService.getService('squared-fusion-gcal').then(service => {
+      this.hybridCalendarEnabledOnOrg = this.hybridCalendarEnabledOnOrg || service.provisioned;
+    });
     const multipleDevicesPerPlacePromise = this.FeatureToggleService.csdmMultipleDevicesPerPlaceGetStatus().then(feature => {
       this.csdmMultipleDevicesPerPlaceFeature = feature;
     });
-    this.$q.all([ataPromise, hybridPromise, personalPromise, placeCalendarPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise]).finally(() => {
+    this.$q.all([hybridPromise, personalPromise, anyCalendarEnabledPromise, getLoggedOnUserPromise, multipleDevicesPerPlacePromise, office365Promise, googleCalendarPromise]).finally(() => {
       this.addDeviceIsDisabled = false;
     });
 
@@ -244,12 +281,10 @@ export class DevicesCtrl implements ng.IComponentController {
     return {
       data: {
         function: 'addDevice',
-        showATA: this.showATA,
         showPersonal: true,
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         title: 'addDeviceWizard.newDevice',
@@ -322,12 +357,10 @@ export class DevicesCtrl implements ng.IComponentController {
     return {
       data: {
         function: 'addDevice',
-        showATA: this.showATA,
         showPersonal: false,
         multipleRoomDevices: this.csdmMultipleDevicesPerPlaceFeature,
         admin: this.adminUserDetails,
         csdmHybridCallFeature: this.csdmHybridCallFeature,
-        csdmHybridCalendarFeature: this.csdmHybridCalendarFeature,
         hybridCalendarEnabledOnOrg: this.hybridCalendarEnabledOnOrg,
         hybridCallEnabledOnOrg: this.hybridCallEnabledOnOrg,
         title: 'addDeviceWizard.newDevice',
@@ -397,8 +430,6 @@ export class DevicesCtrl implements ng.IComponentController {
       },
     };
   }
-
-  //TODO end this is a duplicate from devices.controller.ts in squared
 }
 
 export class DevicesComponent implements ng.IComponentOptions {

@@ -2,20 +2,35 @@
 
   <div class="row">
     <div class="columns medium-4">
-      <h4>Cisco Spark Agreement</h4>
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.ciscoSparkAgreement"></h4>
+      <p class="wizard-info" translate="accountLinking.wizard.ciscoSparkAgreementTxt"></p>
     </div>
     <div class="columns medium-5 medium-offset-1">
-      <div class="align-top">
+      <div class="align-top legal-agreement wizard-info">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus id lectus malesuada eleifend id ac ante. Curabitur vel nibh a urna finibus fringilla. Donec et justo in velit molestie pharetra eget in risus. Aenean sit amet urna a felis volutpat
-          mattis. Cras tincidunt libero vitae risus euismod convallis. Fusce vehicula magna elit, fermentum gravida nisi malesuada non. Duis eget quam eget nisl lacinia convallis eu vel arcu. Curabitur diam felis, maximus sit amet auctor in, consequat
-          porttitor justo. Mauris pellentesque nunc eu blandit consequat. Maecenas tortor nulla, pharetra a mi et, eleifend egestas velit. Aenean ex quam, euismod ut feugiat a, efficitur eu dolor. Praesent vehicula nulla turpis. Mauris tempus nisl lorem,
-          rutrum dictum enim tincidunt id. Integer eget efficitur risus. Mauris eleifend eget ex vestibulum gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus eros et turpis hendrerit porttitor. Nulla ut nisl non lectus
-          condimentum tincidunt. Pellentesque et lorem eu turpis malesuada accumsan. Quisque volutpat tortor sed velit mattis fermentum. Integer elementum, massa ut tempus faucibus, felis erat elementum ex, vitae porttitor augue eros ac sapien. Duis placerat
-          velit id cursus ullamcorper.
+          As an administrator of the WebEx site for your organization you are agreeing to the following by electronically signing this agreement: -
+        </p>
+        <p>
+          (1) the users that you are importing are valid users who are members of your organization, accordingly you have the right to manage them;
+        </p>
+        <p>
+          (2) Upon importing these users to Cisco Spark, users who are linked through this process will share personal profile information and content on the Spark Platform. Accordingly, the Cisco Terms of Service and Privacy Policy will apply. You are hereby accepting
+          these terms on behalf of your organization and the users you link in this process. –
+        </p>
+        <p>
+          (3) You, as the administrator, are being given a 3-month grace period to verify the domains listed in the wizard via the DNS Txt entry feature in the “settings” section of Spark Control Hub. If you fail to verify domains within that 3-month grace period,
+          Cisco Spark may discontinue the auto sync and linking of accounts for the user domains not verified via the “verify domain” feature in the security settings of control hub. Those users will no longer have access to Cisco Spark through your subscription,
+          and that failure to access will not be considered a breach by Cisco.
+        </p>
+        <p>
+          (4) Users from consumer domains or any domain not in the admin’s verified list will be sent an email from Cisco to verify their user account. For example purposes only, domains that fall into this category are gmail.com, yahoo.com, sina.com, or consumer
+          services that do not specifically represent a company domain. Additionally, Cisco may decide to verify the authenticity of a user’s email address for any other reason. –
+        </p>
+        <p>
+          (5) If you choose to turn on the Automatic Link feature in Spark Control Hub, all new users you create on the WebEx Site Administration will be created and linked automatically on the Spark Platform.
         </p>
         <div class="agreement-accept">
-          <input cs-input type="checkbox" ng-model="$ctrl.agreementAccepted" id="agreementAccepted" name="agreementAccepted" cs-input-label="{{:: 'accountLinking.wizard.mode.automatic.agreementAcceptLabel' | translate}}" />
+          <input cs-input type="checkbox" ng-model="$ctrl.agreementAccepted" id="agreementAccepted" name="agreementAccepted" cs-input-label="{{:: 'accountLinking.wizard.agreementAcceptLabel' | translate}}" />
         </div>
       </div>
     </div>
@@ -25,13 +40,8 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn"
-          ng-click="$ctrl.backFunc()"
-          translate="common.back">
+  <button class="btn" ng-click="$ctrl.backFunc()" translate="common.back">
   </button>
-  <button ng-disabled="!$ctrl.agreementAccepted"
-          class="btn btn--primary"
-          ng-click="$ctrl.next()"
-          translate="common.next">
+  <button ng-disabled="!$ctrl.agreementAccepted" class="btn btn--primary" ng-click="$ctrl.next()" translate="common.next">
   </button>
 </div>

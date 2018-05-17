@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .ct-profile {
   align-items: center;
 
@@ -316,8 +318,9 @@
 
   .cs-input__help-text {
     @include vr-spacing(pt, 0);
-    font-family: "CiscoSansTT Light";
+    font-family: $brand-font-light;
     font-size: 12px;
+    padding: 0px;
   }
 
   .org-setting-info {
@@ -334,5 +337,11 @@
       letter-spacing: 0;
       line-height: 16px;
     }
+  }
+  .user-alias-info {
+    margin-left: 30px;
+  }
+  .user-alias-info-text {
+    font-size: 10px;
   }
 }

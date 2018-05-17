@@ -5,7 +5,6 @@ import { HybridDataSecurityInactiveCardController } from 'modules/services-overv
 
 describe('Component: HybridDataSecurityInactiveCardController', () => {
   let $componentController: ng.IComponentControllerService;
-  let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
   let ctrl: HybridDataSecurityInactiveCardController;
@@ -18,9 +17,8 @@ describe('Component: HybridDataSecurityInactiveCardController', () => {
   beforeEach(angular.mock.module(componentModule));
   beforeEach(inject(dependencies));
 
-  function dependencies(_$componentController_, _$httpBackend_, _$q_, _$rootScope_, _HDSService_, _ProPackService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _HDSService_, _ProPackService_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     HDSService = _HDSService_;

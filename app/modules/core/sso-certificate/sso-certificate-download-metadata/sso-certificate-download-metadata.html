@@ -1,0 +1,28 @@
+<multi-step-modal
+  l10n-title="ssoCertificateModal.updateCertificate"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.next()"
+  back="$ctrl.back()"
+  >
+
+  <div class="sso-certificate-content sso-certificate-content-download-metadata" ng-if="$ctrl.isLoading">
+    <i class="icon icon-spinner sso-certificate-content__icon sso-certificate-content__icon--size100"></i>
+  </div>
+
+  <div class="sso-certificate-content sso-certificate-content-download-metadata" ng-if="!$ctrl.isLoading">
+    <i class="icon icon-download-circle_100 sso-certificate-content__icon sso-certificate-content__icon--size100"></i>
+    <p class="sso-certificate-content__paragraph-title h4"
+      translate="ssoCertificateModal.exportDirectoryMetadata">
+    </p>
+    <p class="sso-certificate-content__paragraph-action2 text-center h6"
+      translate="ssoCertificateModal.downloadMessage">
+    </p>
+    <div class="sso-certificate-content__button">
+      <a id="downloadMeta" class="btn btn--cta"
+        download={{$ctrl.filename}}
+        ng-href="{{$ctrl.objectUrl}}"
+        ><span translate="ssoCertificateModal.downloadMetadataFile"></span>
+      </a>
+    </div>
+  </div>
+</multi-step-modal>

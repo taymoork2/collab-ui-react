@@ -6,6 +6,7 @@ export class SunlightUtilitiesService {
     private LocalStorage,
     private SunlightConfigService,
     private SunlightConstantsService,
+    private ContextAdminAuthorizationService,
   ) {}
 
   public getCareSetupKey() {
@@ -31,26 +32,15 @@ export class SunlightUtilitiesService {
     return (this.Authinfo.getOrgId() === this.Authinfo.getUserOrgId());
   }
 
-  public getAAOnboardStatus(aaOnboarded) {
-    let aaOnboardStatus = this.SunlightConstantsService.status.SUCCESS;
-    if (this.Authinfo.isCareVoice()) {
-      aaOnboardStatus = aaOnboarded;
-    }
-    return aaOnboardStatus;
-  }
-
-  public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) {
+  public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, jwtOnboarded) {
     const success = this.SunlightConstantsService.status.SUCCESS;
     return (this.isOrgAdmin() && csOnboarded === success
-    && appOnboarded === success
-    && this.getAAOnboardStatus(aaOnboarded) === success
-    && jwtOnboarded === success);
+    && appOnboarded === success && jwtOnboarded === success);
   }
 
-  public getCareOnboardStatusForPartner(csOnboarded, aaOnboarded) {
+  public getCareOnboardStatusForPartner(csOnboarded) {
     const success = this.SunlightConstantsService.status.SUCCESS;
-    return (!this.isOrgAdmin() && csOnboarded === success
-    && this.getAAOnboardStatus(aaOnboarded) === success);
+    return (!this.isOrgAdmin() && csOnboarded === success);
   }
 
   public getCareSetupNotificationText() {
@@ -70,13 +60,14 @@ export class SunlightUtilitiesService {
     let isCareOnboarded = false;
     const csOnboarded = _.get(result, 'data.csOnboardingStatus');
     const appOnboarded = _.get(result, 'data.appOnboardStatus');
-    const aaOnboarded = _.get(result, 'data.aaOnboardingStatus');
     const jwtOnboarded = _.get(result, 'data.jwtAppOnboardingStatus');
-    if (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, aaOnboarded, jwtOnboarded) ||
-      this.getCareOnboardStatusForPartner(csOnboarded, aaOnboarded)) {
-      isCareOnboarded = true;
-    }
-    return isCareOnboarded;
+    return this.ContextAdminAuthorizationService.isMigrationNeeded().then((migrationNeeded) => {
+      if (!migrationNeeded && (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, jwtOnboarded) ||
+        this.getCareOnboardStatusForPartner(csOnboarded))) {
+        isCareOnboarded = true;
+      }
+      return isCareOnboarded;
+    });
   }
 
   public isCareSetup() {

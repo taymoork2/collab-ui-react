@@ -1,0 +1,385 @@
+<div ui-view="header"></div>
+
+<cs-sp-container class="hercules-fix-paragraphs">
+
+  <cs-sp-section>
+
+    <h4 class="section-title-row section-name"
+        translate="hercules.eventHistory.sidepanel.description"></h4>
+
+    <!-- Alarms events -->
+    <div ng-if="$ctrl.isAlarmEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'AlarmRaised'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmRaised"
+                translate-values="{ hostname: $ctrl.eventItem.hostname }"></span>
+        </p>
+        <p>
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmRaised-description"
+                translate-values="{ description: $ctrl.eventItem.alarmDetails.description }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'AlarmResolved'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmResolved"
+                translate-values="{ title: $ctrl.eventItem.alarmDetails.title, hostname: $ctrl.eventItem.hostname }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'AlarmDebounced'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmDebounced"
+                translate-values="{ title: $ctrl.eventItem.alarmDetails.title, hostname: $ctrl.eventItem.hostname }"></span>
+        </p>
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmDebounced-help"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'AlarmRaisedNotificationSent'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmRaisedNotificationSent"
+                translate-values="{ title: $ctrl.eventItem.alarmDetails.title, recipientCount: $ctrl.eventItem.alarmDetails.recipientCount, hostname: $ctrl.eventItem.hostname }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'AlarmResolvedNotificationSent'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.alarmEvents.alarmResolvedNotificationSent"
+                translate-values="{ title: $ctrl.eventItem.alarmDetails.title, recipientCount: $ctrl.eventItem.alarmDetails.recipientCount, hostname: $ctrl.eventItem.hostname }"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!--Connector events-->
+    <div ng-if="$ctrl.isConnectorEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'not_installed'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.not_installed"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+        <p>
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.not_installed-help"></span>
+        </p>
+        <p>
+          <span translate="common.ifErrorRemains"></span>
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.provideInfoBelow"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'downloading'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.downloading"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'installing'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.installing"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'not_configured'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.not_configured"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'disabled'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.disabled"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'initializing'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.initializing"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'not_operational'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.not_operational"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+        <p>
+          <span translate="common.ifErrorRemains"></span>
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.provideInfoBelow"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'running'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.running"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Cluster events -->
+    <div ng-if="$ctrl.isClusterEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.isClusterProvisioningChange($ctrl.eventItem)">
+
+        <div ng-if="$ctrl.performedAutomatically($ctrl.eventItem)">
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue !== null && $ctrl.eventItem.clusterProvisioningDetails.newValue !== null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedProvisioningChange"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName, newValue: $ctrl.eventItem.clusterProvisioningDetails.newValue }"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.upgradeHelpText"></span>
+            </p>
+          </div>
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue === null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedProvisioning"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName }"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.provisioningAddedHelpText"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName }"></span>
+            </p>
+          </div>
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.newValue === null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedDeprovisioning"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName }"></span>
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.provisioningRemovedHelpText"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedDeprovisioningHelpText"></span>
+            </p>
+          </div>
+
+        </div>
+
+        <div ng-if="$ctrl.performedByHuman($ctrl.eventItem)">
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue !== null && $ctrl.eventItem.clusterProvisioningDetails.newValue !== null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.manualProvisioningChange"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName, newValue: $ctrl.eventItem.clusterProvisioningDetails.newValue, username: $ctrl.eventItem.username }"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.upgradeHelpText"></span>
+            </p>
+          </div>
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue === null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.manualProvisioning"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName, username: $ctrl.eventItem.username }"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.provisioningAddedHelpText"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName }"></span>
+            </p>
+          </div>
+
+          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.newValue === null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.manualDeprovisioning"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName, username: $ctrl.eventItem.username }"></span>
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.provisioningRemovedHelpText"></span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'UpgradeSchedule'">
+        <p class="hybrid-service-description">
+          <span ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue === ''"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.firstUpgradeSchedule"
+                translate-values="{ upgradeSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue }">
+          </span>
+          <span ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue !== '' && $ctrl.eventItem.clusterProvisioningDetails.newValue"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.changedUpgradeSchedule"
+                translate-values="{ username: $ctrl.eventItem.username , newSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue, oldSchedule: $ctrl.eventItem.clusterProvisioningDetails.oldValue }">
+          </span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'clusterRenamed'">
+        <div ng-if="$ctrl.eventItem.clusterDetails.oldName !== ''">
+          <p class="hybrid-service-description">
+            <span translate="hercules.eventHistory.sidepanel.clusterEvents.renamed"
+                  translate-values="{ username: $ctrl.eventItem.username, newName: $ctrl.eventItem.clusterDetails.name, oldName: $ctrl.eventItem.clusterDetails.oldName }">
+            </span>
+          </p>
+        </div>
+        <div ng-if="$ctrl.eventItem.clusterDetails.oldName === ''">
+          <p class="hybrid-service-description">
+            <span translate="hercules.eventHistory.sidepanel.clusterEvents.nameAssigned"
+                  translate-values="{ username: $ctrl.eventItem.username, name: $ctrl.eventItem.clusterDetails.name }">
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'resourceGroupChanged'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.resourceGroupIntro"
+                translate-values="{ username: $ctrl.eventItem.username }">
+          </span>
+        </p>
+        <p class="hybrid-service-description">
+          <span ng-if="$ctrl.eventItem.clusterDetails.oldResourceGroupId === ''"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.previouslyNotInResourceGroup"
+                translate-values="{ newGroup: $ctrl.eventItem.clusterDetails.resourceGroupName }">
+          </span>
+          <span ng-if="$ctrl.eventItem.clusterDetails.oldResourceGroupId !== '' && $ctrl.eventItem.clusterDetails.resourceGroupId !== ''"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.changedResourceGroup"
+                translate-values="{ newGroup: $ctrl.eventItem.clusterDetails.resourceGroupName, oldGroup: $ctrl.eventItem.clusterDetails.oldResourceGroupName }">
+          </span>
+          <span ng-if="$ctrl.eventItem.clusterDetails.resourceGroupId === ''"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.removedResourceGroup"
+                translate-values="{ oldGroup: $ctrl.eventItem.clusterDetails.oldResourceGroupName }">
+          </span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'releaseChannelChanged'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.changedReleaseChannel"
+                translate-values="{ username: $ctrl.eventItem.username }">
+          </span>
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.oldAndNewReleaseChannel"
+                translate-values="{ newReleaseChannel: $ctrl.eventItem.clusterDetails.releaseChannel, oldReleaseChannel: $ctrl.eventItem.clusterDetails.oldReleaseChannel }">
+          </span>
+        </p>
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.clusterEvents.changedReleaseChannelHelp">
+          </span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Service Activation events-->
+    <div ng-if="$ctrl.isServiceActivationEvent($ctrl.eventItem)">
+
+      <div ng-if="$ctrl.eventItem.type === 'ServiceEnabled'">
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec'">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceEnabled"
+                translate-values="{ username: $ctrl.eventItem.username, serviceName: $ctrl.localizedServiceName, connectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId === 'squared-fusion-ec'">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.callServiceConnectEnabled"
+                translate-values="{ username: $ctrl.eventItem.username, serviceName: $ctrl.localizedServiceName, connectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.type === 'ServiceDisabled'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceDisabled"
+                translate-values="{ serviceName: $ctrl.localizedServiceName, username: $ctrl.eventItem.username }"></span>
+        </p>
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec'">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceDisabledHelpText"
+                translate-values="{ serviceName: $ctrl.localizedServiceName, connectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId === 'squared-fusion-ec'">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceDisabledHelpTextCallServiceConnect"
+                translate-values="{ serviceName: $ctrl.localizedServiceName }"></span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Troubleshooting data-->
+    <div>
+
+      <div class="section-title-row section-name">
+        <span translate="hercules.eventHistory.sidepanel.technicalDetails.heading"></span>
+        <i class="icon icon-question-circle"
+          tabindex="0"
+          tooltip-placement="left"
+          tooltip="{{::'hercules.eventHistory.sidepanel.technicalDetails.tooltip' | translate}}"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'hercules.eventHistory.sidepanel.technicalDetails.tooltip' | translate}}">
+        </i>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.clusterId">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.clusterId"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.clusterId}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.connectorId">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.connectorId"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.connectorId}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.alarmDetails.alarmId">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.alarmId"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.alarmDetails.alarmId}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.softwareVersion">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.softwareVersion"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.softwareVersion}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.timestamp">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.timestamp"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.timestamp}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.userId">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.userId"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.userId}}</span>
+        </div>
+      </div>
+
+      <div class="row collapse" ng-if="$ctrl.eventItem.trackingId">
+        <div class="columns small-3">
+          <span class="hybrid-services-label" translate="hercules.eventHistory.sidepanel.technicalDetails.trackingId"></span>
+        </div>
+        <div class="columns small-9 normal-line-height">
+          <span class="hybrid-services-label">{{$ctrl.eventItem.trackingId}}</span>
+        </div>
+      </div>
+
+
+    </div>
+
+  </cs-sp-section>
+</cs-sp-container>

@@ -17,7 +17,7 @@
               <i class="icon icon-check"></i>
               <span class="feature-text" ng-bind-html="feature"></span>
             </div>
-            <div ng-show="pstnCarrier.note.length != 0" class="footnote">
+            <div ng-show="pstnCarrier.note.length !== 0" class="footnote">
               <i class="icon icon-info"></i>
               <span class="footnote-text">{{::pstnCarrier.note}}</span>
             </div>
@@ -32,7 +32,7 @@
             translate="common.select">
           </button>
           <a
-            ng-if="pstnCarrier.docSrc.length != 0"
+            ng-if="pstnCarrier.docSrc.length !== 0"
             class="icon icon-content-share"
             ng-href="{{pstnCarrier.docSrc}}"
             download="{{pstnCarrier.title}}"

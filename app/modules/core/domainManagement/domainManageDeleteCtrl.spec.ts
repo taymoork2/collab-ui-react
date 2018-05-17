@@ -2,16 +2,14 @@ import testModule from './index';
 
 describe('DomainManageDeleteCtrl', () => {
 
-  let Config, $q, $rootScope, $controller, $translate, DomainManagementService: any;
+  let $q, $rootScope, $controller, DomainManagementService: any;
 
   beforeEach(angular.mock.module(testModule));
 
-  beforeEach(inject((_$q_, _$rootScope_, _Config_, _$controller_, _$translate_, _DomainManagementService_) => {
-    Config = _Config_;
+  beforeEach(inject((_$q_, _$rootScope_, _$controller_, _DomainManagementService_) => {
     $q = _$q_;
     $rootScope = _$rootScope_;
     $controller = _$controller_;
-    $translate = _$translate_;
     DomainManagementService = _DomainManagementService_;
   }));
 

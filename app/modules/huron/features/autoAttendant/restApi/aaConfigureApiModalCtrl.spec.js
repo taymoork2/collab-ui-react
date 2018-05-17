@@ -40,6 +40,10 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
   }));
   beforeEach(angular.mock.module('Huron'));
 
+  beforeEach(inject(function (CustomVariableService, $q) {
+    spyOn(CustomVariableService, 'listCustomVariables').and.returnValue($q.resolve([]));
+  }));
+
   beforeEach(inject(function ($controller, $q, _$rootScope_, _$translate_, _$window_, _AutoAttendantCeMenuModelService_, _AACommonService_, _AASessionVariableService_, _AAUiModelService_, _RestApiService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
@@ -198,6 +202,14 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         },
         focus: function () {},
       };
+      spyOn(angular, 'element').and.returnValue(dynamicElement);
+      spyOn(dynamicElement, 'focus');
+      spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
+      spyOn(AACommonService, 'isMediaUploadToggle').and.returnValue(true);
+      spyOn(scopeElement, 'insertElement');
+    });
+
+    it('should be able to create dynamicList', function () {
       var rangeGetter = function () {
         var range = {
           collapsed: true,
@@ -218,6 +230,12 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
                       value: 'dummyId',
                     }],
                   },
+                  className: 'aa-insertion-element',
+                }, {
+                  nodeName: 'SPAN',
+                  nodeValue: 'this is test say message',
+                  innerText: 'this is test say message',
+                  className: '',
                 }],
                 className: 'dynamic-prompt aa-message-height',
                 id: 'messageTypeopenHours0',
@@ -227,11 +245,7 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
         };
         return range;
       };
-      spyOn(angular, 'element').and.returnValue(dynamicElement);
-      spyOn(dynamicElement, 'focus');
-      spyOn(dynamicElement, 'scope').and.returnValue(scopeElement);
-      spyOn(AACommonService, 'isMediaUploadToggle').and.returnValue(true);
-      spyOn(scopeElement, 'insertElement');
+      spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
       spyOn($window, 'getSelection').and.returnValue({
         getRangeAt: rangeGetter,
         rangeCount: true,
@@ -242,10 +256,6 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
           return true;
         },
       });
-    });
-
-    it('should be able to create dynamicList', function () {
-      spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
       var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
       action.dynamicList = [{
         action: {
@@ -265,7 +275,77 @@ describe('Controller: AAConfigureApiModalCtrl', function () {
       controller.saveDynamicUi();
       expect(_.get(menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
     });
-
+    it('should be able to create dynamicList for list is empty but have children', function () {
+      var rangeGetter1 = function () {
+        var child = [];
+        child.nodeName = 'DIV';
+        child.childNodes = [{
+          nodeName: '#text',
+          nodeValue: 'this is test say message',
+        }, {
+          nodeName: 'SPAN',
+          parentElement: {
+            attributes: [{
+              value: 'Test Attribute',
+            }, {
+              value: 'NUMBER',
+            }, {
+              value: 'dummyId',
+            }],
+          },
+          className: 'aa-insertion-element',
+        }, {
+          nodeName: 'SPAN',
+          nodeValue: 'this is test say message',
+          innerText: 'this is test say message',
+          className: 'teststyle',
+        }];
+        var range = {
+          collapsed: true,
+          endContainer: {
+            ownerDocument: {
+              activeElement: {
+                childNodes: [child],
+                className: 'dynamic-prompt aa-message-height',
+                id: 'messageTypeopenHours0',
+              },
+            },
+          },
+        };
+        return range;
+      };
+      spyOn(AACommonService, 'isDynAnnounceToggle').and.returnValue(true);
+      spyOn($window, 'getSelection').and.returnValue({
+        getRangeAt: rangeGetter1,
+        rangeCount: true,
+        removeAllRanges: function () {
+          return true;
+        },
+        addRange: function () {
+          return true;
+        },
+      });
+      var action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
+      action.dynamicList = [{
+        action: {
+          eval: {
+            value: 'Static Text',
+          },
+        },
+        isDynamic: false,
+        htmlModel: '',
+      }];
+      var menuEntry = AutoAttendantCeMenuModelService.newCeMenuEntry();
+      menuEntry.addAction(action);
+      aaUiModel.openHours = AutoAttendantCeMenuModelService.newCeMenu();
+      aaUiModel.openHours.addEntryAt(0, menuEntry);
+      expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe('Static Text');
+      $scope.$apply();
+      controller.saveDynamicUi();
+      expect(_.get(controller.menuEntry.actions[0], 'dynamicList[0].isDynamic', '')).toBe(false);
+      expect(_.get(controller.menuEntry.actions[0], 'dynamicList[1].isDynamic', '')).toBe(true);
+      expect(_.get(controller.menuEntry.actions[0], 'dynamicList[2].isDynamic', '')).toBe(false);
+    });
     //will be used and updated in the next story which covers errors part
     /*describe('variable warning', function () {
       it('fullWarningMsg', function () {

@@ -1,0 +1,115 @@
+<div class="modal-header">
+  <button id="convertModalClose" type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <h3 class="modal-title">
+    <span translate="{{::$ctrl.ftF7208 ? 'convertUsersModal.title' : 'homePage.convertUsers'}}"></span>
+  </h3>
+</div>
+<!-- ********** UI for orgs that do not have atlasF7208GDPRConvertUser set -->
+<div ng-if="!$ctrl.ftF7208" class="modal-body">
+  <p class="explanation"><span translate="homePage.convertUsersText"></span></p>
+  <h4 translate="homePage.unlicensedUsers"></h4>
+  <div class="text-center" ng-if="!$ctrl.showSearch">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
+  <div class="search" ng-if="$ctrl.showSearch">
+    <span class="icon icon-search"></span>
+    <input type="text"
+      id="searchConvertUser"
+      placeholder="{{:: 'usersPage.convertUserSearch' | translate }}"
+      ng-model="$ctrl.scopeData.searchStr"
+      ng-change="$ctrl.filterList($ctrl.scopeData.searchStr)">
+  </div>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.unlicensed > 0"
+    grid-api="$ctrl.gridApi"
+    grid-class="grid-checkbox ui-grid"
+    grid-options="$ctrl.convertGridOptions"
+    spinner="false">
+  </cs-grid>
+  <div class="noUnlicensedUsers" ng-if="$ctrl.unlicensed === 0">
+    <h2 translate="usersPage.convertUserNoneFound"></h2>
+    <h3 translate="usersPage.convertUserTryAgain"></h3>
+  </div>
+</div>
+<!-- ********** UI for orgs with atlasF7208GDPRConvertUser -->
+<cs-alert-banner ng-if="$ctrl.ftF7208 && $ctrl.showAutoAssignBanner" type="warning" closeable="true">
+  <span translate="convertUsersModal.banner.text" translate-value-click="$ctrl.showAutoAssignModal()" translate-compile></span>
+</cs-alert-banner>
+<div ng-if="$ctrl.ftF7208" class="modal-body">
+  <h4 class="convert-users__bottom-space--50" translate="convertUsersModal.subTitle"></h4>
+  <h6 class="convert-users__bottom-space--50" translate="convertUsersModal.desc" translate-value-count="{{$ctrl.daysToConvert}}" translate-interpolation="messageformat"></h6>
+  <div class="search convert-users__bottom-space--150">
+    <span class="icon icon-search"></span>
+    <input type="text"
+      id="searchConvertUser"
+      placeholder="{{::'usersPage.convertUserSearch' | translate}}"
+      ng-model="$ctrl.scopeData.searchStr"
+      ng-change="$ctrl.filterList($ctrl.scopeData.searchStr)"
+      ng-disabled="!$ctrl.showSearch || (!$ctrl.scopeData.searchStr && ($ctrl.getSelectedListCount() <= 0))">
+  </div>
+  <div class="text-center" ng-if="!$ctrl.showSearch">
+    <i class="icon icon-spinner icon-4x"></i>
+  </div>
+  <div ng-if="$ctrl.showSearch" class="convert-users__bottom-space--50">
+    <span
+      ng-class="['h5 convert-users__grid-filter', $ctrl.isPotentialTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']"
+      ng-click="$ctrl.selectTab($ctrl.POTENTIAL)"
+      translate="convertUsersModal.tab.potential"
+      translate-value-count="{{$ctrl.getPotentialUsersList().length}}">
+    </span>
+    <span
+      ng-class="['h5 convert-users__grid-filter', $ctrl.isPendingTabSelected() ? 'convert-users__grid-filter--active' : 'convert-users__grid-filter--inactive']"
+      ng-click="$ctrl.selectTab($ctrl.PENDING)"
+      translate="convertUsersModal.tab.pending"
+      translate-value-count="{{$ctrl.getPendingUsersList().length}}">
+    </span>
+    <div ng-show="$ctrl.isPendingTabSelected() && ($ctrl.getSelectedListCount() > 0)" class="h5 convert-users__csvDownload">
+      <csv-simple-export
+        anchor-text="{{::'convertUsersModal.csv' | translate}}"
+        on-export="$ctrl.exportCSV()"
+        filename="{{::'convertUsersModal.csvFilename' | translate}}"
+        icon="icon-download"
+        tooltip-placement="none">
+      </csv-simple-export>
+    </div>
+  </div>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0) && $ctrl.isPotentialTabSelected()"
+    grid-api="$ctrl.gridApi"
+    grid-class="grid-checkbox"
+    grid-options="$ctrl.gridPotentialUsers"
+    spinner="false">
+  </cs-grid>
+  <cs-grid
+    class="unlicensed-user-list"
+    ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() > 0) && $ctrl.isPendingTabSelected()"
+    grid-api="$ctrl.gridApi"
+    grid-options="$ctrl.gridPendingUsers"
+    spinner="false">
+  </cs-grid>
+  <div class="noUnlicensedUsers" ng-if="$ctrl.showSearch && ($ctrl.getSelectedListCount() <= 0)">
+    <h3 class="convert-users__bottom-space--50" translate="convertUsersModal.error.noUsers"></h3>
+    <h4 ng-show="$ctrl.scopeData.searchStr.length > 0" translate="usersPage.convertUserTryAgain"></h4>
+  </div>
+</div>
+<!-- ************ end F7208 dependent UI -->
+<div class="modal-footer">
+  <button type="button"
+    class="btn"
+    id="btnBack"
+    ng-if="$ctrl.manageUsers"
+    ng-click="$ctrl.goToManageUsers()"
+    translate="common.back">
+  </button>
+  <button
+    id="convertNextButton"
+    class="btn btn--lg btn--primary pull-right"
+    ng-if="!$ctrl.convertUsersReadOnly  && !$ctrl.isPendingTabSelected()"
+    ng-click="$ctrl.onClickNext()"
+    ng-disabled="$ctrl.convertDisabled()"
+    translate="common.next">
+  </button>
+  <button ng-if="$ctrl.convertUsersReadOnly" class="btn btn--primary" translate="common.ok" ng-click="$ctrl.dismissModal()"></button>
+</div>

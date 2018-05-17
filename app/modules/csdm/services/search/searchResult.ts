@@ -1,9 +1,11 @@
 import { Device } from '../deviceSearchConverter';
 import { List } from 'lodash';
+import { SearchElement } from './searchElement';
 
 export class SearchResult {
   public aggregations: Aggregations;
   public hits: SearchHits;
+  public query?: SearchElement;
   public successfullyRetrievedFromCsdm: boolean;
   public successfullyRetrievedFromCmi: boolean;
 }

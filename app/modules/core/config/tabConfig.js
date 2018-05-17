@@ -27,13 +27,6 @@
     state: 'partnercustomers',
     link: '/partner/customers',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-user',
     title: 'tabs.userTab',
@@ -52,6 +45,13 @@
     state: 'services-overview',
     link: 'services',
   }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
+    link: '/partner/services-overview',
+  }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
     title: 'tabs.deviceTab',
@@ -69,6 +69,7 @@
     title: 'tabs.reportTab',
     state: 'partnerreports',
     link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
   }, {
     tab: 'taasOverviewTab',
     icon: 'icon-outline',
@@ -141,13 +142,6 @@
     link: '/partner/customers',
     iconClass: 'icon-outline',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-people-active',
     title: 'tabs.userTab',
@@ -169,6 +163,13 @@
     link: 'services',
     iconClass: 'icon-outline',
   }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
+    link: '/partner/services-overview',
+  }, {
     tab: 'deviceTab',
     icon: 'icon-endpoint-active',
     title: 'tabs.deviceTab',
@@ -188,6 +189,7 @@
     title: 'tabs.reportTab',
     state: 'partnerreports',
     link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',

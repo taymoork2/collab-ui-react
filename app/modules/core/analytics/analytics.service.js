@@ -6,7 +6,7 @@
   module.exports = Analytics;
 
   /* @ngInject */
-  function Analytics($q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
+  function Analytics($document, $location, $q, $state, Authinfo, Config, MetricsService, Orgservice, TrialService, UrlConfig, UserListService) {
     var DiagnosticKey = require('../metrics').DiagnosticKey;
     var NO_EVENT_NAME = 'eventName not passed';
 
@@ -123,13 +123,21 @@
           VISIT_HDS_LIST: 'Visit Hybrid Data Security Service Cluster List',
           VISIT_HDS_SETTINGS: 'Visit Hybrid Data Security Service Settings',
           VISIT_CAL_EXC_LIST: 'Visit Hybrid Calendar (Exchange) Service Cluster List',
-          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings', // TODO
+          VISIT_CAL_EXC_SETTINGS: 'Visit Hybrid Calendar (Exchange) Service Settings',
+          VISIT_CAL_EXC_USER_LIST: 'Visit Hybrid Calendar (Exchange) Service User List',
+          VISIT_IMP_LIST: 'Visit Hybrid Messaging Service Cluster List',
+          VISIT_IMP_SETTINGS: 'Visit Hybrid Messaging Service Settings',
+          VISIT_IMP_USER_LIST: 'Visit Hybrid Messaging Service User List',
           VISIT_CAL_O365_SETTINGS: 'Visit Hybrid Calendar (Office 365) Service Settings',
           VISIT_CAL_GOOG_SETTINGS: 'Visit Hybrid Calendar (Google) Service Settings',
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
-          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
-          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+          VISIT_CALL_USER_LIST: 'Visit Hybrid Call Service User List',
+          VISIT_MEDIA_LIST: 'Visit Video Mesh Service Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Video Mesh Service Settings',
+          VISIT_NODE_LIST_SETTINGS: 'Visit Hybrid Nodes List',
+          OPEN_CONNECTOR_UPGRADE_MODAL: 'Open Connector Upgrade Modal',
+          START_CONNECTOR_UPGRADE: 'Start Connector Upgrade',
         },
         persistentProperties: null,
       },
@@ -231,11 +239,60 @@
           EVA_DELETE_FAILURE: 'Expert VA deletion failed',
         },
       },
+      APPLE_BUSINESS_CHAT: {
+        name: 'Apple Business Chat operations',
+        eventNames: {
+          ABC_DELETE_SUCCESS: 'ABC deleted',
+          ABC_DELETE_FAILURE: 'ABC deletion failed',
+          ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
+          ABC_NAME_PAGE: 'ABC Name',
+          ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_STATUS_MESSAGE: 'ABC Status Message',
+          ABC_SUMMARY_PAGE: 'ABC Summary',
+          ABC_START_FINISH: 'ABC the entire wizard',
+          ABC_CREATE_SUCCESS: 'ABC created',
+          ABC_CREATE_FAILURE: 'ABC creation failed',
+        },
+      },
       ONLINE_ORDER: {
         name: 'Online Orders',
         eventNames: {
           FREEMIUM: 'Online: Downgrade to Freemium',
           VIEW_INVOICE: 'Online: View Invoice',
+        },
+      },
+      DEVICE: {
+        name: 'Device',
+        eventNames: {
+          PROXIMITY: 'wifi proximity',
+        },
+      },
+      DEVICE_BULK: {
+        name: 'Bulk device',
+        eventNames: {
+          BULK: 'bulk',
+          COMPLETE: 'bulk complete',
+          DELETE: 'bulk delete',
+          DELETE_ASK: 'bulk delete ask',
+          DELETE_FAKE: 'bulk delete fake',
+          EXPORT: 'bulk export',
+          EXPORT_ASK: 'bulk export ask',
+          SELECT: 'bulk select',
+          SELECT_ALL: 'bulk select all',
+        },
+      },
+      DEVICE_SEARCH: {
+        name: 'Devices search',
+        eventNames: {
+          PERFORM_SEARCH: 'CSDM dev search',
+          SELECT_SUGGESTION: 'CSDM Suggestion',
+          EXPAND_DEVICE: 'CSDM expand device',
+        },
+      },
+      ORGANIZATION: {
+        name: 'Organization',
+        eventNames: {
+          DELETE: 'Organization Delete',
         },
       },
     };
@@ -263,7 +320,7 @@
       trackUserOnboarding: trackUserOnboarding,
       trackAddUsers: trackAddUsers,
       trackCsv: trackCsv,
-      trackHSNavigation: trackHSNavigation,
+      trackHybridServiceEvent: trackHybridServiceEvent,
       trackReportsEvent: trackReportsEvent,
     };
 
@@ -335,11 +392,29 @@
           properties[prefix + key] = value;
         }
       });
+
+      _.set(properties, '$current_url', cleanUrl($location.absUrl()));
+      _.set(properties, '$referrer', cleanUrl((_.get($document, '[0].referrer'))));
+
       _init()
         .then(function () {
           service._track(eventName, properties);
         })
         .catch(_.noop); // don't log error, legit reasons to fail
+    }
+
+    function cleanUrl(url) {
+      var REDACTED = '***';
+      var urlSearchAndReplacePairs = [
+        {
+          search: /\/search\/.*/,
+          replace: '/search/' + REDACTED,
+        },
+      ];
+      _.forEach(urlSearchAndReplacePairs, function (pair) {
+        url = _.replace(url, pair.search, pair.replace);
+      });
+      return url;
     }
 
     /**
@@ -495,7 +570,6 @@
       return trackEvent(eventName, properties);
     }
 
-
     /**
     * Add User Events
     */
@@ -528,11 +602,12 @@
     }
 
     /**
-     * Hybrid Services navigation
+     * Hybrid Services
      */
-    function trackHSNavigation(eventName, payload) {
+    // function trackHybridServiceEvent(eventName, payload) {
+    function trackHybridServiceEvent(eventName, payload) {
       if (!eventName) {
-        return _logError('trackHSNavigation', NO_EVENT_NAME);
+        return _logError('trackHybridServiceEvent', NO_EVENT_NAME);
       }
 
       var properties = _.extend({
@@ -561,7 +636,6 @@
     /**
     * General Error Tracking
     */
-
     function trackError(errorObj, cause) {
       var message = _.get(errorObj, 'message');
       var stack = _.get(errorObj, 'stack');

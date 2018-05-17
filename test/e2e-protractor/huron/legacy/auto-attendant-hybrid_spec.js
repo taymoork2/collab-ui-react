@@ -18,6 +18,8 @@ describe('Huron Auto Attendant', function () {
   var testCardClick;
   var testCardClose;
   var flow;
+  
+  var ceInfos = require('./aaE2ETest.json');
 
   describe('Hybrid Enabled tenant', function () {
     beforeAll(function () {
@@ -25,8 +27,8 @@ describe('Huron Auto Attendant', function () {
       deleteUtils.testAAName = deleteUtils.testAAName + "_" + Date.now();
 
       testAAName = element(by.css('p[title="' + deleteUtils.testAAName + '"]'));
-      testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.card-body'));
-      testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.card-icon-div')).element(by.css('.close'));
+      testCardClick = testAAName.element(by.xpath('ancestor::article')).element(by.css('.care-sub-header'));
+      testCardClose = testAAName.element(by.xpath('ancestor::article')).element(by.css('.header-with-right-icon')).element(by.css('.right')).element(by.css('.close'));
 
       browser.setFileDetector(new remote.FileDetector());
 
@@ -104,23 +106,26 @@ describe('Huron Auto Attendant', function () {
       // saving the tenant and closing it
       utils.expectIsEnabled(autoattendant.saveButton);
       utils.click(autoattendant.saveButton);
-      utils.click(autoattendant.closeEditButton);
-      
-      // logging out of tenant
-      navigation.logout();
+      utils.wait(autoattendant.saveButton, 120000);
+      flow = browser.controlFlow();
+      flow.execute(function () {
+        return aaGetCeUtils.validateCesDefinitionForHybridOrg(ceInfos.Test7.actionSets);
+     });
+      //utils.wait(autoattendant.saveButton, 120000);
 
     }, 120000);
 
-    it('should login the hybrid org to call features services page and check if route to user feature is available in AA named"' + deleteUtils.testAAName + '"',function() {
-      //logging back into the hybrid enabled tenant, this time via call feature services
-      login.login('hybrid-org', autoattendant.callFeature);
-      utils.wait(testAAName, 120000);
+    it('should close AA', function () {
+      utils.click(autoattendant.closeEditButton);
+    }, 120000);
+
+    it('should find new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      utils.wait(testAAName);
       utils.expectIsEnabled(testAAName);
 
-      //selecting the created tenant
+      //selecting the created AA
       utils.click(testCardClick);
-      utils.wait(autoattendant.addAANumbers, 20000);
-      utils.expectIsDisplayed(autoattendant.addAANumbers);
+      browser.driver.sleep(10000);
       autoattendant.scrollIntoView(autoattendant.routeCall);
 
       //Verify we have 1 Route Call already
@@ -128,18 +133,20 @@ describe('Huron Auto Attendant', function () {
       utils.expectIsDisplayed(autoattendant.routeCall);
       utils.wait(autoattendant.closeEditButton, 20000);
       utils.click(autoattendant.closeEditButton);
-    });
+
+    }, 120000);
 
     it('should delete new AA named "' + deleteUtils.testAAName + '" on the landing page', function () {
+      // click delete X on the AA card for e2e test AA
       autoattendant.clearNotifications().then(function () {
         utils.click(testCardClose);
-  
+
         // confirm dialog with e2e AA test name in it is there, then agree to delete
         utils.expectText(autoattendant.deleteModalConfirmText, 'Are you sure you want to delete the ' + deleteUtils.testAAName + ' Auto Attendant?').then(function () {
           utils.click(autoattendant.deleteModalConfirmButton);
           autoattendant.assertDeleteSuccess(deleteUtils.testAAName);
         });
       });
-    });
+    }, 120000);
   });
 });

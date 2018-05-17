@@ -20,10 +20,10 @@
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.waitingMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.waitingMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.waitingMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
             <div class="chat-status-waiting-help-text">
-              <span class="chat-status-help-text body-small" translate="careChatTpl.helpTextWaiting"></span>
+              <span class="chat-status-help-text body-small">{{careSetupAssistant.helpTextWaiting()}}</span>
               <span class="chat-status-help-text body-small" ng-show='careSetupAssistant.isCareAssistantEnabled' translate="careChatTpl.helpTextWaitingVirtualAssistant"></span>
             </div>
           </div>
@@ -39,7 +39,7 @@
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.chattingMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.chattingMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.chattingMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
               <div class="chat-status-help-text body-small" translate="careChatTpl.helpTextChatting">
               </div>
@@ -56,9 +56,9 @@
                 validate-characters="careSetupAssistant.InvalidCharacters"
                 ng-model="careSetupAssistant.template.configuration.chatStatusMessages.messages.leaveRoomMessage.displayText"
                 ng-model-options="{ allowInvalid: true }"
-                placeholder="{{::'careChatTpl.leaveRoomMessage' | translate}}"
+                placeholder="{{::'careChatTpl.templateConfig.default.leaveRoomMessage' | translate}}"
                 ng-keypress="careSetupAssistant.enterNextPage($event)"/>
-              <div class="chat-status-help-text body-small" translate="careChatTpl.helpTextLeaveRoom">
+              <div class="chat-status-help-text body-small">{{careSetupAssistant.helpTextLeaveRoom()}}
               </div>
             </div>
           </section>

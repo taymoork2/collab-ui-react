@@ -1,0 +1,18 @@
+hcs-setup-modal {
+  margin: initial !important; // FIXME: investigate problem higher up the DOM tree requiring this override
+}
+
+.hcs-service-setup__title {
+  padding-bottom: 1.5rem;
+}
+
+.hcs-profile__select {
+  padding-bottom: 1rem;
+}
+
+.hcs-install__token .tokenfield {
+  height: 10rem;
+}
+.hcs-padding__token {
+  margin-top: 1rem;
+}

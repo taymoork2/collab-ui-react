@@ -3,10 +3,15 @@
     <p>{{::$ctrl.domainName}}</p>
     <div ng-repeat="connector in $ctrl.connectors track by $index">
       <cs-statusindicator ng-model="connector.status"></cs-statusindicator>
-      <span>{{::connector.name}}</span>
+      <text-tooltip
+        tt-class="{{connector.isInService ? '' : 'connector-disabled'}}"
+        tt-tooltip-placement="bottom"
+        tt-tooltip-text="{{::$ctrl.getTooltip(connector)}}">
+        {{::connector.name}}
+      </text-tooltip>
     </div>
   </div>
-  <div class="columns medium-4">
+  <div class="columns medium-4 text-right">
     <cs-statusindicator ng-model="$ctrl.dirsync.siteStatus"></cs-statusindicator>
     <span translate="{{::$ctrl.getStatus()}}"></span>
     <div cs-dropdown class="actions-menu">

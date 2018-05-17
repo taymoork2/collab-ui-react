@@ -1,0 +1,53 @@
+<div ng-show="!$ctrl.ovaDownload">
+  <h5 translate="mediaFusion.easyConfig.firstStep"></h5>
+  <div class="preRegisterClusterForm">
+    <form name="preRegisterClusterForm">
+      <div class="cs-radio-group">
+        <div class="radioDisplay">
+          <input cs-input type="radio" ng-model="$ctrl.registerNode" id="yes" name="redirectResource" value="1" ng-change="$ctrl.registerNodeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.yesProceed' | translate}}"
+            class="radioNoTranform">
+        </div>
+        <div class="radioDisplay">
+          <input cs-input type="radio" ng-model="$ctrl.registerNode" id="no" name="redirectResource" value="0" ng-change="$ctrl.registerNodeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.noProceed' | translate}}"
+            class="radioNoTranform">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="myAddResourceDownloadForm" ng-show="$ctrl.registerNode === '0'">
+    <div translate="mediaFusion.add-resource-dialog.ovaHelpText"></div>
+    <form name="myAddResourceDownloadForm">
+      <div class="cs-radio-group">
+        <div class="radioDisplay">
+          <input cs-input type="radio" ng-model="$ctrl.ovaType" id="full" name="redirectResource" value="1" ng-change="$ctrl.ovaTypeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.fullOva' | translate}}"
+            class="radioNoTranform" ng-disabled="$ctrl.registerNode === '1'">
+        </div>
+        <div class="radioDisplay">
+          <input cs-input type="radio" ng-model="$ctrl.ovaType" id="demo" name="redirectResource" value="0" ng-change="$ctrl.ovaTypeSelector(value)" cs-input-label="{{'mediaFusion.add-resource-dialog.demoOva' | translate}}"
+            class="radioNoTranform" ng-disabled="$ctrl.registerNode === '1'">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="add-resource">
+    <p class="stick-bottom" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></p>
+  </div>
+</div>
+<div ng-show="$ctrl.ovaDownload">
+  <div>
+    <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: $ctrl.getAppTitle()}"></h5>
+  </div>
+  <br>
+  <div ng-show="$ctrl.ovaType === '1'">
+    <h5 translate="mediaFusion.add-resource-dialog.noRetryInfo"></h5>
+  </div>
+  <div ng-show="$ctrl.ovaType === '0'">
+    <h5 translate="mediaFusion.add-resource-dialog.noRetryDemoInfo"></h5>
+  </div>
+  <div class="addResourceBodyInfo">
+    <p>
+      {{'mediaFusion.add-resource-dialog.noDesc1' | translate}}
+      <a href="https://www.cisco.com/go/hybrid-services-media" target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+    </p>
+  </div>
+</div>

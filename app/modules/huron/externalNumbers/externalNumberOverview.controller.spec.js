@@ -97,7 +97,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
@@ -120,7 +120,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
@@ -140,7 +140,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,
@@ -164,7 +164,7 @@ describe('Controller: ExternalNumberOverviewCtrl', function () {
       ExternalNumberService.isTerminusCustomer.and.returnValue($q.resolve(true));
       controller.isTerminusCustomer();
       $scope.$apply();
-      expect($state.go).toHaveBeenCalledWith('pstnSetup', {
+      expect($state.go).toHaveBeenCalledWith('pstnWizard', {
         customerId: controller.currentCustomer.customerOrgId,
         customerName: controller.currentCustomer.customerName,
         customerEmail: controller.currentCustomer.customerEmail,

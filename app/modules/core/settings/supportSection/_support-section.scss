@@ -1,8 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 .device-support-section {
-  .custom-text {
-    margin-top: 6px;
-  }
   .indent {
     margin-left: 32px;
   }
@@ -10,6 +7,7 @@
     margin-top: 16px;
   }
   .custom-text {
+    margin-top: 6px;
     margin-bottom: 0;
     .text-wrap {
       height: 4.1rem;

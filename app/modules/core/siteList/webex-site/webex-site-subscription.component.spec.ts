@@ -3,7 +3,12 @@ describe('Component: WebexSiteSubscription', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$scope', '$rootScope');
+    this.injectDependencies(
+      '$componentController',
+      '$scope',
+      '$rootScope',
+      'SiteListService',
+    );
     this.$scope.fixtures = {
       currentSubscriptionId: 'sub123',
       subscriptions: [{ id: 'sub123', isPending: false } , { id: 'sub321', isPending: true }],
@@ -32,16 +37,47 @@ describe('Component: WebexSiteSubscription', function () {
   });
   describe('On selection change', () => {
     it('should, if subscription not pending, call the subscription change function with subscription id, and call validation change with TRUE', function () {
+      this.controller.useManagement = false;
       this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
       this.controller.setSubscription();
+      this.$scope.$digest();
       expect(this.$scope.onSubscriptionChangeFn).toHaveBeenCalledWith('sub123', undefined);
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(true);
     });
     it('should, if subscription is pending, NOT call the subscription change function with subscription id, and call validation change with FALSE', function () {
+      this.controller.useManagement = false;
       this.controller.currentSubscription = this.$scope.fixtures.subscriptions[1];
       this.controller.setSubscription();
       expect(this.$scope.onSubscriptionChangeFn).not.toHaveBeenCalled();
       expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(false);
+    });
+    it('should call validation true when site is managed', function() {
+      spyOn(this.SiteListService, 'canManageSubscription').and.returnValue(true);
+      this.controller.useManagement = true;
+      this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
+      this.controller.setSubscription();
+      expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(true);
+    });
+    it('should call validation false when site is not managed', function() {
+      spyOn(this.SiteListService, 'canManageSubscription').and.returnValue(false);
+      this.controller.useManagement = true;
+      this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
+      this.controller.setSubscription();
+      expect(this.$scope.onValidationStatusChangeFn).toHaveBeenCalledWith(false);
+    });
+    it('should use webex site management flag', function () {
+      spyOn(this.SiteListService, 'useSiteManagement').and.returnValue(this.$q.resolve(true));
+      this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
+      this.controller.setSubscription();
+      this.$scope.$digest();
+      expect(this.controller.useManagement).toBe(true);
+    });
+    it('should not use webex site management flag', function () {
+      spyOn(this.SiteListService, 'useSiteManagement').and.returnValue(this.$q.resolve(false));
+      this.controller.currentSubscription = this.$scope.fixtures.subscriptions[0];
+      this.controller.setSubscription();
+      this.$scope.$digest();
+      expect(this.controller.useManagement).toBe(false);
     });
   });
   describe('On launchMeetingSetup', () => {

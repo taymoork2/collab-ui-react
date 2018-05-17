@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h4 class="modal-title" translate="globalSettings.proximity.modalTitle"></h4>
+</div>
+<div class="modal-body">
+  <div class="section wproximity">
+    <span translate="globalSettings.proximity.wifiOptInDescription"></span>
+    <br>
+    <span translate="globalSettings.proximity.enableItNow"></span>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    cs-btn
+    class="btn "
+    loading="pm.optOutProgress"
+    ng-click="pm.optOut()">
+    <span translate="">globalSettings.proximity.optOutButton</span>
+  </button>
+  <button
+    cs-btn
+    class="btn btn--primary"
+    loading="pm.optInProgress"
+    ng-click="pm.optIn()">
+    <span translate="common.enable"></span>
+  </button>
+</div>

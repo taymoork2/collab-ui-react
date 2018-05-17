@@ -15,11 +15,11 @@ class SnrCtrl implements ng.IComponentController {
 
   public ownerId: string;
   public snrData: SnrData;
-  private callDestInputs: string[];
+  public callDestInputs: string[];
   private form: ng.IFormController;
-  private customTranslations: ITranslationMessages;
-  private inputTranslations: ICallDestinationTranslate;
-  private customNumberValidationPatern: RegExp;
+  public customTranslations: ITranslationMessages;
+  public inputTranslations: ICallDestinationTranslate;
+  public customNumberValidationPatern: RegExp;
   public loading: boolean = false;
   public processing: boolean = false;
 

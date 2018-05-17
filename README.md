@@ -29,7 +29,7 @@ Adherence is mandatory. Please refactor non-compliant code.
   GitHub provides an easy-to-use tool for reviewing and maintaining commit history by linking commits
   with their associated pull requests.
 * **Code style is mandatory**. Style should be enforced through linting and code reviews.
-  * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/master/es5)
+  * [Javascript Style Guide](https://github.com/airbnb/javascript/tree/es5-deprecated/es5)
   * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide/tree/master/a1)
   * [CSS BEMS-style naming](http://getbem.com/naming/)
   * [Commit Guidelines](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-client/wiki/How-to-commit-changes)
@@ -179,10 +179,9 @@ See [git-terminology](https://sqbu-github.cisco.com/WebExSquared/wx2-admin-web-c
       * `git push gauntlet <feature-branch>:master`
   * Gauntlet Information
     * Use your CEC username and [internal password](https://sqbu-jenkins-01.cisco.com:8443/job/utilities/job/internal-utilities-password-changer/) (**:warning: it is not the same password as your CEC password :warning:**).
-    * Consider putting your internal password into ~/.netrc
+    * Consider putting your internal password into [`~/.netrc`](https://github.com/bagder/everything-curl/blob/master/usingcurl-netrc.md#the-netrc-file-format)
     * You can [monitor the gauntlet queue here](https://gauntlet.wbx2.com/queue.html?queue=atlas-web)
-    * You can [force fail stuck gauntlet queue here](https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web--gauntlet--fail-build/) (note: trigger it with the **full SHA** of your feature branch's HEAD commit). You can alternatively force fail it using the following curl command: `curl --insecure --user <username> -X PUT "https://gauntlet.wbx2.com/api/queues/atlas-web/master?commitId=<commitId>&componentTestStatus=failure"
-`, use your internal password when prompted.
+    * You can [force fail stuck gauntlet queue here](https://sqbu-jenkins.cisco.com:8443/job/team/job/atlas/job/atlas-web--gauntlet--fail-build/) (note: trigger it with the **full SHA** of your feature branch's HEAD commit). You can alternatively force fail it using the following curl command: `curl --insecure --user <username> -X PUT "https://gauntlet.wbx2.com/api/queues/atlas-web/master?commitId=<commitId>&componentTestStatus=failure"`, use your internal password when prompted.
 
 ##### 8. Jenkins Build Triage
   * Build failures happen - sometimes they are related to your work and sometimes they aren't

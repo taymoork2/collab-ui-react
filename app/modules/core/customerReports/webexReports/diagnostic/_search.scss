@@ -92,11 +92,11 @@
   }
 }
 
-.content-container.meeting-list {
+.content-container .meeting-list {
   position: relative;
   background: $white;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0 !important;// FIXME: track down and remove need for '!important'
+  padding-right: 0 !important;// FIXME: track down and remove need for '!important'
   overflow: hidden;
   height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
 
@@ -133,8 +133,15 @@
     }
 
     .error {
+      background-color: #FEDCD7;
+      border-color: $color-alerts-base;
+
       .cs-datapicker-normal {
         background-color: #FEDCD7; //TODO Now Collab-UI(4.2.0) changed the color variable $color-alerts-lighter(#FEDCD7 => #F0928B), the original is #FEDCD7, But now it’s available, we need to check with Collab-UI Team.
+      }
+
+      input {
+        background: none !important;
       }
     }
 
@@ -192,16 +199,6 @@
         .select-options > .li > a {
           font-size: 0.8rem;
         }
-      }
-    }
-
-    .error {
-      //background-color: $color-alerts-lighter; //TODO same about.
-      background-color: #FEDCD7;
-      border-color: $color-alerts-base;
-
-      input {
-        background: none !important;
       }
     }
   }
@@ -273,7 +270,6 @@
     color: $gray-dark-3;
     margin-bottom: -5px;
     font-size: 17px;
-    font-family: "CiscoSans";
   }
 }
 

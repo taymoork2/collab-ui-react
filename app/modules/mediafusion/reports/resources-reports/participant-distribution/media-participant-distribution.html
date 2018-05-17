@@ -1,9 +1,24 @@
 <cs-card id='participant-distribution-card' class="cs-card--full media-metrics-report-card">
   <article class="media-service-card header-padding">
     <graphheader>
-        <span class='report-section-header' translate='mediaFusion.metrics.participantDistributionTitle'></span>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.calldistributionOrgDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></i>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.calldistributionClusterDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></i>
+        <span class='report-section-header' translate='mediaFusion.metrics.participantDistributionTitle' ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"></span>
+        <span class='report-section-header' translate='mediaFusion.metrics.numberOfParticipantTitle' ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"></span>
+        <i class='icon icon-info-outline icon-large'
+          ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"
+          tabindex="0"
+          tooltip="{{::'mediaFusion.metrics.graphDescription.calldistributionOrgDesc' | translate}}"
+          tooltip-class="metrics-tooltip"
+          tooltip-trigger="mouseenter focus"
+          aria-label="{{::'mediaFusion.metrics.graphDescription.calldistributionOrgDesc' | translate}}">
+        </i>
+        <i class='icon icon-info-outline icon-large'
+          ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"
+          tabindex="0"
+          tooltip="{{::'mediaFusion.metrics.graphDescription.calldistributionClusterDesc' | translate}}"
+          tooltip-class="metrics-tooltip"
+          tooltip-trigger="mouseenter focus"
+          aria-label="{{::'mediaFusion.metrics.graphDescription.calldistributionClusterDesc' | translate}}">
+        </i>
         <div id="participant-export-div"></div>
     </graphheader>
     <section>

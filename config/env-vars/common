@@ -1,10 +1,12 @@
+APP_DEPLOY_DESCRIPTOR_TEMPLATE=deploy-descriptor.yml.tpl
+APP_DEPLOY_DESCRIPTOR=webpack.yml
 APP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.tar.gz
+APP_BUILD_INFO_FILE=build-info.json
 SOURCE_MAP_ARCHIVE=wx2-admin-web-client.$BUILD_TAG.source-map.tar.gz
 BUILD_DEPS_ARCHIVE=build-deps.tar
 COVERAGE_ARCHIVE=coverage.tar.gz
 E2E_TEST_ENV_VARS_FILE=e2e-test-env-vars
 E2E_TEST_RESULTS_ARCHIVE=e2e-test-results.tar
-FABFILE=fabfile.py
 WX2_ADMIN_WEB_CLIENT_HOME=$WX2_ADMIN_WEB_CLIENT_HOME
 
 E2E_RUN_COUNTER_MAX=2

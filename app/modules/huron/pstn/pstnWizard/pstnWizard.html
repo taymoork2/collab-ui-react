@@ -2,22 +2,21 @@
 
 <!-- header -->
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
+  <button ng-if="!$ctrl.ftsw" type="button" class="close" ng-click="$ctrl.dismissModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title">{{$ctrl.titles[$ctrl.step]}}</h3>
 </div>
 
 <!-- body -->
-<div class="modal-body" ng-class="{trials: $ctrl.step == 4}">
-  <div ng-if="$ctrl.step == 1">
+<div class="modal-body" ng-class="{trials: $ctrl.step === 4}" ng-style="$ctrl.ftsw && {'overflow-x':'hidden'}">
+  <div ng-if="$ctrl.step === 1">
     <uc-pstn-providers
       ng-if="$ctrl.enableCarriers"
       ng-show="$ctrl.showCarriers"
       on-change-fn="$ctrl.onProviderChange()"
-      on-ready-fn="$ctrl.onProviderReady()"
-    >
+      on-ready-fn="$ctrl.onProviderReady()">
     </uc-pstn-providers>
   </div>
-  <div class="row collapse" ng-if="$ctrl.step == 2">
+  <div class="row collapse" ng-if="$ctrl.step === 2">
     <h3 translate="pstnContractInformation.title"></h3>
     <p translate="pstnContractInformation.prompt"></p>
     <br>
@@ -25,7 +24,7 @@
       <uc-pstn-contact-info class="columns medium-6" contact="$ctrl.contact"></uc-pstn-contact-info>
     </form>
   </div>
-  <div ng-if="$ctrl.step == 3">
+  <div ng-if="$ctrl.step === 3">
     <emergency-services
       address="$ctrl.address"
       country-code="$ctrl.countryCode"
@@ -38,8 +37,8 @@
       show-validation="true">
     </emergency-services>
   </div>
-  <div ng-if="$ctrl.step == 4" class="pstn-selector-container">
-    <div class="flex-container">
+  <div ng-if="$ctrl.step === 4" class="pstn-selector-container">
+    <div class="flex-container" ng-class="{'ftsw-adjust': $ctrl.ftsw}">
       <cs-tabset class="flex-2" justified="false">
         <cs-tab>
           <cs-tab-heading translate="pstnSetup.newNumbersTab"></cs-tab-heading>
@@ -54,8 +53,13 @@
         <cs-tab ng-if="$ctrl.showTollFreeNumbers">
           <cs-tab-heading translate="pstnSetup.newTollFreeTab"></cs-tab-heading>
           <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
-            <div translate="pstnSetup.unableToAddTollFreeNumbersShort"></div>
-            <a translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            <div ng-if="!$ctrl.hasStandardOrder()">
+              <div translate="pstnSetup.unableToAddTollFreeNumbersShort"></div>
+              <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            </div>
+            <div ng-if="$ctrl.hasStandardOrder()">
+              <span translate="pstnSetup.unableToAddTollFreeNumbers"></span>
+            </div>
           </div>
           <div ng-if="$ctrl.showOrderForm()">
             <div ng-if="!$ctrl.showContractUnSigned()">
@@ -76,8 +80,13 @@
         <cs-tab ng-if="$ctrl.showPortNumbers">
           <cs-tab-heading translate="pstnSetup.portNumbersTab"></cs-tab-heading>
           <div class="numbers-new" ng-if="!$ctrl.showOrderForm()">
-            <div translate="pstnSetup.unableToAddPortedNumbersShort"></div>
-            <a translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            <div ng-if="!$ctrl.hasStandardOrder()">
+              <div translate="pstnSetup.unableToAddPortedNumbersShort"></div>
+              <a href translate="pstnSetup.initContract" translate-value-carrier="{{$ctrl.carrierName}}" ng-click="$ctrl.sendContract()"></a>
+            </div>
+            <div ng-if="$ctrl.hasStandardOrder()">
+              <span translate="pstnSetup.unableToAddPortedNumbers"></span>
+            </div>
           </div>
           <div ng-if="$ctrl.showOrderForm()">
             <div ng-if="!$ctrl.showContractUnSigned()">
@@ -114,7 +123,7 @@
       </section>
     </div>
   </div>
-  <div ng-if="$ctrl.step == 5">
+  <div ng-if="$ctrl.step === 5">
     <uc-pstn-swivel-numbers
       numbers="$ctrl.swivelNumbers"
       acknowledge="$ctrl.emergencyAcknowledge"
@@ -122,7 +131,7 @@
       on-acknowledge="$ctrl.onAcknowledge(value)">
     </uc-pstn-swivel-numbers>
   </div>
-  <div ng-if="$ctrl.step == 6" class="pstn-review">
+  <div ng-if="$ctrl.step === 6" class="pstn-review">
     <uc-pstn-review ng-if="$ctrl.ftHI1635">
     </uc-pstn-review>
     <div class="review-container" ng-if="!$ctrl.ftHI1635">
@@ -146,7 +155,7 @@
       </div>
     </div>
   </div>
-  <div ng-if="$ctrl.step == 7" class="pstn-next-steps">
+  <div ng-if="$ctrl.step === 7" class="pstn-next-steps">
     <div class="flex-container">
       <i class="icon icon-check-mark-success"></i>
       <h3 translate="pstnSetup.thankYou"></h3>
@@ -156,17 +165,17 @@
       <span ng-show="$ctrl.portOrders.length"><i class="icon icon-information left"></i><span class="h5 left" translate="pstnSetup.nextStepPrompt2"></span></span>
       </h2>
       <div>
-        <button class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
+        <button ng-if="!$ctrl.ftsw" class="left btn btn--people" ng-click="$ctrl.launchCustomerPortal()" translate="pstnSetup.launchPortal">
         </button>
       </div>
     </div>
   </div>
-  <div ng-if="$ctrl.step == 8" >
+  <div ng-if="$ctrl.step === 8" >
     <div class="flex-container">
       <uc-esa-disclaimer-msg></uc-esa-disclaimer-msg>
     </div>
   </div>
-  <div ng-if="$ctrl.step == 9" >
+  <div ng-if="$ctrl.step === 9" >
     <div ng-if="$ctrl.blockByopNumberAddForPartnerAdmin" class="adding-phone-number-blocked">
       <div><i class="icon icon-warning"></i></div><div><h1 class="h4" translate="pstnSetup.addByopNumberBlocked.title"></h1></div>
       <div class="clearfix"></div>
@@ -181,7 +190,7 @@
       on-acknowledge="$ctrl.onAcknowledge(value)">
     </uc-pstn-swivel-numbers>
   </div>
-  <div ng-if="$ctrl.step == 10" class="pstn-review swivel-pstn-review">
+  <div ng-if="$ctrl.step === 10" class="pstn-review swivel-pstn-review">
     <div class="review-container">
       <i class="icon icon-circle-call"></i>
       <h1 class="title" translate="pstnSetup.reviewSummary"></h1>
@@ -197,7 +206,7 @@
       </div>
     </div>
   </div>
-  <div ng-if="$ctrl.step == 11" class="pstn-next-steps">
+  <div ng-if="$ctrl.step === 11" class="pstn-next-steps">
     <div class="flex-container swivel-pstn-next-steps">
       <i class="icon icon-check-mark-success"></i>
       <h3 translate="pstnSetup.thankYou"></h3>
@@ -222,12 +231,12 @@
     translate="common.back">
   </button>
   <button id="wizardBtn" class="btn btn--primary" type="button" cs-btn loading="$ctrl.placeOrderLoad"
-    ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()">
-    <span ng-if="$ctrl.step == 6" translate="pstnSetup.placeOrder"></span>
-    <span ng-if="$ctrl.step == 7 || $ctrl.step == 11" translate="common.done"></span>
-    <span ng-if="!($ctrl.step == 6 || $ctrl.step == 7 || $ctrl.step == 8 || $ctrl.step == 10 || $ctrl.step == 11)" translate="common.next"></span>
-    <span ng-if="$ctrl.step == 8" translate="common.agree"></span>
-    <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length === 0" translate="pstnSetup.finalizePstn"></span>
-    <span ng-if="$ctrl.step == 10 && $ctrl.swivelNumbers.length !== 0" translate="pstnSetup.importNumbers"></span>
+    ng-click="$ctrl.nextStep()" ng-disabled="$ctrl.nextDisabled()" ng-hide="($ctrl.step === 7 && $ctrl.ftsw)">
+    <span ng-if="$ctrl.step === 6" translate="pstnSetup.placeOrder"></span>
+    <span ng-if="$ctrl.step === 7 || $ctrl.step === 11" translate="common.done"></span>
+    <span ng-if="!($ctrl.step === 6 || $ctrl.step === 7 || $ctrl.step === 8 || $ctrl.step === 10 || $ctrl.step === 11)" translate="common.next"></span>
+    <span ng-if="$ctrl.step === 8" translate="common.agree"></span>
+    <span ng-if="$ctrl.step === 10 && $ctrl.swivelNumbers.length === 0" translate="pstnSetup.finalizePstn"></span>
+    <span ng-if="$ctrl.step === 10 && $ctrl.swivelNumbers.length !== 0" translate="pstnSetup.importNumbers"></span>
   </button>
 </div>

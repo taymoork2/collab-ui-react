@@ -1,0 +1,13 @@
+<div class="grid-contents assignedTo" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.clearRows()">
+  <span class="feature-name">{{row.entity.displayField()}}
+    <i ng-if="row.entity.tooltip"
+      class="icon icon-info info-tooltip"
+      tooltip-placement="top"
+      tooltip="{{row.entity.tooltip}}"
+      tooltip-animation="false"
+      tooltip-append-to-body="true"
+      tooltip-trigger="mouseenter focus"
+      tabindex="0"
+      aria-label="{{row.entity.tooltip}}"></i>
+  </span>
+</div>

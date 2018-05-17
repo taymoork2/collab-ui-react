@@ -14,7 +14,7 @@ export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
       <article>
         <div class="active-card_header">
           <h4 translate="servicesOverview.cards.hybridTesting.title"></h4>
-          <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridTesting.description' | translate}}" tooltip-placement="bottom-right"></i>
+          <i class="icon icon-question-circle" tooltip="{{::'servicesOverview.cards.hybridTesting.description' | translate}}" tooltip-placement="bottom-right" tabindex="0" tooltip-trigger="focus mouseenter" aria-label="{{::'servicesOverview.cards.hybridTesting.description' | translate}}"></i>
         </div>
         <div class="active-card_content">
           <div class="active-card_section">
@@ -23,9 +23,9 @@ export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
           </div>
         </div>
         <div class="active-card_footer">
-          <a>
-            <span translate="{{'servicesOverview.cardStatus.'+ $ctrl.serviceStatus.status}}"></span>
+          <a class="active-card_footer_status-link">
             <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass" ng-click="$ctrl.openClusterMapping()"></cs-statusindicator>
+            <span translate="{{'servicesOverview.cardStatus.'+ $ctrl.serviceStatus.status}}"></span>
           </a>
         </div>
       </article>

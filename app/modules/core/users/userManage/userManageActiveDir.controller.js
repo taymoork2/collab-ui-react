@@ -10,6 +10,7 @@ require('./_user-manage.scss');
   function UserManageActiveDirController(Authinfo, FeatureToggleService, OnboardService, $state, $timeout, UserCsvService) {
     var vm = this;
 
+    vm.dirSyncStatus = 'success';
     vm.isUserAdmin = isUserAdmin;
     vm.onInit = onInit;
     vm.onNext = onNext;
@@ -20,7 +21,7 @@ require('./_user-manage.scss');
     vm.onInit();
 
     var isAtlasEmailSuppressToggle = false;
-    vm.ManageType = require('./userManage.keys').ManageType;
+    vm.ManageType = require('./shared/user-manage.keys').ManageType;
 
     //////////////////
     function onInit() {
@@ -59,7 +60,7 @@ require('./_user-manage.scss');
             break;
 
           case vm.ManageType.ADVANCED_DS:
-            $state.go('users.manage.advanced.add.ob.syncStatus');
+            $state.go('users.manage.dir-sync.add.ob.syncStatus');
             break;
         }
       }

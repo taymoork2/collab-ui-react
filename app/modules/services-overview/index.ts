@@ -1,6 +1,6 @@
 import './services-overview.scss';
 
-import { CardUsersSummaryComponent } from 'modules/services-overview/new-hybrid/card-users-summary/card-users-summary.component';
+import { CardCapacityBarComponent } from 'modules/services-overview/new-hybrid/card-capacity-bar/card-capacity-bar.component';
 import { EnableUsersModalComponent } from 'modules/services-overview/new-hybrid/enable-users-modal/enable-users-modal.component';
 import { EPTActiveCardComponent } from 'modules/services-overview/new-hybrid/active/ept-active-card.component';
 import { EPTInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/ept-inactive-card.component';
@@ -26,6 +26,10 @@ import { Office365TestModalComponent } from 'modules/services-overview/new-hybri
 import { ServicesOverviewComponent } from 'modules/services-overview/services-overview.component';
 import { HybridTestingInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hybrid-testing-inactive-card.component';
 import { HybridTestingActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hybrid-testing-active-card.component';
+import { HcsActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-active-card.component';
+import { HcsInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hcs-inactive-card.component';
+import { HcsUpgradeActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-upgrade-active-card.component';
+import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component';
 
 export default angular
   .module('services-overview', [
@@ -38,16 +42,18 @@ export default angular
     require('modules/core/proPack').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/users/userAdd/shared').default,
+    require('modules/hcs/task-manager/shared').default,
     require('modules/hds/services/hds.service'),
-    require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
     require('modules/hercules/private-trunk/private-trunk-services').default,
     require('modules/hercules/services/calendar-cloud-connector.service').default,
     require('modules/hercules/services/enterprise-private-trunk-service').default,
     require('modules/hercules/services/hybrid-services-cluster.service').default,
+    require('modules/hercules/services/hybrid-services-extras.service').default,
     require('modules/hercules/services/uss.service').default,
-    require('modules/hcs/task-manager/shared').default,
+    require('modules/services-overview/new-hybrid/card-users-summary').default,
+    require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
   ])
-  .component('cardUsersSummary', new CardUsersSummaryComponent())
+  .component('cardCapacityBar', new CardCapacityBarComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())
   .component('eptActiveCard', new EPTActiveCardComponent())
   .component('eptInactiveCard', new EPTInactiveCardComponent())
@@ -73,4 +79,8 @@ export default angular
   .component('servicesOverview', new ServicesOverviewComponent())
   .component('hybridTestingInactiveCard', new HybridTestingInactiveCardComponent())
   .component('hybridTestingActiveCard', new HybridTestingActiveCardComponent())
+  .component('hcsActiveCard', new HcsActiveCardComponent())
+  .component('hcsInactiveCard', new HcsInactiveCardComponent())
+  .component('hcsUpgradeActiveCard', new HcsUpgradeActiveCardComponent())
+  .component('hcsLicenseActiveCard', new HcsLicenseActiveCardComponent())
   .name;

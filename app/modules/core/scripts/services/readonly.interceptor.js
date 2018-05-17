@@ -15,6 +15,7 @@
   function ReadonlyInterceptor($q, $injector, $log) {
     var allowedList = [
       '/pcs/api/v2/',
+      '/pcs/api/v3/',
       '/api/v1/metrics',
       '/api/v1/compliance/',
       '/api/v1/logs/',
@@ -35,6 +36,7 @@
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',
+      '/preloadCaches',
       'webex.com/status',
       'collaborationhelp.cisco.com/status',
     ];

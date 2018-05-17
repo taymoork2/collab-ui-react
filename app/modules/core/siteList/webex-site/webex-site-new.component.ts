@@ -78,6 +78,7 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     this.sendTracking(this.Analytics.sections.WEBEX_SITE_MANAGEMENT.eventNames.CLIENT_VERSION_RADIO, { clientVersionSelected: clientVersion });
     this.clearError();
   }
+
   public validateMeetingSite(): void {
     this.disableValidateButton = true;
     if (_.isEmpty(this.siteModel.siteUrl)) {
@@ -90,6 +91,10 @@ class WebexSiteNewCtrl implements ng.IComponentController {
     }
     if (this.siteModel.setupType === undefined) {
       this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.noUserManagementSelected'), this.siteErrorType.USER_MGMT);
+      return;
+    }
+    if (_.some(this.newSitesArray, { siteUrl: this.siteModel.siteUrl })) {
+      this.showError(this.$translate.instant('firstTimeWizard.meetingSettingsError.duplicateSite'), this.siteErrorType.URL);
       return;
     }
     const siteName = this.siteModel.siteUrl.concat(this.Config.siteDomainUrl.webexUrl);

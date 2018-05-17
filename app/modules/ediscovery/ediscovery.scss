@@ -32,6 +32,11 @@
     background: $brand-white;
     border-bottom: 1px solid $gray-light-3;
 
+    .page-sub-header {
+      border-bottom: none;
+      background-color: transparent;
+    }
+
     .menu-container {
       padding-bottom: 5px;
 
@@ -64,7 +69,13 @@
   }
 
   .ediscovery-content-view {
+    height: 100vh;
+    padding-top: rem-calc(100);
     font-family: 'CiscoSansTT Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    [ui-view] {
+      height: 100%;
+    }
 
     button.fit {
       height: 30px;
@@ -95,19 +106,13 @@
   }
 
   .ediscovery-search {
-    height: 100vh;
 
     .basic-search {
       background-color: $brand-white;
-      padding-top: 8rem;
     }
 
     .advanced-search {
       background-color: $gray-light-4;
-    }
-
-    @media only screen and (max-height: 950px) {
-      padding-top: 6rem;
     }
 
     div.search-result-area {
@@ -421,7 +426,6 @@
         }
 
         .report-title {
-          font-family: 'CiscoSans';
           font-size: 16px;
           font-weight: 200;
           font-style: normal;
@@ -433,7 +437,6 @@
         }
 
         .report-info {
-          font-family: 'CiscoSans';
           font-size: 26px;
           font-weight: 200;
           font-style: normal;
@@ -583,14 +586,12 @@
 
   .ediscovery-reports {
     background-color: $gray-light-4;
-    min-height: 100vh;
+    height: 100%;
 
     .report-banner {
       padding-top: 9.5rem;
 
       &--generating {
-        padding-top: 6.4rem;
-
         .banner-padding {
           padding-bottom: 52px;
         }

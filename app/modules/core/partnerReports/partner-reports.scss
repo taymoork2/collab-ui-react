@@ -1,20 +1,43 @@
+@import 'reportCard/_report-card';
+@import 'reportFilter/_report-filter';
+@import 'reportSlider/_report-slider';
 @import '~@collabui/collab-ui/scss/settings/core';
 @import '~@collabui/collab-ui/scss/settings/page';
 @import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
-.partner-spark-reports {
-  &.content-container {
+.partner-reports {
+  @extend %content-subheader;
+  @extend %page-content-padding;
+
+  .sparkMetricsContent {
+    height: calc(100vh - (#{$page-header-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sparkMetricsContentWithReadOnly {
+    height: calc(100vh - (#{$page-header-height} + #{$read-only-banner-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .customer-report-filter {
+    width: vr-adjust(200);
+    @include vr-spacing(pl, 1.25);
+  }
+
+  .metricsContent {
     overflow: hidden !important;
     padding: 0 !important;
-    height: calc(100vh - (#{$top-bar-height} + (#{$top-bar-border-width} * 2) + #{$page-header-height})) !important;
   }
-  .full-size,
-  .full-size__iframe {
+
+  .fullSize {
     height: 100%;
     width: 100%;
-  }
-  #sparkReportsIframeLoading {
-    text-align: center;
   }
 
   .metrics-loading-icon {
@@ -30,5 +53,75 @@
 
   .metrics-loading-description {
     margin-top: 1rem;
+  }
+
+  .report-subheader {
+    @include vr-spacing(mt, 0.25);
+    @include vr-spacing(mr, 1);
+  }
+
+  .time-filter {
+    width: vr-adjust(200);
+  }
+
+  .customer-filter {
+    width: vr-adjust(350);
+  }
+
+  .report-download {
+    @include vr-spacing(mr, 1);
+    width: vr-adjust(125);
+  }
+
+  .report-filter-link:first-of-type {
+    padding: rem-calc(3) rem-calc(16) rem-calc(3) 0;
+  }
+
+  .report-filter-link:last-of-type {
+    border-right: none;
+  }
+
+  .report-filter-link {
+    display: inline;
+    border-right: rem-calc(1) solid $gray;
+    padding: rem-calc(3) rem-calc(16);
+
+    .report-link {
+      font-family: $brand-font-cisco-TT-Light;
+      font-size: rem-calc(14);
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+
+  .cs-card-layout {
+    margin-bottom: rem-calc(15);
+  }
+
+  .report-card,
+  .report-box {
+    .report-description {
+      position: relative;
+      z-index: 100;
+    }
+
+    .areachart {
+      font-size: vr-adjust(12);
+      height: vr-adjust(375);
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 50;
+    }
+  }
+
+  report-slider {
+    width: calc(100% - 135px); // subtracting the width and margin of the download button
+  }
+
+  .download-page {
+    @include vr-spacing(mh, 0.75);
+    width: vr-adjust(125);
   }
 }

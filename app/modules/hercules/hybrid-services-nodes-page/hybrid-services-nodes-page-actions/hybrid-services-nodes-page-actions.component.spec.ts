@@ -222,7 +222,7 @@ describe('HybridServicesNodesPageActionsComponentCtrl', () => {
 
   describe('actions for deregistering ECP nodes', () => {
 
-    it('should show for Hybrid Media nodes', () => {
+    it('should show for Video Mesh nodes', () => {
       const targetType = 'mf_mgmt';
       initController({}, 4, Function(), targetType);
       expect(ctrl.displayDeregisterNodeMenuItem(targetType)).toBeTruthy();
@@ -258,7 +258,7 @@ describe('HybridServicesNodesPageActionsComponentCtrl', () => {
 
   describe('actions for moving ECP nodes', () => {
 
-    it('should show for Hybrid Media nodes', () => {
+    it('should show for Video Mesh nodes', () => {
       const targetType = 'mf_mgmt';
       initController({}, 4, Function(), targetType);
       expect(ctrl.displayMoveNodeMenuItem(targetType)).toBeTruthy();
@@ -295,7 +295,7 @@ describe('HybridServicesNodesPageActionsComponentCtrl', () => {
 
   describe('maintenance mode', () => {
 
-    it('should show for Hybrid Media nodes', () => {
+    it('should show for Video Mesh nodes', () => {
       const targetType = 'mf_mgmt';
       initController({}, 4, Function(), targetType);
       expect(ctrl.displayMaintenanceModeMenuItem(targetType)).toBeTruthy();

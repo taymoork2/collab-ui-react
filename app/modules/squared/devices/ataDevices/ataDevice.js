@@ -9,7 +9,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function AtaDeviceController($modalInstance, $scope, Notification, FeatureToggleService, $stateParams, device) {
+  function AtaDeviceController($modalInstance, $scope, Notification, $stateParams, device) {
     var ata = this;
     var huronDeviceService = $stateParams.huronDeviceService;
 
@@ -17,10 +17,6 @@
     ata.isLoading = false;
 
     function init() {
-      FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
-        ata.ataRebootWarningToggle = response;
-      });
-
       $scope.$$postDigest(function () {
         $scope.$broadcast('rzSliderForceRender');
       });
@@ -94,7 +90,7 @@
       huronDeviceService.setSettingsForAta(ata.device, settings).then(function () {
         ata.isLoading = false;
         $modalInstance.close();
-        Notification.success(ata.ataRebootWarningToggle ? 'ataSettings.savedReboot' : 'ataSettings.saved');
+        Notification.success('ataSettings.savedReboot');
       });
     };
   }

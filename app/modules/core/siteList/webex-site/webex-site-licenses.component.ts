@@ -1,12 +1,14 @@
-import { IWebExSite, IPendingLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, ICenterDetails } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { WebExSite } from 'modules/core/setupWizard/meeting-settings/meeting-settings.model';
 import { Config } from 'modules/core/config/config';
+import { WebExSiteService } from './webex-site.service';
 class WebexSiteLicensesCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private Config: Config,
+    private WebExSiteService: WebExSiteService,
   ) {
   }
 
@@ -15,7 +17,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   public sitesArray: IWebExSite[];
   public existingWebexSites: WebExSite[];
   public distributedLicensesArray: IWebExSite[][];
-  public centerDetails: { centerType: string; volume: number; }[];
+  public centerDetails: ICenterDetails[];
   public isHideDescription: boolean;
   public onDistributionChange: Function;
   public onSendTracking: Function;
@@ -48,7 +50,12 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     if (this.sitesArray && this.conferenceLicensesInSubscription) {
-      this.centerDetails = this.getWebExMeetingsLicenseTypeDetails(this.conferenceLicensesInSubscription);
+        // if loaded from Setup Wizard, no center details are passed. Calculate center license totals from subscription.
+        // if loaded from Overview -> siteList controller, center details passed down from parent.
+        // if call to subscriptions/orderDetails fails, an empty array is passed. Calculate center license totals from subscription.
+      if (_.isEmpty(this.centerDetails)) {
+        this.centerDetails = this.WebExSiteService.extractCenterDetailsFromSingleSubscription(this.conferenceLicensesInSubscription);
+      }
       this.constructDistributedSitesArray();
     }
   }
@@ -65,8 +72,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
       this.distributedLicensesArray = _.map(this.sitesArray, (site: IWebExSite) => {
         return _.map(this.centerDetails, (center) => {
           return new WebExSite({
-            centerType: center.centerType,
-            quantity: 0,
+            centerType: center.serviceName,
+            quantity: (this.sitesArray.length === 1) ? center.quantity : 0,
             siteUrl: site.siteUrl,
             timezone: site.timezone,
             setupType: site.setupType,
@@ -95,7 +102,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
   private getTotalLicensesRemaining () {
     let licensesRemaining = 0;
     _.forEach(this.centerDetails, (center) => {
-      licensesRemaining += this.calculateLicensesRemaining(center.centerType);
+      licensesRemaining += this.calculateLicensesRemaining(center.serviceName);
     });
     return licensesRemaining;
   }
@@ -149,8 +156,8 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
 
   private calculateLicensesRemaining(centerType) {
     const siteArray = _.filter(_.flatten(this.distributedLicensesArray), { centerType: centerType });
-    const centerDetail = _.find(this.centerDetails, { centerType: centerType });
-    const licenseVolume = _.get<number>(centerDetail, 'volume');
+    const centerDetail = _.find(this.centerDetails, { serviceName: centerType });
+    const licenseVolume = _.get<number>(centerDetail, 'quantity');
 
     return (licenseVolume - this.sumOfWebExLicensesAssigned(siteArray));
   }
@@ -161,18 +168,6 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     });
 
     return result;
-  }
-
-  private getMeetingLicensesGroupedByOfferName(confServicesInActingSubscription): { offerName, volume }[] {
-    const meetingLicensesGrouped = _.groupBy(confServicesInActingSubscription, 'offerName');
-    return _.map(meetingLicensesGrouped, function (value, key) {
-      return {
-        offerName: key,
-        volume: _.reduce(value, function (total, o) {
-          return total + _.get(o, 'volume', 0);
-        }, 0),
-      };
-    });
   }
 
   private constructWebexLicensesPayload(distributedLicensesArray): WebExSite[] {
@@ -208,16 +203,6 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
     const licensePayload = this.constructWebexLicensesPayload(this.distributedLicensesArray);
     this.onDistributionChange({ sites: licensePayload, isValid: true });
   }
-
-  private getWebExMeetingsLicenseTypeDetails(confServicesInActingSubscription) {
-    const meetingLicenses = this.getMeetingLicensesGroupedByOfferName(confServicesInActingSubscription);
-    return _.map(meetingLicenses, (license: IPendingLicense) => {
-      return {
-        centerType: license.offerName,
-        volume: license.volume,
-      };
-    });
-  }
 }
 
 export class WebexSiteLicensesComponent implements ng.IComponentOptions {
@@ -226,6 +211,7 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
   public bindings = {
     sitesArray: '<',
     existingWebexSites: '<',
+    centerDetails: '<?',
     conferenceLicensesInSubscription: '<',
     isHideDescription: '<?',
     onDistributionChange: '&',

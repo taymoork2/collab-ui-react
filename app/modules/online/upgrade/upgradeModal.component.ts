@@ -1,26 +1,23 @@
-import { OnlineUpgradeService } from './upgrade.service';
-import { Notification } from 'modules/core/notifications';
-import { IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr, IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
+import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { OrganizationDeleteService } from 'modules/core/organizations/organization-delete/organization-delete.service';
 
 class OnlineUpgrade {
-  public subscriptionId: string;
-  public cancelLoading: boolean = false;
-  public showCancelButton: boolean = false;
   public showBmmpButton: boolean = false;
+  public showMoreOptionsButton: boolean = false;
   public bodyText: string = '';
-  public cancelBodyText: string = '';
   public titleText: string = '';
   public bmmpAttr: IBmmpAttr;
+  private accountExpiredModal: IToolkitModalServiceInstance;
 
   /* @ngInject */
   constructor(
-    private $state: ng.ui.IStateService,
+    private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
-    private Analytics,
     private Auth,
     private Authinfo,
-    private Notification: Notification,
-    private OnlineUpgradeService: OnlineUpgradeService,
+    private OnlineUpgradeService,
+    private OrganizationDeleteService: OrganizationDeleteService,
   ) {}
 
   public $onInit(): void {
@@ -34,10 +31,17 @@ class OnlineUpgrade {
     } else {
       this.titleText = this.$translate.instant('onlineUpgradeModal.expiredTitle');
       this.bodyText = this.$translate.instant('onlineUpgradeModal.body');
-      this.cancelBodyText = this.$translate.instant('onlineUpgradeModal.cancelBody');
       this.showBmmpButton = true;
-      this.showCancelButton = !this.OnlineUpgradeService.hasCancelledSubscriptions() &&
-                              !this.OnlineUpgradeService.hasOnlySparkSubscriptions();
+      // allow customer to downgrade to Freemium
+      this.showMoreOptionsButton = !this.OnlineUpgradeService.hasCancelledSubscriptions() &&
+                                   !this.OnlineUpgradeService.hasOnlySparkSubscriptions() &&
+                                   !this.OnlineUpgradeService.hasFreemiumSubscription();
+    }
+    if (!this.showMoreOptionsButton) {
+      this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+      .then((result) => {
+        this.showMoreOptionsButton = result;
+      });
     }
     if (this.showBmmpButton) {
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {
@@ -53,24 +57,19 @@ class OnlineUpgrade {
     }
   }
 
-  public cancel(): void {
-    this.cancelLoading = true;
-    this.Analytics.trackEvent(this.Analytics.sections.ONLINE_ORDER.eventNames.FREEMIUM, {
-      subscriptionId: this.bmmpAttr.subscriptionId,
+  public openAccountExpiredModal(): void {
+    this.dismissAccountExpiredModal();
+    this.accountExpiredModal = this.$modal.open({
+      template: '<account-expired-modal dismiss="$dismiss()"></account-expired-modal>',
+      backdrop: 'static',
+      keyboard: false,
     });
-    this.OnlineUpgradeService.cancelSubscriptions()
-      .then(() => {
-        this.Notification.success('onlineUpgradeModal.cancelSuccess');
-        this.OnlineUpgradeService.dismissModal();
-        this.$state.go('login', {
-          reauthorize: true,
-        }, {
-          reload: true,
-        });
-      })
-      .finally(() => {
-        this.cancelLoading = false;
-      });
+  }
+
+  public dismissAccountExpiredModal(): void {
+    if (this.accountExpiredModal) {
+      this.accountExpiredModal.dismiss();
+    }
   }
 
   public logout(): void {

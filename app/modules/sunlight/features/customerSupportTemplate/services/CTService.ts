@@ -15,6 +15,86 @@ export class CTService {
   ) {
   }
 
+  public typeOptions = [{
+    id: 'email',
+    text: this.$translate.instant('careChatTpl.typeEmail'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Work_Email',
+    },
+  }, {
+    id: 'name',
+    text: this.$translate.instant('careChatTpl.typeName'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_First_Name',
+    },
+  }, {
+    id: 'category',
+    text: this.$translate.instant('careChatTpl.typeCategory'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'category',
+    },
+  }, {
+    id: 'phone',
+    text: this.$translate.instant('careChatTpl.typePhone'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Mobile_Phone',
+    },
+  }, {
+    id: 'id',
+    text: this.$translate.instant('careChatTpl.typeId'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.customer',
+      fieldName: 'Context_Customer_External_ID',
+    },
+  }, {
+    id: 'custom',
+    text: this.$translate.instant('careChatTpl.typeCustom'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'cccCustom',
+    },
+  }, {
+    id: 'reason',
+    text: this.$translate.instant('careChatTpl.typeReason'),
+    dictionaryType: {
+      fieldSet: 'cisco.base.ccc.pod',
+      fieldName: 'cccChatReason',
+    },
+  }];
+
+  public categoryTypeOptions = [{
+    text: this.$translate.instant('careChatTpl.categoryTextCustomer'),
+    id: 'customerInfo',
+
+  }, {
+    text: this.$translate.instant('careChatTpl.categoryTextRequest'),
+    id: 'requestInfo',
+  }];
+
+  public requiredOptions = [{
+    text: this.$translate.instant('careChatTpl.requiredField'),
+    id: 'required',
+  }, {
+    text: this.$translate.instant('careChatTpl.optionalField'),
+    id: 'optional',
+  }];
+
+  public getCategoryTypeObject = function (typeId) {
+    return _.find(this.categoryTypeOptions, {
+      id: typeId,
+    });
+  };
+
+  public getTypeObject = function (typeId) {
+    return _.find(this.typeOptions, {
+      id: typeId,
+    });
+  };
+
   public getPromptTimeOptions() {
     return [
       { label: this.$translate.instant('careChatTpl.promptTimeOption1'), value: 30 },
@@ -87,10 +167,17 @@ export class CTService {
     });
   }
 
-  public generateCodeSnippet(templateId: uuid) {
+  public generateCodeSnippet(templateId: uuid, templateName: String) {
     const appName = this.UrlConfig.getSunlightBubbleUrl();
     const orgId = this.Authinfo.getOrgId();
+    const orgName = this.Authinfo.getOrgName();
+    const templateNameHelpText = this.$translate.instant('careChatTpl.embedCodeSnippet.templateNameHelpText',
+      { templateName: templateName });
+    const orgNameHelpText = this.$translate.instant('careChatTpl.embedCodeSnippet.orgNameHelpText',
+      { orgName: orgName });
     return '<script>\n' +
+      '//' + templateNameHelpText + '\n' +
+      '//' + orgNameHelpText + '\n' +
       '  (function(document, script) {\n' +
       '  var bubbleScript = document.createElement(script);\n' +
       '  e = document.getElementsByTagName(script)[0];\n' +
@@ -211,10 +298,22 @@ export class CTService {
         templateId: function () {
           return templateId;
         },
+        templateName: function () {
+          return templateName;
+        },
         templateHeader: function () {
           return header + templateName;
         },
       },
+    });
+  }
+
+  public openEmbedCodeModalNew(templateId, templateName) {
+    const header = this.$translate.instant('careChatTpl.embedCodeFor');
+    const templateHeader = `${header}${templateName}`;
+    this.$modal.open({
+      template: `<ct-embed-code-modal-component dismiss="$dismiss()" template-id="${templateId}" template-name="${templateName}" template-header="${templateHeader}"></ct-embed-code-modal-component>`,
+      type: 'small',
     });
   }
 

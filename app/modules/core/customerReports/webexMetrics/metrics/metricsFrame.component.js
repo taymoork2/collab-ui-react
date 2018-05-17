@@ -1,3 +1,5 @@
+require('./metrics-frame.scss');
+
 (function () {
   'use strict';
 

@@ -12,16 +12,17 @@ var ed = moment().subtract(30, 'days').format();
 describe('Service: EdiscoveryService', function () {
   beforeEach(angular.mock.module(ediscoveryModule));
 
-  var Service, httpBackend, Authinfo, UrlConfig, $q, $rootScope, $state;
+  var Service, httpBackend, Authinfo, FeatureToggleService, UrlConfig, $q, $rootScope, $state;
   var argonautUrlBase, responseUrl, urlBase;
 
-  beforeEach(inject(function ($httpBackend, _$q_, _$rootScope_, _$state_, _Authinfo_, _EdiscoveryService_, _UrlConfig_) {
+  beforeEach(inject(function ($httpBackend, _$q_, _$rootScope_, _$state_, _Authinfo_, _EdiscoveryService_, _FeatureToggleService_, _UrlConfig_) {
     Service = _EdiscoveryService_;
     httpBackend = $httpBackend;
     $q = _$q_;
     $rootScope = _$rootScope_;
     $state = _$state_;
     Authinfo = _Authinfo_;
+    FeatureToggleService = _FeatureToggleService_;
     UrlConfig = _UrlConfig_;
     argonautUrlBase = UrlConfig.getArgonautReportUrl();
     urlBase = UrlConfig.getAdminServiceUrl();
@@ -33,11 +34,14 @@ describe('Service: EdiscoveryService', function () {
       .respond({});
 
     spyOn(Authinfo, 'getOrgId').and.returnValue(orgId);
+    spyOn(FeatureToggleService, 'atlasEdiscoveryJumboReportsGetStatus').and.returnValue($q.resolve(false));
+    spyOn(Service, 'downloadReportWithSaveAs').and.returnValue($q.resolve());
+    spyOn(Service, 'downloadReportLegacy').and.returnValue($q.resolve());
     spyOn($state, 'go');
   }));
 
   afterEach(function () {
-    Service = httpBackend = Authinfo = UrlConfig = argonautUrlBase = responseUrl = urlBase = $q = null;
+    Service = httpBackend = Authinfo = FeatureToggleService = UrlConfig = argonautUrlBase = responseUrl = urlBase = $q = null;
   });
 
   describe('Argonaut Service API', function () {
@@ -321,6 +325,27 @@ describe('Service: EdiscoveryService', function () {
         done();
       });
       httpBackend.flush();
+    });
+  });
+
+  describe('Download Report Implementation', function () {
+    it('should call the old implementation of download report if FT is not set', function () {
+      Service.downloadReport()
+        .then(function () {
+          expect(Service.downloadReportLegacy).toHaveBeenCalled();
+          expect(Service.downloadReportWithSaveAs).not.toHaveBeenCalled();
+        });
+      $rootScope.$apply();
+    });
+
+    it('should call the old implementation of download report if FT is not set', function () {
+      FeatureToggleService.atlasEdiscoveryJumboReportsGetStatus.and.returnValue($q.resolve(true));
+      Service.downloadReport()
+        .then(function () {
+          expect(Service.downloadReportLegacy).not.toHaveBeenCalled();
+          expect(Service.downloadReportWithSaveAs).toHaveBeenCalled();
+        });
+      $rootScope.$apply();
     });
   });
 });

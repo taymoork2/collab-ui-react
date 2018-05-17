@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="aaConfigureApiModal.cancel()"></button>
+  <button type="button" class="close" ng-click="aaConfigureApiModal.cancel()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="autoAttendant.configureRestApi"></h3>
 </div>
 <div class="modal-body">
@@ -11,10 +11,10 @@
       <div class="large-8 medium-8 small-12 columns">
         <div class="row">
           <div  ng-if="aaConfigureApiModal.isDynamicToggle()" class="aa-dynamic-prompt aa-message-only-type large-11 medium-11 small-11 columns">
-            <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url" 
-            dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues" 
-            insert-element="insertElement" aa-change ng-keyup = "aaConfigureApiModal.saveDynamicUi()" 
-            id="configureApiUrl{{schedule + index}}" name="url" 
+            <dynamic-prompt class="small-12 columns dynamic-prompt aa-message-height" ng-model="aaConfigureApiModal.url"
+            dynamic-tags="aaConfigureApiModal.dynamicTags" model-values="aaConfigureApiModal.dynamicValues"
+            insert-element="insertElement" aa-change ng-keyup = "aaConfigureApiModal.saveDynamicUi()"
+            id="configureApiUrl{{schedule + index}}" name="url"
             data-placeholder="{{:: aaConfigureApiModal.messageInputPlaceholder}}"
             ng-blur = "aaConfigureApiModal.getUrlErrorMessages()"
             ng-class = "{'aa-rest-url-box-error' : aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage,
@@ -31,7 +31,7 @@
           <div class="large-12 medium-12 small-12 columns aa-rest-url-helper-text">
             <label class ="cs-input__help-text" translate = "autoAttendant.restApiUrlHelperText"></label>
           </div>
-          <div id = "aaRestErrorMessage" class = "aa-rest-url-error-message large-12 medium-12 small-12 columns" 
+          <div id = "aaRestErrorMessage" class = "aa-rest-url-error-message large-12 medium-12 small-12 columns"
           ng-if = "aaConfigureApiModal.showFullErrorMessage || aaConfigureApiModal.showSecureUrlErrorMessage">
             <div class="aa-rest-error-icon"></div>
             <div class = "aa-rest-url-error" ng-if = "aaConfigureApiModal.showFullErrorMessage" translate = "autoAttendant.completeHttpsError"></div>
@@ -51,7 +51,15 @@
           <label class="h4" translate="autoAttendant.configureApiAuthentication"></label>
         </div>
         <div class="large-4 medium-4 small-12 columns">
-          <cs-toggle-switch class="aa-toggle" ng-model="aaConfigureApiModal.basicAuthButton" ng-click="aaConfigureApiModal.onBasicAuthSlider()" toggle-id="BasicAuthToggle" name="BasicAuthToggle" size="small"></cs-toggle-switch>
+          <cs-toggle-switch
+            class="aa-toggle"
+            ng-model="aaConfigureApiModal.basicAuthButton"
+            ng-click="aaConfigureApiModal.onBasicAuthSlider()"
+            toggle-id="BasicAuthToggle"
+            name="BasicAuthToggle"
+            size="small"
+            cs-aria-label="{{::'autoAttendant.configureApiAuthentication' | translate}}">
+          </cs-toggle-switch>
         </div>
       </div>
       <div class="row aa-rest-margin">
@@ -100,7 +108,13 @@
       </div>
     <div class="row">
       <div class="large-12 medium-12 small-12 columns">
-        <button id="testBtn" class="btn btn-primary aa-rest-test-button-spacing" ng-click="aaConfigureApiModal.callTestRestApiConfigs()" ng-disabled="aaConfigureApiModal.isTestDisabled();">{{ :: 'common.test' | translate }}</button>
+        <button
+          id="testBtn"
+          class="btn btn-primary aa-rest-test-button-spacing"
+          ng-click="aaConfigureApiModal.callTestRestApiConfigs()"
+          ng-disabled="aaConfigureApiModal.isTestDisabled();"
+          translate="common.test">
+        </button>
       </div>
     </div>
     <div class="row">
@@ -127,7 +141,7 @@
             <div class="tab-content">
               <div class="row">
                 <div class="large-12 medium-12 small-12 columns">
-                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiResponse" cols="20" rows="7" 
+                  <textarea class="aa-message-textarea aa-tab-text-area " id="restApiResponse" cols="20" rows="7"
                   maxlength="2000" ng-readonly="true" ng-model="aaConfigureApiModal.restApiResponse"></textarea>
                 </div>
               </div>
@@ -140,12 +154,12 @@
             <div class="tab-content">
               <div class="row">
                 <div class="large-12 medium-12 small-12 columns">
-                  <table class="table table-striped var-assignment-table"> 
-                    <tr>    
-                      <th translate = "autoAttendant.restApiResponseVar"></th>    
-                      <th translate="autoAttendant.restApiResponseVal"></th>    
-                      <th translate="autoAttendant.restApiCustomVar"></th>    
-                    </tr> 
+                  <table class="table table-striped var-assignment-table">
+                    <tr>
+                      <th translate = "autoAttendant.restApiResponseVar"></th>
+                      <th translate="autoAttendant.restApiResponseVal"></th>
+                      <th translate="autoAttendant.restApiCustomVar"></th>
+                    </tr>
                     <tr ng-repeat = "data in aaConfigureApiModal.tableData">
                       <td>
                         {{data.responseKey}}
@@ -178,8 +192,34 @@
   </div>
 </div>
 <div class="modal-footer">
- <button id="cancelBtn" class="btn" ng-click="aaConfigureApiModal.cancel()" ng-if='aaConfigureApiModal.currentStep === 1'>{{ :: 'common.cancel' | translate }}</button>
- <button id="backBtn" class="btn btn-default" ng-click="aaConfigureApiModal.stepBack()" ng-hide='aaConfigureApiModal.currentStep === 1'>{{ :: 'common.back' | translate }}</button> 
- <button id="nextBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.stepNext()" ng-hide='aaConfigureApiModal.currentStep === 2' ng-disabled="aaConfigureApiModal.isNextDisabled();">{{ :: 'common.next' | translate }}</button>    
- <button id="saveBtn" class="btn btn-primary" ng-click="aaConfigureApiModal.save()" ng-if='aaConfigureApiModal.currentStep === 2' ng-disabled="aaConfigureApiModal.isSaveDisabled();">{{ :: 'common.save' | translate }}</button>
+  <button
+    id="cancelBtn"
+    class="btn"
+    ng-click="aaConfigureApiModal.cancel()"
+    ng-if="aaConfigureApiModal.currentStep === 1"
+    translate="common.cancel">
+  </button>
+  <button
+    id="backBtn"
+    class="btn btn-default"
+    ng-click="aaConfigureApiModal.stepBack()"
+    ng-hide="aaConfigureApiModal.currentStep === 1"
+    translate="common.back">
+  </button>
+  <button
+    id="nextBtn"
+    class="btn btn-primary"
+    ng-click="aaConfigureApiModal.stepNext()"
+    ng-hide="aaConfigureApiModal.currentStep === 2"
+    ng-disabled="aaConfigureApiModal.isNextDisabled();"
+    translate="common.next">
+  </button>
+  <button
+    id="saveBtn"
+    class="btn btn-primary"
+    ng-click="aaConfigureApiModal.save()"
+    ng-if="aaConfigureApiModal.currentStep === 2"
+    ng-disabled="aaConfigureApiModal.isSaveDisabled();"
+    translate="common.save">
+  </button>
 </div>

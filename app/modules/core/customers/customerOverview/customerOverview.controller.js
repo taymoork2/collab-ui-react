@@ -31,8 +31,6 @@ require('./_customer-overview.scss');
     vm.hasSubview = hasSubview;
     vm.goToSubview = goToSubview;
     vm.showContractIncompleteFn = showContractIncompleteFn;
-    vm.getCareDetailsQuantity = getCareDetailsQuantity;
-    vm.getCareDetailsSub = getCareDetailsSub;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -78,7 +76,6 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasITProPackGetStatus(),
       FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
       FeatureToggleService.hI1635GetStatus(),
-      FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
     ]).then(function (results) {
       if (_.find(vm.currentCustomer.offers, {
         id: Config.offerTypes.roomSystems,
@@ -87,7 +84,6 @@ require('./_customer-overview.scss');
       }
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
-      vm.cvcAsCdcFeatureToggle = results[5];
       setOffers(isCareEnabled, isAdvanceCareEnabled);
       vm.isProPackEnabled = results[2];
       vm.isNewPatchFlow = results[3];
@@ -96,32 +92,6 @@ require('./_customer-overview.scss');
 
     function showContractIncompleteFn() {
       return vm.isHI1635Enabled && vm.showContractIncomplete;
-    }
-
-    function getCareDetailsQuantity(trialService) {
-      return (vm.cvcAsCdcFeatureToggle ? Math.min(50, trialService.qty) : trialService.qty);
-    }
-
-    function getCareDetailsSub(trialServiceSub) {
-      var featureList = [];
-
-      var careAdvanceFeatureData = _.filter(trialServiceSub, function (feature) {
-        return feature.offerTypes === 'CAREVOICE';
-      });
-
-      var careFeatureData = _.filter(trialServiceSub, function (feature) {
-        return feature.offerTypes === 'CARE';
-      });
-
-
-      if (vm.cvcAsCdcFeatureToggle && careAdvanceFeatureData.length >= 0) {
-        careFeatureData[0].name = careAdvanceFeatureData[0].name;
-        careFeatureData[0].qty = Math.min(50, careFeatureData[0].qty + careAdvanceFeatureData[0].qty);
-        featureList = careFeatureData;
-      } else {
-        featureList = trialServiceSub;
-      }
-      return featureList;
     }
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
@@ -135,9 +105,8 @@ require('./_customer-overview.scss');
         .get('trialServices')
         .map(function (trialService) {
           return _.assign({}, trialService, {
-            detail: (trialService.isSparkCare ? getCareDetailsQuantity(trialService) : trialService.qty) + ' ' + QTY,
+            detail: trialService.qty + ' ' + QTY,
             actionAvailable: hasSubview(trialService),
-            sub: trialService.isSparkCare ? getCareDetailsSub(trialService.sub) : trialService.sub,
           });
         })
         .value();
@@ -467,7 +436,7 @@ require('./_customer-overview.scss');
     function goToSubview(service, options) {
       if (service.hasWebex || service.isMeeting) {
         var isTrial = _.get(options, 'isTrial', false);
-        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList, vm.currentCustomer.customerOrgId) : service.sub;
         $state.go('customer-overview.meetingDetail', {
           meetingLicenses: services,
         });
@@ -530,7 +499,7 @@ require('./_customer-overview.scss');
       }, vm.customerOrgId, params);
     }
 
-    //if vm.isMediaFusionEnabled then we ask the user to deactivate hybrid media service and not allowing deletion.
+    //if vm.isMediaFusionEnabled then we ask the user to deactivate Video Mesh service and not allowing deletion.
     function deleteTestOrg() {
       if (vm.isTest) {
         if (vm.isMediaFusionEnabled) {

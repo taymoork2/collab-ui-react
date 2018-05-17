@@ -2,7 +2,6 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
 
   public title = '';
   public features: any[] = [];
-  public hasCall: Boolean = false;
   public dismiss: Function;                   // Dismiss callback for modal dialog
 
   /* @ngInject*/
@@ -16,12 +15,11 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
    * Initialize the controller
    */
   public $onInit() {
-
-    this.hasCall = this.Authinfo.isSquaredUC();
     this.title = 'sunlightDetails.newFeatures.newCustomerSupportTemplateModalTitle';
 
     const serviceCards: any[] = [];
     const serviceColor =  'feature-cst-color';
+    let isAACardDisabled = false;
     serviceCards.push({ //web Template
       id: 'webTemplate',
       label: 'sunlightDetails.newFeatures.webTemplate',
@@ -31,13 +29,18 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
       disabled: false,
     });
 
+    if (this.$state.isSparkCallConfigured === false && this.$state.isHybridAndEPTConfigured === false) {
+      isAACardDisabled = true;
+    }
     serviceCards.push({ //AutoAttendant
       id: 'AA',
       label: 'autoAttendant.title',
-      description: 'autoAttendant.modalDescription',
+      description: 'autoAttendant.careModalDescription',
       code: 'autoAttendant.code',
       color: 'feature-aa-color',
-      disabled: false,
+      warning: 'autoAttendant.noCallWarningMessage',
+      disabled: isAACardDisabled,
+      showWarning: isAACardDisabled,
     });
 
     if (this.Authinfo.isCare()) {
@@ -59,6 +62,13 @@ class CareHybridFeatureModalCtrl implements ng.IComponentController {
       });
     }
     this.dismiss();
+  }
+
+  public learnMoreLink(): void {
+    const templateStr = '<care-voice-features-modal dismiss="$dismiss()" class="care-modal"></care-voice-features-modal>';
+    this.$modal.open({
+      template: templateStr,
+    });
   }
 }
 

@@ -125,12 +125,9 @@ describe('Controller: AAInsertionElementCtrl', function () {
 
     it('elementText and readAs values should be updated upon calling mainClickFn from REST block', function () {
       $scope.aaElementType = 'REST';
-      controller = $controller('AAInsertionElementCtrl', {
-        $scope: $scope,
-      });
-      $scope.$apply();
-      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
-      actionEntry.dynamicList = [{
+      spyOn($rootScope, '$broadcast');
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      actionEntry.url = [{
         action: {
           eval: {
             value: 'testVar',
@@ -140,6 +137,7 @@ describe('Controller: AAInsertionElementCtrl', function () {
         htmlModel: encodeURIComponent(ele),
       }];
       menuEntry.addAction(actionEntry);
+      $scope.$apply();
       var variableSelection = {
         label: 'testVar',
         value: 'testVal',
@@ -152,6 +150,8 @@ describe('Controller: AAInsertionElementCtrl', function () {
       modal.resolve(result);
       $scope.$apply();
       expect(controller.elementText).toBe('testVar');
+      expect(_.get(menuEntry.actions[0], 'dynamicList[0].action.eval.value', '')).toBe(_.get(menuEntry.actions[0], 'url[0].action.eval.value', ''));
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('CE Updated');
     });
   });
 
@@ -237,21 +237,18 @@ describe('Controller: AAInsertionElementCtrl', function () {
 
     it('should clear out elementText and readAs upon calling of closeClickFn from REST CTRL', function () {
       $scope.aaElementType = 'REST';
-      controller = $controller('AAInsertionElementCtrl', {
-        $scope: $scope,
-      });
-      $scope.$apply();
-      action = AutoAttendantCeMenuModelService.newCeActionEntry('dynamic', '');
-      action.dynamicList = [{
+      var actionEntry = AutoAttendantCeMenuModelService.newCeActionEntry('doREST', '');
+      actionEntry.url = [{
         action: {
           eval: {
-            value: 'testValue',
+            value: 'testVar',
           },
         },
         isDynamic: true,
         htmlModel: encodeURIComponent(ele),
       }];
-      menuEntry.addAction(action);
+      menuEntry.addAction(actionEntry);
+      $scope.$apply();
       controller.closeClickFn();
       expect(controller.elementText).toBe('');
       expect(controller.readAs).toBe('');

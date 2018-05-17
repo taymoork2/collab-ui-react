@@ -42,11 +42,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.AUTO_AGREEMENT,
+              supportAgreementLinkingMode: true,
             };
           }, 2000),
         },
         isSiteAdmin: false,
-        supportAgreementLinkingMode: true,
         domains: [],
       },
       {
@@ -64,11 +64,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.MANUAL,
+              supportAgreementLinkingMode: true,
             };
           }, 3000),
         },
         isSiteAdmin: false,
-        supportAgreementLinkingMode: true,
         domains: [],
       },
       {
@@ -86,11 +86,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.AUTO_VERIFY_DOMAIN,
+              supportAgreementLinkingMode: true,
             };
           }, 2000),
         },
         isSiteAdmin: true,
-        supportAgreementLinkingMode: false,
         domains: [],
       },
       {
@@ -108,11 +108,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.AUTO_VERIFY_DOMAIN,
+              supportAgreementLinkingMode: true,
             };
           }, 2000),
         },
         isSiteAdmin: true,
-        supportAgreementLinkingMode: false,
         domains: [],
       },
       {
@@ -131,11 +131,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.MANUAL,
+              supportAgreementLinkingMode: true,
             };
           }, 1000),
         },
         isSiteAdmin: true,
-        supportAgreementLinkingMode: true,
         domains: [],
       },
       {
@@ -154,11 +154,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.UNSET,
+              supportAgreementLinkingMode: false,
             };
           }, 1000),
         },
         isSiteAdmin: true,
-        supportAgreementLinkingMode: true,
         domains: [],
       },
       { // TODO: How to simulate 'old' api...
@@ -177,11 +177,11 @@ export class LinkedSitesMockService {
           siteInfoPromise: this.$timeout( () => {
             return <IACWebexSiteinfoResponse> {
               accountLinkingMode: LinkingMode.UNSET,
+              supportAgreementLinkingMode: false,
             }; // TODO: dont return enything because it's unsupported ???
           }, 1000),
         },
         isSiteAdmin: true,
-        supportAgreementLinkingMode: false,
         domains: [],
       },
     ];

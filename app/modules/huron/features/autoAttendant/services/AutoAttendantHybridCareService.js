@@ -1,3 +1,5 @@
+// TODO: convert this file to TypeScript
+
 (function () {
   'use strict';
 
@@ -7,11 +9,15 @@
 
   /* @ngInject */
   function AutoAttendantHybridCareService($q, Authinfo, PrivateTrunkService, ServiceDescriptorService) {
+    var checkForHybridAndEPTConfigured = false;
+
     var service = {
       isHybridCallConfigured: isHybridCallConfigured,
       isEPTConfigured: isEPTConfigured,
       isHybridAndEPTConfigured: isHybridAndEPTConfigured,
       isSparkCallConfigured: isSparkCallConfigured,
+      setHybridandEPTConfiguration: setHybridandEPTConfiguration,
+      getHybridandEPTConfiguration: getHybridandEPTConfiguration,
     };
 
     return service;
@@ -70,6 +76,16 @@
 
     function isSparkCallConfigured() {
       return Authinfo.isSquaredUC();
+    }
+
+    function setHybridandEPTConfiguration(value) {
+      //In AA, this check has been set during AA builder main controller
+      checkForHybridAndEPTConfigured = value;
+    }
+
+    function getHybridandEPTConfiguration() {
+      // In AA, to check if hybird and EPT is configured, use this function
+      return checkForHybridAndEPTConfigured;
     }
   }
 })();

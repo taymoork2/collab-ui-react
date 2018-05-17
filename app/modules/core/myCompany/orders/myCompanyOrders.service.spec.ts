@@ -2,6 +2,9 @@ import { IOrderDetail, IOrderList } from './myCompanyOrders.service';
 
 describe('Service: MyCompanyOrdersService', () => {
   const onlineCustId: string = '98765';
+  const orgId: string = 'org_id';
+  const userEmail = 'user@company.com';
+  const userId = 'user_id';
   const orderUrl: string = 'https://atlas-intb.ciscospark.com/admin/api/v1/commerce/purchaseorders/customer/' + onlineCustId;
   beforeEach(function () {
     this.initModules('Core');
@@ -10,6 +13,7 @@ describe('Service: MyCompanyOrdersService', () => {
       'Authinfo',
       'MyCompanyOrdersService',
       'UrlConfig',
+      'UserListService',
     );
     spyOn(this.Authinfo, 'getCustomerId').and.returnValue('12345');
     spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([{
@@ -21,6 +25,14 @@ describe('Service: MyCompanyOrdersService', () => {
       customerType: 'Online',
     } ],
     );
+    spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve({
+      data: {
+        Resources: [{
+          userName: userEmail,
+          id: userId,
+        }],
+      },
+    }));
 
     const purchaseOrdersList: IOrderDetail[] = [{
       externalOrderId: '123',
@@ -56,10 +68,21 @@ describe('Service: MyCompanyOrdersService', () => {
 
   it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(orderUrl).respond(500);
-    this.MyCompanyOrdersService.getOrderDetails().catch(response => {
+    this.MyCompanyOrdersService.getOrderDetails().then(fail)
+    .catch(response => {
       expect(response.data).toBeUndefined();
       expect(response.status).toEqual(500);
     });
     this.$httpBackend.flush();
+  });
+
+  it('should get the user ID from response', function () {
+    let testUserId;
+    this.MyCompanyOrdersService.getUserId(orgId, userEmail).then(response => {
+      testUserId = response;
+    });
+    this.$scope.$apply();
+
+    expect(testUserId).toEqual(userId);
   });
 });

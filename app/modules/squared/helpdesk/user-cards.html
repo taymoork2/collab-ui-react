@@ -152,12 +152,36 @@
               <span>{{helpdeskUserCtrl.hybridServicesCard.uc.status.resourceGroup.name}}</span>
             </div>
           </div>
-          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showDirectoryUri">
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showUserNumbers && helpdeskUserCtrl.hybridServicesCard.uc.directoryUri">
             <div class="columns small-4 details-heading">
               <span>{{::'cloudExtensions.sipUri' | translate}}:</span>
             </div>
             <div class="columns small-8 details-value">
               <span>{{helpdeskUserCtrl.hybridServicesCard.uc.directoryUri}}</span>
+            </div>
+          </div>
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showUserNumbers && helpdeskUserCtrl.hybridServicesCard.uc.primaryDn">
+            <div class="columns small-4 details-heading">
+              <span>{{::'cloudExtensions.primaryDN' | translate}}:</span>
+            </div>
+            <div class="columns small-8 details-value">
+              <span>{{helpdeskUserCtrl.hybridServicesCard.uc.primaryDn}}</span>
+            </div>
+          </div>
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showUserNumbers && helpdeskUserCtrl.hybridServicesCard.uc.telephoneNumber">
+            <div class="columns small-4 details-heading">
+              <span>{{::'cloudExtensions.telephoneNumber' | translate}}:</span>
+            </div>
+            <div class="columns small-8 details-value">
+              <span>{{helpdeskUserCtrl.hybridServicesCard.uc.telephoneNumber}}</span>
+            </div>
+          </div>
+          <div class="row collapse" ng-if="helpdeskUserCtrl.hybridServicesCard.uc.showUserNumbers && helpdeskUserCtrl.hybridServicesCard.uc.ucmCluster">
+            <div class="columns small-4 details-heading">
+              <span>{{::'cloudExtensions.ucmCluster' | translate}}:</span>
+            </div>
+            <div class="columns small-8 details-value">
+              <span>{{helpdeskUserCtrl.hybridServicesCard.uc.ucmCluster}}</span>
             </div>
           </div>
         </div>

@@ -1,3 +1,5 @@
+import { AutoAssignTemplateService } from 'modules/core/users/shared/auto-assign-template';
+
 class AutoAssignTemplateManageOptionsController implements ng.IComponentController {
 
   private readonly DEFAULT_AUTO_ASSIGN_TEMPLATE = 'Default';
@@ -7,29 +9,14 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
 
   /* @ngInject */
   constructor(
-    private $q: ng.IQService,
-    private $state: ng.ui.IStateService,
     private $translate,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
     private ModalService,
     private Notification,
   ) {}
 
   public modifyAutoAssignTemplate() {
-    this.$q.all({
-      defaultAutoAssignTemplate: this.AutoAssignTemplateService.getDefaultTemplate(),
-      subscriptions: this.AutoAssignTemplateService.getSortedSubscriptions(),
-    })
-    .then((results) => {
-      const stateData = this.AutoAssignTemplateService.toStateData(results.defaultAutoAssignTemplate, results.subscriptions);
-      this.$state.go('users.manage.edit-auto-assign-template-modal', {
-        prevState: 'users.manage.picker',
-        stateData: stateData,
-      });
-    })
-    .catch((response) => {
-      this.Notification.errorResponse(response, 'userManage.org.modifyAutoAssign.modifyError');
-    });
+    this.AutoAssignTemplateService.gotoEditAutoAssignTemplate();
   }
 
   public activateAutoAssignTemplate() {
@@ -70,8 +57,9 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       dismiss: this.$translate.instant('common.cancel'),
       btnType: 'alert',
     }).result.then(() => {
-      const templateId = _.get(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
-      return this.AutoAssignTemplateService.deleteTemplate(templateId)
+      const templateId = _.get<string>(this.autoAssignTemplates, `${this.DEFAULT_AUTO_ASSIGN_TEMPLATE}.templateId`);
+      return this.AutoAssignTemplateService.deactivateTemplate()
+        .then(() => this.AutoAssignTemplateService.deleteTemplate(templateId))
         .then(() => {
           this.Notification.success('userManage.org.deleteAutoAssignModal.deleteSuccess');
           this.onDelete();

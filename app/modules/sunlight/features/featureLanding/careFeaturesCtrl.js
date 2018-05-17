@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
 (function () {
   'use strict';
@@ -11,12 +12,13 @@ var _ = require('lodash');
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CTService, Log, Notification, CvaService, EvaService, FeatureToggleService) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AbcService, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CvaService, CTService, EvaService, FeatureToggleService, HuronFeaturesListService, Log, Notification) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
+    vm.isAppleBusinessChatEnabled = $state.isAppleBusinessChatEnabled;
     vm.init = init;
-    vm.getCeList = getCeList;
+
     var pageStates = {
       newFeature: 'NewFeature',
       showFeatures: 'ShowFeatures',
@@ -28,24 +30,31 @@ var _ = require('lodash');
     var listOfEvaFeatures = [];
     var listOfNonVaFeatures = [];
     var featureToBeDeleted = {};
+    var listOfAAFeatures = [];
+    var listOfABCFeatures = [];
+
     vm.searchData = searchData;
     vm.deleteCareFeature = deleteCareFeature;
+    vm.deleteCareFeatureKeypress = deleteCareFeatureKeypress;
     vm.openEmbedCodeModal = openEmbedCodeModal;
+    vm.openEmbedCodeModalKeypress = openEmbedCodeModalKeypress;
     vm.filteredListOfFeatures = [];
     vm.pageState = pageStates.loading;
     vm.cardColor = {};
-    vm.featureToolTip = function (type, name) {
+    vm.featureToolTip = function (type, assistantName, name) {
       var assistantType = {
         cva: $translate.instant('careChatTpl.virtualAssistant.cva.featureText.name'),
         eva: $translate.instant('careChatTpl.virtualAssistant.eva.featureText.name'),
       };
       return $translate.instant('careChatTpl.assistantTooltip',
-        { assistantType: assistantType[type], assistantName: name });
+        { assistantType: assistantType[type], assistantName: assistantName, name: name });
     };
     vm.placeholder = {
       name: 'Search',
     };
+    vm.aaModel = {};
     vm.filterText = '';
+    vm.filterValue = '';
     vm.template = null;
     vm.openNewCareFeatureModal = openNewCareFeatureModal;
     vm.spacesInUseText = spacesInUseText;
@@ -57,6 +66,7 @@ var _ = require('lodash');
     vm.tooltip = '';
     vm.purchaseLink = purchaseLink;
     vm.userHasAccess = userHasAccess;
+    vm.showWarning = showWarning;
 
     /* LIST OF FEATURES
      *
@@ -100,10 +110,15 @@ var _ = require('lodash');
       name: $translate.instant('common.all'),
       filterValue: CareFeatureList.filterConstants.all,
     }, {
-      name: $translate.instant('common.customerSupportTemplates'),
+      name: $translate.instant('careChatTpl.filterValue.customerSupportTemplates'),
       filterValue: CareFeatureList.filterConstants.customerSupport,
     },
     ];
+
+    if (vm.isAppleBusinessChatEnabled) {
+      vm.features.push(AbcService.featureList);
+      vm.filters.push(AbcService.featureFilter);
+    }
 
     if (vm.isVirtualAssistantEnabled) {
       vm.features.push(CvaService.featureList);
@@ -115,21 +130,34 @@ var _ = require('lodash');
     }
 
     /**
-     * Function to get Ce info so that getAAModel() can gets its value to proceed
-     * further in aaBuilder under care features.
+     * Function to push the AutoAttendant feature into the features list if
+     * Hybrid is enabled.
      */
-    function getCeList() {
-      FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
+    function setupHybridFeatures() {
+      return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable).then(function (results) {
         if (results) {
-          AutoAttendantCeInfoModelService.getCeInfosList();
+          vm.features.push({
+            name: 'AA',
+            getFeature: function () {
+              return AutoAttendantCeInfoModelService.getCeInfosList();
+            },
+            formatter: HuronFeaturesListService.autoAttendants,
+            isEmpty: false,
+            i18n: 'huronFeatureDetails.aaName',
+            color: 'primary',
+            badge: 'primary',
+            data: [],
+          });
+
+          vm.filters.push({
+            name: $translate.instant('autoAttendant.title'),
+            filterValue: CareFeatureList.filterConstants.autoAttendant,
+          });
         }
       });
     }
-    init();
 
-    function init() {
-      vm.getCeList();
-      vm.pageState = pageStates.loading;
+    function settingFeatures() {
       var featuresPromises = getListOfFeatures();
 
       handleFeaturePromises(featuresPromises);
@@ -146,11 +174,18 @@ var _ = require('lodash');
             case 'expertVirtualAssistant':
               listOfEvaFeatures = listOfEvaFeatures.concat(vm.features[i].data);
               break;
+            case 'AA':
+              listOfAAFeatures = listOfAAFeatures.concat(vm.features[i].data);
+              break;
+            case 'appleBusinessChat':
+              listOfABCFeatures = listOfABCFeatures.concat(vm.features[i].data);
+              break;
             default:
               listOfNonVaFeatures = listOfNonVaFeatures.concat(vm.features[i].data);
               break;
           }
         }
+        generateCvaInUseForABC();
         generateTemplateCountAndSpaceUsage();
         //by default "all" filter is the selected
         vm.filteredListOfFeatures = _.clone(listOfAllFeatures);
@@ -164,6 +199,38 @@ var _ = require('lodash');
       } else if (!vm.hasMessage) {
         vm.tooltip = $translate.instant('sunlightDetails.licensesMissing.messageOnly');
       }
+    }
+
+    init();
+
+    function init() {
+      vm.pageState = pageStates.loading;
+      setupHybridFeatures()
+        .then(_.noop)
+        .finally(function () {
+          settingFeatures();
+        });
+    }
+
+    /**
+     * Find the CVA name using the id for the ABC config objects
+     */
+    function generateCvaInUseForABC() {
+      _.forEach(listOfABCFeatures, function (item) {
+        if (!_.isEmpty(item.cvaId)) {
+          var cva = _.find(listOfCvaFeatures, function (cvaFeature) {
+            return cvaFeature.id === item.cvaId;
+          });
+          if (cva) {
+            var feature = {};
+            feature.featureType = 'cva';
+            feature.name = cva.name;
+            feature.id = cva.id;
+            item.features = [];
+            item.features.push(feature);
+          }
+        }
+      });
     }
 
     /**
@@ -195,10 +262,11 @@ var _ = require('lodash');
         item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
       });
 
-      // Generate the template html popover for EVA
+      // Generate the template and spaces html popover for EVA
       _.forEach(listOfEvaFeatures, function (item) {
         var popoverMainHeader = $translate.instant('careChatTpl.featureCard.evaPopoverMainHeader');
         item.templatesHtmlPopover = generateTemplateCountHtmlPopover(popoverMainHeader, item);
+        item.spacesHtmlPopover = generateHtmlPopover(item);
       });
     }
 
@@ -221,9 +289,9 @@ var _ = require('lodash');
     }
 
     function generateHtmlPopover(feature) {
-      var spacesList = _.get(feature, 'spaces', []);
+      var spacesList = _.get(feature, 'spaces');
 
-      if (spacesList.length < 1) {
+      if (!spacesList) {
         return '<div class="feature-card-popover-error">' + $translate.instant('careChatTpl.featureCard.popoverErrorMessage') + '</div>';
       }
 
@@ -233,6 +301,7 @@ var _ = require('lodash');
 
       var htmlString = '<div class="feature-card-popover"><h3 class="sub-header">' + spacesHeader + '</h3><ul class="spaces-list">';
 
+      spacesList = _.sortBy(spacesList, function (space) { return space.title.toLowerCase(); });
       _.forEach(spacesList, function (expertSpace) {
         htmlString += '<li>' + expertSpace.title;
         if (expertSpace.default) {
@@ -261,18 +330,9 @@ var _ = require('lodash');
         feature.data = list;
         feature.isEmpty = false;
 
-        if (feature.name === 'expertVirtualAssistant') {
-          _.forEach(feature.data, function (eva, index) {
-            return EvaService.getExpertAssistantSpaces(eva.id)
-              .then(function (result) {
-                feature.data[index].spaces = result.items;
-                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
-              })
-              .catch(function () {
-                feature.data[index].spaces = [];
-                feature.data[index].spacesHtmlPopover = vm.generateHtmlPopover(feature.data[index]);
-              });
-          });
+        // Adding AutoAttedant as a new feature.
+        if (feature.name === 'AA') {
+          vm.aaModel = data;
         }
       } else {
         feature.isEmpty = true;
@@ -322,66 +382,134 @@ var _ = require('lodash');
 
     //Switches Data that populates the Features tab
     function setFilter(filterValue) {
-      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, filterValue, vm.filterText);
+      vm.filterValue = filterValue || 'all';
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterValue, vm.filterText);
       reInstantiateMasonry();
     }
 
     /* This function does an in-page search for the string typed in search box*/
     function searchData(searchStr) {
       vm.filterText = searchStr;
-      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, 'all', vm.filterText);
+      vm.filteredListOfFeatures = CareFeatureList.filterCards(listOfAllFeatures, vm.filterValue, vm.filterText);
       reInstantiateMasonry();
     }
 
     vm.editCareFeature = function (feature, $event) {
-      $event.stopImmediatePropagation();
-      if (feature.featureType === EvaService.evaServiceCard.id) {
-        EvaService.getExpertAssistant(feature.templateId).then(function (template) {
-          EvaService.evaServiceCard.goToService($state, {
+      if (feature.filterValue === 'AA') {
+        $rootScope.isCare = true;
+        vm.aaModel.aaName = feature.cardName;
+        $state.go('huronfeatures.aabuilder', {
+          aaName: vm.aaModel.aaName,
+        });
+      } else {
+        $event.stopImmediatePropagation();
+        if (feature.featureType === EvaService.evaServiceCard.id) {
+          EvaService.getExpertAssistant(feature.templateId).then(function (template) {
+            template.missingDefaultSpace = feature.missingDefaultSpace;
+            EvaService.evaServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        if (feature.featureType === CvaService.cvaServiceCard.id) {
+          CvaService.getConfig(feature.templateId).then(function (template) {
+            CvaService.cvaServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        if (feature.featureType === AbcService.abcServiceCard.id) {
+          AbcService.getAbcConfig(feature.templateId).then(function (template) {
+            AbcService.abcServiceCard.goToService($state, {
+              isEditFeature: true,
+              template: template,
+            });
+          });
+          return;
+        }
+        CareFeatureList.getTemplate(feature.templateId).then(function (template) {
+          $state.go('care.setupAssistant', {
             isEditFeature: true,
             template: template,
+            type: template.configuration.mediaType,
           });
         });
-        return;
       }
-      if (feature.featureType === CvaService.cvaServiceCard.id) {
-        CvaService.getConfig(feature.templateId).then(function (template) {
-          CvaService.cvaServiceCard.goToService($state, {
-            isEditFeature: true,
-            template: template,
-          });
-        });
-        return;
-      }
-      CareFeatureList.getTemplate(feature.templateId).then(function (template) {
-        $state.go('care.setupAssistant', {
-          isEditFeature: true,
-          template: template,
-          type: template.configuration.mediaType,
-        });
-      });
     };
 
     function userHasAccess(feature) {
       if (feature.featureType === EvaService.evaServiceCard.id) {
-        var result = EvaService.getWarningIfNotOwner(feature);
-        if (!result.valid) {
-          $scope.warning = $translate.instant(result.warning.message, result.warning.args);
+        var hasAccess = EvaService.canIEditThisEva(feature);
+        if (!hasAccess) {
+          var owner = EvaService.getEvaOwner(feature);
+          feature.noAccessTooltip = $translate.instant(EvaService.evaServiceCard.editDeleteWarning, { owner: owner });
         }
-        return result.valid;
+        return hasAccess;
       }
       return true;
+    }
+
+    function showWarning(feature) {
+      if (feature.featureType === EvaService.evaServiceCard.id) {
+        feature.missingDefaultSpace = false;
+        if (EvaService.isMissingDefaultSpace(feature)) {
+          feature.warning = $translate.instant(EvaService.evaServiceCard.noDefaultSpaceWarning);
+          feature.missingDefaultSpace = true;
+
+          // if user has no access, combine the warnings
+          if (!userHasAccess(feature)) {
+            var owner = EvaService.getEvaOwner(feature);
+            feature.warning = $translate.instant(EvaService.evaServiceCard.noDefaultSpaceAndNoAccess, { owner: owner });
+          }
+          return true;
+        }
+      }
+      // only EVA cards have warnings for now
+      return false;
     }
 
     function deleteCareFeature(feature, $event) {
       $event.preventDefault();
       $event.stopImmediatePropagation();
       featureToBeDeleted = feature;
-      $state.go('care.Features.DeleteFeature', {
-        deleteFeatureName: feature.name,
-        deleteFeatureId: feature.templateId,
-        deleteFeatureType: feature.featureType,
-      });
+      if (feature.hasDepends) {
+        Notification.error('huronFeatureDetails.aaDeleteBlocked', {
+          aaNames: feature.dependsNames.join(', '),
+        });
+        return;
+      }
+
+      /* Checking if feature has cardName then the feature is
+       * AutoAttedant otherwise its a Customer Support template.
+       */
+      if (_.has(feature, 'cardName')) {
+        $state.go('huronfeatures.deleteFeature', {
+          deleteFeatureName: feature.cardName,
+          deleteFeatureId: feature.id,
+          deleteFeatureType: feature.filterValue,
+        });
+      } else {
+        $state.go('care.Features.DeleteFeature', {
+          deleteFeatureName: feature.name,
+          deleteFeatureId: feature.templateId,
+          deleteFeatureType: feature.featureType,
+        });
+      }
+    }
+
+    function deleteCareFeatureKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          deleteCareFeature(feature, $event);
+          break;
+      }
     }
 
     function openEmbedCodeModal(feature, $event) {
@@ -390,10 +518,33 @@ var _ = require('lodash');
       CTService.openEmbedCodeModal(feature.templateId, feature.name);
     }
 
-    function spacesInUseText(feature) {
-      var numOfSpaces = _.get(feature, 'spaces.length', 0);
+    function openEmbedCodeModalKeypress(feature, $event) {
+      switch ($event.which) {
+        case KeyCodes.ENTER:
+        case KeyCodes.SPACE:
+          $event.preventDefault();
+          $event.stopImmediatePropagation();
+          openEmbedCodeModal(feature, $event);
+          break;
+      }
+    }
 
-      if (numOfSpaces > 0) {
+    /** Getting the details of the all the dependant AA's */
+    vm.detailsHuronFeature = function (feature, $event) {
+      $event.preventDefault();
+      $event.stopImmediatePropagation();
+      $state.go('huronfeatures.aaListDepends', {
+        detailsFeatureName: feature.cardName,
+        detailsFeatureId: feature.id,
+        detailsFeatureType: feature.filterValue,
+        detailsDependsList: feature.dependsNames,
+      });
+    };
+
+    function spacesInUseText(feature) {
+      var numOfSpaces = _.get(feature, 'spaces.length', -1);
+
+      if (numOfSpaces >= 0) {
         return $translate.instant('careChatTpl.featureCard.spacesInUseText', {
           numOfSpaces: numOfSpaces,
         });
@@ -420,10 +571,48 @@ var _ = require('lodash');
     //list is updated by deleting a feature
     $scope.$on('CARE_FEATURE_DELETED', function () {
       listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+      // remove deleted feature from abc's in use
+      if (featureToBeDeleted.featureType === CvaService.cvaServiceCard.id) {
+        _.find(listOfAllFeatures, function (feature) {
+          if (feature.featureType === AbcService.abcServiceCard.id) {
+            if (feature.features && feature.features[0].id === featureToBeDeleted.id) {
+              feature.features = [];
+            }
+          }
+        });
+      }
       vm.filteredListOfFeatures = listOfAllFeatures;
       featureToBeDeleted = {};
       if (listOfAllFeatures.length === 0) {
         vm.pageState = pageStates.newFeature;
+      }
+    });
+
+    /** list is updated by deleting an Auto Attendant from care feature landing page */
+    $scope.$on('HURON_FEATURE_DELETED', function () {
+      listOfAllFeatures.splice(listOfAllFeatures.indexOf(featureToBeDeleted), 1);
+
+      if (featureToBeDeleted.filterValue === 'AA' && featureToBeDeleted.hasReferences) {
+        _.forEach(featureToBeDeleted.referenceNames, function (ref) {
+          var cardToRefresh = _.find(listOfAllFeatures, function (feature) {
+            return feature.cardName === ref;
+          });
+          if (!_.isUndefined(cardToRefresh)) {
+            cardToRefresh.dependsNames.splice(cardToRefresh.dependsNames.indexOf(featureToBeDeleted.cardName), 1);
+            if (cardToRefresh.dependsNames.length === 0) {
+              cardToRefresh.hasDepends = false;
+            }
+          }
+        });
+      }
+
+      vm.filteredListOfFeatures = listOfAllFeatures;
+      featureToBeDeleted = {};
+      if (listOfAllFeatures.length === 0) {
+        vm.pageState = pageStates.newFeature;
+      }
+      if (vm.filterText) {
+        searchData(vm.filterText);
       }
     });
 

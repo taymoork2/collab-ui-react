@@ -6,7 +6,7 @@
     .controller('AADecisionCtrl', AADecisionCtrl);
 
   /* @ngInject */
-  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACesOnboardHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AAModelService, AASessionVariableService) {
+  function AADecisionCtrl($scope, $translate /*, QueueHelperService*/, AACesOnboardHelperService, AACommonService, AAUiModelService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AAModelService, AASessionVariableService) {
     var vm = this;
 
     var actionName = 'conditional';
@@ -59,17 +59,11 @@
     };
 
     vm.thenOptions = [{
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      value: 'routeToHuntGroup',
-    }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       value: 'goto',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       value: 'routeToUser',
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      value: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       value: 'route',
@@ -336,7 +330,24 @@
       vm.ifOptions.sort(AACommonService.sortByProperty('label'));
     }
 
+    function setSparkCallOptions() {
+    /* spark call options will be shown in case
+     * 1. hybrid toggle is disabled
+     * 2. hybrid toggle is enabled and customer have spark call configuration */
+      if ((!AACommonService.isHybridEnabledOnOrg()) ||
+        (AACommonService.isHybridEnabledOnOrg() && AutoAttendantHybridCareService.isSparkCallConfigured())) {
+        vm.thenOptions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          value: 'routeToVoiceMail',
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+          value: 'routeToHuntGroup',
+        });
+      }
+    }
+
     function activate() {
+      setSparkCallOptions();
       setActionEntry();
       sortAndSetActionType();
 

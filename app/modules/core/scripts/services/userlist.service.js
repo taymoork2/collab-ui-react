@@ -19,7 +19,8 @@
     // DEPRECATED
     // - remove these vars after all calls to 'listUsers()' has been migrated to 'listUsersAsPromise()'
     var searchFilter = 'filter=active%20eq%20true%20and%20%s(userName%20sw%20%22%s%22%20or%20name.givenName%20sw%20%22%s%22%20or%20name.familyName%20sw%20%22%s%22%20or%20displayName%20sw%20%22%s%22)';
-    var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings';
+    var attributes = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences';
+    var attributesForHybridOrg = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences,phoneNumbers,sipAddresses';
 
     // Get last 7 day user counts
     var userCountResource = $resource(UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/reports/detailed/activeUsers?&intervalCount=7&intervalType=day&spanCount=1&spanType=day');
@@ -27,7 +28,7 @@
 
     var CI_QUERY = {
       ACTIVE_EQ_TRUE: 'active eq true',
-      DEFAULT_ATTRS: 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings',
+      DEFAULT_ATTRS: 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences',
 
       // US8552: For organizations with too many users, don't load the user list
       // searching a large org with too few characters 'xz' triggers an useful error.
@@ -137,6 +138,10 @@
       return service._helpers.mkAttrsSwValExpr(['userName', 'name.givenName', 'name.familyName', 'displayName'], searchStr);
     }
 
+    function mkEmailEqualsWithExpr(searchStr) {
+      return service._helpers.mkAttrEqValsExpr('userName', searchStr);
+    }
+
     /**
      * Helper function for combining multiple CI query expressions into one.
      *
@@ -155,6 +160,7 @@
       var defaultExpr = CI_QUERY.ACTIVE_EQ_TRUE;
 
       var nameStartsWith = _.get(filterParams, 'nameStartsWith');
+      var emailEquals = _.get(filterParams, 'emailEquals');
       var allRoles = _.get(filterParams, 'allRoles');
       var allEntitlements = _.get(filterParams, 'allEntitlements');
       var useUnboundedResultsHack = _.get(filterParams, 'useUnboundedResultsHack');
@@ -169,6 +175,10 @@
 
       if (nameStartsWith && isAdequateSearchStr) {
         exprList.push(mkNameStartsWithExpr(nameStartsWith));
+      }
+
+      if (emailEquals) {
+        exprList.push(mkEmailEqualsWithExpr(emailEquals));
       }
 
       if (allRoles) {
@@ -196,6 +206,7 @@
      * @param {(string|number)} params.orgId - org id of users to search for (default: logged-in user's org id)
      * @param {Object} params.filter - params object passed through to 'mkFilterExpr()'
      * @param {Object} params.ci - params object passed through to the underlying '$http.get()' request
+     * @param {Object} params.noErrorNotificationOnReject - set to true to prevent error notification if '$http.get()' rejects
      * @see {@link mkFilterExpr}
      * @see {@link https://wiki.cisco.com/display/PLATFORM/CI3.0+SCIM+API+-+Query+Users}
      */
@@ -206,16 +217,22 @@
       // crunch 'filter.*' properties to make a proper filter expression, then set as 'ci.filter'
       var filterParams = _.get(params, 'filter');
       var filterExpr = service._helpers.mkFilterExpr(filterParams);
-      _.set(params, 'ci.filter', filterExpr);
-
-      // define 'ci.attributes' property
       _.set(params, 'ci.attributes', CI_QUERY.DEFAULT_ATTRS);
+      _.set(params, 'ci.filter', filterExpr);
+      _.set(params, 'ci.count', params.count);
+      _.set(params, 'ci.startIndex', params.startIndex);
+      _.set(params, 'ci.sortBy', params.sortBy);
+      _.set(params, 'ci.sortOrder', params.sortOrder);
 
       return $http.get(url, {
         params: _.get(params, 'ci'),
       })
         .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'usersPage.loadError');
+          var useErrorNotification = !_.get(params, 'noErrorNotificationOnReject');
+          if (useErrorNotification) {
+            Notification.errorWithTrackingId(response, 'usersPage.loadError');
+          }
+          return $q.reject(response);
         });
     }
 
@@ -238,7 +255,10 @@
     //   this implementataion
     // - 'listUsersAsPromise()' can then assume this name after all callers use promise-style
     //   chaining
-    function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId) {
+    function listUsers(startIndex, count, sortBy, sortOrder, callback, searchStr, getAdmins, entitlements, orgId, orgHasHybridEnabled) {
+      if (orgHasHybridEnabled) {
+        attributes = attributesForHybridOrg;
+      }
       var searchOrgId = orgId || Authinfo.getOrgId();
       var listUrl = UrlConfig.getScimUrl(searchOrgId) + '?' + '&' + attributes;
       var filter;

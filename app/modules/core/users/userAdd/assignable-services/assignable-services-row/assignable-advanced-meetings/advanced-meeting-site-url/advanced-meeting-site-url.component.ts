@@ -1,7 +1,7 @@
 class AdvancedMeetingSiteUrlController implements ng.IComponentController {
 
   private siteUrl: string;
-  private siteAdminUrl: string;
+  public siteAdminUrl: string;
   private isCISite: boolean;
 
   /* @ngInject */

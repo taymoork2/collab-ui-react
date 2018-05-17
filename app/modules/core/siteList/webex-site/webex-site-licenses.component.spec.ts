@@ -5,7 +5,7 @@ describe('Component: WebexSiteLicensesComponent', function () {
 
   beforeEach(function () {
     this.initModules(module);
-    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService');
+    this.injectDependencies('$componentController', '$q', '$rootScope', '$scope', 'Config', 'SetupWizardService', 'WebExSiteService');
     this.$scope.fixtures = {
       sitesArray: [{
         siteUrl: 'abc.dmz',
@@ -35,6 +35,10 @@ describe('Component: WebexSiteLicensesComponent', function () {
         centerType: 'EE',
         quantity: 100,
       }],
+      centerDetails: [
+        { serviceName: 'MC', quantity: 100 },
+        { serviceName: 'EE', quantity: 200 },
+      ],
     };
 
     initSpies.apply(this);
@@ -50,15 +54,13 @@ describe('Component: WebexSiteLicensesComponent', function () {
   function initSpies() {
     this.$scope.onDistributionChangeFn = jasmine.createSpy('onDistributionChangeFn');
     spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.returnValue(licenses.confLicenses);
+    spyOn(this.WebExSiteService, 'extractCenterDetailsFromSingleSubscription').and.returnValue(this.$scope.fixtures.centerDetails);
   }
 
   describe('When first opened', () => {
     it('should get centerDetails and distributedLicensesArray correctly', function () {
-      const expectedCenterDetails = [
-        { centerType: 'MC', volume: 100 },
-        { centerType: 'EE', volume: 200 },
-      ];
-      expect(this.controller.centerDetails).toEqual(expectedCenterDetails);
+      expect(this.controller.centerDetails).toEqual(this.$scope.fixtures.centerDetails);
+      expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription).toHaveBeenCalled();
       expect(this.controller.distributedLicensesArray.length).toBe(3);
       expect(this.controller.distributedLicensesArray[0].length).toBe(2);
     });
@@ -80,6 +82,39 @@ describe('Component: WebexSiteLicensesComponent', function () {
     it('should getLicensesAssignedTotal correctly', function () {
       const result = this.controller.getLicensesAssignedTotal('EE');
       expect(result).toEqual(200);
+    });
+
+    it('should set default site license value when only site', function () {
+      const sitesArray = [
+        { quantity: 10, siteUrl: 'site1' },
+      ];
+      const distributedLicensesArray = [];
+      const centerDetails = [
+        { serviceName: 'MC', quantity: 150 },
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.centerDetails = _.clone(centerDetails);
+      this.controller.constructDistributedSitesArray();
+      this.$scope.$apply();
+      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(150);
+    });
+
+    it('should set site license to zero when more then one site', function () {
+      const sitesArray = [
+        { quantity: 10, siteUrl: 'site1' },
+        { quantity: 20, siteUrl: 'site1' },
+      ];
+      const distributedLicensesArray = [];
+      const centerDetails = [
+        { serviceName: 'MC', quantity: 150 },
+      ];
+      this.controller.sitesArray = _.clone(sitesArray);
+      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.centerDetails = _.clone(centerDetails);
+      this.controller.constructDistributedSitesArray();
+      this.$scope.$apply();
+      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(0);
     });
 
     it('should calculate license quantity for sites correctly', function () {

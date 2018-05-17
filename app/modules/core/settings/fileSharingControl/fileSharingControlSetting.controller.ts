@@ -54,7 +54,7 @@ export class FileSharingControlSettingController {
       .then((response) => {
         this.fileSharingControlSettingLoaded(response.fileSharingControl);
         this.isProPackPurchased = response.proPackPurchased;
-      });
+      }).catch(_.noop);
   }
 
   private fileSharingControlSettingLoaded(fileSharingControl: IGetFileSharingControlSettingResponse) {
@@ -103,7 +103,8 @@ export class FileSharingControlSettingController {
         this._isBlockDesktopAppUpload = value;
       }
       this.updateFileSharingControlSetting();
-    });
+    })
+    .catch(_.noop);
   }
 
   public get isBlockWebAppDownload(): boolean {

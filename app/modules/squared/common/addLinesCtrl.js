@@ -20,7 +20,7 @@
     vm.resetDns = resetDns;
     vm.activateDID = activateDID;
     vm.isLoading = false;
-    vm.isDisabled = true;
+    vm.anyPoolEmpty = true;
 
     vm.loadLocations = loadLocations;
     vm.locationOptions = [];
@@ -153,12 +153,16 @@
       $stateParams.wizard.back();
     };
 
+    vm.isDisabled = function () {
+      return vm.anyPoolEmpty || !vm.getSelectedNumbers().directoryNumber;
+    };
+
     function activateDID() {
       $q.all([CommonLineService.loadExternalNumberPool(), CommonLineService.loadPrimarySiteInfo(), toggleShowExtensions(), loadLocations()])
         .finally(function () {
           $scope.externalNumber = _.head(CommonLineService.getExternalNumberPool());
           vm.telephonyInfo = CommonLineService.getTelephonyInfo();
-          vm.isDisabled = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
+          vm.anyPoolEmpty = !!(CommonLineService.getInternalNumberPool().length === 0 || CommonLineService.getExternalNumberPool().length === 0);
 
           if (vm.showExtensions === true) {
             CommonLineService.assignDNForUserList(vm.addDnGridOptions.data);

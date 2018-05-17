@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 
 .gemini-page {
   .kpi-banner {
@@ -179,7 +180,7 @@
         box-sizing: border-box;
 
         h4 {
-          font-family: "CiscoSansTT Light";
+          font-family: $brand-font-light;
           color: $gray-dark-1;
           font-size: 0.9rem;
           //padding: 0;
@@ -231,25 +232,6 @@
 
     *:focus {
       box-shadow: none;
-    }
-  }
-
-  .page-sub-header {
-    height: auto;
-    padding: .75rem 1.6rem;
-
-    .nav {
-      margin-bottom: 3px;
-
-      a {
-        color: $gray-base;
-
-        &:hover{
-          border: 0 !important;
-        }
-        font-size: 1rem;
-        border: none  !important;
-      }
     }
   }
 }

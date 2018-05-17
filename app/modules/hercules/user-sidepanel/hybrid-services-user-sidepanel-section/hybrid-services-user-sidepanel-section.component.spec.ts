@@ -1,65 +1,43 @@
 import moduleName from './index';
+import { HybridServicesUserSidepanelSectionComponentCtrl } from './hybrid-services-user-sidepanel-section.component';
+
+type Test = atlas.test.IComponentTest<HybridServicesUserSidepanelSectionComponentCtrl, {
+  Authinfo,
+  CloudConnectorService,
+  FeatureToggleService,
+  ServiceDescriptorService,
+  UserOverviewService
+  USSService,
+  WaitingIntervalService,
+}>;
 
 describe('HybridServicesUserSidepanelSectionComponent', () => {
-
-  let $componentController, $q, $scope, CloudConnectorService, FeatureToggleService, ServiceDescriptorService, $timeout, USSService;
-
-  const defaultUser = {
-    name: 'Julius Caesar',
-    entitlements: [],
-  };
-
-  beforeEach(angular.mock.module(moduleName));
-  afterEach(cleanup);
-
-  function cleanup() {
-    $componentController = $q = $scope = CloudConnectorService = FeatureToggleService = ServiceDescriptorService = $timeout = USSService = undefined;
-  }
-
-  function initController(user?) {
-    const ctrl = $componentController('hybridServicesUserSidepanelSection', {}, {
-      user: user || defaultUser,
-    });
-    ctrl.$onChanges({
-      user: {
-        previousValue: undefined,
-        currentValue: user || defaultUser,
-        isFirstChange() {
-          return true;
-        },
-      },
-    });
-    $scope.$apply();
-    return ctrl;
-  }
+  beforeEach(function (this: Test) {
+    this.initComponent = (user?) => {
+      this.compileComponent('hybridServicesUserSidepanelSection', {
+        user,
+      });
+    };
+    this.initModules(moduleName);
+    this.injectDependencies(
+      'Authinfo',
+      'CloudConnectorService',
+      'FeatureToggleService',
+      'ServiceDescriptorService',
+      'UserOverviewService',
+      'USSService',
+      'WaitingIntervalService',
+    );
+  });
 
   describe('premises-based hybrid services', () => {
+    beforeEach(function (this: Test) {
+      spyOn(this.Authinfo, 'getLicenses').and.returnValue(['license1', 'license2']);
+      spyOn(this.Authinfo, 'isEntitled').and.callFake(service => (service === 'squared-fusion-cal' || service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop'));
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('12');
 
-    beforeEach(angular.mock.module(mockDependencies));
-
-    function mockDependencies($provide) {
-      const Authinfo = {
-        isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-cal' || service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
-        getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
-      };
-      $provide.value('Authinfo', Authinfo);
-    }
-
-    beforeEach(inject(dependencies));
-    beforeEach(initSpies);
-
-    function dependencies (_$componentController_, _$q_, $rootScope, _FeatureToggleService_, _ServiceDescriptorService_, _USSService_) {
-      $componentController = _$componentController_;
-      $q = _$q_;
-      $scope = $rootScope.$new();
-      FeatureToggleService = _FeatureToggleService_;
-      ServiceDescriptorService = _ServiceDescriptorService_;
-      USSService = _USSService_;
-    }
-
-    function initSpies() {
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([{
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve({}));
+      spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([{
         id: 'squared-fusion-uc',
         enabled: true,
       }, {
@@ -69,238 +47,180 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
         id: 'spark-hybrid-impinterop',
         enabled: true,
       }]));
-      spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve({}));
-    }
-
-    it('should only take into account the hybrid services an org is entitled to in CI if they are set up in either FMS or CCC', () => {
-      const controller = initController();
-      expect(controller.servicesWithStatuses.length).toBe(2);
+      spyOn(this.USSService, 'getStatusesForUser').and.returnValue(this.$q.resolve({}));
+      spyOn(this.UserOverviewService, 'getUser').and.returnValue(this.$q.resolve({
+        user: {
+          entitlements: ['ciscouc'],
+        },
+      }));
     });
 
-    it('should amend the services list with setup data from FMS', () => {
-      const controller = initController();
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'squared-fusion-cal')).not.toBeDefined();
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'squared-fusion-uc')).toEqual(jasmine.objectContaining({ id: 'squared-fusion-uc' }));
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'spark-hybrid-impinterop')).toEqual(jasmine.objectContaining({ id: 'spark-hybrid-impinterop' }));
-
-    });
-
-    it('should tell the admin that hybrid call cannot be enabled if the user is entitled to Huron', () => {
-      const huronUser = {
-        name: 'Caligula',
-        entitlements: ['ciscouc'],
+    it('should not show the section if there are no licenses assigned to the user', function (this: Test) {
+      const unlicensedUser = {
+        licenseID: [],
       };
+      this.initComponent(unlicensedUser);
+      expect(this.controller.isLicensed).toBe(false);
+    });
 
-      const controller = initController(huronUser);
-      expect(controller.userIsEnabledForHuron).toBe(true);
+    it('should show the section if there is at least one paid license assigned to the user', function (this: Test) {
+      const licensedUser = {
+        licenseID: ['This is a paid license'],
+      };
+      this.initComponent(licensedUser);
+      expect(this.controller.isLicensed).toBe(true);
+    });
 
+    it('should amend the services list with setup data from FMS', function (this: Test) {
+      this.initComponent();
+      expect(this.controller['enabledServicesWithStatuses'].length).toBe(2);
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'squared-fusion-cal')).not.toBeDefined();
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'squared-fusion-uc')).toEqual(jasmine.objectContaining({ id: 'squared-fusion-uc' }));
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'spark-hybrid-impinterop')).toEqual(jasmine.objectContaining({ id: 'spark-hybrid-impinterop' }));
+
+    });
+
+    it('should tell the admin that hybrid call cannot be enabled if the user is entitled to Huron', function (this: Test) {
+      this.initComponent();
+      expect(this.controller.userIsEnabledForHuron).toBe(true);
     });
   });
 
   describe('cloud-based hybrid services', () => {
+    beforeEach(function (this: Test) {
+      spyOn(this.Authinfo, 'getLicenses').and.returnValue(['license1', 'license2']);
+      spyOn(this.Authinfo, 'isEntitled').and.callFake((service) => {
+        return (service === 'squared-fusion-gcal' || service === 'squared-fusion-cal');
+      });
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('12');
 
-    beforeEach(angular.mock.module(mockDependencies));
+      spyOn(this.CloudConnectorService, 'getService');
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve({}));
+      spyOn(this.ServiceDescriptorService, 'getServices');
+      spyOn(this.USSService, 'getStatusesForUser').and.returnValue(this.$q.resolve({}));
+      spyOn(this.UserOverviewService, 'getUser').and.returnValue(this.$q.resolve());
+    });
 
-    function mockDependencies($provide) {
-      const Authinfo = {
-        isEntitled: jasmine.createSpy('isEntitled').and.callFake((service) => {
-          return (service === 'squared-fusion-gcal' || service === 'squared-fusion-cal');
-        }),
-        getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
-      };
-      $provide.value('Authinfo', Authinfo);
-    }
-
-    beforeEach(inject(dependencies));
-    beforeEach(initSpies);
-
-    function dependencies (_$componentController_, _$q_, $rootScope, _CloudConnectorService_, _FeatureToggleService_, _ServiceDescriptorService_, _USSService_) {
-      $componentController = _$componentController_;
-      $q = _$q_;
-      $scope = $rootScope.$new();
-      CloudConnectorService = _CloudConnectorService_;
-      FeatureToggleService = _FeatureToggleService_;
-      ServiceDescriptorService = _ServiceDescriptorService_;
-      USSService = _USSService_;
-    }
-
-    function initSpies() {
-      spyOn(CloudConnectorService, 'getService');
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptorService, 'getServices');
-      spyOn(USSService, 'getStatusesForUser').and.returnValue($q.resolve({}));
-    }
-
-    it('should check status with CloudConnectorService if the org is entitled to Google Calendar ', () => {
-      CloudConnectorService.getService.and.returnValues($q.resolve({
+    it('should check status with CloudConnectorService if the org is entitled to Google Calendar', function (this: Test) {
+      this.CloudConnectorService.getService.and.returnValues(this.$q.resolve({
         provisioned: true,
-      }), $q.resolve({
+      }), this.$q.resolve({
         provisioned: true,
       }));
-      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
+      this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
         id: 'squared-fusion-gcal',
         enabled: true,
       }, {
         id: 'squared-fusion-cal',
         enabled: true,
       }]));
-      initController();
-      expect(CloudConnectorService.getService.calls.count()).toBe(2);
+      this.initComponent();
+      expect(this.CloudConnectorService.getService.calls.count()).toBe(2);
 
     });
 
-    it('should warn the admin if the user has conflicting calendar entitlements ', () => {
-      CloudConnectorService.getService.and.returnValues($q.resolve({
+    it('should warn the admin if the user has conflicting calendar entitlements', function (this: Test) {
+      this.UserOverviewService.getUser.and.returnValue(this.$q.resolve({
+        user: {
+          entitlements: ['squared-fusion-cal', 'squared-fusion-gcal'],
+        },
+      }));
+      this.CloudConnectorService.getService.and.returnValues(this.$q.resolve({
         provisioned: true,
-      }), $q.resolve({
+      }), this.$q.resolve({
         provisioned: false,
       }));
-      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
+      this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
         id: 'squared-fusion-gcal',
         enabled: true,
       }, {
         id: 'squared-fusion-cal',
         enabled: true,
       }]));
-      const userWithBothEntitlements = {
-        entitlements: ['squared-fusion-gcal', 'squared-fusion-cal'],
-      };
 
-      const controller = initController(userWithBothEntitlements);
-      expect(controller.bothCalendarTypesWarning).toBe(true);
+      this.initComponent();
+      expect(this.controller.bothCalendarTypesWarning).toBe(true);
     });
 
-    it('should use values provided by the CCC to decide whether or not to show a calendar type', () => {
-      CloudConnectorService.getService.and.returnValues($q.resolve({
+    it('should use values provided by the CCC to decide whether or not to show a calendar type', function (this: Test) {
+      this.UserOverviewService.getUser.and.returnValue(this.$q.resolve({
+        user: {
+          entitlements: ['squared-fusion-cal'],
+        },
+      }));
+      this.CloudConnectorService.getService.and.returnValues(this.$q.resolve({
         provisioned: true,
-      }), $q.resolve({
+      }), this.$q.resolve({
         provisioned: false,
       }));
-      ServiceDescriptorService.getServices.and.returnValue($q.resolve([{
+      this.ServiceDescriptorService.getServices.and.returnValue(this.$q.resolve([{
         id: 'squared-fusion-gcal',
         enabled: false,
       }, {
         id: 'squared-fusion-cal',
         enabled: false,
       }]));
-      const userWithNoGcal = {
-        entitlements: ['squared-fusion-cal'],
-      };
 
-
-      const controller = initController(userWithNoGcal);
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'squared-fusion-gcal')).not.toBeDefined();
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'squared-fusion-cal')).toEqual(jasmine.objectContaining({ id: 'squared-fusion-cal' }));
+      this.initComponent();
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'squared-fusion-gcal')).not.toBeDefined();
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'squared-fusion-cal')).toEqual(jasmine.objectContaining({ id: 'squared-fusion-cal' }));
     });
 
   });
 
   describe('USS and callback usage', () => {
+    beforeEach(function (this: Test) {
+      spyOn(this.Authinfo, 'getLicenses').and.returnValue(['license1', 'license2']);
+      spyOn(this.Authinfo, 'isEntitled').and.callFake(service => (service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop'));
+      spyOn(this.Authinfo, 'getOrgId').and.returnValue('12');
 
-    beforeEach(angular.mock.module(mockDependencies));
-
-    function mockDependencies($provide) {
-      const Authinfo = {
-        isEntitled: jasmine.createSpy('isEntitled').and.callFake(service => (service === 'squared-fusion-uc' || service === 'spark-hybrid-impinterop')),
-        getOrgId: jasmine.createSpy('getOrgId').and.returnValue('12'),
-      };
-      $provide.value('Authinfo', Authinfo);
-    }
-
-    beforeEach(inject(dependencies));
-    beforeEach(initSpies);
-
-    function dependencies (_$componentController_, _$q_, $rootScope, _$timeout_, _FeatureToggleService_, _ServiceDescriptorService_, _USSService_) {
-      $componentController = _$componentController_;
-      $q = _$q_;
-      $scope = $rootScope.$new();
-      $timeout = _$timeout_;
-      FeatureToggleService = _FeatureToggleService_;
-      ServiceDescriptorService = _ServiceDescriptorService_;
-      USSService = _USSService_;
-    }
-
-    function initSpies() {
-      spyOn($timeout, 'cancel').and.callThrough();
-      spyOn(USSService, 'getStatusesForUser');
-      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
-      spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([{
+      spyOn(this.USSService, 'getStatusesForUser');
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve({}));
+      spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve([{
         id: 'squared-fusion-uc',
         enabled: true,
       }]));
-    }
+      spyOn(this.WaitingIntervalService, 'interval').and.returnValue('fake-interval');
+      spyOn(this.WaitingIntervalService, 'cancel');
+    });
 
-    it('should call USS with the correct userId', () => {
-      USSService.getStatusesForUser.and.returnValue($q.resolve({}));
+    it('should call USS with the correct userId', function (this: Test) {
+      this.USSService.getStatusesForUser.and.returnValue(this.$q.resolve({}));
       const userId = '12345';
       const user = {
         id: userId,
         name: 'Marcus Aurelius',
-        entitlements: ['squared-fusion-uc'],
       };
-      initController(user);
-      expect(USSService.getStatusesForUser).toHaveBeenCalledWith(userId);
+      this.initComponent(user);
+      expect(this.USSService.getStatusesForUser).toHaveBeenCalledWith(userId);
     });
 
-    it('should use USS data to populate services statuses for the user', () => {
-      USSService.getStatusesForUser.and.returnValue($q.resolve([{
+    it('should use USS data to populate services statuses for the user', function (this: Test) {
+      this.USSService.getStatusesForUser.and.returnValue(this.$q.resolve([{
         serviceId: 'squared-fusion-uc',
         state: 'activated',
       }, {
         serviceId: 'spark-hybrid-impinterop',
         state: 'notActivated',
       }]));
-      const user = {
-        id: 'something',
-        name: 'Nero',
-        entitlements: ['squared-fusion-uc', 'spark-hybrid-impinterop'],
-      };
-      const controller = initController(user);
+      this.initComponent();
 
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'squared-fusion-uc').status.state).toEqual('activated');
-      expect(_.find(controller.servicesWithStatuses, (service: any) => service.id === 'spark-hybrid-impinterop')).not.toBeDefined();
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'squared-fusion-uc').status.state).toEqual('activated');
+      expect(_.find(this.controller['enabledServicesWithStatuses'], (service: any) => service.id === 'spark-hybrid-impinterop')).not.toBeDefined();
     });
 
-    it('should start subscribing to recurring updates, and call USS once for every $timeout cycle', () => {
-      USSService.getStatusesForUser.and.returnValue($q.resolve({}));
-      const user = {
-        name: 'Claudius',
-      };
-      const controller = initController(user);
-      expect(controller.userSubscriptionTimer).toBeDefined();
-      expect(USSService.getStatusesForUser.calls.count()).toBe(1);
-      $timeout.flush();
-      expect(USSService.getStatusesForUser.calls.count()).toBe(2);
-      $timeout.flush();
-      expect(USSService.getStatusesForUser.calls.count()).toBe(3);
-    });
+    it('should call USS once during init and subscribe to interval updates until $onDestroy', function (this: Test) {
+      this.USSService.getStatusesForUser.and.returnValue(this.$q.resolve({}));
+      this.initComponent({});
 
-    it('should cancel the USS subscription on destroy', () => {
-      USSService.getStatusesForUser.and.returnValue($q.resolve({}));
-      const user = {
-        name: 'Claudius',
-      };
-      const controller = initController(user);
-      expect(controller.userSubscriptionTimer).toBeDefined();
-      controller.$onDestroy();
-      expect($timeout.cancel).toHaveBeenCalledTimes(1);
-      expect($timeout.cancel).toHaveBeenCalledWith(controller.userSubscriptionTimer);
-    });
+      expect(this.USSService.getStatusesForUser.calls.count()).toBe(1);
+      expect(this.WaitingIntervalService.cancel).toHaveBeenCalledTimes(1); // $onChanges cancels before starting interval
+      expect(this.WaitingIntervalService.interval).toHaveBeenCalledTimes(1);
+      expect(this.controller['intervalPromise']).toBeDefined();
 
-    it('should reload user data when something has changed in a child component', () => {
-      USSService.getStatusesForUser.and.returnValue($q.resolve({}));
-      const user = {
-        name: 'Galba',
-      };
-      const controller = initController(user);
-      expect(USSService.getStatusesForUser.calls.count()).toBe(1);
-      expect(ServiceDescriptorService.getServices.calls.count()).toBe(1);
-      controller.userUpdatedCallback({
-        refresh: true,
-      });
-      $scope.$apply();
-      expect(USSService.getStatusesForUser.calls.count()).toBe(2);
-      expect(ServiceDescriptorService.getServices.calls.count()).toBe(2);
+      this.controller.$onDestroy();
+      expect(this.WaitingIntervalService.cancel).toHaveBeenCalledTimes(2);
+      expect(this.controller['intervalPromise']).not.toBeDefined();
     });
   });
 });

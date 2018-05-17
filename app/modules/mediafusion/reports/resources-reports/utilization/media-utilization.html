@@ -2,8 +2,22 @@
   <article class="media-service-card header-padding">
     <graphheader>
         <span class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></span>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected == $ctrl.parentcntrl.allClusters"></i>
-        <i class='icon icon-info-outline icon-large' tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}" tooltip-class="metrics-tooltip" ng-if="$ctrl.parentcntrl.clusterSelected != $ctrl.parentcntrl.allClusters"></i>
+        <i class='icon icon-info-outline icon-large'
+          ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"
+          tabindex="0"
+          tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}"
+          tooltip-class="metrics-tooltip"
+          tooltip-trigger="mouseenter focus"
+          aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}">
+        </i>
+        <i class='icon icon-info-outline icon-large'
+          ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"
+          tabindex="0"
+          tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}"
+          tooltip-class="metrics-tooltip"
+          tooltip-trigger="mouseenter focus"
+          aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}">
+        </i>
         <div id="utilization-export-div"></div>
     </graphheader>
     <section>
@@ -15,10 +29,10 @@
         <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus)">
           <p>
             <h3 class="no-data">
-            <i class='icon icon-warning no-data-warning'></i>
-            <span translate='mediaFusion.metrics.nodata'></span>
-          </h3>
-            <p>
+              <i class='icon icon-warning no-data-warning'></i>
+              <span translate='mediaFusion.metrics.nodata'></span>
+            </h3>
+          <p>
         </div>
       </div>
     </section>

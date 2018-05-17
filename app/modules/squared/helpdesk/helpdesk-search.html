@@ -1,32 +1,30 @@
 <div class="helpdesk-search centered" tabindex="0" ng-keyup="helpdeskCtrl.keyPressHandler($event)">
-
-
   <div class="main-heading">
     <h1 translate="helpdesk.searchHeading"></h1>
     <span class="help" ng-click="helpdeskCtrl.showSearchHelp()">
       {{'helpdesk.searchHelp' | translate}}<i class="icon icon-help"></i>
     </span>
-
   </div>
 
   <div class="typeahead-large" style="text-align: left;">
     <form class="searchInputForm">
       <input id="searchInput" type="search"
-             tabindex="1"
-             placeholder=""
-             autocomplete="off"
-             ng-model="helpdeskCtrl.searchString"
-             autofocus="true"/>
-      <button type="submit" tabindex="-1" class="btn btn--circle btn--primary icon icon-search"
-              ng-click="helpdeskCtrl.search()" ng-disabled="helpdeskCtrl.searchString == ''"></button>
+        placeholder="{{::'common.search' | translate}}"
+        autocomplete="off"
+        ng-model="helpdeskCtrl.searchString"
+        autofocus="true">
+      <button type="submit"
+        class="btn btn--circle btn--primary icon icon-search"
+        ng-click="helpdeskCtrl.search()"
+        ng-disabled="helpdeskCtrl.searchString === ''">
+      </button>
     </form>
 
     <div class="input-description"></div>
   </div>
 
   <div ng-if="helpdeskCtrl.currentSearch.orgFilter && !helpdeskCtrl.isCustomerHelpDesk" class="helpdesk-searching-org">
-        <span translate="helpdesk.searchingOrg"
-              translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
+    <span translate="helpdesk.searchingOrg" translate-value-name="{{helpdeskCtrl.currentSearch.orgFilter.displayName}}"></span>
     <i class="icon icon-close pointer" ng-click="helpdeskCtrl.initSearchWithoutOrgFilter()"></i>
   </div>
 
@@ -38,29 +36,29 @@
   <div class="row full">
     <div class="medium-12 xlarge-10 large-offset-1 centered columns end search-results">
       <div ng-class="['search-user-results', 'medium-6', 'large-5', 'xlarge-4',
-             {'large-offset-1 xlarge-offset-2': !helpdeskCtrl.isOrderSearchEnabled}, 'columns']"
-           ng-if="helpdeskCtrl.showUsersResultPane()">
+         {'large-offset-1 xlarge-offset-2': !helpdeskCtrl.isOrderSearchEnabled}, 'columns']"
+        ng-if="helpdeskCtrl.showUsersResultPane()">
         <h4 translate="helpdesk.users"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForUsers">
           <span><i class="icon icon-spinner icon-2x"></i></span>
-
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
+
         <div ng-if="helpdeskCtrl.currentSearch.userSearchFailure">
-          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} {{'helpdesk.help.referTo' | translate}} <a ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.
+          <p>{{helpdeskCtrl.currentSearch.userSearchFailure}} {{'helpdesk.help.referTo' | translate}} <a href ng-click="helpdeskCtrl.showSearchHelp()">{{'helpdesk.searchHelp' | translate}}</a>.</p>
         </div>
-        <div
-          ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length == 0">
+        <div ng-if="!helpdeskCtrl.searchingForUsers && helpdeskCtrl.currentSearch.userSearchResults.length === 0">
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > 0">
-          <cs-card class="cs-card--full pointer"
-                   ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit" id="user-card-{{$index}}" >
-            <article tabindex="{{$index * 10 + 1}}"
-                     ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})">
-
+          <cs-card class="cs-card--full pointer user-card-{{$index}}"
+            ng-repeat="user in helpdeskCtrl.currentSearch.userSearchResults | limitTo:helpdeskCtrl.currentSearch.userLimit"
+            id="user-card-{{$index}}" >
+            <article tabindex="0"
+              ui-sref="helpdesk.user({user:user, id:user.id, orgId:user.organization.id})"
+              ng-keydown="helpdeskCtrl.arrowNavigation($event, $index, 'user')">
                <div class="search-result-picture">
                  <div ng-if="user.photos[0].url" style="background-image:url('{{user.photos[0].url}}');"></div>
                  <div ng-if="!user.photos[0].url">
@@ -84,8 +82,7 @@
           </cs-card>
         </div>
 
-        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > helpdeskCtrl.currentSearch.userLimit"
-             class="show-more-results">
+        <div ng-if="helpdeskCtrl.currentSearch.userSearchResults.length > helpdeskCtrl.currentSearch.userLimit" class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('user')" translate="helpdesk.showMore"></a></span>
         </div>
 
@@ -95,9 +92,7 @@
         </div>
       </div>
 
-      <div class="search-customer-results medium-6 large-5 xlarge-4 columns end"
-           ng-if="helpdeskCtrl.showOrgsResultPane()">
-
+      <div class="search-customer-results medium-6 large-5 xlarge-4 columns end" ng-if="helpdeskCtrl.showOrgsResultPane()">
         <h4 translate="helpdesk.customers"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForOrgs">
@@ -108,22 +103,23 @@
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchFailure">
           <p>{{helpdeskCtrl.currentSearch.orgSearchFailure}}</p>
         </div>
-        <div
-          ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length == 0">
+        <div ng-if="!helpdeskCtrl.searchingForOrgs && helpdeskCtrl.currentSearch.orgSearchResults.length === 0">
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.orgSearchResults.length > 0">
-          <cs-card class="cs-card--full pointer"
-                   ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults | limitTo:helpdeskCtrl.currentSearch.orgLimit">
-            <article tabindex="{{$index * 10 + 2}}" ui-sref="helpdesk.org({org:org, id:org.id})">
+          <cs-card class="cs-card--full pointer org-card-{{$index}}"
+            ng-repeat="org in helpdeskCtrl.currentSearch.orgSearchResults | limitTo:helpdeskCtrl.currentSearch.orgLimit">
+            <article tabindex="0"
+              ui-sref="helpdesk.org({org:org, id:org.id})"
+              ng-keydown="helpdeskCtrl.arrowNavigation($event, $index, 'org')">
               <header>
                 <h5>
                   {{org.displayName}}
-                  <a tabindex="-1"
-                     ng-click="helpdeskCtrl.initSearchWithOrgFilter(org); $event.stopPropagation()"
-                     name="{{org}}"
-                     class="right">
+                  <a href
+                    ng-click="helpdeskCtrl.initSearchWithOrgFilter(org); $event.stopPropagation()"
+                    name="{{org}}"
+                    class="right search-link">
                     <i class="icon icon-search icon-org-search"></i>
                   </a>
                 </h5>
@@ -143,16 +139,14 @@
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
-
       </div>
 
       <div class="search-device-results medium-6 large-5 xlarge-4 columns end"
-           ng-if="helpdeskCtrl.showDeviceResultPane()">
+        ng-if="helpdeskCtrl.showDeviceResultPane()">
         <h4 translate="common.devices"></h4>
 
         <div ng-if="helpdeskCtrl.searchingForDevices">
           <span><i class="icon icon-spinner icon-2x"></i></span>
-
           <p translate="helpdesk.searchingPleaseWait"></p>
         </div>
 
@@ -161,15 +155,16 @@
         </div>
 
         <div
-          ng-if="!helpdeskCtrl.searchingForDevices && helpdeskCtrl.currentSearch.deviceSearchResults.length == 0">
+          ng-if="!helpdeskCtrl.searchingForDevices && helpdeskCtrl.currentSearch.deviceSearchResults.length === 0">
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.deviceSearchResults.length > 0">
-          <cs-card class="cs-card--full pointer"
-                   ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit | filter:notFound">
-            <article tabindex="{{$index * 10 + 3}}"
-                     ui-sref="{{device.isHuronDevice ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}">
+          <cs-card class="cs-card--full pointer device-card-{{$index}}"
+            ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit | filter:notFound">
+            <article tabindex="0"
+              ui-sref="{{device.isHuronDevice ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.encoded_id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}"
+              ng-keydown="helpdeskCtrl.arrowNavigation($event, $index, 'device')">
               <div class="device-result-picture">
                 <div style="background-image:url('{{device.image}}');"></div>
               </div>
@@ -204,7 +199,7 @@
       </div>
 
       <div class="search-order-results medium-6 large-5 xlarge-4 columns end"
-           ng-if="helpdeskCtrl.showOrdersResultPane()">
+        ng-if="helpdeskCtrl.showOrdersResultPane()">
 
         <h4 translate="helpdesk.orders"></h4>
 
@@ -216,15 +211,16 @@
         <div ng-if="helpdeskCtrl.currentSearch.orderSearchFailure">
           <p>{{helpdeskCtrl.currentSearch.orderSearchFailure}}</p>
         </div>
-        <div
-          ng-if="!helpdeskCtrl.searchingForOrders && helpdeskCtrl.currentSearch.orderSearchResults.length == 0">
+        <div ng-if="!helpdeskCtrl.searchingForOrders && helpdeskCtrl.currentSearch.orderSearchResults.length === 0">
           <p translate="helpdesk.noSearchHits"></p>
         </div>
 
         <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > 0">
-          <cs-card class="cs-card--full pointer"
-                   ng-repeat="order in helpdeskCtrl.currentSearch.orderSearchResults | limitTo:helpdeskCtrl.currentSearch.orderLimit">
-            <article tabindex="{{$index * 10 + 3}}" ui-sref="helpdesk.order({order:order})">
+          <cs-card class="cs-card--full pointer order-card-{{$index}}"
+            ng-repeat="order in helpdeskCtrl.currentSearch.orderSearchResults | limitTo:helpdeskCtrl.currentSearch.orderLimit">
+            <article tabindex="0"
+              ui-sref="helpdesk.order({order:order})"
+              ng-keydown="helpdeskCtrl.arrowNavigation($event, $index, 'order')">
               <header>
                 <h5 translate="helpdesk.orderNumber" translate-values="{orderNumber: order.externalOrderId}">
                 </h5>
@@ -236,8 +232,7 @@
           </cs-card>
         </div>
 
-        <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > helpdeskCtrl.currentSearch.orderLimit"
-             class="show-more-results">
+        <div ng-if="helpdeskCtrl.currentSearch.orderSearchResults.length > helpdeskCtrl.currentSearch.orderLimit" class="show-more-results">
           <span><a href ng-click="helpdeskCtrl.showMoreResults('order')" translate="helpdesk.showMore"></a></span>
         </div>
 
@@ -245,11 +240,7 @@
              class="show-more-results">
           <span translate="helpdesk.noMoreResults"></span>
         </div>
-
       </div>
-
-
     </div>
   </div>
-
 </div>

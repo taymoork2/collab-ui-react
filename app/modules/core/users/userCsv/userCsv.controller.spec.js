@@ -13,7 +13,7 @@ describe('userCsv.controller', function () {
 
     this.injectDependencies('$controller', '$interval', '$modal', '$previousState', '$q', '$rootScope',
       '$scope', '$state', '$timeout', 'Analytics', 'Authinfo', 'CsvDownloadService', 'FeatureToggleService',
-      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'ServiceDescriptorService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
+      'HuronCustomer', 'Notification', 'Orgservice', 'ResourceGroupService', 'UserCsvService', 'Userservice', 'USSService', 'DirSyncService');
 
     initFixtures.apply(this);
     initMocks.apply(this);
@@ -25,6 +25,9 @@ describe('userCsv.controller', function () {
     spyOn(this.$state, 'go').and.returnValue(this.$q.resolve());
     spyOn(this.Analytics, 'trackAddUsers').and.returnValue(this.$q.resolve());
     spyOn(this.Authinfo, 'isOnline').and.returnValue(true);
+    spyOn(this.Authinfo, 'isFusionUC').and.returnValue(false);
+    spyOn(this.Authinfo, 'isFusionCal').and.returnValue(true);
+    spyOn(this.Authinfo, 'isFusionIMP').and.returnValue(false);
     this.modalDefer = this.$q.defer();
     spyOn(this.$modal, 'open').and.returnValue({
       result: this.modalDefer.promise,
@@ -33,12 +36,11 @@ describe('userCsv.controller', function () {
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'refreshStatus').and.returnValue(this.$q.resolve());
 
-    spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.fusionServices));
     spyOn(this.CsvDownloadService, 'getCsv').and.callFake(function (type) {
       if (type === 'headers') {
-        return this.$q.resolve(_this.headers);
+        return _this.$q.resolve(_this.headers);
       } else {
-        return this.$q.resolve({});
+        return _this.$q.resolve({});
       }
     });
 
@@ -50,9 +52,15 @@ describe('userCsv.controller', function () {
     spyOn(this.FeatureToggleService, 'supports').and.callFake(function () {
       return _this.$q.resolve(false);
     });
+    spyOn(this.FeatureToggleService, 'atlasCsvImportTaskManagerGetStatus').and.callFake(function () {
+      return _this.$q.resolve(false);
+    });
+    spyOn(this.FeatureToggleService, 'atlasUserCsvSubscriptionEnableGetStatus').and.callFake(function () {
+      return _this.$q.resolve(true);
+    });
 
     spyOn(this.Userservice, 'onboardUsers').and.callThrough();
-    spyOn(this.Userservice, 'bulkOnboardUsers').and.callThrough();
+    spyOn(this.Userservice, 'bulkOnboardUsers').and.returnValue(this.$q.resolve());
     spyOn(this.Userservice, 'getUser').and.returnValue(this.getUserMe);
     spyOn(this.Userservice, 'migrateUsers').and.returnValue(this.getMigrateUsers);
     spyOn(this.Userservice, 'updateUsers').and.callThrough();
@@ -76,7 +84,6 @@ describe('userCsv.controller', function () {
     this.getUserMe = getJSONFixture('core/json/users/me.json');
     this.getMigrateUsers = getJSONFixture('core/json/users/migrate.json');
     this.getMyFeatureToggles = getJSONFixture('core/json/users/me/featureToggles.json');
-    this.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.headers = getJSONFixture('core/json/users/headers.json');
     this.customer = getJSONFixture('huron/json/settings/customer.json');
     this.resourceGroups = getJSONFixture('core/json/users/resource_groups.json');
@@ -240,6 +247,7 @@ describe('userCsv.controller', function () {
         threeUsersOneDuplicateEmail: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Calendar Service,Meeting 25 Party,Spark Call,Spark Message\nFirst0,Last0,First0 Last0,firstlast0@example.com,5001,,true,true,true,true\nFirst1,Last1,First1 Last1,firstlast1@example.com,5002,,true,true,true,true\nFirst2,Last2,First2 Last2,firstlast0@example.com,5002,,true,true,true,true',
         invalidHeaders: 'John,Doe,John Doe,johndoe@example.com,5001,12223335001,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE\nJane,Doe,Jane Doe,janedoe@example.com,,,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE',
         badCsvFormat: 'fa;lskdhgqiwoep;klnandf',
+        mismatchHeaderName: 'User ID/Email (Required),Meeting 2500 Party\njohn.doe@example.com,true',
         invalidCsvData: {},
         oneInvalidEmailUserTooManySparkCallLicenses: 'First Name,Last Name,Display Name,User ID/Email (Required),Directory Number,Direct Line,Spark Call,Spark Call 2\nJohn,Doe,John Doe,johndoe@example.com,5001,,true,true',
       };
@@ -253,9 +261,8 @@ describe('userCsv.controller', function () {
           expect(this.controller.model.uploadProgress).toEqual(0);
         });
         it('should not go to the next step', function () {
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -277,9 +284,8 @@ describe('userCsv.controller', function () {
           this.controller.resetFile();
           this.$scope.$apply();
           this.$timeout.flush();
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -315,6 +321,15 @@ describe('userCsv.controller', function () {
         expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvBadFormat');
       });
 
+      it('should notify error if any mismatch header name', function () {
+        this.controller.model.file = this.mockCsvData.mismatchHeaderName;
+        this.$scope.$apply();
+        this.$timeout.flush();
+        expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.csvHeaderNameMismatch', {
+          name: 'Meeting 2500 Party',
+        });
+      });
+
       describe('valid one column file content', function () {
         beforeEach(function () {
           this.controller.model.file = this.mockCsvData.oneColumnValidUser;
@@ -340,9 +355,8 @@ describe('userCsv.controller', function () {
           expect(this.controller.model.uploadProgress).toEqual(100);
         });
         it('should not go to the next step', function () {
-          var promise = this.controller.csvUploadNext();
+          this.controller.csvUploadNext().catch(_.noop);
           this.$scope.$apply();
-          expect(promise).toBeRejected();
           expect(this.Notification.error).toHaveBeenCalledWith('firstTimeWizard.uploadCsvEmpty');
         });
       });
@@ -358,12 +372,6 @@ describe('userCsv.controller', function () {
 
     describe('Process CSV and Save Users with an invalid user', function () {
       beforeEach(function () {
-        this.controller.model.file = this.mockCsvData.oneInvalidEmailUserTooManySparkCallLicenses;
-        this.$scope.$apply();
-        this.$timeout.flush();
-      });
-
-      it('should fail users that has more than 1 active Spark Call licenses', function () {
         var newHeaders = getJSONFixture('core/json/users/headers.json');
         newHeaders.columns.push({
           name: 'Spark Call 2',
@@ -379,6 +387,14 @@ describe('userCsv.controller', function () {
             return this.$q.resolve({});
           }
         });
+        initController.apply(this);
+
+        this.controller.model.file = this.mockCsvData.oneInvalidEmailUserTooManySparkCallLicenses;
+        this.$scope.$apply();
+        this.$timeout.flush();
+      });
+
+      it('should fail users that has more than 1 active Spark Call licenses', function () {
         this.controller.startUpload();
         this.$scope.$apply();
         this.$timeout.flush();
@@ -740,7 +756,6 @@ describe('userCsv.controller', function () {
       this.FeatureToggleService.supports.and.callFake(function () {
         return _this.$q.resolve(true);
       });
-      this.fusionServices = getJSONFixture('core/json/users/hybridServices.json');
       this.headers = getJSONFixture('core/json/users/headersForHybridServicesOld.json');
 
       initMocks.apply(this);
@@ -902,7 +917,10 @@ describe('userCsv.controller', function () {
     });
 
     it('should ignore resource group changes if unable to read groups from FMS', function () {
-      this.ResourceGroupService.getAll.and.returnValue(this.$q.reject());
+      var ngq = this.$q;
+      this.ResourceGroupService.getAll.and.callFake(function () {
+        return ngq.reject();
+      });
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
@@ -910,7 +928,10 @@ describe('userCsv.controller', function () {
     });
 
     it('should ignore resource group changes if unable to read current props from USS', function () {
-      this.USSService.getAllUserProps.and.returnValue(this.$q.reject());
+      var ngq = this.$q;
+      this.USSService.getAllUserProps.and.callFake(function () {
+        return ngq.reject();
+      });
       var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
@@ -1008,10 +1029,37 @@ describe('userCsv.controller', function () {
       initController.apply(this);
     });
 
-    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+    it('should go to users.manage.org when previous state is users.manage.emailSuppress', function () {
       this.controller.onBack();
       this.$scope.$apply();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
+    });
+  });
+
+  describe('Import CSV with new batch service', function () {
+    beforeEach(function () {
+      var _this = this;
+      this.FeatureToggleService.atlasCsvImportTaskManagerGetStatus.and.callFake(function () {
+        return _this.$q.resolve(true);
+      });
+      initController.apply(this);
+    });
+
+    it('should go to users.csv.task-manager', function () {
+      this.controller.model.fileName = 'fileName.csv';
+      this.controller.model.file = 'csvContent';
+      this.controller.model.fileChecksum = 'fileChecksum';
+      this.controller.model.enableRemove = true;
+      this.controller.startUpload();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith('users.csv.task-manager', {
+        job: {
+          fileName: 'fileName.csv',
+          fileData: 'csvContent',
+          fileChecksum: 'fileChecksum',
+          exactMatchCsv: true,
+        },
+      });
     });
   });
 });

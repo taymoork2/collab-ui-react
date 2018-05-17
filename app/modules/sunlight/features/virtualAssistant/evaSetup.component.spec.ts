@@ -11,7 +11,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       nextButtonState: true,
     },
     {
-      name: 'vaName',
+      name: 'name',
       previousButtonState: true,
       nextButtonState: false,
     },
@@ -147,8 +147,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   };
 
   let getLogoDeferred, getLogoUrlDeferred, controller, listRoomsDeferred, listMembershipsDeferred;
-  let warningIfNotOwnerResult;
-
+  let userAccess = true;
   beforeEach(function () {
     this.initModules('Sunlight', evaSetupModule);
     this.injectDependencies(
@@ -176,7 +175,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     getLogoUrlDeferred = this.$q.defer();
     listRoomsDeferred = this.$q.defer();
     listMembershipsDeferred = this.$q.defer();
-    warningIfNotOwnerResult = { valid: true };
+    userAccess = true;
     spyOn(this.$modal, 'open');
     spyOn(this.CTService, 'getLogo').and.returnValue(getLogoDeferred.promise);
     spyOn(this.CTService, 'getLogoUrl').and.returnValue(getLogoUrlDeferred.promise);
@@ -191,7 +190,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     spyOn(this.SparkService, 'getMyPersonId').and.returnValue(personId);
     spyOn(this.SparkService, 'listRooms').and.returnValue(listRoomsDeferred.promise);
     spyOn(this.SparkService, 'listMemberships').and.returnValue(listMembershipsDeferred.promise);
-    spyOn(this.EvaService, 'getWarningIfNotOwner').and.callFake(() => warningIfNotOwnerResult);
+    spyOn(this.EvaService, 'canIEditThisEva').and.callFake(() => userAccess);
 
     this.compileComponent('eva-setup', {
       dismiss: 'dismiss()',
@@ -211,30 +210,31 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(controller, 'getText').and.returnValue(deferred.promise);
+      spyOn(controller, 'getCommonText').and.returnValue(deferred.promise);
     });
 
     it('getTitle', function () {
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('createTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('createTitle');
     });
 
     it('getTitle with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('editTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('editTitle');
     });
 
     it('getSummaryDescription', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDesc', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
       controller.isEditFeature = true;
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.evaDescEdit', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('cancelModal', function () {
@@ -359,13 +359,13 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
   });
 
-  describe('vaName Page', function () {
+  describe('name Page', function () {
     beforeEach(function () {
       controller.nameForm = getForm('nameInput');
     });
 
     it ('isNameValid to return true when name input field is populated and less than maxNameLength', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testUser';
+      controller.template.configuration.pages.name.nameValue = 'testUser';
 
       const isNameValid = controller.isNameValid();
       expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, true);
@@ -373,14 +373,14 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it ('isNameValid to return false when name input field is empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = '';
+      controller.template.configuration.pages.name.nameValue = '';
 
       const isNameValid = controller.isNameValid();
       expect(isNameValid).toBe(true);
     });
 
     it ('isNameValid to return false when name is longer than maxNameLength', function () {
-      controller.template.configuration.pages.vaName.nameValue = '123456789012345678901234567890123456789012345678901';
+      controller.template.configuration.pages.name.nameValue = '123456789012345678901234567890123456789012345678901';
 
       const isNameValid = controller.isNameValid();
       expect(controller.nameForm.nameInput.$setValidity).toHaveBeenCalledWith(controller.NameErrorMessages.ERROR_CHAR_50, false);
@@ -388,7 +388,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
     });
 
     it ('isNamePageValid to return false when name input field is empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = '';
+      controller.template.configuration.pages.name.nameValue = '';
 
       spyOn(this.controller, 'isNameValid').and.returnValue(true);
       const isNameValid = controller.isNamePageValid();
@@ -427,13 +427,20 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
   });
 
   describe('Summary Page', function () {
-    let deferred, listEvasDeferred;
+    let deferred, updateDeferred, updateIconDeferred, listEvasDeferred;
     beforeEach(function () {
       deferred = this.$q.defer();
+      updateDeferred = this.$q.defer();
+      updateIconDeferred = this.$q.defer();
       listEvasDeferred = this.$q.defer();
       spyOn(this.EvaService, 'addExpertAssistant').and.returnValue(deferred.promise);
-      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(deferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(updateDeferred.promise);
+      spyOn(this.EvaService, 'updateExpertAssistantIcon').and.returnValue(updateIconDeferred.promise);
       spyOn(this.EvaService, 'listExpertAssistants').and.returnValue(listEvasDeferred.promise);
+    });
+
+    afterEach(function () {
+      deferred = updateDeferred = updateIconDeferred = listEvasDeferred = undefined;
     });
 
     it("should fail to submit Expert Virtual Assistant when the 'saveTemplateErrorOccurred' is set", function () {
@@ -501,9 +508,9 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;
       const testName = 'My Test EVA';
-      controller.template.configuration.pages.vaName.nameValue = testName;
+      controller.template.configuration.pages.name.nameValue = testName;
       spyOn(this.$state, 'go');
-      deferred.resolve({
+      updateDeferred.resolve({
         success: true,
         status: 200,
       });
@@ -530,26 +537,55 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
           errorCode: '100106',
         }],
       };
-      deferred.reject(failedData);
+      updateDeferred.reject(failedData);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.eva.featureText.name' };
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should show invalidIconDimensions if update icon fails on Edit', function () {
+      const myTranslation = 'invalid icon dimensions';
+      spyOn(this.$translate, 'instant').and.returnValue(myTranslation);
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      controller.template.configuration.pages.vaAvatar.oldFileValue = 'oldFile';
+      controller.isEditFeature = true;
+      updateDeferred.resolve({
+        success: true,
+        status: 200,
+      });
+      const failedData = {
+        success: false,
+        status: 403,
+        Errors: [{
+          errorCode: '100106',
+        }],
+      };
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidIconDimensions' } }, failedData);
+      updateIconDeferred.reject(response);
       controller.submitFeature();
       this.$scope.$apply();
 
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
-      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(response, jasmine.any(String), { featureName: myTranslation });
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_ICON_DIMENSIONS);
+      expect(controller.summaryErrorMessage).toBe(myTranslation);
     });
 
-    it('should show correct notification if user does not have access for edit Edit', function () {
+    it('should show correct notification if user does not have access for edit', function () {
       //by default, this flag is false
       expect(controller.saveTemplateErrorOccurred).toBeFalsy();
       controller.isEditFeature = true;
+      const owner = 'Some Owner';
+      controller.template.ownerDetails.displayName = owner;
       const expectedWarningMessage = {
         message: 'careChatTpl.virtualAssistant.eva.featureText.nonAdminEditDeleteWarning',
-        args: { owner: 'Some Owner' },
+        args: { owner },
       };
-      warningIfNotOwnerResult = {
-        valid: false,
-        warning: expectedWarningMessage,
-      };
+      userAccess = false;
       controller.submitFeature();
       this.$scope.$apply();
 

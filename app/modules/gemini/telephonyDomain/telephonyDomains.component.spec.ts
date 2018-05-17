@@ -82,7 +82,9 @@ describe('Component: gmTelephonyDomains', () => {
     });
 
     it('should notify in message for non 200 http status', function() {
-      this.TelephonyDomainService.getTelephonyDomains.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getTelephonyDomains.and.callFake(() => {
+        return this.$q.reject({ status: 404 });
+      });
       initComponent.call(this);
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });

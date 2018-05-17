@@ -1,5 +1,5 @@
 import { BmmpService } from '../index';
-import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr } from 'modules/online/upgrade/shared/upgrade.service';
 
 class SubscriptionUpgradeButton implements ng.IComponentController {
   public showLoading: string;

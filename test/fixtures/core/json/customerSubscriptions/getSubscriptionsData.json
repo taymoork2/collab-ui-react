@@ -143,11 +143,11 @@
         "isTrial": false,
         "status": "ACTIVE",
         "capacity": 200,
-        "siteUrl": "frankSinatraTest.dmz.webex.com",
+        "siteUrl": "shafiTest.dmz.webex.com",
         "isCIUnifiedSite": true,
         "siteId": "57493322",
         "isCI": true,
-        "siteAdminUrl": "https://frankSinatraTest.dmz.webex.com/wbxadmin/default.do?siteurl=frankSinatraTest"
+        "siteAdminUrl": "https://shafiTest.dmz.webex.com/wbxadmin/default.do?siteurl=shafiTest"
       },
       {
         "licenseId": "CMR_0dsdfsfdg7c7d-f0fdgsb-3497-5f59a-64fddsf32r31995c4_shafiTest.dmz.webex.com",

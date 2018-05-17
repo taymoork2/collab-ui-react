@@ -12,7 +12,9 @@ class HybridIMPInactiveCardController implements ng.IComponentController {
       resolve: {
         connectorType: () => 'c_imp',
         serviceId: () => 'spark-hybrid-impinterop',
-        firstTimeSetup: true,
+        options: {
+          firstTimeSetup: true,
+        },
       },
       controller: 'AddResourceController',
       controllerAs: 'vm',

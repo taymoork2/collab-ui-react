@@ -135,7 +135,7 @@ describe('Component: bulkEnableVm', () => {
 
   describe('component: bulkEnableVm', () => {
     beforeEach(function () {
-      this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings&count=1000')
+      this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users?filter=active%20eq%20true%20and%20entitlements%20eq%20%22ciscouc%22&attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences&count=1000')
         .respond({});
       this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me')
         .respond({});

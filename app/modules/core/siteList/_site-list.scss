@@ -1,4 +1,5 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 @import '~@collabui/collab-ui/scss/settings/typography';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
@@ -6,7 +7,7 @@
   @extend %grid-header;
   @extend %page-background-white;
 
-  .ui-grid-row {
+  cs-grid.legacy-site-list .ui-grid-row {
     &:hover {
       background-color: transparent;
     }
@@ -22,6 +23,13 @@
       &:hover {
         color: $anchor-font-color-hover;
       }
+    }
+  }
+
+  .page-sub-header__left {
+    color: $gray-2;
+    .icon {
+      padding-right: .75rem;
     }
   }
 
@@ -69,12 +77,10 @@
       margin-left: 0.25rem;
       padding: 0;
       border: 0px;
-
       li {
         display: inline;
         margin-right: 1rem;
-        font-size: 1rem;
-
+        font-family: $brand-font-light;
         &:hover {
           cursor: pointer;
           color: $color-primary-base;
@@ -83,10 +89,12 @@
           color: $color-primary-base;
         }
         .link {
-          color: $gray-light-1;
-          font-size: 1rem;
           border: 0px;
           outline: none;
+        }
+        span {
+          font-size:1rem;
+          color: $gray-2;
         }
       }
     }

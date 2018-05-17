@@ -16,6 +16,7 @@ export interface ICardStatus {
 export enum CardType {
   cloud,
   hybrid,
+  hcs,
 }
 
 export interface ICardParams {
@@ -30,6 +31,7 @@ export interface ICardParams {
   setupMode?: boolean;
   infoIcon?: string;
   infoText?: string;
+  isPartner?: boolean;
 }
 
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
@@ -38,9 +40,9 @@ const servicesOverviewCardTemplatePath = require('ngtemplate-loader?module=Hercu
 export abstract class ServicesOverviewCard {
 
   private cardType: CardType;
-  private description: string;
-  private icon: string;
-  private template: string;
+  public description: string;
+  public icon: string;
+  public template: string;
   public cardClass: string;
   public active: boolean;
   public display: boolean;
@@ -50,6 +52,7 @@ export abstract class ServicesOverviewCard {
   public setupMode: boolean;
   public infoIcon: string;
   public infoText: string;
+  public isPartner: boolean;
 
   public getCardType() {
     return this.cardType;
@@ -75,6 +78,7 @@ export abstract class ServicesOverviewCard {
     setupMode = false,
     infoIcon = '',
     infoText = '',
+    isPartner = false,
   }: ICardParams) {
     this.active = active;
     this.cardClass = cardClass;
@@ -87,5 +91,6 @@ export abstract class ServicesOverviewCard {
     this.setupMode = setupMode;
     this.infoIcon = infoIcon;
     this.infoText = infoText;
+    this.isPartner = isPartner;
   }
 }

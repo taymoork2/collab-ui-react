@@ -10,4 +10,5 @@ export default angular
   ])
   .service('WebexMetricsService', WebexMetricsServices)
   .constant('LoadingTimeout', 120000)
+  .constant('HybridLoadingTimeout', 120000)
   .name;

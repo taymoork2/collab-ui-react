@@ -73,6 +73,7 @@
           $location.search({});
 
           if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
+            $rootScope.$emit('Core::loginCompleted');
             $state.go('firsttimewizard');
           } else {
             var state = 'overview';

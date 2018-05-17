@@ -20,7 +20,7 @@
   }
 
   .aa-route-action {
-    .csSelect-container {
+    .csSelect-container, .cs-input-text {
       @include vr-spacing(pt, 1);
 
       width: 100%;

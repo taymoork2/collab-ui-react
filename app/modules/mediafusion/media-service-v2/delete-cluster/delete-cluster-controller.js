@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, HybridServicesClusterService, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -19,6 +19,7 @@
     vm.hosts = '';
     vm.ngDisable = false;
     vm.canContinue = canContinue;
+    vm.clusters = [];
     vm.loading = true;
 
     HybridServicesClusterService.getAll()
@@ -70,6 +71,10 @@
       for (var i = 0; i < vm.hosts.length; i++) {
         defuseHost(vm.hosts[i]);
       }
+      if (vm.clusters.length === 1) {
+        DeactivateMediaService.deactivateHybridMediaService();
+        $modalInstance.close();
+      }
     };
 
     function defuseHost(host) {
@@ -111,13 +116,51 @@
             loopPromises.push(deferred.promise.catch(recoverPromise));
             deferred.resolve(toCluster);
           } else {
-            var promise = HybridServicesClusterService.preregisterCluster(toClusterName, 'stable', 'mf_mgmt');
+            var promise = updatePropertiesofCluster(toClusterName);
             loopPromises.push(promise.catch(recoverPromise));
           }
           clusterListNames.push(toClusterName);
         }
       }
       return loopPromises;
+    }
+
+    function updatePropertiesofCluster(toClusterName) {
+      return HybridServicesClusterService.preregisterCluster(toClusterName, 'stable', 'mf_mgmt').then(function (res) {
+        vm.clusterDetail = res;
+        // Add the created cluster to property set
+        MediaClusterServiceV2.getPropertySets()
+          .then(function (propertySets) {
+            if (propertySets.length > 0) {
+              vm.videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              vm.qosPropertySet = _.filter(propertySets, {
+                name: 'qosPropertySet',
+              });
+              if (vm.videoPropertySet.length > 0) {
+                var clusterPayload = {
+                  assignedClusters: vm.clusterDetail.id,
+                };
+                // Assign it the property set with cluster list
+                MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+              }
+              if (vm.qosPropertySet.length > 0) {
+                var clusterQosPayload = {
+                  assignedClusters: vm.clusterDetail.id,
+                };
+                // Assign it the property set with cluster list
+                MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+              }
+            }
+          });
+        return vm.clusterDetail;
+      }, function () {
+        vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
+          hostName: toClusterName,
+        });
+        Notification.error(vm.error);
+      });
     }
 
     function moveHost(hostname, toClusterName, response) {
@@ -180,7 +223,9 @@
           });
           Notification.success(vm.success);
           $modalInstance.close();
-          $state.go('media-service-v2.list');
+          if (vm.clusters.length > 1) {
+            $state.go('media-service-v2.list');
+          }
         }, function (err) {
           vm.error = $translate.instant('mediaFusion.deleteGroup.errorMessage', {
             groupName: vm.cluster.name,

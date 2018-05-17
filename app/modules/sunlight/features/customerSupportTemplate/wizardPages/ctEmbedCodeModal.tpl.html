@@ -1,11 +1,14 @@
 <div id="embedCodeModalDiv">
-	<div class="modal-header">
-	  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
-	  <span class="h3 modal-title sunlight-ellipsis-text" ng-attr-title="{{embedCodeCtrl.templateHeader}}" ng-bind="embedCodeCtrl.templateHeader"></span>
-	</div>
-	<div class="modal-body ct-embed-code-area lead">
-	  <textarea class="script-area" rows=20 readonly ng-bind="embedCodeCtrl.embedCodeSnippet"></textarea>
-	</div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
+    <span class="h3 modal-title sunlight-ellipsis-text" ng-attr-title="{{embedCodeCtrl.templateHeader}}" ng-bind="embedCodeCtrl.templateHeader"></span>
+  </div>
+  <div class="modal-body ct-embed-code-use-instruction" style="padding-bottom:0rem">
+    <h5 class="embed-instruction" translate="careChatTpl.embedCodeHowToUseInfo"></h5>
+  </div>
+  <div class="modal-body ct-embed-code-area lead">
+    <textarea class="script-area" rows=20 readonly ng-bind="embedCodeCtrl.embedCodeSnippet"></textarea>
+  </div>
   <div class="modal-body">
     <div ng-if="embedCodeCtrl.isLoading"><i class='icon icon-spinner icon-2x'></i></div>
     <div ng-show="embedCodeCtrl.domainInfo.warn" class="flex-display">
@@ -28,11 +31,12 @@
       </div>
     </div>
   </div>
-	<div class="modal-footer">
-	  <button class="btn btn-default" id="closeEmbedCodeBtn"
-	          ng-click="$dismiss()" translate="common.close"></button>
-	  <a id="downloadChatCodeTxt" ng-click="embedCodeCtrl.downloadEmbedCode($event); $dismiss();">
-	  	<button class="btn btn--primary" id="copyEmbedCodeBtn" focus-on translate="careChatTpl.downloadEmbedCode"></button>
-	  </a>
-	</div>
+  <div class="modal-footer">
+    <button class="btn btn-default" id="closeEmbedCodeBtn" ng-click="$dismiss()" translate="common.close"></button>
+    <!-- TODO: merge the anchor and button elements -->
+    <a href id="downloadChatCodeTxt" ng-click="embedCodeCtrl.downloadEmbedCode($event); $dismiss();" focus-on>
+      <!-- button removed from tabindex to prevent redundancy -->
+      <button class="btn btn--primary" id="copyEmbedCodeBtn" translate="careChatTpl.downloadEmbedCode" tabindex="-1"></button>
+    </a>
+  </div>
 </div>

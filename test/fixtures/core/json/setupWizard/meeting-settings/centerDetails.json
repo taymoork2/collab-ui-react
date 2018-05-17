@@ -1,0 +1,47 @@
+[{
+  "subscriptionId":"db820f2c-7e2f-442e-8974-75cdc6ba0d3d",
+  "serviceOrderId":"284bcf35-dc0e-441c-ae1b-11a255959016",
+  "purchaseOrderId":"20a338d1-be53-42be-8bc4-d1041ae227ca",
+  "purchasedServices":[
+    {
+      "serviceName":"TC",
+      "quantity":30
+    },
+    {
+      "serviceName":"EC",
+      "quantity":30
+    },
+    {
+      "serviceName":"SC",
+      "quantity":30
+    },
+    {
+      "serviceName":"MC",
+      "quantity":30
+    },
+    {
+      "serviceName":"MS",
+      "quantity":30
+    },
+    {
+      "serviceName":"CDC",
+      "quantity":5
+    },
+    {
+      "serviceName":"CMR",
+      "quantity":30
+    }
+  ]
+},
+{
+  "subscriptionId":"284bcf35-dc0e-441c-ae1b-11a255959016",
+  "serviceOrderId":"db820f2c-7e2f-442e-8974-75cdc6ba0d3d",
+  "purchaseOrderId":"20a338d1-be53-42be-8bc4-d1041ae227ca",
+  "purchasedServices":[
+    {
+      "serviceName":"MC",
+      "quantity":30
+    }
+  ]
+}
+]

@@ -1,14 +1,16 @@
 import dirSyncServiceModuleName from 'modules/core/featureToggle';
-import userAddSharedModuleName from 'modules/core/users/userAdd/shared';
+import onboardModuleName from 'modules/core/users/shared/onboard';
 import * as userlistModuleName from 'modules/core/scripts/services/userlist.service';
+import usersSharedAutoAssignTemplateModuleName from 'modules/core/users/shared/auto-assign-template';
 import { CrOnboardUsersComponent } from './cr-onboard-users.component';
 
 export default angular.module('core.users.userAdd.users-add-modal.cr-onboard-users', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
   dirSyncServiceModuleName,
-  userAddSharedModuleName ,
+  onboardModuleName,
   userlistModuleName,
+  usersSharedAutoAssignTemplateModuleName,
 ])
   .component('crOnboardUsers', new CrOnboardUsersComponent())
   .name;

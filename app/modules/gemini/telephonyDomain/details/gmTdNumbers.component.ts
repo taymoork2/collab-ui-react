@@ -43,8 +43,8 @@ class GmTdNumbersCtrl implements ng.IComponentController {
   private callTypeOptions: any[] = [];
   private defaultNumberOptions: any[] = [];
   private globalDisplayOptions: any[] = [];
-  private _countryOptions: any[] = [];
-  private countryOptions: any[] = [];
+  public _countryOptions: any[] = [];
+  public countryOptions: any[] = [];
   private isHiddenOptions: any[] = [];
   private phoneAndLabelLength: number = 0;
 
@@ -261,10 +261,11 @@ class GmTdNumbersCtrl implements ng.IComponentController {
       this.$element.find('#' + row.uid + '-tollType').find('.select-toggle').focus();
     }
     if (status === DNIS_TYPE.NON_CCA) {
-      const message = this.TelephonyNumberValidateService.getValidationMessage('dnisNumberNotAvailable');
+      const label = this.TelephonyNumberValidateService.getValidationLabel('dnisNumberNotAvailable');
 
       row.entity.validation.dnisNumberFormat.invalid = true;
-      row.entity.validation.dnisNumberFormat.message = message;
+      row.entity.validation.dnisNumberFormat.ariaLabel = label;
+      row.entity.validation.dnisNumberFormat.message = this.TelephonyNumberValidateService.createTooltip(label);
       row.entity.validation.dnisNumberFormat.show = true;
 
       this.$element.find('#' + row.uid + '-dnisNumberFormat').focus();

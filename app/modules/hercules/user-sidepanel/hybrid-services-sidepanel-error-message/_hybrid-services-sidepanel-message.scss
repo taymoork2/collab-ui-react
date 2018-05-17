@@ -1,0 +1,25 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+hybrid-services-sidepanel-message {
+  display: block;
+  margin-top: 5px;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 3px;
+  }
+
+  .icon-error {
+    color: $color-alerts-base;
+  }
+
+  .icon-warning {
+    color: $brand-warning-dark;
+  }
+
+  .icon-info {
+    color: $color-primary-base;
+  }
+
+}

@@ -9,8 +9,14 @@
     </div>
   </div>
 </div>
+<assignable-services
+  ng-if="isAtlastF3745PortAssignableServices"
+  subscriptions="sortedSubscriptions"
+  on-update=""
+  auto-assign-template-data="">
+</assignable-services>
 <cr-services-panels
-  ng-if="hasAccount"
+  ng-if="hasAccount && !isAtlastF3745PortAssignableServices"
   message-features="messageFeatures"
   radio-states="radioStates"
   check-license-availability="checkLicenseAvailability"
@@ -30,5 +36,10 @@
   current-user-enables-call="currentUserEnablesCall"
   cvc-care-feature="cvcCareFeature"
   care-features="careFeatures"
+  on-update-is-context-service-admin-authorized="recvUpdateIsContextServiceAdminAuthorized(isAuthorized)"
   ></cr-services-panels>
-<hybrid-services-entitlements-panel entitlements-callback="updateHybridServicesEntitlements(entitlements)"></hybrid-services-entitlements-panel>
+<hybrid-services-entitlements-panel
+  entitlements-callback="updateHybridServicesEntitlements(entitlements)"
+  is-huron-call-license-selected="isHuronCallLicenseSelected()"
+  has-license-selections="userIsLicensed()"
+></hybrid-services-entitlements-panel>

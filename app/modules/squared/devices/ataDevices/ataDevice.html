@@ -3,17 +3,16 @@
   <button
     type="button"
     class="close"
-    ng-click="$dismiss()">
+    ng-click="$dismiss()"
+    aria-label="{{::'common.close' | translate}}">
   </button>
   <h3 class="modal-title" translate="ataSettings.title">
   </h3>
 </div>
 
 <!-- body -->
-<div
-  class="modal-body ataDeviceModal">
-  <p translate="ataSettings.description" ng-if="!ata.ataRebootWarningToggle"></p>
-  <p translate="ataSettings.rebootDescription" ng-if="ata.ataRebootWarningToggle"></p>
+<div class="modal-body ataDeviceModal">
+  <p translate="ataSettings.rebootDescription"></p>
   <br>
 
   <h5 translate="ataSettings.input"></h5>
@@ -36,22 +35,17 @@
 </div>
 
 <!-- footer -->
-<div
-  class="modal-footer">
+<div class="modal-footer">
   <button
     class="btn"
-    ng-click="$dismiss()">
-    <span
-      translate="common.cancel">
-    </span>
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
   <button
-      cs-btn
-      loading="ata.isLoading"
-      class="btn btn--primary"
-      sq-click-promise="ata.saveSettings()">
-      <span
-        translate="common.save">
-      </span>
+    cs-btn
+    loading="ata.isLoading"
+    class="btn btn--primary"
+    sq-click-promise="ata.saveSettings()">
+    <span translate="common.save"></span>
   </button>
 </div>

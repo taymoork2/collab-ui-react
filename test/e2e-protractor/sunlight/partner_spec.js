@@ -18,17 +18,18 @@ describe('Spark Care Partner flow', function () {
       // expect all offers checked
       utils.expectInputCheckbox(partner.messageTrialCheckbox, true);
       utils.expectInputCheckbox(partner.careTrialCheckbox, true);
-      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, true);
       utils.expectInputCheckbox(partner.roomSystemsTrialCheckbox, true);
       utils.expectInputCheckbox(partner.sparkBoardTrialCheckbox, true);
       utils.setCheckboxIfDisplayed(partner.webexTrialCheckbox, false, 100);
+
+      // expect call offer to not be checked
+      utils.expectInputCheckbox(partner.squaredUCTrialCheckbox, false);
 
       utils.sendKeys(partner.customerNameInput, partner.newTrial.customerName);
       utils.sendKeys(partner.customerEmailInput, partner.newTrial.customerEmail);
       utils.click(partner.validLocationCheckbox); //set valid location checkbox
 
       // Disable other offers
-      utils.click(partner.squaredUCTrialCheckbox);
       utils.click(partner.roomSystemsTrialCheckbox);
       utils.click(partner.sparkBoardTrialCheckbox);
 

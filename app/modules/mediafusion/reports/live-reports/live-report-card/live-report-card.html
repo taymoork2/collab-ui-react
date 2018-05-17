@@ -1,0 +1,50 @@
+<cs-card class="large-3 medium-6 small-12 menu-card overview-card {{$ctrl.cardClass}}">
+  <article class="media-card-article">
+    <div class="metrics-header reports-header"> {{$ctrl.headername}} </div>
+    <section>
+      <div class="metrics-info">
+        <div class="no-data" ng-if="$ctrl.value === $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">{{$ctrl.value}}</div>
+        <div ng-if="$ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-display': $ctrl.chartOptions.isShow==true}">
+          <div class="call-counts" ng-class="{'negetive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff > 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading, 'positive-indicate' : $ctrl.parentcntrl.cardIndicatorDiff < 0 && $ctrl.headername === $ctrl.parentcntrl.second_card_heading}">
+            <span ng-if="$ctrl.headername !== $ctrl.parentcntrl.second_card_heading"
+              class="cardTooltipClass"
+              tabindex="0"
+              tooltip="{{$ctrl.tooltipValue}}"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{$ctrl.tooltipValue}}">
+              {{$ctrl.value}}
+            </span>
+            <span ng-if="$ctrl.headername === $ctrl.parentcntrl.second_card_heading" class="cardTooltipClass">{{$ctrl.parentcntrl.overflowPercentage}}<span ng-if="$ctrl.parentcntrl.overflowPercentage" class="cardTooltipClass">%</span>
+              <i class='icon icon-arrow-up indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicatorDiff < 0 || $ctrl.parentcntrl.cardIndicatorDiff === 0}"></i>
+              <i class='icon icon-arrow-down indicator-icon' ng-class="{'no-display' : $ctrl.parentcntrl.cardIndicatorDiff > 0 || $ctrl.parentcntrl.cardIndicatorDiff === 0}"></i>
+            </span>
+            <i class='icon media-scroll-icon icon-presentation' ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.availabilityCardHeading || !$ctrl.value}" scroll-on-click></i>
+          </div>
+          <span class="overflow-updown-text" ng-class="{'no-display': $ctrl.parentcntrl.cardIndicatorDiff === 0 || $ctrl.headername !== $ctrl.parentcntrl.second_card_heading}">
+            {{$ctrl.parentcntrl.cardIndicator}} <span><span translate='mediaFusion.metrics.inThe'></span></span>
+            <span class="card-time-filter" ng-if="$ctrl.parentcntrl.timeSelected.label !== $ctrl.parentcntrl.customPlaceholder">{{$ctrl.parentcntrl.timeSelected.label}}</span>
+            <span class="card-time-filter" ng-if="$ctrl.parentcntrl.timeSelected.label === $ctrl.parentcntrl.customPlaceholder">{{$ctrl.parentcntrl.selectedPeriod}}</span>
+          </span>
+          <div class="spinner-position" ng-if="!$ctrl.value && $ctrl.value !== 0">
+            <i class='icon icon-spinner icon-2x'></i>
+          </div>
+        </div>
+        <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': $ctrl.chartOptions.isShow==false || $ctrl.chartOptions.isShow==undefined}"></div>
+        <div class="no-data-center-card" ng-if="$ctrl.chartOptions.noData">
+          <p>
+            <h3 class="no-data-card">
+            <i class='icon icon-warning no-data-warning-card'></i>
+            <span translate='mediaFusion.metrics.nodata'></span></h3>
+          <p>
+        </div>
+      </div>
+    </section>
+    <div ng-class="{'no-display': $ctrl.chartOptions.isShow==true}" class="footer-section">
+      <span ng-class="{'no-display': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined}" class="availabilityDpdnSelector">{{$ctrl.parentcntrl.tooltipText}}</span>
+      <cs-select ng-class="{'no-display': $ctrl.tooltipOptions.isShow==false || $ctrl.tooltipOptions.isShow==undefined, 'no-display' : $ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters || $ctrl.headername !== $ctrl.parentcntrl.availabilityCardHeading}" class='sneak-peek-filter' ng-model="$ctrl.tooltipOptions.tooltipModel" options="$ctrl.tooltipOptions.values" on-change-fn="$ctrl.tooltipOptions.tooltipClickHandler()"></cs-select>
+      <div ng-if="$ctrl.parentcntrl.overflowPercentage" ng-class="{'no-display': $ctrl.headername !== $ctrl.parentcntrl.second_card_heading}">
+        <span translate='common.total'></span> {{$ctrl.value}}
+      </div>
+    </div>
+  </article>
+</cs-card>

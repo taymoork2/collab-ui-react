@@ -15,9 +15,14 @@
         translate-value-onclick="$ctrl.launchMeetingSetup()"
         translate-compile></p>
     </div>
+    <div class="error"
+      cr-feature-toggle feature-show="atlas-webex-site-management-setting"
+      ng-if="!$ctrl.canManage && !$ctrl.isPending">
+      <p translate="webexSiteManagement.addSiteSelectNoManagement"></p>
+    </div>
   </div>
   <div class="error"
-    ng-if="$ctrl.isPending && $ctrl.subscriptions.length == 1">
+    ng-if="$ctrl.isPending && $ctrl.subscriptions.length === 1">
     <p translate="webexSiteManagement.addSiteRejectPending"></p>
   </div>
   <div class="error"

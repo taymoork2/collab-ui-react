@@ -55,7 +55,7 @@ class VerifySipDestinationComponentCtrl implements ng.IComponentController {
 
 export class VerifySipDestinationComponent implements ng.IComponentOptions {
   public controller = VerifySipDestinationComponentCtrl;
-  public template = require('modules/hercules/service-settings/verify-sip-destination/verify-sip-destination.html');
+  public template = require('./verify-sip-destination.html');
   public bindings = {
     destinationUrl: '<',
     onDestinationSave: '&',

@@ -57,7 +57,7 @@ describe('AddResourceCommonServiceV2', function () {
   });
   it('MediaServiceActivationV2 enableMediaService should not be called for redirectPopUpAndClose', function () {
     spyOn(MediaServiceActivationV2, 'enableMediaService');
-    AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster', 'clusterId', true);
+    AddResourceCommonServiceV2.redirectPopUpAndClose('hostName', 'enteredCluster');
     expect(MediaServiceActivationV2.enableMediaService).not.toHaveBeenCalled();
   });
   it('HybridServicesClusterService.preregisterCluster and MediaClusterServiceV2 createPropertySet,updatePropertySetById should be called for createFirstTimeSetupCluster', function () {

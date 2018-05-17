@@ -168,7 +168,13 @@ export class TelephonyNumberDataService {
         enableSorting: false,
         displayName: this.$translate.instant('gemini.tds.numbers.field.action'),
         cellClass: 'cell-border-none',
-        cellTemplate: '<div class="ui-grid-cell-contents text-center"><button class="btn--none" ng-click="grid.appScope.deleteNumber(row)"><i class="icon icon-trash"></i></button></div>',
+        cellTemplate: `
+          <div class="ui-grid-cell-contents text-center">
+            <button class="btn--none" ng-click="grid.appScope.deleteNumber(row)" aria-label="${this.$translate.instant('common.delete')}">
+              <i class="icon icon-trash"></i>
+            </button>
+          </div>
+        `,
       };
 
       columnDefs.push(actionColumn);

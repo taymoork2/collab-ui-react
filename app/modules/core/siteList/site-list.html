@@ -1,0 +1,43 @@
+<div ng-if='$ctrl.showGridData' id="site-list">
+  <!-- If site-management toggle is disabled only allow if add-site toggle is enabled -->
+  <div cr-feature-toggle feature-hide="atlas-webex-site-management-setting">
+    <div cr-feature-toggle feature-show="atlas-webex-add-site" class="page-sub-header" 
+      ng-if="$ctrl.isAdminPage && $ctrl.canAddSite">
+      <div class="page-sub-header__right">
+        <a href class="btn btn-primary"
+          ng-click="$ctrl.addSite()"
+          translate="firstTimeWizard.addSiteButton">
+        </a>
+      </div>
+    </div>
+    <!-- Show the legacy grid when using old feature toggle -->
+    <cs-grid class="legacy-site-list" grid-options="$ctrl.gridOptions" spinner="false"></cs-grid>
+  </div>
+  <!-- Allow if site-management toggle is enabled -->
+  <div cr-feature-toggle feature-show="atlas-webex-site-management-setting">
+    <div class="page-sub-header" ng-if="$ctrl.showAddSite">
+      <div class="page-sub-header__right">
+        <a href class="btn btn-primary"
+          ng-click="$ctrl.addSite()"
+          translate="firstTimeWizard.addSiteButton">
+        </a>
+      </div>
+    </div>
+    <!-- TODO: Remove during UX tech debt cleanup - once customers are used to new UI -->
+    <div class="page-sub-header">
+      <div class="page-sub-header__left">
+          <i class="icon icon-info icon-lg"></i>
+          <span translate="siteList.clickToEdit"></span>
+      </div>
+    </div>
+    <!-- Show new interaction when using new feature toggle -->
+    <sites-grid sites="$ctrl.gridOptions.data" on-site-selected="$ctrl.onSiteSelected(site)">
+    </sites-grid>
+  </div>
+  <!-- Start Webex linked form -->
+  <form action="{{$ctrl.trustSrc($ctrl.siteAdminUrl)}}" class="webex-hidden-form" method="post" target="_blank">
+    <input type="hidden" name="authorization" value="{{$ctrl.accessToken}}">
+    <button type="submit" id="webExLinkedSiteFormBtn" aria-label="{{::'common.submit' | translate}}"></button>
+  </form>
+  <!-- End Webex linked form -->
+</div>

@@ -37,7 +37,6 @@
       bulkOnboardUsers: bulkOnboardUsers,
       deactivateUser: deactivateUser,
       isHuronUser: isHuronUser,
-      isInvitePending: isInvitePending,
       resendInvitation: resendInvitation,
       sendSparkWelcomeEmail: sendSparkWelcomeEmail,
       getUserPhoto: getUserPhoto,
@@ -49,6 +48,7 @@
       getPreferredWebExSiteForCalendaring: getPreferredWebExSiteForCalendaring,
       updateUserData: updateUserData,
       _helpers: {
+        checkAndUpdateSunlightUser: checkAndUpdateSunlightUser,
         mkOnboardUsersPayload: mkOnboardUsersPayload,
         onboardUsersAPI: onboardUsersAPI,
       },
@@ -57,7 +57,6 @@
     // TODO: migrate these helpers to 'SunlightUserService'
     var _sunlightHelpers = {
       licenseUpdateRequired: licenseUpdateRequired,
-      removeCESRoleforUser: removeCESRoleforUser,
       getUserLicence: getUserLicence,
       createUserData: createUserData,
       isCareFeatureGettingRemoved: isCareFeatureGettingRemoved,
@@ -353,32 +352,17 @@
       });
     }
 
-    function migrateUsers(users, callback) {
+    function migrateUsers(users) {
+      var usersWithEmail = _.map(users, function (user) {
+        return {
+          email: user.userName,
+        };
+      });
       var requestBody = {
-        users: [],
+        users: usersWithEmail,
       };
 
-      for (var x in users) {
-        var user = {
-          email: users[x].userName,
-        };
-        requestBody.users.push(user);
-      }
-
-      $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody)
-        .then(function (response) {
-          var data = response.data;
-          data = _.isObject(data) ? data : {};
-          data.success = true;
-          callback(data, response.status);
-        })
-        .catch(function (response) {
-          var data = response.data;
-          data = _.isObject(data) ? data : {};
-          data.success = false;
-          data.status = response.status;
-          callback(data, response.status);
-        });
+      return $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/migrate', requestBody);
     }
 
     // DEPRECATED
@@ -408,8 +392,9 @@
       var users = options.users;
       var licenses = options.licenses;
       var userEntitlements = options.userEntitlements;
+      var onboardMethod = options.onboardMethod;
       var cancelPromise = options.cancelPromise;
-      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements);
+      var payload = service._helpers.mkOnboardUsersPayload(users, licenses, userEntitlements, onboardMethod);
       return service._helpers.onboardUsersAPI(payload, cancelPromise);
     }
 
@@ -425,10 +410,11 @@
       return $http.delete(userUrl + 'organization/' + Authinfo.getOrgId() + '/user?email=' + encodeURIComponent(userData.email));
     }
 
-    function mkOnboardUsersPayload(users, _licenses, _userEntitlements) {
+    function mkOnboardUsersPayload(users, _licenses, _userEntitlements, _onboardMethod) {
       // default 'licenses' and 'userEntitlements' to empty lists if falsey
       var licenses = _licenses || [];
       var userEntitlements = _userEntitlements || [];
+      var onboardMethod = _onboardMethod || null;
 
       var usersPayload = _.map(users, function (user) {
         // early-out if email is falsey
@@ -441,6 +427,7 @@
         _.set(sanitizedUser, 'email', userEmail);
         _.set(sanitizedUser, 'licenses', licenses);
         _.set(sanitizedUser, 'userEntitlements', userEntitlements);
+        _.set(sanitizedUser, 'onboardMethod', onboardMethod);
 
         // set 'name' property only if both 'givenName' or 'familyName' are truthy
         _.set(sanitizedUser, 'name', tokenParseFirstLastName(user.name));
@@ -458,6 +445,10 @@
         }
         if (_.size(userEntitlements)) {
           sanitizedUser.userEntitlements = buildUserSpecificProperties(user, userEntitlements);
+        }
+
+        if (!_.isNull(onboardMethod)) {
+          _.set(sanitizedUser, 'onboardMethod', onboardMethod);
         }
 
         return sanitizedUser;
@@ -479,6 +470,7 @@
       hasSameLicenses = _.isBoolean(hasSameLicenses) ? hasSameLicenses : false;
       var licenses = (!_.isUndefined(thisParams) && _.isArray(thisParams.licenses)) ? thisParams.licenses : undefined;
       var entitlements = (!_.isUndefined(thisParams) && _.isArray(thisParams.entitlements)) ? thisParams.entitlements : undefined;
+      var onboardMethod = !_.isNull(users[0].onboardMethod) ? users[0].onboardMethod : null;
       var userPayload = {
         users: [],
       };
@@ -496,6 +488,7 @@
           },
           userEntitlements: null,
           licenses: null,
+          onboardMethod: null,
         };
 
         if (userEmail.length > 0) {
@@ -506,6 +499,10 @@
           }
           if (displayName) {
             user.displayName = displayName;
+          }
+
+          if (!_.isNull(onboardMethod)) {
+            user.onboardMethod = onboardMethod;
           }
 
           var theLicenses = (hasSameLicenses) ? licenses || [] : userData.licenses || [];
@@ -549,40 +546,39 @@
         var onboardUsersPromise = $http.post(userUrl + 'organization/' + Authinfo.getOrgId() + '/users/onboard', userPayload, {
           timeout: cancelPromise,
         });
-        onboardUsersPromise.then(function (response) {
-          checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users);
-        });
-        return onboardUsersPromise;
+        var onboardUsersResponse;
+        return onboardUsersPromise
+          .then(function (response) {
+            // notes:
+            // - save the original http post response from onboarding users to resolve with later
+            onboardUsersResponse = response;
+
+            // - chain necessary Care-specific logic for updating users as-appropriate
+            // - prevent rejections from Care-specific logic from causing the original promise chain to reject
+            return service._helpers.checkAndUpdateSunlightUser(response.data.userResponse, userPayload.users)
+              .catch(_.noop);
+          })
+          .then(function () {
+            return onboardUsersResponse;
+          });
       } else {
         return $q.reject('No valid emails entered.');
       }
     }
 
-    // TODO: migrate these sunlight specific logic to 'SunlightUserService'
-    function removeCESRoleforUser(userId) {
-      var userRoleData = {
-        schemas: Config.scimSchemas,
-        roles: [],
-      };
-      userRoleData.roles.push({ value: Config.backend_roles.ciscouc_ces, operation: 'delete' });
-      return updateUserProfile(userId, userRoleData)
-        .catch(function (response) {
-          Notification.errorWithTrackingId(response, 'usersPage.careDeleteCESRoleError');
-        });
-    }
-
-    function checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole) {
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
+    function checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData) {
       var needSyncKms = !_.includes(ciUserData.roles, Config.backend_roles.spark_synckms);
-      var needCiscoucCES = checkCesRole ? !_.includes(ciUserData.roles, Config.backend_roles.ciscouc_ces) : false;
       var needContextServiceEntitlement = !_.includes(ciUserData.entitlements, Config.entitlements.context);
 
-      onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData);
+      return onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, sunlightUserData);
     }
 
-    function onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES, sunlightUserData) {
-      return patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES)
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
+    function onboardSunlightUser(userId, needSyncKms, needContextServiceEntitlement, sunlightUserData) {
+      return patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement)
         .then(function () {
-          SunlightConfigService.updateUserInfo(sunlightUserData, userId)
+          return SunlightConfigService.updateUserInfo(sunlightUserData, userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careAddUserError');
             });
@@ -592,36 +588,36 @@
         });
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function checkAndUpdateSunlightUser(userResponse, users) {
       var userResponseSuccess = _.filter(userResponse, function (response) {
         return response.status === 200;
       });
-      _.each(userResponseSuccess, function (userResponseSuccess) {
+      var promises = _.map(userResponseSuccess, function (userResponseSuccess) {
         var userLicenses = _sunlightHelpers.getUserLicence(userResponseSuccess.email, users);
         var userId = userResponseSuccess.uuid;
-        if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'REMOVE')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'REMOVE'))) {
-          _sunlightHelpers.removeCESRoleforUser(userId);
-        }
         if ((_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CDC, 'ADD')) || (_sunlightHelpers.licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD'))) {
           var sunlightUserData = _sunlightHelpers.createUserData();
           // Get user to check for roles and entitlements
-          getUserAsPromise(userId)
+          return getUserAsPromise(userId)
             .then(function (ciUserData) {
               if (ciUserData.status === 200) {
-                var checkCesRole = licenseUpdateRequired(userLicenses, Config.offerCodes.CVC, 'ADD') &&
-              licenseUpdateRequired(userLicenses, Config.offerCodes.CO, 'ADD');
-                checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData, checkCesRole);
+                return checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData);
               }
             });
         } else if (_sunlightHelpers.isCareFeatureGettingRemoved(userLicenses)) {
-          SunlightConfigService.deleteUser(userId)
+          return SunlightConfigService.deleteUser(userId)
             .catch(function (response) {
               Notification.errorWithTrackingId(response, 'usersPage.careDeleteUserError');
             });
         }
+        return $q.resolve();
       });
+
+      return $q.all(promises);
     }
 
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
     function isCareFeatureGettingRemoved(licenses) {
       var careLicenses = _.filter(licenses, function (license) {
         return (_.includes(license.id, Config.offerCodes.CDC) || _.includes(license.id, Config.offerCodes.CVC));
@@ -640,7 +636,8 @@
       });
     }
 
-    function patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement, needCiscoucCES) {
+    // TODO (WebExSquared/spark-care): migrate this to a more Care-specific service
+    function patchSunlightRolesAndEntitlements(userId, needSyncKms, needContextServiceEntitlement) {
       var userRoleData = {
         schemas: Config.scimSchemas,
         roles: [],
@@ -649,14 +646,10 @@
         userRoleData.roles.push(Config.backend_roles.spark_synckms);
       }
 
-      if (needCiscoucCES) {
-        userRoleData.roles.push(Config.backend_roles.ciscouc_ces);
-      }
-
       if (needContextServiceEntitlement) {
         userRoleData.entitlements = [Config.entitlements.context];
       }
-      if (needSyncKms || needCiscoucCES || needContextServiceEntitlement) {
+      if (needSyncKms || needContextServiceEntitlement) {
         return updateUserProfile(userId, userRoleData);
       } else {
         var defer = $q.defer();
@@ -715,10 +708,6 @@
 
     function isHuronUser(allEntitlements) {
       return _.indexOf(allEntitlements, Config.entitlements.huron) >= 0;
-    }
-
-    function isInvitePending(user) {
-      return user.pendingStatus;
     }
 
     function resendInvitation(userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {

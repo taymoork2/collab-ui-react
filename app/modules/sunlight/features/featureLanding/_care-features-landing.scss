@@ -10,6 +10,7 @@
   .cs-card article {
     section {
       @include vr-spacing(pb, 1);
+      height: rem-calc(72);
     }
   }
 
@@ -29,11 +30,11 @@
     flex-wrap: wrap;
 
     .care-badge {
-      @include vr-spacing(pt, 0.5);
+      @include vr-spacing(mr, 0.5);
+      line-height: rem-calc(25);
     }
 
     .care-icon {
-      @include vr-spacing(pt, 0.5);
       display: inline-flex;
 
       .people {
@@ -42,13 +43,18 @@
       .cta {
         color: $color-violet-darker;
       }
+      .abc {
+        color: $color-green-dark;
+      }
       .icon {
-        @include vr-spacing(pl, 0.5);
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pr, 0.5);
         display: block;
-        padding-top: rem-calc(3); // vr-spacing isn't specific enough
+      }
+      .icon-bot-five {
+        @include vr-spacing(pt, 0.3);
       }
     }
-
   }
 
   .care-features-icon {
@@ -60,7 +66,10 @@
 
     .icon {
       display: block;
-      padding-top: rem-calc(3); // vr-spacing isn't specific enough
+    }
+
+    .icon-bot-six {
+      margin-top: rem-calc(2); // vr-spacing isn't specific enough
     }
 
     span{
@@ -72,11 +81,9 @@
     @include vr-spacing(ph, 1.5);
     display: flex;
     color: $color-yellow-darker;
-    max-width: rem-calc(400);
 
-    .warning-text{
+    .warning-text {
       @include vr-spacing(pl, 0.25);
-      font-family: CiscoSans;
       letter-spacing: 0px;
       font-size: rem-calc(10);
       line-height: rem-calc(14);
@@ -116,6 +123,16 @@
 
   .card-header {
     height: rem-calc(110);
+
+    h4 {
+      padding: 0;
+    }
+
+    .icon-color {
+      color: $gray-light;
+      line-height: 2;
+      padding-right: .5rem;
+    }
   }
 
   .card-footer {
@@ -217,6 +234,10 @@
   }
 }
 
+.tooltip[popup-class="icon-tooltip"] .c-nub {
+  min-width: 250px;
+}
+
 header > p > span.badge {
   @include vr-spacing(pt, 1);
 }
@@ -313,6 +334,10 @@ header > p > span.badge {
           flex-basis: 100%;
         }
       }
+
+      .virtual-assistant-icon {
+        font-size: rem-calc(32);
+      }
     }
 
     .feature-icon-circle {      // Icon in the option.
@@ -332,8 +357,16 @@ header > p > span.badge {
       color: $color-violet-darker;
     }
 
+    .feature-abc-color {
+      color: $color-green-dark;
+    }
+
     .feature-cst-color {
       color: $color-people-base;
+    }
+
+    .aa-learn-more {
+      @include vr-spacing(pl, 0.35);
     }
 
     .feature-aa-color {
@@ -366,7 +399,16 @@ header > p > span.badge {
       @include vr-spacing(pr, 1.5);
       @include vr-spacing(pl, 1.5);
 
+      margin-bottom: auto;
       text-align: left;
+    }
+
+    .feature-warning-container {
+     font-size: rem-calc(14);
+    }
+
+    .feature-icon-color {
+      color: $color-blue-base;
     }
   }
 }
@@ -415,6 +457,27 @@ header > p > span.badge {
       color: $color-mint-darker;
     }
   }
+
+  &.abc {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $color-green-dark;
+        header {
+          background-color: $color-green-dark;
+        }
+      }
+    }
+    .badge {
+      border-color: $color-green-dark;
+      color: $color-green-dark;
+    }
+  }
+}
+
+.cs-card + .tooltip {
+  @include vr-spacing(mt, 10);
+  pointer-events: none;
 }
 
 .popover-content {
@@ -429,6 +492,7 @@ header > p > span.badge {
 
   .feature-card-popover-error {
     @include vr-spacing(pb, .625);
+    font-family: $brand-font-light;
     font-size: rem-calc(12);
     word-break: normal;
   }
@@ -446,7 +510,7 @@ header > p > span.badge {
     }
 
     .header {
-      @include vr-spacing(mb, .5);
+      @include vr-spacing(mb, 1);
     }
 
     .sub-header {

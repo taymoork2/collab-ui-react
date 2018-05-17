@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()"></button>
+  <button type="button" class="close" id="closeEditServices" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="usersPreview.editServiceTitle" translate-values="{name: currentUserDisplayName()}"></h3>
 </div>
 
@@ -29,11 +29,22 @@
     current-user-enables-call="currentUserEnablesCall"
     cvc-care-feature="cvcCareFeature"
     care-features="careFeatures"
+    on-update-is-context-service-admin-authorized="recvUpdateIsContextServiceAdminAuthorized(isAuthorized)"
     ></cr-services-panels>
 </div>
 
 <div class="modal-footer">
-  <button type="button" id="btnCancel" class="btn" ng-click="$dismiss()"><span translate="common.cancel"></span>
+  <button type="button"
+    id="btnCancel"
+    class="btn"
+    ng-click="$dismiss()"
+    translate="common.cancel">
   </button>
-    <button type="button" id="btnSaveEnt" cs-btn loading="btnSaveEntLoad" class="btn btn--primary" ng-click="editServicesSave()"><span translate="{{getServicesNextText()}}"></span></button>
+  <button cs-btn type="button"
+    id="btnSaveEnt"
+    loading="btnSaveEntLoad"
+    class="btn btn--primary"
+    ng-click="editServicesSave()">
+    <span translate="{{getServicesNextText()}}"></span>
+  </button>
 </div>

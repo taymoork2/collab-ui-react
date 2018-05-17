@@ -3,11 +3,13 @@ require('./_support.scss');
 (function () {
   'use strict';
 
+  var HealthStatusType = require('modules/core/health-monitor').HealthStatusType;
+
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, HealthService, Log, LogService, ModalService, Notification, Orgservice, PageParam, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = $translate.instant('supportPage.byCisco');
@@ -29,7 +31,6 @@ require('./_support.scss');
     $scope.gotoProvisioningConsole = gotoProvisioningConsole;
     $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
     $scope.showOrderProvisioningConsole = false;
-    $scope.hasAtlasEdiscoveryToggle = false;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -62,9 +63,6 @@ require('./_support.scss');
     function initializeShowLinks() {
       FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
         $scope.showOrderProvisioningConsole = Authinfo.isOrderAdminUser() && (!Config.isProd() || result);
-      });
-      FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
-        $scope.hasAtlasEdiscoveryToggle = result;
       });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
@@ -130,7 +128,7 @@ require('./_support.scss');
     };
 
     $scope.showEdiscoveryLink = function () {
-      return Authinfo.isComplianceUser() && $scope.hasAtlasEdiscoveryToggle;
+      return Authinfo.isComplianceUser();
     };
 
     $scope.tabs = [{
@@ -163,21 +161,15 @@ require('./_support.scss');
     };
 
     var getHealthMetrics = function () {
-      ReportsService.healthMonitor(function (data, status) {
-        if (data.success) {
-          $scope.healthMetrics = data.components;
-          $scope.healthyStatus = true;
+      HealthService.getHealthCheck().then(function (data) {
+        $scope.healthMetrics = data.components;
 
-          // check Squared for error
-          for (var health in $scope.healthMetrics) {
-            if ($scope.healthMetrics[health].status !== 'operational') {
-              $scope.healthyStatus = false;
-              return;
-            }
-          }
-        } else {
-          Log.debug('Get health metrics failed. Status: ' + status);
-        }
+        // check Squared for error
+        $scope.healthyStatus = _.every($scope.healthMetrics, function (healthMetric) {
+          return healthMetric.status === HealthStatusType.OPERATIONAL;
+        });
+      }).catch(function (error) {
+        Log.debug('Get health metrics failed. Status: ' + error.status);
       });
     };
 
@@ -494,8 +486,8 @@ require('./_support.scss');
       });
     };
 
-    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
-    var metadataTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openExtendedMetadata(row.entity.metadata)"><i class="icon icon-data"></i></a></div>';
+    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
+    var metadataTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.openExtendedMetadata(row.entity.metadata)"><i class="icon icon-data"></i></a></div>';
 
     $scope.gridOptions = {
       data: 'userLogs',

@@ -1,8 +1,8 @@
 <cr-collapsible-row
-  header-class="column-subsription-header paid subscription__header"
+  header-class="column-subscription-header paid subscription__header"
   content-class="row-licenses subscription__content"
   row-id="$ctrl.subscription.subscriptionId"
-  row-title="$ctrl.subscription.subscriptionId"
+  row-title="$ctrl.subscriptionLabel"
   on-update="$ctrl.recvUpdate($event)"
   show-content="$ctrl.showContent"
   >
@@ -15,16 +15,17 @@
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MS)"
         l10n-label="onboardModal.paidCiscoSparkMessaging"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
       </assignable-license-checkbox>
 
       <!-- messenger -->
-      <assignable-license-checkbox
-        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.MSGR)"
+      <assignable-user-entitlement-checkbox ng-if="$ctrl.showJabberInteropCheckbox()"
+        item-id="'messengerInterop'"
         l10n-label="onboardModal.ciscoSparkJabberInterop"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
-      </assignable-license-checkbox>
+        auto-assign-template-data="$ctrl.autoAssignTemplateData"
+        >
+      </assignable-user-entitlement-checkbox>
     </div>
   </div>
 
@@ -37,7 +38,7 @@
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CF)"
         l10n-label="firstTimeWizard.meetingsInSpark"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
       </assignable-license-checkbox>
     </div>
 
@@ -46,7 +47,7 @@
       licenses="$ctrl.advancedMeetingLicenses"
       site-urls="$ctrl.advancedMeetingSiteUrls"
       on-update="$ctrl.onUpdate({ $event: $event })"
-      state-data="$ctrl.stateData">
+      auto-assign-template-data="$ctrl.autoAssignTemplateData">
     </assignable-advanced-meetings>
   </div>
 
@@ -59,29 +60,28 @@
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CO)"
         l10n-label="onboardModal.paidSparkCall"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
       </assignable-license-checkbox>
     </div>
   </div>
 
   <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid column__care">
     <div ng-if="$ctrl.careLicenses.length">
-      <div translate="onboardModal.contactCenter" class="license__category"></div>
+      <div class="license__category">
+        <span translate="onboardModal.contactCenter" class="license__category-text"></span><cr-icon-info
+          l10n-tooltip="userManage.autoAssignTemplate.edit.careDisabledTooltip"
+          tooltip-placement="bottom"
+          >
+        </cr-icon-info>
+      </div>
 
       <!-- care - K1 -->
       <assignable-license-checkbox
         license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CDC)"
+        is-disabled="$ctrl.disableCareLicenseSelection()"
         l10n-label="onboardModal.paidCDC"
         on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
-      </assignable-license-checkbox>
-
-      <!-- care - K2 -->
-      <assignable-license-checkbox
-        license="$ctrl.findLicenseForOfferName($ctrl.OFFER_NAME.CVC)"
-        l10n-label="onboardModal.paidCVC"
-        on-update="$ctrl.onUpdate({ $event: $event })"
-        state-data="$ctrl.stateData">
+        auto-assign-template-data="$ctrl.autoAssignTemplateData">
       </assignable-license-checkbox>
     </div>
   </div>

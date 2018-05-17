@@ -6,8 +6,10 @@ describe('callServiceSettingsPage template', () => {
     this.initModules(callServiceSettingsPageModule);
     this.injectDependencies(
       '$q',
+      'Analytics',
       'ServiceDescriptorService',
     );
+    spyOn(this.Analytics, 'trackHybridServiceEvent');
   });
 
   it('should show the Call Service Connect specific items if Call Service Connect is enabled', function () {
@@ -39,12 +41,13 @@ describe('callServiceSettingsPage controller', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$q_, _$rootScope_, _CiscoCollaborationCloudCertificateService_, _ServiceDescriptorService_) {
+  function dependencies (_$componentController_, _$q_, _$rootScope_, Analytics, _CiscoCollaborationCloudCertificateService_, _ServiceDescriptorService_) {
     $componentController = _$componentController_;
     $scope = _$rootScope_.$new();
     $q = _$q_;
     CiscoCollaborationCloudCertificateService = _CiscoCollaborationCloudCertificateService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
+    spyOn(Analytics, 'trackHybridServiceEvent');
   }
 
   function initSpies() {

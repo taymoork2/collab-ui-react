@@ -299,6 +299,9 @@
     var HOLIDAYS_SCHEDULE_EVENT = 'holiday';
 
     var dynAnnounceToggle = false;
+    var CONSTANTS = {};
+    CONSTANTS.phoneNumber = 'phoneNumber';
+    CONSTANTS.extension = 'extension';
 
     var service = {
       getWelcomeMenu: getWelcomeMenu,
@@ -318,6 +321,7 @@
       isCeMenu: isCeMenu,
       isCeMenuEntry: isCeMenuEntry,
       setDynAnnounceToggle: setDynAnnounceToggle,
+      checkIfEnteredValueIsPhoneNumber: checkIfEnteredValueIsPhoneNumber,
 
       newCeMenu: function () {
         return new CeMenu();
@@ -421,7 +425,7 @@
       var action;
       action = new Action('dynamic', '');
       action.dynamicList = inObject;
-      if (!_.isUndefined(inObject[0].say.voice)) {
+      if (_.has(inObject[0], ['say', 'voice'])) {
         action.setVoice(inObject[0].say.voice);
       }
       menuEntry.addAction(action);
@@ -520,7 +524,9 @@
         action = new Action('dynamic', '');
         var dynamicList = inAction.dynamic.dynamicOperations;
         action.dynamicList = dynamicList;
-        action.voice = dynamicList[0].say.voice;
+        if (_.has(dynamicList, [0, 'say', 'voice'])) {
+          action.voice = dynamicList[0].say.voice;
+        }
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.play)) {
         action = new Action('play', decodeUtf8(inAction.play.url));
@@ -567,6 +573,8 @@
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToUser)) {
         action = new Action('routeToUser', inAction.routeToUser.id);
+        _.set(action, 'type', _.get(inAction, 'routeToUser.userType'));
+        _.set(action, 'sipURI', _.get(inAction, 'routeToUser.sipURI'));
         setDescription(action, inAction.routeToUser);
         menuEntry.addAction(action);
       } else if (!_.isUndefined(inAction.routeToVoiceMail)) {
@@ -717,6 +725,8 @@
         }
         if (inAction.conditional.true[0].routeToUser) {
           action.then = new Action('routeToUser', inAction.conditional.true[0].routeToUser.id);
+          _.set(action, 'then.type', _.get(inAction, 'conditional.true[0].routeToUser.userType'));
+          _.set(action, 'then.sipURI', _.get(inAction, 'conditional.true[0].routeToUser.sipURI'));
         }
         if (inAction.conditional.true[0].routeToVoiceMail) {
           action.then = new Action('routeToVoiceMail', inAction.conditional.true[0].routeToVoiceMail.id);
@@ -1404,10 +1414,17 @@
               // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(menuEntry.actions[0].getValue());
             } else if (actionName === 'route') {
               newActionArray[i][actionName].destination = menuEntry.actions[0].getValue();
+              if (checkIfEnteredValueIsPhoneNumber(menuEntry.actions[0].getValue())) {
+                newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+              } else {
+                newActionArray[i][actionName].destType = CONSTANTS.extension;
+              }
             } else if (actionName === 'routeToVoiceMail') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
             } else if (actionName === 'routeToUser') {
               newActionArray[i][actionName].id = menuEntry.actions[0].getValue();
+              _.set(newActionArray[i][actionName], 'userType', _.get(menuEntry, 'actions[0].type'));
+              _.set(newActionArray[i][actionName], 'sipURI', _.get(menuEntry, 'actions[0].sipURI'));
             } else if (actionName === 'disconnect') {
               if (menuEntry.actions[0].getValue() && menuEntry.actions[0].getValue() !== 'none') {
                 newActionArray[i][actionName].treatment = menuEntry.actions[0].getValue();
@@ -1460,6 +1477,11 @@
       return newActionArray;
     }
 
+    function checkIfEnteredValueIsPhoneNumber(number) {
+      // returns true when entered value is phonenumber starting with +. Returns false in case entered value is an extension
+      return (_.startsWith(number, '+'));
+    }
+
     function createResponseBlock(action) {
       var responseActions = [];
       var newVariable = $translate.instant('autoAttendant.newVariable');
@@ -1509,6 +1531,17 @@
       /* special case routeToQueue */
       if (_.get(action.then, 'name') === 'routeToQueue') {
         destObj = populateRouteToQueue(action.then);
+      } else if (_.get(action.then, 'name') === 'routeToUser') {
+        destObj[tag] = action.then.value;
+        destObj['userType'] = _.get(action, 'then.type');
+        destObj['sipURI'] = _.get(action, 'then.sipURI');
+      } else if (_.get(action.then, 'name') === 'route') {
+        destObj[tag] = action.then.value;
+        if (checkIfEnteredValueIsPhoneNumber(destObj[tag])) {
+          destObj.destType = CONSTANTS.phoneNumber;
+        } else {
+          destObj.destType = CONSTANTS.extension;
+        }
       } else {
         destObj[tag] = action.then.value;
       }
@@ -1595,6 +1628,11 @@
           // newActionArray[i][actionName].url = MediaResourceService.getFileUrl(val);
         } else if (actionName === 'route') {
           newActionArray[i][actionName].destination = val;
+          if (checkIfEnteredValueIsPhoneNumber(val)) {
+            newActionArray[i][actionName].destType = CONSTANTS.phoneNumber;
+          } else {
+            newActionArray[i][actionName].destType = CONSTANTS.extension;
+          }
         } else if (actionName === 'routeToExtension') {
           newActionArray[i][actionName].destination = val;
         } else if (actionName === 'routeToEsn') {
@@ -1605,6 +1643,8 @@
           newActionArray[i][actionName].id = val;
         } else if (actionName === 'routeToUser') {
           newActionArray[i][actionName].id = val;
+          _.set(newActionArray[i][actionName], 'userType', actions[i].type);
+          _.set(newActionArray[i][actionName], 'sipURI', actions[i].sipURI);
         } else if (actionName === 'goto') {
           newActionArray[i][actionName].ceid = val;
         } else if (actionName === 'routeToSipEndpoint') {

@@ -1,7 +1,8 @@
 'use strict';
 
 describe('EVA feature setup', function () {
-  var evaTestName = 'e2e-expertVirtualAssistant-' + utils.randomId();
+  // Added a space for name
+  var evaTestName = 'e2e-expertVirtualAssistant -' + utils.randomId();
   var evaTestRename = evaTestName + '-NewName';
   var evaTestInvalidEmailPrefix = 'a@b';
   var evaTestEmailPrefix = 'e2e-expertVirtualAssistant-' + utils.randomId();

@@ -8,6 +8,9 @@ export interface IACSiteInfo {
   domains: string[];
   webexInfo: IACWebexPromises;
   supportAgreementLinkingMode?: boolean;
+  siteInfoErrors?: string[];
+  accountInfoErrors?: string[];
+  linkAllUsers?: boolean;
 }
 
 export interface IACWebexPromises {

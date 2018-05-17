@@ -30,7 +30,7 @@ export class SparkAssistantService {
       }).$promise;
   }
 
-  public getSpeechServiceOptIn(): ng.IPromise<boolean> {
+  public getSpeechServiceOptIn(): ng.IPromise<any> {
     return this.getConfigResource().get().$promise;
   }
 }

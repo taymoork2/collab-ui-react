@@ -22,15 +22,11 @@
     PersonalMeetingRoomManagementService,
     ServiceSetup,
     SSOService,
+    SsoCertificateService,
     UrlConfig) {
     var strEntityDesc = '<EntityDescriptor ';
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
-    var strSignOn = 'SingleSignOnService';
-    var strLocation = 'Location';
-    var _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
-    var bindingStr = 'Binding="' + _BINDINGS;
-    var strBindingEnd = '" ';
     $scope.updateSSO = updateSSO;
 
     $scope.options = {
@@ -278,7 +274,7 @@
             // Set the email suppress state to FALSE when the SSO is disabled
             Orgservice.setOrgEmailSuppress(false).then(function () {
               deleteSSO();
-            });
+            }).catch(_.noop);
           }).catch(function () {
             $scope.options.modifySSO = false; //reset modify flag if user clicks cancel
             $scope.options.configureSSO = 0;
@@ -557,13 +553,11 @@
 
     function checkReqBinding() {
       var file = _.get($scope, 'idpFile.file');
-      if (_.isString(file)) {
-        var start = file.indexOf(strSignOn);
-        start = file.indexOf(bindingStr, start);
-        var end = file.indexOf(strLocation, start) - strBindingEnd.length;
-        var reqBinding = file.substring(start + bindingStr.length, end);
-        return reqBinding;
+      if (!_.isString(file)) {
+        return '';
       }
+
+      return SsoCertificateService.getReqBinding(file);
     }
 
     $scope.openTest = function () {
@@ -574,10 +568,10 @@
         if (data.success) {
           if (data.data.length > 0) {
             entityId = data.data[0].entityId;
-            reqBinding = checkReqBinding(data);
+            reqBinding = checkReqBinding();
           }
-          if (entityId && reqBinding) {
-            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + _BINDINGS + 'HTTP-POST&reqBinding=' + _BINDINGS + reqBinding;
+          if (entityId) {
+            var testUrl = UrlConfig.getSSOTestUrl() + '?metaAlias=/' + Authinfo.getOrgId() + '/sp&idpEntityID=' + encodeURIComponent(entityId) + '&binding=' + SsoCertificateService.HTTP_POST_BINDINGS + reqBinding;
             $window.open(testUrl);
           } else {
             Log.debug('Retrieved null Entity id. Status: ' + status);

@@ -1,7 +1,12 @@
 <div ng-if="$ctrl.hasPrivateTrunkFeatureToggle">
   <div class="expressway-service hercules hercules-fix-paragraphs">
-    <cs-page-header title-name="{{'servicesOverview.cards.privateTrunk.title' | translate}}" tabs="$ctrl.tabs" back="true"
-                    back-url="$ctrl.backState"></cs-page-header>
+    <cs-page-header
+      title-name="{{'servicesOverview.cards.privateTrunk.title' | translate}}"
+      tabs="$ctrl.tabs"
+      back="true"
+      back-url="$ctrl.backState"
+      back-aria-label="{{::'common.back' | translate}}">
+    </cs-page-header>
     <cs-page-sub-header>
       <cs-page-sub-header-left>
         <hs-cloud-alarms-dropdown service-id="'ept'"></hs-cloud-alarms-dropdown>

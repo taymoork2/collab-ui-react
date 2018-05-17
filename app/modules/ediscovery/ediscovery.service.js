@@ -5,7 +5,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   module.exports = EdiscoveryService;
   /* @ngInject */
-  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, Blob, CacheFactory, EdiscoveryMockData, FeatureToggleService, FileSaver, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
@@ -57,28 +57,6 @@ var Spark = require('@ciscospark/spark-core').default;
           endDate: endDate,
           query: query,
         });
-    }
-
-    function getAvalonServiceUrl() {
-      var orgId = Authinfo.getOrgId();
-      var cachedAvalonRoomsUrl = avalonRoomsUrlCache.get(orgId);
-      if (cachedAvalonRoomsUrl) {
-        var deferred = $q.defer();
-        deferred.resolve(cachedAvalonRoomsUrl);
-        return deferred.promise;
-      }
-      return $http
-        .get(urlBase + 'compliance/organizations/' + orgId + '/servicelocations')
-        .then(function (res) {
-          if (res.data && res.data.avalonRoomsUrl) {
-            avalonRoomsUrlCache.put(orgId, res.data);
-          }
-          return res.data;
-        });
-    }
-
-    function getAvalonRoomInfo(url) {
-      return $http.get(url).then(extractData);
     }
 
     function getReportKey(url, spark) {
@@ -220,6 +198,16 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function downloadReport(report) {
+      return FeatureToggleService.atlasEdiscoveryJumboReportsGetStatus()
+        .then(function (supports) {
+          return (supports) ? downloadReportWithSaveAs(report) : downloadReportLegacy(report);
+        })
+        .catch(function () {
+          return downloadReportLegacy(report);
+        });
+    }
+
+    function downloadReportLegacy(report) {
       return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer',
       }).then(function (response) {
@@ -251,10 +239,19 @@ var Spark = require('@ciscospark/spark-core').default;
       });
     }
 
+    function downloadReportWithSaveAs(report) {
+      return $http.get(report.downloadUrl, {
+        responseType: 'blob',
+      }).then(function (response) {
+        var text = response.data;
+        var fileName = 'report_' + report.id + '.zip';
+        var data = new Blob([text], { type: 'application/zip' });
+        FileSaver.saveAs(data, fileName);
+      });
+    }
+
     return {
       getArgonautServiceUrl: getArgonautServiceUrl,
-      getAvalonServiceUrl: getAvalonServiceUrl,
-      getAvalonRoomInfo: getAvalonRoomInfo,
       getReport: getReport,
       getReports: getReports,
       getReportKey: getReportKey,
@@ -267,6 +264,8 @@ var Spark = require('@ciscospark/spark-core').default;
       setEntitledForCompliance: setEntitledForCompliance,
       openReportModal: openReportModal,
       downloadReport: downloadReport,
+      downloadReportLegacy: downloadReportLegacy,
+      downloadReportWithSaveAs: downloadReportWithSaveAs,
       setupSpark: setupSpark,
     };
   }

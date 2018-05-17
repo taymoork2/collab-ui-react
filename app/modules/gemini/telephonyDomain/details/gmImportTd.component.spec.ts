@@ -3,7 +3,7 @@ import testModule from '../index';
 describe('Component: gmImportTd', () => {
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', 'gemService', 'Notification', 'TelephonyDomainService');
+    this.injectDependencies('$q', '$scope', 'UrlConfig', '$httpBackend', '$timeout', 'gemService', 'Notification', 'TelephonyDomainService');
 
     initSpies.apply(this);
   });
@@ -78,6 +78,7 @@ describe('Component: gmImportTd', () => {
 
   describe('View: ', () => {
     it('should show grid data when selected one option and click select all checkbox then the Import button should be availabe', function () {
+      spyOn(this.$timeout, 'cancel');
       spyOn(this.gemService, 'getStorage').and.returnValue({ countryId2NameMapping: { 1: 'Albania', 2: 'Algeria' } });
       initComponent.call(this);
 

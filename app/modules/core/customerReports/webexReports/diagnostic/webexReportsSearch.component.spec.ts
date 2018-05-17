@@ -48,7 +48,7 @@ describe('Component: webexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'SearchService', 'Notification');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'SearchService', 'Notification', 'ProPackService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
@@ -56,8 +56,9 @@ describe('Component: webexReportsSearch', () => {
 
   function initSpies() {
     spyOn(this.$state, 'go');
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve());
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {
@@ -67,7 +68,7 @@ describe('Component: webexReportsSearch', () => {
 
   it('should show the correct data for the grid when search with enter keyup', function () {
     const $event = { type: 'keyup', keyCode: 13, which: 13 };
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
     initComponent.call(this);
 
     this.view.find(this.input).val('355602502').change().triggerHandler($event);
@@ -79,7 +80,7 @@ describe('Component: webexReportsSearch', () => {
 
   it('should show the correct data for the grid when search with email and then trigger blur event', function () {
     this.$timeout.flush();
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
     this.view.find(this.input).val('zoncao@cisco.com').change().triggerHandler('blur');
@@ -116,7 +117,7 @@ describe('Component: webexReportsSearch', () => {
   it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
 
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
     this.view.find(this.input).val('355602502').change().triggerHandler('blur');
@@ -144,10 +145,9 @@ describe('Component: webexReportsSearch', () => {
   });
 
   it('should notify in message for non 200 http status', function() {
-    this.SearchService.getMeetings.and.returnValue(this.$q.reject({ status: 404 }));
-
+    spyOn(this.SearchService, 'getStorage').and.returnValue('23423432');
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
-    this.view.find(this.input).val('23423432').change().triggerHandler('blur');
     expect(this.Notification.errorResponse).toHaveBeenCalled();
   });
 

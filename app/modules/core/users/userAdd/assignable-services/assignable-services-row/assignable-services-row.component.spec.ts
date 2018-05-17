@@ -4,16 +4,20 @@ describe('Component: assignableServicesRow:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
+      '$state',
       '$scope',
+      '$translate',
       'LicenseUsageUtilService',
     );
     this.$scope.fakeSubscription = {
       subscriptionId: 'fake-subscriptionId-1',
     };
-    this.$scope.fakeStateData = {
-      SUBSCRIPTION: {
-        'fake-subscriptionId-1': {
-          showContent: false,
+    this.$scope.fakeAutoAssignTemplateData = {
+      viewData: {
+        SUBSCRIPTION: {
+          'fake-subscriptionId-1': {
+            showContent: false,
+          },
         },
       },
     };
@@ -27,9 +31,8 @@ describe('Component: assignableServicesRow:', () => {
         });
       });
 
-      it('should render with a subscription id', function () {
+      it('should render with a subscription header', function () {
         expect(this.view.find('.subscription__header').length).toBe(1);
-        expect(this.view.find('.subscription__header')).toContainText('fake-subscriptionId-1');
       });
 
       it('should have at least 3 columns initially and 4 if "isCareEnabled" is true', function () {
@@ -48,10 +51,10 @@ describe('Component: assignableServicesRow:', () => {
       it('should render a collapsed row if previous state has "showContent" set to false', function () {
         this.compileComponent('assignableServicesRow', {
           subscription: 'fakeSubscription',
-          stateData: 'fakeStateData',
+          autoAssignTemplateData: 'fakeAutoAssignTemplateData',
         });
         expect(this.view.find('.subscription__header .icon.toggle')).toHaveClass('icon-chevron-down');
-        expect(this.view.find('.subscription__content')).toHaveClass('ng-hide');
+        expect(this.view.find('.subscription__content')).not.toExist();
       });
     });
   });
@@ -79,6 +82,7 @@ describe('Component: assignableServicesRow:', () => {
     });
 
     it('should initialize properties as appropriate', function () {
+      spyOn(this.$translate, 'instant').and.returnValue('fake-$translate-instant-result');
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscriptionWithLicenses',
       });
@@ -86,10 +90,14 @@ describe('Component: assignableServicesRow:', () => {
       expect(this.controller.basicMeetingLicenses.length).toBe(1);  // ['CF']
       expect(this.controller.advancedMeetingLicenses.length).toBe(2);  // ['MC', 'CMR']
       expect(this.controller.advancedMeetingSiteUrls.length).toBe(1);  // ['fake-site-1']
+      expect(this.$translate.instant).toHaveBeenCalledWith('userManage.autoAssignTemplate.edit.rowTitle', {
+        subscriptionId: 'fake-subscriptionId-2',
+      });
+      expect(this.controller._subscriptionLabel).toBe('fake-$translate-instant-result');
 
       this.compileComponent('assignableServicesRow', {
         subscription: 'fakeSubscription',
-        stateData: 'fakeStateData',
+        autoAssignTemplateData: 'fakeAutoAssignTemplateData',
       });
       expect(this.controller.showContent).toBe(false);
     });
@@ -138,6 +146,18 @@ describe('Component: assignableServicesRow:', () => {
 
       this.controller.getTotalLicenseVolume('foo');
       expect(this.LicenseUsageUtilService.getTotalLicenseVolume).toHaveBeenCalledWith('foo', this.controller.licenses);
+    });
+
+    describe('disableCareLicenseSelection():', () => {
+      it('should return true if UI state is currently the edit auto-assign template', function () {
+        this.compileComponent('assignableServicesRow', {
+          subscription: 'fakeSubscription',
+        });
+        _.set(this.$state, 'current.name', 'foo');
+        expect(this.controller.disableCareLicenseSelection()).toBe(false);
+        _.set(this.$state, 'current.name', 'users.manage.edit-auto-assign-template-modal');
+        expect(this.controller.disableCareLicenseSelection()).toBe(true);
+      });
     });
   });
 });

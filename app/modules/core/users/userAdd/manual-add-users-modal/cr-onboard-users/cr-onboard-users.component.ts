@@ -1,4 +1,5 @@
-import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/userAdd/shared/onboard.store';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
+import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
 import { KeyCodes } from 'modules/core/accessibility';
 
 // notes:
@@ -12,6 +13,7 @@ import { KeyCodes } from 'modules/core/accessibility';
 // - add output binding(s)
 export class CrOnboardUsersController implements ng.IComponentController {
 
+  public isDefaultAutoAssignTemplateActivated: boolean;
   public isDirSyncEnabled: boolean;
   public model: any;
   public strEmailAddress: string;
@@ -32,6 +34,7 @@ export class CrOnboardUsersController implements ng.IComponentController {
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private AutoAssignTemplateModel: AutoAssignTemplateModel,
     private DirSyncService,
     private OnboardService,
     private OnboardStore,
@@ -39,6 +42,7 @@ export class CrOnboardUsersController implements ng.IComponentController {
   ) {
     // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
     this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
+    this.isDefaultAutoAssignTemplateActivated = this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
     this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
     this.model = this.scopeData.model;
     this.strFirstName = this.$translate.instant('usersPage.firstNamePlaceHolder');
@@ -61,11 +65,9 @@ export class CrOnboardUsersController implements ng.IComponentController {
         if (!this.OnboardService.validateEmail(e.attrs.value) || isDuplicate) {
           this.setInvalidToken(e);
         } else {
-          this.validateDirSyncUser(e);
+          this.validateProposedUser(e);
         }
         this.sortTokens();
-        // TODO (f3745): rm this if determined not-needed
-        // wizardNextText();
         this.checkPlaceholder();
       },
       edittoken: (e) => {
@@ -81,8 +83,6 @@ export class CrOnboardUsersController implements ng.IComponentController {
           (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
         }).then(() => {
           this.sortTokens();
-          // TODO (f3745): rm this if determined not-needed
-          // wizardNextText();
           this.checkPlaceholder();
         });
       },
@@ -115,8 +115,6 @@ export class CrOnboardUsersController implements ng.IComponentController {
 
   public clearPanel(): void {
     this.resetUsersfield();
-    // TODO (f3745): rm this if determined not-needed
-    //initResults();
   }
 
   private resetUsersfield(): void {
@@ -192,16 +190,30 @@ export class CrOnboardUsersController implements ng.IComponentController {
     this.scopeData.invalidcount++;
   }
 
-  public validateDirSyncUser(e): void {
-    if (this.isDirSyncEnabled) {
-      this.UserListService.queryUser(e.attrs.value)
-        .catch(() => {
-          this.setInvalidToken(e);
-          this.sortTokens();
-          this.scopeData.invalidDirSyncUsersCount++;
-        });
-    }
+  public updateForInvalidUser(e): void {
+    this.setInvalidToken(e);
+    this.sortTokens();
   }
+
+  public validateProposedUser(e): void {
+    if (!this.isDirSyncEnabled && !this.isDefaultAutoAssignTemplateActivated) {
+      return;
+    }
+    this.UserListService.queryUser(e.attrs.value)
+      .then((response) => {
+        if (this.isDefaultAutoAssignTemplateActivated && response.userName === e.attrs.value) {
+          this.updateForInvalidUser(e);
+          this.scopeData.invalidNewUserCount++;
+        }
+      })
+      .catch(() => {
+        if (this.isDirSyncEnabled) {
+          this.updateForInvalidUser(e);
+          this.scopeData.invalidDirSyncUsersCount++;
+        }
+      });
+  }
+
 }
 
 export class CrOnboardUsersComponent implements ng.IComponentOptions {

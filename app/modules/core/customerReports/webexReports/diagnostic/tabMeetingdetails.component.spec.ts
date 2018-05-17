@@ -25,6 +25,18 @@ describe('Component: dgcTabMeetingdetail', () => {
               { rxPackets: 134263, txPackets: 123736, audioMos: 3, packetLost: 0, packetBad: 0, timestamp: 1513215075000 },
               { rxPackets: 135110, txPackets: 123089, audioMos: 1, packetLost: 0, packetBad: 0, timestamp: 1513215135000 },
             ],
+            audioQos: {
+              VCS: [
+                { packetLoss: 0, lossRate: 0.06, jitter: 2, timestamp: 1515389351508 },
+                { packetLoss: 0, lossRate: 0.01, jitter: 21, timestamp: 1515389265000 },
+              ],
+            },
+            videoQos: {
+              VCS: [
+                { packetLoss: 0, lossRate: 0.06, jitter: 3, timestamp: 1515389265000 },
+                { packetLoss: 0, lossRate: 0.01, jitter: 22, timestamp: 1515389351508 },
+              ],
+            },
           },
         ],
       },
@@ -72,54 +84,237 @@ describe('Component: dgcTabMeetingdetail', () => {
     this.initModules(testModule);
     this.injectDependencies('$q', 'SearchService', 'Notification', '$timeout');
 
-    initSpies.apply(this);
     this.SearchService.setStorage('webexOneMeeting', this.meeting);
   });
 
-  function initSpies() {
-    spyOn(this.Notification, 'errorResponse');
-    spyOn(this.SearchService, 'getQOS').and.returnValue(this.$q.resolve());
-    spyOn(this.SearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve());
-    spyOn(this.SearchService, 'getUniqueParticipants').and.returnValue(this.$q.resolve());
-  }
-
-  function initComponent(this) {
+  function initComponent(this, isReject?: boolean) {
+    if (isReject) {
+      spyOn(this.SearchService, 'getUniqueParticipants').and.returnValue(this.$q.reject({ status: 404 }));
+    } else {
+      spyOn(this.SearchService, 'getUniqueParticipants').and.returnValue(this.$q.resolve(this.uniqueParticipants));
+    }
     this.compileComponent('dgcTabMeetingdetail');
     this.$scope.$apply();
   }
 
-  it('Should get correct conferenceId from view', function () {
+  it('Should switch view when call onChangeQOS', function () {
     initComponent.call(this);
-
-    expect(this.view.find(this.createdTimeNode)).toHaveText('2017-11-11');
-  });
-
-  it('should get sourceData and circleColor data', function () {
-    this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.pstnQOS));
-    this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
-    initComponent.call(this);
-    expect(_.size(this.controller.dataSet)).toBe(4);
-  });
-
-  it('should get correct data  when call onChangeQOS', function () {
-    this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.cmrQOS));
-    this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
-    initComponent.call(this);
-
-    this.controller.onChangeQOS('voip');
+    this.controller.onChangeQOS('video');
     this.$timeout.flush();
-    expect(this.controller.loading).toBe(false);
-  });
-
-  it('', function () {
-    this.SearchService.getQOS.and.returnValue(this.$q.resolve(this.videoQos));
-    this.SearchService.getUniqueParticipants.and.returnValue(this.$q.resolve(this.uniqueParticipants));
-    initComponent.call(this);
+    expect(this.controller.tabType).toBe('Video');
   });
 
   it('Should call Notification.errorResponse when response status is 404', function () {
-    this.SearchService.getUniqueParticipants.and.returnValue(this.$q.reject({ status: 404 }));
-    initComponent.call(this);
+    spyOn(this.Notification, 'errorResponse');
+    initComponent.call(this, true);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('Should update join meeting time', function () {
+    const mockData = { 50335745: 'Good' };
+    spyOn(this.SearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getJoinMeetingTime();
+    expect(this.controller.circleColor['50335745']).toBe('Good');
+  });
+
+  it('Should get voip session detail when data completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '50335745',
+          completed: true,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [
+                {
+                  lossrates: 1,
+                  rtts: 100,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getVoipSessionDetail('');
+    expect(this.controller.audioLines['50335745'].length).toBe(1);
+  });
+
+  it('Should retry to get voip session detail when data not completed', function () {
+    const mockData = { items: [{ key: '50335745', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    spyOn(this.SearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getVoipSessionDetail('');
+    expect(this.controller.audioLines['50335745'].length).toBe(0);
+  });
+
+  it('Should get video session detail when data completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '50335759',
+          completed: true,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [
+                {
+                  lossrates: 1,
+                  rtts: 100,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getVideoSessionDetail('');
+    expect(this.controller.videoLines['50335759'].length).toBe(1);
+  });
+
+  it('Should get video session detail when data not completed', function () {
+    const mockData = { items: [{ key: '50335759', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    spyOn(this.SearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getVideoSessionDetail('');
+    expect(this.controller.videoLines['50335759'].length).toBe(0);
+  });
+
+  it('Should get pstn session detail when data completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '60335752',
+          completed: true,
+          items: [
+            {
+              callId: '2',
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              tahoeQuality: [
+                {
+                  audioMos: 4,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getPSTNSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getPSTNSessionDetail('');
+    expect(this.controller.audioLines['2_60335752'].length).toBe(1);
+  });
+
+  it('Should get pstn session detail when data not completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '60335752',
+          completed: false,
+          items: [
+            {
+              callId: '2',
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              tahoeQuality: [],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getPSTNSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getPSTNSessionDetail('');
+    expect(this.controller.audioLines['2_60335752']).toBeUndefined();
+  });
+
+  it('Should get cmr session detail when data completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '30337718',
+          completed: true,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              audioQos: [],
+              videoQos: [],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getPSTNSessionDetail('');
+    expect(this.controller.audioLines['30337718'].length).toBe(1);
+  });
+
+  it('Should get cmr session detail when data not completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '40337718',
+          completed: false,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              audioQos: [],
+              videoQos: [],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.SearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getPSTNSessionDetail('');
+    expect(this.controller.audioLines['40337718'].length).toBe(0);
+  });
+
+  it('Should retry to send request', function () {
+    initComponent.call(this);
+    const mockData = { key: '0' };
+    const mockFn = function(param) { mockData.key = param; };
+    this.controller.retryRequest('voip', mockFn, ['40337718']);
+    this.$timeout.flush();
+    expect(mockData.key).toBe('40337718');
+  });
+
+  it('Should get voip quality: Poor', function () {
+    initComponent.call(this);
+    expect(this.controller.parseVoipQuality(6, 500)).toBe(3);
+  });
+
+  it('Should get voip quality: Fair', function () {
+    initComponent.call(this);
+    expect(this.controller.parseVoipQuality(4, 350)).toBe(2);
+  });
+
+  it('Should get video quality: Poor', function () {
+    initComponent.call(this);
+    expect(this.controller.parseVideoQuality(6, 400)).toBe(3);
+  });
+
+  it('Should get pstn quality: Poor', function () {
+    initComponent.call(this);
+    expect(this.controller.parsePSTNQuality(2)).toBe(3);
+  });
+
+  it('Should get pstn quality: Fail', function () {
+    initComponent.call(this);
+    expect(this.controller.parsePSTNQuality(0)).toBe(2);
   });
 });

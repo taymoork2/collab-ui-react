@@ -2,14 +2,14 @@
   <div class="ct-title">
     <span class="h3">{{careSetupAssistant.getLocalisedText('careChatTpl.profile')}}</span>
   </div>
-  <div class="h5 ct-title-desc" translate="careChatTpl.profileDesc"></div>
+  <div class="h5 ct-title-desc">{{careSetupAssistant.profileDesc()}}</div>
   <div class="cs-card-container ct-profile ct-sa-content">
     <cs-card-layout block-view="true" class="ct-card-center">
       <cs-card class="ct-card">
         <div class="preview-agent-bot h4 ct-card-info">
           <span class="h4 ct-card-info" translate="careChatTpl.preview"></span>
           <span class="agent-bot" ng-if="careSetupAssistant.isAgentProfileWithCVA()">
-            <i class="bot icon-bot-four icon-lg"
+            <i class="bot icon-bot-six icon-lg"
               ng-class="{active: careSetupAssistant.selectedAvater === 'bot'}"
               ng-click="careSetupAssistant.toggleBotAgentSelection('bot')"
               tooltip="{{::careSetupAssistant.brandingPageTooltipText('bot')}}"
@@ -46,7 +46,7 @@
               <div ng-switch-default>
                 <img ng-if="careSetupAssistant.selectedVA.icon" class="uploded-org-img" ng-src="{{careSetupAssistant.selectedVA.icon}}"/>
                 <div class="bot" ng-if="!careSetupAssistant.selectedVA.icon">
-                  <i class="icon icon-bot-four icon-2x"></i>
+                  <i class="icon icon-bot-six icon-2x"></i>
                 </div>
               </div>
             </div>
@@ -98,16 +98,23 @@
                 ng-keypress="careSetupAssistant.enterNextPage($event)">
             <div class="profile-image" ng-if="careSetupAssistant.selectedTemplateProfile === careSetupAssistant.profiles.agent">
               <div class="h4 ct-display-txt" translate="careChatTpl.displayText"></div>
+              <div class="escalation-required-info" ng-if="careSetupAssistant.isExpertEscalationSelected()">
+                <span class="cs-input__help-text" translate="careChatTpl.display_text_desc"></span>
+              </div>
               <div focus-on class="agent-name-options">
-                <input cs-input type="radio"
-                  ng-repeat="(key, name) in careSetupAssistant.agentNames"
-                  ng-model="careSetupAssistant.selectedAgentProfile"
-                  id="{{name}}"
-                  name="agentList"
-                  value="{{name}}"
-                  cs-input-label="{{name}}"
-                  ng-click="careSetupAssistant.setAgentProfile()"
-                  ng-keypress="careSetupAssistant.enterNextPage($event)">
+                <div ng-repeat="(key, name) in careSetupAssistant.userDetails">
+                  <input cs-input type="radio"
+                    ng-model="careSetupAssistant.selectedAgentProfile"
+                    id="{{name}}"
+                    name="agentList"
+                    value="{{name}}"
+                    cs-input-label="{{name}}"
+                    ng-click="careSetupAssistant.setAgentProfile()"
+                    ng-keypress="careSetupAssistant.enterNextPage($event)">
+                  <div class="user-alias-info" ng-if="careSetupAssistant.isExpertEscalationSelected() && key === 'alias'">
+                    <span class="user-alias-info-text cs-input__help-text" translate="careChatTpl.user_alias_desc"></span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="org-setting-info">
