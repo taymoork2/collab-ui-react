@@ -38,11 +38,14 @@
     vm.uc = $translate.instant('mediaFusion.metrics.clientType.uc');
     vm.jabber = $translate.instant('mediaFusion.metrics.clientType.jabber');
     vm.board = $translate.instant('mediaFusion.metrics.clientType.board');
+    vm.web = $translate.instant('mediaFusion.metrics.clientType.web');
+    vm.webexvoice = $translate.instant('mediaFusion.metrics.clientType.webexvoice');
+    vm.webexshare = $translate.instant('mediaFusion.metrics.clientType.webexshare');
 
     vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
     vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
     vm.sipList = [vm.sip, vm.uc];
-    vm.sparkDevicesList = [vm.tp, vm.board];
+    vm.sparkDevicesList = [vm.tp, vm.board, vm.webexvoice, vm.webexshare];
     vm.jabber = [vm.jabber];
 
 
@@ -178,7 +181,7 @@
       vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
       vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
       vm.sipList = [vm.sip, vm.uc];
-      vm.sparkDevicesList = [vm.tp, vm.board];
+      vm.sparkDevicesList = [vm.tp, vm.board, vm.webexvoice, vm.webexshare];
       vm.jabber = [vm.jabber];
 
       if (clientPercents.sparkDesktopValue > 0) {
