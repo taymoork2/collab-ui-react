@@ -6711,7 +6711,7 @@
       "streamsBandwidthType": {
         "audio": "Audio",
         "video": "Video",
-        "presentation": "Presentation"
+        "share": "Share"
       },
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",

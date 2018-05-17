@@ -209,8 +209,12 @@
       });
     }
 
-    function getCascadeBandwidthData(time, cluster) {
-      vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster';
+    function getCascadeBandwidthData(time, cluster, cascadeBandwidthSelected) {
+      if (cluster === vm.allClusters) {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/media/' + cascadeBandwidthSelected;
+      } else {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/';
+      }
       var returnData = {
         graphData: [],
         graphs: [],
