@@ -4,6 +4,7 @@ import { LegalHoldCustodianImportController } from './legal-hold-custodian-impor
 import { ImportMode, ImportStep, ImportResultStatus } from './legal-hold.enums';
 import { IImportResult } from './legal-hold.interfaces';
 import { CrUsersTileTotalsComponent } from 'modules/core/users/shared/cr-users-tile-totals/cr-users-tile-totals.component';
+import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
 
 type Test = atlas.test.IComponentTest<LegalHoldCustodianImportController, {
   $q;
@@ -16,6 +17,7 @@ type Test = atlas.test.IComponentTest<LegalHoldCustodianImportController, {
 }, {
   components: {
     crUsersTileTotals: atlas.test.IComponentSpy<CrUsersTileTotalsComponent>;
+    crCsvDownload: atlas.test.IComponentSpy<CrCsvDownloadComponent>;
   },
 }>;
 
@@ -24,11 +26,13 @@ describe('Component: legalHoldCustodianImport', () => {
   beforeEach(function (this: Test) {
     this.components = {
       crUsersTileTotals: this.spyOnComponent('crUsersTileTotals'),
+      crCsvDownload: this.spyOnComponent('crCsvDownload'),
     };
 
     this.initModules(
       legalHoldModalModuleName,
       this.components.crUsersTileTotals,
+      this.components.crCsvDownload,
 
     );
     this.injectDependencies(

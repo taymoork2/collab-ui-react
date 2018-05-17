@@ -86,7 +86,7 @@
                 class="cs-input"
                 name="matterDescription"
                 placeholder="{{::'common.description' | translate}}"
-                ng-model="$ctrl.matterEdit.matterDescription" />
+                ng-model="$ctrl.matterEdit.matterDescription"></textarea>
             </div>
           </div>
         </cs-sp-section>
@@ -96,16 +96,22 @@
             <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
               <div ng-if="$ctrl.isActive()"
                 class="matter-detail__action__release">
-                <i class="icon icon-circle-data icon-4x"
-                  aria-label="{{::'legalHold.detail.release' | translate}}"
-                  ng-click="$ctrl.releaseMatter()"></i>
+                  <button cs-btn type="button"
+                  class="btn btn--circle" loading="$ctrl.isReleasing"
+                  aria-label="{{::'common.release' | translate}}"
+                  ng-click="$ctrl.releaseMatter()">
+                  <span class="icon icon-circle-data"></span>
+                </button>
                 <label class="body-small"
                   translate="legalHold.detail.release"></label>
               </div>
               <div class="matter-detail__action__delete">
-                <i class="icon icon-circle-data icon-4x"
+                <button cs-btn type="button"
+                  class="btn btn--circle btn--negative" loading="$ctrl.isDeleting"
                   aria-label="{{::'common.delete' | translate}}"
-                  ng-click="$ctrl.deleteMatter()"></i>
+                  ng-click="$ctrl.deleteMatter()">
+                  <span class = "icon icon-circle-data"></span>
+                </button>
                 <label class="body-small"
                   translate="common.delete"></label>
               </div>
@@ -119,28 +125,44 @@
           </div>
           <div class="row">
             <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
-              <div>
-                <i class="icon icon-circle-data icon-4x"
+              <div class="matter-detail__action__export" ng-if="$ctrl.matter.numberOfCustodians !== 0">
+                <button cs-btn type="button"
+                  class="btn btn--circle btn--primary" loading="$ctrl.isDownloading"
                   aria-label="{{::'common.export' | translate}}"
-                  ng-click="$ctrl.exportCustodians()"></i>
-                <label class="body-small"
-                  translate="common.export"></label>
+                  ng-click="$ctrl.exportCustodians()">
+                  <span class="icon icon-search"></span>
+              </button>
+              <label class="body-small"translate="common.export"></label>
+                <cr-csv-download filename={{::$ctrl.exportFileName}}
+                  is-hidden="true"
+                  csv-data="$ctrl.exportResults"
+                  download-finished-fn="$ctrl.finishDownload()"
+                  l10n-success-string="legalHold.custodianImport.downloadSuccess">
+                </cr-csv-download>
               </div>
               <div ng-if="$ctrl.isActive()"
                 class="matter-detail__action__add">
-                <i class="icon icon-circle-data icon-4x"
-                  aria-label="{{::'common.add' | translate}}"
-                  ng-click="$ctrl.addCustodians()"></i>
+                <button cs-btn type="button"
+                class="btn btn--circle btn--people"
+                aria-label="{{::'common.add' | translate}}"
+                ng-click="$ctrl.addCustodians()">
+                <span class="icon icon-search"></span>
+                </button>
                 <label class="body-small"
-                  translate="common.add"></label>
+                  translate="common.add">
+                </label>
               </div>
               <div ng-if="$ctrl.isActive()"
                 class="matter-detail__action__remove">
-                <i class="icon icon-circle-data icon-4x"
-                  aria-label="{{::'common.common.remove' | translate}}"
-                  ng-click="$ctrl.removeCustodians()"></i>
+                <button cs-btn type="button"
+                class="btn btn--circle btn--attention"
+                aria-label="{{::'common.remove' | translate}}"
+                ng-click="$ctrl.removeCustodians()">
+                <span class="icon icon-search"></span>
+                </button>
                 <label class="body-small"
-                  translate="common.remove"></label>
+                  translate="common.remove">
+                </label>
               </div>
             </div>
           </div>
@@ -149,3 +171,4 @@
     </form>
   </div>
 </div>
+

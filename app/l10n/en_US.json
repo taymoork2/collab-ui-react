@@ -4216,6 +4216,7 @@
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
+    "exportWarning": "Gathering data for export may take a while. If you sign out or refresh your browser, the export will be canceled.",
     "matterList": {
       "title": "Matters",
       "dateReleased": "Date Released",
@@ -4234,7 +4235,9 @@
     },
     "detail": {
       "release": "Release",
-      "releaseMatter": "Release Matter"
+      "releaseMatter": "Release Matter",
+      "exportFileName": "custodians.csv",
+      "exportCustodians": "Export Custodians"
     },
     "matterNew": {
       "title": "Create Matter",
@@ -4258,7 +4261,9 @@
       "emailAddress": "Email Address",
       "usersAdded": "Users Added",
       "usersRemoved": "Users Removed",
-      "errorsFileName": "ImportErrors.csv",
+      "importTemplateFileName": "CustodianImportTemplate.csv",
+      "downloadSuccess": "Download Successful",
+      "importErrorsFileName": "CustodianImportErrors.csv",
       "cancelImportTitle": "Cancel Import",
       "add": {
         "title": "Add Custodians",
