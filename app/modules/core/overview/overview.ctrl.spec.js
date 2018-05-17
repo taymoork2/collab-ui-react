@@ -227,7 +227,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Notifications', function () {
     beforeEach(function () {
-      this.TOTAL_NOTIFICATIONS = 8;
+      this.TOTAL_NOTIFICATIONS = 9;
       this.initController();
     });
 
@@ -369,7 +369,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should call ESA check if logged in as a Partner', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 10;
       expect(this.PstnService.isSwivelCustomerAndEsaUnsigned).toHaveBeenCalled();
       expect(this.controller.esaDisclaimerNotification).toBeTruthy();
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
@@ -387,16 +387,19 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
-      var TOTAL_NOTIFICATIONS = 8;
+      var TOTAL_NOTIFICATIONS = 9;
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(this.controller.esaDisclaimerNotification).toBeFalsy();
     });
   });
 
   describe('Notifications - notificationComparator', function () {
-    it('should return correct sort values', function () {
+    beforeEach(function () {
+      this.TOTAL_NOTIFICATIONS = 9;
       this.initController();
+    });
 
+    it('should return correct sort values', function () {
       // ensure comparator sorts correctly
       var sorted = this.$filter('orderBy')([
         { badgeText: 'common.info' },
@@ -415,6 +418,54 @@ describe('Controller: OverviewCtrl', function () {
         { badgeText: 'common.info' },
         { badgeText: 'common.new' },
       ]);
+    });
+
+    it('should sort notifications by zOrder', function () {
+      function makeTestNotification(_this, name, factory, zOrder, makeOnly) {
+        _this.zOrderTest[name] = factory();
+        _this.zOrderTest[name].extendedText = name;
+        _this.zOrderTest[name].zOrder = zOrder;
+        if (!makeOnly) {
+          _this.controller.pushNotification(_this.zOrderTest[name]);
+        }
+      }
+
+      // Make zOrders base-1000 to avoid conflict with any 'normal' notifications
+      this.zOrderTest = {};
+      makeTestNotification(this, 'highest', this.OverviewNotificationFactory.createAutoAssignNotification, 9999);
+      makeTestNotification(this, 'lowest', this.OverviewNotificationFactory.createAutoAssignNotification, -1);
+      makeTestNotification(this, 'nextHighest', this.OverviewNotificationFactory.createAutoAssignNotification, 9998);
+      makeTestNotification(this, 'ten', this.OverviewNotificationFactory.createCrashLogNotification, 1010);
+      makeTestNotification(this, 'ten_dupe', this.OverviewNotificationFactory.createCrashLogNotification, 1010);
+      makeTestNotification(this, 'override_five', this.OverviewNotificationFactory.createCrashLogNotification, 1010, true);
+      this.controller.pushNotification(this.zOrderTest.override_five, 1005);
+      makeTestNotification(this, 'ten_dupe_param_zOrder', this.OverviewNotificationFactory.createCrashLogNotification, undefined, true);
+      this.controller.pushNotification(this.zOrderTest.ten_dupe_param_zOrder, 1010);
+
+      // Should have added all the extra notifications
+      expect(this.controller.notifications.length).toEqual(this.TOTAL_NOTIFICATIONS + _.keys(this.zOrderTest).length);
+
+      // ensure comparator sorts correctly
+      var sorted = this.$filter('orderBy')(this.controller.notifications, ['badgeText', 'zOrder'], false, this.controller.notificationComparator);
+
+      // 'common.new' badge sorting expectations...
+      expect(_.find(sorted, { badgeText: 'common.new' }).extendedText).toBe('highest');
+      expect(sorted[_.findIndex(sorted, { extendedText: 'highest' }) + 1].extendedText).toBe('nextHighest');
+      expect(_.last(sorted).extendedText).toBe('lowest');
+
+      // 'common.info' badge sorting -- these should go LIFO
+      expect(_.find(sorted, { badgeText: 'common.info' }).extendedText).toBe('ten_dupe_param_zOrder');
+      expect(sorted[_.findIndex(sorted, { extendedText: 'ten_dupe_param_zOrder' }) + 1].extendedText).toBe('ten_dupe');
+      expect(sorted[_.findIndex(sorted, { extendedText: 'ten_dupe_param_zOrder' }) + 2].extendedText).toBe('ten');
+      expect(sorted[_.findIndex(sorted, { extendedText: 'ten_dupe_param_zOrder' }) + 3].extendedText).toBe('override_five');
+
+      // Should set zOrder with passed param
+      expect(_.find(sorted, { extendedText: 'ten_dupe_param_zOrder' }).zOrder).toBe(1010);
+      // Should override zOrder with passed param
+      expect(_.find(sorted, { extendedText: 'override_five' }).zOrder).toBe(1005);
+
+      // garbage collect
+      sorted = undefined;
     });
   });
 
@@ -441,7 +492,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Auto Assign Notification - set up now', function () {
     it('should not display if atlasF3745AutoAssignLicenses is false', function () {
-      var TOTAL_NOTIFICATIONS = 7;
+      var TOTAL_NOTIFICATIONS = 8;
       this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
@@ -455,14 +506,14 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('AccountLinking20 notification', function () {
     it('should not be displayed if no sites need configuration', function () {
-      var TOTAL_NOTIFICATIONS = 8;
+      var TOTAL_NOTIFICATIONS = 9;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
     });
 
     it('should be displayed if one or several sites needs configuration', function () {
-      var TOTAL_NOTIFICATIONS = 8;
+      var TOTAL_NOTIFICATIONS = 9;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
@@ -470,7 +521,7 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Expert Virtual Assistant notification', function () {
-    var TOTAL_NOTIFICATIONS = 8;
+    var TOTAL_NOTIFICATIONS = 9;
     it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
       spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve({ name: 'evaTest' }));
       this.initController();
