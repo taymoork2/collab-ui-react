@@ -68,7 +68,7 @@ describe('Huron Functional: add-user', () => {
       utils.click(manageUsersPage.buttons.next);
       utils.expectIsDisplayed(CallUser.sparkCallRadio);
     });
-    it('should select Cisco Spark Call', () => {
+    it('should select Cisco Webex Calling', () => {
       utils.expectIsEnabled(manageUsersPage.buttons.save);
       utils.click(CallUser.sparkCallRadio);
       utils.expectIsEnabled(manageUsersPage.buttons.next);

@@ -75,6 +75,20 @@
           height: rem-calc(28);
           font-size: rem-calc(16);
         }
+        button.btn--circle.btn--small.btn--white.is-accepted {
+          background-color: $color-blue-darker;
+          box-shadow: inset 0 0 0 1px $color-blue-darker;
+          span {
+            color: $white;
+          }
+        }
+        button.btn--circle.btn--small.btn--white.is-rejected {
+          background-color: $gray-dark-1;
+          box-shadow: inset 0 0 0 1px $gray-dark-1;
+          span {
+            color: $white;
+          }
+        }
       }
     }
   }
@@ -90,6 +104,6 @@
   }
 }
 
-.hcs-container.cs-form__section:last-child {
+.cs-form__section.save-section.cluster-detail-save {
   padding-bottom: rem-calc(16);
 }

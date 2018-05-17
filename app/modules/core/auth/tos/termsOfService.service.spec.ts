@@ -1,4 +1,5 @@
 import tosModule from './index';
+import { IToolkitModalSettings } from 'modules/core/modal';
 
 describe('TOSService', () => {
   const mockTosModal = {
@@ -14,8 +15,9 @@ describe('TOSService', () => {
       '$rootScope',
       '$modal',
       'UserPreferencesService',
+      'Auth',
       'Authinfo',
-      'FeatureToggleService',
+      'ModalService',
     );
 
     this.meData = {
@@ -23,15 +25,12 @@ describe('TOSService', () => {
     };
 
     this.MeServiceSpy = spyOn(this.MeService, 'getMe').and.callFake(() => this.$q.resolve(this.meData));
-
     spyOn(this.$modal, 'open').and.returnValue(mockTosModal);
-    spyOn(this.TOSService, 'dismissModal').and.callThrough();
 
     installPromiseMatchers();
   });
 
   describe('hasAcceptedTOS()', () => {
-
     it('should return true if user has the ToS preference set', function () {
       this.UserPreferencesService.hasPreference = jasmine.createSpy('hasPreference').and.returnValue(true);
       const promise = this.TOSService.hasAcceptedTOS()
@@ -67,43 +66,40 @@ describe('TOSService', () => {
 
   describe('openTOSModal()', function () {
     it('should open a new modal dialog', function () {
+      spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
+      const options = <IToolkitModalSettings>{
+        type: 'dialog',
+        title: 'termsOfService.title',
+        message: 'termsOfService.message',
+        dismiss: 'common.decline',
+        close: 'common.accept',
+      };
+
       this.TOSService.openTOSModal();
-      expect(this.$modal.open).toHaveBeenCalled();
-    });
-    it('should not open a modal if there is already a modal instance on the page', function () {
-      this.TOSService.tosModal = { foo: 'bar' };
-      this.TOSService.openTOSModal();
-      expect(this.$modal.open).not.toHaveBeenCalled();
+      expect(this.ModalService.open).toHaveBeenCalledWith(options);
     });
   });
 
   describe('acceptTOS()', () => {
-
-    it('should dismiss open modal once user updated', function () {
+    it('should call UserPreferencesService.setUserPreferences', function () {
       spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.resolve());
 
-      const ap = this.TOSService.hasAcceptedTOS();
-      expect(ap).toBeResolvedWith(false);
+      this.TOSService.acceptTOS();
+      expect(this.UserPreferencesService.setUserPreferences).toHaveBeenCalled();
+    });
+  });
 
-      this.TOSService.openTOSModal();
-      this.TOSService.acceptTOS().then( function() {
-        expect(mockTosModal.dismiss).toHaveBeenCalled();
+  describe('openTOSModal()', () => {
+    it('should call acceptTOS() when accepting TOS', function () {
+      spyOn(this.ModalService, 'open').and.callFake(() => {
+        return { result: this.$q.resolve() };
       });
-      this.$rootScope.$digest();
-    });
-
-    it('should reject acceptTOS promise if user update failed', function () {
-      const ap = this.TOSService.hasAcceptedTOS();
-      expect(ap).toBeResolvedWith(false);
-
-      spyOn(this.UserPreferencesService, 'setUserPreferences').and.returnValue(this.$q.reject());
+      spyOn(this.TOSService, 'acceptTOS').and.returnValue(this.$q.resolve());
 
       this.TOSService.openTOSModal();
-      mockTosModal.dismiss.calls.reset(); // openTOSModal calls dismiss, so reset spy
-      this.TOSService.acceptTOS().catch(_.noop);
+      expect(this.ModalService.open).toHaveBeenCalled();
       this.$rootScope.$digest();
-      expect(mockTosModal.dismiss).not.toHaveBeenCalled();
+      expect(this.TOSService.acceptTOS).toHaveBeenCalled();
     });
-
   });
 });

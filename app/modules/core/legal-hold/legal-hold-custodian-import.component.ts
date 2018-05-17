@@ -158,8 +158,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
       this.shouldCancel = true;
       this.LegalHoldService.cancelConvertUsers();
       this.progressLabel = this.$translate.instant('common.cancelingEllipsis');
-    });
-
+    }).catch(_.noop);
   }
 
   // getting raw data from file

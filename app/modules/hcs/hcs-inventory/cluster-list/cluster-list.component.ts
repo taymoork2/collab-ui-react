@@ -135,7 +135,7 @@ export class ClusterListCtrl implements ng.IComponentController {
       const clusterItem: IClusterItem = {
         id: _.get(cluster, 'uuid'),
         name: _.get(cluster, 'name'),
-        status: _.get(cluster, 'status'),
+        status: _.get(cluster, 'clusterStatus'),
         applications: applicationList,
       };
       this.clusterList.push(clusterItem);
