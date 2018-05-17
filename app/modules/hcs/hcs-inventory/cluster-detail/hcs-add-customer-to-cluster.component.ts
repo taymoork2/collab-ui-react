@@ -30,7 +30,6 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
     private HcsUpgradeService: HcsUpgradeService,
     private HcsControllerService: HcsControllerService,
     private Notification: Notification,
-    private $log: ng.ILogService,
   ) {}
 
   public cancel() {
@@ -71,8 +70,6 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
     };
     this.HcsControllerService.addHcsControllerCustomer(this.customerName, ['UPGRADE'])
     .then((resp) => {
-      this.$log.log(resp.uuid);
-
       const swProfileSelected: ISoftwareProfile = {
         name: this.softwareProfileSelected.label,
         uuid: this.softwareProfileSelected.value,

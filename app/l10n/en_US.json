@@ -11151,7 +11151,7 @@
         "active":"Active",
         "inactive": "Inactive",
         "needsAcceptance":"Needs Acceptance",
-        "needsAssigned":"Needs assigned",
+        "needsAssigned":"Needs Assigned",
         "operational": "Operational",
         "agentOffline": "Agent Offline",
         "swProfileNotCoverAll": "Software profile does not cover all application",
