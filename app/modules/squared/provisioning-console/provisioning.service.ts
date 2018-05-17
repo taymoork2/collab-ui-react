@@ -20,7 +20,8 @@ export class ProvisioningService {
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
-    private UrlConfig ) {
+    private UrlConfig,
+   ) {
     const adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
     this.getOrdersUrl = `${adminServiceUrl}orders/postProvisioning/manualCodes?status=`;
     this.getOrderUrl = `${adminServiceUrl}commerce/orders/`;
@@ -50,8 +51,6 @@ export class ProvisioningService {
     });
   }
 
-  public updateOrderStatus<T>(order: IOrder, newStatus: Status): ng.IPromise<T>;
-  public updateOrderStatus<T>(order: IOrder, newStatus: Status, assignedTo: string): ng.IPromise<IOrder>;
 
   public updateOrderStatus<T>(order: IOrder, newStatus: Status, assignedTo?: string): ng.IPromise<T> {
     if (assignedTo) {

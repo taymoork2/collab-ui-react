@@ -73,21 +73,6 @@ export class ProvisioningController {
       displayName: this.$translate.instant('provisioningConsole.status'),
     }];
 
-
-   /*      this.sharedColumDefs.filter(obj => obj.field === 'lastModified');
-        this.sharedColumDefs.push({
-          field: 'queueReceived',
-          displayName: this.$translate.instant('provisioningConsole.queueReceived'),
-        }, {
-          field: 'queueCompleted',
-          displayName: this.$translate.instant('provisioningConsole.queueCompleted'),
-        },  {
-          field: 'completedBy',
-          displayName: this.$translate.instant('provisioningConsole.completedBy'),
-        });
-      }
-    }); */
-
     this.init();
   }
 
@@ -102,7 +87,7 @@ export class ProvisioningController {
     this.$q.all({
       atlasWebexFeatureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
       orderDataPromise : this.getOrderData() }).then(promises => {
-        this.featureToggleFlag = promises.atlasWebexFeatureTogglePromise.valueOf();
+        this.featureToggleFlag = promises.atlasWebexFeatureTogglePromise;
         if (this.featureToggleFlag) {
           this.updateGridOptions();
         }
@@ -136,14 +121,7 @@ export class ProvisioningController {
       if (completedOrder) {
         this.completedOrders.push(completedOrder);
       }
-    } /* else if (order.status === Status.PROGRESS) {
-      _.forEach(this.pendingOrders, function(value: IOrder) {
-        if (value.orderUUID === order.orderUUID && value.siteUrl === order.siteUrl) {
-          value.queueReceived = order.queueReceived;
-          value.assignedTo = value.assignedTo;
-        }
-      });
-    } */
+    }
   }
 
   /*
@@ -234,7 +212,7 @@ export class ProvisioningController {
       field: 'assignedTo',
       displayName: this.$translate.instant('provisioningConsole.assignedTo'),
     });
-    this.gridOptions.pending.columnDefs = pendingDefs.filter(obj => obj.field !== 'lastModified');
+    this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field !== 'lastModified');
     completedDefs.push({
       field: 'queueReceived',
       displayName: this.$translate.instant('provisioningConsole.queueReceived'),

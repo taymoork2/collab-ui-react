@@ -33,6 +33,3 @@ export interface IOrderDetail {
   subscriptionUuid: string;
 
 }
-
-/*
- */

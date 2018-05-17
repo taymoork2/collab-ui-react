@@ -1,9 +1,7 @@
 import { ProvisioningService } from './../provisioning.service';
-import { Status } from './../provisioning.service';
+import { Status , STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
 import { Notification } from 'modules/core/notifications';
-import { STATUS_UPDATE_EVENT_NAME } from './../provisioning.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
-import { IOrder } from '..';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -52,9 +50,9 @@ export class ProvisioningDetailsController {
 
   /* @ngInject */
   constructor(
-    private $rootScope,
-    private $stateParams,
-    private $translate,
+    private $rootScope: ng.IRootScopeService,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private $q: ng.IQService,
     private Notification: Notification,
@@ -152,13 +150,11 @@ export class ProvisioningDetailsController {
         featureTogglePromise: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole) })
     .then( promises => {
       this.featureToggleFlag = promises.featureTogglePromise.valueOf();
-      const result: IOrder = promises.updateOrderPromise;
+      const result: any = promises.updateOrderPromise;
       if (result) {
         this.order.status = newStatus;
         if (this.featureToggleFlag) {
-          if (newStatus === Status.PENDING) {
-            this.order.assignedTo = result.assignedTo;
-          } else if ( newStatus === Status.PROGRESS ) {
+          if (newStatus === Status.PENDING || newStatus === Status.PROGRESS) {
             this.order.assignedTo = result.assignedTo;
           } else if ( newStatus === Status.COMPLETED ) {
             this.order.completedBy = result.assignedTo;

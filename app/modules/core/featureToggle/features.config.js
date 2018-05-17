@@ -92,7 +92,7 @@ module.exports = {
   atlasVirtualAssistantEnable: 'atlas-virtual-assistant-enable',
   atlasWebexAddSite: 'atlas-webex-add-site',
   atlasWebexSiteManagementSetting: 'atlas-webex-site-management-setting',
-  atlasWebexProvisioningConsole: 'atlasWebexProvisioningConsole',
+  atlasWebexProvisioningConsole: 'atlas-US25427-webex-provisioning-console',
   atMentions: 'at-mentions',
   audioPairing: 'audio-pairing',
   autoLicense: 'auto-license',
