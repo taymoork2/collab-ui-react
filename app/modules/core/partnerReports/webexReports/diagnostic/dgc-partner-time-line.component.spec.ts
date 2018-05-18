@@ -64,7 +64,7 @@ describe('Component: DgcPartnerTimeLine', () => {
       line.joinTime += i;
       line.userName += i;
       this.sourceData.lines.push(line);
-      i++;
+      i += 1;
     }
   }
 
@@ -79,7 +79,7 @@ describe('Component: DgcPartnerTimeLine', () => {
     expect(this.view.find('.timelineSvg')).toExist();
   });
 
-  it('should get no error', function () {
+  it('should get no throw error', function () {
     this.sourceData.lines = [];
     mockLines.call(this, 4);
     const bindings = {
@@ -111,44 +111,21 @@ describe('Component: DgcPartnerTimeLine', () => {
     initComponent.call(this, bindings);
 
     const msgArr = [{ key: 'Join Time: ', value: '' }];
-    this.controller.tip = {
-      transition: () => { return this.controller.tip; },
-      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
-      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
-      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
-      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      t: (t) => { if (t) { return true; } },
-    };
+    spyOn(this.controller, 'makeTips').and.returnValue('');
     this.controller.makeTips({ arr: msgArr }, 100, 100);
     expect(msgArr).toExist();
   });
 
   it('should detect and update device type', function () {
     const bindings = { sourceData: this.sourceData };
-    initComponent.call(this, bindings);
-
     const msgArr = [{ key: 'SIP', value: '' }];
-    const mockData = { completed: true, items : [{ deviceType: 'SIP' }] };
-    spyOn(this.PartnerSearchService, 'getRealDevice').and.callFake(function () {
-      return {
-        then: function (callback) {
-          return callback(mockData);
-        },
-      };
-    });
+    const mockData = { completed: true, items: [{ deviceType: 'SIP' }] };
+    initComponent.call(this, bindings);
+    spyOn(this.PartnerSearchService, 'getRealDevice').and.callFake(function () { return { then: function (callback) { return callback(mockData); } }; });
 
-    const mockParam = { platform: '10' };
-    this.controller.tip = {
-      transition: () => { return this.controller.tip; },
-      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
-      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
-      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
-      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
-      t: (t) => { if (t) { return true; } },
-    };
-    this.controller.detectAndUpdateDevice(mockParam, msgArr);
+    const mockParam = { conferenceID: '1234340', nodeId: '544234' };
+    spyOn(this.controller, 'makeTips').and.returnValue('');
+    this.controller.detectAndUpdateDevice(mockParam, msgArr, 0);
     expect(mockParam['device']).toBe('SIP');
   });
 
@@ -193,5 +170,4 @@ describe('Component: DgcPartnerTimeLine', () => {
       expect(mockData.values['jmtQuality']).toBe('Poor');
     });
   });
-
 });

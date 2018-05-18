@@ -1,15 +1,14 @@
 import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms } from './partner-search.service';
-import { IDevice, IParticipant } from './partner-search.interfaces';
+import { ICallType, IParticipant } from './partner-search.interfaces';
 
-export interface IGridApiScope extends ng.IScope {
+interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
-class Participants implements ng.IComponentController {
-
-  public gridData: any;
-  public gridOptions = {};
+class DgcPartnerTabParticipantsController implements ng.IComponentController {
+  public gridData: IParticipant[];
+  public gridOptions: uiGrid.IGridOptions = {};
   public conferenceID: string;
   public loading = true;
   public deviceLoaded = false;
@@ -33,49 +32,52 @@ class Participants implements ng.IComponentController {
 
   public $onInit(): void {
     this.getParticipants();
-    this.setGridOptions();
   }
 
   private getParticipants(): void {
     this.PartnerSearchService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
-        this.gridData = _.map(res, (item: IParticipant) => {
-          const device = this.PartnerSearchService.getDevice({ platform: item.platform, browser: item.browser, sessionType: item.sessionType });
-          if (item.platform === Platforms.TP && !device.name) {
-            device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
-          }
-          return _.assignIn({}, item, {
-            phoneNumber: this.PartnerSearchService.getPhoneNumber(item.phoneNumber),
-            callInNumber: this.PartnerSearchService.getPhoneNumber(item.callInNumber),
-            platform_: _.get(device, 'name'),
-            duration: this.PartnerSearchService.getDuration(item.duration),
-            endReason: this.PartnerSearchService.getParticipantEndReason(item.reason),
-            startDate: this.PartnerSearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),
-          });
-        });
-        this.loading = false;
+        this.gridData = this.getGridData(res);
         this.setGridOptions();
-
         this.detectAndUpdateDevice();
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
-        this.loading = true;
+      })
+      .finally(() => {
+        this.loading = false;
       });
+  }
+
+  private getGridData(participants: IParticipant[]): IParticipant[] {
+    return _.map(participants, (participant: IParticipant) => {
+      const device = this.PartnerSearchService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
+      if (participant.platform === Platforms.TP && !device.name) {
+        device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+      }
+      return _.assignIn({}, participant, {
+        phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
+        callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
+        platform_: _.get(device, 'name'),
+        duration: this.PartnerSearchService.getDuration(participant.duration),
+        endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
+        startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+      });
+    });
   }
 
   private detectAndUpdateDevice(): void {
     this.deviceLoaded = true;
-    this.gridData.forEach((item: IDevice) => {
+    this.gridData.forEach((item: ICallType) => {
       if (item.platform === Platforms.TP && !item.deviceCompleted) {
         this.deviceLoaded = false;
         this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
-        .then((res: any) => {
-          if (res.completed) {
-            item.device = this.updateDevice(res);
-          }
-          item.deviceCompleted = res.completed;
-        });
+          .then((res: ICallType) => {
+            if (res.completed) {
+              item.device = this.getDeviceType(res);
+            }
+            item.deviceCompleted = res.completed;
+          });
       }
     });
 
@@ -87,16 +89,15 @@ class Participants implements ng.IComponentController {
     }
   }
 
-  private updateDevice(deviceInfo: IDevice): string {
-    if (deviceInfo.items && deviceInfo.items.length > 0) {
-      const device = deviceInfo.items[0].deviceType;
-      return device;
+  private getDeviceType(deviceInfo: ICallType): string {
+    if (!_.isEmpty(deviceInfo.items)) {
+      return deviceInfo.items[0].deviceType;
     }
     return this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
   }
 
   private setGridOptions(): void {
-    const columnDefs = [{
+    const columnDefs: uiGrid.IColumnDef[] = [{
       width: '16%',
       cellTooltip: true,
       field: 'userName',
@@ -145,7 +146,7 @@ class Participants implements ng.IComponentController {
   }
 }
 
-export class ParticipantsComponent implements ng.IComponentOptions {
-  public controller = Participants;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/tab-participants.html');
+export class DgcPartnerTabParticipantsComponent implements ng.IComponentOptions {
+  public controller = DgcPartnerTabParticipantsController;
+  public template = require('./dgc-partner-tab-participants.html');
 }
