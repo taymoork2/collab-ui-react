@@ -28,15 +28,14 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   public hcsProfileForm: ng.IFormController;
   public errors: Object;
   public swprofile: ISoftwareProfile;
-  public allVersions: IApplicationVersion[];
-  public hcstoggle2: boolean = false;
+  public allVersions: IApplicationVersion[] = [];
   public versions: IVersions = {
-    cucm: [],
-    imp: [],
-    ucxn: [],
-    plm: [],
-    cer: [],
-    expway: [],
+    cucm: [''],
+    imp: [''],
+    ucxn: [''],
+    plm: [''],
+    cer: [''],
+    expway: [''],
   };
   public selectedVersion: ISelectedVersion = {
     cucm: '',
@@ -93,11 +92,21 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
   }
 
   public listAppVersions(): void {
-    this.HcsUpgradeService.listAppVersions().then(resp => {
-      this.allVersions = _.get(resp, 'applicationVersions');
+    const none = this.$translate.instant('common.none');
+    this.HcsUpgradeService.getAppVersions(EApplicationTypes.CUCM).then(resp => {
+      this.allVersions.push(_.get(resp, 'applicationVersions[0]'));
       this.versions.cucm = _.map(this.getAppVersion(EApplicationTypes.CUCM), 'fileName');
+      this.versions.cucm.splice(0, 0, none);
+    });
+    this.HcsUpgradeService.getAppVersions(EApplicationTypes.CUP).then(resp => {
+      this.allVersions.push(_.get(resp, 'applicationVersions[0]'));
       this.versions.imp = _.map(this.getAppVersion(EApplicationTypes.IMP), 'fileName');
+      this.versions.imp.splice(0, 0, none);
+    });
+    this.HcsUpgradeService.getAppVersions(EApplicationTypes.CUC).then(resp => {
+      this.allVersions.push(_.get(resp, 'applicationVersions[0]'));
       this.versions.ucxn = _.map(this.getAppVersion(EApplicationTypes.CUC), 'fileName');
+      this.versions.ucxn.splice(0, 0, none);
     });
   }
 
@@ -115,10 +124,11 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
     if (!_.isUndefined(this.changedProfile) && this.changedProfile.applicationVersions) {
       const ver: ISoftwareAppVersion = _.find(this.getAppVersion(typeApp), { fileName: name });
       const appVer: ISoftwareAppVersion = _.find(this.changedProfile.applicationVersions, { typeApplication: typeApp });
+      const versionUuid = !_.isUndefined(ver) ? ver.uuid : '';
       if (appVer) {
-        appVer.uuid = ver.uuid;
+        appVer.uuid = versionUuid;
       } else {
-        this.changedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: ver.uuid });
+        this.changedProfile.applicationVersions.push({ typeApplication: typeApp, uuid: versionUuid });
       }
     }
     this.onChangeFn({

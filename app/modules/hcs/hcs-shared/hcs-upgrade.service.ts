@@ -110,13 +110,7 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.swProfilesResource = this.$resource<ISwProfileType>(BASE_URL + 'partners/:partnerId/softwareprofiles', {},
-      {
-        save: saveAction,
-        get: getAction,
-      });
-
-    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {},
+    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions?application=:type', {},
       {
         get: getAction,
       });
@@ -242,6 +236,12 @@ export class HcsUpgradeService {
 
   public listAppVersions(): ng.IPromise<IApplicationVersion> {
     return this.appVersionResource.get().$promise;
+  }
+
+  public getAppVersions(apptype: string): ng.IPromise<IApplicationVersion> {
+    return this.appVersionResource.get({
+      type: apptype,
+    }).$promise;
   }
 
   public updateNodeSftp(nodeId: string, sftp: ISftpServerItem): ng.IPromise<any> {
