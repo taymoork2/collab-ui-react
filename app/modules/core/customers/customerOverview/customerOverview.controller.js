@@ -499,7 +499,7 @@ require('./_customer-overview.scss');
       }, vm.customerOrgId, params);
     }
 
-    //if vm.isMediaFusionEnabled then we ask the user to deactivate Video Mesh service and not allowing deletion.
+    //if vm.isMediaFusionEnabled then we ask the user to deactivate Webex Video Mesh and not allowing deletion.
     function deleteTestOrg() {
       if (vm.isTest) {
         if (vm.isMediaFusionEnabled) {

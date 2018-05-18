@@ -1922,7 +1922,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Setup PMR Now",
     "setupPMRsiteNameModalTitle": "Personal Meeting Room Setup",
-    "setUpHybridMediaService": "Video Mesh Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
+    "setUpHybridMediaService": "Webex Video Mesh is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
@@ -2550,7 +2550,7 @@
       "serviceNames": {
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
-        "squared-fusion-media": "Video Mesh Service Activation",
+        "squared-fusion-media": "Webex Video Mesh Activation",
         "contact-center-context": "Context Service Activation",
         "squared-fusion-ec": "Call Service Connect Activation",
         "squared-fusion-mgmt": "Expressway Management Service Activation"
@@ -2667,7 +2667,7 @@
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "squared-fusion-o365": "Hybrid Calendar (Office 365)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-media": "Video Mesh Service",
+      "squared-fusion-media": "Webex Video Mesh",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
       "spark-hybrid-impinterop": "Hybrid Message Service"
@@ -2734,7 +2734,7 @@
     },
     "serviceHelpInfo": {
       "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>.",
-      "videoMeshPrivacyStatement": "Video Mesh collects and send certain information about your deployment to Cisco Webex. Video Mesh microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
+      "videoMeshPrivacyStatement": "Video Mesh nodes collects and send certain information about your deployment to Cisco Webex. Video Mesh microservices may also send commands to the nodes like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -3265,8 +3265,8 @@
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
           "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Message Service.",
           "expressway-not-setup": "Expressway not set up",
-          "mediafusion-description": "Can run Video Mesh Service",
-          "mediafusion-not-setup": "Video Mesh Service not set up",
+          "mediafusion-description": "Can run Webex Video Mesh",
+          "mediafusion-not-setup": "Webex Video Mesh not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
           "cucm-description": "Cisco Unified Communications Manager",
@@ -3289,7 +3289,7 @@
         },
         "mediafusion": {
           "name": {
-            "title": "Enter a name for the Video Mesh Node",
+            "title": "Enter a name for the Webex Video Mesh Node",
             "help": "The cluster name is only used for display purposes."
           },
           "end": {}
@@ -6069,7 +6069,7 @@
     "SD": "Cisco Webex Room Device",
     "deleteOrgTitle": "Delete Customer",
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
-    "deleteOrgHmsError": "For the customer '{{orgName}}' Video Mesh Service is currently Active, please deactivate Video Mesh Service before deleting the customer.",
+    "deleteOrgHmsError": "For the customer '{{orgName}}' Webex Video Mesh is currently Active, please deactivate Webex Video Mesh before deleting the customer.",
     "deleteOrg": "Delete Customer",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
@@ -6551,8 +6551,8 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Video Mesh Service",
-    "report_title": "Video Mesh Service Report",
+    "page_title": "Webex Video Mesh",
+    "report_title": "Webex Video Mesh Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "sipconfiguration": {
@@ -6565,7 +6565,7 @@
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
-      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Video Mesh Service.",
+      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Webex Video Mesh.",
       "placeholder": "Enter the trusted SIP sources..."
     },
     "videoQuality": {
@@ -6640,9 +6640,9 @@
       "callwait": "Looking for Calls",
       "nocalls": "No {{callType}} calls on this cluster in the last 15 minutes.",
       "sparkcallline1": "Start a call directed at a user near the cluster, and then see if it shows up here. You may also wait  and see if someone else's call automatically lands on this cluster.Users who make the test calls must restart the app to verify.",
-      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> and verify that you opened all the necessary ports of your firewall.",
+      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> and verify that you opened all the necessary ports of your firewall.",
       "sipcallline1": "Start a SIP call directed at a user near the cluster, and then see if it shows up here. You may also wait and see if someone else's call automatically lands on this cluster.",
-      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> <br>if you need further help.",
+      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> <br>if you need further help.",
       "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Media cluster will not be able to process SIP Calls anymore",
       "callsuccess": "{{callType}} calls configured correctly",
       "lastcalldetails": "Last call details",
@@ -6657,7 +6657,7 @@
     "clusterBandwidth": {
       "success": "Maximum cluster cascade bandwidth saved successfully.",
       "title": "Maximum cluster cascade bandwidth",
-      "description": "Enter the maximum bandwidth (in megabits per second) that Video Mesh Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
+      "description": "Enter the maximum bandwidth (in megabits per second) that Webex Video Mesh clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
       "range": "Enter a value between 5 to 50",
       "megabytes": "Mbps"
     },
@@ -6861,16 +6861,16 @@
       "deregister_node": "Deregister Node"
     },
     "deactivate": {
-      "areYou": "Are you sure you want to deactivate your Video Mesh Service?",
-      "future": "If your organisation requires Video Mesh Service again,you must reconfigure it by registering clusters to the cloud.",
-      "complete": "When completed there is no way to undo this action. You will have to activate Video Mesh Service again.",
+      "areYou": "Are you sure you want to deactivate your Webex Video Mesh?",
+      "future": "If your organisation requires Webex Video Mesh again,you must reconfigure it by registering clusters to the cloud.",
+      "complete": "When completed there is no way to undo this action. You will have to activate Webex Video Mesh again.",
       "deregister": "To deactivate this service it is necessary to deregister the following clusters:",
       "deregister_cluster_list": "Deregister following clusters:",
       "ready": "I'm ready to deregister these clusters.",
-      "confirmation_check": "By deactivating Video Mesh Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
+      "confirmation_check": "By deactivating Webex Video Mesh, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
       "button_deactivate": "Deactivate",
-      "success": "Your Video Mesh Services was deactivated successfully.",
-      "error": "Could not deactivate Video Mesh Service.",
+      "success": "Your Webex Video Mesh was deactivated successfully.",
+      "error": "Could not deactivate Webex Video Mesh.",
       "step": "Step ",
       "of": " of 2"
     },
@@ -6882,9 +6882,9 @@
       "grant-success-information": "Go to your Video Mesh Node within one hour to finish registration.",
       "titleV2": "Register Video Mesh Node",
       "text1V2": "Create a new or select an existing Video Mesh Cluster where you want to add the Video Mesh Node.",
-      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Collaboration Cloud.",
+      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Webex cloud.",
       "text3V1": "Enter the",
-      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Webex cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Video Mesh Node, you must install and configure the software on your new server.",
@@ -6930,8 +6930,8 @@
       "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaMicroserviceFailure": "Video Mesh Service was not enabled for your organization, because enabling Video Mesh Service routing failed. Open a case through admin.webex.com to get the issue corrected.",
-    "mediaEntitlementEnablementFailure": "Video Mesh Service was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.webex.com to get the issue corrected.",
+    "mediaMicroserviceFailure": "Webex Video Mesh was not enabled for your organization, because enabling Webex Video Mesh routing failed. Open a case through admin.webex.com to get the issue corrected.",
+    "mediaEntitlementEnablementFailure": "Webex Video Mesh was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.webex.com to get the issue corrected.",
     "delete": "Delete",
     "actionsHeader": "Actions",
     "ipAddr": "IP Address",
@@ -9926,11 +9926,11 @@
         },
         "prerequisites": {
           "title": "Video Mesh Prerequisites",
-          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Video Mesh Service in your organization.",
-          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Video Mesh Service",
-          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Video Mesh Service",
-          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Video Mesh Service",
-          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Video Mesh Service",
+          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Webex Video Mesh in your organization.",
+          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Webex Video Mesh",
+          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Webex Video Mesh",
+          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Webex Video Mesh",
+          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Webex Video Mesh",
           "acquireInformation": "Acquire the following information to assign to your Video Mesh Node:",
           "acquireInformationHelp1": "IP address",
           "acquireInformationHelp2": "Network mask",

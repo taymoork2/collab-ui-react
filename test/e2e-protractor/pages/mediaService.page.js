@@ -34,11 +34,11 @@ var MediaServicePage = function () {
   this.serviceStatus = element(by.cssContainingText('.ui-grid-header-cell-label', 'Service Status'));
   this.emailNotificationsHeading = element(by.cssContainingText('.sub-section__label', 'Email Notifications'));
   this.videoQualityHeading = element(by.cssContainingText('.sub-section__label', 'Video Quality'));
-  this.deactivateServiceHeading = element(by.cssContainingText('.sub-section__label', 'Deactivate Video Mesh Service'));
+  this.deactivateServiceHeading = element(by.cssContainingText('.sub-section__label', 'Deactivate Webex Video Mesh'));
   this.documentationAndSoftware = element(by.cssContainingText('.sub-section__label', 'Documentation'));
   this.deactivateButton = element(by.cssContainingText('button', 'Deactivate'));
   this.emailNotificationInput = element(by.css('input[type="email"]'));
-  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Video Mesh Service'));
+  this.deactivateServiceModalHeader = element(by.cssContainingText('.modal-title', 'Deactivate Webex Video Mesh'));
   this.deactivateServiceModalCancelButton = element(by.css('button[ng-click="disableServiceDialog.cancel()"]'));
   this.invalidEmailTag = element(by.css('.invalid-tag'));
   this.clusterFirstTr = element(by.repeater('(rowRenderIndex, row) in rowContainer.renderedRows track by $index').row(0));
