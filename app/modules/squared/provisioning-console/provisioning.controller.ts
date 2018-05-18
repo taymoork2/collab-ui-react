@@ -212,7 +212,7 @@ export class ProvisioningController {
       field: 'assignedTo',
       displayName: this.$translate.instant('provisioningConsole.assignedTo'),
     });
-    this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field !== 'lastModified');
+    this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field === 'lastModified');
     completedDefs.push({
       field: 'queueReceived',
       displayName: this.$translate.instant('provisioningConsole.queueReceived'),
