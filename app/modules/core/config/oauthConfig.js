@@ -173,17 +173,11 @@
       return Utils.sprintf(config.oauthUrl.userInfo, params);
     }
 
-    function getAbsUrlForDev() {
-      var urlAtRootContext = Config.getAbsUrlAtRootContext();
-      var isOkayForRedir = Config.canUseAbsUrlForDevLogin(urlAtRootContext);
-      return (isOkayForRedir) ? urlAtRootContext : 'http://127.0.0.1:8000';
-    }
-
     function getAdminPortalUrl() {
       var isDev = Config.isE2E() || Config.isDev();
 
       if (isDev) {
-        return getAbsUrlForDev();
+        return Config.getAbsUrlForDev();
       }
 
       return 'https://' + $location.host() + '/';

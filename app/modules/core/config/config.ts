@@ -639,29 +639,35 @@ export class Config {
   private readonly defaultEntitlements = ['webex-squared', 'squared-call-initiation'];
   private readonly hostnameConfig = require('config/hostname.config');
 
-  // public functions
   public isDevHostName(hostName: string): boolean {
     const whitelistDevHosts = [
       '0.0.0.0',
-      this.hostnameConfig.LOCAL,
       'localhost',
       'server',
-      'dev-admin.ciscospark.com',
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
     ];
     return _.includes(whitelistDevHosts, hostName);
   }
 
-  public canUseAbsUrlForDevLogin (absUrl: string): boolean {
-    const whitelistAbsUrls = [
-      'http://127.0.0.1:8000',
-      'http://dev-admin.ciscospark.com:8000',
-    ];
-    return _.includes(whitelistAbsUrls, absUrl);
+  public getAbsUrlForDev(absUrl: string = this.getAbsUrlAtRootContext()): string {
+    const whitelistAbsUrls = _.map([
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
+    ], host => `http://${host}:8000/`);
+
+    if (_.includes(whitelistAbsUrls, absUrl)) {
+      return absUrl;
+    }
+
+    return whitelistAbsUrls[0];
   }
 
-  public getAbsUrlAtRootContext (): string {
+  public getAbsUrlAtRootContext(): string {
     const portSuffix = (this.$location.port()) ? ':' + this.$location.port() : '';
-    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}`;
+    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}/`;
   }
 
   public forceProdForE2E(): boolean {
