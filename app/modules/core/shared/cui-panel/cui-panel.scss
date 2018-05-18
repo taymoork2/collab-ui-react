@@ -920,7 +920,7 @@
     display: flex;
     width: 100%;
     max-width: 32.5rem;
-    flex: 1;
+    flex: 1 0 auto;
     flex-direction: column;
     align-items: center;
   }
@@ -956,6 +956,7 @@
   }
   .cui-panel__footer {
     display: flex;
+    flex: 0 1 auto;
     margin-top: 4rem;
     font-size: 0.625rem;
     color: #999999;
