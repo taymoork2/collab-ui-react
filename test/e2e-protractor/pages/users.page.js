@@ -48,9 +48,9 @@ var UsersPage = function () {
   this.rolesPanel = element(by.id('roles-panel'));
   this.closeRolesPanel = element(by.id('close-roles'));
   this.closeSidePanel = element(by.css('.panel-close'));
-  this.messagingService = element(by.cssContainingText('.feature', 'Message')).element(by.css('.feature-arrow'));
-  this.communicationsService = element(by.cssContainingText('.feature', 'Call')).element(by.css('.feature-arrow'));
-  this.communicationService = element.all(by.cssContainingText('.feature', 'Call')).first().element(by.css('.feature-arrow'));
+  this.messagingService = element(by.cssContainingText('.feature', 'Messaging')).element(by.css('.feature-arrow'));
+  this.communicationsService = element(by.cssContainingText('.feature', 'Calling')).element(by.css('.feature-arrow'));
+  this.communicationService = element.all(by.cssContainingText('.feature', 'Calling')).first().element(by.css('.feature-arrow'));
   this.conferencingService = element(by.cssContainingText('.feature', 'Meeting')).element(by.css('.feature-arrow'));
   this.contactCenterService = element(by.cssContainingText('.feature', 'Care')).element(by.css('.feature-arrow'));
   this.sunlightUserPanel = element(by.cssContainingText('.section-title-row', 'Channels'));
@@ -179,14 +179,14 @@ var UsersPage = function () {
   this.callServiceConnectToggle = element(by.css('label[for="callServiceConnectEntitledToggle"]'));
   this.msgRadio = element(by.repeater('license in msgFeature.licenses'));
 
-  this.messageService = element(by.cssContainingText('.feature-name', 'Message'));
+  this.messageService = element(by.cssContainingText('.feature-name', 'Messaging'));
   this.meetingService = element(by.cssContainingText('.feature-name', 'Meeting'));
 
-  this.messageServiceFree = element(by.cssContainingText('.feature-label', 'Message Free'));
-  this.meetingServiceFree = element(by.cssContainingText('.feature-label', 'Meeting Free 3 Party'));
+  this.messageServiceFree = element(by.cssContainingText('.feature-label', 'Cisco Webex Teams Free Messaging'));
+  this.meetingServiceFree = element(by.cssContainingText('.feature-label', 'Cisco Webex Free Meetings'));
 
-  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Message'));
-  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Meeting 25 Party'));
+  this.messageServicePaid = element(by.cssContainingText('.feature-label', 'Messaging'));
+  this.meetingServicePaid = element(by.cssContainingText('.feature-label', 'Meeting'));
 
   this.assertSorting = function (nameToSort) {
     this.queryResults.getAttribute('value').then(function (value) {
