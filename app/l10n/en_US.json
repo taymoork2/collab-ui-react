@@ -2553,7 +2553,7 @@
       "serviceNames": {
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
-        "squared-fusion-media": "Media Service Activation",
+        "squared-fusion-media": "Video Mesh Service Activation",
         "contact-center-context": "Context Service Activation",
         "squared-fusion-ec": "Call Service Connect Activation",
         "squared-fusion-mgmt": "Expressway Management Service Activation"
@@ -2654,7 +2654,7 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-o365": "Calendar Service",
-      "squared-fusion-media": "Media Service",
+      "squared-fusion-media": "Video Mesh",
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
@@ -2679,7 +2679,7 @@
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
       "squared-fusion-cal": "Calendar Connector",
-      "squared-fusion-media": "Media Service",
+      "squared-fusion-media": "Video Mesh",
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
@@ -2689,7 +2689,7 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service",
+      "mf_mgmt": "Video Mesh",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
@@ -2701,7 +2701,7 @@
       "c_cal": "Calendar",
       "c_ucmc": "Call",
       "c_mgmt": "Management",
-      "mf_mgmt": "Media Service",
+      "mf_mgmt": "Video Mesh",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management",
       "cs_context": "Context",
@@ -2736,7 +2736,8 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
+      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>.",
+      "videoMeshPrivacyStatement": "Video Mesh collects and send certain information about your deployment to Cisco Webex. Video Mesh microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -3214,7 +3215,7 @@
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "Media",
+        "mediafusion": "Video Mesh",
         "context": "Context",
         "cucm": "CUCM"
       },
@@ -3240,7 +3241,7 @@
         "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "ept": "SIP Destinations",
-        "mediafusion": "Media",
+        "mediafusion": "Video Mesh",
         "hds": "Data Security",
         "cucm": "CUCM",
         "no-services": "No services",
@@ -3268,7 +3269,7 @@
           "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Message Service.",
           "expressway-not-setup": "Expressway not set up",
           "mediafusion-description": "Can run Video Mesh Service",
-          "mediafusion-not-setup": "Media Service not set up",
+          "mediafusion-not-setup": "Video Mesh Service not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
           "cucm-description": "Cisco Unified Communications Manager",
@@ -6574,7 +6575,7 @@
     "qos": {
       "title": "QoS",
       "fulltitle": "Extended port range for QoS",
-      "description": "Enable extended port range for QoS. Disabling the port range will result in lose of QoS functionality.",
+      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (EF) and video (AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the Ports and Protocols <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>documentation</a> for guidance.",
       "success": "Extended port range for QoS setting was set successfully.",
       "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
     },
@@ -6637,9 +6638,9 @@
       "callwait": "Looking for Calls",
       "nocalls": "No {{callType}} calls on this cluster in the last 15 minutes.",
       "sparkcallline1": "Start a call directed at a user near the cluster, and then see if it shows up here. You may also wait  and see if someone else's call automatically lands on this cluster.Users who make the test calls must restart the app to verify.",
-      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> and verify that you opened all the necessary ports of your firewall.",
+      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> and verify that you opened all the necessary ports of your firewall.",
       "sipcallline1": "Start a SIP call directed at a user near the cluster, and then see if it shows up here. You may also wait and see if someone else's call automatically lands on this cluster.",
-      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> <br>if you need further help.",
+      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> <br>if you need further help.",
       "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Media cluster will not be able to process SIP Calls anymore",
       "callsuccess": "{{callType}} calls configured correctly",
       "lastcalldetails": "Last call details",
@@ -8901,7 +8902,7 @@
           "squared-fusion-uc": "Call",
           "spark-hybrid-impinterop": "Message",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media",
+          "squared-fusion-media": "Video Mesh",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
