@@ -755,10 +755,10 @@
     "custom2": "custom selection",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
-    "webex": "Webex Classic",
+    "webex": "Webex Meetings Classic",
     "devReports": "Development Customer Reports",
     "sparkReports": "Webex Teams",
-    "webexReports": "Webex",
+    "webexReports": "Webex Meetings",
     "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
@@ -838,7 +838,7 @@
       }
     },
     "webexMetrics": {
-      "title": "Webex",
+      "title": "Webex Meetings",
       "metrics": "Metrics",
       "MEI": "MEI",
       "system": "System",
@@ -1660,7 +1660,7 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "cancelingEllipsis": "Canceling...",
-    "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "ciscoCollaborationCloud": "Cisco Webex Cloud",
     "clear": "Clear",
     "close": "Close",
     "cluster": "Cluster",
@@ -1974,7 +1974,7 @@
     "exportMetadataTitle": "Export Directory Metadata",
     "testSSOSetupTitle": "Test SSO Setup",
     "enableSSOTitle": "Enable SSO",
-    "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
+    "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Webex Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Webex Control Hub, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
@@ -2540,7 +2540,7 @@
       "selectGroup": "Select…",
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
-      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
+      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Webex Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
       "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step.",
       "nextStepIsConfigure": "Next steps and cluster configuration",
       "useTheNotifications": "Use the notifications <div class=\"notification-button success\"><div class=\"icon icon-bell\"></div><div class=\"notification-label\" translate=\"hercules.notificationDropdown.label\">2 Notifications</div></div> in the top left corner of {{ServiceName}} pages for next steps in configuration.",
@@ -2851,15 +2851,15 @@
       "sipDestinationNameCannotBeSaved": "SIP Destination name could not be saved. Try again later.",
       "clusterNameCannotByEmpty": "Name cannot be empty.",
       "renameClusterDescription": "The name is for display purposes only.",
-      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
-      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
+      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Webex Cloud.",
+      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Webex Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
-      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Webex Cloud.",
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Webex Cloud."
     },
     "office365ReAuthorizationComponent": {
       "title": "Authorization",
@@ -2930,8 +2930,8 @@
       "scope": "Scope",
       "error": "Couldn't fetch API key",
       "authorization": {
-        "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
-        "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
+        "title": "Authorize Cisco Webex Cloud on your G Suite account",
+        "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Webex Cloud on your G Suite account.",
         "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to <strong>Security</strong>.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
@@ -2963,7 +2963,7 @@
     "gcalSecondSetupModal": {
       "modalTitle": "Update API Client access",
       "title": "Update Client name and Scope",
-      "line1": "To update or restore your G suite access to Cisco Collaboration Cloud, follow the steps below.",
+      "line1": "To update or restore your G suite access to Cisco Webex Cloud, follow the steps below.",
       "success": "Great! Google Calendar is correctly configured."
     },
     "settings": {
@@ -3112,7 +3112,7 @@
         "title": "Google Calendar",
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
-        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Webex Cloud.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
         "apiClientAccess": "Update API Client Access",
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
@@ -3289,7 +3289,7 @@
             "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Message page."
           },
           "end": {
-            "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
+            "line1": "You may now register the Expressway with Cisco Webex Cloud.",
             "line2": "Go to your Expressway to complete registration and configure the connector(s)."
           }
         },
@@ -3312,7 +3312,7 @@
           },
           "enter-cluster-name": "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
-            "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
+            "line1": "You may now register the Cisco Unified Communications Manager with Cisco Webex Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
             "finish": "Go to CUCM"
           }
@@ -3352,7 +3352,7 @@
     "resourceGroups": {
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
-      "cautionOwnedByCCC": "If you assign this user to a Resource Group, they will move from the Cisco Collaboration Cloud to an on-premises connector.",
+      "cautionOwnedByCCC": "If you assign this user to a Resource Group, they will move from the Cisco Webex Cloud to an on-premises connector.",
       "setPlaceDescription": "Select the Resource Group the place is assigned to for this service. (optional)",
       "noGroupSelected": "None",
       "noGroupSelectedOnPlace": "No resource group (default)",
@@ -3449,7 +3449,7 @@
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
       "removeNode": "Remove node",
-      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Collaboration Cloud, deregister the cluster from the settings page.",
+      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Webex Cloud, deregister the cluster from the settings page.",
       "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "maintenanceModeTooltip": "Use maintenance mode to stop the connectors in this node and stop email alarm notifications.",
       "maintenancePending": "Pending maintenance",
@@ -3724,8 +3724,8 @@
           "not_installed": "The Expressway reports that {{localizedConnectorName}} is not installed. This state is expected for a short while for new deployments, and it could also happen during upgrades.",
           "not_installed-help": "Something is likely to be misconfigured if this state lasts for more than a couple of minutes, and admin action is required to fix it. The Expressway's Management Connector might have raised an alarm that could assist you with troubleshooting.",
           "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Webex Control Hub.",
-          "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
-          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Collaboration Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Webex Cloud. It will be installed when it has finished downloading.",
+          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
           "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
@@ -3738,9 +3738,9 @@
           "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
           "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
           "alarmDebounced": "An alarm titled <strong>{{title}}</strong> was raised on the Expressway, and then marked as resolved within a few minutes.",
-          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Collaboration Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
-          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
-          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
+          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Webex Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
+          "alarmRaisedNotificationSent": "Cisco Webex Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco CollabWebexoration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
@@ -3751,7 +3751,7 @@
           "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
           "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
           "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
-          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Collaboration Cloud that they are operational.",
+          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
           "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
           "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
           "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Webex organization's configuration, for example because an entitlement was removed or a service was deactivated.",
@@ -3774,7 +3774,7 @@
         },
         "technicalDetails": {
           "heading": "Technical Details",
-          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Collaboration Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
+          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Webex Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
           "resourceName": "Resource Name:",
           "clusterId": "Cluster ID:",
           "connectorId": "Connector ID:",
@@ -3944,14 +3944,14 @@
     "add-resource-dialog": {
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
-      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
+      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Webex Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
       "grant-success-information": " <i class='icon icon-warning'></i> Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
       "title": "Register Hybrid Data Security Node",
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
-      "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Webex Cloud.",
       "serverOnline": "The Hybrid Data Security server that you are registering already exists and is online.",
       "serverOffline": "The Hybrid Data Security server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Data Security Node, you must install and configure the software on your new server.",
@@ -6888,9 +6888,9 @@
       "grant-success-information": "Go to your Video Mesh Node within one hour to finish registration.",
       "titleV2": "Register Video Mesh Node",
       "text1V2": "Create a new or select an existing Video Mesh Cluster where you want to add the Video Mesh Node.",
-      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Webex cloud.",
+      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Webex Cloud.",
       "text3V1": "Enter the",
-      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Webex cloud.",
+      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Webex Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Video Mesh Node, you must install and configure the software on your new server.",
@@ -9361,7 +9361,7 @@
     "entitlements": {
       "webex-squared": "Free Cisco Webex Teams",
       "squared-syncup.paid": "25 Party Meetings",
-      "squared-syncup.free": "Free 3 Party Cisco Webex Meetings",
+      "squared-syncup.free": "Cisco Webex Free Meeting",
       "squared-room-moderation.paid": "Standard Team Spaces",
       "squared-room-moderation.free": "Free Cisco Webex Teams",
       "ciscouc.paid": "Advanced Cisco Webex Calling",
@@ -9756,8 +9756,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meetings Center and Cisco Webex Teams configurations for your organization and individuals.",
-        "SPDescription": "WebEx Meetings Center and Cisco Webex Teams configurations.",
+        "description": "Webex Meetings Center and Cisco Webex Teams configurations for your organization and individuals.",
+        "SPDescription": "Webex Meetings Center and Cisco Webex Teams configurations.",
         "pmrText": "Configure your Personal Meeting Room",
         "viewWebExSites": "View Webex Meetings Sites"
       },
