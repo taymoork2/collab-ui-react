@@ -53,7 +53,7 @@ export class CrAddUsersResultsController implements ng.IComponentController {
       // push column headers
       csv.push({
         email: this.$translate.instant('convertUsersModal.tableHeader.email'),
-        status: this.$translate.instant('convertUsersModal.tableHeader.status'),
+        status: this.$translate.instant('convertUsersModal.tableHeader.csvStatus'),
       });
 
       // push row data
