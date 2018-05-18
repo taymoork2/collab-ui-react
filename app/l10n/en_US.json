@@ -183,7 +183,8 @@
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
     "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Webex Teams and Jabber. Provide access for Jabber users to Cisco Webex Teams spaces. Changes can take up to 24 hours.",
-    "userImage": "User Image"
+    "userImage": "User Image",
+    "mustConvertUserBeforeAdding": "{{email}} cannot be added. Use the Convert User option to move this user into the organization."
   },
   "userManage": {
     "org": {
