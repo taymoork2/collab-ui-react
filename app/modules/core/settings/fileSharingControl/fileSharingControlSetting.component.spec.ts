@@ -1,89 +1,103 @@
-import testModule from './index';
-import { FileSharingControlSettingController } from './fileSharingControlSetting.controller';
+import testModuleName from './index';
+import { FileSharingControlSettingController } from './fileSharingControlSetting.component';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { IToolkitModalService } from 'modules/core/modal';
+
+type Test = atlas.test.IComponentTest<FileSharingControlSettingController, {
+  AccountOrgService,
+  Authinfo,
+  ModalService: IToolkitModalService,
+  ProPackService: ProPackService,
+}>;
 
 describe('Controller: FileSharingControlSettingController', () => {
+  beforeEach(function (this: Test) {
+    this.initModules(testModuleName);
+    this.injectDependencies(
+      'AccountOrgService',
+      'Authinfo',
+      'ModalService',
+      'ProPackService',
+    );
 
-  let controller: FileSharingControlSettingController;
-  let $scope, $controller, $q;
-  let AccountOrgService, Authinfo, ModalService, ProPackService;
+    this.initComponent = () => this.compileComponent('fileSharingControlSetting', {});
 
-  beforeEach(angular.mock.module(testModule));
-
-  beforeEach(inject(dependencies));
-  beforeEach(initSpies);
-
-  function dependencies($rootScope, _$controller_, _$q_, _AccountOrgService_, _Authinfo_, _ModalService_, _ProPackService_) {
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $q = _$q_;
-    AccountOrgService = _AccountOrgService_;
-    Authinfo = _Authinfo_;
-    ModalService = _ModalService_;
-    ProPackService = _ProPackService_;
-  }
-
-  function initSpies() {
-    spyOn(AccountOrgService, 'getFileSharingControl');
-    spyOn(AccountOrgService, 'setFileSharingControl');
-    spyOn(ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue($q.resolve(true));
-  }
-
-  function initController() {
-    controller = $controller(FileSharingControlSettingController, {
-      $scope: $scope,
-    });
-    controller.$onInit();
-    $scope.$apply();
-  }
+    this.initSpies = (spies: {
+      getFileSharingControl?,
+      setFileSharingControl?,
+      hasProPackPurchasedOrNotEnabled?,
+    } = {}) => {
+      const {
+        getFileSharingControl = this.$q.resolve(),
+        setFileSharingControl = this.$q.resolve(),
+        hasProPackPurchasedOrNotEnabled = this.$q.resolve(true),
+      } = spies;
+      spyOn(this.AccountOrgService, 'getFileSharingControl').and.returnValue(getFileSharingControl);
+      spyOn(this.AccountOrgService, 'setFileSharingControl').and.returnValue(setFileSharingControl);
+      spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue(hasProPackPurchasedOrNotEnabled);
+    };
+  });
 
   describe('constructor()', () => {
 
     describe('when getFileSharingControl fail', () => {
-      beforeEach(initGetBlockFileSharingControlReject());
-      beforeEach(initController);
+      beforeEach(function (this: Test) {
+        this.initSpies({
+          getFileSharingControl: this.$q.reject(),
+        });
+        this.initComponent();
+      });
 
-      it('should not set dataloaded and no value for isBlockDesktopAppDownload', () => {
-        expect(controller.isBlockDesktopAppDownload).toBeFalsy();
-        expect(controller.isFileSharingControlSettingLoaded).toBeFalsy();
+      it('should not set dataloaded and no value for isBlockDesktopAppDownload', function (this: Test) {
+        expect(this.controller.isBlockDesktopAppDownload).toBeFalsy();
+        expect(this.controller.isFileSharingControlSettingLoaded).toBeFalsy();
       });
     });
     describe('when getFileSharingControl return blockFileSharingControls set to true', () => {
-      const fileShareControlSetting = {
-        blockDesktopAppDownload: true,
-        blockWebAppDownload: false,
-        blockMobileAppDownload: false,
-        blockBotsDownload: false,
-        blockDesktopAppUpload: true,
-        blockWebAppUpload: false,
-        blockMobileAppUpload: false,
-        blockBotsUpload: false,
-      };
-      beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
-      beforeEach(initController);
+      beforeEach(function (this: Test) {
+        const fileShareControlSetting = {
+          blockDesktopAppDownload: true,
+          blockWebAppDownload: false,
+          blockMobileAppDownload: false,
+          blockBotsDownload: false,
+          blockDesktopAppUpload: true,
+          blockWebAppUpload: false,
+          blockMobileAppUpload: false,
+          blockBotsUpload: false,
+        };
+        this.initSpies({
+          getFileSharingControl: this.$q.resolve(fileShareControlSetting),
+        });
+        this.initComponent();
+      });
 
-      it('should set dataloaded and true for isBlockDesktopAppDownload', () => {
-        expect(controller.isBlockDesktopAppDownload).toBeTruthy();
-        expect(controller.isFileSharingControlSettingLoaded).toBeTruthy();
+      it('should set dataloaded and true for isBlockDesktopAppDownload', function (this: Test) {
+        expect(this.controller.isBlockDesktopAppDownload).toBeTruthy();
+        expect(this.controller.isFileSharingControlSettingLoaded).toBeTruthy();
       });
     });
 
     describe('when getFileSharingControl return blockFileSharingControls set to false', () => {
-      const fileShareControlSetting = {
-        blockDesktopAppDownload: false,
-        blockWebAppDownload: false,
-        blockMobileAppDownload: false,
-        blockBotsDownload: false,
-        blockDesktopAppUpload: false,
-        blockWebAppUpload: false,
-        blockMobileAppUpload: false,
-        blockBotsUpload: false,
-      };
-      beforeEach(initGetFileSharingControlWithResult(fileShareControlSetting));
-      beforeEach(initController);
+      beforeEach(function (this: Test) {
+        const fileShareControlSetting = {
+          blockDesktopAppDownload: false,
+          blockWebAppDownload: false,
+          blockMobileAppDownload: false,
+          blockBotsDownload: false,
+          blockDesktopAppUpload: false,
+          blockWebAppUpload: false,
+          blockMobileAppUpload: false,
+          blockBotsUpload: false,
+        };
+        this.initSpies({
+          getFileSharingControl: this.$q.resolve(fileShareControlSetting),
+        });
+        this.initComponent();
+      });
 
-      it('should set dataloaded and true for isBlockDesktopAppDownload', () => {
-        expect(controller.isBlockDesktopAppDownload).toBeFalsy();
-        expect(controller.isFileSharingControlSettingLoaded).toBeTruthy();
+      it('should set dataloaded and true for isBlockDesktopAppDownload', function (this: Test) {
+        expect(this.controller.isBlockDesktopAppDownload).toBeFalsy();
+        expect(this.controller.isFileSharingControlSettingLoaded).toBeTruthy();
       });
     });
   });
@@ -100,20 +114,21 @@ describe('Controller: FileSharingControlSettingController', () => {
         blockMobileAppUpload: false,
         blockBotsUpload: false,
       };
-      initGetFileSharingControlWithResult(fileShareControlSetting);
-      initGetBlockFileSharingControl();
-      initController();
+      this.initSpies({
+        getFileSharingControl: this.$q.resolve(fileShareControlSetting),
+      });
+      this.initComponent();
     });
 
-    it('should call AccountOrgService to save the value true if the modal closed with "ok"', () => {
-      spyOn(ModalService, 'open').and.returnValue({ result: $q.resolve(true) });
-      controller.isBlockDesktopAppDownload = true;
-      $scope.$apply();
+    it('should call AccountOrgService to save the value true if the modal closed with "ok"', function (this: Test) {
+      spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve(true) });
+      this.controller.isBlockDesktopAppDownload = true;
+      this.$scope.$apply();
 
-      controller.updateFileSharingControlSetting();
+      this.controller.updateFileSharingControlSetting();
 
-      expect(AccountOrgService.setFileSharingControl)
-        .toHaveBeenCalledWith(Authinfo.getOrgId(), {
+      expect(this.AccountOrgService.setFileSharingControl)
+        .toHaveBeenCalledWith(this.Authinfo.getOrgId(), {
           blockDesktopAppDownload: true,
           blockWebAppDownload: false,
           blockMobileAppDownload: false,
@@ -125,14 +140,14 @@ describe('Controller: FileSharingControlSettingController', () => {
     });
 
 
-    it('should not change the value if the modal closed with "cancel" ', () => {
-      spyOn(ModalService, 'open').and.returnValue({ result: $q.reject() });
-      controller.isBlockDesktopAppDownload = true;
-      $scope.$apply();
-      controller.updateFileSharingControlSetting();
+    it('should not change the value if the modal closed with "cancel" ', function (this: Test) {
+      spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.reject() });
+      this.controller.isBlockDesktopAppDownload = true;
+      this.$scope.$apply();
+      this.controller.updateFileSharingControlSetting();
 
-      expect(AccountOrgService.setFileSharingControl)
-        .toHaveBeenCalledWith(Authinfo.getOrgId(), {
+      expect(this.AccountOrgService.setFileSharingControl)
+        .toHaveBeenCalledWith(this.Authinfo.getOrgId(), {
           blockDesktopAppDownload: false,
           blockWebAppDownload: false,
           blockMobileAppDownload: false,
@@ -142,13 +157,13 @@ describe('Controller: FileSharingControlSettingController', () => {
           blockMobileAppUpload: false,
           blockBotsUpload: false});
     });
-    it('should call AccountOrgService to save the value false', () => {
-      controller.isBlockDesktopAppDownload = false;
+    it('should call AccountOrgService to save the value false', function (this: Test) {
+      this.controller.isBlockDesktopAppDownload = false;
 
-      controller.updateFileSharingControlSetting();
+      this.controller.updateFileSharingControlSetting();
 
-      expect(AccountOrgService.setFileSharingControl)
-        .toHaveBeenCalledWith(Authinfo.getOrgId(), {
+      expect(this.AccountOrgService.setFileSharingControl)
+        .toHaveBeenCalledWith(this.Authinfo.getOrgId(), {
           blockDesktopAppDownload: false,
           blockWebAppDownload: false,
           blockMobileAppDownload: false,
@@ -158,33 +173,5 @@ describe('Controller: FileSharingControlSettingController', () => {
           blockMobileAppUpload: false,
           blockBotsUpload: false});
     });
-
-    function initGetBlockFileSharingControl() {
-      AccountOrgService.setFileSharingControl.and.returnValue($q.resolve({}));
-    }
   });
-
-  interface IFileSharingControlSetting {
-    blockDesktopAppDownload: boolean;
-    blockWebAppDownload: boolean;
-    blockMobileAppDownload: boolean;
-    blockBotsDownload: boolean;
-
-    blockDesktopAppUpload: boolean;
-    blockWebAppUpload: boolean;
-    blockMobileAppUpload: boolean;
-    blockBotsUpload: boolean;
-  }
-
-  function initGetFileSharingControlWithResult(fileShareControlSetting: IFileSharingControlSetting) {
-    return () => {
-      AccountOrgService.getFileSharingControl.and.returnValue($q.resolve(fileShareControlSetting));
-    };
-  }
-
-  function initGetBlockFileSharingControlReject() {
-    return () => {
-      AccountOrgService.getFileSharingControl.and.returnValue($q.reject({}));
-    };
-  }
 });
