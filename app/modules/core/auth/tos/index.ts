@@ -1,16 +1,13 @@
-import { TermsOfServiceComponent } from './termsOfService.component';
 import { TOSService } from './termsOfService.service';
 import coreAuthUserModule from 'modules/core/auth/user';
-import featureToggleModule from 'modules/core/featureToggle';
-
-import './termsOfService.scss';
+import modalModuleName from 'modules/core/modal';
 
 export default angular
   .module('core.auth.tos', [
-    require('@collabui/collab-ui-ng').default,
+    require('angular-translate'),
+    require('modules/core/auth/auth'),
     coreAuthUserModule,
-    featureToggleModule,
+    modalModuleName,
   ])
   .service('TOSService', TOSService)
-  .component('termsOfService', new TermsOfServiceComponent())
   .name;

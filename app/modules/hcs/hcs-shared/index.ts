@@ -11,6 +11,7 @@ export * from './hcs-license';
 export * from './hcs-delete-modal';
 export * from './hcs-swprofile';
 export * from './hcs-controller';
+export * from './hcs-upgrade';
 export { HcsUpgradeService,
          HcsSetupModalService,
          HcsSetupModalSelect,

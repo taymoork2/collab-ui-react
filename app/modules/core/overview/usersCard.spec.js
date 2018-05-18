@@ -51,11 +51,19 @@ describe('OverviewUsersCard', function () {
         volume: 10,
       }],
     }];
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
+
+    this.listUsersData = {
+      status: 200,
+      data: {
+        totalResults: 10,
+      },
+    };
+    spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve(this.listUsersData));
   });
 
   describe('primary behaviors:', function () {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
       this.card = this.OverviewUsersCard.createCard();
       this.$rootScope.$apply();
     });
@@ -92,7 +100,6 @@ describe('OverviewUsersCard', function () {
       beforeEach(function () {
         spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(true));
         spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
-        spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve());
       });
       describe('enabled:', function () {
         it('should set "autoAssignLicensesStatus" property', function () {
@@ -125,15 +132,7 @@ describe('OverviewUsersCard', function () {
         });
 
         it('should update "usersOnboarded" if call to "UserListService.listUsersAsPromise()" resolves with data', function () {
-          this.listUsersData = {
-            status: 200,
-            data: {
-              totalResults: 10,
-            },
-          };
-
           this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
-          this.UserListService.listUsersAsPromise.and.returnValue(this.$q.resolve(this.listUsersData));
           this.card = this.OverviewUsersCard.createCard();
           this.$rootScope.$apply();
 

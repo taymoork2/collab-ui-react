@@ -112,7 +112,7 @@ describe('Service: LegalHoldService', () => {
         caseId: 'case123',
       };
       const expReturn = this.matterList[0].usersUUIDList;
-      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.LIST_USERS}`, expParams).respond(200, this.matterList[0].usersUUIDList);
+      this.$httpBackend.expectPOST(`${this.matterUsersUrl}${Actions.LIST_USERS}`, expParams).respond(200, { usersInMatter: this.matterList[0].usersUUIDList });
       expect(this.LegalHoldService.listUsersInMatter('123', 'case123')).toBeResolvedWith(expReturn);
     });
 

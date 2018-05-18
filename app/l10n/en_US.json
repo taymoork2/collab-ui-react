@@ -13,13 +13,7 @@
   },
   "termsOfService": {
     "title": "Terms of Service",
-    "disagree": "Decline",
-    "agree": "Accept ",
-    "ciscoSpark": "Cisco Spark",
-    "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2018 Cisco Systems.",
-    "copyright2": "All rights reserved.",
-    "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
+    "message": "By clicking 'Accept', you agree to these <a href='https://www.cisco.com/c/dam/en_us/about/doing_business/legal/docs/universal-cloud-agreement.pdf' target='_blank'>Terms of Service</a>.",
     "loggingOut": "Logging off..."
   },
   "editFeatureToggles": {
@@ -1141,7 +1135,7 @@
     "users": "Users",
     "search": "Search",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Webex Teams app. In this report you can compare the total number of registered users to the number of active users.",
-    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
+    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or Webex Teams messages and searched based on the user name.",
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "missingUsersError": "Some user data could not be retrieved. For assistance, click your username on the top right and submit feedback to contact support.",
@@ -1642,6 +1636,7 @@
     "last": "Last"
   },
   "common": {
+    "accept": "Accept",
     "actions": "Actions",
     "activate": "Activate",
     "active": "Active",
@@ -1673,6 +1668,7 @@
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
+    "decline": "Decline",
     "default": "Default",
     "delete": "Delete",
     "description": "Description",
@@ -1692,6 +1688,7 @@
     "enabled": "Enabled",
     "error": "Error",
     "errors": "Errors",
+    "errorMessage": "The following error {{error}}",
     "export": "Export",
     "fieldRequired": "This field is required",
     "finish": "Finish",
@@ -1914,8 +1911,8 @@
     "goSetupCloudSipUri": "Go here to finish this configuration",
     "setupCloudSipUriMessage": "Your organization's Cisco Webex SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
-    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpCalendarService": "Hybrid Calendar is available. Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Webex Teams clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex Teams clients, and place calls to others' work phones from their Cisco Webex Teams clients.",
     "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
@@ -2496,7 +2493,7 @@
       "report": "User Status Report",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define Cisco Spark SIP Address"
+      "setupCloudSipUriHeader": "Define Cisco Webex SIP Address"
     },
     "deleteClusterNodeDialog": {
       "confirmationDialogHeader": "Confirm Node Removal",
@@ -2728,7 +2725,7 @@
       "ept": "Private Trunk"
     },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
+      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Webex Teams clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Webex Teams client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Webex Teams room. Add @webex to attach a Webex link to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
@@ -4220,6 +4217,7 @@
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
+    "exportWarning": "Gathering data for export may take a while. If you sign out or refresh your browser, the export will be canceled.",
     "matterList": {
       "title": "Matters",
       "dateReleased": "Date Released",
@@ -4238,7 +4236,9 @@
     },
     "detail": {
       "release": "Release",
-      "releaseMatter": "Release Matter"
+      "releaseMatter": "Release Matter",
+      "exportFileName": "custodians.csv",
+      "exportCustodians": "Export Custodians"
     },
     "matterNew": {
       "title": "Create Matter",
@@ -4262,7 +4262,9 @@
       "emailAddress": "Email Address",
       "usersAdded": "Users Added",
       "usersRemoved": "Users Removed",
-      "errorsFileName": "ImportErrors.csv",
+      "importTemplateFileName": "CustodianImportTemplate.csv",
+      "downloadSuccess": "Download Successful",
+      "importErrorsFileName": "CustodianImportErrors.csv",
       "cancelImportTitle": "Cancel Import",
       "add": {
         "title": "Add Custodians",
@@ -8509,7 +8511,7 @@
       "name": {
         "namePlaceholder": "Enter {{ featureName }} Name",
         "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
-        "nameHintEva": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "nameHintEva": "Specify the name Cisco Webex Teams users in your organization see when they interact with your {{ featureName }} in expert spaces.",
         "errorChar50": "Name cannot exceed 50 characters.",
         "duplicateError": "{{ featureName }} must have a unique name.",
         "processing": "Checking {{ featureName }} name availability…"
@@ -8517,7 +8519,7 @@
       "avatar": {
         "title": "{{ featureName }} Avatar",
         "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
-        "descEva": "Choose the avatar Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "descEva": "Choose the avatar Cisco Webex Teams users in your organization see when they interact with your {{ featureName }} in expert spaces.",
         "upload": "Upload Avatar",
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
@@ -8559,11 +8561,11 @@
       },
       "defaultSpace": {
         "title": "Default Expert Space Configuration",
-        "desc": "Define a fallback Cisco Spark expert space for your {{ featureName }} escalations.",
+        "desc": "Define a fallback Cisco Webex Teams expert space for your {{ featureName }} escalations.",
         "boxDesc": "The {{ featureName }} uses the default space as a fallback to escalate requests that are not matched with any other expert space topics. Ensure that users who can respond to customer requests are in this space.",
         "learnMoreLink": "Learn more",
         "placeHolder": "Search and select an existing Cisco Webex Teams space",
-        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list.",
+        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Webex Teams. Then restart the wizard to see and select the new space in the list.",
         "noDefaultWarning": "The Expert Virtual Assistant was removed from the selected Cisco Webex Teams space. Click next to designate it as the default Cisco Webex Teams space or choose a different space."
       },
       "configurationSteps": {
@@ -8977,9 +8979,9 @@
       "siteManagementSettingUpdated": "Cisco Webex Site Management by customer setting has been updated"
     },
     "sipDomain": {
-      "title": "Cisco Spark SIP Address",
+      "title": "Cisco Webex SIP Address",
       "subsectionLabel": "SIP Domain Prefix",
-      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.calls.webex.com, \"example\" is the prefix you are defining."
     },
     "domains": {
       "title": "Domains"
@@ -9175,7 +9177,7 @@
     "upgrade": "Upgrade",
     "licenseTypes": {
       "MS": "Standard Team Spaces",
-      "CF": "Webex Team Meetings",
+      "CF": "Webex team meetings",
       "MC": "Webex Meeting Center",
       "SC": "Webex Support Center",
       "TC": "Webex Training Center",
@@ -9787,7 +9789,7 @@
       },
       "hybridCalendar": {
         "title": "Hybrid Calendar",
-        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Webex Teams, and provide One Button to Push (OBTP) to Join.",
+        "description": "Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in Cisco Webex Teams, and provide One Button to Push (OBTP) to Join.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -9969,25 +9971,25 @@
       },
       "privateTrunk": {
         "title": "Enterprise Private Trunking ",
-        "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Spark call brings cloud PSTN service to smaller branches that tie back in to your main branch.",
+        "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Webex Calling brings cloud PSTN service to smaller branches that tie back in to your main branch.",
         "buttons": {
           "view": "View Prerequisites",
           "resources": "SIP Destinations"
         },
         "prerequisites": {
           "title": "Enterprise Private Trunking Prerequisites",
-          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Cisco Spark Calling for Branch Offices in your organization.",
+          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Cisco Webex Calling for Branch Offices in your organization.",
           "openPort5062": "Allow extra time to open port 5062 on your Internet firewall for mutual TLS authentication.",
           "verifyDomains": "Verify any domains in your existing deployment (for example, domains used in your user directory URIs and email address).",
-          "obtainCertificates": "Obtain certificates to use to secure the Expressway-E and Cisco Spark Calling connection.",
+          "obtainCertificates": "Obtain certificates to use to secure the Expressway-E and Cisco Webex Calling connection.",
           "openRequiredPorts": "Open the required ports, as described in the \"Port Requirements\" section.",
           "runSupportedSoftware": "Run the minimum supported versions of on-premises software, as described in the \"System Requirements\" section.",
           "determinePSTN": "Determine the type of PSTN service that you require",
           "determinePSTNHelp1": "On-premises PSTN through Unified CM.",
-          "determinePSTNHelp2": "Cloud PSTN through Cisco Spark Calling Preferred Media Providers.",
-          "prepareExpressway": "Prepare your Expressway-E for the secure mutual TLS connection between Cisco Spark and your call control environment:",
+          "determinePSTNHelp2": "Cloud PSTN through Cisco Webex Calling Preferred Media Providers.",
+          "prepareExpressway": "Prepare your Expressway-E for the secure mutual TLS connection between Cisco Webex and your call control environment:",
           "prepareExpresswayHelp1": "For an SRV record (multiple Expressway-Es for redundancy):",
-          "prepareExpresswayHelp2": "If you have an existing SRV, allow the time to request a dedicated SRV for Cisco Spark Calling for Branch Offices and use port 5062. The SRV record resolves into Expressway-E A-records; the hostname is the A-record for Expressway-E.",
+          "prepareExpresswayHelp2": "If you have an existing SRV, allow the time to request a dedicated SRV for Cisco Webex Calling for Branch Offices and use port 5062. The SRV record resolves into Expressway-E A-records; the hostname is the A-record for Expressway-E.",
           "prepareExpresswayHelp3": "Request that port 5062 be open on the enterprise firewall.",
           "prepareExpresswayHelp4": "Make sure the port is open to and from the Internet.",
           "prepareExpresswayHelp5": "Verify that the mutual MTLS port is reachable by using a ping utility – for example, telnet [domainname or ip] [port] in a command prompt.",
@@ -10055,14 +10057,14 @@
         "cancelBody": "Are you sure you want to cancel?",
         "cancelHeaderDest": "Cancel Add SIP Destination",
         "setupCompete": "Set up complete",
-        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "great": "Great! You configured private trunking for your Cisco Webex organization.",
         "callSelection": "Your call selections",
-        "interSite": "Inter-site dialling between your on premise endpoints and Cisco Spark call endpoints.",
+        "interSite": "Inter-site dialling between your on premise endpoints and Cisco Webex calling endpoints.",
         "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
         "pstnConnectivity": "PSTN connectivity",
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
-        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
+        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Webex remote SIP destinations configuration and disables the service for all users."
       }
     },
     "showMore": "View all",
@@ -11077,7 +11079,7 @@
         "start": "Link Now",
         "stop": "stop",
         "startLinking": "All Webex accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts.",
-        "stopLinking": "By stopping automatic linking, future new accounts will not be linked to Cisco Spark."
+        "stopLinking": "By stopping automatic linking, future new accounts will not be linked to Cisco Webex."
       }
     },
     "wizard": {
@@ -11153,8 +11155,20 @@
       "nodeStatus": {
         "active":"Active",
         "inactive": "Inactive",
-        "needsAcceptance":"Needs acceptance",
-        "needsAssigned":"Needs assigned"
+        "needsAcceptance":"Needs Acceptance",
+        "needsAssigned":"Needs Assigned",
+        "operational": "Operational",
+        "agentOffline": "Agent Offline",
+        "swProfileNotCoverAll": "Software profile does not cover all application",
+        "swVersionMismatch": "Software profile version mismatch",
+        "swUpgradeNeeded": "Software Upgrade Needed",
+        "needToUpdateBatchNumber": "Need to Update Batch Number",
+        "upgradeScheduled": "Upgrade Scheduled",
+        "upgradeInProgress": "Upgrade in progress",
+        "failedUpgrade": "Failed Upgrade",
+        "unassigned": "Unassigned",
+        "swProfileNotAssigned": "Software profile not Assigned",
+        "noAgentRunning": "No Agent Running"
       },
       "settings": {
         "inventoryName": {
@@ -11164,8 +11178,8 @@
           "sectionHeader": "Inventory Name"
         },
         "sftpLocation": {
-          "sectionHeader": "Default SFTP Location",
-          "sftpSelectLabel": "Choose the default SFTP Location for this cluster.",
+          "sectionHeader": "Default SFTP Server",
+          "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
           "sftpPlaceholder": "Select a server"
         },
         "nodes": {
