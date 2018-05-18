@@ -52,7 +52,7 @@ describe('Component: crTotalTile:', () => {
         totalLabel: 'My Label',
         totalValue: 'myTotalValue',
       });
-      expect(this.$translate.instant).toHaveBeenCalledWith('my.label');
+      expect(this.$translate.instant).toHaveBeenCalledWith('my.label', Object({ total: this.$scope.myTotalValue }), 'messageformat');
       expect(this.view.find(View.LABEL)).toHaveText('my.label');
     });
   });

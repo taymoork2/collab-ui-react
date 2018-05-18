@@ -17,7 +17,7 @@ export class CrTotalTileController implements ng.IComponentController {
 
   public $onInit() {
     if (this.l10nLabel) {
-      this.translatedLabel = this.$translate.instant(this.l10nLabel);
+      this.translatedLabel = this.$translate.instant(this.l10nLabel, { total: this.totalValue }, 'messageformat');
     }
   }
 
