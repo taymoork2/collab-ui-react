@@ -4,10 +4,10 @@
     "titlePro": "Cisco Webex Control Hub Pro",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Webex Teams Services you accept the Terms of Service and Privacy Statement.",
+    "license": "By using Cisco Webex Teams Services you accept the <a href=\"{{hrefTos}}\" target=\"_blank\">Terms of Service</a> and <a href=\"{{hrefPrivacy}}\" target=\"_blank\">Privacy Statement</a>.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
-    "copyright": "Cisco and/or affiliates. All rights reserved.",
+    "copyright": "&copy; {{year}} Cisco and/or affiliates. All rights reserved.",
     "expired": "Your session has expired due to inactivity.",
     "email": "Enter your email address"
   },

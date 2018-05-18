@@ -910,6 +910,9 @@
     .cui-input-group {
       margin: 0 auto;
     }
+    span {
+      font-size: inherit;
+    }
   }
   .cui-panel--full {
     z-index: 1039;

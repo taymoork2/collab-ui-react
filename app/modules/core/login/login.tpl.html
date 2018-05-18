@@ -43,9 +43,14 @@
         <i class="icon icon-cisco-logo"></i>
       </div>
       <div class="footer__copyright">
-        {{'loginPage.license' | translate}}
-        <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> and
-        <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2018 {{'loginPage.copyright' | translate}}
+        <span
+          translate="loginPage.license"
+          translate-values="{
+            hrefTos: 'http://www.ciscospark.com/terms-of-service.html',
+            hrefPrivacy: 'http://www.cisco.com/web/siteassets/legal/privacy.html'
+          }"></span>
+          <span translate="loginPage.copyright" translate-value-year="2018"></span>
+
       </div>
     </div>
   </div>
