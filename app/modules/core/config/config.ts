@@ -1,6 +1,8 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
 import { OfferName } from 'modules/core/shared/offer-name';
 
+import storageModuleName from 'modules/core/storage';
+
 interface IRoleStates {
   Application: string[];
   Compliance_User: string[];
@@ -670,7 +672,7 @@ export class Config {
   }
 
   public isCfe(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_CFE || this.getCurrentHostname() === this.hostnameConfig.CFE);
   }
 
   public isDev(): boolean {
@@ -688,11 +690,11 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_INTEGRATION || this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {
-    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
+    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.WEBEX_PRODUCTION || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
   }
 
   public isUserAgent(userAgentString: string): boolean {
@@ -729,7 +731,7 @@ export class Config {
 
 export default angular
   .module('core.config', [
-    require('modules/core/storage').default,
+    storageModuleName,
   ])
   .service('Config', Config)
   .name;

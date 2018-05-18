@@ -1,3 +1,5 @@
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('Controller: PlacesCtrl', function () {
   beforeEach(function () {
     this.initModules('Core', 'Squared');
@@ -11,7 +13,7 @@ describe('Controller: PlacesCtrl', function () {
       'Authinfo',
       'CsdmDataModelService',
       'FeatureToggleService',
-      'GridCellService',
+      'GridService',
       'RemPlaceModal',
       'ServiceDescriptorService',
       'Userservice'
@@ -20,7 +22,7 @@ describe('Controller: PlacesCtrl', function () {
     this.accounts = getJSONFixture('squared/json/accounts.json');
     this.url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/places/?type=all&query=xy';
 
-    spyOn(this.GridCellService, 'selectRow');
+    spyOn(this.GridService, 'selectRow');
     spyOn(this.Userservice, 'getUser');
     spyOn(this.$state, 'go');
     spyOn(this.RemPlaceModal, 'open');
@@ -66,7 +68,7 @@ describe('Controller: PlacesCtrl', function () {
           this.entity = { place: 'place' };
           this.placeOverview = 'place-overview';
           this.event = {
-            keyCode: this.GridCellService.ENTER,
+            keyCode: KeyCodes.ENTER,
             stopPropagation: jasmine.createSpy('stopPropagation'),
           };
         });
@@ -98,9 +100,9 @@ describe('Controller: PlacesCtrl', function () {
           });
         });
 
-        it('selectRow should call showPlaceDetails and GridCellService.selectRow', function () {
+        it('selectRow should call showPlaceDetails and GridService.selectRow', function () {
           this.controller.selectRow({}, { entity: this.entity });
-          expect(this.GridCellService.selectRow).toHaveBeenCalled();
+          expect(this.GridService.selectRow).toHaveBeenCalled();
           expect(this.controller.currentPlace).toEqual(this.entity);
           expect(this.$state.go).toHaveBeenCalledWith(this.placeOverview, {
             currentPlace: this.entity,

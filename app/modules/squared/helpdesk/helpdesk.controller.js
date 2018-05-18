@@ -195,7 +195,9 @@ require('./helpdesk.scss');
           vm.searchingForOrgs = false;
           vm.currentSearch.orgSearchResults = null;
           vm.currentSearch.orgSearchFailure = null;
-          if (err.status === 400) {
+          if (err.status === 404) {
+            vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.noSearchHits');
+          } else if (err.status === 400) {
             var message = _.get(err.data, 'message');
             if (message && message.indexOf('Search phrase is too generic' != -1)) {
               vm.currentSearch.orgSearchFailure = $translate.instant('helpdesk.tooManySearchResults');

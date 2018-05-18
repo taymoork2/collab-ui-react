@@ -32,11 +32,23 @@
     progressbar-on-cancel="$ctrl.onCancelImport()">
   </cr-progressbar>
 
-  <cr-users-tile-totals
-    new-total="$ctrl.numNewUsers"
-    updated-total="$ctrl.numUpdatedUsers"
-    error-total="$ctrl.numErroredUsers">
-  </cr-users-tile-totals>
+  <cr-total-tile-container>
+    <cr-total-tile
+      l10n-label="userManage.bulk.newUsers"
+      total-color="green"
+      total-value="$ctrl.numNewUsers"
+    ></cr-total-tile>
+    <cr-total-tile
+      l10n-label="userManage.bulk.existingUsers"
+      total-color="blue"
+      total-value="$ctrl.numUpdatedUsers"
+    ></cr-total-tile>
+    <cr-total-tile
+      l10n-label="userManage.bulk.errorUsers"
+      total-color="red"
+      total-value="$ctrl.numErroredUsers"
+    ></cr-total-tile>
+  </cr-total-tile-container>
 
   <hr class="csv-upload-results__line-break" ng-if="$ctrl.userErrorArray.length > 0">
 

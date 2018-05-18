@@ -1,6 +1,12 @@
+import * as tabConfigModuleName from 'modules/core/config/tabConfig';
+import testModuleName from './config';
+
 describe('Config', function () {
   beforeEach(function () {
-    this.initModules(require('./config').default, 'core.tabconfig');
+    this.initModules(
+      testModuleName,
+      tabConfigModuleName, // for injected tabConfig in tests
+    );
     this.injectDependencies(
       '$location',
       '$q',
@@ -12,8 +18,11 @@ describe('Config', function () {
     this.blaHost = 'wbx2.com/bla';
     this.devHost = 'localhost';
     this.cfeHost = 'cfe-admin.ciscospark.com';
+    this.cfeWebexHost = 'cfe-admin.webex.com';
     this.intHost = 'int-admin.ciscospark.com';
+    this.intWebexHost = 'int-admin.webex.com';
     this.prodHost = 'admin.ciscospark.com';
+    this.prodWebexHost = 'admin.webex.com';
 
     spyOn(this.$location, 'host').and.returnValue(this.blaHost);
     // Config must be injected after the $location spy is set for returnValue to take effect
@@ -93,6 +102,9 @@ describe('Config', function () {
 
     this.$location.host.and.returnValue(this.prodHost);
     expect(this.Config.isCfe()).toBe(false);
+
+    this.$location.host.and.returnValue(this.cfeWebexHost);
+    expect(this.Config.isCfe()).toBe(true);
   });
 
   it('should detect integration environment', function () {
@@ -101,6 +113,9 @@ describe('Config', function () {
 
     this.$location.host.and.returnValue(this.devHost);
     expect(this.Config.isIntegration()).toBe(false);
+
+    this.$location.host.and.returnValue(this.intWebexHost);
+    expect(this.Config.isIntegration()).toBe(true);
   });
 
   it('should detect prod environment', function () {
@@ -108,6 +123,9 @@ describe('Config', function () {
     expect(this.Config.isProd()).toBe(false);
 
     this.$location.host.and.returnValue(this.prodHost);
+    expect(this.Config.isProd()).toBe(true);
+
+    this.$location.host.and.returnValue(this.prodWebexHost);
     expect(this.Config.isProd()).toBe(true);
   });
 
@@ -118,10 +136,19 @@ describe('Config', function () {
     this.$location.host.and.returnValue(this.cfeHost);
     expect(this.Config.getEnv()).toBe('cfe');
 
+    this.$location.host.and.returnValue(this.cfeWebexHost);
+    expect(this.Config.getEnv()).toBe('cfe');
+
     this.$location.host.and.returnValue(this.intHost);
     expect(this.Config.getEnv()).toBe('integration');
 
+    this.$location.host.and.returnValue(this.intWebexHost);
+    expect(this.Config.getEnv()).toBe('integration');
+
     this.$location.host.and.returnValue(this.prodHost);
+    expect(this.Config.getEnv()).toBe('prod');
+
+    this.$location.host.and.returnValue(this.prodWebexHost);
     expect(this.Config.getEnv()).toBe('prod');
 
     this.$location.host.and.returnValue('random-host-is-prod');

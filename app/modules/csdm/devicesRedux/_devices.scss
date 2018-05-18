@@ -180,8 +180,6 @@
       display: flex;
       margin-right: 1rem;
       font-size: .875rem;
-      color: $gray-dark-1;
-      font-family: $brand-font-light;
       line-height: 1rem;
       .titleleg {
         margin-left: 1.5rem;
@@ -205,11 +203,22 @@
             background-color: $gray;
           }
         }
-        .selected, :hover {
-          color: $color-blue-base;
-        }
-        .none {
-          filter: opacity(30%);
+        tr {
+          box-shadow: unset;
+          &.selected {
+            > td {
+              font-family: $brand-font-regular;
+            }
+          }
+          &:hover > td{
+            color: $color-blue-darker;
+          }
+          &.none {
+            filter: opacity(30%);
+            &:hover{
+              filter: unset
+            }
+          }
         }
         td {
           padding: 0 8px 14px;

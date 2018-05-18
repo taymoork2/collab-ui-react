@@ -17,6 +17,7 @@ import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
+import proximityModule from './proximity';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -37,6 +38,7 @@ export default angular.module('core.settings', [
   webexModule,
   sparkAssistantModule,
   multiDirSyncModule,
+  proximityModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

@@ -1,3 +1,5 @@
+import { ISoftwareProfile, SoftwareProfile } from './hcs-swprofile';
+
 export enum EApplicationTypes {
   CUCM = 'CUCM',
   IMP = 'CUP',
@@ -9,11 +11,13 @@ export enum EApplicationTypes {
 }
 
 export interface IHcsCluster {
-  uuid: string;
+  uuid?: string;
   name: string;
   url?: string;
   sftpServer?: ISftpServerItem | null;
-  nodes: IHcsNode[] | null;
+  nodes?: IHcsNode[] | null;
+  customerUuid?: string | null;
+  sftpServerUuid?: string;
 }
 
 export interface IHcsNode {
@@ -33,6 +37,8 @@ export interface IHcsNode {
   sftpServer?: ISftpServerItem | null;
   status?: string;
   verificationCode?: string;
+  isAccepted?: boolean;
+  isRejected?: boolean;
 }
 
 export interface ISftpServerItem {
@@ -69,6 +75,8 @@ export class HcsNode implements IHcsNode {
   public sftpServer?: ISftpServerItem | null | undefined;
   public status?: string;
   public verificationCode?: string;
+  public isAccepted?: boolean;
+  public isRejected?: boolean;
   constructor(obj: {
     uuid: '';
     nodeUuid: '',
@@ -86,6 +94,8 @@ export class HcsNode implements IHcsNode {
     sftpServer?: null;
     status?: undefined;
     verificationCode?: undefined;
+    isAccepted?: false;
+    isRejected?: false;
   }) {
     this.uuid = obj.uuid;
     this.nodeUuid = obj.nodeUuid;
@@ -103,27 +113,32 @@ export class HcsNode implements IHcsNode {
     this.sftpServer = obj.sftpServer;
     this.status = obj.status;
     this.verificationCode = obj.verificationCode;
+    this.isAccepted = obj.isAccepted;
+    this.isRejected = obj.isRejected;
   }
 }
 
 export class HcsCluster implements IHcsCluster {
-  public uuid: string;
+  public uuid?: string;
   public name: string;
-  public nodes: IHcsNode[] | null;
+  public nodes?: IHcsNode[] | null;
   public url?: string;
   public sftpServer?: ISftpServerItem | null;
+  public customerUuid?: string | null;
   constructor(obj: {
-    uuid: '',
+    uuid?: '',
     name: '',
-    nodes: null,
-    url: undefined,
-    sftpServer: null;
+    nodes?: null,
+    url?: undefined,
+    sftpServer?: null;
+    customerUuid?: null;
   }) {
     this.uuid = obj.uuid;
     this.name = obj.name;
     this.url = obj.url;
     this.sftpServer = obj.sftpServer;
     this.nodes = _.clone(obj.nodes);
+    this.customerUuid = obj.customerUuid;
   }
 }
 
@@ -171,4 +186,22 @@ export interface ISftpServersObject {
   url: string;
   sftpServers: ISftpServer[];
   paging: IHcsPaging;
+}
+
+export interface IHcsUpgradeCustomer {
+  uuid: string;
+  softwareProfile: ISoftwareProfile;
+}
+
+export class HcsUpgradeCustomer implements IHcsUpgradeCustomer {
+  public uuid: string;
+  public softwareProfile: ISoftwareProfile;
+
+  constructor(obj: {
+    uuid: '',
+    softwareProfile: SoftwareProfile,
+  }) {
+    this.uuid = obj.uuid;
+    this.softwareProfile = obj.softwareProfile;
+  }
 }
