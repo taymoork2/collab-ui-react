@@ -2,7 +2,8 @@ import { ISoftwareProfile, SoftwareProfile } from './hcs-swprofile';
 
 export enum EApplicationTypes {
   CUCM = 'CUCM',
-  IMP = 'CUP',
+  CUP = 'CUP',
+  IMP = 'IM&P',
   CUC = 'CUC',
   EXPY = 'EXPRESSWAY',
   PLM = 'PLM',
