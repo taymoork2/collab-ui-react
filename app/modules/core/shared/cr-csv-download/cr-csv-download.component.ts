@@ -18,6 +18,7 @@ export class CrCsvDownloadComponent implements ng.IComponentOptions {
     anchorText: '@',                // text to display instead of icon
     isHidden: '<?',                 // if true, hides the visual elements.
     csvData: '<',                   // data to go in csv
+    isStringData: '<',              // if true, take csvData as string type rather than string[][]
     l10nSuccessString: '@?',        // success string to display in notification
     downloadFinishedFn: '&?',        // parent function to generate data
   };
@@ -34,6 +35,7 @@ export class CrCsvDownloadController implements ng.IComponentController {
   public csvData: string[][];
   public l10nSuccessString: string;
   public downloadFinishedFn: Function;
+  public isStringData: boolean;
 
   public tooltipMessage: string;
   public iconClass = '';
@@ -87,7 +89,7 @@ export class CrCsvDownloadController implements ng.IComponentController {
   }
 
   public downloadData(): void {
-    const url = this.getCsv(this.FILENAME, this.csvData);
+    const url = this.isStringData ? this.createObjectUrl(this.csvData, this.FILENAME) : this.getCsv(this.FILENAME, this.csvData);
     this.$timeout(() => {
       this.finishDownload(url);
       this.changeAnchorAttrToOriginalState();

@@ -1021,6 +1021,14 @@
       "sessionType_5": "Teleagent Session",
       "sessionType_4005": "Other Teleconference AB",
       "sessionType_3005": "Other Teleconference NBR2"
+    },
+    "meetingExport": {
+      "btnTitle": "Export Record",
+      "tooltipMessage": "Download .JSON file.",
+      "isRunning": "Downloading in progress!",
+      "error": "Generate content failed",
+      "inProgress": "Downloading in progress!",
+      "success": "Generate content completed"
     }
   },
   "sharedMeetingReports": {

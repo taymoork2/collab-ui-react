@@ -1,0 +1,17 @@
+<div 
+  class="meeting-export btn"
+  tooltip="{{$ctrl.tooltipMessage}}"
+  tooltip-animation="false"
+  tooltip-append-to-body="true"
+  tooltip-trigger="focus mouseenter"
+  aria-label="{{$ctrl.tooltipMessage}}">
+  <a href ng-click="$ctrl.exportJSON()" aria-label="{{::$ctrl.getDownloadTranslation()}}">
+    <span ng-if="$ctrl.anchorText"><h5 class="text">{{::$ctrl.anchorText}}</h5></span>
+  </a>
+</div>
+<dgc-meeting-download
+  filename="{{$ctrl.filename}}"
+  is-hidden="true" 
+  csv-data="$ctrl.reportData"
+  is-string-data="true"
+  download-finished-fn="$ctrl.restoreToOriginalState()"></dgc-meeting-download>
