@@ -116,6 +116,15 @@ export enum QualityRange {
   LOWER_LATENCY = 300,
 }
 
+export enum SearchStorage {
+  UNIQUE_PARTICIPANTS = 'uniqueParticipants',
+  JOIN_MEETING_TIMES = 'joinMeetingTimes',
+  VOIP_SESSION_DETAIL = 'voipSessionDetail',
+  VIDEO_SESSION_DETAIL = 'videoSessionDetail',
+  PSTN_SESSION_DETAIL = 'pstnSessionDetail',
+  WEBEX_ONE_MEETING = 'webexOneMeeting',
+}
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -333,5 +342,9 @@ export class SearchService {
       phone = `+${phone}`;
     }
     return phone;
+  }
+
+  public getData(): any {
+    return this.data;
   }
 }

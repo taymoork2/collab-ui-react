@@ -7,6 +7,9 @@ import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { ParticipantsComponent } from './tabParticipants.component';
 import { MeetingdetailsComponent } from './tabMeetingdetails.component';
 import { DgcWebexReportsSearchComponent } from './webexReportsSearch.component';
+import { MeetingExportComponent } from './meeting-export.component';
+import { MeetingExportService } from './meeting-export.service';
+import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
 
 export default angular
   .module('reports.webex.search', [
@@ -18,10 +21,13 @@ export default angular
   ])
   .service('SearchService', SearchService)
   .service('ProPackService', ProPackService)
+  .service('MeetingExportService', MeetingExportService)
   .component('dgcTab', new DgcTabComponent())
   .component('dgcTimeLine', new DgcTimeLineComponent())
   .component('dgcTimeZone', new DgcTimeZoneComponent())
   .component('dgcTabParticipants', new ParticipantsComponent())
   .component('dgcTabMeetingdetail', new MeetingdetailsComponent())
   .component('dgcWebexReportsSearch', new DgcWebexReportsSearchComponent())
+  .component('dgcMeetingExport', new MeetingExportComponent())
+  .component('dgcMeetingDownload', new CrCsvDownloadComponent())
   .name;

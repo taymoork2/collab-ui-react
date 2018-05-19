@@ -1,5 +1,6 @@
-import './_dgc-meeting.scss';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { SearchService } from './searchService';
+import './_dgc-meeting.scss';
 
 export enum SessionTypes {
   SCREEN_SHARE = '4',
@@ -14,12 +15,14 @@ class DgcTab implements ng.IComponentController {
   public featAndconn: Object;
   public loading: boolean = true;
   public backState: string = 'reports.webex-metrics.diagnostics';
+  public isSupportExport = false;
 
   private timeZone: any;
   private conferenceID: string;
 
   /* @ngInject */
   public constructor(
+    private FeatureToggleService: FeatureToggleService,
     private SearchService: SearchService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
@@ -29,6 +32,11 @@ class DgcTab implements ng.IComponentController {
   }
 
   public $onInit() {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8194MeetingDetails)
+      .then((isSupport: boolean) => {
+        this.isSupportExport = isSupport;
+      });
+
     this.tabs = [
       {
         state: `dgc.tab.meetingdetail({cid: '${this.conferenceID}'})`,
