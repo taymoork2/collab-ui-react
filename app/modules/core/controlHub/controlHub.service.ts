@@ -1,8 +1,8 @@
 export class ControlHubService {
-  private image = '/images/control-hub-logo.svg';
+  private image = '/images/control-hub-white.svg';
   private collapsed = {
     value: false,
-    image: '/images/spark-logo.svg',
+    image: '',
   };
   private proPackIcon = 'icon-propack-solid-outline';
 
