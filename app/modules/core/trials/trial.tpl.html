@@ -79,7 +79,7 @@
       <!-- paid services: TODO: refactor as a component -->
       <div class="section__content">
         <div class="sub-section" ng-show="!trial.messageTrial.paid">
-          <h5 class="sub-section__label" translate="subscriptions.messaging"></h5>
+          <h5 class="sub-section__label" translate="subscriptions.message"></h5>
           <input type="checkbox" cs-input
             ng-model="trial.messageTrial.enabled"
             id="messageTrial" name="messageTrial"
@@ -102,7 +102,7 @@
             cs-input-label="{{::'trials.webex' | translate}}">
         </div>
         <div class="sub-section" ng-show="!trial.callTrial.paid && trial.hasCallEntitlement">
-          <h5 class="sub-section__label" translate="subscriptions.calling"></h5>
+          <h5 class="sub-section__label" translate="subscriptions.call"></h5>
           <input type="checkbox" cs-input
             ng-model="trial.callTrial.enabled"
             id="callTrial" name="callTrial"

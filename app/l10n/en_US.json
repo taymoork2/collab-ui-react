@@ -9144,7 +9144,7 @@
   "subscriptions": {
     "activeUsers": "Active Users",
     "advancedReporting": "Advanced Reporting",
-    "calling": "Calling",
+    "call": "Calling",
     "care": "Care",
     "changePlan": "Change Plan",
     "complianceFunctionality": "Compliance Functionality",
@@ -9164,7 +9164,7 @@
     "licenseSummaryOnline": "License Summary for {{name}}",
     "licenseUsageReport": "License Usage Report",
     "loadError": "An error occurred while loading subscriptions.",
-    "messaging": "Messaging",
+    "message": "Messaging",
     "meeting": "Meeting",
     "numberedName": "Enterprise Subscription {{number}}",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
