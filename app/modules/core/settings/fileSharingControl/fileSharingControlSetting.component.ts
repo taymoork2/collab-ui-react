@@ -1,108 +1,60 @@
 import { ProPackSettingSection } from '../proPackSettingSection';
+import { FileSharingControlModel } from './fileSharingControl.model';
+import { IToolkitModalService } from 'modules/core/modal';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { Notification } from 'modules/core/notifications';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 
-interface IGetFileSharingControlSettingResponse {
-  blockDesktopAppDownload: boolean;
-  blockWebAppDownload: boolean;
-  blockMobileAppDownload: boolean;
-  blockBotsDownload: boolean;
-
-  blockDesktopAppUpload: boolean;
-  blockWebAppUpload: boolean;
-  blockMobileAppUpload: boolean;
-  blockBotsUpload: boolean;
-}
 export class FileSharingControlSettingController {
-
-  private _isBlockDesktopAppDownload = false;
-  private _isBlockWebAppDownload = false;
-  private _isBlockMobileAppDownload = false;
-  private _isBlockBotsDownload = false;
-
-  private _isBlockDesktopAppUpload = false;
-  private _isBlockWebAppUpload = false;
-  private _isBlockMobileAppUpload = false;
-  private _isBlockBotsUpload = false;
-
-  public isFileSharingControlSettingLoaded = false;
   public isProPackPurchased = false;
-  private hasWarningDisplayed = false;
+  public isLoaded = false;
 
-  private orgId: string;
+  private hasWarningDisplayed = false;
+  private model = new FileSharingControlModel();
 
   /* @ngInject */
   constructor(
-    private $q,
-    private $translate,
-    private AccountOrgService,
+    private $q: ng.IQService,
+    private $translate: ng.translate.ITranslateService,
     private Authinfo,
-    private ModalService,
-    private ProPackService,
-    private Notification,
+    private ModalService: IToolkitModalService,
+    private Notification: Notification,
+    private OrgSettingsService: OrgSettingsService,
+    private ProPackService: ProPackService,
   ) {
   }
 
   public $onInit() {
-    this.orgId = this.Authinfo.getOrgId();
     this.loadSetting();
   }
 
   public loadSetting() {
     const promises = {
-      fileSharingControl: this.AccountOrgService.getFileSharingControl(this.orgId),
+      fileSharingControl: this.OrgSettingsService.getFileShareControl(this.Authinfo.getOrgId()),
       proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
     };
 
     this.$q.all(promises)
       .then((response) => {
-        this.fileSharingControlSettingLoaded(response.fileSharingControl);
+        this.model = new FileSharingControlModel(response.fileSharingControl),
         this.isProPackPurchased = response.proPackPurchased;
+        this.isLoaded = true;
       }).catch(_.noop);
   }
 
-  private fileSharingControlSettingLoaded(fileSharingControl: IGetFileSharingControlSettingResponse) {
-    if (!_.isUndefined(fileSharingControl)) {
-      this._isBlockDesktopAppDownload = fileSharingControl.blockDesktopAppDownload;
-      this._isBlockWebAppDownload = fileSharingControl.blockWebAppDownload;
-      this._isBlockMobileAppDownload = fileSharingControl.blockMobileAppDownload;
-      this._isBlockBotsDownload = fileSharingControl.blockBotsDownload;
-
-      this._isBlockDesktopAppUpload = fileSharingControl.blockDesktopAppUpload;
-      this._isBlockWebAppUpload = fileSharingControl.blockWebAppUpload;
-      this._isBlockMobileAppUpload = fileSharingControl.blockMobileAppUpload;
-      this._isBlockBotsUpload = fileSharingControl.blockBotsUpload;
-    }
-    this.isFileSharingControlSettingLoaded = true;
-  }
-
-  public isCheckboxDisabled(): boolean {
-    return !this.isFileSharingControlSettingLoaded || !this.isProPackPurchased;
+  public get isCheckboxDisabled(): boolean {
+    return !this.isLoaded || !this.isProPackPurchased;
   }
 
   public get isBlockDesktopAppDownload(): boolean {
-    return this._isBlockDesktopAppDownload;
-  }
-
-  private getConfirmation(value: boolean): ng.IPromise<any> {
-    const deferred = this.$q.defer();
-    if (value && !this.hasWarningDisplayed) {
-      this.hasWarningDisplayed = true;
-      return this.ModalService.open({
-        title: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsTitle'),
-        message: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsDescription'),
-        close: this.$translate.instant('common.confirm'),
-        dismiss: this.$translate.instant('common.cancel'),
-      }).result;
-    } else {
-      deferred.resolve();
-      return deferred.promise;
-    }
+    return this.model.blockDesktopApp.download;
   }
 
   public set isBlockDesktopAppDownload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockDesktopAppDownload = value;
-      if (this._isBlockDesktopAppDownload) {
-        this._isBlockDesktopAppUpload = value;
+      this.model.blockDesktopApp.download = value;
+      if (value) {
+        this.model.blockDesktopApp.upload = value;
       }
       this.updateFileSharingControlSetting();
     })
@@ -110,109 +62,116 @@ export class FileSharingControlSettingController {
   }
 
   public get isBlockWebAppDownload(): boolean {
-    return this._isBlockWebAppDownload;
+    return this.model.blockWebApp.download;
   }
 
   public set isBlockWebAppDownload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockWebAppDownload = value;
-      if (this._isBlockWebAppDownload) {
-        this._isBlockWebAppUpload = value;
+      this.model.blockWebApp.download = value;
+      if (value) {
+        this.model.blockWebApp.upload = value;
       }
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockMobileAppDownload(): boolean {
-    return this._isBlockMobileAppDownload;
+    return this.model.blockMobileApp.download;
   }
 
   public set isBlockMobileAppDownload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockMobileAppDownload = value;
-      if (this._isBlockMobileAppDownload) {
-        this._isBlockMobileAppUpload = value;
+      this.model.blockMobileApp.download = value;
+      if (value) {
+        this.model.blockMobileApp.upload = value;
       }
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockBotsDownload(): boolean {
-    return this._isBlockBotsDownload;
+    return this.model.blockBots.download;
   }
 
   public set isBlockBotsDownload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockBotsDownload = value;
-      if (this._isBlockBotsDownload) {
-        this._isBlockBotsUpload = value;
+      this.model.blockBots.download = value;
+      if (value) {
+        this.model.blockBots.upload = value;
       }
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockDesktopAppUpload(): boolean {
-    return this._isBlockDesktopAppUpload;
+    return this.model.blockDesktopApp.upload;
   }
 
   public set isBlockDesktopAppUpload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockDesktopAppUpload = value;
+      this.model.blockDesktopApp.upload = value;
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockWebAppUpload(): boolean {
-    return this._isBlockWebAppUpload;
+    return this.model.blockWebApp.upload;
   }
 
   public set isBlockWebAppUpload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockWebAppUpload = value;
+      this.model.blockWebApp.upload = value;
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockMobileAppUpload(): boolean {
-    return this._isBlockMobileAppUpload;
+    return this.model.blockMobileApp.upload;
   }
 
   public set isBlockMobileAppUpload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockMobileAppUpload = value;
+      this.model.blockMobileApp.upload = value;
       this.updateFileSharingControlSetting();
     });
   }
 
   public get isBlockBotsUpload(): boolean {
-    return this._isBlockBotsUpload;
+    return this.model.blockBots.upload;
   }
 
   public set isBlockBotsUpload(value: boolean) {
     this.getConfirmation(value).then(() => {
-      this._isBlockBotsUpload = value;
+      this.model.blockBots.upload = value;
       this.updateFileSharingControlSetting();
     });
   }
 
-  public updateFileSharingControlSetting() {
-    if (this.isFileSharingControlSettingLoaded) {
-      this.AccountOrgService.setFileSharingControl(this.orgId, {
-        blockDesktopAppDownload: this._isBlockDesktopAppDownload,
-        blockWebAppDownload: this._isBlockWebAppDownload,
-        blockMobileAppDownload: this._isBlockMobileAppDownload,
-        blockBotsDownload: this._isBlockBotsDownload,
-        blockDesktopAppUpload: this._isBlockDesktopAppUpload,
-        blockWebAppUpload: this._isBlockWebAppUpload,
-        blockMobileAppUpload: this._isBlockMobileAppUpload,
-        blockBotsUpload: this._isBlockBotsUpload})
-        .then(() => {
-          this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
-        })
-        .catch((response) => {
-          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
-        });
+  private updateFileSharingControlSetting() {
+    if (this.isLoaded) {
+      this.OrgSettingsService.setFileShareControl(
+        this.Authinfo.getOrgId(),
+        this.model.toFileShareControl(),
+      ).then(() => {
+        this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
+      })
+      .catch((response) => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+      });
     }
+  }
+
+  private getConfirmation(value: boolean): ng.IPromise<void> {
+    if (this.hasWarningDisplayed || !value) {
+      return this.$q.resolve();
+    }
+    this.hasWarningDisplayed = true;
+    return this.ModalService.open({
+      title: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsTitle'),
+      message: this.$translate.instant('globalSettings.fileSharingControl.disableWhiteboardsDescription'),
+      close: this.$translate.instant('common.confirm'),
+      dismiss: this.$translate.instant('common.cancel'),
+    }).result;
   }
 }
 

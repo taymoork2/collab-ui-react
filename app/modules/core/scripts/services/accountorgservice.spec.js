@@ -2,20 +2,16 @@
 
 var testModule = require('./accountorgservice');
 
-describe('Service : AccountOrgService', function () {
+// TODO: test something meaningful
+describe('Service: AccountOrgService', function () {
   beforeEach(function () {
     this.initModules(testModule);
     this.injectDependencies(
       '$httpBackend',
       'AccountOrgService',
-      'Authinfo'
+      'UrlConfig'
     );
-
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7');
-
-    this.appSecurityRegex = /.*\/settings\/clientSecurityPolicy\.*/;
-    this.blockExternalCommuncationRegex = /.*\/settings\/blockExternalCommunications\.*/;
-    this.fileSharingControlRegex = /.*\/settings\.*/;
+    installPromiseMatchers();
   });
 
   afterEach(function () {
@@ -23,38 +19,14 @@ describe('Service : AccountOrgService', function () {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('File Sharing Control ', function () {
+  describe('getAccount()', function () {
     beforeEach(function () {
-      this.$httpBackend.whenGET(this.fileSharingControlRegex).respond({
-        orgSettings: ['{ "desktopFileShareControl": "BLOCK_BOTH", "mobileFileShareControl": "NONE", "webFileShareControl": "NONE", "botFileShareControl": "NONE" }'],
-      });
+      this.$httpBackend.expectGET(this.UrlConfig.getAdminServiceUrl() + 'organization/12345/accounts').respond(200);
     });
 
-    //File Sharing Control check
-    it('should set File Sharing Control', function () {
-      this.$httpBackend.expectPATCH(this.fileSharingControlRegex).respond([200, {}]);
-
-      this.AccountOrgService.setFileSharingControl(this.Authinfo.getOrgId(), {}).then(function (response) {
-        expect(response.status).toEqual(200);
-      });
-      this.$httpBackend.flush();
-    });
-
-    //File Sharing Control Setter Getter check
-    it('should get block desktpAppDownload', function () {
-      this.AccountOrgService.getFileSharingControl(this.Authinfo.getOrgId()).then(function (fileShareControl) {
-        expect(fileShareControl).toEqual({
-          blockDesktopAppDownload: true,
-          blockWebAppDownload: false,
-          blockMobileAppDownload: false,
-          blockBotsDownload: false,
-          blockDesktopAppUpload: true,
-          blockWebAppUpload: false,
-          blockMobileAppUpload: false,
-          blockBotsUpload: false,
-        });
-      });
-      this.$httpBackend.flush();
+    it('should GET /accounts', function () {
+      var promise = this.AccountOrgService.getAccount('12345');
+      expect(promise).toBeResolved();
     });
   });
 });

@@ -12,7 +12,7 @@ export class FileShareControl {
   public webFileShareControl: FileShareControlType;
   public botFileShareControl: FileShareControlType;
 
-  constructor(settings: IAnyObject) {
+  constructor(settings: IAnyObject = {}) {
     this.desktopFileShareControl = _.get(settings, 'desktopFileShareControl', FileShareControlType.NONE);
     this.mobileFileShareControl = _.get(settings, 'mobileFileShareControl', FileShareControlType.NONE);
     this.webFileShareControl = _.get(settings, 'webFileShareControl', FileShareControlType.NONE);
