@@ -1,13 +1,15 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { LegalHoldService } from './legal-hold.service';
+import { LegalHoldService, GetUserBy } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { Matter } from './matter.model';
 import { MatterState, ImportMode, Events } from './legal-hold.enums';
-import { IMatterJsonDataForDisplay } from './legal-hold.interfaces';
+import { IMatterJsonDataForDisplay, ICustodian } from './legal-hold.interfaces';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 export class LegalHoldMatterDetailController implements ng.IComponentController {
 
   public static readonly DATE_FORMAT = 'MMM Do, YYYY h:mm A';
+  public static readonly EXPORT_CHUNK_SIZE = 10;
 
   public form: ng.IFormController;
   public saveInProcess = false;
@@ -15,13 +17,20 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
   public matterEdit: IMatterJsonDataForDisplay;
   private releaseMessage: string;
   private deleteMessage: string;
+  private exportMessage: string;
   public isEdit = false;
+  public exportResults: ICustodian[];
+  public downloadComponentApi;
+  public cancelExport = false;
+  public isDownloading = false;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $rootScope: ng.IRootScopeService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
+    private Authinfo: Authinfo,
     private ModalService: IToolkitModalService,
     private Notification: Notification,
     private LegalHoldService: LegalHoldService,
@@ -32,6 +41,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     this.releaseMessage = `<p class="text-left">${this.$translate.instant('legalHold.releaseConfirmation1', { name: this.matter.matterName })}
     </p><p class="text-left">${this.$translate.instant('legalHold.releaseConfirmation2')}</p>`;
     this.deleteMessage = `<p class="text-left">${this.$translate.instant('legalHold.deleteConfirmation', { name: this.matter.matterName })}</p>`;
+    this.exportMessage = this.$translate.instant('legalHold.exportWarning');
   }
 
   public get status(): string {
@@ -42,6 +52,10 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     return this.isActive() ?
       'legalHold.matterList.filter.active' :
       'legalHold.matterList.filter.released';
+  }
+
+  public get exportFileName(): string {
+    return `${this.matter.matterName}_${this.$translate.instant('legalHold.detail.exportFileName')}`;
   }
 
   public isActive(): boolean {
@@ -113,7 +127,6 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     });
   }
 
-
   public deleteMatter(): ng.IPromise<void> {
     return this.ModalService.open({
       title: this.$translate.instant('common.warning'),
@@ -135,6 +148,45 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     });
   }
 
+  public exportCustodians(): ng.IPromise<void> {
+    if (this.isDownloading) {
+      return this.$q.resolve();
+    } // notify the user
+    return this.ModalService.open({
+      title: this.$translate.instant('legalHold.detail.exportCustodians'),
+      message: this.exportMessage,
+      close: this.$translate.instant('common.ok'),
+      hideDismiss: true,
+    }).result
+    .then(() => { //set the spinner and get the users in matter
+      this.isDownloading = true;
+      return this.LegalHoldService.listUsersInMatter(this.Authinfo.getOrgId(), this.matter.caseId);
+    })
+      .then((userUuidList) => { //get the users in uuid
+        if (_.isEmpty(userUuidList)) {
+          return this.$q.reject('no users');
+        }
+        const chunkedArray = _.chunk(<string[]>userUuidList, LegalHoldMatterDetailController.EXPORT_CHUNK_SIZE);
+        return this.LegalHoldService.convertUsersChunk(chunkedArray, GetUserBy.ID);
+      })
+      .then((result) => { //exportResults is watched by download component. as soon as it's set download starts
+        if (result) {
+          this.exportResults = _.concat(result.success, result.error);
+        }
+        this.isDownloading = !_.isEmpty(this.exportResults);
+      })
+      .catch((errorResponse) => {
+        this.exportResults = [];
+        this.Notification.errorResponse(errorResponse);
+        this.isDownloading = false;
+      });
+  }
+
+
+  public finishDownload() {
+    this.isDownloading = false;
+  }
+
   public addCustodians(): void {
     this.$state.go('legalhold.custodians-manage', {
       caseId: this.matter.caseId,
@@ -149,9 +201,6 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     });
   }
 
-  public exportCustodians() {
-    //TODO  algendel 4/13 needs implementation
-  }
 }
 
 export class LegalHoldMatterDetailComponent implements ng.IComponentOptions {

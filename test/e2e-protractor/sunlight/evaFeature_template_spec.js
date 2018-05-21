@@ -47,7 +47,7 @@ describe('EVA feature setup', function () {
 
   it('Create: Name page', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
-    var expectedHint = 'Specify the name Cisco Spark users in your organization see when they interact with your Expert Virtual Assistant in expert spaces.';
+    var expectedHint = 'Specify the name Cisco Webex Teams users in your organization see when they interact with your Expert Virtual Assistant in expert spaces.';
     utils.waitForText(careVirtualAssistantTemplateSetupPage.nameHint, expectedHint);
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, evaTestName);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);

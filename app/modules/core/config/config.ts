@@ -328,6 +328,7 @@ export class Config {
     insufficientEntitlementsError: '400111',
     hybridServicesError: '400087',
     hybridServicesComboError: '400094',
+    mustConvertBeforeAdding: '600001',
   };
 
   public readonly timeFormat = {

@@ -7,7 +7,7 @@ export interface IMeetingBasicInfo {
 }
 
 export interface IMeetingDetail extends IMeetingBasicInfo {
-  conferenceId: string;
+  conferenceID: string;
   hostEmail: string;
   hostId: string;
   hostName: string;
@@ -28,6 +28,8 @@ export interface IMeetingDetail extends IMeetingBasicInfo {
   screenShare_: string;
   recording: number;
   recording_: string;
+  status_?: string;
+  Duration?: string;
 }
 
 export interface ISession {
@@ -45,11 +47,14 @@ export interface IMeeting {
   sessions: ISession[];
 }
 
-export interface ICallType {
+export interface ICallType extends IParticipant {
   completed: boolean;
-  description: string;
-  deviceType: string;
-  items: any[]; //TODO use better type
+  deviceCompleted: boolean;
+  description?: string;
+  deviceType?: string;
+  items: {
+    deviceType: string;
+  };
 }
 
 export interface IUniqueParticipant {
@@ -121,16 +126,6 @@ export interface ICallLegs {
 export interface IServerTime {
   timestamp: number;
   dateLong: number;
-}
-
-export interface IDevice {
-  completed: boolean;
-  deviceCompleted: boolean;
-  device: string;
-  platform: string;
-  conferenceID: string;
-  nodeId: string;
-  items: any; //TODO use better type
 }
 
 export interface IUniqueData {

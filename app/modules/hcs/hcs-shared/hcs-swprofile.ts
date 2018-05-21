@@ -1,3 +1,5 @@
+import { IHcsPaging } from './hcs-upgrade';
+
 export interface IApplicationVersion {
   typeApplication: string;
   fileData: IFileData[];
@@ -33,7 +35,7 @@ export class SoftwareAppVersion implements ISoftwareAppVersion {
 
 export interface ISoftwareProfile {
   name: string;
-  uuid?: string;
+  uuid: string;
   url?: string;
   applicationVersions?: SoftwareAppVersion[] | null;
 }
@@ -46,18 +48,24 @@ export interface ISoftwareVersion {
 
 export class SoftwareProfile implements ISoftwareProfile {
   public name: string;
-  public uuid?: string;
+  public uuid: string;
   public url?: string;
   public applicationVersions?: SoftwareAppVersion[] | null;
   constructor (obj: {
     name: '',
-    uuid?: '',
+    uuid: '',
     url?: '',
-    applicationVersions: SoftwareAppVersion[],
+    applicationVersions?: SoftwareAppVersion[],
   }) {
     this.name = obj.name;
     this.uuid = obj.uuid;
     this.url = obj.url;
     this.applicationVersions = obj.applicationVersions;
   }
+}
+
+export interface ISoftwareProfilesObject {
+  softwareProfiles: ISoftwareProfile[];
+  url: string;
+  paging: IHcsPaging;
 }
