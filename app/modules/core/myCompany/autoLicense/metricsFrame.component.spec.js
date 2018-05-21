@@ -13,7 +13,7 @@ describe('Component: autoLicenseMetricsFrame', function () {
   };
 
   beforeEach(angular.mock.module('Core'));
-  beforeEach(angular.mock.module('core.customer-reports'));
+  // beforeEach(angular.mock.module('Core'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   beforeEach(initController);

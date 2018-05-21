@@ -2,7 +2,7 @@
 
 describe('Controller: Auto License Ctrl', function () {
   beforeEach(function () {
-    this.initModules('core.customer-reports', 'Core'); // 'Core' included for Userservice
+    this.initModules('Core', 'Core'); // 'Core' included for Userservice
     this.injectDependencies(
       '$controller',
       '$q',

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('core.customer-reports')
+    .module('Core')
     .controller('AutoLicenseCtrl', AutoLicenseCtrl);
 
   /* @ngInject */
@@ -42,7 +42,7 @@
               $q.all(promises).then(function (features) {
                 $log.log('FeatureToggleService.autoLicenseGetStatus() is ' + features.isFeatureToggleOn);
                 if (!features.isFeatureToggleOn) {
-                  $state.go('reports.care');
+                  $state.go('my-company.info');
                 }
               });
               loadMetricsReport();

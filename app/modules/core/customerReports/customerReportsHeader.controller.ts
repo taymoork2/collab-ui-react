@@ -45,12 +45,6 @@ class CustomerReportsHeaderCtrl {
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
-      if (features.autoLicenseEnabled) {
-        this.headerTabs.push({
-          title: this.$translate.instant('reportsPage.autoLicense'),
-          state: 'reports.autoLicense',
-        });
-      }
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }

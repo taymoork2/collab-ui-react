@@ -1,10 +1,11 @@
 require('./auto-license-metrics-frame.scss');
+require('../_myCompany.scss');
 
 (function () {
   'use strict';
 
   angular
-    .module('core.customer-reports')
+    .module('Core')
     .component('autoLicenseMetricsFrame', {
       template: require('./metricsFrame.tpl.html'),
       controller: metricsFrameController,
