@@ -59,6 +59,8 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.FeatureToggleService, 'atlasPartnerWebexReportsGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'diagnosticF8234QueryRangeGetStatus').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {

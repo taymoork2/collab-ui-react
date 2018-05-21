@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { PartnerSearchService, Platforms } from './partner-search.service';
-import { ICallType, IAnyDict, IParticipant, IUniqueData } from './partner-search.interfaces';
+import { ICallType, IParticipant, IUniqueData } from './partner-search.interfaces';
 import { QualityType, TabType } from './partner-meeting.enum';
 
 interface IDataStore {
@@ -32,7 +32,7 @@ class TimeLineController implements ng.IComponentController {
   private option: IGridOption;
   private legendInfo: { line: string[]; circle: string[] };
   private data: IDataStore;
-  private sourceData: IAnyDict; //TODO use better type
+  private sourceData: { lines: IParticipant[][], endTime: number, startTime: number };
   private tabType: string;
   private timeScale: d3;
   private timeFormat = 'hh:mm:ss A';
@@ -41,11 +41,13 @@ class TimeLineController implements ng.IComponentController {
   private markLabel: d3;
   private yPanel: d3;
   private lineColorCls = ['goodLine', 'fairLine', 'poorLine', ''];
+  private isSupportClientVersion = false;
 
   /* @ngInject */
   public constructor(
     private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
   ) {
     this.data = {
@@ -70,6 +72,10 @@ class TimeLineController implements ng.IComponentController {
     this.initChart();
   }
 
+  public $onInit() {
+    this.loadFeatureToggle();
+  }
+
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
     const { circleColor, lineData } = changes;
     if (_.get(circleColor, 'currentValue')) {
@@ -83,7 +89,7 @@ class TimeLineController implements ng.IComponentController {
 
   private initParameters(): void {
     if (!this.sourceData) {
-      this.sourceData = {};
+      this.sourceData = { lines: [], startTime: 0, endTime: 0 };
     }
     if (!this.sourceData.lines) {
       this.sourceData.lines = [];
@@ -118,6 +124,13 @@ class TimeLineController implements ng.IComponentController {
       line: [QualityType.GOOD, QualityType.FAIR, QualityType.POOR, QualityType.NA],
       circle: [QualityType.GOOD, QualityType.FAIR, QualityType.POOR, QualityType.NA],
     };
+  }
+
+  private loadFeatureToggle(): void {
+    this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
+      .then((isSupport: boolean) => {
+        this.isSupportClientVersion = isSupport;
+      });
   }
 
   private initChart(): void {
@@ -253,7 +266,7 @@ class TimeLineController implements ng.IComponentController {
       .append('i')
       .attr('class', (item) => { return `icon ${item.deviceIcon}`; })
       .on('mouseover', (item: IParticipant, index) => {
-        const msgArr: {key?: string; value?: string}[] = [];
+        const msgArr: { key?: string; value?: string }[] = [];
 
         msgArr.push({ key: item.userName });
         if (item.platform === Platforms.TP) {
@@ -271,7 +284,12 @@ class TimeLineController implements ng.IComponentController {
             msgArr.push({ key: this.$translate.instant('webexReports.callBack') });
           }
         } else {
-          msgArr.push({ key: item.device });
+          if (this.isSupportClientVersion) {
+            const clientVersion = this.PartnerSearchService.getClientVersion(item.clientKey);
+            msgArr.push({ key: `${item.platform_} ${clientVersion.osVersion}: ${item.browser_} ${clientVersion.browserVersion}` });
+          } else {
+            msgArr.push({ key: item.device });
+          }
         }
         msgArr.push({ key: this.$translate.instant('webexReports.joinTime'), value: item.joinTime_ });
 
@@ -433,7 +451,7 @@ class TimeLineController implements ng.IComponentController {
         const tipLeft = cx + 158;
         this.makeTips(msgArr, tipTop, tipLeft);
       })
-      .on('mouseout', () => this.hideTip());
+        .on('mouseout', () => this.hideTip());
     });
   }
 
@@ -479,7 +497,7 @@ class TimeLineController implements ng.IComponentController {
         const tipLeft = cx + 158;
         this.makeTips(msgArr, tipTop, tipLeft);
       })
-      .on('mouseout', () => this.hideTip());
+        .on('mouseout', () => this.hideTip());
     });
   }
 
@@ -643,17 +661,17 @@ class TimeLineController implements ng.IComponentController {
       return;
     }
     this.tip.html(tooltip)
-    .classed('Tooltip-bottom', true)
-    .style('display', 'block')
-    .style('z-index', 1500);
+      .classed('Tooltip-bottom', true)
+      .style('display', 'block')
+      .style('z-index', 1500);
 
     const leftOffset = this.tip.style('width').replace('px', '');
     const topOffset = this.tip.style('height').replace('px', '');
     this.tip.transition()
       .duration(500)
       .style('opacity', 1)
-      .style('top', () => (top - topOffset) + 'px' )
-      .style('left', () => (left - leftOffset / 2) + 'px' );
+      .style('top', () => (top - topOffset) + 'px')
+      .style('left', () => (left - leftOffset / 2) + 'px');
   }
 
   private hideTip(): void {
@@ -690,10 +708,11 @@ class TimeLineController implements ng.IComponentController {
     });
 
     const qualityLegends = [{ cls: 'goodLine', text: this.$translate.instant('webexReports.good'), width: 80 },
-                            { cls: 'fairLine', text: this.$translate.instant('webexReports.fair'), width: 65 },
-                            { cls: 'poorLine', text: this.$translate.instant('webexReports.poor'), width: 0 },
-                            { cls: 'defaultLine', text: this.$translate.instant('webexReports.notAvailable'), width: 130 },
-                            { cls: '', text: `${this.tabType} ${this.$translate.instant('webexReports.notEnabled')}`, width: 155 }];
+      { cls: 'fairLine', text: this.$translate.instant('webexReports.fair'), width: 65 },
+      { cls: 'poorLine', text: this.$translate.instant('webexReports.poor'), width: 0 },
+      { cls: 'defaultLine', text: this.$translate.instant('webexReports.notAvailable'), width: 130 },
+      { cls: '', text: `${this.tabType} ${this.$translate.instant('webexReports.notEnabled')}`, width: 155 },
+    ];
     _.forEach(qualityLegends, (legend, index) => {
       const colorZone = d3.select('.legendLine').append('div');
       if (legend.width) {

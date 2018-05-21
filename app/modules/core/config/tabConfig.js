@@ -192,6 +192,14 @@
     feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
     iconClass: 'icon-outline',
   }, {
+    tab: 'troubleshootingTab',
+    icon: 'icon-support',
+    title: 'tabs.troubleshootingTab',
+    state: 'partnertroubleshooting.diagnostics',
+    link: '/partner/troubleshooting',
+    feature: ['diagnostic-f8193-ux3'],
+    iconClass: 'icon-outline',
+  }, {
     tab: 'supportTab',
     icon: 'icon-diagnostics-active',
     title: 'tabs.supportTab',

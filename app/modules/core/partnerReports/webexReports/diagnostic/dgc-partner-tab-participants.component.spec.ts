@@ -11,7 +11,7 @@ describe('Component: DgcPartnerTabParticipants', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', 'FeatureToggleService', 'Notification', 'PartnerSearchService');
 
     initSpies.apply(this);
   });
@@ -19,6 +19,7 @@ describe('Component: DgcPartnerTabParticipants', () => {
   function initSpies() {
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.PartnerSearchService, 'getParticipants').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureToggleService, 'diagnosticF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent(this) {

@@ -3071,7 +3071,7 @@
           .state('partnerreports.dgc', {
             parent: 'partner',
             template: '<dgc-partner-tab></dgc-partner-tab>',
-            absract: true,
+            abstract: true,
           })
           .state('partnerreports.dgc.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
@@ -3088,6 +3088,15 @@
                 template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
               },
             },
+          })
+          .state('partnertroubleshooting', {
+            parent: 'partner',
+            template: '<partner-troubleshooting></partner-troubleshooting>',
+            abstract: true,
+          })
+          .state('partnertroubleshooting.diagnostics', {
+            url: '/troubleshooting',
+            template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
           })
           .state('partnercustomers', {
             parent: 'partner',

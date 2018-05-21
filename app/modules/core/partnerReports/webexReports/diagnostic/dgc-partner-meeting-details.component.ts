@@ -44,7 +44,7 @@ class MeetingDetailsController implements ng.IComponentController {
   public data: IDataStore;
   public dataSet: { lines: IParticipant[][], endTime: number, startTime: number, offset: string };
   public overview: { audioSession: string, videoSession: string };
-  public circleJoinTime: IJoinTime;
+  public circleJoinTime: IJoinTime[];
   public conferenceID: string;
   public tabType = TabType.AUDIO;
   public loading = true;
@@ -140,7 +140,18 @@ class MeetingDetailsController implements ng.IComponentController {
 
   private getJoinMeetingTime(): void {
     this.PartnerSearchService.getJoinMeetingTime(this.conferenceID)
-      .then((res: IJoinTime) => this.circleJoinTime = res);
+      .then((res: IJoinTime[]) => {
+        const clientVersion = {};
+        _.forEach(res, (joinTime) => {
+          const key = `${ joinTime.userId }_${ joinTime.userName }`;
+          clientVersion[key] = {
+            osVersion: joinTime.osVersion,
+            browserVersion: joinTime.browserVersion,
+          };
+        });
+        this.PartnerSearchService.setStorage('ClientVersion', clientVersion);
+        this.circleJoinTime = res;
+      });
   }
 
   private formatLines(lines: IParticipant[]): IParticipant[] {
@@ -175,6 +186,7 @@ class MeetingDetailsController implements ng.IComponentController {
       line.joinTime_ = this.PartnerSearchService.timestampToDate(line.joinTime, 'h:mm A');
       line.mobile = _.includes(mobiles, line.platform) ? platform_ : '';
       line.duration = line.duration ? line.duration : _.round((line.leaveTime - line.joinTime) / 1000);
+      line.clientKey = `${line.userId}_${line.userName}`;
       return line;
     });
   }
@@ -312,7 +324,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private parsePSTNQualities(detailItem: { callId: string, startTime: number, endTime: number, callType: string, tahoeQuality: IQuality[] }): IQualitySet {
-    const detail: IQualitySet  = { qualities: [] };
+    const detail: IQualitySet = { qualities: [] };
     detail['cid'] = detailItem.callId;
     detail['startTime'] = detailItem.startTime * 1;
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;

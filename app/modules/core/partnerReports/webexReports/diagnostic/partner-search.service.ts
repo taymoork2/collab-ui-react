@@ -1,4 +1,4 @@
-import { ICallLegs, ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, IParticipant, IObjectDict, IUniqueParticipant } from './partner-search.interfaces';
+import { ICallLegs, ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, IParticipant, IObjectDict, IUniqueParticipant, IVersion } from './partner-search.interfaces';
 
 export enum Platforms {
   WINDOWS = '0',
@@ -131,9 +131,9 @@ export class PartnerSearchService {
     return this.$http.post<ISessionDetail>(url, { nodeIds: nodeID }).then(this.extractData);
   }
 
-  public getJoinMeetingTime(conferenceID: string): ng.IPromise<IJoinTime> {
+  public getJoinMeetingTime(conferenceID: string): ng.IPromise<IJoinTime[]> {
     const url = `${this.url}v3/partner/meetings/${conferenceID}/participants/join-meeting-time`;
-    return this.$http.get<IJoinTime>(url).then(this.extractData);
+    return this.$http.get<IJoinTime[]>(url).then(this.extractData);
   }
 
   public getServerTime(): ng.IPromise<IServerTime> {
@@ -245,7 +245,7 @@ export class PartnerSearchService {
     return _.includes(mobiles, platform);
   }
 
-  public getDevice(obj: any) {// TODO share the code next time and use better type
+  public getDevice(obj: any): { icon: string, name: string} {// TODO share the code next time and use better type
     const browser = obj.browser;
     const platform = obj.platform;
     const sessionType = obj.sessionType;
@@ -345,5 +345,15 @@ export class PartnerSearchService {
       phone = `+${phone}`;
     }
     return phone;
+  }
+
+  public getClientVersion(key: string): IVersion {/// TODO share the code next time
+    const empty = {
+      osVersion: '',
+      browserVersion: '',
+    };
+    const clientVersions = this.getStorage('ClientVersion');
+    const clientVersion: IVersion = _.get(clientVersions, key);
+    return clientVersion ? clientVersion : empty;
   }
 }
