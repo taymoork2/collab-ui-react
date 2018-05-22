@@ -107,3 +107,9 @@ export class HcsCustomer implements IHcsCustomer {
     this.partnerOrgId = obj.partnerOrgId;
   }
 }
+
+export interface IHcsPartner {
+  orgid: string;
+  name: string;
+  services: string[];
+}

@@ -30,6 +30,8 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     private HcsControllerService: HcsControllerService,
     private Notification: Notification,
     private $state: ng.ui.IStateService,
+    private Auth,
+    private Authinfo,
   ) {
   }
 
@@ -80,6 +82,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
         }
         break;
       case 2:
+        this.createHcsPartner();
         this.title = 'hcs.installFiles.setupTitle';
         if (this.hcsSetupModalForm) {
           this.hcsSetupModalForm.$setPristine();
@@ -118,6 +121,24 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       default:
         this.dismissModal();
     }
+  }
+
+  public createHcsPartner(): void {
+    const services: string[] = [];
+    const entitlements: string[] = [];
+    if (this.hcsServices.license) {
+      services.push('LICENSING');
+      entitlements.push('ucmgmt-laas');
+    }
+    if (this.hcsServices.upgrade) {
+      services.push('UPGRADE');
+      entitlements.push('ucmgmt-uaas');
+    }
+    this.HcsControllerService.createHcsPartner(services)
+    //Update the entitlement
+    .then(() => this.HcsControllerService.updateUserEntitlement(this.Authinfo.getUserId(), entitlements))
+    //update Bearer token with new
+    .then(() => this.Auth.getAccessTokenWithNewScope());
   }
 
   public createSftp(): void {

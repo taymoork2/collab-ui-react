@@ -116,6 +116,8 @@ export class Config {
     fusion_khaos: 'squared-fusion-khaos',
     message: 'squared-room-moderation',
     imp: 'spark-hybrid-impinterop',
+    uaas: 'ucmgmt-uaas',
+    laas: 'ucmgmt-laas',
   };
 
   public readonly licenseModel = {
@@ -511,6 +513,7 @@ export class Config {
     customer: [
       'partneroverview',
       'partnerreports',
+      'partner-services-overview',
     ],
     partner: [
       'calendar-service',

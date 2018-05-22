@@ -20,7 +20,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, Utils, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -36,6 +36,8 @@
       getAuthorizationUrl: getAuthorizationUrl,
       getAuthorizationUrlList: getAuthorizationUrlList,
       revokeUserAuthTokens: revokeUserAuthTokens,
+      getAccessTokenWithNewScope: getAccessTokenWithNewScope,
+
     };
 
     var REFRESH_ACCESS_TOKEN_DEBOUNCE_MS = 1000;
@@ -197,9 +199,9 @@
 
     function redirectToLogin(email, sso) {
       if (email) {
-        WindowLocation.set(OAuthConfig.getOauthLoginUrl(email, getOauthState()));
+        WindowLocation.set(OAuthConfig.getOauthLoginUrl(email, OAuthConfig.getOauthState()));
       } else if (sso) {
-        WindowLocation.set(OAuthConfig.getOauthLoginUrl(null, getOauthState()));
+        WindowLocation.set(OAuthConfig.getOauthLoginUrl(null, OAuthConfig.getOauthState()));
       } else {
         var $state = $injector.get('$state');
         $state.go('login');
@@ -357,19 +359,8 @@
       return accessToken;
     }
 
-    function getOauthState() {
-      var state = SessionStorage.get('oauthState') || generateOauthState();
-      return state;
-    }
-
-    function generateOauthState() {
-      var state = Utils.getUUID();
-      SessionStorage.put('oauthState', state);
-      return state;
-    }
-
     function verifyOauthState(testState) {
-      return _.isEqual(testState, getOauthState());
+      return _.isEqual(testState, OAuthConfig.getOauthState());
     }
 
     function logErrorAndReject(message) {
@@ -382,6 +373,37 @@
     function getHuronDomain(res) {
       var authData = _.get(res, 'data');
       return HuronCompassService.fetchDomain(authData);
+    }
+
+    function getNewAccessCode() {
+      var url = OAuthConfig.getNewOauthAccessCodeUrl();
+      var $http = $injector.get('$http');
+      return $http({
+        method: 'GET',
+        url: url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        withCredentials: true,
+      });
+    }
+
+    function getAccessTokenWithNewScope() {
+      var clientSessionId = TokenService.getOrGenerateClientSessionId();
+      var token = OAuthConfig.getOAuthClientRegistrationCredentials();
+      var url = OAuthConfig.getAccessTokenUrl();
+      return getNewAccessCode()
+        .then(function (resp) {
+          var ref;
+          if (resp && _.isString(resp.data)) {
+            ref = resp.data.match(/<title>(.*)</);
+          }
+          var code = ref ? ref[1] : '';
+          var data = OAuthConfig.getNewAccessTokenPostData(code, clientSessionId);
+          return httpPOST(url, data, token)
+            .then(updateOauthTokens)
+            .catch(logErrorAndReject('Failed to obtain new oauth access token'));
+        }).catch(logErrorAndReject('Failed to obtain new oauth code'));
     }
   }
 })();

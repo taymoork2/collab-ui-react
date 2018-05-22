@@ -40,8 +40,8 @@
 
     <cs-card-layout block-view="true" ng-if="$ctrl.isAnyHybridServiceActive() && $ctrl.isPartnerAdmin()">
       <hcs-active-card ng-if="$ctrl.isActive('hcs')" class="cs-card cs-card--small active-card"></hcs-active-card>
-      <hcs-license-active-card ng-if="!$ctrl.isActive('license')" class="cs-card cs-card--small active-card"></hcs-license-active-card>
-      <hcs-upgrade-active-card ng-if="!$ctrl.isActive('upgrade')" class="cs-card cs-card--small active-card"></hcs-upgrade-active-card>
+      <hcs-license-active-card ng-if="$ctrl.isActive('hcs-licensing')" class="cs-card cs-card--small active-card"></hcs-license-active-card>
+      <hcs-upgrade-active-card ng-if="$ctrl.isActive('hcs-upgrade')" class="cs-card cs-card--small active-card"></hcs-upgrade-active-card>
     </cs-card-layout>
 
     <h5><span translate="servicesOverview.inactiveHybridServices" ng-if="!$ctrl.isPartnerAdmin() || $ctrl.hasInactiveHcsHybridCards()"></span></h5>

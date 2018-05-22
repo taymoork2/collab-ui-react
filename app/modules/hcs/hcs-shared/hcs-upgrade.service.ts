@@ -46,83 +46,38 @@ export class HcsUpgradeService {
     private Authinfo,
     private UrlConfig,
   ) {
-    const BASIC_AUTH_VAL = 'Basic aGNzdXNfdXNlcjo0NGJlNjJiMWNhNzVhMWJjMWI1YzAwNWE5OTJhNTU1NzZhZWEwMjFi'; //To-do Temporary usage from Upgrade Service
     const BASE_URL = this.UrlConfig.getHcsUpgradeServiceUrl();
 
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
-    const saveAction: ng.resource.IActionDescriptor = {
-      method: 'POST',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
     };
     const queryAction: ng.resource.IActionDescriptor = {
       method: 'GET',
       isArray: true,
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
-    const getAction: ng.resource.IActionDescriptor = {
-      method: 'GET',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
-    const deleteAction: ng.resource.IActionDescriptor = {
-      method: 'DELETE',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
     };
 
     this.sftpServerResource = <ISftpServerResource>this.$resource(BASE_URL + 'partners/:partnerId/sftpServers/:sftpServerId', {},
       {
         update: updateAction,
-        save: saveAction,
-        query: queryAction,
-        delete: deleteAction,
       });
     this.clusterResource = <IClusterResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId', {},
       {
         update: updateAction,
-        save: saveAction,
         query: queryAction,
       });
 
-    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {},
-      {
-        update: updateAction,
-        save: saveAction,
-        get: getAction,
-      });
+    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {}, {});
 
     this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {},
       {
         update: updateAction,
-        save: saveAction,
-        get: getAction,
         query: queryAction,
       });
 
-    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions?application=:type', {},
-      {
-        get: getAction,
-      });
+    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {}, {});
 
-    this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {
-      update: updateAction,
-    });
-
-    this.customerResource = this.$resource<ICustomerType>(BASE_URL + 'partners/:partnerId/customers', {},
-      {
-        save: saveAction,
-      });
+    this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {});
+    this.customerResource = this.$resource<ICustomerType>(BASE_URL + 'partners/:partnerId/customers', {}, {});
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {

@@ -1,5 +1,7 @@
-import { IHcsInstallables, IControllerNode, IHcsCustomer } from './hcs-controller';
+import { IHcsInstallables, IControllerNode, IHcsCustomer, IHcsPartner } from './hcs-controller';
+import { Config } from 'modules/core/config/config';
 import { IHcsNode } from './hcs-upgrade';
+
 type IHcsNodeListType = IControllerNode[] & ng.resource.IResourceArray<IControllerNode>;
 interface IInstallablesResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsInstallables>> {}
 interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListType> {}
@@ -10,67 +12,43 @@ interface IHcsCustomersResource extends ng.resource.IResourceClass<IHcsCustomerT
 interface IHcsAgentResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<any>>;
 }
+interface IHcsPartnerResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsPartner>> { }
 
 export class HcsControllerService {
   private installablesResource: IInstallablesResource;
   private nodeListResource: INodeListResource;
+
   private customersResource: IHcsCustomersResource;
   private agentResource: IHcsAgentResource;
+  private partnerResource: IHcsPartnerResource;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig,
+    private Config: Config,
+    private Userservice,
   ) {
-    const BASIC_AUTH_VAL = 'Basic aGNzdXNfdXNlcjo0NGJlNjJiMWNhNzVhMWJjMWI1YzAwNWE5OTJhNTU1NzZhZWEwMjFi'; //To-do Temporary usage from Upgrade Service
     const BASE_URL = this.UrlConfig.getHcsControllerServiceUrl();
+
 
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
     };
-    const saveAction: ng.resource.IActionDescriptor = {
-      method: 'POST',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
+
     const postAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       isArray: true,
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
     };
     const queryAction: ng.resource.IActionDescriptor = {
       method: 'GET',
       isArray: true,
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
-    const getAction: ng.resource.IActionDescriptor = {
-      method: 'GET',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
-    };
-    const deleteAction: ng.resource.IActionDescriptor = {
-      method: 'DELETE',
-      headers: {
-        Authorization: BASIC_AUTH_VAL,
-      },
     };
 
     this.installablesResource = <IInstallablesResource>this.$resource(BASE_URL + 'partners/:partnerId/installables/:id', {},
       {
-        save: saveAction,
         query: queryAction,
-        delete: deleteAction,
-        get: getAction,
       });
 
     this.nodeListResource = this.$resource<IHcsNodeListType>(BASE_URL + 'inventory/organizations/:partnerId/lists/nodes', {},
@@ -81,13 +59,18 @@ export class HcsControllerService {
     this.customersResource = this.$resource<IHcsCustomerType>(BASE_URL + 'partners/:partnerId/customers', {},
       {
         query: queryAction,
-        save: saveAction,
       });
 
     this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
       {
         update: updateAction,
       });
+
+    this.partnerResource = <IHcsPartnerResource>this.$resource(BASE_URL + 'partners/:partnerId', {},
+      {
+        query: queryAction,
+      });
+
   }
 
   public createAgentInstallFile(installable: IHcsInstallables): ng.IPromise<any> {
@@ -124,7 +107,7 @@ export class HcsControllerService {
       partnerId: this.Authinfo.getOrgId(),
     }, {
       nodeIds: nodeIds,
-    } ).$promise.then(response => {
+    }).$promise.then(response => {
       return response;
     });
   }
@@ -136,6 +119,7 @@ export class HcsControllerService {
       return response;
     });
   }
+
 
   public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
     return this.customersResource.save({
@@ -151,5 +135,21 @@ export class HcsControllerService {
       partnerId: this.Authinfo.getOrgId(),
       agentId: node.agentUuid,
     }, {}).$promise;
+  }
+  public createHcsPartner(_services: string[]): ng.IPromise<IHcsPartner> {
+    return this.partnerResource.save({
+    }, {
+      orgId: this.Authinfo.getOrgId(),
+      name: this.Authinfo.getOrgName(),
+      services: _services,
+    }).$promise;
+  }
+
+  public updateUserEntitlement(userId: string, entitlements: string[]) {
+    const userData = {
+      schemas: this.Config.scimSchemas,
+      entitlements: entitlements,
+    };
+    return this.Userservice.updateUserData(userId, userData);
   }
 }

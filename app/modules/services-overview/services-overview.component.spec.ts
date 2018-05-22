@@ -5,6 +5,7 @@ import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-
 import { EnterprisePrivateTrunkService } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { Config } from 'modules/core/config/config';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 describe('ServicesOverviewController', () => {
 
@@ -22,6 +23,7 @@ describe('ServicesOverviewController', () => {
   let enabledFeatureToggles: string[] = [];
   let ServiceDescriptorService;
   let HybridServicesClusterStatesService;
+  let UserOverviewService: UserOverviewService;
 
   // Spies
   let getRoles: jasmine.Spy;
@@ -61,9 +63,11 @@ describe('ServicesOverviewController', () => {
     spyOn(HybridServicesClusterService, 'processClustersToAggregateStatusForService').and.returnValue($q.resolve({}));
     getStatusForService = spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve({}));
     spyOn(HybridServicesClusterStatesService, 'getServiceStatusCSSClassFromLabel').and.returnValue('success');
+    spyOn(UserOverviewService, 'getUser').and.returnValue($q.resolve({}));
+
   });
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_, _UserOverviewService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
@@ -75,6 +79,7 @@ describe('ServicesOverviewController', () => {
     HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
+    UserOverviewService = _UserOverviewService_;
     $state = _$state_;
   }
 
@@ -315,6 +320,7 @@ describe('ServicesOverviewController', () => {
     beforeEach(function () {
       enabledFeatureToggles = [FeatureToggleService.features.gemServicesTab];
       enabledFeatureToggles = [FeatureToggleService.features.atlasHostedCloudService];
+
       isPartnerAdmin.and.returnValue(true);
       initControllerPartner();
     });
@@ -328,7 +334,7 @@ describe('ServicesOverviewController', () => {
     });
 
     it('should load hybrid HCS Services cards', () => {
-      expect(ctrl._servicesToDisplay).toEqual(['hcs', 'hcs-licensing', 'hcs-upgrade']);
+      expect(ctrl._servicesToDisplay).toEqual(['hcs']);
     });
   });
 });

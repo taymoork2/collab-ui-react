@@ -18,6 +18,7 @@ import { ProPackService }  from 'modules/core/proPack/proPack.service';
 import { TaskManagerService } from 'modules/hcs/task-manager';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+import { UserOverviewService } from 'modules/core/users/userOverview/userOverview.service';
 
 type AllService = ICCCService | IServiceStatusWithSetup;
 
@@ -60,6 +61,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private Notification: Notification,
     private ProPackService: ProPackService,
     private ServiceDescriptorService: ServiceDescriptorService,
+    private UserOverviewService: UserOverviewService,
   ) {}
 
   public $onInit() {
@@ -159,16 +161,6 @@ export class ServicesOverviewController implements ng.IComponentController {
                 serviceId: serviceId,
                 setup: false,
               }));
-            } else if (serviceId === 'hcs') {
-              return {
-                serviceId: serviceId,
-                setup: true,
-              };
-            } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
-              return {
-                serviceId: serviceId,
-                setup: true,
-              };
             }
           }));
           // Now get all from FMS
@@ -265,33 +257,24 @@ export class ServicesOverviewController implements ng.IComponentController {
       //Hybrid Cards
       if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
         this._servicesToDisplay.push('hcs');
-        this._servicesToDisplay.push('hcs-licensing');
-        this._servicesToDisplay.push('hcs-upgrade');
-      }
-      const promises = _.compact(_.map(this._servicesToDisplay, (serviceId) => {
-        if (serviceId === 'hcs') {
-          return {
-            serviceId: serviceId,
-            setup: true,
-          };
-        } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
-          return {
-            serviceId: serviceId,
-            setup: true,
-          };
-        }
-      }));
-      this.$q.all<any[]>(promises)
-      .then((servicesStatuses) => {
-        servicesStatuses = _.flatten(servicesStatuses);
-        this.servicesStatuses = servicesStatuses;
-        _.forEach(this._servicesToDisplay, (serviceId) => {
-          const serviceStatus: IServiceStatusWithSetup = _.find(this.servicesStatuses, (status: IServiceStatusWithSetup) =>  status.serviceId === serviceId);
-          if (serviceStatus.setup) {
-            this._servicesActive.push(serviceId);
+        this.UserOverviewService.getUser(this.Authinfo.getUserId())
+        .then((response) => {
+          const user = response.user;
+          const isUpgrade = _.includes(user.entitlements, 'ucmgmt-uaas');
+          const isLicensing = _.includes(user.entitlements, 'ucmgmt-laas');
+          if (isUpgrade) {
+            this._servicesActive.push('hcs');
+            this._servicesToDisplay.push('hcs-upgrade');
+            this._servicesActive.push('hcs-upgrade');
+          } else {
+            this._servicesInactive.push('hcs');
+          }
+          if (isLicensing) { //To-do
+            this._servicesToDisplay.push('hcs-licensing');
+            this._servicesActive.push('hcs-licensing');
           }
         });
-      });
+      }
     }).finally(() => {
       this.loadingHybridServicesCards = false;
     });

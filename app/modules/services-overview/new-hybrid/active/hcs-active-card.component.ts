@@ -8,6 +8,7 @@ class HcsActiveCardController implements ng.IComponentController {
     private HcsSetupModalService: HcsSetupModalService,
   ) {
   }
+
   public openSetUp(): void {
     this.HcsSetupModalService.openSetupModal(true, HcsSetupModalSelect.FirstTimeSetup);
   }
@@ -26,9 +27,6 @@ export class HcsActiveCardComponent implements ng.IComponentOptions {
         <div class="active-card_section">
           <div class="active-card_action"><a ui-sref="hcs.shared.installFiles" translate="hcs.agentInstallFiles"></a></div>
         </div>
-      </div>
-      <div class="inactive-card_footer" ng-if="!$ctrl.loading">
-        <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="hcs.addService"></button></p>
       </div>
     </article>
   `;

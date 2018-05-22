@@ -20,7 +20,7 @@ describe('OAuthConfig', function () {
   var prodHost = 'admin.webex.com';
   var cfeHost = 'cfe-admin.webex.com';
   var intHost = 'int-admin.webex.com';
-  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin spark-compliance:rooms_read spark-compliance:people_read spark-compliance:organizations_read compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read spark:kms spark:applications_write spark:applications_read spark:messages_read spark:memberships_read spark:memberships_write spark:rooms_read');
+  var scope = encodeURIComponent('webexsquare:admin webexsquare:billing ciscouc:admin Identity:SCIM Identity:Config Identity:Organization Identity:OAuthToken cloudMeetings:login webex-messenger:get_webextoken cloud-contact-center:admin spark-compliance:rooms_read spark-compliance:people_read spark-compliance:organizations_read compliance:spark_conversations_read contact-center-context:pod_read contact-center-context:pod_write spark-admin:people_read spark-admin:people_write spark-admin:customers_read spark-admin:customers_write spark-admin:organizations_read spark-admin:licenses_read spark-admin:logs_read spark:kms spark:applications_write spark:applications_read spark:messages_read spark:memberships_read spark:memberships_write spark:rooms_read ucmgmt-uaas:admin ucmgmt-laas:admin');
 
   var whenCalling = function (fn, arg1, arg2) {
     var hosts = {
@@ -90,6 +90,17 @@ describe('OAuthConfig', function () {
       cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens?username=',
       integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
       prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+    });
+  });
+
+  it('should return getNewOauthAccessCodeUrl', function () {
+    var state = OAuthConfig.getOauthState();
+    var redirectUri = '=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob';
+    whenCalling('getNewOauthAccessCodeUrl').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri' + redirectUri + '&state=' + state,
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C5469b72a6de8f8f0c5a23e50b073063ea872969fc74bb461d0ea0438feab9c03&scope=' + scope + '&redirect_uri' + redirectUri + '&state=' + state,
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri' + redirectUri + '&state=' + state,
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/authorize?response_type=code&client_id=C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec&scope=' + scope + '&redirect_uri' + redirectUri + '&state=' + state,
     });
   });
 

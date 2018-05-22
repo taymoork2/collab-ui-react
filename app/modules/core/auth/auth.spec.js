@@ -855,8 +855,31 @@ describe('Auth Service', function () {
       expect(promise).toBeResolved();
     });
   });
-  // helpers
 
+  describe('getAccessTokenWithNewScope()', function () {
+    beforeEach(function () {
+      OAuthConfig.getNewAccessTokenPostData = jasmine.createSpy('getNewAccessTokenPostData').and.returnValue('data');
+      TokenService.getOrGenerateClientSessionId = jasmine.createSpy('getOrGenerateClientSessionId').and.returnValue('id');
+    });
+
+    it('should get new access Token', function () {
+      OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('url');
+      OAuthConfig.getNewOauthAccessCodeUrl = jasmine.createSpy('getNewOauthAccessCodeUrl').and.returnValue('url');
+      OAuthConfig.getOAuthClientRegistrationCredentials = stubCredentials();
+      $httpBackend
+        .expectGET('url')
+        .respond(200, '<title>NewAuthCode</title>');
+      $httpBackend
+        .expectPOST('url', 'data', assertCredentials)
+        .respond(200, {
+          access_token: 'accessTokenFromAPI',
+        });
+      var promise = Auth.getAccessTokenWithNewScope();
+      expect(promise).toBeResolvedWith('accessTokenFromAPI');
+      expect(OAuthConfig.getNewAccessTokenPostData.calls.argsFor(0)[0]).toBe('NewAuthCode');
+    });
+  });
+  // helpers
   function stubCredentials() {
     return jasmine.createSpy('getOAuthClientRegistrationCredentials').and.returnValue('clientRegistrationCredentials');
   }

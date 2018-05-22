@@ -5,11 +5,12 @@
     .module('core.oauthconfig', [
       require('modules/core/config/config').default,
       require('modules/core/scripts/services/utils'),
+      require('modules/core/storage').default,
     ])
     .factory('OAuthConfig', OAuthConfig)
     .name;
 
-  function OAuthConfig($location, Config, Utils) {
+  function OAuthConfig($location, Config, Utils, SessionStorage) {
     var scopes = [
       'webexsquare:admin',
       'webexsquare:billing',
@@ -43,6 +44,9 @@
       'spark:memberships_read',
       'spark:memberships_write',
       'spark:rooms_read',
+      //for HCS services
+      'ucmgmt-uaas:admin',
+      'ucmgmt-laas:admin',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));
@@ -67,6 +71,7 @@
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
         userInfo: 'user_info=%s',
+        oauth2NewCodeUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s',
       },
       logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=',
     };
@@ -84,6 +89,8 @@
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
       getOAuthRevokeUserTokenUrl: getOAuthRevokeUserTokenUrl,
+      getNewOauthAccessCodeUrl: getNewOauthAccessCodeUrl,
+      getOauthState: getOauthState,
     };
 
     // public
@@ -126,6 +133,19 @@
         pattern = pattern + '&email=%s';
       }
 
+      return Utils.sprintf(pattern, params);
+    }
+
+    function getNewOauthAccessCodeUrl() {
+      var pattern = config.oauthUrl.oauth2NewCodeUrlPattern;
+      var redirectUrl = 'urn:ietf:wg:oauth:2.0:oob';
+      var params = [
+        getOauth2Url(),
+        getClientId(),
+        oauth2Scope,
+        encodeURIComponent(redirectUrl),
+        getOauthState(),
+      ];
       return Utils.sprintf(pattern, params);
     }
 
@@ -205,6 +225,17 @@
 
     function getOauthServiceType() {
       return 'common';
+    }
+
+    function getOauthState() {
+      var state = SessionStorage.get('oauthState') || generateOauthState();
+      return state;
+    }
+
+    function generateOauthState() {
+      var state = Utils.getUUID();
+      SessionStorage.put('oauthState', state);
+      return state;
     }
   }
 }());
