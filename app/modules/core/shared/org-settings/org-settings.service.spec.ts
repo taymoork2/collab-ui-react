@@ -1,5 +1,5 @@
 import moduleName from './index';
-import { OrgSettingsService, FileShareControl, FileShareControlType } from './org-settings.service';
+import { OrgSettingsService, FileShareControl, FileShareControlType, WhiteboardFileShareControlType } from './org-settings.service';
 
 type Test = atlas.test.IServiceTest<{
   $rootScope: ng.IRootScopeService,
@@ -161,6 +161,35 @@ describe('Component: orgSettings:', () => {
       };
       this.$httpBackend.expectPUT(this.url, expectedSetting).respond(200);
       const promise = this.OrgSettingsService.setBlockExternalCommunications(this.orgId, true);
+      expect(promise).toBeResolved();
+    });
+  });
+
+  describe('Whiteboard File Share Control', () => {
+    beforeEach(function (this: Test) {
+      this.url = `${this.url}/whiteboardFileShareControl`;
+    });
+
+    it('should resolve BLOCK if whiteboardFileShareControl is not set', function (this: Test) {
+      this.$httpBackend.expectGET(this.url).respond({});
+      const promise = this.OrgSettingsService.getWhiteboardFileShareControl(this.orgId);
+      expect(promise).toBeResolvedWith('BLOCK');
+    });
+
+    it('should resolve existing whiteboardFileShareControl value', function (this: Test) {
+      this.$httpBackend.expectGET(this.url).respond({
+        whiteboardFileShareControl: WhiteboardFileShareControlType.ALLOW,
+      });
+      const promise = this.OrgSettingsService.getWhiteboardFileShareControl(this.orgId);
+      expect(promise).toBeResolvedWith('ALLOW');
+    });
+
+    it('should update whiteboardFileShareControl value', function (this: Test) {
+      const expectedSetting = {
+        whiteboardFileShareControl: 'ALLOW',
+      };
+      this.$httpBackend.expectPUT(this.url, expectedSetting).respond(200);
+      const promise = this.OrgSettingsService.setWhiteboardFileShareControl(this.orgId, WhiteboardFileShareControlType.ALLOW);
       expect(promise).toBeResolved();
     });
   });

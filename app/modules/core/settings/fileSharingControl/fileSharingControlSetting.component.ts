@@ -3,11 +3,13 @@ import { FileSharingControlModel } from './fileSharingControl.model';
 import { IToolkitModalService } from 'modules/core/modal';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { Notification } from 'modules/core/notifications';
-import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { OrgSettingsService, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.service';
 
 export class FileSharingControlSettingController {
+  public allowWhiteboards = false;
   public isProPackPurchased = false;
   public isLoaded = false;
+  public supportsWhiteboardFileShareControl = false;
 
   private hasWarningDisplayed = false;
   private model = new FileSharingControlModel();
@@ -17,6 +19,7 @@ export class FileSharingControlSettingController {
     private $q: ng.IQService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
+    private FeatureToggleService,
     private ModalService: IToolkitModalService,
     private Notification: Notification,
     private OrgSettingsService: OrgSettingsService,
@@ -30,16 +33,35 @@ export class FileSharingControlSettingController {
 
   public loadSetting() {
     const promises = {
-      fileSharingControl: this.OrgSettingsService.getFileShareControl(this.Authinfo.getOrgId()),
-      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled(),
+      supportsWhiteboardFileShareControl: this.FeatureToggleService.atlasWhiteboardFileShareControlGetStatus()
+        .then(supportsWhiteboardFileShareControl => this.supportsWhiteboardFileShareControl = supportsWhiteboardFileShareControl),
+      fileSharingControl: this.OrgSettingsService.getFileShareControl(this.Authinfo.getOrgId())
+        .then(fileShareControl => this.model = new FileSharingControlModel(fileShareControl)),
+      proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled()
+        .then(isPurchased => this.isProPackPurchased = isPurchased),
+      whiteboardFileShareControl: this.OrgSettingsService.getWhiteboardFileShareControl(this.Authinfo.getOrgId())
+        .then(whiteboardFileShareControl => this.allowWhiteboards = this.isAllowWhiteboards(whiteboardFileShareControl)),
     };
 
     this.$q.all(promises)
-      .then((response) => {
-        this.model = new FileSharingControlModel(response.fileSharingControl),
-        this.isProPackPurchased = response.proPackPurchased;
-        this.isLoaded = true;
-      }).catch(_.noop);
+      .then(() => this.isLoaded = true)
+      .catch(_.noop);
+  }
+
+  public updateAllowWhiteboards(): void {
+    this.OrgSettingsService.setWhiteboardFileShareControl(
+      this.Authinfo.getOrgId(),
+      this.allowWhiteboards ? WhiteboardFileShareControlType.ALLOW : WhiteboardFileShareControlType.BLOCK,
+    ).then(() => {
+      this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
+    })
+    .catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+    });
+  }
+
+  private isAllowWhiteboards(whiteboardFileShareControl: WhiteboardFileShareControlType): boolean {
+    return whiteboardFileShareControl === WhiteboardFileShareControlType.ALLOW;
   }
 
   public get isCheckboxDisabled(): boolean {
@@ -162,7 +184,7 @@ export class FileSharingControlSettingController {
   }
 
   private getConfirmation(value: boolean): ng.IPromise<void> {
-    if (this.hasWarningDisplayed || !value) {
+    if (this.hasWarningDisplayed || !value || this.allowWhiteboards) {
       return this.$q.resolve();
     }
     this.hasWarningDisplayed = true;
@@ -181,6 +203,8 @@ export class FileSharingControlSetting extends ProPackSettingSection {
   public constructor(proPackPurchased: boolean) {
     super('fileSharingControl', proPackPurchased);
     this.description = 'globalSettings.fileSharingControl.description';
+    this.subsectionLabel = '';
+    this.subsectionDescription = '';
   }
 }
 

@@ -26,6 +26,11 @@ export enum FileShareControlType {
   NONE = 'NONE',
 }
 
+export enum WhiteboardFileShareControlType {
+  ALLOW = 'ALLOW',
+  BLOCK = 'BLOCK',
+}
+
 enum OrgSetting {
   BLOCK_EXTERNAL_COMMUNICATIONS = 'blockExternalCommunications',
   CLIENT_SECURITY_POLICY = 'clientSecurityPolicy',
@@ -61,7 +66,7 @@ export class OrgSettingsService {
   }
 
   public getClientSecurityPolicy(orgId: string): ng.IPromise<boolean> {
-    return this.getSpecificSetting(orgId, OrgSetting.CLIENT_SECURITY_POLICY).then(response => {
+    return this.getSpecificSetting<boolean>(orgId, OrgSetting.CLIENT_SECURITY_POLICY).then(response => {
       if (_.isUndefined(response)) {
         return false;
       }
@@ -77,7 +82,7 @@ export class OrgSettingsService {
   }
 
   public getBlockExternalCommunications(orgId: string): ng.IPromise<boolean> {
-    return this.getSpecificSetting(orgId, OrgSetting.BLOCK_EXTERNAL_COMMUNICATIONS).then(response => {
+    return this.getSpecificSetting<boolean>(orgId, OrgSetting.BLOCK_EXTERNAL_COMMUNICATIONS).then(response => {
       if (_.isUndefined(response)) {
         return false;
       }
@@ -92,6 +97,22 @@ export class OrgSettingsService {
     return this.setSpecificSetting(orgId, OrgSetting.BLOCK_EXTERNAL_COMMUNICATIONS, payload);
   }
 
+  public getWhiteboardFileShareControl(orgId: string): ng.IPromise<WhiteboardFileShareControlType> {
+    return this.getSpecificSetting<WhiteboardFileShareControlType>(orgId, OrgSetting.WHITEBOARD_FILE_SHARE_CONTROL).then(response => {
+      if (_.isUndefined(response)) {
+        return WhiteboardFileShareControlType.BLOCK;
+      }
+      return response;
+    });
+  }
+
+  public setWhiteboardFileShareControl(orgId: string, whiteboardFileShareControl: WhiteboardFileShareControlType): ng.IHttpPromise<void> {
+    const payload = {
+      [OrgSetting.WHITEBOARD_FILE_SHARE_CONTROL]: whiteboardFileShareControl,
+    };
+    return this.setSpecificSetting(orgId, OrgSetting.WHITEBOARD_FILE_SHARE_CONTROL, payload);
+  }
+
   public getFileShareControl(orgId: string): ng.IPromise<FileShareControl> {
     return this.getSettings(orgId).then(response => new FileShareControl(response));
   }
@@ -100,7 +121,7 @@ export class OrgSettingsService {
     return this.updateLatestSettings(orgId, fileShareControl);
   }
 
-  private getSpecificSetting(orgId: string, orgSetting: OrgSetting): ng.IPromise<any> {
+  private getSpecificSetting<T>(orgId: string, orgSetting: OrgSetting): ng.IPromise<T> {
     const url = `${this.getSettingsUrl(orgId)}/${orgSetting}`;
     return this.$http.get(url).then(response => {
       return response.data[orgSetting];

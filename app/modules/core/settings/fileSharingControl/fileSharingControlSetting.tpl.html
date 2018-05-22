@@ -1,6 +1,42 @@
 <div class="setting">
+  <div class="sub-section" ng-if="$ctrl.supportsWhiteboardFileShareControl">
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.restrictionsSubsectionLabel' | translate }}&nbsp;
+      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
+        tooltip="{{::'common.proPackTooltip' | translate}}"
+        tooltip-append-to-body="true"
+        tooltip-placement="right"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}"
+      >
+      </cr-pro-pack-icon>
+    </h5>
+    <input
+      cs-input
+      type="checkbox"
+      id="allowWhiteboards"
+      ng-model="$ctrl.allowWhiteboards"
+      ng-change="$ctrl.updateAllowWhiteboards()"
+      cs-input-label="{{::'globalSettings.fileSharingControl.whiteboardRestriction' | translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"
+    >
+  </div>
   <div class="sub-section">
-    <p class="sub-section__description" translate="globalSettings.fileSharingControl.downloadSubsectionLabelDescription"></p>
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.subsectionLabel' | translate }}&nbsp;
+      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
+        tooltip="{{::'common.proPackTooltip' | translate}}"
+        tooltip-append-to-body="true"
+        tooltip-placement="right"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}">
+      </cr-pro-pack-icon>
+    </h5>
+    <p class="sub-section__description">
+      {{::'globalSettings.fileSharingControl.subsectionDescription' | translate}}
+      <br>
+      {{::'globalSettings.fileSharingControl.downloadSubsectionLabelDescription' | translate}}
+    </p>
     <input
       cs-input
       type="checkbox"
