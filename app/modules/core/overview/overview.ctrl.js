@@ -146,11 +146,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       }
     }
 
-    // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
-    function resizeNotifications() {
-      CardUtils.resize(0, '.fourth.cs-card-layout');
-    }
-
     // pushNotification -
     // zOrder sorts within a particular badge type (e.g. within new notifications).
     // the higher the zOrder, the higher the notification is placed in the list.  A zero value is default.
@@ -159,7 +154,9 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       // Set the notification's zOrder if one is specified or does not exist
       notification.zOrder = zOrder || notification.zOrder || 0;
       vm.notifications.push(notification);
-      resizeNotifications();
+
+      // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
+      CardUtils.resize(0, '.fourth.cs-card-layout');
     }
 
     function init() {
