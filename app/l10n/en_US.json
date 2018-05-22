@@ -4243,6 +4243,7 @@
     "thenDecision": "Then",
     "selectConditionPlaceholder": "Select Condition",
     "selectActionPlaceholder": "Select Action",
+    "selectVariablePlaceholder": "Select Variable",
     "decisionCallerReturned": "The Caller Has Returned",
     "decisionNumberDialed": "The Number That Was Dialed",
     "decisionCallerNumber": "The Caller's Number",
