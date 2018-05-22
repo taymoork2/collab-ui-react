@@ -154,7 +154,7 @@ export class PartnerSearchService {
     return this.data[key];
   }
 
-  public getStorage(key: string) {// TODO share the code next time
+  public getStorage(key: string): any {// TODO share the code next time
     return _.get(this.data, key);
   }
 
@@ -245,13 +245,13 @@ export class PartnerSearchService {
     return _.includes(mobiles, platform);
   }
 
-  public getDevice(obj: any) {// TODO share the code next time
+  public getDevice(obj: any) {// TODO share the code next time and use better type
     const browser = obj.browser;
     const platform = obj.platform;
     const sessionType = obj.sessionType;
     const browser_ = this.getBrowser(browser);
     const platform_ = this.getPlatform(obj);
-    if (this.isMobilePlatform(obj.platform)) {
+    if (this.isMobilePlatform(platform)) {
       return {
         icon: 'icon-mobile-phone',
         name: this.$translate.instant('webexReports.mobilePlatform', { platform: platform_ }),
@@ -299,13 +299,23 @@ export class PartnerSearchService {
     if (!duration) {
       return '';
     }
-    const hours = moment.duration(duration * 1000).hours();
-    const minutes = moment.duration(duration * 1000).minutes();
-    const seconds = moment.duration(duration * 1000).seconds();
-    const minutes_ = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const seconds_ = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    const momentDuration = moment.duration(duration * 1000);
+    const days = momentDuration.days();
+    let hours = momentDuration.hours();
+    if (days > 0) {
+      hours += days * 24;
+    }
+    const minutes = this.prefixZero(momentDuration.minutes());
+    const seconds = this.prefixZero(momentDuration.seconds());
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+  }
 
-    return hours ? `${hours}:${minutes_}:${seconds_}` : `${minutes_}:${seconds_}`;
+  private prefixZero(data: number): string {
+    if (data > 9) {
+      return `${data}`;
+    } else {
+      return `0${data}`;
+    }
   }
 
   private extractData<T>(response: ng.IHttpResponse<T>): T {

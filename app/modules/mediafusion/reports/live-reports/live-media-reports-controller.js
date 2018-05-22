@@ -102,6 +102,7 @@
     vm.clusterUpdateFromTooltip = clusterUpdateFromTooltip;
     vm.timeUpdate = timeUpdate;
     vm.streamsBandwidthUpdate = streamsBandwidthUpdate;
+    vm.cascadeBandwidthUpdate = cascadeBandwidthUpdate;
     vm.setRefreshTabs = setRefreshTabs;
 
     vm.setClusterAvailability = setClusterAvailability;
@@ -148,6 +149,18 @@
       label: $translate.instant('mediaFusion.metrics.streamsTx'),
     }];
     vm.streamsBandwidthSelected = vm.streamsBandwidthOptions[0];
+
+    vm.cascadeBandwidthOptions = [{
+      value: 'all',
+      label: $translate.instant('mediaFusion.metrics.streamsAll'),
+    }, {
+      value: 'receive',
+      label: $translate.instant('mediaFusion.metrics.streamsRx'),
+    }, {
+      value: 'transmit',
+      label: $translate.instant('mediaFusion.metrics.streamsTx'),
+    }];
+    vm.cascadeBandwidthSelected = vm.cascadeBandwidthOptions[0];
 
     vm.isFlipped = false;
     vm.cloudParticipantsDesc = $translate.instant('mediaFusion.metrics.cardDescription.cloudParticipants');
@@ -234,6 +247,11 @@
     function streamsBandwidthUpdate() {
       timeUpdate();
     }
+
+    function cascadeBandwidthUpdate() {
+      timeUpdate();
+    }
+
 
     function refreshReportCards() {
       CardUtils.resize();
@@ -535,7 +553,7 @@
     }
 
     function setCascadeBandwidthData() {
-      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected, vm.cascadeBandwidthSelected.value).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyCascadeBandwidth();
         } else {
@@ -555,7 +573,7 @@
     }
 
     function setClusterCascadeBandwidthData() {
-      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected).then(function (response) {
+      MediaReportsService.getCascadeBandwidthData(vm.timeSelected, vm.clusterSelected, vm.cascadeBandwidthSelected.value).then(function (response) {
         if (_.isUndefined(response.graphData) || _.isUndefined(response.graphs) || response.graphData.length === 0 || response.graphs.length === 0) {
           setDummyClusterCascadeBandwidth();
         } else {

@@ -1,18 +1,20 @@
 import { IUser, UserPreferencesService, IMeService } from 'modules/core/auth/user/index';
-import { IToolkitModalService, IToolkitModalServiceInstance } from 'modules/core/modal';
+import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 import { Config } from 'modules/core/config/config';
 
 //////////////////////////
 
 export class TOSService {
 
-  private tosModal: IToolkitModalServiceInstance;
   private user: IUser;
   private hasAcceptedToS: boolean = false;
 
   /* @ngInject */
   constructor(
-    private $modal: IToolkitModalService,
+    private ModalService: IToolkitModalService,
+    private $modal,
+    private $translate: ng.translate.ITranslateService,
+    private Auth,
     private Authinfo,
     private MeService: IMeService,
     private UserPreferencesService: UserPreferencesService,
@@ -40,29 +42,31 @@ export class TOSService {
   }
 
   public openTOSModal(): void {
-    if (_.isUndefined(this.tosModal)) {
-      this.tosModal = this.$modal.open({
-        template: '<terms-of-service></terms-of-service>',
-        backdrop: 'static',
-        keyboard: false,
-        type: 'default',
+    const options = <IToolkitModalSettings>{
+      type: 'dialog',
+      title: this.$translate.instant('termsOfService.title'),
+      message: this.$translate.instant('termsOfService.message'),
+      dismiss: this.$translate.instant('common.decline'),
+      close: this.$translate.instant('common.accept'),
+    };
+    this.ModalService.open(options).result
+      .then(() => {
+        this.acceptTOS();
+      }, () => {
+        this.$modal.open({
+          template: '<h1 translate="termsOfService.loggingOut"></h1>',
+          backdrop: 'static',
+          keyboard: false,
+          type: 'dialog',
+        });
+        this.Auth.logout();
       });
-    }
-  }
-
-  public dismissModal(): void {
-    if (!_.isUndefined(this.tosModal)) {
-      this.tosModal.dismiss();
-    }
   }
 
   public acceptTOS(): ng.IPromise<IUser> {
     return this.UserPreferencesService.setUserPreferences(this.user, UserPreferencesService.USER_PREF_TOS, true)
       .then((newUser) => {
         this.user = newUser;
-        if (this.tosModal) {
-          this.tosModal.dismiss();
-        }
         return newUser;
       });
   }

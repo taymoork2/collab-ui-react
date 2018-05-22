@@ -42,7 +42,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
   public $onInit() {
     if (this.spark) {
       this.headerSelected = this.headerOptions[0];
-      this.callType = 'Cisco Spark';
+      this.callType = 'Cisco Webex';
       this.callTypeUrl = 'SPARK';
     } else {
       this.headerSelected = this.headerOptions[1];
@@ -60,7 +60,7 @@ export class FirstTimeCallingController implements ng.IComponentController {
         callType: this.callType,
       });
     } else if (this.cluster.extendedProperties.upgradeState === 'upgrading') {
-      this.clusterStateValue = 'upgarding';
+      this.clusterStateValue = 'upgrading';
       this.clusterStateMsg = this.$translate.instant('mediaFusion.easyConfig.upgrademsg');
     } else {
       this.clusterState = this.cluster.extendedProperties.servicesStatuses[0].state.name;

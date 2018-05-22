@@ -22,7 +22,7 @@
     vm.streamsTypeMap = {
       audioMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.audio'),
       videoMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.video'),
-      presMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.presentation'),
+      presMegabytes: $translate.instant('mediaFusion.metrics.streamsBandwidthType.share'),
     };
 
     vm.zoomedEndTime = null;

@@ -11,37 +11,38 @@
     <i class="icon icon-spinner icon-3x"></i>
   </div>
 
-  <div class="overview">
-    <div class="content-container" ng-if="!$ctrl.loading">
+  <div class="content-container" ng-if="!$ctrl.loading">
+    <div class="overview">
       <div class="meeting-room-name">
-        <h3>{{$ctrl.details.meetingName}}</h3>
-        <h6 class="detailInfo">{{::'webexReports.meetingNumber' | translate}}: <span>{{$ctrl.details.meetingNumber}}</span></h6>
-        <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceID' | translate}}: <span>{{$ctrl.details.conferenceId}}</span></h6>
+        <h3>{{::$ctrl.details.meetingName}}</h3>
+        <h6 class="detailInfo">{{::'webexReports.meetingNumberTitle' | translate}} <span>{{::$ctrl.details.meetingNumber}}</span></h6>
+        <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceIDTitle' | translate}} <span>{{::$ctrl.details.conferenceId}}</span></h6>
         <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
       </div>
-  
+
       <div class="room-information">
         <h6>
           <span translate="webexReports.searchGridHeader.startTime"></span>
-          <span class="value">{{$ctrl.details.startDate}}</span>
+          <span class="value">{{::$ctrl.details.startDate}}</span>
         </h6>
         <h6>
           <span translate="webexReports.start"></span>
-          <span class="value">{{$ctrl.details.startTime_}}</span>
+          <span class="value">{{::$ctrl.details.startTime_}}</span>
         </h6>
         <h6>
           <span ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING" translate="webexReports.end"></span>
-          <span class="value" ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.END">{{$ctrl.details.endTime_}}</span>
+          <span class="value" ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.END">{{::$ctrl.details.endTime_}}</span>
         </h6>
         <h6>
           <span translate="webexReports.duration"></span>
-          <span class="value">{{$ctrl.details.duration_}}</span>
+          <span class="value">{{::$ctrl.details.duration_}}</span>
         </h6>
         <h6>
           <span translate="webexReports.participants"></span>
-          <span class="value">{{$ctrl.details.numberOfParticipants}}</span>
+          <span class="value">{{::$ctrl.details.numberOfParticipants}}</span>
         </h6>
       </div>
       <div ui-view="tabContent" class="tabContent"></div>
+    </div>
   </div>
 </div>

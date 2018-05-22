@@ -326,6 +326,12 @@ export default class OnboardService {
               });
               break;
             }
+            case this.Config.messageErrors.mustConvertBeforeAdding: {
+              userResult.message = this.$translate.instant('usersPage.mustConvertUserBeforeAdding', {
+                email: userResult.email,
+              });
+              break;
+            }
             default: {
               userResult.message = this.$translate.instant('usersPage.accessDeniedError', {
                 email: userResult.email,

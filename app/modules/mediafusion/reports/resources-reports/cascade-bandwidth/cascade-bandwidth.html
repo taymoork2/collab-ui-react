@@ -8,6 +8,13 @@
         tooltip-trigger="mouseenter focus"
         aria-label="{{::'mediaFusion.metrics.cascadeBandwidthOrgDesc' | translate}}">
         </i>
+        <cs-select 
+        class='mf-streams-filter' 
+        ng-model="$ctrl.parentcntrl.cascadeBandwidthSelected" 
+        options="$ctrl.parentcntrl.cascadeBandwidthOptions" 
+        on-change-fn="$ctrl.parentcntrl.cascadeBandwidthUpdate()"
+        ng-if="!$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.cascadebandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.cascadebandwidthStatus)">
+        </cs-select>
         <div id="cascadeBandwidthExportDiv"></div>
       </graphheader>
       <section>
