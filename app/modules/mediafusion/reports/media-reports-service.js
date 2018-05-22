@@ -24,7 +24,9 @@
       IPHONE: $translate.instant('mediaFusion.metrics.clientType.iphone'),
       JABBER: $translate.instant('mediaFusion.metrics.clientType.jabber'),
       SIP: $translate.instant('mediaFusion.metrics.clientType.sip'),
-      SPARK_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_VOICE: $translate.instant('mediaFusion.metrics.clientType.webexvoice'),
+      WEBEX_SHARE: $translate.instant('mediaFusion.metrics.clientType.webexshare'),
       TEST: $translate.instant('mediaFusion.metrics.clientType.test'),
       TP_ENDPOINT: $translate.instant('mediaFusion.metrics.clientType.tp'),
       UC: $translate.instant('mediaFusion.metrics.clientType.uc'),
@@ -209,8 +211,12 @@
       });
     }
 
-    function getCascadeBandwidthData(time, cluster) {
-      vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster';
+    function getCascadeBandwidthData(time, cluster, cascadeBandwidthSelected) {
+      if (cluster === vm.allClusters) {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/media/' + cascadeBandwidthSelected;
+      } else {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/';
+      }
       var returnData = {
         graphData: [],
         graphs: [],

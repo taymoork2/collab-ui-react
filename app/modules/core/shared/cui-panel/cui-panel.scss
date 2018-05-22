@@ -1,0 +1,1172 @@
+/***********************************************
+* THIS IS A TEMPORARY FILE
+* DO NOT ADD ANY CSS TO THIS FILE
+* THIS FILE WILL BE REMOVED WHEN ATLAS IS
+* UPDATED TO THE LATEST VERSION OF COLLAB-UI
+************************************************/
+@import '~@collabui/collab-ui/scss/settings/core';
+
+.cui {
+  .cui-panel__spinner {
+    border-radius: 50%;
+    position: relative;
+    margin: 2px;
+    display: inline-block;
+    border: 1px solid #c2c2c2;
+    width: 2.25em;
+    height: 2.25em;
+    margin-top: 2.5rem !important;
+    &:after {
+      border-top: 1px solid transparent;
+      border-right: 1px solid transparent;
+      border-bottom: 1px solid transparent;
+      border-left: 1px solid #000000;
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      text-indent: -9999em;
+      animation: load8 1s infinite linear;
+      top: -1px;
+      left: -1px;
+      width: calc(2.25em);
+      height: calc(2.25em);
+    }
+  }
+  .cui-input {
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    height: 2.25rem;
+    padding-top: 0.5625rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.4375rem;
+    padding-left: 0.75rem;
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color ease-out 0.15s;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.12);
+      border-color: transparent;
+    }
+    &.hover {
+      background-color: rgba(0, 0, 0, 0.12);
+      border-color: transparent;
+    }
+    &:focus {
+      background-color: rgba(0, 0, 0, 0.08);
+      border-color: #000000;
+    }
+    &.focus {
+      background-color: rgba(0, 0, 0, 0.08);
+      border-color: #000000;
+      z-index: 800;
+      outline: none;
+      box-shadow: none;
+      transition: border-color ease-in 0.15s;
+    }
+    &:disabled {
+      color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      cursor: default;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.disabled {
+      color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      cursor: default;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.readonly {
+      color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.04);
+      cursor: default;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    .cui-input-group.disabled {
+      .cui-input__label {
+        color: rgba(0, 0, 0, 0.2);
+      }
+      .cui-input__secondary-label-container > .cui-input__secondary-label {
+        color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+  .cui-input::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .cui-input[readonly] {
+    color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: default;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+  .cui-input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    &.column {
+      padding: 0;
+    }
+    &.columns {
+      padding: 0;
+    }
+    &.disabled {
+      .cui-input__label {
+        cursor: default;
+      }
+      .cui-input__secondary-label-container > .cui-input__secondary-label {
+        cursor: default;
+      }
+    }
+    &.error {
+      input {
+        background-color: #ffe2df;
+        border: 1px solid #ff503c;
+        &:focus {
+          border-color: #ff503c;
+        }
+        &:hover {
+          background-color: #ffe2df;
+        }
+      }
+      textarea {
+        background-color: #ffe2df;
+        border: 1px solid #ff503c;
+        &:focus {
+          border-color: #ff503c;
+        }
+        &:hover {
+          background-color: #ffe2df;
+        }
+      }
+      select {
+        background-color: #ffe2df;
+        border: 1px solid #ff503c;
+        &:focus {
+          border-color: #ff503c;
+        }
+        &:hover {
+          background-color: #ffe2df;
+        }
+      }
+      .cui-input__messages {
+        color: #d64332;
+        display: inline-flex;
+        &:before {
+          color: #d64332;
+          content: '\f290';
+        }
+      }
+    }
+    &.warning {
+      input {
+        background-color: #fff2d6;
+        border: 1px solid #ffb400;
+        &:focus {
+          border-color: #ffb400;
+        }
+        &:hover {
+          background-color: #fff2d6;
+        }
+      }
+      textarea {
+        background-color: #fff2d6;
+        border: 1px solid #ffb400;
+        &:focus {
+          border-color: #ffb400;
+        }
+        &:hover {
+          background-color: #fff2d6;
+        }
+      }
+      select {
+        background-color: #fff2d6;
+        border: 1px solid #ffb400;
+        &:focus {
+          border-color: #ffb400;
+        }
+        &:hover {
+          background-color: #fff2d6;
+        }
+      }
+      .cui-input__messages {
+        color: #d69700;
+        display: inline-flex;
+        &:before {
+          color: #d69700;
+          content: '\f720';
+        }
+      }
+    }
+    &.success {
+      input {
+        background-color: #ddf8e3;
+        border: 1px solid #30d557;
+        &:focus {
+          border-color: #30d557;
+        }
+        &:hover {
+          background-color: #ddf8e3;
+        }
+      }
+      textarea {
+        background-color: #ddf8e3;
+        border: 1px solid #30d557;
+        &:focus {
+          border-color: #30d557;
+        }
+        &:hover {
+          background-color: #ddf8e3;
+        }
+      }
+      select {
+        background-color: #ddf8e3;
+        border: 1px solid #30d557;
+        &:focus {
+          border-color: #30d557;
+        }
+        &:hover {
+          background-color: #ddf8e3;
+        }
+      }
+      .cui-input__messages {
+        color: #26b249;
+        display: inline-flex;
+        &:before {
+          color: #26b249;
+          content: '\f28a';
+        }
+      }
+    }
+    &.info {
+      input {
+        background-color: rgba(0, 0, 0, 0.12);
+        border: 0 solid transparent;
+        &:focus {
+          border-color: #000000;
+        }
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.12);
+        }
+      }
+      textarea {
+        background-color: rgba(0, 0, 0, 0.12);
+        border: 0 solid transparent;
+        &:focus {
+          border-color: #000000;
+        }
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.12);
+        }
+      }
+      select {
+        background-color: rgba(0, 0, 0, 0.12);
+        border: 0 solid transparent;
+        &:focus {
+          border-color: #000000;
+        }
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.12);
+        }
+      }
+      .cui-input__messages {
+        color: #05a1bf;
+        display: inline-flex;
+        &:before {
+          color: #05a1bf;
+          content: '\f407';
+        }
+      }
+    }
+  }
+  .cui-input__help-text {
+    margin-left: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    color: #333333;
+    margin-bottom: 0.25rem;
+    span {
+      font-size: inherit;
+    }
+  }
+  .cui-input__messages {
+    display: none;
+    margin-left: 1rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    padding-top: 0.25rem;
+    &:before {
+      float: left;
+      font-family: $icon-font-name;
+      font-size: 1rem;
+    }
+    .message {
+      line-height: 1rem;
+      margin-left: 0.5rem;
+    }
+  }
+  .cui-input--nested-1 {
+    margin-left: 2rem;
+  }
+  .cui-input--nested-2 {
+    margin-left: 4rem;
+  }
+  .cui-input--nested-3 {
+    margin-left: 6rem;
+  }
+  [class|='cui-button__container'] {
+    display: inline-flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-flow: column nowrap;
+    width: 116px;
+  }
+  [class|='cui-button__container'][class$='--small'] {
+    width: 104px;
+  }
+  .cui-button {
+    position: relative;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    font-family: CiscoSansTT Regular, Helvetica Neue, Helvetica, Arial,
+      sans-serif;
+    font-weight: normal;
+    line-height: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    min-width: 4.5rem;
+    padding: 0.375rem 1.125rem;
+    font-size: 1rem;
+    border-radius: 6.25rem;
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.12);
+    border-color: transparent;
+    transition: background-color 150ms ease;
+    > * {
+      font-size: inherit;
+    }
+    .cui-button__children {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      flex-flow: row nowrap;
+    }
+    + {
+      .cui-button {
+        margin-left: 0.3125rem;
+      }
+      .cui-button__label {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        text-align: center;
+      }
+    }
+    &:active {
+      color: #000000;
+      background-color: rgba(0, 0, 0, 0.2);
+      &:focus {
+        box-shadow: none;
+      }
+      &.focus-state {
+        box-shadow: none;
+      }
+    }
+    &.active-state {
+      color: #000000;
+      background-color: rgba(0, 0, 0, 0.2);
+      &:focus {
+        box-shadow: none;
+      }
+      &.focus-state {
+        box-shadow: none;
+      }
+    }
+    &.disabled {
+      cursor: default;
+      box-shadow: none;
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        box-shadow: none;
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        box-shadow: none;
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button--disabled {
+      cursor: default;
+      box-shadow: none;
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        box-shadow: none;
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        box-shadow: none;
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &:focus {
+      outline: 0;
+      box-shadow: inset 0 0 0 2px #000000;
+    }
+    &.focus-state {
+      outline: 0;
+      box-shadow: inset 0 0 0 2px #000000;
+    }
+    &:hover {
+      color: #000000;
+      background-color: rgba(0, 0, 0, 0.16);
+    }
+    &.hover-state {
+      color: #000000;
+      background-color: rgba(0, 0, 0, 0.16);
+    }
+    &.cui-button--expand {
+      padding: 0.375rem 1.125rem;
+      font-size: 1rem;
+      border-radius: 6.25rem;
+      width: 100%;
+      display: block;
+    }
+    &.cui-button--left {
+      text-align: left;
+      text-indent: 0.75rem;
+    }
+    &.cui-button--right {
+      padding-right: 0.75rem;
+      text-align: right;
+    }
+    &.cui-button--large {
+      font-size: 1rem;
+      border-radius: 1.625rem;
+      padding: 0.875rem 1.625rem;
+    }
+    &.cui-button--circle {
+      border-radius: 1000px;
+      min-width: 2.25rem;
+      min-height: 2.25rem;
+      padding: 0;
+      font-size: 0.625rem;
+      &.icon {
+        font-family: $icon-font-name;
+      }
+      .cui-loading {
+        top: 20%;
+      }
+      &.cui-button--large {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 0.875rem;
+        .cui-loading {
+          top: 25%;
+        }
+      }
+    }
+    &.cui-button--blue {
+      color: #ffffff;
+      background-color: #07c1e4;
+      border-color: transparent;
+      &.disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &.cui-button--disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #06b1d2;
+      }
+      &.hover-state {
+        color: #ffffff;
+        background-color: #06b1d2;
+      }
+      &:active {
+        color: #ffffff;
+        background-color: #05a1bf;
+      }
+      &.active-state {
+        color: #ffffff;
+        background-color: #05a1bf;
+      }
+    }
+    &.cui-button--blue[disabled] {
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button--red {
+      color: #ffffff;
+      background-color: #ff503c;
+      border-color: transparent;
+      &.disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &.cui-button--disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #eb4937;
+      }
+      &.hover-state {
+        color: #ffffff;
+        background-color: #eb4937;
+      }
+      &:active {
+        color: #ffffff;
+        background-color: #d64332;
+      }
+      &.active-state {
+        color: #ffffff;
+        background-color: #d64332;
+      }
+    }
+    &.cui-button--red[disabled] {
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button--green {
+      color: #ffffff;
+      background-color: #30d557;
+      border-color: transparent;
+      &.disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &.cui-button--disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #2ac450;
+      }
+      &.hover-state {
+        color: #ffffff;
+        background-color: #2ac450;
+      }
+      &:active {
+        color: #ffffff;
+        background-color: #26b249;
+      }
+      &.active-state {
+        color: #ffffff;
+        background-color: #26b249;
+      }
+    }
+    &.cui-button--green[disabled] {
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button--mint {
+      color: #ffffff;
+      background-color: #00d6a2;
+      border-color: transparent;
+      &.disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &.cui-button--disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: #00c595;
+      }
+      &.hover-state {
+        color: #ffffff;
+        background-color: #00c595;
+      }
+      &:active {
+        color: #ffffff;
+        background-color: #00b387;
+      }
+      &.active-state {
+        color: #ffffff;
+        background-color: #00b387;
+      }
+    }
+    &.cui-button--mint[disabled] {
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button--link {
+      background-color: transparent;
+      border-color: transparent;
+      color: #05a1bf;
+      &.disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &.cui-button--disabled {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+        &:hover {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+        &:focus {
+          color: rgba(0, 0, 0, 0.2);
+          fill: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      &:hover {
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.16);
+      }
+      &.hover-state {
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.16);
+      }
+      &:active {
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      &.active-state {
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+    &.cui-button--link[disabled] {
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+      &:hover {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+      &:focus {
+        color: rgba(0, 0, 0, 0.2);
+        fill: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.cui-button .cui-loading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  .cui-button[disabled] {
+    cursor: default;
+    box-shadow: none;
+    color: rgba(0, 0, 0, 0.2);
+    fill: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.04);
+    &:hover {
+      box-shadow: none;
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+    &:focus {
+      box-shadow: none;
+      color: rgba(0, 0, 0, 0.2);
+      fill: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+  .cui-button--none {
+    font-weight: normal;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    border-color: transparent;
+    &:active {
+      background-color: transparent;
+      box-shadow: none;
+      border-color: transparent;
+    }
+    &:hover {
+      border-color: transparent;
+      color: #05a1bf;
+      text-decoration: none;
+      background-color: transparent;
+      box-shadow: none;
+    }
+    &:focus {
+      border-color: transparent;
+      color: #05a1bf;
+      text-decoration: none;
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+  .cui-button--none[disabled] {
+    background-color: transparent;
+    box-shadow: none;
+    &:hover {
+      color: rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+    }
+    &:focus {
+      color: rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+    }
+  }
+  .cui-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    padding: 8.25rem 2rem 2rem 2rem;
+    text-align: center;
+    background: #ffffff;
+    flex-direction: column;
+    align-items: center;
+    .cui-button {
+      height: 2.5rem;
+    }
+    .cui-input {
+      width: 100%;
+      height: 2.5rem;
+      max-width: 20rem;
+      border-radius: 6.25rem;
+    }
+    .cui-input-group {
+      margin: 0 auto;
+    }
+    span {
+      font-size: inherit;
+    }
+  }
+  .cui-panel--full {
+    z-index: 1039;
+    width: 100vw;
+    min-height: 100vh;
+  }
+  .cui-panel__main {
+    display: flex;
+    width: 100%;
+    max-width: 32.5rem;
+    flex: 1 0 auto;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cui-panel__image {
+    width: 100%;
+    max-width: 190px;
+    max-height: 80px;
+    margin-bottom: 3rem;
+    font-size: 5rem;
+  }
+  .cui-panel__title {
+    width: 100%;
+    margin-bottom: 0;
+    font-family: CiscoSansTT Regular, Helvetica Neue, Helvetica, Arial,
+      sans-serif;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #000000;
+  }
+  .cui-panel__message {
+    width: 100%;
+    margin-bottom: 0;
+    font-family: CiscoSansTT Regular, Helvetica Neue, Helvetica, Arial,
+      sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    color: #666666;
+  }
+  .cui-panel__secondary-action {
+    margin-top: 3rem;
+    font-size: 0.875rem;
+    color: #666666;
+  }
+  .cui-panel__footer {
+    display: flex;
+    flex: 0 1 auto;
+    margin-top: 4rem;
+    font-size: 0.625rem;
+    color: #999999;
+    flex-direction: column;
+    .footer__logo {
+      display: flex;
+      max-height: 1.75rem;
+      margin-bottom: 0.875rem;
+      font-size: 1.75rem;
+      justify-content: center;
+    }
+    a {
+      color: #999999;
+      &:hover {
+        color: #0493af;
+      }
+    }
+  }
+  .cui-panel__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .cui-panel--form {
+    .cui-panel__message {
+      color: #666666;
+    }
+    .cui-panel__form {
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+    }
+    .cui-panel__password-link {
+      display: flex;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      align-items: center;
+      flex-direction: column;
+    }
+    .cui-panel__secondary-action {
+      margin-top: 4.875rem;
+    }
+    .cui-button {
+      min-height: 2.5rem;
+      padding-right: 1.25rem;
+      padding-left: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .cui-input {
+      min-height: 2.5rem;
+      padding-right: 1.25rem;
+      padding-left: 1.25rem;
+      margin-bottom: 0.5rem;
+      &:focus + .cui-input__icon--right {
+        position: absolute;
+        display: block;
+        cursor: pointer;
+      }
+    }
+    .cui-input--with-icon {
+      padding-right: 2.25rem;
+    }
+    .cui-input-group {
+      margin-bottom: 0;
+      align-items: center;
+      .cui-input__messages {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        line-height: 1.5rem;
+      }
+      .cui-input__icon--right {
+        position: absolute;
+        top: 0.6875rem;
+        right: 0.6875rem;
+        z-index: 801;
+        display: flex;
+        font-size: 1.125rem;
+        color: #999999;
+        cursor: pointer;
+      }
+    }
+    .cui-panel__cta .cui-checkbox {
+      margin-top: 0.5rem;
+      font-family: CiscoSansTT Regular, Helvetica Neue, Helvetica, Arial,
+        sans-serif;
+      color: #666666;
+    }
+    .cui-input__messages.error {
+      padding: 0;
+      margin: 0;
+      .message {
+        margin-bottom: 0.75rem;
+        margin-left: 0;
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+        color: #d64332;
+      }
+    }
+  }
+  .cui-panel--message .cui-panel__cta {
+    margin-top: 1.5rem;
+  }
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media only screen and(min-width: 40.0625em) {
+  .cui {
+    .cui-panel {
+      padding-top: 11.75rem;
+    }
+    .cui-panel__footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      .footer__logo {
+        margin-bottom: 0;
+      }
+      .footer__copyright {
+        margin-left: 1.25rem;
+      }
+    }
+    .cui-panel--form {
+      .cui-button {
+        width: 20rem;
+      }
+      .cui-input {
+        width: 20rem;
+      }
+    }
+    .cui-panel--message .cui-panel__cta .cui-button {
+      padding-right: 4rem;
+      padding-left: 4rem;
+    }
+  }
+}
+
+@media only screen and(max-height: 37.5em) {
+  .cui .cui-panel {
+    padding-top: 15vh;
+  }
+}
+
+@media only screen and(min-height: 37.5625em) and(max-height: 50em) {
+  .cui .cui-panel {
+    padding-top: 15vh;
+  }
+}
+
+@media only screen and(max-width: 40em) {
+  .cui {
+    .cui-panel {
+      .cui-button {
+        width: 100%;
+        max-width: 20rem;
+      }
+      .cui-input {
+        width: 100%;
+        max-width: 20rem;
+      }
+      .cui-input-group {
+        width: 100%;
+        max-width: 20rem;
+      }
+    }
+    .cui-panel--form {
+      .cui-panel__form {
+        width: 100%;
+      }
+      .cui-panel__title.ellipsis {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .cui-panel--message .cui-panel__cta {
+      width: 100%;
+    }
+  }
+}
+
+fieldset[disabled] .cui .cui-button--none {
+  background-color: transparent;
+  box-shadow: none;
+  &:hover {
+    color: rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+  }
+  &:focus {
+    color: rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+  }
+}

@@ -4,22 +4,16 @@
     "titlePro": "Cisco Webex Control Hub Pro",
     "login": "Sign In",
     "loading": "Loading",
-    "license": "By using Cisco Webex Teams Services you accept the Terms of Service and Privacy Statement.",
+    "license": "By using Cisco Webex Teams Services you accept the <a href=\"{{hrefTos}}\" target=\"_blank\">Terms of Service</a> and <a href=\"{{hrefPrivacy}}\" target=\"_blank\">Privacy Statement</a>.",
     "tos": "Terms of Service",
     "privacy": "Privacy Statement",
-    "copyright": "Cisco and/or affiliates. All rights reserved.",
+    "copyright": "&copy; {{year}} Cisco and/or affiliates. All rights reserved.",
     "expired": "Your session has expired due to inactivity.",
     "email": "Enter your email address"
   },
   "termsOfService": {
     "title": "Terms of Service",
-    "disagree": "Decline",
-    "agree": "Accept ",
-    "ciscoSpark": "Cisco Spark",
-    "version": "Version: {{version}}",
-    "copyright1": "Copyright &copy; 2018 Cisco Systems.",
-    "copyright2": "All rights reserved.",
-    "description": "Cisco Spark is a collaboration application that provides messaging(IM), voice, and video calling capabilities.",
+    "message": "By clicking 'Accept', you agree to these <a href='https://www.cisco.com/c/dam/en_us/about/doing_business/legal/docs/universal-cloud-agreement.pdf' target='_blank'>Terms of Service</a>.",
     "loggingOut": "Logging off..."
   },
   "editFeatureToggles": {
@@ -189,7 +183,8 @@
     "careDeleteCESRoleError": "Error deleting CES role from user",
     "loadError": "An error while loading the users list.",
     "ciscoSparkJabberInteropTooltip": "Enable messaging between Cisco Webex Teams and Jabber. Provide access for Jabber users to Cisco Webex Teams spaces. Changes can take up to 24 hours.",
-    "userImage": "User Image"
+    "userImage": "User Image",
+    "mustConvertUserBeforeAdding": "{{email}} cannot be added. Use the Convert User option to move this user into the organization."
   },
   "userManage": {
     "org": {
@@ -445,9 +440,9 @@
     "howToInvite": "How would you like them to be invited?",
     "waitInvitation": "Send email invitations and wait until the user accepts before provisioning services.",
     "sendImmediate": "Immediately provision services for the user and send email notifications.",
-    "message": "Message",
+    "message": "Messaging",
     "meeting": "Meeting",
-    "call": "Call",
+    "call": "Calling",
     "subscriptionIdError": "An error occurred loading your subscription ids",
     "hybridServices": "Hybrid Services",
     "hybridServicesWarning": "Assign at least one license to enable Hybrid Services for the user",
@@ -461,18 +456,18 @@
     "groupColHeader": "Group Name",
     "collabService": "Select the collaboration service licenses that should be given to the users in the group.",
     "addEntitleError": "insufficient priveledge to add or entitle a user.",
-    "msgFree": "Message Free",
-    "mtgFree": "Meeting Free 3 Party",
-    "callFree": "Call Free",
+    "msgFree": "Cisco Webex Teams Free Messaging",
+    "mtgFree": "Cisco Webex Free Meetings",
+    "callFree": "Cisco Webex Free Calling",
     "careFree": "Care Free",
     "none": "None",
     "freeContactCenter": "Free Chat",
-    "paidMsg": "Message",
-    "paidCiscoSparkMessaging": "Cisco Webex Teams",
-    "paidConf": "Meeting 25 Party",
-    "paidCiscoSparkMeetings": "Webex team meetings",
-    "paidAdvancedConferencing": "Webex Meetings",
-    "paidComm": "Call",
+    "paidMsg": "Messaging",
+    "paidCiscoSparkMessaging": "Webex Teams",
+    "paidConf": "Meeting",
+    "paidCiscoSparkMeetings": "Cisco Webex Team Meetings",
+    "paidAdvancedConferencing": "Cisco Webex Meetings",
+    "paidComm": "Calling",
     "paidCommHybrid": "Hybrid Call",
     "paidSparkCall": "Cisco Webex Calling",
     "paidNone": "None",
@@ -487,10 +482,10 @@
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
-    "meetingCenter": "Meeting Center {{capacity}}",
-    "supportCenter": "Support Center {{capacity}}",
-    "trainingCenter": "Training Center {{capacity}}",
-    "eventCenter": "Event Center {{capacity}}",
+    "meetingCenter": "Webex Meetings {{capacity}}",
+    "supportCenter": "Webex Support {{capacity}}",
+    "trainingCenter": "Webex Training {{capacity}}",
+    "eventCenter": "Webex Events {{capacity}}",
     "communication": "Communication",
     "cmr": "Collaboration Meeting Rooms",
     "licenseShortage": "Not enough licenses",
@@ -702,19 +697,19 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Spark account. Your Webex site will not be converted to a free site and will be deleted.",
-    "singleMoveUsers": "Convert to a free Cisco Spark account.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Webex account. Your Webex site will not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Cisco Webex account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Spark account.",
-    "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
-    "multMoveUsers": "Convert users to their own free Cisco Spark account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Webex account.",
+    "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Webex Teams spaces.",
+    "multMoveUsers": "Convert users to their own free Cisco Webex account.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleUserMove": "You will be converted to a free Cisco Spark account.",
-    "multiUserMove": "All users will be converted to their own free Cisco Spark account.",
+    "singleUserMove": "You will be converted to a free Cisco Webex account.",
+    "multiUserMove": "All users will be converted to their own free Cisco Webex account.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
-    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Spark Boards and Cisco TelePresence video conferencing endpoints.",
+    "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Webex Boards and Cisco TelePresence video conferencing endpoints.",
     "customerPermission": "You have your customer's permission to delete their organization.",
     "accountClosedTitle": "Your account is closed.",
     "accountClosedBody": "To resubscribe, please visit <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>",
@@ -760,10 +755,10 @@
     "custom2": "custom selection",
     "unauthorizedError": "User is not authorized to access the customer reports.",
     "conversationError": "There was an error while loading room and file data.",
-    "webex": "Webex Classic",
+    "webex": "Webex Meetings Classic",
     "devReports": "Development Customer Reports",
     "sparkReports": "Webex Teams",
-    "webexReports": "Webex",
+    "webexReports": "Webex Meetings",
     "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
@@ -843,7 +838,7 @@
       }
     },
     "webexMetrics": {
-      "title": "Webex",
+      "title": "Webex Meetings",
       "metrics": "Metrics",
       "MEI": "MEI",
       "system": "System",
@@ -914,6 +909,7 @@
     "meetingName": "Meeting Name",
     "meetingType": "Meeting Type",
     "participants": "Participants",
+    "numberOfParticipants": "Number of Participants",
     "meetingNumber": "Meeting Number",
     "scheduledFrom": "Scheduled From",
     "placeholder-date": "Choose a day",
@@ -925,6 +921,8 @@
     "searchError": "Enter the correct email or meeting number",
     "search-info": "The meeting list will display when narrowed by search",
     "end-date-tooltip": "The start date must not be greater than the end date",
+    "meetingNumberTitle": "Meeting Number:",
+    "qualityType": "{{qualityType}} Quality",
     "timelineChartLegend": {
       "joinMeetingTime": "Join Meeting Time is calculated in seconds.",
       "jmtQuality": {
@@ -972,7 +970,8 @@
       "conferenceDate": "Date",
       "startTime": "Start Date",
       "meetingName": "Meeting Name",
-      "conferenceID": "Conference ID"
+      "conferenceID": "Conference ID",
+      "conferenceIDTitle": "Conference ID:"
     },
     "meetingFeatures": {
       "chat": "Chat",
@@ -1033,7 +1032,7 @@
     "sharedMeetingReport": "Shared Meetings Report",
     "sharedMeetingUsage": "Shared Meetings Usage",
     "sharedMeetingDescription": "This graph shows the number of peak concurrent meetings per month.",
-    "sharedMeetingNote": "PLEASE NOTE concurrent Cisco Spark Meetings are not yet included in this report, but will be added soon.",
+    "sharedMeetingNote": "PLEASE NOTE concurrent Cisco Webex Meetings are not yet included in this report, but will be added soon.",
     "concurrentMeetingsTitle": "Actual number of peak concurrent meetings held",
     "concurrentMeetings": "Concurrent Meetings",
     "maxMeetingsTitle": "Maximum number of peak concurrent meetings allowed",
@@ -1141,7 +1140,7 @@
     "users": "Users",
     "search": "Search",
     "customerPortalDescription": "An active user is defined as someone who has made or received a call using a device or has sent a message using the Webex Teams app. In this report you can compare the total number of registered users to the number of active users.",
-    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or spark messages and searched based on the user name.",
+    "customerMostActiveDescription": "During the last {{time}}, these are the most active users.  The table can be sorted by the user name, total calls, or Webex Teams messages and searched based on the user name.",
     "noActiveUsers": "During the last {{time}}, there have been no active users.  To see user status and resend invitations to those still pending, visit the ",
     "errorActiveUsers": "This data is temporarily unavailable.  Our servers are working to return it soon, please check back again shortly.",
     "missingUsersError": "Some user data could not be retrieved. For assistance, click your username on the top right and submit feedback to contact support.",
@@ -1642,6 +1641,7 @@
     "last": "Last"
   },
   "common": {
+    "accept": "Accept",
     "actions": "Actions",
     "activate": "Activate",
     "active": "Active",
@@ -1660,7 +1660,7 @@
     "begin": "Begin",
     "cancel": "Cancel",
     "cancelingEllipsis": "Canceling...",
-    "ciscoCollaborationCloud": "Cisco Collaboration Cloud",
+    "ciscoCollaborationCloud": "Cisco Webex Cloud",
     "clear": "Clear",
     "close": "Close",
     "cluster": "Cluster",
@@ -1673,6 +1673,7 @@
     "create": "Create",
     "dateRange": "Date Range",
     "deactivate": "Deactivate",
+    "decline": "Decline",
     "default": "Default",
     "delete": "Delete",
     "description": "Description",
@@ -1692,6 +1693,7 @@
     "enabled": "Enabled",
     "error": "Error",
     "errors": "Errors",
+    "errorMessage": "The following error {{error}}",
     "export": "Export",
     "fieldRequired": "This field is required",
     "finish": "Finish",
@@ -1914,8 +1916,8 @@
     "goSetupCloudSipUri": "Go here to finish this configuration",
     "setupCloudSipUriMessage": "Your organization's Cisco Webex SIP Address is not defined. This value is required for some call functionality to work correctly.",
     "dirsync": "Directory Synchronization",
-    "setUpCalendarService": "Hybrid Calendar is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
-    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpCalendarService": "Hybrid Calendar is available. Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
+    "setUpGoogleCalendarService": "Hybrid Calendar (Google) is available. Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in the Cisco Webex Teams app, and provide One Button to Push (OBTP) to Join.",
     "setUpCallAwareService": "Call Service Aware is available. Users can instantly share their desktops from their Cisco Webex Teams clients while on a call.",
     "setUpCallConnectService": "Call Service Connect is available. Users can answer calls to their work phones on their Cisco Webex Teams clients, and place calls to others' work phones from their Cisco Webex Teams clients.",
     "setUpHybridMessaging": "Hybrid Message Service is available. Connect Cisco Webex Teams to IM and Presence Service, so that Cisco Webex Teams users and Cisco Jabber users can direct message each other.",
@@ -1925,7 +1927,7 @@
     "setUpPMRDescription": "The Personal Meeting Rooms feature has been added to your subscription.",
     "setUpPMRUrl": "Setup PMR Now",
     "setupPMRsiteNameModalTitle": "Personal Meeting Room Setup",
-    "setUpHybridMediaService": "Video Mesh Service is available. Extend cloud media to use premises-based resources for calls and meetings.",
+    "setUpHybridMediaService": "Webex Video Mesh is available. Extend cloud media to use premises-based resources for calls and meetings.",
     "getStarted": "Get Started",
     "urgentUpgrade": "An urgent upgrade is available for <a ui-sref='{{link}}'>{{connector}}</a> and it will upgrade during the next scheduled upgrade.",
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
@@ -1972,7 +1974,7 @@
     "exportMetadataTitle": "Export Directory Metadata",
     "testSSOSetupTitle": "Test SSO Setup",
     "enableSSOTitle": "Enable SSO",
-    "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Collaboration Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
+    "importMetadataDesc": "Begin configuring the trust relationship between your identity provider (IdP) and the Cisco Webex Cloud by obtaining a trust metadata file from your IdP and uploading it here.",
     "importMetadataNote": "Note: By importing the metadata file, SSO will be turned <b>on</b>. If you are simply testing SSO, please remember to turn it off in the next screen.",
     "exportMetadataDesc1": "Download the following trust metadata file from the Cisco Webex Control Hub, and upload it into your identity provider (IdP) management interface.",
     "exportMetadataDesc2": "When you have finished uploading the file into your IdP, return to this screen and press Next.",
@@ -2009,9 +2011,10 @@
     "ssoDisableSuccessNotification": "SSO is Disabled. User authentication configuration is now using simple built-in identity service."
   },
   "serviceSetupModal": {
+    "settingsDescription": "These settings control PSTN service to Desk Phones and Webex Teams applications.",
     "regionalSettings": "Regional Settings",
     "preferredLanguage": "Preferred Language",
-    "preferredLanguageDescription": "Specify the language to use for Cisco Webex Calling Services. Preferred language only applies to new users.",
+    "preferredLanguageDescription": "Specify the language to use for Cisco Webex Calling. Preferred language only applies to new users.",
     "preferredLanguagePlaceholder": "Select your language",
     "defaultCountry": "Default Country",
     "defaultTones": "Default Tones",
@@ -2496,7 +2499,7 @@
       "report": "User Status Report",
       "add-resource-button": "Add Resource",
       "add-resource-button-information": "Click \"Add Resource\" to start the registration and configuration of your Expressways.",
-      "setupCloudSipUriHeader": "Define Cisco Spark SIP Address"
+      "setupCloudSipUriHeader": "Define SIP Address for Cisco Webex Calling"
     },
     "deleteClusterNodeDialog": {
       "confirmationDialogHeader": "Confirm Node Removal",
@@ -2537,7 +2540,7 @@
       "selectGroup": "Select…",
       "couldNotReadResourceGroups": "Could not read Resource Groups.",
       "CouldNotSaveResourceGroup": "Resource Group could not be saved. Continue with the registration process, and then try assigning a Resource Group again later.",
-      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Collaboration Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
+      "hostnameRegistered": "This FQDN belongs to an Expressway cluster that is already registered with Cisco Webex Cloud. It is not necessary to register it as a new resource if you want to add more services to it.",
       "partnersCannotConfigureClusters": "You cannot add this resource. A customer administrator must perform this step.",
       "nextStepIsConfigure": "Next steps and cluster configuration",
       "useTheNotifications": "Use the notifications <div class=\"notification-button success\"><div class=\"icon icon-bell\"></div><div class=\"notification-label\" translate=\"hercules.notificationDropdown.label\">2 Notifications</div></div> in the top left corner of {{ServiceName}} pages for next steps in configuration.",
@@ -2553,7 +2556,7 @@
       "serviceNames": {
         "squared-fusion-uc": "Call Service Activation",
         "squared-fusion-cal": "Calendar Service Activation",
-        "squared-fusion-media": "Media Service Activation",
+        "squared-fusion-media": "Webex Video Mesh Activation",
         "contact-center-context": "Context Service Activation",
         "squared-fusion-ec": "Call Service Connect Activation",
         "squared-fusion-mgmt": "Expressway Management Service Activation"
@@ -2603,8 +2606,8 @@
       "connected": "Connected"
     },
     "userSidepanel": {
-      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Spark. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
-      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Spark.",
+      "warningInvitePendingNotEntitled": "The user has not yet accepted the invitation to join Cisco Webex. You can still enable {{ServiceName}}, but service activation will wait until the invitation has been accepted.",
+      "warningInvitePendingActivation": "Hybrid Services activation will start after the user accepts the invitation to join Cisco Webex.",
       "entitlements-dont-exist": "Service licenses for {{userName}} do not exist.",
       "previously-updated": "Could not save licenses. They are allocated somewhere else.",
       "not-updated": "Licenses could not be updated for {{userName}}.",
@@ -2654,7 +2657,7 @@
       "squared-fusion-cal": "Calendar Service",
       "squared-fusion-gcal": "Calendar Service",
       "squared-fusion-o365": "Calendar Service",
-      "squared-fusion-media": "Media Service",
+      "squared-fusion-media": "Video Mesh",
       "contact-center-context": "Context Service",
       "squared-fusion-ec": "Call Service Connect",
       "squared-fusion-ec.full": "Call Service Connect",
@@ -2670,7 +2673,7 @@
       "squared-fusion-gcal": "Hybrid Calendar (Google)",
       "squared-fusion-o365": "Hybrid Calendar (Office 365)",
       "spark-hybrid-datasecurity": "Hybrid Data Security",
-      "squared-fusion-media": "Video Mesh Service",
+      "squared-fusion-media": "Webex Video Mesh",
       "hybrid-context": "Hybrid Context Service",
       "ept": "Enterprise Private Trunking",
       "spark-hybrid-impinterop": "Hybrid Message Service"
@@ -2679,7 +2682,7 @@
       "squared-fusion-uc": "Call Connector",
       "squared-fusion-uc.full": "Call Connector",
       "squared-fusion-cal": "Calendar Connector",
-      "squared-fusion-media": "Media Service",
+      "squared-fusion-media": "Video Mesh",
       "contact-center-context": "Context Connector",
       "squared-fusion-ec": "Call Connector",
       "squared-fusion-mgmt": "Management Connector",
@@ -2689,7 +2692,7 @@
       "c_cal": "Calendar Connector",
       "c_ucmc": "Call Connector",
       "c_mgmt": "Management Connector",
-      "mf_mgmt": "Media Service",
+      "mf_mgmt": "Video Mesh",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management Connector",
       "cs_context": "Context Connector",
@@ -2701,7 +2704,7 @@
       "c_cal": "Calendar",
       "c_ucmc": "Call",
       "c_mgmt": "Management",
-      "mf_mgmt": "Media Service",
+      "mf_mgmt": "Video Mesh",
       "hds_app": "Hybrid Data Security",
       "cs_mgmt": "Management",
       "cs_context": "Context",
@@ -2728,7 +2731,7 @@
       "ept": "Private Trunk"
     },
     "serviceDescriptions": {
-      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Spark clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Spark client.",
+      "squared-fusion-uc": "Call Service Aware lets your users instantly share their desktops from their Cisco Webex Teams clients while on a call. Call Service Connect lets your users answer calls to their work phones and to place calls to other work phones, on their Cisco Webex Teams client.",
       "squared-fusion-cal": "Calendar Service helps your users to collaborate instantly. Just add @spark to create a Cisco Webex Teams room. Add @webex to attach a Webex link to your invitation.",
       "squared-fusion-media": "",
       "contact-center-context": "",
@@ -2736,7 +2739,8 @@
       "squared-fusion-mgmt": "Management Service is the global configuration service for Calendar and Call Services. This page will be active after you activate one of these services."
     },
     "serviceHelpInfo": {
-      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
+      "servicePrivacyStatement": "Hybrid Service connectors collect and send certain information about your Hybrid Service deployment to Cisco Webex. Hybrid Service microservices may also send commands to the connectors like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>.",
+      "videoMeshPrivacyStatement": "Video Mesh nodes collects and send certain information about your deployment to Cisco Webex. Video Mesh microservices may also send commands to the nodes like upgrade, restart, and so on, to ensure that you receive the best service. <a href='http://www.cisco.com/web/siteassets/legal/spark_supp.html' target='_blank'>Learn more</a>."
     },
     "errors": {
       "enableServiceEntitlementFailure": "Failed! Your organization is missing entitlements that are needed to add the {{serviceName}}. Contact your support representative to fix the issue.",
@@ -2847,15 +2851,15 @@
       "sipDestinationNameCannotBeSaved": "SIP Destination name could not be saved. Try again later.",
       "clusterNameCannotByEmpty": "Name cannot be empty.",
       "renameClusterDescription": "The name is for display purposes only.",
-      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Collaboration Cloud.",
-      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Collaboration Cloud. This step removes all related configuration.",
+      "deregisterClusterExplanation": "Remove this {{clusterType}} cluster from Cisco Webex Cloud.",
+      "deregisterSipDestinationExplanation": "Remove this SIP Destination from Cisco Webex Cloud. This step removes all related configuration.",
       "deregisterMediaClusterExplanation": "Click the \"Remove\" button to launch the Remove Cluster workflow.",
       "deregisterClusterExplanationBlocked": "It is not possible to deregister an Expressway until all its services have been deactivated.",
       "allServicesMustBeDeactivatedOnExpressway": "All services must be deactivated on an Expressway cluster before it can be removed.",
       "couldNotDeregisterCluster": "Could not deregister cluster.",
       "deregisterConfirmRemoval": "Confirm Removal",
-      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Collaboration Cloud.",
-      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Collaboration Cloud."
+      "deregisterConfirmationText": "You are about to deregister <strong>{{clusterName}}</strong> from Cisco Webex Cloud.",
+      "deregisterConfirmPopup": "{{clusterName}} was removed successfully from Cisco Webex Cloud."
     },
     "office365ReAuthorizationComponent": {
       "title": "Authorization",
@@ -2926,8 +2930,8 @@
       "scope": "Scope",
       "error": "Couldn't fetch API key",
       "authorization": {
-        "title": "Authorize Cisco Collaboration Cloud on your G Suite account",
-        "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Collaboration Cloud on your G Suite account.",
+        "title": "Authorize Cisco Webex Cloud on your G Suite account",
+        "line1": "To enable Hybrid Calendar Service for you users, you must authorize Cisco Webex Cloud on your G Suite account.",
         "item1": "In a new tab, open your <a href=\"https://admin.google.com/AdminHome\" target=\"_blank\">G Suite account dashboard</a> and then go to <strong>Security</strong>.",
         "item2": "Click <strong>Show more</strong> and then <strong>Advanced settings</strong>.",
         "item3": "Click <strong>Manage API Client Access</strong>.",
@@ -2959,7 +2963,7 @@
     "gcalSecondSetupModal": {
       "modalTitle": "Update API Client access",
       "title": "Update Client name and Scope",
-      "line1": "To update or restore your G suite access to Cisco Collaboration Cloud, follow the steps below.",
+      "line1": "To update or restore your G suite access to Cisco Webex Cloud, follow the steps below.",
       "success": "Great! Google Calendar is correctly configured."
     },
     "settings": {
@@ -3108,7 +3112,7 @@
         "title": "Google Calendar",
         "deactivateHeader": "Deactivate Google Calendar",
         "deactivateText": "Your users will no longer be able to use this service.",
-        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Collaboration Cloud.",
+        "googleCalendarConfigWillBeWiped": "This action will delete all Google Calendar settings from Cisco Webex Cloud.",
         "couldNotReadGoogleCalendarStatus": "Could not read Google Calendar status.",
         "apiClientAccess": "Update API Client Access",
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
@@ -3214,7 +3218,7 @@
     "fusion": {
       "types": {
         "expressway": "Expressway",
-        "mediafusion": "Media",
+        "mediafusion": "Video Mesh",
         "context": "Context",
         "cucm": "CUCM"
       },
@@ -3240,7 +3244,7 @@
         "add-resource-group": "Create new resource group",
         "expressway": "Expressway",
         "ept": "SIP Destinations",
-        "mediafusion": "Media",
+        "mediafusion": "Video Mesh",
         "hds": "Data Security",
         "cucm": "CUCM",
         "no-services": "No services",
@@ -3267,8 +3271,8 @@
           "expressway-description": "Can run Hybrid Call Service or Hybrid Calendar Service",
           "expressway-description-with-imp": "Can run Hybrid Call Service, Hybrid Calendar Service, or Hybrid Message Service.",
           "expressway-not-setup": "Expressway not set up",
-          "mediafusion-description": "Can run Video Mesh Service",
-          "mediafusion-not-setup": "Media Service not set up",
+          "mediafusion-description": "Can run Webex Video Mesh",
+          "mediafusion-not-setup": "Webex Video Mesh not set up",
           "context-description": "Can run Hybrid Context",
           "context-not-setup": "Context not set up",
           "cucm-description": "Cisco Unified Communications Manager",
@@ -3285,13 +3289,13 @@
             "add-more-later-with-imp": "You can add more services later by clicking Add Resource in the Call, Calendar, or Message page."
           },
           "end": {
-            "line1": "You may now register the Expressway with Cisco Collaboration Cloud.",
+            "line1": "You may now register the Expressway with Cisco Webex Cloud.",
             "line2": "Go to your Expressway to complete registration and configure the connector(s)."
           }
         },
         "mediafusion": {
           "name": {
-            "title": "Enter a name for the Video Mesh Node",
+            "title": "Enter a name for the Webex Video Mesh Node",
             "help": "The cluster name is only used for display purposes."
           },
           "end": {}
@@ -3308,7 +3312,7 @@
           },
           "enter-cluster-name": "Enter a name for the Cisco Unified Communications Manager cluster",
           "end": {
-            "line1": "You may now register the Cisco Unified Communications Manager with Cisco Collaboration Cloud.",
+            "line1": "You may now register the Cisco Unified Communications Manager with Cisco Webex Cloud.",
             "line2": "Go to your CUCM to complete the registration.",
             "finish": "Go to CUCM"
           }
@@ -3348,7 +3352,7 @@
     "resourceGroups": {
       "resourceGroupHeading": "Resource Group",
       "setDescription": "Select the Resource Group the user is assigned to for this service.",
-      "cautionOwnedByCCC": "If you assign this user to a Resource Group, they will move from the Cisco Collaboration Cloud to an on-premises connector.",
+      "cautionOwnedByCCC": "If you assign this user to a Resource Group, they will move from the Cisco Webex Cloud to an on-premises connector.",
       "setPlaceDescription": "Select the Resource Group the place is assigned to for this service. (optional)",
       "noGroupSelected": "None",
       "noGroupSelectedOnPlace": "No resource group (default)",
@@ -3445,7 +3449,7 @@
       "moveNode": "Move node",
       "deregisterNode": "Deregister node",
       "removeNode": "Remove node",
-      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Collaboration Cloud, deregister the cluster from the settings page.",
+      "removeNodeTooltip": "Nodes cannot be removed from single node clusters. If you want to remove the Expressway from the Cisco Webex Cloud, deregister the cluster from the settings page.",
       "pendingTooltip": "Pending since: {{date}}. Maintenance mode has been requested. Please wait until the node is ready.",
       "maintenanceModeTooltip": "Use maintenance mode to stop the connectors in this node and stop email alarm notifications.",
       "maintenancePending": "Pending maintenance",
@@ -3720,8 +3724,8 @@
           "not_installed": "The Expressway reports that {{localizedConnectorName}} is not installed. This state is expected for a short while for new deployments, and it could also happen during upgrades.",
           "not_installed-help": "Something is likely to be misconfigured if this state lasts for more than a couple of minutes, and admin action is required to fix it. The Expressway's Management Connector might have raised an alarm that could assist you with troubleshooting.",
           "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Webex Control Hub.",
-          "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Collaboration Cloud. It will be installed when it has finished downloading.",
-          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Collaboration Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Webex Cloud. It will be installed when it has finished downloading.",
+          "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
           "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
@@ -3734,9 +3738,9 @@
           "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
           "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
           "alarmDebounced": "An alarm titled <strong>{{title}}</strong> was raised on the Expressway, and then marked as resolved within a few minutes.",
-          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Collaboration Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
-          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
-          "alarmResolvedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
+          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Webex Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
+          "alarmRaisedNotificationSent": "Cisco Webex Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco CollabWebexoration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
@@ -3747,7 +3751,7 @@
           "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
           "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
           "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
-          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Collaboration Cloud that they are operational.",
+          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
           "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
           "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
           "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Webex organization's configuration, for example because an entitlement was removed or a service was deactivated.",
@@ -3770,7 +3774,7 @@
         },
         "technicalDetails": {
           "heading": "Technical Details",
-          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Collaboration Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
+          "tooltip": "Customer data is always stored in an anonymized fashion in the Cisco Webex Cloud. Provide the information in this section to Cisco Technical Support if you need Cisco to investigate this event.",
           "resourceName": "Resource Name:",
           "clusterId": "Cluster ID:",
           "connectorId": "Connector ID:",
@@ -3940,14 +3944,14 @@
     "add-resource-dialog": {
       "cluster": "Create or select cluster",
       "hostname": "Enter FQDN or IP address",
-      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Collaboration Cloud.",
+      "grant-registration-success-part-1": "You may now register your Hybrid Data Security Node to the Cisco Webex Cloud.",
       "grant-registration-success-part-2": "Node IP Address/FQDN: {{hostname}}",
       "grant-registration-success-part-3": "Cluster: {{clustername}}",
       "grant-success-information": " <i class='icon icon-warning'></i> Go to your Hybrid Data Security Node within one hour to finish registration.<br>After one hour you will need to start the process again.",
       "title": "Register Hybrid Data Security Node",
       "text1": "Create a new or select an existing Hybrid Data Security Cluster where you want to add the Hybrid Data Security Node.",
       "text3": "Enter the",
-      "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3part2": "or IP address of the Hybrid Data Security Node that you want to register with the Cisco Webex Cloud.",
       "serverOnline": "The Hybrid Data Security server that you are registering already exists and is online.",
       "serverOffline": "The Hybrid Data Security server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Hybrid Data Security Node, you must install and configure the software on your new server.",
@@ -4219,6 +4223,7 @@
     "deleteConfirmation": "Are you sure you want to delete {{name}} matter?",
     "releaseConfirmation1": "Are you sure you want to release {{name}} matter?",
     "releaseConfirmation2": "Custodians will no longer have their data on hold unless they belong to another matter.",
+    "exportWarning": "Gathering data for export may take a while. If you sign out or refresh your browser, the export will be canceled.",
     "matterList": {
       "title": "Matters",
       "dateReleased": "Date Released",
@@ -4237,7 +4242,9 @@
     },
     "detail": {
       "release": "Release",
-      "releaseMatter": "Release Matter"
+      "releaseMatter": "Release Matter",
+      "exportFileName": "custodians.csv",
+      "exportCustodians": "Export Custodians"
     },
     "matterNew": {
       "title": "Create Matter",
@@ -4261,7 +4268,9 @@
       "emailAddress": "Email Address",
       "usersAdded": "Users Added",
       "usersRemoved": "Users Removed",
-      "errorsFileName": "ImportErrors.csv",
+      "importTemplateFileName": "CustodianImportTemplate.csv",
+      "downloadSuccess": "Download Successful",
+      "importErrorsFileName": "CustodianImportErrors.csv",
       "cancelImportTitle": "Cancel Import",
       "add": {
         "title": "Add Custodians",
@@ -4396,9 +4405,10 @@
     "providedBy": " provided by ",
     "calling": "Calling",
     "callingMsg": "Cloud Calling",
-    "message": "Message",
+    "messaging": "Messaging",
     "ciscoSparkMessaging": "Cisco Webex Teams",
     "meeting": "Meeting",
+    "meetings": "Meetings",
     "setupMeetingService": "Set up meeting service",
     "setupWebexMeetingSites": "Set up Cisco Webex Meetings Sites",
     "setupYourSites": "Set up your sites",
@@ -4489,14 +4499,13 @@
     "careTooltipToggle": "You must have Cisco Webex Teams license to use Webex Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "Webex-provided Audio",
-    "meetingsInSpark": "Webex team meetings",
-    "call": "Call",
+    "meetingsInSpark": "Webex Team Meetings",
     "care": "Care",
-    "roomSystems": "Room Devices",
+    "roomSystems": "Webex Devices",
     "sparkRoomSystem": "Cisco Webex Room Device",
-    "freeMsg": "Message Free",
-    "freeMtg": "Meeting Free 3 Party",
-    "freeCall": "Call Free",
+    "freeMsg": "Cisco Webex Teams Free Messaging",
+    "freeMtg": "Cisco Webex Free Meetings",
+    "freeCall": "Cisco Webex Free Calling",
     "freeCare": "None",
     "communicationsSub": "Setup calling service",
     "setPMRSSetupTitle": "PMR Site Name Setup",
@@ -4535,7 +4544,7 @@
     "subdomainSaveSuccess": "Cisco Webex SIP Address successfully updated.",
     "editSubdomain": "Edit Subdomain",
     "messageSettings": "Message Settings",
-    "callSettings": "Call Settings",
+    "callSettings": "Calling Settings",
     "enterpriseSettings": "Enterprise Settings",
     "messagingSetup": "Message Settings",
     "messagingSetupSub": "Set up messaging service",
@@ -4544,7 +4553,7 @@
     "planReviewDesc": "This setup wizard will enable you to quickly get collaboration services up and running for your organization. If you're not sure what to do in any given step, don't worry, you can always make changes later.",
     "accountReview": "Account Review",
     "serviceSetupSub": "Phone-related settings",
-    "unifiedCommunication": "Call Settings",
+    "unifiedCommunication": "Calling Settings",
     "careSettings": "Care Settings",
     "careSettingsSub": "Set up Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
@@ -5552,7 +5561,7 @@
     "privatePstnFinalized": "‘Private PSTN Trunk’ selection finalized.",
     "privatePstnNumbersImported": "‘Private PSTN Trunk’ {count, plural, =1{number} other{numbers}} imported.",
     "checkOrderStatus": "Check Order Status",
-    "launchPortal": "Setup Cisco Spark Service",
+    "launchPortal": "Setup Cisco Webex Service",
     "carrierListError": "Failed to retrieve carrier list for this customer.",
     "listSiteError": "Failed to retrieve the site list for this customer.",
     "orderNumbersPrompt": "Must add numbers to proceed.",
@@ -5930,20 +5939,20 @@
     "licenseQuantity": "Licenses Quantity",
     "licenseCount": "License Count",
     "users": "Users",
-    "message": "Message",
-    "meeting": "Meeting 25 Party",
-    "webex": "Webex Enterprise Edition 200 with CMR/TNU+",
-    "call": "Call",
-    "careDescription": "Care services require Message as a prerequisite.<br>Additionally, Call is required for voice-based interactions.",
+    "message": "Cisco Webex Teams",
+    "meeting": "Cisco Webex 25 Party",
+    "webex": "Cisco Webex Enterprise Edition 200 with CMR/TNU+",
+    "call": "Cisco Webex Calling",
+    "careDescription": "Care services require Cisco Webex Teams as a prerequisite.<br>Additionally, Cisco Webex Calling is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
     "advanceCare": "Chat, Callback and Inbound Call",
     "callUsOnly": "Call (Currently U.S. only)",
     "supportSelectLocations": "Cisco Webex Teams is supported in selected locations.  <a href='http://www.cisco.com/go/spark-availability' target='_blank' ng-click='{{click}}'>Learn more</a>",
-    "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://collaborationhelp.cisco.com/article/en-us/nqzhfbo\" target=\"_blank\">supported location</a> for Cisco Webex Teams",
+    "supportedLocationsCertification": "I certify that this customer is in a <a href=\"https://collaborationhelp.cisco.com/article/en-us/nqzhfbo\" target=\"_blank\">supported location</a> for Cisco Webex",
     "supportedLocationWarning": "Please check the box above to certify that this customer is in a supported location for Cisco Webex Teams",
     "context": "Enable Context Service for Cisco Unified Contact Center.",
-    "roomSystem": "Cisco Webex Room Kit, DX, MX and SX series",
+    "roomSystem": "Cisco Webex Room devices and Cisco Webex Desk Devices",
     "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Cisco Webex Room Device (Currently U.S. only)",
     "expireWarningMsg": "Your trial is ending in {{numDaysLeft}} day(s).",
@@ -6066,7 +6075,7 @@
     "SD": "Cisco Webex Room Device",
     "deleteOrgTitle": "Delete Customer",
     "deleteOrgConfirmMsg": "Are you sure you want to permanently delete customer '{{orgName}}'?",
-    "deleteOrgHmsError": "For the customer '{{orgName}}' Video Mesh Service is currently Active, please deactivate Video Mesh Service before deleting the customer.",
+    "deleteOrgHmsError": "For the customer '{{orgName}}' Webex Video Mesh is currently Active, please deactivate Webex Video Mesh before deleting the customer.",
     "deleteOrg": "Delete Customer",
     "deleteOrgSuccess": "{{orgName}} successfully deleted",
     "deleteOrgError": "{{orgName}} was not deleted.",
@@ -6548,8 +6557,8 @@
     "deleteResource": "Decomission Resource"
   },
   "mediaFusion": {
-    "page_title": "Video Mesh Service",
-    "report_title": "Video Mesh Service Report",
+    "page_title": "Webex Video Mesh",
+    "report_title": "Webex Video Mesh Report",
     "add-resource-button": "Add Resource",
     "genericError": "An unexpected error occurred. Please try again later.",
     "sipconfiguration": {
@@ -6562,7 +6571,7 @@
     "trustedSip": {
       "success": "Trusted SIP source(s) saved successfully.",
       "title": "Trusted SIP sources",
-      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Video Mesh Service.",
+      "description": "Enter a comma-separated list of Expressway IP addresses or FQDN. These entries are treated as trusted SIP sources and allowed to send SIP calls to Webex Video Mesh.",
       "placeholder": "Enter the trusted SIP sources..."
     },
     "videoQuality": {
@@ -6574,7 +6583,7 @@
     "qos": {
       "title": "QoS",
       "fulltitle": "Extended port range for QoS",
-      "description": "Enable extended port range for QoS. Disabling the port range will result in lose of QoS functionality.",
+      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (EF) and video (AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the Ports and Protocols <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>documentation</a> for guidance.",
       "success": "Extended port range for QoS setting was set successfully.",
       "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
     },
@@ -6637,9 +6646,9 @@
       "callwait": "Looking for Calls",
       "nocalls": "No {{callType}} calls on this cluster in the last 15 minutes.",
       "sparkcallline1": "Start a call directed at a user near the cluster, and then see if it shows up here. You may also wait  and see if someone else's call automatically lands on this cluster.Users who make the test calls must restart the app to verify.",
-      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> and verify that you opened all the necessary ports of your firewall.",
+      "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> and verify that you opened all the necessary ports of your firewall.",
       "sipcallline1": "Start a SIP call directed at a user near the cluster, and then see if it shows up here. You may also wait and see if someone else's call automatically lands on this cluster.",
-      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/hybrid-services-media' target='_blank'>Deployment Guide for Cisco Webex Video Mesh Service</a> <br>if you need further help.",
+      "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> <br>if you need further help.",
       "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Media cluster will not be able to process SIP Calls anymore",
       "callsuccess": "{{callType}} calls configured correctly",
       "lastcalldetails": "Last call details",
@@ -6654,7 +6663,7 @@
     "clusterBandwidth": {
       "success": "Maximum cluster cascade bandwidth saved successfully.",
       "title": "Maximum cluster cascade bandwidth",
-      "description": "Enter the maximum bandwidth (in megabits per second) that Video Mesh Service clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
+      "description": "Enter the maximum bandwidth (in megabits per second) that Webex Video Mesh clusters should use for cascades to the cloud. The lowest amount allows for one active 720p stream.",
       "range": "Enter a value between 5 to 50",
       "megabytes": "Mbps"
     },
@@ -6701,7 +6710,7 @@
       "overallMeetingLocationGraphError": "There was an error while loading Meeting Location Data",
       "cascadeBandwidthCardOrgHeading": "Cluster Cascade Bandwidth Usage",
       "cascadeBandwidthCardClusterHeading": "Cascade Bandwidth Usage",
-      "cascadeBandwidthOrgDesc": "Total bandwidth used across all Video Mesh cluster when cascades are established between on-premises and the cloud.",
+      "cascadeBandwidthOrgDesc": "Total bandwidth used across all Video Mesh clusters when cascades are established between on-premises and the cloud.",
       "cascadeBandwidthClusterDesc": "Tx: Provide bandwidth usage for transmission.<br>Rx: Provide bandwidth usage for receiving.",
       "streamsBandwidthHeading": "Streams Bandwidth Usage",
       "streamsBandwidthDesc": "Audio: Provide bandwidth usage for audio when receiving or transmission.<br>Video: Provide bandwidth usage for video when receiving or transmission.<br>Presentation: Provide bandwidth usage for presentation when receiving or transmission.",
@@ -6711,7 +6720,7 @@
       "streamsBandwidthType": {
         "audio": "Audio",
         "video": "Video",
-        "presentation": "Presentation"
+        "share": "Share"
       },
       "total_calls": "Total Calls",
       "onpremcalls": "Hosted On-Premises",
@@ -6779,7 +6788,10 @@
         "windowsDesk": "Windows",
         "sparkDesktop": "Cisco Webex Desktop",
         "sparkMobile": "Cisco Webex Mobile",
-        "sparkDevices": "Cisco Webex Devices"
+        "sparkDevices": "Cisco Webex Devices",
+        "web": "Web",
+        "webexvoice": "Cisco Webex Voice",
+        "webexshare": "Cisco Webex Share"
       },
       "mobile": "Mobile",
       "cardDescription": {
@@ -6855,16 +6867,16 @@
       "deregister_node": "Deregister Node"
     },
     "deactivate": {
-      "areYou": "Are you sure you want to deactivate your Video Mesh Service?",
-      "future": "If your organisation requires Video Mesh Service again,you must reconfigure it by registering clusters to the cloud.",
-      "complete": "When completed there is no way to undo this action. You will have to activate Video Mesh Service again.",
+      "areYou": "Are you sure you want to deactivate your Webex Video Mesh?",
+      "future": "If your organisation requires Webex Video Mesh again,you must reconfigure it by registering clusters to the cloud.",
+      "complete": "When completed there is no way to undo this action. You will have to activate Webex Video Mesh again.",
       "deregister": "To deactivate this service it is necessary to deregister the following clusters:",
       "deregister_cluster_list": "Deregister following clusters:",
       "ready": "I'm ready to deregister these clusters.",
-      "confirmation_check": "By deactivating Video Mesh Service, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
+      "confirmation_check": "By deactivating Webex Video Mesh, I understand that the above clusters will be deregistered and all further meetings will be hosted  in the cloud and that this action cannot be undone.",
       "button_deactivate": "Deactivate",
-      "success": "Your Video Mesh Services was deactivated successfully.",
-      "error": "Could not deactivate Video Mesh Service.",
+      "success": "Your Webex Video Mesh was deactivated successfully.",
+      "error": "Could not deactivate Webex Video Mesh.",
       "step": "Step ",
       "of": " of 2"
     },
@@ -6876,9 +6888,9 @@
       "grant-success-information": "Go to your Video Mesh Node within one hour to finish registration.",
       "titleV2": "Register Video Mesh Node",
       "text1V2": "Create a new or select an existing Video Mesh Cluster where you want to add the Video Mesh Node.",
-      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Collaboration Cloud.",
+      "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Webex Cloud.",
       "text3V1": "Enter the",
-      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Collaboration Cloud.",
+      "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Webex Cloud.",
       "serverOnline": "The media server that you are registering already exists and is online.",
       "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Video Mesh Node, you must install and configure the software on your new server.",
@@ -6924,8 +6936,8 @@
       "meeting-duration-title": "Meeting Duration"
     },
     "mediaServiceActivationFailure": "Problems enabling the service",
-    "mediaMicroserviceFailure": "Video Mesh Service was not enabled for your organization, because enabling Video Mesh Service routing failed. Open a case through admin.webex.com to get the issue corrected.",
-    "mediaEntitlementEnablementFailure": "Video Mesh Service was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.webex.com to get the issue corrected.",
+    "mediaMicroserviceFailure": "Webex Video Mesh was not enabled for your organization, because enabling Webex Video Mesh routing failed. Open a case through admin.webex.com to get the issue corrected.",
+    "mediaEntitlementEnablementFailure": "Webex Video Mesh was not enabled for your organization, because the required licenses are not applied to your organization. Open a case through admin.webex.com to get the issue corrected.",
     "delete": "Delete",
     "actionsHeader": "Actions",
     "ipAddr": "IP Address",
@@ -8433,7 +8445,7 @@
     },
     "virtualAssistant": {
       "featureText": {
-        "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Spark.",
+        "selectDesc": "Create virtual assistants that can provide automated chat support to customers, or manage escalated chat requests in Cisco Webex Teams.",
         "virtualAssistant": "Virtual Assistant"
       },
       "cva": {
@@ -8505,7 +8517,7 @@
       "name": {
         "namePlaceholder": "Enter {{ featureName }} Name",
         "nameHint": "Specify the name your customers see when they interact with your {{ featureName }}.",
-        "nameHintEva": "Specify the name Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "nameHintEva": "Specify the name Cisco Webex Teams users in your organization see when they interact with your {{ featureName }} in expert spaces.",
         "errorChar50": "Name cannot exceed 50 characters.",
         "duplicateError": "{{ featureName }} must have a unique name.",
         "processing": "Checking {{ featureName }} name availability…"
@@ -8513,7 +8525,7 @@
       "avatar": {
         "title": "{{ featureName }} Avatar",
         "desc": "Choose the avatar your customers see in their chat window, when they interact with your {{ featureName }}",
-        "descEva": "Choose the avatar Cisco Spark users in your organization see when they interact with your {{ featureName }} in expert spaces.",
+        "descEva": "Choose the avatar Cisco Webex Teams users in your organization see when they interact with your {{ featureName }} in expert spaces.",
         "upload": "Upload Avatar",
         "preview": "Avatar Preview",
         "fileBrowser": "file browser",
@@ -8555,11 +8567,11 @@
       },
       "defaultSpace": {
         "title": "Default Expert Space Configuration",
-        "desc": "Define a fallback Cisco Spark expert space for your {{ featureName }} escalations.",
+        "desc": "Define a fallback Cisco Webex Teams expert space for your {{ featureName }} escalations.",
         "boxDesc": "The {{ featureName }} uses the default space as a fallback to escalate requests that are not matched with any other expert space topics. Ensure that users who can respond to customer requests are in this space.",
         "learnMoreLink": "Learn more",
         "placeHolder": "Search and select an existing Cisco Webex Teams space",
-        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Spark. Then restart the wizard to see and select the new space in the list.",
+        "noteInfo": "If the space you want to use is not in this list, create the space in Cisco Webex Teams. Then restart the wizard to see and select the new space in the list.",
         "noDefaultWarning": "The Expert Virtual Assistant was removed from the selected Cisco Webex Teams space. Click next to designate it as the default Cisco Webex Teams space or choose a different space."
       },
       "configurationSteps": {
@@ -8753,7 +8765,7 @@
   },
   "digitalRiver": {
     "enterEmailAddr": {
-      "startTrial": "To start a Cisco Spark trial you must create an account.",
+      "startTrial": "To start a Cisco Webex trial you must create an account.",
       "enterEmail": "Please enter account email address",
       "emailPlaceholder": "Enter email address",
       "validation": {
@@ -8786,18 +8798,18 @@
       "submitError": "An error occurred while submitting the order."
     },
     "drOnboardQuestion": {
-      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Cisco Spark services?"
+      "adminQuestionLabel": "Will the following person '{{email}}' be managing the Cisco Webex services?"
     },
     "drConfirmAdminOrg": {
       "useDifferentName": "Use Different Name",
       "companyAndOrg1": "We have matched your email address to the following organization:",
-      "companyAndOrg2": "Would you like to assign the Cisco Spark services to this organization?"
+      "companyAndOrg2": "Would you like to assign the Cisco Webex services to this organization?"
     },
     "drOnboardEnterAdminEmail": {
-      "adminEmailLabel": "Please enter the email address of the person who will be managing the Cisco Spark services"
+      "adminEmailLabel": "Please enter the email address of the person who will be managing the Cisco Webex services"
     },
     "orgName": {
-      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Cisco Spark services, etc.",
+      "orgNameLabel": "Please enter your organization's name. You will be set up as the administrator and you will be able to add other users to your organization, manage Cisco Webex services, etc.",
       "enterOrgName": "Enter Company Name",
       "missingOrgName": "The Company Name is missing."
     },
@@ -8808,7 +8820,7 @@
       "choice1b": "Once you have been assigned admin privileges you can restart the process by clicking on the button in the Welcome email again or going to the <Screen 15> page.",
       "choice2": "Allow the Admin of this organization to manage the service(s) I purchased",
       "choice3a": "Create a new organization to manage the service(s)",
-      "choice3b": "Note you will not be able to assign Cisco Spark licenses you just purchased to anyone in your current organization if you choose this option."
+      "choice3b": "Note you will not be able to assign Cisco Webex licenses you just purchased to anyone in your current organization if you choose this option."
     },
     "validation": {
       "missingSKU": "The order is missing a SKU.",
@@ -8816,7 +8828,7 @@
       "unexpectedError": "Unexpected error"
     },
     "restrictedPage": "Restricted Page",
-    "ciscoSpark": "Cisco Spark",
+    "ciscoSpark": "Cisco Webex",
     "emailLabel": "Enter your email address:",
     "submitButton": "Submit",
     "activateButton": "Activate",
@@ -8898,7 +8910,7 @@
           "squared-fusion-uc": "Call",
           "spark-hybrid-impinterop": "Message",
           "squared-fusion-mgmt": "Management",
-          "squared-fusion-media": "Media",
+          "squared-fusion-media": "Video Mesh",
           "spark-hybrid-datasecurity": "Data Security",
           "contact-center-context": "Context",
           "squared-fusion-khaos": "Management",
@@ -8973,9 +8985,9 @@
       "siteManagementSettingUpdated": "Cisco Webex Site Management by customer setting has been updated"
     },
     "sipDomain": {
-      "title": "Cisco Spark SIP Address",
+      "title": "SIP Address for Cisco Webex Calling",
       "subsectionLabel": "SIP Domain Prefix",
-      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.call.ciscospark.com, \"example\" is the prefix you are defining."
+      "subsectionDescription": "Specify a SIP domain prefix that will be used in a user's addresses when calling a user on a SIP enabled device. For example in this address: example.calls.webex.com, \"example\" is the prefix you are defining."
     },
     "domains": {
       "title": "Domains"
@@ -9132,7 +9144,7 @@
   "subscriptions": {
     "activeUsers": "Active Users",
     "advancedReporting": "Advanced Reporting",
-    "call": "Call",
+    "call": "Calling",
     "care": "Care",
     "changePlan": "Change Plan",
     "complianceFunctionality": "Compliance Functionality",
@@ -9152,7 +9164,7 @@
     "licenseSummaryOnline": "License Summary for {{name}}",
     "licenseUsageReport": "License Usage Report",
     "loadError": "An error occurred while loading subscriptions.",
-    "message": "Message",
+    "message": "Messaging",
     "meeting": "Meeting",
     "numberedName": "Enterprise Subscription {{number}}",
     "onlineProductInstanceError": "Unable to retrieve product instance for trial {{trialId}}.  To purchase a paid subscription, contact your partner via email or use the purchase button on the trial banner to have one sent for you.",
@@ -9163,23 +9175,23 @@
     "premiumManagement": "Premium Management",
     "premiumTooltip": "Pro Pack is licensed per users and is automatically assigned to all active users in your organization.",
     "purchase": "Purchase",
-    "room": "Room Devices",
+    "room": "Webex Devices",
     "signIn": "Sign-in to manage",
     "subscription": "Subscription ID: ",
     "subscriptionNum": "Subscription ID xxx{{number}}",
     "usage": "Usage:",
     "upgrade": "Upgrade",
     "licenseTypes": {
-      "MS": "Standard Team Spaces",
+      "MS": "Webex Teams",
       "CF": "Webex Team Meetings",
-      "MC": "Webex Meeting Center",
-      "SC": "Webex Support Center",
-      "TC": "Webex Training Center",
-      "EC": "Webex Event Center",
+      "MC": "Webex Meetings",
+      "SC": "Webex Support",
+      "TC": "Webex Training",
+      "EC": "Webex Events",
       "EE": "Webex Enterprise Edition",
       "CMR": "Webex Collaboration Meeting Rooms",
-      "CO": "Cisco Webex Calling",
-      "SD": "Cisco Webex Room Kit, DX, MX and SX series",
+      "CO": "Webex Calling",
+      "SD": "Webex Room Kit, DX, MX and SX series",
       "SB": "Cisco Webex Board",
       "CDC": "Chat and Callback",
       "CVC": "Chat, Callback and Inbound Call",
@@ -9349,7 +9361,7 @@
     "entitlements": {
       "webex-squared": "Free Cisco Webex Teams",
       "squared-syncup.paid": "25 Party Meetings",
-      "squared-syncup.free": "Free 3 Party Cisco Webex Meetings",
+      "squared-syncup.free": "Cisco Webex Free Meeting",
       "squared-room-moderation.paid": "Standard Team Spaces",
       "squared-room-moderation.free": "Free Cisco Webex Teams",
       "ciscouc.paid": "Advanced Cisco Webex Calling",
@@ -9744,8 +9756,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "WebEx Meetings Center and Cisco Webex Teams configurations for your organization and individuals.",
-        "SPDescription": "WebEx Meetings Center and Cisco Webex Teams configurations.",
+        "description": "Webex Meetings Center and Cisco Webex Teams configurations for your organization and individuals.",
+        "SPDescription": "Webex Meetings Center and Cisco Webex Teams configurations.",
         "pmrText": "Configure your Personal Meeting Room",
         "viewWebExSites": "View Webex Meetings Sites"
       },
@@ -9783,7 +9795,7 @@
       },
       "hybridCalendar": {
         "title": "Hybrid Calendar",
-        "description": "Use @WebEx or @Spark in a meeting location to insert join details, show upcoming meetings in Cisco Webex Teams, and provide One Button to Push (OBTP) to Join.",
+        "description": "Use @webex or @spark in a meeting location to insert join details, show upcoming meetings in Cisco Webex Teams, and provide One Button to Push (OBTP) to Join.",
         "buttons": {
           "resources": "Resources",
           "settings": "Settings"
@@ -9920,11 +9932,11 @@
         },
         "prerequisites": {
           "title": "Video Mesh Prerequisites",
-          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Video Mesh Service in your organization.",
-          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Video Mesh Service",
-          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Video Mesh Service",
-          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Video Mesh Service",
-          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Video Mesh Service",
+          "intro": "Use this checklist alongside the deployment guide. Make sure you complete all the prerequisites necessary for deploying Webex Video Mesh in your organization.",
+          "meetMinimumSystemRequirements": "Meet the minimum system requirements described in Requirements for Webex Video Mesh",
+          "verifyDeploymentModels": "Verify the supported deployment models described in Deployment Models Supported by Webex Video Mesh",
+          "ensureNetworkConnectivity": "Ensure that your network allows connectivity on the ports and using the protocols described in Ports and Protocols Used by Webex Video Mesh",
+          "ensureBandwidth": "Ensure that your network supports the bandwidth requirements described in Bandwidth Requirements for Webex Video Mesh",
           "acquireInformation": "Acquire the following information to assign to your Video Mesh Node:",
           "acquireInformationHelp1": "IP address",
           "acquireInformationHelp2": "Network mask",
@@ -9965,25 +9977,25 @@
       },
       "privateTrunk": {
         "title": "Enterprise Private Trunking ",
-        "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Spark call brings cloud PSTN service to smaller branches that tie back in to your main branch.",
+        "description": "Extends your existing Unified CM call control environment without deploying more hardware. Cisco Webex Calling brings cloud PSTN service to smaller branches that tie back in to your main branch.",
         "buttons": {
           "view": "View Prerequisites",
           "resources": "SIP Destinations"
         },
         "prerequisites": {
           "title": "Enterprise Private Trunking Prerequisites",
-          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Cisco Spark Calling for Branch Offices in your organization.",
+          "intro": "Use this checklist alongside the \"Prepare Your Environment\" chapter in the deployment guide. Make sure you complete all the prerequisites necessary for deploying Cisco Webex Calling for Branch Offices in your organization.",
           "openPort5062": "Allow extra time to open port 5062 on your Internet firewall for mutual TLS authentication.",
           "verifyDomains": "Verify any domains in your existing deployment (for example, domains used in your user directory URIs and email address).",
-          "obtainCertificates": "Obtain certificates to use to secure the Expressway-E and Cisco Spark Calling connection.",
+          "obtainCertificates": "Obtain certificates to use to secure the Expressway-E and Cisco Webex Calling connection.",
           "openRequiredPorts": "Open the required ports, as described in the \"Port Requirements\" section.",
           "runSupportedSoftware": "Run the minimum supported versions of on-premises software, as described in the \"System Requirements\" section.",
           "determinePSTN": "Determine the type of PSTN service that you require",
           "determinePSTNHelp1": "On-premises PSTN through Unified CM.",
-          "determinePSTNHelp2": "Cloud PSTN through Cisco Spark Calling Preferred Media Providers.",
-          "prepareExpressway": "Prepare your Expressway-E for the secure mutual TLS connection between Cisco Spark and your call control environment:",
+          "determinePSTNHelp2": "Cloud PSTN through Cisco Webex Calling Preferred Media Providers.",
+          "prepareExpressway": "Prepare your Expressway-E for the secure mutual TLS connection between Cisco Webex and your call control environment:",
           "prepareExpresswayHelp1": "For an SRV record (multiple Expressway-Es for redundancy):",
-          "prepareExpresswayHelp2": "If you have an existing SRV, allow the time to request a dedicated SRV for Cisco Spark Calling for Branch Offices and use port 5062. The SRV record resolves into Expressway-E A-records; the hostname is the A-record for Expressway-E.",
+          "prepareExpresswayHelp2": "If you have an existing SRV, allow the time to request a dedicated SRV for Cisco Webex Calling for Branch Offices and use port 5062. The SRV record resolves into Expressway-E A-records; the hostname is the A-record for Expressway-E.",
           "prepareExpresswayHelp3": "Request that port 5062 be open on the enterprise firewall.",
           "prepareExpresswayHelp4": "Make sure the port is open to and from the Internet.",
           "prepareExpresswayHelp5": "Verify that the mutual MTLS port is reachable by using a ping utility – for example, telnet [domainname or ip] [port] in a command prompt.",
@@ -10051,14 +10063,14 @@
         "cancelBody": "Are you sure you want to cancel?",
         "cancelHeaderDest": "Cancel Add SIP Destination",
         "setupCompete": "Set up complete",
-        "great": "Great! You configured private trunking for your Cisco Spark organization.",
+        "great": "Great! You configured private trunking for your Cisco Webex organization.",
         "callSelection": "Your call selections",
-        "interSite": "Inter-site dialling between your on premise endpoints and Cisco Spark call endpoints.",
+        "interSite": "Inter-site dialling between your on premise endpoints and Cisco Webex calling endpoints.",
         "pstn": "PSTN in and outbound will be over this trunk, as you are using your on premise PSTN connectivity•",
         "pstnConnectivity": "PSTN connectivity",
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
-        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Spark remote SIP destinations configuration and disables the service for all users."
+        "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Webex remote SIP destinations configuration and disables the service for all users."
       }
     },
     "showMore": "View all",
@@ -11073,7 +11085,7 @@
         "start": "Link Now",
         "stop": "stop",
         "startLinking": "All Webex accounts listed in the verified domains will be linked, including existing unlinked accounts and future new accounts.",
-        "stopLinking": "By stopping automatic linking, future new accounts will not be linked to Cisco Spark."
+        "stopLinking": "By stopping automatic linking, future new accounts will not be linked to Cisco Webex."
       }
     },
     "wizard": {
@@ -11090,7 +11102,7 @@
       "verifyHow": "How do you verify a user?",
       "verifyAccounts": "Verify Accounts",
       "noEmails": "Don't want users to receive linking emails?",
-      "noEmailsP1": "When you verify Cisco Spark accounts, invited users will not receive an email. No user action is required.",
+      "noEmailsP1": "When you verify Cisco Webex accounts, invited users will not receive an email. No user action is required.",
       "noEmailsP2": "If you don't want your users to receive an email, click \"Verify\" below and you will see the following options:",
       "noEmailsP3": "Verify Domain",
       "noEmailsP4": "by entering a TXT record in your DNS.",
@@ -11102,7 +11114,7 @@
       "verifyDomainsHeader": "Verify Domains",
       "verifyDomains": "Verify your domain and ensure the security and integrity of your organization. Users belonging to verified domains will not be sent an email to verify their email address.",
       "legalAgreement": "Sign a Legal Agreement that allows your organization to verify your domains within a grace period. Cisco gives you a 3 month grace period to add a TXT record to your DNS so as to prove ownership of the domain.",
-      "verifyDomainsToken": "Cisco provides a token to add to your Domain Host’s DNS TXT record. Cisco confirms that you own the domain by checking for this token on your DNS server. Once the verification is completed, go to Webex Meetings Site Administration and begin inviting users to Cisco Spark. Users in Verified Domains will not receive linking emails.",
+      "verifyDomainsToken": "Cisco provides a token to add to your Domain Host’s DNS TXT record. Cisco confirms that you own the domain by checking for this token on your DNS server. Once the verification is completed, go to Webex Meetings Site Administration and begin inviting users to Cisco Webex. Users in Verified Domains will not receive linking emails.",
       "signAgreement": "Sign Legal Agreement",
       "verifyNow": "Verify Now",
       "webExDomains": "Webex Domains",
@@ -11115,7 +11127,7 @@
       "fetchingDomainsTxt": "It may take several minutes to get the full list of your domains.",
       "linkAccounts": "Link Accounts",
       "linkAccountsTxt": "You're about to be directed to Webex Meetings Site Administration where you can begin to link your Webex Meetings accounts to Cisco Webex Teams.",
-      "ciscoSparkAgreement": "Cisco Spark Agreement",
+      "ciscoSparkAgreement": "Cisco Webex Agreement",
       "ciscoSparkAgreementTxt": "Please read the agreement thoroughly and accept below. This will give you 3 months to verify you own the domains by entering a TXT record in your DNS.",
       "verifyDomainsTxt": "You're about to go to the page where you can verify your domain. Once the verification is complete, you must invite users from Webex Meetings Site Administration. Invited users belonging to verified domains will not receive an email.",
       "startLinkingAccounts": "Start Linking Accounts",
@@ -11149,8 +11161,20 @@
       "nodeStatus": {
         "active":"Active",
         "inactive": "Inactive",
-        "needsAcceptance":"Needs acceptance",
-        "needsAssigned":"Needs assigned"
+        "needsAcceptance":"Needs Acceptance",
+        "needsAssigned":"Needs Assigned",
+        "operational": "Operational",
+        "agentOffline": "Agent Offline",
+        "swProfileNotCoverAll": "Software profile does not cover all application",
+        "swVersionMismatch": "Software profile version mismatch",
+        "swUpgradeNeeded": "Software Upgrade Needed",
+        "needToUpdateBatchNumber": "Need to Update Batch Number",
+        "upgradeScheduled": "Upgrade Scheduled",
+        "upgradeInProgress": "Upgrade in progress",
+        "failedUpgrade": "Failed Upgrade",
+        "unassigned": "Unassigned",
+        "swProfileNotAssigned": "Software profile not Assigned",
+        "noAgentRunning": "No Agent Running"
       },
       "settings": {
         "inventoryName": {
@@ -11160,8 +11184,8 @@
           "sectionHeader": "Inventory Name"
         },
         "sftpLocation": {
-          "sectionHeader": "Default SFTP Location",
-          "sftpSelectLabel": "Choose the default SFTP Location for this cluster.",
+          "sectionHeader": "Default SFTP Server",
+          "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
           "sftpPlaceholder": "Select a server"
         },
         "nodes": {

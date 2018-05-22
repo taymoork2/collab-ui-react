@@ -1,35 +1,44 @@
 import * as moment from 'moment';
-import { IAnyDict, IMeetingDetail } from './partner-search.interfaces';
 import { KeyCodes } from 'modules/core/accessibility';
 import { Notification } from 'modules/core/notifications';
+import { IMeetingDetail } from './partner-search.interfaces';
 import { PartnerSearchService } from './partner-search.service';
 
 const DATERANGE = 6;
-export interface IGridApiScope extends ng.IScope {
+interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
 
-class WebexReportsSearch implements ng.IComponentController {
-  public gridData;
-  public gridOptions: {};
+interface IDateRange {
+  start?: {
+    lastEnableDate: string,
+    firstEnableDate: string,
+  };
+  end?: {
+    lastEnableDate: string,
+    firstEnableDate: string,
+  };
+}
+
+class DgcPartnerWebexReportsSearchController implements ng.IComponentController {
+  public gridData: IMeetingDetail[];
+  public gridOptions: uiGrid.IGridOptions = {};
   public endDate: string;
   public timeZone: string;
   public startDate: string;
-  public searchStr: any;
-  public errMsg: any = {};
-  public dateRange: IAnyDict = {};
-  public storeData: IAnyDict = {};
+  public searchStr: string;
+  public errMsg: { search?: string, datePicker?: string, datePickerAriaLabel?: string, ariaLabel?: string } = {};
+  public dateRange: IDateRange = {};
+  public storeData: { searchStr?: string, startDate?: string, endDate?: string } = {};
   public isLoadingShow = false;
   public isDatePickerShow = false;
 
-  private flag = true;
   private today: string;
   private email: string;
   private meetingNumber: string;
 
   /* @ngInject */
   public constructor(
-    private $log: ng.ILogService,
     private $scope: IGridApiScope,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
@@ -48,7 +57,6 @@ class WebexReportsSearch implements ng.IComponentController {
     this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
       .then((isPartnerWebexEnabled: boolean): void => {
         if (!isPartnerWebexEnabled) {
-          this.$log.log('webex report for partner webex disabled');
           this.$state.go('login');
         } else {
           this.initDateRange();
@@ -61,7 +69,7 @@ class WebexReportsSearch implements ng.IComponentController {
       });
   }
 
-  public showDetail(item: IAnyDict): void {
+  public showDetail(item: IMeetingDetail): void {
     this.PartnerSearchService.setStorage('webexMeeting', item);
     this.PartnerSearchService.setStorage('searchStr', this.searchStr);
     this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
@@ -75,7 +83,7 @@ class WebexReportsSearch implements ng.IComponentController {
 
   public onBlur(): void {
     if (this.searchStr === this.storeData.searchStr) {
-      return ;
+      return;
     }
     this.startSearch();
   }
@@ -86,7 +94,7 @@ class WebexReportsSearch implements ng.IComponentController {
       firstEnableDate: this.startDate,
     };
     if (this.startDate === this.storeData.startDate && this.endDate === this.storeData.endDate) {
-      return ;
+      return;
     }
     this.errMsg.datePickerAriaLabel = '';
     this.errMsg.datePicker = '';
@@ -102,10 +110,17 @@ class WebexReportsSearch implements ng.IComponentController {
   public onChangeTz(tz: string): void {
     this.timeZone = tz;
     this.PartnerSearchService.setStorage('timeZone', this.timeZone);
-    _.forEach(this.gridData, (item) => {
-      item.endTime_ = this.PartnerSearchService.utcDateByTimezone(item.endTime);
-      item.startTime_ = this.PartnerSearchService.utcDateByTimezone(item.startTime);
+    this.gridData = _.map(this.gridData, (row: IMeetingDetail) => {
+      row.endTime_ = this.PartnerSearchService.utcDateByTimezone(row.endTime);
+      row.startTime_ = this.PartnerSearchService.utcDateByTimezone(row.startTime);
+      return row;
     });
+  }
+
+  public onClickClearIcon(): void {
+    this.searchStr = '';
+    this.storeData.searchStr = '';
+    this.gridData = [];
   }
 
   private initDateRange(): void {
@@ -122,33 +137,48 @@ class WebexReportsSearch implements ng.IComponentController {
     this.dateRange.end = this.dateRange.start;
   }
 
-  private startSearch(): void {
-    const digitaReg = /^([\d]{8,10}|([\d]{1,4}[\s]?){3})$/;
-    const emailReg = /^[\w\d]([\w\d.-])+@([\w\d-])+\.([\w\d-]){2,}/;
+  private isValidEmail(testStr: string): boolean {
+    const USER_COMPONENT = '^[\\w\\d]([\\w\\d.-])+';
+    const DOMAIN_PREFIX = '([\\w\\d-])+';
+    const DOT = '\\.';
+    const DOMAIN_SUFFIX = '([\\w\\d-]){2,}';
+    const emailRegex = new RegExp(`${USER_COMPONENT}@${DOMAIN_PREFIX}${DOT}${DOMAIN_SUFFIX}`);
+    return emailRegex.test(testStr);
+  }
 
-    this.flag = false;
+  private isValidDigitCode(testStr: string): boolean {
+    const DIGITS_8_TO_10 = '^[\\d]{8,10}';
+    const DIGITS_1_TO_4 = '[\\d]{1,4}';
+    const OPTIONAL_SPACE = '[\\s]?';
+    const ACCEPTABLE_CODE_OPTION_1 = `${DIGITS_8_TO_10}`;
+    const ACCEPTABLE_CODE_OPTION_2 = `(${DIGITS_1_TO_4}${OPTIONAL_SPACE}){3}`;
+    const digitalCodeRegex = new RegExp(`^(${ACCEPTABLE_CODE_OPTION_1}|${ACCEPTABLE_CODE_OPTION_2})$`);
+    return digitalCodeRegex.test(testStr);
+  }
+
+  private startSearch(): void {
     this.gridData = [];
     this.errMsg.ariaLabel = '';
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
-
-    if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
+    const isValidEmail = this.isValidEmail(this.searchStr);
+    const isValidDigital = this.isValidDigitCode(this.searchStr);
+    if (!isValidEmail && !isValidDigital) {
       this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');
       this.errMsg.search = `<i class="icon icon-warning"></i> ${this.errMsg.ariaLabel}`;
-      return ;
+      return;
     }
 
     if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
-      return ;
+      return;
     }
 
-    this.flag = true;
-    if (emailReg.test(this.searchStr)) {
+    if (isValidEmail) {
       this.email = this.searchStr;
       this.meetingNumber = '';
     }
 
-    if (digitaReg.test(this.searchStr) ) {
+    if (isValidDigital) {
       this.email = '';
       this.meetingNumber = this.searchStr;
     }
@@ -169,23 +199,25 @@ class WebexReportsSearch implements ng.IComponentController {
 
     this.PartnerSearchService.getMeetings(data)
       .then((res: IMeetingDetail[]) => {
-        _.forEach(res, (item: any) => {
-          item.status_ = this.PartnerSearchService.getStatus(item.status);
-          item.Duration = this.PartnerSearchService.getDuration(item.duration);
-          item.endTime_ = this.PartnerSearchService.utcDateByTimezone(item.endTime) ;
-          item.startTime_ = this.PartnerSearchService.utcDateByTimezone(item.startTime);
+        const meetingList = _.map(res, (meeting: IMeetingDetail) => {
+          meeting.status_ = this.PartnerSearchService.getStatus(meeting.status);
+          meeting.duration_ = this.PartnerSearchService.getDuration(meeting.duration);
+          meeting.endTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.endTime) ;
+          meeting.startTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.startTime);
+          return meeting;
         });
-        this.isLoadingShow = false;
-        this.gridData = this.flag ? res : [];
+        this.gridData = meetingList;
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      })
+      .finally(() => {
         this.isLoadingShow = false;
       });
   }
 
   private setGridOptions(): void {
-    const columnDefs = [{
+    const columnDefs: uiGrid.IColumnDef[] = [{
       width: '13%',
       cellTooltip: true,
       field: 'conferenceID',
@@ -200,13 +232,12 @@ class WebexReportsSearch implements ng.IComponentController {
       displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
     }, {
       width: '16%',
-      sortable: true,
       cellTooltip: true,
       field: 'startTime_',
       displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
     }, {
       width: '9%',
-      field: 'Duration',
+      field: 'duration_',
       cellClass: 'text-right',
       displayName: this.$translate.instant('webexReports.duration'),
     }, {
@@ -217,13 +248,12 @@ class WebexReportsSearch implements ng.IComponentController {
       width: '8%',
       cellClass: 'text-center',
       field: 'numberOfParticipants',
-      headerCellTemplate: require('modules/core/partnerReports/webexReports/diagnostic/number-participants-cell-template.html'),
+      headerCellTemplate: require('./number-participants-cell-template.html'),
     }, {
       width: '7%',
-      sortable: true,
       field: 'status_',
       displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
-      cellTemplate: require('modules/core/partnerReports/webexReports/diagnostic/webex-meeting-status.html'),
+      cellTemplate: require('./webex-meeting-status.html'),
     }];
 
     this.gridOptions = {
@@ -238,7 +268,7 @@ class WebexReportsSearch implements ng.IComponentController {
       enableVerticalScrollbar: 0,
       enableHorizontalScrollbar: 0,
       onRegisterApi: (gridApi) => {
-        gridApi.selection.on.rowSelectionChanged(this.$scope, (row) => {
+        gridApi.selection.on.rowSelectionChanged(this.$scope, (row: {entity: IMeetingDetail}) => {
           this.showDetail(row.entity);
         });
       },
@@ -246,7 +276,7 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 }
 
-export class DgcWebexReportsSearchComponent implements ng.IComponentOptions {
-  public controller = WebexReportsSearch;
-  public template = require('modules/core/partnerReports/webexReports/diagnostic/webex-reports-search.html');
+export class DgcPartnerWebexReportsSearchComponent implements ng.IComponentOptions {
+  public controller = DgcPartnerWebexReportsSearchController;
+  public template = require('./dgc-partner-webex-reports-search.html');
 }

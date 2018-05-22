@@ -116,7 +116,6 @@ describe('Component: webexReportsSearch', () => {
 
   it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
-
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);

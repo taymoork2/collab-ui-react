@@ -80,7 +80,7 @@ describe('Component: legalHoldMatterDetail', () => {
       expect(this.LegalHoldService.addUsersToMatter).toHaveBeenCalled();
       this.$scope.mode = ImportMode.REMOVE;
       initComponent.apply(this);
-      this.view.controller('legalHoldCustodiansManage').updateCustodians();
+      this.controller.updateCustodians([]);
       expect(this.LegalHoldService.removeUsersFromMatter).toHaveBeenCalled();
     });
 

@@ -1,13 +1,21 @@
 import { IHcsInstallables, IControllerNode, IHcsCustomer } from './hcs-controller';
+import { IHcsNode } from './hcs-upgrade';
 type IHcsNodeListType = IControllerNode[] & ng.resource.IResourceArray<IControllerNode>;
 interface IInstallablesResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsInstallables>> {}
 interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListType> {}
-interface IHcsCustomerListResource extends ng.resource.IResourceClass<IHcsCustomer> {}
+
+type IHcsCustomerType = IHcsCustomer & ng.resource.IResource<IHcsCustomer>;
+interface IHcsCustomersResource extends ng.resource.IResourceClass<IHcsCustomerType> {}
+
+interface IHcsAgentResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<any>>;
+}
 
 export class HcsControllerService {
   private installablesResource: IInstallablesResource;
   private nodeListResource: INodeListResource;
-  private customerListResource: IHcsCustomerListResource;
+  private customersResource: IHcsCustomersResource;
+  private agentResource: IHcsAgentResource;
 
   /* @ngInject */
   constructor(
@@ -18,6 +26,12 @@ export class HcsControllerService {
     const BASIC_AUTH_VAL = 'Basic aGNzdXNfdXNlcjo0NGJlNjJiMWNhNzVhMWJjMWI1YzAwNWE5OTJhNTU1NzZhZWEwMjFi'; //To-do Temporary usage from Upgrade Service
     const BASE_URL = this.UrlConfig.getHcsControllerServiceUrl();
 
+    const updateAction: ng.resource.IActionDescriptor = {
+      method: 'PUT',
+      headers: {
+        Authorization: BASIC_AUTH_VAL,
+      },
+    };
     const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
       headers: {
@@ -64,9 +78,15 @@ export class HcsControllerService {
         save: postAction,
       });
 
-    this.customerListResource = this.$resource<IHcsCustomer>(BASE_URL + 'partners/:partnerId/customers', {},
+    this.customersResource = this.$resource<IHcsCustomerType>(BASE_URL + 'partners/:partnerId/customers', {},
       {
         query: queryAction,
+        save: saveAction,
+      });
+
+    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
+      {
+        update: updateAction,
       });
   }
 
@@ -110,10 +130,26 @@ export class HcsControllerService {
   }
 
   public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
-    return this.customerListResource.query({
+    return this.customersResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => {
       return response;
     });
+  }
+
+  public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
+    return this.customersResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+    }, {
+      name: customerName,
+      services: services,
+    }).$promise;
+  }
+
+  public acceptAgent(node: IHcsNode): ng.IPromise<any> {
+    return this.agentResource.update({
+      partnerId: this.Authinfo.getOrgId(),
+      agentId: node.agentUuid,
+    }, {}).$promise;
   }
 }

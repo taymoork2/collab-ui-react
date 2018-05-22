@@ -15,7 +15,7 @@ export enum Actions {
 }
 export enum GetUserBy {
   ID = 'id',
-  EMAIL =  'email',
+  EMAIL = 'email',
 }
 
 export enum OperationObject {
@@ -112,6 +112,9 @@ export class LegalHoldService {
     return this.$http.post(this.getActionUrl(Actions.ADD_USERS, OperationObject.USERS), data)
       .then(() => {
         return this.readMatter(orgId, caseId);
+      })
+      .catch(() => { //algendel 5/1 TODO: remove this once back end is in place
+        return this.readMatter(orgId, caseId);
       });
   }
 
@@ -131,7 +134,9 @@ export class LegalHoldService {
       caseId: caseId,
     };
     return (this.$http.post(this.getActionUrl(Actions.LIST_USERS, OperationObject.USERS), data))
-      .then(result => <string[]>result.data);
+      .then(result => {
+        return _.get<string[]>(result, 'data.usersInMatter', []);
+      });
   }
 
   public listMatterIdsForUser(orgId: string, userUUID: string): IPromise<string[]> {

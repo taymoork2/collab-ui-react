@@ -4,17 +4,19 @@
   <div class="users-convert-results__bottom-space--500">
     <h6 translate="convertUsersModal.results.desc" translate-value-count="14" translate-interpolation="messageformat"></h6>
   </div>
-  <div class="row results-container">
-    <div class="columns medium-2"></div>
-    <div class="columns medium-4 result converted-users">
-      <h1 ng-class="{disabled: $ctrl.convertedUsers.length === 0}">{{$ctrl.convertedUsers.length}}</h1>
-      <h5 translate="convertUsersModal.results.usersConverted"></h5>
-    </div>
-    <div class="columns medium-4 result pending-users">
-      <h1 ng-class="{disabled: $ctrl.pendingUsers.length === 0}">{{$ctrl.pendingUsers.length}}</h1>
-      <h5 translate="convertUsersModal.results.usersPending"></h5>
-    </div>
-    <div class="columns medium-2"></div>
+  <div class="row collapse">
+    <cr-total-tile-container class="columns small-12 medium-8 medium-offset-2">
+      <cr-total-tile
+        l10n-label="convertUsersModal.results.usersConverted"
+        total-color="green"
+        total-value="$ctrl.convertedUsers.length"
+      ></cr-total-tile>
+      <cr-total-tile
+        l10n-label="convertUsersModal.results.usersPending"
+        total-color="red"
+        total-value="$ctrl.pendingUsers.length"
+      ></cr-total-tile>
+    </cr-total-tile-container>
   </div>
   <div class="h4 results-total">
     <csv-simple-export

@@ -1,0 +1,31 @@
+$cr-total-tile-container-gutter: 1rem;
+$cr-total-tile-container-margin: $cr-total-tile-container-gutter / 2;
+$cr-total-tile-container-column-min-width: 9rem;
+
+cr-total-tile-container {
+  .total-tile-container {
+    /* IE fallback */
+    display: flex;
+    flex-wrap: wrap;
+    margin: -$cr-total-tile-container-margin;
+    > * {
+      margin: $cr-total-tile-container-margin;
+      min-width: $cr-total-tile-container-column-min-width;
+      flex: 1 1 0;
+    }
+
+    @supports (display: grid) {
+      display: grid;
+      grid-template: 1fr / repeat(auto-fit, minmax($cr-total-tile-container-column-min-width, 1fr));
+      grid-gap: $cr-total-tile-container-gutter;
+
+      flex-wrap: unset;
+      margin: unset;
+      > * {
+        margin: unset;
+        min-width: unset;
+        flex: unset;
+      }
+    }
+  }
+}

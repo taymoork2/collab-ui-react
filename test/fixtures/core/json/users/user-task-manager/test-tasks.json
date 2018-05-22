@@ -212,9 +212,9 @@
     "startedTime": "6:30 pm",
     "sourceUserId": "010e453a-865b-4d34-b3d9-daf94ab0805e",
     "counts": {
-      "usersCreated": 10,
+      "usersCreated": 5,
       "usersUpdated": 10,
-      "usersFailed": 10,
+      "usersFailed": 15,
       "totalUsers": 100
     },
     "exactMatchCsv": false

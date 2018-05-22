@@ -3,6 +3,10 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
+.settings__description {
+  @include vr-spacing(mb, .75);
+}
+
 .huronsettings-state {
   @extend %page-background-white;
 }

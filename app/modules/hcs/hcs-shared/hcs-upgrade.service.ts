@@ -1,6 +1,6 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
-import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem } from './hcs-upgrade';
-import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
+import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer } from './hcs-upgrade';
+import { ISoftwareProfile, IApplicationVersion, ISoftwareProfilesObject } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
@@ -16,9 +16,15 @@ interface INodeResource extends ng.resource.IResourceClass<ng.resource.IResource
 
 interface ICustomerClustersResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCustomerClusters>> {}
 
+type ICustomerType = IHcsUpgradeCustomer & ng.resource.IResource<IHcsUpgradeCustomer>;
+interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {}
+
 interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
+
+type ISwProfileType = ISoftwareProfilesObject & ng.resource.IResource<ISoftwareProfilesObject>;
+interface ISwProfilesResource extends ng.resource.IResourceClass<ISwProfileType> {}
 
 interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.resource.IResource<IApplicationVersion>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
@@ -29,8 +35,10 @@ export class HcsUpgradeService {
   private clusterResource: IClusterResource;
   private customerClustersResource: ICustomerClustersResource;
   private swProfileResource: ISwProfileResource;
+  private swProfilesResource: ISwProfilesResource;
   private appVersionResource: IApplicationVersionResource;
   private nodeResource: INodeResource;
+  private customerResource: ICustomerResource;
 
   /* @ngInject */
   constructor(
@@ -102,7 +110,7 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {},
+    this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions?application=:type', {},
       {
         get: getAction,
       });
@@ -110,6 +118,11 @@ export class HcsUpgradeService {
     this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {
       update: updateAction,
     });
+
+    this.customerResource = this.$resource<ICustomerType>(BASE_URL + 'partners/:partnerId/customers', {},
+      {
+        save: saveAction,
+      });
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -193,6 +206,14 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
+  public getSoftwareProfiles(): ng.IPromise<ISoftwareProfile[]> {
+    return this.swProfilesResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+    }).$promise.then(response => {
+      return response.softwareProfiles;
+    });
+  }
+
   public updateSoftwareProfile(swProfile: ISoftwareProfile): ng.IPromise<any>  {
     return this.swProfileResource.update({
       partnerId: this.Authinfo.getOrgId(),
@@ -217,10 +238,22 @@ export class HcsUpgradeService {
     return this.appVersionResource.get().$promise;
   }
 
+  public getAppVersions(apptype: string): ng.IPromise<IApplicationVersion> {
+    return this.appVersionResource.get({
+      type: apptype,
+    }).$promise;
+  }
+
   public updateNodeSftp(nodeId: string, sftp: ISftpServerItem): ng.IPromise<any> {
     return this.nodeResource.update({
       partnerId: this.Authinfo.getOrgId(),
       nodeId: nodeId,
     }, sftp).$promise;
+  }
+
+  public addHcsUpgradeCustomer(customer: IHcsUpgradeCustomer): ng.IPromise<any> {
+    return this.customerResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+    }, customer).$promise;
   }
 }

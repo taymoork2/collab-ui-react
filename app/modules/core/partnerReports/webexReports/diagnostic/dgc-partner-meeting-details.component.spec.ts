@@ -9,8 +9,34 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
       overview: { status: 2, conferenceId: '81296856363088285', createTime_: '2017-11-11' },
     };
     this.uniqueParticipants = [
-      { userName: 'Felix', platform: '7', sessionType: '25', participants: [{ joinTime: 1515039409000, userName: 'Felix', browser: 2, nodeId: 16789507 }] },
-      { userName: 'Felix2', platform: '10', sessionType: '0', participants: [{ joinTime: 1515039320000, leaveTime: 1515039920000, userName: 'Felix2', duration: 600, browser: 2, nodeId: 16797697 }] },
+      {
+        userName: 'Felix',
+        platform: '7',
+        sessionType: '25',
+        participants: [
+          {
+            joinTime: 1515039409000,
+            userName: 'Felix',
+            browser: 2,
+            nodeId: 16789507,
+          },
+        ],
+      },
+      {
+        userName: 'Felix2',
+        platform: '10',
+        sessionType: '0',
+        participants: [
+          {
+            joinTime: 1515039320000,
+            leaveTime: 1515039920000,
+            userName: 'Felix2',
+            duration: 600,
+            browser: 2,
+            nodeId: 16797697,
+          },
+        ],
+      },
     ];
     this.pstnQOS = {
       16789507: {
@@ -82,7 +108,7 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService', 'Notification', '$timeout');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService');
 
     this.PartnerSearchService.setStorage('webexOneMeeting', this.meeting);
   });
@@ -114,7 +140,7 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     spyOn(this.PartnerSearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getJoinMeetingTime();
-    expect(this.controller.circleColor['50335745']).toBe('Good');
+    expect(this.controller.circleJoinTime['50335745']).toBe('Good');
   });
 
   it('should get voip session detail when data completed', function () {
@@ -145,7 +171,21 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
   });
 
   it('should retry to get voip session detail when data not completed', function () {
-    const mockData = { items: [{ key: '50335745', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    const mockData = {
+      items: [
+        {
+          key: '50335745',
+          completed: false,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [],
+            },
+          ],
+        },
+      ],
+    };
     spyOn(this.PartnerSearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVoipSessionDetail('');
@@ -180,7 +220,21 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
   });
 
   it('should get video session detail when data not completed', function () {
-    const mockData = { items: [{ key: '50335759', completed: false, items: [{ startTime: 1515393187000, endTime: 1515394215000, mmpQuality: [] }] }] };
+    const mockData = {
+      items: [
+        {
+          key: '50335759',
+          completed: false,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [],
+            },
+          ],
+        },
+      ],
+    };
     spyOn(this.PartnerSearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVideoSessionDetail('');
@@ -283,13 +337,15 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     expect(this.controller.audioLines['40337718'].length).toBe(0);
   });
 
-  it('should retry to send request', function () {
-    initComponent.call(this);
-    const mockData = { key: '0' };
-    const mockFn = function(param) { mockData.key = param; };
-    this.controller.retryRequest('voip', mockFn, ['40337718']);
-    this.$timeout.flush();
-    expect(mockData.key).toBe('40337718');
+  describe('retryRequest():', () => {
+    it('should retry to send request', function () {
+      initComponent.call(this);
+      const mockData = { key: '0' };
+      const mockFn = function(param) { mockData.key = param; };
+      this.controller.retryRequest('voip', mockFn, ['40337718']);
+      this.$timeout.flush();
+      expect(mockData.key).toBe('40337718');
+    });
   });
 
   describe('parseVoipQuality():', () => {
@@ -312,10 +368,9 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
     it('should get pstn quality: Fail', function () {
       initComponent.call(this);
-      expect(this.controller.parsePSTNQuality(0)).toBe(2);
+      expect(this.controller.parsePSTNQuality(3)).toBe(2);
     });
   });
-
 
   describe('parseVideoQuality():', () => {
     it('should get video quality: Poor', function () {
