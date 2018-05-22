@@ -11464,16 +11464,17 @@
   },
   "convertUsersModal": {
     "title": "Convert Users",
-    "subTitle": "Select Users for Conversion",
-    "desc": "Selected users will be sent a conversion invite email. Users without any recent activity or in <strong>Pending</strong> status will be converted immediately. Users who do not take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+    "desc": "Convert employees to a licensed user who have signed up for Cisco Webex Teams on their own with a company email address. Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
+    "desc2": "Users who have not activated their account will be converted immediately. Other users will be sent a conversion invite email. Users that do not take action on the conversion invite will be converted after {count, plural, =1{# day} other{# days}}.",
     "csv": "CSV",
-    "csvFilename": "users_pending_conversion.csv",
+    "csvFilename": "users_delayed_conversion.csv",
     "csvResultsFilename": "users_converted_results.csv",
     "tab": {
       "potential": "Potential Conversion {{count}}",
-      "pending": "Pending Conversion {{count}}"
+      "pending": "Delayed Conversion {{count}}"
     },
     "tableHeader": {
+      "csvStatus": "Status",
       "name": "Display Name",
       "email": "Email Address",
       "status": "Auto Convert In",
@@ -11488,7 +11489,7 @@
     },
     "convertedStatus": {
       "converted": "Converted",
-      "pending": "Pending"
+      "pending": "Delayed"
     },
     "banner": {
       "text": "Manage users' licenses more conveniently, <a href ng-click='{{click}}'>configure Auto Assign</a>"
@@ -11498,7 +11499,8 @@
     },
     "results": {
       "subTitle": "Conversion Results",
-      "desc": "<strong>Pending Conversion</strong> users were sent a conversion invite email. Users with <strong>Pending</strong> status were converted immediately. Users who don't take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+      "desc": "<strong>Delayed Conversion</strong> users were sent a conversion invite email. Users who don't take any action will be converted after {count, plural, =1{# day} other{# days}}.",
+      "desc2": "If your company is using <strong>Directory Synchronization</strong>, you must download the CSV file which contains Users Converted and Delayed Connversions <strong>and add all of these users to your directory</strong>, otherwise they will be deactivated during the next full directory synchronization.",
       "usersConverted": "{total, plural, =0{Users} =1{User} other{Users}} converted",
       "usersPending": "Pending conversion"
     }
