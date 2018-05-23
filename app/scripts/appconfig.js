@@ -5833,6 +5833,30 @@
               },
             },
           })
+          .state('legalhold.export', {
+            parent: 'modalDialog',
+            params: {
+              orgId: null,
+              caseId: null,
+              matterName: null,
+            },
+            views: {
+              'modal@': {
+                template: '<legal-hold-custodian-export org-id="$resolve.orgId" matter-name="$resolve.matterName" case-id="$resolve.caseId"></legal-hold-custodian-export>',
+                resolve: {
+                  orgId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.orgId;
+                  },
+                  caseId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.caseId;
+                  },
+                  matterName: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matterName;
+                  },
+                },
+              },
+            },
+          })
           .state('legalhold.custodians-manage', {
             parent: 'modal',
             params: {
