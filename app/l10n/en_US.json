@@ -6420,6 +6420,8 @@
       "codeOnlyForPhones": "This code can only be used to activate Cisco IP Phones",
       "codeOnlyForRoomDevices": "This code cannot be used to activate Cisco IP Phones",
       "searchAnotherUser": "Or search for another user",
+      "noUsersFound": "No users found",
+      "searchStringTooShort": "Enter 3 characters or more",
       "failedToGenerateActivationCode": "Failed to generate activation code. Reason:",
       "failedResourceGroup": "Failed to set the resource group on the service(s). Please set in from the service setting on the place. It failed with the following reason:",
       "problemGeneratingCode": "There was a problem generating your activation code.",

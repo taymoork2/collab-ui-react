@@ -66,11 +66,13 @@
               <input id="userInput"
                      ng-model="showActivationCode.foundUser"
                      class="underline userInput"
+                     ng-class="{'error': showActivationCode.noUserFound, 'short': showActivationCode.searchStringShort}"
                      typeahead="user for user in showActivationCode.searchUser($viewValue) | limitTo:6"
                      typeahead-template-url="stateTemplate.html"
                      typeahead-on-select="showActivationCode.selectUser($item)"
                      placeholder="{{'addDeviceWizard.showActivationCode.searchAnotherUser' | translate}}"
                      ng-click="showActivationCode.onTextClick($event)"
+                     ng-keyup="showActivationCode.onUserInputKeyUp()"
                      typeahead-wait-ms="500"/>
               <script type="text/ng-template" id="stateTemplate.html">
                 <a>
@@ -78,7 +80,16 @@
                   ng-bind-html="'' + match.label.extractedName + ' (' + match.label.userName + ')' | typeaheadHighlight:query"></span>
                 </a>
               </script>
+              <div class="userSearchSpinner">
+                <i ng-if="showActivationCode.isSearching" class="icon icon icon-spinner"></i>
+              </div>
             </div>
+            <div class="userSearchMessage userSearchError"
+                 ng-if="showActivationCode.noUserFound"
+                 translate="addDeviceWizard.showActivationCode.noUsersFound"></div>
+            <div class="userSearchMessage userSearchWarning"
+                 ng-if="showActivationCode.searchStringShort"
+                 translate="addDeviceWizard.showActivationCode.searchStringTooShort"></div>
             <div class="scrollSpace"></div>
           </div>
         </div>
