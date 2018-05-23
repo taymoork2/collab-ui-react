@@ -47,7 +47,7 @@ export class ClusterListCtrl implements ng.IComponentController {
       state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
     }, {
       title: this.$translate.instant('hcs.upgradePage.title'),
-      state: `hcs.upgradeGroup({customerId: '${this.groupId}'})`,
+      state: `hcs.upgradeCluster({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
     });
 
     this.clusterList = [];

@@ -78,7 +78,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     private Notification: Notification,
   ) {
     this.timer = 0;
-    this.timeoutVal = 1000;
+    this.timeoutVal = 500;
   }
 
   public $onInit(): void {
