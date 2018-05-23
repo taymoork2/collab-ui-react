@@ -9054,6 +9054,9 @@
       "successText": "Success",
       "tooltip": "An update will complete within the hour. You'll receive a notification on the Overview page."
     },
+    "privacyDataSheetsNotification": {
+      "text": "Please see our updated privacy data sheets."
+    },
     "externalCommunication": {
       "title": "External Communication",
       "subsectionLabel": "Messaging",

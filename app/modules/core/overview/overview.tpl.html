@@ -47,7 +47,7 @@
                 </div>
               </span>
             </div>
-            <div class="notification-style" ng-repeat="notification in overview.notifications | orderBy:'badgeText':false:overview.notificationComparator">
+            <div class="notification-style" ng-repeat="notification in overview.notifications | orderBy:['badgeText', 'zOrder']:false:overview.notificationComparator">
               <span class="notification-spacing">
                 <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
                 <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
