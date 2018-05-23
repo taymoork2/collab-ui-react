@@ -132,13 +132,15 @@ describe('Care Customer Virtual Assistant Service', function () {
   it('URL should support updateConfig', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID);
     const config = { token: DIALOGFLOW_TEST_BOT_TOKEN };
+    const contextServiceFields = { fieldName: 'fieldValue' };
     $httpBackend.expectPUT(url, {
       type: CvaService.configurationTypes.dialogflow,
       name: TEST_BOT_NAME,
       config: config,
+      contextServiceFields,
       icon: 'iconURL',
     }).respond(200);
-    CvaService.updateConfig(TEST_BOT_CONFIG_ID, CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL');
+    CvaService.updateConfig(TEST_BOT_CONFIG_ID, CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, contextServiceFields, 'iconURL');
     $httpBackend.flush();
   });
 
@@ -146,18 +148,20 @@ describe('Care Customer Virtual Assistant Service', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/botconfig');
     const expectedResponse = { botServicesConfigId: TEST_BOT_CONFIG_ID };
     const config = { token: DIALOGFLOW_TEST_BOT_TOKEN };
+    const contextServiceFields = { fieldName: 'fieldValue' };
     $httpBackend
       .expectPOST(url, {
         type: CvaService.configurationTypes.dialogflow,
         name: TEST_BOT_NAME,
         config: config,
+        contextServiceFields,
         icon: 'iconURL',
       }) // respond with a 201, no data, but the location header of the stated form.
       .respond(201, {}, {
         location: 'organization/' + TEST_ORG_ID + '/botconfig/' + TEST_BOT_CONFIG_ID,
       });
     let result = {};
-    CvaService.addConfig(CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, 'iconURL')
+    CvaService.addConfig(CvaService.configurationTypes.dialogflow, TEST_BOT_NAME, config, TEST_ORG_ID, contextServiceFields, 'iconURL')
       .then(function (response) {
         result = { botServicesConfigId: response.botServicesConfigId };
       });

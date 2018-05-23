@@ -149,13 +149,14 @@ export class CvaService {
    * @param iconURL URL to avatar icon file
    * returns promise
    */
-  public addConfig(type: string, name: string, config: object, orgId: string, iconURL?: string): ng.IPromise<any> {
+  public addConfig(type: string, name: string, config: object, orgId: string, contextServiceFields: any, iconURL?: string): ng.IPromise<any> {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId())
       .save({
         type: type,
         name: name,
         config: config,
         icon: iconURL,
+        contextServiceFields,
       }, function (data, headers) {
         data.botServicesConfigId = headers('location').split('/').pop();
         return data;
@@ -172,13 +173,14 @@ export class CvaService {
    * @param iconURL URL to avatar icon file
    * returns promise
    */
-  public updateConfig(botServicesConfigId: string, type: string, name: string, config: object, orgId: string, iconURL?: string): ng.IPromise<void> {
+  public updateConfig(botServicesConfigId: string, type: string, name: string, config: object, orgId: string, contextServiceFields: any, iconURL?: string): ng.IPromise<void> {
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), botServicesConfigId)
       .update({
         type: type,
         name: name,
         config: config,
         icon: iconURL,
+        contextServiceFields,
       }).$promise;
   }
 

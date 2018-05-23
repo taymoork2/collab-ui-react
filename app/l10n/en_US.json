@@ -8543,6 +8543,16 @@
         "errorInvalidIcon": "The {{ featureName }} avatar is invalid.",
         "errorInvalidIconDimensions": "The dimensions of the {{ featureName }} avatar must be exactly 512 x 512 pixels."
       },
+      "contextFields": {
+        "title": "Dialogflow input contexts",
+        "descStart": "Map fields to Dialogflow input contexts. ",
+        "descLearnMoreLink": "Learn more",
+        "descFinal": " about input contexts.",
+        "searchText": "Search and add fields",
+        "errorMaxContextLength": "Character length cannot be more than 50",
+        "errorMinContextLength": "Cannot be empty",
+        "errorInvalidCharacters": "Invalid character set"
+      },
       "summary": {
         "cvaDesc": "You have configured {{ name }}. To use the assisted service feature in your organization's chat application, add your assistant to a Customer Support Template.",
         "cvaDescEdit": "You have edited {{ name }}. Click Finish to save the configuration so customers can interact with this updated {{ featureName }} during chats with your organization.",

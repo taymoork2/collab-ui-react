@@ -88,7 +88,18 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
-
+  
+  it('Create: Move to Dialogflow Input Context Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextForm);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextFieldInput1);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+  
   it('Create: Finally Move to Summary Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
@@ -158,7 +169,18 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
-
+  
+  it('Edit: Move to Dialogflow Input Context Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextForm);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextFieldInput1);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+  
   it('Edit: Finally Move to Summary Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
