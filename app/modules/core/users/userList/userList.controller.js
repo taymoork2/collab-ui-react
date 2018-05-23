@@ -555,22 +555,22 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         field: 'name.givenName',
         id: 'givenName',
         displayName: $translate.instant('usersPage.firstnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.name.givenName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
       }, {
         field: 'name.familyName',
         id: 'familyName',
         displayName: $translate.instant('usersPage.lastnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.name.familyName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
       }, {
         field: 'displayName',
         id: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.displayName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'userName',
         id: 'userName',
         displayName: $translate.instant('usersPage.emailHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.userName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
       }, {
         field: 'userStatus',
         id: 'userStatus',

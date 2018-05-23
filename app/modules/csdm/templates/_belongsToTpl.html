@@ -1,4 +1,4 @@
-<div class="grid-contents grid-cell-image-text" ng-click="grid.appScope.selectRow(grid, row)">
+<div class="grid-contents grid-cell-image-text" title="{{row.entity.displayName}}" ng-click="grid.appScope.selectRow(grid, row)">
   <span ng-if="row.entity.accountType === 'MACHINE'" class="user-img account_avatar place_avatar">
     <i class="icon icon-location"></i>
   </span>
@@ -6,6 +6,6 @@
     <i class="icon icon-user"></i>
   </span>
   <img ng-if="row.entity.accountType === 'PERSON' && row.entity.thumbnailUrl" class="user-img account_avatar" ng-src="{{row.entity.thumbnailUrl}}"/>
-  <span class="belongs-to column-text" title="{{row.entity.displayName}}" ng-bind-html="row.entity.displayName | highlightFromSearch:grid.appScope.searchObject():'displayname'">
+  <span class="belongs-to column-text" ng-bind-html="row.entity.displayName | highlightFromSearch:grid.appScope.searchObject():'displayname'">
   </span>
 </div>
