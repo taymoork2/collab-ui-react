@@ -153,6 +153,7 @@
       getIsReadAsVisible();
       var variablesOptions = [];
       executeAsyncWaitTasks(variablesOptions)
+        .catch(_.noop)
         .finally(function () {
           setUpVariablesOptions(variablesOptions);
           activate();

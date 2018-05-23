@@ -35,7 +35,7 @@
 
           if (!validateQuantity($viewValue, deviceLimit)) {
             if (deviceLimit.min === deviceLimit.max) {
-              messages.trialDeviceQuantityValidator = $translate.instant('trialModal.call.invalidQuantityMx300', { qty: deviceLimit.min });
+              messages.trialDeviceQuantityValidator = $translate.instant('trialModal.call.invalidQuantitySingle', { qty: deviceLimit.min });
             } else {
               messages.trialDeviceQuantityValidator = $translate.instant('trialModal.call.invalidQuantity', { min: deviceLimit.min, max: deviceLimit.max });
             }

@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var nameTemplate = require('./grid/nameColumn.tpl.html');
     var compactServiceTemplate = require('./grid/compactServiceColumn.tpl.html');
     var accountStatusTemplate = require('./grid/accountStatusColumn.tpl.html');
@@ -60,12 +60,12 @@ require('./_customer-list.scss');
     // we'd want to set a default sort on the name field
     var columnSort = {
       name: function (a, b) {
-        var first = a.customerName || a;
-        var second = b.customerName || b;
-        if (first.toLowerCase() > second.toLowerCase()) {
-          return 1;
-        } else if (first.toLowerCase() < second.toLowerCase()) {
+        var first = _.toLower(a);
+        var second = _.toLower(b);
+        if (first < second) {
           return -1;
+        } else if (first > second) {
+          return 1;
         }
         return 0;
       },
@@ -85,25 +85,37 @@ require('./_customer-list.scss');
         return columnSort.name(a, b);
       },
 
-      accountStatus: function (a, b, rowA, rowB) {
-        return (vm.statusTextOrder[rowA.entity.accountStatus] - vm.statusTextOrder[rowB.entity.accountStatus]);
-      },
+      accountStatus: function (a, b) {
+        var aUnavailable = !a;
+        var bUnavailable = !b;
 
-      license: function (a, b, rowA, rowB) {
-        var rowAUnavailable = !isLicenseInfoAvailable(rowA.entity);
-        var rowBUnavailable = !isLicenseInfoAvailable(rowB.entity);
-
-        if (rowAUnavailable && rowBUnavailable) {
+        if (aUnavailable && bUnavailable) {
           return 0;
-        } else if (rowAUnavailable) {
+        } else if (aUnavailable) {
           return -1;
-        } else if (rowBUnavailable) {
+        } else if (bUnavailable) {
           return 1;
         }
-        return (a - b);
+
+        return (vm.statusTextOrder[a] - vm.statusTextOrder[b]);
+      },
+
+      license: function (a, b) {
+        return _.toFinite(a) - _.toFinite(b);
       },
 
       notes: function (a, b, rowA, rowB) {
+        var aUnavailable = !a || !rowA;
+        var bUnavailable = !b || !rowB;
+
+        if (aUnavailable && bUnavailable) {
+          return 0;
+        } else if (aUnavailable) {
+          return -1;
+        } else if (bUnavailable) {
+          return 1;
+        }
+
         var modA = (a.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : a.text;
         var modB = (b.sortOrder === PartnerService.customerStatus.NOTE_DAYS_LEFT) ? '0' : b.text;
         if (modA < modB) {
@@ -133,9 +145,8 @@ require('./_customer-list.scss');
         return 0;
       },
 
-      service: function (a, b, rowA, rowB) {
-        // Sorting by aggregate number of total licenses
-        return rowA.entity.uniqueServiceCount - rowB.entity.uniqueServiceCount;
+      service: function (a, b) {
+        return _.toFinite(a) - _.toFinite(b);
       },
 
       /* AG TODO:  once we have data for total users -- add back
@@ -740,7 +751,7 @@ require('./_customer-list.scss');
     }
 
     function selectRow(grid, row) {
-      GridCellService.selectRow(grid, row);
+      GridService.selectRow(grid, row);
       vm.showCustomerDetails(row.entity);
     }
 
@@ -765,7 +776,7 @@ require('./_customer-list.scss');
       return ExternalNumberService.isTerminusCustomer(org.customerOrgId)
         .then(function (response) {
           if (response) {
-            return $state.go('pstnSetup', {
+            return $state.go('pstnWizard', {
               customerId: org.customerOrgId,
               customerName: org.customerName,
               customerEmail: org.customerEmail,

@@ -1,4 +1,4 @@
-import componentModule from './index';
+import moduleName from './index';
 
 import { ServicesOverviewController } from './services-overview.component';
 import { CloudConnectorService } from 'modules/hercules/services/calendar-cloud-connector.service';
@@ -9,9 +9,9 @@ import { Config } from 'modules/core/config/config';
 describe('ServicesOverviewController', () => {
 
   let $componentController: ng.IComponentControllerService;
-  let $httpBackend: ng.IHttpBackendService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
+  let $state: ng.ui.IStateService;
   let ctrl: ServicesOverviewController;
   let Authinfo;
   let CloudConnectorService: CloudConnectorService;
@@ -20,10 +20,10 @@ describe('ServicesOverviewController', () => {
   let FeatureToggleService;
   let HybridServicesClusterService: HybridServicesClusterService;
   let enabledFeatureToggles: string[] = [];
+  let ServiceDescriptorService;
+  let HybridServicesClusterStatesService;
 
   // Spies
-  let getConferenceServicesWithoutSiteUrl: jasmine.Spy;
-  let getConferenceServicesWithLinkedSiteUrl: jasmine.Spy;
   let getRoles: jasmine.Spy;
   let isFusionUC: jasmine.Spy;
   let isFusionCal: jasmine.Spy;
@@ -35,16 +35,15 @@ describe('ServicesOverviewController', () => {
   let isFusionIMP: jasmine.Spy;
   let getService: jasmine.Spy;
   let fetch: jasmine.Spy;
-  let supports: jasmine.Spy;
-  let getAll: jasmine.Spy;
   let getStatusForService: jasmine.Spy;
+  let isPartnerAdmin: jasmine.Spy;
 
-  beforeEach(angular.mock.module(componentModule));
+  beforeEach(angular.mock.module(moduleName));
   beforeEach(inject(dependencies));
   beforeEach(() => {
     enabledFeatureToggles = [];
-    getConferenceServicesWithoutSiteUrl = spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(false);
-    getConferenceServicesWithLinkedSiteUrl = spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue(false);
+    spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(false);
+    spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue(false);
     getRoles = spyOn(Authinfo, 'getRoles').and.returnValue([]);
     isFusionUC = spyOn(Authinfo, 'isFusionUC').and.returnValue(false);
     isFusionCal = spyOn(Authinfo, 'isFusionCal').and.returnValue(false);
@@ -54,16 +53,18 @@ describe('ServicesOverviewController', () => {
     isContactCenterContext = spyOn(Authinfo, 'isContactCenterContext').and.returnValue(false);
     isSquaredUC = spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     isFusionIMP = spyOn(Authinfo, 'isFusionIMP').and.returnValue(false);
+    isPartnerAdmin = spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
     getService = spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({}));
     fetch = spyOn(EnterprisePrivateTrunkService, 'fetch').and.returnValue($q.resolve([]));
-    supports = spyOn(FeatureToggleService, 'supports').and.callFake((name) => $q.resolve(_.includes(enabledFeatureToggles, name)));
-    getAll = spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
-    getStatusForService = spyOn(HybridServicesClusterService, 'getStatusForService').and.returnValue($q.resolve({}));
+    spyOn(FeatureToggleService, 'supports').and.callFake((name) => $q.resolve(_.includes(enabledFeatureToggles, name)));
+    spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve([]));
+    spyOn(HybridServicesClusterService, 'processClustersToAggregateStatusForService').and.returnValue($q.resolve({}));
+    getStatusForService = spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve({}));
+    spyOn(HybridServicesClusterStatesService, 'getServiceStatusCSSClassFromLabel').and.returnValue('success');
   });
 
-  function dependencies(_$componentController_, _$httpBackend_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
     Authinfo = _Authinfo_;
@@ -72,39 +73,41 @@ describe('ServicesOverviewController', () => {
     EnterprisePrivateTrunkService = _EnterprisePrivateTrunkService_;
     FeatureToggleService = _FeatureToggleService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
+    HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
+    ServiceDescriptorService = _ServiceDescriptorService_;
+    $state = _$state_;
   }
 
-  function initController(hasServicesOverviewRefreshToggle = false) {
+  function initController() {
     ctrl = $componentController('servicesOverview', {}, {
-      hasServicesOverviewRefreshToggle: hasServicesOverviewRefreshToggle,
       urlParams: {
         office365: undefined,
       },
     });
+    $state.current = { name: 'services-overview' };
+    ctrl.$onInit();
+    $scope.$apply();
+  }
+
+  function initControllerPartner() {
+    ctrl = $componentController('servicesOverview', {}, {
+      urlParams: {
+        office365: undefined,
+      },
+    });
+    $state.current = { name: 'partner-services-overview' };
     ctrl.$onInit();
     $scope.$apply();
   }
 
   describe('$onInit', () => {
-    it('should create 4 cloud cards', () => {
+    it('should create 5 cloud cards', () => {
       initController();
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: false }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
-    });
-
-    it('should create 8 hybrid cards', () => {
-      initController();
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.clusterList.title' }).length).toBe(1);
-      // 2 Hybrid Calendar cards (sharing the same title) but never displayed at the same time
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCalendar.title' }).length).toBe(2);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridCall.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridMedia.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridDataSecurity.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridContext.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.privateTrunk.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getHybridCards(), { name: 'servicesOverview.cards.hybridImp.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: true, display: false }).length).toBe(1);
     });
 
     it('should load the webex site list', () => {
@@ -112,24 +115,14 @@ describe('ServicesOverviewController', () => {
       expect(Authinfo.getConferenceServicesWithoutSiteUrl).toHaveBeenCalled();
       expect(Authinfo.getConferenceServicesWithLinkedSiteUrl).toHaveBeenCalled();
     });
-
-    // it('should PropackPromises', () => {});
 
     it('should leave servicesToDisplay empty', () => {
       expect(ctrl._servicesToDisplay.length).toBe(0);
     });
-  });
-
-  describe('$onInit with the feature toggle for the new design', () => {
-    it('should load the webex site list', () => {
-      initController(true);
-      expect(Authinfo.getConferenceServicesWithoutSiteUrl).toHaveBeenCalled();
-      expect(Authinfo.getConferenceServicesWithLinkedSiteUrl).toHaveBeenCalled();
-    });
 
     // Below are tests for cards being displayed, and inactive
     it('should have not populate servicesToDisplay if nothing is setup/entitled', () => {
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay.length).toBe(0);
       expect(ctrl._servicesActive.length).toBe(0);
       expect(ctrl._servicesInactive.length).toBe(0);
@@ -137,7 +130,7 @@ describe('ServicesOverviewController', () => {
 
     it('should display Hybrid Call if the org is entitled to it', () => {
       isFusionUC.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['squared-fusion-uc']);
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-uc']);
     });
@@ -145,28 +138,28 @@ describe('ServicesOverviewController', () => {
     it('should display Hybrid Calendar Exchange/Office 365 if the org is entitled to it', () => {
       isFusionCal.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.atlasOffice365Support];
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['squared-fusion-cal', 'squared-fusion-o365']);
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-cal', 'squared-fusion-o365']);
     });
 
     it('should display Hybrid Calendar Google if the org is entitled to it', () => {
       isFusionGoogleCal.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['squared-fusion-gcal']);
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-gcal']);
     });
 
-    it('should display Hybrid Media if the org is entitled to it and the user is full_admin or readonly_admin', () => {
+    it('should display Video Mesh if the org is entitled to it and the user is full_admin or readonly_admin', () => {
       isFusionMedia.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['squared-fusion-media']);
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-media']);
 
       isFusionMedia.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.readonly_admin);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['squared-fusion-media']);
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-media']);
     });
@@ -174,7 +167,7 @@ describe('ServicesOverviewController', () => {
     it('should display Hybrid Data Security if the org is an Enterprise Customer and the user is full_admin or readonly_admin', () => {
       isEnterpriseCustomer.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['spark-hybrid-datasecurity']);
       expect(ctrl._servicesInactive).toEqual(['spark-hybrid-datasecurity']);
       // not trying the readonly_admin case to shorten the test
@@ -182,7 +175,7 @@ describe('ServicesOverviewController', () => {
 
     it('should display Context Center if the org is entitled to it', () => {
       isContactCenterContext.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['contact-center-context']);
       expect(ctrl._servicesInactive).toEqual(['contact-center-context']);
     });
@@ -190,7 +183,7 @@ describe('ServicesOverviewController', () => {
     it('should display EPT if the org is entitled to it and has the feature toggle', () => {
       isSquaredUC.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.huronEnterprisePrivateTrunking];
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['ept']);
       expect(ctrl._servicesInactive).toEqual(['ept']);
     });
@@ -198,55 +191,90 @@ describe('ServicesOverviewController', () => {
     it('should display Hybrid IMP if the org is entitled to it and has the feature toggle', () => {
       isFusionIMP.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.atlasHybridImp];
-      initController(true);
+      initController();
       expect(ctrl._servicesToDisplay).toEqual(['spark-hybrid-impinterop']);
       expect(ctrl._servicesInactive).toEqual(['spark-hybrid-impinterop']);
     });
 
     // Below are tests for enabled/disabled
-    it('should consider Hybrid Call active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
+    it('should consider Hybrid Call active, if the Call Service Aware service is setup', () => {
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'squared-fusion-uc',
+      }]));
       isFusionUC.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['squared-fusion-uc']);
     });
 
-    it('should consider Hybrid Calendar Exchange/Office 365 active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
-      getService.and.returnValue($q.resolve({ setup: true }));
+    it('should consider Hybrid Calendar Exchange and Office 365 active, if the services are setup', () => {
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'squared-fusion-cal',
+      }]));
+      getService.and.returnValue($q.resolve({
+        setup: true,
+        serviceId: 'squared-fusion-o365',
+      }));
       isFusionCal.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.atlasOffice365Support];
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['squared-fusion-cal', 'squared-fusion-o365']);
     });
 
-    it('should consider Hybrid Calendar Exchange/Office 365 active, if the service is setup', () => {
-      getService.and.returnValue($q.resolve({ setup: true }));
+    it('should consider Google Calendar active, if the service is setup in CCC, but not in FMS', () => {
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: false,
+        id: 'squared-fusion-gcal',
+      }]));
+      getService.and.returnValue($q.resolve({
+        setup: true,
+        serviceId: 'squared-fusion-gcal',
+      }));
       isFusionGoogleCal.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['squared-fusion-gcal']);
     });
 
-    it('should consider Hybrid Media active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
+    it('should not consider Google Calendar active, if the service only is setup in FMS', () => {
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'squared-fusion-gcal',
+      }]));
+      isFusionGoogleCal.and.returnValue(true);
+      initController();
+      expect(ctrl._servicesActive).toEqual([]);
+    });
+
+    it('should consider Video Mesh active, if the service is setup', () => {
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'squared-fusion-media',
+      }]));
       isFusionMedia.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['squared-fusion-media']);
     });
 
     it('should consider Hybrid Data Security active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'spark-hybrid-datasecurity',
+      }]));
       isEnterpriseCustomer.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['spark-hybrid-datasecurity']);
     });
 
     it('should consider Hybrid Context Center active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'contact-center-context',
+      }]));
       isContactCenterContext.and.returnValue(true);
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['contact-center-context']);
     });
 
@@ -267,16 +295,40 @@ describe('ServicesOverviewController', () => {
       }]));
       isSquaredUC.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.huronEnterprisePrivateTrunking];
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['ept']);
     });
 
     it('should consider Hybrid IMP active, if the service is setup', () => {
-      getStatusForService.and.returnValue($q.resolve({ setup: true }));
+      getStatusForService.and.returnValue($q.resolve([{
+        enabled: true,
+        id: 'spark-hybrid-impinterop',
+      }]));
       isFusionIMP.and.returnValue(true);
       enabledFeatureToggles = [FeatureToggleService.features.atlasHybridImp];
-      initController(true);
+      initController();
       expect(ctrl._servicesActive).toEqual(['spark-hybrid-impinterop']);
+    });
+  });
+
+  describe('$onInit partner ServicesOverview', () => {
+    beforeEach(function () {
+      enabledFeatureToggles = [FeatureToggleService.features.gemServicesTab];
+      enabledFeatureToggles = [FeatureToggleService.features.atlasHostedCloudService];
+      isPartnerAdmin.and.returnValue(true);
+      initControllerPartner();
+    });
+
+    it('should list CCA cloud card', () => {
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: false }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: true, display: false }).length).toBe(1);
+    });
+
+    it('should load hybrid HCS Services cards', () => {
+      expect(ctrl._servicesToDisplay).toEqual(['hcs', 'hcs-licensing', 'hcs-upgrade']);
     });
   });
 });

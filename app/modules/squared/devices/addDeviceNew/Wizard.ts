@@ -1,20 +1,17 @@
 import { ITimeoutService, IWindowService } from 'angular';
 
-(function () {
-  'use strict';
+export class WizardFactory {
 
-  angular.module('Squared').service('WizardFactory', WizardFactory);
   /* @ngInject */
-  function WizardFactory($state, $timeout) {
-    function create(state) {
-      return new Wizard($state, state, $timeout);
-    }
+  constructor(
+    private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
+  ) { }
 
-    return {
-      create: create,
-    };
+  public create(state) {
+    return new Wizard(this.$state, state, this.$timeout);
   }
-})();
+}
 
 class Wizard {
 
@@ -31,7 +28,13 @@ class Wizard {
     const next = this.wizardState.wizardState[this.wizardState.currentStateName].next || this.wizardState.wizardState[this.wizardState.currentStateName].nextOptions[nextOption];
     this.wizardState.history.push(this.wizardState.currentStateName);
     this.wizardState.currentStateName = next;
-    _.merge(this.wizardState.data, data);
+    _.mergeWith(this.wizardState.data, data, (original, update) => {
+      // Need to override the merge behavior for arrays,
+      // otherwise it's not possible to remove elements from an array for a next step
+      if (_.isArray(original) && _.isArray(update)) {
+        return update;
+      }
+    });
     $state.go(next, {
       wizard: this,
     });
@@ -59,3 +62,8 @@ class Wizard {
     return this.wizardState;
   }
 }
+
+export default angular
+  .module('Csdm.wizard-factory', [])
+  .service('WizardFactory', WizardFactory)
+  .name;

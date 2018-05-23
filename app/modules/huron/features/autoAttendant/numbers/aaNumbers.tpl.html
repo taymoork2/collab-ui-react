@@ -6,7 +6,7 @@
     </div>
     <div class="row" ng-controller="AABuilderNumbersCtrl as aa">
       <div class="panel aa-panel-numbers">
-        <p class="h6" ng-if="aa.ui.ceInfo.getResources().length == 0" translate="autoAttendant.addNumberMsg"></p>
+        <p class="h6" ng-if="aa.ui.ceInfo.getResources().length === 0" translate="autoAttendant.addNumberMsg"></p>
         <div class="aa-builder-number-tile" ng-repeat="phoneNum in aa.ui.ceInfo.getResources()">
           <span class="phone-number">{{phoneNum.getNumber() |telephoneNumber}}</span>
           <i name="numberClose" class="icon icon-close" ng-click="aa.removeNumber(phoneNum)"></i>

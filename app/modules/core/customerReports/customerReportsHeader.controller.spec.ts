@@ -12,10 +12,13 @@ describe('Controller: Customer Reports Ctrl', function () {
     state: 'reports.webex',
   }, {
     title: 'mediaFusion.report.title',
-    state: 'reports.media',
+    state: 'reports.mediaservice',
   }, {
     title: 'reportsPage.usageReports.usageReportTitle',
     state: 'reports.device-usage',
+  }, {
+    title: 'mediaFusion.report.title',
+    state: 'reports.hybridMedia',
   }];
 
   const propackTabs: any = [{
@@ -37,14 +40,14 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(function () {
     this.initModules('Core', 'Huron', 'Sunlight', 'Mediafusion', 'WebExApp');
     this.injectDependencies('$controller',
-                            '$scope',
-                            '$state',
-                            '$q',
-                            'Authinfo',
-                            'FeatureToggleService',
-                            'ProPackService',
-                            'WebexMetricsService',
-                            'MediaServiceActivationV2');
+      '$scope',
+      '$state',
+      '$q',
+      'Authinfo',
+      'FeatureToggleService',
+      'ProPackService',
+      'WebexMetricsService',
+      'MediaServiceActivationV2');
 
     spyOn(this.$state, 'go');
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
@@ -53,16 +56,15 @@ describe('Controller: Customer Reports Ctrl', function () {
     }]);
 
     WebexReportService = {
-      initReportsObject: function () {},
+      initReportsObject: function () { },
     };
 
   });
 
   describe('when all featuretoggles return false and there are no webex sites', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(false));
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
+      spyOn(this.FeatureToggleService, 'atlasHybridMediaServiceQlikReportsGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
       spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve([false]));
@@ -89,10 +91,10 @@ describe('Controller: Customer Reports Ctrl', function () {
 
   describe('when all featuretoggles return true and there are webex sites', function () {
     beforeEach(function () {
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneOneGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.FeatureToggleService, 'atlasMediaServiceMetricsMilestoneTwoGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'atlasHybridMediaServiceQlikReportsGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'autoLicenseGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
       spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve([true]));
       spyOn(this.WebexMetricsService, 'checkWebexAccessiblity').and.returnValue(this.$q.resolve([true]));
@@ -111,7 +113,7 @@ describe('Controller: Customer Reports Ctrl', function () {
 
     it('should display all reports tabs', function () {
       expect(this.controller.headerTabs).toContain(headerTabs[0]);
-      expect(this.controller.headerTabs).toContain(headerTabs[3], headerTabs[4]);
+      expect(this.controller.headerTabs).toContain(headerTabs[4], headerTabs[5]);
       expect(this.controller.headerTabs).toContain(propackTabs[0], propackTabs[1]);
     });
   });

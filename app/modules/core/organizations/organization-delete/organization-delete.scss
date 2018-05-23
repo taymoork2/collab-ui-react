@@ -1,0 +1,19 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+organization-delete-modal {
+  @include keep-flex-container(column);
+}
+
+.organization-delete-modal {
+  &__intro {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 25px;
+  }
+
+  &__intro-icon {
+    color: $color-green;
+  }
+}

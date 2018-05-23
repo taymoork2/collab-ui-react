@@ -6,7 +6,7 @@ import coreSharedModuleName from 'modules/core/shared';
 
 export default angular.module('modules.core.users.shared.cr-checkbox-item', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   sharedModuleName,
   coreSharedModuleName,
 ])

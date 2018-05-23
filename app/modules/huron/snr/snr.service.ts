@@ -1,16 +1,26 @@
-import { SingleNumberReach } from './snr';
+import { SingleNumberReach, IRSingleNumberReach } from './snr';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
+import { LineService, LineConsumerType, Line } from 'modules/huron/lines/services';
 
-interface ISnrResource extends ng.resource.IResourceClass<ng.resource.IResource<SingleNumberReach>> {
-  update: ng.resource.IResourceMethod<ng.resource.IResource<SingleNumberReach>>;
+export class SnrData {
+  public lines: Line[];
+  public snr: SingleNumberReach;
 }
+
+interface ISnrResource extends ng.resource.IResourceClass<ng.resource.IResource<IRSingleNumberReach>> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
+}
+
 export class SnrService {
+  private snrDataCopy: SnrData;
   private snrService: ISnrResource;
   /* @ngInject */
   constructor(
     private Authinfo,
     private PhoneNumberService: PhoneNumberService,
     private $resource: ng.resource.IResourceService,
+    private $q: ng.IQService,
+    private LineService: LineService,
     private HuronConfig) {
     const saveAction: ng.resource.IActionDescriptor = {
       method: 'POST',
@@ -27,6 +37,17 @@ export class SnrService {
     });
   }
 
+  public loadSnrData(userId: string): ng.IPromise<SnrData> {
+    const snrData = new SnrData();
+    return this.$q.all({
+      snr: this.getFirstSnr(userId).then(snr => snrData.snr = snr),
+      lines: this.LineService.getLineList(LineConsumerType.USERS, userId).then(lines => snrData.lines = lines),
+    }).then(snrData => {
+      this.snrDataCopy = this.cloneSnrData(snrData);
+      return snrData;
+    });
+  }
+
   public getSnrList(_userId: string): ng.IPromise<any> {
     return this.snrService.query({
       customerId: this.Authinfo.getOrgId(),
@@ -34,22 +55,37 @@ export class SnrService {
     }).$promise;
   }
 
+  public getFirstSnr(_userId: string): IPromise<SingleNumberReach> {
+    return this.getSnrList(_userId)
+      .then(snrList => {
+        if (snrList && snrList.length > 0) {
+          return this.getSnr(_userId, snrList[0].uuid).then(snr => snr);
+        } else {
+          return new SingleNumberReach();
+        }
+      });
+  }
 
   public getSnr(_userId: string, _id: string): ng.IPromise<SingleNumberReach> {
     return this.snrService.get({
       customerId: this.Authinfo.getOrgId(),
       userId: _userId,
       remotedestinationId: _id,
-    }).$promise;
+    }).$promise.then(snr => new SingleNumberReach(snr));
   }
 
-  public createSnr(_userId: string, payload: any): ng.IPromise<any> {
-    payload.name = 'RD-' + this.getRandomString();
-    payload.autoAssignRemoteDestinationProfile = 'true';
+  public createSnr(_userId: string, payload: SingleNumberReach): ng.IPromise<any> {
     return this.snrService.save({
       customerId: this.Authinfo.getOrgId(),
       userId: _userId,
-    }, payload).$promise;
+    }, {
+      name: 'RD-' + this.getRandomString(),
+      autoAssignRemoteDestinationProfile: 'true',
+      destination: payload.destination,
+      answerTooLateTimer: payload.answerTooLateTimer,
+      enableMobileConnect: payload.enableMobileConnect,
+      patterns: payload.patterns,
+    }).$promise;
   }
 
   public updateSnr(_userId: string, _id: string, payload: SingleNumberReach): ng.IPromise<any> {
@@ -57,7 +93,12 @@ export class SnrService {
       customerId: this.Authinfo.getOrgId(),
       userId: _userId,
       remotedestinationId: _id,
-    }, payload).$promise;
+    }, {
+      destination: payload.destination,
+      answerTooLateTimer: payload.answerTooLateTimer,
+      enableMobileConnect: payload.enableMobileConnect,
+      patterns: payload.patterns,
+    }).$promise;
   }
 
   public deleteSnr(_userId: string, _id: string): ng.IPromise<any> {
@@ -71,10 +112,8 @@ export class SnrService {
   public saveSnr(_userId: string, _id: string, snr: SingleNumberReach) {
     if (_.isEmpty(_id)) {
       return this.createSnr(_userId, snr);
-    } else if (snr.destination) {
-      return this.updateSnr(_userId, _id, snr);
     } else {
-      return this.deleteSnr(_userId, _id);
+      return this.updateSnr(_userId, _id, snr);
     }
   }
 
@@ -96,5 +135,17 @@ export class SnrService {
       newNumber = _.replace(number, /-/g, '');
     }
     return newNumber.replace(/ /g, '');
+  }
+
+  public getOriginalConfig(): SnrData {
+    return this.cloneSnrData(this.snrDataCopy);
+  }
+
+  public matchesOriginalConfig(snrData: SnrData): boolean {
+    return _.isEqual(snrData, this.snrDataCopy);
+  }
+
+  private cloneSnrData(snrData: SnrData): SnrData {
+    return _.cloneDeep(snrData);
   }
 }

@@ -6,7 +6,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function ClientTypeAdoptionGraphService(CommonReportsGraphService, $translate, $rootScope) {
+  function ClientTypeAdoptionGraphService($rootScope, $translate, CommonReportsGraphService, MediaReportsService) {
     var vm = this;
     vm.clientTypediv = 'clientTypediv';
     vm.exportDiv = 'client-type-div';
@@ -28,7 +28,9 @@
       IPHONE: $translate.instant('mediaFusion.metrics.clientType.iphone'),
       JABBER: $translate.instant('mediaFusion.metrics.clientType.jabber'),
       SIP: $translate.instant('mediaFusion.metrics.clientType.sip'),
-      SPARK_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_VOICE: $translate.instant('mediaFusion.metrics.clientType.webexvoice'),
+      WEBEX_SHARE: $translate.instant('mediaFusion.metrics.clientType.webexshare'),
       TEST: $translate.instant('mediaFusion.metrics.clientType.test'),
       TP_ENDPOINT: $translate.instant('mediaFusion.metrics.clientType.tp'),
       UC: $translate.instant('mediaFusion.metrics.clientType.uc'),
@@ -49,6 +51,7 @@
       var isDummy = false;
       var data = response.graphData;
       var graphs = getClusterName(response.graphs);
+      vm.legendGraphs = graphs;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else {
@@ -217,7 +220,11 @@
     }
 
     function legendHandler(evt) {
+      MediaReportsService.legendHandlerForGraphs(vm.legendGraphs, evt);
       if (evt.dataItem.title === vm.allOff) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = false;
+        });
         evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
           if (graph.title != vm.allOn) {
@@ -227,6 +234,9 @@
           }
         });
       } else if (evt.dataItem.title === vm.allOn) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = true;
+        });
         evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);

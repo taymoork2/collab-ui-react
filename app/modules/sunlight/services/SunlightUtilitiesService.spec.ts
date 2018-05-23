@@ -7,7 +7,10 @@ describe('Test sunlight Util Service for admin profile', function () {
 
   function initDependencies() {
     this.injectDependencies('SunlightUtilitiesService', '$scope', '$q', 'SunlightConfigService', 'Authinfo',
-      'LocalStorage', 'SunlightConstantsService');
+      'LocalStorage', 'SunlightConstantsService', 'FeatureToggleService', 'ContextAdminAuthorizationService');
+    this.constants = {
+      NEEDS_MIGRATION: 'NeedsMigration',
+    };
   }
   function initSpies() {
     deferredRes = this.$q.defer();
@@ -21,6 +24,12 @@ describe('Test sunlight Util Service for admin profile', function () {
     spyOn(this.Authinfo, 'getUserId').and.returnValue('eqcbe9dc-d4c9-490b-8908-738f373d2c4b');
 
     this.status =  this.SunlightConstantsService.status;
+  }
+
+  function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(isFeatureEnabled));
+    spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(isMigrationNeeded));
+    spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(this.constants.NEEDS_MIGRATION));
   }
 
   beforeEach(function () {
@@ -53,7 +62,7 @@ describe('Test sunlight Util Service for admin profile', function () {
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForPartner(this.status.SUCCESS, this.status.UNKNOWN)).toBe(true);
     });
 
-    it('should get CareOnboardStatus false ForPartner ', function () {
+    it('should get CareOnboardStatus false For Partner ', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForPartner(this.status.UNKNOWN, this.status.SUCCESS)).toBe(false);
     });
@@ -62,9 +71,10 @@ describe('Test sunlight Util Service for admin profile', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(true);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
@@ -72,9 +82,10 @@ describe('Test sunlight Util Service for admin profile', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.appOnboardUnknown);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(true);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
@@ -82,34 +93,21 @@ describe('Test sunlight Util Service for admin profile', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.jwtAppOnboardUnknown);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(true);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
-    });
-
-    it('should get getAAOnboardStatus for non care voice entitled org', function () {
-      this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
-      this.Authinfo.isCareVoice.and.returnValue(false);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.UNKNOWN);
-      expect(aaOnboardStatus).toBe(this.status.SUCCESS);
-    });
-
-    it('should get getAAOnboardStatus for care voice entitled org', function () {
-      this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.status.FAILURE);
-      expect(aaOnboardStatus).toBe(this.status.FAILURE);
     });
 
     it('should get isCareSetup for cs not onboarded', function () {
       this.Authinfo.getUserOrgId.and.returnValue(partnerOrgId);
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.csOnboardUnknown);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
@@ -139,32 +137,19 @@ describe('Test sunlight Util Service for admin profile', function () {
     });
 
     it('should get CareOnboardStatusForAdmin positive', function () {
-      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS,
-      this.status.SUCCESS)).toBe(true);
+      expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS, this.status.SUCCESS,
+        this.status.SUCCESS)).toBe(true);
     });
 
     it('should get CareOnboardStatusForAdmin when careVoice not enabled', function () {
       this.Authinfo.isCareVoice.and.returnValue(false);
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS,
-      this.status.SUCCESS , this.status.UNKNOWN, this.status.SUCCESS)).toBe(true);
+      this.status.SUCCESS, this.status.SUCCESS)).toBe(true);
     });
 
     it('should get getCareOnboardStatusForAdmin negative', function () {
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.UNKNOWN,
-        this.status.SUCCESS, this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
-    });
-
-    it('should get getAAOnboardStatus for non care voice entitled org', function () {
-      this.Authinfo.isCareVoice.and.returnValue(false);
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.FAILURE);
-      expect(aaOnboardStatus).toBe(this.status.SUCCESS);
-    });
-
-    it('should get getAAOnboardStatus for care voice entitled org', function () {
-      const aaOnboardStatus = this.SunlightUtilitiesService
-        .getAAOnboardStatus(this.FAILURE);
-      expect(aaOnboardStatus).toBe(this.FAILURE);
+        this.status.SUCCESS, this.status.SUCCESS)).toBe(false);
     });
 
     it('should test that snoozeTime is Up  ', function () {
@@ -184,27 +169,30 @@ describe('Test sunlight Util Service for admin profile', function () {
     it('should get isCareSetup for all Success statuses', function () {
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(true);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
     it('should get isCareSetup for app not onboarded', function () {
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.appOnboardUnknown);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
     it('should get isCareSetup for jwtApp not onboarded', function () {
       const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
       deferredRes.resolve(dummyResponse.jwtAppOnboardUnknown);
+      initMigrationAdminSpies.call(this, true, false);
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
@@ -213,7 +201,7 @@ describe('Test sunlight Util Service for admin profile', function () {
       deferredRes.reject({ status: 403, body: 'dummyBody' });
       careSetupResponse.then(function (res) {
         expect(res).toBe(true);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
 
@@ -222,7 +210,26 @@ describe('Test sunlight Util Service for admin profile', function () {
       deferredRes.reject({ status: 404, body: 'dummyBody' });
       careSetupResponse.then(function (res) {
         expect(res).toBe(false);
-      });
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
+      this.$scope.$digest();
+    });
+
+    it('should get isCareSetup as false for org if migration is needed', function () {
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, true);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(false);
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
+      this.$scope.$digest();
+    });
+    it('should get isCareSetup as true for org if migration is not needed', function () {
+      const careSetupResponse = this.SunlightUtilitiesService.isCareSetup();
+      deferredRes.resolve(dummyResponse.SuccessStatusResponse);
+      initMigrationAdminSpies.call(this, true, false);
+      careSetupResponse.then(function (res) {
+        expect(res).toBe(true);
+      }).catch((error) => fail('Failed to resolve promise with error' + error));
       this.$scope.$digest();
     });
   });

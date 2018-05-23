@@ -92,6 +92,14 @@ export class ServiceDescriptorService {
     return this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
   }
 
+  public setDefaultCalendarAction(defaultCalWebexAction: string, defaultCalMeetAction: string): ng.IPromise<''> {
+    const settings = {
+      defaultCalendarWebexAction: defaultCalWebexAction,
+      defaultCalendarMeetAction: defaultCalMeetAction,
+    };
+    return this.Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
+  }
+
   public getAllWebExSiteOrgLevel(): string[] {
     const conferenceServices = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
     const webexSiteUrls = _.map(conferenceServices, (conferenceService: any) => {
@@ -112,7 +120,7 @@ export class ServiceDescriptorService {
       .then(this.extractData);
   }
 
-  public isServiceEnabled(serviceId: HybridServiceId) {
+  public isServiceEnabled(serviceId: HybridServiceId): ng.IPromise<boolean> {
     return this.getServices()
       .then((services) => {
         const service = _.find(services, { id: serviceId });

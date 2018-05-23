@@ -1,5 +1,7 @@
 'use strict';
 
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
 describe('UserListCtrl: Ctrl', function () {
   function init() {
     this.initModules('Core', 'Huron', 'Sunlight');
@@ -14,7 +16,6 @@ describe('UserListCtrl: Ctrl', function () {
       'Config',
       'DirSyncService',
       'FeatureToggleService',
-      'GridCellService',
       'Notification',
       'Orgservice',
       'UserListService',
@@ -236,14 +237,14 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is enter', function () {
-      this.event.keyCode = this.GridCellService.ENTER;
+      this.event.keyCode = KeyCodes.ENTER;
       this.controller.keypressHandleDeleteUser(this.event, this.user, true);
       expect(this.event.stopPropagation).toHaveBeenCalled();
       expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
     });
 
     it('should call keypressHandleDeleteUser and handleDeleteUser successfully when keypress event is space', function () {
-      this.event.keyCode = this.GridCellService.SPACE;
+      this.event.keyCode = KeyCodes.SPACE;
       this.controller.keypressHandleDeleteUser(this.event, this.user, true);
       expect(this.event.stopPropagation).toHaveBeenCalled();
       expect(this.$state.go).toHaveBeenCalledWith(this.selfDelete, this.userDetails);
@@ -282,7 +283,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressResendInvitation and resendInvitation successfully when keypress event is enter', function () {
-      this.event.keyCode = this.GridCellService.ENTER;
+      this.event.keyCode = KeyCodes.ENTER;
       this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
@@ -290,7 +291,7 @@ describe('UserListCtrl: Ctrl', function () {
     });
 
     it('should call keypressResendInvitation and resendInvitation successfully when keypress event is space', function () {
-      this.event.keyCode = this.GridCellService.SPACE;
+      this.event.keyCode = KeyCodes.SPACE;
       this.controller.keypressResendInvitation(this.event, this.userEmail, this.userName, this.uuid, this.userStatus, this.dirsyncEnabled, this.entitlements);
       this.$scope.$apply();
       expect(this.Notification.success).toHaveBeenCalled();
@@ -486,6 +487,11 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'error';
       expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return false if org is dirsynch', function () {
+      this.$scope.dirsyncEnabled = true;
+      expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
     });
 
     it('should return false if userStatus is neither pending nor error', function () {

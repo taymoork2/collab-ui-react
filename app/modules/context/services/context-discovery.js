@@ -1,12 +1,10 @@
 (function () {
   'use strict';
 
-  angular
-    .module('Context')
-    .factory('Discovery', Discovery);
+  module.exports = contextDiscovery;
 
   /* @ngInject */
-  function Discovery($http, $q, UrlConfig) {
+  function contextDiscovery($http, $q, UrlConfig) {
     var _discoveryPromise = null;
     var _contextDiscoveryUrl = UrlConfig.getContextDiscoveryServiceUrl();
 

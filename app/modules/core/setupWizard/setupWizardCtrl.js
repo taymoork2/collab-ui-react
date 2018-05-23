@@ -12,7 +12,6 @@ require('./_setup-wizard.scss');
   var enterpriseExportMetadataTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.exportMetadata.tpl.html');
   var enterpriseImportIdpTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.importIdp.tpl.html');
   var enterpriseTestSSOTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.testSSO.tpl.html');
-  var enterprisePmrSetupTemplatePath = require('ngtemplate-loader?module=Core!./enterpriseSettings/enterprise.pmrSetup.tpl.html');
   var meetingSettingsMigrateTrialTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-migrate-trial.html');
   var meetingSettingsSiteSetupTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-site-setup.html');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
@@ -23,6 +22,8 @@ require('./_setup-wizard.scss');
   var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
+  var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
+  var bsftPstnSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftPstn.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -32,7 +33,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, BsftCustomerService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -40,8 +41,8 @@ require('./_setup-wizard.scss');
     var shouldShowMeetingsTab = false;
     var hasPendingCallLicenses = false;
     var hasPendingLicenses = false;
-    var supportsAtlasPMRonM2 = false;
     var supportsHI1484 = false;
+    var supportsHI1776 = false;
     $scope.tabs = [];
     $scope.isTelstraCsbEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
@@ -74,6 +75,11 @@ require('./_setup-wizard.scss');
           supportsHI1484 = _supportsHI1484;
         });
 
+      var hI1776Promise = FeatureToggleService.supports(FeatureToggleService.features.hI1776)
+        .then(function (_supportsHI1776) {
+          supportsHI1776 = _supportsHI1776;
+        });
+
       var adminOrgUsagePromise = Orgservice.getAdminOrgUsage()
         .then(function (subscriptions) {
           var licenses = _.flatMap(subscriptions, 'licenses');
@@ -82,17 +88,12 @@ require('./_setup-wizard.scss');
         })
         .catch(_.noop);
 
-      var atlasPMRonM2Promise = FeatureToggleService.supports(FeatureToggleService.features.atlasPMRonM2)
-        .then(function (_supportsAtlasPMRonM2) {
-          supportsAtlasPMRonM2 = _supportsAtlasPMRonM2;
-        });
-
       var pendingSubscriptionsPromise = SetupWizardService.populatePendingSubscriptions();
 
       var promises = [
         adminOrgUsagePromise,
-        atlasPMRonM2Promise,
         hI1484Promise,
+        hI1776Promise,
         pendingSubscriptionsPromise,
       ];
       return $q.all(promises);
@@ -103,12 +104,12 @@ require('./_setup-wizard.scss');
       getPendingSubscriptionFlags();
       var tabs = getInitTabs();
 
+      initHybridServicesCaches();
       initPlanReviewTab(tabs);
       initEnterpriseSettingsTab(tabs);
       initMeetingSettingsTab(tabs);
       initCallSettingsTab(tabs);
       initCareTab(tabs);
-      initAtlasPMRonM2(tabs);
       initFinishTab(tabs);
       removeTabsWithEmptySteps(tabs);
       $scope.tabs = filterTabsByStateParams(tabs);
@@ -279,9 +280,22 @@ require('./_setup-wizard.scss');
         template: callSettingsSetupSiteTemplatePath,
       };
 
+      var setupBsft = {
+        name: 'setupBsft',
+        template: bsftSettingsSetupTemplatePath,
+      };
+
+      var bsftPstn = {
+        name: 'bsftPstn',
+        template: bsftPstnSetupTemplatePath,
+      };
+
       if (showCallSettings()) {
-        $q.resolve($scope.isCustomerPresent).then(function (customer) {
-          if (customer && hasPendingCallLicenses) {
+        $q.all({
+          customer: $scope.isCustomerPresent,
+          bsft: BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()),
+        }).then(function (response) {
+          if (response.customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
                 //   $scope.$emit('wizardNextButtonDisable', true);
@@ -298,9 +312,9 @@ require('./_setup-wizard.scss');
 
           var steps = [];
 
-          if (!customer && hasPendingCallLicenses) {
+          if (!response.customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
-          } else if (!customer) {
+          } else if (!response.customer) {
             var org = SetupWizardService.getOrg();
             CustomerCommonService.save({}, {
               uuid: org.id,
@@ -310,10 +324,17 @@ require('./_setup-wizard.scss');
             });
           }
 
-          if (supportsHI1484) {
-            steps.push(setupLocation);
+          if (supportsHI1776) {
+            if (!response.bsft.rialtoCustomerId) {
+              steps.push(setupBsft);
+            }
+            steps.push(bsftPstn);
           } else {
-            steps.push(setupSite);
+            if (supportsHI1484) {
+              steps.push(setupLocation);
+            } else {
+              steps.push(setupSite);
+            }
           }
 
           tabs.splice(1, 0, {
@@ -368,21 +389,6 @@ require('./_setup-wizard.scss');
           tabs.push(careTab);
         } else {
           tabs.splice(finishTabIndex, 0, careTab);
-        }
-      }
-    }
-
-    function initAtlasPMRonM2(tabs) {
-      if (supportsAtlasPMRonM2) {
-        var step = {
-          name: 'enterprisePmrSetup',
-          template: enterprisePmrSetupTemplatePath,
-        };
-        var enterpriseSettings = _.find(tabs, {
-          name: 'enterpriseSettings',
-        });
-        if (enterpriseSettings) {
-          enterpriseSettings.steps.splice(1, 0, step);
         }
       }
     }
@@ -454,6 +460,12 @@ require('./_setup-wizard.scss');
       }
 
       return filteredTabs;
+    }
+
+    function initHybridServicesCaches() {
+      if (Authinfo.isCustomerLaunchedFromPartner()) {
+        ApiCacheManagementService.invalidateHybridServicesCaches();
+      }
     }
   }
 })();

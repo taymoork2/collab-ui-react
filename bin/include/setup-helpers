@@ -200,8 +200,8 @@ function get_bash_conf_file {
 function get_top_dir {
     local cwd
     cwd="$(pwd)"
-    # get project top-level dir (look for 'fabfile.py')
-    while [ ! -r fabfile.py ] && [ "$(pwd)" != "/" ]; do
+    # get project top-level dir (look for 'build.sh')
+    while [ ! -r "build.sh" ] && [ "$(pwd)" != "/" ]; do
       cd ..
     done
     top_dir=$(pwd)

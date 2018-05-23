@@ -3,6 +3,7 @@ import { IOrders } from './provisioning.interfaces';
 import { IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { STATUS_UPDATE_EVENT_NAME } from './provisioning.service';
 
 export class ProvisioningController {
@@ -19,6 +20,7 @@ export class ProvisioningController {
   public status = Status;
   public completedOrders: any;
   public pendingOrders: any;
+  private featureToggleFlag: boolean;
 
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
@@ -37,7 +39,8 @@ export class ProvisioningController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private ProvisioningService: ProvisioningService,
-    private Notification: Notification) {
+    private Notification: Notification,
+    private FeatureToggleService: FeatureToggleService ) {
 
 
     this.sharedColumDefs = [{
@@ -69,8 +72,10 @@ export class ProvisioningController {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
     }];
+
     this.init();
   }
+
 
   private init(): void {
     this.isLoading = true;
@@ -79,9 +84,17 @@ export class ProvisioningController {
     this.$scope.$on(STATUS_UPDATE_EVENT_NAME, (_event, order) => {
       this.updateOrderStatusInGrid(order);
     });
-    this.getOrderData().then((results: IOrders) => {
-      this.setGridData(results);
-    })
+    this.$q.all({
+      atlasWebexFeatureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
+      orderDataPromise : this.getOrderData() }).then(promises => {
+        this.featureToggleFlag = promises.atlasWebexFeatureTogglePromise;
+        if (this.featureToggleFlag) {
+          this.updateGridOptions();
+        }
+        const results: IOrders = promises.orderDataPromise;
+
+        this.setGridData(results);
+      })
       .catch((error) => {
         this.pendingOrders = [];
         this.completedOrders = [];
@@ -146,8 +159,8 @@ export class ProvisioningController {
 
   private getOrderData(searchStr?: string): ng.IPromise<{ pending: IOrder[], completed: IOrder[] }> {
     const orders = {
-      pending: this.ProvisioningService.getOrders(Status.PENDING),
-      completed: this.ProvisioningService.getOrders(Status.COMPLETED),
+      pending: this.ProvisioningService.getOrders(Status.PENDING, this.featureToggleFlag),
+      completed: this.ProvisioningService.getOrders(Status.COMPLETED, this.featureToggleFlag),
     };
     return this.$q.all(orders).then((results) => {
       if (searchStr && searchStr.length > 0) {
@@ -187,6 +200,29 @@ export class ProvisioningController {
       });
     };
     return result;
+  }
+
+  private updateGridOptions(): void {
+    const pendingDefs = this.gridOptions.pending.columnDefs || [];
+    const completedDefs = this.gridOptions.completed.columnDefs || [];
+    pendingDefs.push({
+      field: 'queueReceived',
+      displayName: this.$translate.instant('provisioningConsole.queueReceived'),
+    }, {
+      field: 'assignedTo',
+      displayName: this.$translate.instant('provisioningConsole.assignedTo'),
+    });
+    this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field === 'lastModified');
+    completedDefs.push({
+      field: 'queueReceived',
+      displayName: this.$translate.instant('provisioningConsole.queueReceived'),
+    }, {
+      field: 'queueCompleted',
+      displayName: this.$translate.instant('provisioningConsole.queueCompleted'),
+    }, {
+      field: 'completedBy',
+      displayName: this.$translate.instant('provisioningConsole.completedBy'),
+    });
   }
 }
 

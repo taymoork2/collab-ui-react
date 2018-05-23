@@ -63,7 +63,7 @@ class LineOverview implements ng.IComponentController {
   // Data from services
   public lineOverviewData: LineOverviewData;
   public lineMediaOptions: IOption[] = [];
-  private userVoicemailEnabled: boolean = false;
+  public userVoicemailEnabled: boolean = false;
   private isHI1484: boolean = false;
   /* @ngInject */
   constructor(
@@ -168,7 +168,7 @@ class LineOverview implements ng.IComponentController {
           .then(mediaList => {
             this.lineMediaOptions = mediaList;
           })
-          .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetOptionsError'));
+          .catch(error => this.Notification.errorResponse(error, 'mediaOnHold.mohGetOptionsError'));
         }
       });
   }

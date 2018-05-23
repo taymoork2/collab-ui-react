@@ -6,6 +6,8 @@ import crServicesPanelsModuleName from './cr-services-panels';
 import sharedModuleName from './shared';
 import assignableServicesModuleName from './assignable-services';
 import hybridServicesEntitlementsPanelModuleName from './hybrid-services-entitlements-panel';
+import manualAddUsersModalModuleName from './manual-add-users-modal';
+import addUsersResultsModalModuleName from './add-users-results-modal';
 
 // TODO (mipark2):
 // - register other components in this directory to this module
@@ -17,5 +19,7 @@ export default angular
     sharedModuleName,
     assignableServicesModuleName,
     hybridServicesEntitlementsPanelModuleName,
+    manualAddUsersModalModuleName,
+    addUsersResultsModalModuleName,
   ])
   .name;

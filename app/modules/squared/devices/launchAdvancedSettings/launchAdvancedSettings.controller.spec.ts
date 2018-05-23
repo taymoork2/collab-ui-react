@@ -55,7 +55,7 @@ describe('LaunchAdvancedSettingsController', () => {
 
   beforeEach(() => {
     state.device = {
-      software: 'Spark Room OS 2016-11-30 a487137',
+      software: 'RoomOS 2016-11-30 a487137',
       isOnline: true,
       ip: '1.1.1.1',
       cisUuid: 'cisUuidcisUuidcisUuid',
@@ -74,7 +74,29 @@ describe('LaunchAdvancedSettingsController', () => {
       describe('+supported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Room OS 2017-11-30 a487137';
+          state.device.software = 'RoomOS 2017-11-30 a487137';
+          initController(state.device);
+          state.$timeout.flush();
+        });
+
+        it('should start in the connect state.', () => {
+          expect(state.controller.state).toEqual(state.controller.states.connect);
+        });
+
+        it('should have a static script block that never changes CSP hash.', () => {
+          const script = state.controller.forwardingPageScript.replace('<script>', '').replace('</script>', '');
+          // READ THIS: If this test fails, it means you changed anything in the forwardingPageScript. This script block has a CSP hash in csp-prod.config.js,
+          // which adds it to the CSP header. If you have to change the forwardingPageScript, you MUST update the hash in the CSP header or the functionality will break.
+          // Do not just update this test!! Make sure the feature still works with CSP!
+          const CryptoJS = require('crypto-js');
+          expect(CryptoJS.SHA256(script).toString(CryptoJS.enc.Base64)).toEqual('5zmUxCaNKNz+kTngvNTF8srDs9p8XHdW0oh+h9q46KQ=');
+        });
+      });
+
+      describe('+re-branded supported sw', () => {
+
+        beforeEach(() => {
+          state.device.software = 'RoomOS 2017-11-30 a487137';
           initController(state.device);
           state.$timeout.flush();
         });
@@ -116,10 +138,22 @@ describe('LaunchAdvancedSettingsController', () => {
         });
       });
 
+      describe('+re-branded supported sw', () => {
+        beforeEach(() => {
+          state.device.software = 'RoomOS 2016-11-30 a487137';
+          initController(state.device);
+          state.$timeout.flush();
+        });
+
+        it('should be in the offline state.', () => {
+          expect(state.controller.state).toEqual(state.controller.states.offline);
+        });
+      });
+
       describe('+unsupported sw', () => {
 
         beforeEach(() => {
-          state.device.software = 'Spark Unsupported Room OS 2012-11-30 a4d7137';
+          state.device.software = 'Spark Unsupported RoomOS 2012-11-30 a4d7137';
           initController(state.device);
           state.$timeout.flush();
         });

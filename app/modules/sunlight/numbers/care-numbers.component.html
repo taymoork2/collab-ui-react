@@ -1,0 +1,66 @@
+<div ng-switch on="$ctrl.pageState">
+  <div class="care-no-features care-line-list">
+    <div ng-if="$ctrl.loading" class="spinner-icon content-container">
+      <i class='icon icon-spinner icon-2x'></i>
+    </div>
+    <div ng-if="!$ctrl.hasCall && (!$ctrl.trunks && !$ctrl.eptStatus) && !$ctrl.loading" class="no-features content-container">
+      <i class="icon icon-circle-contact-centre"></i>
+      <div class="h2" translate="sunlightDetails.featuresNotYetConfiguredPage.addNumbers"></div>
+      <div class="h5 ct-desc">
+        <span translate="homePage.careLicenseCallMissingTextToggle"/>
+      </div>
+      <div class="new-btn">
+        <button
+          type="button"
+          class="btn--primary"
+          ui-sref="services-overview"
+          translate="servicesOverview.genericButtons.learnMore">
+        </button>
+      </div>
+    </div>
+    <div ng-if="($ctrl.hasCall || ($ctrl.trunks && $ctrl.eptStatus)) && !$ctrl.loading">
+      <cs-page-sub-header>
+        <cs-page-sub-header-left>
+          <cs-searchfilter
+            filters="$ctrl.filters"
+            set-filter-fn="$ctrl.setFilter(filter.filterValue)"
+            ng-model="$ctrl.placeholder.count"
+            search-item-fn="$ctrl.filterList(searchStr)"
+            placeholder-text="{{$ctrl.placeholder.name}}"
+            clear-aria-text="{{::'common.clear' | translate}}"
+            search-placeholder-text="{{::'common.search' | translate}}">
+          </cs-searchfilter>
+        </cs-page-sub-header-left>
+        <cs-page-sub-header-right >
+          <div>
+            <a href ui-sref="customerPstnOrdersOverview({currentCustomer: $ctrl.currentCustomer, vendor:$ctrl.vendor})">
+              <span class="order-history" translate="pstnOrderOverview.historyAndImports"></span>
+            </a>
+            <span>
+              <button
+                id="addNumbers"
+                class="btn btn--people"
+                ng-click="$ctrl.openNewCareFeatureModal()"
+                translate="careAddNumberTpl.addNumbers">
+              </button>
+            </span>
+          </div>
+
+          <csv-simple-export
+            on-export="$ctrl.exportCsv()"
+            filename="{{::'linesPage.csvFilename' | translate}}"
+            export-tooltip="{{::'linesPage.csvBtnTitle' | translate}}"
+            exporting-tooltip="{{::'linesPage.csvBtnExportingTitle' | translate}}"
+            tooltip-placement="left">
+          </csv-simple-export>
+        </cs-page-sub-header-right>
+      </cs-page-sub-header>
+      <cs-grid
+        id="linesListPanel"
+        grid-api="$ctrl.gridApi"
+        grid-options="$ctrl.gridOptions"
+        spinner="$ctrl.gridRefresh">
+      </cs-grid>
+    </div>
+  </div>
+</div>

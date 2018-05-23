@@ -1,0 +1,165 @@
+@import '~@collabui/collab-ui/scss/tools/functions/core';
+
+.ct-chat-status-messages {
+  align-items: center;
+
+  .cs-card article{
+    display: inline;
+    align-self: center;
+    @include vr-spacing(mt, 1.1);
+    @include vr-spacing(mr, 3);
+    @include vr-spacing(ml, 1.5);
+  }
+
+  .cs-card {
+    max-width: rem-calc(575px);
+    max-height: rem-calc(467.8px);
+    @include vr-spacing(mt, 5);
+
+    .status-preview-waiting {
+      display: flex;
+      border: 0;
+      border-radius: 1.5rem;
+      bottom: 0;
+      color: $white;
+      cursor: pointer;
+      float: right;
+      height: 3rem;
+      right: 0;
+      background-color: $blue-hover;
+      max-height: 100%;
+      max-width: 100%;
+      -webkit-box-align: center;
+      align-items: center;
+      @include vr-spacing(p, .6);
+    }
+
+    .preview-ellipsis-text {
+      max-width: inherit;
+    }
+  }
+
+  .cs-card .chat-icon-img {
+    height: 1.3rem;
+    vertical-align: middle;
+    @include vr-spacing(mt, .3);
+    @include vr-spacing(mh, .25);
+    @include vr-spacing(mb, 0);
+  }
+
+  .cs-card img.status-msg-preview {
+    width: 21.75rem;
+    text-align: center;
+    @include vr-spacing(mb, .5);
+  }
+
+  .cs-card article.status-msg-attributes {
+    width: 21.75rem;
+    box-shadow: 0;
+    background-color: $gray-light-4;
+
+    @include vr-spacing(pl, 1);
+  }
+
+  .cs-card section .h4, .cs-card section h4 {
+    @include vr-spacing(pt, 0);
+  }
+
+  .cs-card .ct-card {
+    @include vr-spacing(m, 2);
+  }
+
+  .ct-card .ct-article {
+    box-shadow: none;
+    border: none;
+  }
+
+  .ct-status-section {
+    @include vr-spacing(pl, 2);
+    @include vr-spacing(pr, 2);
+  }
+
+  .ct-attribute-field-textbox {
+    @include vr-spacing(ml, 3);
+
+    @include placeholder {
+      line-height: rem-calc(12px);
+    }
+
+    @include vr-spacing(ml, 1);
+
+    font-family: $brand-font-cisco-TT-Light;
+    width: 100%;
+    height: 2rem;
+  }
+
+  .labelText {
+    @include vr-spacing(pt, 0.75);
+  }
+
+  .textOverflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .inputField {
+    @include vr-spacing(ml, 1);
+    @include vr-spacing(mb, 0.1);
+
+    color: $gray-dark-2;
+  }
+
+  .ct-flex-topleft {
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .ct-attribute-section {
+    display: flex;
+    flex-flow: column;
+    background-color: $gray-light-4;
+    height: 26.4rem;
+    @include vr-spacing(ph, 1.3);
+
+    .ct-default-msg {
+      max-width: 60%;
+      text-align: center;
+      flex: 0;
+      color: $gray-dark-1;
+    }
+  }
+
+  .ct-attribute-field-label {
+    @include vr-spacing(mb, 0);
+    @include vr-spacing(ml, 1);
+
+    font-family: $brand-font-cisco-TT-Regular;
+  }
+
+  .ct-attribute-row {
+    width: 100%;
+    @include vr-spacing(mt, 1);
+  }
+
+  .margin-0 {
+    @include vr-spacing(m, 0);
+  }
+
+  .chat-status-help-text {
+    color: $gray-base;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+
+  .chat-status-waiting-help-text {
+    line-height: 16px;
+    text-align: justify;
+  }
+
+  .cs-input-group {
+    @include vr-spacing(mb, 0.25);
+    @include vr-spacing(mt, 0.5);
+  }
+}

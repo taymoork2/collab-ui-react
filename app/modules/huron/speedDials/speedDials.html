@@ -26,7 +26,14 @@
                   <p>{{sd.number | telephoneNumber}}</p>
                 </div>
                 <div ng-if="!$ctrl.editing && !$ctrl.isReordering()">
-                  <i ng-if="sd.callPickupEnabled" tooltip="{{$ctrl.getTooltipText(sd)}}" tooltip-placement="left" tooltip-trigger="mouseenter focus" class="icon icon-info sd-spacing-edit"></i>
+                  <i ng-if="sd.callPickupEnabled"
+                    tabindex="0"
+                    tooltip="{{$ctrl.getTooltipText(sd)}}"
+                    tooltip-placement="left"
+                    tooltip-trigger="mouseenter focus"
+                    class="icon icon-info sd-spacing-edit"
+                    aria-label="{{$ctrl.getTooltipText(sd)}}">
+                  </i>
                   <a href class="icon icon-edit sd-spacing-edit" ng-click="$ctrl.setEdit(sd)" aria-label="{{::'common.edit | translate'}}"></a>
                   <a href class="icon icon-trash" ng-click="$ctrl.delete(sd)" aria-label="{{::'common.delete | translate'}}"></a>
                 </div>
@@ -37,38 +44,33 @@
             </div>
             <div ng-if="$ctrl.editing" class="sd-edit-wrapper">
               <div class="sd-spacing-input row">
-                 <input
-                    id="{{'sd-'+sd.index}}"
-                    cs-input
-                    type="text"
-                    id="label{{$index}}"
-                    name="label{{$index}}"
-                    ng-model="$ctrl.newLabel"
-                    cs-input-label="{{:: 'speedDials.label' | translate}}"
-                    ng-required="true"
-                    maxlength="30"
-                    cs-input-messages="$ctrl.labelMessages"
-                    pattern="^((?!<).)*$"/>
+                <input cs-input type="text"
+                  id="{{'sd-'+sd.index}}"
+                  name="label{{$index}}"
+                  ng-model="$ctrl.newLabel"
+                  cs-input-label="{{:: 'speedDials.label' | translate}}"
+                  ng-required="true"
+                  maxlength="30"
+                  cs-input-messages="$ctrl.labelMessages"
+                  pattern="^((?!<).)*$"/>
               </div>
               <div class="sd-spacing-input row">
                 <cs-call-destination
-                    model="$ctrl.newNumber"
-                    size="medium-12"
-                    country-code="$ctrl.countryCode"
-                    inputs="$ctrl.callDestInputs"
-                    id="number{{$index}}"
-                    name="number{{$index}}"
-                    select-type="select"
-                    custom-number-translations="$ctrl.customTranslations"
-                    custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
-                    input-translations="$ctrl.inputTranslations"
-                    on-change-fn="$ctrl.setSpeedDial(model)">
+                  model="$ctrl.newNumber"
+                  size="medium-12"
+                  country-code="$ctrl.countryCode"
+                  inputs="$ctrl.callDestInputs"
+                  id="number{{$index}}"
+                  name="number{{$index}}"
+                  select-type="select"
+                  custom-number-translations="$ctrl.customTranslations"
+                  custom-number-validation-pattern="$ctrl.customNumberValidationPatern"
+                  input-translations="$ctrl.inputTranslations"
+                  on-change-fn="$ctrl.setSpeedDial(model)">
                 </cs-call-destination>
               </div>
               <div ng-if="$ctrl.isValid">
-                <input
-                  cs-input
-                  type="checkbox"
+                <input cs-input type="checkbox"
                   id="validInput"
                   ng-model="$ctrl.callPickupEnabled"
                   cs-input-label="{{$ctrl.ownerName}} {{:: 'speedDials.blfPickup' | translate}} {{$ctrl.extension}}"/>

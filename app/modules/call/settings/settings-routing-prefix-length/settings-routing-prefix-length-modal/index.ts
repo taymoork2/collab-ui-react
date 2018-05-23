@@ -7,7 +7,7 @@ import customerConfigCesModule from 'modules/call/shared/customer-config-ces' ;
 
 export default angular
   .module('call.settings.routing-prefix-length-modal', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('angular-resource'),
     require('modules/core/scripts/services/authinfo'),

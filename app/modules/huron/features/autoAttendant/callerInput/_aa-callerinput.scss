@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 
 .aa-call-input-message-panel {
   @extend .aa-message-panel;
@@ -36,9 +36,6 @@
 
   .aa-pm-action-select {
     @extend %aa-menu-select;
-  }
-
-  .aa-pm-action-select {
     max-width: $aa-pm-action-max-width;
   }
 

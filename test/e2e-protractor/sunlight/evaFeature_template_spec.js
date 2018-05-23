@@ -1,10 +1,11 @@
 'use strict';
 
 describe('EVA feature setup', function () {
-  var evaTestName = 'e2e-careExpertVirtualAssistant-' + utils.randomId();
+  // Added a space for name
+  var evaTestName = 'e2e-expertVirtualAssistant -' + utils.randomId();
   var evaTestRename = evaTestName + '-NewName';
   var evaTestInvalidEmailPrefix = 'a@b';
-  var evaTestEmailPrefix = 'e2e-careExpertVirtualAssistantTemplate-' + utils.randomId();
+  var evaTestEmailPrefix = 'e2e-expertVirtualAssistant-' + utils.randomId();
   var defaultSpaceName = 'Expert Virtual Assistant Default Space';
 
   beforeAll(function () {
@@ -34,10 +35,10 @@ describe('EVA feature setup', function () {
     utils.expectIsDisplayed(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
   });
 
-  it('Start Creating Expert Virtual Assistant: empty page', function () {
+  it('Start Creating Expert Virtual Assistant: Overview page', function () {
+    utils.expectIsEnabled(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
     utils.click(careFeatureLandingPage.createExpertVirtualAssistantTemplateButton);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
-
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
@@ -46,7 +47,7 @@ describe('EVA feature setup', function () {
 
   it('Create: Name page', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
-    var expectedHint = 'Specify the name Cisco Spark users in your organization see when they interact with your Expert Virtual Assistant in expert spaces.';
+    var expectedHint = 'Specify the name Cisco Webex Teams users in your organization see when they interact with your Expert Virtual Assistant in expert spaces.';
     utils.waitForText(careVirtualAssistantTemplateSetupPage.nameHint, expectedHint);
     utils.sendKeys(careVirtualAssistantTemplateSetupPage.name, evaTestName);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);

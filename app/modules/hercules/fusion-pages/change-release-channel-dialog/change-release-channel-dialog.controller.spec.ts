@@ -61,8 +61,8 @@ describe('ChangeReleaseChannelDialogController', () => {
     });
 
     it('should call Notification.errorWithTrackingId() if a request fails', () => {
-      setClusterInformationSpy.and.returnValue($q.reject());
       initController('cluster');
+      setClusterInformationSpy.and.returnValue($q.reject());
       ctrl.confirmChange();
       $scope.$apply();
       expect(Notification.errorWithTrackingId).toHaveBeenCalled();

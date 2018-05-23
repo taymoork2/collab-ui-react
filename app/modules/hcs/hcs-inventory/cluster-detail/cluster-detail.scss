@@ -1,0 +1,109 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.section__content.node__info {
+  width: 75%;
+  .cs-card article {
+    min-height: rem-calc(200);
+    header.node-header {
+      padding: 1rem 0.5rem 0.5rem 1.25rem;
+      border-bottom: 1px solid $gray-light-3;
+      .node-name {
+        padding-left: 0rem;
+        color: $gray-dark-4;
+      }
+      .node-type {
+        color: $gray-base;
+        .columns.medium-3 {
+          padding-left: 0rem;
+        }
+      }
+      button.close.node-close:before {
+        font-size: rem-calc(16)
+      }
+      button.close.node-close {
+        font-size: rem-calc(16)
+      }
+    }
+
+    section.card-body {
+      padding: 1.5rem 0.5rem 0.5rem 1.25rem;
+      .card-section {
+        .card-section-item {
+          font-weight: 200;
+          .node-sftp-container {
+            padding-left: 0rem;
+            color: $gray-dark-4;
+          }
+          .icon-edit {
+            cursor: pointer;
+            float: right;
+            color: $gray-light-1;
+            font-size: rem-calc(20);
+            &:hover,
+            &:focus {
+              color: $color-primary;
+            }
+          }
+          .node-sftp {
+            color: $gray-base;
+          }
+        }
+      }
+    }
+
+    footer.node-footer {
+      padding: 1rem 0.5rem 1rem 1.25rem;
+      background-color: $gray-light-4;
+      .columns.medium-8 {
+        padding-left: 0rem;
+        color: $gray-dark-4;
+        .icon-info-outline {
+          top: rem-calc(4);
+          margin-right: rem-calc(4);
+        }
+      }
+      .columns.medium-4 {
+        .node-status {
+          float: right;
+          color: $gray-dark-4;
+        }
+        button.btn--circle.btn--small.btn--white {
+          float: right;
+          margin-left: rem-calc(8);
+          width: rem-calc(28);
+          height: rem-calc(28);
+          font-size: rem-calc(16);
+        }
+        button.btn--circle.btn--small.btn--white.is-accepted {
+          background-color: $color-blue-darker;
+          box-shadow: inset 0 0 0 1px $color-blue-darker;
+          span {
+            color: $white;
+          }
+        }
+        button.btn--circle.btn--small.btn--white.is-rejected {
+          background-color: $gray-dark-1;
+          box-shadow: inset 0 0 0 1px $gray-dark-1;
+          span {
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}
+
+.hcs-edit-modal-class{
+  hcs-node-sftp-edit, hcs-add-customer-to-cluster{
+    .modal-footer{
+      button{
+        border-radius: 100px;
+      }
+    }
+  }
+}
+
+.cs-form__section.save-section.cluster-detail-save {
+  padding-bottom: rem-calc(16);
+}

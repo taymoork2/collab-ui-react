@@ -2,39 +2,27 @@
 
 /*global TIMEOUT, isSauce*/
 
+const moment = require('moment');
 var config = require('./test.config.js');
 var request = require('request');
+var getCecId = require('../../../utils/getCecId');
+var processEnvUtil = require('../../../utils/processEnvUtil')();
 var EC = protractor.ExpectedConditions;
 var path = require('path');
 var fs = require('fs');
 
 var RETRY_COUNT = 5;
+let serialId = 0;
 
-exports.getDateTimeString = function () {
-  var now = new Date();
-  var year = now.getYear() - 100;
-  var month = now.getMonth() + 1;
-  var day = now.getDate();
-  var hour = now.getHours();
-  var minute = now.getMinutes();
-  var second = now.getSeconds();
-  if (month.toString().length == 1) {
-    month = '0' + month;
-  }
-  if (day.toString().length == 1) {
-    day = '0' + day;
-  }
-  if (hour.toString().length == 1) {
-    hour = '0' + hour;
-  }
-  if (minute.toString().length == 1) {
-    minute = '0' + minute;
-  }
-  if (second.toString().length == 1) {
-    second = '0' + second;
-  }
-  var dateTime = year.toString() + month.toString() + day.toString() + '_' + hour.toString() + minute.toString() + second.toString();
-  return dateTime;
+exports.getUTCDateTimeString = function () {
+  // notes:
+  // - want human-readable format for easier troubleshooting
+  // - use year + month + day + hours + min + sec
+  //
+  // e.g.
+  // - March 19, 2018, 4:59:22 PM PDT => '20180319_235922'
+  // - March 19, 2018, 5:00:22 PM PDT => '20180320_000022'
+  return moment.utc().format('YYYYMMDD_HHmmss');
 };
 
 exports.resolvePath = function (filePath) {
@@ -75,15 +63,35 @@ exports.randomTestRoom = function () {
   return 'atlas-' + this.randomId();
 };
 
-exports.randomTestGmail = function () {
-  return 'collabctg+' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+exports.getTestRunOwner = function () {
+  return (processEnvUtil.isJenkins()) ? 'jenkins' : getCecId();
 };
 
-exports.randomTestGmailwithSalt = function (salt) {
-  if (!isSauce) {
-    salt = 'LOC_' + salt;
-  }
-  return 'collabctg+' + salt + '_' + this.getDateTimeString() + '_' + this.randomId() + '@gmail.com';
+function mkEmailUserComponentSuffix(options) {
+  options = options || {};
+  let salt = options.salt || '';
+  salt = (!isSauce) ? `LOC_${salt}` : salt;
+
+  // private counter
+  serialId = serialId + 1;
+
+  // TODO:
+  // - as of 2018-03-19, backend onboard API does not allow for email addresses where user-component is >=64 chars long
+  // - work with backend team to remove this artificial limit
+  // - then restore using full jenkins build tag instead of just 'jenkins'
+  const emailUserComponentSuffix = `${exports.getTestRunOwner()}_${exports.getUTCDateTimeString()}_${serialId}`;
+
+  // prepend salt if present
+  return (!!salt) ? `${salt}_${emailUserComponentSuffix}` : emailUserComponentSuffix;
+}
+
+exports.randomTestGmail = function (options) {
+  const emailUserComponentSuffix = mkEmailUserComponentSuffix(options);
+  return `collabctg+${emailUserComponentSuffix}@gmail.com`;
+};
+
+exports.randomTestGmailWithSalt = function (salt) {
+  return this.randomTestGmail({ salt: salt });
 };
 
 exports.sendRequest = function (options) {
@@ -562,6 +570,16 @@ exports.expectInputCheckbox = function (elem, value) {
         });
       });
     }, TIMEOUT, 'Waiting for input checkbox to be ' + value + ': ' + elem.locator());
+  });
+};
+
+// notes:
+// - this is a more primitive implementation than the above methods
+// - a single 'input[type="checkbox"]' element is expected as the first arg
+// - TODO: investigate whether the above methods can be removed and if this method can replace them
+exports.expectCheckboxIsChecked = function (inputElem, isChecked) {
+  return this.wait(inputElem).then(function () {
+    return expect(inputElem.isSelected()).toBe(isChecked);
   });
 };
 

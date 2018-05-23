@@ -1,0 +1,78 @@
+<div class="modal-body">
+
+  <div class="row">
+    <div class="columns medium-4">
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.enrolledWebexSiteName"></h4>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <h5 class="wizard-info-title">{{$ctrl.siteinfo.linkedSiteUrl}}
+      </h5>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="columns medium-4">
+      <h4 translate="accountLinking.wizard.policyHeader"></h4>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <h5 class="wizard-info-title" translate="accountLinking.wizard.verifyUser"></h5>
+      <p class="wizard-info" translate="accountLinking.wizard.verifyUserP1"></p>
+      <p class="wizard-info" translate="accountLinking.wizard.verifyUserP2"></p>
+
+      <h5 class="wizard-info-title"><b translate="accountLinking.wizard.verifyHow"></b></h5>
+      <p class="wizard-info" translate="accountLinking.wizard.verifyUserP3"></p>
+
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="columns medium-4">
+      <h4 class="wizard-info-title" translate="accountLinking.wizard.verifyAccounts"></h4>
+    </div>
+    <div class="columns medium-5 medium-offset-1">
+      <h5 class="wizard-info-title" translate="accountLinking.wizard.noEmails"></h5>
+      <p>
+        <span class="wizard-info" translate="accountLinking.wizard.noEmailsP1"></span>
+        <a href="#"
+           tooltip-html-unsafe="{{:: 'accountLinking.wizard.exceptionsTooltip' | translate}}"
+           translate="accountLinking.wizard.exceptions">
+        </a>
+      </p>
+      <ul>
+        <li>
+          <p class="wizard-info" translate="accountLinking.wizard.noEmailsP2"></p>
+          <p>
+            <b class="wizard-info-title" translate="accountLinking.wizard.noEmailsP3"></b>
+            <span class="wizard-info" translate="accountLinking.wizard.noEmailsP4"></span>
+          </p>
+          <p>
+            <b class="wizard-info-title" translate="accountLinking.wizard.noEmailsP5"></b>
+            <span class="wizard-info" translate="accountLinking.wizard.noEmailsP6"></span>
+          </p>
+        </li>
+        <li>
+          <p>
+            <span class="wizard-info" translate="accountLinking.wizard.noEmailsP7"></span>
+            <a href="#"
+               tooltip-html-unsafe="{{:: 'accountLinking.wizard.receiveEmailInfo' | translate}}"
+               translate="accountLinking.wizard.receiveEmailMoreInfo">
+            </a>
+          </p>
+        </li>
+      </ul>
+    </div>
+    <div class="columns medium-2"></div>
+  </div>
+</div>
+<div class="modal-footer">
+
+  <button class="btn" id="accountLinkingReceiveEmailButton"
+          ng-click="$ctrl.receiveEmail()" translate="accountLinking.wizard.receiveEmail">
+  </button>
+  <button class="btn btn--primary"  id="accountLinkingVerifyButton"
+          ng-click="$ctrl.verify()" translate="accountLinking.wizard.verify">
+  </button>
+
+</div>

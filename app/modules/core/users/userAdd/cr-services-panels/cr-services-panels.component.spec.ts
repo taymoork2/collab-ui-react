@@ -9,6 +9,8 @@ describe('Component: crServicesPanels:', () => {
       '$state',
       '$translate',
       'Authinfo',
+      'ContextAdminAuthorizationService',
+      'FeatureToggleService',
       'MessengerInteropService',
     );
 
@@ -19,6 +21,9 @@ describe('Component: crServicesPanels:', () => {
   });
 
   describe('primary behaviors (controller):', () => {
+    beforeEach(function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+    });
     describe('hasAssignableMessageItems():', () => {
       it('should call through to MessengerInteropService.hasAssignableMessageItems()', function () {
         spyOn(this.MessengerInteropService, 'hasAssignableMessageItems');
@@ -112,7 +117,17 @@ describe('Component: crServicesPanels:', () => {
     });
 
     describe('showMessengerInteropToggle():', () => {
-      it('should return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()"', function () {
+      it('should always return false while in edit mode', function () {
+        _.set(this, '$state.current.name', 'editService');
+        spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement').and.returnValue(true);
+        this.compileComponent('crServicesPanels');
+        expect(this.controller.showMessengerInteropToggle()).toBe(false);
+        this.MessengerInteropService.hasAssignableMessageOrgEntitlement.and.returnValue(false);
+        expect(this.controller.showMessengerInteropToggle()).toBe(false);
+      });
+
+      it('should return the result of "MessengerInteropService.hasAssignableMessageOrgEntitlement()" while onboarding a user', function () {
+        _.set(this, '$state.current.name', 'users.add.services');
         spyOn(this.MessengerInteropService, 'hasAssignableMessageOrgEntitlement').and.returnValue(true);
         this.compileComponent('crServicesPanels');
         expect(this.controller.showMessengerInteropToggle()).toBe(true);
@@ -247,6 +262,87 @@ describe('Component: crServicesPanels:', () => {
         const billingServiceId = 'Trial';
         const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
         expect(result).toBe(true);
+      });
+    });
+  });
+
+  describe('isContextServiceAdminAuthorized():', () => {
+    describe('when feature toggle atlas-care-use-context-admin-authorization is enabled:', () => {
+      beforeEach(function () {
+        spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      });
+
+      it('should set isContextServiceAdminAuthorized to true when the admin is authorized', function () {
+        spyOn(this.ContextAdminAuthorizationService, 'isAdminAuthorized').and.returnValue(this.$q.resolve(true));
+        this.compileComponent('crServicesPanels');
+        expect(this.controller.isContextServiceAdminAuthorized).toBe(true);
+      });
+
+      it('should set isContextServiceAdminAuthorized to false when the admin is not authorized', function () {
+        spyOn(this.ContextAdminAuthorizationService, 'isAdminAuthorized').and.returnValue(this.$q.resolve(false));
+        this.compileComponent('crServicesPanels');
+        expect(this.controller.isContextServiceAdminAuthorized).toBe(false);
+      });
+    });
+
+    describe('when feature toggle atlas-care-use-context-admin-authorization is disabled:', () => {
+      beforeEach(function () {
+        spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      });
+
+      it('should set isContextServiceAdminAuthorized to true when the feature is turned off', function () {
+        this.compileComponent('crServicesPanels');
+        expect(this.controller.isContextServiceAdminAuthorized).toBe(true);
+      });
+    });
+
+    describe('isCareRadioFieldSetDisabled():', () => {
+      it('should return true if message is not selected', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: false },
+        });
+        expect(this.controller.isCareRadioFieldSetDisabled()).toBe(true);
+      });
+
+      it('should return true if message is selected but admin is not authorized to context', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: true },
+        });
+        this.controller.isContextServiceAdminAuthorized = false;
+        expect(this.controller.isCareRadioFieldSetDisabled()).toBe(true);
+      });
+
+      it('should return false if message is selected and admin is authorized to context', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: true },
+        });
+        this.controller.isContextServiceAdminAuthorized = true;
+        expect(this.controller.isCareRadioFieldSetDisabled()).toBe(false);
+      });
+    });
+
+    describe('showCareRadioTooltip():', () => {
+      it('should return false if message is not selected', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: false },
+        });
+        expect(this.controller.showCareRadioTooltip()).toBe(false);
+      });
+
+      it('should return false if message is selected and admin is authorized to context', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: true },
+        });
+        this.controller.isContextServiceAdminAuthorized = true;
+        expect(this.controller.showCareRadioTooltip()).toBe(false);
+      });
+
+      it('should return true if message is selected but admin is not authorized to context', function () {
+        this.compileComponent('crServicesPanels', {
+          radioStates: { msgRadio: true },
+        });
+        this.controller.isContextServiceAdminAuthorized = false;
+        expect(this.controller.showCareRadioTooltip()).toBe(true);
       });
     });
   });

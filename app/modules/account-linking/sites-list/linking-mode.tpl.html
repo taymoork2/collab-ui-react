@@ -1,0 +1,9 @@
+<div class="ui-grid-cell-contents" ng-if="row.entity.linkingMode && row.entity.siteInfoErrors.length === 0">
+  {{row.entity.linkingModeDisplay }}
+</div>
+<div class="ui-grid-cell-contents" ng-if="row.entity.siteInfoErrors.length === 0 && row.entity.linkingMode === undefined">
+  <div cs-loader class="waiting"/>
+</div>
+<div class="ui-grid-cell-contents faded error-table-entry" ng-if="row.entity.siteInfoErrors.length > 0" >
+  {{row.entity.siteInfoErrors[0]}}
+</div>

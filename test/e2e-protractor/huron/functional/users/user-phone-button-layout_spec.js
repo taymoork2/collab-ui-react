@@ -13,7 +13,6 @@ describe('Huron Functional: user-phone-button-layout', () => {
   const customer = huronCustomer({
     test: 'user-phone-btn-layout',
     users: { noOfUsers: 1 },
-    toggle: 'h-i1238',
   });
   const USERS = customer.users;
 
@@ -38,10 +37,10 @@ describe('Huron Functional: user-phone-button-layout', () => {
     utils.click(CallUser.usersList.searchFilter);
     utils.searchAndClick(USERS[0].email);
     utils.expectIsDisplayed(users.servicesPanel);
-    utils.expectIsDisplayed(users.communicationsService);
+    utils.expectIsDisplayed(users.communicationService);
   });
   it('should navigate to call details view', () => {
-    utils.click(users.communicationsService);
+    utils.click(users.communicationService);
     utils.expectIsDisplayed(CallUser.callOverview.features.title);
     utils.expectIsDisplayed(CallUser.callOverview.features.singleNumberReach);
     utils.expectIsDisplayed(CallUser.callOverview.features.speedDials);
@@ -222,7 +221,7 @@ describe('Huron Functional: user-phone-button-layout', () => {
         // should see Edit button for Feature None
         utils.expectIsDisplayed(UserPhoneButtonLayout.firstEmptyDeleteButton);
       });
-        
+
       it('should be able to delete feature none ', () => {
         UserPhoneButtonLayout.firstFeatureNoneLabel.getText().then((initialFeatureNoneName) => {
           utils.click(UserPhoneButtonLayout.firstEmptyDeleteButton);
@@ -231,6 +230,6 @@ describe('Huron Functional: user-phone-button-layout', () => {
           utils.expectNotText(UserPhoneButtonLayout.firstFeatureNoneLabel, initialFeatureNoneName);
         });
       });
-    }); 
+    });
   });
 });

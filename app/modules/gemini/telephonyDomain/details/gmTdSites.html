@@ -13,7 +13,7 @@
         <li class="feature" ng-repeat="val in $ctrl.sites">
           <span class="feature-name"><a href="{{val.globalSite}}" target="_blank" onclick="this.blur()">{{val.siteUrl}}</a></span>
           <span ng-if="!$ctrl.showLoading && $ctrl.tds.length" class="action-menu dropdown pull-right action-movesite" cs-dropdown>
-            <a class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
+            <a href class="dropdown-toggle small" cs-dropdown-toggle translate="gemini.cbgs.moveSite"></a>
             <ul class="dropdown-menu dropdown-primary actions-services" cs-dropdown-menu>
               <li ng-repeat="td in $ctrl.tds" ng-click="$ctrl.onClick(val, { targetCcaDomainId: td.ccaDomainId, targetDomainName: td.telephonyDomainName })">
                 <small class="ellipsis">{{td.telephonyDomainName}}</small>
@@ -25,6 +25,6 @@
     </div>
   </cs-sp-section>
   <cs-sp-buttons>
-    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+    <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
   </cs-sp-buttons>
 </cs-sp-container>

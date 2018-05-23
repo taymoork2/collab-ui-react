@@ -3,6 +3,29 @@ module.exports = {
   // for each of the directives that are absent,
   // the user agent will look for the default-src directive and will use this value for it
   // TODO: get rid of it to be more strict
+  // valid URLs which can be loaded using script interfaces (Fetch, XMLHttpRequest, WebSocket, etc.)
+  connectSrc: [
+    '\'self\'',
+    'http://rpbtqlkhsn002.webex.com:8080',
+    'https://*.amazonaws.com', // MOH Media
+    'https://*.cisco.com',
+    'https://*.ciscoccservice.com',
+    'https://*.ciscospark.com',
+    'https://*.clouddrive.com', // CSV download
+    'https://*.huron-dev.com',
+    'https://*.huron-int.com',
+    'https://*.huron.uno',
+    'https://*.sparkc-eu.com',
+    'https://*.statuspage.io',
+    'https://*.wbx2.com',
+    'https://*.webex.com',
+    'https://*.webexconnect.com',
+    'https://api.dialogflow.com', // Virtual Assistant testing dialogflow token
+    'https://api.mixpanel.com',
+    'https://cdn.mxpnl.com',
+    'https://rpbtqlkhsn006.webex.com',
+    'wss://mercury-connection-a.wbx2.com',
+  ],
   defaultSrc: [
     '\'self\'',
     'blob:',
@@ -23,36 +46,6 @@ module.exports = {
     'https://qlik-engine2',
     'https://qlik-loader',
   ],
-  // valid sources for the <object>, <embed>, and <applet> elements
-  objectSrc: [
-    'http://www.cisco.com', // Terms of Service
-  ],
-  // valid URLs which can be loaded using script interfaces (Fetch, XMLHttpRequest, WebSocket, etc.)
-  connectSrc: [
-    '\'self\'',
-    'https://ciscowebex.d1.sc.omtrdc.net', // Adobe DTM Omniture
-    'https://dpm.demdex.net', // Adobe DTM Omniture
-    'http://rpbtqlkhsn002.webex.com:8080',
-    'https://*.amazonaws.com', // MOH Media
-    'https://*.cisco.com',
-    'https://*.ciscoccservice.com',
-    'https://*.ciscospark.com',
-    'https://*.clouddrive.com', // CSV download
-    'https://*.huron-dev.com',
-    'https://*.huron-int.com',
-    'https://*.huron.uno',
-    'https://*.sparkc-eu.com',
-    'https://*.statuspage.io',
-    'https://*.wbx2.com',
-    'https://*.webex.com',
-    'https://*.webexconnect.com',
-    'https://api.dialogflow.com', // Virtual Assistant testing dialogflow token
-    'https://api.mixpanel.com',
-    'https://bam.nr-data.net', // New Relic Browser
-    'https://cdn.mxpnl.com',
-    'https://rpbtqlkhsn006.webex.com',
-    'wss://mercury-connection-a.wbx2.com',
-  ],
   // valid sources for fonts loaded using @font-face
   fontSrc: [
     '\'self\'',
@@ -64,28 +57,29 @@ module.exports = {
     'https://*.clouddrive.com',
     'https://*.localytics.com',
     'https://*.rackcdn.com',
-    'https://webexglobal.112.2o7.net', // Adobe DTM Omniture
-    'https://*.d1.sc.omtrdc.net', // Adobe DTM Omniture
-    'https://bam.nr-data.net', // New Relic Browser
+    'http://*.rackcdn.com', // Expert Virtual Assistant avatar icon
+  ],
+  mediaSrc: [
+    'https://*.webex.com',
   ],
   // valid sources for sources for JavaScript
   scriptSrc: [
     '\'self\'',
     '\'unsafe-eval\'',
+    '\'sha256-5zmUxCaNKNz+kTngvNTF8srDs9p8XHdW0oh+h9q46KQ=\'', // Devices page advanced settings launch: ATLAS-2913
     'https://*.localytics.com',
     'https://*.webex.com',
     'https://api.mixpanel.com', // Mixpanel
     'https://cdn.mxpnl.com', // Mixpanel
-    'https://assets.adobedtm.com', // Adobe DTM Omniture
-    'https://dpm.demdex.net', // Adobe DTM Omniture
-    'https://*.omtrdc.net', // Adobe DTM Ominture
     'https://buy.ciscospark.com', // Digital River
-    'https://js-agent.newrelic.com', // New Relic Browser
-    'https://bam.nr-data.net', // New Relic Browser
   ],
   // valid sources for sources for stylesheets
   styleSrc: [
     '\'self\'',
     '\'unsafe-inline\'',
+  ],
+  workerSrc: [
+    'blob:',
+    '\'self\'',
   ],
 };

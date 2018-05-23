@@ -32,6 +32,7 @@ describe('Component: LocationsWizardComponent -', () => {
   beforeEach(function() {
     this.initModules(locationsWizardComponentModule);
     this.injectDependencies(
+      '$httpBackend',
       '$q',
       '$state',
       '$scope',
@@ -40,6 +41,7 @@ describe('Component: LocationsWizardComponent -', () => {
       '$translate',
       'Authinfo',
       'Config',
+      'HuronConfig',
       'Orgservice',
       'PstnModel',
       'PstnService',
@@ -49,6 +51,7 @@ describe('Component: LocationsWizardComponent -', () => {
       'Notification',
     );
     config = this.Config;
+    this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/countries').respond(200);
   });
 
   function getLicenses(count: number): any[] {
@@ -116,7 +119,7 @@ describe('Component: LocationsWizardComponent -', () => {
     spyOn(this.CallLocationSettingsService, 'save').and.returnValue(this.$q.resolve());
     spyOn(this.LocationSettingsOptionsService, 'getOptions').and.returnValue(this.$q.resolve(locationSettingsOptions));
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.$state, 'go').and.callThrough();
+    spyOn(this.$state, 'go');
   }
 
   describe('Initialization,', () => {

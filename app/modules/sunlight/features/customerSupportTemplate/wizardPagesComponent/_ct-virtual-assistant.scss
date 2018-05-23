@@ -1,0 +1,241 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.ct-virtual-assistant {
+  align-items: center;
+
+  .inputField {
+    @include vr-spacing(mb, 0);
+
+    color: $gray-dark-2;
+  }
+
+  .ct-attribute-field-textbox {
+    @include placeholder {
+      line-height: rem-calc(12);
+    }
+
+    font-family: $brand-font-light;
+    resize: none;
+    width: 100%;
+    height: 5rem;
+  }
+
+  .cs-card article.profile-preview {
+    height: 26.5rem;
+    width: 21.75rem;
+    text-align: center;
+
+    > header {
+      height: 4rem;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $gray-light-4;
+      padding-top: 2rem!important;
+      padding-bottom: 2rem!important;
+
+      .profile-name {
+        @include vr-spacing(pb, 0.5);
+
+        flex: 0 1 65%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        color: $color-primary-base;
+      }
+
+      .img {
+        .icon-circle-computer-blank {
+          font-size: 3rem;
+        }
+      }
+
+      .uploded-bot-img {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        border: 1px solid $gray-light-1;
+      }
+
+      .bot {
+        font-size: 1.8rem;
+        border: 1px solid $gray-light-1;
+        background-color: white;
+        border-radius: 50%;
+        @include vr-spacing(p, 0.5);
+      }
+
+      .actions {
+        flex: 0 1 15%;
+
+        > i {
+          font-size: 1rem;
+        }
+
+        .icon-minus {
+          @include vr-spacing(pr, 0.5);
+        }
+      }
+    }
+
+    > section {
+
+      .bot-message {
+        float: left;
+        font-size: 0;
+        text-align: left;
+        @include vr-spacing(mt, 1);
+
+        .message {
+          border-radius: 0.3125rem 0.3125rem 0.3125rem 0;
+          background-color: $gray-light-3;
+          display: inline-block;
+          max-width: 16rem;
+          @include vr-spacing(p, 0.5);
+          word-wrap: break-word;
+        }
+
+        .time {
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 2);
+          @include vr-spacing(mb, -2);
+        }
+
+        .speech-bubble {
+          top: 1.0rem;
+          width: 2.0rem;
+          height: 2.5rem;
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+          background-color: $gray-light-3;
+
+          > span {
+            position: absolute;
+            width: 3.75rem;
+            height: 3.75rem;
+            border-radius: 100%;
+            background-color: $white;
+          }
+
+          .top {
+            top: -0.9375rem;
+          }
+
+          .left {
+            left: -1.25rem;
+          }
+        }
+      }
+
+      .customer-details {
+        float: right;
+        font-size: 0;
+        padding-top: 2rem;
+
+        .customer-message {
+          border-radius: 0.3125rem 0.3125rem 0;
+          color: $white;
+          background-color: $color-people-base;
+          display: inline-block;
+          @include vr-spacing(p, 0.5);
+          @include vr-spacing(mb, 0);
+        }
+
+        .time {
+          text-align: right;
+          background-color: $white;
+          position: relative;
+          @include vr-spacing(ml, 1.5);
+          @include vr-spacing(mr, 1.5);
+        }
+
+        .speech-bubble {
+          top: 0.985rem;
+          width: 2.0rem;
+          height: 2.5rem;
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+          background-color: $color-people-base;
+
+          > span {
+            position: absolute;
+            width: 3.75rem;
+            height: 3.75rem;
+            border-radius: 100%;
+            background-color: $white;
+          }
+
+          .top {
+            top: -0.9375rem;
+          }
+
+          .right {
+            right: -1.25rem;
+          }
+        }
+      }
+    }
+
+    > footer {
+      text-align: start;
+      color: $gray-light-1;
+      border-top: 1px solid $gray-light-3;
+
+      @include vr-spacing(pv, 0.75);
+    }
+  }
+
+  .cs-card article.profile-attributes {
+    height: 26.5rem;
+    width: 21.75rem;
+    box-shadow: 0;
+    background-color: $gray-light-4;
+
+    @include vr-spacing(pt, 1);
+    @include vr-spacing(ph, 1);
+
+    .subheader-text {
+      @include vr-spacing(pt, 1.25);
+      @include vr-spacing(pb, 0.5);
+    }
+
+    .ct-display-txt {
+      @include vr-spacing(pb, 0.5);
+
+      padding-top: 0;
+    }
+  }
+
+  .setting-info {
+    position: absolute;
+    color: $color-primary-base;
+    bottom: 0.5rem;
+    left: 0.25rem;
+    @include vr-spacing(pl, 0.25);
+    @include vr-spacing(pr, 0.25);
+
+    .icon {
+      bottom: -3px;
+    }
+
+    .setting-info-text {
+      font-size: 0.625rem;
+      letter-spacing: 0;
+      line-height: 1rem;
+    }
+  }
+
+  .bot-welcome-msg-help {
+    color: $gray-base;
+    letter-spacing: 0;
+    line-height: 1rem;
+    @include vr-spacing(mt, -0.625);
+    padding: 0rem !important;
+  }
+}

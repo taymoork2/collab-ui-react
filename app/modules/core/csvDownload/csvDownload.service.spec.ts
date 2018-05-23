@@ -233,40 +233,30 @@ describe('CsvDownloadService', () => {
     });
 
     it('should reject promise if FAILURE is returned', function () {
-      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
-
-      const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
-      this.$httpBackend.flush();
-
-      // respond with FAILED
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportFAILED);
-      this.$timeout.flush();
+      this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
+      .catch( function (response) {
+        expect(response.processStatus).toBe('FAILED');
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith(this.getUserReportFAILED);
     });
 
-    it('should reject promise if processStatus returns something unsuported', function () {
+    it('should reject promise if processStatus returns something unsupported', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
-
-      const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+      this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
+      .catch( function (response) {
+        expect(response.message).toBe('Unknown status');
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith(this.getUserReportINVALID);
     });
 
     it('should reject promise if fetching processStatus returns HTTP error code', function () {
-      this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportRUNNING);
-
-      const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
-      this.$httpBackend.flush();
-
-      // respond with an HTTP error code
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
-      this.$timeout.flush();
+      this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
+      .catch( function (response) {
+        expect(response.status).toBe(503);
+      });
       this.$httpBackend.flush();
-
-      expect(promise).toBeRejectedWith(jasmine.objectContaining({ status: 503 }));
     });
 
     describe('successfully returned data', function () {
@@ -310,9 +300,11 @@ describe('CsvDownloadService', () => {
           return this.$q.reject('extract failed');
         });
 
-        const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true);
+        this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
+        .catch( function (response) {
+          expect(response).toBe('extract failed');
+        });
         this.$httpBackend.flush();
-        expect(promise).toBeRejectedWith('extract failed');
       });
 
     });

@@ -27,13 +27,6 @@
     state: 'partnercustomers',
     link: '/partner/customers',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-user',
     title: 'tabs.userTab',
@@ -52,19 +45,18 @@
     state: 'services-overview',
     link: 'services',
   }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
+    link: '/partner/services-overview',
+  }, {
     tab: 'deviceTab',
     icon: 'icon-devices',
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
-    feature: '!csdm-device-red',
-  }, {
-    tab: 'deviceTab',
-    icon: 'icon-devices',
-    title: 'tabs.deviceTab',
-    state: 'devices-redux',
-    link: '/devices-redux',
-    feature: 'csdm-device-red',
   }, {
     tab: 'reportTab',
     icon: 'icon-bars',
@@ -77,6 +69,13 @@
     title: 'tabs.reportTab',
     state: 'partnerreports',
     link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
+  }, {
+    tab: 'taasOverviewTab',
+    icon: 'icon-outline',
+    title: 'tabs.taasOverviewTab',
+    state: 'taas',
+    link: '/partner/taas',
   }, {
     tab: 'supportTab',
     icon: 'icon-support',
@@ -143,13 +142,6 @@
     link: '/partner/customers',
     iconClass: 'icon-outline',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-people-active',
     title: 'tabs.userTab',
@@ -171,20 +163,18 @@
     link: 'services',
     iconClass: 'icon-outline',
   }, {
+    tab: 'partnerServicesTab',
+    icon: 'icon-cloud',
+    title: 'tabs.servicesTab',
+    state: 'partner-services-overview',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
+    link: '/partner/services-overview',
+  }, {
     tab: 'deviceTab',
     icon: 'icon-endpoint-active',
     title: 'tabs.deviceTab',
     state: 'devices',
     link: '/devices',
-    feature: '!csdm-device-red',
-    iconClass: 'icon-outline',
-  }, {
-    tab: 'deviceTab',
-    icon: 'icon-endpoint-active',
-    title: 'tabs.deviceTab',
-    state: 'devices-redux',
-    link: '/devices-redux',
-    feature: 'csdm-device-red',
     iconClass: 'icon-outline',
   }, {
     tab: 'reportTab',
@@ -199,6 +189,7 @@
     title: 'tabs.reportTab',
     state: 'partnerreports',
     link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',

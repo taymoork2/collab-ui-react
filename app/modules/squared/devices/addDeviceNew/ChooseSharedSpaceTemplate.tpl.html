@@ -1,6 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$dismiss()">
-  </button>
+  <button type="button" class="close" ng-click="$dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="{{choosePlace.title}}"></h3>
 </div>
 <div class="modal-body device-wizard choose-shared">
@@ -72,12 +71,7 @@
           </div>
         </span>
         <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptysearchresult)" translate="placesPage.noneFound"></span>
-        <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
-          <a>
-            <span ng-bind-html="match.label.displayName + ' (' + match.label.readablePlaceType + ')' | typeaheadHighlight:query" ></span>
-          </a>
-        </script>
-        <script type="text/ng-template" id="placeTemplate.html" ng-if="!choosePlace.showPersonal">
+        <script type="text/ng-template" id="placeTemplate.html">
           <a>
             <span ng-bind-html="match.label.displayName | typeaheadHighlight:query" ></span>
           </a>

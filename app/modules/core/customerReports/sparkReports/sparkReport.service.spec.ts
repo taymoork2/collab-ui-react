@@ -93,7 +93,8 @@ describe('Service: Customer Reports Service', function () {
     it('should notify an error for getMostActiveUserData', function () {
       spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(this.rejectError));
 
-      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then((response: IActiveTableBase[]): void => {
+      this.SparkReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then(fail)
+      .catch((response: IActiveTableBase[]): void => {
         expect(response).toEqual([]);
       });
       this.$scope.$apply();

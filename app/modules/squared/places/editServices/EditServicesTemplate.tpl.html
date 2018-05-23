@@ -18,7 +18,6 @@
             type="radio"
             ng-model="editServices.service"
             id="service1"
-            ng-disabled="editServices.disableServices()"
             name="service"
             value="sparkOnly"
             cs-input-label="{{'addDeviceWizard.editServices.sparkOnly' | translate}}"
@@ -28,7 +27,6 @@
             type="radio"
             ng-model="editServices.service"
             id="service2"
-            ng-disabled="editServices.disableServices()"
             name="service"
             value="sparkCall"
             cs-input-label="{{'addDeviceWizard.editServices.sparkCall' | translate}}"
@@ -38,7 +36,6 @@
             type="radio"
             ng-model="editServices.service"
             id="service3"
-            ng-disabled="editServices.disableServices()"
             name="service"
             value="sparkCallConnect"
             ng-if="editServices.sparkCallConnectEnabled"
@@ -53,15 +50,21 @@
           <h3 translate="addDeviceWizard.editServices.calendar"></h3>
         </div>
         <div class="cs-radio-group callServiceControls">
-          <cs-toggle-switch is-disabled="editServices.disableCalendar()" ng-model="editServices.enableCalService" toggle-id="calService" name="toggleExample" size="small"></cs-toggle-switch>
+          <cs-toggle-switch
+            ng-model="editServices.enableCalService"
+            toggle-id="calService"
+            name="toggleExample"
+            size="small"
+            cs-aria-label="{{::'addDeviceWizard.editServices.toggleCalendar' | translate}}">
+          </cs-toggle-switch>
           <p class="help-toggle-calendar" translate="addDeviceWizard.editServices.toggleCalendar"></p>
         </div>
       </div>
     </form>
   </div>
 </div>
-<div class="modal-footer">
 
+<div class="modal-footer">
   <button
     id="back-button"
     class="btn"

@@ -3,7 +3,7 @@ import callPickupGroupService from 'modules/call/features/call-pickup/shared';
 
 export default angular
   .module('call.call-pickup.notifications', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     callPickupGroupService,
   ])

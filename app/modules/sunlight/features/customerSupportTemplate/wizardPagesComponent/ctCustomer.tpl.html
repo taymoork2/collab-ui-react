@@ -1,0 +1,164 @@
+<div ng-form="customerInfo">
+  <div class="ct-title">
+    <span class="h3" ng-if="$ctrl.selectedMediaType() === $ctrl.MediaTypes.CHAT_PLUS_CALLBACK">
+      {{$ctrl.getLocalisedText('careChatTpl.customerInfo')}}
+    </span>
+    <span class="h3" ng-if="!($ctrl.selectedMediaType() === $ctrl.MediaTypes.CHAT_PLUS_CALLBACK)" translate='careChatTpl.customerInformation'>
+    </span>
+  </div>
+  <div class="h5 ct-title-desc">{{$ctrl.getLocalisedTextWithEscalation('careChatTpl.customerInfoDesc')}}</div>
+
+  <div class="ct-customer ct-sa-content">
+    <cs-card-layout block-view="true" class="customer-card-layout">
+      <cs-card class="ct-customer-card">
+        <div class="h4 cardHeader1" translate="careChatTpl.preview"></div>
+        <article class="customer-preview-article ct-article header-border header-background articleHeight">
+
+          <header id="customerHeader" class="customerHeader ct-selectable-container" selectable ng-click="$ctrl.setActiveItem('welcomeHeader')" autofocus>
+            <label class="welcomeText textOverflow">{{$ctrl.TemplateWizardService.getAttributeParam('value', 'header', 'welcomeHeader')}}</label>
+            <label class="orgText textOverflow">{{$ctrl.getCustomerInformationFormFields().welcomeHeader.attributes[1].value}}</label>
+          </header>
+
+          <section>
+            <ct-customer-form
+              ct-model='$ctrl',
+              media-type-attr="$ctrl.type",
+              fields='$ctrl.getCustomerInformationFormFields()'
+              ignore-fields='["welcomeHeader"]'
+              type-attr='type'
+              label-attr='label'
+              placeholder-attr='hintText'
+              required-attr='required'>
+            </ct-customer-form>
+          </section>
+
+          <div>
+            <a href class="btn btn--medium disabled ct-flex-center" ng-class="$ctrl.getCustomerInformationBtnClass()">{{$ctrl.getLocalisedText('careChatTpl.customerInfoBtnText')}}</a>
+          </div>
+
+        </article>
+      </cs-card>
+
+      <cs-card class="ct-customer-card">
+        <div class="h4 cardHeader1" translate="careChatTpl.attributes"></div>
+        <article class="customer-attributes-article ct-article articleHeight">
+          <section class="ct-attribute-section item-not-selected ct-flex-center" ng-show="$ctrl.activeItem === undefined">
+            <div class="ct-default-msg h6 medium-8" translate="careChatTpl.defaultRightCardText"></div>
+          </section>
+          <section class="ct-attribute-section ng-hide" ng-hide="$ctrl.activeItem === undefined">
+            <div class="row ct-attribute-row" ng-repeat="attribute in $ctrl.activeItem.attributes">
+              <label ng-if="attribute.name === 'type'|| attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
+                class="cs-input__label ct-attribute-field-label h4 large-11"
+                translate="{{$ctrl.getLabel(attribute.name)}}"></label>
+
+              <input cs-input type="text"
+                ng-if="attribute.name === 'header' || attribute.name === 'label' || attribute.name === 'hintText'"
+                id="attribute.fieldName"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                ng-model="attribute.value"
+                name="{{attribute.name}}"
+                cs-input-messages="$ctrl.singleLineValidationMessage50"
+                ng-maxlength="$ctrl.lengthValidationConstants.singleLineMaxCharLimit50"
+                validate-characters="$ctrl.InvalidCharacters"
+                ng-model-options="{ allowInvalid: true }"
+                ng-disabled="$ctrl.isSecondFieldForCallBack() && attribute.name === 'hintText'"
+                placeholder="{{$ctrl.getLabel(attribute.name) | translate}}"
+                ng-keypress="$ctrl.enterNextPage($event)"
+                ng-change="$ctrl.isCustomerInformationPageValid()"/>
+
+              <div ng-if="attribute.name === 'required'" class="h6 cs-radio-group ct-attribute-field-radio">
+                <div class="no-margin" ng-repeat="option in $ctrl.requiredOptions">
+                <input cs-input type="radio"
+                  ng-disabled="$ctrl.isSecondFieldForCallBack()"
+                  ng-model="attribute.value"
+                  id="{{option.id}}"
+                  name="requiredOptions"
+                  value="{{option.id}}"
+                  cs-input-label="{{option.text}}"
+                  ng-keypress="$ctrl.enterNextPage($event)"/>
+                  <div class="escalation-required-info" ng-if="$ctrl.TemplateWizardService.isExpertEscalationSelected() && option.id === 'required' && $ctrl.checkIfTypeCategory($ctrl.activeItem.attributes)">
+                    <span  class="msg" translate="careChatTpl.escalationEnabledRequiredInfo"></span><a ng-href="{{$ctrl.evaLearnMoreLink}}" translate="careChatTpl.learnMoreLink" target="_blank"></a>
+                  </div>
+                  </div>
+              </div>
+
+              <div ng-if="attribute.name === 'type'">
+                <cs-select
+                  ng-model="attribute.value"
+                  ng-init="$ctrl.validateType(attribute.value)"
+                  ng-change="$ctrl.validateType(attribute.value);"
+                  options="$ctrl.typeOptions"
+                  labelfield="text"
+                  valuefield="id"
+                  is-disabled="$ctrl.isSecondFieldForCallBack()"
+                  ng-class="$ctrl.validateType(attribute.value) ? 'ct-attribute-field-textbox' : 'ct-attribute-field-textbox_error'"
+                  placeholder="attribute.defaultValue">
+                </cs-select>
+                <label ng-if="$ctrl.isDefined(attribute.value, 'helpText')" class="cs-input__label ct-attribute-field-helptext large-11">
+                  <em>{{attribute.value.helpText}}</em>
+                </label>
+                <div class="small ct-input-error" ng-show="$ctrl.isTypeDuplicate">
+                  <div class="ct-error-icon"><i class="icon icon-error icon-lg"></i></div>
+                  <div>{{:: 'careChatTpl.ctValidation.errorTypeDuplicate' | translate}}</div>
+                </div>
+              </div>
+              <div class="row ct-attribute-row ct-customer-info-category-input right-inner-addon" ng-if="attribute.name === 'type' && attribute.value.id === 'category'">
+                <div class="escalation-required-info escalation-required-info-category" ng-if="$ctrl.TemplateWizardService.isExpertEscalationSelected()">
+                  <span  class="msg" translate="careChatTpl.escalationEnabledCategoryInfo"></span>
+                  <span
+                    tabindex="0"
+                    popover-html="$ctrl.TemplateWizardService.evaSpaceTooltipData"
+                    popover-placement="auto right"
+                    popover-trigger="click"
+                    popover-append-to-body="false"
+                    class="icon icon-question-circle icon-eva-details"
+                    ng-class="{'icon-eva-details-toggle': $ctrl.isPopoverActive}"
+                    ng-click="$ctrl.popoverClicked()"
+                    aria-label="{{$ctrl.TemplateWizardService.evaSpaceTooltipAriaLabel}}">
+                  </span>
+                </div>
+                <i class="icon icon-add-contain ct-add-contain" ng-click="$ctrl.addCategoryOption()"></i>
+                <input cs-input type="text"
+                  ng-readonly="{{!$ctrl.validateCategoryTextBoxType(attribute.value)}}"
+                  name="categoryTextBox"
+                  id="categoryTextBox"
+                  class="h5 inputField ct-attribute-field-textbox large-11 ng-pristine ng-valid ng-scope ng-not-empty ng-touched icon-add-contain"
+                  ng-keypress="$ctrl.onEnterKey($event)"
+                  ng-model="$ctrl.categoryOptionTag"
+                  cs-input-messages="$ctrl.singleLineValidationMessage50"
+                  ng-maxlength="$ctrl.lengthValidationConstants.singleLineMaxCharLimit50"
+                  validate-characters="$ctrl.InvalidCharacters"
+                  placeholder="{{:: 'careChatTpl.categoryHintText' | translate}}"
+                  ng-model-options="{ allowInvalid: true }"/>
+
+                <label class="ct-attribute-field-label category-validation-warning" ng-if="$ctrl.isCategoryWarningRequired()">
+                  <span class="icon icon-warning no-data-warning"></span>
+                  {{:: 'careChatTpl.categoryWarningText' | translate}}
+                </label>
+                <div class="category-tokens">
+                  <cs-token-field
+                    tokenfieldid="$ctrl.categoryTokensId"
+                    tokens="attribute.categoryOptions"
+                    static="true"></cs-token-field>
+                </div>
+              </div>
+            </div>
+            <div ng-if="$ctrl.getFieldByName('welcomeHeader') === $ctrl.activeItem" class="row ct-attribute-row">
+              <label class="cs-input__label ct-attribute-field-label h4 large-11" translate="careChatTpl.defaultOrgLabel"></label>
+               <input cs-input type="text"
+                id="orgText"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                ng-model="$ctrl.getCustomerInformationFormFields().welcomeHeader.attributes[1].value"
+                name="orgText"
+                cs-input-messages="$ctrl.singleLineValidationMessage50"
+                ng-maxlength="$ctrl.lengthValidationConstants.singleLineMaxCharLimit50"
+                validate-characters="$ctrl.InvalidCharacters"
+                ng-model-options="{ allowInvalid: true }"
+                ng-keypress="$ctrl.enterNextPage($event)"/>
+              </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

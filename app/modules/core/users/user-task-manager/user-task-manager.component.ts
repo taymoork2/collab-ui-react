@@ -1,33 +1,66 @@
 import { UserTaskManagerService } from './user-task-manager.service';
-import { TaskListFilterType, TaskType, TaskStatus } from './user-task-manager.constants';
+import { TaskListFilterType, TaskType } from './user-task-manager.constants';
 import { Notification } from 'modules/core/notifications';
 
+interface ICounts {
+  usersCreated: number;
+  usersUpdated: number;
+  usersFailed: number;
+  totalUsers: number;
+}
+
+interface IStepStatus {
+  endTime: string;
+  exitCode: string;
+  exitMessage: string;
+  lastUpdated: string;
+  name: string;
+  percentComplete?: number;
+  startTime: string;
+  statusMessage: string;
+  timeElapsed?: number;
+  timeRemaining?: number;
+}
+
+export interface IJobExecutionStatus {
+  createdTime: number;
+  endTime: number;
+  exitStatus: string;
+  id: number;
+  lastUpdatedTime: number;
+  startTime: number;
+  status: string;
+}
+
 export interface ITask {
-  jobInstanceId: string;
+  counts: ICounts;
+  createdDate?: string;
+  createdTime?: string;
+  csvFile?: string;
+  exactMatchCsv: boolean;
+  exitCode?: number;
+  exitMessage: string;
+  exitStatus?: number;
+  id: string;
+  instanceId: number;
+  jobExecutionStatus: IJobExecutionStatus[];
   jobType: string;
   jobTypeTranslate: string;
-  created: string;
-  createdDate: string;
-  createdTime: string;
-  started: string;
-  startedDate: string;
-  startedTime: string;
-  lastModified: string;
-  stopped: string;
-  stoppedDate: string;
-  stoppedTime: string;
-  creatorUserId: string;
-  modifierUserId: string;
-  status: string;
+  lastUpdated?: string;
+  latestExecutionStatus: string;
+  percentComplete?: number;
+  sourceCustomerId?: string;
+  sourceUserId?: string;
+  startedDate?: string;
+  startedTime?: string;
+  statusMessage?: string;
   statusTranslate: string;
-  message: string;
-  filename: string;
-  fileSize: number;
-  fileMd5: string;
-  totalUsers: number;
-  addedUsers: number;
-  updatedUsers: number;
-  erroredUsers: number;
+  stepStatuses: IStepStatus[];
+  stoppedDate?: string;
+  stoppedTime?: string;
+  targetCustomerId: string;
+  timeElapsed?: string;
+  timeRemaining?: string;
 }
 
 export class UserTaskManagerModalCtrl implements ng.IComponentController {
@@ -37,10 +70,12 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   public dismiss: Function;
   public allTaskList: ITask[] = [];
   public inProcessTaskList: ITask[] = [];
+  public errorTaskList: ITask[] = [];
   public activeFilter: TaskListFilterType = TaskListFilterType.ALL;
 
   private fileData: string;
   private fileName: string;
+  private fileChecksum: string;
   private exactMatchCsv = false;
   private requestedTaskId?: string;
 
@@ -67,6 +102,8 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
         return this.allTaskList;
       case TaskListFilterType.ACTIVE:
         return this.inProcessTaskList;
+      case TaskListFilterType.ERROR:
+        return this.errorTaskList;
     }
   }
 
@@ -83,20 +120,21 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       return;
     }
 
-    const task = this.getTaskById(this.activeTask.jobInstanceId);
+    const task = this.getTaskById(this.activeTask.id);
     if (!task) {
       return;
     }
 
-    task.status = status;
+    task.latestExecutionStatus = status;
     this.populateTaskStatusTranslate(task);
   }
 
   private initActives() {
     this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
-    this.requestedTaskId = _.get(this.activeTask, 'jobInstanceId');
+    this.requestedTaskId = _.get(this.activeTask, 'id');
     this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
     this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
+    this.fileChecksum = _.get<string>(this.$stateParams, 'job.fileChecksum', undefined);
     this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
     this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
   }
@@ -106,18 +144,27 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       return this.$q.resolve();
     }
 
-    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
+    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.fileChecksum, this.exactMatchCsv)
       .then(importedTask => {
         this.activeTask = importedTask;
-        this.requestedTaskId = importedTask.jobInstanceId;
+        this.requestedTaskId = importedTask.id;
       })
-      .catch(response => this.Notification.errorResponse(response, 'userTaskManagerModal.submitCsvError'));
+      .catch(response => {
+        // Batch process supports only one running job per customer
+        if (response.status === 409 && response.data.errorCode === 1001004) {
+          this.Notification.error('userTaskManagerModal.anotherJobIsRunning');
+        } else {
+          this.Notification.errorResponse(response);
+        }
+      });
   }
 
   private intervalCallback = (tasks: ITask[] = []) => {
     this.populateTaskListData(tasks);
     this.allTaskList = tasks;
+
     this.inProcessTaskList = this.filterInProcessTaskList(tasks);
+    this.errorTaskList = this.filterErrorTaskList(tasks);
     this.initSelectedTask();
     this.loading = false;
   }
@@ -133,32 +180,38 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private initSelectedTask() {
-    if (_.some(this.taskList, (task) => task.jobInstanceId === _.get(this.activeTask, 'jobInstanceId'))) {
+    if (_.some(this.taskList, (task) => task.id === _.get(this.activeTask, 'id'))) {
       return;
     }
 
     this.activeTask = this.taskList[0];
   }
 
-  private getTaskById(jobInstanceId: string): ITask | undefined {
-    return _.find(this.taskList, { jobInstanceId });
+  private getTaskById(id: string): ITask | undefined {
+    return _.find(this.taskList, { id });
+  }
+
+  private filterErrorTaskList(tasks: ITask[]) {
+    return _.filter(tasks, task => {
+      return this.UserTaskManagerService.isTaskError(task);
+    });
   }
 
   private filterInProcessTaskList(tasks: ITask[]) {
     const filteredTasks = _.filter(tasks, task => {
-      return this.UserTaskManagerService.isTaskPending(task.status);
+      return this.UserTaskManagerService.isTaskPending(task.latestExecutionStatus);
     });
 
     // If we have a requested task, sort it to the top of the list or add it first
     if (this.requestedTaskId) {
-      const requestedTask = _.find(tasks, { jobInstanceId: this.requestedTaskId });
+      const requestedTask = _.find(tasks, { id: this.requestedTaskId });
       if (requestedTask) {
         if (_.includes(filteredTasks, requestedTask)) {
           filteredTasks.sort((aTask, bTask) => {
-            if (aTask.jobInstanceId === this.requestedTaskId) {
+            if (aTask.id === this.requestedTaskId) {
               return -1;
             }
-            if (bTask.jobInstanceId === this.requestedTaskId) {
+            if (bTask.id === this.requestedTaskId) {
               return 1;
             }
             return 0;
@@ -177,34 +230,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private populateTaskStatusTranslate(task: ITask) {
-    switch (task.status) {
-      case TaskStatus.CREATED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
-        break;
-      case TaskStatus.STARTED:
-      case TaskStatus.STARTING:
-      case TaskStatus.STOPPING:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
-        break;
-      case TaskStatus.ABANDONED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
-        break;
-      case TaskStatus.COMPLETED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
-        break;
-      case TaskStatus.COMPLETED_WITH_ERRORS:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
-        break;
-      case TaskStatus.FAILED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
-        break;
-      case TaskStatus.STOPPED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
-        break;
-      case TaskStatus.STOPPED_FOR_MAINTENANCE:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stoppedForMaintenance');
-        break;
-    }
+    task.statusTranslate = this.UserTaskManagerService.getTaskStatusTranslate(task);
   }
 
   private populateTaskJobType(task: ITask) {
@@ -216,18 +242,24 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private populateTaskDatesAndTime(task: ITask) {
-    if (task.created) {
-      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.created);
+    const jobStatuses: IJobExecutionStatus[] = _.sortBy(task.jobExecutionStatus, status => status.id);
+    const mostRecent = _.last(jobStatuses);
+
+    // Get original createdTime
+    if (jobStatuses[0].createdTime) {
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(jobStatuses[0].createdTime);
       task.createdDate = date;
       task.createdTime = time;
     }
-    if (task.started) {
-      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
+
+    // Get most recent start/end time for the job, for cases where the job was finished/aborted and then re-run later
+    if (mostRecent.startTime) {
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(mostRecent.startTime);
       task.startedDate = date;
       task.startedTime = time;
     }
-    if (task.stopped) {
-      const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
+    if (mostRecent.endTime) {
+      const { date, time } = this.UserTaskManagerService.getDateAndTime(mostRecent.endTime);
       task.stoppedDate = date;
       task.stoppedTime = time;
     }

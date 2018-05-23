@@ -1,7 +1,82 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+$tl-grid-height:35.5px;
+$tl-padding-left: 150px;
+$tl-padding-right: 30px;
 
 .timelineSvg {
+  position: relative;
   font-family: "CiscoSansTT Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  circle {
+    stroke-width: 2;
+    fill: $gray-light-1;
+    stroke: $gray-light-1;
+  }
+
+  circle.goodCircle {
+    fill: $color-green-base;
+    stroke: $color-green-base;
+  }
+
+  polygon {
+    fill: $color-yellow-base;
+    stroke: $color-yellow-base;
+  }
+
+  rect {
+    fill: $color-red-base;
+    stroke: $color-red-base;
+  }
+  
+  .unitStr {
+    color: $gray-1;
+    display: inline-block;
+    position: absolute;
+    font-size: 11px;
+    bottom: 0;
+    right: 50px;
+  }
+
+  .yaxis {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    width: $tl-padding-left;
+    min-height: 250px;
+    z-index: 10;
+    padding-top: 17px;
+
+    p {
+      color: $gray-1;
+      position: relative;
+      width: 100%;
+      padding-right: 30px;
+      text-align: right;
+      height: $tl-grid-height;
+      line-height: $tl-grid-height;
+      box-sizing: border-box;
+      i {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        font-size: 16px;
+        margin: 0 0.5rem;
+        color: $gray-light-1;
+        vertical-align: middle;
+      }
+    }
+  }
+  .seFlag {
+    position: absolute;
+
+    .badge:last-child {
+      float: right;
+    }
+  }
+  .startEnd line{
+    stroke-width: 2;
+    stroke: $gray-1;
+  }
   .axis path,
   .axis line {
     fill: none;
@@ -20,89 +95,119 @@
     stroke-width: 0.5;
     stroke: $gray-light-2;
   }
-  
-  .timeLine, .legend .line {
+
+  .timeLine, .lineSvg, .lineQos, .pstn, .cmr, .line {
     line {
       stroke-width: 4;
       stroke-linecap: round;
       stroke: $gray-light-1;
+      stroke-dasharray: 1, 8;
     }
 
     .goodLine {
+      stroke-dasharray: none;
       stroke: $color-green-base;
+    }
+
+    .fairLine {
+      stroke-dasharray: none;
+      stroke: $color-yellow-base;
     }
 
     .poorLine {
-      stroke: $color-yellow-base;
+      stroke-dasharray: none;
+      stroke: #FF503C;
+    }
+
+    .defaultLine {
+      stroke-dasharray: none;
     }
   }
 
-  .showUser text {
-    //font-family: Consolas, Monaco, monospace;
-    stroke-width: 1;
-    text-anchor: end;
-    fill-opacity: 0.6;
-    //font-size: 1.2ch;
-  }
-
-  .circle, .circleStart {
-    circle {
-      stroke-width: 2;
-      fill: $gray-light-1;
-      stroke: $gray-light-1;
-    }
-
-    .goodCircle {
-      fill: $color-green-base;
-      stroke: $color-green-base;
-    }
-
-    .fairCircle {
-      fill: #FDEBCD;
-      stroke: #FFB400;
-    }
-
-    .poorCircle {
-      fill: #FFDFE6;
-      stroke: #f5483f;
+  .coverLine {
+    line {
+      stroke-width: 5;
+      stroke: $white;
     }
   }
 
   .legend {
+    overflow: hidden;
+    margin: 0;
+    box-sizing: border-box;
+    svg {
+      height: 30px;
+    }
+    p {
+      width: 50%;
+      color: $gray-1;
+      text-align: center;
+      display: inline-block;
+      i {
+        font-size: 16px;
+        margin: 0 0.8rem;
+        color: $gray-light-1;
+        vertical-align: middle;
+      }
+    }
+
+    .legendCircle, .legendLine {
+      height: 20px;
+      width: 50%;
+      overflow: hidden;
+      margin-top: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 0 3rem;
+
+      div {
+        width: 75px;
+        display: inline-block;
+        overflow: hidden;
+
+        &:last-child {
+          width: 120px;
+        }
+      }
+    }
+    .legendLine {
+      padding: 0;
+    }
     text {
       stroke-width: 1;
       fill-opacity: 0.6;
       font-size: 0.9rem;
     }
   }
+
+  .markLabel {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+
+    span {
+      position: absolute;
+      bottom: 0;
+    }
+  }
 }
 
 .timelineTooltip {
-  color: $white;
   position: absolute;
   text-align: left;
   padding: .5rem;
   font: 12px sans-serif !important;
   line-height: 28px;
+  min-width: 160px;
   background: $gray-dark-3;
   border: 0px;
   border-radius: 2px;
+  color: $white;
   box-shadow: inset 0 1px 0 0 rgba(235,235,236,0.5), 0 1px 3px 0 rgba(41,41,41,0.25);
   pointer-events: none;
-  z-index: 1500;
   display: none;
-
-  .goodCircle span {
-    color: $color-green-base;
-  }
-
-  .fairCircle span {
-    color: #FFB400;
-  }
-
-  .poorCircle span {
-    color: #f5483f;
-  }
 }
 
 .Tooltip-bottom {
@@ -114,16 +219,5 @@
     border: 6px solid;
     border-color: $gray-dark-3 transparent transparent transparent;
     margin-left: -3px;
-  }
-}
-
-.Tooltip-right {
-  &::before {
-    position: absolute;
-    top: 0.5rem;
-    right: -12px;
-    content: "";
-    border: 6px solid;
-    border-color: transparent transparent transparent $gray-dark-3;
   }
 }

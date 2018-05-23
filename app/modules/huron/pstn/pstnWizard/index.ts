@@ -6,13 +6,14 @@ import notifications from 'modules/core/notifications';
 import huronCountryService from 'modules/huron/countries';
 import PstnAddressServiceModule from '../shared/pstn-address';
 import LocationsServiceModule from 'modules/call/locations';
+import BsftCustomerServiceModule from 'modules/call/bsft/settings/shared';
 
 export * from './pstnWizard.service';
 export * from './directInwardDialing';
 
 export default angular
   .module('huron.pstn.pstn-wizard', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
     require('modules/core/auth/auth'),
@@ -22,6 +23,7 @@ export default angular
     huronCountryService,
     PstnAddressServiceModule,
     LocationsServiceModule,
+    BsftCustomerServiceModule,
   ])
   .component('ucPstnPaidWizard', new PstnWizardComponent())
   .service('PstnWizardService', PstnWizardService)

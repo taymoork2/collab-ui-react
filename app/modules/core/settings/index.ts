@@ -7,6 +7,7 @@ import emailModule from './email';
 import brandingModule from './branding';
 import domainsModule from './domain';
 import dirSyncModule from './dirsync';
+import multiDirSyncModule from 'modules/core/multi-dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
@@ -14,12 +15,13 @@ import externalCommunicationModule from './externalCommunication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
-import webexVersionModule from './webexVersion';
+import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
+import proximityModule from './proximity';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('angular-translate'),
   authenticationModule,
   emailModule,
@@ -33,8 +35,10 @@ export default angular.module('core.settings', [
   domainsModule,
   sipDomainModule,
   supportSectionModule,
-  webexVersionModule,
+  webexModule,
   sparkAssistantModule,
+  multiDirSyncModule,
+  proximityModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

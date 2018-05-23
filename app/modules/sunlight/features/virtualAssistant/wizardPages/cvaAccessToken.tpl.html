@@ -1,36 +1,32 @@
 <div>
   <div class="ct-title">
-    <span class="h3">
-      {{$ctrl.getText('accessToken.title')}}
-    </span>
+    <span class="h3">{{$ctrl.getText('accessToken.title')}}</span>
   </div>
-  <h6 class="ct-title-desc">
-    {{$ctrl.getText('accessToken.desc')}}
-  </h6>
+  <h6 class="ct-title-desc">{{$ctrl.getText('accessToken.desc')}}</h6>
   <div class="cs-card-container ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="va-box cva-access-token-box va-card">
         <p class="h6">{{$ctrl.getText('accessToken.boxDesc')}}</p>
         <div ng-form="$ctrl.tokenForm">
           <div class="cs-input-group medium-12 columns" ng-class="{'error': $ctrl.isAccessTokenInvalid()}">
-          <label class="cs-input__label input-label" for="tokenInput">{{$ctrl.getText('accessToken.inputLabel')}}</label>
+            <label class="cs-input__label input-label" for="tokenInput">{{$ctrl.getText('accessToken.inputLabel')}}</label>
             <div class="input-row">
-            <input
+            <input cs-input type="text" focus-on
               name="tokenInput"
-              type="text"
               autocomplete="off"
               ng-change="$ctrl.onDialogflowTokenChange()"
               ng-model="$ctrl.template.configuration.pages.cvaAccessToken.accessTokenValue"
-              ng-disabled="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken">
-            <i class="icon icon-check token-check-mark" ng-hide="!($ctrl.template.configuration.pages.cvaAccessToken.invalidToken == false)"></i>
+              ng-disabled="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken"
+              placeholder="{{$ctrl.getText('accessToken.inputLabel')}}">
+            <i class="icon icon-check token-check-mark" ng-hide="!($ctrl.template.configuration.pages.cvaAccessToken.invalidToken === false)"></i>
             <button cs-btn class="btn btn--primary validate-button"
-                ng-disabled="!($ctrl.template.configuration.pages.cvaAccessToken.accessTokenValue)"
-                loading="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken"
-                ng-click="$ctrl.validateDialogflowToken()">
-                {{$ctrl.getText('accessToken.validateButtonText')}}
+              ng-disabled="$ctrl.isValidateButtonDisabled()"
+              loading="$ctrl.template.configuration.pages.cvaAccessToken.validatingToken"
+              ng-click="$ctrl.validateDialogflowToken()">
+              {{$ctrl.getText('accessToken.validateButtonText')}}
             </button>
             </div>
-            <div class="cs-input__messages" ng-messages="$ctrl.tokenForm.tokenInput.$error" ng-if="$ctrl.isAccessTokenInvalid()">
+            <div class="cs-input__messages" ng-messages="$ctrl.getAccessTokenError()" ng-if="$ctrl.isAccessTokenInvalid()">
               <div class="message" ng-message="maxlength">{{$ctrl.getText('accessToken.maxLengthError')}}</div>
               <div class="message" ng-message="invalidToken">{{$ctrl.getText('accessToken.invalidTokenText')}}</div>
             </div>

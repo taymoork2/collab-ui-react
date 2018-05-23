@@ -6,7 +6,7 @@ import ProPack from 'modules/core/proPack';
 
 export default angular.module('core.settings.externalCommunication', [
   require('angular-cache'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/scripts/services/accountorgservice'),
   require('modules/core/scripts/services/authinfo'),
   ProPack,

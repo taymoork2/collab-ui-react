@@ -1,0 +1,21 @@
+<div class="loading" ng-if="$ctrl.loading">
+  <i class="icon icon-spinner"></i>
+</div>
+
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
+  <div class="container-fluid service-setup-container">
+    <div class="row full service-setup">
+      <bsft-site-name
+        name="$ctrl.bsftSettingsData.bsftSettings.site.name"
+        on-change-fn="$ctrl.onSiteNameChanged(name)">
+      </bsft-site-name>
+    </div>
+    <div class="row full service-setup bottom-margin">
+      <uc-time-zone
+        time-zone="$ctrl.bsftSettingsData.bsftSettings.site.timeZone"
+        time-zone-options="$ctrl.bsftSettingsOptions.timeZoneOptions"
+        on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
+      </uc-time-zone>
+    </div>
+  </div>
+</form>

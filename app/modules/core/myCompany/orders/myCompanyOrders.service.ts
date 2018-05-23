@@ -15,16 +15,16 @@ export interface IOrderList {
 
 export class MyCompanyOrdersService {
   private ordersService: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
-  private userIdURL: ng.resource.IResourceClass<ng.resource.IResource<IOrderList>>;
 
   /* @ngInject */
   constructor(
+    private $q: ng.IQService,
     private $resource: ng.resource.IResourceService,
     private Authinfo,
     private UrlConfig,
+    private UserListService,
   ) {
     this.ordersService = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'commerce/purchaseorders/customer/:customerId');
-    this.userIdURL = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'user?email=:emailAddress');
   }
 
   public getOrderDetails(): ng.IPromise<any[]> {
@@ -41,12 +41,21 @@ export class MyCompanyOrdersService {
       });
   }
 
-  public getUserId(emailAddress: string): ng.IPromise<string> {
-    return this.userIdURL.get({
-      emailAddress: emailAddress,
-    }).$promise
-      .then(userRecord => {
-        return _.get<string>(userRecord, 'id', '');
+  // Return the CI UUID for the given email address
+  public getUserId(orgId: string, emailAddress: string): ng.IPromise<string> {
+    const params = { orgId,
+      filter: {
+        nameStartsWith: emailAddress,
+      },
+    };
+    return this.UserListService.listUsersAsPromise(params)
+      .then((reply) => {
+        const userId: string = _.get(reply.data, 'Resources[0].id');
+        if (userId) {
+          return userId;
+        } else {
+          return this.$q.reject();
+        }
       });
   }
 }

@@ -1,31 +1,59 @@
 <div class="csv-upload-results" ng-if="$ctrl.activeTask !== undefined">
-  <h4 class="csv-upload-results__title"
-    translate="userManage.bulk.import.status"></h4>
+  <h4 class="csv-upload-results__title" translate="userManage.bulk.import.status"></h4>
 
   <p class="csv-upload-results__description"
-    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.startedBy"
-    translate="userTaskManagerModal.startedAt"
-    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }"></p>
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && !$ctrl.hasUser"
+    translate="userTaskManagerModal.startedOn"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate }">
+  </p>
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.startedTime && $ctrl.startedDate && $ctrl.hasUser"
+    translate="userTaskManagerModal.startedBy"
+    translate-values="{ time: $ctrl.startedTime, date: $ctrl.startedDate, person: $ctrl.startedBy }">
+  </p>
+  <p class="csv-upload-results__description"
+    ng-if="$ctrl.isCompleted()"
+    translate="userTaskManagerModal.endedDescription"
+    translate-values="{ time: $ctrl.endedTime, date: $ctrl.endedDate }">
+  </p>
+  <p class="csv-upload-results__description" ng-if="$ctrl.isCompleted()">
+    <span translate="userTaskManagerModal.status"></span>
+    <span ng-class="{'alert': $ctrl.isTaskError()}">
+      <i class="icon task__subtext-icon icon-error" ng-if="$ctrl.isTaskError()"></i>
+      {{$ctrl.getStatusTranslation()}}
+    </span>
+  </p>
 
   <cr-progressbar ng-if="$ctrl.isProcessing"
-    progressbar-label="$ctrl.progressbarLabel"
     progressbar-filename="$ctrl.fileName"
+    progressbar-label="$ctrl.progressbarLabel"
     progressbar-value="$ctrl.processProgress"
     progressbar-is-processing="$ctrl.isProcessing"
-    progressbar-on-cancel="$ctrl.onCancelImport()"
-    >
+    progressbar-on-cancel="$ctrl.onCancelImport()">
   </cr-progressbar>
 
-  <cr-users-tile-totals
-   new-total="$ctrl.numNewUsers"
-   updated-total="$ctrl.numUpdatedUsers"
-   error-total="$ctrl.numErroredUsers">
-  </cr-users-tile-totals>
+  <cr-total-tile-container>
+    <cr-total-tile
+      l10n-label="userManage.bulk.newUsers"
+      total-color="green"
+      total-value="$ctrl.numNewUsers"
+    ></cr-total-tile>
+    <cr-total-tile
+      l10n-label="userManage.bulk.existingUsers"
+      total-color="blue"
+      total-value="$ctrl.numUpdatedUsers"
+    ></cr-total-tile>
+    <cr-total-tile
+      l10n-label="userManage.bulk.errorUsers"
+      total-color="red"
+      total-value="$ctrl.numErroredUsers"
+    ></cr-total-tile>
+  </cr-total-tile-container>
 
-  <hr class="csv-upload-results__line-break"
-    ng-if="$ctrl.userErrorArray.length > 0">
+  <hr class="csv-upload-results__line-break" ng-if="$ctrl.userErrorArray.length > 0">
 
-  <cr-users-error-results ng-if="$ctrl.userErrorArray.length > 0"
+  <cr-users-error-results
+    ng-if="$ctrl.userErrorArray.length > 0"
     user-error-array="$ctrl.userErrorArray">
   </cr-users-error-results>
 

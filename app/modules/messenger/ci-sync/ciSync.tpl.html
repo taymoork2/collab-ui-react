@@ -5,7 +5,7 @@
 
 <div class="container-ci-sync settings" ng-if="sync.authorized()">
 
-  <cs-page-header title-name="{{'messengerCiSync.pageTitle' | translate}}" back="true" back-url="sync.backState"></cs-page-header>
+  <cs-page-header title-name="{{'messengerCiSync.pageTitle' | translate}}" back="true" back-url="sync.backState" back-aria-label="{{::'common.back' | translate}}"></cs-page-header>
 
   <div class="container-ci-sync__content-body">
     <div ng-if="sync.dataStates.LOADING === sync.dataStatus">
@@ -67,46 +67,97 @@
               <i class="icon icon-refresh"></i> {{sync.refresh}}
             </span>
             |
-            <span><a tooltip-placement="left" tooltip="{{sync.orgAdminLinkTooltip}}" href="{{sync.orgAdminUrl}}" target="_blank" translate="messengerCiSync.orgAdminLinkText"></a></span>
+            <span>
+              <a
+                href="{{sync.orgAdminUrl}}"
+                target="_blank"
+                tooltip-placement="left"
+                tooltip="{{sync.orgAdminLinkTooltip}}"
+                tooltip-trigger="mouseenter focus"
+                translate="messengerCiSync.orgAdminLinkText"
+                aria-label="{{::'messengerCiSync.orgAdminLinkText' | translate}} {{sync.orgAdminLinkTooltip}}">
+                <!-- aria-label must include both the link text and the tooltip text -->
+              </a>
+            </span>
           </div>
         </div>
       </setting-section>
 
       <setting-section setting="sync.subSections.options" class="options-section">
         <div cr-feature-toggle feature-show="atlas-jabber-interop" class="row row--first">
-          <span tooltip="{{sync.jabberInteropTooltip}}" translate="messengerCiSync.jabberInteropHeading"></span>
+          <span tabindex="0"
+            tooltip="{{sync.jabberInteropTooltip}}"
+            tooltip-trigger="mouseenter focus"
+            translate="messengerCiSync.jabberInteropHeading"
+            aria-label="{{::'messengerCiSync.jabberInteropHeading' | translate}} {{sync.jabberInteropTooltip}}">
+            <!-- aria-label must include both the link text and the tooltip text -->
+          </span>
           <toggle-switch-with-read-only
             value="sync.settings.jabberInterop"
             toggle-id="toggleJabberInterop"
-            on-change-fn="sync.setExistingProperty('settings.jabberInterop', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setExistingProperty('settings.jabberInterop', toggleValue);"
+            cs-aria-label="{{::'messengerCiSync.jabberInteropHeading' | translate}}">
+          </toggle-switch-with-read-only>
         </div>
 
         <div ng-if="sync.settings.syncInfo.isMessengerSyncRawMode" class="row"> <!-- Native Messenger Sync mode -->
-          <span tooltip-placement="top" tooltip="{{sync.syncStatusTooltip}}" translate="messengerCiSync.syncStatusHeading"></span>
+          <span tabindex="0"
+            tooltip-placement="top"
+            tooltip="{{sync.syncStatusTooltip}}"
+            tooltip-trigger="mouseenter focus"
+            translate="messengerCiSync.syncStatusHeading"
+            aria-label="{{::'messengerCiSync.syncStatusHeading' | translate}} {{sync.syncStatusTooltip}}">
+            <!-- aria-label must include both the link text and the tooltip text -->
+          </span>
           <toggle-switch-with-read-only
             value="sync.settings.syncInfo.isSyncEnabled"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleIsSyncing"
-            on-change-fn="sync.setExistingProperty('settings.syncInfo.isSyncEnabled', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setExistingProperty('settings.syncInfo.isSyncEnabled', toggleValue);"
+            cs-aria-label="{{::'messengerCiSync.syncStatusHeading' | translate}}">
+          </toggle-switch-with-read-only>
         </div>
 
         <div ng-if="!sync.settings.syncInfo.isMessengerSyncRawMode" class="row"> <!-- Native CI DirSync mode -->
-          <span tooltip-placement="top" tooltip="{{sync.dirsyncStatusTooltip}}" translate="messengerCiSync.dirsyncStatusHeading"></span>
+          <span tabindex="0"
+            tooltip-placement="top"
+            tooltip="{{sync.dirsyncStatusTooltip}}"
+            tooltip-trigger="mouseenter focus"
+            translate="messengerCiSync.dirsyncStatusHeading"
+            aria-label="{{::'messengerCiSync.dirsyncStatusHeading' | translate}} {{sync.dirsyncStatusTooltip}}">
+            <!-- aria-label must include both the link text and the tooltip text -->
+          </span>
           <boolean-text-field value="sync.settings.syncInfo.isSyncEnabled"></boolean-text-field>
         </div>
 
         <div class="row">
-          <span tooltip-placement="top" tooltip="{{sync.authRedirectTooltip}}" translate="messengerCiSync.authRedirectHeading"></span>
+          <span tabindex="0"
+            tooltip-placement="top"
+            tooltip="{{sync.authRedirectTooltip}}"
+            tooltip-trigger="mouseenter focus"
+            translate="messengerCiSync.authRedirectHeading"
+            aria-label="{{::'messengerCiSync.authRedirectHeading' | translate}} {{sync.authRedirectTooltip}}">
+            <!-- aria-label must include both the link text and the tooltip text -->
+          </span>
           <toggle-switch-with-read-only
             value="sync.settings.syncInfo.isAuthRedirect"
             is-read-only="!sync.isOpsAdmin()"
             toggle-id="toggleAuthRedirect"
-            on-change-fn="sync.setExistingProperty('settings.syncInfo.isAuthRedirect', toggleValue);"></toggle-switch-with-read-only>
+            on-change-fn="sync.setExistingProperty('settings.syncInfo.isAuthRedirect', toggleValue);"
+            cs-aria-label="{{::'messengerCiSync.authRedirectHeading' | translate}}">
+          </toggle-switch-with-read-only>
         </div>
 
         <div ng-if="sync.settings.syncInfo.isNewDataFormat"> <!-- new org ext data -->
           <div class="row">
-            <span tooltip-placement="top" tooltip="{{sync.pwdSyncTooltip}}" translate="messengerCiSync.pwdSyncHeading"></span>
+            <span tabindex="0"
+              tooltip-placement="top"
+              tooltip="{{sync.pwdSyncTooltip}}"
+              tooltip-trigger="mouseenter focus"
+              translate="messengerCiSync.pwdSyncHeading"
+              aria-label="{{::'messengerCiSync.pwdSyncHeading' | translate}} {{sync.pwdSyncTooltip}}">
+              <!-- aria-label must include both the link text and the tooltip text -->
+            </span>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isPwdSync"
               is-read-only="!sync.isOpsAdmin()"
@@ -115,30 +166,57 @@
           </div>
 
           <div class="row">
-            <span tooltip-placement="top" tooltip="{{sync.sparkEntTooltip}}" translate="messengerCiSync.sparkEntHeading"></span>
+            <span tabindex="0"
+              tooltip-placement="top"
+              tooltip="{{sync.sparkEntTooltip}}"
+              tooltip-trigger="mouseenter focus"
+              translate="messengerCiSync.sparkEntHeading"
+              aria-label="{{::'messengerCiSync.sparkEntHeading' | translate}} {{sync.sparkEntTooltip}}">
+              <!-- aria-label must include both the link text and the tooltip text -->
+            </span>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isSparkEnt"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidSparkEnt"
-              on-change-fn="sync.setExistingProperty('settings.syncInfo.isSparkEnt', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isSparkEnt', toggleValue);"
+              cs-aria-label="{{::'messengerCiSync.sparkEntHeading' | translate}}">
+            </toggle-switch-with-read-only>
           </div>
 
           <div class="row">
-            <span tooltip-placement="top" tooltip="{{sync.usrDisTooltip}}" translate="messengerCiSync.usrDisHeading"></span>
+            <span tabindex="0"
+              tooltip-placement="top"
+              tooltip="{{sync.usrDisTooltip}}"
+              tooltip-trigger="mouseenter focus"
+              translate="messengerCiSync.usrDisHeading"
+              aria-label="{{::'messengerCiSync.usrDisHeading' | translate}} {{sync.usrDisTooltip}}">
+              <!-- aria-label must include both the link text and the tooltip text -->
+            </span>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isUsrDis"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDis"
-              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDis', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDis', toggleValue);"
+              cs-aria-label="{{::'messengerCiSync.usrDisHeading' | translate}}">
+            </toggle-switch-with-read-only>
           </div>
 
           <div class="row">
-            <span tooltip-placement="top" tooltip="{{sync.usrDelTooltip}}" translate="messengerCiSync.usrDelHeading"></span>
+            <span tabindex="0"
+              tooltip-placement="top"
+              tooltip="{{sync.usrDelTooltip}}"
+              tooltip-trigger="mouseenter focus"
+              translate="messengerCiSync.usrDelHeading"
+              aria-label="{{::'messengerCiSync.usrDelHeading' | translate}} {{sync.usrDelTooltip}}">
+              <!-- aria-label must include both the link text and the tooltip text -->
+            </span>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isUsrDel"
               is-read-only="!sync.isOpsAdmin()"
               toggle-id="tidUsrDel"
-              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDel', toggleValue);"></toggle-switch-with-read-only>
+              on-change-fn="sync.setExistingProperty('settings.syncInfo.isUsrDel', toggleValue);"
+              cs-aria-label="{{::'messengerCiSync.usrDelHeading' | translate}}">
+            </toggle-switch-with-read-only>
           </div>
         </div>
 

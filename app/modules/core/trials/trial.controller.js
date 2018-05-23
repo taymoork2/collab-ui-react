@@ -69,7 +69,6 @@
     vm.showContextServiceTrial = false;
     vm.showCare = false;
     vm.showBasicCare = false;
-    vm.showAdvanceCare = false;
     vm.paidServicesForDisplay = null;
 
     vm.messageTrial = vm.trialData.trials.messageTrial;
@@ -81,7 +80,6 @@
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
     vm.contextTrial = vm.trialData.trials.contextTrial;
     vm.careTrial = vm.trialData.trials.careTrial;
-    vm.advanceCareTrial = vm.trialData.trials.advanceCareTrial;
     vm.hasUserServices = hasUserServices;
     _licenseCountDefaultQuantity = vm.trialData.details.licenseCount;
 
@@ -146,17 +144,15 @@
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
       hasEnabledSparkBoardTrial: hasEnabledSparkBoardTrial,
       hasEnabledCareTrial: hasEnabledCareTrial,
-      hasEnabledAdvanceCareTrial: hasEnabledAdvanceCareTrial,
       hasEnabledAnyTrial: hasEnabledAnyTrial,
       messageOfferDisabledExpression: messageOfferDisabledExpression,
       callOfferDisabledExpression: callOfferDisabledExpression,
       careLicenseInputDisabledExpression: careLicenseInputDisabledExpression,
-      advanceCareLicenseInputDisabledExpression: advanceCareLicenseInputDisabledExpression,
-      getCareMaxLicenseCount: getCareMaxLicenseCount,
       getMinUserLicenseRequired: getMinUserLicenseRequired,
       saveTrialPstn: saveTrialPstn,
       saveTrialContext: saveTrialContext,
       getNewOrgInitResults: getNewOrgInitResults,
+      getCareMaxLicenseCount: getCareMaxLicenseCount,
       getExistingOrgInitResults: getExistingOrgInitResults,
       getPaidLicense: getPaidLicense,
       hasOfferType: hasOfferType,
@@ -166,6 +162,8 @@
       name: 'trial.call',
     });
     vm.setDefaultCountry = setDefaultCountry;
+
+    vm.hasRegisteredContextService = hasRegisteredContextService;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -197,15 +195,6 @@
       }
     });
 
-    //watch advance care 'enabled' for quantity
-    $scope.$watch(function () {
-      return vm.advanceCareTrial.enabled;
-    }, function (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        vm._helpers.advanceCareLicenseInputDisabledExpression();
-      }
-    });
-
     //watch hasUserServices for licence quantity
     $scope.$watch(function () {
       return hasUserServices();
@@ -234,10 +223,10 @@
       var promises = {
         atlasDarling: FeatureToggleService.atlasDarlingGetStatus(),
         ftCareTrials: FeatureToggleService.atlasCareTrialsGetStatus(),
-        ftAdvanceCareTrials: FeatureToggleService.atlasCareInboundTrialsGetStatus(),
+        ftK1Promotion: FeatureToggleService.atlasCareCvcToCdcMigrationGetStatus(),
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
-        huronPstn: FeatureToggleService.supports(FeatureToggleService.features.huronPstn),
+        hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -250,8 +239,8 @@
           vm.showRoomSystems = true;
           vm.showContextServiceTrial = true;
           vm.showBasicCare = results.ftCareTrials;
-          vm.showAdvanceCare = results.ftAdvanceCareTrials;
-          vm.showCare = vm.showBasicCare || vm.showAdvanceCare;
+          vm.k1Promotion = results.ftK1Promotion;
+          vm.showCare = vm.showBasicCare;
           vm.sbTrial = results.atlasDarling;
           vm.atlasTrialsShipDevicesEnabled = results.ftShipDevices;
           overrideTestOrg = results.ftShipDevices;
@@ -259,11 +248,9 @@
           vm.canSeeDevicePage = !isTestOrg || overrideTestOrg;
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
-          vm.huronPstn = results.huronPstn;
+          vm.hybridCare = results.hybridCare;
 
-          if (vm.huronPstn) {
-            vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
-          }
+          vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
 
           var initResults = (vm.isExistingOrg()) ? getExistingOrgInitResults(results, vm.hasCallEntitlement, vm.preset, vm.paidServices) : getNewOrgInitResults(results, vm.hasCallEntitlement, vm.stateDefaults);
           _.merge(vm, initResults);
@@ -347,13 +334,7 @@
       setViewState('trial.webex', hasEnabledWebexTrial());
       setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       setViewState('trial.emergAddress', TrialPstnService.getCarrierCapability('E911'));
-
-      if (vm.huronPstn) {
-        setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      } else {
-        setViewState('trial.pstnDeprecated', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
-      }
-
+      setViewState('trial.pstn', isPstn() && (_.get(vm.details.country, 'id') !== 'N/A'));
       addRemoveStates();
     }
 
@@ -598,7 +579,6 @@
         vm.preset.roomSystems && (vm.preset.roomSystemsValue !== vm.roomSystemTrial.details.quantity),
         vm.preset.sparkBoard && (vm.preset.sparkBoardValue !== vm.sparkBoardTrial.details.quantity),
         vm.preset.care && (vm.preset.careLicenseValue !== vm.careTrial.details.quantity),
-        vm.preset.advanceCare && (vm.preset.advanceCareLicenseValue !== vm.advanceCareTrial.details.quantity),
         (vm.preset.licenseCount !== vm.details.licenseCount) && !(isNewTrial() && isExistingOrg()),
         vm.licenseCountChanged,
         canAddDevice(),
@@ -660,12 +640,6 @@
       return hasEnabled(trial.enabled, preset.care);
     }
 
-    function hasEnabledAdvanceCareTrial(vmAdvanceCareTrial, vmPreset) {
-      var trial = vmAdvanceCareTrial || vm.advanceCareTrial;
-      var preset = vmPreset || vm.preset;
-      return hasEnabled(trial.enabled, preset.advanceCare);
-    }
-
     function hasEnabledAnyTrial(vm, vmPreset) {
       // TODO: look into discrepancy for 'roomSystem' vs. 'roomSystems'
       return hasEnabledMessageTrial(vm.messageTrial, vmPreset) ||
@@ -674,8 +648,11 @@
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
         hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
-        hasEnabledCareTrial(vm.careTrial, vmPreset) ||
-        hasEnabledAdvanceCareTrial(vm.advanceCareTrial, vmPreset);
+        hasEnabledCareTrial(vm.careTrial, vmPreset);
+    }
+
+    function hasRegisteredContextService(contextFormSection) {
+      return vm.contextTrial.enabled && contextFormSection.$pristine;
     }
 
     function hasService(service) {
@@ -685,7 +662,6 @@
     function messageOfferDisabledExpression() {
       if (!hasService(vm.messageTrial)) {
         vm.careTrial.enabled = false;
-        vm.advanceCareTrial.enabled = false;
       }
       return !hasService(vm.messageTrial);
     }
@@ -693,7 +669,6 @@
     function callOfferDisabledExpression() {
       if (!hasService(vm.callTrial)) {
         vm.careTrial.enabled = false;
-        vm.advanceCareTrial.enabled = false;
       }
       return !hasService(vm.callTrial);
     }
@@ -703,18 +678,13 @@
       return !vm.careTrial.enabled;
     }
 
-    function advanceCareLicenseInputDisabledExpression() {
-      vm.advanceCareTrial.details.quantity = (!vm.advanceCareTrial.enabled) ? 0 : (vm.advanceCareTrial.details.quantity || _careDefaultQuantity);
-      return !vm.advanceCareTrial.enabled;
-    }
-
     function getCareLicenseCount(careTrial) {
       var paidCareTrialQuantity = _.get(careTrial, 'paid', 0);
       return careTrial.enabled ? careTrial.details.quantity : paidCareTrialQuantity;
     }
 
     function getMinUserLicenseRequired() {
-      var totalCare = getCareLicenseCount(vm.careTrial) + getCareLicenseCount(vm.advanceCareTrial);
+      var totalCare = getCareLicenseCount(vm.careTrial);
       var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
       // Has no user services but might have purchased message licenses.
       // Care should validate against those licenses so 0 is OK.
@@ -729,14 +699,6 @@
       }
       // Has purchased message
       return 1; // Care will validate against purchased message licenses.
-    }
-
-    function getCareMaxLicenseCount(careType) {
-      var careTrial = (careType === vm.careTypes.K2) ? vm.careTrial : vm.advanceCareTrial;
-      var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
-      var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : paidMessageLicenseCount;
-      var max = messageLicenseCount - getCareLicenseCount(careTrial);
-      return Math.min(max, vm.validationData.careMax);
     }
 
     // TODO: this can be refactored as it is mostly a dupe of 'TrialAddCtrl.launchCustomerPortal'
@@ -769,6 +731,12 @@
       var callTrialEnabled = vm.callTrial.enabled;
       var canSeeDevicePage = vm.canSeeDevicePage;
       return TrialDeviceService.canAddDevice(stateDetails, roomSystemTrialEnabled, callTrialEnabled, canSeeDevicePage);
+    }
+
+    function getCareMaxLicenseCount() {
+      var paidMessageLicenseCount = _.get(vm.messageTrial, 'paid', 0);
+      var messageLicenseCount = (vm.messageTrial.enabled) ? vm.details.licenseCount : paidMessageLicenseCount;
+      return Math.min(messageLicenseCount, vm.validationData.careMax);
     }
 
     function cancelCustomer() {
@@ -812,9 +780,7 @@
         sparkBoardValue: _.get(findOffer(Config.offerTypes.sparkBoard), 'licenseCount', 0),
         licenseDuration: _.get(vm, 'currentTrial.duration', 0),
         care: hasOfferType(Config.offerTypes.care),
-        advanceCare: hasOfferType(Config.offerTypes.advanceCare),
         careLicenseValue: _.get(findOffer(Config.offerTypes.care), 'licenseCount', 0),
-        advanceCareLicenseValue: _.get(findOffer(Config.offerTypes.advanceCare), 'licenseCount', 0),
         context: false, // we don't know this yet, so default to false
         countryCode: hasOfferType(Config.trials.call, Config.offerTypes.call) || hasOfferType(Config.offerTypes.roomSystems) ? TrialPstnService.getCountryCode() : '',
       };
@@ -830,7 +796,6 @@
         roomSystems: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SD, $translate.instant('trials.roomSystem')),
         sparkBoard: getPaidLicense(Config.licenseTypes.SHARED_DEVICES, Config.offerCodes.SB, $translate.instant('trials.sparkBoardSystem')),
         care: getPaidLicense(Config.licenseTypes.CARE, undefined, $translate.instant('trials.care')),
-        advanceCare: getPaidLicense(Config.licenseTypes.ADVANCE_CARE, undefined, $translate.instant('trials.advanceCare')),
         context: getPaidLicense(Config.licenseTypes.CONTEXT, undefined, $translate.instant('trials.context')),
       };
     }
@@ -842,7 +807,6 @@
         roomSystemsDefault: _roomSystemDefaultQuantity,
         sparkBoardDefault: _roomSystemDefaultQuantity,
         careDefault: _careDefaultQuantity,
-        advanceCareDefault: _careDefaultQuantity,
       };
     }
 
@@ -882,23 +846,22 @@
 
     function getNewOrgInitResults(results, hasCallEntitlement, stateDefaults) {
       var initResults = {};
+
       _.set(initResults, 'roomSystemTrial.enabled', true);
       _.set(initResults, 'sparkBoardTrial.enabled', results.atlasDarling);
       _.set(initResults, 'webexTrial.enabled', true);
       _.set(initResults, 'meetingTrial.enabled', true);
-      _.set(initResults, 'callTrial.enabled', hasCallEntitlement);
       _.set(initResults, 'messageTrial.enabled', true);
       _.set(initResults, 'roomSystemTrial.details.quantity', stateDefaults.roomSystemsDefault);
       _.set(initResults, 'sparkBoardTrial.details.quantity', stateDefaults.sparkBoardDefault);
       _.set(initResults, 'careTrial.enabled', results.ftCareTrials);
       _.set(initResults, 'careTrial.details.quantity', stateDefaults.careDefault);
-      _.set(initResults, 'advanceCareTrial.enabled', results.ftAdvanceCareTrials);
-      _.set(initResults, 'advanceCareTrial.details.quantity', stateDefaults.advanceCareDefault);
       return initResults;
     }
 
     function getExistingOrgInitResults(results, hasCallEntitlement, preset, paidServices) {
       var initResults = {};
+
       _.set(initResults, 'roomSystemTrial.enabled', preset.roomSystems);
       _.set(initResults, 'roomSystemTrial.paid', paidServices.roomSystems.qty);
       _.set(initResults, 'sparkBoardTrial.enabled', preset.sparkBoard);
@@ -916,9 +879,6 @@
       _.set(initResults, 'careTrial.enabled', preset.care);
       _.set(initResults, 'careTrial.paid', paidServices.care.qty);
       _.set(initResults, 'careTrial.details.quantity', preset.careLicenseValue || paidServices.care.qty);
-      _.set(initResults, 'advanceCareTrial.enabled', preset.advanceCare);
-      _.set(initResults, 'advanceCareTrial.paid', paidServices.advanceCare.qty);
-      _.set(initResults, 'advanceCareTrial.details.quantity', preset.advanceCareLicenseValue || paidServices.advanceCare.qty);
       if (isEditTrial()) {
         _.set(initResults, 'contextTrial.enabled', results.tcHasService);
         _.set(initResults, 'preset.context', results.tcHasService);
@@ -953,11 +913,18 @@
       //edit
       var hasValueChanged = !isExistingOrg() ? vm.contextTrial.enabled : (vm.preset.context !== vm.contextTrial.enabled);
       var errorAddResponse = isNewTrial() ? 'trialModal.startTrialContextServiceError' : 'trialModal.editTrialContextServiceEnableError';
+      var orgAlreadyRegistered = 'ORGANIZATION_REGISTERED_USING_API';
+
       if (!hasValueChanged) {
         return;
       }
       if (vm.contextTrial.enabled) {
         return TrialContextService.addService(customerOrgId).catch(function (response) {
+          // ignore only the "org already registered" error
+          if (_.get(response, 'data.error.statusText') === orgAlreadyRegistered) {
+            return;
+          }
+
           Notification.errorResponse(response, errorAddResponse);
           return $q.reject(response);
         });
@@ -970,8 +937,8 @@
     }
 
     function saveTrialPstn(customerOrgId, customerName, customerEmail, country) {
-      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled;
-      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoardTrial));
+      var newOrgCondition = vm.callTrial.enabled || vm.roomSystemTrial.enabled || vm.sparkBoardTrial.enabled || (vm.careTrial.enabled && vm.hybridCare);
+      var existingOrgCondition = ((vm.callTrial.enabled && !vm.preset.call) || (vm.roomSystemTrial.enabled && !vm.preset.roomSystems) || (vm.sparkBoardTrial.enabled && !vm.preset.sparkBoard) || (vm.careTrial.enabled && !vm.preset.care && vm.hybridCare));
       var hasValueChanged = !isExistingOrg() ? newOrgCondition : existingOrgCondition;
       var countryCode;
 

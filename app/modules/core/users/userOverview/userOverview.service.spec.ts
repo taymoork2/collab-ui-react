@@ -3,7 +3,7 @@ import testModule from './index';
 describe('Service: UserOverviewService', () => {
 
   beforeEach(function () {
-    this.initModules(testModule, 'WebExApp', 'Huron');
+    this.initModules(testModule);
     this.injectDependencies(
       '$httpBackend',
       'UserOverviewService',
@@ -58,10 +58,13 @@ describe('Service: UserOverviewService', () => {
     describe('initial response', () => {
 
       it('should reject if getUser has an error', function () {
+        let err;
         this.$httpBackend.expectGET(/.*\/badf00d.*/g).respond(404);
-        const promise = this.UserOverviewService.getUser('badf00d');
+        this.UserOverviewService.getUser('badf00d').catch(response => {
+          err = response;
+        });
         this.$httpBackend.flush();
-        expect(promise).toBeRejected();
+        expect(err.status).toBe(404);
       });
 
       it('should parse valid user result into user and sqEntitlements', function () {
@@ -147,6 +150,13 @@ describe('Service: UserOverviewService', () => {
         this.updatedUser.meta.lastLoginTime = '09/06/2017 09:50 AM';
         expect(this.UserOverviewService.getAccountActiveStatus(this.updatedUser)).toBeTruthy();
       });
+      it('should not be confused with whether or not the user ever has activated his or her account in Common Identity', function () {
+        const neverActivatedUser = {
+          accountStatus: ['pending'],
+        };
+        expect(this.UserOverviewService.getAccountActiveStatus(neverActivatedUser)).toBeFalsy();
+        expect(this.UserOverviewService.userHasActivatedAccountInCommonIdentity(neverActivatedUser)).toBeFalsy();
+      });
 
     });
 
@@ -154,10 +164,12 @@ describe('Service: UserOverviewService', () => {
 
       it('should reject getUser if there is an error fetching data', function () {
         this.$httpBackend.expectGET(/.*\/userid.*/g).respond(400);
-
-        const promise = this.UserOverviewService.getUser('userid');
+        let err;
+        this.UserOverviewService.getUser('userid').catch(response => {
+          err = response;
+        });
         this.$httpBackend.flush();
-        expect(promise).toBeRejected();
+        expect(err.status).toBe(400);
       });
 
       it('should set pendingStatus true if entitlements is empty', function () {
@@ -258,7 +270,7 @@ describe('Service: UserOverviewService', () => {
 
       it('should set invitations object from Casandra effectiveLicenses', function () {
         this.updatedUser.entitlements = [];
-        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms, this.Config.backend_roles.ciscouc_ces];
+        this.updatedUser.roles = [this.Config.backend_roles.spark_synckms];
         const promise = this.UserOverviewService.getUser('userid')
           .then((userData) => {
             expect(userData.user.entitlements).toHaveLength(0);

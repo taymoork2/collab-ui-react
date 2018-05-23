@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .aa-rest-api-url {
   width: 25rem;
 }
@@ -12,6 +14,9 @@
   @include vr-spacing(mr, -0.35);
 }
 
+.aa-toggle {
+  width: fit-content;
+}
 .aa-text-overflow.aa-text-overflow {
   display: inline-block;
   width: 100%;
@@ -19,7 +24,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #F5A623;
-  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial;
+  font-family: $brand-font-regular;
   font-style: normal;
   font-weight: normal;
   font-size: .75rem;
@@ -133,4 +138,31 @@ label {
 
 .aa-rest-margin {
     @include vr-spacing(mt, 2);
+}
+
+.aa-rest-url-error-message {
+  color: $color-red-base;
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
+
+  .aa-rest-url-error {
+    @include vr-spacing(ml, 1.5);
+    @include vr-spacing(mb, 1);
+    @include vr-spacing(pt, 0.4);
+    line-height: 1rem;
+    font-size: .875rem;
+    max-width: 36rem;
+  }
+}
+
+.aa-rest-error-icon::before {
+  @extend %icon-error;
+  font-family: $icon-font-name;
+  float: left;
+  font-size: 1rem;
+}
+
+.aa-rest-url-helper-text {
+  @include vr-spacing(pl, 0);
+  @include vr-spacing(pr, 0);
 }

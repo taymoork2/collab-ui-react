@@ -15,7 +15,7 @@ export { ComponentType };
 
 export default angular
   .module('call.features.shared.members', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('dragular'),
     accessibilityModule,

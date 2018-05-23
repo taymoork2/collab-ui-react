@@ -17,8 +17,10 @@
         <div ng-if="trial.isExistingOrg()" class="cs-input-group">
           <label class="sub-section__label" translate="partnerHomePage.customerName"></label>
           <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerName">
-          <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
-          <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          <div ng-if="!trial.isEditTrial()">
+            <label class="sub-section__label" translate="partnerHomePage.customerEmail"></label>
+            <input cs-input type="text" disabled="disabled" ng-model="trial.currentTrial.customerEmail">
+          </div>
         </div>
         <!-- new customer -->
         <div ng-if="!trial.isExistingOrg()" class="cs-input-group">
@@ -108,7 +110,7 @@
             cs-input-label="{{::'trials.call' | translate}}"
             ng-change="trial.updateCountryList()">
         </div>
-        <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid || !trial.advanceCareTrial.paid)">
+        <div class="sub-section" ng-if="trial.showCare && (!trial.careTrial.paid)">
           <h5 translate="subscriptions.care"></h5>
           <p class="body-small get-bottom-margin" translate="trials.careDescription"></p>
           <div class="cs-form-group row" ng-if="trial.showBasicCare" >
@@ -117,6 +119,7 @@
               ng-model="trial.careTrial.enabled"
               ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.care"
               cs-input-label="{{::'trials.care' | translate}}">
+            <p class="cs-input__help-text" translate="trials.kOneContents" ng-if="trial.k1Promotion"></p>
 
             <input cs-input type="number"
               id="trialCareLicenseCount" name="trialCareLicenseCount"
@@ -125,28 +128,10 @@
               cs-input-secondary-label="{{::'trials.licenses' | translate}}"
               cs-input-size="medium-4"
               cs-input-messages="trial.validationMessages.care"
-              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K1)}}"
+              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(trial.careTypes.K1)}}"
               min="1"
               ng-required="trial.careTrial.enabled"
               ng-disabled="!trial.careTrial.enabled"
-              ng-model-options="{'allowInvalid': true}">
-          </div>
-          <div class="cs-form-group row" ng-if="trial.showAdvanceCare">
-            <input cs-input type="checkbox"
-              id="advanceCareTrial" name="advanceCareTrial"
-              ng-model="trial.advanceCareTrial.enabled"
-              ng-disabled="trial._helpers.messageOfferDisabledExpression() || trial.preset.advanceCare"
-              cs-input-label="{{::'trials.advanceCare' | translate}}">
-            <input cs-input type="number"
-              id="trialAdvanceCareLicenseCount" name="trialAdvanceCareLicenseCount"
-              ng-model="trial.advanceCareTrial.details.quantity"
-              cs-input-group-size="medium-8" cs-input-nested="1" cs-input-size="medium-4"
-              cs-input-secondary-label="{{::'trials.licenses' | translate}}"
-              cs-input-messages="trial.validationMessages.care"
-              ng-min="0" ng-max="{{trial._helpers.getCareMaxLicenseCount(vm.careTypes.K2)}}"
-              min="1"
-              ng-required="trial.advanceCareTrial.enabled"
-              ng-disabled="!trial.advanceCareTrial.enabled"
               ng-model-options="{'allowInvalid': true}">
           </div>
         </div>
@@ -287,7 +272,9 @@
         <h4 translate="partnerHomePage.nonTrialServices"></h4>
       </div>
       <div class="section__content">
+         <!-- we don't support de-registering Context Service, so grey out checkbox if it is enabled -->
          <input type="checkbox" cs-input
+            ng-disabled="trial.hasRegisteredContextService(trialForm.contextTrial)"
             ng-model="trial.contextTrial.enabled"
             id="contextTrial" name="contextTrial"
             cs-input-label="{{::'trials.context' | translate}}">
@@ -304,7 +291,7 @@
     </div>
   </div>
   <button id="cancelTrialButton" class="btn" ng-click="trial.cancelModal()" ng-disabled="trial.loading">
-    <span translate="partnerHomePage.cancel"></span>
+    <span translate="common.cancel"></span>
   </button>
   <!-- edit trial -->
   <button id="saveUpdateButton" class="btn btn--primary" type="button" cs-btn loading="trial.loading" ng-click="trialForm.$setPristine(true); trial.nextStep()"

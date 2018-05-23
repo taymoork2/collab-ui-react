@@ -3,56 +3,44 @@ import { ServicesOverviewMessageCard } from './cloud/message-card';
 import { ServicesOverviewMeetingCard } from './cloud/meeting-card';
 import { ServicesOverviewCallCard } from './cloud/cloud-call-card';
 import { ServicesOverviewCareCard } from './cloud/care-card';
-import { ServicesOverviewHybridServicesCard } from './hybrid/hybrid-services-card';
-import { ServicesOverviewHybridAndGoogleCalendarCard } from './hybrid/hybrid-and-google-calendar-card';
-import { ServicesOverviewHybridCalendarCard } from './hybrid/hybrid-calendar-card';
-import { ServicesOverviewHybridCallCard } from './hybrid/hybrid-call-card';
-import { ServicesOverviewImpCard } from './hybrid/imp-card';
-import { ServicesOverviewHybridMediaCard } from './hybrid/hybrid-media-card';
-import { ServicesOverviewHybridDataSecurityCard } from './hybrid/hybrid-data-security-card';
-import { ServicesOverviewHybridContextCard } from './hybrid/hybrid-context-card';
-import { ServicesOverviewPrivateTrunkCard } from './hybrid/private-trunk-card';
+import { ServicesOverviewCCACard } from './cloud/cca-card';
 
 import { Config } from 'modules/core/config/config';
 import { CloudConnectorService, CCCService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { EnterprisePrivateTrunkService, IPrivateTrunkResourceWithStatus } from 'modules/hercules/services/enterprise-private-trunk-service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { HybridServicesClusterService, IServiceStatusWithSetup } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { ICluster, HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
-import { IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
+import { HybridServiceId, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IToolkitModalService } from 'modules/core/modal';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 import { Notification } from 'modules/core/notifications';
-import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { ProPackService }  from 'modules/core/proPack/proPack.service';
+import { TaskManagerService } from 'modules/hcs/task-manager';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
+
+type AllService = ICCCService | IServiceStatusWithSetup;
 
 export class ServicesOverviewController implements ng.IComponentController {
-  // ️️⚠️ The property below is exclusive to the OLD cards, before the UI rewrite for the office 365 feature
+  // TODO: rewrite the following properties with proper AngularJS 1.5+ components
   private cards: ServicesOverviewCard[] = [
-    new ServicesOverviewMessageCard(this.Authinfo),
+    new ServicesOverviewMessageCard(this.Authinfo, this.MessengerInteropService),
     new ServicesOverviewMeetingCard(this.Authinfo),
-    new ServicesOverviewCallCard(this.Authinfo, this.Config),
+    new ServicesOverviewCallCard(this.Authinfo),
     new ServicesOverviewCareCard(this.Authinfo),
-    new ServicesOverviewHybridServicesCard(this.Authinfo),
-    new ServicesOverviewHybridAndGoogleCalendarCard(this.$state, this.$q, this.$modal, this.Authinfo, this.CloudConnectorService, this.Notification),
-    new ServicesOverviewHybridCalendarCard(this.Authinfo),
-    new ServicesOverviewHybridCallCard(this.Authinfo),
-    new ServicesOverviewHybridMediaCard(this.Authinfo, this.Config),
-    new ServicesOverviewHybridDataSecurityCard(this.$state, this.Authinfo, this.Config, this.HDSService, this.Notification),
-    new ServicesOverviewHybridContextCard(this.Authinfo),
-    new ServicesOverviewPrivateTrunkCard(this.PrivateTrunkPrereqService),
-    new ServicesOverviewImpCard(this.Authinfo),
+    new ServicesOverviewCCACard(),
   ];
 
-  // ⚠️ The properties below are exclusive to the new cards coming with the office 365 feature
-  private hasServicesOverviewRefreshToggle: boolean; // this feature toggle is used to decide if we display the new design for hybrid cards
   private urlParams: ng.ui.IStateParamsService;
   public _servicesToDisplay: HybridServiceId[] = []; // made public for easier testing
   public _servicesActive: HybridServiceId[] = []; // made public for easier testing
   public _servicesInactive: HybridServiceId[] = []; // made public for easier testing
-  public clusters: IExtendedClusterFusion[] | null = null;
-  public trunks: IPrivateTrunkResourceWithStatus[] | null = null;
-  public servicesStatuses: (ICCCService | IPrivateTrunkResourceWithStatus | IServiceStatusWithSetup)[] = [];
+  public clusters: IExtendedClusterFusion[];
+  public trunks: IPrivateTrunkResourceWithStatus[];
+  public servicesStatuses: AllService[] = [];
   public loadingHybridServicesCards = true;
+  public hasCapacityFeatureToggle: boolean;
+  public hasEventsHistoryFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
@@ -60,17 +48,18 @@ export class ServicesOverviewController implements ng.IComponentController {
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private Analytics,
-    private Auth,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Config: Config,
     private EnterprisePrivateTrunkService: EnterprisePrivateTrunkService,
     private FeatureToggleService: FeatureToggleService,
-    private HDSService,
+    private HcsTestManagerService: TaskManagerService,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private HybridServicesClusterStatesService: HybridServicesClusterStatesService,
+    private MessengerInteropService: MessengerInteropService,
     private Notification: Notification,
-    private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
     private ProPackService: ProPackService,
+    private ServiceDescriptorService: ServiceDescriptorService,
   ) {}
 
   public $onInit() {
@@ -84,45 +73,32 @@ export class ServicesOverviewController implements ng.IComponentController {
       .then(result => {
         this.forwardEvent('proPackEventHandler', result);
       });
-
-    const features = this.$q.all({
-      atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
-      atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
-      atlasPMRonM2: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasPMRonM2),
-      hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
-      hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
-      huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
-    });
-
-    if (!this.hasServicesOverviewRefreshToggle) {
-      this.loadHybridServicesStatuses();
-      features
-        .then((response) => {
-          this.forwardEvent('atlasHybridImpFeatureToggleEventHandler', response.atlasHybridImp);
-          if (response.atlasPMRonM2) {
-            this.getPMRStatus();
-          }
-          this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
-          this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
-          this.forwardEvent('privateTrunkFeatureToggleEventHandler', response.huronEnterprisePrivateTrunking);
-          if (response.huronEnterprisePrivateTrunking) {
-            this.PrivateTrunkPrereqService.getVerifiedDomains().then(domains => {
-              this.forwardEvent('privateTrunkDomainEventHandler', domains.length);
-            });
-          }
-        });
+    if (this.$state.current.name === 'partner-services-overview') {
+      this.initPartnerAdminServices();
     } else {
+      const features = this.$q.all({
+        atlasHybridCapacity: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridCapacity),
+        atlasHybridAuditLog: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog),
+        atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
+        atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
+        hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
+        hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
+        hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
+        huronEnterprisePrivateTrunking: this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking),
+        hybridCare: this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare),
+      });
+
       features
         .then((response) => {
           // Used by cloud cards
-          if (response.atlasPMRonM2) {
-            this.getPMRStatus();
-          }
+          this.forwardEvent('hybridCareToggleEventHandler', response.hybridCare);
           this.forwardEvent('hI1484FeatureToggleEventhandler', response.hI1484);
           this.forwardEvent('sparkCallCdrReportingFeatureToggleEventhandler', response.hI802);
 
           // Used by hybrid cards
-          if (this.Authinfo.isFusionUC()) {
+          this.hasCapacityFeatureToggle = response.atlasHybridCapacity;
+          this.hasEventsHistoryFeatureToggle = response.atlasHybridAuditLog;
+          if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
             this._servicesToDisplay.push('squared-fusion-uc');
           }
           if (this.Authinfo.isFusionCal()) {
@@ -143,7 +119,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           if (this.Authinfo.isContactCenterContext()) {
             this._servicesToDisplay.push('contact-center-context');
           }
-          if (response.huronEnterprisePrivateTrunking && this.Authinfo.isSquaredUC()) {
+          if (response.huronEnterprisePrivateTrunking && (this.Authinfo.isSquaredUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare))) {
             this._servicesToDisplay.push('ept');
           }
           if (response.atlasHybridImp && this.Authinfo.isFusionIMP()) {
@@ -156,10 +132,8 @@ export class ServicesOverviewController implements ng.IComponentController {
         })
         .then((clusters) => {
           this.clusters = clusters;
-          const promises = _.map(this._servicesToDisplay, (serviceId) => {
-            if (_.includes(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], serviceId)) {
-              return this.HybridServicesClusterService.getStatusForService(serviceId, clusters);
-            } else if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
+          const promises = _.compact(_.map(this._servicesToDisplay, (serviceId) => {
+            if (_.includes(['squared-fusion-gcal', 'squared-fusion-o365'], serviceId)) {
               // TODO: When the backend returns an error, we should say "we don't know" instead of considering `setup: false`
               return this.CloudConnectorService.getService(serviceId as CCCService)
                 .catch(() => ({
@@ -179,18 +153,76 @@ export class ServicesOverviewController implements ng.IComponentController {
                   serviceId: serviceId,
                   setup: false,
                 }));
+            } else if (serviceId === 'spark-hybrid-testing') {
+              return this.HcsTestManagerService.getServiceStatus(serviceId)
+              .catch(() => ({
+                serviceId: serviceId,
+                setup: false,
+              }));
+            } else if (serviceId === 'hcs') {
+              return {
+                serviceId: serviceId,
+                setup: true,
+              };
+            } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
+              return {
+                serviceId: serviceId,
+                setup: true,
+              };
             }
-          });
+          }));
+          // Now get all from FMS
+          if (_.some(['squared-fusion-uc', 'squared-fusion-cal', 'squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context', 'spark-hybrid-impinterop'], (serviceId) => _.includes(this._servicesToDisplay, serviceId))) {
+            promises.push(this.ServiceDescriptorService.getServices()
+              .then((servicesStatusesFromFMS) => {
+                return _.compact(_.map(servicesStatusesFromFMS, (serviceStatus) => {
+                  // For some services, we rather trust data from CCC or Huron. For some services, we don't care, because they have no card in the Services Overview page.
+                  if (!_.includes(['squared-fusion-gcal', 'ept', 'squared-fusion-khaos', 'squared-fusion-servicability', 'squared-fusion-ec', 'squared-fusion-mgmt'], serviceStatus.id)) {
+                    const status = this.HybridServicesClusterService.processClustersToAggregateStatusForService(serviceStatus.id, this.clusters);
+                    return {
+                      serviceId: serviceStatus.id,
+                      setup: serviceStatus.enabled,
+                      status: status,
+                      cssClass: this.HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(status),
+                    };
+                  }
+                }));
+              }));
+          }
           return this.$q.all<any[]>(promises)
             .then((servicesStatuses) => {
+              servicesStatuses = _.flatten(servicesStatuses);
               this.servicesStatuses = servicesStatuses;
-              _.forEach(this._servicesToDisplay, (serviceId, i) => {
-                if (servicesStatuses[i].setup) {
+              _.forEach(this._servicesToDisplay, (serviceId) => {
+                const serviceStatus: IServiceStatusWithSetup = _.find(this.servicesStatuses, (status: IServiceStatusWithSetup) =>  status.serviceId === serviceId);
+                if (serviceStatus && serviceStatus.setup) {
                   this._servicesActive.push(serviceId);
                 } else {
                   this._servicesInactive.push(serviceId);
                 }
               });
+              const payload = {
+                'All Clusters is clickable': _.sum([_.get(this.clusters, 'length', 0), _.get(this.trunks, 'length', 0)]) > 0,
+                'Call is setup': this.getProperty(servicesStatuses, 'squared-fusion-uc', 'setup'),
+                'Call status': this.getProperty(servicesStatuses, 'squared-fusion-uc', 'status'),
+                'Calendar is setup': this.getProperty(servicesStatuses, 'squared-fusion-cal', 'setup'),
+                'Calendar status': this.getProperty(servicesStatuses, 'squared-fusion-cal', 'status'),
+                'Office 365 is setup': this.getProperty(servicesStatuses, 'squared-fusion-o365', 'setup'),
+                'Office 365 status': this.getProperty(servicesStatuses, 'squared-fusion-o365', 'status'),
+                'Google Calendar is setup': this.getProperty(servicesStatuses, 'squared-fusion-gcal', 'setup'),
+                'Google Calendar status': this.getProperty(servicesStatuses, 'squared-fusion-gcal', 'status'),
+                'Media is setup': this.getProperty(servicesStatuses, 'squared-fusion-media', 'setup'),
+                'Media status': this.getProperty(servicesStatuses, 'squared-fusion-media', 'status'),
+                'Data Security is setup': this.getProperty(servicesStatuses, 'spark-hybrid-datasecurity', 'setup'),
+                'Data Security status': this.getProperty(servicesStatuses, 'spark-hybrid-datasecurity', 'status'),
+                'Context is setup': this.getProperty(servicesStatuses, 'contact-center-context', 'setup'),
+                'Context status': this.getProperty(servicesStatuses, 'contact-center-context', 'status'),
+                'Private Trunking is setup': this.getProperty(servicesStatuses, 'ept', 'setup'),
+                'Private Trunking status': this.getProperty(servicesStatuses, 'ept', 'status'),
+                'Message is setup': this.getProperty(servicesStatuses, 'spark-hybrid-impinterop', 'setup'),
+                'Message status': this.getProperty(servicesStatuses, 'spark-hybrid-impinterop', 'status'),
+              };
+              this.Analytics.trackEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_SERVICES_OVERVIEW, payload);
             })
             .finally(() => {
               this.loadingHybridServicesCards = false;
@@ -220,6 +252,51 @@ export class ServicesOverviewController implements ng.IComponentController {
     }
   }
 
+  public initPartnerAdminServices(): void {
+    //Hybrid Services For Partner Admin Only
+    const partnerFeatures = this.$q.all({
+      atlasHostedCloudService: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService),
+      geminiCCA: this.FeatureToggleService.supports(this.FeatureToggleService.features.gemServicesTab),
+    });
+    partnerFeatures
+    .then((response) => {
+      //Cloud Cards
+      this.forwardEvent('geminiCCAToggleEventHandler', response.geminiCCA);
+      //Hybrid Cards
+      if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
+        this._servicesToDisplay.push('hcs');
+        this._servicesToDisplay.push('hcs-licensing');
+        this._servicesToDisplay.push('hcs-upgrade');
+      }
+      const promises = _.compact(_.map(this._servicesToDisplay, (serviceId) => {
+        if (serviceId === 'hcs') {
+          return {
+            serviceId: serviceId,
+            setup: true,
+          };
+        } else if (serviceId === 'hcs-licensing' || serviceId === 'hcs-upgrade') {
+          return {
+            serviceId: serviceId,
+            setup: true,
+          };
+        }
+      }));
+      this.$q.all<any[]>(promises)
+      .then((servicesStatuses) => {
+        servicesStatuses = _.flatten(servicesStatuses);
+        this.servicesStatuses = servicesStatuses;
+        _.forEach(this._servicesToDisplay, (serviceId) => {
+          const serviceStatus: IServiceStatusWithSetup = _.find(this.servicesStatuses, (status: IServiceStatusWithSetup) =>  status.serviceId === serviceId);
+          if (serviceStatus.setup) {
+            this._servicesActive.push(serviceId);
+          }
+        });
+      });
+    }).finally(() => {
+      this.loadingHybridServicesCards = false;
+    });
+  }
+
   public isActive(serviceId: HybridServiceId): boolean {
     return _.includes(this._servicesToDisplay, serviceId) && _.includes(this._servicesActive, serviceId);
   }
@@ -243,12 +320,6 @@ export class ServicesOverviewController implements ng.IComponentController {
     return _.find(this.servicesStatuses, { serviceId: serviceId });
   }
 
-  public getHybridCards() {
-    return _.filter(this.cards, {
-      cardType: CardType.hybrid,
-    });
-  }
-
   public hasActiveHybridCards() {
     return !!_.find(this.cards, card => card.display && card.getCardType() === CardType.hybrid);
   }
@@ -263,6 +334,10 @@ export class ServicesOverviewController implements ng.IComponentController {
     });
   }
 
+  public isCloudCardActive() {
+    return (this.$state.current.name !== 'partner-services-overview' || !_.isUndefined(_.find(this.cards, { isPartner: true, display: true })));
+  }
+
   private forwardEvent(handlerName, ...eventArgs: any[]) {
     _.each(this.cards, function (card) {
       if (_.isFunction(card[handlerName])) {
@@ -271,61 +346,22 @@ export class ServicesOverviewController implements ng.IComponentController {
     });
   }
 
-  private loadHybridServicesStatuses() {
-    this.HybridServicesClusterService.getAll()
-      .then((clusterList) => {
-        const servicesStatuses: IServiceStatusWithSetup[] = [
-          this.HybridServicesClusterService.getStatusForService('squared-fusion-mgmt', clusterList),
-          this.HybridServicesClusterService.getStatusForService('squared-fusion-cal', clusterList),
-          this.HybridServicesClusterService.getStatusForService('squared-fusion-uc', clusterList),
-          this.HybridServicesClusterService.getStatusForService('spark-hybrid-impinterop', clusterList),
-          this.HybridServicesClusterService.getStatusForService('squared-fusion-media', clusterList),
-          this.HybridServicesClusterService.getStatusForService('spark-hybrid-datasecurity', clusterList),
-          this.HybridServicesClusterService.getStatusForService('contact-center-context', clusterList),
-        ];
-        this.forwardEvent('hybridStatusEventHandler', servicesStatuses);
-        this.forwardEvent('hybridClustersEventHandler', clusterList);
-        this.Analytics.trackEvent(this.Analytics.sections.HS_NAVIGATION.eventNames.VISIT_SERVICES_OVERVIEW, {
-          'All Clusters is clickable': clusterList.length > 0,
-          'Management is setup': servicesStatuses[0].setup,
-          'Management status': servicesStatuses[0].status,
-          'Calendar is setup': servicesStatuses[1].setup,
-          'Calendar status': servicesStatuses[1].status,
-          'Call is setup': servicesStatuses[2].setup,
-          'Call status': servicesStatuses[2].status,
-          'Media is setup': servicesStatuses[3].setup,
-          'Media status': servicesStatuses[3].status,
-          'Data Security is setup': servicesStatuses[4].setup,
-          'Data Security status': servicesStatuses[4].status,
-          'Context is setup': servicesStatuses[5].setup,
-          'Context status': servicesStatuses[5].status,
-        });
-        return clusterList;
-      })
-      .then(this.loadSipDestinations);
-  }
-
-  private loadSipDestinations = (clusterList: ICluster[]) => {
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.huronEnterprisePrivateTrunking)
-      .then((supported: boolean) => {
-        if (supported) {
-          this.EnterprisePrivateTrunkService.fetch()
-            .then((sipTrunkResources: IPrivateTrunkResource[]) => {
-              this.forwardEvent('sipDestinationsEventHandler', sipTrunkResources, clusterList);
-            });
-        }
-      });
-  }
-
   private loadWebexSiteList() {
     let siteList = this.Authinfo.getConferenceServicesWithoutSiteUrl() || [];
     siteList = siteList.concat(this.Authinfo.getConferenceServicesWithLinkedSiteUrl() || []);
     this.forwardEvent('updateWebexSiteList', siteList);
   }
 
-  private getPMRStatus() {
-    const customerAccount = this.Auth.getCustomerAccount(this.Authinfo.getOrgId());
-    this.forwardEvent('updatePMRStatus', customerAccount);
+  private getProperty(servicesStatuses: AllService[], serviceId: HybridServiceId, property: 'setup' | 'status'): any {
+    if (property === 'setup') {
+      return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, false);
+    } else if (property === 'status') {
+      return _.get(_.find(servicesStatuses, { serviceId: serviceId }), property, 'notAvailable');
+    }
+  }
+
+  public isPartnerAdmin() {
+    return this.Authinfo.isPartnerAdmin();
   }
 }
 
@@ -333,7 +369,6 @@ export class ServicesOverviewComponent implements ng.IComponentOptions {
   public controller = ServicesOverviewController;
   public template = require('modules/services-overview/services-overview.component.html');
   public bindings = {
-    hasServicesOverviewRefreshToggle: '<',
     urlParams: '<',
   };
 }

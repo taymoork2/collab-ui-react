@@ -125,7 +125,7 @@ export class PhoneNumberService {
   private filterRegex = /[^+\d]/g;
   private readonly REGION_CODE_BLANK: string = '';
   private readonly REGION_CODE_US: string = 'us';
-
+  private readonly REGION_CODE_CANADA: string = 'CA';
   private readonly exampleNumbers = {
     us: '15556667777, +15556667777, 1-555-666-7777, +1 (555) 666-7777',
     au: '61255566777, +61255566777, +61 2 5556 6777',
@@ -269,6 +269,23 @@ export class PhoneNumberService {
     try {
       const parsedNumber: PhoneNumber = this.phoneUtil.parseAndKeepRawInput(e164Number, this.REGION_CODE_BLANK);
       return this.phoneUtil.isValidNumberForRegion(parsedNumber, this.phoneUtil.getRegionCodeForNumber(parsedNumber));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks if the number is only US/Canada number
+   *
+   * @param {string} e164Number
+   * @returns {boolean}
+   *
+   * @memberOf PhoneNumberService
+   */
+  public numberNANPValidator(e164Number: string): boolean {
+    try {
+      const parsedNumber: PhoneNumber = this.phoneUtil.parseAndKeepRawInput(e164Number, this.REGION_CODE_BLANK);
+      return (this.phoneUtil.getRegionCodeForNumber(parsedNumber) === _.upperCase(this.REGION_CODE_US) || this.phoneUtil.getRegionCodeForNumber(parsedNumber) === this.REGION_CODE_CANADA);
     } catch (e) {
       return false;
     }

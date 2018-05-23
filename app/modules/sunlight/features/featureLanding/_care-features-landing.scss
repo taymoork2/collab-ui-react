@@ -1,3 +1,5 @@
+@import 'app/modules/huron/features/featureLanding/_feature-landing';
+
 .care-no-features {
   @extend %content-header;
 }
@@ -6,7 +8,10 @@
   @extend %content-subheader;
 
   .cs-card article {
-    height: rem-calc(170);
+    section {
+      @include vr-spacing(pb, 1);
+      height: rem-calc(72);
+    }
   }
 
   .cs-card article header {
@@ -20,36 +25,91 @@
     color: $gray-light-1;
   }
 
-  .care-badge {
-    @include vr-spacing(pt, 0.25);
-    display: block;
-    float: left;
+  .care-sub-header {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    .care-badge {
+      @include vr-spacing(mr, 0.5);
+      line-height: rem-calc(25);
+    }
+
+    .care-icon {
+      display: inline-flex;
+
+      .people {
+        color: $color-mint-darker;
+      }
+      .cta {
+        color: $color-violet-darker;
+      }
+      .abc {
+        color: $color-green-dark;
+      }
+      .icon {
+        @include vr-spacing(pt, 0.5);
+        @include vr-spacing(pr, 0.5);
+        display: block;
+      }
+      .icon-bot-five {
+        @include vr-spacing(pt, 0.3);
+      }
+    }
   }
 
-  .care-icon {
+  .care-features-icon {
     @include vr-spacing(pt, 0.5);
-    @include vr-spacing(ml, 0.25);
-    display: block;
-    float: left;
-
-    .people {
-      color: $color-mint-darker;
-    }
+    display: flex;
     .cta {
-      color: $color-violet-darker;
+      color: $gray-light-1;
     }
+
     .icon {
-      @include vr-spacing(ml, 0.25);
+      display: block;
+    }
+
+    .icon-bot-six {
+      margin-top: rem-calc(2); // vr-spacing isn't specific enough
+    }
+
+    span{
+      @include vr-spacing(pr, 0.5);
     }
   }
+
+  .warning-sign {
+    @include vr-spacing(ph, 1.5);
+    display: flex;
+    color: $color-yellow-darker;
+
+    .warning-text {
+      @include vr-spacing(pl, 0.25);
+      letter-spacing: 0px;
+      font-size: rem-calc(10);
+      line-height: rem-calc(14);
+      color: $color-yellow-darker;
+    }
+  }
+
   .cs-card.hoverable {
     article {
       &.hover,
       &:focus {
+        .badge {
+          @include vr-spacing(pb, 0.25);
+        }
+        .warning-text {
+          color: $color-white;
+        }
         .embed-code-txt {
           color: $color-white;
           .email {
             color: $color-white;
+          }
+          .usage {
+            .usage-text {
+              color: $color-white;
+            }
           }
         }
         .card-icons-inline,
@@ -61,23 +121,75 @@
     }
   }
 
+  .card-header {
+    height: rem-calc(110);
+
+    h4 {
+      padding: 0;
+    }
+
+    .icon-color {
+      color: $gray-light;
+      line-height: 2;
+      padding-right: .5rem;
+    }
+  }
+
   .card-footer {
     width: 100%;
+    height: rem-calc(56);
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: flex-end;
 
     @include vr-spacing(ph, 1);
-    @include vr-spacing(pt, 1.5);
-    @include vr-spacing(pb, 0.5);
+    @include vr-spacing(pt, 0);
+    @include vr-spacing(pb, 1);
     @include vr-spacing(pl, 1.5);
 
     .embed-code-txt {
-      @include vr-spacing(pt, 1.5);
       color: $gray-base;
+
       .email {
+        @include vr-spacing(pb, 0.5);
         color: $gray-dark-4;
+        font-family: $brand-font-light;
+        font-size: rem-calc(12);
+        letter-spacing: 0;
+        line-height: rem-calc(16);
+      }
+
+      .usage {
+        display: flex;
+
+        .usage-text {
+          font-family: $brand-font-regular;
+          font-size: rem-calc(12);
+          color: $gray-light-1;
+          letter-spacing: 0;
+        }
+
+        .usage-text-space {
+          @include vr-spacing(mr, 0.25);
+        }
+
+        .usage-warning {
+          font-size: rem-calc(10);
+        }
+
+        .icon-question-circle {
+          @include vr-spacing(p, 0);
+          @include vr-spacing(ph, 0.25);
+          background: none;
+          color: $gray-light-1;
+          font-size: rem-calc(15);
+          min-width: 0;
+
+          &:hover {
+            color: $color-violet-light;
+          }
+        }
       }
     }
 
@@ -86,7 +198,6 @@
       color: $gray-light-1;
 
       @include vr-spacing(ml, 0.5);
-      @include vr-spacing(pt, 1.5);
     }
   }
 
@@ -121,6 +232,10 @@
   .tooltip-wrapper-div {
     display: inline-block;
   }
+}
+
+.tooltip[popup-class="icon-tooltip"] .c-nub {
+  min-width: 250px;
 }
 
 header > p > span.badge {
@@ -169,6 +284,11 @@ header > p > span.badge {
   @include vr-spacing(pb, 2);
   @include vr-spacing(pl, 1);
 
+  .tooltip {
+    @include vr-spacing(ml, -15);
+    pointer-events: none;
+  }
+
   div.feature-card-container {
     // The button options in the body.
     display: flex;
@@ -214,6 +334,10 @@ header > p > span.badge {
           flex-basis: 100%;
         }
       }
+
+      .virtual-assistant-icon {
+        font-size: rem-calc(32);
+      }
     }
 
     .feature-icon-circle {      // Icon in the option.
@@ -233,8 +357,20 @@ header > p > span.badge {
       color: $color-violet-darker;
     }
 
+    .feature-abc-color {
+      color: $color-green-dark;
+    }
+
     .feature-cst-color {
       color: $color-people-base;
+    }
+
+    .aa-learn-more {
+      @include vr-spacing(pl, 0.35);
+    }
+
+    .feature-aa-color {
+      color: $toolkit-primary;
     }
 
     .feature-icon-disabled {
@@ -263,7 +399,16 @@ header > p > span.badge {
       @include vr-spacing(pr, 1.5);
       @include vr-spacing(pl, 1.5);
 
+      margin-bottom: auto;
       text-align: left;
+    }
+
+    .feature-warning-container {
+     font-size: rem-calc(14);
+    }
+
+    .feature-icon-color {
+      color: $color-blue-base;
     }
   }
 }
@@ -310,6 +455,77 @@ header > p > span.badge {
     .badge {
       border-color: $color-mint-darker;
       color: $color-mint-darker;
+    }
+  }
+
+  &.abc {
+    article {
+      &.hover,
+      &:focus {
+        background-color: $color-green-dark;
+        header {
+          background-color: $color-green-dark;
+        }
+      }
+    }
+    .badge {
+      border-color: $color-green-dark;
+      color: $color-green-dark;
+    }
+  }
+}
+
+.cs-card + .tooltip {
+  @include vr-spacing(mt, 10);
+  pointer-events: none;
+}
+
+.popover-content {
+  @include vr-spacing(ph, 0.875);
+  @include vr-spacing(pt, 0.625);
+  @include vr-spacing(pb, 0.25);
+
+  color: $gray-dark-1;
+  line-height: rem-calc(16);
+  white-space: pre-wrap;
+  width: rem-calc(224);
+
+  .feature-card-popover-error {
+    @include vr-spacing(pb, .625);
+    font-family: $brand-font-light;
+    font-size: rem-calc(12);
+    word-break: normal;
+  }
+
+  .feature-card-popover {
+    word-break: normal;
+
+    .header,
+    .sub-header {
+      @include vr-spacing(mb, .25);
+      @include vr-spacing(mh, 0);
+
+      font-family: $brand-font-regular;
+      font-size: rem-calc(12);
+    }
+
+    .header {
+      @include vr-spacing(mb, 1);
+    }
+
+    .sub-header {
+      font-family: $brand-font-light;
+    }
+
+    .spaces-list {
+      @include vr-spacing(p, 0);
+      @include vr-spacing(pl, .625);
+      font-family: $brand-font-light;
+      font-size: rem-calc(12);
+
+      li:last-child {
+        @include vr-spacing(pb, 0.5);
+      }
     }
   }
 }

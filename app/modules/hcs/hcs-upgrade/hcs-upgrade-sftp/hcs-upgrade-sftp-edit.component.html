@@ -1,0 +1,19 @@
+<cs-page-header
+  title-name="{{$ctrl.sftpServer.name}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}">
+</cs-page-header>
+<div class="hcs-container">
+  <form novalidate class="cs-form content-container" name="$ctrl.form" role="form">
+    <hcs-setup-sftp
+      sftp-server="$ctrl.sftpServer"
+      on-change-fn="$ctrl.setSftpServer(sftpServer)">
+    </hcs-setup-sftp>
+    <div class="save-section" ng-class="{invisible: !$ctrl.form.$dirty}">
+      <p></p>
+      <button ng-click="$ctrl.cancel()" translate="common.cancel"></button>
+      <button class="btn btn--primary" cs-btn loading="$ctrl.processing" ng-click="$ctrl.saveSftpServer()" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
+    </div>
+  </form>
+</div>

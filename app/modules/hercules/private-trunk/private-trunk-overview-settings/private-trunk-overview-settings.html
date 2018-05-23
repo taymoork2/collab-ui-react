@@ -1,5 +1,6 @@
 <div>
   <email-notifications-section service-id="'ept'"></email-notifications-section>
+  <keywords-section service-id="'ept'"></keywords-section>
   <setting-section>
     <div class="sub-section">
       <private-trunk-domain
@@ -16,7 +17,8 @@
         formatted-cert-list="$ctrl.formattedCertList"
         on-change-fn="$ctrl.uploadFile(file)"
         on-delete-cert-fn="$ctrl.deleteCert(certId)"
-        on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
+        on-change-option-fn="$ctrl.changeOption(isCertificateDefault)"
+        service-id="'ept'">
       </cisco-collaboration-cloud-certificate-store>
      </div>
   </setting-section>

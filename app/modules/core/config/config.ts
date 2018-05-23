@@ -1,5 +1,7 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
+
+import storageModuleName from 'modules/core/storage';
 
 interface IRoleStates {
   Application: string[];
@@ -52,11 +54,7 @@ export class Config {
 
   public readonly feedbackUrl = 'https://conv-a.wbx2.com/conversation/api/v1/users/deskFeedbackUrl';
   public readonly helpUrl = 'https://collaborationhelp.cisco.com';
-  public readonly ssoUrl = 'https://collaborationhelp.cisco.com';
-  public readonly rolesUrl = 'https://collaborationhelp.cisco.com';
-  public readonly supportUrl = 'https://collaborationhelp.cisco.com';
   public readonly webexSiteMigrationUrl = 'http://try.webex.com/mk/get/ciscowebexmigration';
-  public readonly partnerSupportUrl = 'https://collaborationhelp.cisco.com';
 
   public readonly usersperpage = 100;
   public readonly orgsPerPage = 100;
@@ -94,10 +92,12 @@ export class Config {
   public readonly customerTypes = {
     enterprise: 'Enterprise',
     pending: 'Pending',
+    online: 'Online',
   };
 
   public readonly entitlements = {
     huron: 'ciscouc',
+    broadCloud: 'ciscobc',
     squared: 'webex-squared',
     fusion_uc: 'squared-fusion-uc',
     fusion_cal: 'squared-fusion-cal',
@@ -171,6 +171,14 @@ export class Config {
     'webexSupportCenter',
   ];
 
+  public readonly webexTypeCodes = [
+    'EE',
+    'EC',
+    'MC',
+    'TC',
+    'SC',
+  ];
+
   public readonly freeLicenses = [
     'messaging',
     'communications',
@@ -204,11 +212,17 @@ export class Config {
     orderadmin: 'atlas-portal.partner.orderadmin',
     partner_management: 'atlas-portal.cisco.partnermgmt',
     spark_synckms: 'spark.synckms',
-    ciscouc_ces: 'ciscouc.ces',
     readonly_admin: 'id_readonly_admin',
     tech_support: 'atlas-portal.cisco.techsupport',
     user_admin: 'id_user_admin',
+    /*
+    / TODO: When 'atlas-portal.deviceadmin' is phased out, 'id_device_admin' will become device_admin
+    /       For now, assigning one role should assign them both.
+    */
     device_admin: 'atlas-portal.deviceadmin',
+    ci_device_admin: 'id_device_admin',
+    cca_full_admin: 'cca-portal.full_admin',
+    cca_readonly_admin: 'cca-portal.readonly_admin',
   };
 
   public readonly roles = {
@@ -293,6 +307,7 @@ export class Config {
     CMR: 'CMR',
     CARE: 'CARE',
     ADVANCE_CARE: 'ADVANCE_CARE',
+    MANAGEMENT: 'MANAGEMENT',
   };
 
   public readonly setupTypes = {
@@ -313,6 +328,7 @@ export class Config {
     insufficientEntitlementsError: '400111',
     hybridServicesError: '400087',
     hybridServicesComboError: '400094',
+    mustConvertBeforeAdding: '600001',
   };
 
   public readonly timeFormat = {
@@ -357,8 +373,9 @@ export class Config {
       'callPickupSetupAssistant',
       'callpickupedit',
       'device-overview',
+      'bulk-overview',
       'devices',
-      'devices-redux',
+      'deviceBulkFlow',
       'didadd',
       'huntgroups',
       'huronCallPark',
@@ -387,17 +404,18 @@ export class Config {
       'private-trunk-redirect',
       'customerPstnOrdersOverview',
       'externalNumberDelete',
-      'pstnSetup',
       'pstnWizard',
       'call-locations',
       'call-locations-add',
       'call-locations-edit',
+      'partner-services-overview',
     ],
     'squared-fusion-mgmt': [
       'expressway-cluster-sidepanel',
       'services-overview',
       'resource-group-settings',
       'cluster-list',
+      'hybrid-services-event-history-page',
       'expressway-cluster',
       'hybrid-services-connector-sidepanel',
       'cucm-cluster', // Remove when squared-fusion-khaos entitlement is returned by Atlas backend
@@ -405,7 +423,9 @@ export class Config {
     'spark-room-system': [
       'addDeviceFlow',
       'device-overview',
+      'bulk-overview',
       'devices',
+      'deviceBulkFlow',
       'place-overview',
       'places',
       'huronsettings',
@@ -452,6 +472,7 @@ export class Config {
       'reports.metrics',
       'reports.media',
       'reports.mediaservice',
+      'reports.live-resource',
       'services-overview',
       'cluster-list',
       'media-cluster-details',
@@ -512,7 +533,7 @@ export class Config {
   };
 
   // These states do not require a role/service check
-  public readonly publicStates = ['unauthorized', '404', 'csadmin'];
+  public readonly publicStates = ['unauthorized', '404', 'csadmin', 'helpdesk-admin-elevation'];
   public readonly ciscoOnly = ['billing'];
 
   // rolestates are modified in the constructor and can't be readonly
@@ -543,15 +564,51 @@ export class Config {
       'userRedirect',
       'userprofile',
       'users',
+      'addDeviceFlow',
+      'device-overview',
+      'devices',
+      'place-overview',
+      'places',
+      'huronsettings',
+      'huronlines',
       'customerPstnOrdersOverview',
+      'taasSuites',
+      'taasTaskView',
+      'taasResource',
+      'taasSchedule',
+      'taasServiceManager',
+      'taasResults',
+      'sso-certificate',
     ],
-    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc', 'dgc-panel'],
+    Support: ['support', 'reports', 'billing', 'cdrsupport', 'cdr-overview', 'cdrladderdiagram', 'dgc'],
     Tech_Support: ['gss'],
     WX2_User: ['overview', 'support', 'activateProduct'],
     WX2_Support: ['overview', 'reports', 'support'],
     WX2_SquaredInviter: [],
-    PARTNER_ADMIN: ['partneroverview', 'partnercustomers', 'gem', 'gemOverview', 'gemReports', 'gemCbgDetails', 'gmTdDetails', 'gmTdNumbersRequest', 'customer-overview', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'profile', 'pstn', 'pstnSetup', 'pstnWizard', 'video', 'settings'],
-    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnSetup', 'pstnWizard', 'video'],
+    PARTNER_ADMIN: ['partneroverview',
+      'partnercustomers',
+      'gem',
+      'gemOverview',
+      'gemReports',
+      'gemCbgDetails',
+      'gmTdDetails',
+      'gmTdNumbersRequest',
+      'customer-overview',
+      'partnerreports',
+      'trial',
+      'trialAdd',
+      'trialEdit',
+      'profile',
+      'pstn',
+      'pstnWizard',
+      'video',
+      'settings',
+      'taas',
+      'taasSuits',
+      'partner-services-overview',
+      'hcs',
+    ],
+    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
@@ -572,39 +629,45 @@ export class Config {
     ],
     Application: ['organizations', 'organization-overview'],
     Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
-    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports', 'legalhold'],
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
-    Device_Admin: ['device-overview', 'devices', 'addDeviceFlow', 'devices-redux', 'place-overview', 'places'],
+    Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';
   private readonly defaultEntitlements = ['webex-squared', 'squared-call-initiation'];
   private readonly hostnameConfig = require('config/hostname.config');
 
-  // public functions
   public isDevHostName(hostName: string): boolean {
     const whitelistDevHosts = [
       '0.0.0.0',
-      this.hostnameConfig.LOCAL,
       'localhost',
       'server',
-      'dev-admin.ciscospark.com',
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
     ];
     return _.includes(whitelistDevHosts, hostName);
   }
 
-  public canUseAbsUrlForDevLogin (absUrl: string): boolean {
-    const whitelistAbsUrls = [
-      'http://127.0.0.1:8000',
-      'http://dev-admin.ciscospark.com:8000',
-    ];
-    return _.includes(whitelistAbsUrls, absUrl);
+  public getAbsUrlForDev(absUrl: string = this.getAbsUrlAtRootContext()): string {
+    const whitelistAbsUrls = _.map([
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
+    ], host => `http://${host}:8000/`);
+
+    if (_.includes(whitelistAbsUrls, absUrl)) {
+      return absUrl;
+    }
+
+    return whitelistAbsUrls[0];
   }
 
-  public getAbsUrlAtRootContext (): string {
+  public getAbsUrlAtRootContext(): string {
     const portSuffix = (this.$location.port()) ? ':' + this.$location.port() : '';
-    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}`;
+    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}/`;
   }
 
   public forceProdForE2E(): boolean {
@@ -616,7 +679,7 @@ export class Config {
   }
 
   public isCfe(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_CFE || this.getCurrentHostname() === this.hostnameConfig.CFE);
   }
 
   public isDev(): boolean {
@@ -634,11 +697,11 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_INTEGRATION || this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {
-    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
+    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.WEBEX_PRODUCTION || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
   }
 
   public isUserAgent(userAgentString: string): boolean {
@@ -675,7 +738,7 @@ export class Config {
 
 export default angular
   .module('core.config', [
-    require('modules/core/storage').default,
+    storageModuleName,
   ])
   .service('Config', Config)
   .name;

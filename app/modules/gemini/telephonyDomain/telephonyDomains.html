@@ -6,19 +6,31 @@
   <cs-page-sub-header-right>
     <div class="page-option-buttons" ng-if="$ctrl.gridData.length > 0">
       <div ng-if="!$ctrl.exportLoading"
-           class="no-animate"
-           tooltip="{{::'gemini.export.exportToCSV' | translate}}"
-           tooltip-placement="top"
-           tooltip-trigger="mouseenter">
-        <a class="export-users" ng-csv="$ctrl.exportCSV()" filename="{{::'gemini.tds.export.csvFilename' | translate}}" quote-strings="true">
-          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+        class="no-animate"
+        tooltip="{{::'gemini.export.exportToCSV' | translate}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{::'gemini.export.exportToCSV' | translate}}"
+        tabindex="0">
+        <a href
+          class="export-users"
+          ng-csv="$ctrl.exportCSV()"
+          filename="{{::'gemini.tds.export.csvFilename' | translate}}"
+          quote-strings="true"
+          aria-label="{{::'common.download' | translate}}">
+          <!-- button removed from tabindex to prevent redundancy with <a> element wrapper -->
+          <button class="btn--none" tabindex="-1">
+            <i class="icon icon-download icon-lg"></i>
+          </button>
         </a>
       </div>
       <div ng-if="$ctrl.exportLoading"
-           class="no-animate"
-           tooltip="{{::'gemini.export.exportInProcess' | translate}}"
-           tooltip-placement="top"
-           tooltip-trigger="mouseenter">
+        class="no-animate"
+        tooltip="{{::'gemini.export.exportInProcess' | translate}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{::'gemini.export.exportInProcess' | translate}}"
+        tabindex="0">
         <div class="btn btn-none">
           <span class="export-users">
             <i class="icon icon-spinner"></i>

@@ -15,14 +15,14 @@
       <i class="icon-li icon" ng-class="{'icon-chevron-right':hide,'icon-chevron-down':!hide}" ng-click="hide = !hide"></i>
       <span class="icon icon-circle component-status-{{component.status}}"></span>
       {{component.componentName}}
-      <a translate="common.delete" ng-click="componentsCtrl.delComponent(component)"></a>
-      <a translate="common.edit" ng-click="componentsCtrl.updateComponent(component)"></a>
+      <a href translate="common.delete" ng-click="componentsCtrl.delComponent(component)"></a>
+      <a href translate="common.edit" ng-click="componentsCtrl.updateComponent(component)"></a>
       <ul collapse="hide">
         <li ng-repeat="subComponent in component.components">
           <span class="icon icon-circle component-status-{{subComponent.status}}"></span>
           {{subComponent.componentName}}
-          <a translate="common.delete" ng-click="componentsCtrl.delComponent(subComponent)"></a>
-          <a translate="common.edit" ng-click="componentsCtrl.updateComponent(subComponent, component)"></a>
+          <a href translate="common.delete" ng-click="componentsCtrl.delComponent(subComponent)"></a>
+          <a href translate="common.edit" ng-click="componentsCtrl.updateComponent(subComponent, component)"></a>
         </li>
       </ul>
     </li>

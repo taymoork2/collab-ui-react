@@ -14,8 +14,9 @@ describe('Component: dgcTab', () => {
         createdTime: 1484789489000,
         conferenceId: '69162350665578622',
       },
-      features: { chat: null, poll: 1 },
-      connection: { voIP: 'yes', video: 'no' },
+      features: { chat: null, poll: 1, appShare: 1 },
+      connection: { voIP: 'yes', video: 'no', nbr2: 'yes' },
+      sessions: [{ sessionType: '4', duration: 4000 }],
     };
     this.nameSection = '.meeting-room-name h3';
   });
@@ -41,5 +42,15 @@ describe('Component: dgcTab', () => {
     initComponent.call(this);
 
     expect(this.view.find(this.nameSection)).toHaveText('Felix cao');
+  });
+
+  it('Should get Server time when the meeting status eq 1', function () {
+    this.meetingDetail.meetingBasicInfo.status = 1;
+    this.SearchService.getMeetingDetail.and.returnValue(this.$q.resolve(this.meetingDetail));
+    spyOn(this.SearchService, 'getServerTime').and.returnValue(this.$q.resolve({ dateLong: 1513319154000 }));
+    initComponent.call(this);
+
+    const oneM = this.SearchService.getStorage('webexOneMeeting');
+    expect(oneM.endTime).toBe(1513319154000);
   });
 });

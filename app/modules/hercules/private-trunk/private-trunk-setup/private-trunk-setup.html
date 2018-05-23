@@ -21,7 +21,8 @@
     is-importing = "$ctrl.isImporting"
     formatted-cert-list="$ctrl.formattedCertList"
     on-change-fn="$ctrl.uploadFile(file)"
-    on-change-option-fn="$ctrl.changeOption(isCertificateDefault)">
+    on-change-option-fn="$ctrl.changeOption(isCertificateDefault)"
+    service-id="'ept'" >
   </cisco-collaboration-cloud-certificate-store>
   <private-trunk-setup-complete ng-if="$ctrl.currentStepIndex === 4 && $ctrl.isFirstTimeSetup"
     verified-domains="$ctrl.selectedVerifiedDomains">

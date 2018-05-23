@@ -3,11 +3,10 @@ import { SearchObject } from './search/searchObject';
 import { Caller } from './csdmSearch.service';
 import { SearchTranslator } from './search/searchTranslator';
 import { QueryParser } from './search/queryParser';
-import translateModule from '../../core/scripts/services/missing-translation-handler.factory';
 
 describe('CsdmSearchService', () => {
   beforeEach(function () {
-    this.initModules(searchModule, translateModule);
+    this.initModules(searchModule);
     this.injectDependencies('$httpBackend', 'CsdmSearchService', 'UrlConfig', 'Authinfo');
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('--org--');
   });
@@ -59,12 +58,14 @@ describe('CsdmSearchService', () => {
       let queryOneExecuted = false;
       let queryOneFinally = false;
       let queryTwoExecuted = false;
-      this.CsdmSearchService.search(searchObj).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryOneExecuted = true;
-      }).finally(() => {
+      })
+      .catch(_.noop)
+      .finally(() => {
         queryOneFinally = true;
       });
-      this.CsdmSearchService.search(searchObj).then(() => {
+      this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryTwoExecuted = true;
       });
       this.$httpBackend.flush();

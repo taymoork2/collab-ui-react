@@ -1,4 +1,4 @@
-import { UserTaskManagerService } from 'modules/core/users/user-task-manager';
+import { IDateAndTime, UserTaskManagerService } from 'modules/core/users/user-task-manager';
 import { ITask } from './user-task-manager.component';
 import { Notification } from 'modules/core/notifications';
 
@@ -14,10 +14,14 @@ export interface IError {
 }
 
 export interface IErrorItem {
+  itemNumber: number;
   error: IError;
   trackingId: string;
-  itemNumber: number;
-  errorMessage: string;
+}
+
+export interface IErrorRow {
+  row: number;
+  message: string;
 }
 
 export class CsvUploadResultsCtrl implements ng.IComponentController {
@@ -26,20 +30,20 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public onStatusUpdate: Function;
 
   public activeTask?: ITask;
+  public fileName?: string;
   public numTotalUsers = 0;
   public numNewUsers = 0;
   public numUpdatedUsers = 0;
   public numErroredUsers = 0;
   public processProgress = 0;
   public isProcessing = false;
-  public userErrorArray: IErrorItem[] = [];
+  public userErrorArray: IErrorRow[] = [];
   public isCancelledByUser = false;
-  public fileName: string;
-  public startedDate: string;
-  public startedTime: string;
-  public startedBy: string;
+  public startedBy?: string;
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
+  private startDateAndTime?: IDateAndTime;
+  private endDateAndTime?: IDateAndTime;
 
   /* @ngInject */
   constructor(
@@ -55,36 +59,70 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   private intervalCallback = (task: ITask) => {
     this.setActiveTaskData(task);
     this.onStatusUpdate({
-      status: task.status,
+      status: task.latestExecutionStatus,
     });
-    if (!this.UserTaskManagerService.isTaskPending(task.status)) {
+    if (!this.UserTaskManagerService.isTaskPending(task.latestExecutionStatus)) {
       this.UserTaskManagerService.cleanupTaskDetailPolling(this.intervalCallback);
     }
   }
 
   public $onChanges(changes: ng.IOnChangesObject): void {
     if (changes.inputActiveTask) {
-      const newTask = changes.inputActiveTask.currentValue;
+      const newTask: ITask = changes.inputActiveTask.currentValue;
       this.resetErrorArrayOnChange();
 
       if (_.isUndefined(newTask)) {
         this.activeTask = undefined;
       } else {
-        this.setStartedByUser(newTask.creatorUserId);
+        if (newTask.sourceUserId) {
+          this.setStartedByUser(newTask.sourceUserId);
+        }
 
         this.UserTaskManagerService.cleanupTaskDetailPolling(this.intervalCallback);
         this.setActiveTaskData(newTask);
-        if (this.UserTaskManagerService.isTaskPending(newTask.status)) {
-          this.UserTaskManagerService.initTaskDetailPolling(newTask.jobInstanceId, this.intervalCallback, this.$scope);
+        if (this.UserTaskManagerService.isTaskPending(newTask.latestExecutionStatus)) {
+          this.UserTaskManagerService.initTaskDetailPolling(newTask.id, this.intervalCallback, this.$scope);
         }
       }
     }
+  }
+
+  public get startedDate() {
+    return _.get(this.startDateAndTime, 'date');
+  }
+
+  public get startedTime() {
+    return _.get(this.startDateAndTime, 'time');
+  }
+
+  public get endedDate() {
+    return _.get(this.endDateAndTime, 'date');
+  }
+
+  public get endedTime() {
+    return _.get(this.endDateAndTime, 'time');
+  }
+
+  public get hasUser() {
+    return _.isString(this.startedBy);
   }
 
   public get progressbarLabel() {
     if (this.isCancelledByUser) {
       return this.$translate.instant('common.cancelingEllipsis');
     }
+  }
+
+  public isCompleted(): boolean {
+    return _.isUndefined(this.activeTask) ? false : !this.UserTaskManagerService.isTaskPending(this.activeTask!.latestExecutionStatus);
+  }
+
+  public isTaskError(): boolean {
+    return _.isUndefined(this.activeTask) ? false : this.UserTaskManagerService.isTaskError(this.activeTask!);
+  }
+
+  public getStatusTranslation(): string {
+    return _.isUndefined(this.activeTask) ? '' : this.UserTaskManagerService.getTaskStatusTranslate(this.activeTask!);
   }
 
   public onCancelImport(): void {
@@ -95,7 +133,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
       close: this.$translate.instant('userManage.bulk.import.stopImportTitle'),
       btnType: 'alert',
     }).result.then(() => {
-      this.UserTaskManagerService.cancelTask(this.activeTask!.jobInstanceId)
+      this.UserTaskManagerService.cancelTask(this.activeTask!.id)
         .then(() => this.isCancelledByUser = true)
         .catch(response => {
           this.Notification.errorResponse(response, 'userTaskManagerModal.cancelCsvError');
@@ -110,30 +148,25 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
 
   private setActiveTaskData(task: ITask): void {
     this.activeTask = task;
-    this.numTotalUsers = task.totalUsers;
-    this.numNewUsers = task.addedUsers;
-    this.numUpdatedUsers = task.updatedUsers;
-    this.numErroredUsers = task.erroredUsers;
+    this.numTotalUsers = task.counts.totalUsers;
+    this.numNewUsers = task.counts.usersCreated;
+    this.numUpdatedUsers = task.counts.usersUpdated;
+    this.numErroredUsers = task.counts.usersFailed;
     this.processProgress = Math.floor((this.numNewUsers + this.numUpdatedUsers + this.numErroredUsers) * 100 / this.numTotalUsers);
     if (isNaN(this.processProgress)) {
       this.processProgress = 0;
     }
-    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.status);
+    this.isProcessing = this.UserTaskManagerService.isTaskInProcess(task.latestExecutionStatus);
     this.isCancelledByUser = false;
-    this.fileName = this.getShortFileName(task.filename);
-    const { date, time } = this.UserTaskManagerService.getDateAndTime(task.started);
-    this.startedDate = date;
-    this.startedTime = time;
+    this.fileName = this.getShortFileName(task.csvFile);
+    const latestExecutionStatus = _.last(_.sortBy(task.jobExecutionStatus, status => status.id));
 
-    this.populateTaskErrors(task);
-  }
-
-  private populateTaskErrors(task: ITask) {
-    if (task.erroredUsers > 0) {
-      this.fetchTaskErrors(task);
-    } else {
-      this.userErrorArray = [];
+    if (latestExecutionStatus) {
+      this.startDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.startTime);
+      this.endDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.endTime);
     }
+
+    this.fetchTaskErrors(task);
   }
 
   private fetchTaskErrors(task: ITask) {
@@ -142,13 +175,41 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     }
 
     this.cancelErrorsDeferred = this.$q.defer();
-    this.UserTaskManagerService.getTaskErrors(task.jobInstanceId, this.cancelErrorsDeferred.promise).then(response => {
+    this.UserTaskManagerService.getTaskErrors(task.id, this.cancelErrorsDeferred.promise).then(response => {
       this.cancelErrorsDeferred = undefined;
-      this.userErrorArray = _.map(response, errorEntry => {
-        return _.assignIn({}, errorEntry, {
-          errorMessage: `${this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), _.get(errorEntry, 'error.message[0].code'))} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+      const tempUserErrorArray: IErrorRow[] = [];
+      _.forEach(response, errorEntry => {
+        _.forEach(errorEntry.error.message, msg => {
+          let errorMessage = '';
+          const errorType = _.split(_.get(msg, 'code'), '-')[0];
+          const errorCode = _.split(_.get(msg, 'code'), '-')[1];
+
+          if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
+            // For EFT, if the code starts with 'BATCH', use the description
+            errorMessage = msg.description;
+          } else if (errorCode) {
+            // get the localized error message
+            errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
+            // For EFT, if the error messages are stock/generic messages, use the description
+            if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
+              errorMessage = msg.description;
+            }
+          } else {
+            errorMessage = msg.description;
+          }
+
+          tempUserErrorArray.push({
+            row: _.get(errorEntry, 'itemNumber'),
+            message: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+          });
         });
       });
+      this.userErrorArray = _.cloneDeep(tempUserErrorArray);
+
       // load the errors to userCsvService when it's done
       if (!this.isProcessing) {
         // empty userErrorArray first
@@ -158,9 +219,9 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
         _.forEach(this.userErrorArray, errorEntry => {
           this.UserCsvService.setCsvStat({
             userErrorArray: [{
-              row: errorEntry.itemNumber,
+              row: errorEntry.row,
               email: 'User',
-              error: errorEntry.errorMessage,
+              error: errorEntry.message,
             }],
           });
         });

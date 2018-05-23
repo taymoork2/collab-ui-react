@@ -6,6 +6,7 @@ describe('HealthService', function () {
     this.injectDependencies(
       '$httpBackend',
       'HealthService',
+      'UrlConfig',
     );
 
     this.pingRegex = /.*\/ping\.*/;
@@ -24,19 +25,33 @@ describe('HealthService', function () {
         serviceState: 'online',
       });
 
-      const promise = this.HealthService.getHealthStatus();
+      this.HealthService.getHealthStatus().then(response => {
+        expect(response).toBe('online');
+      });
 
       this.$httpBackend.flush();
-      expect(promise).toBeResolvedWith('online');
     });
 
     it('should return an error if service is unavailable', function () {
       this.$httpBackend.expectGET(this.pingRegex).respond(404);
 
-      const promise = this.HealthService.getHealthStatus();
+      this.HealthService.getHealthStatus().then(fail)
+      .catch(response => {
+        expect(response.status).toBe(404);
+      });
 
       this.$httpBackend.flush();
-      expect(promise).toBeRejected();
+    });
+  });
+
+  describe('getHealthCheck', function () {
+    it('should return success is true when API returns successfully', function () {
+      const fakeData = { fakeData: true };
+      this.$httpBackend.expectGET(this.UrlConfig.getHealthCheckServiceUrl()).respond(200, fakeData);
+      this.HealthService.getHealthCheck().then((healthData) => {
+        expect(healthData).toEqual(fakeData);
+      });
+      this.$httpBackend.flush();
     });
   });
 });

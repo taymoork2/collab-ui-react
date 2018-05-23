@@ -1,4 +1,4 @@
-import { IBmmpAttr } from 'modules/online/upgrade/upgrade.service';
+import { IBmmpAttr } from 'modules/online/upgrade/shared/upgrade.service';
 
 export interface ISubscription {
   changeplanOverride?: any;
@@ -40,7 +40,9 @@ export interface IOfferData {
   licenseModel: string;
   offerName: string;
   siteUrl?: string;
+  status?: string;
   tooltip?: string;
+  tooltipAriaLabel?: string;
   totalUsage?: number;
   usage?: number;
   volume: number;

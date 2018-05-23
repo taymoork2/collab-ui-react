@@ -1,10 +1,10 @@
-import { HybridServicesSidepanelErrorMessageComponent } from './hybrid-services-sidepanel-error-message.component';
+import { HybridServicesSidepanelMessageComponent } from './hybrid-services-sidepanel-message.component';
 
-require('./_hybrid-services-sidepanel-error-message.scss');
+require('./_hybrid-services-sidepanel-message.scss');
 
 export default angular
-  .module('hercules.hybrid-services-sidepanel-error-message', [
+  .module('hercules.hybrid-services-sidepanel-message', [
     require('angular-translate'),
   ])
-  .component('hybridServicesSidepanelErrorMessage', new HybridServicesSidepanelErrorMessageComponent())
+  .component('hybridServicesSidepanelMessage', new HybridServicesSidepanelMessageComponent())
   .name;

@@ -1,64 +1,47 @@
 <div class="customer-overview dgc-meeting">
-    <cs-page-header title-name="{{::'reportsPage.webexMetrics.diagnostics' | translate}}" back="true" back-url="$ctrl.backState" tabs="$ctrl.tabs"></cs-page-header>
-
+    <cs-page-header
+      title-name="{{::'reportsPage.webexMetrics.diagnostics' | translate}}"
+      back="true"
+      back-url="$ctrl.backState"
+      back-aria-label="{{::'common.back' | translate}}"
+      tabs="$ctrl.tabs">
+    </cs-page-header>
+  
     <div ng-if="$ctrl.loading" class="grid-refresh">
-        <i class="icon icon-spinner icon-3x"></i>
+      <i class="icon icon-spinner icon-3x"></i>
     </div>
-
     <div class="content-container" ng-if="!$ctrl.loading">
-        <div class="overview">
-            <h4>Meeting Details</h4>
-            <div class="meeting-room-name">
-                <h3 ng-bind="$ctrl.details.meetingName"></h3>
-                <small><i class="icon icon-circle status-indicator"></i><span ng-bind="$ctrl.details.status_"></span></small>
-            </div>
-
-            <div class="room-information">
-                <h6>
-                    <span translate="webexReports.meetingNumber"></span><span>: {{$ctrl.details.meetingNumber}}</span>
-                </h6>
-                <h6>
-                    <span translate="webexReports.searchGridHeader.conferenceID"></span><span>: {{$ctrl.details.conferenceId}}</span>
-                </h6>
-                <h6>
-                    <span translate="webexReports.hostName"></span><span>: {{$ctrl.details.hostName}}</span>
-                </h6>
-            </div>
+      <div class="overview">
+        <div class="meeting-room-name">
+          <h3>{{$ctrl.details.meetingName}}</h3>
+          <h6 class="detailInfo">{{::'webexReports.meetingNumberTitle' | translate}} {{$ctrl.details.meetingNumber}}</h6>
+          <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceIDTitle' | translate}} {{$ctrl.details.conferenceId}}</h6>
+          <h6 ng-if="$ctrl.details.status === 1"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
         </div>
 
-        <cs-card-layout>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header>
-                <h4>{{::'webexReports.start' | translate}}</h4></header>
-                <section>
-                <p ng-bind="$ctrl.details.startTime_"></p>
-                </section>
-                <span ng-bind="$ctrl.details.startDate"></span>
-            </article>
-            </cs-card>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header>
-                <h4>{{::'webexReports.duration' | translate}}</h4></header>
-                <section>
-                <p>{{$ctrl.details.duration_}}</p>
-                </section>
-                <span ng-if="$ctrl.details.numberOfParticipants === 1">{{$ctrl.details.numberOfParticipants}} {{::'webexReports.participant' | translate}}</span>
-                <span ng-if="$ctrl.details.numberOfParticipants !== 1">{{$ctrl.details.numberOfParticipants}} {{::'webexReports.participants' | translate}}</span>
-            </article>
-            </cs-card>
-            <cs-card class="medium header-border meeting-time">
-            <article>
-                <header><h4 ng-hide="$ctrl.details.status === 1" translate="webexReports.end"></h4></header>
-                <section>
-                <p ng-bind="$ctrl.details.endTime_" ng-show="$ctrl.details.status === 2"></p>
-                <p ng-show="$ctrl.details.status === 1">{{::'webexReports.meetingStatus.inProcess' | translate}}<i cs-loader class="loader-example--small"></i></p>
-                </section>
-                <span ng-hide="$ctrl.details.status === 1" ng-bind="$ctrl.details.endDate"></span>
-            </article>
-            </cs-card>
-        </cs-card-layout>
+        <div class="room-information">
+          <h6>
+            <span translate="webexReports.searchGridHeader.startTime"></span>
+            <span class="value">{{$ctrl.details.startDate}}</span>
+          </h6>
+          <h6>
+            <span translate="webexReports.start"></span>
+            <span class="value">{{$ctrl.details.startTime_}}</span>
+          </h6>
+          <h6>
+            <span ng-if="!$ctrl.details.status === 1" translate="webexReports.end"></span>
+            <span class="value" ng-if="$ctrl.details.status === 2">{{$ctrl.details.endTime_}}</span>
+          </h6>
+          <h6>
+            <span translate="webexReports.duration"></span>
+            <span class="value">{{$ctrl.details.duration_}}</span>
+          </h6>
+          <h6>
+            <span translate="webexReports.participants"></span>
+            <span class="value">{{$ctrl.details.numberOfParticipants}}</span>
+          </h6>
+        </div>
         <div ui-view="tabContent" class="tabContent"></div>
+      </div>
     </div>
-</div>
+  </div>

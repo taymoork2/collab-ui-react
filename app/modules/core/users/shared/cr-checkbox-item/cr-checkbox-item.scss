@@ -1,7 +1,13 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
 cr-checkbox-item {
   display: block;
 
-  .assignable_item_checkbox__description {
+  .cr-checkbox-item--disabled {
+    color: $gray-3;
+  }
+
+  .cr-checkbox-item__description {
     line-height: 1rem;
     margin-top: -0.75rem;
     margin-left: 2rem;

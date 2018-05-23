@@ -22,8 +22,10 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
+    vm.validNode = true;
     vm.yesProceed = yesProceed;
     vm.canGoNext = canGoNext;
+    vm.validateHostName = validateHostName;
 
     AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -42,11 +44,11 @@
               //call the rest of the services which needs to be enabled
               AddResourceCommonServiceV2.enableMediaService();
               AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
-            }, function () {
-              $state.go('services-overview');
+            }).then(function () {
+              $state.go('media-service-v2.list');
             });
           } else {
-            $state.go('services-overview');
+            $state.go('services-overview', {}, { reload: true });
           }
         });
       } else {
@@ -103,10 +105,14 @@
       }
     }
 
+    function validateHostName() {
+      vm.validNode = AddResourceCommonServiceV2.validateHostName(vm.hostName);
+    }
+
     function canGoNext() {
       if (vm.firstTimeSetup && vm.showDownloadableOption) {
         return true;
-      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

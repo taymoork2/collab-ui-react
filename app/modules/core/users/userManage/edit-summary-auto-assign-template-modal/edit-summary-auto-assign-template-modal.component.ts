@@ -1,11 +1,11 @@
-import { ILicenseRequestItem, IUserEntitlementRequestItem, IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared';
-import { AssignableServicesItemCategory } from 'modules/core/users/userAdd/assignable-services/shared';
-import { LicenseChangeOperation } from 'modules/core/users/shared/onboard.interfaces';
+import { IAutoAssignTemplateRequestPayload } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { AutoAssignTemplateService, IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { RetryingPromiseService } from 'modules/core/shared/retrying-promise.service';
 
 class EditSummaryAutoAssignTemplateModalController implements ng.IComponentController {
   private dismiss: Function;
-  private stateData: any;  // TODO: better type
-  private readonly DEFAULT_TEMPLATE_NAME = 'Default';
+  private autoAssignTemplateData: IAutoAssignTemplateData;
+  private isEditTemplateMode: boolean;
   public saveLoading = false;
 
   /* @ngInject */
@@ -13,28 +13,58 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
     private $state: ng.ui.IStateService,
     private Notification,
     private Analytics,
-    private AutoAssignTemplateService,
+    private AutoAssignTemplateService: AutoAssignTemplateService,
+    private RetryingPromiseService: RetryingPromiseService,
   ) {}
 
   public $onInit(): void {
-    this.stateData = _.get(this.$state, 'params.stateData');
+    if (this.autoAssignTemplateData) {
+      return;
+    }
+
+    this.AutoAssignTemplateService.getDefaultStateData()
+      .then(autoAssignTemplateData => this.autoAssignTemplateData = autoAssignTemplateData);
   }
 
-  public dismissModal(): void {
-    this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
-    this.dismiss();
+  private get templateId(): string {
+    return _.get(this.autoAssignTemplateData, 'apiData.template.templateId', '');
   }
 
-  public back(): void {
-    this.$state.go('users.manage.edit-auto-assign-template-modal', {
-      stateData: this.stateData,
-    });
+  private updateTemplate(payload: IAutoAssignTemplateRequestPayload): void {
+    this.AutoAssignTemplateService.updateTemplate(this.templateId, payload)
+      .then(() => {
+        this.Notification.success('userManage.org.modifyAutoAssign.modifySuccess');
+        this.$state.go('users.list');
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'userManage.autoAssignTemplate.editSummary.saveError');
+      })
+      .finally(() => {
+        this.saveLoading = false;
+      });
   }
 
-  public save(): void {
-    this.saveLoading = true;
-    const payload: IAutoAssignTemplateRequestPayload = this.mkPayload();
-    this.AutoAssignTemplateService.saveTemplate(payload)
+  // notes:
+  // - need to ensure the write operation to org-level setting has completed
+  // - so we check up to three times (each retry increases delay 2x) that the setting is true
+  private validateAutoAssignIsEnabledForOrg(): ng.IPromise<boolean> {
+    const checkIsEnabledFn = () => this.AutoAssignTemplateService.isEnabledForOrg();
+    const expectedResult = true;
+    const options = {
+      maxCalls: 3, // up to three http calls
+      startDelay: 500, // wait 500ms before making first call
+    };
+    return this.RetryingPromiseService.tryUntil(checkIsEnabledFn, expectedResult, options);
+  }
+
+  private createTemplate(payload: IAutoAssignTemplateRequestPayload): void {
+    this.AutoAssignTemplateService.createTemplate(payload)
+      .then(() => {
+        return this.AutoAssignTemplateService.activateTemplate();
+      })
+      .then(() => {
+        return this.validateAutoAssignIsEnabledForOrg();
+      })
       .then(() => {
         this.Notification.success('userManage.autoAssignTemplate.editSummary.saveSuccess');
         this.$state.go('users.list');
@@ -47,50 +77,22 @@ class EditSummaryAutoAssignTemplateModalController implements ng.IComponentContr
       });
   }
 
-  private mkPayload(): IAutoAssignTemplateRequestPayload {
-    const licensesPayload = this.mkLicensesPayload();
-    const userEntitlementsPayload = this.mkUserEntitlementsPayload();
-    const result = {
-      name: this.DEFAULT_TEMPLATE_NAME,
-      userEntitlements: userEntitlementsPayload,
-      licenses: licensesPayload,
-    };
-    return result;
+  public dismissModal(): void {
+    this.Analytics.trackAddUsers(this.Analytics.eventNames.CANCEL_MODAL);
+    this.dismiss();
   }
 
-  private mkLicensesPayload(): ILicenseRequestItem[] {
-    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
-      return [];
-    }
-    const selectedLicenses = _.get(this.stateData, AssignableServicesItemCategory.LICENSE);
-    const result = _.map(_.keys(selectedLicenses), (licenseId: string) => {
-      return <ILicenseRequestItem>{
-        id: licenseId,
-        idOperation: LicenseChangeOperation.ADD,
-        properties: {},
-      };
+  public back(): void {
+    this.AutoAssignTemplateService.gotoEditAutoAssignTemplate({
+      autoAssignTemplateData: this.autoAssignTemplateData,
+      isEditTemplateMode: this.isEditTemplateMode,
     });
-    return result;
   }
 
-  private mkUserEntitlementsPayload(): IUserEntitlementRequestItem[] {
-    if (_.isEmpty(_.get(this.stateData, AssignableServicesItemCategory.LICENSE))) {
-      return [];
-    }
-
-    // TODO: implement calculation of appropriate entitlements
-    let result: any[] = [];
-    result.push({
-      entitlementName: 'webExSquared',
-      entitlementState: 'ACTIVE',
-    });
-
-    // TODO: rm this logic once 'hybrid-services-entitlements-panel' propogates its UI state
-    //   and build this payload from UI state instead
-    const hybridUserEntitlements = _.get(this.stateData, 'USER_ENTITLEMENTS_PAYLOAD', []);
-    result = result.concat(hybridUserEntitlements);
-
-    return result;
+  public save(): void {
+    this.saveLoading = true;
+    const payload: IAutoAssignTemplateRequestPayload = this.AutoAssignTemplateService.autoAssignTemplateDataToPayload(this.autoAssignTemplateData);
+    return this.isEditTemplateMode ? this.updateTemplate(payload) : this.createTemplate(payload);
   }
 }
 
@@ -98,6 +100,8 @@ export class EditSummaryAutoAssignTemplateModalComponent implements ng.IComponen
   public controller = EditSummaryAutoAssignTemplateModalController;
   public template = require('./edit-summary-auto-assign-template-modal.html');
   public bindings = {
-    dismiss: '&?',
+    dismiss: '&',
+    isEditTemplateMode: '<',
+    autoAssignTemplateData: '<',
   };
 }

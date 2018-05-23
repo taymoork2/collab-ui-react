@@ -11,6 +11,10 @@
       <external-communication-setting></external-communication-setting>
     </setting-section>
 
+    <setting-section setting="settingsCtrl.proximity" ng-if="settingsCtrl.proximity">
+      <proximity-setting></proximity-setting>
+    </setting-section>
+
     <setting-section setting="settingsCtrl.fileSharingControl" ng-if="settingsCtrl.fileSharingControl">
       <file-sharing-control-setting></file-sharing-control-setting>
     </setting-section>
@@ -28,12 +32,16 @@
     </setting-section>
 
     <setting-section setting="settingsCtrl.sparkAssistant" ng-if="settingsCtrl.sparkAssistant">
-      <spark-assistant-setting></spark-assistant-setting>
+      <spark-assistant-setting ftsw="false"></spark-assistant-setting>
     </setting-section>
 
-    <setting-section setting="settingsCtrl.dirsync" ng-if="settingsCtrl.dirsync">
-      <dirsync-setting></dirsync-setting>
-    </setting-section>
+    <div class="setting-section" cr-feature-toggle feature-hide="atlas-f6980-multi-dir-sync" ng-if="settingsCtrl.dirsync">
+      <setting-section setting="settingsCtrl.dirsync">
+        <dirsync-setting></dirsync-setting>
+      </setting-section>
+    </div>
+
+    <multi-dirsync-setting cr-feature-toggle feature-show="atlas-f6980-multi-dir-sync" class="setting-section" ng-if="settingsCtrl.dirsync"></multi-dirsync-setting>
 
     <setting-section setting="settingsCtrl.authentication" ng-if="settingsCtrl.authentication">
       <authentication-setting></authentication-setting>
@@ -49,17 +57,20 @@
 
     <setting-section setting="settingsCtrl.brandingWrapper" ng-if="settingsCtrl.brandingWrapper">
       <branding-setting-wrapper show-application-branding-title="settingsCtrl.brandingWrapper.branding">
-        <branding-setting show-version="false" show-branding="true" ng-if="settingsCtrl.brandingWrapper.branding"></branding-setting>
+        <branding-setting ng-if="settingsCtrl.brandingWrapper.branding"></branding-setting>
         <device-branding-setting ng-if="settingsCtrl.brandingWrapper.deviceBranding && !settingsCtrl.brandingWrapper.isPartner" ></device-branding-setting>
       </branding-setting-wrapper>
     </setting-section>
 
-    <setting-section setting="settingsCtrl.webexVersion" ng-if="settingsCtrl.webexVersion">
-      <webex-version-setting class="setting webexversion" show-version="true" show-branding="false"></webex-version-setting>
-    </setting-section>
-
     <setting-section setting="settingsCtrl.support" ng-if="settingsCtrl.support">
       <support-setting></support-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.webexSettingsWrapper" ng-if="settingsCtrl.webexSettingsWrapper">
+      <webex-settings-wrapper>
+        <webex-site-management-setting cr-feature-toggle feature-show="atlas-webex-site-management-setting"></webex-site-management-setting>
+        <webex-version-setting></webex-version-setting>
+      </webex-settings-wrapper>
     </setting-section>
 
     <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">

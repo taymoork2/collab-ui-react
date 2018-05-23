@@ -16,14 +16,14 @@
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved meta url');
-            callback(data, response.status);
+            callback(data, response.status, response);
           })
           .catch(function (response) {
             var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = response.status;
-            callback(data, response.status);
+            callback(data, response.status, response);
           });
       },
 
@@ -44,14 +44,14 @@
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
-            callback(data, response.status);
+            callback(data, response.status, response);
           })
           .catch(function (response) {
             var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = response.status;
-            callback(data, response.status);
+            callback(data, response.status, response);
           });
       },
 
@@ -78,14 +78,14 @@
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Posted metadataXml: ' + metadataXmlContent);
-            callback(data, response.status);
+            callback(data, response.status, response);
           })
           .catch(function (response) {
             var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = response.status;
-            callback(data, response.status);
+            callback(data, response.status, response);
           });
       },
 
@@ -110,14 +110,14 @@
             data = _.isObject(data) ? data : {};
             data.success = true;
             Log.debug('Retrieved metadata file');
-            callback(data, response.status);
+            callback(data, response.status, response);
           })
           .catch(function (response) {
             var data = response.data;
             data = _.isObject(data) ? data : {};
             data.success = false;
             data.status = response.status;
-            callback(data, response.status);
+            callback(data, response.status, response);
           });
       },
     };

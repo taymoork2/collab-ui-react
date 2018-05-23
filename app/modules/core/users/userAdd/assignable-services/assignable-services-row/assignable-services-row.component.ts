@@ -1,25 +1,31 @@
 import { AssignableServicesItemCategory, ILicenseUsage, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
-import { OfferName } from 'modules/core/shared';
+import { OfferName } from 'modules/core/shared/offer-name';
+import { IAutoAssignTemplateData } from 'modules/core/users/shared/auto-assign-template';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 class AssignableServicesRowController implements ng.IComponentController {
 
+  public OFFER_NAME = OfferName;
+  public showContent: boolean;
   private static readonly itemCategory = AssignableServicesItemCategory.SUBSCRIPTION;
   private subscription: ISubscription;
-  private stateData: any;  // TODO: better type
+  private autoAssignTemplateData: IAutoAssignTemplateData;
   private onUpdate: Function;
   private licenses: ILicenseUsage[];
-  private messageLicenses: ILicenseUsage[];
-  private callLicenses: ILicenseUsage[];
-  private careLicenses: ILicenseUsage[];
-  private basicMeetingLicenses: ILicenseUsage[];
-  private advancedMeetingLicenses: ILicenseUsage[];
-  private advancedMeetingSiteUrls: string[];
-  public showContent: boolean;
-  public OFFER_NAME = OfferName;
+  public messageLicenses: ILicenseUsage[];
+  public callLicenses: ILicenseUsage[];
+  public careLicenses: ILicenseUsage[];
+  public basicMeetingLicenses: ILicenseUsage[];
+  public advancedMeetingLicenses: ILicenseUsage[];
+  public advancedMeetingSiteUrls: string[];
+  private _subscriptionLabel: string;
 
   /* @ngInject */
   constructor (
+    private $state,
+    private $translate,
     private LicenseUsageUtilService,
+    private MessengerInteropService: MessengerInteropService,
   ) {}
 
   public $onInit(): void {
@@ -31,8 +37,16 @@ class AssignableServicesRowController implements ng.IComponentController {
     this.advancedMeetingLicenses = this.getAdvancedMeetingLicenses();
     this.advancedMeetingSiteUrls = this.getAdvancedMeetingSiteUrls();
 
-    const stateDataKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
-    this.showContent = _.get(this.stateData, `${stateDataKey}.showContent`, true);
+    const entryKey = `${AssignableServicesRowController.itemCategory}["${this.subscription.subscriptionId}"]`;
+    this.showContent = _.get(this.autoAssignTemplateData, `viewData.${entryKey}.showContent`, true);
+
+    this._subscriptionLabel = this.$translate.instant('userManage.autoAssignTemplate.edit.rowTitle', {
+      subscriptionId: this.subscription.subscriptionId,
+    });
+  }
+
+  public get subscriptionLabel(): string {
+    return this._subscriptionLabel;
   }
 
   private getMessageLicenses(): ILicenseUsage[] {
@@ -79,8 +93,27 @@ class AssignableServicesRowController implements ng.IComponentController {
     return this.LicenseUsageUtilService.getTotalLicenseVolume(offerName, this.licenses);
   }
 
-  public recvClick(): void {
-    this.showContent = !this.showContent;
+  // TODO:
+  // - this implements a sub-optimal UX design decision to render jabber interop checkboxes within
+  //   the subscription rows (which are for presenting licenses, not entitlements)
+  // - rm this when no longer needed
+  public showJabberInteropCheckbox(): boolean {
+    // early out if not the correct UI state
+    if (_.get(this.$state, 'current.name') !== 'users.manage.edit-auto-assign-template-modal') {
+      return false;
+    }
+    return this.MessengerInteropService.hasMessengerLicense();
+  }
+
+  // notes:
+  // - as of 2018-02-02, because Care licenses are allocated in a non-standard way, we disallow them
+  //   from being included as selectable items in auto-assign templates
+  public disableCareLicenseSelection() {
+    return (_.get(this.$state, 'current.name') === 'users.manage.edit-auto-assign-template-modal');
+  }
+
+  public recvUpdate($event): void {
+    this.showContent = $event.item.showContent;
     this.onUpdate({
       $event: {
         itemId: this.subscription.subscriptionId,
@@ -100,6 +133,6 @@ export class AssignableServicesRowComponent implements ng.IComponentOptions {
     isCareEnabled: '<',
     subscription: '<',
     onUpdate: '&',
-    stateData: '<',
+    autoAssignTemplateData: '<',
   };
 }

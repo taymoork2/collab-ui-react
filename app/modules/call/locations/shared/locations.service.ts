@@ -79,7 +79,7 @@ export class LocationsService {
       return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
-    });
+    }).catch(resp => resp);
   }
 
   public getLocationsByRoutingPrefix(routingPrefix: string): IPromise<LocationListItem[]> {
@@ -90,7 +90,7 @@ export class LocationsService {
       return _.map(_.get<IRLocationListItem[]>(locationData, 'locations', []), location => {
         return new LocationListItem(location);
       });
-    });
+    }).catch(resp => resp);
   }
 
   public getLocation(locationId: string): ng.IPromise<Location> {

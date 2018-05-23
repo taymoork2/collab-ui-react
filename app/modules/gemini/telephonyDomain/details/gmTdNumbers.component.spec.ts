@@ -60,9 +60,7 @@ describe('Component: gmTdNumbers', () => {
     spyOn(this.TelephonyDomainService, 'postTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'exportNumbersToCSV').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'getDownloadUrl').and.returnValue('downloadUrl');
-    spyOn(this.WindowLocation, 'set').and.callFake(function (url) {
-      url = '';
-    });
+    spyOn(this.WindowLocation, 'set');
   }
 
   function initConstObjectAndAllOptions() {
@@ -622,7 +620,9 @@ describe('Component: gmTdNumbers', () => {
   });
 
   it('$onInit > edit TD > get Numbers return error', function () {
-    this.TelephonyDomainService.getNumbers.and.returnValue(this.$q.reject( { status: 404 } ));
+    this.TelephonyDomainService.getNumbers.and.callFake(() => {
+      return this.$q.reject({ status: 404 });
+    });
     updateTD.apply(this);
 
     expect(this.Notification.errorResponse).toHaveBeenCalled();

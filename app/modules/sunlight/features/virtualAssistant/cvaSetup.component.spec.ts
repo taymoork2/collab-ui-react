@@ -1,5 +1,6 @@
 import cvaSetupModule from './cvaSetup.component';
 import { KeyCodes } from 'modules/core/accessibility';
+import * as _ from 'lodash';
 
 describe('Care Customer Virtual Assistant Setup Component', () => {
   const OrgName = 'Test-Org-Name';
@@ -21,7 +22,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       nextButtonState: false,
     },
     {
-      name: 'vaName',
+      name: 'name',
       previousButtonState: true,
       nextButtonState: false,
 
@@ -100,7 +101,6 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(OrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue(OrgName);
     spyOn(Date, 'now').and.returnValues(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
-    spyOn(this.$translate, 'instant').and.callThrough();
 
     this.compileComponent('cva-setup', {
       dismiss: 'dismiss()',
@@ -108,14 +108,6 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
 
     controller = this.controller;
   });
-
-  function repeatString(str: string, count: number): string {
-    let result = '';
-    for (let i = 0; i < count; i++) {
-      result += str;
-    }
-    return result;
-  }
 
   function checkStateOfNavigationButtons(pageIndex: number, previousButtonState: any, nextButtonState: any): void {
     controller.currentState = controller.states[pageIndex];
@@ -128,39 +120,42 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     beforeEach(function () {
       deferred = this.$q.defer();
       spyOn(controller, 'getText').and.returnValue(deferred.promise);
+      spyOn(controller, 'getCommonText').and.returnValue(deferred.promise);
     });
 
     it('getTitle', function () {
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('createTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('createTitle');
     });
 
     it('getTitle with isEditFeature true', function () {
       controller.isEditFeature = true;
       controller.getTitle();
-      expect(controller.getText).toHaveBeenCalledWith('editTitle');
+      expect(controller.getCommonText).toHaveBeenCalledWith('editTitle');
     });
 
     it('getSummaryDescription', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDesc', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDesc', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('getSummaryDescription with isEditFeature true', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'testName';
+      controller.template.configuration.pages.name.nameValue = 'testName';
       controller.isEditFeature = true;
       controller.getSummaryDescription();
-      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDescEdit', { name: controller.template.configuration.pages.vaName.nameValue });
+      expect(controller.getText).toHaveBeenCalledWith('summary.cvaDescEdit', { name: controller.template.configuration.pages.name.nameValue });
     });
 
     it('cancelModal', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelCreateDialog',
         { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' });
     });
 
     it('cancelModal with isEditFeature true', function () {
+      spyOn(this.$translate, 'instant').and.callThrough();
       controller.isEditFeature = true;
       controller.cancelModal();
       expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.cancelEditDialog',
@@ -213,7 +208,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
         checkStateOfNavigationButtons(index, expectedPage.previousButtonState, expectedPage.nextButtonState);
       });
 
-      it(expectedPage.name + ': make sure template file exists for page va' + expectedPage.name + '.tpl.html\'', function () {
+      it(expectedPage.name + ': make sure template file exists for page ' + expectedPage.name + '.tpl.html\'', function () {
         const expectedPageFilename = 'modules/sunlight/features/virtualAssistant/wizardPages/' + expectedPage.name + '.tpl.html';
         controller.currentState = controller.states[index];
         expect(controller.getCurrentPage()).toEqual(expectedPageFilename);
@@ -269,34 +264,54 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
     });
 
     it('Next button on Name Page enabled when nameValue is not empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = 'Hello World';
+      controller.template.configuration.pages.name.nameValue = 'Hello World';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
     });
 
     it('Next button on Name Page disabled when nameValue too long', function () {
-      controller.template.configuration.pages.vaName.nameValue = repeatString('X', controller.maxNameLength);
+      controller.template.configuration.pages.name.nameValue = _.repeat('X', controller.maxNameLength);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
 
-      controller.template.configuration.pages.vaName.nameValue = repeatString('X', controller.maxNameLength + 1);
+      controller.template.configuration.pages.name.nameValue = _.repeat('X', controller.maxNameLength + 1);
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page disabled when nameValue is empty', function () {
-      controller.template.configuration.pages.vaName.nameValue = '';
+      controller.template.configuration.pages.name.nameValue = '';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
+    it('Next page keyboard shortcut should not work if name field is invalid', function () {
+      controller.template.configuration.pages.name.nameValue = '';
+      const ENTER_KEYPRESS_EVENT = {
+        which: KeyCodes.ENTER,
+      };
+      spyOn(controller, 'nextPage');
+      controller.enterNextPage(ENTER_KEYPRESS_EVENT);
+      expect(controller.nextPage).not.toHaveBeenCalled();
+    });
+
+    it('space keyboard shortcut should not trigger next page', function () {
+      controller.template.configuration.pages.name.nameValue = 'testName';
+      const SPACE_KEYPRESS_EVENT = {
+        which: KeyCodes.SPACE,
+      };
+      spyOn(controller, 'nextPage');
+      controller.enterNextPage(SPACE_KEYPRESS_EVENT);
+      expect(controller.nextPage).not.toHaveBeenCalled();
+    });
+
     it('Next button on Name Page disabled when nameValue is only spaces', function () {
-      controller.template.configuration.pages.vaName.nameValue = '  ';
+      controller.template.configuration.pages.name.nameValue = '  ';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
 
     it('Next button on Name Page disabled when nameValue is not unique', function () {
       controller.service.featureList.data = [{ name: 'hi i am baymax', id: '1' }];
-      controller.template.configuration.pages.vaName.nameValue = 'Hi I am Baymax';
+      controller.template.configuration.pages.name.nameValue = 'Hi I am Baymax';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
 
-      controller.template.configuration.pages.vaName.nameValue = 'Baymax';
+      controller.template.configuration.pages.name.nameValue = 'Baymax';
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, true);
     });
 
@@ -311,6 +326,7 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       checkStateOfNavigationButtons(NAME_PAGE_INDEX, true, false);
     });
   });
+
   describe('AccessToken Page', function () {
     let deferred;
     beforeEach(function () {
@@ -341,6 +357,31 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
 
       expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toEqual(true);
       expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toEqual(false);
+    });
+
+    it('validate button should be enabled if validation fails', function () {
+      expect(controller.isValidateButtonDisabled()).toBeTruthy();  // disabled if input blank
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      deferred.reject(false);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeFalsy(); // validation failed, button should be enabled
+    });
+
+    it('validate button should be disabled if token is already validated', function () {
+      controller.template.configuration.pages.cvaAccessToken.accessTokenValue = '123';
+      expect(controller.isValidateButtonDisabled()).toBeFalsy();  // disabled if not validated
+      deferred.resolve(true);
+      controller.validateDialogflowToken();
+      this.$scope.$apply();
+      expect(controller.isValidateButtonDisabled()).toBeTruthy(); // validation passed, button should be enabled
+    });
+
+    it('getAccessTokenError should return correct error', function () {
+      controller.template.configuration.pages.cvaAccessToken.invalidToken = true;
+      controller.tokenForm.$valid = true;
+      controller.getAccessTokenError();
+      expect(controller.tokenForm.tokenInput.$setValidity).toHaveBeenCalledWith('invalidToken', false);
     });
   });
   describe('Avatar Page', function () {
@@ -456,6 +497,50 @@ describe('Care Customer Virtual Assistant Setup Component', () => {
       const featureNameObj = { featureName: 'careChatTpl.virtualAssistant.cva.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should set proper error message, when save fails due to invalid name', function () {
+      controller.template.configuration.pages.name.nameValue = 'testName';
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.duplicateName' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.name.nameWithError).toBe('testName');
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.duplicateName',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation');
+    });
+
+    it('should set proper error, when save fails due to invalid icon', function () {
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidIcon' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation for invalid icon');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.vaAvatar.avatarError).toBe(controller.avatarErrorType.INVALID_FILE);
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.invalidIcon',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation for invalid icon');
+    });
+
+    it('should set proper error, when save fails due to invalid access token', function () {
+      const response = (<any>Object).assign({ data: { type: 'invalidInput.invalidAccessToken' } }, failedData);
+      spyOn(this.$translate, 'instant').and.returnValue('some translation for invalid token');
+
+      deferred.reject(response);
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      expect(controller.template.configuration.pages.cvaAccessToken.invalidToken).toBeTruthy();
+      expect(controller.template.configuration.pages.cvaAccessToken.needsValidation).toBeFalsy();
+      expect(this.$translate.instant).toHaveBeenCalledWith('careChatTpl.virtualAssistant.invalidInput.invalidAccessToken',
+        { featureName: jasmine.any(String) });
+      expect(controller.summaryErrorMessage).toBe('some translation for invalid token');
     });
   });
 });

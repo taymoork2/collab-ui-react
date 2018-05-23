@@ -194,7 +194,8 @@
             "input": "1",
             "actions": [{
               "route": {
-                "destination": "1111"
+                "destination": "1111",
+                "destType": "extension"
               }
             }]
           }, {

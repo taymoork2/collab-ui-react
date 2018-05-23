@@ -126,7 +126,7 @@ export class CallSettingsService {
   private getCompanyMedia(): ng.IPromise<string> {
     return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
         return this.$q.reject();
       });
   }
@@ -265,14 +265,14 @@ export class CallSettingsService {
   private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
   private unassignCompanyMediaOnHold(): ng.IPromise<void> {
     return this.MediaOnHoldService.unassignMediaOnHold()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 

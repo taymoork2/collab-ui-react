@@ -9,7 +9,7 @@ class CallerId implements ng.IComponentController {
   private customCallerIdName: string | null;
   private customCallerIdNumber: string | null;
   private callerIdSelected: IOption;
-  private callerIdOptions: IOption[];
+  public callerIdOptions: IOption[];
   private options: CallerIdOption[];
   private companyNumberOption: CallerIdOption;
   private companyCallerIdOption: CallerIdOption;
@@ -17,12 +17,12 @@ class CallerId implements ng.IComponentController {
   private directLineOption: CallerIdOption;
   private blockOption: CallerIdOption;
   private locationOption: CallerIdOption;
-  private inputTranslations: ICallDestinationTranslate;
+  public inputTranslations: ICallDestinationTranslate;
   private companyIdPattern: string;
   private companyNumberPattern: string;
   private listApiSuccess: boolean = false;
   private firstTime: boolean = true;
-  private callerIdInputs: string[];
+  public callerIdInputs: string[];
   public errorMessage: { pattern: string };
   public validator: { pattern: Function };
   public locationPromise: ng.IPromise<any>;

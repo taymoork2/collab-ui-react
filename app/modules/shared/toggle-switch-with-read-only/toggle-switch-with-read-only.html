@@ -1,10 +1,13 @@
 <div class="toggle-switch-with-read-only">
-  <cs-toggle-switch ng-if="!$ctrl.isReadOnly && !_.isNil($ctrl.value)"
+  <cs-toggle-switch
+    ng-if="!$ctrl.isReadOnly && !_.isNil($ctrl.value)"
     ng-model="$ctrl.value"
     toggle-id="{{:: $ctrl.toggleId }}"
     name="{{:: $ctrl.toggleId }}"
     cs-change="$ctrl.setValue(toggleValue)"
-    size="small"></cs-toggle-switch>
+    size="small"
+    cs-aria-label="{{::$ctrl.ariaLabel | translate}}">
+  </cs-toggle-switch>
 
   <boolean-text-field ng-if="$ctrl.isReadOnly && !_.isNil($ctrl.value)"
     label="{{:: $ctrl.label }}"

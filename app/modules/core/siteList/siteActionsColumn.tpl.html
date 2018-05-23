@@ -1,9 +1,10 @@
 
 <p ng-if="!row.entity.isLinkedSite"
   class="ui-grid-cell-contents">
-  <span ng-if="!row.entity.isCI && !row.entity.isPending"
-        id="{{row.entity.license.siteUrl}}_isNotCI"
-        name="{{row.entity.license.siteUrl}}_isNotCI">
+  <span cr-feature-toggle feature-hide="atlas-webex-site-management-setting"
+      ng-if="!row.entity.isCI && !row.entity.isPending"
+      id="{{row.entity.license.siteUrl}}_isNotCI"
+      name="{{row.entity.license.siteUrl}}_isNotCI">
 
     <a target="_blank"
        href="{{row.entity.siteAdminUrl}}"
@@ -12,29 +13,35 @@
       {{::'siteList.siteAdminUrl' | translate}}
     </a>
   </span>
+
   <!-- delete and redistribute show show up regardless of ci flag -->
-  <span ng-if="grid.appScope.isShowAddSite && grid.appScope.isSubscriptionEnterprise(row.entity.license)">
-    <!-- redistribute licenses icon -->
-    <cr-site-actions-licenses-icon  can-modify="grid.appScope.canModify(row.entity.license)"
-      license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)">
-    </cr-site-actions-licenses-icon>
-   <!-- delete icon -->
-   <cr-site-actions-delete-icon can-modify="grid.appScope.canModify(row.entity.license)"
-    license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)">
-  </cr-site-actions-delete-icon>
+  <span cr-feature-toggle feature-hide="atlas-webex-site-management-setting">
+    <span cr-feature-toggle feature-show="atlas-webex-add-site" ng-if="grid.appScope.isSubscriptionEnterprise(row.entity.license)">
+      <!-- redistribute licenses icon -->
+      <cr-site-actions-licenses-icon  can-modify="grid.appScope.canModify(row.entity.license)"
+        license="row.entity.license" on-click-fn="grid.appScope.redistributeLicenses(license)">
+      </cr-site-actions-licenses-icon>
+      <!-- delete icon -->
+      <cr-site-actions-delete-icon can-modify="grid.appScope.canModify(row.entity.license)"
+        license="row.entity.license"  on-click-fn="grid.appScope.deleteSite(license)">
+      </cr-site-actions-delete-icon>
+    </span>
   </span>
 
   <span ng-if="row.entity.isCI"
         id="{{row.entity.license.siteUrl}}_isCI"
         name="{{row.entity.license.siteUrl}}_isCI">
-  <!-- Reports icon -->
-  <cr-site-actions-reports-icon></cr-site-actions-reports-icon>
 
-  <!-- Config icon -->
-  <cr-site-actions-config-icon></cr-site-actions-config-icon>
+    <span cr-feature-toggle feature-hide="atlas-webex-site-management-setting">
+      <!-- Reports icon -->
+      <cr-site-actions-reports-icon></cr-site-actions-reports-icon>
 
-  <!-- CSV icon and results link -->
-  <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
+      <!-- Config icon -->
+      <cr-site-actions-config-icon></cr-site-actions-config-icon>
+
+      <!-- CSV icon and results link -->
+      <cr-site-actions-csv-icon></cr-site-actions-csv-icon>
+    </span>
 
   <!-- Start of Loading indication -->
   <span ng-if="!row.entity.isLinkedSite">

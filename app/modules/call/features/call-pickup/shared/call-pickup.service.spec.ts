@@ -171,7 +171,7 @@ describe('Service: callPickupService', () => {
   });
 
   describe('create checkboxes for member test', () => {
-    let member1, member2, memberData, checkboxesList, allNumbers;
+    let member1, memberData, checkboxesList, allNumbers;
 
     beforeEach(initComponent);
 
@@ -184,7 +184,6 @@ describe('Service: callPickupService', () => {
         checkboxes: checkboxesList,
         saveNumbers: [],
       };
-      member2 = _.cloneDeep(membersList[1]);
       allNumbers = getJSONFixture('huron/json/features/callPickup/numbersList.json');
       spyOn(this.CallPickupGroupService, 'createCheckboxes').and.callThrough();
       this.$httpBackend.whenGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/0001/numbers').respond(200, allNumbers);

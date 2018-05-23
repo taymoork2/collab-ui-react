@@ -4,6 +4,8 @@
   angular.module('Core')
     .controller('TabsCtrl', TabsCtrl);
 
+  var CoreEvent = require('modules/core/shared/event.constants').CoreEvent;
+
   /* @ngInject */
   function TabsCtrl($rootScope, $scope, $translate, $location, $q, Utils, Authinfo, Config, FeatureToggleService, ControlHubService) {
     var vm = this;
@@ -12,6 +14,7 @@
     vm.image = null;
     vm.collapsed = null;
     vm.icon = null;
+    vm.onResize = onResize;
 
     initTabs();
 
@@ -115,10 +118,22 @@
 
     function filterFeatureToggledTabs(tabs, features) {
       return _.filter(tabs, function (tab) {
-        return !tab.feature || _.some(features, {
-          feature: tab.feature.replace(/^!/, ''),
-          enabled: !/^!/.test(tab.feature),
+        var toggles = _.get(tab, 'feature');
+
+        if (_.isString(toggles)) {
+          toggles = [toggles];
+        }
+
+        return _.isUndefined(toggles) || _.some(toggles, function (toggle) {
+          return filterFeatureToggle(toggle, features);
         });
+      });
+    }
+
+    function filterFeatureToggle(toggle, features) {
+      return _.some(features, {
+        feature: toggle.replace(/^!/, ''),
+        enabled: !/^!/.test(toggle),
       });
     }
 
@@ -127,6 +142,7 @@
       return _.chain(tabs)
         .map('feature')
         .compact()
+        .flattenDeep()
         .invokeMap(String.prototype.replace, /^!/, '')
         .uniq()
         .map(function (feature) {
@@ -152,6 +168,10 @@
       $q.all(toggles).then(function () {
         filterTabsOnFeaturesAndSetActiveTab();
       });
+    }
+
+    function onResize() {
+      $rootScope.$emit(CoreEvent.SIDENAV_RESIZED);
     }
   }
 })();

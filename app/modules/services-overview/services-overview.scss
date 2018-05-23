@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
-@import '~collab-ui/scss/tools/mixins/text-overflow';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/text-overflow';
 
 services-overview {
   display: block;
@@ -196,7 +196,7 @@ services-overview {
     }
   }
 
-  .cs-card.large > article header {
+  .cs-card.cs-card--large > article header {
     padding-top: 0.5rem;
   }
 
@@ -314,6 +314,10 @@ services-overview {
     width: 70px;
   }
 
+  .active-card-center_content {
+    text-align: center;
+  }
+
   .active-card_content,
   .inactive-card_content {
     margin: 0 1rem;
@@ -338,17 +342,24 @@ services-overview {
 
   .active-card_footer {
     padding: 0.375rem 1rem;
-    text-align: left;
+    display: flex;
     background-color: $gray-light-4;
 
+    cs-statusindicator {
+      margin-right: 0.4rem;
+    }
+
     a {
-      color: inherit;
       display: flex;
       align-items: center;
     }
 
-    span {
-      margin-right: auto;
+    .active-card_footer_status-link {
+      color: inherit;
+    }
+
+    .active-card_footer_events-link {
+      margin-left: auto;
     }
   }
 

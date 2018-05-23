@@ -1,0 +1,9 @@
+@import 'styles/partials/mixins';
+
+logs-extended-metadata {
+  @include keep-flex-container(column);
+
+  .json-metadata {
+    white-space: pre-wrap;
+  }
+}

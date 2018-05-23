@@ -12,6 +12,7 @@
 
     var service = {
       getCSConfig: getCSConfig,
+      cesOnboard: cesOnboard,
     };
 
     return service;
@@ -19,6 +20,10 @@
     function getCSConfig() {
       var csConfigUrl = HuronConfig.getCesUrl() + '/customers/' + authInfoOrgId + '/config/csOnboardingStatus';
       return $http.get(csConfigUrl);
+    }
+    function cesOnboard() {
+      var cesUrl = HuronConfig.getCesUrl() + '/cesonboard' + '/customer/' + authInfoOrgId + '/' + 'contextService';
+      return $http.post(cesUrl);
     }
   }
 })();

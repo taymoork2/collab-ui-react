@@ -14,9 +14,13 @@ class EnableUsersModalController implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
   ) {}
 
-  public $onChanges(changes: { serviceId: ng.IChangesObject<HybridServiceId> }) {
+  public $onChanges(changes: { serviceId: ng.IChangesObject<any> }) {
     if (changes.serviceId && changes.serviceId.currentValue) {
-      this.service = this.$translate.instant(`hercules.serviceNames.${this.serviceId}`);
+      if (changes.serviceId.currentValue !== 'undefined') { // Yes, AngularJS actually uses the string 'undefined' here, not the primitive value undefined
+        this.service = this.$translate.instant(`hercules.serviceNames.${changes.serviceId.currentValue}`);
+      } else {
+        this.service = this.$translate.instant(`common.service`).toLowerCase();
+      }
     }
   }
 
@@ -29,7 +33,7 @@ class EnableUsersModalController implements ng.IComponentController {
     this.dismiss();
     this.$state.go('users.list')
       .then(() => {
-        this.$state.go('users.manage.picker');
+        this.$state.go('users.manage.org');
       });
   }
 }

@@ -10,24 +10,59 @@
       </cs-page-sub-header-left>
 
       <cs-page-sub-header-right>
-        <h6 class="text-left"><a ng-click="$ctrl.downloadTemplate()" translate="gemini.tds.request.download.csvTemplate"></a></h6>
+        <h6 class="text-left">
+          <a href ng-click="$ctrl.downloadTemplate()" translate="gemini.tds.request.download.csvTemplate"></a>
+        </h6>
         <div ng-if="!$ctrl.exportLoading" class="no-animate">
-          <a ng-if="$ctrl.ccaDomainId" tooltip="{{::'gemini.export.exportToCSV' | translate}}" class="export-users" ng-csv="$ctrl.exportToCSV()" filename="{{::'gemini.tds.numbers.export.csvFilename' | translate}}" quote-strings="true">
-            <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+          <a href
+            ng-if="$ctrl.ccaDomainId"
+            tooltip="{{::'gemini.export.exportToCSV' | translate}}"
+            tooltip-trigger="focus mouseenter"
+            class="export-users" ng-csv="$ctrl.exportToCSV()"
+            filename="{{::'gemini.tds.numbers.export.csvFilename' | translate}}"
+            quote-strings="true"
+            aria-label="{{::'gemini.export.exportToCSV' | translate}}">
+            <!-- removing button from tabindex to prevent having a redundant entry for the csv download -->
+            <button class="btn--none" tabindex="-1">
+              <i class="icon icon-download icon-lg"></i>
+            </button>
           </a>
-          <a ng-if="!$ctrl.ccaDomainId" class="export-users">
-            <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+          <a href ng-if="!$ctrl.ccaDomainId" class="export-users" aria-label="{{::'common.download' | translate}}">
+            <!-- button removed from tabindex to prevent redundancy with <a> element wrapper -->
+            <button class="btn--none" tabindex="-1">
+              <i class="icon icon-download icon-lg"></i>
+            </button>
           </a>
         </div>
-        <div ng-if="$ctrl.exportLoading" class="btn btn-none no-animate" tooltip="{{::'gemini.export.exportInProcess' | translate}}">
+        <div
+          ng-if="$ctrl.exportLoading"
+          class="btn btn-none no-animate"
+          tabindex="0"
+          tooltip="{{::'gemini.export.exportInProcess' | translate}}"
+          tooltip-trigger="focus mouseenter"
+          aria-label="{{::'gemini.export.exportInProcess' | translate}}">
           <span class="export-users">
             <i class="icon icon-spinner"></i>
           </span>
         </div>
 
-        <button ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" class="btn" translate="gemini.tds.request.importNumber.fromTd" ng-click="$ctrl.importTD()"></button>
-        <gm-td-import-numbers-from-csv is-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" on-imported="$ctrl.importNumberCSV(numbers)"></gm-td-import-numbers-from-csv>
-        <button class="btn btn--primary" ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300" id="addNumber" translate="gemini.tds.request.addNumber" ng-click="$ctrl.addNumber()"></button>
+        <button
+          ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300"
+          class="btn"
+          translate="gemini.tds.request.importNumber.fromTd"
+          ng-click="$ctrl.importTD()">
+        </button>
+        <gm-td-import-numbers-from-csv
+          is-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300"
+          on-imported="$ctrl.importNumberCSV(numbers)">
+        </gm-td-import-numbers-from-csv>
+        <button
+          class="btn btn--primary"
+          ng-disabled="!$ctrl.isEdit || $ctrl.submitLoading || $ctrl.loading || $ctrl.gridData.length >= 300"
+          id="addNumber"
+          translate="gemini.tds.request.addNumber"
+          ng-click="$ctrl.addNumber()">
+        </button>
       </cs-page-sub-header-right>
     </cs-page-sub-header>
     <div class="grid-his-note">
@@ -42,10 +77,14 @@
       <gm-td-histories ng-if="$ctrl.ccaDomainId"></gm-td-histories>
     </div>
     <cs-sp-buttons>
-      <button type="button" class="btn btn--primary" cs-btn loading="$ctrl.submitLoading" ng-disabled="!$ctrl.TelephonyNumberDataService.gridOptions.data.length || !$ctrl.isEdit || $ctrl.loading" ng-click="$ctrl.submitTD()">
+      <button cs-btn type="button"
+        class="btn btn--primary"
+        loading="$ctrl.submitLoading"
+        ng-disabled="!$ctrl.TelephonyNumberDataService.gridOptions.data.length || !$ctrl.isEdit || $ctrl.loading"
+        ng-click="$ctrl.submitTD()">
         <span translate="gemini.button.submitRequest"></span>
       </button>
-      <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()"><span translate="common.cancel"></span></button>
+      <button type="button" class="btn btn-default" ng-click="$ctrl.onCancel()" translate="common.cancel"></button>
     </cs-sp-buttons>
   </cs-sp-container>
 

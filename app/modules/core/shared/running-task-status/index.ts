@@ -3,7 +3,7 @@ import { RunningTaskStatusComponent } from './running-task-status.component';
 
 export default angular
   .module('core.shared.running-task-status', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
   ])
   .component('runningTaskStatus', new RunningTaskStatusComponent())
   .name;

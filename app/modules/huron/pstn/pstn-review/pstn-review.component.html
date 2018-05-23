@@ -1,0 +1,40 @@
+<div class="uc-pstn-review">
+  <div class="logo">
+    <img class="right" ng-src="{{::$ctrl.logoSrc}}" alt="{{::$ctrl.logoAlt}}">
+  </div>
+  <h4>{{$ctrl.packageName}}</h4>
+  <div ng-if="$ctrl.isOrdersEmpty()">
+    <h4 translate="pstnSetup.initContractTitle"></h4>
+    <p translate="pstnSetup.initContractReview" translate-value-carrier="{{$ctrl.carrierName}}"></p>
+  </div>
+  <div ng-if="!$ctrl.isOrdersEmpty()">
+    <div class="number-container" ng-if="$ctrl.numbersPort.length">
+      <p translate="pstnSetup.prPortParagraph"></p>
+      <p translate="pstnSetup.prPortDate" translate-value-date="{{$ctrl.getPortDate()}}"></p>
+      <p translate="pstnSetup.prPortCarrier" translate-value-carrier="{{$ctrl.carrierName}}"></p>
+
+      <h7 translate="pstnSetup.prPortNumbers" translate-value-count="{{$ctrl.numbersPort.length}}"></h7>
+      <div class="numbers">
+        <div class="number" ng-repeat="number in $ctrl.numbersPort">
+          <span>{{number}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="number-container" ng-if="$ctrl.numbersDID.length">
+      <h7 translate="pstnSetup.prDIDNumbers" translate-value-count="{{$ctrl.numbersDID.length}}"></h7>
+      <div class="numbers">
+        <div class="number" ng-repeat="number in $ctrl.numbersDID">
+          <span>{{number}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="number-container" ng-if="$ctrl.numbersToll.length">
+      <h7 translate="pstnSetup.prTollNumbers" translate-value-count="{{$ctrl.numbersToll.length}}"></h7>
+      <div class="numbers">
+        <div class="number" ng-repeat="number in $ctrl.numbersToll">
+          <span>{{number}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

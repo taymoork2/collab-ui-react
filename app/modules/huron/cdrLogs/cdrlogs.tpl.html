@@ -10,13 +10,31 @@
 
       <form name="cdr.searchAndUploadForm" novalidate>
         <div ng-show="cdr.radioSelected === cdr.UPLOAD">
-         <div class="row showgrid">
+          <div class="row showgrid">
             <div class="columns">
-               <formly-form model="cdr.model" fields="cdr.fields"></formly-form>
-            </div>
+              <input
+                id="uploadFile"
+                name="uploadFile"
+                type="file"
+                uc-file-read
+                file="cdr.model.uploadFile"
+                file-name="filename"
+                file-max-size="10"
+                file-max-size-error="cdr.maxSizeError()"
+                file-type="cdr.filetype"
+                file-type-error="cdr.fileTypeError()"
+                file-suffix="json">
+              <button
+                cs-btn
+                class="btn btn--primary search-button"
+                ng-hide="cdr.radioSelected !== cdr.UPLOAD"
+                ng-disabled="cdr.uploadDisabled()"
+                ng-click="cdr.uploadFile()">
+                <span translate="cdrLogs.upload"></span>
+            </button>
           </div>
         </div>
-
+      </div>
         <div ng-show="cdr.radioSelected === cdr.SEARCH">
           <div class="row showgrid">
             <div class="columns">
@@ -144,7 +162,7 @@
           <cs-accordion-group ng-repeat="call in cdr.gridData" display-status="{{cdr.statusAvalibility(call)}}" show-caret="true">
             <cs-accordion-heading>
               <span ng-click="cdr.resize()">
-                <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) == 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
+                <span class="icon " ng-class="{ 'icon-error' : cdr.statusAvalibility(call) === 'danger'}"></span> {{cdr.getAccordionHeader(call)}}
               <span class="pull-right caret"></span>
               </span>
             </cs-accordion-heading>

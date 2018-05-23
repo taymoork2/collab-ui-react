@@ -1,46 +1,58 @@
-<div class="messagebox-backdrop login-box" ng-class="{loading: loading}">
-  <div class="message-box" ng-class="checkForIeWorkaround">
-    <div class="message-box__content">
-      <img class="message-box__logo" src="/images/spark-logo.svg">
-      <h2 class="message-box__app-name" translate="loginPage.titleNew"></h2>
-      <h4 class="message-box__login-title" translate="loginPage.email"></h4>
+<div class="cui">
+  <div class="cui-panel cui-panel--full cui-panel--form">
+    <div class="cui-panel__main" ng-class="checkForIeWorkaround" ng-class="{loading: loading}">
+      <div class="cui-panel__image">
+        <img src="/images/cisco-webex-wordmark-black.svg">
+      </div>
+      <div class="cui-panel__title" translate="loginPage.email" ng-show="!loading"></div>
       <div ng-show="result">
         <div class="results alert alert-danger" ng-bind-html="result"></div>
       </div>
       <div id="generic-message" class="validation-messages info" ng-if="message && !loading">
-          <div class="cs-input__messages" >
-            <div class="message" translate="{{message}}">
-            </div>
-          </div>
-      </div>
-      <form novalidate name="loginForm" class="typeahead-group" autocomplete="off">
-        <div class="row">
-          <div class="cs-input-group small-10 small-offset-1 columns">
-            <input
-              type="email"
-              class="cs-input"
-              name="email"
-              ng-model="email"
-              placeholder="{{'homePage.emailAddress' | translate}}"
-              required
-              focus-on
-              ng-keypress="login($event.which)">
+        <div class="cui-input__messages">
+          <div class="message expired-inactivity" translate="{{message}}">
           </div>
         </div>
+      </div>
+      <form novalidate name="loginForm" class="cui-panel__form" autocomplete="off" ng-show="!loading">
+        <div class="cui-input-group">
+          <input
+            type="email"
+            class="cui-input"
+            name="email"
+            ng-model="email"
+            placeholder="{{'homePage.emailAddress' | translate}}"
+            required focus-on ng-keypress="login($event.which)">
+        </div>
       </form>
-      <button class="btn btn--primary btn--large message-box__btn" role="button" ng-click="login()" ng-disabled="loginForm.email.$invalid">
-      <span translate="loginPage.login"></span>
-      </button>
-      <div class="message-box__footer" translate="loginPage.license"></div>
+      <div class="cui-panel__cta" ng-show="!loading">
+        <button
+          class="cui-button cui-button--blue"
+          role="button"
+          ng-click="login()"
+          ng-disabled="loginForm.email.$invalid"
+          translate="loginPage.login">
+        </button>
+      </div>
       <div ng-show="loading" class="login-spinner">
-        <i class="icon icon-3x icon-spinner"></i>
+        <div class="cui-panel__spinner"></div>
       </div>
     </div>
-  </div>
-  <div class="messagebox-backdrop__footer">
-    <i class="icon icon-cisco-logo"></i>
-    <div class="body-smallest">
-      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> | <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a> &copy; 2017 <span translate="loginPage.copyright"></span>
+    <div class="cui-panel__footer">
+      <div class="footer__logo">
+        <i class="icon icon-cisco-logo"></i>
+      </div>
+      <div class="footer__copyright">
+        <span
+          translate="loginPage.license"
+          translate-values="{
+            hrefTos: 'http://www.ciscospark.com/terms-of-service.html',
+            hrefPrivacy: 'http://www.cisco.com/web/siteassets/legal/privacy.html'
+          }"></span>
+          <span translate="loginPage.copyright" translate-value-year="2018"></span>
+
+      </div>
     </div>
   </div>
 </div>
+

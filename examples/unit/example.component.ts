@@ -3,9 +3,9 @@ import { ExampleService } from './example.service';
 class Example implements ng.IComponentController {
   public count: number = 0;
 
-  private error: boolean = false;
-  private loading: boolean = false;
-  private doneSomething: boolean = false;
+  public error: boolean = false;
+  public loading: boolean = false;
+  public doneSomething: boolean = false;
 
   /* @ngInject */
   constructor(

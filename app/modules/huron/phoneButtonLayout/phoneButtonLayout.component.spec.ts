@@ -333,7 +333,7 @@ describe('component: phoneButtonLayout', () => {
     });
   });
 
-  describe(' - keyboard navigation functionality', function (){
+  describe(' - keyboard navigation functionality', function () {
     beforeEach(initComponent('users', '12345'));
     beforeEach(function () {
       this.list = [{

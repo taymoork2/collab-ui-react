@@ -214,19 +214,25 @@ describe('Partner Service -', function () {
   it('should successfully return a list customer orgs with orderedServices property from calling loadRetrievedDataToList with isCareEnabled being false', function () {
     Authinfo.getPrimaryEmail.and.returnValue('partner@company.com');
 
+    // Make the messaging service appear to have been provisiond by the customer
+    delete testData.managedOrgsResponse.data.organizations[0].licenses[0].partnerEmail;
+
     var returnList = PartnerService.loadRetrievedDataToList(_.get(testData, 'managedOrgsResponse.data.organizations', []), {
       isTrialData: true,
       isCareEnabled: false,
       isAdvanceCareEnabled: false,
     });
-    var expectedServices = ['messaging', 'communications', 'webex', 'roomSystems', 'sparkBoard'];
+    var expectedServices = ['communications', 'webex', 'roomSystems', 'sparkBoard'];
     var expectedServicesManagedByOthers = ['conferencing'];
+    var expectedServicesManagedByCustomer = ['messaging'];
 
     // Verify the ordered service property
-    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(5);
+    expect(returnList[0].orderedServices.servicesManagedByCurrentPartner.length).toBe(4);
     expect(returnList[0].orderedServices.servicesManagedByCurrentPartner).toEqual(expectedServices);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner.length).toBe(1);
     expect(returnList[0].orderedServices.servicesManagedByAnotherPartner).toEqual(expectedServicesManagedByOthers);
+    expect(returnList[0].orderedServices.servicesManagedByCustomer.length).toBe(1);
+    expect(returnList[0].orderedServices.servicesManagedByCustomer).toEqual(expectedServicesManagedByCustomer);
   });
 
   it('should successfully return an array of customers from calling exportCSV', function () {
@@ -772,6 +778,15 @@ describe('Partner Service -', function () {
       it('should return FALSE from isDisplayableService for storage license', function () {
         var licenseInfo = {
           licenseType: Config.licenseTypes.STORAGE,
+          volume: 10,
+        };
+        var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };
+        expect(PartnerService.helpers.isDisplayableService(licenseInfo, options)).toBe(false);
+      });
+
+      it('should return FALSE from isDisplayableService for audio license', function () {
+        var licenseInfo = {
+          licenseType: Config.licenseTypes.AUDIO,
           volume: 10,
         };
         var options = { isTrial: false, isCareEnabled: true, isAdvanceCareEnabled: true };

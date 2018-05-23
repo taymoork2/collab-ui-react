@@ -51,6 +51,7 @@ build-deps.tar
 node_modules
 npm-debug.log
 npm-shrinkwrap.json
+webpack.yml
 
 test/e2e-protractor/reports
 test/ts/

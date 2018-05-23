@@ -1,5 +1,8 @@
 import { CsvDownloadTypes, CsvDownloadService } from 'modules/core/csvDownload';
 import { IToolkitModalService } from 'modules/core/modal';
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
+
+import './userCsvExport.scss';
 
 /* UI for allowing user to export the Csv and Template. Does not do downloading on its own! See csvDownload.component */
 export class UserCsvExportComponent {
@@ -26,15 +29,18 @@ class UserCsvExportController implements ng.IComponentController {
   private isOverExportThreshold: boolean;
 
   constructor(
-    private $rootScope: ng.IRootScopeService,
     private $modal: IToolkitModalService,
+    private $q: ng.IQService,
+    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Analytics,
-    private CsvDownloadService,
-    private Notification,
     private Authinfo,
-    private UserListService,
+    private CsvDownloadService,
     private FeatureToggleService,
+    private ModalService,
+    private Notification,
+    private AutoAssignTemplateModel: AutoAssignTemplateModel,
+    private UserListService,
   ) {
   }
 
@@ -77,10 +83,11 @@ class UserCsvExportController implements ng.IComponentController {
   public exportCsv(): void {
     this.Analytics.trackAddUsers(this.Analytics.sections.ADD_USERS.eventNames.EXPORT_USER_LIST);
 
-    this.$modal.open({
-      type: 'dialog',
-      template: require('modules/core/users/userCsv/userCsvExportConfirm.tpl.html'),
-    }).result
+    this.warnAutoAssignTemplate().then(() => {
+      this.$modal.open({
+        type: 'dialog',
+        template: require('modules/core/users/userCsv/userCsvExportConfirm.tpl.html'),
+      }).result
       .then(() => {
         if (this.isOverExportThreshold) {
           // warn that entitlements won't be exported since there are too many users
@@ -93,22 +100,25 @@ class UserCsvExportController implements ng.IComponentController {
             },
             controllerAs: 'ctrl',
           }).result
-            .then(() => {
-              this.beginUserCsvDownload();
-            });
+          .then(() => {
+            this.beginUserCsvDownload();
+          });
         } else {
           this.beginUserCsvDownload();
         }
       });
+    });
   }
 
   public downloadTemplate(): void {
-    // start the download
-    this.$rootScope.$emit('csv-download-request', {
-      csvType: CsvDownloadTypes.TYPE_TEMPLATE,
-      tooManyUsers: this.isOverExportThreshold,
-      suppressWarning: true,
-      filename: 'template.csv',
+    this.warnAutoAssignTemplate().then(() => {
+      // start the download
+      this.$rootScope.$emit('csv-download-request', {
+        csvType: CsvDownloadTypes.TYPE_TEMPLATE,
+        tooManyUsers: this.isOverExportThreshold,
+        suppressWarning: true,
+        filename: 'template.csv',
+      });
     });
   }
 
@@ -118,6 +128,18 @@ class UserCsvExportController implements ng.IComponentController {
   }
 
   //// private functions
+
+  private warnAutoAssignTemplate(): ng.IPromise<any> {
+    if (!this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated) {
+      return this.$q.resolve();
+    }
+
+    return this.ModalService.open({
+      hideDismiss: true,
+      message: this.$translate.instant('userManage.autoAssignTemplate.csv.warningMessage'),
+      title: this.$translate.instant('userManage.autoAssignTemplate.csv.warningTitle'),
+    }).result;
+  }
 
   private beginUserCsvDownload(): void {
     // start the export

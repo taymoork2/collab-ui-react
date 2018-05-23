@@ -1,0 +1,86 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+
+.first-time-calling-modal {
+  .icon-error {
+    color: $color-red-base;
+    left: 25rem;
+    top: 10rem;
+  }
+  .icon-sucesss {
+    color: $color-green-base;
+    left: 25rem;
+    top: 2rem;
+  }
+  .icon-loading {
+    left: 23rem;
+    top: 1rem;
+  }
+  .loading-text {
+    display: flex;
+    flex-direction: row;
+  }
+  .loading-text-position {
+    padding-left: 14rem;
+    padding-top: 12rem;
+    font-size: 22px;
+  }
+  .spark-success {
+    background: $color-white;
+    width: 100%;
+    height: 25rem;
+    margin-top: 20px;
+    margin-right: 5px;
+  }
+  .stick-bottom-spark {
+    top: 35rem;
+    font-size: .8rem;
+    line-height: 1rem;
+    position: absolute !important;
+  }
+  .stick-bottom-sip {
+    top: 33rem;
+    font-size: .8rem;
+    line-height: 1rem;
+    position: absolute !important;
+  }
+  .call-details {
+    padding-top: 4rem;
+    text-align: center;
+    font-size: 1.2rem;
+    padding-bottom: 1rem;
+  }
+  .call-details-list {
+    padding-bottom: .2rem;
+    padding-left: 19rem;
+  }
+  .text-align {
+    padding-bottom: 1rem;
+    text-align: center;
+  }
+  .display-flex {
+    display: flex;
+    flex-direction: row;
+  }
+  .no-calls {
+    padding-top: 10rem;
+    text-align: center;
+  }
+  .position-msg {
+    font-size: 20px;
+    font-family: $brand-font-cisco-TT-Light;
+    -webkit-margin-before: 8em;
+    width: 63%;
+    margin: 11rem auto;
+    text-align: center;
+  }
+  .icon-size {
+    font-size: 7em;
+  }
+  .icon-error-size {
+    font-size: 5em;
+  }
+  .position-error-msg {
+    position: absolute !important;
+  }
+}

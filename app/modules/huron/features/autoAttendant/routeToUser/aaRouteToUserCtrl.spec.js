@@ -2,7 +2,7 @@
 
 describe('Controller: AARouteToUserCtrl', function () {
   var $controller;
-  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService;
+  var AAUiModelService, AutoAttendantCeInfoModelService, AutoAttendantCeMenuModelService, AAModelService, $httpBackend, HuronConfig, aaCommonService, AutoAttendantHybridCareService;
 
   var $rootScope, $scope, UrlConfig;
 
@@ -123,120 +123,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     }],
   };
 
-  var userListCISResponse = {
-    totalResults: '3',
-    itemsPerPage: '2',
-    startIndex: '1',
-    schemas: [
-      'urn:scim:schemas:core:1.0',
-      'urn:scim:schemas:extension:cisco:commonidentity:1.0',
-    ],
-    Resources: [{
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Super Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dude@gmail.com',
-      name: {
-        givenName: 'inferior',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '5FCF9B4A-4A44-943B-4A4A-A397974E97D4',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'Test Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }, {
-      userName: 'dudette@gmail.com',
-      name: {
-        givenName: 'some',
-        familyName: 'user',
-      },
-      entitlements: [
-        'ciscouc',
-        'squared-call-initiation',
-        'spark',
-        'webex-squared',
-      ],
-      id: '47026507-4F83-0B5B-9C1D-8DBA89F2E01C',
-      meta: {
-        created: '2015-11-16T16:40:54.084Z',
-        lastModified: '2016-01-06T18:06:47.999Z',
-        version: '19382735439',
-        location: 'https://identity.webex.com/identity/scim/7e88d491-d6ca-4786-82ed-cbe9efb02ad2/v1/Users/9ba7b358-6795-41d7-8b0a-c07b34d6715b',
-        organizationID: '7e88d491-d6ca-4786-82ed-cbe9efb02ad2',
-      },
-      displayName: 'AA Admin',
-      active: true,
-      licenseID: [
-        'CO_6a0254d2-37b7-4b01-a81b-41cd2cb91a32',
-      ],
-      avatarSyncEnabled: false,
-    }],
-    success: true,
-  };
+  var userListCISResponse = getJSONFixture('huron/json/autoAttendant/userListCISResponse.json');
 
   var userListCISResponse2 = {
     totalResults: '3',
@@ -289,7 +176,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   };
 
   var listUsersProps = {
-    attributes: 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,licenseID,userSettings',
+    attributes: 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences',
     filter: 'filter=active%20eq%20true%20or%20displayName%20sw%20%22xz%22',
     startIndex: 0,
     count: 10,
@@ -360,7 +247,7 @@ describe('Controller: AARouteToUserCtrl', function () {
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AACommonService_/* , _AAUserService_ */) {
+  beforeEach(inject(function (_$controller_, _$rootScope_, _AAUiModelService_, _AutoAttendantCeInfoModelService_, _AutoAttendantCeMenuModelService_, _AAModelService_, _$httpBackend_, _Authinfo_, _HuronConfig_, _UrlConfig_, _AutoAttendantHybridCareService_, _AACommonService_/* , _AAUserService_ */) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
 
@@ -370,6 +257,7 @@ describe('Controller: AARouteToUserCtrl', function () {
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     aaCommonService = _AACommonService_;
+    AutoAttendantHybridCareService = _AutoAttendantHybridCareService_;
 
     $httpBackend = _$httpBackend_;
     authinfo = _Authinfo_;
@@ -598,25 +486,136 @@ describe('Controller: AARouteToUserCtrl', function () {
 
       $scope.$apply();
 
-      expect(controller.users[1].description).toEqual(nameNumber);
+      expect(controller.users[3].description).toEqual(nameNumber);
     });
 
-    it('should omit user with 404 on extension', function () {
-      cmiCompleteUserGet.respond(404);
-
-      var controller = $controller('AARouteToUserCtrl', {
-        $scope: $scope,
+    describe('for hybrid user', function () {
+      beforeEach(function () {
+        var attributesForHybridOrg = 'attributes=name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences,phoneNumbers,sipAddresses';
+        var listUsersUrl = UrlConfig.getScimUrl(authinfo.getOrgId()) +
+        '?' + '&' + attributesForHybridOrg +
+        '&' + listUsersProps.filter +
+        '&count=' + listUsersProps.count +
+        '&sortBy=' + listUsersProps.sortBy +
+        '&sortOrder=' + listUsersProps.sortOrder;
+        $httpBackend.whenGET(listUsersUrl).respond(200, userListCISResponse);
+        spyOn(AutoAttendantHybridCareService, 'getHybridandEPTConfiguration').and.returnValue(true);
+        cmiCompleteUserGet.respond(404);
+        $scope.$apply();
       });
 
-      controller.sort.fullLoad = 0;
+      it('should show user with extension response as 404 for call free users', function () {
+        var result = 'Super Admin (Spark)';
 
-      controller.getUsers();
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
 
-      $httpBackend.flush();
+        controller.sort.fullLoad = 8;
 
-      $scope.$apply();
+        controller.getUsers();
 
-      expect(controller.users.length).toEqual(0);
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].type).toBe('sparkOnlyUser');
+      });
+
+      it('should show user email id when dispalyName, firstname and lasname are empty', function () {
+        var result = 'user@gmail.com (Spark)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[2].description).toBe(result);
+      });
+
+      it('should show user lastname when dispalyName and firstName is empty', function () {
+        var result = 'Super Admin (Spark)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users.length).toBe(6);
+        expect(controller.users[0].description).toBe(result);
+        expect(controller.users[0].sipUri).toBe('admin@webex.cisco.com');
+      });
+
+      it('should show hybrid user with extension when phoneNumbers exist in response', function () {
+        var result = 'AlanHybrid Geller (9999)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[3].description).toBe(result);
+        expect(controller.users[3].type).toBe('hybridUser');
+        expect(controller.users[3].sipUri).toBe('alanHybrid@webex.cisco.com');
+      });
+
+      it('should show hybrid user email when displayName is same as email in response and extension does not exist', function () {
+        var result = 'user@gmail.com';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[4].description).toBe(result);
+        expect(controller.users[4].type).toBe('hybridUser');
+        expect(controller.users[4].sipUri).toBeUndefined();
+      });
+
+      it('should show hybrid user firstName lastName along with email, when user displayName does not exist and type and work are undefined in response', function () {
+        var result = 'Sam Will (user@gmail.com)';
+
+        var controller = $controller('AARouteToUserCtrl', {
+          $scope: $scope,
+        });
+
+        controller.sort.fullLoad = 8;
+
+        controller.getUsers();
+
+        $httpBackend.flush();
+
+        $scope.$apply();
+        expect(controller.users[5].description).toBe(result);
+        expect(controller.users[5].type).toBe('hybridUser');
+        expect(controller.users[5].sipUri).toBeUndefined();
+      });
     });
 
     describe('activate', function () {
@@ -673,7 +672,7 @@ describe('Controller: AARouteToUserCtrl', function () {
         menuEntry.addAction(actionEntry);
         aaUiModel[schedule].entries[0].addEntry(menuEntry);
 
-        cmiCompleteUserGet.respond(404);
+        cmiCompleteUserGet.respond(500);
 
         var controller = $controller('AARouteToUserCtrl', {
           $scope: $scope,

@@ -20,8 +20,6 @@ export enum Pattern {
 }
 
 export class DirectoryNumberOptionsService {
-  private locationsInternalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
-  private internalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
   private externalNumbersOptions: ng.resource.IResourceClass<ng.resource.IResource<IDirectoryNumber>>;
 
   /* @ngInject */
@@ -32,8 +30,6 @@ export class DirectoryNumberOptionsService {
     private FeatureToggleService,
     private NumberService: NumberService,
   ) {
-    this.locationsInternalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/locations/:locationId/internalnumberpools');
-    this.internalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/internalnumberpools/:internalNumberId');
     this.externalNumbersOptions = this.$resource(this.HuronConfig.getCmiUrl() + '/voice/customers/:customerId/externalnumberpools/:externalNumberId');
   }
 

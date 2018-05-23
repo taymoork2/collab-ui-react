@@ -152,6 +152,7 @@
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
       return _.cloneDeep({
         type: 'serial',
+        zoomOutText: '',
         pathToImages: amchartsImages,
         startEffect: 'easeOutSine',
         addClassNames: true,

@@ -1,5 +1,5 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/mixins/text-overflow';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/text-overflow';
 
 hs-cluster-card {
   display: block;
@@ -160,6 +160,12 @@ hs-cluster-card {
       }
     }
   }
+
+  // simulating .cs-card widths with cluster-card
+  width: 100%;
+  .cs-card.cs-card--medium {
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 470px) {
@@ -169,16 +175,6 @@ hs-cluster-card {
     .connection-status {
       margin-top: 0.9375rem;
     }
-  }
-}
-
-// override:
-// simulating .cs-card widths with cluster-card
-hs-cluster-card {
-  width: 100%;
-
-  .cs-card.medium {
-    width: 100%;
   }
 }
 

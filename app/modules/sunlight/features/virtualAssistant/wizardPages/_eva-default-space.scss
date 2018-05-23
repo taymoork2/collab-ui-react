@@ -21,8 +21,11 @@
 
   .note-info {
     @include vr-spacing(mt, 3.0);
-    @include vr-spacing(pr, 5.5);
+    @include vr-spacing(pr, 2.5);
     color: $color-blue-dark;
+  }
+
+  .warning-message, .note-info {
     line-height: 1.5;
     display: inline-flex;
     font-size: smaller;
@@ -31,5 +34,26 @@
       @include vr-spacing(mr, 0.5);
       @include vr-spacing(pt, 0.125);
     }
+  }
+
+  .warning-message {
+    @include vr-spacing(mb, 2.0, 0px, true); // -2px
+    @include vr-spacing(mt, 0.5);
+  }
+
+  .icon-warning {
+    color: $color-attention-base;
+  }
+
+  .warning-text {
+    color: $color-attention-darker;
+  }
+
+  .msg-container {
+    visibility: hidden;
+  }
+
+  .select-list.warn .select-toggle:not(:focus) {
+      background-color: $color-attention-light;
   }
 }

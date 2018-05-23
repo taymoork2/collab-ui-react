@@ -1,35 +1,37 @@
 <div class="user-csv-upload" ng-disabled="vm.disabled">
   <div class="flex-center-container" ng-if="!csv.isCsvValid">
     <div class="file-drop"
-         cr-file-drop
-         file="csv.model.file"
-         file-name="csv.model.fileName"
-         file-max-size="10"
-         file-max-size-error="csv.onFileSizeError()"
-         file-type="text/csv, application/csv, application/vnd.ms-excel"
-         file-suffix="csv"
-         file-type-error="csv.onFileTypeError()">
+      cr-file-drop
+      file="csv.model.file"
+      file-name="csv.model.fileName"
+      file-checksum="csv.model.fileChecksum"
+      file-max-size="{{csv.maxCsvFileSize}}"
+      file-max-size-error="csv.onFileSizeError()"
+      file-type="text/csv, application/csv, application/vnd.ms-excel"
+      file-suffix="csv"
+      file-type-error="csv.onFileTypeError()">
 
-        <div class="hotspot" for='upload'>
-          <i class="icon icon-upload"></i>
-          <div translate="userManage.bulk.import.label"></div>
-        </div>
-        <input
-          id="upload"
-          name="upload"
-          type="file"
-          cr-file-read
-          file="csv.model.file"
-          file-name="csv.model.fileName"
-          file-max-size="10"
-          file-max-size-error="csv.onFileSizeError()"
-          file-type="text/csv, application/csv, application/vnd.ms-excel"
-          file-suffix="csv"
-          file-type-error="csv.onFileTypeError()"/>
-        <div class="prompt">
-          <span translate="userManage.bulk.uploadPrompt"></span>
-          <label for='upload' translate="userManage.bulk.fileBrowser"></label>
-        </div>
+      <label class="hotspot" for="upload">
+        <i class="icon icon-upload"></i>
+        <div translate="userManage.bulk.import.label"></div>
+      </label>
+      <input
+        id="upload"
+        name="upload"
+        type="file"
+        cr-file-read
+        file="csv.model.file"
+        file-name="csv.model.fileName"
+        file-checksum="csv.model.fileChecksum"
+        file-max-size="{{csv.maxCsvFileSize}}"
+        file-max-size-error="csv.onFileSizeError()"
+        file-type="text/csv, application/csv, application/vnd.ms-excel"
+        file-suffix="csv"
+        file-type-error="csv.onFileTypeError()"/>
+      <div class="prompt">
+        <span translate="userManage.bulk.uploadPrompt"></span>
+        <label for="upload" translate="userManage.bulk.fileBrowser"></label>
+      </div>
     </div>
   </div>
   <div ng-if="csv.isCsvValid" class="file-drop-inactive">

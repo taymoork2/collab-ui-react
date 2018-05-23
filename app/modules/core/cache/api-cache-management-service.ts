@@ -3,7 +3,7 @@ import { USSService } from 'modules/hercules/services/uss.service';
 
 export class ApiCacheManagementService {
   private intervalPromise?: ng.IPromise<void>;
-  private readonly INTERVAL_DELAY = 100000;
+  private readonly INTERVAL_DELAY = 300000;
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
@@ -30,13 +30,13 @@ export class ApiCacheManagementService {
   }
 
   public warmUpAsynchronousCaches(): ng.IPromise<void> {
-    if (!this.Authinfo.isAdmin()) {
+    if (!(this.Authinfo.isAdmin() || this.Authinfo.isReadOnlyAdmin())) {
       return this.$q.resolve();
     }
     const cachePromises: ng.IPromise<any>[] = [];
 
     // Add urls for other asynchronous caches that should be warmed up here
-    cachePromises.push(this.$http.post(this.UrlConfig.getCsdmServiceUrl() + `/organization/${this.Authinfo.getOrgId()}/preloadCaches`, null));
+    cachePromises.push(this.$http.post(`${this.UrlConfig.getCsdmServiceUrl()}/organization/${this.Authinfo.getOrgId()}/preloadCaches`, null));
 
     return this.$q.all(cachePromises).then(() => {
       return this.$q.resolve();

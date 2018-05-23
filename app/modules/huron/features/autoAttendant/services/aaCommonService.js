@@ -24,6 +24,7 @@
     var restApiToggle = false;
     var aaRestApiStatus = false;
     var restApiTogglePhase2 = false;
+    var hybridToggle = false;
 
     var invalidList = {};
     var schedules = ['openHours', 'closedHours', 'Holidays'];
@@ -89,6 +90,8 @@
       DIGITS_CHOICE: 4,
       getprePopulatedSessionVariablesList: getprePopulatedSessionVariablesList,
       getVarOption: getVarOption,
+      setHybridToggle: setHybridToggle,
+      isHybridEnabledOnOrg: isHybridEnabledOnOrg,
     };
 
     return service;
@@ -198,6 +201,15 @@
     function setReturnedCallerToggle(status) {
       returnedCallerToggle = status;
     }
+
+    function setHybridToggle(status) {
+      hybridToggle = status;
+    }
+
+    function isHybridEnabledOnOrg() {
+      return hybridToggle;
+    }
+
     function setMultiSiteEnabledToggle(status) {
       multiSiteToggle = status;
     }

@@ -1,19 +1,17 @@
 import { SipDestinationSettingsSectionComponent } from './sip-destination-settings-section.component';
-import USSServiceModuleName from 'modules/hercules/services/uss.service';
-import FeatureToggleServiceModuleName from 'modules/core/featureToggle';
-import * as AuthInfoModuleName from 'modules/core/scripts/services/authinfo';
-import ModalServiceModuleName from 'modules/core/modal';
-import NotificationServiceModuleName from 'modules/core/notifications';
+import ussServiceModuleName from 'modules/hercules/services/uss.service';
+import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
+import featureToggleServiceModuleName from 'modules/core/featureToggle';
+import * as authInfoModuleName from 'modules/core/scripts/services/authinfo';
 
-import './_sip-destination-settings-section.scss';
+import './sip-destination-settings-section.scss';
 
 export default angular
   .module('hercules.sip-destination-test-tool', [
-    ModalServiceModuleName,
-    AuthInfoModuleName,
-    FeatureToggleServiceModuleName,
-    NotificationServiceModuleName,
-    USSServiceModuleName,
+    authInfoModuleName,
+    featureToggleServiceModuleName,
+    hybridServicesClusterServiceModuleName,
+    ussServiceModuleName,
   ])
   .component('sipDestinationSettingsSection', new SipDestinationSettingsSectionComponent())
   .name;

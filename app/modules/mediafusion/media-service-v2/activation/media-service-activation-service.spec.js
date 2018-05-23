@@ -1,12 +1,12 @@
 'use strict';
 
+var moduleName = require('./index').default;
+
 describe('MediaServiceActivationV2', function () {
-  // load the service's module
-  beforeEach(angular.mock.module('Mediafusion'));
-  beforeEach(angular.mock.module('Hercules'));
+  beforeEach(angular.mock.module(moduleName));
 
   // instantiate service
-  var Service, $q, $httpBackend, authinfo, Notification, HybridServicesClusterService, ServiceDescriptorService;
+  var Service, $q, $httpBackend, authinfo, Notification, ServiceDescriptorService;
   //var serviceId = "squared-fusion-media";
   var mediaAgentOrgIds = ['mediafusion'];
   var serviceId = 'squared-fusion-media';
@@ -21,11 +21,10 @@ describe('MediaServiceActivationV2', function () {
     });
   });
 
-  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _HybridServicesClusterService_, _ServiceDescriptorService_) {
+  beforeEach(inject(function (_$q_, _Notification_, $injector, _MediaServiceActivationV2_, _ServiceDescriptorService_) {
     //$rootScope = _$rootScope_;
     Service = _MediaServiceActivationV2_;
     ServiceDescriptorService = _ServiceDescriptorService_;
-    HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
     $httpBackend = $injector.get('$httpBackend');
     Notification = _Notification_;
@@ -82,22 +81,22 @@ describe('MediaServiceActivationV2', function () {
 
   it('MediaServiceActivationV2 isServiceEnabled should be called for getMediaServiceState', function () {
     $httpBackend.when('GET', /^\w+.*/).respond({});
-    spyOn(HybridServicesClusterService, 'serviceIsSetUp').and.returnValue($q.resolve(true));
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve(true));
     Service.getMediaServiceState();
     $httpBackend.verifyNoOutstandingExpectation();
-    expect(HybridServicesClusterService.serviceIsSetUp).toHaveBeenCalled();
+    expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to true', function () {
-    Service.setisMediaServiceEnabled(true);
-    spyOn(HybridServicesClusterService, 'serviceIsSetUp').and.callThrough();
+    Service.setIsMediaServiceEnabled(true);
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.callThrough();
     Service.getMediaServiceState();
-    expect(HybridServicesClusterService.serviceIsSetUp).not.toHaveBeenCalled();
+    expect(ServiceDescriptorService.isServiceEnabled).not.toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 isServiceEnabled should not be called for getMediaServiceState when isMediaServiceEnabled is set to false', function () {
-    Service.setisMediaServiceEnabled(false);
-    spyOn(HybridServicesClusterService, 'serviceIsSetUp').and.callThrough();
+    Service.setIsMediaServiceEnabled(false);
+    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.callThrough();
     Service.getMediaServiceState();
-    expect(HybridServicesClusterService.serviceIsSetUp).not.toHaveBeenCalled();
+    expect(ServiceDescriptorService.isServiceEnabled).not.toHaveBeenCalled();
   });
   it('MediaServiceActivationV2 deleteUserIdentityOrgToMediaAgentOrgMapping should successfully delete the OrgMapping', function () {
     $httpBackend.when('DELETE', 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1/identity2agent').respond(204);

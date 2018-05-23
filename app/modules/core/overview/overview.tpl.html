@@ -1,17 +1,32 @@
 <div class="overview-page">
   <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
-    <cs-card-layout class="three-fourths"  block-view="true">
-      <cs-card class="medium menu-card overview-card" ng-class="card.cardClass" ng-repeat="card in overview.cards">
+    <cs-card-layout class="three-fourths" block-view="true">
+      <cs-card class="menu-card overview-card cs-card--medium" ng-class="card.cardClass" ng-repeat="card in overview.cards">
         <!--
           currently ng-include templates loaded through ngtemplate-loader
           TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
         -->
-        <article ng-include="card.template"></article>
+        <article ng-if="card.template" ng-include="card.template"></article>
+        <article ng-if="!card.template && !card.isMeetingCard">
+          <license-card
+            l10n-default-message="{{::card.defaultMessage}}"
+            l10n-license-description="{{::card.licenseDescription}}"
+            l10n-title="{{::card.title}}"
+            header-class="{{::card.icon}}"
+            license-types="card.offerType"
+            loading="overview.loadingSubscriptions"
+            settings-url-object="card.settingsUrlObject"
+            status-id="{{::card.statusId}}">
+          </license-card>
+        </article>
+        <article ng-if="!card.template && card.isMeetingCard">
+          <meeting-card loading="overview.loadingSubscriptions"></meeting-card>
+        </article>
       </cs-card>
     </cs-card-layout>
     <cs-card-layout block-view="true" class="fourth">
-      <cs-card class="full side-info-card">
+      <cs-card class="cs-card--full side-info-card">
         <article>
           <header>
             <div translate="homePage.notifications"></div>
@@ -32,7 +47,7 @@
                 </div>
               </span>
             </div>
-            <div class="notification-style" ng-repeat="notification in overview.notifications | orderBy:'badgeText':false:overview.notificationComparator">
+            <div class="notification-style" ng-repeat="notification in overview.notifications | orderBy:['badgeText', 'zOrder']:false:overview.notificationComparator">
               <span class="notification-spacing">
                 <span class="badge {{notification.badgeType}}" translate="{{notification.badgeText}}"></span>
                 <span class="text" translate="{{notification.text}}" translate-values="{{notification.textValues}}" translate-compile></span>
@@ -41,7 +56,7 @@
                   <a href ng-if="notification.linkText.length > 0" ng-click="notification.link()" translate="{{notification.linkText}}"></a>
                 </div>
               </span>
-              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{'common.close' | translate}}"></button>
+              <button type="button" class="close" ng-if="notification.canDismiss" ng-click="overview.dismissNotification(notification)" aria-label="{{::'common.close' | translate}}"></button>
             </div>
           </section>
           <footer>

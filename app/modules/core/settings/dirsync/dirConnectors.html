@@ -6,9 +6,13 @@
       enabled="connector.isInService"
       link-title="'globalSettings.dirsync.deregister'|translate"
       on-click="$ctrl.deregister(connector)"
+      tabindex="0"
       tooltip="{{connector.name}}"
       tooltip-popup-delay="1000"
       tooltip-placement="bottom-left"
-      ng-repeat="connector in $ctrl.connectors | orderBy: 'name'"></dir-sync-status-row>
+      tooltip-trigger="focus mouseenter"
+      ng-repeat="connector in $ctrl.connectors | orderBy: 'name'"
+      aria-label="{{connector.name}}">
+    </dir-sync-status-row>
   </p>
 </div>

@@ -1,4 +1,4 @@
-@import '~collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 uc-pstn-paid-wizard {
   margin: initial !important;
@@ -8,6 +8,21 @@ uc-pstn-paid-wizard {
   pstn-selector {
     section {
       margin: 0;
+    }
+  }
+
+  .numbers-new {
+    div {
+      padding-bottom: 1rem;
+    }
+  }
+  .ftsw-adjust{
+    &.flex-container {
+      padding-top: 1rem;
+    }
+    .tab-content {
+      min-height: rem-calc(428);
+      padding: 1rem;
     }
   }
 }

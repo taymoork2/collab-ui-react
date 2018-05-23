@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .aa-message-type-textarea {
   line-height: 1.5rem;
   @include vr-spacing(ml, 0);
@@ -36,7 +38,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: #F5A623;
-  font-family: "CiscoSansTT Regular", "Helvetica Neue", Helvetica, Arial;
+  font-family: $brand-font-regular;
   font-style: normal;
   font-weight: normal;
   font-size: .75rem;

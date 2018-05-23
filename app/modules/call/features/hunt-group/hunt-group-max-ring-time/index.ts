@@ -2,7 +2,7 @@ import { HuntGroupMaxRingTimeComponent } from './hunt-group-max-ring-time.compon
 
 export default angular
   .module('huron.hunt-group-max-ring-time', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
   .component('ucHuntGroupMaxRingTime', new HuntGroupMaxRingTimeComponent())

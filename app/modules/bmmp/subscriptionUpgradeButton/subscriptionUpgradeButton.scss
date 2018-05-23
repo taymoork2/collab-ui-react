@@ -10,6 +10,9 @@ bmmp-subscription-upgrade-button.btn {
       line-height: inherit !important;
       padding: 0.8125rem 1rem 0.625rem !important;
       border: inherit !important;
+      background-color: inherit !important;
+      color: inherit !important;
+      border-radius: inherit !important;
     }
 
     .reveal-modal.dialog & * {
@@ -17,8 +20,7 @@ bmmp-subscription-upgrade-button.btn {
       justify-content: center;
       align-items: center;
       height: 100% !important;
-      width: 10rem !important;
-      border-radius: 4px !important;
+      width: 100% !important;
       line-height: inherit !important;
     }
 

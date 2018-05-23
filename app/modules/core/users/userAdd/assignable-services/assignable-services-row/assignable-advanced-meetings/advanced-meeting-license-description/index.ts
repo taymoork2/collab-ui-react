@@ -5,7 +5,7 @@ import sharedModuleName from 'modules/core/users/userAdd/assignable-services/sha
 
 export default angular.module('core.users.userAdd.assignable-services.assignable-services-row.assignable-advanced-meetings.advanced-meeting-license-description', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   sharedModuleName,
 ])
   .component('advancedMeetingLicenseDescription', new AdvancedMeetingLicenseDescriptionComponent())

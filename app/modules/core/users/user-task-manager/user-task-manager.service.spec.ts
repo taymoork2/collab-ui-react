@@ -1,5 +1,7 @@
 import userTaskManagerModuleName from './index';
 import { UserTaskManagerService } from './user-task-manager.service';
+import { TaskStatus } from './user-task-manager.constants';
+import { ITask } from './user-task-manager.component';
 
 import 'moment';
 import 'moment-timezone';
@@ -24,11 +26,13 @@ describe('Service: UserTaskManagerService', () => {
       'UserTaskManagerService',
     );
 
-    this.taskList = _.cloneDeep(require('./test-tasks.json').taskManagerTasks);
+    this.testTasks = _.cloneDeep(getJSONFixture('core/json/users/user-task-manager/test-tasks.json'));
+    this.taskList = this.testTasks.taskManagerTasks;
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     this.URL = `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard`;
     this.UPLOAD_URL = `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/uploadurl`;
+    this.DOWNLOAD_URL = `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/downloadurl`;
 
     installPromiseMatchers();
 
@@ -49,10 +53,10 @@ describe('Service: UserTaskManagerService', () => {
     });
 
     it('should get in process tasks', function (this: Test) {
-      this.$httpBackend.expectGET(`${this.URL}?status=CREATED,STARTING,STARTED,STOPPING`).respond({
+      this.$httpBackend.expectGET(this.URL).respond({
         items: this.taskList,
       });
-      expect(this.UserTaskManagerService.getInProcessTasks()).toBeResolvedWith(this.taskList);
+      expect(this.UserTaskManagerService.getInProcessTasks()).toBeResolvedWith([this.taskList[2]]);
     });
 
     it('should get a specific task', function (this: Test) {
@@ -63,23 +67,54 @@ describe('Service: UserTaskManagerService', () => {
     it('should submit a csv import task', function (this: Test) {
       const myFilename = 'myFilename';
       const fileData = 'fileData';
+      const fileChecksum = 'fileChecksum';
       const exactMatch = true;
 
       const tempUploadUrl = 'tempUploadUrl';
       const uniqueFileName = 'uniqueFileName';
+      const md5 = 'fileChecksum';
       this.$httpBackend.expectGET(`${this.UPLOAD_URL}?filename=${myFilename}`).respond({
         tempUrl: tempUploadUrl,
         uniqueFileName: uniqueFileName,
       });
       this.$httpBackend.expectPUT(tempUploadUrl, fileData).respond(200);
+      this.$httpBackend.expectGET(`${this.DOWNLOAD_URL}?filename=${uniqueFileName}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+        md5: md5,
+      });
       this.$httpBackend.expectPOST(this.URL, {
         exactMatchCsv: exactMatch,
         csvFile: uniqueFileName,
         useLocalFile: false,
       }).respond(this.taskList[0]);
 
-      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, exactMatch);
+      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, fileChecksum, exactMatch);
       expect(promise).toBeResolvedWith(this.taskList[0]);
+    });
+
+    it('should reject submitting a csv import task if the checksum is wrong', function (this: Test) {
+      const myFilename = 'myFilename';
+      const fileData = 'fileData';
+      const fileChecksum = 'fileChecksum';
+      const exactMatch = true;
+
+      const tempUploadUrl = 'tempUploadUrl';
+      const uniqueFileName = 'uniqueFileName';
+      const md5 = 'wrongFileChecksum';
+      this.$httpBackend.expectGET(`${this.UPLOAD_URL}?filename=${myFilename}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+      });
+      this.$httpBackend.expectPUT(tempUploadUrl, fileData).respond(200);
+      this.$httpBackend.expectGET(`${this.DOWNLOAD_URL}?filename=${uniqueFileName}`).respond({
+        tempUrl: tempUploadUrl,
+        uniqueFileName: uniqueFileName,
+        md5: md5,
+      });
+
+      const promise = this.UserTaskManagerService.submitCsvImportTask(myFilename, fileData, fileChecksum, exactMatch);
+      expect(promise).toBeRejectedWith('userTaskManagerModal.csvFileChecksumError');
     });
 
     it('should get task errors', function (this: Test) {
@@ -126,25 +161,35 @@ describe('Service: UserTaskManagerService', () => {
 
   describe('Task Status', () => {
     it('should show pending task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskPending('CREATED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STARTED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STARTING')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskPending('STOPPING')).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.CREATED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTING)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STOPPING)).toBe(true);
     });
 
     it('should show processing task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskInProcess('STARTED')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskInProcess('STARTING')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskInProcess('STOPPING')).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTED)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STARTING)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskPending(TaskStatus.STOPPING)).toBe(true);
     });
 
     it('should show error task', function (this: Test) {
-      expect(this.UserTaskManagerService.isTaskError('COMPLETED_WITH_ERRORS')).toBe(true);
-      expect(this.UserTaskManagerService.isTaskError('FAILED')).toBe(true);
+      const completedWithErrors: ITask = this.testTasks.completedWithErrorsStatus;
+      const failed: ITask = this.testTasks.failedStatus;
+
+      expect(this.UserTaskManagerService.isTaskError(completedWithErrors)).toBe(true);
+      expect(this.UserTaskManagerService.isTaskError(failed)).toBe(true);
     });
 
     it('should show canceled task', function (this: Test) {
       expect(this.UserTaskManagerService.isTaskCanceled('ABANDONED')).toBe(true);
+    });
+
+    it('should get the correct status translation', function (this: Test) {
+      const completedWithErrors: ITask = this.testTasks.completedWithErrorsStatus;
+      const failed: ITask = this.testTasks.failedStatus;
+      expect(this.UserTaskManagerService.getTaskStatusTranslate(completedWithErrors)).toBe('userTaskManagerModal.taskStatus.completedWithErrors');
+      expect(this.UserTaskManagerService.getTaskStatusTranslate(failed)).toBe('userTaskManagerModal.taskStatus.failed');
     });
   });
 

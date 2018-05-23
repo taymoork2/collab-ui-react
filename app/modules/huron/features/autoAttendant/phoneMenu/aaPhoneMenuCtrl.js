@@ -16,7 +16,7 @@
   }
 
   /* @ngInject */
-  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService, QueueHelperService) {
+  function AAPhoneMenuCtrl($scope, $translate, AAUiModelService, AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AACommonService, QueueHelperService) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('autoAttendant.selectPlaceholder');
     vm.actionPlaceholder = $translate.instant('autoAttendant.actionPlaceholder');
@@ -52,15 +52,6 @@
       name: 'phoneMenuSayMessage',
       action: ['say', 'play', 'dynamic'],
     }, {
-      label: $translate.instant('autoAttendant.phoneMenuDialExt'),
-      name: 'phoneMenuDialExt',
-      action: 'runActionsOnInput',
-      inputType: [2, 5],
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
-      name: 'phoneMenuRouteHunt',
-      action: 'routeToHuntGroup',
-    }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteAA'),
       name: 'phoneMenuRouteAA',
       action: 'goto',
@@ -68,10 +59,6 @@
       label: $translate.instant('autoAttendant.phoneMenuRouteUser'),
       name: 'phoneMenuRouteUser',
       action: 'routeToUser',
-    }, {
-      label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
-      name: 'phoneMenuRouteMailbox',
-      action: 'routeToVoiceMail',
     }, {
       label: $translate.instant('autoAttendant.phoneMenuRouteToExtNum'),
       name: 'phoneMenuRouteToExtNum',
@@ -295,6 +282,29 @@
       });
     }
 
+    function setSparkCallActions() {
+    /* spark call actions will be shown in case
+    * 1. hybrid toggle is disabled
+    * 2. hybrid toggle is enabled and customer have spark call configuration */
+      if ((!AACommonService.isHybridEnabledOnOrg()) ||
+      (AACommonService.isHybridEnabledOnOrg() && AutoAttendantHybridCareService.isSparkCallConfigured())) {
+        vm.keyActions.push({
+          label: $translate.instant('autoAttendant.phoneMenuRouteVM'),
+          name: 'phoneMenuRouteMailbox',
+          action: 'routeToVoiceMail',
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuRouteHunt'),
+          name: 'phoneMenuRouteHunt',
+          action: 'routeToHuntGroup',
+        }, {
+          label: $translate.instant('autoAttendant.phoneMenuDialExt'),
+          name: 'phoneMenuDialExt',
+          action: 'runActionsOnInput',
+          inputType: [2, 5],
+        });
+      }
+    }
+
     function addRouteToSipEndPoint() {
       vm.keyActions.push({
         label: $translate.instant('autoAttendant.phoneMenuRouteToSipEndpoint'),
@@ -306,6 +316,7 @@
     /////////////////////
 
     function activate() {
+      setSparkCallActions();
       vm.keyActions.sort(AACommonService.sortByProperty('label'));
 
       if (vm.menuEntry.type === 'MENU_OPTION') {

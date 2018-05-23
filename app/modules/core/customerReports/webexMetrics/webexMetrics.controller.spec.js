@@ -43,6 +43,21 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         state: 'reports.webex-metrics.system',
         initialed: true,
       },
+      dashboard: {
+        title: 'reportsPage.webexMetrics.dashboard',
+        state: 'reports.webex-metrics.dashboard',
+        initialed: true,
+      },
+      jms: {
+        title: 'reportsPage.webexMetrics.JMS',
+        state: 'reports.webex-metrics.jms',
+        initialed: true,
+      },
+      jmt: {
+        title: 'reportsPage.webexMetrics.JMT',
+        state: 'reports.webex-metrics.jmt',
+        initialed: true,
+      },
       classic: {
         title: 'reportsPage.webexMetrics.classic',
         state: 'reports.webex-metrics.classic',
@@ -62,6 +77,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.initModules('Core', 'core.customer-reports', 'WebExApp');
     this.injectDependencies(
       '$controller',
+      '$location',
       '$q',
       '$sce',
       '$scope',
@@ -82,13 +98,16 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.Analytics, 'trackReportsEvent');
     spyOn(this.Authinfo, 'setEmails');
     spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue('1eb65fdf-9643-417f-9974-ad72cae0e10f');
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'getMetricsSites').and.returnValue(this.$q.resolve(['go.webex.com', 'alpha.webex.com']));
     spyOn(this.WebexMetricsService, 'hasMetricsSites').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMEIGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexSystemGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'webexInternalGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.QlikService, 'getProdToBTSQBSInfo').and.returnValue(this.$q.resolve(testQBSData));
     spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(testMashupUrl);
     spyOn(this.$scope, '$broadcast').and.callThrough();
@@ -103,6 +122,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
         isWebexClassicEnabled: true,
       };
       this.controller = this.$controller('WebExMetricsCtrl', {
+        $location: this.$location,
         $sce: this.$sce,
         $scope: this.$scope,
         $stateParams: this.$stateParams,
@@ -130,11 +150,17 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should set the metrics tab depends on the rules', function () {
     var testMetricsOptions = [
       testWebexMetrics.states.system,
+      /*testWebexMetrics.states.dashboard,
+      testWebexMetrics.states.jms,
+      testWebexMetrics.states.jmt,
+      for hiding those tabs
+      */
       testWebexMetrics.states.metrics,
       testWebexMetrics.states.diagnostics,
-      testWebexMetrics.states.mei,
+      // testWebexMetrics.states.mei, for hiding the MEI tab
       testWebexMetrics.states.classic,
     ];
+
     expect(this.controller.metricsOptions).toEqual(testMetricsOptions);
   });
 
@@ -156,11 +182,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should check classic when classicEnabled event fired', function () {
     this.$scope.$broadcast('classicEnabled', false);
     expect(this.controller.isWebexClassicEnabled).toBeFalsy();
+    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
+    // this.FeatureToggleService.webexMetricsGetStatus.and.returnValue(this.$q.resolve(false));
   });
 
   it('should check classic and push the tab when classicEnabled event fired with true', function () {
     this.$scope.$broadcast('classicEnabled', true);
     expect(this.controller.isWebexClassicEnabled).toBeTruthy();
+    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
+    // expect(this.controller.pushClassicTab).toHaveBeenCalled();
   });
 
   it('should broadcast the event when updateWebexMetrics called', function () {
@@ -209,6 +239,18 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.system' }, {}, { name: 'reports.webex-metrics.classic' });
     expect(event.preventDefault).toHaveBeenCalled();
 
+    this.controller.features.isInternalOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.dashboard' }, {}, { name: 'reports.webex-metrics.metrics' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
+    this.controller.features.isInternalOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.jms' }, {}, { name: 'reports.webex-metrics.classic' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
+    this.controller.features.isInternalOn = false;
+    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.jmt' }, {}, { name: 'reports.webex-metrics.classic' });
+    expect(event.preventDefault).toHaveBeenCalled();
+
     this.controller.isWebexClassicEnabled = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.classic' }, {}, { name: 'reports.webex-metrics.system' });
     expect(event.preventDefault).toHaveBeenCalled();
@@ -228,6 +270,21 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.controller, 'updateWebexMetrics');
     this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.system' });
     expect(this.controller.webexMetricsViews).toBe('system');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.dashboard' });
+    expect(this.controller.webexMetricsViews).toBe('dashboard');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.jms' });
+    expect(this.controller.webexMetricsViews).toBe('jms');
+    expect(this.controller.selectEnable).toBeFalsy();
+    expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
+
+    this.controller.onStateChangeSuccess(event, { name: 'reports.webex-metrics.jmt' });
+    expect(this.controller.webexMetricsViews).toBe('jmt');
     expect(this.controller.selectEnable).toBeFalsy();
     expect(this.controller.updateWebexMetrics).toHaveBeenCalled();
 

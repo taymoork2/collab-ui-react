@@ -1,4 +1,8 @@
 import pstnWizard from './index';
+import { PstnModel } from '../pstn.model';
+import { ContractStatus } from '../pstn.const';
+
+let pstnModel: PstnModel;
 
 describe('Component: PstnWizardComponent', () => {
   let $componentController: ng.IComponentControllerService;
@@ -26,12 +30,11 @@ describe('Component: PstnWizardComponent', () => {
       'PstnModel',
       'PstnService',
       'PstnWizardService',
-      'PstnServiceAddressService',
       'HuronCountryService',
       'FeatureToggleService',
       '$rootScope',
     );
-
+    pstnModel = this.PstnModel;
     installPromiseMatchers();
   });
 
@@ -40,8 +43,8 @@ describe('Component: PstnWizardComponent', () => {
     $componentController = _$componentController_;
   }));
 
-  function initController(showContractIncomplete): ng.IComponentControllerService {
-    return $componentController('ucPstnPaidWizard', { $stateParams: { showContractIncomplete } }, {});
+  function initController(): ng.IComponentControllerService {
+    return $componentController('ucPstnPaidWizard', {}, {});
   }
 
   function initComponent() {
@@ -303,18 +306,25 @@ describe('Component: PstnWizardComponent', () => {
   });
 
   describe('showContractIncomplete', () => {
+    beforeEach(initComponent);
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+    });
+
     it('should show the contract incomplete message', function () {
-      const showContractIncomplete = true;
-      ctrl = initController(showContractIncomplete);
+      pstnModel.setContractStatus(ContractStatus.UnSigned);
+      ctrl = initController();
       ctrl.$onInit();
-      expect(ctrl.showContractIncomplete).toBe(true);
+      this.$scope.$apply();
+      expect(ctrl.showContractUnSigned()).toBe(true);
     });
 
     it('should NOT show the contract incomplete message', function () {
-      const showContractIncomplete = false;
-      ctrl = initController(showContractIncomplete);
+      pstnModel.setContractStatus(ContractStatus.Signed);
+      ctrl = initController();
       ctrl.$onInit();
-      expect(ctrl.showContractIncomplete).toBe(false);
+      this.$scope.$apply();
+      expect(ctrl.showContractUnSigned()).toBe(false);
     });
   });
 });

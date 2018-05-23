@@ -1,0 +1,17 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+
+sip-destination-settings-section {
+  display: block;
+
+  .hercules-sip-settings {
+    .c-nub {
+      max-width: 300px;
+      text-align: left;
+    }
+  }
+
+  a.link-to-cluster {
+    color: $color-blue-base;
+  }
+}

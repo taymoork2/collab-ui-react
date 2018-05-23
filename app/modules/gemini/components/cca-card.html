@@ -1,7 +1,7 @@
 <div class="gemini-page">
   <cs-page-header title-name="{{'gemini.services.pageTitle' | translate}}"></cs-page-header>
   <div class="cs-card-container multiple-layouts">
-    <cs-card class="medium menu-card header-bar attention overview-card">
+    <cs-card class="cs-card--medium menu-card header-bar attention overview-card">
       <article>
         <header>
           <div class="overview-header"><i class="icon icon-circle-group"></i>{{::'servicesOverview.cards.meeting.title' | translate}}</div>
@@ -9,7 +9,7 @@
         <section>
           <div class="overview-info">
             <p translate="servicesOverview.cards.meeting.SPDescription"></p>
-            <p><a ng-click="$ctrl.goto()" translate="gemini.audiocca"></a></p>
+            <p><a href ng-click="$ctrl.goto()" translate="gemini.audiocca"></a></p>
           </div>
         </section>
       </article>

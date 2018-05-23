@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var OfferName = require('modules/core/shared/offer-name').OfferName;
+
   angular
     .module('Core')
     .controller('PlanReviewCtrl', PlanReviewCtrl);
@@ -8,6 +10,8 @@
   /* @ngInject */
   function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
+    var TRIAL = 'Trial';
+
     var classes = {
       userService: 'user-service-',
       hasRoomSys: 'has-room-systems',
@@ -109,20 +113,27 @@
     }
 
     function fetchPendingSubscriptionInfo() {
+      var audioLicense = SetupWizardService.getPendingAudioLicense();
+      var meetingLicenses = SetupWizardService.getPendingMeetingLicenses();
+
+      if (!_.isUndefined(audioLicense)) {
+        meetingLicenses.push(audioLicense);
+      }
+
       // TODO update this logic when Room licenses are implemented.
       vm.pendingLicenses = [
         {
           title: $translate.instant('firstTimeWizard.meeting'),
           icon: 'icon-circle-group',
-          licenses: SetupWizardService.getPendingMeetingLicenses().concat(SetupWizardService.getPendingAudioLicenses()),
+          licenses: meetingLicenses,
         },
         {
-          title: $translate.instant('firstTimeWizard.call'),
+          title: $translate.instant('firstTimeWizard.calling'),
           icon: 'icon-circle-call',
           licenses: SetupWizardService.getPendingCallLicenses(),
         },
         {
-          title: $translate.instant('firstTimeWizard.message'),
+          title: $translate.instant('firstTimeWizard.messaging'),
           icon: 'icon-circle-message',
           licenses: SetupWizardService.getPendingMessageLicenses(),
         },
@@ -319,24 +330,29 @@
 
       vm.sites = {};
       _.forEach(vm.confServices.services, function (service) {
-        if (service.license) {
-          if (service.license.siteUrl) {
-            if (!vm.sites[service.license.siteUrl]) {
-              vm.sites[service.license.siteUrl] = [];
-            }
-            vm.sites[service.license.siteUrl].push(service);
+        if (_.has(service, 'license.siteUrl') && !_.isUndefined(service.license.siteUrl)) {
+          if (!vm.sites[service.license.siteUrl]) {
+            vm.sites[service.license.siteUrl] = [];
           }
+          vm.sites[service.license.siteUrl].push(service);
         }
       });
 
-      vm.sitesBasedOnBillingId = {};
+      vm.advancedMeetings = {};
       _.forEach(vm.sites, function (services) {
         _.forEach(services, function (service) {
-          if (_.has(service, 'license.billingServiceId')) {
-            if (!vm.sitesBasedOnBillingId[service.license.billingServiceId]) {
-              vm.sitesBasedOnBillingId[service.license.billingServiceId] = [];
+          var offerCode = _.get(service, 'license.offerName');
+          // check for advanced meetings based on billing service id first, license type second to catch trials
+          if (_.has(service, 'license.billingServiceId') && !_.isUndefined(service.license.billingServiceId)) {
+            if (_.isUndefined(vm.advancedMeetings[service.license.billingServiceId])) {
+              vm.advancedMeetings[service.license.billingServiceId] = [];
             }
-            vm.sitesBasedOnBillingId[service.license.billingServiceId].push(service);
+            vm.advancedMeetings[service.license.billingServiceId].push(service);
+          } else if (offerCode === OfferName.EE || offerCode === OfferName.MC || offerCode === OfferName.TC || offerCode === OfferName.SC || offerCode === OfferName.EC) {
+            if (_.isUndefined(vm.advancedMeetings[TRIAL])) {
+              vm.advancedMeetings[TRIAL] = [];
+            }
+            vm.advancedMeetings[TRIAL].push(service);
           }
         });
       });

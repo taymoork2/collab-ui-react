@@ -1,0 +1,28 @@
+<i ng-if="$ctrl.isSafe"
+  aria-label="{{$ctrl.ariaLabel}}"
+  class="icon"
+  ng-class="$ctrl.classes"
+  ng-click="$ctrl.onClick()"
+  role="{{$ctrl.role}}"
+  tabindex="{{$ctrl.tabindex}}"
+  tooltip="{{$ctrl.ttTooltipText}}"
+  tooltip-animation="{{$ctrl.animation}}"
+  tooltip-append-to-body="{{$ctrl.appendToBody}}"
+  tooltip-class="{{$ctrl.ttTooltipClass}}"
+  tooltip-placement="{{$ctrl.placement}}"
+  tooltip-trigger="mouseenter focus">
+</i>
+<i ng-if="!$ctrl.isSafe"
+  aria-label="{{$ctrl.ariaLabel}}"
+  class="icon"
+  ng-class="$ctrl.classes"
+  ng-click="$ctrl.onClick()"
+  role="{{$ctrl.role}}"
+  tabindex="{{$ctrl.tabindex}}"
+  tooltip-animation="{{$ctrl.animation}}"
+  tooltip-append-to-body="{{$ctrl.appendToBody}}"
+  tooltip-html-unsafe="{{$ctrl.ttTooltipUnsafeText}}"
+  tooltip-class="{{$ctrl.ttTooltipClass}}"
+  tooltip-placement="{{$ctrl.placement}}"
+  tooltip-trigger="mouseenter focus">
+</i>

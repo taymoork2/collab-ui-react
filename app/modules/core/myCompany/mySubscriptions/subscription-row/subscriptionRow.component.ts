@@ -4,7 +4,6 @@ import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { SharedMeetingsReportService } from 'modules/core/myCompany/mySubscriptions/sharedMeetings/sharedMeetingsReport.service';
 
 class SubscriptionRowCtrl {
-  public isSharedMeetingsReportsEnabled: boolean = false;
   public isProPackEnabled: boolean = false;
   public offer: IOfferData;
   public wrapped: boolean;
@@ -14,17 +13,12 @@ class SubscriptionRowCtrl {
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
     private Config: Config,
-    private FeatureToggleService,
     private ProPackService: ProPackService,
     private SharedMeetingsReportService: SharedMeetingsReportService,
     private WebExUtilsFact,
   ) { }
 
   public $onInit(): void {
-    this.FeatureToggleService.atlasSharedMeetingsReportsGetStatus().then((sharedMeetingReportsStatus) => {
-      this.isSharedMeetingsReportsEnabled = sharedMeetingReportsStatus;
-    });
-
     this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
       this.isProPackEnabled = isProPackEnabled;
     });

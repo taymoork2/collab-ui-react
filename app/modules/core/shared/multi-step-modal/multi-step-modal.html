@@ -1,12 +1,17 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
-  <h3 class="modal-title" translate="{{::$ctrl.l10nTitle}}"></h3>
+  <h3 class="modal-title" translate="{{$ctrl.l10nTitle}}"></h3>
 </div>
 
-<div class="modal-body" ng-transclude>
+<div class="modal-body" scroll-indicator="{{::$ctrl.showScrollIndicator}}" ng-transclude>
 </div>
 
 <div class="modal-footer" ng-if="::$ctrl.showFooter()">
+  <div ng-if="$ctrl.l10nWarningFooter"
+    class="modal-footer__warning"
+    >
+    <h6 translate="{{$ctrl.l10nWarningFooter}}"></h6>
+  </div>
   <button type="button" class="btn cancel"
     ng-if="$ctrl.cancel && !$ctrl.cancelRemoved"
     ng-disabled="$ctrl.cancelDisabled"
@@ -34,5 +39,13 @@
     cs-btn
     loading="$ctrl.saveLoading"
     ><span translate="common.save"></span>
+  </button>
+  <button type="button" class="btn btn--primary custom-finish"
+    ng-if="$ctrl.customFinish && !$ctrl.customFinishRemoved"
+    ng-disabled="$ctrl.customFinishDisabled"
+    ng-click="$ctrl.customFinish()"
+    cs-btn
+    loading="$ctrl.customFinishLoading"
+    ><span translate="{{::$ctrl.customFinishL10nLabel}}"></span>
   </button>
 </div>

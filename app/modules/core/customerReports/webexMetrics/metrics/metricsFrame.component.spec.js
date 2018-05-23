@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Component: metricsFrame', function () {
-  var $scope, $timeout, controller, $componentCtrl;
+  var $q, $scope, $timeout, controller, $componentCtrl;
   var iframeUrl = 'qlik-load';
   var testData = {
     trustIframeUrl: 'qlik-load',
@@ -18,7 +18,8 @@ describe('Component: metricsFrame', function () {
   beforeEach(initSpies);
   beforeEach(initController);
 
-  function dependencies(_$rootScope_, _$timeout_, _$componentController_) {
+  function dependencies(_$q_, _$rootScope_, _$timeout_, _$componentController_) {
+    $q = _$q_;
     $scope = _$rootScope_.$new();
     $timeout = _$timeout_;
     $componentCtrl = _$componentController_;
@@ -49,10 +50,22 @@ describe('Component: metricsFrame', function () {
     expect(controller.isIframeLoaded).toBeTruthy();
   });
 
+  it('should convert the parameters to the url parameters', function () {
+    var paramObj = {
+      trustIframeUrl: 'qlik-loader',
+      appId: 'system',
+      ticket: 'ALIEWOJF23SJDOF',
+    };
+    var qlikReportUrl = '';
+    qlikReportUrl = controller.setQlikUrls('qlik-loader', paramObj);
+    expect(qlikReportUrl).not.toBeEmpty();
+  });
+
   it('should register/unregister event handlers over lifecycle', function () {
     var listeners = $scope.$$listeners;
     expect(_.isFunction(listeners['updateIframe'][0])).toBeTruthy();
     expect(_.isFunction(listeners['unfreezeState'][0])).toBeTruthy();
+    controller.startLoadReportTimer = $q.defer();
     controller.$onDestroy();
     expect(_.isFunction(listeners['updateIframe'][0])).toBeFalsy();
     expect(_.isFunction(listeners['unfreezeState'][0])).toBeFalsy();

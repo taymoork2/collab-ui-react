@@ -7,8 +7,9 @@ export interface IOverviewPageNotification {
   dismiss: Function;
   link: Function;
   linkText: string;
-  textValues?: string[];
+  textValues?: {};
   name: string;
   text: string;
   extendedText?: string;
+  zOrder?: number;
 }

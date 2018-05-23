@@ -1,16 +1,20 @@
 import { Config } from 'modules/core/config/config';
 import { DigitalRiverService } from 'modules/online/digitalRiver/digitalRiver.service';
 import { Notification } from 'modules/core/notifications';
-import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { OnlineUpgradeService, IBmmpAttr, IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
 import { IOfferData, IOfferWrapper, ISubscription, ISubscriptionCategory } from './subscriptionsInterfaces';
 import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { CoreEvent } from 'modules/core/shared/event.constants';
+
+interface ITooltipData {
+  tooltip?: string;
+  ariaLabel?: string;
+}
 
 export class MySubscriptionCtrl implements ng.IController {
-  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
-
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];
   public subscriptionDetails: ISubscription[] = [];
@@ -49,6 +53,7 @@ export class MySubscriptionCtrl implements ng.IController {
   private readonly CARE_CLASS: string = 'icon-headset';
   private readonly SPARK: string = 'spark';
   private readonly WEBEX: string = 'webex';
+  private readonly OVERAGE_BANNER_NAME = 'OVERAGE_BANNER_NAME';
 
   private readonly CARE: string = 'CARE';
   private readonly SUBSCRIPTION_TYPES = {
@@ -75,6 +80,7 @@ export class MySubscriptionCtrl implements ng.IController {
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private Authinfo,
     private Config: Config,
     private DigitalRiverService: DigitalRiverService,
@@ -105,7 +111,10 @@ export class MySubscriptionCtrl implements ng.IController {
     });
 
     this.$scope.$on('$destroy', (): void => {
-      this.$rootScope.$emit(this.HEADER_BROADCAST);
+      this.$rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
+        name: this.OVERAGE_BANNER_NAME,
+        isVisible: false,
+      });
     });
   }
 
@@ -132,20 +141,27 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   // generating the subscription view tooltips
-  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): string | undefined {
+  private generateTooltip(offer: IOfferData, usage?: number, volume?: number): ITooltipData {
+    const tooltipData: ITooltipData = {};
     if (_.isNumber(volume)) {
-      let tooltip = this.$translate.instant('subscriptions.licenseTypes.' + offer.offerName) + '<br>';
+      const offerLabel = this.$translate.instant(`subscriptions.licenseTypes.${offer.offerName}`);
+
       if (this.useTotal(offer) || !_.isNumber(usage)) {
-        tooltip += this.$translate.instant('subscriptions.licenses') + volume;
-      } else if (usage > volume) {
-        tooltip += this.$translate.instant('subscriptions.usage') + `<span class="warning">${usage}/${volume}</span>`;
+        const licenseLabel = this.$translate.instant('subscriptions.licenses');
+
+        tooltipData.tooltip = `${offerLabel}<br>${licenseLabel}${volume}`;
+        tooltipData.ariaLabel = `${offerLabel} ${licenseLabel}${volume}`;
       } else {
-        tooltip += this.$translate.instant('subscriptions.usage') + `${usage}/${volume}`;
+        const usageLabel = this.$translate.instant('subscriptions.usage');
+        tooltipData.ariaLabel = `${offerLabel} ${usageLabel}${usage}/${volume}`;
+        if (usage > volume) {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}<span class="warning">${usage}/${volume}</span>`;
+        } else {
+          tooltipData.tooltip = `${offerLabel}<br>${usageLabel}${usage}/${volume}`;
+        }
       }
-      return tooltip;
-    } else {
-      return;
     }
+    return tooltipData;
   }
 
   // combines licenses for the license view
@@ -209,7 +225,6 @@ export class MySubscriptionCtrl implements ng.IController {
   private subscriptionRetrieval(): void {
     this.Orgservice.getInternallyManagedSubscriptions().then((subscriptions: any[]): void => {
       const authinfoSubscriptions = this.Authinfo.getSubscriptions();
-
       _.forEach(subscriptions, (subscription: any, subIndex: number): void => {
         const newSubscription: ISubscription = {
           licenses: [],
@@ -476,6 +491,7 @@ export class MySubscriptionCtrl implements ng.IController {
   }
 
   private generateOffer(license: any, subIndex: number, licenseIndex: number) {
+    const tooltipData: ITooltipData = this.generateTooltip(license, license.usage, license.volume);
     const offer: IOfferData = {
       licenseId: license.licenseId,
       licenseType: license.licenseType,
@@ -483,7 +499,8 @@ export class MySubscriptionCtrl implements ng.IController {
       offerName: license.offerName,
       volume: license.volume,
       id: 'donutId' + subIndex + licenseIndex,
-      tooltip: this.generateTooltip(license, license.usage, license.volume),
+      tooltip: tooltipData.tooltip,
+      tooltipAriaLabel: tooltipData.ariaLabel,
     };
 
     if (this.useTotal(offer)) {
@@ -506,11 +523,13 @@ export class MySubscriptionCtrl implements ng.IController {
 
   private setOverageWarning(): void {
     if (this.overage) {
-      this.$rootScope.$emit(this.HEADER_BROADCAST, {
+      this.$rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
+        name: this.OVERAGE_BANNER_NAME,
+        isVisible: true,
+        state: this.$state.current.name,
         iconCss: 'icon-warning',
         translation: 'subscriptions.overageWarning',
         type: 'danger',
-        visible: true,
       });
     }
   }

@@ -39,8 +39,6 @@ describe('controller:GssIframeCtrl', function () {
   }
 
   function initSpies() {
-    spyOn(GSSService, 'syncCheck').and.returnValue(($q.resolve(false)));
-    spyOn(GSSService, 'syncUp').and.returnValue(($q.resolve(true)));
     spyOn(GSSService, 'getServices').and.returnValue($q.resolve(testData.services));
     spyOn(GSSService, 'getServiceId').and.callThrough();
     spyOn($modal, 'open').and.returnValue({
@@ -59,16 +57,6 @@ describe('controller:GssIframeCtrl', function () {
 
     $scope.$apply();
   }
-
-  it('event serviceDeleted, should check the version', function () {
-    expect(GSSService.syncCheck).toHaveBeenCalled();
-  });
-
-  it('compare version, should show sync button', function () {
-    controller.syncUp();
-
-    expect(GSSService.syncUp).toHaveBeenCalled();
-  });
 
   it('addService, should open edit modal, refresh services list and notify edited', function () {
     controller.init();

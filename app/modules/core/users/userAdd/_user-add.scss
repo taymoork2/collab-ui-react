@@ -1,7 +1,7 @@
 @import 'modules/core/setupWizard/planReview/plan-container';
 
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
 
 .modal-useradd-dialog {
   width: 900px;
@@ -84,7 +84,22 @@
 }
 
 .onboard-users {
-  .unsynced-users {
+  .tokenfield.form-control,
+  .tokenfield.form-control-static {
+    width: 100% !important;
+
+    input.token-input {
+      margin-top: 0;
+      padding: 6px;
+    }
+  }
+
+  .wizard-main & {
+    margin-left: 2px;
+    margin-right: 2px;
+  }
+
+  .error-msg {
     display: inherit;
     margin-bottom: 1rem;
     color: $color-negative-base;
@@ -161,6 +176,7 @@
 
 .license-block {
   position: inherit;
+  margin-top: 20px;
 }
 
 .service-block {
@@ -230,10 +246,6 @@
 
 .bucket-lic-header {
   margin-bottom: 20px;
-}
-
-.license-block {
-  margin-top: 20px;
 }
 
 .onboard-divider {
@@ -385,23 +397,6 @@
   }
 }
 
-.onboard-users {
-  .tokenfield.form-control,
-  .tokenfield.form-control-static {
-    width: 100% !important;
-
-    input.token-input {
-      margin-top: 0;
-      padding: 6px;
-    }
-  }
-
-  .wizard-main & {
-    margin-left: 2px;
-    margin-right: 2px;
-  }
-}
-
 .collab-options {
   padding-bottom: 20px;
 }
@@ -429,7 +424,7 @@
     margin-right: -20px;
   }
 
-  .hybrid-services-panel {
+  .hs-section {
     margin-left: -20px;
     margin-right: -20px;
   }
@@ -594,7 +589,7 @@
     }
 
     .email-display-style {
-      font-family: Arial;
+      font-family: 'Arial', sans-serif;
       font-size: 12px;
       color: $gray-dark;
       text-align: left;
@@ -604,7 +599,7 @@
 
     .error,
     .warning {
-      font-family: Arial;
+      font-family: 'Arial', sans-serif;
       font-size: 12px;
       text-align: left;
       top: rem-calc(-4);

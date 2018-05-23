@@ -3,7 +3,7 @@
 describe('CVA feature setup', function () {
   // NOTE: these variables will only be saved AFTER DELETE is implemented in the page
   var DialogflowTestClientToken = '22e724e0bc604e99b0cfd281cd6c282a';
-  var DialogflowTestAgentName = 'e2e-customerVirtualAssistant-' + utils.randomId();
+  var DialogflowTestAgentName = 'e2e-customerVirtualAssistant- ' + utils.randomId();
   var RenamedDialogflowTestAgentName = DialogflowTestAgentName + '-NewName';
   beforeAll(function () {
     login.login('virtualassistant-admin', '#/services');
@@ -134,7 +134,7 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken);
 
-    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisabled(careVirtualAssistantTemplateSetupPage.validateBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 

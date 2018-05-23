@@ -2,7 +2,7 @@
   <div class="modal-body">
     <div class="progressbar-info" ng-hide="logoError">
       <span ng-show="progress < 100" translate="fileUpload.uploading"></span>
-      <span ng-show="progress == 100" translate="fileUpload.success"></span>
+      <span ng-show="progress === 100" translate="fileUpload.success"></span>
       <div class="upload-progress">
         <progressbar animate="false" value="progress" type="primary"></progressbar>
       </div>
@@ -20,6 +20,6 @@
     </div>
   </div>
   <div class="modal-footer" ng-show="logoError">
-    <button class="btn btn--primary" ng-click="$dismiss()">Dismiss</button>
+    <button class="btn btn--primary" ng-click="$dismiss()" translate="common.dismiss"></button>
   </div>
 </div>

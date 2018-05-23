@@ -21,7 +21,7 @@
           ng-model="langSettings.selected"
           ng-change="langSettings.updateLanguage()"
           aria-labelledby="languageSelectorLabel"
-          onclick="event.stopPropagation();">
+          ng-click="$event.stopPropagation();">
         </select>
         <span id="languageSelectorLabel" class="sr-only" translate="common.selectLanguage" aria-hidden="true"></span>
       </a>
@@ -30,7 +30,7 @@
       <a id="feedback-lnk" href="" ng-click="sendFeedback()" translate="index.feedback"></a>
     </li>
     <li id="support-btn" role="menuitem">
-      <a id="support-lnk" href="{{supportUrl}}" target="_blank" translate="index.support"></a>
+      <a id="support-lnk" href="{{supportUrl}}" target="_blank" translate="common.help"></a>
     </li>
     <li id="videoTutorial-btn" ng-if="isPartner || isPartnerSales" role="menuitem">
       <a id="videoTutorial-lnk" href="" ng-click="openVideo()" translate="index.videoTutorial"></a>

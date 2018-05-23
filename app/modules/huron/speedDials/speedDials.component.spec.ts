@@ -140,7 +140,7 @@ describe('component: speedDial', () => {
     });
   });
 
-  describe(' - keyboard navigation functionality', function (){
+  describe(' - keyboard navigation functionality', function () {
     beforeEach(initComponent);
     beforeEach(function () {
       this.$httpBackend.flush();

@@ -46,7 +46,7 @@
       var partnerOrgName = Authinfo.getOrgName();
       return TrialService.notifyPartnerTrialExt()
         .catch(function (err) {
-          Notification.error('trials.requestConfirmTotalFailNotifyMsg');
+          Notification.errorWithTrackingId(err, 'trials.requestConfirmTotalFailNotifyMsg');
           vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
           return $q.reject(err);
         })
@@ -56,13 +56,13 @@
           });
 
           if (notifySuccess.length === 0) {
-            Notification.error('trials.requestConfirmTotalFailNotifyMsg');
+            Notification.errorWithTrackingId(results, 'trials.requestConfirmTotalFailNotifyMsg');
             vm.requestResult = vm.requestResultEnum.TOTAL_FAILURE;
           } else if (notifySuccess.length === results.data.notifyPartnerEmailStatusList.length) {
             Notification.success('trials.requestConfirmNotifyMsg');
             vm.requestResult = vm.requestResultEnum.SUCCESS;
           } else {
-            Notification.error('trials.requestConfirmPartialFailNotifyMsg', {
+            Notification.errorWithTrackingId(results, 'trials.requestConfirmPartialFailNotifyMsg', {
               partnerOrgName: partnerOrgName,
             });
             vm.requestResult = vm.requestResultEnum.PARTIAL_FAILURE;

@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  // TODO: Update all callback functions to be promises instead
+
   var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
@@ -48,6 +50,8 @@
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setAllowCustomerSiteManagementSetting: setAllowCustomerSiteManagementSetting,
+      getAllowCustomerSiteManagementSetting: getAllowCustomerSiteManagementSetting,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
@@ -336,6 +340,30 @@
         });
     }
 
+    function returnAllowCustomerSiteManagementApiUrl(orgId) {
+      return UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/allowCustomerSiteManagement';
+    }
+
+    function setAllowCustomerSiteManagementSetting(orgId, settings) {
+      if (_.isUndefined(orgId) || !_.isObject(settings)) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
+
+      return $http.post(url, settings);
+    }
+
+    function getAllowCustomerSiteManagementSetting(orgId) {
+      if (_.isUndefined(orgId)) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
+
+      return $http.get(url);
+    }
+
     function createOrg(enc, country) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
@@ -352,16 +380,15 @@
       });
     }
 
-    function deleteOrg(currentOrgId) {
+    function deleteOrg(currentOrgId, deleteUsers) {
       if (!currentOrgId) {
         return $q.reject('currentOrgId is not set');
       }
+      if (_.isUndefined(deleteUsers)) {
+        deleteUsers = true;
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-
-      return $http({
-        method: 'DELETE',
-        url: serviceUrl,
-      });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
     }
 
     function listOrgs(filter) {

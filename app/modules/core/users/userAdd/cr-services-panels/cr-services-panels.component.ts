@@ -1,6 +1,8 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { Config } from 'modules/core/config/config';
-import MessengerInteropService from 'modules/core/users/userAdd/shared/messenger-interop.service';
+import { ContextAdminAuthorizationService } from 'modules/context/services/context-authorization-service';
+import { FeatureToggleService } from 'modules/core/featureToggle/featureToggle.service';
+import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 
 class CrServicesPanelsController implements ng.IComponentController {
   public isCareEnabled = false;
@@ -8,14 +10,21 @@ class CrServicesPanelsController implements ng.IComponentController {
   public isCareAndCVCEnabled = false;
   public basicLicenses: any[];
   public advancedLicenses: any[];
+  public hybridCareToggle: boolean = false;
+  public onUpdateIsContextServiceAdminAuthorized: Function;
+  public isContextServiceAdminAuthorized = false;
+  public radioStates;
 
   /* @ngInject */
   constructor (
     private $modal: IToolkitModalService,
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private Config: Config,
+    private ContextAdminAuthorizationService: ContextAdminAuthorizationService,
+    private FeatureToggleService: FeatureToggleService,
     private MessengerInteropService: MessengerInteropService,
   ) {}
 
@@ -23,6 +32,14 @@ class CrServicesPanelsController implements ng.IComponentController {
     this.isCareAndCDCEnabled = this.Authinfo.isCareAndCDC();
     this.isCareAndCVCEnabled = this.Authinfo.isCareVoiceAndCVC();
     this.isCareEnabled = this.isCareAndCDCEnabled || this.isCareAndCVCEnabled;
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.hybridCare).then((supports) => this.hybridCareToggle = supports);
+    this.getIsContextServiceAdminAuthorized().then((isAuthorized) => {
+      this.isContextServiceAdminAuthorized = isAuthorized;
+      // TODO: as of 2018-03-02, this output-binding is required because of logic tied up in
+      //   `OnbordCtrl.getAccountLicensesForCare()`
+      // - when that logic can be decoupled, rm this output-binding
+      this.onUpdateIsContextServiceAdminAuthorized({ isAuthorized });
+    });
   }
 
   public hasAssignableMessageItems(): boolean {
@@ -56,7 +73,13 @@ class CrServicesPanelsController implements ng.IComponentController {
   }
 
   public showMessengerInteropToggle(): boolean {
-    return this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
+    // notes:
+    // - as of 2018-01-09, this component can be used both when onboarding new users, or when editing
+    //   services for an individual user
+    // - because we implement control of the `MSGR`-license assignment through a sub-menu in 'Message'
+    //   (in the user-overview), we only allow showing the toggle when in the appropriate UI state
+    //   ('users.add.services')
+    return this.$state.current.name === 'users.add.services' && this.MessengerInteropService.hasAssignableMessageOrgEntitlement();
   }
 
   public checkCMR(cfLic, cmrLics): void {
@@ -85,6 +108,18 @@ class CrServicesPanelsController implements ng.IComponentController {
     return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltip') + '</div>';
   }
 
+  public careTooltipToggle() {
+    return '<div class="license-tooltip-html">' + this.$translate.instant('firstTimeWizard.careTooltipToggle') + '</div>';
+  }
+
+  public isCareRadioFieldSetDisabled() {
+    return !this.radioStates.msgRadio || !this.isContextServiceAdminAuthorized;
+  }
+
+  public showCareRadioTooltip() {
+    return this.radioStates.msgRadio && !this.isContextServiceAdminAuthorized;
+  }
+
   public selectedSubscriptionHasBasicLicenses(subscriptionId: string): boolean {
     if (subscriptionId && subscriptionId !== this.Config.subscriptionState.trial) {
       return _.some(this.basicLicenses, function (service) {
@@ -106,6 +141,19 @@ class CrServicesPanelsController implements ng.IComponentController {
       });
     }
     return !_.isEmpty(this.advancedLicenses);
+  }
+
+  private getIsContextServiceAdminAuthorized() {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasCareUseContextAdminAuthorization)
+      .then((supports) => {
+        // care using old way of cs onboarding
+        if (!supports) {
+          return this.$q.resolve(true);
+        }
+
+        // care using new way of cs onboarding
+        return this.ContextAdminAuthorizationService.isAdminAuthorized();
+      });
   }
 }
 
@@ -136,5 +184,6 @@ export class CrServicesPanelsComponent implements ng.IComponentOptions {
     currentUserEnablesCall: '<',
     cvcCareFeature: '<',
     careFeatures: '<',
+    onUpdateIsContextServiceAdminAuthorized: '&',
   };
 }

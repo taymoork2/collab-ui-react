@@ -1,0 +1,5 @@
+@import 'styles/partials/mixins';
+
+user-manage-dir-sync-auto-assign-license-summary {
+  @include keep-flex-container(column);
+}

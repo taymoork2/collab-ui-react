@@ -11,6 +11,7 @@ class CustomerReportsHeaderCtrl {
     private WebexMetricsService,
     private $translate: ng.translate.ITranslateService,
   ) {
+
     if (this.Authinfo.isCare()) {
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.careTab'),
@@ -29,28 +30,27 @@ class CustomerReportsHeaderCtrl {
           state: 'reports.spark',
         });
       }
-      if (features.isMfEnabled) {
-        if (features.mf) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.media',
-          });
-        } else if (features.mfMilestoneTwo) {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.mediaservice',
-          });
-        } else {
-          this.headerTabs.push({
-            title: this.$translate.instant('mediaFusion.report.title'),
-            state: 'reports.metrics',
-          });
-        }
+      if (features.isQlikEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.hybridMedia',
+        });
+      } else if (features.isMfEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('mediaFusion.report.title'),
+          state: 'reports.mediaservice',
+        });
       }
       this.headerTabs.push({
         title: this.$translate.instant('reportsPage.usageReports.usageReportTitle'),
         state: 'reports.device-usage',
       });
+      if (features.autoLicenseEnabled) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.autoLicense'),
+          state: 'reports.autoLicense',
+        });
+      }
       if (this.$state.current.name === 'reports') {
         this.goToFirstReportsTab();
       }
@@ -63,11 +63,11 @@ class CustomerReportsHeaderCtrl {
   public headerTabs = new Array<any>();
 
   private promises: any = {
-    mf: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneOneGetStatus(),
-    mfMilestoneTwo: this.FeatureToggleService.atlasMediaServiceMetricsMilestoneTwoGetStatus(),
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
+    isQlikEnabled: this.FeatureToggleService.atlasHybridMediaServiceQlikReportsGetStatus(),
     webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
+    autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),
   };
 
   public checkWebex(): void {
