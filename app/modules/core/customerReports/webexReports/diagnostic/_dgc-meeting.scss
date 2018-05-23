@@ -2,6 +2,7 @@
 @import '~@collabui/collab-ui/scss/settings/page';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
+$btn-right-pos: 0rem;
 
 .dgc-meeting {
     @extend %page-content-padding;
@@ -192,6 +193,16 @@
               }
             }
           }
+        }
+      }
+
+      dgc-meeting-export {
+        position: absolute; 
+        right: $btn-right-pos;
+        button {
+          border-radius: 1.5rem;
+          padding: 0.8rem 1rem;
+          color: $black;
         }
       }
     }

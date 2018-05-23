@@ -1,5 +1,5 @@
 import './_search.scss';
-import { SearchService, SearchStorage, Platforms, Quality, QualityRange } from './searchService';
+import { ISessionDetailItem, SearchService, SearchStorage, Platforms, Quality, QualityRange } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
 class Meetingdetails implements ng.IComponentController {
@@ -464,10 +464,10 @@ class Meetingdetails implements ng.IComponentController {
     return this.getAllIds(lines);
   }
 
-  private saveSessionDetailToStorage(sessionType: string, sessionDetail): void {
+  private saveSessionDetailToStorage(sessionType: string, sessionDetail: ISessionDetailItem): void {
     const sessionDetailByNodeId = {};
     sessionDetailByNodeId[sessionDetail.key] = sessionDetail.items;
-    const newDetail = _.assign({}, this.SearchService.getStorage(sessionType) || {}, sessionDetailByNodeId);
+    const newDetail = _.assign(this.SearchService.getStorage(sessionType) || {}, sessionDetailByNodeId);
     this.SearchService.setStorage(sessionType, newDetail);
   }
 }
