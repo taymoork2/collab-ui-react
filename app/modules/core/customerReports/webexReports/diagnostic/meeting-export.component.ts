@@ -1,5 +1,5 @@
+import { Analytics } from 'modules/core/analytics';
 import { MeetingExportService } from './meeting-export.service';
-import './_meeting-export.scss';
 
 class MeetingExportController implements ng.IComponentController {
 
@@ -15,13 +15,13 @@ class MeetingExportController implements ng.IComponentController {
   public defaultFileName = 'exported_file.json';
   public reportData: string;
 
-  private downloadAnchor: JQuery;
+  private downloadButton: JQuery;
 
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
-    private Analytics,
+    private Analytics: Analytics,
     private MeetingExportService: MeetingExportService,
   ) {
     this.anchorText = this.$translate.instant('webexReports.meetingExport.btnTitle');
@@ -29,7 +29,7 @@ class MeetingExportController implements ng.IComponentController {
   }
 
   public $postLink() {
-    this.downloadAnchor = $(this.$element.find('a')[0]);
+    this.downloadButton = $(this.$element.find('button')[0]);
   }
 
   public $onInit() {
@@ -42,7 +42,7 @@ class MeetingExportController implements ng.IComponentController {
       this.Analytics.trackEvent(this.analyticsEventname);
     }
 
-    this.downloadAnchor.attr('disabled', 'disabled');
+    this.downloadButton.attr('disabled', 'disabled');
     this.MeetingExportService.generateMeetingReport()
       .then((meetingReport) => {
         this.reportData = meetingReport;
@@ -51,7 +51,7 @@ class MeetingExportController implements ng.IComponentController {
 
   public restoreToOriginalState(): void {
     this.reportData = '';
-    this.downloadAnchor.removeAttr('disabled');
+    this.downloadButton.removeAttr('disabled');
   }
 }
 

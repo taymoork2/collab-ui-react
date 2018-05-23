@@ -65,7 +65,7 @@ export class MeetingExportService {
     let result;
     queue.push(source);
     while (!_.isEmpty(queue)) {
-      const obj: Object = queue.shift() || {};
+      const obj: object = queue.shift() || {};
       _.forOwn(obj, function(value: any, key: string) {
         if (ignoreCase) {
           key = key.toLowerCase();
@@ -101,7 +101,7 @@ export class MeetingExportService {
         session['Join Meeting Records'].push(joinMeetingRecord);
       });
 
-      if (!participantsInName.hasOwnProperty(userName)) {
+      if (!_.has(participantsInName, userName)) {
         participantsInName[userName] = {
           'User Id': uniqueParticipant.userId,
           Sessions: [session],

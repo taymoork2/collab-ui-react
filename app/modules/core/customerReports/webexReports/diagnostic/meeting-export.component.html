@@ -1,14 +1,10 @@
-<div 
-  class="meeting-export btn"
-  tooltip="{{$ctrl.tooltipMessage}}"
-  tooltip-animation="false"
-  tooltip-append-to-body="true"
-  tooltip-trigger="focus mouseenter"
-  aria-label="{{$ctrl.tooltipMessage}}">
-  <a href ng-click="$ctrl.exportJSON()" aria-label="{{::$ctrl.getDownloadTranslation()}}">
-    <span ng-if="$ctrl.anchorText"><h5 class="text">{{::$ctrl.anchorText}}</h5></span>
-  </a>
-</div>
+<button 
+  type="button" 
+  class="btn" 
+  ng-click="$ctrl.exportJSON()" 
+  tooltip-html-unsafe="{{$ctrl.tooltipMessage}}" 
+  tooltip-placement="top">{{::$ctrl.anchorText}}</button>
+
 <dgc-meeting-download
   filename="{{$ctrl.filename}}"
   is-hidden="true" 
