@@ -1,1 +1,1 @@
-export * from './upgrade-group';
+export * from './hcs-upgrade-cluster';

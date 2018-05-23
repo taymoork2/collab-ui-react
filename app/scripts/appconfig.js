@@ -3342,16 +3342,20 @@
               },
             },
           })
-          .state('hcs.upgradeGroup', {
-            url: '/hcs/inventory/:customerId/upgrades',
+          .state('hcs.upgradeCluster', {
+            url: '/hcs/inventory/:groupId/upgrades',
             parent: 'partner',
-            template: '<hcs-upgrade-group customer-id="$resolve.customerId"></hcs-upgrade-group>',
+            template: '<hcs-upgrade-cluster group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-upgrade-cluster>',
             params: {
-              customerId: '',
+              groupId: '',
+              groupType: '',
             },
             resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
               },
             },
           })

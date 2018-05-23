@@ -26,6 +26,7 @@
               ng-model="$ctrl.customerSelected"
               options="$ctrl.customerSelectOptions"
               filter="true"
+              is-custom-search="true"
               refresh-data-fn="$ctrl.onCustomerSearch(filter)"
               on-change-fn="$ctrl.onCustomerChanged()"
               input-placeholder="$ctrl.customerInputPlaceholder"
@@ -101,7 +102,7 @@
                 <footer class="node-footer">
                   <div class="row">
                     <div class="columns medium-8">
-                      <i class="icon icon-info-outline"></i>
+                      <i class="icon icon-info-outline" tooltip-placement="top" tooltip="{{::'hcs.clusterDetail.settings.nodes.verificationCodeTooltip' | translate}}"></i>
                       <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.agentVerificationCode}}</span>
                     </div>
                     <div class="columns medium-4">

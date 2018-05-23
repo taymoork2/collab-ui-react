@@ -11211,7 +11211,8 @@
           "sectionHeader": "Nodes",
           "verificationCode": "Verification Code",
           "publisher": "Publisher",
-          "subscriber": "Subscriber"
+          "subscriber": "Subscriber",
+          "verificationCodeTooltip": "Accept only if the code is correct"
         },
         "clustername": {
           "clusterInputLabel": "Enter a new name for the cluster.",
@@ -11376,10 +11377,15 @@
         },
         "upgrade": {
           "gridColumn": {
+            "application": "Application",
             "clusters": "Clusters",
             "currentVersion": "Current Version",
             "upgradeTo": "Upgrade to",
-            "status": "Status"
+            "status": "Status",
+            "actions": {
+              "viewUpgradeStatus": "View Status Details",
+              "runPrechecks": "Run Prechecks"
+            }
           },
           "gridLabel": "Choose the Clusters to Upgrade",
           "sectionHeader": "Upgrade",
