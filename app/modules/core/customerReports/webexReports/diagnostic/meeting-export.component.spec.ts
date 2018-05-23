@@ -1,6 +1,6 @@
 import moduleName from './index';
 
-describe('Component: dgcMeetingExport', () => {
+describe('Component: MeetingExport', () => {
   beforeAll(function() {
   });
 
@@ -18,7 +18,7 @@ describe('Component: dgcMeetingExport', () => {
     expect(this.controller.exportJSON).toBeDefined();
   });
 
-  it('should generate file url when export finished', function () {
+  it('should set the correct reportData corresponding to the return value of generateMeetingReport api', function () {
     const mockData = '{"Meeting Summary": {"Meeting Number": "340564904"}}';
     spyOn(this.MeetingExportService, 'generateMeetingReport').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
