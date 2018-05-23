@@ -11506,7 +11506,7 @@
       "desc": "<strong>Delayed Conversion</strong> users were sent a conversion invite email. Users who don't take any action will be converted after {count, plural, =1{# day} other{# days}}.",
       "desc2": "If your company is using <strong>Directory Synchronization</strong>, you must download the CSV file which contains Users Converted and Delayed Connversions <strong>and add all of these users to your directory</strong>, otherwise they will be deactivated during the next full directory synchronization.",
       "usersConverted": "{total, plural, =0{Users} =1{User} other{Users}} converted",
-      "usersPending": "Pending conversion"
+      "usersPending": "Delayed conversion"
     }
   },
   "rebrand": {
