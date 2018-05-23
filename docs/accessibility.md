@@ -428,7 +428,7 @@ public isSelectedItem(item: IListItem): boolean {
 
 ## Tooltip Wrapper Components
 
-Because of how many tags go in to creating an accessible tooltip, wrapper components have been created to streamline the tooltip creation process for the most common element types.
+Because creating a proper accessible tooltip is very verbose, wrapper components have been created to streamline the tooltip creation process for the most common element types.
 
 Commonalities between tooltip components:
 * All tooltips are added to the tabindex by default, but will include an optional tabindex override: `tt-tabindex`.
@@ -440,9 +440,9 @@ Commonalities between tooltip components:
 ```typescript
 public bindings = {
   ttAriaLabel: '@?',            // optional aria-label text
-  ttClass: '@?',                // optional icon class names; defaults to icon-information
+  ttClass: '@?',                // optional icon class names
   ttTabindex: '<?',             // optional tabindex override
-  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng - default setting is 'true'
+  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng - default setting is true
   ttTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng - default setting is false
   ttTooltipClass: '@?',         // same as tooltip-class from collab-ui-ng
   ttTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng - default setting is 'top'
@@ -492,7 +492,7 @@ Examples:
 
 ### link-tooltip
 
-`link-tooltip` adds an extra required variable - `tt-href` - to pass in the `href` for the anchor element.  The `link-tooltip` is otherwise similar to the `text-tooltip` in creation.
+`link-tooltip` adds an extra required binding - `tt-href` - to pass in the `href` for the anchor element.  The `link-tooltip` is otherwise similar to the `text-tooltip` in creation.
 
 Examples:
 * The minimum effort for an accessible tooltip.
@@ -515,7 +515,7 @@ Examples:
 
 ### button-tooltip
 
-`button-tooltip` combines `tooltip` and `cs-btn` so that the button and the tooltip are a single location when navigating via keyboard.  Two variables are added to control whether the tooltip is disabled - `tt-disabled` - and the `cs-btn` loading state - `tt-loading`.  They are both optional boolean variables.  If the variables are not provided, both the disabled and loading states will default to false.
+`button-tooltip` combines `tooltip` and `cs-btn` so that the button and the tooltip are a single location when navigating via keyboard.  Two bindings are added to control whether the tooltip is disabled - `tt-disabled` - and the `cs-btn` loading state - `tt-loading`.  They are both optional boolean variables.  If the variables are not provided, both the disabled and loading states will default to false.
 
 Examples:
 * The minimum effort for an accessible tooltip.
