@@ -39,19 +39,23 @@
             </div>
           </div>
 
-          <div class="cs-input-group" ng-class="{'error': trialForm.customerEmail.$invalid && trialForm.customerEmail.$touched}">
+          <div class="cs-input-group" ng-class="{'error': trialForm.customerEmail.$invalid && trialForm.customerEmail.$touched, 'warning': trialForm.customerEmail.$valid && trialForm.customerEmail.$touched && trial.asyncWarning.customerEmail.show}">
             <label for="customerEmail" translate="partnerHomePage.customerEmail"></label>
             <input id="customerEmail" name="customerEmail"
               type="email" ng-change="trialForm.isValidLocation.$validate()"
               messages="trial.validationMessages.general"
               ng-model="trial.details.customerEmail"
               trial-unique-async-validator="{key: 'endCustomerEmail'}"
+              trial-unique-async-warning-obj="trial.asyncWarning.customerEmail"
               ng-model-options="{updateOn: 'default blur', debounce: { default: 2000, blur: 0 } }"
               required>
-            <div class="cs-input__messages" ng-messages="trialForm.customerEmail.$error" role="alert">
+            <div ng-show="!trial.asyncWarning.customerEmail.show" class="cs-input__messages" ng-messages="trialForm.customerEmail.$error" role="alert">
               <div class="message" ng-message="required">{{::trial.validationMessages.general.required}}</div>
               <div class="message" ng-message="email">{{::trial.validationMessages.general.email}}</div>
               <div class="message" ng-message="trialUniqueAsyncValidator">{{::trial.validationMessages.general.trialUniqueAsyncValidator}}</div>
+            </div>
+            <div ng-show="trial.asyncWarning.customerEmail.show" class="cs-input__messages" role="alert">
+              <div class="message">{{::trial.asyncWarning.customerEmail.message}}</div>
             </div>
           </div>
         </div>

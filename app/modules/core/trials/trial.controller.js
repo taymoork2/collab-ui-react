@@ -12,6 +12,12 @@
       K2: 2,
     };
 
+    vm.asyncWarning = {
+      customerEmail: {
+        show: false,
+      },
+    };
+
     vm.validationMessages = {
       general: {
         required: $translate.instant('common.invalidRequired'),
