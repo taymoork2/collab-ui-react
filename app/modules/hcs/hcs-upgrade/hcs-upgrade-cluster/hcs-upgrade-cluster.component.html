@@ -1,6 +1,6 @@
 <cs-page-header
   class="huron-tabs"
-  title-name="{{$ctrl.customerName && $ctrl.customerName || ('common.unassigned' | translate)}}"
+  title-name="{{$ctrl.groupName ? $ctrl.groupName : ('common.unassigned' | translate)}}"
   back="$ctrl.back"
   back-url="$ctrl.backState"
   back-aria-label="{{::'common.back' | translate}}"

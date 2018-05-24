@@ -1,5 +1,7 @@
 import { ISoftwareProfile, SoftwareProfile } from './hcs-swprofile';
 
+export const GROUP_TYPE_UNASSIGNED: string = 'Unassigned';
+
 export enum EApplicationTypes {
   CUCM = 'CUCM',
   CUP = 'CUP',
@@ -146,7 +148,7 @@ export class HcsCluster implements IHcsCluster {
 export interface INodeSummaryItem {
   hostName: string;
   typeApplication: string;
-  isPublisher: boolean;
+  publisher: boolean;
   ipAddress: string;
 }
 
@@ -156,7 +158,7 @@ export interface IHcsClusterSummaryItem {
   nodes: INodeSummaryItem[];
   url?: string;
   sftpServer?: ISftpServerItem;
-  status?: string;
+  clusterStatus?: string;
 }
 
 export interface IHcsPaging {
@@ -205,4 +207,13 @@ export class HcsUpgradeCustomer implements IHcsUpgradeCustomer {
     this.uuid = obj.uuid;
     this.softwareProfile = obj.softwareProfile;
   }
+}
+
+export interface IUpgradeClusterGridRow {
+  clusterUuid: string;
+  clusterName: string;
+  applicationName: string;
+  currentVersion: string;
+  upgradeTo: string;
+  clusterStatus: string;
 }

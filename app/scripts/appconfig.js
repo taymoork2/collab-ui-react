@@ -3368,6 +3368,31 @@
               },
             },
           })
+          .state('hcs.upgradeClusterStatus', {
+            url: '/hcs/inventory/:groupId/upgrades/:clusterId',
+            parent: 'partner',
+            template: '<hcs-upgrade-cluster-status group-id="$resolve.groupId" cluster="$resolve.cluster" cluster-id="$resolve.clusterId" group-type="$resolve.groupType"></hcs-upgrade-cluster-status>',
+            params: {
+              groupId: '',
+              clusterId: '',
+              cluster: {},
+              groupType: '',
+            },
+            resolve: {
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              cluster: /* @ngInject */ function ($stateParams) {
+                return $stateParams.cluster;
+              },
+              clusterId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.clusterId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
+              },
+            },
+          })
           .state('hcs.sftplist', {
             parent: 'partner',
             url: '/hcs/sftplist',

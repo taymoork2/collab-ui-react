@@ -304,6 +304,7 @@
     require('modules/hcs/hcs-inventory/inventory-list').default,
     require('modules/hcs/hcs-upgrade').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-cluster').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-cluster-status').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile').default,
     require('modules/hcs/agent-install-files-list').default,

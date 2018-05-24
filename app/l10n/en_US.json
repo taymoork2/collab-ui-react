@@ -11398,6 +11398,14 @@
           "gridLabel": "Choose the Clusters to Upgrade",
           "sectionHeader": "Upgrade",
           "upgradeButton": "Upgrade Selected"
+        },
+        "upgradeClusterStatus": {
+          "gridColumn": {
+            "order": "Order",
+            "previousUpgradeDuration": "Previous Upgrade Duration",
+            "startTime": "Start Time",
+            "elapsedTime": "Elapsed Time"
+          }
         }
       }
     },

@@ -1,0 +1,24 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.cluster.clusterName ? $ctrl.cluster.clusterName : ('common.unassigned' | translate)}}"
+  back="$ctrl.back"
+  back-fxn="$ctrl.onBack()"
+  back-aria-label="{{::'common.back' | translate}}">
+</cs-page-header>
+<cs-page-sub-header>
+  <cs-page-sub-header-left>
+    <div>
+      Upgrade Status: In Progress,
+      <span>Estimated Completion: time here</span>
+    </div>
+  </cs-page-sub-header-left>
+</cs-page-sub-header>
+<div class="hcs-upgrade-cluster-status">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <div class="upgrade-cluster-status-grid" ng-if="!$ctrl.loading">
+    <cs-grid ng-if="$ctrl.showGrid" name="licenseListPanel" grid-api="$ctrl.gridApi" grid-options="$ctrl.gridOptions" spinner="$ctrl.showManagedLicenseRefresh" state="plm.licenseReport"></cs-grid>
+  </div>
+</div>

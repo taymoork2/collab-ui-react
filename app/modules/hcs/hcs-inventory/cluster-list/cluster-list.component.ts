@@ -1,10 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/hcs-shared/hcs-upgrade';
-import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { ISelectOption, IHeaderTab } from '../shared/hcs-inventory';
-
-const GROUP_TYPE_UNASSIGNED: string = 'Unassigned';
 
 export class ClusterListComponent implements ng.IComponentOptions {
   public controller = ClusterListCtrl;
@@ -75,15 +72,16 @@ export class ClusterListCtrl implements ng.IComponentController {
       }];
 
     }
-    this.HcsUpgradeService.listClusters(this.customerId).then((clusters: IHcsClusterSummaryItem[]) => {
-      this.initClusterList(clusters);
-    })
-    .then(() => {
-      this.loading = false;
-    })
-    .catch(() => {
-      this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
-    });
+    this.HcsUpgradeService.listClusters(this.customerId)
+      .then((clusters: IHcsClusterSummaryItem[]) => {
+        this.initClusterList(clusters);
+      })
+      .catch(() => {
+        this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   public cardSelected(cluster: IClusterItem): void {
@@ -116,10 +114,10 @@ export class ClusterListCtrl implements ng.IComponentController {
   public initClusterList(clustersData: IHcsClusterSummaryItem[]): void {
     this.clusterList = [];
     //function to get cluster data from response object
-    _.each(clustersData, (cluster: IHcsClusterSummaryItem) => {
+    _.forEach(clustersData, (cluster: IHcsClusterSummaryItem) => {
       const applicationList: IApplicationItem[] = [];
       if (!_.isUndefined(cluster.nodes)) {
-        _.each(cluster.nodes, (node: INodeSummaryItem) => {
+        _.forEach(cluster.nodes, (node: INodeSummaryItem) => {
           const index = _.findIndex(applicationList, (application: any) => application.name === node.typeApplication);
           if (index === -1) {
             const applicationItem: IApplicationItem = {
