@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceActivationV2, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -78,7 +78,7 @@
           id: vm.cluster.id,
         };
         DeactivateMediaService.deactivateHybridMediaService()
-          .then(MediaServiceActivationV2.auditEvents(payload))
+          .then(MediaServiceAuditService.devOpsAuditEvents(payload))
           .then($modalInstance.close());
       }
     };
@@ -91,7 +91,7 @@
       };
       HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
-        .then(MediaServiceActivationV2.auditEvents(payload))
+        .then(MediaServiceAuditService.devOpsAuditEvents(payload))
         .catch(incrementFailureCount(host));
     }
 
@@ -132,7 +132,7 @@
               operation: 'add',
               id: toCluster.id,
             };
-            MediaServiceActivationV2.auditEvents(payload);
+            MediaServiceAuditService.devOpsAuditEvents(payload);
           } else {
             var promise = updatePropertiesofCluster(toClusterName);
             loopPromises.push(promise.catch(recoverPromise));
@@ -176,7 +176,7 @@
               operation: 'add',
               id: vm.clusterDetail.id,
             };
-            MediaServiceActivationV2.auditEvents(payload);
+            MediaServiceAuditService.devOpsAuditEvents(payload);
           });
         return vm.clusterDetail;
       }, function () {
@@ -213,7 +213,7 @@
         };
         HybridServicesClusterService.moveEcpNode(host.id, fromCluster.id, toCluster.id)
           .then(incrementSuccessCount(host, toCluster))
-          .then(MediaServiceActivationV2.auditEvents(payload))
+          .then(MediaServiceAuditService.devOpsAuditEvents(payload))
           .catch(incrementFailureCount(host));
       }
     }
@@ -256,7 +256,7 @@
             operation: 'delete',
             id: vm.cluster.id,
           };
-          MediaServiceActivationV2.auditEvents(payload);
+          MediaServiceAuditService.devOpsAuditEvents(payload);
           Notification.success(vm.success);
           $modalInstance.close();
           if (vm.clusters.length > 1) {

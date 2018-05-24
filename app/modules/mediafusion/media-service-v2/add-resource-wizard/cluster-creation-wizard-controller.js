@@ -6,7 +6,7 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceActivationV2, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceAuditService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
@@ -395,14 +395,14 @@
           operation: 'add',
           id: Authinfo.getOrgId(),
         };
-        MediaServiceActivationV2.auditEvents(payload);
+        MediaServiceAuditService.devOpsAuditEvents(payload);
       } else {
         payload = {
           entity: 'cluster',
           operation: 'add',
           id: vm.clusterId,
         };
-        MediaServiceActivationV2.auditEvents(payload);
+        MediaServiceAuditService.devOpsAuditEvents(payload);
       }
     }
   }

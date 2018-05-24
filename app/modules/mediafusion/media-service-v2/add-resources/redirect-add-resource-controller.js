@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, Authinfo, AddResourceCommonServiceV2, MediaServiceActivationV2, $window, $state, $q) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, Authinfo, AddResourceCommonServiceV2, MediaServiceAuditService, $window, $state, $q) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -48,7 +48,7 @@
                 operation: 'add',
                 id: Authinfo.getOrgId(),
               };
-              MediaServiceActivationV2.auditEvents(payload);
+              MediaServiceAuditService.devOpsAuditEvents(payload);
               AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
             }).then(function () {
               $state.go('media-service-v2.list');

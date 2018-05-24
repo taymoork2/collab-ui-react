@@ -213,11 +213,6 @@
       return $http.post(url, payload);
     };
 
-    var auditEvents = function (payLoad) {
-      var url = UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + Authinfo.getOrgId() + '/auditEvent';
-      return $http.post(url, payLoad);
-    };
-
     return {
       setIsMediaServiceEnabled: setIsMediaServiceEnabled,
       getMediaServiceState: getMediaServiceState,
@@ -230,7 +225,6 @@
       disableMFOrgSettingsForDevOps: disableMFOrgSettingsForDevOps,
       enableMediaServiceEntitlements: enableMediaServiceEntitlements,
       enableMediaServiceEntitlementsWizard: enableMediaServiceEntitlementsWizard,
-      auditEvents: auditEvents,
     };
   }
 })();
