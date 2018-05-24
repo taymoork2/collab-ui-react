@@ -16,7 +16,7 @@ export class MeetingExportService {
   ) {
   }
 
-  // TODO (yashen): add call to backend for report data
+  // TODO (yashen2): add call to backend for report data
   public generateMeetingReport(): IPromise<string> {
     return this.$q((resolve) => {
       const report = {};

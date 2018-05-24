@@ -102,12 +102,10 @@ export interface IDataStorage {
   uniqueParticipants: ISessionDetail;
   pstnSessionDetail: ISessionDetail;
   joinMeetingTimes: IJoinTime[];
-  [key: string]: any;
 }
 
 export interface IWebexOneMeeting {
   overview: IMeetingOverview;
-  [key: string]: any;
 }
 
 export interface IMeetingOverview {
@@ -133,7 +131,6 @@ export interface IMeetingOverview {
   startTime_: string;
   endTime_: string;
   createTime_: string;
-  [key: string]: any;
 }
 
 export enum Platforms {
