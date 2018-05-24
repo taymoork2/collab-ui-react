@@ -1,3 +1,5 @@
+// TODO: refactor to typescript, add enum for
+// orderingTool types here and throughout codebase
 (function () {
   'use strict';
 
@@ -210,7 +212,8 @@
     }
 
     function filterOrders(orders) {
-      var orderToolFilters = ['CCW', 'CCW-CSB'];
+      // TODO: move usage into enum when file is made typescript
+      var orderToolFilters = ['CCW', 'CCW-CSB', 'CCW-CDC'];
       return _.filter(orders, function (el) { return _.includes(orderToolFilters, el.orderingTool); });
     }
 
