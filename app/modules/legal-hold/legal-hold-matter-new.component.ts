@@ -3,7 +3,7 @@ import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { Notification } from 'modules/core/notifications';
 import { Matter } from './matter.model';
 import { IImportComponentApi } from './legal-hold.interfaces';
-import { ImportMode } from './legal-hold.enums';
+import { ImportMode, Events } from './legal-hold.enums';
 
 export class LegalHoldMatterNewController implements ng.IComponentController {
 
@@ -26,6 +26,7 @@ export class LegalHoldMatterNewController implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private Authinfo: Authinfo,
     private LegalHoldService: LegalHoldService,
@@ -36,6 +37,10 @@ export class LegalHoldMatterNewController implements ng.IComponentController {
 
   public cancelModal() {
     this.dismiss();
+  }
+
+  public cancel() {
+    this.isDone = true;
   }
 
   public createMatter() {
@@ -55,6 +60,7 @@ export class LegalHoldMatterNewController implements ng.IComponentController {
         this.matter = matter;
         this.isDone = true;
         this.importComponentApi.displayResults();
+        this.$rootScope.$emit(Events.CHANGED);
       })
       .catch(error => {
         this.Notification.errorResponse(error);
