@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, Authinfo, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -75,7 +75,7 @@
         var payload = {
           entity: 'org',
           operation: 'delete',
-          id: vm.cluster.id,
+          id: Authinfo.getOrgId(),
         };
         DeactivateMediaService.deactivateHybridMediaService()
           .then(MediaServiceAuditService.devOpsAuditEvents(payload))

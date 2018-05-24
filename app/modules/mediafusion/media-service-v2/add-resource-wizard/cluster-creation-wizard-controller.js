@@ -131,7 +131,9 @@
           if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
           if (!_.isUndefined(vm.emailSubscribers)) HybridMediaEmailNotificationService.saveEmailSubscribers(vm.emailSubscribers);
         }).then(function () {
-          devOpsAuditEvents();
+          devOpsAuditEventsOrg().then(function () {
+            devOpsAuditEventsCluster();
+          });
           $state.go('media-service-v2.list', {}, {
             reload: true,
           });
@@ -387,7 +389,7 @@
         });
     }
 
-    function devOpsAuditEvents() {
+    function devOpsAuditEventsOrg() {
       var payload = {};
       if (vm.firstTimeSetup) {
         payload = {
@@ -395,15 +397,16 @@
           operation: 'add',
           id: Authinfo.getOrgId(),
         };
-        MediaServiceAuditService.devOpsAuditEvents(payload);
-      } else {
-        payload = {
-          entity: 'cluster',
-          operation: 'add',
-          id: vm.clusterId,
-        };
-        MediaServiceAuditService.devOpsAuditEvents(payload);
+        return MediaServiceAuditService.devOpsAuditEvents(payload);
       }
+    }
+    function devOpsAuditEventsCluster() {
+      var payload = {
+        entity: 'cluster',
+        operation: 'add',
+        id: vm.clusterId,
+      };
+      MediaServiceAuditService.devOpsAuditEvents(payload);
     }
   }
 }());

@@ -44,7 +44,7 @@
               //call the rest of the services which needs to be enabled
               AddResourceCommonServiceV2.enableMediaService();
               var payload = {
-                entity: 'cluster',
+                entity: 'org',
                 operation: 'add',
                 id: Authinfo.getOrgId(),
               };
