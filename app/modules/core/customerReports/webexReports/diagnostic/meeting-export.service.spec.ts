@@ -11,9 +11,9 @@ describe('Service: MeetingExportService', () => {
     this.SearchService.data = this.meetingDetails;
   });
 
-  it('should generate blob url after calling generateMeetingReport', function () {
+  it('should generate report in string format after calling generateMeetingReport', function () {
     this.MeetingExportService.generateMeetingReport()
-      .then( res => expect(res).toContain('Meeting Summary'))
+      .then(res => expect(res).toContain('Meeting Summary'))
       .catch(fail);
   });
 
