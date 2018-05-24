@@ -10,7 +10,7 @@ describe('Component: MeetingExport', () => {
   });
 
   function initComponent(this) {
-    this.compileComponent('dgcMeetingExport');
+    this.compileComponent('meetingExport');
   }
 
   it('should assign a function definition to exportJSON function at init phase', function () {
