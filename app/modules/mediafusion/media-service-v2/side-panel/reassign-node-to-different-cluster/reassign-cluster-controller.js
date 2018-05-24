@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification, HybridServicesClusterService) {
+  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, MediaServiceActivationV2, $translate, $modalInstance, Notification, HybridServicesClusterService) {
     var vm = this;
 
     vm.options = [];
@@ -76,6 +76,12 @@
                 }
               }
             });
+          var payload = {
+            entity: 'cluster',
+            operation: 'add',
+            id: vm.clusterDetail.id,
+          };
+          MediaServiceActivationV2.auditEvents(payload);
           moveHost(res);
         }, function () {
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
@@ -90,6 +96,12 @@
 
     function moveHost() {
       HybridServicesClusterService.moveEcpNode(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
+        var payload = {
+          entity: 'node',
+          operation: 'move',
+          id: connector.id,
+        };
+        MediaServiceActivationV2.auditEvents(payload);
         $modalInstance.close();
         Notification.success('mediaFusion.moveHostSuccess');
       }).catch(function (err) {

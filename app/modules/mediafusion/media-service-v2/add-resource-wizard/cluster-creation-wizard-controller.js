@@ -6,7 +6,7 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceActivationV2, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
@@ -131,7 +131,10 @@
           if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
           if (!_.isUndefined(vm.emailSubscribers)) HybridMediaEmailNotificationService.saveEmailSubscribers(vm.emailSubscribers);
         }).then(function () {
-          $state.go('media-service-v2.list');
+          devOpsAuditEvents();
+          $state.go('media-service-v2.list', {}, {
+            reload: true,
+          });
         });
       }
     }
@@ -382,6 +385,25 @@
             $modalInstance.dismiss();
           }
         });
+    }
+
+    function devOpsAuditEvents() {
+      var payload = {};
+      if (vm.firstTimeSetup) {
+        payload = {
+          entity: 'org',
+          operation: 'add',
+          id: Authinfo.getOrgId(),
+        };
+        MediaServiceActivationV2.auditEvents(payload);
+      } else {
+        payload = {
+          entity: 'cluster',
+          operation: 'add',
+          id: vm.clusterId,
+        };
+        MediaServiceActivationV2.auditEvents(payload);
+      }
     }
   }
 }());

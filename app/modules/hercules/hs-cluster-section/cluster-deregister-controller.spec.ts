@@ -2,11 +2,12 @@ import renameAndDeregisterClusterSection from './index';
 
 describe('ClusterDeregisterController', function () {
   beforeEach(function () {
-    this.initModules(renameAndDeregisterClusterSection);
-    this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService');
+    this.initModules(renameAndDeregisterClusterSection, 'Mediafusion');
+    this.injectDependencies('$controller', '$q', '$scope', 'PrivateTrunkService', 'HybridServicesClusterService', 'MediaServiceActivationV2');
 
     spyOn(this.PrivateTrunkService, 'removePrivateTrunkResource').and.returnValue(this.$q.resolve({}));
     spyOn(this.HybridServicesClusterService, 'deregisterCluster').and.returnValue(this.$q.resolve({}));
+    spyOn(this.MediaServiceActivationV2, 'auditEvents').and.returnValue(this.$q.resolve({}));
     this.mockModal = { close: jasmine.createSpy('close') };
     this.baseToggle = {
       id: '123',
