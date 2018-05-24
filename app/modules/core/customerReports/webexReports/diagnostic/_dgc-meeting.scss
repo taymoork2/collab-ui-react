@@ -22,11 +22,10 @@ $btn-right-pos: 0rem;
         flex-direction: column;
         align-items: baseline;
         color: $gray-dark-1;
-        height: $room-title-height;
         position: relative;
   
         h3 {
-          display: flex;
+          display: inline;
           align-items: flex-end;
         }
         .title {
@@ -34,7 +33,7 @@ $btn-right-pos: 0rem;
           align-items: center;
         }
         .detailInfo {
-          display: flex;
+          display: inline;
           align-items: flex-end;
           color: $gray-base;
           margin-left: 1.25rem;
@@ -194,11 +193,6 @@ $btn-right-pos: 0rem;
             }
           }
         }
-      }
-
-      meeting-export {
-        position: absolute; 
-        right: $btn-right-pos;
       }
     }
     
