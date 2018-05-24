@@ -15,21 +15,14 @@ class MeetingExportController implements ng.IComponentController {
   public defaultFileName = 'exported_file.json';
   public reportData: string;
 
-  private downloadButton: JQuery;
-
   /* @ngInject */
   constructor(
-    private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
     private Analytics: Analytics,
     private MeetingExportService: MeetingExportService,
   ) {
     this.anchorText = this.$translate.instant('webexReports.meetingExport.btnTitle');
     this.tooltipMessage = this.$translate.instant('webexReports.meetingExport.tooltipMessage');
-  }
-
-  public $postLink() {
-    this.downloadButton = $(this.$element.find('button')[0]);
   }
 
   public $onInit() {
@@ -42,7 +35,7 @@ class MeetingExportController implements ng.IComponentController {
       this.Analytics.trackEvent(this.analyticsEventname);
     }
 
-    this.downloadButton.attr('disabled', 'disabled');
+    this.downloading = true;
     this.MeetingExportService.generateMeetingReport()
       .then((meetingReport) => {
         this.reportData = meetingReport;
@@ -51,7 +44,7 @@ class MeetingExportController implements ng.IComponentController {
 
   public restoreToOriginalState(): void {
     this.reportData = '';
-    this.downloadButton.removeAttr('disabled');
+    this.downloading = false;
   }
 }
 

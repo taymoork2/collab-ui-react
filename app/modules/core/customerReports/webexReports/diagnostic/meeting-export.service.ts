@@ -1,5 +1,5 @@
 import { IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, ISessionInReport } from './meeting-export.interface';
-import { IJoinTime, ISessionDetail, IUniqueParticipant, Platforms, SearchService, SearchStorage } from './searchService';
+import { IDataStorage, IJoinTime, ISessionDetail, IUniqueParticipant, Platforms, SearchService, SearchStorage } from './searchService';
 
 export enum MediaType {
   PSTN = 'PSTN',
@@ -16,6 +16,7 @@ export class MeetingExportService {
   ) {
   }
 
+  // TODO (yashen): add call to backend for report data
   public generateMeetingReport(): IPromise<string> {
     return this.$q((resolve) => {
       const report = {};
@@ -42,14 +43,14 @@ export class MeetingExportService {
       'Host Id': '',
       'Host Email': '',
     };
-    return this.searchMeetingSummary(meetingSummary, [this.SearchService.getData()]);
+    return this.searchMeetingSummary(meetingSummary, this.SearchService.getData());
   }
 
-  private searchMeetingSummary(meetingSummary: IMeetingSummaryInReport, sources: object[]): IMeetingSummaryInReport {
+  private searchMeetingSummary(meetingSummary: IMeetingSummaryInReport, dataStorage: IDataStorage): IMeetingSummaryInReport {
     _.forOwn(meetingSummary, (value: any, key: string) => {
       const normalKey = this.normalizeKey(key);
       if (_.isEmpty(value)) {
-        meetingSummary[key] = this.searchByKey(normalKey, sources);
+        meetingSummary[key] = this.searchByKey(normalKey, dataStorage);
       }
     });
     return meetingSummary;

@@ -1,13 +1,14 @@
 <button 
-  type="button" 
-  class="btn" 
-  ng-click="$ctrl.exportJSON()" 
-  tooltip-html-unsafe="{{$ctrl.tooltipMessage}}" 
+  type="button"
+  class="cui-button"
+  ng-click="$ctrl.exportJSON()"
+  ng-disabled="$ctrl.downloading"
+  tooltip-html-unsafe="{{$ctrl.tooltipMessage}}"
   tooltip-placement="top">{{::$ctrl.anchorText}}</button>
 
 <dgc-meeting-download
   filename="{{$ctrl.filename}}"
-  is-hidden="true" 
+  is-hidden="true"
   csv-data="$ctrl.reportData"
   is-string-data="true"
   download-finished-fn="$ctrl.restoreToOriginalState()"></dgc-meeting-download>
