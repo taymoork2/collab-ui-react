@@ -196,14 +196,9 @@ $btn-right-pos: 0rem;
         }
       }
 
-      dgc-meeting-export {
+      meeting-export {
         position: absolute; 
         right: $btn-right-pos;
-        button {
-          border-radius: 1.5rem;
-          padding: 0.8rem 1rem;
-          color: $black;
-        }
       }
     }
     

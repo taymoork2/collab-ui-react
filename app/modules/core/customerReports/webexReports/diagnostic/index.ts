@@ -28,6 +28,6 @@ export default angular
   .component('dgcTabParticipants', new ParticipantsComponent())
   .component('dgcTabMeetingdetail', new MeetingdetailsComponent())
   .component('dgcWebexReportsSearch', new DgcWebexReportsSearchComponent())
-  .component('dgcMeetingExport', new MeetingExportComponent())
+  .component('meetingExport', new MeetingExportComponent())
   .component('dgcMeetingDownload', new CrCsvDownloadComponent())
   .name;

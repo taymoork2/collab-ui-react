@@ -39,12 +39,16 @@ export interface IParticipant {
 }
 
 export interface IJoinTime {
-  joinTime: number;
+  joinTime?: number;
   userName: string;
   userId: string;
   guestId: string;
   joinMeetingTime: string;
   jmtQuality: string;
+  browser: string;
+  browserVersion: string;
+  os: string;
+  osVersion: string;
 }
 
 export interface IMeeting {
@@ -89,6 +93,47 @@ export interface ICallLegs {
 }
 export interface IServerTime {
   timestamp: number;
+}
+
+export interface IDataStorage {
+  webexOneMeeting: IWebexOneMeeting;
+  videoSessionDetail: ISessionDetail;
+  voipSessionDetail: ISessionDetail;
+  uniqueParticipants: ISessionDetail;
+  pstnSessionDetail: ISessionDetail;
+  joinMeetingTimes: IJoinTime[];
+  [key: string]: any;
+}
+
+export interface IWebexOneMeeting {
+  overview: IMeetingOverview;
+  [key: string]: any;
+}
+
+export interface IMeetingOverview {
+  startTime: number;
+  endTime: number;
+  createdTime: number;
+  videoSession: string;
+  startFrom: string;
+  siteName: string;
+  siteId: string;
+  scheduleFrom: string;
+  recording_: string;
+  meetingType: string;
+  hostName: string;
+  audioSession: string;
+  meetingNumber: string;
+  meetingName: string;
+  hostId: string;
+  hostEmail: string;
+  duration_: string;
+  screenShare_: string;
+  conferenceId: string;
+  startTime_: string;
+  endTime_: string;
+  createTime_: string;
+  [key: string]: any;
 }
 
 export enum Platforms {
@@ -344,7 +389,7 @@ export class SearchService {
     return phone;
   }
 
-  public getData(): any {
+  public getData(): IDataStorage {
     return this.data;
   }
 }
