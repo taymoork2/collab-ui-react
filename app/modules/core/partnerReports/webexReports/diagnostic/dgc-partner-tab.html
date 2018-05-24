@@ -14,10 +14,14 @@
   <div class="content-container" ng-if="!$ctrl.loading">
     <div class="overview">
       <div class="meeting-room-name">
-        <h3>{{::$ctrl.details.meetingName}}</h3>
-        <h6 class="detailInfo">{{::'webexReports.meetingNumberTitle' | translate}} <span>{{::$ctrl.details.meetingNumber}}</span></h6>
-        <h6 class="detailInfo">{{::'webexReports.searchGridHeader.conferenceIDTitle' | translate}} <span>{{::$ctrl.details.conferenceId}}</span></h6>
-        <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
+        <div class="title">
+          <h3>{{::$ctrl.details.meetingName}}</h3>
+          <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
+        </div>
+        <h6 class="ui-pt">
+          <span class="ui-pr">{{::'webexReports.meetingNumberTitle' | translate}} {{::$ctrl.details.meetingNumber}}</span>
+          <span class="ui-pr">{{::'webexReports.searchGridHeader.conferenceIDTitle' | translate}} {{::$ctrl.details.conferenceId}}</span>
+        </h6>
       </div>
 
       <div class="room-information">
@@ -29,9 +33,9 @@
           <span translate="webexReports.start"></span>
           <span class="value">{{::$ctrl.details.startTime_}}</span>
         </h6>
-        <h6>
-          <span ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING" translate="webexReports.end"></span>
-          <span class="value" ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.END">{{::$ctrl.details.endTime_}}</span>
+        <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.END">
+          <span translate="webexReports.end"></span>
+          <span class="value" >{{::$ctrl.details.endTime_}}</span>
         </h6>
         <h6>
           <span translate="webexReports.duration"></span>

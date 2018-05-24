@@ -364,7 +364,7 @@ class TimeLineController implements ng.IComponentController {
           id: `myLine${lineItem.cid}_${lineItem.nodeId}`,
           start: lineItem.joinTime,
           end: lineItem.leaveTime,
-          cls: lineItem.platform === Platforms.TP ? 'defaultLine' : '',
+          cls: lineItem.platform === Platforms.TP || (lineItem.sessionType === Platforms.PSTN && this.tabType === TabType.AUDIO) ? 'defaultLine' : '',
         });
 
         containers.push({
