@@ -2211,13 +2211,13 @@
               },
             },
           })
-          .state('reports.autoLicense', {
-            url: '/sparkAutoLicense',
+          .state('my-company.autoLicense', {
+            url: '/my-company/onboarding',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'AutoLicenseCtrl',
-                template: require('modules/core/customerReports/autoLicense/autoLicense.tpl.html'),
+                template: require('modules/core/myCompany/autoLicense/autoLicense.tpl.html'),
               },
             },
           })

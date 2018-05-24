@@ -1,4 +1,8 @@
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import 'modules/sunlight/reports/_care-task';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '../../../styles/variables';
 
 .my-company-page {
   @extend %grid-subheader;
@@ -19,35 +23,145 @@
     height: 100%;
     border: none;
   }
-}
 
-.btn--myCompany {
-  .header-label {
-    margin-right: 0.75rem !important;
+  .metricsContent {
+    overflow: hidden !important;
+    padding: 0 !important;
   }
 
-  .icon {
-    position: static !important;
+  .sparkMetricsContent {
+    height: calc(100vh - (#{$page-header-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sparkMetricsContentWithReadOnly {
+    height: calc(100vh - (#{$page-header-height} + #{$read-only-banner-height})) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .customer-report-filter {
+    width: vr-adjust(200);
+    @include vr-spacing(pl, 1.25);
+  }
+
+  .report-filter {
+    width: 380px;
+  }
+
+  .cs-card-layout {
+    @include vr-spacing(mb, 1);
+  }
+
+  .report-card,
+  .report-box {
+    .report-description {
+      position: relative;
+      z-index: 100;
+    }
+
+    .areachart {
+      font-size: vr-adjust(12);
+      height: vr-adjust(375);
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 50;
+    }
+  }
+
+  report-slider {
+    width: calc(100% - 135px); // subtracting the width and margin of the download button
+  }
+
+  .download-page {
+    @include vr-spacing(mh, 0.75);
+    width: vr-adjust(125);
   }
 }
 
-.pro-badge {
-  margin: auto 0;
-}
 
-.my-company-order-history-actions {
-  display: flex;
-  align-items: center;
+.detail-reports {
+  @extend %content-subheader;
+  @extend %page-background-white;
 
-  .icon {
-    margin-right: 0.5rem;
+  .detail-reports-contents {
+    position: relative;
+  }
+
+  .ui-grid-row {
+    text-align: left;
+    top: rem-calc(30);
+  }
+
+  .cs-timepicker-container {
+    width: 100px;
+    height: 36px;
+    padding-left: 12px;
+  }
+
+  #startTime,
+  #endTime {
+    width: 100px;
+  }
+
+  .cs-datepicker,
+  #startDate,
+  #endDate {
+    width: 183px;
+  }
+
+  .data-span {
+    padding-left: 20px;
+    padding-right: 6px;
+  }
+
+  .cs-datepicker-normal {
+    width: 183px;
+  }
+
+  .searchfilter {
+    padding-right: 20px;
+  }
+
+  .searchbox,
+  .searchinput {
+    width: 240px;
   }
 }
 
-.a-order-history {
-  display: inline-block;
-}
 
-.iconspacer {
-  padding-left: 30px;
-}
+//
+//.btn--myCompany {
+//  .header-label {
+//    margin-right: 0.75rem !important;
+//  }
+//
+//  .icon {
+//    position: static !important;
+//  }
+//}
+//
+//.pro-badge {
+//  margin: auto 0;
+//}
+//
+//.my-company-order-history-actions {
+//  display: flex;
+//  align-items: center;
+//
+//  .icon {
+//    margin-right: 0.5rem;
+//  }
+//}
+//
+//.a-order-history {
+//  display: inline-block;
+//}
+//
+//.iconspacer {
+//  padding-left: 30px;
+//}
+//
+
