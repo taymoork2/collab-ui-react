@@ -514,7 +514,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     }
 
     function getWifiProximityOptInStatus() {
-      if (Authinfo.isCustomerLaunchedFromPartner() || !Authinfo.isCustomerAdmin()) {
+      if (Authinfo.isCustomerLaunchedFromPartner() || !(Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin())) {
         return;
       }
       FeatureToggleService.csdmProximityOptInGetStatus().then(function (optInToggle) {
