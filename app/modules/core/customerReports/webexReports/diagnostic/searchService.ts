@@ -39,12 +39,16 @@ export interface IParticipant {
 }
 
 export interface IJoinTime {
-  joinTime: number;
+  joinTime?: number;
   userName: string;
   userId: string;
   guestId: string;
   joinMeetingTime: string;
   jmtQuality: string;
+  browser: string;
+  browserVersion: string;
+  os: string;
+  osVersion: string;
 }
 
 export interface IMeeting {
@@ -91,6 +95,44 @@ export interface IServerTime {
   timestamp: number;
 }
 
+export interface IDataStorage {
+  webexOneMeeting: IWebexOneMeeting;
+  videoSessionDetail: ISessionDetail;
+  voipSessionDetail: ISessionDetail;
+  uniqueParticipants: ISessionDetail;
+  pstnSessionDetail: ISessionDetail;
+  joinMeetingTimes: IJoinTime[];
+}
+
+export interface IWebexOneMeeting {
+  overview: IMeetingOverview;
+}
+
+export interface IMeetingOverview {
+  startTime: number;
+  endTime: number;
+  createdTime: number;
+  videoSession: string;
+  startFrom: string;
+  siteName: string;
+  siteId: string;
+  scheduleFrom: string;
+  recording_: string;
+  meetingType: string;
+  hostName: string;
+  audioSession: string;
+  meetingNumber: string;
+  meetingName: string;
+  hostId: string;
+  hostEmail: string;
+  duration_: string;
+  screenShare_: string;
+  conferenceId: string;
+  startTime_: string;
+  endTime_: string;
+  createTime_: string;
+}
+
 export enum Platforms {
   TP = '10',
   THIN_CLIENT = '15',
@@ -114,6 +156,15 @@ export enum QualityRange {
   LOWER_LOSSRATE = 3,
   UPPER_LATENCY = 400,
   LOWER_LATENCY = 300,
+}
+
+export enum SearchStorage {
+  UNIQUE_PARTICIPANTS = 'uniqueParticipants',
+  JOIN_MEETING_TIMES = 'joinMeetingTimes',
+  VOIP_SESSION_DETAIL = 'voipSessionDetail',
+  VIDEO_SESSION_DETAIL = 'videoSessionDetail',
+  PSTN_SESSION_DETAIL = 'pstnSessionDetail',
+  WEBEX_ONE_MEETING = 'webexOneMeeting',
 }
 
 export class SearchService {
@@ -333,5 +384,9 @@ export class SearchService {
       phone = `+${phone}`;
     }
     return phone;
+  }
+
+  public getData(): IDataStorage {
+    return this.data;
   }
 }
