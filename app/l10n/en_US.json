@@ -8868,8 +8868,8 @@
         "onboardError": "Onboard data is not available, refresh the page or try later.",
         "unassignedLicenses": "You have <span class=\"convert-nr h4\">{{licenseNumber}}</span> unassigned {{licenseType}} licenses",
         "unassignedLicensesOnboarding": "unassigned {{licenseType}} licenses",
-        "potentialConversions": "Potential new users",
-        "pendingConversions": "Pending conversions"
+        "potentialConversions": "Potential new {total, plural, =0{users} =1{user} other{users}}",
+        "pendingConversions": "Delayed {total, plural, =0{conversions} =1{conversion} other{conversions}}"
       },
       "message": {
         "title": "Message",
