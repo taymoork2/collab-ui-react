@@ -1,4 +1,4 @@
-import testModule from 'modules/core/overview/license-card/index';
+import testModule from 'modules/core/overview/license-card';
 import { OverviewEvent } from 'modules/core/overview/overview.keys';
 import { WebexProvisioningEvent } from 'modules/core/overview/provisioning.keys';
 

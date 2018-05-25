@@ -1,6 +1,6 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-license-card {
+license-card, meeting-card {
   .license-spinner {
     margin-top: rem-calc(50);
   }

@@ -578,7 +578,7 @@
     "developmentTab": "Development",
     "organizationTab": "Manage Organizations",
     "organizationTabDesc": "Manage Organization Details, View Assigned Services, And Access Tools.",
-    "metricsDetailsTab": "Media Service V2 Page",
+    "metricsDetailsTab": "Video Mesh V2 Page",
     "metricsDetailsTabDesc": "Metrics Management",
     "thresholdDetailsTab": "Threshold",
     "thresholdDetailsTabDesc": "Threshold Management",
@@ -2903,7 +2903,7 @@
       "clusters-title-squared-fusion-cal": "Expressway Clusters",
       "clusters-title-squared-fusion-uc": "Expressway Clusters",
       "clusters-title-spark-hybrid-impinterop": "Expressway Clusters",
-      "clusters-title-squared-fusion-media": "Media Clusters",
+      "clusters-title-squared-fusion-media": "Video Mesh Clusters",
       "clusters-title-spark-hybrid-datasecurity": "HDS Clusters",
       "clusters-title-contact-center-context": "Context Clusters",
       "clusters-title-ept": "SIP Destination",
@@ -6545,7 +6545,6 @@
     "active": "Active",
     "pending": "Invite Pending",
     "enterprise": "Enterprise",
-    "mediaFusion": "Media Fusion",
     "cloud": "Cloud"
   },
   "vtsPage": {
@@ -6581,7 +6580,7 @@
     },
     "videoQuality": {
       "title": "Video Quality",
-      "description": "Enable 1080P HD video for all participants hosted on on-premises media nodes.",
+      "description": "Enable 1080P HD video for all participants hosted on on-premises Video Mesh nodes.",
       "success": "Video quality setting was set successfully.",
       "error": "Error in saving video quality setting. Please revert the change and try again later."
     },
@@ -6618,7 +6617,7 @@
       "clusterExistError": "Cluster already exists, try a different Cluster Name",
       "existingCluster": "Select an existing cluster",
       "invalidip": "Invalid FQDN or IP address",
-      "mediaNode": "Media node",
+      "mediaNode": "Video Mesh Node",
       "mediaNodeMessage": "Enter the FQDN or IP address of the Video Mesh Node that you want to register with Webex.",
       "enterNode": "Enter FQDN or IP address",
       "requiredclusterconfig": "Required Cluster Configuration",
@@ -6654,7 +6653,7 @@
       "sparkcallline2":"If you try to call someone that is geographically close to the node and the call doesn't appear here, your node might be misconfigured.<br>See the <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> and verify that you opened all the necessary ports of your firewall.",
       "sipcallline1": "Start a SIP call directed at a user near the cluster, and then see if it shows up here. You may also wait and see if someone else's call automatically lands on this cluster.",
       "sipcallline2": "If you try to call someone that is geographically close to the node and the call doesn't appear, your node might be misconfigured.<br>Adjust the Unified CM SIP Trunk and the Trusted SIP sources and refer to <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Deployment Guide for Cisco Webex Video Mesh</a> <br>if you need further help.",
-      "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Media cluster will not be able to process SIP Calls anymore",
+      "removesipdesc": "Are you sure you want to remove SIP Calls configuration? If you do,this Video Mesh cluster will not be able to process SIP Calls anymore",
       "callsuccess": "{{callType}} calls configured correctly",
       "lastcalldetails": "Last call details",
       "callfrom": "Call from",
@@ -6833,7 +6832,6 @@
     "clusters": {
       "deregisterConfirm": "Confirm",
       "deregisterErrorHeader": "Unexpected Error",
-      "deregisterAreYouSure": "You are about to deregister media server {{clusterName}} from organization {{organizationName}}.",
       "deregisterErrorGeneric": "Unable to deregister {{clusterName}}.",
       "deregisterNodeErrorGeneric": "Unable to deregister node.",
       "clusterSettings": "Cluster Settings",
@@ -6843,7 +6841,7 @@
       "makeASelection": "Make a selection:",
       "moveallnodes": "Move All Nodes",
       "deregisterallnodes": "Deregister All Nodes",
-      "selectTheDest": "Select the destination media cluster for each node.",
+      "selectTheDest": "Select the destination Video Mesh cluster for each node.",
       "nodes": "Nodes",
       "moveTo": "Move to:",
       "continue": "Continue",
@@ -6862,7 +6860,6 @@
     },
     "reassign": {
       "reassignHost": "Reassign Host",
-      "reassignText": "You are about to move the media server {{clusterName}} from {{displayName}}",
       "reassignTextV2": "You are about to move the Video Mesh Node {{clusterName}} from {{displayName}}",
       "reassignErrorHeader": "Unexpected Error",
       "reassignErrorMessage": "Unable move to the Video Mesh Node {{hostName}}. Please try again after some time.",
@@ -6896,8 +6893,8 @@
       "text2V2": "Enter the hostname or IP address of the Video Mesh Node that you want to the Cisco Webex Cloud.",
       "text3V1": "Enter the",
       "text3V3": "or IP address of the Video Mesh Node that you want to register with the Cisco Webex Cloud.",
-      "serverOnline": "The media server that you are registering already exists and is online.",
-      "serverOffline": "The media server that you are registering already exists and is offline. Deregister the existing server before you try again.",
+      "serverOnline": "The Video Mesh node that you are registering already exists and is online.",
+      "serverOffline": "The Video Mesh that you are registering already exists and is offline. Deregister the existing server before you try again.",
       "firstStep": "Before you can register your Video Mesh Node, you must install and configure the software on your new server.",
       "firstStepYes": "During this guided setup you will need documentation.",
       "firstStepYes1": "Visit ",
@@ -9807,7 +9804,7 @@
           "all": "All Resources",
           "view": "View",
           "expressway": "Expressway",
-          "mediafusion": "Media Fusion",
+          "mediafusion": "Video Mesh",
           "context": "Context"
         }
       },
