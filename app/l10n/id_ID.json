@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Semua",
         "roomSystems": "Kit Kamar Cisco Spark, Seri DX, MX, dan SX",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Ekspor Atribut Penggunaan Perangkat ke CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Centang kotak di atas untuk menyatakan bahwa pelanggan ini berada di lokasi yang didukung untuk Cisco Spark",
     "context": "Aktifkan Layanan Konteks untuk Pusat Kontak Terpadu Cisco.",
     "roomSystem": "Kit Kamar Cisco Spark, Seri DX, MX, dan SX",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Perangkat Kamar Cisco Spark (Saat ini hanya untuk AS)",
     "expireWarningMsg": "Percobaan Anda berakhir dalam {{numDaysLeft}} hari.",
     "expiredMsg": "Percobaan Anda telah berakhir.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Organisasi Saya",
     "meetingParty": "Rapat 25 Peserta",
     "roomSystem": "Kit Kamar Cisco Spark, Seri DX, MX, dan SX",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Penentuan Merek Pelanggan",
     "MS": "Pesan",
     "CF": "Rapat",
@@ -5907,7 +5907,7 @@
       "call": "Panggilan",
       "webexOverview": "WebEx",
       "roomSystem": "Perangkat Kamar",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Care",
       "trialAccounts": "Akun Percobaan ({{count}})",
       "activeAccounts": "Akun yang Dibeli ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Uji",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Pelanggan melihat pesan ini ketika sedang menunggu tanggapan atas permintaan mereka.",
     "waitingMessageEVA": "Seseorang akan segera membantu Anda...",
     "helpTextLeaveRoomEVA": "Pelanggan melihat pesan ini ketika pengguna yang sedang berinteraksi dengan mereka mengakhiri obrolan.",
-    "leaveRoomMessageEVA": "Obrolan telah berakhir"
+    "leaveRoomMessageEVA": "Obrolan telah berakhir",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Silakan nilai pengalaman panggilan kembali Anda.",
+        "additionalDetailsAbtIssue": "Jelaskan masalah yang sedang Anda alami",
+        "chattingMessage": "Obrolan sedang berlangsung...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Mengobrol dengan spesialis solusi kami agar dapat melayani Anda dengan lebih baik.",
+        "ratingComment": "Tambahkan komentar",
+        "feedbackQuery": "Silakan nilai pengalaman obrolan Anda",
+        "offHoursDefaultMessage": "Saat ini kami sedang offline. Harap coba lagi selama jam kerja kami.",
+        "callbackConfirmationMsg": "Permintaan Panggilan Kembali berhasil diterima.",
+        "defaultEmailText": "Email",
+        "field3HintText": "Pilih dari daftar atau ketikkan",
+        "defaultWelcomeText": "Selamat Datang di",
+        "connectingMessage": "Menyambungkan Anda ke Agen",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agen telah memasuki kamar obrolan",
+        "defaultQuestionText": "Bagaimana saya dapat membantu Anda?",
+        "leaveRoomMessage": "Agen telah meninggalkan obrolan",
+        "waitingMessageEVA": "Seseorang akan segera membantu Anda...",
+        "virtualAssistantWelcomeMessage": "Halo, apa yang bisa saya bantu hari ini?",
+        "defaultNameText": "Nama",
+        "waitingMessage": "Menunggu seorang agen...",
+        "defaultPhoneText": "Nomor Telepon",
+        "additionalDetails": "Rincian Tambahan",
+        "bubbleTitleMessage": "Klik di sini mengobrol dengan Layanan Pelanggan",
+        "defaultEmail": "misal. abc@xyz.com",
+        "agentUnavailableMessage": "Maaf, kami tidak tersedia saat ini. Silakan coba lagi nanti.",
+        "leaveRoomMessageEVA": "Obrolan telah berakhir"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Grup Berburu",
@@ -8909,7 +8940,7 @@
       "CMR": "Kamar Rapat Kolaborasi WebEx",
       "CO": "Panggilan Cisco Spark",
       "SD": "Kit Kamar Cisco Spark, Seri DX, MX, dan SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Obrolan dan Panggilan Kembali",
       "CVC": "Obrolan, Panggilan Kembali, dan Panggilan Masuk",
       "MGMTPRO": "Paket Pro",
@@ -9107,7 +9138,7 @@
       "CMR": "Kamar Rapat Kolaborasi",
       "ST": "Penyimpanan",
       "SD": "Kit Kamar Cisco Spark, Seri DX, MX, dan SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Lisensi WebEx Warisan",
       "CDC": "Obrolan dan Panggilan Kembali",
       "CVC": "Obrolan, Panggilan Kembali, dan Panggilan Masuk",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "Anda harus menyalin dan menempel token verifikasi DNS ini ke bagian data TXT untuk membuktikan bahwa Anda memiliki domain:",
       "warning": "Penting untuk memverifikasi semua domain. Pengguna yang tidak berasal dari domain yang terverifikasi akan langsung dikunci. Pengguna tersebut tidak akan dapat login atau menggunakan layanan Cisco Spark. Anda juga tidak akan dapat menambahkan pengguna baru yang berasal dari domain yang tidak terverifikasi.",
       "verify": "Verifikasi",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Pelajari lebih lanjut</a> tentang cara memasukkan token verifikasi DNS."
     },
     "claim": {
       "header": "Klaim Domain",

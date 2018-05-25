@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  angular.module('WebExApp').factory('WebExRestApiFact', WebExRestApiFact);
-
   /* @ngInject */
   function WebExRestApiFact(
     $http,
@@ -145,4 +143,6 @@
       }, // csvApiRequest()
     }; // return
   } // top level function()
+
+  module.exports = WebExRestApiFact;
 })();

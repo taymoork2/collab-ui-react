@@ -101,12 +101,17 @@ function phase_2 {
     node ./utils/printCustomHttpHeaders.js --env cfe | tee ./cfe-headers.txt
     node ./utils/printCustomHttpHeaders.js --env prod | tee ./prod-headers.txt
 
+    # build
     time nice -10 yarn build --env.nolint --env.noprogress --env.nocacheloader --devtool source-map
 
+    # add build info
+    ./bin/print-current-build-info.sh | tee "./dist/${APP_BUILD_INFO_FILE}" || :
+
+    # unit test
     nice -15 yarn test --phantomjs --env.noprogress --env.coverage
     set +e
 
-    # e2e tests
+    # e2e test
     ./e2e.sh | tee ./.cache/e2e-sauce-logs
 
     # groom logs for cleaner sauce labs output
@@ -127,6 +132,8 @@ function phase_3 {
         BUILD_NUMBER=0
     fi
     rm -f wx2-admin-web-client.*.tar.gz
+
+    envsubst < "$APP_DEPLOY_DESCRIPTOR_TEMPLATE" > "$APP_DEPLOY_DESCRIPTOR" || :
 
     # important: we untar with '--strip-components=1', so use 'dist/*' and NOT './dist/*'
     tar -zcvf "$APP_ARCHIVE" dist/* &> "${APP_ARCHIVE}--files-list"

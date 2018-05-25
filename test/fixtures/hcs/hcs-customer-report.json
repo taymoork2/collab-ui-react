@@ -1,0 +1,40 @@
+[{
+  "partnerOrgId": "1234",
+  "customerId": "1236",
+  "customerOrgId": null,
+  "customerName": "Arizona Diamondbacks",
+  "subscriptionList": [{
+    "id": "Sub101123",
+    "licenseType": "standard",
+    "ordered": 100
+  }, {
+    "id": "Sub101123",
+    "licenseType": "foundation",
+    "ordered": 100
+  }, {
+    "id": "Sub101124",
+    "licenseType": "basic",
+    "ordered": 100
+  }],
+  "plmList": [{
+    "plmId": "PLMWest",
+    "plmName": "PLMWest",
+    "violationsCount": 1
+  }],
+  "licenseList": [{
+    "licenseType": "HCS_Basic",
+    "productType": "CUCM",
+    "required": 10,
+    "ordered": 100
+  }, {
+    "licenseType": "HCS_Standard",
+    "productType": "CUCM",
+    "required": 10,
+    "ordered": 100
+  }, {
+    "licenseType": "HCS_Foundation",
+    "productType": "CUCM",
+    "required": 10,
+    "ordered": 100
+  }]
+}]

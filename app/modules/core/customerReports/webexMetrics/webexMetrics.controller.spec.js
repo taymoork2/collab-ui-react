@@ -100,6 +100,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.Authinfo, 'isReadOnlyAdmin').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('1eb65fdf-9643-417f-9974-ad72cae0e10f');
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'getMetricsSites').and.returnValue(this.$q.resolve(['go.webex.com', 'alpha.webex.com']));
     spyOn(this.WebexMetricsService, 'hasMetricsSites').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve(true));

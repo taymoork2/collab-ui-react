@@ -74,7 +74,7 @@
         });
         if (aggregate) {
           aggregate.totalVolume += l.volume;
-          aggregate.totalUsage += (l.usage || 0);
+          aggregate.totalUsage = (l.usage || 0);
           aggregate.licenses.push(l);
         } else {
           aggregate = {

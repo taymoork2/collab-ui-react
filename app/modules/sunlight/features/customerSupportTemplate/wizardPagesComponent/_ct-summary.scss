@@ -1,0 +1,43 @@
+.ct-summary {
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+
+  height: calc(100vh - #{($top-bar-height + $page-header-height)});
+
+  .success-icon {
+    color: $color-cta-base;
+  }
+
+  .edit-message {
+    @include vr-spacing(pt, 1.2);
+    color: $color-attention-darker;
+    line-height: initial;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .warning-sign {
+    color: $color-attention-base;
+    @include vr-spacing(mr, 0.5);
+  }
+
+  .description {
+    @include vr-spacing(pl, 1);
+    @include vr-spacing(pv, 1);
+
+    text-align: center;
+    width: 100%;
+    white-space: pre-wrap;
+  }
+
+  > button {
+    width: 5.5rem;
+  }
+
+  .retry-message {
+    color: $color-alerts-base;
+  }
+}

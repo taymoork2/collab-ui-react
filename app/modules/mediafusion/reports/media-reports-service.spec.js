@@ -71,6 +71,7 @@ describe('Service: Media Reports Service', function () {
     vm.clientTypeUrl = vm.baseUrl + '/client_type_trend/?relativeTime=4h';
     vm.meetingLcationUrl = vm.baseUrl + '/meeting_location_trend/?relativeTime=4h';
     vm.participant_change = vm.baseUrl + '/overflow_participant_change/?relativeTime=4h';
+    vm.cascadeBandwidthUrl = vm.baseUrl + '/cascade_bandwidth_usage_for_cluster/media/all/?relativeTime=4h';
   }));
 
   afterEach(function () {
@@ -254,6 +255,19 @@ describe('Service: Media Reports Service', function () {
 
       vm.MediaReportsService.getAvailabilityData(vm.timeFilter, vm.allClusters).then(function (response) {
         expect(response).toEqual([]);
+        expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
+      });
+
+      vm.$httpBackend.flush();
+    });
+  });
+
+  describe('getCascadeBandwidthData', function () {
+    it('should notify an error for call failure', function () {
+      vm.$httpBackend.whenGET(vm.cascadeBandwidthUrl).respond(500, vm.error);
+      expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(0);
+
+      vm.MediaReportsService.getCascadeBandwidthData(vm.timeFilter, vm.allClusters, 'all').then(function () {
         expect(vm.Notification.errorWithTrackingId).toHaveBeenCalledTimes(1);
       });
 

@@ -5,6 +5,8 @@ import './_hybrid-media-cluster-settings.scss';
 
 export default angular
   .module('hercules.hybrid-media-cluster-settings', [
+    require('angular-translate'),
+    require('@collabui/collab-ui-ng').default,
     HybridServicesClusterServiceModuleName,
     NotificationModuleName,
   ])

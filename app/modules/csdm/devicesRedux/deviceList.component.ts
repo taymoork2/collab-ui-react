@@ -4,11 +4,12 @@ import { SearchHits } from '../services/search/searchResult';
 import { Caller, CsdmSearchService } from '../services/csdmSearch.service';
 import { IOnChangesObject } from 'angular';
 import { DeviceSearch } from './deviceSearch.component';
-import { GridCellService } from '../../core/csgrid/cs-grid-cell/gridCell.service';
+import { GridService } from 'modules/core/csgrid';
 import IDevice = csdm.IDevice;
 import { Device, DeviceSearchConverter, IIdentifiableDevice } from '../services/deviceSearchConverter';
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { Dictionary } from 'lodash';
+import { BulkActionName, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
 
 class DeviceList implements ng.IComponentController {
   private devicePlaceLink: boolean;
@@ -22,6 +23,7 @@ class DeviceList implements ng.IComponentController {
   public loadingMoreSpinner = false;
   public selectAllSpinner = false;
   public selectedDevices: Dictionary<IIdentifiableDevice> = {};
+  private allDevicesIdsFromSearch: Dictionary<IIdentifiableDevice> = {};
   private bulkAll: boolean | null = false;
 
   public get bulkSelectionCount() {
@@ -37,15 +39,15 @@ class DeviceList implements ng.IComponentController {
   constructor(private $state,
               private CsdmSearchService: CsdmSearchService,
               private CsdmBulkService: CsdmBulkService,
+              private CsdmAnalyticsHelper: ICsdmAnalyticHelper,
               private $translate,
               CsdmHuronOrgDeviceService,
               private $scope,
               private $window: Window,
               private Notification,
-              private GridCellService: GridCellService,
+              private GridService: GridService,
               private DeviceSearchConverter: DeviceSearchConverter,
               private FeatureToggleService,
-              private Analytics,
               Authinfo) {
 
     this.FeatureToggleService.csdmDevicePlaceLinkGetStatus().then((result: boolean) => {
@@ -66,8 +68,11 @@ class DeviceList implements ng.IComponentController {
       multiSelect: false,
       rowHeight: DeviceList.RowHeight,
       appScopeProvider: {
+        searchObject: () => {
+          return this.searchObject;
+        },
         selectRow: (grid: uiGrid.IGridInstance, row: uiGrid.IGridRow): void => {
-          this.GridCellService.selectRow(grid, row);
+          this.GridService.selectRow(grid, row);
           this.expandDevice(row.entity);
         },
         expandDevice: (device: IDevice) => {
@@ -110,7 +115,9 @@ class DeviceList implements ng.IComponentController {
           if (
             _.isUndefined(this.selectedDevices[deviceId])) {
             this.selectedDevices[deviceId] = device;
-            this.bulkAll = null;
+            this.bulkAll = _.size(this.selectedDevices) === _.size(this.allDevicesIdsFromSearch)
+              ? true
+              : null;
           } else {
             delete this.selectedDevices[deviceId];
             this.bulkAll = _.size(this.selectedDevices) === 0 ? false : null;
@@ -129,6 +136,9 @@ class DeviceList implements ng.IComponentController {
             },
           };
           return o;
+        },
+        getUknownImageFile: (row: uiGrid.IGridRow) => {
+          return row.isSelected ? 'images/devices-hi/unknown-thumb-w.svg' : 'images/devices-hi/unknown-thumb-b.svg';
         },
       },
       onRegisterApi: (gridApi: IGridApi) => {
@@ -160,39 +170,36 @@ class DeviceList implements ng.IComponentController {
           }
         });
       },
+      rowTemplate: require('modules/csdm/templates/_rowTpl.html'),
       columnDefs: [
         {
           displayName: '',
           field: 'selection',
           cellTemplate: require('modules/csdm/templates/_selectionTpl.html'),
-          width: 70,
+          width: 55,
           visible: false,
           enableSorting: false,
           headerCellTemplate: require('modules/csdm/templates/_selectionHeaderTpl.html'),
-        },
-        {
-          field: 'photos',
-          displayName: '',
-          cellTemplate: require('modules/csdm/templates/_imageTpl.html'),
-          width: 70,
-        }, {
-          field: 'displayName',
-          displayName: this.$translate.instant('spacesPage.nameHeader'),
-          suppressRemoveSort: true,
-          cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
-        }, {
-          field: 'connectionStatus',
-          displayName: this.$translate.instant('spacesPage.statusHeader'),
-          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
-          sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
-            direction: 'asc',
-            priority: 0,
-          },
-          suppressRemoveSort: true,
         }, {
           field: 'product',
           displayName: this.$translate.instant('spacesPage.typeHeader'),
           cellTemplate: require('modules/csdm/templates/_productTpl.html'),
+          suppressRemoveSort: true,
+          maxWidth: 370,
+          sort: { // This has no effect on the actual sorting, but makes the grid reflect the default sort in searchObject.ts
+            direction: 'asc',
+            priority: 0,
+          },
+        }, {
+          field: 'connectionStatus',
+          displayName: this.$translate.instant('spacesPage.statusHeader'),
+          cellTemplate: require('modules/csdm/templates/_statusTpl.html'),
+          suppressRemoveSort: true,
+          maxWidth: 250,
+        }, {
+          field: 'displayName',
+          displayName: this.$translate.instant('spacesPage.nameHeader'),
+          cellTemplate: require('modules/csdm/templates/_belongsToTpl.html'),
           suppressRemoveSort: true,
         }],
     };
@@ -204,22 +211,34 @@ class DeviceList implements ng.IComponentController {
 
   private handleSelections() {
     if (this.bulkAll === false) {
-      if (this.$state.sidepanel) {
+      if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
         this.$state.sidepanel.close();
       }
     } else if (this.bulkAll) {
+      this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.SELECT,
+        {
+          mainAction: BulkActionName.SELECT_ALL,
+          selectedDevices: this.searchHits.total,
+          totalSearchHits: this.searchHits.total,
+        });
       this.selectAllSpinner = true;
       this.CsdmBulkService.getIds(this.searchObject).then((response) => {
         if (response && response.data) {
           this.selectedDevices = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
-          if (this.$state.sidepanel) {
+          this.allDevicesIdsFromSearch = _.keyBy<any>(response.data.deviceIdentifiers, (uri) => uri);
+          if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
             this.expandBulk(); //re expanding
           }
         }
         this.selectAllSpinner = false;
       });
     } else {
-      if (this.$state.sidepanel) {
+      this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.SELECT, {
+        mainAction: BulkActionName.SELECT,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
+      if (this.$state.sidepanel && this.$state.name === 'bulk-overview') {
         this.expandBulk(); //re expanding
       }
     }
@@ -269,6 +288,24 @@ class DeviceList implements ng.IComponentController {
       selectedDevices: this.selectedDevices,
       devicesDeleted: this.devicesDeleted(this.searchHits),
     });
+    this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.DELETE_ASK,
+      {
+        mainAction: BulkActionName.DELETE_ASK,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
+  }
+
+  public bulkExport() {
+    this.$state.go('deviceBulkFlow.export', {
+      selectedDevices: this.selectedDevices,
+    });
+    this.CsdmAnalyticsHelper.trackBulkAction(BulkActionName.EXPORT_ASK,
+      {
+        mainAction: BulkActionName.EXPORT_ASK,
+        selectedDevices: _.size(this.selectedDevices),
+        totalSearchHits: this.searchHits.total,
+      });
   }
 
   public expandDevice(device) {
@@ -279,14 +316,14 @@ class DeviceList implements ng.IComponentController {
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
-      this.trackExpandDevice(device);
+      this.CsdmAnalyticsHelper.trackExpandDevice(_.size(this.selectedDevices), device);
     } else {
       this.$state.go('device-overview', {
         currentDevice: device,
         huronDeviceService: this.huronDeviceService,
         deviceDeleted: this.deviceDeleted(this.searchHits),
       });
-      this.trackExpandDevice(device);
+      this.CsdmAnalyticsHelper.trackExpandDevice(_.size(this.selectedDevices), device);
     }
   }
 
@@ -306,15 +343,14 @@ class DeviceList implements ng.IComponentController {
         _.remove(searchHits.hits, (device: Device) => {
           return sucessfullyDeleted.hasOwnProperty(device.url);
         });
+        _.forEach(sucessfullyDeleted, (_sd, k: string) => {
+          delete this.selectedDevices[k];
+        });
+        if (_.size(sucessfullyDeleted) > 0) {
+          this.bulkAll = false;
+        }
       }
     };
-  }
-
-  private trackExpandDevice(device: IDevice) {
-    this.Analytics.trackEvent(this.Analytics.sections.DEVICE_SEARCH.eventNames.EXPAND_DEVICE, {
-      device_type: device && device.accountType,
-      device_status: device && device.cssColorClass,
-    });
   }
 
   private loadMore(fromScrollEvent = false) {

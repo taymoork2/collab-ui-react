@@ -8,7 +8,7 @@
     .factory('OverviewBroadsoftCard', OverviewBroadsoftCard);
 
   /* @ngInject */
-  function OverviewBroadsoftCard($window, Authinfo, BsftCustomerService) {
+  function OverviewBroadsoftCard($interval, $window, Authinfo, BsftCustomerService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -32,9 +32,14 @@
           });
         };
 
-        BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()).then(function (response) {
-          card.disableCrossLaunch = !response.completed;
-        });
+        var getStatus = $interval(function () {
+          BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()).then(function (response) {
+            if (response.completed && !response.failed) {
+              card.disableCrossLaunch = false;
+              $interval.cancel(getStatus);
+            }
+          });
+        }, 1000);
 
         return card;
       },

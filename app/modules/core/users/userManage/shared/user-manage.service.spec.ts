@@ -34,7 +34,7 @@ describe('Service: UserManageService', () => {
 
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.emailSuppress', {
         manageType: 'manual',
-        prevState: 'users.manage.picker',
+        prevState: 'users.manage.org',
       });
     });
 
@@ -43,7 +43,7 @@ describe('Service: UserManageService', () => {
       this.$scope.$apply();
 
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
-        prevState: 'users.manage.picker',
+        prevState: 'users.manage.org',
       });
     });
   });
@@ -87,6 +87,7 @@ describe('Service: UserManageService', () => {
       expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
         manageUsers: true,
         isDefaultAutoAssignTemplateActivated: false,
+        resetOnboardStoreStates: 'all',
       });
 
       this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = true;
@@ -94,6 +95,7 @@ describe('Service: UserManageService', () => {
       expect(this.$state.go).toHaveBeenCalledWith('users.convert', {
         manageUsers: true,
         isDefaultAutoAssignTemplateActivated: true,
+        resetOnboardStoreStates: 'all',
       });
 
       expect(this.Analytics.trackAddUsers).not.toHaveBeenCalled();
@@ -102,7 +104,7 @@ describe('Service: UserManageService', () => {
     it('should go to users.manage.edit-auto-assign-template-modal', function (this: Test) {
       this.UserManageService.gotoNextStateForManageTypeAfterEmailSuppress(ManageType.AUTO_ASSIGN_TEMPLATE);
       expect(this.$state.go).toHaveBeenCalledWith('users.manage.edit-auto-assign-template-modal', {
-        prevState: 'users.manage.picker',
+        prevState: 'users.manage.org',
       });
     });
   });

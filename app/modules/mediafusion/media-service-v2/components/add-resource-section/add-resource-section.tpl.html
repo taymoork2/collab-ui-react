@@ -31,17 +31,17 @@
             ng-model="$ctrl.radio" 
             id="mf-add-resource-section-existing" 
             name="addResource" 
-            ng-value='0' 
+            ng-value='0'
             cs-input-label="{{'mediaFusion.easyConfig.existingCluster' | translate}}">
           <div class="row" ng-show="$ctrl.radio === 0">
             <div class="columns medium-11">
               <cs-select 
-                ng-model="$ctrl.enteredCluster" 
+                ng-model="$ctrl.selectedClusterFromList" 
                 options="$ctrl.clusterList" 
                 labelfield="label"
-                ng-change="$ctrl.validateClusterName()" 
+                ng-change="$ctrl.validateClusterNameFromList()" 
                 placeholder="$ctrl.selectPlaceHolder"
-                is-disabled="$ctrl.isDiabled">
+                is-disabled="$ctrl.isDisabled">
               </cs-select>
             </div>
           </div>

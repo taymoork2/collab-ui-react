@@ -1,15 +1,27 @@
 (function () {
   'use strict';
 
-  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
-  var usersCardTemplatePath = require('ngtemplate-loader?module=Core!./usersCard.tpl.html');
+  module.exports = angular
+    .module('core.overview.usersCard', [
+      require('angular-translate'),
+      require('modules/core/config/config').default,
+      require('modules/core/featureToggle').default,
+      require('modules/core/modal').default,
+      require('modules/core/multi-dirsync').default,
+      require('modules/core/scripts/services/accountorgservice'),
+      require('modules/core/scripts/services/authinfo'),
+      require('modules/core/scripts/services/org.service'),
+      require('modules/core/users/shared/auto-assign-template').default,
+      require('modules/core/scripts/services/userlist.service'),
+    ])
+    .factory('OverviewUsersCard', OverviewUsersCard)
+    .name;
 
-  angular
-    .module('Core')
-    .factory('OverviewUsersCard', OverviewUsersCard);
+  // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
+  var usersCardTemplatePath = require('ngtemplate-loader?module=core.overview.usersCard!./usersCard.tpl.html');
 
   /* @ngInject */
-  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice) {
+  function OverviewUsersCard($q, $rootScope, $state, $timeout, $translate, Authinfo, AutoAssignTemplateService, Config, DirSyncService, FeatureToggleService, ModalService, MultiDirSyncService, Orgservice, UserListService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -22,20 +34,65 @@
         card.cardClass = 'user-card';
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
+        card.isOnboardingError = false;
         card.showLicenseCard = false;
         card.isDirsyncEnabled = false;
+        card.deferredFT = $q.defer(); // only process unlicensed data after featureToggles resolve
 
         card.unlicensedUsersHandler = function (data) {
           if (data.success) {
-            // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
-            card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
-            if (card.usersToConvert === 0) {
-              card.name = 'overview.cards.licenses.title';
-              card.showLicenseCard = true;
-              getUnassignedLicenses();
-            }
+            card.deferredFT.promise.then(function () {
+              if (card.features.atlasF7208GDPRConvertUser) {
+                card.potentialConversions = 0;
+                card.pendingConversions = 0;
+                _.forEach(data.resources, function (user) {
+                  if (user.conversionStatus === 'IMMEDIATE' || user.conversionStatus === 'DELAYED') {
+                    card.potentialConversions += 1;
+                  } else if (user.conversionStatus == 'TRANSIENT') {
+                    card.pendingConversions += 1;
+                  }
+                });
+                card.usersToConvert = card.pendingConversions + card.potentialConversions;
+              } else {
+                // for now use the length to get the count as there is a bug in CI and totalResults is not accurate.
+                card.usersToConvert = Math.max((data.resources || []).length, data.totalResults);
+              }
+              if (card.usersToConvert === 0) {
+                card.name = 'overview.cards.licenses.title';
+                card.showLicenseCard = true;
+                getUnassignedLicenses();
+              }
+            });
           }
         };
+
+        // notes:
+        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403 status containing an error code of `'200045'`
+        function getNumberOnboardedUsers() {
+          var params = {
+            orgId: Authinfo.getOrgId(),
+            noErrorNotificationOnReject: true,
+            startIndex: 0,
+            count: 100,
+            sortBy: 'name',
+            sortOrder: 'ascending',
+            filter: {
+              nameStartsWith: '',
+              useUnboundedResultsHack: true,
+            },
+          };
+          UserListService.listUsersAsPromise(params).then(function (response) {
+            card.usersOnboarded = response.data.totalResults;
+          }).catch(function (error) {
+            var errors = error.data.Errors;
+            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
+              card.usersOnboarded = '3000+';
+            } else {
+              card.isOnboardingError = true;
+              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
+            }
+          });
+        }
 
         function getUnassignedLicenses() {
           Orgservice.getLicensesUsage().then(function (response) {
@@ -172,19 +229,13 @@
           // TODO: reverify after angular-ui-router upgrade
           $state.go('users.list').then(function () {
             $timeout(function () {
-              $state.go('users.manage.picker');
+              $state.go('users.manage.org');
             });
           });
         };
 
         card.showEditAutoAssignTemplateModal = function () {
-          $state.go('users.list').then(function () {
-            $timeout(function () {
-              AutoAssignTemplateService.gotoEditAutoAssignTemplate({
-                isEditTemplateMode: card.hasAutoAssignDefaultTemplate,
-              });
-            });
-          });
+          AutoAssignTemplateService.showEditAutoAssignTemplateModal();
         };
 
         card.getAutoAssignLicensesStatusCssClass = function () {
@@ -195,13 +246,19 @@
           return $q.all({
             atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
             atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
+            atlasF7208GDPRConvertUser: FeatureToggleService.atlasF7208GDPRConvertUserGetStatus(),
+            autoLicense: FeatureToggleService.autoLicenseGetStatus(),
           }).then(function (features) {
             card.features = features;
+            card.cardClass = card.features.atlasF3745AutoAssignLicenses ? 'cs-card--x-large user-card' : 'cs-card--medium user-card';
+            card.deferredFT.resolve();
           });
         }
 
         function initAutoAssignTemplate() {
           if (card.features.atlasF3745AutoAssignLicenses) {
+            card.name = 'overview.cards.users.onboardTitle';
+            getNumberOnboardedUsers();
             AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
               card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
               if (hasDefaultTemplate) {

@@ -10,6 +10,7 @@
     vm.clientTypeChartDiv = 'clientTypeChartDiv';
     vm.numberOfMeetsOnPremisesChartDiv = 'numberOfMeetsOnPremisesChartDiv';
     vm.totalParticipantsChartDiv = 'totalParticipantsChartDiv';
+    vm.exportDiv = 'total-calls-export-div';
     vm.totalHeader = $translate.instant('mediaFusion.metrics.clientType.total');
     vm.onPremiseHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.overflowHeading = $translate.instant('mediaFusion.metrics.cloud_calls');
@@ -37,11 +38,14 @@
     vm.uc = $translate.instant('mediaFusion.metrics.clientType.uc');
     vm.jabber = $translate.instant('mediaFusion.metrics.clientType.jabber');
     vm.board = $translate.instant('mediaFusion.metrics.clientType.board');
+    vm.web = $translate.instant('mediaFusion.metrics.clientType.web');
+    vm.webexvoice = $translate.instant('mediaFusion.metrics.clientType.webexvoice');
+    vm.webexshare = $translate.instant('mediaFusion.metrics.clientType.webexshare');
 
     vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
     vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
     vm.sipList = [vm.sip, vm.uc];
-    vm.sparkDevicesList = [vm.tp, vm.board];
+    vm.sparkDevicesList = [vm.tp, vm.board, vm.webexvoice, vm.webexshare];
     vm.jabber = [vm.jabber];
 
 
@@ -82,7 +86,7 @@
       return chart;
     }
 
-    function setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster) {
+    function setTotalParticipantsPiechart(callsOnPremise, callsOverflow, cloudCalls, isAllCluster, type) {
       var data = {};
       var dataProvider = [];
       cloudCalls = (cloudCalls - callsOverflow) < 0 ? 0 : (cloudCalls - callsOverflow);
@@ -112,6 +116,22 @@
         align: 'center',
         y: 63,
       }];
+      if (type === 'live') {
+        chartData.export = {
+          enabled: true,
+          divId: vm.exportDiv,
+          fileName: 'total_calls_' + new Date(),
+          libs: {
+            autoLoad: false,
+          },
+          menu: [{
+            class: 'export-main',
+            label: $translate.instant('reportsPage.downloadOptions'),
+            title: $translate.instant('reportsPage.saveAs'),
+            menu: ['save.data', 'PNG', 'JPG', 'PDF', 'CSV', 'XLSX'],
+          }],
+        };
+      }
       var chart = AmCharts.makeChart(vm.totalParticipantsChartDiv, chartData, 0);
       return chart;
     }
@@ -161,7 +181,7 @@
       vm.sparkDesktopList = [vm.desktop, vm.mac, vm.windowsDesk];
       vm.sparkMobileList = [vm.android, vm.blackberry, vm.ipad, vm.iphone, vm.windows];
       vm.sipList = [vm.sip, vm.uc];
-      vm.sparkDevicesList = [vm.tp, vm.board];
+      vm.sparkDevicesList = [vm.tp, vm.board, vm.webexvoice, vm.webexshare];
       vm.jabber = [vm.jabber];
 
       if (clientPercents.sparkDesktopValue > 0) {

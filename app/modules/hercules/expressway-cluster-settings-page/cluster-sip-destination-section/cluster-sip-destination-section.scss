@@ -3,12 +3,17 @@
 
 cluster-sip-destination-section {
   @include keep-flex-container();
-
-  border-top: 1px solid $gray-light-2;
+  margin-bottom: 2.25rem;
 
   .padded-element {
     display: block;
     margin-left: 2rem;
     margin-bottom: 1rem;
+  }
+
+  .icon-info {
+    color: $blue-base;
+    vertical-align: -1px;
+    margin-right: 0.4rem;
   }
 }

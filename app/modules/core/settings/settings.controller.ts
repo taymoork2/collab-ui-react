@@ -13,9 +13,11 @@ import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';
 import { DirSyncSetting } from './dirsync/dirSyncSetting.component';
 import { DeviceBrandingSetting } from './branding/device-branding-setting.component';
-import { WebexVersionSetting } from './webexVersion/webex-version.component';
-import { WebexSiteManagementSetting } from './webexSiteManagement/webexSiteManagementSetting.component';
+import { WebexVersionSetting } from './webex/webexVersion/webex-version.component';
+import { WebexSiteManagementSetting } from './webex/webexSiteManagement/webex-site-management-setting.component';
+import { WebexSetting } from './webex/webex-settings-wrapper.component';
 import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
+import { ProximitySetting } from './proximity/proximity.component';
 
 export class SettingsCtrl {
 
@@ -32,9 +34,11 @@ export class SettingsCtrl {
   public externalCommunication: SettingSection;
   public fileSharingControl: SettingSection;
   public dirsync: SettingSection;
+  public webexSettingsWrapper: SettingSection;
   public webexVersion: SettingSection;
   public webexSiteManagement: SettingSection;
   public sparkAssistant: SettingSection;
+  public proximity: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -78,6 +82,7 @@ export class SettingsCtrl {
       this.sipDomain = new SipDomainSetting();
       this.dirsync = new DirSyncSetting();
       this.initSparkAssistant();
+      this.initProximitySetting();
       if (this.Authinfo.isEnterpriseCustomer()) {
         this.initSecurity();
         this.initBlockExternalCommunication();
@@ -85,7 +90,7 @@ export class SettingsCtrl {
         this.initRetention();
       }
     } else {
-      this.webexSiteManagement = new WebexSiteManagementSetting();
+      this.initWebex();
     }
 
     const settingsToShow = _.get<any>(this.$stateParams, 'showSettings', null);
@@ -114,6 +119,12 @@ export class SettingsCtrl {
       const body = $('body');
       body.scrollTop(body.scrollTop() - ($('.settings').offset() || { top: 0 }).top);
     }
+  }
+
+  private initWebex() {
+    this.webexSettingsWrapper = new WebexSetting();
+    this.webexVersion = new WebexVersionSetting();
+    this.webexSiteManagement = new WebexSiteManagementSetting();
   }
 
   private initBranding() {
@@ -153,12 +164,17 @@ export class SettingsCtrl {
       if (toggle) {
         this.initOldBranding(false).then((showBranding: boolean) => {
           this.brandingWrapper = new DeviceBrandingSetting(this.Authinfo.isPartner(), showBranding);
-          if (showBranding && this.Authinfo.isPartner()) {
-            this.webexVersion = new WebexVersionSetting();
-          }
         });
       } else {
         this.initOldBranding(true);
+      }
+    });
+  }
+
+  private initProximitySetting() {
+    this.FeatureToggleService.csdmProximityOptInGetStatus().then(toggle => {
+      if (toggle) {
+        this.proximity = new ProximitySetting();
       }
     });
   }
@@ -180,8 +196,7 @@ export class SettingsCtrl {
 
     this.$q.all(promises).then((result) => {
       if (result.blockExternalCommunicationToggle) {
-        //TODO: algendel 1/12/18. This temporarily replaces ExternalCommunicationSetting(proPackPurchased) to enable for all for GA
-        this.externalCommunication = new ExternalCommunicationSetting(true);
+        this.externalCommunication = new ExternalCommunicationSetting(result.proPackPurchased);
       }
     });
   }

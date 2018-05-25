@@ -195,7 +195,7 @@ beforeEach(function () {
   };
 
   // Inspired by https://velesin.io/2016/08/23/unit-testing-angular-1-5-components/
-  this.spyOnComponent = function (name) {
+  this.spyOnComponent = function (name, options) {
     function componentSpy($provide) {
       componentSpy.bindings = [];
 
@@ -209,7 +209,7 @@ beforeEach(function () {
         component.controller = function () {
           componentSpy.bindings.push(this);
         };
-
+        _.assignIn(component, options);
         return $delegate;
       });
     }

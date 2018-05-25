@@ -3,6 +3,14 @@
   position: relative;
   top: 3.25rem;
 
+  .cisco-bmmp-marketing-closeable-widget > * {
+    border-top-color: inherit !important;
+    background-color: inherit !important;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: underline !important;
+  }
   &.readonly {
     top: 6rem;
   }

@@ -26,6 +26,12 @@ export interface IGetFileUrlResponse {
   uniqueFileName: string;
 }
 
+export interface IGetFileChecksumResponse {
+  tempUrl: string;
+  uniqueFileName: string;
+  md5: string;
+}
+
 export interface IGetTaskErrorsResponse {
   items: IErrorItem[];
   paging: IPaging;
@@ -87,6 +93,8 @@ export class UserTaskManagerService {
   constructor(
     private $http: ng.IHttpService,
     private $interval: ng.IIntervalService,
+    private $translate: ng.translate.ITranslateService,
+    private $q: ng.IQService,
     private Authinfo,
     private UrlConfig,
   ) {}
@@ -116,14 +124,16 @@ export class UserTaskManagerService {
     }).then(response => response.data);
   }
 
-  public submitCsvImportTask(fileName: string, fileData: string, exactMatchCsv: boolean): ng.IPromise<ITask> {
+  public submitCsvImportTask(fileName: string, fileData: string, fileChecksum: string, exactMatchCsv: boolean): ng.IPromise<ITask> {
     // submit a CSV file import task procedure:
     // 1. get Swift file location
     // 2. upload CSV file to Swift
-    // 3. create and start the Kafka job
+    // 3. compare checksum
+    // 4. create and start the Kafka job
     return this.getFileUrl(fileName)
       .then(fileUploadObject => {
         return this.uploadToFileStorage(fileUploadObject, fileData)
+          .then(() => this.checkFileChecksum(fileUploadObject, fileChecksum))
           .then(() => this.submitCsvImportJob(fileUploadObject, exactMatchCsv));
       });
   }
@@ -143,6 +153,40 @@ export class UserTaskManagerService {
     };
   }
 
+  public getTaskStatusTranslate(task: ITask): string {
+    let statusTranslate = '';
+    switch (task.latestExecutionStatus) {
+      case TaskStatus.CREATED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
+        break;
+      case TaskStatus.STARTED:
+      case TaskStatus.STARTING:
+      case TaskStatus.STOPPING:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
+        break;
+      case TaskStatus.ABANDONED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
+        break;
+      case TaskStatus.COMPLETED:
+        if (task.counts.usersFailed > 0) {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
+        } else {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
+        }
+        break;
+      case TaskStatus.FAILED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
+        break;
+      case TaskStatus.STOPPED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
+        break;
+      case TaskStatus.UNKNOWN:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
+        break;
+    }
+    return statusTranslate;
+  }
+
   public isTaskPending(status: string): boolean {
     return status === TaskStatus.CREATED ||
            status === TaskStatus.STARTED ||
@@ -156,8 +200,9 @@ export class UserTaskManagerService {
            status === TaskStatus.STOPPING;
   }
 
-  public isTaskError(status: string): boolean {
-    return status === TaskStatus.COMPLETED_WITH_ERRORS ||
+  public isTaskError(task: ITask): boolean {
+    const status = task.latestExecutionStatus;
+    return (status === TaskStatus.COMPLETED && task.counts.usersFailed > 0) ||
            status === TaskStatus.FAILED;
   }
 
@@ -209,6 +254,32 @@ export class UserTaskManagerService {
       data: fileData,
     };
     return this.$http(uploadReq);
+  }
+
+  private getFileChecksum(uniqueFileName: string): ng.IPromise<IGetFileChecksumResponse> {
+    return this.$http<IGetFileChecksumResponse>({
+      method: 'GET',
+      url: `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/downloadurl`,
+      params: {
+        filename: uniqueFileName,
+      },
+    }).then(response => response.data);
+  }
+
+  private checkFileChecksum(fileUploadObject: IGetFileUrlResponse, fileChecksum: string): ng.IPromise<void> {
+    return this.$q((resolve, reject) => {
+      this.getFileChecksum(fileUploadObject.uniqueFileName)
+        .then(fileChecksumObject => {
+          if (fileChecksumObject.md5 === fileChecksum) {
+            resolve();
+          } else {
+            reject(this.$translate.instant('userTaskManagerModal.csvFileChecksumError'));
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }
 
   private submitCsvImportJob(fileUploadObject: IGetFileUrlResponse, exactMatchCsv: boolean): ng.IPromise<ITask> {

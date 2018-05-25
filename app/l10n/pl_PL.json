@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Wszystkie",
         "roomSystems": "Zestaw Cisco Spark Room Kit, seria DX, MX i SX",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Eksportuj atrybuty wykorzystania urządzeń do pliku CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Zaznacz powyższe pole wyboru, aby zaświadczyć, że ten klient znajduje się lokalizacji obsługiwanej przez usługę Cisco Spark",
     "context": "Włącz usługę Context przeznaczoną do Cisco Unified Contact Center.",
     "roomSystem": "Zestaw Cisco Spark Room Kit, seria DX, MX i SX",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Urządzenie pokoju Cisco Spark (aktualnie tylko w USA)",
     "expireWarningMsg": "Liczba dni do zakończenia okresu próbnego: {{numDaysLeft}}.",
     "expiredMsg": "Okres próbny wygasł.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Moja organizacja",
     "meetingParty": "Spotkanie 25-osobowe",
     "roomSystem": "Zestaw Cisco Spark Room Kit, seria DX, MX i SX",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Dostosowanie elementów graficznych",
     "MS": "Wiadomość",
     "CF": "Spotkanie",
@@ -5907,7 +5907,7 @@
       "call": "Zadzwoń",
       "webexOverview": "WebEx",
       "roomSystem": "Urządzenia pokoju",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Usługa Care",
       "trialAccounts": "Konta próbne ({{count}})",
       "activeAccounts": "Konta zakupione ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "TelePresence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Klienci zobaczą ten komunikat podczas oczekiwania na odpowiedź na zgłoszenie.",
     "waitingMessageEVA": "Wkrótce ktoś Ci pomoże…",
     "helpTextLeaveRoomEVA": "Klienci zobaczą ten komunikat, gdy użytkownik opuści sesję czatu i zakończy interakcję.",
-    "leaveRoomMessageEVA": "Czat został zakończony"
+    "leaveRoomMessageEVA": "Czat został zakończony",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Oceń wrażenia z korzystania z czatu",
+        "additionalDetailsAbtIssue": "Opisz występujący problem",
+        "chattingMessage": "Czat w toku...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Porozmawiaj z naszymi specjalistami, aby znaleźć rozwiązanie.",
+        "ratingComment": "Dodaj komentarze",
+        "feedbackQuery": "Oceń wrażenia z korzystania z czatu",
+        "offHoursDefaultMessage": "Aktualnie jesteśmy niedostępni. Zapraszamy ponownie w godzinach pracy.",
+        "callbackConfirmationMsg": "Żądanie połączenia zwrotnego zostało odebrane.",
+        "defaultEmailText": "E-mail",
+        "field3HintText": "Wybierz z listy lub napisz",
+        "defaultWelcomeText": "Witamy w",
+        "connectingMessage": "Nawiązywanie połączenia z agentem",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agent wszedł do pokoju rozmów",
+        "defaultQuestionText": "W czym mogę pomóc?",
+        "leaveRoomMessage": "Agent opuścił czat",
+        "waitingMessageEVA": "Wkrótce ktoś Ci pomoże…",
+        "virtualAssistantWelcomeMessage": "Witaj, w czym mogę pomóc?",
+        "defaultNameText": "Nazwa",
+        "waitingMessage": "Oczekiwanie na agenta...",
+        "defaultPhoneText": "Numer telefonu",
+        "additionalDetails": "Więcej informacji",
+        "bubbleTitleMessage": "Kliknij tutaj, aby otworzyć czat z obsługą klienta",
+        "defaultEmail": "np. abc@xyz.com",
+        "agentUnavailableMessage": "Przepraszamy, aktualnie jesteśmy niedostępni. Spróbuj ponownie później.",
+        "leaveRoomMessageEVA": "Czat został zakończony"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Grupa polowania",
@@ -8909,7 +8940,7 @@
       "CMR": "Sale konferencyjne WebEx",
       "CO": "Połączenie Cisco Spark",
       "SD": "Zestaw Cisco Spark Room Kit, seria DX, MX i SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Czat i połączenie zwrotne",
       "CVC": "Czat, połączenie zwrotne i połączenie przychodzące",
       "MGMTPRO": "Pakiet Pro Pack",
@@ -9107,7 +9138,7 @@
       "CMR": "Sale konferencyjne",
       "ST": "Miejsce do przechowywania",
       "SD": "Zestaw Cisco Spark Room Kit, seria DX, MX i SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Starsza licencja usługi WebEx",
       "CDC": "Czat i połączenie zwrotne",
       "CVC": "Czat, połączenie zwrotne i połączenie przychodzące",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "Aby udowodnić, że ta domena należy do Ciebie, w sekcji rekordu TXT musisz wkleić token weryfikacji DNS:",
       "warning": "Wszystkie domeny muszą być zweryfikowane. Użytkownicy, którzy nie należą do zweryfikowanej domeny, zostaną natychmiast zablokowani. Nie będą mogli się logować do usług Cisco Spark ani z nich korzystać. Nie będzie też możliwe dodawanie nowych użytkowników należących do niezweryfikowanych domen.",
       "verify": "Zweryfikuj",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Dowiedz się,</a> jak wprowadzić token weryfikacji DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Dowiedz się,</a> jak wprowadzić token weryfikacji DNS."
     },
     "claim": {
       "header": "Zgłoś prawa do domeny",

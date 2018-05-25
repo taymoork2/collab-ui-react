@@ -26,7 +26,7 @@ export class ContextAdminAuthorizationService implements IContextAdminAuthorizat
   }
 
   public getAdminAuthorizationStatus(): IPromise<AdminAuthorizationStatus> {
-    const ADMIN_AUTHORIZATION_URL = '/AdminAuthorizationStatus/';
+    const ADMIN_AUTHORIZATION_URL = '/admin/authorizationStatus/';
     const adminAuthorizationStatusUrl = [this.UrlConfig.getContextCcfsUrl(), `${ADMIN_AUTHORIZATION_URL}${this.Authinfo.getOrgId()}`].join('');
     const orgNeedsMigration = 'ORG_NEEDS_MIGRATION';
 

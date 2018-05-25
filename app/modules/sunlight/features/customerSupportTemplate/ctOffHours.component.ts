@@ -10,9 +10,11 @@ class CtOffHoursController extends CtBaseController {
     public CTService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
 
+  private cardMode;
   public days;
   public isBusinessHoursDisabled = false;
   public daysPreview;
@@ -92,6 +94,7 @@ class CtOffHoursController extends CtBaseController {
   }
 
   public $onInit(): void {
+    super.$onInit();
     this.populateViewModal();
     this.isOffHoursPageValid();
   }
@@ -101,7 +104,9 @@ class CtOffHoursController extends CtBaseController {
 export class CtOffHoursComponent implements ng.IComponentOptions {
   public controller = CtOffHoursController;
   public template = require('modules/sunlight/features/customerSupportTemplate/wizardPagesComponent/ctOffHours.tpl.html');
-
+  public bindings = {
+    cardMode: '@',
+  };
 }
 
 export default angular

@@ -11,7 +11,7 @@ enum State {
   USERS_DIR_SYNC_LICENSE_SUMMARY = 'users.manage.dir-sync.add.ob.autoAssignLicenseSummary',
   USERS_DIR_SYNC_STATUS = 'users.manage.dir-sync.add.ob.syncStatus',
   USERS_EMAIL_SUPPRESS = 'users.manage.emailSuppress',
-  USERS_MANAGE_PICKER = 'users.manage.picker',
+  USERS_MANAGE_ORG = 'users.manage.org',
 }
 
 export class UserManageService {
@@ -75,6 +75,7 @@ export class UserManageService {
         this.$state.go(State.USERS_CONVERT, {
           manageUsers: true,
           isDefaultAutoAssignTemplateActivated: this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated,
+          resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
         });
         break;
 
@@ -84,7 +85,7 @@ export class UserManageService {
 
       case ManageType.AUTO_ASSIGN_TEMPLATE:
         this.$state.go(State.USERS_AUTO_ASSIGN_TEMPLATE, {
-          prevState: State.USERS_MANAGE_PICKER,
+          prevState: State.USERS_MANAGE_ORG,
         });
         break;
     }
@@ -93,7 +94,7 @@ export class UserManageService {
   private gotoEmailSuppressStateForType(manageType: ManageType): void {
     this.$state.go(State.USERS_EMAIL_SUPPRESS, {
       manageType: manageType,
-      prevState: State.USERS_MANAGE_PICKER,
+      prevState: State.USERS_MANAGE_ORG,
     });
   }
 }

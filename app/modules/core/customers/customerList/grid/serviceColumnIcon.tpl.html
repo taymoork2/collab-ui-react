@@ -1,10 +1,7 @@
-<i
+<icon-tooltip
   ng-if="isServiceManaged()"
-  class="icon"
-  tabindex="0"
-  ng-class="translateTypeToIcon(type)"
-  tooltip-html-unsafe="{{getTooltipText(row, type)}}"
-  tooltip-append-to-body="true"
-  tooltip-trigger="focus mouseenter"
-  aria-label="{{ariaLabel}}">
-</i>
+  tt-aria-label="{{ariaLabel}}"
+  tt-class="{{translateTypeToIcon(type)}}"
+  tt-tooltip-append-to-body="true"
+  tt-tooltip-unsafe-text="{{getTooltipText(row, type)}}">
+</icon-tooltip>

@@ -9,14 +9,14 @@ export class HcsLicenseActiveCardComponent implements ng.IComponentOptions {
   public template = `
     <article>
       <div class="cs-card">
-        <h4 translate="hcs.license.title"></h4>
+        <h4 translate="hcs.license.hcsTitle"></h4>
       </div>
       <div class="active-card_content active-card-center_content">
         <div class="active-card_section">
-          <div class="active-card_action"><a translate="hcs.license.perpetual"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.plmReport" translate="hcs.license.plmReport.title"></a></div>
         </div>
         <div class="active-card_section">
-          <div class="active-card_action"><a ui-sref="hcs.subscription" translate="hcs.license.subscriptions"></a></div>
+          <div class="active-card_action"><a ui-sref="hcs.subscription" translate="hcs.license.customerReport"></a></div>
         </div>
       </div>
       <div class="active-card_footer" style="display:none">

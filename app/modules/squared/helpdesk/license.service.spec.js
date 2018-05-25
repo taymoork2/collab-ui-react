@@ -155,7 +155,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 1000,
       isTrial: false,
-      usage: 50,
+      usage: 150,
       capacity: 25,
       siteUrl: 'mock.webex.com',
     }, {
@@ -175,7 +175,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 300,
       isTrial: false,
-      usage: 15,
+      usage: 150,
       capacity: 200,
       siteUrl: 'ladidadi.webex.com',
     }, {
@@ -185,7 +185,7 @@ describe('LicenseService', function () {
       status: 'ACTIVE',
       volume: 250,
       isTrial: false,
-      usage: 250,
+      usage: 500,
       capacity: 25,
       siteUrl: 'mock.webex.com',
     }, {
@@ -195,7 +195,7 @@ describe('LicenseService', function () {
       status: 'PENDING',
       volume: 1000,
       isTrial: false,
-      usage: 250,
+      usage: 500,
       capacity: 25,
       siteUrl: 'mock.webex.com',
     }, {
@@ -239,8 +239,8 @@ describe('LicenseService', function () {
     expect(aggregated.length).toEqual(1);
     var aggregate = aggregated[0];
     expect(aggregate.totalVolume).toEqual(130);
-    expect(aggregate.totalUsage).toEqual(65);
-    expect(aggregate.usagePercentage).toEqual(50);
+    expect(aggregate.totalUsage).toEqual(50);
+    expect(aggregate.usagePercentage).toEqual(38);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MS');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(3);
@@ -254,8 +254,8 @@ describe('LicenseService', function () {
       key: 'MC',
     });
     expect(aggregate.totalVolume).toEqual(2300);
-    expect(aggregate.totalUsage).toEqual(215);
-    expect(aggregate.usagePercentage).toEqual(9);
+    expect(aggregate.totalUsage).toEqual(150);
+    expect(aggregate.usagePercentage).toEqual(7);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(3);

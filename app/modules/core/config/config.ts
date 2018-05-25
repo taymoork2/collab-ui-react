@@ -1,6 +1,8 @@
 import { LocalStorageService } from 'modules/core/storage/localStorage.service';
 import { OfferName } from 'modules/core/shared/offer-name';
 
+import storageModuleName from 'modules/core/storage';
+
 interface IRoleStates {
   Application: string[];
   Compliance_User: string[];
@@ -95,6 +97,7 @@ export class Config {
 
   public readonly entitlements = {
     huron: 'ciscouc',
+    broadCloud: 'ciscobc',
     squared: 'webex-squared',
     fusion_uc: 'squared-fusion-uc',
     fusion_cal: 'squared-fusion-cal',
@@ -325,6 +328,7 @@ export class Config {
     insufficientEntitlementsError: '400111',
     hybridServicesError: '400087',
     hybridServicesComboError: '400094',
+    mustConvertBeforeAdding: '600001',
   };
 
   public readonly timeFormat = {
@@ -468,6 +472,7 @@ export class Config {
       'reports.metrics',
       'reports.media',
       'reports.mediaservice',
+      'reports.live-resource',
       'services-overview',
       'cluster-list',
       'media-cluster-details',
@@ -528,7 +533,7 @@ export class Config {
   };
 
   // These states do not require a role/service check
-  public readonly publicStates = ['unauthorized', '404', 'csadmin'];
+  public readonly publicStates = ['unauthorized', '404', 'csadmin', 'helpdesk-admin-elevation'];
   public readonly ciscoOnly = ['billing'];
 
   // rolestates are modified in the constructor and can't be readonly
@@ -624,7 +629,7 @@ export class Config {
     ],
     Application: ['organizations', 'organization-overview'],
     Help_Desk: ['helpdesk', 'helpdesk.search', 'helpdesk.user', 'helpdesk.org', 'helpdesklaunch', 'provisioning', 'order-details'],
-    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports'],
+    Compliance_User: ['ediscovery', 'ediscovery.search', 'ediscovery.reports', 'legalhold'],
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
     Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],
@@ -634,29 +639,35 @@ export class Config {
   private readonly defaultEntitlements = ['webex-squared', 'squared-call-initiation'];
   private readonly hostnameConfig = require('config/hostname.config');
 
-  // public functions
   public isDevHostName(hostName: string): boolean {
     const whitelistDevHosts = [
       '0.0.0.0',
-      this.hostnameConfig.LOCAL,
       'localhost',
       'server',
-      'dev-admin.ciscospark.com',
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
     ];
     return _.includes(whitelistDevHosts, hostName);
   }
 
-  public canUseAbsUrlForDevLogin (absUrl: string): boolean {
-    const whitelistAbsUrls = [
-      'http://127.0.0.1:8000',
-      'http://dev-admin.ciscospark.com:8000',
-    ];
-    return _.includes(whitelistAbsUrls, absUrl);
+  public getAbsUrlForDev(absUrl: string = this.getAbsUrlAtRootContext()): string {
+    const whitelistAbsUrls = _.map([
+      this.hostnameConfig.LOCAL,
+      this.hostnameConfig.DEV,
+      this.hostnameConfig.WEBEX_DEV,
+    ], host => `http://${host}:8000/`);
+
+    if (_.includes(whitelistAbsUrls, absUrl)) {
+      return absUrl;
+    }
+
+    return whitelistAbsUrls[0];
   }
 
-  public getAbsUrlAtRootContext (): string {
+  public getAbsUrlAtRootContext(): string {
     const portSuffix = (this.$location.port()) ? ':' + this.$location.port() : '';
-    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}`;
+    return `${this.$location.protocol()}://${this.$location.host()}${portSuffix}/`;
   }
 
   public forceProdForE2E(): boolean {
@@ -668,7 +679,7 @@ export class Config {
   }
 
   public isCfe(): boolean {
-    return !this.forceProdForE2E() && this.getCurrentHostname() === this.hostnameConfig.CFE;
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_CFE || this.getCurrentHostname() === this.hostnameConfig.CFE);
   }
 
   public isDev(): boolean {
@@ -686,11 +697,11 @@ export class Config {
   }
 
   public isIntegration(): boolean {
-    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
+    return !this.forceProdForE2E() && (this.getCurrentHostname() === this.hostnameConfig.WEBEX_INTEGRATION || this.getCurrentHostname() === this.hostnameConfig.INTEGRATION || this.forceIntegrationForE2E());
   }
 
   public isProd(): boolean {
-    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
+    return this.forceProdForE2E() || this.getCurrentHostname() === this.hostnameConfig.WEBEX_PRODUCTION || this.getCurrentHostname() === this.hostnameConfig.PRODUCTION;
   }
 
   public isUserAgent(userAgentString: string): boolean {
@@ -727,7 +738,7 @@ export class Config {
 
 export default angular
   .module('core.config', [
-    require('modules/core/storage').default,
+    storageModuleName,
   ])
   .service('Config', Config)
   .name;

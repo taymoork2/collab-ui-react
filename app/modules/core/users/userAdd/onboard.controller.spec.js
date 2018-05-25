@@ -34,6 +34,7 @@ describe('OnboardCtrl: Ctrl', function () {
       'Notification',
       'NumberService',
       'OnboardService',
+      'OnboardStore',
       'Orgservice',
       'ServiceSetup',
       'SunlightConfigService',
@@ -93,7 +94,6 @@ describe('OnboardCtrl: Ctrl', function () {
     this.mock.fusionServices = getJSONFixture('core/json/authInfo/fusionServices.json');
     this.mock.headers = getJSONFixture('core/json/users/headers.json');
     this.mock.getMessageServices = getJSONFixture('core/json/authInfo/messagingServices.json');
-    this.mock.unlicensedUsers = getJSONFixture('core/json/organizations/unlicensedUsers.json');
     this.mock.getCareServices = getJSONFixture('core/json/authInfo/careServices.json');
     this.mock.getCareVoiceServices = getJSONFixture('core/json/authInfo/careVoiceServices.json');
     this.mock.getCareServicesWithoutCareLicense = getJSONFixture('core/json/authInfo/careServicesWithoutCareLicense.json');
@@ -117,9 +117,6 @@ describe('OnboardCtrl: Ctrl', function () {
 
     spyOn(this.Notification, 'notify');
 
-    spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(function (callback) {
-      callback(this.mock.unlicensedUsers, 200);
-    }.bind(this));
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({}, 200);
     });
@@ -135,7 +132,8 @@ describe('OnboardCtrl: Ctrl', function () {
     spyOn(this.TelephonyInfoService, 'loadExtPoolWithMapping').and.returnValue(this.$q.resolve(this.mock.externalNumberPoolMap));
 
     spyOn(this.FeatureToggleService, 'getFeaturesForUser').and.returnValue(this.mock.getMyFeatureToggles);
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'hI1484GetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF3745PortAssignableServicesGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.TelephonyInfoService, 'getPrimarySiteInfo').and.returnValue(this.$q.resolve(this.mock.sites));
     spyOn(this.ServiceSetup, 'listSites').and.returnValue(this.$q.resolve(this.mock.sites));
 
@@ -489,7 +487,7 @@ describe('OnboardCtrl: Ctrl', function () {
         name: 'dntodid1',
         address: 'dntodid1@gmail.com',
       }];
-      this.$scope.convertSelectedList = [{
+      this.OnboardStore['users.convert'].convertSelectedList = [{
         name: {
           givenName: 'dntodid',
           familyName: '',
@@ -545,7 +543,7 @@ describe('OnboardCtrl: Ctrl', function () {
       }));
       expect(this.$state.go).toHaveBeenCalledWith('editService.dn');
       expect(this.$scope.editServicesFlow).toBe(true);
-      expect(this.$scope.convertUsersFlow).toBe(false);
+      expect(this.OnboardStore['users.convert'].convertUsersFlow).toBe(false);
     });
 
     it('assignDNForUserList', function () {
@@ -702,16 +700,6 @@ describe('OnboardCtrl: Ctrl', function () {
         expect(licenseFeatures[1].id).toBe('CO_cb9b68a9-ee2d-4896-bc8d-0f4dd830b47d');
         expect(licenseFeatures[1].idOperation).toBe('ADD');
       });
-    });
-  });
-
-  describe('filterList', function () {
-    beforeEach(initController);
-    it('a proper query should call out to organizationService', function () {
-      this.$scope.filterList('sqtest');
-      this.$timeout.flush();
-      expect(this.Orgservice.getUnlicensedUsers.calls.count()).toEqual(2);
-      expect(this.$scope.showSearch).toEqual(true);
     });
   });
 
@@ -1187,6 +1175,7 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
@@ -1194,7 +1183,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
 
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CDC_da652e7d-cd34-4545-8f23-936b74359afd');
@@ -1210,6 +1200,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREDISABLED');
       });
     });
@@ -1235,14 +1227,16 @@ describe('OnboardCtrl: Ctrl', function () {
       beforeEach(initController);
 
       it('should call getAccountLicenses and getAccountLicensesForCare correctly', function () {
+        this.$scope.setCareService();
         this.$scope.radioStates.msgRadio = true;
         this.$scope.controlMsg();
         this.$scope.radioStates.initialCareRadioState = this.$scope.careRadioValue.NONE;
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.K2;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
-
         var licenseFeatures = this.$scope.getAccountLicenses();
-        this.$scope.setCareService();
+
+        this.$scope.sendCareServiceMetrics();
+
         expect(licenseFeatures[0].id).toBe('MS_07bbaaf5-735d-4878-a6ea-d67d69feb1c0');
         expect(licenseFeatures[0].idOperation).toBe('ADD');
         expect(licenseFeatures[1].id).toBe('CVC_va652e7d-cd34-4545-8f23-936b74359afd');
@@ -1258,6 +1252,8 @@ describe('OnboardCtrl: Ctrl', function () {
         this.$scope.radioStates.careRadio = this.$scope.careRadioValue.NONE;
         this.$scope.recvUpdateIsContextServiceAdminAuthorized(true);
         this.$scope.getAccountLicenses();
+        this.$scope.sendCareServiceMetrics();
+
         expect(this.LogMetricsService.logMetrics.calls.argsFor(0)[1]).toBe('CAREVOICEDISABLED');
       });
     });
@@ -1374,18 +1370,6 @@ describe('OnboardCtrl: Ctrl', function () {
     });
   });
 
-  describe('opening convert users in the manage users model', function () {
-    it('should go to users.manage when gotToManageUsers() is called', function () {
-      this.$stateParams.manageUsers = true;
-      initController.apply(this);
-      this.$scope.$apply();
-
-      expect(this.$scope.manageUsers).toBeTruthy();
-      this.$scope.goToManageUsers();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
-    });
-  });
-
   describe('onBack', function () {
     beforeEach(function () {
       this.$previousState.get.and.returnValue({
@@ -1397,10 +1381,10 @@ describe('OnboardCtrl: Ctrl', function () {
       initController.apply(this);
     });
 
-    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+    it('should go to users.manage.org when previous state is users.manage.emailSuppress', function () {
       this.$scope.onBack();
       this.$scope.$apply();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
     });
   });
 

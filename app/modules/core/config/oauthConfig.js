@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  var hostnameConfig = require('config/hostname.config');
-
   module.exports = angular
     .module('core.oauthconfig', [
       require('modules/core/config/config').default,
@@ -11,7 +9,7 @@
     .factory('OAuthConfig', OAuthConfig)
     .name;
 
-  function OAuthConfig(Utils, Config) {
+  function OAuthConfig($location, Config, Utils) {
     var scopes = [
       'webexsquare:admin',
       'webexsquare:billing',
@@ -24,6 +22,8 @@
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
       'spark-compliance:rooms_read',
+      'spark-compliance:people_read',
+      'spark-compliance:organizations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
@@ -68,7 +68,7 @@
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
         userInfo: 'user_info=%s',
       },
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=',
+      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=',
     };
 
     return {
@@ -173,21 +173,14 @@
       return Utils.sprintf(config.oauthUrl.userInfo, params);
     }
 
-    function getAbsUrlForDev() {
-      var urlAtRootContext = Config.getAbsUrlAtRootContext();
-      var isOkayForRedir = Config.canUseAbsUrlForDevLogin(urlAtRootContext);
-      return (isOkayForRedir) ? urlAtRootContext : 'http://127.0.0.1:8000';
-    }
-
     function getAdminPortalUrl() {
-      var adminPortalUrl = {
-        dev: getAbsUrlForDev(),
-        cfe: 'https://' + hostnameConfig.CFE,
-        integration: 'https://' + hostnameConfig.INTEGRATION + '/',
-        prod: 'https://' + hostnameConfig.PRODUCTION + '/',
-      };
-      var env = Config.isE2E() ? 'dev' : Config.getEnv();
-      return adminPortalUrl[env];
+      var isDev = Config.isE2E() || Config.isDev();
+
+      if (isDev) {
+        return Config.getAbsUrlForDev();
+      }
+
+      return 'https://' + $location.host() + '/';
     }
 
     function getClientSecret() {
@@ -211,7 +204,7 @@
     }
 
     function getOauthServiceType() {
-      return 'spark';
+      return 'common';
     }
   }
 }());

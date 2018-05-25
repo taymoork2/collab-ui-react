@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Tout",
         "roomSystems": "Kit de salle Cisco Spark, séries DX, MX et SX",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Exporter les attributs d'utilisation du périphérique dans un fichier CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Veuillez cocher la case ci-dessus pour certifier que ce client se trouve dans un emplacement géographique pris en charge pour Cisco Spark",
     "context": "Activer le service Context pour Cisco Unified Contact Center.",
     "roomSystem": "Kit de salle Cisco Spark, séries DX, MX et SX",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Périphérique de salle Cisco Spark (Actuellement États-Unis uniquement)",
     "expireWarningMsg": "Choisissez si les utilisateurs externes sont autorisés à effectuer des transferts d'appels et des conférences. Ce paramètre affecte la totalité de l'organisation, mais vous pouvez remplacer ce paramètre ultérieurement pour les utilisateurs individuels.",
     "expiredMsg": "Votre essai a expiré.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Mon organisation",
     "meetingParty": "Réunion de 25 personnes",
     "roomSystem": "Kit de salle Cisco Spark, séries DX, MX et SX",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Charte graphique du client",
     "MS": "Message",
     "CF": "Réunion",
@@ -5907,7 +5907,7 @@
       "call": "Appeler",
       "webexOverview": "WebEx",
       "roomSystem": "Périphériques de la salle",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Cœur",
       "trialAccounts": "Comptes d'essai ({{count}})",
       "activeAccounts": "Comptes achetés ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Les clients voient ce message pendant qu'ils attendent la réponse à leur demande.",
     "waitingMessageEVA": "Quelqu'un va vous aider dans quelques instants...",
     "helpTextLeaveRoomEVA": "Les clients voient ce message lorsque l'utilisateur qui interagit avec eux met un terme à la conversation instantanée.",
-    "leaveRoomMessageEVA": "La conversation instantanée a pris fin"
+    "leaveRoomMessageEVA": "La conversation instantanée a pris fin",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Veuillez évaluer votre expérience de rappel.",
+        "additionalDetailsAbtIssue": "Décrivez le problème que vous rencontrez",
+        "chattingMessage": "Chat en cours...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chatez avec nos spécialistes de la solution qui nous aident à mieux vous servir.",
+        "ratingComment": "Ajouter des commentaires",
+        "feedbackQuery": "Veuillez évaluer votre expérience du chat",
+        "offHoursDefaultMessage": "Nous sommes actuellement hors-ligne. Veuillez réessayer pendant nos heures ouvrées.",
+        "callbackConfirmationMsg": "La demande de rappel a été reçue avec succès.",
+        "defaultEmailText": "Adresse électronique",
+        "field3HintText": "Sélectionner à partir de la liste ou taper",
+        "defaultWelcomeText": "Bienvenue à",
+        "connectingMessage": "Vous allez être connecté(e) à un agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "L'agent est entré dans la salle de Chat",
+        "defaultQuestionText": "Comment puis-je vous aider ?",
+        "leaveRoomMessage": "L'agent a quitté le Chat",
+        "waitingMessageEVA": "Quelqu'un va vous aider dans quelques instants...",
+        "virtualAssistantWelcomeMessage": "Bonjour, comment puis-je vous aider aujourd'hui ?",
+        "defaultNameText": "Nom",
+        "waitingMessage": "En attente d’un agent...",
+        "defaultPhoneText": "Numéro de téléphone",
+        "additionalDetails": "Informations supplémentaires",
+        "bubbleTitleMessage": "Cliquez ici pour chater avec le Service clientèle",
+        "defaultEmail": "e.g. abc@xyz.com",
+        "agentUnavailableMessage": "Désolés, nous sommes indisponibles pour le moment. Veuillez réessayer ultérieurement.",
+        "leaveRoomMessageEVA": "La conversation instantanée a pris fin"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Groupe de recherche",
@@ -8909,7 +8940,7 @@
       "CMR": "Salles de réunion de collaboration WebEx",
       "CO": "Cisco Spark Call (Appel Cisco Spark)",
       "SD": "Kit de salle Cisco Spark, séries DX, MX et SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Chat et rappel",
       "CVC": "Chat, rappel et appel entrant",
       "MGMTPRO": "Pack Pro",
@@ -9107,7 +9138,7 @@
       "CMR": "Salles de réunion de collaboration",
       "ST": "Stockage",
       "SD": "Kit de salle Cisco Spark, séries DX, MX et SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Licence héritée WebEx",
       "CDC": "Chat et rappel",
       "CVC": "Chat, rappel et appel entrant",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "vous devez copier et coller ce jeton de vérification DNS dans la section d'enregistrement TXT pour prouver que vous possédez le domaine :",
       "warning": "Il est important de vérifier tous les domaines. Les utilisateurs qui n'appartiennent pas à un domaine vérifié seront immédiatement exclus. Ces utilisateurs ne pourront pas se connecter ni utiliser les services Cisco Spark. De plus, vous ne pourrez pas ajouter des nouveaux utilisateurs qui appartiennent à des domaines non vérifiés.",
       "verify": "Vérifier",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>En savoir plus</a> sur la façon de saisir le jeton de vérification DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>En savoir plus</a> sur la façon de saisir le jeton de vérification DNS."
     },
     "claim": {
       "header": "Prendre un domaine",

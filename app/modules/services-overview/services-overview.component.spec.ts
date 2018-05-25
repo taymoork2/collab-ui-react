@@ -11,6 +11,7 @@ describe('ServicesOverviewController', () => {
   let $componentController: ng.IComponentControllerService;
   let $q: ng.IQService;
   let $scope: ng.IScope;
+  let $state: ng.ui.IStateService;
   let ctrl: ServicesOverviewController;
   let Authinfo;
   let CloudConnectorService: CloudConnectorService;
@@ -35,6 +36,7 @@ describe('ServicesOverviewController', () => {
   let getService: jasmine.Spy;
   let fetch: jasmine.Spy;
   let getStatusForService: jasmine.Spy;
+  let isPartnerAdmin: jasmine.Spy;
 
   beforeEach(angular.mock.module(moduleName));
   beforeEach(inject(dependencies));
@@ -51,6 +53,7 @@ describe('ServicesOverviewController', () => {
     isContactCenterContext = spyOn(Authinfo, 'isContactCenterContext').and.returnValue(false);
     isSquaredUC = spyOn(Authinfo, 'isSquaredUC').and.returnValue(false);
     isFusionIMP = spyOn(Authinfo, 'isFusionIMP').and.returnValue(false);
+    isPartnerAdmin = spyOn(Authinfo, 'isPartnerAdmin').and.returnValue(false);
     getService = spyOn(CloudConnectorService, 'getService').and.returnValue($q.resolve({}));
     fetch = spyOn(EnterprisePrivateTrunkService, 'fetch').and.returnValue($q.resolve([]));
     spyOn(FeatureToggleService, 'supports').and.callFake((name) => $q.resolve(_.includes(enabledFeatureToggles, name)));
@@ -60,7 +63,7 @@ describe('ServicesOverviewController', () => {
     spyOn(HybridServicesClusterStatesService, 'getServiceStatusCSSClassFromLabel').and.returnValue('success');
   });
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
@@ -72,6 +75,7 @@ describe('ServicesOverviewController', () => {
     HybridServicesClusterService = _HybridServicesClusterService_;
     HybridServicesClusterStatesService = _HybridServicesClusterStatesService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
+    $state = _$state_;
   }
 
   function initController() {
@@ -80,17 +84,30 @@ describe('ServicesOverviewController', () => {
         office365: undefined,
       },
     });
+    $state.current = { name: 'services-overview' };
+    ctrl.$onInit();
+    $scope.$apply();
+  }
+
+  function initControllerPartner() {
+    ctrl = $componentController('servicesOverview', {}, {
+      urlParams: {
+        office365: undefined,
+      },
+    });
+    $state.current = { name: 'partner-services-overview' };
     ctrl.$onInit();
     $scope.$apply();
   }
 
   describe('$onInit', () => {
-    it('should create 4 cloud cards', () => {
+    it('should create 5 cloud cards', () => {
       initController();
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
-      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: false }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
       expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: true, display: false }).length).toBe(1);
     });
 
     it('should load the webex site list', () => {
@@ -133,7 +150,7 @@ describe('ServicesOverviewController', () => {
       expect(ctrl._servicesInactive).toEqual(['squared-fusion-gcal']);
     });
 
-    it('should display Hybrid Media if the org is entitled to it and the user is full_admin or readonly_admin', () => {
+    it('should display Video Mesh if the org is entitled to it and the user is full_admin or readonly_admin', () => {
       isFusionMedia.and.returnValue(true);
       getRoles.and.returnValue(Config.roles.full_admin);
       initController();
@@ -229,7 +246,7 @@ describe('ServicesOverviewController', () => {
       expect(ctrl._servicesActive).toEqual([]);
     });
 
-    it('should consider Hybrid Media active, if the service is setup', () => {
+    it('should consider Video Mesh active, if the service is setup', () => {
       getStatusForService.and.returnValue($q.resolve([{
         enabled: true,
         id: 'squared-fusion-media',
@@ -291,6 +308,27 @@ describe('ServicesOverviewController', () => {
       enabledFeatureToggles = [FeatureToggleService.features.atlasHybridImp];
       initController();
       expect(ctrl._servicesActive).toEqual(['spark-hybrid-impinterop']);
+    });
+  });
+
+  describe('$onInit partner ServicesOverview', () => {
+    beforeEach(function () {
+      enabledFeatureToggles = [FeatureToggleService.features.gemServicesTab];
+      enabledFeatureToggles = [FeatureToggleService.features.atlasHostedCloudService];
+      isPartnerAdmin.and.returnValue(true);
+      initControllerPartner();
+    });
+
+    it('should list CCA cloud card', () => {
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.message.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: false }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.call.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.care.title' }).length).toBe(1);
+      expect(_.filter(ctrl.getCloudCards(), { name: 'servicesOverview.cards.meeting.title', isPartner: true, display: false }).length).toBe(1);
+    });
+
+    it('should load hybrid HCS Services cards', () => {
+      expect(ctrl._servicesToDisplay).toEqual(['hcs', 'hcs-licensing', 'hcs-upgrade']);
     });
   });
 });

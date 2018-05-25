@@ -64,7 +64,7 @@ class CardUsersSummaryController implements ng.IComponentController {
   }
 
   public openUserStatusTab(): void {
-    if (this.hasCapacityFeatureToggle) {
+    if (this.hasCapacityFeatureToggle && _.includes(['squared-fusion-cal', 'squared-fusion-uc', 'spark-hybrid-impinterop'], this.serviceId)) {
       if (this.serviceId === 'squared-fusion-cal') {
         this.$state.go('calendar-service.users');
       } else if (this.serviceId === 'squared-fusion-uc') {

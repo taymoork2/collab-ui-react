@@ -4,15 +4,19 @@ describe('OverviewUsersCard', function () {
     this.injectDependencies(
       '$q',
       '$rootScope',
+      'Authinfo',
       'AutoAssignTemplateService',
       'DirSyncService',
       'FeatureToggleService',
       'MultiDirSyncService',
       'Orgservice',
-      'OverviewUsersCard'
+      'OverviewUsersCard',
+      'UserListService'
     );
     spyOn(this.FeatureToggleService, 'atlasF6980MultiDirSyncGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'atlasF7208GDPRConvertUserGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'autoLicenseGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.DirSyncService, 'requiresRefresh').and.returnValue(false);
     spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
 
@@ -47,11 +51,19 @@ describe('OverviewUsersCard', function () {
         volume: 10,
       }],
     }];
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
+
+    this.listUsersData = {
+      status: 200,
+      data: {
+        totalResults: 10,
+      },
+    };
+    spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve(this.listUsersData));
   });
 
   describe('primary behaviors:', function () {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
       this.card = this.OverviewUsersCard.createCard();
       this.$rootScope.$apply();
     });
@@ -62,12 +74,16 @@ describe('OverviewUsersCard', function () {
     });
 
     it('should stay on convert user card', function () {
+      this.card.orgEventHandler(this.convertUserData);
       this.card.unlicensedUsersHandler(this.convertUserData);
+      this.$rootScope.$apply();
+
       expect(this.card.usersToConvert).toBe(10);
       expect(this.card.showLicenseCard).toBe(false);
     });
 
     it('should create license card if convert users is 0', function () {
+      this.card.orgEventHandler(this.userData);
       this.card.unlicensedUsersHandler(this.userData);
       this.$rootScope.$apply();
 
@@ -113,6 +129,48 @@ describe('OverviewUsersCard', function () {
           expect(this.card.hasAutoAssignDefaultTemplate).toBe(false);
           expect(this.card.isAutoAssignTemplateActive).toBe(false);
           expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('disabled');
+        });
+
+        it('should update "usersOnboarded" if call to "UserListService.listUsersAsPromise()" resolves with data', function () {
+          this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.UserListService.listUsersAsPromise).toHaveBeenCalled();
+          expect(this.card.usersOnboarded).toBe(10);
+        });
+
+        it('should set "usersOnboarded" appropriately if call to "UserListService.listUsersAsPromise()" rejects', function () {
+          this.listUsersData403 = {
+            status: 403,
+            data: {
+              Errors: [{
+                errorCode: '200045',
+              }],
+            },
+          };
+
+          this.listUsersData503 = {
+            status: 503,
+            data: {
+              Errors: [{
+                errorCode: '400143',
+              }],
+            },
+          };
+          this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
+          this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData403));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.usersOnboarded).toBe('3000+');
+
+          this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData503));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.isOnboardingError).toBe(true);
+          expect(this.card.usersOnboardedError).toBe('overview.cards.users.onboardError');
         });
       });
 
@@ -171,6 +229,40 @@ describe('OverviewUsersCard', function () {
           expect(this.MultiDirSyncService.isDirsyncEnabled).toHaveBeenCalledTimes(1);
           expect(this.card.dirsyncEnabled).toBe(false);
           expect(this.card.isUpdating).toBe(false);
+        });
+      });
+    });
+
+    describe('atlasF7208GDPRConvertUser', function () {
+      beforeEach(function () {
+        this.mock = _.cloneDeep(getJSONFixture('core/json/organizations/unlicensedUsers.json'));
+      });
+
+      describe('enabled:', function () {
+        beforeEach(function () {
+          this.FeatureToggleService.atlasF7208GDPRConvertUserGetStatus.and.returnValue(this.$q.resolve(true));
+          this.card = this.OverviewUsersCard.createCard();
+          this.card.orgEventHandler(this.mock);
+          this.card.unlicensedUsersHandler(this.mock);
+          this.$rootScope.$apply();
+        });
+        it('should set potential and pending conversions properties', function () {
+          expect(this.card.features.atlasF7208GDPRConvertUser).toBe(true);
+          expect(this.card.potentialConversions).toBe(0);
+          expect(this.card.pendingConversions).toBe(0);
+        });
+      });
+      describe('disabled:', function () {
+        beforeEach(function () {
+          this.card = this.OverviewUsersCard.createCard();
+          this.card.orgEventHandler(this.mock);
+          this.card.unlicensedUsersHandler(this.mock);
+          this.$rootScope.$apply();
+        });
+        it('should not set pontential and pending conversions properties', function () {
+          expect(this.card.features.atlasF7208GDPRConvertUser).toBe(false);
+          expect(this.card.potentialConversions).toBeUndefined();
+          expect(this.card.pendingConversions).toBeUndefined();
         });
       });
     });

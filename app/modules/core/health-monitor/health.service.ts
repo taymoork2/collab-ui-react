@@ -11,4 +11,12 @@ export class HealthService {
     return this.$http.get<{ serviceState: string }>(`${this.UrlConfig.getAdminServiceUrl()}ping`)
       .then((response) => response.data.serviceState);
   }
+
+  public getHealthCheck() {
+    return this.$http.get(this.UrlConfig.getHealthCheckServiceUrl(), {
+      // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
+      headers: { Authorization: undefined },
+    })
+    .then((response) => response.data);
+  }
 }

@@ -1,0 +1,62 @@
+export interface IWebexSite {
+  adminEmailParam: string;
+  advancedSettings: string;
+  csvStatusObj: {
+    siteUrl: string,
+    isMockResult: boolean,
+    status: string,
+    details: {
+      jobType: number,
+      request: number,
+      errorLogLink: string,
+      created: string,
+      started: string,
+      finished: string,
+      totalRecords: number,
+      successRecords: number,
+      failedRecords: number,
+      exportFileLink: string,
+    },
+  };
+  isAdminReportEnabled: boolean;
+  isCI: boolean;
+  isCSVSupported: boolean;
+  isCustomerPartner: boolean;
+  isError: boolean;
+  isIframeSupported: boolean;
+  isLinkedSite: boolean;
+  isPending: boolean;
+  isWarn: boolean;
+  license: {
+    partnerEmail: string;
+    partnerOrgId: string;
+    billingServiceId: string;
+    capacity: number;
+    features: any[];
+    isCIUnifiedSite: boolean;
+    isTrial: boolean;
+    licenseId: string;
+    licenseModel: any;
+    licenseType: string;
+    offerName: string;
+    siteId: string;
+    siteUrl: string;
+    status: string;
+    volume: number;
+  };
+  multipleWebexServicesLicensed: boolean;
+  showCSVIconAndResults: boolean;
+  showCSVInfo: boolean;
+  showLicenseTypes: boolean;
+  showSiteLinks: boolean;
+  siteAdminUrl: string;
+  siteUrl: string;
+  userEmailParam: string;
+  webexAdvancedUrl: string;
+  CMRLicensed: boolean;
+  ECLicensed: boolean;
+  EELicensed: boolean;
+  MCLicensed: boolean;
+  SCLicensed: boolean;
+  TCLicensed: boolean;
+}

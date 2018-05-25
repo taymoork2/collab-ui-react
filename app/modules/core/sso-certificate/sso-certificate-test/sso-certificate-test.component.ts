@@ -1,4 +1,4 @@
-import { SsoCertificateService, IIdpMetadata } from 'modules/core/sso-certificate/shared/sso-certificate.service';
+import { SsoCertificateService } from 'modules/core/sso-certificate/shared/sso-certificate.service';
 import { Notification } from 'modules/core/notifications';
 import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 
@@ -41,11 +41,10 @@ export class SsoCertificateTestController implements ng.IComponentController {
   public testSso(): void {
     this.SsoCertificateService.downloadIdpMetadata()
       .then(response => {
-        const entityId = (<IIdpMetadata>response).entityId;
-        const reqBinding = this.checkReqBinding((<IIdpMetadata>response).metadataXml!);
-        if (entityId && reqBinding) {
-          const _BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:';
-          const testUrl = `${this.UrlConfig.getSSOTestUrl()}?metaAlias=/${this.Authinfo.getOrgId()}/sp&idpEntityID=${encodeURIComponent(entityId)}&binding=${_BINDINGS}HTTP-POST&reqBinding=${_BINDINGS}${reqBinding}&reqCertId=${this.SsoCertificateService.getLatestCertificate().id}`;
+        const entityId = response.entityId;
+        if (entityId) {
+          const reqBinding = this.SsoCertificateService.getReqBinding(response.metadataXml!);
+          const testUrl = `${this.UrlConfig.getSSOTestUrl()}?metaAlias=/${this.Authinfo.getOrgId()}/sp&idpEntityID=${encodeURIComponent(entityId)}&binding=${this.SsoCertificateService.HTTP_POST_BINDINGS}${reqBinding}&reqCertId=${this.SsoCertificateService.getLatestCertificate().id}`;
           this.$window.open(testUrl);
           this.ssoTested = true;
         }
@@ -65,19 +64,6 @@ export class SsoCertificateTestController implements ng.IComponentController {
       .catch((response) => {
         this.Notification.errorResponse(response);
       });
-  }
-
-  private checkReqBinding(metadataXml: string): string {
-    const SINGLE_SIGN_ON = 'SingleSignOnService';
-    const SSO_BINDINGS = 'Binding="urn:oasis:names:tc:SAML:2.0:bindings:';
-    const BINDING_END = '" ';
-    const LOCATION = 'Location';
-
-    let start = metadataXml.indexOf(SINGLE_SIGN_ON);
-    start = metadataXml.indexOf(SSO_BINDINGS, start);
-    const end = metadataXml.indexOf(LOCATION, start) - BINDING_END.length;
-    const reqBinding = metadataXml.substring(start + SSO_BINDINGS.length, end);
-    return reqBinding;
   }
 }
 

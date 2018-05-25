@@ -13,10 +13,10 @@ export class HcsUpgradeActiveCardComponent implements ng.IComponentOptions {
       </div>
       <div class="active-card_content active-card-center_content">
         <div class="active-card_section">
-          <div class="active-card_action"><a translate="hcs.sftp.title"></a></div>
+          <div class="active-card_action"><a translate="hcs.sftp.title" ui-sref="hcs.sftplist"></a></div>
         </div>
         <div class="active-card_section">
-          <div class="active-card_action"><a translate="hcs.upgrade.softwareProfiles"></a></div>
+          <div class="active-card_action"><a translate="hcs.upgrade.softwareProfiles" ui-sref="hcs.swprofilelist"></a></div>
         </div>
       </div>
       <div class="active-card_footer" style="display:none">

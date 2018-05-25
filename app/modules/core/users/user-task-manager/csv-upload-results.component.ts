@@ -14,10 +14,14 @@ export interface IError {
 }
 
 export interface IErrorItem {
+  itemNumber: number;
   error: IError;
   trackingId: string;
-  lineNum: number;
-  errorMessage: string;
+}
+
+export interface IErrorRow {
+  row: number;
+  message: string;
 }
 
 export class CsvUploadResultsCtrl implements ng.IComponentController {
@@ -33,12 +37,13 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public numErroredUsers = 0;
   public processProgress = 0;
   public isProcessing = false;
-  public userErrorArray: IErrorItem[] = [];
+  public userErrorArray: IErrorRow[] = [];
   public isCancelledByUser = false;
-  public startedBy: string;
+  public startedBy?: string;
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
   private startDateAndTime?: IDateAndTime;
+  private endDateAndTime?: IDateAndTime;
 
   /* @ngInject */
   constructor(
@@ -50,14 +55,6 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     private UserTaskManagerService: UserTaskManagerService,
     private UserCsvService,
   ) {}
-
-  public get startedDate() {
-    return _.get(this.startDateAndTime, 'date');
-  }
-
-  public get startedTime() {
-    return _.get(this.startDateAndTime, 'time');
-  }
 
   private intervalCallback = (task: ITask) => {
     this.setActiveTaskData(task);
@@ -90,10 +87,42 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     }
   }
 
+  public get startedDate() {
+    return _.get(this.startDateAndTime, 'date');
+  }
+
+  public get startedTime() {
+    return _.get(this.startDateAndTime, 'time');
+  }
+
+  public get endedDate() {
+    return _.get(this.endDateAndTime, 'date');
+  }
+
+  public get endedTime() {
+    return _.get(this.endDateAndTime, 'time');
+  }
+
+  public get hasUser() {
+    return _.isString(this.startedBy);
+  }
+
   public get progressbarLabel() {
     if (this.isCancelledByUser) {
       return this.$translate.instant('common.cancelingEllipsis');
     }
+  }
+
+  public isCompleted(): boolean {
+    return _.isUndefined(this.activeTask) ? false : !this.UserTaskManagerService.isTaskPending(this.activeTask!.latestExecutionStatus);
+  }
+
+  public isTaskError(): boolean {
+    return _.isUndefined(this.activeTask) ? false : this.UserTaskManagerService.isTaskError(this.activeTask!);
+  }
+
+  public getStatusTranslation(): string {
+    return _.isUndefined(this.activeTask) ? '' : this.UserTaskManagerService.getTaskStatusTranslate(this.activeTask!);
   }
 
   public onCancelImport(): void {
@@ -134,17 +163,10 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
 
     if (latestExecutionStatus) {
       this.startDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.startTime);
+      this.endDateAndTime = this.UserTaskManagerService.getDateAndTime(latestExecutionStatus.endTime);
     }
 
-    this.populateTaskErrors(task);
-  }
-
-  private populateTaskErrors(task: ITask) {
-    if (task.counts.usersFailed > 0) {
-      this.fetchTaskErrors(task);
-    } else {
-      this.userErrorArray = [];
-    }
+    this.fetchTaskErrors(task);
   }
 
   private fetchTaskErrors(task: ITask) {
@@ -155,11 +177,39 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.cancelErrorsDeferred = this.$q.defer();
     this.UserTaskManagerService.getTaskErrors(task.id, this.cancelErrorsDeferred.promise).then(response => {
       this.cancelErrorsDeferred = undefined;
-      this.userErrorArray = _.map(response, errorEntry => {
-        return _.assignIn({}, errorEntry, {
-          errorMessage: `${this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), _.get(errorEntry, 'error.message[0].code'))} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+      const tempUserErrorArray: IErrorRow[] = [];
+      _.forEach(response, errorEntry => {
+        _.forEach(errorEntry.error.message, msg => {
+          let errorMessage = '';
+          const errorType = _.split(_.get(msg, 'code'), '-')[0];
+          const errorCode = _.split(_.get(msg, 'code'), '-')[1];
+
+          if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
+            // For EFT, if the code starts with 'BATCH', use the description
+            errorMessage = msg.description;
+          } else if (errorCode) {
+            // get the localized error message
+            errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
+            // For EFT, if the error messages are stock/generic messages, use the description
+            if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
+            || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
+              errorMessage = msg.description;
+            }
+          } else {
+            errorMessage = msg.description;
+          }
+
+          tempUserErrorArray.push({
+            row: _.get(errorEntry, 'itemNumber'),
+            message: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+          });
         });
       });
+      this.userErrorArray = _.cloneDeep(tempUserErrorArray);
+
       // load the errors to userCsvService when it's done
       if (!this.isProcessing) {
         // empty userErrorArray first
@@ -169,9 +219,9 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
         _.forEach(this.userErrorArray, errorEntry => {
           this.UserCsvService.setCsvStat({
             userErrorArray: [{
-              row: errorEntry.lineNum,
+              row: errorEntry.row,
               email: 'User',
-              error: errorEntry.errorMessage,
+              error: errorEntry.message,
             }],
           });
         });

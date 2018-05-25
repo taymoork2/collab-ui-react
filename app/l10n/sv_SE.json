@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Alla",
         "roomSystems": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Exportera användningsattribut för enheten till CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Markera kryssrutan ovan för att intyga att kunden befinner sig på en plats som stöds för Cisco Spark",
     "context": "Aktivera kontexttjänsten för Cisco Unified Contact Center.",
     "roomSystem": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Cisco Spark-rumsenhet (för närvarande endast i USA)",
     "expireWarningMsg": "Din provperiod utgår om {{numDaysLeft}} dag(ar).",
     "expiredMsg": "Din provperiod har löpt ut.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Min organisation",
     "meetingParty": "Flerpersonsmöte med 25 personer",
     "roomSystem": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Kundmärkning",
     "MS": "Meddelande",
     "CF": "Möte",
@@ -5907,7 +5907,7 @@
       "call": "Samtal",
       "webexOverview": "WebEx",
       "roomSystem": "Rumsenheter",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Ta hand om",
       "trialAccounts": "Testkonton ({{count}})",
       "activeAccounts": "Inköpta konton ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Kunderna ser det här meddelandet medan de väntar på ett svar på sin begäran.",
     "waitingMessageEVA": "Du kommer att få hjälp inom kort ...",
     "helpTextLeaveRoomEVA": "Kunderna ser det här meddelandet när användaren som kommunicerar med dem avslutar chatten.",
-    "leaveRoomMessageEVA": "Chatten har avslutats"
+    "leaveRoomMessageEVA": "Chatten har avslutats",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Betygsätt din upplevelse av återuppringningen.",
+        "additionalDetailsAbtIssue": "Beskriv problemet som du har stött på",
+        "chattingMessage": "Chatt pågår...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chatta med våra lösningsspecialister för bästa möjliga hjälp.",
+        "ratingComment": "Lägg till kommentarer",
+        "feedbackQuery": "Betygsätt din upplevelse av chatten",
+        "offHoursDefaultMessage": "Vi är för närvarande offline. Försök igen under vår kontorstid.",
+        "callbackConfirmationMsg": "Begäran om återuppringning har tagits emot.",
+        "defaultEmailText": "E-post",
+        "field3HintText": "Välj från listan eller skriv",
+        "defaultWelcomeText": "Välkommen till",
+        "connectingMessage": "Kopplar dig till en agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agenten har gått in i chattrummet",
+        "defaultQuestionText": "Hur kan jag hjälpa dig?",
+        "leaveRoomMessage": "Agenten har lämnat chatten",
+        "waitingMessageEVA": "Du kommer att få hjälp inom kort ...",
+        "virtualAssistantWelcomeMessage": "Hej, vad kan jag hjälpa till med?",
+        "defaultNameText": "Namn",
+        "waitingMessage": "Väntar på en agent ...",
+        "defaultPhoneText": "Telefonnummer",
+        "additionalDetails": "Ytterligare uppgifter",
+        "bubbleTitleMessage": "Klicka här för att chatta med kundtjänst",
+        "defaultEmail": "t.ex. abc@xyz.com",
+        "agentUnavailableMessage": "Beklagar, det går för tillfället inte att nå oss. Försök igen senare.",
+        "leaveRoomMessageEVA": "Chatten har avslutats"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Sökgrupper",
@@ -8909,7 +8940,7 @@
       "CMR": "WebEx mötesrum för samarbete (CMR)",
       "CO": "Cisco Spark-samtal",
       "SD": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Chatt och återuppringning",
       "CVC": "Chatt, återuppringning och inkommande samtal",
       "MGMTPRO": "Pro-paket",
@@ -9107,7 +9138,7 @@
       "CMR": "Mötesrum för samarbete",
       "ST": "Lagring",
       "SD": "Cisco Spark-paket för rum, DX-, MX- och SX-serierna",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Äldre WebEx-licens",
       "CDC": "Chatt och återuppringning",
       "CVC": "Chatt, återuppringning och inkommande samtal",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "måste du kopiera och klistra in denna DNS-verifieringsnyckel i TXT-registreringsavsnittet för att bevisa att du äger domänen:",
       "warning": "Det är viktigt att verifiera alla domäner. Användare som inte tillhör en verifierad domän kommer omedelbart att låsas ute. Dessa användare kommer inte att kunna logga in eller använda Cisco Spark-tjänsterna. Inte heller kan du lägga till nya användare som tillhör icke-verifierade domäner.",
       "verify": "Verifiera",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Läs mer</a> om hur man anger DNS-verifieringsnyckeln."
     },
     "claim": {
       "header": "Reservera domän",

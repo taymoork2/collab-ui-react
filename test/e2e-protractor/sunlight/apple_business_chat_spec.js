@@ -47,6 +47,14 @@ describe('Apple Business Chat', () => {
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
 
+    it('should proceed to Status Messages page', () => {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.waitingMessage);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.leftChatMessage);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+    });
+
     it('should proceed to Summary page', () => {
       utils.click(careAppleBusinessChatPage.setUpRightBtn);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
@@ -96,6 +104,14 @@ describe('Apple Business Chat', () => {
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
       utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
       utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
+    });
+
+    it('should proceed to Status Messages page', () => {
+      utils.click(careAppleBusinessChatPage.setUpRightBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.waitingMessage);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.leftChatMessage);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
     });
 
     it('should proceed to Summary page', () => {

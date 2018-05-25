@@ -5,7 +5,7 @@ export interface IMatterJsonData {
   createdBy: string;
   caseId: string;
   creationDate: Date;
-  releaseDate?: Date;
+  dateReleased?: Date;
   matterName: string;
   matterDescription: string;
   matterState?: MatterState;
@@ -19,6 +19,12 @@ export interface ICustodian {
   firstName?: string;
   lastName?: string;
   error?: string;
+}
+
+
+export interface IMatterJsonDataForDisplay extends IMatterJsonData {
+  createdByName: string | null;
+  numberOfCustodians: number;
 }
 
 export interface IImportComponentApi {

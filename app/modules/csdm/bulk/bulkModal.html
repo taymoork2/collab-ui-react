@@ -1,39 +1,47 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="vm.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h4 class="modal-title">{{vm.title | translate}}</h4>
 </div>
 <div class="modal-body">
   <div class="section">
-    <h3 translate="common.status"></h3>
-    <p translate="deviceBulk.startedAt" translate-values="{startTime: vm.startTime}"></p>
-    <br>
-    <div class="progressbar-info">
+    <div class="progressbar-info" ng-show="vm.progress < 100">
       <span class="progressbar-label" ng-show="vm.progress < 100" translate="common.processingEllipsis"></span>
-      <span class="progressbar-label" ng-hide="vm.progress < 100" translate="common.done"></span>
       <span class="progressbar-progress">{{vm.progress}}%</span>
     </div>
-    <progressbar animate="false" value="vm.progress" type="success"></progressbar>
-    <div class="cs-card medium">
-      <article>
-        <section>
-          <div class="number success">{{vm.numberOfSuccesses}}</div>
-          <div>{{vm.actionName | translate}}</div>
-        </section>
-      </article>
-    </div>
-    <div class="cs-card medium">
-      <article>
-        <section>
-          <div class="number error">{{vm.numberOfErrors}}</div>
-          <div translate="common.errors"></div>
-        </section>
-      </article>
+    <progressbar ng-show="vm.progress < 100" animate="false" value="vm.progress" type="primary"></progressbar>
+    <br />
+    <div class="device-bulk-results">
+      <div class="device-bulk-result-view">
+        <div class="number success">{{vm.numberOfSuccesses}}</div>
+        <h4 class="action-title">{{vm.actionName | translate}}</h4>
+      </div>
+      <div class="device-bulk-result-view">
+        <div class="number error">{{vm.numberOfErrors}}</div>
+        <h4 class="action-title" translate="common.errors"></h4>
+      </div>
     </div>
   </div>
-  <div class="section errors-section" ng-show="vm.hasErrors">
+  <div class="section errors-section" ng-if="vm.hasErrors">
     <h3 translate="common.errors"></h3>
-    <p translate="deviceBulk.toResolveErrors"></p>
-    <cs-grid class="gridStyle" grid-api="vm.gridApi" grid-options="vm.gridOptions"></cs-grid>
+    <table>
+      <thead>
+      <th class="">{{'spacesPage.nameHeader' | translate}}</th>
+      <th class="">{{'common.errors' | translate}}</th>
+      </thead>
+      <colgroup>
+        <col class="medium-4">
+        <col class="medium-8">
+      </colgroup>
+      <tbody>
+      <tr ng-repeat="error in vm.failuresData">
+        <td>
+          {{error.name}}
+        </td>
+        <td>
+          {{error.error}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>

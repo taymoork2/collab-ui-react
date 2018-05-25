@@ -17,7 +17,6 @@ describe('Partner flow', function () {
     it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
-      utils.expectIsDisplayed(navigation.reportsTab);
     });
 
     it('should display trials list', function () {
@@ -36,13 +35,6 @@ describe('Partner flow', function () {
 
       // - after animation is complete, allow click to fire
       utils.click(navigation.supportLink).then(navigation.launchSupportPage);
-    });
-  });
-
-  describe('Partner landing page reports', function () {
-    it('should show the reports', function () {
-      utils.expectIsDisplayed(partner.entitlementsChart);
-      utils.expectIsDisplayed(partner.entitlementsCount);
     });
   });
 

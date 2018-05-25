@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Tümü",
         "roomSystems": "Cisco Spark Odası Kiti, DX, MX ve SX serisi",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Cihaz Kullanım Özniteliklerini CSV Dosyası Olarak Dışa Aktar",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Bu müşterinin Cisco Spark için desteklenen bir konumda olduğunu onaylamak için lütfen yukarıdaki kutuyu işaretleyin",
     "context": "Cisco Unified Kişi Merkezi için Bağlam Hizmeti'ni etkinleştirin.",
     "roomSystem": "Cisco Spark Odası Kiti, DX, MX ve SX serisi",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Cisco Spark Oda Cihazı (Şu anda yalnızca ABD)",
     "expireWarningMsg": "Deneme sürümünüz {{numDaysLeft}} gün içinde sona eriyor.",
     "expiredMsg": "Deneme sürümünüzün tarihi geçti.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Kuruluşum",
     "meetingParty": "25 Taraflı Toplantı",
     "roomSystem": "Cisco Spark Odası Kiti, DX, MX ve SX serisi",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Müşteri Markalama",
     "MS": "Mesaj gönder",
     "CF": "Toplantı",
@@ -5907,7 +5907,7 @@
       "call": "Ara",
       "webexOverview": "WebEx",
       "roomSystem": "Toplantı Odası Cihazları",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Bakım",
       "trialAccounts": "Deneme Hesapları ({{count}})",
       "activeAccounts": "Satın Alınan Hesaplar ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Müşteriler, taleplerinin yanıtlanmasını beklerken bu mesajı görür.",
     "waitingMessageEVA": "Kısa süre içinde size yardımcı olacağız…",
     "helpTextLeaveRoomEVA": "Kendileriyle etkileşime geçen kullanıcı sohbeti sonlandırdığında müşteriler bu mesajı görür.",
-    "leaveRoomMessageEVA": "Sohbet sonlandırıldı"
+    "leaveRoomMessageEVA": "Sohbet sonlandırıldı",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Lütfen geri arama deneyiminize puan verin.",
+        "additionalDetailsAbtIssue": "Yaşadığınız sorunu anlatın",
+        "chattingMessage": "Sohbet sürüyor...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Size daha iyi hizmet etmemize yardımcı olması için çözüm uzmanımızla sohbet edin.",
+        "ratingComment": "Yorum ekle",
+        "feedbackQuery": "Lütfen sohbet deneyiminize puan verin.",
+        "offHoursDefaultMessage": "Şu anda çevrimdışıyız. Lütfen çalışma saatleri içinde tekrar deneyin.",
+        "callbackConfirmationMsg": "Geri arama isteği başarıyla alındı.",
+        "defaultEmailText": "E-posta",
+        "field3HintText": "Liste veya tür arasından seçim yapın",
+        "defaultWelcomeText": "Hoş geldiniz:",
+        "connectingMessage": "Sizi bir Aracıya bağlıyoruz",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Aracı sohbet odasına girdi",
+        "defaultQuestionText": "Size nasıl yardımcı olabilirim?",
+        "leaveRoomMessage": "Aracı sohbetten ayrıldı",
+        "waitingMessageEVA": "Kısa süre içinde size yardımcı olacağız…",
+        "virtualAssistantWelcomeMessage": "Merhaba, size nasıl yardımcı olabilirim?",
+        "defaultNameText": "Ad",
+        "waitingMessage": "Aracı bekleniyor...",
+        "defaultPhoneText": "Telefon Numarası",
+        "additionalDetails": "Diğer Ayrıntılar",
+        "bubbleTitleMessage": "Müşteri Hizmetleri ile sohbet etmek için buraya tıklayın",
+        "defaultEmail": "ör. abc@xyz.com",
+        "agentUnavailableMessage": "Şu anda uygun olmadığımız için özür dileriz. Lütfen daha sonra tekrar deneyin.",
+        "leaveRoomMessageEVA": "Sohbet sonlandırıldı"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Çağrı Yakalama Grubu",
@@ -8909,7 +8940,7 @@
       "CMR": "WebEx İş Birliği Toplantı Odaları",
       "CO": "Cisco Spark Çağrısı",
       "SD": "Cisco Spark Odası Kiti, DX, MX ve SX serisi",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Sohbet ve Geri Arama",
       "CVC": "Sohbet, Geri Arama ve Gelen Çağrı",
       "MGMTPRO": "Pro Pack",
@@ -9107,7 +9138,7 @@
       "CMR": "İş Birliği Toplantı Odaları",
       "ST": "Depolama",
       "SD": "Cisco Spark Odası Kiti, DX, MX ve SX serisi",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Eski WebEx Lisansı",
       "CDC": "Sohbet ve Geri Arama",
       "CVC": "Sohbet, Geri Arama ve Gelen Çağrı",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "etki alanına sahip olduğunuzu doğrulamak için bu DNS doğrulama jetonunu kopyalayıp TXT kayıt bölümüne yapıştırmanız gerekir:",
       "warning": "Tüm etki alanlarını doğrulamak önemlidir. Doğrulanmış bir etki alanına ait olmayan kullanıcılar derhal engellenecektir. Bu kullanıcılar Cisco Spark hizmetlerinde oturum açamayacak veya bu hizmetleri kullanamayacaktır. Ayrıca doğrulanmamış etki alanlarına ait olan yeni kullanıcıları ekleyemeyeceksiniz.",
       "verify": "Doğrula",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>DNS doğrulama jetonunu</a> girme hakkında daha fazla bilgi edinin."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>DNS doğrulama jetonunu</a> girme hakkında daha fazla bilgi edinin."
     },
     "claim": {
       "header": "Etki Alanını Talep Et",

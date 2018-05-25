@@ -58,7 +58,7 @@ describe('In ctOffHoursComponent, The controller', () => {
   }
 
   it('should set off hours message and business hours by default', () => {
-    expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.offHoursDefaultMessage');
+    expect(controller.template.configuration.pages.offHours.message).toEqual('careChatTpl.templateConfig.default.offHoursDefaultMessage');
     expect(controller.template.configuration.pages.offHours.schedule.open24Hours).toBe(true);
     expect(controller.isOffHoursMessageValid).toBe(true);
     expect(controller.isBusinessHoursDisabled).toBe(false);
@@ -148,7 +148,7 @@ describe('In ctOffHoursComponent, The controller', () => {
   it('should update templateJSON with the offHours data', function () {
     const expectedTemplate: any = {
       enabled: true,
-      message: 'careChatTpl.offHoursDefaultMessage',
+      message: 'careChatTpl.templateConfig.default.offHoursDefaultMessage',
       schedule: {
         businessDays: ['Monday', 'Friday'],
         open24Hours: false,

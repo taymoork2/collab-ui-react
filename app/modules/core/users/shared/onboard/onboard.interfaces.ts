@@ -125,6 +125,9 @@ export interface IParsedOnboardedUserResponse {
   resultList: IParsedOnboardedUserResult[];
   numUpdatedUsers: number;
   numAddedUsers: number;
+  // F7208
+  convertedUsers: string[];
+  pendingUsers: string[];
 }
 
 export interface IOnboardedUsersResultsErrorsAndWarnings {
@@ -137,6 +140,9 @@ export interface IOnboardedUsersAggregateResult {
   results: IOnboardedUsersResultsErrorsAndWarnings;
   numUpdatedUsers: number;
   numAddedUsers: number;
+  // F7208
+  convertedUsers: string[];
+  pendingUsers: string[];
 }
 
 export interface IOnboardedUsersAnalyticsProperties {

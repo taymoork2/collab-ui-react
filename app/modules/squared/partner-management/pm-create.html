@@ -1,59 +1,70 @@
 <div class="partner-management-main centered" tabindex="0">
-    <div class="row">
-        <div class="main-heading columns medium-12">
-            <h2 translate="partnerManagement.search.heading"></h2>
-            <div class="desc-panel">
-                <span class="desc-text" translate="partnerManagement.create.desc"></span>
-            </div>
+  <div class="row">
+    <div class="main-heading columns medium-12">
+      <h2 translate="partnerManagement.search.heading"></h2>
+      <div class="desc-panel">
+        <span class="desc-text" translate="partnerManagement.create.desc"></span>
+      </div>
 
-            <div class="create-form">
-                <label id="email-label" for="email" translate="partnerManagement.search.email"></label>
-                <div>
-                    <input name="email" cs-input class="medium-8 input-checked" ng-model="vm.data.email" ng-readonly="true">
-                    <i id="check-glyph" class="icon icon-check icon-2x"></i>
-                </div>
-
-                <div class="medium-8">
-                    <form name="vm.createForm">
-                        <input cs-input class="form-control" name="name"
-                            ng-model="vm.data.name" cs-input-label="{{::'partnerManagement.search.name' | translate}}"
-                            cs-input-messages="vm.messages" required
-                            ng-blur="vm.createForm.confirmName.$validate()"
-                            validate-unused={{vm.createForm.name.$viewValue}}>
-
-                        <input cs-input name="confirmName" class="form-control"
-                            ng-model="vm.data.confirmName"
-                            ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
-                            cs-input-label="{{::'partnerManagement.search.confirmName' | translate}}"
-                            cs-input-messages="vm.messages" required validate-match="{{vm.createForm.name.$viewValue}}">
-
-                        <label translate="partnerManagement.create.type"></label>
-                        <cs-select ng-model="vm.data.partnerType" options="vm.partnerOptions" valueField="value"
-                            placeholder="vm.partnerPlaceholder" required></cs-select>
-
-                        <div id="lifeCycleDiv">
-                            <input cs-input type="checkbox" id="lifeCycle" ng-model="vm.data.lifeCyclePartner"
-                            cs-input-label="{{::'partnerManagement.create.lifeCycleCB' | translate}}">
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <div class="create-form">
+        <label id="email-label" for="email" translate="partnerManagement.search.email"></label>
+        <div>
+          <input name="email" cs-input class="medium-8 input-checked" ng-model="vm.data.email" ng-readonly="true">
+          <i id="check-glyph" class="icon icon-check icon-2x"></i>
         </div>
-        <hr class="pm-rule">
-        <div class="row">
-            <div class="columns medium-4 text-left">
-                <span class="pm-step" translate="partnerManagement.step2"></span>
+
+        <div class="medium-8">
+          <form name="vm.createForm">
+            <input cs-input class="form-control" name="name"
+              ng-model="vm.data.name" cs-input-label="{{::'partnerManagement.search.name' | translate}}"
+              cs-input-messages="vm.messages" required
+              ng-blur="vm.createForm.confirmName.$validate()"
+              validate-unused={{vm.createForm.name.$viewValue}}>
+
+            <input cs-input name="confirmName" class="form-control"
+              ng-model="vm.data.confirmName"
+              ng-model-options="{updateOn: 'default blur', debounce: {default: 800, blur: 0}}"
+              cs-input-label="{{::'partnerManagement.search.confirmName' | translate}}"
+              cs-input-messages="vm.messages" required validate-match="{{vm.createForm.name.$viewValue}}">
+
+            <label translate="partnerManagement.create.type"></label>
+            <cs-select required
+              ng-model="vm.data.partnerType"
+              options="vm.partnerOptions"
+              valueField="value"
+              placeholder="vm.partnerPlaceholder">
+            </cs-select>
+
+            <div id="lifeCycleDiv">
+              <input cs-input type="checkbox"
+                id="lifeCycle"
+                ng-model="vm.data.lifeCyclePartner"
+                cs-input-label="{{::'partnerManagement.create.lifeCycleCB' | translate}}">
             </div>
-            <div class="columns medium-8">
-                <div class="text-right">
-                    <button cs-btn id="startOver" type="button" ng-click="vm.startOver()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
-                        <span translate="partnerManagement.startOver"></span>
-                    </button>
-                    <button cs-btn id="next" type="button" ng-click="vm.create()" class="btn btn--primary pm-btn" ng-disabled="vm.createForm.$invalid" loading="vm.isLoading">
-                        <span translate="partnerManagement.next"></span>
-                    </button>
-                </div>
-            </div>
+          </form>
         </div>
+      </div>
     </div>
+    <hr class="pm-rule">
+    <div class="row">
+      <div class="columns medium-4 text-left">
+        <span class="pm-step" translate="partnerManagement.step2"></span>
+      </div>
+      <div class="columns medium-8">
+        <div class="text-right">
+          <button cs-btn id="startOver" type="button" ng-click="vm.startOver()" class="btn pm-btn pm-btn-pad" ng-disabled="vm.isLoading">
+            <span translate="partnerManagement.startOver"></span>
+          </button>
+          <button cs-btn type="button"
+            id="next"
+            ng-click="vm.create()"
+            class="btn btn--primary pm-btn"
+            ng-disabled="vm.createForm.$invalid"
+            loading="vm.isLoading">
+            <span translate="common.next"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

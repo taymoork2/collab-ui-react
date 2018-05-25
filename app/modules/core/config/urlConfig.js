@@ -176,6 +176,12 @@
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
+    DiagnosticUrl: {
+      dev: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/',
+      prod: 'https://sapmats.webex.com/pcs/api/',
+    },
     GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
@@ -242,6 +248,12 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
+    ProximityServiceUrl: {
+      dev: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      cfe: 'https://proximity-loada.ciscospark.com/proximity/api/v1/ping',
+      integration: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      prod: 'https://proximity-a.wbx2.com/proximity/api/v1',
+    },
     QlikServiceUrl: {
       dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
@@ -267,10 +279,10 @@
       prod: 'https://media-manager.produs1.ciscoccservice.com/media-manager/v1/',
     },
     AdminBatchServiceUrl: {
-      dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      prod: 'https://admin-batch-service.wbx2.com/api/v1',
+      dev: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
+      cfe: 'https://admin-batch-service-loada.ciscospark.com/api/v1',
+      integration: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
+      prod: 'https://admin-batch-service-a.wbx2.com/api/v1',
     },
     SpeechServiceUrl: {
       dev: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
@@ -279,22 +291,22 @@
       prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
     },
     HcsLicenseServiceUrl: {
-      dev: 'https://licensing.scplatform.cloud/api/v1/',
-      cfe: 'https://licensing.scplatform.cloud/api/v1/',
-      integration: 'https://licensing.scplatform.cloud/api/v1/',
-      prod: 'https://licensing.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://licensing.ucmgmt.cisco.com/api/v1/', //TBD
     },
     HcsUpgradeServiceUrl: {
-      dev: 'https://upgrade.scplatform.cloud/api/v1/',
-      cfe: 'https://upgrade.scplatform.cloud/api/v1/',
-      integration: 'https://upgrade.scplatform.cloud/api/v1/',
-      prod: 'https://upgrade.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://upgrade.ucmgmt.cisco.com/api/v1/', //TBD
     },
     HcsControllerServiceUrl: {
-      dev: 'https://controller.scplatform.cloud/api/v1/',
-      cfe: 'https://controller.scplatform.cloud/api/v1/',
-      integration: 'https://controller.scplatform.cloud/api/v1/',
-      prod: 'https://controller.scplatform.cloud/api/v1/', //TBD
+      dev: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://controller.ucmgmt.cisco.com/api/v1/', //TBD
     },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',

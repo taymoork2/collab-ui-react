@@ -6,11 +6,15 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
     vm.isSipSettingsEnabled = true;
+    vm.videoQuality = false;
+    vm.qosValue = true;
+    vm.videoPropertySetId = null;
+    vm.qosPropertySetId = null;
     vm.closeSetupModal = closeSetupModal;
     vm.createCluster = createCluster;
     vm.clusterlist = [];
@@ -26,11 +30,15 @@
     vm.clusterNameUpdated = clusterNameUpdated;
     vm.upgradeScheduleUpdated = upgradeScheduleUpdated;
     vm.videoQualityUpdated = videoQualityUpdated;
+    vm.qosUpdated = qosUpdated;
     vm.releaseChannelUpdated = releaseChannelUpdated;
     vm.canGoNext = canGoNext;
     vm.hasMfFeatureToggle = hasMfFeatureToggle;
     vm.hasMfSIPFeatureToggle = hasMfSIPFeatureToggle;
     vm.hasMfCascadeBwConfigToggle = hasMfCascadeBwConfigToggle;
+    vm.hasMfClusterWizardFeatureToggle = hasMfClusterWizardFeatureToggle;
+    vm.hasMfFirstTimeCallingFeatureToggle = hasMfFirstTimeCallingFeatureToggle;
+    vm.hasMfQosFeatureToggle = hasMfQosFeatureToggle;
     vm.sipSettingsUpdated = sipSettingsUpdated;
     vm.sipSettingsEnabledCheck = sipSettingsEnabledCheck;
     vm.totalSteps = 7;
@@ -106,15 +114,16 @@
     function additionalCluster() {
       if (newClusterCheck()) {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
-          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
+          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName, vm.releaseChannel.value);
         });
       } else {
         AddResourceSectionService.addRedirectTargetClicked(vm.hostName, vm.clusterName).then(function () {
           if (vm.firstTimeSetup) AddResourceSectionService.enableMediaService();
-          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName);
+          AddResourceSectionService.redirectPopUpAndClose(vm.hostName, vm.clusterName, vm.releaseChannel.value);
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
-          if (!_.isUndefined(vm.videoQuality)) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
+          if (!_.isUndefined(vm.videoQuality) && vm.firstTimeSetup) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
+          if (!_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.videoPropertySetId);
           if (vm.hasMfFeatureToggle && vm.sipSettingEnabled) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle && vm.sipSettingEnabled) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
           if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth) && vm.sipSettingEnabled) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);
@@ -138,6 +147,12 @@
       if (!_.isUndefined(response.videoQuality)) {
         vm.videoQuality = response.videoQuality;
         vm.videoPropertySetId = response.videoPropertySetId;
+      }
+    }
+    function qosUpdated(response) {
+      if (!_.isUndefined(response.qos)) {
+        vm.qosValue = response.qos;
+        vm.qosPropertySetId = response.qosPropertySetId;
       }
     }
 

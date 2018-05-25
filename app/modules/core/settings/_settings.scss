@@ -50,6 +50,16 @@
       margin-top: -1.5rem;
     }
 
+    .spark-assistant-badge {
+      margin-top: -2.5rem;
+      position: absolute;
+      margin-left: 14rem;
+    }
+
+    .tooltip[popup-class="spark-badge-tooltip"] .c-nub {
+      margin-left: 14rem;
+    }
+
     .margin-set {
       margin-top: 1.5rem;
     }
@@ -61,21 +71,38 @@
     }
 
     #brandingLogoPanel,
-    #webex_client_versions_label_and_dropdown {
+    .webex-client-versions__label-and-dropdown {
       h4 {
         font-size: 1rem;
         font-family: $brand-font-light;
         margin-bottom: 0.5rem;
       }
 
+      .webex-client-version__dropdown {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .webex-client-version__error {
+        color: $red;
+      }
+
       span {
         font-family: $brand-font-light;
-        margin-left: 0.05rem;
       }
     }
 
-    #webex_client_versions_label_and_dropdown .row {
-      margin-top: 2.5rem;
+    .webex-allow-customer-site-management__label-and-checkbox {
+      margin-bottom: 2rem;
+
+      h4 {
+        font-size: 1rem;
+        font-family: $brand-font-light;
+        margin-bottom: 1rem;
+      }
+      p {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 

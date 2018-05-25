@@ -71,7 +71,7 @@ export class SuggestionDropdown implements ISuggestionDropdown {
 
   private initGroups() {
     const groups = this.mapFieldsToGroups();
-    groups['all-containing'] = new AllContainingGroup(this.$translate);
+    groups['all-containing'] = new AllContainingGroup(this.$translate, this.searchTranslator);
     groups['display-containing'] = new BelongsToGroup(this.searchTranslator);
     return groups;
   }

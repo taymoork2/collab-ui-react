@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Alle",
         "roomSystems": "Cisco Spark-lokalesæt, DX-, MX- og SX-serier",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Eksport af attributter for enhedsbrug til CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Markér afkrydsningsfeltet ovenfor for at bekræfte, at denne kunde er på en understøttet placering for Cisco Spark",
     "context": "Aktiver konteksttjeneste for Cisco Unified-kontaktcenter.",
     "roomSystem": "Cisco Spark-lokalesæt, DX-, MX- og SX-serier",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Cisco Spark-lokaleenhed (I øjeblikket kun USA)",
     "expireWarningMsg": "Din prøveversion udløber om {{numDaysLeft}} dag(e).",
     "expiredMsg": "Din prøveversion er udløbet.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Min organisation",
     "meetingParty": "Møde med 25 deltagere",
     "roomSystem": "Cisco Spark-lokalesæt, DX-, MX- og SX-serier",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Kundebranding",
     "MS": "Meddelelse",
     "CF": "Møde",
@@ -5907,7 +5907,7 @@
       "call": "Opkald",
       "webexOverview": "WebEx",
       "roomSystem": "Rumenheder",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Omhu",
       "trialAccounts": "Prøvekonti ({{count}})",
       "activeAccounts": "Købte konti ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Kunderne ser denne besked, mens de venter på svar på deres anmodning.",
     "waitingMessageEVA": "En medarbejder vil lige straks hjælpe dig...",
     "helpTextLeaveRoomEVA": "Kunderne ser denne besked, når brugeren, der interagerer med dem, afslutter chatten.",
-    "leaveRoomMessageEVA": "Chat er afsluttet"
+    "leaveRoomMessageEVA": "Chat er afsluttet",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Vurder venligst din tilbagekaldsoplevelse.",
+        "additionalDetailsAbtIssue": "Beskriv dit problem",
+        "chattingMessage": "Chat i gang...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chat med vores løsningsspecialister, så de bedre kan hjælpe dig.",
+        "ratingComment": "Tilføj kommentarer",
+        "feedbackQuery": "Vurder venligst din chatoplevelse",
+        "offHoursDefaultMessage": "Vi er i øjeblikket offline, prøv igen inden for vores åbningstider.",
+        "callbackConfirmationMsg": "Anmodningen om tilbagekald blev modtaget.",
+        "defaultEmailText": "E-mail",
+        "field3HintText": "Vælg fra liste eller type",
+        "defaultWelcomeText": "Velkommen til",
+        "connectingMessage": "Forbinder dig til en agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agenten er tilgået chatrummet",
+        "defaultQuestionText": "Hvordan kan jeg hjælpe dig?",
+        "leaveRoomMessage": "Agent har forladt chatten",
+        "waitingMessageEVA": "En medarbejder vil lige straks hjælpe dig...",
+        "virtualAssistantWelcomeMessage": "Hej, hvordan kan jeg hjælpe dig i dag?",
+        "defaultNameText": "Navn",
+        "waitingMessage": "Venter på en agent ...",
+        "defaultPhoneText": "Telefonnummer",
+        "additionalDetails": "Yderligere oplysninger",
+        "bubbleTitleMessage": "Klik her for at chatte med kundeservice",
+        "defaultEmail": "f.eks. abc@xyz.com",
+        "agentUnavailableMessage": "Vi beklager, vi er ikke tilgængelige i øjeblikket. Prøv igen senere.",
+        "leaveRoomMessageEVA": "Chat er afsluttet"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Viderestillingsgruppe",
@@ -8909,7 +8940,7 @@
       "CMR": "WebEx-møderum til samarbejde",
       "CO": "Cisco Spark-opkald",
       "SD": "Cisco Spark-lokalesæt, DX-, MX- og SX-serier",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Chat og tilbagekald",
       "CVC": "Chat, tilbagekald og indgående opkald",
       "MGMTPRO": "Pro Pack",
@@ -9107,7 +9138,7 @@
       "CMR": "Møderum til samarbejde",
       "ST": "Hukommelse",
       "SD": "Cisco Spark-lokalesæt, DX-, MX- og SX-serier",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Ældre WebEx-licens",
       "CDC": "Chat og tilbagekald",
       "CVC": "Chat, tilbagekald og indgående opkald",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "du må kopiere og indsætte denne DNS-token til bekræftelse i optagelsesafsnittet TXT for at bevise, at du ejer domænet:",
       "warning": "Det er vigtigt at bekræfte alle domæner. Brugere, som ikke tilhører et bekræftet domæne, vil øjeblikkeligt blive låst ude. De brugere vil ikke være i stand til at logge ind eller bruge Cisco Spark-tjenesteydelser. Du vil heller ikke være i stand til at tilføje nye brugere, der tilhører ikke-bekræftede domæner.",
       "verify": "Bekræft",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Læs mere</a> om, hvordan du indtaster DNS token til bekræftelse."
     },
     "claim": {
       "header": "Gør krav på domæne",

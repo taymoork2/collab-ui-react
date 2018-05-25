@@ -23,14 +23,18 @@ export class HybridMediaActiveCardComponent implements ng.IComponentOptions {
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="media-service-v2.list">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="media-service-v2.list" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
+        <a ng-if="$ctrl.hasEventsHistoryFeatureToggle" ui-sref="hybrid-services-event-history-page({serviceId: 'squared-fusion-media'})" class="active-card_footer_events-link">
+          <span>Events</span>
         </a>
       </div>
     </article>
   `;
   public bindings = {
+    hasEventsHistoryFeatureToggle: '<',
     serviceStatus: '<',
   };
 }

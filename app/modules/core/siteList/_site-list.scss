@@ -7,7 +7,7 @@
   @extend %grid-header;
   @extend %page-background-white;
 
-  .ui-grid-row {
+  cs-grid.legacy-site-list .ui-grid-row {
     &:hover {
       background-color: transparent;
     }
@@ -23,6 +23,13 @@
       &:hover {
         color: $anchor-font-color-hover;
       }
+    }
+  }
+
+  .page-sub-header__left {
+    color: $gray-2;
+    .icon {
+      padding-right: .75rem;
     }
   }
 

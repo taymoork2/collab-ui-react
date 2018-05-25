@@ -6,11 +6,11 @@ export class MediaSpecificConfiguration {
   public useOrgProfile: boolean = true;
   public displayText: string;
   public orgLogoUrl: string;
-  public useAgentRealName: boolean = false;
+  public useAgentRealName: boolean = true;
 
   constructor( authinfo: Authinfo, private ctService: CTService) {
     this.useOrgProfile = true;
-    this.useAgentRealName = false;
+    this.useAgentRealName = true;
     this.displayText  = authinfo.getOrgName();
     this.getOrgLogo();
   }
@@ -25,32 +25,57 @@ export class MediaSpecificConfiguration {
 export class IdNameConfig {
   public id: string;
   public name: string;
+  constructor (id = '', name = '') {
+    this.id = id;
+    this.name = name;
+  }
+}
+
+export enum MediaTypes {
+  CHAT = 'chat',
+  CALLBACK = 'callback',
+  CHAT_PLUS_CALLBACK = 'chatPlusCallback',
+}
+
+export class IdNameIconConfig {
+  public id: string;
+  public name: string;
+  public icon: string;
 
   constructor() {
     this.id = '';
     this.name = '';
+    this.icon = '';
   }
 }
 
 export class Attribute {
   public name: string;
-  public value: string;
+  public value: any;
 
-  constructor(name: string, value: string) {
+  constructor(name: string, value: any) {
     this.name = name;
     this.value = value;
+  }
+}
+
+export class CategoryAttribute extends Attribute {
+  public categoryOptions: string;
+  constructor (name: string, value: any, options: string) {
+    super(name, value);
+    this.categoryOptions = options;
   }
 }
 
 export class ProActiveFields {
   public promptTime: string;
   public promptTitle: any;
-  public promptMessage: any = {
-    message: this.$translate.instant('careChatTpl.defaultPromptMessage'),
-  };
-  constructor (
-    private $translate: ng.translate.ITranslateService,
-  ) {}
+  public promptMessage: any;
+  constructor (promptTime, displayText, message) {
+    this.promptTime = promptTime;
+    this.promptTitle = { displayText };
+    this.promptMessage = { message };
+  }
 }
 
 export class ProactivePrompt {
@@ -58,30 +83,33 @@ export class ProactivePrompt {
   public fields: any;
 
   constructor(authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
-    this.enabled =  false;
-    this.fields = {
-      promptTime: ctService.getPromptTime(null).value,
-      promptTitle: {
-        displayText: authinfo.getOrgName(),
-      },
-      promptMessage: {
-        message: $translate.instant('careChatTpl.defaultPromptMessage'),
-      },
-    };
+    this.enabled = false;
+    this.fields = new ProActiveFields(
+      ctService.getPromptTime(null).value,
+      (authinfo.getOrgName() || '').slice(0, 50),
+      $translate.instant('careChatTpl.templateConfig.default.defaultPromptMessage'),
+    );
+  }
+}
+
+export class CVAConfig extends IdNameConfig {
+  public icon: string = '';
+  constructor (id = '', name = '', icon = '') {
+    super(id, name);
+    this.icon = icon;
   }
 }
 
 export class VirtualAssistantConfig {
-  public enabled: boolean;
-  public config: IdNameConfig;
+  public enabled: boolean = false;
+  public config: CVAConfig;
   public welcomeMessage: string;
 
   constructor (
     $translate: ng.translate.ITranslateService,
   ) {
-    this.enabled = false;
-    this.config = new IdNameConfig();
-    this.welcomeMessage = $translate.instant('careChatTpl.virtualAssistantWelcomeMessage');
+    this.config = new CVAConfig();
+    this.welcomeMessage = $translate.instant('careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage');
   }
 }
 
@@ -104,92 +132,70 @@ export class CustomerInformation {
     this.enabled = true;
     this.fields = {
       welcomeHeader: {
-        attributes: [{
-          name: 'header',
-          value: $translate.instant('careChatTpl.defaultWelcomeText'),
-        }, {
-          name: 'organization',
-          value: authinfo.getOrgName(),
-        }],
+        attributes: [
+          new Attribute('header', $translate.instant('careChatTpl.templateConfig.default.defaultWelcomeText')),
+          new Attribute('organization', authinfo.getOrgName()),
+        ],
       },
       field1: {
-        attributes: [{
-          name: 'required',
-          value: 'required',
-        }, {
-          name: 'category',
-          value: ctService.getCategoryTypeObject('customerInfo'),
-        }, {
-          name: 'label',
-          value: $translate.instant('careChatTpl.defaultNameText'),
-        }, {
-          name: 'hintText',
-          value: $translate.instant('careChatTpl.defaultNameHint'),
-        }, {
-          name: 'type',
-          value: ctService.getTypeObject('name'),
-          categoryOptions: '',
-        }],
+        attributes: [
+          new Attribute('required', 'required'),
+          new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultNameText')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultNameHint')),
+          new CategoryAttribute('type', ctService.getTypeObject('name'), ''),
+        ],
       },
 
       field2: {
-        attributes: [{
-          name: 'required',
-          value: 'required',
-        }, {
-          name: 'category',
-          value: ctService.getCategoryTypeObject('customerInfo'),
-        }, {
-          name: 'label',
-          value: $translate.instant('careChatTpl.defaultEmailText'),
-        }, {
-          name: 'hintText',
-          value: $translate.instant('careChatTpl.defaultEmail'),
-        }, {
-          name: 'type',
-          value: ctService.getTypeObject('email'),
-          categoryOptions: '',
-        }],
+        attributes: [
+          new Attribute('required', 'required'),
+          new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultEmailText')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultEmail')),
+          new CategoryAttribute('type', ctService.getTypeObject('email'), ''),
+        ],
       },
 
       field3: {
-        attributes: [{
-          name: 'required',
-          value: 'optional',
-        }, {
-          name: 'category',
-          value: ctService.getCategoryTypeObject('requestInfo'),
-        }, {
-          name: 'label',
-          value: $translate.instant('careChatTpl.defaultQuestionText'),
-        }, {
-          name: 'hintText',
-          value: $translate.instant('careChatTpl.field3HintText'),
-        }, {
-          name: 'type',
-          value: ctService.getTypeObject('category'),
-          categoryOptions: '',
-        }],
+        attributes: [
+          new Attribute('required', 'optional'),
+          new Attribute('category', ctService.getCategoryTypeObject('requestInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultQuestionText')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.field3HintText')),
+          new CategoryAttribute('type', ctService.getTypeObject('category'), ''),
+        ],
       },
 
       field4: {
-        attributes: [{
-          name: 'required',
-          value: 'optional',
-        }, {
-          name: 'category',
-          value: ctService.getCategoryTypeObject('requestInfo'),
-        }, {
-          name: 'label',
-          value: $translate.instant('careChatTpl.additionalDetails'),
-        }, {
-          name: 'hintText',
-          value: $translate.instant('careChatTpl.additionalDetailsAbtIssue'),
-        }, {
-          name: 'type',
-          value: ctService.getTypeObject('reason'),
-          categoryOptions: '',
-        }],
+        attributes: [
+          new Attribute('required', 'optional'),
+          new Attribute('category', ctService.getCategoryTypeObject('requestInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.additionalDetails')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.additionalDetailsAbtIssue')),
+          new CategoryAttribute('type', ctService.getTypeObject('reason'), ''),
+        ],
+      },
+    };
+  }
+}
+
+export class CustomerInformationCallback {
+  public enabled: boolean;
+  public fields: any;
+  constructor(authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
+    const chatInfo = new CustomerInformation(authinfo, ctService, $translate);
+    this.enabled = true;
+    this.fields = {
+      ...chatInfo.fields,
+      field2: {
+        attributes: [
+          new Attribute('required', 'required'),
+          new Attribute('category', ctService.getCategoryTypeObject('customerInfo') as string),
+          new Attribute('label', $translate.instant('careChatTpl.templateConfig.default.defaultPhoneText')),
+          new Attribute('hintText', $translate.instant('careChatTpl.templateConfig.default.defaultPhoneHintText')),
+          new CategoryAttribute('type', ctService.getTypeObject('phone'), ''),
+        ],
       },
     };
   }
@@ -205,7 +211,7 @@ export class AgentUnavailable {
     this.enabled = true;
     this.fields = {
       agentUnavailableMessage: {
-        displayText: $translate.instant('careChatTpl.agentUnavailableMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.agentUnavailableMessage'),
       },
     };
   }
@@ -217,7 +223,7 @@ export class OffHours {
   public schedule: any;
   constructor(ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.enabled = true;
-    this.message = $translate.instant('careChatTpl.offHoursDefaultMessage');
+    this.message = $translate.instant('careChatTpl.templateConfig.default.offHoursDefaultMessage');
     this.schedule = {
       businessDays: _.map(_.filter(ctService.getDays(), 'isSelected'), 'label'),
       open24Hours: true,
@@ -239,10 +245,32 @@ export class Feedback {
     this.enabled = true;
     this.fields = {
       feedbackQuery: {
-        displayText: $translate.instant('careChatTpl.feedbackQueryCall'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQuery'),
       },
       comment: {
-        displayText: $translate.instant('careChatTpl.ratingComment'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
+        dictionaryType: {
+          fieldSet: 'cisco.base.rating',
+          fieldName: 'cccRatingComments',
+        },
+      },
+    };
+  }
+}
+
+export class FeedbackCallback {
+  public enabled: boolean;
+  public fields: any;
+  constructor(
+    $translate: ng.translate.ITranslateService,
+  ) {
+    this.enabled = true;
+    this.fields = {
+      feedbackQuery: {
+        displayText: $translate.instant('careChatTpl.templateConfig.default.feedbackQueryCall'),
+      },
+      comment: {
+        displayText: $translate.instant('careChatTpl.templateConfig.default.ratingComment'),
         dictionaryType: {
           fieldSet: 'cisco.base.rating',
           fieldName: 'cccRatingComments',
@@ -260,7 +288,7 @@ export class CallbackConfirmation {
     this.enabled = true;
     this.fields = {
       callbackConfirmationMessage: {
-        displayText: $translate.instant('careChatTpl.callbackConfirmationMsg'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.callbackConfirmationMsg'),
       },
     };
   }
@@ -289,34 +317,34 @@ export class CallbackPages implements IPages {
   public customerInformation: CustomerInformation;
   public agentUnavailable: AgentUnavailable;
   public offHours: OffHours;
-  public feedbackCallback: Feedback;
+  public feedbackCallback: FeedbackCallback;
   public callbackConfirmation: CallbackConfirmation;
 
   constructor(authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformation = new CustomerInformation(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
-    this.feedbackCallback = new Feedback($translate);
+    this.feedbackCallback = new FeedbackCallback($translate);
     this.callbackConfirmation = new CallbackConfirmation($translate);
   }
 }
 
 export class CBPages implements IPages {
   public customerInformationChat: CustomerInformation;
-  public customerInformationCallback: CustomerInformation;
+  public customerInformationCallback: CustomerInformationCallback;
   public agentUnavailable: AgentUnavailable;
   public offHours: OffHours;
-  public feeback: Feedback;
+  public feedback: Feedback;
   public callbackConfirmation: CallbackConfirmation;
-  public feedbackCallback: Feedback;
+  public feedbackCallback: FeedbackCallback;
 
   constructor( authinfo: Authinfo, ctService: CTService, $translate: ng.translate.ITranslateService) {
     this.customerInformationChat = new CustomerInformation(authinfo, ctService, $translate);
-    this.customerInformationCallback = new CustomerInformation(authinfo, ctService, $translate);
+    this.customerInformationCallback = new CustomerInformationCallback(authinfo, ctService, $translate);
     this.agentUnavailable = new AgentUnavailable($translate);
     this.offHours = new OffHours(ctService, $translate);
-    this.feedbackCallback = new Feedback($translate);
-    this.feeback = new Feedback($translate);
+    this.feedbackCallback = new FeedbackCallback($translate);
+    this.feedback = new Feedback($translate);
     this.callbackConfirmation = new CallbackConfirmation($translate);
   }
 }
@@ -329,26 +357,25 @@ export class ChatStatusMessages {
   ) {
     this.messages = {
       bubbleTitleMessage: {
-        displayText: $translate.instant('careChatTpl.bubbleTitleMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.bubbleTitleMessage'),
       },
       connectingMessage: {
-        displayText: $translate.instant('careChatTpl.connectingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.connectingMessage'),
       },
       waitingMessage: {
-        displayText: $translate.instant('careChatTpl.waitingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.waitingMessage'),
       },
       enterRoomMessage: {
-        displayText: $translate.instant('careChatTpl.enterRoomMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.enterRoomMessage'),
       },
       leaveRoomMessage: {
-        displayText: $translate.instant('careChatTpl.leaveRoomMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.leaveRoomMessage'),
       },
       chattingMessage: {
-        displayText: $translate.instant('careChatTpl.chattingMessage'),
+        displayText: $translate.instant('careChatTpl.templateConfig.default.chattingMessage'),
       },
     };
   }
-
 }
 
 export interface IConfiguration {

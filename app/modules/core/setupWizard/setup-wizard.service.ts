@@ -33,7 +33,7 @@ export class SetupWizardService {
   private org;
   private willNotProvision = false;
   private actingSubscriptionChangeFn: Function = _.noop;
-  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
+  private static enterpriseSubscriptionOrderingTools = ['CCW', 'CCW-CDC', 'CCW_CSB', 'ATLAS_SITE_MGMT'];
 
   /* @ngInject */
   constructor(
@@ -59,7 +59,7 @@ export class SetupWizardService {
     return (_.get(subscription, 'status') === this.Config.subscriptionStatus.ACTIVE) && !_.has(subscription, 'pendingServiceOrderUUID');
   }
 
-  public addProvisioningCallbacks(callObject: { [keys: string]: Function }) {
+  public addProvisioningCallbacks(callObject: { [keys: string]: Function }): void {
     _.assign(this.provisioningCallbacks, callObject);
   }
 
@@ -75,7 +75,7 @@ export class SetupWizardService {
   // A subscriptionId parameter is passed from outside of Atlas (Order Processing Client)
   // to induce a determinant Service Setup flow; acting on a specified pending subscription.
   // Once the flow is complete, the subscriptionID must be cleared to prevent interference with state flows.
-  public clearDeterminantParametersFromSession() {
+  public clearDeterminantParametersFromSession(): void {
     this.SessionStorage.remove(this.StorageKeys.SUBSCRIPTION_ID);
   }
 
@@ -85,7 +85,7 @@ export class SetupWizardService {
 
   public hasPendingCCWSubscriptions(): boolean {
     return this.hasPendingServiceOrder() && _.some(this.pendingSubscriptions, function (sub) {
-      return sub.orderingTool && _.includes(['CCW', 'CCW_CSB', 'ATLAS_SITE_MGMT'], sub.orderingTool);
+      return sub.orderingTool && _.includes(SetupWizardService.enterpriseSubscriptionOrderingTools, sub.orderingTool);
     });
   }
 
@@ -122,7 +122,7 @@ export class SetupWizardService {
     }
   }
 
-  public onActingSubscriptionChange(callback: Function = _.noop) {
+  public onActingSubscriptionChange(callback: Function = _.noop): void {
     this.actingSubscriptionChangeFn = callback;
   }
 
@@ -154,7 +154,7 @@ export class SetupWizardService {
     return _.get(this.actingSubscription, 'pendingTransferServices', []);
   }
 
-  public getPendingOrderStatusDetails(pendingServiceOrderUUID) {
+  public getPendingOrderStatusDetails(pendingServiceOrderUUID): ng.IPromise<any> {
     if (!_.isString(pendingServiceOrderUUID)) {
       return this.$q.reject('No valid pendingServiceOrderUUID passed');
     }
@@ -242,8 +242,8 @@ export class SetupWizardService {
     return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => _.includes([this.Config.licenseTypes.COMMUNICATION, this.Config.licenseTypes.SHARED_DEVICES], license.licenseType));
   }
 
-  public getPendingAudioLicenses(): IPendingLicense[] {
-    return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.licenseType === this.Config.licenseTypes.AUDIO);
+  public getPendingAudioLicense(): IPendingLicense {
+    return _.find(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) =>  license.licenseType === this.Config.licenseTypes.AUDIO);
   }
 
   public getPendingMessageLicenses(): IPendingLicense[] {
@@ -254,23 +254,35 @@ export class SetupWizardService {
     return _.filter(this.getActingSubscriptionPendingLicenses(), (license: IPendingLicense) => license.offerName === this.Config.offerCodes.CDC || license.offerName === this.Config.offerCodes.CVC);
   }
 
-  public hasPendingTSPAudioPackage() {
+  public hasPendingTSPAudioPackage(): boolean {
     return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.TSP });
   }
 
-  public hasPendingCCASPPackage() {
+  public hasPendingCCASPPackage(): boolean {
     return _.some(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCASP });
   }
 
-  public getActiveTSPAudioPackage() {
+  public hasPendingCCAUserPackage(): boolean {
+    return !_.isUndefined(this.getPendingCCAUserPackage());
+  }
+
+  public getActiveTSPAudioPackage(): ITSPLicense {
     return <ITSPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.TSP });
   }
 
-  public getActiveCCASPPackage() {
+  public getActiveCCASPPackage(): ICCASPLicense {
     return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCASP });
   }
 
-  public getPendingAuthinfoSubscriptions() {
+  public getActiveCCAUserPackage(): ICCASPLicense {
+    return <ICCASPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+  }
+
+  public getPendingCCAUserPackage(): ICCASPLicense {
+    return <ICCASPLicense>_.find(this.getActingSubscriptionPendingLicenses(), { offerName: this.Config.offerCodes.CCAUser });
+  }
+
+  public getPendingAuthinfoSubscriptions(): IPendingOrderSubscription[] {
     return _.filter(this.Authinfo.getSubscriptions(), (subscription: IPendingOrderSubscription) => _.has(subscription, 'pendingServiceOrderUUID'));
   }
 
@@ -304,7 +316,7 @@ export class SetupWizardService {
     });
   }
 
-  public getPendingLicensesFromExternalSubscription(externalSubscriptionId: string) {
+  public getPendingLicensesFromExternalSubscription(externalSubscriptionId: string): ng.IPromise<any> {
     if (!_.isString(externalSubscriptionId)) {
       return this.$q.reject('An invalid subscriptionId was passed.');
     }
@@ -330,14 +342,14 @@ export class SetupWizardService {
     };
   }
 
-  private formatWebOrderId(webOrderId) {
+  private formatWebOrderId(webOrderId): string {
     if (webOrderId.lastIndexOf('/') !== -1) {
       return webOrderId.slice(0, webOrderId.lastIndexOf('/'));
     }
     return webOrderId;
   }
 
-  public isCustomerPresent() {
+  public isCustomerPresent(): ng.IPromise<boolean> {
     const params = {
       basicInfo: true,
     };
@@ -369,11 +381,11 @@ export class SetupWizardService {
     });
   }
 
-  public getCustomerCountry() {
+  public getCustomerCountry(): string {
     return this.country;
   }
 
-  public getEndCustomerName() {
+  public getEndCustomerName(): string {
     return this.endCustomer;
   }
 
@@ -381,14 +393,14 @@ export class SetupWizardService {
     return this.org;
   }
 
-  public findCustomerInDc(baseDomain) {
+  public findCustomerInDc(baseDomain): ng.IPromise<boolean> {
     this.HuronCompassService.setCustomerBaseDomain(baseDomain);
     return this.HuronCustomerService.getCustomer()
       .then(() => true)
       .catch(() => false);
   }
 
-  public activateAndCheckCapacity(countryCode?) {
+  public activateAndCheckCapacity(countryCode?): ng.IPromise<any> {
     const url = `${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/setup/communication`;
     const param = this.getActingSubscriptionId();
     return this.$http.patch(url, {
@@ -397,14 +409,14 @@ export class SetupWizardService {
     });
   }
 
-  public getTSPPartners() {
+  public getTSPPartners(): ng.IPromise<any[]> {
     const url = `${this.UrlConfig.getAdminServiceUrl()}partners/tsp`;
     return this.$http.get(url).then((response) => {
       return _.get(response, 'data.tspPartnerList', []);
     });
   }
 
-  public hasWebexMeetingTrial() {
+  public hasWebexMeetingTrial(): boolean {
     let conferencingServices: IConferenceService[] = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
     // Make sure not to touch online trial sites
     conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
@@ -414,7 +426,7 @@ export class SetupWizardService {
     return _.some(conferencingServices, (service: IConferenceService) => _.includes([this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC, this.Config.offerCodes.CF, this.Config.offerCodes.CMR], service.license.offerName));
   }
 
-  public validateTransferCode(payload) {
+  public validateTransferCode(payload): ng.IPromise<any> {
     const orderUuid = this.getActingSubscriptionServiceOrderUUID();
     const url = `${this.UrlConfig.getAdminServiceUrl()}orders/${orderUuid}/transferCode/verify`;
     return this.$http.post(url, payload);
@@ -429,7 +441,7 @@ export class SetupWizardService {
     }
   }
 
-  public validateTransferCodeBySubscriptionId(payload: { siteUrl: string, transferCode: string }, externalSubscriptionId: string = '', orderUuid?: string) {
+  public validateTransferCodeBySubscriptionId(payload: { siteUrl: string, transferCode: string }, externalSubscriptionId: string = '', orderUuid?: string): ng.IPromise<any> {
     _.set(payload, 'serviceId', externalSubscriptionId);
     if (orderUuid) {
       _.set(payload, 'orderUuid', orderUuid);
@@ -438,12 +450,12 @@ export class SetupWizardService {
     return this.$http.post(url, payload);
   }
 
-  public updateSitesInActiveSubscription(payload) {
+  public updateSitesInActiveSubscription(payload): ng.IPromise<any> {
     const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site`;
     return this.$http.post(url, payload);
   }
 
-  public getCCASPPartners() {
+  public getCCASPPartners(): ng.IPromise<any[]> {
     const url = `${this.UrlConfig.getAdminServiceUrl()}partners/ccasp`;
     return this.$http.get(url).then((response) => {
       return _.sortBy(_.get(response, 'data.ccaspPartnerList', []));

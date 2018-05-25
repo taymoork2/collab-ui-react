@@ -116,7 +116,7 @@ describe('Component: manualAddUsersModal:', () => {
 
       it('should transition to the previous state by default', function (this: Test) {
         this.controller.back();
-        expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+        expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
       });
 
       it('should transition specified state if one was provided', function (this: Test) {

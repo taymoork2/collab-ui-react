@@ -71,12 +71,7 @@
           </div>
         </span>
         <span ng-if="choosePlace.filteredView.isInState(choosePlace.filteredView.emptysearchresult)" translate="placesPage.noneFound"></span>
-        <script type="text/ng-template" id="placeTemplate.html" ng-if="choosePlace.showPersonal">
-          <a>
-            <span ng-bind-html="match.label.displayName + ' (' + match.label.readablePlaceType + ')' | typeaheadHighlight:query" ></span>
-          </a>
-        </script>
-        <script type="text/ng-template" id="placeTemplate.html" ng-if="!choosePlace.showPersonal">
+        <script type="text/ng-template" id="placeTemplate.html">
           <a>
             <span ng-bind-html="match.label.displayName | typeaheadHighlight:query" ></span>
           </a>

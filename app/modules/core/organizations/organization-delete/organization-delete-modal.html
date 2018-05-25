@@ -4,7 +4,7 @@
 <div class="modal-body">
   <div ng-if="$ctrl.state === $ctrl.states.USER_ACTION">
     <div class="organization-delete-modal__intro">
-      <span>{{$ctrl.moveOrDeleteLabel}}</span>
+      <h4>{{$ctrl.moveOrDeleteLabel}}</h4>
     </div>
     <div class="cs-radio-group" ng-if="$ctrl.userCount === 1">
       <input cs-input type="radio"
@@ -38,7 +38,7 @@
   <div ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
     <div class="organization-delete-modal__intro">
       <i class="icon icon-check icon-lg organization-delete-modal__intro-icon"></i>
-      <span>{{::'organizationDeleteModal.checkBoxes'|translate}}</span>
+      <h4>{{::'organizationDeleteModal.checkBoxes'|translate}}</h4>
     </div>
     <div class="cs-checkbox-group" ng-repeat="text in $ctrl.checkBoxText track by $index" ng-if="$ctrl.state === $ctrl.states.DELETE_ORG">
       <input class="checkbox-text" cs-input type="checkbox"

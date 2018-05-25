@@ -48,9 +48,12 @@ export class HybridCalendarExchangeActiveCardComponent implements ng.IComponentO
         </div>
       </div>
       <div class="active-card_footer">
-        <a ui-sref="calendar-service.list">
-          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        <a ui-sref="calendar-service.list" class="active-card_footer_status-link">
           <cs-statusindicator ng-model="$ctrl.serviceStatus.cssClass"></cs-statusindicator>
+          <span translate="{{'servicesOverview.cardStatus.'+$ctrl.serviceStatus.status}}"></span>
+        </a>
+        <a ng-if="$ctrl.hasEventsHistoryFeatureToggle" ui-sref="hybrid-services-event-history-page({serviceId: 'squared-fusion-cal'})" class="active-card_footer_events-link">
+          <span>Events</span>
         </a>
       </div>
     </article>
@@ -58,6 +61,7 @@ export class HybridCalendarExchangeActiveCardComponent implements ng.IComponentO
   public bindings = {
     clusters: '<',
     hasCapacityFeatureToggle: '<',
+    hasEventsHistoryFeatureToggle: '<',
     serviceStatus: '<',
   };
 }

@@ -1,0 +1,52 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{::'hcs.upgrade.title'| translate}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="hcs-no-data" ng-if="$ctrl.sftpList.length === 0">
+  <h2 translate="hcs.sftp.noneSftp"></h2>
+  <h5 translate="hcs.sftp.noneSftpDesc"></h5>
+  <button class="btn btn--primary btn--large" ng-click="$ctrl.addSftp()">
+    <span translate="hcs.sftp.add"></span>
+  </button>
+</div>
+<div ng-if="$ctrl.sftpList.length>0">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="$ctrl.filteredList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+      <div>
+        <span translate="common.all"/> <span class="count">{{$ctrl.currentSftpList.length}}</span>
+      </div>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button type="button" class="btn--primary" ng-click="$ctrl.addSftp()"> {{::'hcs.sftp.add' | translate}}</button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="cs-card-container hcs-card-header" ng-if="$ctrl.currentSftpList.length">
+    <cs-card-layout>
+      <cs-card class="cs-card--small header-background hoverable" ng-repeat="sftp in $ctrl.currentSftpList">
+        <article ng-click="$ctrl.editSftp(sftp)" hover-delay>
+          <header>
+            <div class="header-with-right-icon">
+              <p class="h4 ellipsis" title="Card Name">{{sftp.name}}</p>
+              <div class="right card-icon-div">
+                <button type="button" class="close"
+                  ng-click="$ctrl.deleteSftp(sftp, $event)"
+                  ng-keydown=""
+                  aria-label="{{::'common.delete' | translate}}"></button>
+              </div>
+            </div>
+            <p class="h6 eliipsis">{{sftp.path}}</p>
+          </header>
+          <section class="card-body card-section">
+          </section>
+          <footer></footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

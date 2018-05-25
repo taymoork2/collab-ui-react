@@ -24,6 +24,7 @@
     mf-toggle="clusterCreationWizard.hasMfFeatureToggle"
     mf-trusted-toggle="clusterCreationWizard.hasMfSIPFeatureToggle"
     mf-cascade-toggle="clusterCreationWizard.hasMfCascadeBwConfigToggle"
+    mf-first-time-toggle="clusterCreationWizard.hasMfFirstTimeCallingFeatureToggle"
     on-sip-settings-update="clusterCreationWizard.sipSettingsUpdated(response)"
     on-sip-settings-enabled-check="clusterCreationWizard.sipSettingsEnabledCheck(response)"
     ng-show="clusterCreationWizard.currentStep === 3">
@@ -46,9 +47,15 @@
     on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
+  <qos-section 
+    is-wizard="true"
+    on-qos-update="clusterCreationWizard.qosUpdated(response)"
+    ng-show="clusterCreationWizard.currentStep === 5 && clusterCreationWizard.hasMfQosFeatureToggle">
+  </qos-section>
   <cluster-creation-final
     cluster="clusterCreationWizard.clusterName"
     host="clusterCreationWizard.hostName"
+    mf-first-time-toggle="clusterCreationWizard.hasMfFirstTimeCallingFeatureToggle"
     ng-show="clusterCreationWizard.currentStep === 6">
   </cluster-creation-final>
   <hybrid-media-entitlement-failure
@@ -58,17 +65,17 @@
 </div>
 <div class="modal-footer">
   <button ng-show="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 2" class="btn" ng-click="clusterCreationWizard.closeSetupModal()">
-    <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+    <span translate="common.cancel"></span>
   </button>
   <button ng-hide="clusterCreationWizard.currentStep === 0 || clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 2 || clusterCreationWizard.currentStep === 7" class="btn" ng-click="clusterCreationWizard.back()">
-    <span translate="mediaFusion.add-resource-dialog.back"></span>
+    <span translate="common.back"></span>
   </button>
   <button ng-hide="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 6 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" cs-btn loading="clusterCreationWizard.loading" ng-click="clusterCreationWizard.next()" ng-disabled="!clusterCreationWizard.canGoNext()">
-    <span translate="mediaFusion.add-resource-dialog.next"></span>
+    <span translate="common.next"></span>
   </button>
   <button ng-show="clusterCreationWizard.currentStep === 1 || clusterCreationWizard.currentStep === 7" class="btn activate-button btn--primary" ng-click="clusterCreationWizard.closeSetupModal(true)">
       <span translate="common.ok"></span>
-    </button>
+  </button>
   <button ng-show="clusterCreationWizard.currentStep === 6" class="btn btn--primary" ng-click="clusterCreationWizard.createCluster()">
     <span translate="mediaFusion.easyConfig.toNode"></span>
   </button>

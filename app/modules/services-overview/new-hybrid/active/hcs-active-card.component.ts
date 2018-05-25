@@ -1,4 +1,4 @@
-import { HcsSetupModalService } from 'modules/hcs/shared/';
+import { HcsSetupModalService, HcsSetupModalSelect } from 'modules/hcs/hcs-shared/';
 class HcsActiveCardController implements ng.IComponentController {
   public loading = false;
   public canSetup = true; //false only if both services up
@@ -9,7 +9,7 @@ class HcsActiveCardController implements ng.IComponentController {
   ) {
   }
   public openSetUp(): void {
-    this.HcsSetupModalService.openSetupModal();
+    this.HcsSetupModalService.openSetupModal(true, HcsSetupModalSelect.FirstTimeSetup);
   }
 }
 export class HcsActiveCardComponent implements ng.IComponentOptions {

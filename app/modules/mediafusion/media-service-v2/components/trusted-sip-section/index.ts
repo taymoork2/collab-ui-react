@@ -1,6 +1,6 @@
 import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
 import notificationsModuleName from 'modules/core/notifications';
-import { TrustedSipSectionComponent } from './trusted-sip-section.component';
+import { TrustedSipSectionCtrl, TrustedSipSectionComponent } from './trusted-sip-section.component';
 import { TrustedSipSectionService } from './trusted-sip-section.service';
 import './_trusted-sip-section.scss';
 
@@ -10,5 +10,6 @@ export default angular
     hybridServicesClusterServiceModuleName,
   ])
   .component('trustedSipSection', new TrustedSipSectionComponent())
+  .controller('TrustedSipSectionCtrl', TrustedSipSectionCtrl)
   .service('TrustedSipSectionService', TrustedSipSectionService)
   .name;

@@ -125,12 +125,21 @@ export class AbcService {
    * @param cvaId (optional)
    * returns promise
    */
-  public addAbcConfig(businessId: string, name: string, orgId: string, cvaId?: string): ng.IPromise<any> {
+  public addAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): ng.IPromise<any> {
+    if (_.isEmpty(waitingMessage)) {
+      waitingMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.waitingDefault');
+    }
+    if (_.isEmpty(leftChatMessage)) {
+      leftChatMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.leftTheChatDefault');
+    }
+    const statusMessage = { locale: 'en-us', waitingMessage, leftChatMessage };
+    const statusMessages = [statusMessage];
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), businessId)
       .save({
         name,
         cvaId,
         queueIds: [orgId],
+        statusMessages,
       }, function (data, headers) {
         data.businessId = headers('location').split('/').pop();
         return data;
@@ -145,12 +154,21 @@ export class AbcService {
    * @param cvaId (optional)
    * returns promise
    */
-  public updateAbcConfig(businessId: string, name: string, orgId: string, cvaId?: string): ng.IPromise<void> {
+  public updateAbcConfig(businessId: string, name: string, orgId: string, waitingMessage: string, leftChatMessage: string, cvaId?: string): ng.IPromise<void> {
+    if (_.isEmpty(waitingMessage)) {
+      waitingMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.waitingDefault');
+    }
+    if (_.isEmpty(leftChatMessage)) {
+      leftChatMessage = this.$translate.instant('careChatTpl.appleBusinessChat.statusMessage.leftTheChatDefault');
+    }
+    const statusMessage = { locale: 'en-us', waitingMessage, leftChatMessage };
+    const statusMessages = [statusMessage];
     return this.getConfigResource(orgId || this.Authinfo.getOrgId(), businessId)
       .update({
         name,
         cvaId,
         queueIds: [orgId],
+        statusMessages,
       }).$promise;
   }
 

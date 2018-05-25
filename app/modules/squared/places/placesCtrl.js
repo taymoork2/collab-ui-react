@@ -4,11 +4,13 @@ require('../devices/_devices.scss');
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   angular.module('Squared')
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService, CloudConnectorService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridService, CloudConnectorService) {
         var vm = this;
 
         vm.data = [];
@@ -50,9 +52,6 @@ require('../devices/_devices.scss');
         }
 
         function fetchAsyncSettings() {
-          var ataPromise = FeatureToggleService.csdmATAGetStatus().then(function (result) {
-            vm.showATA = result;
-          });
           var hybridPromise = FeatureToggleService.csdmHybridCallGetStatus().then(function (feature) {
             vm.csdmHybridCallFeature = feature;
           });
@@ -74,7 +73,7 @@ require('../devices/_devices.scss');
           var googleCalendarPromise = CloudConnectorService.getService('squared-fusion-gcal').then(function (service) {
             vm.hybridCalendarEnabledOnOrg = vm.hybridCalendarEnabledOnOrg || service.provisioned;
           });
-          $q.all([ataPromise, hybridPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
+          $q.all([hybridPromise, anyCalendarEnabledPromise, office365Promise, googleCalendarPromise, fetchDisplayNameForLoggedInUser()]).finally(function () {
             vm.addPlaceIsDisabled = false;
           });
         }
@@ -125,7 +124,7 @@ require('../devices/_devices.scss');
         };
 
         vm.selectRow = function (grid, row) {
-          GridCellService.selectRow(grid, row);
+          GridService.selectRow(grid, row);
           vm.showPlaceDetails(row.entity);
         };
 
@@ -166,7 +165,6 @@ require('../devices/_devices.scss');
           var wizardState = {
             data: {
               function: 'addPlace',
-              showATA: vm.showATA,
               admin: vm.adminUserDetails,
               csdmHybridCallFeature: vm.csdmHybridCallFeature,
               hybridCalendarEnabledOnOrg: vm.hybridCalendarEnabledOnOrg,
@@ -230,7 +228,7 @@ require('../devices/_devices.scss');
         };
 
         vm.keyboardDeletePlace = function ($event, place) {
-          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+          if ($event.keyCode === KeyCodes.ENTER || $event.keyCode === KeyCodes.SPACE) {
             vm.deletePlace($event, place);
           } else {
             $event.stopPropagation();

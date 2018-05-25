@@ -1,0 +1,15 @@
+<div class="setting wproximity">
+  <input
+    cs-input
+    type="checkbox"
+    id="wifiProximityOptIn"
+    ng-model="proxCtrl.wifiProximityOptIn"
+    ng-if="proxCtrl.wifiProximityOptIn !== null"
+    cs-input-label="{{'globalSettings.proximity.wifiOptInLabel'|translate}}">
+  <button class="btn--attention" ng-if="proxCtrl.wifiProximityOptIn === null" translate="common.reviewSetting"
+          ui-sref="settings.proximity"></button>
+
+  <p class="body-small" ng-if="proxCtrl.wifiProximityOptIn !== null">
+    <span translate="globalSettings.proximity.wifiOptInDescription"></span>
+  </p>
+</div>

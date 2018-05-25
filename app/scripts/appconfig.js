@@ -740,6 +740,14 @@
               showSettings: null,
             },
           })
+          .state('settings.proximity', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<proximity-modal ui-view dismiss="$dismiss()"></proximity-modal>',
+              },
+            },
+          })
           .state('profile', {
             url: '/profile',
             template: require('modules/core/partnerProfile/partnerProfile.tpl.html'),
@@ -791,7 +799,7 @@
             authenticate: false,
           })
           .state('overview', {
-            url: '/overview',
+            url: '/overview?updateSsoCertificateNow',
             template: require('modules/core/overview/overview.tpl.html'),
             controller: 'OverviewCtrl',
             controllerAs: 'overview',
@@ -829,6 +837,16 @@
               },
             },
           })
+          // TODO: Enable onboarding state when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
+          // .state('my-company.onboarding', {
+          //   url: '/my-company/onboarding',
+          //   views: {
+          //     tabContent: {
+          //       controller: 'MyCompanyPageOnboardingCtrl',
+          //       template: require('modules/core/myCompany/myOnboarding/myOnboarding.tpl.html'),
+          //     },
+          //   },
+          // })
           .state('my-company.orders', {
             url: '/my-company/orders',
             views: {
@@ -970,10 +988,6 @@
           })
 
           ///////////////////////////
-          .state('users.manage.picker', {
-            controller: 'UserManageModalPickerController',
-            template: '<div class="user-manage-picker__center-spinner"><i class="icon icon-spinner icon-5x"></i></div>',
-          })
           .state('users.manage', {
             abstract: true,
             parent: 'modal',
@@ -1054,13 +1068,13 @@
           .state('users.manage.edit-auto-assign-template-modal', {
             template: '<edit-auto-assign-template-modal dismiss="$dismiss()" prev-state="$resolve.prevState" is-edit-template-mode="$resolve.isEditTemplateMode" auto-assign-template-data="$resolve.autoAssignTemplateData"></edit-auto-assign-template-modal>',
             resolve: stateParamsToResolveParams({
-              prevState: 'users.manage.picker',
+              prevState: 'users.manage.org',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
               userEntitlementsStateData: null,
             }),
             params: {
-              prevState: 'users.manage.picker',
+              prevState: 'users.manage.org',
               isEditTemplateMode: false,
               autoAssignTemplateData: null,
               userEntitlementsStateData: null,
@@ -1099,7 +1113,7 @@
                 template: '<div ui-view="usersConvert" class="convert-users"></div>',
               },
               'usersConvert@users.convert': {
-                template: '<cr-convert-users-modal/>',
+                template: '<cr-convert-users-modal manage-users="$resolve.manageUsers" read-only="$resolve.readOnly" dismiss="$dismiss()"></cr-convert-users-modal>',
                 resolve: {
                   modalInfo: function ($state) {
                     $state.params.modalId = 'convertDialog';
@@ -1108,9 +1122,10 @@
               },
             },
             params: {
+              isDefaultAutoAssignTemplateActivated: undefined,
               manageUsers: false,
               readOnly: false,
-              isDefaultAutoAssignTemplateActivated: undefined,
+              resetOnboardStoreStates: null,
             },
             resolve: {
               isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService, FeatureToggleService) {
@@ -1127,6 +1142,15 @@
                     AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
                   });
                 });
+              },
+              manageUsers: /* @ngInject */ function ($stateParams) {
+                return $stateParams.manageUsers;
+              },
+              readOnly: /* @ngInject */ function ($stateParams) {
+                return $stateParams.readOnly;
+              },
+              resetOnboardStoreStates: /* @ngInject */ function ($stateParams) {
+                return $stateParams.resetOnboardStoreStates;
               },
             },
           })
@@ -1154,7 +1178,7 @@
           .state('users.convert.results', {
             views: {
               'usersConvert@users.convert': {
-                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" results="$resolve.results"></add-users-results-modal>',
+                template: '<add-users-results-modal dismiss="$dismiss()" convert-pending="$resolve.convertPending" convert-users-flow="$resolve.convertUsersFlow" num-updated-users="$resolve.numUpdatedUsers" num-added-users="$resolve.numAddedUsers" converted-users="$resolve.convertedUsers" pending-users="$resolve.pendingUsers" results="$resolve.results"></add-users-results-modal>',
               },
             },
             resolve: stateParamsToResolveParams({
@@ -1162,6 +1186,8 @@
               convertUsersFlow: false,
               numUpdatedUsers: 0,
               numAddedUsers: 0,
+              convertedUsers: [],
+              pendingUsers: [],
               results: [],
             }),
             params: {
@@ -1169,6 +1195,8 @@
               convertUsersFlow: false,
               numUpdatedUsers: 0,
               numAddedUsers: 0,
+              convertedUsers: [],
+              pendingUsers: [],
               results: [],
             },
           })
@@ -1202,6 +1230,7 @@
               job: {
                 fileName: undefined,
                 fileData: undefined,
+                fileChecksum: undefined,
                 exactMatchCsv: undefined,
               },
               task: undefined,
@@ -1411,6 +1440,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -1973,10 +2003,34 @@
             url: '/not-linked',
             views: {
               tabContent: {
-                controllerAs: 'siteList',
-                controller: 'WebExSiteRowCtrl',
-                template: require('modules/core/siteList/siteList.tpl.html'),
+                template: '<site-list hide-linked="$resolve.accountLinkingPhase2"></site-list>',
               },
+            },
+          })
+          .state('site-list.not-linked.detail', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<site-detail selected-site="$resolve.selectedSite" on-delete="$resolve.onDelete(license)" on-redistribute="$resolve.onRedistribute(license)"></site-detail>',
+              },
+            },
+            params: {
+              selectedSite: undefined,
+              onDelete: undefined,
+              onRedistribute: undefined,
+            },
+            data: {},
+            resolve: {
+              selectedSite: /*@ngInject */ function ($stateParams) {
+                return $stateParams['selectedSite'];
+              },
+              onDelete: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onDelete'];
+              },
+              onRedistribute: /*@ngInject */ function ($stateParams) {
+                return $stateParams['onRedistribute'];
+              },
+              displayName: translateDisplayName('webexSiteManagement.manageSite'),
             },
           })
           .state('site-list.linked', {
@@ -2293,6 +2347,19 @@
               hasMFMultipleInsightFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceMultipleInsights);
               },
+              hasMFCascadeBandwidthFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwReport);
+              },
+            },
+          })
+          .state('reports.live-resource', {
+            url: '/live-resource',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'LiveMediaReportsController',
+                template: require('modules/mediafusion/reports/live-reports/live-resource-reports.html'),
+              },
             },
           })
           .state('reports.care', {
@@ -2326,6 +2393,16 @@
             },
             params: {
               siteUrl: null,
+            },
+          })
+          .state('reports.hybridMedia', {
+            url: '/hybridMediaReports',
+            views: {
+              tabContent: {
+                controllerAs: 'nav',
+                controller: 'HybridMediaMetricsCtrl',
+                template: require('modules/core/customerReports/hybridMedia/hybridMediaMetrics.tpl.html'),
+              },
             },
           })
           .state('webex-reports-iframe', {
@@ -2524,6 +2601,7 @@
             data: {},
             params: {
               currentAddress: {},
+              currentHuronDevice: {},
               currentNumber: '',
               status: '',
               staticNumber: '',
@@ -2897,6 +2975,22 @@
               title: 'deviceBulk.deleteDevicesTitle',
             },
           })
+          .state('deviceBulkFlow.export', {
+            parent: 'modalSmall',
+            views: {
+              'modal@': {
+                template: '<bulk-export ui-view dismiss="$dismiss()"></bulk-export>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-bulk-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevices: [],
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
@@ -2937,30 +3031,23 @@
           .state('partneroverview', {
             parent: 'partner',
             url: '/overview',
-            template: require('modules/core/partnerHome/partnerHome.tpl.html'),
-            controller: 'PartnerHomeCtrl',
+            template: '<partner-home></partner-home>',
           })
           .state('partnerreports', {
             parent: 'partner',
             url: '/reports',
             template: '<div ui-view></div>',
-            controller: 'PartnerReportsSwitchCtrl',
-          })
-          .state('partnerreports.base', {
-            parent: 'partner',
-            url: '/base',
-            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
-            controller: 'PartnerReportCtrl',
-            controllerAs: 'nav',
+            controller: 'ReportsRedirectCtrl',
           })
           .state('partnerreports.tab', {
+            abstract: true,
             parent: 'partner',
             template: '<partner-reports-tabs></partner-reports-tabs>',
           })
-          .state('partnerreports.tab.base', {
-            url: '/metrics',
-            template: require('modules/core/partnerReports/partnerReports.tpl.html'),
-            controller: 'PartnerReportCtrl',
+          .state('partnerreports.tab.spark', {
+            url: '/spark',
+            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
+            controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
           })
           .state('partnerreports.tab.ccaReports', {
@@ -2970,12 +3057,37 @@
             url: '/ccareports/:name',
             template: '<cca-reports report-chart-data="$ctrl.chartsData"></cca-reports>',
           })
-          .state('partnerreports.spark', {
+          .state('partnerreports.tab.webexreports', {
+            template: '<webex-reports-tabs></webex-reports-tabs>',
+          })
+          .state('partnerreports.tab.webexreports.metrics', {
+            url: '/webexreports/metrics',
+            template: '<webex-reports></webex-reports>',
+          })
+          .state('partnerreports.tab.webexreports.diagnostics', {
+            url: '/webexreports/diagnostics',
+            template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
+          })
+          .state('partnerreports.dgc', {
             parent: 'partner',
-            url: '/spark',
-            template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
-            controller: 'SparkReportsCtrl',
-            controllerAs: '$ctrl',
+            template: '<dgc-partner-tab></dgc-partner-tab>',
+            absract: true,
+          })
+          .state('partnerreports.dgc.meetingdetail', {
+            url: '/diagnostics/meeting/:cid',
+            views: {
+              tabContent: {
+                template: '<dgc-partner-tab-meeting-detail></dgc-partner-tab-meeting-detail>',
+              },
+            },
+          })
+          .state('partnerreports.dgc.participants', {
+            url: '/diagnostics/participants/:cid',
+            views: {
+              tabContent: {
+                template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
+              },
+            },
           })
           .state('partnercustomers', {
             parent: 'partner',
@@ -3151,7 +3263,7 @@
           })
           .state('hcs', {
             parent: 'partner',
-            template: require('modules/hcs/shared/hcs-base/hcs-shared-base.html'),
+            template: require('modules/hcs/hcs-shared/hcs-base/hcs-shared-base.html'),
             absract: true,
           })
           .state('hcs.shared', {
@@ -3167,7 +3279,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/hcs/shared/hcs-base'));
+                  done(require('modules/hcs/hcs-shared/hcs-base'));
                 }, 'hcs-shared-template');
               }),
             },
@@ -3187,37 +3299,46 @@
             url: '/hcs/subscription',
             template: '<hcs-licenses-subscription></hcs-licenses-subscription>',
           })
-          .state('hcs.clusterList', {
-            url: '/hcs/inventory/:customerId/clusters',
+          .state('hcs.plmReport', {
             parent: 'partner',
-            template: '<hcs-cluster-list customer-id="$resolve.customerId"></hcs-cluster-list>',
+            url: '/hcs/plm-report',
+            template: '<hcs-licenses-plm-report></hcs-licenses-plm-report>',
+          })
+          .state('hcs.clusterList', {
+            url: '/hcs/inventory/:groupId/clusters',
+            parent: 'partner',
+            template: '<hcs-cluster-list group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-cluster-list>',
             params: {
-              customerId: '',
+              groupId: '',
+              groupType: '',
             },
             resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.clusterDetail', {
-            url: '/hcs/inventory/:customerId/cluster/:clusterId',
+            url: '/hcs/inventory/:groupId/cluster/:clusterId',
             parent: 'partner',
-            template: '<hcs-cluster-detail customer-id="$resolve.customerId" cluster-id="$resolve.clusterId" cluster-name="$resolve.clusterName"></hcs-cluster-detail>',
+            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
             params: {
-              customerId: '',
+              groupId: '',
+              groupType: '',
               clusterId: '',
-              clusterName: '',
             },
             resolve: {
-              customerId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.customerId;
+              groupId: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupId;
+              },
+              groupType: /* @ngInject */ function ($stateParams) {
+                return $stateParams.groupType;
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              clusterName: /* @ngInject */ function ($stateParams) {
-                return $stateParams.clusterName;
               },
             },
           })
@@ -3231,6 +3352,52 @@
             resolve: {
               customerId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.customerId;
+              },
+            },
+          })
+          .state('hcs.sftplist', {
+            parent: 'partner',
+            url: '/hcs/sftplist',
+            template: '<hcs-upgrade-sftp-list></hcs-upgrade-sftp-list>',
+          })
+          .state('hcs.sftpserver-edit', {
+            url: '/hcs/upgrade/sftpserveredit',
+            parent: 'partner',
+            template: '<hcs-upgrade-sftp-edit sftp-server="$resolve.sftpServer"></hcs-upgrade-sftp-edit>',
+            params: {
+              sftpServer: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp/hcs-upgrade-sftp-edit.component'));
+                }, 'hcs-upgrade-sftp-edit');
+              }),
+              sftpServer: /* @ngInject */ function ($stateParams) {
+                return $stateParams.sftpServer;
+              },
+            },
+          })
+          .state('hcs.swprofilelist', {
+            parent: 'partner',
+            url: '/hcs/swprofilelist',
+            template: '<hcs-upgrade-swprofile-list></hcs-upgrade-swprofile-list>',
+          })
+          .state('hcs.swprofile-edit', {
+            url: '/hcs/upgrade/swprofileedit',
+            parent: 'partner',
+            template: '<hcs-upgrade-swprofile-edit swprofile="$resolve.swprofile"></hcs-upgrade-swprofile-edit>',
+            params: {
+              swprofile: {},
+            },
+            resolve: {
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile/hcs-upgrade-swprofile-edit.component'));
+                }, 'hcs-upgrade-swprofile-edit');
+              }),
+              swprofile: /* @ngInject */ function ($stateParams) {
+                return $stateParams.swprofile;
               },
             },
           })
@@ -3713,6 +3880,41 @@
               orgId: null,
             },
           })
+          // TODO: Landing page for heldesk to admin elevation
+          .state('helpdesk-admin-elevation', {
+            parent: 'mainLazyLoad',
+            url: '/helpdesk-admin-elevation?orgId&signature&customerUserId&userId&timestamp',
+            views: {
+              'main@': {
+                template: '<helpdesk-admin-elevation timestamp="$resolve.timestamp" user-id="$resolve.userId" org-id="$resolve.orgId" signature="$resolve.signature" customer-user-id="$resolve.customerUserId"></helpdesk-admin-elevation>',
+              },
+            },
+            params: {
+              orgId: null,
+              signature: null,
+              customerEmail: null,
+              userId: null,
+              timestamp: null,
+            },
+            authenticate: false,
+            resolve: {
+              orgId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['orgId'];
+              },
+              signature: /*@ngInject */ function ($stateParams) {
+                return $stateParams['signature'];
+              },
+              customerUserId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['customerUserId'];
+              },
+              userId: /*@ngInject */ function ($stateParams) {
+                return $stateParams['userId'];
+              },
+              timestamp: /*@ngInject */ function ($stateParams) {
+                return $stateParams['timestamp'];
+              },
+            },
+          })
           .state('provisioning-main', {
             views: {
               'main@': {
@@ -3939,7 +4141,7 @@
               customerCommunicationLicenseIsTrial: '',
               customerRoomSystemsLicenseIsTrial: '',
               showContractIncomplete: false,
-              refreshFn: function () {},
+              refreshFn: function () { },
             },
             views: {
               'modal@': {
@@ -4018,7 +4220,7 @@
             parent: 'modalDialog',
             params: {
               numberInfo: {},
-              refreshFn: function () {},
+              refreshFn: function () { },
             },
             views: {
               'modal@': {
@@ -4404,7 +4606,7 @@
               existingFieldIds: [],
               existingFieldData: {},
               inUse: false,
-              callback: function () {},
+              callback: function () { },
             },
             resolve: {
               existingFieldIds: /* @ngInject */ function ($stateParams) {
@@ -4435,8 +4637,8 @@
             params: {
               adminAuthorizationStatus: {},
               field: {},
-              process: function () {},
-              callback: function () {},
+              process: function () { },
+              callback: function () { },
             },
             resolve: {
               adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
@@ -4495,7 +4697,7 @@
               existingFieldsetIds: [],
               inUse: false,
               existingFieldsetData: {},
-              callback: function () {},
+              callback: function () { },
             },
             resolve: {
               existingFieldsetIds: /* @ngInject */ function ($stateParams) {
@@ -4526,8 +4728,8 @@
             params: {
               adminAuthorizationStatus: {},
               fieldset: {},
-              process: function () {},
-              callback: function () {},
+              process: function () { },
+              callback: function () { },
             },
             resolve: {
               adminAuthorizationStatus: /* @ngInject */ function ($stateParams) {
@@ -4858,7 +5060,7 @@
           })
           .state('mediafusion-cluster.settings', {
             url: '/settings',
-            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle"></hybrid-media-cluster-settings>',
+            template: '<hybrid-media-cluster-settings cluster-id="$resolve.id" has-mf-phase-two-toggle="$resolve.hasMFFeatureToggle" has-mf-trusted-sip-toggle="$resolve.hasMFSIPFeatureToggle" has-mf-cascade-bw-config-toggle="$resolve.hasMFCascadeBwConfigToggle" has-mf-cluster-wizard-feature-toggle="$resolve.hasMfClusterWizardFeatureToggle"></hybrid-media-cluster-settings>',
             resolve: {
               id: /* @ngInject */ function ($stateParams) {
                 return $stateParams.id;
@@ -4871,6 +5073,9 @@
               },
               hasMFCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+              hasMfFirstTimeCallingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceFirstTimeCalling);
               },
             },
           })
@@ -5011,6 +5216,9 @@
               hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
               },
+              hasMfFirstTimeCallingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceFirstTimeCalling);
+              },
               hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
               },
@@ -5019,6 +5227,9 @@
               },
               hasMfCascadeBwConfigToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceCascadeBwConfig);
+              },
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
               },
             },
             params: {
@@ -5385,23 +5596,17 @@
           })
           .state('hybrid-services-event-history-page', {
             parent: 'main',
-            url: '/services/clusters/history?clusterId&serviceId&connectorId',
-            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" connector-id="$resolve.connectorId" service-id="$resolve.serviceId" resource-filter="$resolve.resourceFilter"></hybrid-services-event-history-page>',
-            params: {
-              resourceFilter: null,
-            },
+            url: '/services/clusters/history?clusterId&hostSerial&serviceId',
+            template: '<hybrid-services-event-history-page cluster-id="$resolve.clusterId" host-serial="$resolve.hostSerial" service-id="$resolve.serviceId"></hybrid-services-event-history-page>',
             resolve: {
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
               },
-              connectorId: /* @ngInject */ function ($stateParams) {
-                return $stateParams.connectorId;
+              hostSerial: /* @ngInject */ function ($stateParams) {
+                return $stateParams.hostSerial;
               },
               serviceId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.serviceId;
-              },
-              resourceFilter: /* @ngInject */ function ($stateParams) {
-                return $stateParams.resourceFilter;
               },
             },
           })
@@ -5500,8 +5705,14 @@
               hasMfClusterWizardFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceClusterWizard);
               },
+              hasMfFirstTimeCallingFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceFirstTimeCalling);
+              },
               hasMfFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServicePhaseTwo);
+              },
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
               },
               hasMfSIPFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceTrustedSIP);
@@ -5543,11 +5754,15 @@
             controller: /* @ngInject */ function (Analytics) {
               return Analytics.trackHybridServiceEvent(Analytics.sections.HS_NAVIGATION.eventNames.VISIT_MEDIA_SETTINGS);
             },
+            resolve: {
+              hasMfQosFeatureToggle: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos);
+              },
+            },
           });
 
         $stateProvider
           .state('ediscovery-main', {
-            parent: 'mainLazyLoad',
             views: {
               'main@': {
                 template: require('modules/ediscovery/ediscovery.tpl.html'),
@@ -5555,6 +5770,14 @@
             },
             abstract: true,
             sticky: true,
+            resolve: {
+              // TODO: agendel 2/7/18 why can't we just do parent: 'mainLazyLoad'?
+              lazy: resolveLazyLoad(function (done) {
+                require.ensure([], function () {
+                  done(require('./main'));
+                }, 'modules');
+              }),
+            },
           })
           .state('ediscovery', {
             url: '/ediscovery',
@@ -5576,6 +5799,67 @@
             controller: 'EdiscoveryReportsController',
             controllerAs: 'ediscoveryCtrl',
             template: require('modules/ediscovery/ediscovery-reports.html'),
+          })
+          .state('legalhold', {
+            template: '<div ui-view class="legal-hold"></div>',
+            absract: true,
+            parent: 'ediscovery',
+            resolve: {
+              supportsFeature: /* @ngInject */ function (FeatureToggleService) {
+                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasF5955LegalHold);
+              },
+            },
+          })
+          .state('legalhold.landing', {
+            url: '/legalhold',
+            template: '<legal-hold-landing></legal-hold-landing>',
+          })
+          .state('legalhold.new', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<legal-hold-matter-new dismiss="$dismiss()"></legal-hold-matter-new>',
+              },
+            },
+          })
+          .state('legalhold.detail', {
+            parent: 'sidepanel',
+            params: {
+              matter: null,
+              displayName: null,
+            },
+            views: {
+              'sidepanel@': {
+                template: '<legal-hold-matter-detail dismiss="$dismiss()" matter="$resolve.matter"></legal-hold-matter-detail>',
+
+                resolve: {
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
+                  },
+                  displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+                },
+              },
+            },
+          })
+          .state('legalhold.custodians-manage', {
+            parent: 'modal',
+            params: {
+              mode: null,
+              caseId: null,
+            },
+            views: {
+              'modal@': {
+                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode"></legal-hold-custodians-manage>',
+                resolve: {
+                  caseId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.caseId;
+                  },
+                  mode: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.mode;
+                  },
+                },
+              },
+            },
           });
 
         $stateProvider

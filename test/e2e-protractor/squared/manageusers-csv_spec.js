@@ -39,9 +39,7 @@ describe('Manage Users - CSV File -', function () {
   it('should select bulk upload/modify users', function () {
     utils.click(navigation.usersTab);
     utils.click(manageUsersPage.buttons.manageUsers);
-    utils.waitForText(manageUsersPage.select.title, 'Add or Modify Users');
-    utils.click(manageUsersPage.select.radio.orgBulk);
-    utils.click(manageUsersPage.buttons.next);
+    utils.click(manageUsersPage.actionCards.csvAddOrModifyUsers);
     if (featureToggle.features.atlasEmailSuppress) {
       utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
       utils.click(manageUsersPage.buttons.next);

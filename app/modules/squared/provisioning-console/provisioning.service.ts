@@ -21,7 +21,7 @@ export class ProvisioningService {
   constructor(
     private $http: ng.IHttpService,
     private UrlConfig,
-  ) {
+   ) {
     const adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
     this.getOrdersUrl = `${adminServiceUrl}orders/postProvisioning/manualCodes?status=`;
     this.getOrderUrl = `${adminServiceUrl}commerce/orders/`;
@@ -32,11 +32,15 @@ export class ProvisioningService {
     return moment(date).format(DATE_FORMAT);
   }
 
-  public getOrders(status: Status): ng.IPromise<IOrder[]> {
+  public getOrders(status: Status, featureToggleFlag: boolean): ng.IPromise<IOrder[]> {
     return this.$http.get<IOrder[]>(this.getOrdersUrl + status).then((response) => {
       return _.each(_.get(response, 'data.orderList'), (order) => {
         order.orderReceived = this.formatDate(order.orderReceived);
-        order.lastModified = this.formatDate(order.lastModified);
+        if (featureToggleFlag) {
+          order.queueReceived = this.formatDate(order.queueReceived);
+        } else {
+          order.lastModified = this.formatDate(order.lastModified);
+        }
       });
     });
   }
@@ -47,7 +51,12 @@ export class ProvisioningService {
     });
   }
 
-  public updateOrderStatus<T>(order: IOrder, newStatus: Status): ng.IPromise<T> {
+
+  public updateOrderStatus<T>(order: IOrder, newStatus: Status, assignedTo?: string): ng.IPromise<T> {
+    if (assignedTo) {
+      const results: string[] = _.split(assignedTo, '@');
+      assignedTo = results[0];
+    }
     const payload = {
       orderId: order.orderUUID,
       postProvisioningStatus: [
@@ -55,6 +64,7 @@ export class ProvisioningService {
           manualCode: order.manualCode,
           siteUrl: order.siteUrl,
           status: newStatus,
+          assignedTo: assignedTo,
         },
       ],
     };

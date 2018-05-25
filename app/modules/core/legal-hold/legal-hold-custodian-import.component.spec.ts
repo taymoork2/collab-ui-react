@@ -4,13 +4,12 @@ import { LegalHoldCustodianImportController } from './legal-hold-custodian-impor
 import { ImportMode, ImportStep, ImportResultStatus } from './legal-hold.enums';
 import { IImportResult } from './legal-hold.interfaces';
 import { CrUsersTileTotalsComponent } from 'modules/core/users/shared/cr-users-tile-totals/cr-users-tile-totals.component';
+import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
 
 type Test = atlas.test.IComponentTest<LegalHoldCustodianImportController, {
   $q;
   $scope;
   $timeout;
-  Authinfo;
-  Config;
   LegalHoldService;
   ModalService;
   Notification;
@@ -18,6 +17,7 @@ type Test = atlas.test.IComponentTest<LegalHoldCustodianImportController, {
 }, {
   components: {
     crUsersTileTotals: atlas.test.IComponentSpy<CrUsersTileTotalsComponent>;
+    crCsvDownload: atlas.test.IComponentSpy<CrCsvDownloadComponent>;
   },
 }>;
 
@@ -26,19 +26,19 @@ describe('Component: legalHoldCustodianImport', () => {
   beforeEach(function (this: Test) {
     this.components = {
       crUsersTileTotals: this.spyOnComponent('crUsersTileTotals'),
+      crCsvDownload: this.spyOnComponent('crCsvDownload'),
     };
 
     this.initModules(
       legalHoldModalModuleName,
       this.components.crUsersTileTotals,
+      this.components.crCsvDownload,
 
     );
     this.injectDependencies(
       '$q',
       '$scope',
       '$timeout',
-      'Authinfo',
-      'Config',
       'LegalHoldService',
       'ModalService',
       'Notification',
@@ -46,16 +46,13 @@ describe('Component: legalHoldCustodianImport', () => {
 
     installPromiseMatchers();
 
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve(true) });
     spyOn(this.Notification, 'success');
-    spyOn(this.LegalHoldService, 'getCustodian').and.callFake(function () {
-      if (arguments[1] === 'validUser@test.com') {
-        return this.$q.resolve({ userId: '12345' });
-      } else {
-        return this.$q.reject({ error: 'someError' });
-      }
-    });
+    spyOn(this.LegalHoldService, 'cancelConvertUsers');
+    spyOn(this.LegalHoldService, 'convertUsersChunk').and.returnValue(this.$q.resolve({
+      success: [{ userId: '12345' }],
+      error: ['invalidUser@test.com'],
+    }));
 
     this.$scope.onFileValidation = jasmine.createSpy('onFileValidation');
     this.$scope.onConversionCompleted = jasmine.createSpy('onConversionCompleted');
@@ -148,7 +145,11 @@ describe('Component: legalHoldCustodianImport', () => {
     });
 
     it('should resolve with result containing the success and empty error list when emails are valid and set result status ', function (this: Test) {
-      importFile.apply(this, ['validUser@test.com, validUser@test.com']);
+      importFile.apply(this);
+      this.LegalHoldService.convertUsersChunk.and.returnValue(this.$q.resolve({
+        success: [{ userId: '12345' }, { userId: '12345' }],
+        error: [],
+      }));
       const promise = this.controller.convertEmailsToUsers();
       promise
         .then(() => {
@@ -166,24 +167,21 @@ describe('Component: legalHoldCustodianImport', () => {
     beforeEach(initComponent);
 
     it('should set "Cancel" status on Cancel and not populate results list', function (this: Test) {
-      importFile.apply(this, ['validUser@test.com, validUser@test.com']);
+      importFile.apply(this);
       this.controller.onCancelImport();
       this.$scope.$digest();
-      const promise = this.controller.convertEmailsToUsers();
-      promise
-        .then(() => {
-          const result = <IImportResult>_.get(this.controller, 'result');
-          expect(result.success.length).toBe(0);
-          expect(result.error.length).toBe(0);
-        });
-      expect(promise).toBeResolved();
-      expect(this.controller.resultStatus).toBe(ImportResultStatus.CANCELED);
-      expect(this.$scope.onConversionCompleted).not.toHaveBeenCalled();
+      expect(this.LegalHoldService.cancelConvertUsers).toHaveBeenCalled();
     });
 
     it('if Cancel modal is closed with \'no\' the cancelation should not happen', function (this: Test) {
-      this.ModalService.open.and.returnValue({ result: this.$q.reject() });
-      importFile.apply(this, ['validUser@test.com, validUser@test.com']);
+      this.ModalService.open.and.callFake(() => {
+        return { result: this.$q.reject() };
+      });
+      this.LegalHoldService.convertUsersChunk.and.returnValue(this.$q.resolve({
+        success: [{ userId: '12345' }, { userId: '12345' }],
+        error: [],
+      }));
+      importFile.apply(this);
       this.controller.onCancelImport();
       this.$scope.$digest();
       const promise = this.controller.convertEmailsToUsers();
@@ -195,7 +193,7 @@ describe('Component: legalHoldCustodianImport', () => {
         });
       expect(promise).toBeResolved();
       expect(this.controller.resultStatus).toBe(ImportResultStatus.SUCCESS);
-      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith(['12345', '12345']);
+      expect(this.$scope.onConversionCompleted).toHaveBeenCalledWith([ '12345', '12345' ]);
     });
   });
 
@@ -231,4 +229,3 @@ describe('Component: legalHoldCustodianImport', () => {
     });
   });
 });
-

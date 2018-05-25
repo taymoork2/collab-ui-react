@@ -6,6 +6,7 @@ const merge = require('webpack-merge');
 const cspIntConfig = require('./csp-int.config');
 const mkCspConfig = require('../utils/mkCspConfig');
 
+// TODO(brspence): remove http://dev-admin.ciscospark.com:8000 src by 2018-07
 // as of 2018-01-09, 'dev' uses the following additional directives:
 let cspDevConfig = mkCspConfig({
   defaultSrc: [],
@@ -25,32 +26,40 @@ let cspDevConfig = mkCspConfig({
   connectSrc: [
     'http://127.0.0.1:8080', // Local Atlas Backend
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
     'http://localhost:8080', // Local Atlas Backend
     'http://localhost:8090', // Lcoal Expert Virtual Assistant Backend
     'https://10.224.166.46:8443',
     'ws://127.0.0.1:8000', // Browser Sync
     'ws://127.0.0.1:8443', // Browser Sync
     'ws://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'ws://dev-admin.webex.com:8000', // manual DNS entry for local dev
     'ws://localhost:8000', // Browser Sync
     'ws://localhost:8443', // Browser Sync
-    'http://rch-ads-165:9090', // Temporary use for HCS testing
+    'https://upgrade.int-ucmgmt.cisco.com', //HCS Upgrade
+    'https://licensing.int-ucmgmt.cisco.com', //HCS License
+    'https://controller.int-ucmgmt.cisco.com', //HCS Controller
   ],
   fontSrc: [
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
   ],
   imgSrc: [
     'blob:', // Webpack Dev
     'http://*.localytics.com', // Localytics will load a pixel image using http when developing locally
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
   ],
   scriptSrc: [
     '\'nonce-browser-sync-dev\'', // browser-sync-dev nonce configured in ./lite-server.js
     '127.0.0.1',
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
   ],
   styleSrc: [
     'blob:', // Webpack Dev
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
+    'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
   ],
 });
 

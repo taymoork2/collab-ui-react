@@ -2,17 +2,13 @@
   <div ng-hide="$ctrl.noIcon" class="stat">
     <a href ng-click="$ctrl.downloadCsv()" aria-label="{{::$ctrl.getDownloadTranslation()}}">
       <span ng-if="$ctrl.anchorText">{{::$ctrl.anchorText}}</span>
-      <span
-        ng-if="!$ctrl.anchorText"
-        tooltip-placement="top"
-        tooltip="{{$ctrl.tooltipMessage}}"
-        tooltip-animation="false"
-        tooltip-append-to-body="true"
-        tooltip-trigger="focus mouseenter"
-        tabindex="0"
-        aria-label="{{$ctrl.tooltipMessage}}">
-          <i ng-show="!$ctrl.downloading" class="icon" ng-class="$ctrl.iconClass"></i>
-      </span>
+      <icon-tooltip
+        ng-if="!$ctrl.anchorText && !$ctrl.downloading"
+        tt-class="{{::$ctrl.iconClass}}"
+        tt-tooltip-animation="false"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-text="{{$ctrl.tooltipMessage}}">
+      </icon-tooltip>
     </a>
   </div>
   <div

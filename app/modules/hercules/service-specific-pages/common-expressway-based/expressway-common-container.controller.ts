@@ -48,7 +48,9 @@ export abstract class ExpresswayContainerController {
         resolve: {
           connectorType: () => this.connectorType,
           serviceId: () => this.servicesId[0],
-          firstTimeSetup: true,
+          options: {
+            firstTimeSetup: true,
+          },
         },
         controller: 'AddResourceController',
         controllerAs: 'vm',

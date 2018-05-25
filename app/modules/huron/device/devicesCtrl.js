@@ -21,9 +21,6 @@
     init();
 
     function fetchAsyncSettings() {
-      FeatureToggleService.csdmATAGetStatus().then(function (result) {
-        vm.showATA = result;
-      });
       FeatureToggleService.cloudberryPersonalModeGetStatus().then(function (result) {
         vm.showPersonal = result;
         activate();
@@ -82,7 +79,6 @@
         data: {
           function: 'addDevice',
           title: 'addDeviceWizard.newDevice',
-          showATA: vm.showATA,
           showPersonal: vm.showPersonal,
           isEntitledToHuron: vm.isOrgEntitledToHuron(),
           isEntitledToRoomSystem: vm.isOrgEntitledToRoomSystem(),

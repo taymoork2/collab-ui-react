@@ -1,4 +1,4 @@
-import { IBsftSettings, BsftSettings, IBsftCustomerStatus, IBsftCustomerLogin, BsftCustomerStatus } from './bsft-settings';
+import { IBsftSettings, BsftSettings, IBsftCustomerStatus, IBsftCustomerLogin, BsftCustomerStatus, ITelephoneNumber } from './bsft-settings';
 
 interface IBsftCustomerResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftSettings>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<void>>;
@@ -6,9 +6,12 @@ interface IBsftCustomerResource extends ng.resource.IResourceClass<ng.resource.I
 
 interface IBsftCustomerLoginResource extends ng.resource.IResourceClass<ng.resource.IResource<IBsftCustomerLogin>> {}
 
+interface IBsftNumberResource extends ng.resource.IResourceClass<ng.resource.IResource<ITelephoneNumber[]>> {}
+
 export class BsftCustomerService {
   private bsftCustomerResource: IBsftCustomerResource;
   private bsftCustomerLoginResource: IBsftCustomerLoginResource;
+  private bsftNumberResource: IBsftNumberResource;
 
   /* @ngInject */
   constructor(
@@ -32,6 +35,7 @@ export class BsftCustomerService {
         save: saveAction,
       });
     this.bsftCustomerLoginResource = <IBsftCustomerLoginResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/customers/:customerId/login`, {}, {});
+    this.bsftNumberResource = <IBsftNumberResource>this.$resource(`${this.HuronConfig.getRialtoUrl()}/numbers`, {}, {});
   }
 
   public getBsftCustomer(customerId: string): IPromise<BsftSettings> {
@@ -65,6 +69,18 @@ export class BsftCustomerService {
       return {
         crossLaunchUrl: _.get(response, 'crossLaunchUrl'),
       } as IBsftCustomerLogin;
+    });
+  }
+
+  public getBsftNumbers(areaCode) {
+    return this.bsftNumberResource.query({
+      countryCode: '1',
+      npa: areaCode,
+      assigned: false,
+    }).$promise.then((numbers) => {
+      return numbers;
+    }).catch(error => {
+      return error;
     });
   }
 }

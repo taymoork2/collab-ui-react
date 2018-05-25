@@ -266,9 +266,17 @@
       });
     }
 
+    function isReportsChanged(viewType, userInfo) {
+      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected.toLowerCase()) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
+    }
+
+    function isMetrics() {
+      return vm.webexMetricsViews === 'metrics';
+    }
+
     function loadMetricsReport() {
       var reportView = vm.webexMetrics.views[vm.webexMetricsViews];
-      if (vm.webexMetricsViews === 'metrics') {
+      if (isMetrics()) {
         reportView = vm.webexMetrics.views[vm.webexMetricsViews][vm.viewType];
       }
 
@@ -280,7 +288,7 @@
 
       var viewType = _.get(reportView, 'view');
       var getWebExReportData = _.get(QlikService, 'getQBSInfo');
-      if (vm.webexMetricsViews === 'metrics') {
+      if (isMetrics()) {
         getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
       }
 
@@ -288,7 +296,7 @@
         return;
       }
       getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
-        if (!_.isUndefined(data)) {
+        if (!_.isUndefined(data) && !isReportsChanged(viewType, userInfo)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
             appId: data.appName,
@@ -328,7 +336,7 @@
       $log.log('onStateChangeStart: checkStatePermission -----------');
       if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
         event.preventDefault();
-        if (!isSubState) {
+        if (!isSubState || (isSubState && toState.name.indexOf('classic') !== -1)) {
           $state.go(fromState);
         } else {
           goLogin();
@@ -432,6 +440,7 @@
         isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
         isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
+        isProPackEnabled: ProPackService.hasProPackEnabled(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
@@ -442,7 +451,11 @@
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
-          vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          if (features.isProPackEnabled) {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          } else {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics);
+          }
         }
         /*if (features.isMEIOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.mei);
@@ -457,7 +470,7 @@
 
     function isCiscoUser() {
       var isCiscoUser = false;
-      isCiscoUser = Authinfo.getOrgId() === '1eb65fdf-9643-417f-9974-ad72cae0e10f';
+      isCiscoUser = Authinfo.isCisco();
       return isCiscoUser;
     }
 

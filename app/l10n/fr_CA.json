@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Tous",
         "roomSystems": "Trousse de salle Cisco Spark, séries DX, MX et SX",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Exporter les attributs d’utilisation des appareils vers le CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Veuillez cocher la case ci-dessus pour certifier que ce client se trouve dans une région prise en charge par Cisco Spark",
     "context": "Activez le service Context pour le centre de contact Cisco Unified.",
     "roomSystem": "Trousse de salle Cisco Spark, séries DX, MX et SX",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Appareil de salle Cisco Spark (États-Unis seulement pour l’instant)",
     "expireWarningMsg": "Votre version d’évaluation expire dans {{numDaysLeft}} jour(s).",
     "expiredMsg": "Votre version d’évaluation a expiré.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Mon organisation",
     "meetingParty": "Conférence à 25",
     "roomSystem": "Trousse de salle Cisco Spark, séries DX, MX et SX",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Marque client",
     "MS": "Message",
     "CF": "Réunion",
@@ -5907,7 +5907,7 @@
       "call": "Appeler",
       "webexOverview": "WebEx",
       "roomSystem": "Appareils de la salle",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Assistance",
       "trialAccounts": "Comptes d’évaluation ({{count}})",
       "activeAccounts": "Comptes achetés ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Essai",
         "tp": "Tele Presence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Les clients voient ce message en attendant une réponse à leur demande.",
     "waitingMessageEVA": "Quelqu’un vous aidera sous peu...",
     "helpTextLeaveRoomEVA": "Les clients voient ce message lorsque l’utilisateur qui interagit avec eux termine le clavardage.",
-    "leaveRoomMessageEVA": "Le clavardage est terminé"
+    "leaveRoomMessageEVA": "Le clavardage est terminé",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Veuillez noter votre expérience de rappel précédente",
+        "additionalDetailsAbtIssue": "Décrivez les problèmes que vous rencontrez",
+        "chattingMessage": "Clavardage en cours...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Clavardez avec nos spécialistes afin que nous puissions mieux vous servir.",
+        "ratingComment": "Ajouter des commentaires",
+        "feedbackQuery": "Veuillez noter votre expérience de clavardage",
+        "offHoursDefaultMessage": "Nous sommes actuellement hors ligne, veuillez réessayer durant nos heures d’ouverture.",
+        "callbackConfirmationMsg": "Demande de rappel reçue avec succès.",
+        "defaultEmailText": "Courriel",
+        "field3HintText": "Faites votre choix dans la liste ou tapez",
+        "defaultWelcomeText": "Bienvenue chez",
+        "connectingMessage": "Connexion à un agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "L’agent est entré dans la salle de clavardage",
+        "defaultQuestionText": "Comment puis-je vous aider?",
+        "leaveRoomMessage": "L’agent a quitté le clavardage",
+        "waitingMessageEVA": "Quelqu’un vous aidera sous peu...",
+        "virtualAssistantWelcomeMessage": "Bonjour, comment puis-je vous aider aujourd’hui?",
+        "defaultNameText": "Nom",
+        "waitingMessage": "En attente d’un agent...",
+        "defaultPhoneText": "Numéro de téléphone",
+        "additionalDetails": "Renseignements supplémentaires",
+        "bubbleTitleMessage": "Cliquez ici pour le service à la clientèle",
+        "defaultEmail": "e.g. abc@xyz.com",
+        "agentUnavailableMessage": "Désolés, nous ne sommes pas disponibles en ce moment. Veuillez réessayer ultérieurement.",
+        "leaveRoomMessageEVA": "Le clavardage est terminé"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Groupe de recherche",
@@ -8909,7 +8940,7 @@
       "CMR": "WebEx Collaboration Meeting Rooms",
       "CO": "Appel Cisco Spark",
       "SD": "Trousse de salle Cisco Spark, séries DX, MX et SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Clavardage et rappel",
       "CVC": "Clavardage, rappel et appel entrant",
       "MGMTPRO": "Pack professionnel",
@@ -9107,7 +9138,7 @@
       "CMR": "Salles de réunion de collaboration",
       "ST": "Stockage",
       "SD": "Trousse de salle Cisco Spark, séries DX, MX et SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Ancienne licence WebEx",
       "CDC": "Clavardage et rappel",
       "CVC": "Clavardage, rappel et appel entrant",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "Vous devez copier et coller ce jeton de vérification DNS dans la section d’enregistrement TXT pour prouver que le domaine vous appartient :",
       "warning": "Il est important de vérifier tous les domaines. Les utilisateurs qui n’appartiennent pas à un domaine vérifié seront immédiatement bloqués et ne pourront pas se connecter et utiliser les services Cisco Spark. Il vous sera également impossible d’ajouter de nouveaux utilisateurs qui appartiennent à des domaines non vérifiés.",
       "verify": "Vérifier",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>En savoir plus </a>sur la saisie du jeton de vérification DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>En savoir plus </a>sur la saisie du jeton de vérification DNS."
     },
     "claim": {
       "header": "Demander le domaine",

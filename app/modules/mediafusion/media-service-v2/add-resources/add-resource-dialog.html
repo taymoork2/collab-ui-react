@@ -88,12 +88,12 @@
         </form>
       </div>
       <div class="add-resource">
-        <p class="small privacy" translate="hercules.serviceHelpInfo.servicePrivacyStatement"></p>
+        <p class="small privacy" translate="hercules.serviceHelpInfo.videoMeshPrivacyStatement"></p>
       </div>
     </div>
     <div ng-show="redirectResource.noProceed">
       <div>
-        <h5 translate="mediaFusion.add-resource-dialog.noInfoNew" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
+        <h5 translate="mediaFusion.add-resource-dialog.noInfo" translate-values="{appTitle: redirectResource.getAppTitle()}"></h5>
       </div>
       <br>
       <br>
@@ -106,7 +106,7 @@
       <div class="addResourceBodyInfo">
         <p>
           {{'mediaFusion.add-resource-dialog.noDesc1' | translate}}
-          <a href="https://www.cisco.com/go/hybrid-services-media" target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
+          <a href="https://www.cisco.com/go/video-mesh" target='_blank'>{{'mediaFusion.add-resource-dialog.noDesc2' | translate}}</a>
         </p>
       </div>
       <!--div class="addResourceBodyInfo">
@@ -117,25 +117,25 @@
   <div class="modal-footer">
     <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || redirectResource.fromClusters">
       <button class="btn" ng-click="redirectResource.closeSetupModal()">
-        <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+        <span translate="common.cancel"></span>
       </button>
       <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
-        <span translate="mediaFusion.add-resource-dialog.next"></span>
+        <span translate="common.next"></span>
       </button>
     </div>
     <div ng-hide="redirectResource.noProceed || redirectResource.enableRedirectToTarget || !redirectResource.fromClusters">
       <span ng-show="redirectResource.yesNoPage">
         <button class="btn" ng-click="redirectResource.closeSetupModal()">
-          <span translate="mediaFusion.add-resource-dialog.cancel"></span>
+          <span translate="common.cancel"></span>
         </button>
       </span>
       <span ng-show="!redirectResource.yesNoPage">
         <button class="btn" ng-click="redirectResource.back()">
-          <span translate="mediaFusion.add-resource-dialog.back"></span>
+          <span translate="common.back"></span>
         </button>
       </span>
       <button class="btn activate-button btn--primary" ng-click="redirectResource.next()" ng-disabled="!redirectResource.canGoNext()">
-        <span translate="mediaFusion.add-resource-dialog.next"></span>
+        <span translate="common.next"></span>
       </button>
     </div>
     <div ng-show="redirectResource.noProceed">
@@ -145,7 +145,7 @@
     </div>
     <div ng-show="redirectResource.enableRedirectToTarget">
       <button class="btn" ng-click="redirectResource.back()">
-        <span translate="mediaFusion.add-resource-dialog.back"></span>
+        <span translate="common.back"></span>
       </button>
       <button class="btn register-button btn--primary" ng-click="redirectResource.redirectToTargetAndCloseWindowClicked(redirectResource.hostName, redirectResource.selectedCluster)">
         <span translate="mediaFusion.add-resource-dialog.register"></span>

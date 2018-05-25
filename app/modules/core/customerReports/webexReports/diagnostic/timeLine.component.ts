@@ -1,7 +1,15 @@
 import './_timeline.scss';
 import * as d3 from 'd3';
-import * as moment from 'moment';
-import { SearchService } from './searchService';
+import { SearchService, Platforms } from './searchService';
+
+export interface IUniqueData {
+  enableStartPoint: boolean;
+  x1: number;
+  y1: number;
+  guestId: string;
+  userId: string;
+  joinTime: number;
+}
 
 class TimeLine implements ng.IComponentController {
 
@@ -9,12 +17,16 @@ class TimeLine implements ng.IComponentController {
   private svg;
   private option;
   private legendInfo;
-  private time2line;
-  private coordinate;
   private data: any = {};
   private sourceData: any;
-  private callLegsData: any;
   private tabType: string;
+  private timeScale: d3;
+  private timeFormat: string = 'hh:mm:ss A';
+  private chartStart: number;
+  private chartEnd: number;
+  private markLabel: d3;
+  private yPanel: d3;
+  private lineColorCls: string[] = ['goodLine', 'fairLine', 'poorLine', ''];
 
   /* @ngInject */
   public constructor(
@@ -31,83 +43,489 @@ class TimeLine implements ng.IComponentController {
       xAxisFormat: '%I:%M %p',
       gridVerticalLineNum: 12,
       gridHorizontalLineNum: 7,
+      data: [],
     };
-    this.option = { width: 960, paddingRight: 25, paddingLeft: 150.5, paddingButtom: 20.5, paddingTop: 0.5, gridHeight: 35.5 };
+    this.option = { width: 960, paddingRight: 25, paddingLeft: 150.5, paddingButtom: 20.5, paddingTop: 0.5, gridHeight: 35.5, top: 30 };
   }
 
   public $onInit() {
-    if (!this.sourceData) { return; }
-    this.addFnToD3();
     this.initParameters();
-
-    this.setDomain();
-    this.drawStartEndLine();
-    this.xAxis();
-    this.drawLines();
-    this.yAxis();
-    this.setLegend();
+    this.initChart();
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    if (!this.sourceData) { return; }
-    const { circleColor, lineColor, pstnData, cmrData, callLegsData } = changes;
+    const { circleColor, lineData } = changes;
     _.debounce(() => {
-      if (_.get(lineColor, 'currentValue')) {
-        this.setLineColor(_.get(lineColor, 'currentValue'));
-      }
-
       if (_.get(circleColor, 'currentValue')) {
-        this.updateGraph(_.get(circleColor, 'currentValue'));
+        this.updateStartPoints(_.get(circleColor, 'currentValue'));
       }
 
-      if (_.get(pstnData, 'currentValue')) {
-        this.lineSegment(_.get(pstnData, 'currentValue'), 'pstn');
-      }
-
-      if (_.get(cmrData, 'currentValue')) {
-        this.lineSegment(_.get(cmrData, 'currentValue'), 'cmr');
-      }
-
-      if (_.get(callLegsData, 'currentValue')) {
-        this.updateCallLegsLine(_.get(callLegsData, 'currentValue'));
+      if (_.get(lineData, 'currentValue')) {
+        this.drawColorLines(_.get(lineData, 'currentValue'));
       }
     }, 500)();
   }
 
   private initParameters(): void {
-    this.option.width = this.getCanvasWidth();
-    this.data.endTime = this.sourceData.endTime;
-    this.data.startTime = this.sourceData.startTime;
+    if (!this.sourceData) {
+      this.sourceData = {};
+    }
+    if (!this.sourceData.lines) {
+      this.sourceData.lines = [];
+    }
     this.data.gridHorizontalLineNum = this.getGridHorizontalLineHum();
-    this.option.height = this.getCanvasHeight();
-    this.coordinate = {
-      x: this.option.paddingLeft,
-      y: this.option.paddingTop,
-      endX: this.option.width - this.option.paddingRight,
-      endY: this.option.height - this.option.paddingButtom,
-    };
-    this.option.gridWidth = (this.coordinate.endX - this.coordinate.x) / this.data.gridVerticalLineNum;
+    this.data.startTime = this.sourceData.startTime;
+    this.data.endTime = this.sourceData.endTime;
 
-    this.svg = d3.select('.timelineSvg').append('svg:svg').attr('width', this.option.width).attr('height', this.option.height);
-    this.tip = d3.select('.timelineSvg').append('div').attr('class', 'timelineTooltip').style('opacity', 0);
+    this.option.width = this.getCanvasWidth();
+    this.option.height = this.getCanvasHeight();
+
+    this.chartStart = _.floor(this.data.startTime / 1000) * 1000;
+    this.chartEnd = _.ceil(this.data.endTime / 1000) * 1000;
+    const remainder = (this.chartEnd - this.chartStart) % (60 * 1000);
+    if (remainder > 0) {
+      const remainder_ = (60 * 1000 - remainder) / 2;
+      this.chartStart -= remainder_;
+      this.chartEnd += remainder_;
+      const interval = (this.chartEnd - this.chartStart) / 12;
+      const rCount = Math.floor(remainder_ / interval);
+      if (rCount >= 1) {
+        this.chartStart += rCount * interval;
+        this.chartEnd -= rCount * interval;
+      }
+    }
+
+    this.timeScale = d3.time.scale()
+                        .domain([this.chartStart, this.chartEnd])
+                        .range([0, this.option.width]);
+
     this.legendInfo = {
       line: ['Good', 'Fair', 'Poor', 'N/A'],
       circle: ['Good', 'Fair', 'Poor', 'N/A'],
     };
   }
 
-  private drawStartEndLine() {
-    const start = this.time2line(this.timestampToDate(this.sourceData.startTime));
-    const end = this.time2line(this.timestampToDate(this.sourceData.endTime));
-    const data = [
-      { x1: end, y1: this.coordinate.y, x2: end, y2: this.coordinate.endY },
-      { x1: start, y1: this.coordinate.y, x2: start, y2: this.coordinate.endY },
-    ];
-    this.dataToline({ data: data, append: 'svg:line', class: 'startEnd' });
-    const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'seFlag')
-    .attr('style', `width: ${end - start + 4}px; margin-left: ${start - 2}px; top: -${this.option.gridHeight / 2}px; line-height: 18px;`);
-    g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.startTime, 'hh:mm A'));
-    g.append('span').attr('class', 'badge').text(this.stampToDate(this.sourceData.endTime, 'hh:mm A'));
+  private initChart(): void {
+    this.svg = d3.select('.chartContent')
+                .style('padding-left', `${this.option.paddingLeft}px`)
+                .style('padding-top', `${this.option.top}px`)
+                .append('svg:svg')
+                .attr('class', 'xchart')
+                .attr('width', this.option.width)
+                .attr('height', this.option.height);
+    this.svg.append('g').attr('class', 'grid gridHorizontalLine');
+    this.svg.append('g').attr('class', 'grid gridVerticalLine');
+    this.svg.append('g').attr('class', 'axis axisX');
+    this.svg.append('g').attr('class', 'axis axisY');
+    this.svg.append('g').attr('class', 'timeLine baseLine');
+    this.svg.append('g').attr('class', 'timeLine enterLine');
+    this.svg.append('g').attr('class', 'timeLine colorLine');
+    this.svg.append('g').attr('class', 'jmt jmtPoint');
+    this.svg.append('g').attr('class', 'crossLine startEnd');
+    this.markLabel = d3.select('.chartContent').append('div').attr('class', 'markLabel').attr('style', `width: ${this.option.width}px`);
+    this.yPanel = d3.select('.chartContent').append('div').attr('class', 'yaxis').attr('style', `height: ${this.option.height}px; top: ${this.option.top}px;`);
+    this.tip = d3.select('.timelineSvg').append('div').attr('class', 'timelineTooltip').style('opacity', 0);
+
+    this.drawChartGrid();
+    this.drawCrossLine();
+    this.xAxis();
+    this.yAxis();
+
+    this.drawBaseLines();
+    this.drawStartPoints();
+
+    this.setLegend();
+  }
+
+  private drawChartGrid(): void {
+    const xGridLines: Object[] = [], yGridLines: Object[] = [];
+    let x = 0, y = 0;
+    let hCount = 0, vCount = 0;
+
+    while (hCount <= this.data.gridHorizontalLineNum) {
+      xGridLines.push({
+        x1: 0,
+        y1: y,
+        x2: this.option.width,
+        y2: y,
+      });
+      y += this.option.gridHeight;
+      hCount++;
+    }
+
+    const hSpace = this.option.width / this.data.gridVerticalLineNum;
+    y -= this.option.gridHeight;
+    while (vCount <= this.data.gridVerticalLineNum) {
+      yGridLines.push({
+        x1: x,
+        y1: 0,
+        x2: x,
+        y2: y,
+      });
+      x += hSpace;
+      vCount++;
+    }
+
+    this.drawLine('g.gridHorizontalLine', xGridLines);
+    this.drawLine('g.gridVerticalLine', yGridLines);
+  }
+
+  private xAxis(): void {
+    const gridHeight = this.data.gridHorizontalLineNum * this.option.gridHeight;
+    const hSpace = this.option.width / this.data.gridVerticalLineNum;
+    const tInterval = (this.chartEnd - this.chartStart) / this.data.gridVerticalLineNum;
+    let vCount = 0;
+    const node = d3.select('g.axis.axisX').attr('transform', `translate(0, ${gridHeight})`);
+    while (vCount <= this.data.gridVerticalLineNum) {
+      let textAnchor = 'middle';
+      if (vCount === 0) {
+        textAnchor = 'start';
+      }
+      if (vCount === this.data.gridVerticalLineNum) {
+        textAnchor = 'end';
+      }
+      if (vCount % 2 === 0) {
+        const translate = vCount * hSpace;
+        const g = node.append('g').attr('transform', `translate(${translate}, 0)`);
+        const text = this.formatTime(this.chartStart + tInterval * vCount, this.timeFormat);
+        g.append('svg:line').attr('x2', 0).attr('y2', 4);
+        g.append('svg:text').attr('x', 0).attr('y', 8).attr('dy', '.71em').attr('style', `text-anchor: ${textAnchor};`).text(text);
+      }
+      vCount++;
+    }
+  }
+
+  private getUniqueData(isUnique: boolean): IUniqueData[] {
+    if (this.data.data.length <= 0) {
+      let data: any = [];
+      let y = 0;
+      _.forEach(this.sourceData.lines, (item: any, key) => {
+        y += this.option.gridHeight;
+        const arr = _.map(item, (item_: any) => {
+          const x2 = this.timeScale(item_.leaveTime);
+          const x1 = this.timeScale(item_.joinTime);
+          return _.assignIn({}, item_, { y1: y, y2: y, x2: x2 > x1 ? x2 : x1, x1: x1, filterId: key });
+        });
+        data = _.concat(data, arr);
+      });
+
+      this.data.data = data;
+    }
+    if (isUnique) {
+      return _.uniqBy(this.data.data, 'filterId');
+    } else {
+      return this.data.data;
+    }
+  }
+
+  private yAxis(): void {
+    const data = this.getUniqueData(true);
+    this.yPanel.selectAll('.yaxis')
+      .data(data)
+      .enter()
+      .append('p')
+      .attr('class', 'ellipsis')
+      .text((item) => { return item.userName; })
+      .append('i')
+      .attr('class', (item) => { return `icon ${item.deviceIcon}`; })
+      .on('mouseover', (item, index) => {
+        const msgArr: {key?: string; value?: string}[] = [];
+
+        msgArr.push({ key: item.userName });
+        if (item.platform === Platforms.TP) {
+          if (item.device) {
+            msgArr.push({ key: item.device });
+          } else {
+            msgArr.push({ key: this.$translate.instant('webexReports.endPointLoading') });
+            this.detectAndUpdateDevice(item, msgArr, index);
+          }
+        } else if (item.sessionType === Platforms.PSTN) {
+          msgArr.push({ key: this.SearchService.getPhoneNumber(item.phoneNumber) });
+          if (item.callType === 'Dial In') {
+            msgArr.push({ key: this.$translate.instant('webexReports.callIn'), value: item.callInType });
+          } else {
+            msgArr.push({ key: this.$translate.instant('webexReports.callBack') });
+          }
+        } else {
+          msgArr.push({ key: item.device });
+        }
+        msgArr.push({ key: this.$translate.instant('webexReports.joinTime'), value: item.joinTime_ });
+
+        let duration = 0;
+        _.each(this.sourceData.lines[index], lineDetail => {
+          duration += lineDetail.duration;
+        });
+        msgArr.push({ key: this.$translate.instant('webexReports.duration'), value: this.SearchService.toMinOrSec(duration * 1000) });
+
+        this.makeTips({ arr: msgArr }, index * this.option.gridHeight + 50, this.option.paddingLeft - 20 );
+      })
+      .on('mouseout', () => this.hideTip());
+  }
+
+  private detectAndUpdateDevice(item: any, msgArr, index: number) {
+    this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
+      .then(res => item.device = this.updateDevice(res, msgArr, index));
+  }
+
+  private updateDevice(deviceInfo, msgArr, index: number) {
+    let device = '';
+    if (deviceInfo.completed) {
+      if (deviceInfo.items && deviceInfo.items.length > 0) {
+        device = deviceInfo.items[0].deviceType;
+      } else {
+        device = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+      }
+      msgArr[1] = { key: device };
+      this.makeTips({ arr: msgArr }, index * this.option.gridHeight + 50, this.option.paddingLeft - 20 );
+    }
+    return device;
+  }
+
+  private drawCrossLine(): void {
+    const gridHeight = this.data.gridHorizontalLineNum * this.option.gridHeight;
+    const crossLine: Object[] = [];
+    let left4Start = this.timeScale(this.data.startTime) - 3;
+    if (left4Start < 0) {
+      left4Start = this.timeScale(this.data.startTime);
+    }
+    const left4End = this.timeScale(this.data.endTime);
+    crossLine.push({
+      x1: left4Start,
+      y1: 0,
+      x2: left4Start,
+      y2: gridHeight,
+    });
+    crossLine.push({
+      x1: left4End,
+      y1: 0,
+      x2: left4End,
+      y2: gridHeight,
+    });
+    this.drawLine('g.crossLine', crossLine);
+
+    const left4End_ = this.option.width - left4End;
+    this.markLabel.append('span').attr('class', 'badge').attr('style', `left: ${left4Start}px`).text(this.formatTime(this.data.startTime));
+    this.markLabel.append('span').attr('class', 'badge').attr('style', `right: ${left4End_}px`).text(this.formatTime(this.data.endTime));
+  }
+
+  private drawBaseLines(): void {
+    const baseLines: Object[] = [], containers: Object[] = [];
+    let y = 0;
+    _.forEach(this.sourceData.lines, (item, yIndex) => {
+      y += this.option.gridHeight;
+      _.forEach(item, line => {
+        baseLines.push({
+          x1: this.timeScale(line.joinTime),
+          y1: y,
+          x2: this.timeScale(line.leaveTime),
+          y2: y,
+          id: `myLine${line.cid}_${line.nodeId}`,
+          start: line.joinTime,
+          end: line.leaveTime,
+          cls: line.platform === Platforms.TP ? 'defaultLine' : '',
+        });
+
+        containers.push({
+          id: `${line.cid}_${line.nodeId}`,
+          yIndex: yIndex,
+          start: line.joinTime,
+          end: line.leaveTime,
+        });
+      });
+    });
+
+    this.drawLine('g.baseLine', baseLines);
+
+    this.renderLineContainer(containers);
+  }
+
+  private renderLineContainer(containers: Object[]): void {
+    const enterNode = d3.select('g.enterLine');
+    const colorNode = d3.select('g.colorLine');
+    _.forEach(containers, item => {
+      enterNode.append('g').attr({
+        id: `myEnter${item['id']}`,
+        yIndex: item['yIndex'],
+        start: item['start'],
+        end: item['end'],
+      });
+      colorNode.append('g').attr({
+        id: `myColor${item['id']}`,
+        yIndex: item['yIndex'],
+        start: item['start'],
+        end: item['end'],
+      });
+    });
+  }
+
+  private drawStartPoints(): void {
+    const jmtNode = d3.select('g.jmtPoint');
+    const r = 9;
+    const data = this.getUniqueData(false);
+    _.forEach(data, line => {
+      if (!line.enableStartPoint) {
+        return;
+      }
+
+      const cx = line.x1;
+      const y = line.y1;
+      const g = jmtNode.append('g').attr({
+        id: `myStartPoint${line.guestId}-${line.userId}-${line.joinTime}`,
+        cx: cx,
+        cy: y,
+      });
+      let cx_ = cx + r - 1;
+      if (cx_ < 9) {
+        cx_ = 11;
+      }
+      g.append('svg:circle').attr({
+        r: r,
+        cx: cx_,
+        cy: y,
+      });
+
+      g.on('mouseover', () => {
+        const msgArr = [
+          { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') },
+          { key: this.$translate.instant('webexReports.notAvailable') },
+        ];
+        this.makeTips({ arr: msgArr }, y + 12, cx + 158);
+      })
+      .on('mouseout', () => this.hideTip());
+    });
+  }
+
+  private updateStartPoints(data: Object[]): void {
+    _.forEach(data, (item: any) => {
+      let jmtQuality = '';
+      const joinMeetingTime = item['joinMeetingTime'];
+      if (!(_.isUndefined(joinMeetingTime) || _.isNull(joinMeetingTime))) {
+        const jmt = Math.floor(joinMeetingTime * 1);
+        const pointNode = d3.select(`#myStartPoint${item.guestId}-${item.userId}-${item.joinTime}`);
+        if (pointNode.size()) {
+          let cx = pointNode.attr('cx') * 1, cy = pointNode.attr('cy') * 1;
+
+          if (jmt < 10) {
+            jmtQuality = 'Good';
+            pointNode.selectAll('circle').attr({
+              class: 'goodCircle',
+              jmtQuality: jmtQuality,
+              joinMeetingTime: jmt,
+            });
+          } else if (jmt >= 10 && jmt <= 20) {
+            jmtQuality = 'Fair';
+            pointNode.selectAll('circle').remove();
+            cx += 2;
+            cy -= 1;
+            pointNode.append('path').attr({
+              d: d3.svg.symbol().type('triangle-up').size(200),
+              transform: `translate(${cx}, ${cy})`,
+              jmtQuality: jmtQuality,
+              joinMeetingTime: jmt,
+            }).style('fill', '#ffb400');
+          } else {
+            jmtQuality = 'Poor';
+            pointNode.selectAll('circle').remove();
+            cx -= 1;
+            cy -= 17 / 2;
+            pointNode.append('rect').attr({
+              width: 17,
+              height: 17,
+              rx: 2,
+              ry: 2,
+              transform: `translate(${cx} , ${cy})`,
+              jmtQuality: jmtQuality,
+              joinMeetingTime: jmt,
+            });
+          }
+
+          pointNode.on('mouseover', () => {
+            let jmtVal = '';
+            jmtVal = this.$translate.instant('time.seconds', { time: jmt }, 'messageformat');
+
+            const msgArr = [
+              { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (jmtQuality ? `: ${jmtQuality} ` : '') },
+              { key: jmtVal },
+            ];
+
+            this.makeTips({ arr: msgArr }, cy + 12, cx + 158);
+          })
+          .on('mouseout', () => this.hideTip());
+        }
+      }
+    });
+  }
+
+  private drawColorLines(lines: Object): void {
+    _.forEach(lines, (line, nodeId) => {
+      if (line.length) {
+        _.forEach(line, lineItem => {
+          const nodeId_ = lineItem.cid ? nodeId : `_${nodeId}`;
+          const enterNode = d3.select(`#myEnter${nodeId_}`);
+          this.drawColorLineSegment(enterNode, lineItem.startTime, lineItem.endTime, 'defaultLine', { nodeId: nodeId_ });
+
+          const colorNode = d3.select(`#myColor${nodeId_}`);
+          _.forEach(lineItem.qualities, qualityItem => {
+            this.drawColorLineSegment(colorNode, qualityItem.startTime, qualityItem.endTime, this.lineColorCls[qualityItem.quality - 1], { source: qualityItem.source, tooltip: qualityItem.tooltip, nodeId: nodeId_ });
+          });
+        });
+      }
+    });
+  }
+
+  private drawColorLineSegment(lineNode: d3, startTime: number, endTime: number, cls: string, options: Object = {}): void {
+    if (lineNode.size()) {
+      const start = lineNode.attr('start') * 1;
+      const end = lineNode.attr('end') * 1;
+      if (startTime < start) {
+        startTime = start;
+      }
+      if (endTime > end) {
+        endTime = end;
+      }
+      const yIndex = lineNode.attr('yIndex') * 1;
+      const x1 = this.timeScale(startTime);
+      const y = (yIndex + 1) * this.option.gridHeight;
+      const x2 = this.timeScale(endTime);
+      const id = `c_${options['nodeId']}_${startTime}_${endTime}`;
+      lineNode.append('svg:line')
+                .attr({
+                  id: id,
+                  x1: x1,
+                  y1: y,
+                  x2: x2,
+                  y2: y,
+                  class: cls,
+                  start: startTime,
+                  end: endTime,
+                  source: options['source'],
+                })
+                .on('mouseover', () => {
+                  const dx = (x1 + x2) / 2;
+                  this.showTip(options['tooltip'], y + 16, dx + this.option.paddingLeft);
+                  d3.select(`#${id}`).attr('style', 'stroke-width: 5;');
+                })
+                .on('mouseout', () => {
+                  this.hideTip();
+                  d3.select(`#${id}`).attr('style', null);
+                });
+    }
+  }
+
+  private drawLine(nodeName: string, data: Object[]): void {
+    const g = this.svg.select(nodeName);
+    return g.selectAll(nodeName)
+            .data(data)
+            .enter()
+            .append('svg:line')
+            .attr('x1', item => item.x1)
+            .attr('y1', item => item.y1)
+            .attr('x2', item => item.x2)
+            .attr('y2', item => item.y2)
+            .attr('class', item => item.cls ? item.cls : '')
+            .attr('id', item => item.id ? item.id : '')
+            .attr('start', item => item.start ? item.start : '')
+            .attr('end', item => item.end ? item.end : '');
   }
 
   private getGridHorizontalLineHum(): number {
@@ -115,7 +533,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   private getCanvasWidth(): number {
-    const width = this.$element.find('.timelineSvg').width();
+    const width = this.$element.find('.timelineSvg').width() - this.option.paddingLeft;
     return width ? width : this.option.width;
   }
 
@@ -123,207 +541,78 @@ class TimeLine implements ng.IComponentController {
     return (this.data.gridHorizontalLineNum * this.option.gridHeight) + this.option.paddingButtom + this.option.paddingTop;
   }
 
-  private drawGrid(tickSize, ticks) {
-    this.gridHorizontalLine();
-    this.gridVerticalLine(tickSize, ticks);
-  }
-
-  private gridHorizontalLine(): void {
-    const data: Object[] = [];
-    let y = this.coordinate.y;
-    while (y <= this.coordinate.endY) {
-      data.push({ x1: this.coordinate.x, y1: y, x2: this.coordinate.endX, y2: y });
-      y  += this.option.gridHeight;
-    }
-    this.dataToline({ data: data, append: 'svg:line', class: 'gridHorizontalLine' });
-  }
-
-  private gridVerticalLine(tickSize, ticks): void {
-    let i = 0;
-    const data: Object[] = [];
-    while (i <= 12) {
-      const tickPoint = ticks[0] + tickSize * i * 0.5;
-      if (tickPoint <= ticks[_.size(ticks) - 1]) {
-        const x = this.time2line(this.timestampToDate(tickPoint));
-        data.push({ x1: x, y1: this.coordinate.y, x2: x, y2: this.coordinate.endY });
-      }
-      i++;
-    }
-    this.dataToline({ data: data, append: 'svg:line', class: 'gridVerticalLine' });
-  }
-
-  private showUnitStr() {
-    d3.select('.yaxis')
-    .append('div')
-    .attr('class', 'unitStr')
-    .text(this.data.unitStr);
-  }
-
-  private setDomain(): void {
-    const interval = this.getInterval();
-    const ticks = this.getTicks(interval);
-    this.data.domain = [this.timestampToDate(ticks[0]), this.timestampToDate(ticks[_.size(ticks) - 1])];
-    this.time2line = d3.time.scale()
-    .domain(this.data.domain)
-    .range([this.coordinate.x, this.coordinate.endX]);
-
-    this.data.tickValues = _.map(ticks, item => this.timestampToDate(item));
-    this.drawGrid(interval, ticks);
-  }
-
-  private xAxis(): void {
-    this.preData();
-    const xAxis = d3.svg.axis()
-      .scale(this.time2line)
-      .orient('bottom')
-      .tickSize(3, 0)
-      .tickValues(this.data.tickValues)
-      .tickFormat(d3.time.format(this.data.xAxisFormat));
-
-    this.svg.append('g')
-      .attr('class', 'axis')
-      .attr('transform', `translate(0, ${this.coordinate.endY})`)
-      .call(xAxis);
-    this.svg.selectAll('.tick:last-of-type text').attr('x', -8);
-  }
-
-  private preData(): void {
-    let y = this.coordinate.y;
-    let data: any = [];
-    _.map(this.sourceData.lines, (item: any, key) => {
-      y += this.option.gridHeight;
-      const arr = _.map(item, (item_: any) => {
-        const x2 = this.time2line(this.timestampToDate(item_.leaveTime));
-        const x1 = this.time2line(this.timestampToDate(item_.joinTime)) + 13;
-        const cls = ( this.callLegsData && this.callLegsData[item_.nodeId]) ? 'defaultLine' : '';
-        return _.assignIn({}, item_, { y1: y, y2: y, x2: x2 > x1 ? x2 : x1, x1: x1, filterId: key, cls: cls });
-      });
-      data = _.concat(data, arr);
-    });
-    this.data.data = data;
-  }
-
-  private drawLines(): void {
-    const node = this.dataToline({ data: this.data.data, append: 'svg:line', class: 'timeLine' });
-    node.attr('id', (item) => `myLine${item.nodeId}`);
-
-    this.drawStartGraph();
-  }
-
-  private drawStartGraph(): void {
-    const circles = this.data.data;
-    const g = this.svg.append('g').attr('class', 'startPoint');
-    const stopX = this.time2line(this.timestampToDate(this.sourceData.endTime));
-    g.selectAll('.startPoint')
-      .data(circles)
-      .enter()
-      .append('circle')
-      .attr('r', 9)
-      .attr('transform', item => `translate(${item.x1 > stopX ? stopX : item.x1}, ${item.y1})`)
-      .attr('id', item => `myDot${item.guestId}-${item.userId}-${item.joinTime}`)
-      .on('mouseover', item => {
-        const circleId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
-        const jmtQuality = this.$element.find(circleId).attr('jmtQuality');
-        const joinMeetingTime = this.$element.find(circleId).attr('joinMeetingTime');
-        let jmtVal = 'Not Available';
-        if (!_.isUndefined(joinMeetingTime)) {
-          jmtVal = _.parseInt(joinMeetingTime) <= 1 ? `${joinMeetingTime} Second` : `${joinMeetingTime} Seconds`;
-        }
-
-        const msgArr = [
-          { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (jmtQuality ? `: ${jmtQuality} ` : '') },
-          { key: jmtVal },
-        ];
-
-        this.makeTips({ arr: msgArr }, item.y1 - 16, item.x1 - 2);
-      })
-      .on('mouseout', () => this.hideTips());
+  private formatTime(timestamp: number, format?: string): string {
+    format = format ? format : 'hh:mm:ss A';
+    return this.SearchService.timestampToDate(timestamp, format);
   }
 
   private makeTips(msg, top: number, left: number) {
     let template: string = '';
     _.forEach(msg.arr, item => {
-      template += `<p class="${item.class ? item.class : ''}"><span>${item.key}</span> ${item.value ? item.value : ''}</p>`;
+      const cls = item.class ? item.class : '';
+      const text = item.value ? `: ${item.value}` : '';
+      template += `<p class="${cls}"><span>${item.key}</span>${text}</p>`;
+    });
+    this.showTip(template, top, left);
+  }
+
+  private showTip(tooltip, top: number, left: number) {
+    if (tooltip) {
+      this.tip.html(tooltip).classed('Tooltip-bottom', true).style('display', 'block').style('z-index', 1500);
+
+      const leftOffset = this.tip.style('width').replace('px', '');
+      const topOffset = this.tip.style('height').replace('px', '');
+      this.tip.transition()
+        .duration(500)
+        .style('opacity', 1)
+        .style('top', () => (top - topOffset) + 'px' ).style('left', () => (left - leftOffset / 2) + 'px' );
+    }
+  }
+
+  private hideTip() {
+    this.tip.transition().duration(500).style('opacity', 0);
+  }
+
+  private setLegend(): void {
+    const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `min-width: 1100px`);
+    this.legendTitle(g);
+    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; float: left;');
+    g.append('div').attr('class', 'legendLine').attr('style', 'float: right;');
+    _.forEach(this.legendInfo.circle, val => {
+      const colorZone = d3.select('.legendCircle').append('div');
+      const svg = colorZone.append('svg:svg');
+      if (val === 'Fair') {
+        this.drawTriangle(svg, { x: 10, y: 2 });
+      } else if (val === 'Poor') {
+        this.drawSquare(svg, { x: 4, y: 2 });
+      } else {
+        this.drawCircle(svg, val === 'N/A' ? '' : _.toLower(val) + 'Circle', { x: 10, y: 10 });
+      }
+      svg.append('text').text(val === 'N/A' ? this.$translate.instant('webexReports.notAvailable') : val).attr('transform', `translate(24 , 17)`);
     });
 
-    this.tip.html(template).classed('Tooltip-bottom', true).style('display', 'block').style('z-index', 1500);
-
-    const leftOffset = this.tip.style('width').replace('px', '');
-    const topOffset = this.tip.style('height').replace('px', '');
-    this.tip.transition()
-      .duration(500)
-      .style('opacity', 1)
-      .style('top', () => (top - topOffset) + 'px' ).style('left', () => (left - leftOffset / 2) + 'px' );
-  }
-
-  private yAxis(): void {
-    const tollFreeData = {};
-    const data = _.uniqBy(this.data.data, 'filterId');
-    const g = d3.select('.timelineSvg').insert('div', 'svg').attr('class', 'yaxis').attr('style', `height: ${this.option.height}px`);
-    g.selectAll('.yaxis')
-      .data(data)
-      .enter()
-      .append('p')
-      .attr('class', 'ellipsis')
-      .on('mouseover', item => {
-        const msgArr = [
-          { key: item.userName },
-          { key: 'Join Time: ', value: item.joinTime_ },
-          { key: 'Duration: ', value: _.round(item.duration / 60) + ' Min' },
-        ];
-
-        if (!item.device) {
-          this.detectAndUpdateDevice(item, msgArr);
-        } else {
-          msgArr.splice(1, 0, { key: item.device });
-          this.getPSTNCallInType(tollFreeData, msgArr, item);
-        }
-
-        this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-      })
-      .on('mouseout', () => this.hideTips()).text(item => `${item.userName}`).append('i').attr('class', item => `icon ${item.deviceIcon}`);
-
-    this.showUnitStr();
-  }
-
-  private detectAndUpdateDevice(item: any, msgArr) {
-    if (item.platform === '10') {
-      this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
-        .then( res => item.device = this.updateDevice(res, item, msgArr) );
-    }
-  }
-
-  private updateDevice(deviceInfo, item, msgArr) {
-    if (deviceInfo.items && deviceInfo.items.length > 0) {
-      const device = deviceInfo.items[0].deviceType;
-      msgArr.splice(1, 0, { key: device });
-      this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-      return device;
-    }
-
-    return '';
-  }
-
-  private getPSTNCallInType(tollFreeData, msgArr, item): void {
-    if (item.device === 'IP Phone' || item.device === 'Phone') {
-      msgArr.splice(1, 1);
-      if (!tollFreeData[item.userName]) {
-        if (!tollFreeData[item.userName + 'startTime'] || new Date().getTime() - tollFreeData[item.userName + 'startTime'] > 1000) {
-          tollFreeData[item.userName + 'startTime'] = new Date().getTime();
-          this.SearchService.getPSTNCallInType(item.conferenceID, item.nodeId).then((res: any) => {
-            if (res.completed && res.items && res.items.length > 0 && res.items[0]) {
-              tollFreeData[item.userName] = res.items[0].pstnCallInType;
-              msgArr.splice(1, 0, { key: 'Call in: ', value: res.items[0].pstnCallInType });
-              this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
-              tollFreeData[item.userName + 'startTime'] = 0;
-            }
-          });
-        }
-      } else {
-        msgArr.splice(1, 0, { key: 'Call in: ', value: tollFreeData[item.userName] });
+    const qualityLegends = [{ cls: 'goodLine', text: this.$translate.instant('webexReports.good'), width: 80 },
+                            { cls: 'fairLine', text: this.$translate.instant('webexReports.fair'), width: 65 },
+                            { cls: 'poorLine', text: this.$translate.instant('webexReports.poor'), width: 0 },
+                            { cls: 'defaultLine', text: this.$translate.instant('webexReports.notAvailable'), width: 130 },
+                            { cls: '', text: `${this.tabType} ${this.$translate.instant('webexReports.notEnabled')}`, width: 155 }];
+    _.each(qualityLegends, (legend, index) => {
+      const colorZone = d3.select('.legendLine').append('div');
+      if (legend.width) {
+        colorZone.attr('style', `width: ${legend.width}px`);
       }
-    }
-    this.makeTips({ arr: msgArr }, item.y1 - 15, this.option.paddingLeft - 40 );
+      if (index === 1 && this.tabType === 'Video') {
+        colorZone.attr('style', 'display: none;');
+      }
+      const svg = colorZone.append('svg:svg').attr('class', 'lineSvg');
+      svg.append('svg:line')
+        .attr('class', legend.cls)
+        .attr('x1', 3)
+        .attr('y1', 14)
+        .attr('x2', 28)
+        .attr('y2', 14);
+      svg.append('text').text(legend.text).attr('transform', `translate(33 , 17)`);
+    });
   }
 
   private drawCircle(node, class_, pos) {
@@ -352,343 +641,51 @@ class TimeLine implements ng.IComponentController {
     .attr('transform', `translate(${pos.x} , ${pos.y})`);
   }
 
-  private preLineSegData(arr, type) { //TODO, will discuss with backend to optimize the response data
-    let arrLine = [];
-    _.forEach(arr, (item, key) => {
-      const data: any = _.find(this.data.data, { nodeId: key });
-      let startx = _.get(data, 'x1', 0) - 4;
-      const leaveTime = _.get(data, 'leaveTime', 0);
-
-      _.map(item, (item_: any) => {
-        const endZone = this.time2line(this.timestampToDate(item_.endTime));
-        const endPoint = this.time2line(this.timestampToDate(item_.timestamp));
-        const startZone = this.time2line(this.timestampToDate(item_.startTime));
-        item_.endTime = (item_.endTime > leaveTime) ? leaveTime : item_.endTime;
-
-        if ( leaveTime < item_.endTime  || endPoint < _.get(data, 'x1', 0) + 14 ) { // out of the line
-          item_.endTime = leaveTime;
-          return true;
-        }
-
-        if (endPoint > _.get(data, 'x2', 0) || startx > _.get(data, 'x2', 0)) {
-          return true;
-        }
-
-        const lineSeg = _.assignIn({}, item_, { x1: startx, y1: _.get(data, 'y1', 0), x2: endPoint, y2: _.get(data, 'y2', 0), msgArr: this.setMsg(_.assign({}, item_, data), type), class: _.lowerFirst(`${item_.quality}Line`) });
-        lineSeg.x = (startx < startZone || startx > endZone) ? startZone + 19 : lineSeg.x;
-        arrLine = _.concat(arrLine, lineSeg);
-        startx = endPoint;
-      });
-    });
-    return arrLine;
-  }
-
-  private lineSegment(arr, type) {
-    const data = this.preLineSegData(arr, type);
-    const node = this.dataToline({ data: data, append: 'svg:line', class: type });
-    node.attr('class', item => item.class).attr('id', item => `my${type}${item.nodeId}`)
-      .on('mouseover', (item) => {
-        this.makeTips({ arr: item.msgArr }, item.y1 - 8, item.x1);
-      })
-      .on('mouseout', () => this.hideTips());
-
-    this.coverLine(data);
-  }
-
-  private setLegend(): void {
-    const g = d3.select('.timelineSvg').append('div').attr('class', 'legend').attr('style', `min-width: 1100px`);
-    this.legendTitle(g);
-    g.append('div').attr('class', 'legendCircle').attr('style', 'padding: 0; float: left;');
-    g.append('div').attr('class', 'legendLine').attr('style', 'float: right;');
-    _.forEach(this.legendInfo.circle, val => {
-      const colorZone = d3.select('.legendCircle').append('div');
-      const svg = colorZone.append('svg:svg');
-      if (val === 'Fair') {
-        this.drawTriangle(svg, { x: 10, y: 2 });
-      } else if (val === 'Poor') {
-        this.drawSquare(svg, { x: 4, y: 2 });
-      } else {
-        this.drawCircle(svg, val === 'N/A' ? '' : _.toLower(val) + 'Circle', { x: 10, y: 10 });
-      }
-      svg.append('text').text(val === 'N/A' ? 'Not Available' : val).attr('transform', `translate(24 , 17)`);
-    });
-
-    const qualityLegends = [{ cls: 'goodLine', text: 'Good', width: 80 },
-                            { cls: 'fairLine', text: 'Fair', width: 65 },
-                            { cls: 'poorLine', text: 'Poor', width: 0 },
-                            { cls: 'defaultLine', text: 'Not Available', width: 130 },
-                            { cls: '', text: `${this.tabType} Not Enabled`, width: 155 }];
-    _.each(qualityLegends, (legend, index) => {
-      const colorZone = d3.select('.legendLine').append('div');
-      if (legend.width) {
-        colorZone.attr('style', `width: ${legend.width}px`);
-      }
-      if (index === 1 && this.tabType === 'Video') {
-        colorZone.attr('style', 'display: none;');
-      }
-      const svg = colorZone.append('svg:svg').attr('class', 'lineSvg');
-      svg.append('svg:line')
-        .attr('class', legend.cls)
-        .attr('x1', 3)
-        .attr('y1', 14)
-        .attr('x2', 28)
-        .attr('y2', 14);
-      svg.append('text').text(legend.text).attr('transform', `translate(33 , 17)`);
-    });
-  }
-
   private legendTitle(g) {
     g.append('p').text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime')).attr('style', 'float: left;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
       const msgArr = [
-        { key: `<p class="text-center">Join Meeting Time is<br>calculated in seconds.<br>Good: < 10 seconds<br>Fair: 10-20 seconds<br>Poor: > 20 seconds<br>Not Available: No information</p>` },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.joinMeetingTime') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.good') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.fair') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.poor') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.NA') },
       ];
       const pos = this.$element.find('.legend p i').first().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
     })
-    .on('mouseout', () => this.hideTips());
+    .on('mouseout', () => this.hideTip());
+
     g.append('p').text(`${this.tabType} Quality`).attr('style', 'float: right;').append('i').attr('class', 'icon icon-info-outline')
     .on('mouseover', () => {
-      let msg = '';
+      let msgArr: Object[];
       if (this.tabType === 'Video') {
-        msg = `<p class="text-center">Video quality are measures <br>with latency and packet loss.<br>
-        Packet loss > 5.0% or latency > 400ms = Poor<br>
-        If neither of the above, then the quality is Good</p>`;
+        msgArr = [
+          { key: this.$translate.instant('webexReports.timelineChartLegend.video') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.videoQuality.poor') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
+        ];
       } else {
-        msg = `<p class="text-center">PSTN quality is measured by a MOS Score. <br>
-        Scores of 4.0-5.0 are Good, <br>
-        3.0-3.9 are Fair and below 3.0 are Poor.<br>
-        VoIP quality are measures<br> with latency and packet loss.<br>
-        Packet loss < 3.0% and latency < 300ms = Good<br>
-        Packet loss > 5.0% and latency > 400ms = Poor<br>
-        If neither of the above, then the quality is Fair</p>`;
+        msgArr = [
+          { key: this.$translate.instant('webexReports.timelineChartLegend.pstn') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.good') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.fair') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.poor') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.voip') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.poor') },
+          { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.fair') },
+        ];
       }
-      const msgArr = [
-        { key: msg },
-      ];
       const pos = this.$element.find('.legend p i').last().position();
       this.makeTips({ arr: msgArr }, pos.top - 10, pos.left + 17);
     })
-    .on('mouseout', () => this.hideTips());
-  }
-
-  private updateGraph(data) {
-    const node = d3.select('.startPoint');
-    node.moveToFront();
-    _.forEach(data, (item) => {
-      const classKey = this.getJoinMeetingQualityIndex(item);
-      const dotId = `#myDot${item.guestId}-${item.userId}-${item.joinTime}`;
-      const nodeData: any = _.find(this.data.data, { guestId: item.guestId, userId: item.userId, joinTime: item.joinTime });
-      const nodey = _.get(nodeData, 'y1', 0);
-      const nodex = _.get(nodeData, 'x1', 0);
-
-      let newS: any = undefined;
-      if (classKey === 0) {
-        d3.select(dotId)
-        .attr('class', 'goodCircle')
-        .attr('joinMeetingTime', item.joinMeetingTime)
-        .attr('jmtQuality', this.legendInfo.circle[classKey]);
-      } else if (classKey === 1) {
-        d3.select(dotId).remove();
-        newS = this.drawTriangle(node, { x: nodex, y: nodey - 9 });
-      } else if (classKey === 2) {
-        d3.select(dotId).remove();
-        newS = this.drawSquare(node, { x: nodex - 6, y: nodey - 9 });
-      }
-
-      if (newS) {
-        newS.on('mouseover', () => {
-          const qualityKey = this.getJoinMeetingQualityIndex(item);
-          const quality = this.legendInfo.circle[qualityKey] === 'N/A' ? '' : this.legendInfo.circle[qualityKey];
-          const msgArr = [
-            { key: this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime') + (quality ? `: ${quality} ` : '') },
-            { key: item.joinMeetingTime ? `${item.joinMeetingTime} Seconds` : 'Not Available' },
-          ];
-
-          this.makeTips({ arr: msgArr }, nodey - 16, nodex);
-        })
-        .on('mouseout', () => this.hideTips());
-      }
-    });
-  }
-
-  private updateCallLegsLine(data) {
-    _.each(data, (isDefault, nodeId) => {
-      if (isDefault) {
-        d3.select(`#myLine${nodeId}`)
-          .attr('class', 'defaultLine');
-      }
-    });
-  }
-
-  private getJoinMeetingQualityIndex(data) {
-    let index = 3;
-    if (!(_.isUndefined(data.joinMeetingTime) || _.isNull(data.joinMeetingTime))) {
-      const jmt = data.joinMeetingTime * 1;
-      if (jmt < 10) {
-        index = 0;
-      } else if (jmt >= 10 && jmt <= 20) {
-        index = 1;
-      } else {
-        index = 2;
-      }
-    }
-    return index;
-  }
-
-  private setLineColor(data) {
-    let arr: any = [];
-    _.forEach(data, (item, key) => {
-      const nodeData = _.find(this.data.data, { nodeId: key });
-      arr = _.concat(arr, this.getQosData(item, _.get(nodeData, 'x1', 0) + 14, _.get(nodeData, 'y1', 0)));
-    });
-
-    const node = this.dataToline({ data: arr, append: 'svg:line', class: 'lineQos' });
-    node.attr('class', item => item.class_).attr('id', item => `${item.qosId}`)
-    .on('mouseover', item => {
-      const msgArr = [
-        { key: `${item.type} Quality:`, value: this.legendInfo.line[_.parseInt(item.dataQuality) - 1] },
-        { key: `Latency:`, value: item.latency * 1 > 999 ? '> 1 Second' : item.latency + ' ms' },
-        { key: 'Packet Loss:', value: item.packageLossRate * 100 > 9.9 ? '> 10%' : _.round(item.packageLossRate * 100, 2) + `%` },
-      ];
-      this.makeTips({ arr: msgArr }, item.y1 - 10, item.x1 + (item.x2 - item.x1) / 2);
-    })
-    .on('mouseout', () => this.hideTips());
-  }
-
-  private getQosData(data, startx, y) {
-    let data_: any = [];
-    _.forEach(data, (item) => {
-      let timestamp = item.timeStamp;
-      if (timestamp > this.data.endTime) {
-        timestamp = this.data.endTime;
-      }
-      const end = this.time2line(this.timestampToDate(timestamp));
-      if (end < startx) {
-        return true;
-      }
-      const classKey = _.parseInt(item.dataQuality) - 1;
-      const class_ = this.legendInfo.line[classKey] === 'N/A' ? '' : _.lowerCase(this.legendInfo.line[classKey]) + 'Line';
-      const newItem = _.assign(item, { x1: startx, x2: end, y1: y, y2: y, class_: class_, qosId: `qosId${item.nodeId}-${startx}-${end}` });
-      data_ = _.concat(data_, newItem);
-
-      startx = end;
-    });
-
-    return data_;
-  }
-
-  private stampToDate(timestamp, formatStr: string = 'YYYY-MM-DD HH:mm:ss'): string {
-    const offset = this.sourceData.offset ? this.sourceData.offset : '+00:00';
-    const utcTime = moment(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
-    const dateStr = moment.utc(utcTime).utcOffset(offset).format(formatStr);
-    return dateStr;
-  }
-  private timestampToDate(timestamp): Date {
-    const dateStr = this.stampToDate(timestamp);
-    return moment(dateStr).toDate();
-  }
-
-  private dataToline(option, node = undefined) {
-    const g = node ? node : this.svg.append('g').attr('class', option.class);
-    return g.selectAll(`.${option.class}`)
-      .data(option.data)
-      .enter()
-      .append(option.append)
-      .attr('x1', item => item.x1)
-      .attr('y1', item => item.y1)
-      .attr('x2', item => item.x2)
-      .attr('y2', item => item.y2)
-      .attr('class', item => item.cls ? item.cls : '');
-  }
-
-  private hideTips() {
-    this.tip.transition().duration(500).style('opacity', 0);
-  }
-
-  private coverLine(arrLine) {
-    d3.select('.startPoint').moveToFront();
-    const data =  _.filter(arrLine, (item: any) => item.quality === 'Poor' );
-    const coverLine = d3.select('.timelineSvg svg').insert('g', '.pstn').attr('class', 'coverLine');
-    this.dataToline({ data: data, append: 'svg:line', class: 'coverLine' }, coverLine);
-  }
-
-  private setMsg(item, type) {
-    const typeObj = {
-      pstn: [
-        { key: `${item.type} Quality: `, value: item.quality },
-        { key: `MOS Score: `, value: item.audioMos },
-        { key: `Call Type: `, value: item.callType },
-      ],
-      cmr: [
-        { key: `${item.type} Quality: `, value: item.quality },
-        { key: `Loss Rate: `, value: _.round(item.lossRate * 100, 2) + `%` },
-        { key: 'Jitter: ', value: _.parseInt(item.jitter) === 1 ? `${item.jitter} Millisecond` : `${item.jitter} Milliseconds` },
-      ],
-    };
-
-    return typeObj[type];
-  }
-
-  private getInterval(): number {
-    let i = 1;
-    let startTime = 0;
-    const unit = this.getUnit();
-    let interval = unit;
-    while (startTime + interval * 6 < this.sourceData.endTime) {
-      interval = i <= 5 ? i * unit : (i - 5) * 5 * unit;
-      startTime = _.floor(this.sourceData.startTime / interval) * interval;
-      i += 1;
-    }
-    return interval;
-  }
-
-  private getUnit() {
-    const duration = this.sourceData.endTime - this.sourceData.startTime;
-    let unit = 60 * 1000;
-    if (duration <= 55 * 6 * 1000) {
-      unit = 1 * 1000;
-      this.data.unitStr = 'Hour:Min:Sec';
-      this.data.xAxisFormat = '%I:%M:%S %p';
-    }
-    return unit;
-  }
-
-  private getTicks(tickSize) {
-    let i = 1;
-    const sourceStartTime = _.floor(this.sourceData.startTime / tickSize) * tickSize;
-    let startTime = sourceStartTime;
-    let endTime = startTime + tickSize * 6;
-    while (i <= 12) {
-      startTime = startTime + 0.5 * tickSize < this.sourceData.startTime ? startTime + 0.5 * tickSize : startTime;
-      endTime = endTime - 0.5 * tickSize > this.sourceData.endTime ? endTime - 0.5 * tickSize : endTime;
-      i++;
-    }
-
-    i = 0;
-    const tickValues = [startTime];
-    while (i < 6) {
-      const tickPoint = sourceStartTime + tickSize * i;
-      if (tickPoint > startTime && tickPoint < endTime) {
-        tickValues.push(tickPoint);
-      }
-      i++;
-    }
-    tickValues.push(endTime);
-    return tickValues;
-  }
-
-  private addFnToD3() {
-    d3.selection.prototype.moveToFront = function() {
-      return this.each(function () {
-        this.parentNode.appendChild(this);
-      });
-    };
+    .on('mouseout', () => this.hideTip());
   }
 }
 
 export class DgcTimeLineComponent implements ng.IComponentOptions {
   public controller = TimeLine;
-  public template = '<div class="timelineSvg"></div>';
-  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', pstnData: '<', cmrData: '<', callLegsData: '<', tabType: '<' };
+  public template = '<div class="timelineSvg"><div class="chartContent"></div></div>';
+  public bindings = { sourceData: '<', lineColor: '<', circleColor: '<', tabType: '<', lineData: '<' };
 }

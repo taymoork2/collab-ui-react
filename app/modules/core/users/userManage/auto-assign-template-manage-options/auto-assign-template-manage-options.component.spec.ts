@@ -64,10 +64,12 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
     spyOn(this.ModalService, 'open').and.returnValue({
       result: this.$q.resolve(true),
     });
+    spyOn(this.AutoAssignTemplateService, 'deactivateTemplate').and.returnValue(this.$q.resolve());
     spyOn(this.AutoAssignTemplateService, 'deleteTemplate').and.returnValue(this.$q.resolve());
     spyOn(this.Notification, 'success');
 
     this.view.find(Options.DELETE).click();
+    expect(this.AutoAssignTemplateService.deactivateTemplate).toHaveBeenCalled();
     expect(this.AutoAssignTemplateService.deleteTemplate).toHaveBeenCalledWith('fake-template-id');
     expect(this.Notification.success).toHaveBeenCalledWith('userManage.org.deleteAutoAssignModal.deleteSuccess');
     expect(this.$scope.onDeleteSpy).toHaveBeenCalled();

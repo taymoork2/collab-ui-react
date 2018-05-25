@@ -23,6 +23,7 @@ require('./_setup-wizard.scss');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
   var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
+  var bsftPstnSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftPstn.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -32,7 +33,7 @@ require('./_setup-wizard.scss');
   angular.module('Core')
     .controller('SetupWizardCtrl', SetupWizardCtrl);
 
-  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService) {
+  function SetupWizardCtrl($q, $scope, $state, $stateParams, $timeout, Analytics, ApiCacheManagementService, Authinfo, Config, FeatureToggleService, Orgservice, SessionStorage, SetupWizardService, StorageKeys, Notification, CustomerCommonService, BsftCustomerService) {
     var isFirstTimeSetup = _.get($state, 'current.data.firstTimeSetup', false);
     var isITDecouplingFlow = false;
     var shouldRemoveSSOSteps = false;
@@ -284,9 +285,17 @@ require('./_setup-wizard.scss');
         template: bsftSettingsSetupTemplatePath,
       };
 
+      var bsftPstn = {
+        name: 'bsftPstn',
+        template: bsftPstnSetupTemplatePath,
+      };
+
       if (showCallSettings()) {
-        $q.resolve($scope.isCustomerPresent).then(function (customer) {
-          if (customer && hasPendingCallLicenses) {
+        $q.all({
+          customer: $scope.isCustomerPresent,
+          bsft: BsftCustomerService.getBsftCustomerStatus(Authinfo.getOrgId()),
+        }).then(function (response) {
+          if (response.customer && hasPendingCallLicenses) {
             SetupWizardService.activateAndCheckCapacity().catch(function (error) {
               $timeout(function () {
                 //   $scope.$emit('wizardNextButtonDisable', true);
@@ -303,9 +312,9 @@ require('./_setup-wizard.scss');
 
           var steps = [];
 
-          if (!customer && hasPendingCallLicenses) {
+          if (!response.customer && hasPendingCallLicenses) {
             steps.push(pickCountry);
-          } else if (!customer) {
+          } else if (!response.customer) {
             var org = SetupWizardService.getOrg();
             CustomerCommonService.save({}, {
               uuid: org.id,
@@ -316,7 +325,10 @@ require('./_setup-wizard.scss');
           }
 
           if (supportsHI1776) {
-            steps.push(setupBsft);
+            if (!response.bsft.rialtoCustomerId) {
+              steps.push(setupBsft);
+            }
+            steps.push(bsftPstn);
           } else {
             if (supportsHI1484) {
               steps.push(setupLocation);

@@ -86,4 +86,11 @@ describe('In CtChatStatusMessagesComponent, The controller', () => {
 
   });
 
+  it('validate preview bubble text and attribute text are same', () => {
+    controller.TemplateWizardService.setSelectedMediaType('chat');
+    controller.TemplateWizardService.template.configuration.routingLabel = 'agent';
+    expect(controller.helpTextWaiting()).toEqual('careChatTpl.helpTextWaiting');
+    expect(controller.previewBubbleText()).toEqual('careChatTpl.templateConfig.default.waitingMessage');
+  });
+
 });

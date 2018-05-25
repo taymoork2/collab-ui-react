@@ -1,0 +1,5 @@
+<div class="title">
+  <div class="number">{{count.chartTitle}}</div>
+  <div ng-if="count.isSearch" translate="spacesPage.chart.deviceFound" translate-values="{deviceCount: count.deviceCount}" translate-interpolation="messageformat" ></div>
+  <div ng-if="!count.isSearch" translate="spacesPage.chart.deviceTotal" translate-values="{deviceCount: count.deviceCount}" translate-interpolation="messageformat" ></div>
+</div>

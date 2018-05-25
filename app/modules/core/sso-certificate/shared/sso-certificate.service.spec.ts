@@ -95,5 +95,11 @@ describe('Service: SsoCertificateService', () => {
       ).respond(this.certificateTestData.orgIdpMetadataData);
       expect(this.SsoCertificateService.updateMetadata(this.certificateTestData.switchPrimaryCertificate)).toBeResolvedWith(this.certificateTestData.orgIdpMetadataData);
     });
+
+    it('function getReqBinding should pass with a valid Metadata XML', function (this: Test) {
+      const idpMetadataXml = this.certificateTestData.idpMetadataXml;
+      const reqBinding = this.SsoCertificateService.getReqBinding(idpMetadataXml);
+      expect(reqBinding).toBe('&reqBinding=urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST');
+    });
   });
 });

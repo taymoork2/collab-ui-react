@@ -4,7 +4,13 @@ account-expired-modal {
   @include keep-flex-container(column);
 }
 
-.disable-button {
-  pointer-events: none;
-  opacity: 0.4;
+.account-expired-modal {
+  &__header {
+    margin-bottom: 10px;
+  }
+
+  &__disable-button {
+    pointer-events: none;
+    opacity: 0.4;
+  }
 }

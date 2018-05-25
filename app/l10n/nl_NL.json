@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Alles",
         "roomSystems": "Cisco Spark-ruimtekit, DX-, MX- en SX-serie",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Kenmerken apparaatgebruik exporteren naar CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Selecteer het vakje hierboven aan om te verklaren dat deze klant zich bevindt in een ondersteunde locatie voor Cisco Spark",
     "context": "Schakel Context Service in voor Cisco Unified Contact Center.",
     "roomSystem": "Cisco Spark-ruimtekit, DX-, MX- en SX-serie",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Cisco Spark-ruimteapparaat (momenteel alleen in de VS)",
     "expireWarningMsg": "Uw proefperiode eindigt over {{numDaysLeft}} dag(en).",
     "expiredMsg": "Uw proefperiode is verlopen.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Mijn organisatie",
     "meetingParty": "Vergadering met 25 partijen",
     "roomSystem": "Cisco Spark-ruimtekit, DX-, MX- en SX-serie",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Klantbranding",
     "MS": "Bericht",
     "CF": "Vergadering",
@@ -5907,7 +5907,7 @@
       "call": "Gesprekken",
       "webexOverview": "WebEx",
       "roomSystem": "Ruimteapparaten",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Care",
       "trialAccounts": "Proefperiode-accounts ({{count}})",
       "activeAccounts": "Aangeschafte accounts ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "TelePresence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Klanten zien dit bericht als ze wachten op een reactie op hun bericht.",
     "waitingMessageEVA": "Iemand zal u snel helpen...",
     "helpTextLeaveRoomEVA": "Klanten zien dit bericht als de gebruiker die met hun communiceert, de chat beëindigt.",
-    "leaveRoomMessageEVA": "Chat is beëindigd"
+    "leaveRoomMessageEVA": "Chat is beëindigd",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Beoordeel uw terugbelervaring.",
+        "additionalDetailsAbtIssue": "Beschrijf het probleem dat u ervaart",
+        "chattingMessage": "Bezig met chatten...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Chat met onze oplossingsspecialisten. Zij kunnen u beter van dienst zijn.",
+        "ratingComment": "Opmerkingen toevoegen",
+        "feedbackQuery": "Beoordeel uw chatervaring",
+        "offHoursDefaultMessage": "We zijn momenteel offline. Probeer het opnieuw tijdens kantooruren.",
+        "callbackConfirmationMsg": "Terugbelverzoek ontvangen.",
+        "defaultEmailText": "E-mailadres",
+        "field3HintText": "Selecteer uit de lijst of het type",
+        "defaultWelcomeText": "Welkom bij",
+        "connectingMessage": "U wordt doorverbonden met een agent",
+        "defaultNameHint": "",
+        "enterRoomMessage": "Agent is de chatruimte binnengekomen",
+        "defaultQuestionText": "Waar kan ik u mee helpen?",
+        "leaveRoomMessage": "De agent heeft de chat verlaten",
+        "waitingMessageEVA": "Iemand zal u snel helpen...",
+        "virtualAssistantWelcomeMessage": "Hallo, wat kan ik voor u doen?",
+        "defaultNameText": "Naam",
+        "waitingMessage": "Wachten op een agent...",
+        "defaultPhoneText": "Telefoonnummer",
+        "additionalDetails": "Aanvullende details",
+        "bubbleTitleMessage": "Klik hier om te chatten met Klantenservice",
+        "defaultEmail": "bijvoorbeeld abc@xyz.com",
+        "agentUnavailableMessage": "We zijn op dit moment niet beschikbaar. Probeer het later opnieuw.",
+        "leaveRoomMessageEVA": "Chat is beëindigd"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Hunt-groep",
@@ -8909,7 +8940,7 @@
       "CMR": "WebEx Collaboration Meeting Rooms (samenwerkingsvergaderruimten)",
       "CO": "Cisco Spark-gesprek",
       "SD": "Cisco Spark-ruimtekit, DX-, MX- en SX-serie",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Chatten en terugbellen",
       "CVC": "Chatten, terugbellen en inkomend gesprek",
       "MGMTPRO": "Pro-pakket",
@@ -9107,7 +9138,7 @@
       "CMR": "Collaboration Meeting Rooms",
       "ST": "Opslag",
       "SD": "Cisco Spark-ruimtekit, DX-, MX- en SX-serie",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Verouderde WebEx-licentie",
       "CDC": "Chatten en terugbellen",
       "CVC": "Chatten, terugbellen en inkomend gesprek",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "moet u deze DNS-verificatietoken kopiëren en in het gedeelte TXT-record plakken om te bewijzen dat u eigenaar bent van het domein:",
       "warning": "Het is belangrijk om alle domeinen te verifiëren. Gebruikers die niet tot een geverifieerd domein behoren, worden meteen uitgesloten. Ze kunnen zich niet meer aanmelden en geen Cisco Spark-services meer gebruiken. U kunt ook geen nieuwe gebruikers meer toevoegen die tot ongeverifieerde domeinen behoren.",
       "verify": "Verifiëren",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Meer informatie</a> over hoe u de DNS-verificatietoken invoert."
     },
     "claim": {
       "header": "Domein claimen",

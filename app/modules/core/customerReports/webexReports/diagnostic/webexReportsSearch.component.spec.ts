@@ -48,7 +48,7 @@ describe('Component: webexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'SearchService', 'Notification');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'SearchService', 'Notification', 'ProPackService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
@@ -58,6 +58,7 @@ describe('Component: webexReportsSearch', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {
@@ -115,7 +116,6 @@ describe('Component: webexReportsSearch', () => {
 
   it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
-
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);

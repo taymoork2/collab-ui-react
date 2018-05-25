@@ -40,7 +40,9 @@ first-time-setup {
 
   .stick-bottom {
     position: absolute !important;
-    bottom: 0;
+    bottom: 1rem;
+    line-height: 1.2rem;
+    width: 88%;
   }
   .inputHostNameForm {
     padding-top: 1rem;

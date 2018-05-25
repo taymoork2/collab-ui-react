@@ -18,3 +18,23 @@
   @include flex-container($direction);
   flex: $flex-grow $flex-shrink $flex-basis;
 }
+
+@mixin placeholder {
+  /* stylelint-disable selector-no-vendor-prefix */
+  ::-webkit-input-placeholder {
+    @content;
+  }
+
+  :-moz-placeholder {
+    @content;
+  }
+
+  ::-moz-placeholder {
+    @content;
+  }
+
+  :-ms-input-placeholder {
+    @content;
+  }
+  /* stylelint-enable selector-no-vendor-prefix */
+}

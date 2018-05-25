@@ -49,9 +49,9 @@ describe('Controller: PlanReviewCtrl', function () {
       offerName: 'CO',
       capacity: 200,
     }]);
-    spyOn(this.SetupWizardService, 'getPendingAudioLicenses').and.returnValue([{
+    spyOn(this.SetupWizardService, 'getPendingAudioLicense').and.returnValue({
       offerName: 'WEBEX',
-    }]);
+    });
     spyOn(this.SetupWizardService, 'getPendingMessageLicenses').and.returnValue([{
       offerName: 'CF',
       capacity: 200,

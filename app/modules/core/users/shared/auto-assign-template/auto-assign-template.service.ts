@@ -14,6 +14,7 @@ export class AutoAssignTemplateService {
     private $http: ng.IHttpService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private Authinfo,
     private MessengerInteropService: MessengerInteropService,
     private Orgservice,
@@ -161,7 +162,7 @@ export class AutoAssignTemplateService {
     const {
       autoAssignTemplateData,
       isEditTemplateMode = true,
-      prevState = 'users.manage.picker',
+      prevState = 'users.manage.org',
     } = options;
     this.$state.go('users.manage.edit-auto-assign-template-modal', {
       autoAssignTemplateData,
@@ -266,5 +267,17 @@ export class AutoAssignTemplateService {
       apiData: {},
       otherData: {},
     };
+  }
+
+  public showEditAutoAssignTemplateModal() {
+    this.hasDefaultTemplate().then(hasDefaultTemplate => {
+      this.$state.go('users.list').then(() => {
+        this.$timeout(() => {
+          this.gotoEditAutoAssignTemplate({
+            isEditTemplateMode: hasDefaultTemplate,
+          });
+        });
+      });
+    });
   }
 }

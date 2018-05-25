@@ -128,7 +128,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
     describe('correct texts are displayed', function () {
       var showPersonal;
-      var showATA;
       var accountType;
       var deviceType;
       var isEntitledToHuron;
@@ -138,7 +137,6 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             return {
               data: {
                 showPersonal: showPersonal,
-                showATA: showATA,
                 account: {
                   type: accountType,
                   deviceType: deviceType,
@@ -625,7 +623,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -689,7 +687,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -761,7 +759,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendHuronEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -803,7 +801,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendHuronEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -850,7 +848,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
 
             controller.sendActivationCodeEmail();
             $scope.$digest();
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -896,7 +894,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendPersonalEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {
@@ -938,7 +936,7 @@ describe('ShowActivationCodeCtrl: Ctrl', function () {
             $httpBackend.flush();
             $scope.$digest();
             expect(CsdmEmailService.sendPersonalCloudberryEmail).toHaveBeenCalledWith(expectedEmailInfo);
-            expect(Notification.notify).toHaveBeenCalledWith(['generateActivationCodeModal.emailSuccess'], 'success', 'generateActivationCodeModal.emailSuccessTitle');
+            expect(Notification.notify).toHaveBeenCalledWith(['addDeviceWizard.showActivationCode.emailSuccess'], 'success', 'addDeviceWizard.showActivationCode.emailSuccessTitle');
           });
 
           it('should try to send email and notify error', function () {

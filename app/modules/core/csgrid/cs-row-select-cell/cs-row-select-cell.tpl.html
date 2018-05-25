@@ -1,0 +1,24 @@
+<div class="ui-grid-cell-contents">
+  <!-- Header Cell -->
+  <div
+    aria-label="{{$ctrl.csAriaLabel}}"
+    aria-checked="{{$ctrl.isAllSelected()}}"
+    class="ui-grid-selection-row-header-buttons ui-grid-icon-ok"
+    ng-class="{'ui-grid-all-selected': $ctrl.isAllSelected()}"
+    ng-click="$ctrl.selectAll()"
+    ng-if="$ctrl.isHeader()"
+    role="checkbox">
+  </div>
+
+  <!-- Column Cell -->
+  <div
+    aria-label="{{$ctrl.csAriaLabel}}"
+    aria-checked="{{$ctrl.isRowSelected()}}"
+    tabindex="0"
+    class="ui-grid-selection-row-header-buttons ui-grid-icon-ok"
+    ng-class="{'ui-grid-row-selected': $ctrl.isRowSelected()}"
+    ng-if="!$ctrl.isHeader()"
+    ng-keypress="$ctrl.selectRowKeypress($event)"
+    role="checkbox">
+  </div>
+</div>

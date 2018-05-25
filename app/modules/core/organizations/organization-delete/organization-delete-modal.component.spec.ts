@@ -15,6 +15,7 @@ describe('Component: organizationDeleteModal', () => {
       '$rootScope',
       '$q',
       '$scope',
+      'Analytics',
       'Auth',
       'Authinfo',
       'Notification',
@@ -22,14 +23,7 @@ describe('Component: organizationDeleteModal', () => {
       'UrlConfig',
     );
     this.userCountUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/12345/users';
-    spyOn(this.Auth, 'logout');
-    spyOn(this.Authinfo, 'getOrgId').and.returnValue(ORG_ID);
-    spyOn(this.Authinfo, 'isOnlineCustomer').and.returnValue(true);
-    spyOn(this.Notification, 'success');
-    spyOn(this.Notification, 'errorResponse');
-  });
-
-  beforeEach(function () {
+    initSpies.call(this);
     initComponent.call(this);
   });
 
@@ -37,6 +31,19 @@ describe('Component: organizationDeleteModal', () => {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
+
+  function initSpies() {
+    spyOn(this.Auth, 'logout');
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(ORG_ID);
+    spyOn(this.Authinfo, 'isOnlineCustomer').and.returnValue(true);
+    spyOn(this.Notification, 'success');
+    spyOn(this.Notification, 'errorResponse');
+    spyOn(this.Analytics, 'trackEvent');
+
+    this.$httpBackend.expectGET(this.userCountUrl).respond(200, {
+      totalResults: 1,
+    });
+  }
 
   function initComponent() {
     this.compileComponent('organizationDeleteModal', {
@@ -46,13 +53,8 @@ describe('Component: organizationDeleteModal', () => {
 
   describe('select action to perform on users', () => {
     it('should show the single-user-move text', function () {
-      this.$httpBackend.expectGET(this.userCountUrl).respond(200, {
-        totalResults: 1,
-      });
-      initComponent.call(this);
       this.controller.action = this.controller.actions.MOVE;
       this.view.find(CONTINUE_BUTTON).click();
-      this.$scope.$apply();
       this.$httpBackend.flush();
 
       expect(this.controller.checkBoxText = this.controller.checkBoxTextList.onlineSingleUserMove);
@@ -66,7 +68,6 @@ describe('Component: organizationDeleteModal', () => {
       initComponent.call(this);
       this.controller.action = this.controller.actions.DELETE;
       this.view.find(CONTINUE_BUTTON).click();
-      this.$scope.$apply();
       this.$httpBackend.flush();
 
       expect(this.controller.checkBoxText = this.controller.checkBoxTextList.onlineMultiUserDelete);
@@ -79,7 +80,7 @@ describe('Component: organizationDeleteModal', () => {
       this.controller.state = this.controller.states.DELETE_ORG;
       this.controller.action = this.controller.actions.MOVE;
       this.view.find(BACK_BUTTON).click();
-      this.$scope.$apply();
+      this.$httpBackend.flush();
 
       expect(this.controller.state).toBe(this.controller.states.USER_ACTION);
     });
@@ -94,7 +95,7 @@ describe('Component: organizationDeleteModal', () => {
     it('should open the Account Closed modal after successful deletion', function () {
       this.controller.action = this.controller.actions.MOVE;
       this.view.find(DELETE_BUTTON).click();
-      this.$scope.$apply();
+      this.$httpBackend.flush();
 
       expect(this.Orgservice.deleteOrg).toHaveBeenCalledWith(ORG_ID, false);
       expect(this.controller.openAccountClosedModal).toHaveBeenCalled();
@@ -102,25 +103,40 @@ describe('Component: organizationDeleteModal', () => {
   });
 
   describe('deletion failure', () => {
+    // TODO Remove the getAdminOrgAsPromise code once the deleteOrg API is fixed.
     beforeEach(function () {
       spyOn(this.Orgservice, 'deleteOrg').and.returnValue(this.$q.reject({ status: 404 }));
       spyOn(this.controller, 'openAccountClosedModal');
     });
 
     it('should show failure notification after failed deletion', function () {
+      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve());
       this.view.find(DELETE_BUTTON).click();
-      this.$scope.$apply();
+      this.$httpBackend.flush();
 
       expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
+      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
-    it('should notopen the Account Closed modal after failed deletion', function () {
+    it('should not open the Account Closed modal after failed deletion', function () {
+      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve());
       this.view.find(DELETE_BUTTON).click();
-      this.$scope.$apply();
+      this.$httpBackend.flush();
 
       expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
+      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
       expect(this.controller.openAccountClosedModal).not.toHaveBeenCalled();
+    });
+
+    it('should open the Account Closed modal if org is eventually deleted ', function () {
+      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.reject({ status: 404 }));
+      this.view.find(DELETE_BUTTON).click();
+      this.$httpBackend.flush();
+
+      expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
+      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
+      expect(this.controller.openAccountClosedModal).toHaveBeenCalled();
     });
   });
 });

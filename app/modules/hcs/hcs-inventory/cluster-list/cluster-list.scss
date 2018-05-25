@@ -4,53 +4,64 @@
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);
+  //TODO: Check if this is necessary once cluster list api is enabled
+  min-height: rem-calc(1000);
+  background-color: $color-white;
 
-  .cs-card article {
-    height: rem-calc(380);
-  }
-
-  header {
-    padding-bottom: 1.5rem;
-    .cluster-name {
-      padding: 0rem;
-      color: $gray-dark-4;
-    }
-
-    .cluster-type {
-      padding: 0rem;
-      color: $gray-dark-3;
+  .card-body {
+    &:hover {
+      cursor: pointer;
     }
   }
 
-  section {
-    padding-left: 1rem;
-    .card-section {
-      .card-section-header {
-        padding-left: 0.5rem;
+  .cs-card.header-background.hoverable article {
+    height: rem-calc(240);
+    &.hover,
+    &:focus {
+      h4.cluster-name,
+      span.application-name.h5,
+      span.application-node-count.h5,
+      footer.cluster-list-footer span span.h6,
+      span.cluster-status {
+        color: $color-white;
+      }
+    }
+    header {
+      padding-bottom: 1.5rem;
+      .cluster-name {
+        padding: 0rem;
         color: $gray-dark-4;
-        margin-bottom: rem-calc(22);
       }
-      .card-section-item {
-        margin-bottom: rem-calc(16);
-        .columns.medium-3, .columns.medium-6 {
+    }
+    section {
+      padding-left: 1rem;
+      .card-section {
+        .application-name {
+          padding-left: 0.5rem;
           color: $gray-base;
-          font-weight: 300;
         }
-
-        .columns.medium-3 {
+        .application-node-count {
+          padding-right: 1.5rem;
           color: $gray-dark-4;
+          float: right;
+        }
+      }
+    }
+    footer.cluster-list-footer {
+      span {
+        float: right;
+        color: $gray-dark-4;
+        i.icon.icon-circle.status-indicator {
+          margin-right: rem-calc(4);
         }
       }
     }
   }
 
-  footer.cluster-list-footer {
-    border-top: 1px solid $gray-light-1;
-    padding-top: 1rem;
-    div {
-      width: 100%;
-      text-align: center;
-    }
-  }
+}
 
+cs-page-sub-header cs-page-sub-header-right {
+  div.columns.medium-2.hcs-right-header-filter {
+    padding-right: 0rem;
+  }
 }

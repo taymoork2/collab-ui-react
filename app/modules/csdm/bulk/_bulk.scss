@@ -1,6 +1,7 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/settings/forms';
 @import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/settings-collab-ui';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 @import '~@collabui/collab-ui/scss/tools/mixins/easing';
@@ -14,7 +15,10 @@
       max-height: unset !important;
       height: auto !important;
       bulk-delete {
-        max-height: 300px;
+        max-height: 345px;
+       }
+      bulk-export {
+        max-height: 620px;
       }
       bulk-modal {
         max-height: 700px;
@@ -24,23 +28,64 @@
   h3 {
     padding-bottom: 8px;
   }
-  .cs-card article {
-    height: 100px;
-    text-align: center;
-    .number {
-      font-size: 2rem;
-      padding-top: 10px;
-      &.error {
-        color: $alerts-color;
+  .device-bulk-results {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 5rem;
+
+    .device-bulk-result-view {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $gray-light-4;
+
+      + .device-bulk-result-view {
+        @include vr-spacing(ml, 1);
       }
-      &.success {
-        color: $primary-color;
+
+      .number {
+        font-size: 2rem;
+        line-height: 1;
+        font-family: $brand-font-thin;
+        &.error {
+          color: $alerts-color;
+        }
+        &.success {
+          color: $primary-color;
+        }
+      }
+
+      .action-title {
+        font-size: 0.75rem;
       }
     }
   }
   .errors-section {
     padding-top: 22px;
     margin-top: 28px;
-    border-top: 1px solid $gray-4;
+    border-top: 1px solid $gray-light-4;
+    table {
+      border-collapse: collapse;
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      th, td {
+        color: $gray-dark-1;
+        font-size: $h6-font-size;
+        font-family: $brand-font-cisco-TT-Light, sans-serif;
+        border-right: 1px solid $ui-grid-border-color;
+        border-bottom: 1px solid $ui-grid-border-color;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+      th {
+        background-color: $gray-light-4;
+      }
+    }
   }
 }

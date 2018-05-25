@@ -828,7 +828,7 @@
       "deviceOptions": {
         "all": "Todos",
         "roomSystems": "Kit de salas Cisco Spark, séries DX, MX e SX",
-        "sparkBoard": "Cisco Spark Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Exportar atributos de uso do dispositivo ao CSV",
@@ -5755,7 +5755,7 @@
     "supportedLocationWarning": "Marque a caixa acima para certificar que este cliente está em um local suportado do Cisco Spark",
     "context": "Ativar o Serviço de contexto do Centro de Contatos do Cisco Unified.",
     "roomSystem": "Kit de salas Cisco Spark, séries DX, MX e SX",
-    "sparkBoardSystem": "Cisco Spark Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Dispositivo de salas Cisco Spark (no momento somente nos EUA)",
     "expireWarningMsg": "Seu período de teste está terminando em {{numDaysLeft}} dia(s).",
     "expiredMsg": "Seu período de teste terminou.",
@@ -5861,7 +5861,7 @@
     "myOrganization": "Minha organização",
     "meetingParty": "Reunião com 25 participantes",
     "roomSystem": "Kit de salas Cisco Spark, séries DX, MX e SX",
-    "sparkBoard": "Cisco Spark Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Marca do cliente",
     "MS": "Mensagem",
     "CF": "Reunião",
@@ -5907,7 +5907,7 @@
       "call": "Chamada",
       "webexOverview": "WebEx",
       "roomSystem": "Dispositivos da sala",
-      "sparkBoard": "Cisco Spark Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Atendimento",
       "trialAccounts": "Contas de teste ({{count}})",
       "activeAccounts": "Contas compradas ({{count}})",
@@ -6545,7 +6545,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Cisco Spark Board",
+        "board": "Cisco Webex Board",
         "test": "Teste",
         "tp": "TelePresence",
         "uc": "UC",
@@ -8390,7 +8390,38 @@
     "helpTextWaitingEVA": "Os clientes veem esta mensagem enquanto esperam uma resposta à solicitação.",
     "waitingMessageEVA": "Alguém irá ajudá-lo em breve...",
     "helpTextLeaveRoomEVA": "Os clientes veem esta mensagem quando o usuário que está interagindo com eles termina o bate-papo.",
-    "leaveRoomMessageEVA": "O bate-papo terminou"
+    "leaveRoomMessageEVA": "O bate-papo terminou",
+    "templateConfig": {
+      "default": {
+        "feedbackQueryCall": "Avalie sua experiência de chamada de retorno.",
+        "additionalDetailsAbtIssue": "Descreva o problema que você está enfrentando",
+        "chattingMessage": "Bate-papo em andamento...",
+        "defaultPhoneHintText": "+12345556789",
+        "defaultPromptMessage": "Converse com nossos especialistas em soluções para ajudar a servi-lo melhor.",
+        "ratingComment": "Adicionar comentários",
+        "feedbackQuery": "Avalie sua experiência de bate-papo",
+        "offHoursDefaultMessage": "Estamos off-line no momento. Tente novamente durante nosso horário comercial.",
+        "callbackConfirmationMsg": "Solicitações de retorno de chamada recebidas com êxito.",
+        "defaultEmailText": "E-mail",
+        "field3HintText": "Selecione da lista ou tipo",
+        "defaultWelcomeText": "Bem-vindo a",
+        "connectingMessage": "Conectando você a um Agente",
+        "defaultNameHint": "",
+        "enterRoomMessage": "O agente entrou na sala de bate-papo",
+        "defaultQuestionText": "Como posso ajudá-lo?",
+        "leaveRoomMessage": "O agente saiu do bate-papo",
+        "waitingMessageEVA": "Alguém irá ajudá-lo em breve...",
+        "virtualAssistantWelcomeMessage": "Olá, como posso ajudá-lo hoje?",
+        "defaultNameText": "Nome",
+        "waitingMessage": "Aguardando um agente...",
+        "defaultPhoneText": "Números de telefone",
+        "additionalDetails": "Detalhes adicionais",
+        "bubbleTitleMessage": "Clique aqui para conversar com o Atendimento ao Cliente",
+        "defaultEmail": "por exemplo, abc@xyz.com",
+        "agentUnavailableMessage": "Desculpe, mas não estamos disponíveis no momento. Tente novamente mais tarde.",
+        "leaveRoomMessageEVA": "O bate-papo terminou"
+      }
+    }
   },
   "huronHuntGroup": {
     "modalTitle": "Grupo de busca",
@@ -8909,7 +8940,7 @@
       "CMR": "Salas de Reunião de Colaboração WebEx",
       "CO": "Chamada Cisco Spark",
       "SD": "Kit de salas Cisco Spark, séries DX, MX e SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Bate-papo e retorno de chamada",
       "CVC": "Bate-papo, retorno de chamada e chamada de entrada",
       "MGMTPRO": "Pro Pack",
@@ -9107,7 +9138,7 @@
       "CMR": "Salas de reunião de colaboração",
       "ST": "Armazenamento",
       "SD": "Kit de salas Cisco Spark, séries DX, MX e SX",
-      "SB": "Cisco Spark Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Licença herdada do WebEx",
       "CDC": "Bate-papo e retorno de chamada",
       "CVC": "Bate-papo, retorno de chamada e chamada de entrada",
@@ -9371,7 +9402,7 @@
       "beforeVerify": "você deve copiar e colar este token de verificação DNS para a seção de registro TXT para provar que você possui o domínio:",
       "warning": "É importante verificar todos os domínios. Os usuários que não pertencem a um domínio verificado serão imediatamente bloqueados, não podendo efetuar logon nem usar os serviços Cisco Spark. Você também não poderá adicionar novos usuários que pertencem a domínios não verificados.",
       "verify": "Verificar",
-      "learn": "<a href='https://collaborationhelp.cisco.com/article/en-us/DOC-4860' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
+      "learn": "<a href='{{howtolink}}' target='_blank' ng-click='{{click}}'>Saiba mais</a> sobre como inserir o código de verificação DNS."
     },
     "claim": {
       "header": "Reivindicar domínio",

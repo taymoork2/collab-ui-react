@@ -1,0 +1,81 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import 'styles/partials/mixins';
+
+cr-convert-users-modal {
+  @include keep-flex-container(column);
+}
+
+.convert-users {
+  .unlicensed-user-list {
+    border: solid $gray-light-2 1px;
+    @include keep-flex-container(column);
+  }
+
+  .gridStyle {
+    flex: 1 1 0px;
+    min-height: 0;
+    background-color: $brand-white;
+  }
+
+  .explanation {
+    margin-bottom: 10px;
+  }
+
+  &__bottom-space--50 {
+    margin-bottom: 0.5rem;
+  }
+
+  &__bottom-space--150 {
+    margin-bottom: 1.50rem;
+  }
+
+  &__grid-filter {
+    & + & {
+      margin-left: 1.5rem;
+    }
+    &--active {
+      color: $color-blue-base;
+    }
+    &--inactive {
+      color: $gray-base;
+    }
+  }
+
+  &__csvDownload {
+    display: flex;
+    float: right;
+    color: $gray-base;
+
+    .csv-simple-export {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .search {
+    width: 100%;
+    position: relative;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 0px;
+
+    input {
+      width: 100%;
+      height: 32px;
+      text-indent: 20px;
+    }
+
+    .icon-search {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+  }
+
+  .noUnlicensedUsers {
+    @include vr-spacing(mt, 5);
+
+    text-align: center;
+  }
+}

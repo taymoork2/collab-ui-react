@@ -24,9 +24,10 @@ describe('On Care settings page, a Care admin should be able to ', function () {
   });
 
   function toggleChatCount() {
-    element(by.css('.settings.care-settings .selectedChatCount span.select-toggle')).click();
+    var toggleElement = element(by.css('.settings.care-settings .selectedChatCount span.select-toggle'));
+    browser.executeScript('arguments[0].scrollIntoView();', toggleElement.getWebElement());
+    toggleElement.click();
     element(by.cssContainingText('.settings.care-settings .selectedChatCount .select-options a', '4')).click();
-    browser.executeScript("$('.sidenav-page-content-wrapper').scrollTop(1000);");
     element(by.css('.settings.care-settings .selectedChatCount span.select-toggle')).click();
     element(by.cssContainingText('.settings.care-settings .selectedChatCount .select-options a', '5')).click();
   }

@@ -1,14 +1,17 @@
+import { ICluster } from 'modules/hercules/hybrid-services.types';
 import { Notification } from 'modules/core/notifications';
 export class VideoQualitySectionService {
 
   /* @ngInject */
   constructor(
     private Authinfo,
+    private HybridServicesClusterService,
     private MediaClusterServiceV2,
     private Notification: Notification,
     private Orgservice,
   ) { }
 
+  public clusters: ICluster[] = [];
 
   public setVideoQuality(videoQuality, videoPropertySetId): void {
     const settings = {
@@ -36,12 +39,28 @@ export class VideoQualitySectionService {
   }
 
   private updatePropertySet(videoPropertySet, payLoad) {
-    this.MediaClusterServiceV2.updatePropertySetById(videoPropertySet.id, payLoad)
-      .then(() => {
-        this.Notification.success('mediaFusion.videoQuality.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
+    this.HybridServicesClusterService.getAll()
+      .then((clusters) => {
+        this.clusters = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
+        const clusterPayload = {
+          assignedClusters: _.map(this.clusters, 'id'),
+        };
+        this.MediaClusterServiceV2.updatePropertySetById(videoPropertySet.id, clusterPayload)
+          .then(() => {
+            this.MediaClusterServiceV2.updatePropertySetById(videoPropertySet.id, payLoad)
+              .then(() => {
+                this.Notification.success('mediaFusion.videoQuality.success');
+              })
+              .catch((error) => {
+                this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
+              });
+          })
+          .catch((error) => {
+            this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
+          });
       });
+
   }
 }

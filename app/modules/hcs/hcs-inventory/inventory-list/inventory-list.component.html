@@ -1,41 +1,64 @@
-<cs-page-sub-header>
-  <cs-page-sub-header-left>
-    <cs-searchfilter search-item-fn="$ctrl.searchInventoryFunction(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
-    </cs-searchfilter>
-    <div>
-      <span translate="common.all"/> <span class="count">{{$ctrl.inventoryListData.length}}</span>
+<div class="hcs-no-data" ng-if="$ctrl.inventoryListData.length === 0">
+  <h2 translate="hcs.inventory.noInventoryTitle"></h2>
+  <h5 translate="hcs.inventory.noInventoryDescription"></h5>
+</div>
+<div ng-if="$ctrl.inventoryListData.length !== 0">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="$ctrl.searchInventoryFunction(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+      <div>
+        <span translate="common.all"/> <span class="count">{{$ctrl.inventoryListData.length}}</span>
+      </div>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+        <cs-select class="filter-dropdown filter-inventory" ng-model="$ctrl.filter.selected" options="$ctrl.filter.options" placeholder="$ctrl.filter.placeholder" multi="true" singular="{{::$ctrl.filter.singular}}" plural="{{::$ctrl.filter.plural}}" on-change-fn="$ctrl.searchFilterFunction()"></cs-select>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="hcs-inventory-container">
+    <div class="row inventory-list-header">
+      <div class="columns medium-6" translate="common.name"></div>
+      <div class="columns medium-6" translate="common.status"></div>
     </div>
-  </cs-page-sub-header-left>
-  <cs-page-sub-header-right>
-      <cs-select class="filter-dropdown filter-inventory" ng-model="$ctrl.filter.selected" options="$ctrl.filter.options" placeholder="$ctrl.filter.placeholder" multi="true" singular="{{::$ctrl.filter.singular}}" plural="{{::$ctrl.filter.plural}}" on-change-fn="$ctrl.searchFilterFunction()"></cs-select>
-  </cs-page-sub-header-right>
-</cs-page-sub-header>
-<div class="hcs-inventory-container">
-  <div class="row inventory-list-header">
-    <div class="columns medium-6" translate="hcs.installFiles.customerName"></div>
-    <div class="columns medium-3" translate="hcs.installFiles.clusterCount"></div>
-    <div class="columns medium-3" translate="hcs.installFiles.status"></div>
+    <cs-card-layout block-view="true">
+      <cs-card class="cs-card--full detail-view"  ng-class="{ 'subscription-expanded': subscription.viewAll }" ng-repeat="inventory in $ctrl.inventoryListData track by inventory.id">
+        <article>
+          <section>
+            <div class="row inventory-list-item">
+              <div class="columns medium-6">
+                {{inventory.name ? inventory.name : ('common.unassigned' | translate)}}
+              </div>
+              <div class="columns medium-5" ng-switch="inventory.status.toLowerCase()">
+                <div ng-switch-when="needs assigned">
+                  <i class="icon icon-circle status-indicator danger"></i>
+                  <span class="h6">{{::'hcs.inventory.status.needsAssigned' | translate}}</span>
+                </div>
+                <div ng-switch-when="nodes need accepted">
+                  <i class="icon icon-circle status-indicator warning"></i>
+                  <span class="h6">{{::'hcs.inventory.status.nodesNeedAccepted' | translate}}</span>
+                </div>
+                <div ng-switch-when="software update needed">
+                  <i class="icon icon-circle status-indicator warning"></i>
+                  <span class="h6">{{::'hcs.inventory.status.softwareUpdateNeeded' | translate}}</span>
+                </div>
+                <div ng-switch-when="operational">
+                  <i class="icon icon-circle status-indicator success"></i>
+                  <span class="h6">{{::'hcs.inventory.status.operational' | translate}}</span>
+                </div>
+                <div ng-switch-when="agent offline">
+                  <i class="icon icon-circle status-indicator danger"></i>
+                  <span class="h6">{{::'hcs.inventory.status.agentoffline' | translate}}</span>
+                </div>
+                <div ng-switch-when="failed upgrade">
+                  <i class="icon icon-circle status-indicator danger"></i>
+                  <span class="h6">{{::'hcs.inventory.status.failedUpgrade' | translate}}</span>
+                </div>
+              </div>
+              <div class="columns medium-1"><a ng-click="$ctrl.onClickSettings(inventory.id)" translate="common.details" /></div>
+            </div>
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
   </div>
-  <cs-card-layout block-view="true">
-    <cs-card class="cs-card--full detail-view"  ng-class="{ 'subscription-expanded': subscription.viewAll }" ng-repeat="inventory in $ctrl.inventoryListData track by inventory.id">
-      <article>
-        <section>
-          <div class="row inventory-list-item">
-            <div class="columns medium-6">
-              {{inventory.name && inventory.name || ('common.unassigned' | translate)}}
-            </div>
-            <div class="columns medium-3">{{inventory.clusterCount}}</div>
-            <div class="columns medium-2" ng-switch="inventory.status">
-              <i ng-switch-when="Needs Assigned" class="icon icon-circle status-indicator danger"></i>
-              <i ng-switch-when="Needs Accepted" class="icon icon-circle status-indicator warning"></i>
-              <i ng-switch-when="Active" class="icon icon-circle status-indicator success"></i>
-              <i ng-switch-when="Agent Inactive" class="icon icon-circle status-indicator danger"></i>
-               {{inventory.status}}
-            </div>
-            <div class="columns medium-1"><a ui-sref="hcs.clusterList({customerId: inventory.id})" translate="common.settings" /></div>
-          </div>
-        </section>
-      </article>
-    </cs-card>
-  </cs-card-layout>
 </div>

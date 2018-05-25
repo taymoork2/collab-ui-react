@@ -149,7 +149,7 @@ describe('Component: editAutoAssignTemplateModal:', () => {
 
     it('should navigate to previous state when back button is clicked', function (this: Test) {
       this.view.find(View.BACK_BUTTON).click();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
     });
 
     it('should navigate to the next state when next button is clicked', function (this: Test) {

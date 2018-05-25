@@ -10,7 +10,7 @@ export class CsdmBulkService {
 
   /* @ngInject */
   constructor(private $http: IHttpService, private $q: IQService, private UrlConfig,
-              private DeviceSearchTranslator: SearchTranslator, private Authinfo) {
+              private DeviceSearchTranslator: SearchTranslator, private Authinfo, private FileSaver) {
 
   }
 
@@ -33,9 +33,33 @@ export class CsdmBulkService {
         deviceUris: deviceUris,
         updateCommand: really
           ? { type: 'delete', deleteEmptyPlaces: deleteEmptyPlaces }
-          : { type: 'longRun', sleepTimeInSeconds: 1 },
+          : { type: 'longRun', sleepTimeInMilliSeconds: 111 },
         async: true,
       });
+  }
+
+  public export(deviceUris: string[], fields: string[]): IPromise<boolean> {
+    const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/bulk/export/';
+    const exportCanceler = this.$q.defer();
+    return this.$http.post(url, {
+      fields: fields,
+      deviceUris: deviceUris,
+    }, {
+      responseType: 'arraybuffer',
+      headers: {
+        Accept: 'text/csv',
+      }
+      ,
+      timeout: exportCanceler.promise,
+    }).then((response) => {
+      const data = response.data;
+      const fileName = 'devices.csv';
+      const file = new Blob([data], {
+        type: 'text/csv',
+      });
+      this.FileSaver.saveAs(file, fileName);
+      return true;
+    });
   }
 
   public getJobStatus(jobUrl: string): IHttpPromise<IBulkResponse> {
@@ -81,6 +105,9 @@ export interface IBulkResponse {
 }
 
 export class BulkAction {
+  private static finished = 'finished';
+  private static failed = 'failed';
+
   private _actionName: string;
   private informHasHappend = false;
   private jobUrl: string;
@@ -96,6 +123,34 @@ export class BulkAction {
 
   get actionName(): string {
     return this._actionName;
+  }
+
+  public get inProgress(): boolean {
+    return !this.currentBulkResponse ||
+      !BulkAction.isCompleted(this.currentBulkResponse.state);
+  }
+
+  public setToTotalFailure() {
+    this.currentBulkResponse = {
+      state: BulkAction.failed,
+      numberOfSuccesses: 0,
+      progressPercentage: 100,
+      numberOfFailures: this.deviceCount,
+      jobUrl: '',
+      failures: {},
+      updateCommand: { type: '' },
+      totalNumber: this.deviceCount,
+      async: false,
+    };
+    return this.currentBulkResponse;
+  }
+
+  public get deviceCount() {
+    return _.size(this.devices);
+  }
+
+  public static isCompleted(state: string): boolean {
+    return (state === BulkAction.failed || state === BulkAction.finished);
   }
 
   public postBulkAction(): IPromise<IHttpResponse<IBulkResponse>> {
@@ -124,7 +179,7 @@ export class BulkAction {
     if (this.informHasHappend || !this.currentBulkResponse) {
       return;
     }
-    if (this.currentBulkResponse && (this.currentBulkResponse.state === 'finished' || this.currentBulkResponse.state === 'failed')) {
+    if (this.currentBulkResponse && (this.currentBulkResponse.state === BulkAction.finished || this.currentBulkResponse.state === BulkAction.failed)) {
       if (_.isFunction(this.actionFinalStateSubscriber)) {
         const devices = _.clone(this.devices);
         _.forEach(this.currentBulkResponse.failures, (_message, key: string) => {

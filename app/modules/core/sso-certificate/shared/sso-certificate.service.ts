@@ -1,3 +1,5 @@
+import { XmlService } from 'modules/core/shared/xml-service/xml-service.service';
+
 export interface ICertificate {
   primary?: string;
   id: string;
@@ -35,7 +37,9 @@ interface IWindowService extends ng.IWindowService {
 
 export class SsoCertificateService {
   private latestCertificate: ICertificate;
-  public static readonly METADATA_SCHEMAS = 'urn:cisco:codev:identity:idbroker:metadata:schemas:1.0';
+  public readonly METADATA_SCHEMAS = 'urn:cisco:codev:identity:idbroker:metadata:schemas:1.0';
+  public readonly SINGLE_SIGN_ON_SERVICE = 'SingleSignOnService';
+  public readonly HTTP_POST_BINDINGS = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
   private objectBlob?: Blob;
   private objectUrl?: string;
 
@@ -45,6 +49,7 @@ export class SsoCertificateService {
     private $window: IWindowService,
     private Authinfo,
     private UrlConfig,
+    private XmlService: XmlService,
   ) {}
 
   public getAllCiCertificates(): ng.IPromise<ICertificate[]> {
@@ -129,7 +134,7 @@ export class SsoCertificateService {
         certificateIds.push(this.getLatestCertificate().id);
 
         const patchData: IMetadataPatchPayload = {
-          schemas: [SsoCertificateService.METADATA_SCHEMAS],
+          schemas: [this.METADATA_SCHEMAS],
           signEncryptCertId: certificateIds,
         };
         return this.updateMetadata(patchData);
@@ -138,7 +143,7 @@ export class SsoCertificateService {
 
   public switchMetadata(): ng.IPromise<IMetadata> {
     const patchData: IMetadataPatchPayload = {
-      schemas: [SsoCertificateService.METADATA_SCHEMAS],
+      schemas: [this.METADATA_SCHEMAS],
       primaryCertId: this.getLatestCertificate().id,
     };
     return this.updateMetadata(patchData);
@@ -174,6 +179,24 @@ export class SsoCertificateService {
       const expirationDate = moment(cert.expirationDate, moment.ISO_8601);
       return expirationDate.diff(today);
     });
+  }
+
+  // Get the reqBinding param in the XML
+  public getReqBinding(metadataXml: string): string {
+    // Get the SingleSignOnService keys into an array
+    const ssoServices = this.XmlService.filterKeyInXml(metadataXml, this.SINGLE_SIGN_ON_SERVICE);
+    if (_.isEmpty(ssoServices)) {
+      return '';
+    }
+
+    const hasPostBinding = _.some(ssoServices, (i) => {
+      return i['_Binding'] === this.HTTP_POST_BINDINGS;
+    });
+    if (hasPostBinding) {
+      return `&reqBinding=${this.HTTP_POST_BINDINGS}`;
+    } else {
+      return '';
+    }
   }
 
   // Blob and URL creation methods

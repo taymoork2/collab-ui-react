@@ -27,7 +27,7 @@ export class EditAutoAssignTemplateModalController implements ng.IComponentContr
   ) {}
 
   public $onInit(): void {
-    this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.picker');
+    this.prevState = _.get<string>(this.$state, 'params.prevState', 'users.manage.org');
     this.isEditTemplateMode = !!this.isEditTemplateMode;
 
     this.$q.resolve()

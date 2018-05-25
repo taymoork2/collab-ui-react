@@ -35,7 +35,7 @@
     cs-btn
     id="create-place-button"
     class="btn btn--primary"
-    ng-disabled="addLines.isDisabled"
+    ng-disabled="addLines.isDisabled()"
     ng-show="addLines.hasNextStep()"
     ng-click="addLines.next()">
     <span translate="common.next"></span>
@@ -44,7 +44,7 @@
     cs-btn
     id="create-place-button"
     class="btn btn--primary"
-    ng-disabled="addLines.isDisabled"
+    ng-disabled="addLines.isDisabled()"
     ng-hide="addLines.hasNextStep()"
     ng-click="addLines.save()">
     <span translate="common.save"></span>

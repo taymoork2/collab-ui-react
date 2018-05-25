@@ -1,0 +1,32 @@
+{
+    "charLimitCheck": {
+        "careChatTpl.templateConfig.default.defaultPromptMessage": 100,  
+        "careChatTpl.templateConfig.default.defaultNameText": 50,
+        "careChatTpl.templateConfig.default.defaultWelcomeText": 50,
+        "careChatTpl.templateConfig.default.defaultNameHint": 50,
+        "careChatTpl.templateConfig.default.defaultEmailText": 50,
+        "careChatTpl.templateConfig.default.defaultEmail": 50,
+        "careChatTpl.templateConfig.default.defaultQuestionText": 50,
+        "careChatTpl.templateConfig.default.field3HintText": 50,
+        "careChatTpl.templateConfig.default.additionalDetails": 50,
+        "careChatTpl.templateConfig.default.additionalDetailsAbtIssue": 50,
+        "careChatTpl.templateConfig.default.agentUnavailableMessage": 250,
+        "careChatTpl.templateConfig.default.offHoursDefaultMessage": 250,
+        "careChatTpl.templateConfig.default.feedbackQuery": 250,
+        "careChatTpl.templateConfig.default.ratingComment": 50,
+        "careChatTpl.templateConfig.default.connectingMessage": 50,
+        "careChatTpl.templateConfig.default.waitingMessage": 50,
+        "careChatTpl.templateConfig.default.enterRoomMessage": 50,
+        "careChatTpl.templateConfig.default.leaveRoomMessage": 50,
+        "careChatTpl.templateConfig.default.chattingMessage": 50,
+        "careChatTpl.templateConfig.default.defaultPhoneText": 50,
+        "careChatTpl.templateConfig.default.defaultPhoneHintText": -1,
+        "careChatTpl.templateConfig.default.feedbackQueryCall": 250,
+        "careChatTpl.templateConfig.default.callbackConfirmationMsg": 250,
+        "careChatTpl.templateConfig.default.bubbleTitleMessage": 50,
+        "careChatTpl.templateConfig.default.waitingMessageEVA": 50,
+        "careChatTpl.templateConfig.default.virtualAssistantWelcomeMessage": 250,
+        "careChatTpl.templateConfig.default.leaveRoomMessageEVA": 50
+    }
+}
+

@@ -10,6 +10,7 @@
     vm.clusterList = [];
     vm.selectedClusterId = '';
     vm.currentServiceId = 'squared-fusion-media';
+    vm.releaseChannel = 'stable';
 
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     function updateClusterLists() {
@@ -67,6 +68,7 @@
         var deferred = $q.defer();
         HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt')
           .then(function (resp) {
+            vm.releaseChannel = resp.releaseChannel;
             vm.selectedClusterId = resp.id;
             // Add the created cluster to property set
             MediaClusterServiceV2.getPropertySets()
@@ -75,12 +77,22 @@
                   vm.videoPropertySet = _.filter(propertySets, {
                     name: 'videoQualityPropertySet',
                   });
+                  vm.qosPropertySet = _.filter(propertySets, {
+                    name: 'qosPropertySet',
+                  });
                   if (vm.videoPropertySet.length > 0) {
                     var clusterPayload = {
                       assignedClusters: vm.selectedClusterId,
                     };
                     // Assign it the property set with cluster list
                     MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+                  }
+                  if (vm.qosPropertySet.length > 0) {
+                    var clusterQosPayload = {
+                      assignedClusters: vm.selectedClusterId,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
                   }
                 }
               });
@@ -95,6 +107,7 @@
           });
         return deferred.promise;
       } else {
+        vm.releaseChannel = vm.clusterDetail.releaseChannel;
         vm.selectedClusterId = vm.clusterDetail.id;
         return whiteListHost(hostName, vm.selectedClusterId);
       }
@@ -105,7 +118,7 @@
     }
 
     function redirectPopUpAndClose(hostName, enteredCluster) {
-      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId));
+      vm.popup = $window.open('https://' + encodeURIComponent(hostName) + '/?clusterName=' + encodeURIComponent(enteredCluster) + '&clusterId=' + encodeURIComponent(vm.selectedClusterId) + '&channel=' + encodeURIComponent(vm.releaseChannel));
     }
 
     function enableMediaServiceEntitlements() {
@@ -125,6 +138,7 @@
       var deferred = $q.defer();
       HybridServicesClusterService.preregisterCluster(enteredCluster, 'stable', 'mf_mgmt').then(function (result) {
         deferred.resolve();
+        vm.releaseChannel = result.releaseChannel;
         vm.selectedClusterId = result.id;
         // Cluster created, now creating a property set for video quality
         var payLoad = {
@@ -146,6 +160,7 @@
                 Notification.errorWithTrackingId(err, 'mediaFusion.videoQuality.error');
               });
           });
+        createQosProperty();
         whiteListHost(hostName, vm.selectedClusterId);
       }, function (error) {
         deferred.reject();
@@ -157,6 +172,28 @@
       return deferred.promise;
     }
 
+    function createQosProperty() {
+      var payLoad = {
+        type: 'mf.group',
+        name: 'qosPropertySet',
+        properties: {
+          'mf.qos': 'true',
+        },
+      };
+      MediaClusterServiceV2.createPropertySet(payLoad)
+        .then(function (response) {
+          vm.qosPropertySetId = response.data.id;
+          var clusterPayload = {
+            assignedClusters: vm.selectedClusterId,
+          };
+          // Assign it the property set with cluster id
+          MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySetId, clusterPayload)
+            .then('', function (err) {
+              Notification.errorWithTrackingId(err, 'mediaFusion.qos.error');
+            });
+        });
+    }
+
     return {
       addRedirectTargetClicked: addRedirectTargetClicked,
       updateClusterLists: updateClusterLists,
@@ -165,6 +202,7 @@
       createFirstTimeSetupCluster: createFirstTimeSetupCluster,
       enableMediaService: enableMediaService,
       validateHostName: validateHostName,
+      createQosProperty: createQosProperty,
     };
   }
   angular

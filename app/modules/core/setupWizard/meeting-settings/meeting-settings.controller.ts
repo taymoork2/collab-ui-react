@@ -41,7 +41,7 @@ export class MeetingSettingsCtrl {
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
   public sitesArray: IWebExSite[] = [];
   public actingSubscriptionId = '';
-  public tspPartnerOptions = [];
+  public tspPartnerOptions: any[] = [];
   public audioPartnerName: string | null = null;
   public dropdownPlaceholder = this.$translate.instant('common.select');
   public hasTrialSites: boolean = false;
@@ -131,6 +131,12 @@ export class MeetingSettingsCtrl {
         this.ccasp.subscriptionId = activeCCASPPackage.ccaspSubscriptionId;
       }
     }
+    if (this.SetupWizardService.hasPendingCCAUserPackage()) {
+      const active = _.get(this.SetupWizardService.getActiveCCAUserPackage(), 'ccaspPartnerName', null);
+      const pending = _.get(this.SetupWizardService.getPendingCCAUserPackage(), 'ccaspPartnerName', null);
+      this.audioPartnerName = active || pending;
+    }
+
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
   }
 
@@ -436,19 +442,31 @@ export class MeetingSettingsCtrl {
   Audio partner
   */
 
-  public getSitesAudioPackageDisplay() {
-    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
-    if (_.isEmpty(audioPackage)) {
+  public getSitesAudioPackageTypeDisplay(): string | null {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicense();
+    if (_.isUndefined(audioPackage)) {
       return null;
     }
-    let audioPackageDisplay = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage[0].offerName);
-    if (this.audioPartnerName) {
-      audioPackageDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
-        partner: this.audioPartnerName,
-        service: audioPackageDisplay,
-      });
+    const audioPackageType = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage.offerName);
+    const audioPackageTypeDisplay = this.$translate.instant('firstTimeWizard.audioPackageWithType', { type: audioPackageType });
+
+    return audioPackageTypeDisplay;
+  }
+
+  public getSitesAudioPartnerDisplay(): string | null {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicense();
+    if (!this.audioPartnerName) {
+      return null;
     }
-    return audioPackageDisplay;
+
+    let audioPartnerDisplay = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage.offerName);
+
+    audioPartnerDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
+      partner: this.audioPartnerName,
+      service: audioPartnerDisplay,
+    }, undefined, undefined, 'sceParameters');
+
+    return audioPartnerDisplay;
   }
 
   public audioPartnerSelectionChange() {

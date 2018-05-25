@@ -10,16 +10,10 @@
     $log,
     Notification,
     WebExApiGatewayService,
-    WebExSiteRowService,
+    SiteListService,
     Authinfo
   ) {
-    // var funcName = "SiteCSVModalCtrl()";
-    // var logMsg = '';
     var vm = this;
-
-    // logMsg = funcName + "\n" +
-    //   "$stateParams=" + JSON.stringify($stateParams);
-    // $log.log(logMsg);
 
     vm.onFileTypeError = onFileTypeError;
     vm.resetFile = resetFile;
@@ -42,25 +36,15 @@
         false,
         'firstTimeWizard.csvFileTypeError'
       );
-    } // onFileTypeError()
+    }
 
     function resetFile() {
       vm.modal.file = null;
-    } // resetFile()
+    }
 
     function startExport() {
-      // var funcName = "SiteCSVModalCtrl.startExport()";
-
       var siteRow = vm.siteRow;
       var siteUrl = siteRow.license.siteUrl;
-
-      // logMsg = funcName + "\n" +
-      //   "siteRow=" + JSON.stringify(siteRow);
-      // $log.log(logMsg);
-
-      // logMsg = funcName + "\n" +
-      //   "siteUrl=" + siteUrl;
-      // $log.log(logMsg);
 
       vm.requestingExport = true;
 
@@ -99,19 +83,11 @@
             'siteList.exportRejectedToast',
             response.errId
           );
-        } // catchError()
-      ); // WebExApiGatewayService.csvExport()
-    } // startExport()
+        }
+      );
+    }
 
     function startImport() {
-      // var funcName = "SiteCSVModalCtrl.startImport()";
-
-      // logMsg = funcName + "\n" +
-      //   "vm.siteUrl=" + JSON.stringify(vm.siteUrl) +
-      //   "vm.siteRow=" + JSON.stringify(vm.siteRow) +
-      //   "vm.modal.file=" + vm.modal.file;
-      //$log.log(logMsg);
-
       vm.requestingImport = true;
 
       if (
@@ -154,9 +130,9 @@
               response.errorCode
             );
           }
-        ); // WebExApiGatewayService.csvImport()
+        );
       }
-    } // startImport()
+    }
 
     function displayResult(
       isSuccess,
@@ -164,11 +140,7 @@
       resultMsg,
       errId
     ) {
-      // var funcName = "displayResult()";
-      // var logMsg = "";
-
-      WebExSiteRowService.updateCSVStatusInRow(vm.siteUrl);
-      //SiteListService.updateCSVStatusInRow(vm.siteRow);
+      SiteListService.updateCSVStatusInRow(vm.siteUrl);
 
       if (isSuccess) {
         Notification.success(resultMsg);
@@ -185,12 +157,11 @@
         (closeModal) &&
         (_.isFunction($scope.$close))
       ) {
-        //SiteListService.updateCSVStatusInRow(vm.siteRow);
         $scope.$close();
       } else {
         vm.requestingImport = false;
         vm.requestingImExport = false;
       }
-    } // displayResult()
-  } // SiteCSVModalCtrl()
-})(); // top level function
+    }
+  }
+})();

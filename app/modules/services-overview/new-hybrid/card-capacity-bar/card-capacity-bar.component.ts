@@ -1,10 +1,10 @@
-import { IExtendedConnector, ConnectorType, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
+import { ConnectorType, IExtendedClusterFusion } from 'modules/hercules/hybrid-services.types';
 import { IExtendedStatusByClusters } from 'modules/hercules/services/uss.service';
+import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
 
 import './card-capacity-bar.scss';
 
 class CardCapacityBarController implements ng.IComponentController {
-  private relevantClusterIds: string[] = [];
   public connectorType: ConnectorType;
   public capacity = 0;
   public maxUsers = 0;
@@ -12,9 +12,12 @@ class CardCapacityBarController implements ng.IComponentController {
   public tooltipAriaLabel: string = '';
   public progressBarType: 'success' | 'warning' | 'danger' = 'success';
 
+  private unassignedClusters: IExtendedClusterFusion[];
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
+    private HybridServicesExtrasService: HybridServicesExtrasService,
   ) {}
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
@@ -22,50 +25,20 @@ class CardCapacityBarController implements ng.IComponentController {
       const clusters: IExtendedClusterFusion[] = changes.clusters.currentValue;
 
       // We only display the capacity bar for clusters not in resource groups
-      const unassignedClusters = _.filter(clusters, cluster => !cluster.resourceGroupId);
-
-      // we can read the user capacity directly from each connectors
-      this.maxUsers = _.chain(unassignedClusters)
-        .map(cluster => cluster.connectors)
-        .flatten<IExtendedConnector>()
-        .filter(connector => connector.connectorType === this.connectorType)
-        .map(connector => connector.userCapacity)
-        .sum()
-        .value();
-
-      // Keeping the relevant cluster ids around is useful to read users statuses
-      this.relevantClusterIds = _.reduce(unassignedClusters, (acc, cluster) => {
-        acc.push(cluster.id);
-        // The data we get from the User Statuses summary could use the legacy device id instead of the current cluster id
-        if (cluster.legacyDeviceClusterId) {
-          acc.push(cluster.legacyDeviceClusterId);
-        }
-        return acc;
-      }, <string[]>[]);
+      this.unassignedClusters = _.filter(clusters, cluster => !cluster.resourceGroupId);
     }
 
     if (changes.summary && changes.summary.currentValue) {
-      const summary: IExtendedStatusByClusters[] = changes.summary.currentValue;
+      const summaries: IExtendedStatusByClusters[] = changes.summary.currentValue;
 
-      let users = 0;
-      if (summary.length > 0) {
-        users = _.sum(_.map(summary, summary => {
-          // TODO: also check device ID…
-          if (_.includes(this.relevantClusterIds, summary.id)) {
-            return summary.users;
-          }
-          return 0;
-        }));
-      }
-      this.capacity = Math.ceil(users / this.maxUsers * 100);
-      if (this.capacity > 90) {
-        this.progressBarType = 'danger';
-      } else if (this.capacity > 60) {
-        this.progressBarType = 'warning';
-      }
+      const capacityInfo = this.HybridServicesExtrasService.getCapacityInformation(this.unassignedClusters, this.connectorType, summaries);
+
+      this.capacity = capacityInfo.capacity;
+      this.maxUsers = capacityInfo.maxUsers;
+      this.progressBarType = capacityInfo.progressBarType;
       this.tooltip = this.$translate.instant('hercules.capacity.tooltipUnassigned', {
         capacity: this.capacity,
-        total: users,
+        total: capacityInfo.users,
         max: this.maxUsers,
       });
     }
