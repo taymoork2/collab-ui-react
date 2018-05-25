@@ -76,12 +76,7 @@
                 }
               }
             });
-          var payload = {
-            entity: 'cluster',
-            operation: 'add',
-            id: vm.clusterDetail.id,
-          };
-          MediaServiceAuditService.devOpsAuditEvents(payload);
+          MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);
           moveHost(res);
         }, function () {
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
