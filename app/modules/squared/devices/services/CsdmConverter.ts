@@ -265,7 +265,7 @@ class HuronHelper {
   };
 
   public static decodeHuronTags(description) {
-    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/','/g, '","');
     return tagString;
   }
 

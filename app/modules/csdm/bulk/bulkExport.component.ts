@@ -31,6 +31,7 @@ class BulkExportCtrl implements IComponentController {
     this.addField(QueryParser.Field_ActiveInterface, false);
     this.addField(QueryParser.Field_UpgradeChannel, false);
     this.addField(QueryParser.Field_ErrorCodes, false);
+    this.addField(QueryParser.Field_Tag, false);
   }
 
   private addField(fieldKey: string, included: boolean) {
