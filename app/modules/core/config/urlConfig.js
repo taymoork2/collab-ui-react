@@ -248,6 +248,12 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
+    XapiServiceUrl: {
+      dev: 'https://xapi-intb.wbx2.com/xapi/api/v1',
+      cfe: 'https://xapi-loada.ciscospark.com/xapi/api/v1',
+      integration: 'https://xapi-intb.wbx2.com/xapi/api/v1',
+      prod: 'https://xapi-a.wbx2.com/xapi/api/v1',
+    },
     ProximityServiceUrl: {
       dev: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
       cfe: 'https://proximity-loada.ciscospark.com/proximity/api/v1/ping',
