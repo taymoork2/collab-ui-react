@@ -33,7 +33,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
+    this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
       .then((isSupport: boolean) => {
         this.isSupportClientVersion = isSupport;
         this.getParticipants();

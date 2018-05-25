@@ -51,7 +51,7 @@ class DgcPartnerTab implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+    this.FeatureToggleService.diagnosticPartnerF8193TroubleshootingGetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
           this.BACK_STATE = 'partnertroubleshooting.diagnostics';

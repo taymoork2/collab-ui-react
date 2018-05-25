@@ -59,7 +59,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
 
   public $onInit(): void {
     this.setGridOptions();
-    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+    this.FeatureToggleService.diagnosticPartnerF8193TroubleshootingGetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
           this.initMeetingList();
@@ -77,7 +77,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private initMeetingList () {
-    this.FeatureToggleService.diagnosticF8234QueryRangeGetStatus()
+    this.FeatureToggleService.diagnosticPartnerF8234QueryRangeGetStatus()
       .then((isSupport: boolean) => {
         this.initDateRange(isSupport);
         this.Analytics.trackEvent(this.PartnerSearchService.featureName, {});

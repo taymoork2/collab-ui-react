@@ -612,7 +612,7 @@ export class Config {
       'partner-services-overview',
       'hcs',
     ],
-    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'partnertroubleshooting', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
+    PARTNER_SALES_ADMIN: ['overview', 'partneroverview', 'customer-overview', 'partnercustomers', 'partnerreports', 'trial', 'trialAdd', 'trialEdit', 'pstn', 'pstnWizard', 'video'],
     CUSTOMER_PARTNER: ['overview', 'partnercustomers', 'customer-overview'],
     //TODO User role is used by Online Ordering UI. The dr* states will be removed once the Online UI is separated from Atlas.
     User: ['drLoginReturn', 'drOnboard', 'drConfirmAdminOrg', 'drOnboardQuestion', 'drOnboardEnterAdminEmail', 'drOrgName', 'drAdminChoices'],
