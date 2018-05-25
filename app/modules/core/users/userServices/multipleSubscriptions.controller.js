@@ -21,7 +21,10 @@
 
     function init() {
       Orgservice.getInternallyManagedSubscriptions().then(function (subscriptions) {
-        vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
+        vm.subscriptionOptions = _.uniq(_.map(_.filter(subscriptions, function (subscription) {
+          // if subscription has an empty license array, then it is suspended and should not be an option
+          return !_.isEmpty(subscription.licenses);
+        }), 'subscriptionId'));
         vm.subscriptionOptions = _.sortBy(vm.subscriptionOptions, function (o) {
           return o === 'Trial' ? 1 : -1;
         });

@@ -136,6 +136,9 @@
         "capacity": 15,
         "usage": 0
       }]
+    }, {
+      "subscriptionId": "svcid-integ-sunnyway-1b",
+      "licenses": []
     }],
     "singleSub": [{
       "subscriptionId": "srvcid-integ-uitest-1a",
