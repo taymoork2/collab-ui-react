@@ -68,6 +68,7 @@ export interface IUniqueParticipant {
 }
 
 export interface IParticipant {
+  cid: string;
   joinTime: number;
   leaveTime: number;
   userName: string;
@@ -88,6 +89,9 @@ export interface IParticipant {
   callInType: string;
   device: string;
   joinTime_: string;
+  platform_: string;
+  browser_: string;
+  clientKey: string;
 }
 
 export interface IJoinTime {
@@ -97,6 +101,8 @@ export interface IJoinTime {
   guestId: string;
   joinMeetingTime: string;
   jmtQuality: string;
+  osVersion?: string;
+  browserVersion?: string;
 }
 
 export interface IObjectDict {
@@ -135,4 +141,9 @@ export interface IUniqueData {
   guestId: string;
   userId: string;
   joinTime: number;
+}
+
+export interface IVersion {
+  osVersion: string;
+  browserVersion: string;
 }

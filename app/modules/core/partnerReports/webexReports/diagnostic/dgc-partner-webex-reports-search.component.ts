@@ -4,7 +4,6 @@ import { Notification } from 'modules/core/notifications';
 import { IMeetingDetail } from './partner-search.interfaces';
 import { PartnerSearchService } from './partner-search.service';
 
-const DATERANGE = 6;
 interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
@@ -18,6 +17,11 @@ interface IDateRange {
     lastEnableDate: string,
     firstEnableDate: string,
   };
+}
+
+enum LimitDays {
+  OneWeek = 7,
+  OneMonth = 30,
 }
 
 class DgcPartnerWebexReportsSearchController implements ng.IComponentController {
@@ -54,17 +58,31 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
-      .then((isPartnerWebexEnabled: boolean): void => {
-        if (!isPartnerWebexEnabled) {
-          this.$state.go('login');
+    this.setGridOptions();
+    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+      .then((isSupport: boolean) => {
+        if (isSupport) {
+          this.initMeetingList();
         } else {
-          this.initDateRange();
-          this.setGridOptions();
-          this.Analytics.trackEvent(this.PartnerSearchService.featureName, {});
-          if (this.searchStr) {
-            this.startSearch();
-          }
+          this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
+            .then((isPartnerWebexEnabled: boolean): void => {
+              if (!isPartnerWebexEnabled) {
+                this.$state.go('login');
+              } else {
+                this.initMeetingList();
+              }
+            });
+        }
+      });
+  }
+
+  private initMeetingList () {
+    this.FeatureToggleService.diagnosticF8234QueryRangeGetStatus()
+      .then((isSupport: boolean) => {
+        this.initDateRange(isSupport);
+        this.Analytics.trackEvent(this.PartnerSearchService.featureName, {});
+        if (this.searchStr) {
+          this.startSearch();
         }
       });
   }
@@ -123,10 +141,10 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     this.gridData = [];
   }
 
-  private initDateRange(): void {
+  private initDateRange(isSupportQueryRange: boolean): void {
+    const calendarLimitDays = isSupportQueryRange ? LimitDays.OneMonth : LimitDays.OneWeek;
     this.today = moment().format('YYYY-MM-DD');
-    this.startDate = moment().subtract(DATERANGE, 'days').format('YYYY-MM-DD');
-
+    this.startDate = moment().subtract(calendarLimitDays - 1, 'days').format('YYYY-MM-DD');
     this.endDate = this.today;
     this.storeData.endDate = this.endDate;
     this.storeData.startDate = this.startDate;
@@ -186,8 +204,8 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private setGridData(): void {
-    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
-    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
+    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.today;
+    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.startDate;
     const data = {
       endDate : endDate,
       email: this.email,

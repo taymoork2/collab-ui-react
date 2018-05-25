@@ -4,7 +4,8 @@ class WebexReportsTabs implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
-  ) {}
+    private FeatureToggleService,
+  ) { }
 
   public $onInit(): void {
     this.tabs = [
@@ -12,11 +13,16 @@ class WebexReportsTabs implements ng.IComponentController {
         state: `partnerreports.tab.webexreports.metrics`,
         title: `reportsPage.webexMetrics.metrics`,
       },
-      {
-        state: `partnerreports.tab.webexreports.diagnostics`,
-        title: `reportsPage.webexMetrics.diagnostics`,
-      },
     ];
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8193UX3)
+      .then((isSupport: boolean) => {
+        if (!isSupport) {
+          this.tabs.push({
+            state: `partnerreports.tab.webexreports.diagnostics`,
+            title: `reportsPage.webexMetrics.diagnostics`,
+          });
+        }
+      });
   }
 }
 

@@ -15,6 +15,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   public reqTimes = 0;
   public platformCellTemplate: string;
   public usernameCellTemplate: string;
+  private isSupportClientVersion = false;
 
   /* @ngInject */
   public constructor(
@@ -22,6 +23,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
+    private FeatureToggleService,
     private Notification: Notification,
     private PartnerSearchService: PartnerSearchService,
   ) {
@@ -31,7 +33,11 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.getParticipants();
+    this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
+      .then((isSupport: boolean) => {
+        this.isSupportClientVersion = isSupport;
+        this.getParticipants();
+      });
   }
 
   private getParticipants(): void {
@@ -55,15 +61,30 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
       if (participant.platform === Platforms.TP && !device.name) {
         device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
       }
+
+      const deviceName = this.getDeviceName(participant, device);
       return _.assignIn({}, participant, {
         phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
         callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
-        platform_: _.get(device, 'name'),
+        platform_: deviceName,
         duration: this.PartnerSearchService.getDuration(participant.duration),
         endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
         startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
       });
     });
+  }
+
+  private getDeviceName(participant: IParticipant, device: { name: string, icon: string }): string {
+    let deviceName: string = _.get(device, 'name');
+    if (!(participant.platform === Platforms.TP || participant.sessionType === Platforms.PSTN) && this.isSupportClientVersion) {
+      const devicePlatform = this.PartnerSearchService.getPlatform(_.get(participant, 'platform'));
+      const deviceBrowser = this.PartnerSearchService.getBrowser(_.get(participant, 'browser'));
+      if (devicePlatform && deviceBrowser) {
+        const clientVersion = this.PartnerSearchService.getClientVersion(`${ participant.userId }_${ participant.userName }`);
+        deviceName = `${ devicePlatform } ${ clientVersion.osVersion }: ${ deviceBrowser } ${ clientVersion.browserVersion }`;
+      }
+    }
+    return deviceName;
   }
 
   private detectAndUpdateDevice(): void {

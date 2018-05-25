@@ -31,14 +31,15 @@ class DgcPartnerTab implements ng.IComponentController {
   public overview: IMeetingDetail;
   public loading = true;
   public MEETING_INFO_STATUS = MeetingInfoStatus;
-  public readonly BACK_STATE = 'partnerreports.tab.webexreports.diagnostics';
-  private timeZone: any; // TODO (xiaopeli): use better type
+  public BACK_STATE = 'partnerreports.tab.webexreports.diagnostics';
+  private timeZone: string;
   private conferenceID: string;
 
   /* @ngInject */
   public constructor(
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
     private Notification: Notification,
     private PartnerSearchService: PartnerSearchService,
   ) {
@@ -47,6 +48,12 @@ class DgcPartnerTab implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+      .then((isSupport: boolean) => {
+        if (isSupport) {
+          this.BACK_STATE = 'partnertroubleshooting.diagnostics';
+        }
+      });
     this.tabs = [
       {
         state: `partnerreports.dgc.meetingdetail({cid: '${this.conferenceID}'})`,
