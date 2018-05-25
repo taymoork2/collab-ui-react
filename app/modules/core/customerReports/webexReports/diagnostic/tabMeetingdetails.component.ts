@@ -1,5 +1,5 @@
 import './_search.scss';
-import { SearchService, Platforms, Quality, QualityRange } from './searchService';
+import { ISessionDetailItem, SearchService, SearchStorage, Platforms, Quality, QualityRange } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
 class Meetingdetails implements ng.IComponentController {
@@ -68,6 +68,7 @@ class Meetingdetails implements ng.IComponentController {
   private getParticipants() {
     this.SearchService.getUniqueParticipants(this.conferenceID)
       .then(res => {
+        this.SearchService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
         const timeZone = this.SearchService.getStorage('timeZone');
         const wom = this.SearchService.getStorage('webexOneMeeting');
         const lines = _.map(res, (item) => this.formateLine(_.get(item, 'participants')));
@@ -94,7 +95,10 @@ class Meetingdetails implements ng.IComponentController {
 
   private getJoinMeetingTime(): void {
     this.SearchService.getJoinMeetingTime(this.conferenceID)
-      .then( res => this.circleColor = res );
+      .then(res => {
+        this.circleColor = res;
+        this.SearchService.setStorage(SearchStorage.JOIN_MEETING_TIMES, res);
+      });
   }
 
   private formateLine(lines) {
@@ -134,6 +138,8 @@ class Meetingdetails implements ng.IComponentController {
             details[item.key] = [];
           }
           if (item.completed) {
+            this.saveSessionDetailToStorage(SearchStorage.VOIP_SESSION_DETAIL, item);
+
             _.forEach(item.items, detailItem => {
               this.audioEnabled.VoIP = true;
               const detail = {};
@@ -172,6 +178,8 @@ class Meetingdetails implements ng.IComponentController {
             details[item.key] = [];
           }
           if (item.completed) {
+            this.saveSessionDetailToStorage(SearchStorage.VIDEO_SESSION_DETAIL, item);
+
             _.forEach(item.items, detailItem => {
               this.videoEnabled = true;
               const detail = {};
@@ -210,6 +218,8 @@ class Meetingdetails implements ng.IComponentController {
         const details = this.audioLines;
         _.forEach(res.items, item => {
           if (item.completed) {
+            this.saveSessionDetailToStorage(SearchStorage.PSTN_SESSION_DETAIL, item);
+
             _.forEach(item.items, detailItem => {
               const key = `${detailItem.callId}_${item.key}`;
               if (!details[key]) {
@@ -260,6 +270,9 @@ class Meetingdetails implements ng.IComponentController {
             videoDetails[item.key] = [];
           }
           if (item.completed) {
+            // TODO: setStorage for CMR Audio/Video session detail.
+            // Because for now there is no CMR quality data, so this feature will be hold util CMR quality data is ready.
+
             _.forEach(item.items, detailItem => {
               const audioDetail = {};
               audioDetail['startTime'] = detailItem.connectionStartTime * 1;
@@ -449,6 +462,13 @@ class Meetingdetails implements ng.IComponentController {
     : _.filter(res, (item: any) => _.parseInt(item.sessionType) === 0 && _.parseInt(item.platform) === 10);
     const lines = _.map(arr, (item) => this.formateLine(_.get(item, 'participants')));
     return this.getAllIds(lines);
+  }
+
+  private saveSessionDetailToStorage(sessionType: string, sessionDetail: ISessionDetailItem): void {
+    const sessionDetailByNodeId = {};
+    sessionDetailByNodeId[sessionDetail.key] = sessionDetail.items;
+    const newDetail = _.assign(this.SearchService.getStorage(sessionType) || {}, sessionDetailByNodeId);
+    this.SearchService.setStorage(sessionType, newDetail);
   }
 }
 

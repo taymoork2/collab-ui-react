@@ -2,7 +2,6 @@
 @import '~@collabui/collab-ui/scss/settings/page';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
-
 .dgc-meeting {
     @extend %page-content-padding;
     $content-padding-size: 1rem;
@@ -17,18 +16,15 @@
       padding: 0 0.5rem;
 
       .meeting-room-name {
-        display: flex;
-        flex-direction: column;
-        align-items: baseline;
+        display: inline;
         color: $gray-dark-1;
-        height: $room-title-height;
   
         h3 {
-          display: flex;
+          display: inline;
           align-items: flex-end;
         }
         .title {
-          display: flex;
+          display: inline;
           align-items: center;
         }
         .detailInfo {
