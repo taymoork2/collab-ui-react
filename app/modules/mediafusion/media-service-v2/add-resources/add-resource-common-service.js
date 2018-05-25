@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AddResourceCommonServiceV2($translate, $q, $window, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, Notification) {
+  function AddResourceCommonServiceV2($translate, $q, $window, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -98,6 +98,7 @@
               });
 
             deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
+            MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.selectedClusterId);
           })
           .catch(function (error) {
             var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
@@ -162,6 +163,7 @@
           });
         createQosProperty();
         whiteListHost(hostName, vm.selectedClusterId);
+        MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.selectedClusterId);
       }, function (error) {
         deferred.reject();
         var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {

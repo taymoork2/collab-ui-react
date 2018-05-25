@@ -6,8 +6,9 @@
     .controller('ClusterCreationWizardController', ClusterCreationWizardController);
 
   /* @ngInject */
-  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
+  function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceAuditService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
+    vm.isWizard = true;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
     vm.isSipSettingsEnabled = true;
@@ -131,7 +132,12 @@
           if (!_.isUndefined(vm.formDataForUpgradeSchedule)) HybridMediaUpgradeScheduleService.updateUpgradeScheduleAndUI(vm.formDataForUpgradeSchedule, vm.clusterId);
           if (!_.isUndefined(vm.emailSubscribers)) HybridMediaEmailNotificationService.saveEmailSubscribers(vm.emailSubscribers);
         }).then(function () {
-          $state.go('media-service-v2.list');
+          devOpsAuditEventsOrg().then(function () {
+            devOpsAuditEventsCluster();
+          });
+          $state.go('media-service-v2.list', {}, {
+            reload: true,
+          });
         });
       }
     }
@@ -382,6 +388,15 @@
             $modalInstance.dismiss();
           }
         });
+    }
+
+    function devOpsAuditEventsOrg() {
+      if (vm.firstTimeSetup) {
+        return MediaServiceAuditService.devOpsAuditEvents('org', 'add', Authinfo.getOrgId());
+      }
+    }
+    function devOpsAuditEventsCluster() {
+      MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterId);
     }
   }
 }());

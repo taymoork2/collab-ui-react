@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, Authinfo, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -74,12 +74,14 @@
       if (vm.clusters.length === 1) {
         DeactivateMediaService.deactivateHybridMediaService();
         $modalInstance.close();
+        MediaServiceAuditService.devOpsAuditEvents('org', 'delete', Authinfo.getOrgId());
       }
     };
 
     function defuseHost(host) {
       HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
+        .then(MediaServiceAuditService.devOpsAuditEvents('node', 'delete', host.id))
         .catch(incrementFailureCount(host));
     }
 
@@ -153,6 +155,7 @@
                 MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
               }
             }
+            MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);
           });
         return vm.clusterDetail;
       }, function () {
@@ -184,6 +187,7 @@
         fromCluster = vm.cluster;
         HybridServicesClusterService.moveEcpNode(host.id, fromCluster.id, toCluster.id)
           .then(incrementSuccessCount(host, toCluster))
+          .then(MediaServiceAuditService.devOpsAuditEvents('node', 'move', host.id))
           .catch(incrementFailureCount(host));
       }
     }
@@ -221,6 +225,7 @@
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
             clustername: vm.cluster.name,
           });
+          MediaServiceAuditService.devOpsAuditEvents('cluster', 'delete', vm.cluster.id);
           Notification.success(vm.success);
           $modalInstance.close();
           if (vm.clusters.length > 1) {
