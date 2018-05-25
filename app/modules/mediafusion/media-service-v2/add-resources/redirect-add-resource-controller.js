@@ -43,12 +43,7 @@
             AddResourceCommonServiceV2.createFirstTimeSetupCluster(hostName, enteredCluster).then(function () {
               //call the rest of the services which needs to be enabled
               AddResourceCommonServiceV2.enableMediaService();
-              var payload = {
-                entity: 'org',
-                operation: 'add',
-                id: Authinfo.getOrgId(),
-              };
-              MediaServiceAuditService.devOpsAuditEvents(payload);
+              MediaServiceAuditService.devOpsAuditEvents('org', 'add', Authinfo.getOrgId());
               AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
             }).then(function () {
               $state.go('media-service-v2.list');

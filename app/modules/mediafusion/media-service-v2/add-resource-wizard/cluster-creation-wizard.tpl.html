@@ -20,7 +20,7 @@
   </add-resource-section>
   <sip-call-settings
     cluster="clusterCreationWizard.clusterDetail"
-    is-wizard="true"
+    is-wizard="clusterCreationWizard.isWizard"
     mf-toggle="clusterCreationWizard.hasMfFeatureToggle"
     mf-trusted-toggle="clusterCreationWizard.hasMfSIPFeatureToggle"
     mf-cascade-toggle="clusterCreationWizard.hasMfCascadeBwConfigToggle"
@@ -43,12 +43,12 @@
     ng-show="clusterCreationWizard.currentStep === 5">
   </hybrid-media-email-notification>
   <video-quality-section
-    is-wizard="true"
+    is-wizard="clusterCreationWizard.isWizard"
     on-video-quality-update="clusterCreationWizard.videoQualityUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5">
   </video-quality-section>
   <qos-section 
-    is-wizard="true"
+    is-wizard="clusterCreationWizard.isWizard"
     on-qos-update="clusterCreationWizard.qosUpdated(response)"
     ng-show="clusterCreationWizard.currentStep === 5 && clusterCreationWizard.hasMfQosFeatureToggle">
   </qos-section>

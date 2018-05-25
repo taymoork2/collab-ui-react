@@ -98,12 +98,7 @@
               });
 
             deferred.resolve(whiteListHost(hostName, vm.selectedClusterId));
-            var payload = {
-              entity: 'cluster',
-              operation: 'add',
-              id: vm.selectedClusterId,
-            };
-            MediaServiceAuditService.devOpsAuditEvents(payload);
+            MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.selectedClusterId);
           })
           .catch(function (error) {
             var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {
@@ -168,12 +163,7 @@
           });
         createQosProperty();
         whiteListHost(hostName, vm.selectedClusterId);
-        var payload = {
-          entity: 'cluster',
-          operation: 'add',
-          id: vm.selectedClusterId,
-        };
-        MediaServiceAuditService.devOpsAuditEvents(payload);
+        MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.selectedClusterId);
       }, function (error) {
         deferred.reject();
         var errorMessage = $translate.instant('mediaFusion.clusters.clusterCreationFailed', {

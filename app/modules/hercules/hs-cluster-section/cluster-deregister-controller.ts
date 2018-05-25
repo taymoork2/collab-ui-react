@@ -31,12 +31,7 @@ export class ClusterDeregisterController {
     } else {
       this.HybridServicesClusterService.deregisterCluster(this.cluster.id)
         .then(() => {
-          const payload = {
-            entity: 'cluster',
-            operation: 'delete',
-            id: this.cluster.id,
-          };
-          this.MediaServiceAuditService.devOpsAuditEvents(payload);
+          this.MediaServiceAuditService.devOpsAuditEvents('cluster', 'delete', this.cluster.id);
           this.callNotification();
           this.$modalInstance.close();
         })

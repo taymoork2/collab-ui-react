@@ -72,26 +72,16 @@
         defuseHost(vm.hosts[i]);
       }
       if (vm.clusters.length === 1) {
-        var payload = {
-          entity: 'org',
-          operation: 'delete',
-          id: Authinfo.getOrgId(),
-        };
-        DeactivateMediaService.deactivateHybridMediaService()
-          .then(MediaServiceAuditService.devOpsAuditEvents(payload))
-          .then($modalInstance.close());
+        DeactivateMediaService.deactivateHybridMediaService();
+        $modalInstance.close();
+        MediaServiceAuditService.devOpsAuditEvents('org', 'delete', Authinfo.getOrgId());
       }
     };
 
     function defuseHost(host) {
-      var payload = {
-        entity: 'node',
-        operation: 'delete',
-        id: host.id,
-      };
       HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
-        .then(MediaServiceAuditService.devOpsAuditEvents(payload))
+        .then(MediaServiceAuditService.devOpsAuditEvents('node', 'delete', host.id))
         .catch(incrementFailureCount(host));
     }
 
@@ -127,12 +117,6 @@
             var deferred = $q.defer();
             loopPromises.push(deferred.promise.catch(recoverPromise));
             deferred.resolve(toCluster);
-            var payload = {
-              entity: 'cluster',
-              operation: 'add',
-              id: toCluster.id,
-            };
-            MediaServiceAuditService.devOpsAuditEvents(payload);
           } else {
             var promise = updatePropertiesofCluster(toClusterName);
             loopPromises.push(promise.catch(recoverPromise));
@@ -171,12 +155,7 @@
                 MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
               }
             }
-            var payload = {
-              entity: 'cluster',
-              operation: 'add',
-              id: vm.clusterDetail.id,
-            };
-            MediaServiceAuditService.devOpsAuditEvents(payload);
+            MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);
           });
         return vm.clusterDetail;
       }, function () {
@@ -206,14 +185,9 @@
         deleteCluster();
       } else {
         fromCluster = vm.cluster;
-        var payload = {
-          entity: 'node',
-          operation: 'move',
-          id: host.id,
-        };
         HybridServicesClusterService.moveEcpNode(host.id, fromCluster.id, toCluster.id)
           .then(incrementSuccessCount(host, toCluster))
-          .then(MediaServiceAuditService.devOpsAuditEvents(payload))
+          .then(MediaServiceAuditService.devOpsAuditEvents('node', 'move', host.id))
           .catch(incrementFailureCount(host));
       }
     }
@@ -251,12 +225,7 @@
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
             clustername: vm.cluster.name,
           });
-          var payload = {
-            entity: 'cluster',
-            operation: 'delete',
-            id: vm.cluster.id,
-          };
-          MediaServiceAuditService.devOpsAuditEvents(payload);
+          MediaServiceAuditService.devOpsAuditEvents('cluster', 'delete', vm.cluster.id);
           Notification.success(vm.success);
           $modalInstance.close();
           if (vm.clusters.length > 1) {

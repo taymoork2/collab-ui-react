@@ -12,12 +12,7 @@
       HybridServicesClusterService
         .deregisterEcpNode(connectorId)
         .then(function () {
-          var payload = {
-            entity: 'node',
-            operation: 'delete',
-            id: connectorId,
-          };
-          MediaServiceAuditService.devOpsAuditEvents(payload);
+          MediaServiceAuditService.devOpsAuditEvents('node', 'delete', connectorId);
           $modalInstance.close();
           Notification.success('mediaFusion.deleteNodeSuccess');
         })

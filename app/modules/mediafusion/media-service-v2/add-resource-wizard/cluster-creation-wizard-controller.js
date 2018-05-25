@@ -8,6 +8,7 @@
   /* @ngInject */
   function ClusterCreationWizardController($modal, $modalInstance, $q, $state, $translate, $window, firstTimeSetup, yesProceed, Authinfo, AddResourceSectionService, ClusterCascadeBandwidthService, HybridMediaEmailNotificationService, HybridMediaReleaseChannelService, HybridMediaUpgradeScheduleService, MediaServiceAuditService, QosSectionService, ServiceDescriptorService, SipRegistrationSectionService, TrustedSipSectionService, VideoQualitySectionService, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     var vm = this;
+    vm.isWizard = true;
     vm.serviceId = 'squared-fusion-media';
     vm.loading = false;
     vm.isSipSettingsEnabled = true;
@@ -390,23 +391,12 @@
     }
 
     function devOpsAuditEventsOrg() {
-      var payload = {};
       if (vm.firstTimeSetup) {
-        payload = {
-          entity: 'org',
-          operation: 'add',
-          id: Authinfo.getOrgId(),
-        };
-        return MediaServiceAuditService.devOpsAuditEvents(payload);
+        return MediaServiceAuditService.devOpsAuditEvents('org', 'add', Authinfo.getOrgId());
       }
     }
     function devOpsAuditEventsCluster() {
-      var payload = {
-        entity: 'cluster',
-        operation: 'add',
-        id: vm.clusterId,
-      };
-      MediaServiceAuditService.devOpsAuditEvents(payload);
+      MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterId);
     }
   }
 }());

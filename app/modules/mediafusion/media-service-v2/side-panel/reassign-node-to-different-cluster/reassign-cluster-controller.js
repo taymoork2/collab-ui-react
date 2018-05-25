@@ -96,12 +96,7 @@
 
     function moveHost() {
       HybridServicesClusterService.moveEcpNode(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
-        var payload = {
-          entity: 'node',
-          operation: 'move',
-          id: connector.id,
-        };
-        MediaServiceAuditService.devOpsAuditEvents(payload);
+        MediaServiceAuditService.devOpsAuditEvents('node', 'move', connector.id);
         $modalInstance.close();
         Notification.success('mediaFusion.moveHostSuccess');
       }).catch(function (err) {
