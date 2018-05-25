@@ -8,5 +8,6 @@ export class CrUsersErrorResultsComponent implements ng.IComponentOptions {
   public template = require('./cr-users-error-results.html');
   public bindings = {
     userErrorArray: '<',
+    isOverErrorThreshhold: '<',
   };
 }

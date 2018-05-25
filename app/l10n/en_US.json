@@ -292,6 +292,8 @@
         "exportErrors": "Export errors to CSV",
         "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
         "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+        "errorInstructions": "To resolve errors listed below, download the CSV file and make changes then resubmit the file.",
+        "tooManyErrorsInstructions": "Errors shown below are limited to the first 200 occurrences per file upload. To review the entire list and resolve any conflicts, download the CSV file and make changes before resubmitting.",
         "headerRow": "Row",
         "headerErrorMessage": "Error Message",
         "completedAt": "Completed {{filename}} at"

@@ -17,6 +17,7 @@ describe('CsvDownloadService', () => {
       'UrlConfig',
       'Authinfo',
       'ExtractTarService',
+      'UserTaskManagerService',
     );
 
     initDependencySpies.apply(this);
@@ -94,10 +95,21 @@ describe('CsvDownloadService', () => {
         spyOn(this.UserCsvService, 'getCsvStat').and.returnValue({
           userErrorArray: errorArray,
         });
+        spyOn(this.UserTaskManagerService, 'downloadTaskErrors').and.returnValue(this.$q.resolve({
+          userErrorArray: errorArray,
+        }));
       });
 
       it('should get error export file', function () {
         const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_ERROR)
+          .then(function (data) {
+            expect(data).toContain('blob:http://');
+          });
+        expect(promise).toBeResolved();
+      });
+
+      it('should get error export file with batchServiceToggle on', function () {
+        const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_ERROR, false, 'errors.csv', false, true)
           .then(function (data) {
             expect(data).toContain('blob:http://');
           });

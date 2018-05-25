@@ -21,7 +21,7 @@ export interface IErrorItem {
 
 export interface IErrorRow {
   row: number;
-  message: string;
+  error: string;
 }
 
 export class CsvUploadResultsCtrl implements ng.IComponentController {
@@ -40,6 +40,8 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
   public userErrorArray: IErrorRow[] = [];
   public isCancelledByUser = false;
   public startedBy?: string;
+  public DOWNLOAD_ERRORS = this.Analytics.sections.ADD_USERS.eventNames.CSV_ERROR_EXPORT;
+  public isOverErrorThreshhold = false;
 
   private cancelErrorsDeferred?: ng.IDeferred<void>;
   private startDateAndTime?: IDateAndTime;
@@ -53,7 +55,7 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     private ModalService,
     private Notification: Notification,
     private UserTaskManagerService: UserTaskManagerService,
-    private UserCsvService,
+    private Analytics,
   ) {}
 
   private intervalCallback = (task: ITask) => {
@@ -177,64 +179,21 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     this.cancelErrorsDeferred = this.$q.defer();
     this.UserTaskManagerService.getTaskErrors(task.id, this.cancelErrorsDeferred.promise).then(response => {
       this.cancelErrorsDeferred = undefined;
-      const tempUserErrorArray: IErrorRow[] = [];
-      _.forEach(response, errorEntry => {
-        _.forEach(errorEntry.error.message, msg => {
-          let errorMessage = '';
-          const errorType = _.split(_.get(msg, 'code'), '-')[0];
-          const errorCode = _.split(_.get(msg, 'code'), '-')[1];
-
-          if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
-            // For EFT, if the code starts with 'BATCH', use the description
-            errorMessage = msg.description;
-          } else if (errorCode) {
-            // get the localized error message
-            errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
-            // For EFT, if the error messages are stock/generic messages, use the description
-            if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
-            || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
-            || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
-            || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
-            || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
-              errorMessage = msg.description;
-            }
-          } else {
-            errorMessage = msg.description;
-          }
-
-          tempUserErrorArray.push({
-            row: _.get(errorEntry, 'itemNumber'),
-            message: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
-          });
-        });
-      });
-      this.userErrorArray = _.cloneDeep(tempUserErrorArray);
-
-      // load the errors to userCsvService when it's done
-      if (!this.isProcessing) {
-        // empty userErrorArray first
-        this.UserCsvService.setCsvStat({
-          userErrorArray: [],
-        }, true);
-        _.forEach(this.userErrorArray, errorEntry => {
-          this.UserCsvService.setCsvStat({
-            userErrorArray: [{
-              row: errorEntry.row,
-              email: 'User',
-              error: errorEntry.message,
-            }],
-          });
-        });
+      if (!_.isEmpty(response.paging.next)) {
+        this.isOverErrorThreshhold = true;
       }
+
+      this.userErrorArray = _.cloneDeep(this.UserTaskManagerService.transformErrorData(response.items));
     });
   }
 
-  private resetErrorArrayOnChange() {
+  private resetErrorArrayOnChange(): void {
     if (this.cancelErrorsDeferred) {
       this.cancelErrorsDeferred.resolve();
       this.cancelErrorsDeferred = undefined;
     }
     this.userErrorArray = [];
+    this.isOverErrorThreshhold = false;
   }
 
   private getShortFileName(longFileName?: string): string {

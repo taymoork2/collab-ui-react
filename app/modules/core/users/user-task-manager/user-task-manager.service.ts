@@ -1,6 +1,6 @@
 import { ITask } from './user-task-manager.component';
 import { TaskStatus } from './user-task-manager.constants';
-import { IErrorItem } from './csv-upload-results.component';
+import { IErrorItem, IErrorRow } from './csv-upload-results.component';
 
 export interface IDateAndTime {
   date: string;
@@ -58,6 +58,10 @@ enum IntervalDelay {
 
 export class UserTaskManagerService {
   public IntervalDelay = IntervalDelay;
+  public readonly ERROR_LIMIT = 200;
+  public activeTask?: ITask;
+  private cancelDownloadErrorsDeferred?: ng.IDeferred<void>;
+  public errorArray: IErrorRow[] = [];
 
   private interval: IntervalTypeOf<ng.IPromise<ITask> | undefined> = {
     detail: undefined,
@@ -97,6 +101,7 @@ export class UserTaskManagerService {
     private $q: ng.IQService,
     private Authinfo,
     private UrlConfig,
+    private UserCsvService,
   ) {}
 
   public getTasks(): ng.IPromise<ITask[]> {
@@ -296,12 +301,80 @@ export class UserTaskManagerService {
       .then(response => response.data);
   }
 
-  public getTaskErrors(id: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IErrorItem[]> {
+  public getTaskErrors(id: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
     return this.$http<IGetTaskErrorsResponse>({
       method: 'GET',
       url: this.getJobSpecificUrl(id, '/errors'),
       timeout: cancelPromise,
-    }).then(response => response.data.items);
+      params: {
+        limit: this.ERROR_LIMIT,
+      },
+    }).then(response => response.data);
+  }
+
+  public getNextTaskErrors(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
+    return this.$http<IGetTaskErrorsResponse>({
+      method: 'GET',
+      url: url,
+      timeout: cancelPromise,
+    }).then(response => response.data);
+  }
+
+  private appendErrorArray(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<void> {
+    return this.getNextTaskErrors(url, cancelPromise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], cancelPromise);
+      }
+    });
+  }
+
+  public downloadTaskErrors(): ng.IPromise<void> {
+    this.errorArray = [];
+    this.cancelDownloadErrorsDeferred = this.$q.defer();
+    return this.getTaskErrors(this.activeTask!.id, this.cancelDownloadErrorsDeferred!.promise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], this.cancelDownloadErrorsDeferred!.promise).then(() => {
+          this.cancelDownloadErrorsDeferred = undefined;
+        });
+      }
+    });
+  }
+
+  public transformErrorData(errors: IErrorItem[]): IErrorRow[] {
+    const tempUserErrorArray: IErrorRow[] = [];
+    _.forEach(errors, errorEntry => {
+      _.forEach(errorEntry.error.message, msg => {
+        let errorMessage = '';
+        const errorType = _.split(_.get(msg, 'code'), '-')[0];
+        const errorCode = _.split(_.get(msg, 'code'), '-')[1];
+
+        if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
+          // For EFT, if the code starts with 'BATCH', use the description
+          errorMessage = msg.description;
+        } else if (errorCode) {
+          // get the localized error message
+          errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
+          // For EFT, if the error messages are stock/generic messages, use the description
+          if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
+            errorMessage = msg.description;
+          }
+        } else {
+          errorMessage = msg.description;
+        }
+
+        tempUserErrorArray.push({
+          row: _.get(errorEntry, 'itemNumber'),
+          error: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+        });
+      });
+    });
+    return tempUserErrorArray;
   }
 
   public initTaskDetailPolling(id: string, callback: Function, scope: ng.IScope) {
@@ -334,6 +407,14 @@ export class UserTaskManagerService {
 
   public cleanupAllTaskListPolling(callback: Function) {
     return this.cleanupTaskPolling('list', callback);
+  }
+
+  public setActiveTask(taskSelected: ITask) {
+    if (this.cancelDownloadErrorsDeferred) {
+      this.cancelDownloadErrorsDeferred.resolve();
+      this.cancelDownloadErrorsDeferred = undefined;
+    }
+    this.activeTask = taskSelected;
   }
 
   private changeTaskPollingDelay(intervalType: IntervalType, newDelay: number) {

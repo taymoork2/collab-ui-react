@@ -110,7 +110,7 @@ describe('Component: csvUploadResults', () => {
       expect(this.view.find(ERROR_TABLE)).not.toExist();
       this.controller.userErrorArray = [{
         row: 0,
-        message: '',
+        error: '',
       }];
       this.$scope.$apply();
       expect(this.view.find(ERROR_LINE_BREAK)).toExist();
