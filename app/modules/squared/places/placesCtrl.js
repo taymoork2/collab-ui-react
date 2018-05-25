@@ -146,13 +146,13 @@ require('../devices/_devices.scss');
               priority: 1,
             },
             sortCellFiltered: true,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.displayName}}" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             sortable: true,
             sortingAlgorithm: sortDeviceTypes,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{grid.appScope.deviceTypes(row.entity.devices)}}" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
