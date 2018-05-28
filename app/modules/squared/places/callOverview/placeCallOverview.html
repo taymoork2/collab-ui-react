@@ -3,7 +3,8 @@
     <section-title
       title-key="deviceOverviewPage.sipUrl">
     </section-title>
-    <p>{{$ctrl.currentPlace.sipUrl}}</p>
+    <p>{{$ctrl.currentPlace.sipUrl}}<span class="badge primary primaryLineBadge" ng-if="$ctrl.currentPlace.additionalSipUrls.length > 0">Primary</span></p>
+    <p ng-repeat="sipUrl in $ctrl.currentPlace.additionalSipUrls">{{sipUrl}}</p>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title
