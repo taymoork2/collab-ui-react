@@ -14,9 +14,10 @@
   <div class="content-container" ng-if="!$ctrl.loading">
     <div class="overview">
       <div class="meeting-room-name">
-        <div class="title">
-          <h3>{{::$ctrl.details.meetingName}}</h3>
+        <div class="ui-pt">
+          <h3 class="ui-pr">{{::$ctrl.details.meetingName}}</h3>
           <h6 ng-if="$ctrl.details.status === $ctrl.MEETING_INFO_STATUS.GOING"><span class="badge badge--outline success" translate="webexReports.meetingStatus.inProgress"></span></h6>
+          <meeting-export class="pull-right" service-type="{{::$ctrl.SERVICE_TYPE.PARTNER}}" ng-if="$ctrl.isSupportExport" filename="{{::$ctrl.conferenceID}}.json" analytics-eventname="partnerReports.diagnostic.meetingExport"></meeting-export>
         </div>
         <h6 class="ui-pt">
           <span class="ui-pr">{{::'webexReports.meetingNumberTitle' | translate}} {{::$ctrl.details.meetingNumber}}</span>

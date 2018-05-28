@@ -1,7 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { PartnerSearchService, Platforms, Quality, QualityRange } from './partner-search.service';
 import { IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
-import { MosType, QualityType, QosType, TabType } from './partner-meeting.enum';
+import { MosType, QualityType, QosType, SearchStorage, TabType } from './partner-meeting.enum';
 
 interface IDataStore {
   retryTimes: number;
@@ -102,6 +102,7 @@ class MeetingDetailsController implements ng.IComponentController {
   private getParticipants(): void {
     this.PartnerSearchService.getUniqueParticipants(this.conferenceID)
       .then((res: IUniqueParticipant[]) => {
+        this.PartnerSearchService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
         const timeZone = this.PartnerSearchService.getStorage('timeZone');
         const webexOneMeeting = this.PartnerSearchService.getStorage('webexOneMeeting');
         const lines: IParticipant[][] = this.parseUniqueParticipants(res);
@@ -211,6 +212,7 @@ class MeetingDetailsController implements ng.IComponentController {
         details[item.key] = [];
       }
       if (item.completed) {
+        this.PartnerSearchService.saveSessionDetailToStorage(SearchStorage.VOIP_SESSION_DETAIL, item);
         _.forEach(item.items, detailItem => {
           this.audioEnabled.VoIP = true;
           const detail = this.parseVoipQualities(detailItem);
@@ -260,6 +262,7 @@ class MeetingDetailsController implements ng.IComponentController {
         details[item.key] = [];
       }
       if (item.completed) {
+        this.PartnerSearchService.saveSessionDetailToStorage(SearchStorage.VIDEO_SESSION_DETAIL, item);
         _.forEach(item.items, detailItem => {
           this.videoEnabled = true;
           const detail = this.parseVideoQualities(detailItem);
@@ -306,6 +309,7 @@ class MeetingDetailsController implements ng.IComponentController {
     const details = this.audioLines || {};
     _.forEach(sessionDetail.items, (item: ISessionDetailItem) => {
       if (item.completed) {
+        this.PartnerSearchService.saveSessionDetailToStorage(SearchStorage.PSTN_SESSION_DETAIL, item);
         _.forEach(item.items, detailItem => {
           const key = `${detailItem.callId}_${item.key}`;
           if (!details[key]) {
@@ -330,13 +334,15 @@ class MeetingDetailsController implements ng.IComponentController {
     detail['endTime'] = detailItem.endTime ? detailItem.endTime * 1 : this.meetingEndTime;
 
     _.forEach(detailItem.tahoeQuality, quality => {
-      detail['qualities'].push({
-        startTime: quality.startTime * 1,
-        endTime: quality.endTime * 1,
-        quality: this.parsePSTNQuality(quality.audioMos),
-        tooltip: this.parsePSTNTooltip(quality.audioMos, detailItem.callType),
-        source: QosType.PSTN,
-      });
+      if (_.parseInt(quality.audioMos) >= 0) {
+        detail['qualities'].push({
+          startTime: quality.startTime * 1,
+          endTime: quality.endTime * 1,
+          quality: this.parsePSTNQuality(quality.audioMos),
+          tooltip: this.parsePSTNTooltip(quality.audioMos, detailItem.callType),
+          source: QosType.PSTN,
+        });
+      }
     });
     return detail;
   }

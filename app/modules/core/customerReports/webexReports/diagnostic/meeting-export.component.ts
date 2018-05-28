@@ -1,6 +1,11 @@
 import { Analytics } from 'modules/core/analytics';
 import { MeetingExportService } from './meeting-export.service';
+import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
+import { SearchService } from './searchService';
 
+export enum SERVICE_TYPE {
+  PARTNER = 'PARTNER',
+}
 class MeetingExportController implements ng.IComponentController {
 
   public type: string;
@@ -14,12 +19,15 @@ class MeetingExportController implements ng.IComponentController {
   public exportJSON: Function;
   public defaultFileName = 'exported_file.json';
   public reportData: string;
+  public serviceType: string;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private Analytics: Analytics,
     private MeetingExportService: MeetingExportService,
+    private PartnerSearchService: PartnerSearchService,
+    private SearchService: SearchService,
   ) {
     this.anchorText = this.$translate.instant('webexReports.meetingExport.btnTitle');
     this.tooltipMessage = this.$translate.instant('webexReports.meetingExport.tooltipMessage');
@@ -36,10 +44,15 @@ class MeetingExportController implements ng.IComponentController {
     }
 
     this.downloading = true;
-    this.MeetingExportService.generateMeetingReport()
+    const dataStoreService = this.getDataStoreService(this.serviceType);
+    this.MeetingExportService.generateMeetingReport(dataStoreService)
       .then((meetingReport) => {
         this.reportData = meetingReport;
       });
+  }
+
+  private getDataStoreService(serviceType: string): PartnerSearchService | SearchService {
+    return (serviceType === SERVICE_TYPE.PARTNER) ? this.PartnerSearchService : this.SearchService;
   }
 
   public restoreToOriginalState(): void {
@@ -55,5 +68,6 @@ export class MeetingExportComponent implements ng.IComponentOptions {
     filename: '@',
     anchorText: '@',
     analyticsEventname: '@',
+    serviceType: '@',
   };
 }

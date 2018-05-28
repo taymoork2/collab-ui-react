@@ -266,7 +266,7 @@ export class SearchService {
     return this.data[key];
   }
 
-  public getStorage(key) {
+  public getStorage(key: string): any {
     return _.get(this.data, key);
   }
 
