@@ -56,7 +56,7 @@ export enum BulkActionName {
 }
 
 export enum WifiProximityAction {
-  OPT_IN, OPT_OUT, SHOW_MODAL,
+  OPT_IN = 'opt_in', OPT_OUT = 'opt_out', SHOW_MODAL = 'show_modal', CANCEL_MODAL = 'cancel_modal',
 }
 
 export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
