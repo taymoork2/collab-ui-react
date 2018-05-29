@@ -6,7 +6,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function ClusterCascadeBandwidthGraphService($rootScope, $translate, CommonReportsGraphService) {
+  function ClusterCascadeBandwidthGraphService($rootScope, $translate, CommonReportsGraphService, MediaReportsService) {
     var vm = this;
     vm.cascadeBandwidthDiv = 'clusterCascadeBandwidthDiv';
     vm.exportDiv = 'clusterCascadeBandwidthExportDiv';
@@ -38,6 +38,7 @@
       var isDummy = false;
       var data = response.graphData;
       var graphs = formatGraph(response.graphs);
+      vm.legendGraphs = graphs;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else {
@@ -77,7 +78,7 @@
       }
       var valueAxes = [CommonReportsGraphService.getBaseVariable(vm.GUIDEAXIS)];
       vm.dateSelected = daterange;
-      valueAxes[0].integersOnly = true;
+      valueAxes[0].integersOnly = false;
       valueAxes[0].axisAlpha = 0.5;
       valueAxes[0].axisColor = '#1C1C1C';
       valueAxes[0].minimum = 0;
@@ -201,7 +202,11 @@
     }
 
     function legendHandler(evt) {
+      MediaReportsService.legendHandlerForGraphs(vm.legendGraphs, evt);
       if (evt.dataItem.title === vm.allOff) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = false;
+        });
         evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
           if (graph.title != vm.allOn) {
@@ -211,6 +216,9 @@
           }
         });
       } else if (evt.dataItem.title === vm.allOn) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = true;
+        });
         evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);

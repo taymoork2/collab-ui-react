@@ -56,7 +56,7 @@
       // save state we came from here so we can go back when exiting this flow
       var rootState = $previousState.get().state.name;
       if (rootState === 'users.manage.emailSuppress') {
-        rootState = 'users.manage.picker';
+        rootState = 'users.manage.org';
       }
       transitions = getTransitions(rootState);
 
@@ -95,7 +95,7 @@
             next: '^.syncStatus',
           },
           syncStatus: {
-            prev: 'users.manage.picker',
+            prev: 'users.manage.org',
             next: '^.dirsyncServices',
           },
           dirsyncServices: {
@@ -108,7 +108,7 @@
       if (DirSyncService.isDirSyncEnabled()) {
         return {
           syncStatus: {
-            prev: 'users.manage.picker',
+            prev: 'users.manage.org',
             next: '^.dirsyncServices',
           },
           dirsyncServices: {

@@ -27,7 +27,10 @@
     OverviewHybridMessagingNotification,
     OverviewPstnTermsOfServiceNotification,
     OverviewSetupNotification,
-    OverviewUrgentUpgradeNotification) {
+    OverviewUrgentUpgradeNotification,
+    OverviewSparkAssistantNotification,
+    OverviewWifiProximityNotification
+  ) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
       createSetupNotification: OverviewSetupNotification.createNotification,
@@ -50,6 +53,8 @@
       createAutoAssignNotification: OverviewAutoAssignNotificationFactory.createNotification,
       createLinkedSitesNotification: LinkedSiteNotification.createNotification,
       createEvaMissingDefaultSpaceNotification: OverviewEVAMissingDefaultSpaceNotification.createNotification,
+      createSparkAssistantNotification: OverviewSparkAssistantNotification.createNotification,
+      createWifiProximityOptInNotification: OverviewWifiProximityNotification.createNotification,
     };
   }
 })();

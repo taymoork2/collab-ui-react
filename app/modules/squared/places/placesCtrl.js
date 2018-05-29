@@ -4,11 +4,13 @@ require('../devices/_devices.scss');
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   angular.module('Squared')
     .controller('PlacesCtrl',
 
       /* @ngInject */
-      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridCellService, CloudConnectorService) {
+      function ($q, $scope, $state, $translate, CsdmFilteredViewFactory, CsdmDataModelService, Userservice, Authinfo, WizardFactory, RemPlaceModal, FeatureToggleService, ServiceDescriptorService, GridService, CloudConnectorService) {
         var vm = this;
 
         vm.data = [];
@@ -122,7 +124,7 @@ require('../devices/_devices.scss');
         };
 
         vm.selectRow = function (grid, row) {
-          GridCellService.selectRow(grid, row);
+          GridService.selectRow(grid, row);
           vm.showPlaceDetails(row.entity);
         };
 
@@ -144,13 +146,13 @@ require('../devices/_devices.scss');
               priority: 1,
             },
             sortCellFiltered: true,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.displayName}}" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
           }, {
             field: 'devices',
             displayName: $translate.instant('placesPage.deviceHeader'),
             sortable: true,
             sortingAlgorithm: sortDeviceTypes,
-            cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
+            cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{grid.appScope.deviceTypes(row.entity.devices)}}" cell-click-function="grid.appScope.showPlaceDetails(row.entity)" cell-value="grid.appScope.deviceTypes(row.entity.devices)"></cs-grid-cell>',
           }, {
             field: 'action',
             displayName: $translate.instant('placesPage.actionHeader'),
@@ -226,7 +228,7 @@ require('../devices/_devices.scss');
         };
 
         vm.keyboardDeletePlace = function ($event, place) {
-          if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+          if ($event.keyCode === KeyCodes.ENTER || $event.keyCode === KeyCodes.SPACE) {
             vm.deletePlace($event, place);
           } else {
             $event.stopPropagation();

@@ -4,10 +4,16 @@ import { ExternalLinkedAccountHelperService } from '../../devices/services/exter
 import IWizardData = csdm.IWizardData;
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
 import { Notification } from 'modules/core/notifications';
+import { UserListService } from 'modules/core/scripts/services/userlist.service';
 import { USSService } from 'modules/hercules/services/uss.service';
 import { IQService } from 'angular';
+import { ICsdmFilteredViewFactory } from '../csdm-filtered-view-factory';
+import {
+  BaseExternalLinkedAccountUniqueSafe,
+  ValidationState,
+} from '../external-linked-account-validation/base-external-linked-account-unique-safe';
 
-export class CallConnectOptions implements ng.IComponentController {
+export class CallConnectOptions extends BaseExternalLinkedAccountUniqueSafe implements ng.IComponentController {
   private dismiss: Function;
   private wizardData: IWizardData;
   private static hybridCalluc = 'squared-fusion-uc';
@@ -40,14 +46,27 @@ export class CallConnectOptions implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $stateParams: ng.ui.IStateParamsService,
-    private $translate: ng.translate.ITranslateService,
+    $translate: ng.translate.ITranslateService,
     private CsdmDataModelService: ICsdmDataModelService,
+    CsdmFilteredViewFactory: ICsdmFilteredViewFactory,
     private ExtLinkHelperService: ExternalLinkedAccountHelperService,
     private Notification: Notification,
     private ResourceGroupService: ResourceGroupService,
+    UserListService: UserListService,
     private USSService: USSService,
-    private $q: IQService,
+    $q: IQService,
+    $timeout: ng.ITimeoutService,
   ) {
+    super({
+      nullAccountMessageKey: 'addDeviceWizard.sparkCallConnect.mailIdInvalidFormat',
+      conflictWithUserEmailMessageKey: 'addDeviceWizard.sparkCallConnect.mailIdBelongsToUser',
+      conflictWithExternalLinkedAccountMessageKey: 'addDeviceWizard.sparkCallConnect.mailIdBelongsToPlace',
+    },
+      CsdmFilteredViewFactory,
+      UserListService,
+      $q,
+      $timeout,
+      $translate);
   }
 
   public $onInit() {
@@ -78,7 +97,7 @@ export class CallConnectOptions implements ng.IComponentController {
 
   public isNextDisabled() {
     return !(
-    this.mailID
+    this.currentValidationState === ValidationState.Success
     && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0));
   }
 
@@ -88,6 +107,10 @@ export class CallConnectOptions implements ng.IComponentController {
 
   public getResourceGroupShow() {
     return this.resourceGroup && this.resourceGroup.show;
+  }
+
+  public onMailIDInputKeyUp() {
+    this.validate(this.mailID, CallConnectOptions.hybridCalluc);
   }
 
   public submitForm() {

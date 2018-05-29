@@ -76,6 +76,7 @@ require('./_user-add.scss');
       msgRadio: false,
       careRadio: $scope.careRadioValue.NONE,
       initialCareRadioState: $scope.careRadioValue.NONE, // For generating Metrics
+      isK1Enabled: false,
     };
 
     $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
@@ -191,6 +192,10 @@ require('./_user-add.scss');
     function initResults() {
       $scope.numUpdatedUsers = 0;
       $scope.numAddedUsers = 0;
+      // F7208
+      $scope.convertedUsers = [];
+      $scope.pendingUsers = [];
+
       $scope.results = {
         resultList: [],
         errors: [],
@@ -201,6 +206,10 @@ require('./_user-add.scss');
     function populateScopeBindingsFromAggregateResult(aggregateResult) {
       $scope.numUpdatedUsers = aggregateResult.numUpdatedUsers;
       $scope.numAddedUsers = aggregateResult.numAddedUsers;
+      // F7208
+      $scope.convertedUsers = aggregateResult.convertedUsers;
+      $scope.pendingUsers = aggregateResult.pendingUsers;
+
       $scope.results.resultList = aggregateResult.results.resultList;
       $scope.results.errors = aggregateResult.results.errors;
       $scope.results.warnings = aggregateResult.results.warnings;
@@ -208,7 +217,7 @@ require('./_user-add.scss');
 
     var rootState = $previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
+      rootState = 'users.manage.org';
     }
     $scope.onBack = function (state) {
       var goToState = state || rootState;
@@ -466,10 +475,14 @@ require('./_user-add.scss');
     };
 
     function initToggles() {
-      FeatureToggleService.supports(FeatureToggleService.features.hI1484)
-        .then(function (supports) {
-          $scope.ishI1484 = supports;
-        });
+      var promises = {
+        ishI1484: FeatureToggleService.hI1484GetStatus(),
+        isAtlasF3745PortAssignableServices: FeatureToggleService.atlasF3745PortAssignableServicesGetStatus(),
+      };
+      return $q.all(promises).then(function (features) {
+        $scope.ishI1484 = features.ishI1484;
+        $scope.isAtlasF3745PortAssignableServices = features.isAtlasF3745PortAssignableServices;
+      });
     }
 
     $scope.editServicesSave = function () {
@@ -624,6 +637,7 @@ require('./_user-add.scss');
     $scope.cvcCareFeature = [];
     $scope.licenses = [];
     $scope.licenseStatus = [];
+    $scope.sortedSubscriptions = {};
     $scope.populateConf = populateConf;
     $scope.populateConfInvitations = populateConfInvitations;
     $scope.getAccountLicenses = getAccountLicenses;
@@ -741,6 +755,15 @@ require('./_user-add.scss');
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.K2;
       } else {
         $scope.radioStates.initialCareRadioState = $scope.radioStates.careRadio = $scope.careRadioValue.NONE;
+      }
+      initCareCheckbox();
+    }
+
+    function initCareCheckbox() {
+      if ($scope.radioStates.careRadio === $scope.careRadioValue.NONE || $scope.radioStates.careRadio === $scope.careRadioValue.K2) {
+        $scope.radioStates.isK1Enabled = false;
+      } else {
+        $scope.radioStates.isK1Enabled = true;
       }
     }
 
@@ -915,7 +938,11 @@ require('./_user-add.scss');
                 return _.startsWith(license, 'CO_') && validCallLicenses.indexOf(license) !== -1;
               });
             }
-
+            // Set subscriptions for assignable-services
+            $scope.sortedSubscriptions = _.reject(licenseUsages, function (licenseUsage) {
+              return MessengerInteropService.subscriptionIsMessengerOnly(licenseUsage);
+            });
+            $scope.sortedSubscriptions = _.sortBy(licenseUsages, 'subscriptionId');
             _.forEach($scope.communicationFeatures, function (commFeature) {
               // Set current communication license checkbox
               if (!_.isUndefined(commFeature.license.licenseId) &&
@@ -1740,6 +1767,8 @@ require('./_user-add.scss');
           convertUsersFlow: OnboardStore['users.convert'].convertUsersFlow,
           numUpdatedUsers: $scope.numUpdatedUsers,
           numAddedUsers: $scope.numAddedUsers,
+          convertedUsers: $scope.convertedUsers,
+          pendingUsers: $scope.pendingUsers,
           results: $scope.results,
         });
       }).finally(function () {

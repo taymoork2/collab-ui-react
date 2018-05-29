@@ -121,8 +121,8 @@ export class CsvUploadResultsCtrl implements ng.IComponentController {
     return _.isUndefined(this.activeTask) ? false : this.UserTaskManagerService.isTaskError(this.activeTask!);
   }
 
-  public getStatusTranslation() {
-    return _.get(this.activeTask, 'statusTranslate');
+  public getStatusTranslation(): string {
+    return _.isUndefined(this.activeTask) ? '' : this.UserTaskManagerService.getTaskStatusTranslate(this.activeTask!);
   }
 
   public onCancelImport(): void {

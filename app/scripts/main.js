@@ -22,6 +22,7 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/accessibility/tooltips').default,
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
     require('modules/core/users/userAdd').default,
@@ -55,8 +56,8 @@
     'rzModule',
     'dragularModule',
     require('modules/bmmp/learn-more-banner').default,
+    require('modules/core/health-monitor').default,
     require('modules/core/account').default,
-    require('modules/core/banner').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -66,6 +67,7 @@
     require('modules/core/learnMore').default,
     require('modules/core/scrollIndicator').default,
     require('modules/core/gridSpinner').default,
+    require('modules/core/overview/license-card').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/scripts/services/user.service'),
     require('modules/core/scripts/services/userlist.service'),
@@ -82,6 +84,8 @@
     require('modules/core/partnerReports/reportFilter').default,
     require('modules/core/partnerReports/reportSlider').default,
     require('modules/core/partnerReports/webexReports').default,
+    require('modules/core/partnerReports/webexReports/diagnostic').default,
+    require('modules/core/partner-troubleshooting').default,
     require('modules/core/partnerProfile/branding').default,
     require('modules/core/window').default,
     require('modules/online/digitalRiver').default, // TODO make core.myCompany independent module
@@ -103,8 +107,9 @@
     require('modules/gemini/reports').default,
     require('modules/core/siteList/webex-site').default,
     require('modules/core/overview/notifications').default,
-    require('modules/core/legal-hold').default,
+    require('modules/core/overview/usersCard'),
     require('modules/core/organizations/organization-delete').default,
+    require('modules/core/siteList').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -219,6 +224,7 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/user-sidepanel/user-status-messages').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
   ]);
 
   angular.module('HDS', [
@@ -235,11 +241,13 @@
     require('modules/mediafusion/media-service-v2/components/add-resource-section').default,
     require('modules/mediafusion/media-service-v2/components/cluster-cascade-bandwidth').default,
     require('modules/mediafusion/media-service-v2/components/cluster-creation-final').default,
+    require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
     require('modules/mediafusion/media-service-v2/components/first-time-setup').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-email-notification').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-release-channel').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-upgrade-schedule').default,
     require('modules/mediafusion/media-service-v2/components/hybrid-media-entitlement-failure').default,
+    require('modules/mediafusion/media-service-v2/components/qos-section').default,
     require('modules/mediafusion/media-service-v2/components/sip-call-settings').default,
     require('modules/mediafusion/media-service-v2/components/sip-registration-section').default,
     require('modules/mediafusion/media-service-v2/components/trusted-sip-section').default,
@@ -249,6 +257,8 @@
 
   angular.module('WebExApp', [
     'Core',
+    require('modules/webex/apiGateway').default,
+    require('modules/webex/restApi').default,
     require('modules/webex/utils').default,
     require('modules/webex/xmlApi').default,
     require('modules/webex/webexClientVersions/webexClientVersion.svc'),
@@ -286,19 +296,21 @@
     require('modules/hcs/task-manager/suite').default,
     require('modules/hcs/task-manager/task').default,
     require('modules/hcs/task-manager/results').default,
-    require('modules/hcs/shared').default,
-    require('modules/hcs/shared/hcs-delete-modal').default,
+    require('modules/hcs/hcs-shared').default,
+    require('modules/hcs/hcs-shared/hcs-delete-modal').default,
     require('modules/hcs/hcs-inventory').default,
     require('modules/hcs/hcs-inventory/cluster-list').default,
     require('modules/hcs/hcs-inventory/cluster-detail').default,
     require('modules/hcs/hcs-inventory/inventory-list').default,
     require('modules/hcs/hcs-upgrade').default,
-    require('modules/hcs/hcs-upgrade/upgrade-group').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-cluster').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-cluster-status').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp').default,
+    require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,
-    require('modules/hcs/setup').default,
+    require('modules/hcs/hcs-setup').default,
   ]);
 
   angular.module('ServicesOverview', [
@@ -330,6 +342,7 @@
     'Huron',
     'Hercules',
     require('modules/ediscovery/ediscovery.module'),
+    require('modules/legal-hold').default,
     'Mediafusion',
     'HDS',
     'WebExApp',

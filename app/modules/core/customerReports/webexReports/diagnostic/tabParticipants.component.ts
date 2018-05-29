@@ -1,6 +1,7 @@
-import './_search.scss';
-import { SearchService, Platforms } from './searchService';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
+import { SearchService, Platforms } from './searchService';
+import './_search.scss';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -12,24 +13,35 @@ class Participants implements ng.IComponentController {
   public gridOptions = {};
   public conferenceID: string;
   public loading: boolean = true;
+  public deviceLoaded = false;
+  public reqtimes = 0;
+  public platformCellTemplate: string;
+  public usernameCellTemplate: string;
 
   /* @ngInject */
   public constructor(
     private $scope: IGridApiScope,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private SearchService: SearchService,
-    private $stateParams: ng.ui.IStateParamsService,
-    private $translate: ng.translate.ITranslateService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
+    this.platformCellTemplate = require('modules/core/customerReports/webexReports/diagnostic/platform-cell-template.html');
+    this.usernameCellTemplate = require('modules/core/customerReports/webexReports/diagnostic/username-cell-template.html');
   }
 
   public $onInit() {
-    this.getParticipants();
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8105ClientVersion)
+      .then((isSupport: boolean) => {
+        this.getParticipants(isSupport);
+      });
     this.setGridOptions();
   }
 
-  private getParticipants() {
+  private getParticipants(isSupportClientVersion: boolean): void {
     this.SearchService.getParticipants(this.conferenceID)
       .then((res) => {
         this.gridData = _.map(res, (item: any) => {
@@ -37,8 +49,19 @@ class Participants implements ng.IComponentController {
           if (item.platform === Platforms.TP && !device.name) {
             device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
           }
+          let deviceName = _.get(device, 'name');
+          if (!(item.platform === Platforms.TP || item.sessionType === Platforms.PSTN) && isSupportClientVersion) {
+            const devicePlatform = _.get(device, 'platform');
+            const deviceBrowser = _.get(device, 'browser');
+            if (devicePlatform && deviceBrowser) {
+              const clientVersion = this.SearchService.getClientVersion(`${item.userId}_${item.userName}`);
+              deviceName = `${devicePlatform} ${clientVersion.osVersion}: ${deviceBrowser} ${clientVersion.browserVersion}`;
+            }
+          }
           return _.assignIn({}, item, {
-            platform_: _.get(device, 'name'),
+            phoneNumber: this.SearchService.getPhoneNumber(item.phoneNumber),
+            callInNumber: this.SearchService.getPhoneNumber(item.callInNumber),
+            platform_: deviceName,
             duration: this.SearchService.getDuration(item.duration),
             endReason: this.SearchService.getParticipantEndReson(item.reason),
             startDate: this.SearchService.timestampToDate(item.joinTime, 'YYYY-MM-DD hh:mm:ss'),
@@ -46,6 +69,8 @@ class Participants implements ng.IComponentController {
         });
         this.loading = false;
         this.setGridOptions();
+
+        this.detectAndUpdateDevice();
       })
       .catch((err) => {
         this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
@@ -53,40 +78,74 @@ class Participants implements ng.IComponentController {
       });
   }
 
-  private setGridOptions(): void { // TODO , will translate next time
+  private detectAndUpdateDevice() {
+    this.deviceLoaded = true;
+    this.gridData.forEach((item) => {
+      if (item.platform === Platforms.TP && !item.deviceCompleted) {
+        this.deviceLoaded = false;
+        this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
+        .then((res: any) => {
+          if (res.completed) {
+            item.device = this.updateDevice(res);
+          }
+          item.deviceCompleted = res.completed;
+        });
+      }
+    });
+
+    if (!this.deviceLoaded && this.reqtimes < 5) {
+      this.$timeout(() => {
+        this.reqtimes += 1;
+        this.detectAndUpdateDevice();
+      }, 3000);
+    }
+  }
+
+  private updateDevice(deviceInfo) {
+    if (deviceInfo.items && deviceInfo.items.length > 0) {
+      const device = deviceInfo.items[0].deviceType;
+      return device;
+    }
+    return this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
+  }
+
+  private setGridOptions(): void {
     const columnDefs = [{
-      width: '14%',
+      width: '16%',
       cellTooltip: true,
       field: 'userName',
-      displayName: 'User Name',
+      displayName: this.$translate.instant('webexReports.participantsTable.userName'),
+      cellTemplate: this.usernameCellTemplate,
     }, {
       width: '16%',
       field: 'startDate',
-      displayName: 'Start Date',
+      displayName: this.$translate.instant('webexReports.participantsTable.startDate'),
     }, {
       width: '10%',
       field: 'duration',
-      displayName: 'Duration',
+      displayName: this.$translate.instant('webexReports.participantsTable.duration'),
     }, {
+      width: '20%',
       field: 'platform_',
       cellTooltip: true,
-      displayName: 'Endpoint',
+      displayName: this.$translate.instant('webexReports.participantsTable.endpoint'),
+      cellTemplate: this.platformCellTemplate,
     }, {
       field: 'clientIP',
       cellTooltip: true,
-      displayName: 'Client IP',
+      displayName: this.$translate.instant('webexReports.participantsTable.clientIP'),
     }, {
       field: 'gatewayIP',
       cellTooltip: true,
-      displayName: 'Gateway IP',
+      displayName: this.$translate.instant('webexReports.participantsTable.gatewayIP'),
     }, {
       field: 'endReason',
       cellTooltip: true,
-      displayName: 'End Reason',
+      displayName: this.$translate.instant('webexReports.participantsTable.endReason'),
     }];
 
     this.gridOptions = {
-      rowHeight: 44,
+      rowHeight: 64,
       data: '$ctrl.gridData',
       multiSelect: false,
       columnDefs: columnDefs,

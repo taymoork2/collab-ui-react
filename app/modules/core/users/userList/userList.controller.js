@@ -1,5 +1,6 @@
 require('./_user-list.scss');
 var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service').CsvDownloadService;
+var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
 (function () {
   'use strict';
@@ -9,7 +10,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     .controller('UserListCtrl', UserListCtrl);
 
   /* @ngInject */
-  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridCellService,
+  function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
 
@@ -421,7 +422,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function keypressHandleDeleteUser($event, user, isSelf) {
-      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+      if ($event.keyCode === KeyCodes.ENTER || $event.keyCode === KeyCodes.SPACE) {
         vm.handleDeleteUser($event, user, isSelf);
       } else {
         $event.stopPropagation();
@@ -506,7 +507,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function keypressResendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements) {
-      if ($event.keyCode === GridCellService.ENTER || $event.keyCode === GridCellService.SPACE) {
+      if ($event.keyCode === KeyCodes.ENTER || $event.keyCode === KeyCodes.SPACE) {
         vm.resendInvitation($event, userEmail, userName, uuid, userStatus, dirsyncEnabled, entitlements);
       } else {
         $event.stopPropagation();
@@ -554,22 +555,22 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
         field: 'name.givenName',
         id: 'givenName',
         displayName: $translate.instant('usersPage.firstnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.name.givenName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
       }, {
         field: 'name.familyName',
         id: 'familyName',
         displayName: $translate.instant('usersPage.lastnameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.name.familyName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.familyName"></cs-grid-cell>',
       }, {
         field: 'displayName',
         id: 'displayName',
         displayName: $translate.instant('usersPage.displayNameHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.displayName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.displayName"></cs-grid-cell>',
       }, {
         field: 'userName',
         id: 'userName',
         displayName: $translate.instant('usersPage.emailHeader'),
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.userName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
       }, {
         field: 'userStatus',
         id: 'userStatus',
@@ -618,7 +619,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function selectRow(grid, row) {
-      GridCellService.selectRow(grid, row);
+      GridService.selectRow(grid, row);
       vm.showUserDetails(row.entity);
     }
 
@@ -663,7 +664,7 @@ var CsvDownloadService = require('modules/core/csvDownload/csvDownload.service')
     }
 
     function onManageUsers() {
-      $state.go('users.manage.picker');
+      $state.go('users.manage.org');
     }
 
     // TODO: If using states should be be able to trigger this log elsewhere?

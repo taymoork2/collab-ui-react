@@ -1,3 +1,4 @@
-export * from './setup';
+export * from './hcs-setup';
 export * from './hcs-licenses/hcs-licenses-subscription';
-export * from './shared';
+export * from './hcs-shared';
+export * from './hcs-upgrade';

@@ -12,7 +12,6 @@ describe('Controller: PartnerProfileCtrl', function () {
       'ProPackService',
       'Notification',
       'Orgservice',
-      'WebexClientVersion',
       'UserListService'
     );
 

@@ -37,7 +37,7 @@ export class HybridMediaPrerequisitesController {
   }
 
   public openDocumentation() {
-    this.$window.open('https://www.cisco.com/go/hybrid-services-media');
+    this.$window.open('https://www.cisco.com/go/video-mesh');
   }
 
   public processChange(flagName: string, newValue: boolean): void {

@@ -1,0 +1,36 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+
+cr-total-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $gray-light-4;
+  padding: 1.25rem;
+
+  .total-tile {
+    &__value {
+      &--green {
+        color: $color-green-base;
+      }
+
+      &--blue {
+        color: $color-blue-base;
+      }
+
+      &--red {
+        color: $color-red-base;
+      }
+
+      &--disabled {
+        color: $gray-light-1;
+      }
+    }
+
+    &__label {
+      color: $gray-dark-1;
+      text-align: center;
+    }
+  }
+}
+

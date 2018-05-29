@@ -1,11 +1,11 @@
 export enum OfferName {
-  MS = 'MS',           // Messaging
-  CF = 'CF',           // Conferencing
+  MS = 'MS',           // Webex Teams
+  CF = 'CF',           // Webex Meetings
   EE = 'EE',           // Enterprise Edition (WebEx)
-  MC = 'MC',           // Meeting Center (WebEx)
-  SC = 'SC',           // Support Center (WebEx)
-  TC = 'TC',           // Training Center (WebEx)
-  EC = 'EC',           // Event Center (WebEx)
+  MC = 'MC',           // Webex Meetings
+  SC = 'SC',           // Webex Support
+  TC = 'TC',           // Webex Training
+  EC = 'EC',           // Webex Events
   CO = 'CO',           // Communication
   SD = 'SD',           // Spark Room System
   SB = 'SB',           // Spark Board
@@ -16,14 +16,20 @@ export enum OfferName {
   MGMTPRO = 'MGMTPRO', // IT Pro Pack
   TSP = 'TSP',         // Telephony Service Provider
   CCASP = 'CCASP',     // Cloud Connected Audio - Service Partners
-  CCAUser = 'CCAUser',     // Cloud Connected Audio - User
+  CCAUser = 'CCAUser', // Cloud Connected Audio - User
 }
 
 export enum AdvancedMeetingOfferName {
   CMR = OfferName.CMR, // Collaboration Meeting Room (WebEx)
-  EC = OfferName.EC,   // Event Center (WebEx)
+  EC = OfferName.EC,   // Webex Events
   EE = OfferName.EE,   // Enterprise Edition (WebEx)
-  MC = OfferName.MC,   // Meeting Center (WebEx)
-  SC = OfferName.SC,   // Support Center (WebEx)
-  TC = OfferName.TC,   // Training Center (WebEx)
+  MC = OfferName.MC,   // Webex Meetings
+  SC = OfferName.SC,   // Webex Support
+  TC = OfferName.TC,   // Webex Training
+}
+
+export enum OfferType {
+  COMMUNICATION = 'COMMUNICATION',
+  CONFERENCING = 'CONFERENCING',
+  MESSAGING = 'MESSAGING',
 }

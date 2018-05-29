@@ -1,0 +1,10 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+// algendel TODO: revision when new toolkit is out. Might not be needed
+legal-hold-matter-detail {
+  .matter-detail__action__release button {
+    background-color: $color-purple-dark;
+    &:hover {
+      background-color: $color-purple-darker;
+    }
+  }
+}

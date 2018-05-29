@@ -1,6 +1,7 @@
 import searchModule from '../index';
 import { FieldQuery, OperatorAnd, OperatorOr } from './searchElement';
 import { QueryParser } from './queryParser';
+import { SearchTranslator } from './searchTranslator';
 
 describe('searchElement', () => {
 
@@ -9,47 +10,74 @@ describe('searchElement', () => {
   });
 
   describe('fieldQuery', () => {
-    it('blank should always match', function () {
-      expect(new FieldQuery('').matches('', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('').matches('')).toBe(true);
+
+    describe('matches', () => {
+      it('blank should always match', function () {
+        expect(new FieldQuery('').matches('', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('').matches('')).toBe(true);
+      });
+
+      it('something should never match blank', function () {
+        expect(new FieldQuery('c', QueryParser.Field_Product).matches('', QueryParser.Field_Product)).toBe(false);
+        expect(new FieldQuery('c', QueryParser.Field_Product).matches('')).toBe(false);
+        expect(new FieldQuery('c').matches('', QueryParser.Field_Product)).toBe(false);
+        expect(new FieldQuery('c').matches('')).toBe(false);
+      });
+
+      it('matched in the query should be true', function () {
+        expect(new FieldQuery('cis').matches('cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('cis').matches('asdf cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('cis').matches('cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('cis').matches('asdf cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('cis').matches('cisco')).toBe(true);
+        expect(new FieldQuery('cis').matches('asdf cisco')).toBe(true);
+        expect(new FieldQuery('cis').matches('cisco')).toBe(true);
+        expect(new FieldQuery('cis').matches('asdf cisco')).toBe(true);
+      });
+
+      it('phrase search should match', function () {
+        expect(new FieldQuery('asdf ghjk').matches('asdf ghjk', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('asdf ghjk').matches('jj sasdf Ghjks', QueryParser.Field_Product)).toBe(true);
+      });
+
+      it('matches specific field should be true', function () {
+        expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_ConnectionStatus)).toBe(false);
+        expect(new FieldQuery('cI').matches('cisco', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('cix').matches('cisco', QueryParser.Field_Product)).toBe(false);
+      });
+
+      it('matches part of field should be true', function () {
+        expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdf newprod sdfds', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdf newprod', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('newprod sdfds', QueryParser.Field_Product)).toBe(true);
+        expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdfnewprodsdfds', QueryParser.Field_Product)).toBe(true);
+      });
     });
 
-    it('something should never match blank', function () {
-      expect(new FieldQuery('c', QueryParser.Field_Product).matches('', QueryParser.Field_Product)).toBe(false);
-      expect(new FieldQuery('c', QueryParser.Field_Product).matches('')).toBe(false);
-      expect(new FieldQuery('c').matches('', QueryParser.Field_Product)).toBe(false);
-      expect(new FieldQuery('c').matches('')).toBe(false);
-    });
+    describe('toQuery', () => {
+      it('should add quotation marks when needed', function () {
+        expect(new FieldQuery('word a', QueryParser.Field_Product, FieldQuery.QueryTypeExact).toQuery()).toEqual(QueryParser.Field_Product + '="word a"');
+        expect(new FieldQuery('word a', QueryParser.Field_Product).toQuery()).toEqual(QueryParser.Field_Product + ':"word a"');
+        expect(new FieldQuery('word a').toQuery()).toEqual('"word a"');
 
-    it('matched in the query should be true', function () {
-      expect(new FieldQuery('cis').matches('cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('cis').matches('asdf cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('cis').matches('cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('cis').matches('asdf cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('cis').matches('cisco')).toBe(true);
-      expect(new FieldQuery('cis').matches('asdf cisco')).toBe(true);
-      expect(new FieldQuery('cis').matches('cisco')).toBe(true);
-      expect(new FieldQuery('cis').matches('asdf cisco')).toBe(true);
-    });
+        const translator = new SearchTranslator(null, null);
+        expect(new FieldQuery('word a', QueryParser.Field_Product, FieldQuery.QueryTypeExact).toQuery(translator)).toEqual(QueryParser.Field_Product + '="word a"');
+        expect(new FieldQuery('word a', QueryParser.Field_Product).toQuery(translator)).toEqual(QueryParser.Field_Product + ':"word a"');
+        expect(new FieldQuery('word a').toQuery(translator)).toEqual('"word a"');
+      });
 
-    it('phrase search should match', function () {
-      expect(new FieldQuery('asdf ghjk').matches('asdf ghjk', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('asdf ghjk').matches('jj sasdf Ghjks', QueryParser.Field_Product)).toBe(true);
-    });
+      it('should not add quotation marks when not needed', function () {
+        expect(new FieldQuery('worda', QueryParser.Field_Product, FieldQuery.QueryTypeExact).toQuery()).toEqual(QueryParser.Field_Product + '=worda');
+        expect(new FieldQuery('worda', QueryParser.Field_Product).toQuery()).toEqual(QueryParser.Field_Product + ':worda');
+        expect(new FieldQuery('worda').toQuery()).toEqual('worda');
 
-    it('matches specific field should be true', function () {
-      expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('ci', QueryParser.Field_Product).matches('cisco', QueryParser.Field_ConnectionStatus)).toBe(false);
-      expect(new FieldQuery('cI').matches('cisco', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('cix').matches('cisco', QueryParser.Field_Product)).toBe(false);
-    });
-
-    it('matches part of field should be true', function () {
-      expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdf newprod sdfds', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdf newprod', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('newprod sdfds', QueryParser.Field_Product)).toBe(true);
-      expect(new FieldQuery('newprod', QueryParser.Field_Product).matches('sdfdfnewprodsdfds', QueryParser.Field_Product)).toBe(true);
+        const translator = new SearchTranslator(null, null);
+        expect(new FieldQuery('worda', QueryParser.Field_Product, FieldQuery.QueryTypeExact).toQuery(translator)).toEqual(QueryParser.Field_Product + '=worda');
+        expect(new FieldQuery('worda', QueryParser.Field_Product).toQuery(translator)).toEqual(QueryParser.Field_Product + ':worda');
+        expect(new FieldQuery('worda').toQuery(translator)).toEqual('worda');
+      });
     });
   });
 

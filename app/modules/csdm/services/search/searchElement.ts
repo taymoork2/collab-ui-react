@@ -36,9 +36,13 @@ export abstract class SearchElement {
     return this.parent;
   }
 
+  public isMatching(matcher: (value: SearchElement) => boolean) {
+    return matcher(this);
+  }
+
   public abstract isEqual(other: SearchElement): boolean;
 
-  public abstract toQuery(translator?: SearchTranslator): string;
+  public abstract toQuery(translator?: SearchTranslator, toStrings?: IToStrings<string>): string;
 
   public abstract getCommonField(): string;
 
@@ -82,6 +86,81 @@ export abstract class SearchElement {
   public abstract matches(value: string, field?: string): boolean;
 }
 
+export interface IToStrings<T> {
+  fieldToString?: (query: FieldQuery) => T;
+  collectionToString?: (strings: T[]) => T;
+}
+
+export class ToString {
+  public static toString(translator?: SearchTranslator) {
+    return ( fq: FieldQuery) => {
+      const query = fq.toQueryComponents(translator);
+      return query.prefix + FieldQuery.addQuotesIfNeeded(query.query);
+    };
+  }
+
+  public static ToStringWithoutField() {
+    return ( fq: FieldQuery) => {
+      return fq.toQueryComponents().query;
+    };
+  }
+}
+
+export class SearchMatchers {
+
+  public static FieldEmpty() {
+    return (value: FieldQuery) => {
+      return value && !value.field;
+    };
+  }
+  public static FieldEqual(field: string) {
+    return (value: FieldQuery) => {
+      return value && _.isEqual(value.field, field);
+    };
+  }
+  public static FieldEqualOrEmpty(field: string) {
+    return (value: FieldQuery) => {
+      return value && (!value.field || _.isEqual(value.field, field));
+    };
+  }
+
+  public static FirstOrNone(fieldMatcher: (value: FieldQuery) => boolean): (value: SearchElement) => boolean {
+    return (value) => {
+      if (value instanceof FieldQuery) {
+        return fieldMatcher(value);
+      }
+      const first = _.first(value.getExpressions());
+      return first instanceof FieldQuery
+        && fieldMatcher(first)
+        && _.every(value.getExpressions(),
+          child => child instanceof FieldQuery && fieldMatcher(child) || child.isMatching(SearchMatchers.FirstOrNone(fieldMatcher)));
+    };
+  }
+
+  public static FirstAndAll(firstFieldMatching: (value: FieldQuery) => boolean, allFieldsMatching: (value: FieldQuery) => boolean) {
+    return (value: SearchElement) => {
+      if (value instanceof FieldQuery) {
+        return firstFieldMatching(value);
+      }
+      const first = _.first(value.getExpressions());
+      return first instanceof FieldQuery
+        && firstFieldMatching(first)
+        && _.every(value.getExpressions(),
+          child => child instanceof FieldQuery && allFieldsMatching(child) || child.isMatching(SearchMatchers.FirstAndAll(firstFieldMatching, allFieldsMatching)));
+    };
+  }
+
+  public static All(fieldMatcher: (value: FieldQuery) => boolean) {
+    return (value: SearchElement) => {
+      if (value instanceof FieldQuery) {
+        return fieldMatcher(value);
+      }
+      return _.every(value.getExpressions(),
+        child => child instanceof FieldQuery && fieldMatcher(child) || child.isMatching(SearchMatchers.All(fieldMatcher)));
+    };
+  }
+}
+
 export abstract class CollectionOperator extends SearchElement {
   private subElements: SearchElement[];
 
@@ -90,8 +169,8 @@ export abstract class CollectionOperator extends SearchElement {
     this.subElements = subElements;
   }
 
-  public toQuery(translator?: SearchTranslator): string {
-    const joinedQuery = _.join(_.map(this.subElements, (e) => e.toQuery(translator)), ' ' + this.getOperator() + ' ');
+  public toQuery(translator?: SearchTranslator, toStrings: IToStrings<string> = {}): string {
+    const joinedQuery = _.join(_.map(this.subElements, (e) => e.toQuery(translator, toStrings)), ' ' + this.getOperator() + ' ');
 
     if (this.getParent()) {
       return '(' + joinedQuery + ')';
@@ -124,19 +203,16 @@ export class FieldQuery extends SearchElement {
   }
 
   public getQueryPrefix(translator?: SearchTranslator): string {
-    return (this.field) ? (translator ? translator.translateQueryField(this.field) : this.field) + this.getCommonMatchOperator() : '';
+    return (this.field) ? (translator ? translator.translateQueryField(
+      this.field) : this.field) + this.getCommonMatchOperator() : '';
   }
 
   public getCommonField(): string {
     return this.field || '';
   }
 
-  public getQueryWithoutField() {
-    let innerQuery = this.query;
-    if (this.query.search(/\s|\(/) > 0) {
-      innerQuery = '"' + innerQuery + '"';
-    }
-    return innerQuery;
+  public getQueryWithoutField(): string {
+    return FieldQuery.addQuotesIfNeeded(this.query);
   }
 
   public getCommonMatchOperator(): string {
@@ -160,7 +236,8 @@ export class FieldQuery extends SearchElement {
       if (this.field !== QueryParser.Field_Tag && this.field !== QueryParser.Field_ErrorCodes) {
 
         const otherSameField = SearchObject.findFirstElementMatching(myParent, (se) => {
-          return se !== this && se.getParent() === myParent && se instanceof FieldQuery && _.isEqual(_.toLower(se.field), _.toLower(this.field)) && se.type === FieldQuery.QueryTypeExact;
+          return se !== this && se.getParent() === myParent && se instanceof FieldQuery && _.isEqual(
+            _.toLower(se.field), _.toLower(this.field)) && se.type === FieldQuery.QueryTypeExact;
         });
 
         if (otherSameField) {
@@ -171,7 +248,9 @@ export class FieldQuery extends SearchElement {
           this.setParent(newOrElement);
         } else {
           const otherSameFieldOr = SearchObject.findFirstElementMatching(myParent, (se) => {
-            return se instanceof OperatorOr && se.getParent() === myParent && _.every(se.or, (ose) => ose instanceof FieldQuery && _.isEqual(_.toLower(ose.field), _.toLower(this.field)) && ose.type === FieldQuery.QueryTypeExact);
+            return se instanceof OperatorOr && se.getParent() === myParent && _.every(se.or,
+              (ose) => ose instanceof FieldQuery && _.isEqual(_.toLower(ose.field),
+                _.toLower(this.field)) && ose.type === FieldQuery.QueryTypeExact);
           });
           if (otherSameFieldOr instanceof OperatorOr) {
             this.removeFromParent();
@@ -186,15 +265,17 @@ export class FieldQuery extends SearchElement {
   public matches(value: string, field?: string): boolean {
 
     if (this.field) {
-      return (!field || _.isEqual(_.toLower(NormalizeHelper.stripAccents(this.field)), _.toLower(NormalizeHelper.stripAccents(field))))
-        && _.includes(_.toLower(NormalizeHelper.stripAccents(value)), _.toLower(NormalizeHelper.stripAccents(this.query)));
+      return (!field || _.isEqual(_.toLower(NormalizeHelper.stripAccents(this.field)),
+        _.toLower(NormalizeHelper.stripAccents(field))))
+        && _.includes(_.toLower(NormalizeHelper.stripAccents(value)),
+          _.toLower(NormalizeHelper.stripAccents(this.query)));
     }
     return _.includes(_.toLower(value), _.toLower(this.query));
   }
 
-  public toQuery(translator?: SearchTranslator): string {
-    const query = this.toQueryComponents(translator);
-    return query.prefix + query.query;
+  public toQuery(translator?: SearchTranslator,
+                 { fieldToString: toString = ToString.toString(translator) }: IToStrings<string> = {}): string {
+    return toString(this);
   }
 
   public toQueryComponents(translator?: SearchTranslator): { prefix: string, query: string } {
@@ -204,7 +285,7 @@ export class FieldQuery extends SearchElement {
         query: translator.lookupTranslatedQueryValueDisplayName(this.query, this.field),
       };
     }
-    return { prefix: this.getQueryPrefix(translator), query: this.getQueryWithoutField() };
+    return { prefix: this.getQueryPrefix(translator), query: this.query };
   }
 
   public toJSON(): any {
@@ -213,6 +294,13 @@ export class FieldQuery extends SearchElement {
       field: this.field,
       type: this.type,
     };
+  }
+
+  public static addQuotesIfNeeded(query: string): string {
+    if (query.search(/\s|\(/) > 0) {
+      return '"' + query + '"';
+    }
+    return query;
   }
 }
 
@@ -333,11 +421,11 @@ export class OperatorOr extends CollectionOperator {
       const firstSubExpr = this.or[0];
       if (firstSubExpr instanceof FieldQuery) {
         if (_.every(this.or,
-            (fq) => {
-              return fq instanceof FieldQuery
-                && _.isEqual(_.toLower(firstSubExpr.field), _.toLower(fq.field))
-                && _.isEqual(firstSubExpr.getCommonMatchOperator(), fq.getCommonMatchOperator());
-            })) {
+          (fq) => {
+            return fq instanceof FieldQuery
+              && _.isEqual(_.toLower(firstSubExpr.field), _.toLower(fq.field))
+              && _.isEqual(firstSubExpr.getCommonMatchOperator(), fq.getCommonMatchOperator());
+          })) {
           return firstSubExpr.getCommonMatchOperator();
         }
       }
@@ -350,11 +438,11 @@ export class OperatorOr extends CollectionOperator {
       const firstSubExpr = this.or[0];
       if (firstSubExpr instanceof FieldQuery) {
         if (_.every(this.or,
-            (fq) => {
-              return fq instanceof FieldQuery
-                && _.isEqual(_.toLower(firstSubExpr.field), _.toLower(fq.field))
-                && _.isEqual(firstSubExpr.getCommonMatchOperator(), fq.getCommonMatchOperator());
-            })) {
+          (fq) => {
+            return fq instanceof FieldQuery
+              && _.isEqual(_.toLower(firstSubExpr.field), _.toLower(fq.field))
+              && _.isEqual(firstSubExpr.getCommonMatchOperator(), fq.getCommonMatchOperator());
+          })) {
           return firstSubExpr.field || '';
         }
       }

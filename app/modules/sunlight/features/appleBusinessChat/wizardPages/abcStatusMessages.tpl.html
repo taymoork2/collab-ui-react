@@ -1,0 +1,61 @@
+<div>
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('statusMessage.title')}}</span>
+  </div>
+  <div class="h5 ct-title-desc" translate="careChatTpl.appleBusinessChat.statusMessage.desc"></div>
+  <div class="cs-card-container ct-sa-content ct-chat-status-messages abc-status-messages">
+    <cs-card-layout block-view="true" class="ct-card-center">
+      <cs-card class="va-card">
+        <article class="status-msg-attribute ct-article">
+          <section class="ct-attribute-section ct-flex-topleft ct-status-section">
+
+            <div ng-form="$ctrl.statusMessagesForm">
+              <div class="cs-input-group medium-12 columns" ng-class="{'error': !$ctrl.isWaitingMessageValid()}">
+                <label class="cs-input__label ct-attribute-field-label h4 large-11 margin-0" translate="careChatTpl.appleBusinessChat.statusMessage.waiting"></label>
+                <input cs-input type="text"
+                     id="waiting"
+                     name="waitingMessageInput"
+                     class="h5 inputField ct-attribute-field-textbox large-11 margin-0"
+                     ng-model="$ctrl.template.configuration.pages.abcStatusMessages.waitingMessage"
+                     ng-model-options="{ allowInvalid: true }"
+                     placeholder="{{::'careChatTpl.appleBusinessChat.statusMessage.waitingDefault' | translate}}"
+                     ng-change="$ctrl.isWaitingMessageValid()"
+                     ng-focus="focus=true"
+                     ng-blur="focus=false"
+                     ng-keypress="$ctrl.enterNextPage($event)"/>
+                <div class="cs-input__messages" ng-messages="$ctrl.statusMessagesForm.waitingMessageInput.$error" ng-if="!$ctrl.isWaitingMessageValid()">
+                  <div class="message" ng-message="maxlength" translate="common.invalidMaxLength"
+                       translate-values="{max: 50}"></div>
+                  <div class="message" ng-message="invalidInput" translate="careChatTpl.ctValidation.invalidCharacters"></div>
+                </div>
+                <div class="chat-status-help-text body-small" translate="careChatTpl.appleBusinessChat.statusMessage.waitingHelpText"></div>
+              </div>
+
+              <div class="cs-input-group medium-12 columns" ng-class="{'error': !$ctrl.isLeftChatMessageValid()}">
+                <label class="cs-input__label ct-attribute-field-label h4 large-11 margin-0" translate="careChatTpl.appleBusinessChat.statusMessage.leftTheChat"></label>
+                <textarea cs-input type="text"
+                        id="leftChat"
+                        name="leftChatMessageInput"
+                        class="h5 inputField ct-attribute-field-textbox-large large-11 margin-0"
+                        ng-model="$ctrl.template.configuration.pages.abcStatusMessages.leftChatMessage"
+                        ng-model-options="{ allowInvalid: true }"
+                        placeholder="{{::'careChatTpl.appleBusinessChat.statusMessage.leftTheChatDefault' | translate}}"
+                        ng-change="$ctrl.isLeftChatMessageValid()"
+                        ng-focus="focus=true"
+                        ng-blur="focus=false"
+                        ng-keypress="$ctrl.enterNextPage($event)"/>
+                  <div class="cs-input__messages" ng-messages="$ctrl.statusMessagesForm.leftChatMessageInput.$error" ng-if="!$ctrl.isLeftChatMessageValid()">
+                    <div class="message" ng-message="maxlength" translate="common.invalidMaxLength"
+                         translate-values="{max: 250}"></div>
+                    <div class="message" ng-message="invalidInput" translate="careChatTpl.ctValidation.invalidCharacters"></div>
+                  </div>
+                <div class="chat-status-help-text body-small" translate="careChatTpl.appleBusinessChat.statusMessage.leftTheChatHelpText"></div>
+              </div>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

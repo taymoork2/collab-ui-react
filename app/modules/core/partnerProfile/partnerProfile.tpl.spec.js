@@ -25,10 +25,6 @@ describe('Template: partnerProfile', function () {
     spyOn(this.Orgservice, 'setOrgSettings').and.returnValue(this.$q.resolve());
     spyOn(this.UserListService, 'listPartners');
     spyOn(this.BrandService, 'getLogoUrl').and.returnValue(this.$q.resolve());
-    spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve());
-    spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve());
-    spyOn(this.WebexClientVersion, 'getTemplate').and.returnValue(this.$q.resolve());
-    spyOn(this.WebexClientVersion, 'postOrPutTemplate').and.returnValue(this.$q.resolve());
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,

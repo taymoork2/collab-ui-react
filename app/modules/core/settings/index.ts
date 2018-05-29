@@ -15,9 +15,9 @@ import externalCommunicationModule from './externalCommunication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
-import webexVersionModule from './webexVersion';
-import webexSiteManagement from './webexSiteManagement';
+import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
+import proximityModule from './proximity';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -35,10 +35,10 @@ export default angular.module('core.settings', [
   domainsModule,
   sipDomainModule,
   supportSectionModule,
-  webexVersionModule,
-  webexSiteManagement,
+  webexModule,
   sparkAssistantModule,
   multiDirSyncModule,
+  proximityModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

@@ -1,0 +1,9 @@
+<setting-section setting="$ctrl.qosTitle" class="needs-border-top">
+  <div class="sub-section">
+    <h5 class="sub-section__label" translate="mediaFusion.qos.fulltitle"></h5>
+    <p class="sub-section__description" translate="mediaFusion.qos.description"></p>
+    <cs-toggle-switch ng-model="$ctrl.enableQos" ng-click="$ctrl.setEnableQos()"
+      toggle-id="toggleEnableQoS" name="toggleEnableQoS" size="small">
+    </cs-toggle-switch>
+  </div>
+</setting-section>

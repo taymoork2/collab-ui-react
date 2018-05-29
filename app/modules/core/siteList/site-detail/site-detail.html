@@ -1,0 +1,122 @@
+<cs-sp-header>
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <div class="header-title">
+        <div class="webex-site-name">
+          {{$ctrl.selectedSite.siteUrl}}
+        </div>
+      </div>
+    </div>
+  </div>
+</cs-sp-header>
+
+<cs-sp-container>
+    <cs-sp-section>
+      <div class="feature-list">
+        <ul class="configure-sites">
+          <li ng-if="$ctrl.showNonCIConfigure">
+            <a class="btn btn-primary" target="_blank"
+              href="{{$ctrl.selectedSite.siteAdminUrl}}"
+              translate="siteList.siteAdminUrl">
+            </a>
+          </li>
+          <li ng-if="$ctrl.showCIConfigure">
+            <button class="btn btn--primary" ng-disabled="$ctrl.hasError"
+              translate="webexSiteManagement.configureSite"
+              ui-sref="site-list.site-settings({siteUrl: $ctrl.selectedSite.siteUrl})"
+              tabindex="0"
+              aria-label="{{::'webexSiteManagement.configureSite' | translate}}">
+            </button>
+          </li>
+          <li ng-if="$ctrl.showDelete">
+            <a translate="webexSiteManagement.deleteSite"
+              ng-click="$ctrl.deleteSite()"
+              tabindex="0"
+              aria-label="{{::'webexSiteManagement.deleteSite' | translate}}"></a>
+          </li>
+          <li ng-if="$ctrl.showRedistribute">
+            <a translate="webexSiteManagement.redistributeLicenses"
+              ng-click="$ctrl.redistributeLicenses()"
+              tabindex="0"
+              aria-label="{{::'webexSiteManagement.redistributeLicenses' | translate}}"></a>
+          </li>
+      </ul>
+      <div ng-if="!$ctrl.canManage" class="message">
+        <div translate="webexSiteManagement.partnerHelpMsg"></div>
+      </div>
+      <div ng-if="$ctrl.showPendingAction" class="message">
+        <div class="section-title-row">
+          <span class="section-name" translate="webexSiteManagement.pending"></span>
+        </div>  
+        <div translate="webexSiteManagement.pendingActionMsg"></div>
+      </div>
+    </div>
+  </cs-sp-section>
+
+  <div ng-if="$ctrl.showManagementFeatures">
+    <!-- User Management -->
+    <cs-sp-section>
+      <div class="section-title-row feature-inline">
+        <span class="section-name" translate="webexSiteManagement.webexUsers"></span>
+        <span ng-if="$ctrl.showUserManagement">
+          <a ng-if="!$ctrl.hasInProgress"
+            ui-sref="site-csv({siteRow: $ctrl.selectedSite})">
+            <span class="feature-name" translate="webexSiteManagement.bulkManageUsers"></span>
+          </a>
+          <!-- display in progress spinner and label -->
+          <span ng-if="$ctrl.hasInProgress" class="feature-name">
+            <i class="icon icon-spinner grid-vcenter"></i>
+            <span>{{$ctrl.inProgressLabel}}</span>
+          </span>
+        </span>
+      </div>
+      <div class="message">
+        <a ng-if="$ctrl.showCSVResults"
+          ui-sref="site-csv-results({siteRow: $ctrl.selectedSite})">
+          {{$ctrl.resultsLabel}}
+        </a>
+        <span ng-if="$ctrl.showUserManagementDisabled">
+          <i class="icon icon-warning attention-color grid-text-top"></i>
+          <span translate="siteList.siteCSVNotAvailableTooltip"></span>
+        </span>
+        <span ng-if="$ctrl.showCSVDisabled">
+          <i class="icon icon-warning attention-color grid-text-top"></i>
+          <span translate="siteList.siteCSVNotAvailable"></span>
+        </span>
+        <span ng-if="$ctrl.showErrorAuth">
+          <i class="icon icon-warning attention-color grid-text-top"></i>
+          <span translate="siteList.authError"></span>
+        </span>
+        <span ng-if="$ctrl.showErrorSystem">
+          <i class="icon icon-error error-color grid-text-top"></i>
+          <span translate="siteList.systemError" class="error-color"></span>
+        </span>
+      </div>
+    </cs-sp-section>
+
+    <!-- Webex Reports -->
+    <cs-sp-section>
+      <div class="section-title-row feature-inline">
+        <span class="section-name" translate="webexSiteManagement.reports"></span>
+        <a ng-if="$ctrl.showReports"
+          ui-sref="reports.webex({siteUrl: $ctrl.selectedSite.siteUrl})">
+          <span class="feature-name" translate="webexSiteManagement.viewReports"></span>
+        </a>
+      </div>
+      <div class="message">
+        <span ng-if="$ctrl.showReportsDisabled">
+          <i class="icon icon-warning attention-color grid-text-top"></i>
+          <span translate="webexSiteReports.adminReportNotEnabled"></span>
+        </span>
+        <span ng-if="$ctrl.showErrorAuth">
+          <i class="icon icon-warning attention-color grid-text-top"></i>
+          <span translate="siteList.authError"></span>
+        </span>
+        <span ng-if="$ctrl.showErrorSystem">
+          <i class="icon icon-error error-color grid-text-top"></i>
+          <span translate="siteList.systemError" class="error-color"></span>
+        </span>
+      </div>
+    </cs-sp-section>
+  </div>
+</cs-sp-container>

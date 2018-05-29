@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, DeactivateMediaService, HybridServicesClusterService, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, Authinfo, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -74,12 +74,14 @@
       if (vm.clusters.length === 1) {
         DeactivateMediaService.deactivateHybridMediaService();
         $modalInstance.close();
+        MediaServiceAuditService.devOpsAuditEvents('org', 'delete', Authinfo.getOrgId());
       }
     };
 
     function defuseHost(host) {
       HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
+        .then(MediaServiceAuditService.devOpsAuditEvents('node', 'delete', host.id))
         .catch(incrementFailureCount(host));
     }
 
@@ -116,13 +118,52 @@
             loopPromises.push(deferred.promise.catch(recoverPromise));
             deferred.resolve(toCluster);
           } else {
-            var promise = HybridServicesClusterService.preregisterCluster(toClusterName, 'stable', 'mf_mgmt');
+            var promise = updatePropertiesofCluster(toClusterName);
             loopPromises.push(promise.catch(recoverPromise));
           }
           clusterListNames.push(toClusterName);
         }
       }
       return loopPromises;
+    }
+
+    function updatePropertiesofCluster(toClusterName) {
+      return HybridServicesClusterService.preregisterCluster(toClusterName, 'stable', 'mf_mgmt').then(function (res) {
+        vm.clusterDetail = res;
+        // Add the created cluster to property set
+        MediaClusterServiceV2.getPropertySets()
+          .then(function (propertySets) {
+            if (propertySets.length > 0) {
+              vm.videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              vm.qosPropertySet = _.filter(propertySets, {
+                name: 'qosPropertySet',
+              });
+              if (vm.videoPropertySet.length > 0) {
+                var clusterPayload = {
+                  assignedClusters: vm.clusterDetail.id,
+                };
+                // Assign it the property set with cluster list
+                MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
+              }
+              if (vm.qosPropertySet.length > 0) {
+                var clusterQosPayload = {
+                  assignedClusters: vm.clusterDetail.id,
+                };
+                // Assign it the property set with cluster list
+                MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+              }
+            }
+            MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);
+          });
+        return vm.clusterDetail;
+      }, function () {
+        vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
+          hostName: toClusterName,
+        });
+        Notification.error(vm.error);
+      });
     }
 
     function moveHost(hostname, toClusterName, response) {
@@ -146,6 +187,7 @@
         fromCluster = vm.cluster;
         HybridServicesClusterService.moveEcpNode(host.id, fromCluster.id, toCluster.id)
           .then(incrementSuccessCount(host, toCluster))
+          .then(MediaServiceAuditService.devOpsAuditEvents('node', 'move', host.id))
           .catch(incrementFailureCount(host));
       }
     }
@@ -183,6 +225,7 @@
           vm.success = $translate.instant('mediaFusion.clusters.clusterdeleteSuccess', {
             clustername: vm.cluster.name,
           });
+          MediaServiceAuditService.devOpsAuditEvents('cluster', 'delete', vm.cluster.id);
           Notification.success(vm.success);
           $modalInstance.close();
           if (vm.clusters.length > 1) {

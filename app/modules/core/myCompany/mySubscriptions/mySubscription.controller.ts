@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-services-utils.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { CoreEvent } from 'modules/core/shared/event.constants';
 
 interface ITooltipData {
   tooltip?: string;
@@ -14,8 +15,6 @@ interface ITooltipData {
 }
 
 export class MySubscriptionCtrl implements ng.IController {
-  private readonly HEADER_BROADCAST = 'TOGGLE_HEADER_BANNER';
-
   public hybridServices: string[] = [];
   public licenseCategory: ISubscriptionCategory[] = [];
   public subscriptionDetails: ISubscription[] = [];
@@ -54,6 +53,7 @@ export class MySubscriptionCtrl implements ng.IController {
   private readonly CARE_CLASS: string = 'icon-headset';
   private readonly SPARK: string = 'spark';
   private readonly WEBEX: string = 'webex';
+  private readonly OVERAGE_BANNER_NAME = 'OVERAGE_BANNER_NAME';
 
   private readonly CARE: string = 'CARE';
   private readonly SUBSCRIPTION_TYPES = {
@@ -80,6 +80,7 @@ export class MySubscriptionCtrl implements ng.IController {
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
+    private $state: ng.ui.IStateService,
     private Authinfo,
     private Config: Config,
     private DigitalRiverService: DigitalRiverService,
@@ -110,7 +111,10 @@ export class MySubscriptionCtrl implements ng.IController {
     });
 
     this.$scope.$on('$destroy', (): void => {
-      this.$rootScope.$emit(this.HEADER_BROADCAST);
+      this.$rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
+        name: this.OVERAGE_BANNER_NAME,
+        isVisible: false,
+      });
     });
   }
 
@@ -519,11 +523,13 @@ export class MySubscriptionCtrl implements ng.IController {
 
   private setOverageWarning(): void {
     if (this.overage) {
-      this.$rootScope.$emit(this.HEADER_BROADCAST, {
+      this.$rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
+        name: this.OVERAGE_BANNER_NAME,
+        isVisible: true,
+        state: this.$state.current.name,
         iconCss: 'icon-warning',
         translation: 'subscriptions.overageWarning',
         type: 'danger',
-        visible: true,
       });
     }
   }

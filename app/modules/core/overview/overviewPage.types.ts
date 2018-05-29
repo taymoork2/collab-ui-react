@@ -11,4 +11,5 @@ export interface IOverviewPageNotification {
   name: string;
   text: string;
   extendedText?: string;
+  zOrder?: number;
 }

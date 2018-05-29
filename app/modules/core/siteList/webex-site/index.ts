@@ -10,6 +10,8 @@ import { WebexDeleteSiteModalComponent } from './webex-delete-site-modal.compone
 import { WebexSiteResultDisplayComponent } from './webex-site-result-display.component';
 import { WebExSiteService } from './webex-site.service';
 
+import siteListSharedModuleName from 'modules/core/siteList/shared';
+
 export default angular
   .module('core.webex-site', [
     require('@collabui/collab-ui-ng').default,
@@ -23,6 +25,7 @@ export default angular
     require('modules/core/scripts/services/authinfo'),
     require('modules/core/trials/trial.module'),
     require('modules/core/scripts/services/utils'),
+    siteListSharedModuleName,
   ])
   .component('webexAddSiteModal', new WebexAddSiteModalComponent())
   .component('webexSiteLicenses', new WebexSiteLicensesComponent())

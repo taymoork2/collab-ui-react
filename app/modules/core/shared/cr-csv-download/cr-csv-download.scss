@@ -1,0 +1,23 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+cr-csv-download {
+  .cr-csv-download {
+    display: flex;
+    flex: 1 0 auto;
+    .icon-container {
+      font-size: 1rem;
+    }
+    .status-container {
+      display: flex;
+      align-items: center;
+      flex: 1 1 auto;
+      a {
+        display: flex;
+      }
+      .status-message {
+        color: $gray-light-1;
+        font-size: small;
+        margin-right: 1rem;
+      }
+    }
+  }
+}

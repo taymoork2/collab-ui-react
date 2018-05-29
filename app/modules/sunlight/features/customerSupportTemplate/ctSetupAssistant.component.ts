@@ -27,6 +27,8 @@ class CtSetupAssistantCtrl extends CtBaseController  {
   public $onInit(): void {
     super.$onInit();
     this.TemplateWizardService.setInitialState();
+    this.TemplateWizardService.setEvaTemplateData();
+    this.TemplateWizardService.setCVATemplateData();
     this.currentState = this.TemplateWizardService.currentState;
   }
 

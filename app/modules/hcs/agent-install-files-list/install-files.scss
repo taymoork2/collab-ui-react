@@ -53,6 +53,19 @@
         float: right;
         margin-left: 0.75rem;
       }
+      .footer-creating {
+        color: $gray-light-1;
+        font-family: $brand-font-light;
+        font-size: $h6-font-size;
+        line-height: rem-calc(24);
+        .icon.icon-download {
+          float: right;
+          padding-top: .5rem;
+        }
+      }
+    }
+    .icon-color {
+      color: $color-blue-base;
     }
   }
 }

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function print_added_ts_files {
+    git diff --cached --name-status | grep "^A" | grep "app/" | grep ".ts$"
+}
+
+function strip_dirpath {
+    sed -e 's,.*\/,,g'
+}
+
+function has_added_new_ts_file_using_capital {
+    print_added_ts_files | strip_dirpath | grep -q '[A-Z]'
+    return $?
+}
+
+function has_added_new_ts_file_using_underscore {
+    print_added_ts_files | strip_dirpath | grep -q '_'
+    return $?
+}
+
+if has_added_new_ts_file_using_capital; then
+    2>&1 echo "[ERROR] Use of capitals in '*.ts' file names under './app' is no longer allowed."
+    2>&1 echo ""
+    2>&1 echo "Please use kebab-case for any new files or dir names. (e.g. 'fooBar.ts' -> 'foo-bar.ts')"
+    exit 1
+fi
+
+if has_added_new_ts_file_using_underscore; then
+    2>&1 echo "[ERROR] Use of underscore in '*.ts' file names under './app' is no longer allowed."
+    2>&1 echo ""
+    2>&1 echo "Please use kebab-case for any new files or dir names. (e.g. 'foo_bar.ts' -> 'foo-bar.ts')"
+    exit 1
+fi

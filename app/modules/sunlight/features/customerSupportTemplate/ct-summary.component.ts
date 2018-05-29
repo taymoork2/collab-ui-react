@@ -6,6 +6,7 @@ import { SunlightConfigService } from 'modules/sunlight/services/sunlightConfigS
 import { Notification } from 'modules/core/notifications/notification.service';
 class CtSummaryComponentController extends CtBaseController {
 
+  private cardMode: string;
   public ChatTemplateButtonText: string;
   public creatingChatTemplate: boolean = false;
   public saveCTErrorOccurred: boolean = false;
@@ -22,6 +23,7 @@ class CtSummaryComponentController extends CtBaseController {
     public TemplateWizardService: TemplateWizardService,
   ) {
     super($stateParams, TemplateWizardService, CTService, $translate);
+    this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
   public $onInit(): void {
@@ -93,6 +95,9 @@ class CtSummaryComponentController extends CtBaseController {
 export class CtSummaryComponent implements ng.IComponentOptions {
   public controller = CtSummaryComponentController;
   public template = require('./wizardPagesComponent/ct-summary.tpl.html');
+  public bindings = {
+    cardMode: '@',
+  };
 
 }
 

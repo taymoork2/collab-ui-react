@@ -6,7 +6,7 @@
   var ChartColors = require('modules/core/config/chartColors').ChartColors;
 
   /* @ngInject */
-  function MeetingLocationAdoptionGraphService(CommonReportsGraphService, $translate, $rootScope) {
+  function MeetingLocationAdoptionGraphService($rootScope, $translate, CommonReportsGraphService, MediaReportsService) {
     var vm = this;
     vm.meetingLocationdiv = 'meetingLocationdiv';
     vm.exportDiv = 'meeting-location-div';
@@ -36,6 +36,7 @@
       var isDummy = false;
       var data = response.graphData;
       var graphs = getClusterName(response.graphs);
+      vm.legendGraphs = graphs;
       if (data === null || data === 'undefined' || data.length === 0) {
         return undefined;
       } else {
@@ -224,7 +225,11 @@
     }
 
     function legendHandler(evt) {
+      MediaReportsService.legendHandlerForGraphs(vm.legendGraphs, evt);
       if (evt.dataItem.title === vm.allOff) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = false;
+        });
         evt.dataItem.title = vm.allOn;
         _.each(evt.chart.graphs, function (graph) {
           if (graph.title != vm.allOn) {
@@ -234,6 +239,9 @@
           }
         });
       } else if (evt.dataItem.title === vm.allOn) {
+        _.forEach(vm.legendGraphs, function (graph) {
+          graph.legendtracker = true;
+        });
         evt.dataItem.title = vm.allOff;
         _.each(evt.chart.graphs, function (graph) {
           evt.chart.showGraph(graph);

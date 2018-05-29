@@ -51,11 +51,19 @@ describe('OverviewUsersCard', function () {
         volume: 10,
       }],
     }];
+    spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
+
+    this.listUsersData = {
+      status: 200,
+      data: {
+        totalResults: 10,
+      },
+    };
+    spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve(this.listUsersData));
   });
 
   describe('primary behaviors:', function () {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'getLicensesUsage').and.returnValue(this.$q.resolve(this.licenses));
       this.card = this.OverviewUsersCard.createCard();
       this.$rootScope.$apply();
     });
@@ -121,6 +129,48 @@ describe('OverviewUsersCard', function () {
           expect(this.card.hasAutoAssignDefaultTemplate).toBe(false);
           expect(this.card.isAutoAssignTemplateActive).toBe(false);
           expect(this.card.getAutoAssignLicensesStatusCssClass()).toBe('disabled');
+        });
+
+        it('should update "usersOnboarded" if call to "UserListService.listUsersAsPromise()" resolves with data', function () {
+          this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.UserListService.listUsersAsPromise).toHaveBeenCalled();
+          expect(this.card.usersOnboarded).toBe(10);
+        });
+
+        it('should set "usersOnboarded" appropriately if call to "UserListService.listUsersAsPromise()" rejects', function () {
+          this.listUsersData403 = {
+            status: 403,
+            data: {
+              Errors: [{
+                errorCode: '200045',
+              }],
+            },
+          };
+
+          this.listUsersData503 = {
+            status: 503,
+            data: {
+              Errors: [{
+                errorCode: '400143',
+              }],
+            },
+          };
+          this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(true));
+          this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData403));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.usersOnboarded).toBe('3000+');
+
+          this.UserListService.listUsersAsPromise.and.returnValue(this.$q.reject(this.listUsersData503));
+          this.card = this.OverviewUsersCard.createCard();
+          this.$rootScope.$apply();
+
+          expect(this.card.isOnboardingError).toBe(true);
+          expect(this.card.usersOnboardedError).toBe('overview.cards.users.onboardError');
         });
       });
 

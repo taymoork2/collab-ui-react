@@ -9,7 +9,11 @@ export interface ICsdmAnalyticHelper {
 
   trackBulkAction(action: BulkActionName, params: IBulkParam);
 
+  trackBulkExport(params: IExportParam);
+
   trackExpandDevice(selectedDevices: number, device: csdm.IDevice);
+
+  trackWifiOptInAction(action: WifiProximityAction, actionParam: IProximityActionParam);
 }
 
 interface IBulkParam {
@@ -17,6 +21,15 @@ interface IBulkParam {
   selectedDevices?: number;
   totalSearchHits?: number;
   totalSuccessSize?: number;
+}
+
+interface IExportParam extends IBulkParam {
+  selectedExportFields?: string[];
+}
+
+export interface IProximityActionParam {
+  originator?: string;
+  performer: string;
 }
 
 export class CsdmAnalyticsValues {
@@ -29,17 +42,31 @@ export class CsdmAnalyticsValues {
   //actions
   public static INITIAL_SEARCH = 'INITIAL_SEARCH';
   public static SEARCH = 'SEARCH';
+
+  public static ORIGINATOR_NOTIFICATION = 'NOTIFICATION';
+  public static ORIGINATOR_SETTING = 'SETTING';
+
+  public static PERFORMER_MODAL = 'MODAL';
+  public static PERFORMER_SETTING = CsdmAnalyticsValues.ORIGINATOR_SETTING;
+  public static PERFORMER_NOTIFICATION = CsdmAnalyticsValues.ORIGINATOR_NOTIFICATION;
 }
 
 export enum BulkActionName {
-  COMPLETE, DELETE, DELETE_FAKE, DELETE_ASK, SELECT, SELECT_ALL,
+  COMPLETE, DELETE, DELETE_FAKE, DELETE_ASK, SELECT, SELECT_ALL, EXPORT, EXPORT_ASK,
+}
+
+export enum WifiProximityAction {
+  OPT_IN = 'opt_in', OPT_OUT = 'opt_out', SHOW_MODAL = 'show_modal', CANCEL_MODAL = 'cancel_modal',
 }
 
 export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
+
   private lastSelectionSize: number;
   private lastResultSize: number;
   private lastQueryCount: number;
   private lastMainAction: BulkActionName;
+
+  private lastProximityOriginator: string;
 
   /* @ngInject */
   constructor(private Analytics) {
@@ -99,6 +126,20 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
     });
   }
 
+  public trackBulkExport({ mainAction = this.lastMainAction, selectedDevices = this.lastSelectionSize, totalSuccessSize, totalSearchHits = this.lastResultSize, selectedExportFields }: IExportParam) {
+    this.Analytics.trackEvent(this.getActionName(mainAction), {
+      bulk_action: this.getActionName(mainAction),
+      bulk_size: selectedDevices,
+      bulk_success: totalSuccessSize,
+      query_result: totalSearchHits,
+      query_count: this.lastQueryCount,
+      selectedExportFields: selectedExportFields,
+    });
+    this.lastResultSize = totalSearchHits;
+    this.lastSelectionSize = selectedDevices;
+    this.lastMainAction = mainAction;
+  }
+
   public trackBulkAction(action: BulkActionName, { mainAction = this.lastMainAction, selectedDevices = this.lastSelectionSize, totalSuccessSize, totalSearchHits = this.lastResultSize }: IBulkParam) {
     this.Analytics.trackEvent(this.getActionName(action), {
       bulk_action: this.getActionName(mainAction),
@@ -122,6 +163,10 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
         return this.Analytics.sections.DEVICE_BULK.eventNames.DELETE_ASK;
       case BulkActionName.DELETE_FAKE:
         return this.Analytics.sections.DEVICE_BULK.eventNames.DELETE_FAKE;
+      case BulkActionName.EXPORT:
+        return this.Analytics.sections.DEVICE_BULK.eventNames.EXPORT;
+      case BulkActionName.EXPORT_ASK:
+        return this.Analytics.sections.DEVICE_BULK.eventNames.EXPORT_ASK;
       case BulkActionName.SELECT:
         return this.Analytics.sections.DEVICE_BULK.eventNames.SELECT;
       case BulkActionName.SELECT_ALL:
@@ -129,5 +174,18 @@ export class CsdmAnalyticsHelper implements ICsdmAnalyticHelper {
       default:
         return this.Analytics.sections.DEVICE_BULK.eventNames.BULK;
     }
+  }
+
+  private getProximityActionName(actionName: WifiProximityAction): string {
+    return actionName.toString();
+  }
+
+  public trackWifiOptInAction(action: WifiProximityAction, { originator = this.lastProximityOriginator, performer }: IProximityActionParam) {
+    this.lastProximityOriginator = originator;
+    this.Analytics.trackEvent(this.Analytics.sections.DEVICE.eventNames.PROXIMITY, {
+      proximity_action: this.getProximityActionName(action),
+      proximity_originator: originator,
+      proximity_performer: performer,
+    });
   }
 }

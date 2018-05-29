@@ -1,6 +1,7 @@
 import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 import { ISuggestion } from './suggestion';
 import { QueryParser } from './queryParser';
+import { SearchTranslator } from './searchTranslator';
 
 export class RankingValues {
   public static FieldStartsWithRank = 10;
@@ -17,11 +18,13 @@ export class SuggestionRanking {
 
   public static initialGroupRate(field: string) {
     switch (field) {
-      case QueryParser.Field_Tag:
-        return 7;
-      case QueryParser.Field_ConnectionStatus:
-        return 6;
       case QueryParser.Field_Product:
+        return 8;
+      case QueryParser.Field_ConnectionStatus:
+        return 7;
+      case QueryParser.Field_Displayname:
+        return 6;
+      case QueryParser.Field_Tag:
         return 5;
       case QueryParser.Field_ErrorCodes:
         return 4;
@@ -34,19 +37,19 @@ export class SuggestionRanking {
     }
   }
 
-  public static rankSuggestion(suggestion: ISuggestion, searchElement: SearchElement | null, baseLineRank: number | undefined): number {
+  public static rankSuggestion(suggestion: ISuggestion, searchElement: SearchElement | null, baseLineRank: number | undefined, translator: SearchTranslator): number {
     if (!searchElement) {
       return baseLineRank || 0;
     }
-    const rankingResults: ResultRank[] = SuggestionRanking.rankSearchElement(ResultRank.createInitial(suggestion.translatedText || ''), searchElement);
+    const rankingResults: ResultRank[] = SuggestionRanking.rankSearchElement(ResultRank.createInitial(suggestion.translatedText || ''), searchElement, translator);
     return _(rankingResults).map(s => s.rank).max() || baseLineRank || 0;
   }
 
-  private static rankSearchElement(upstreamRank: ResultRank, searchElement: SearchElement): ResultRank[] {
+  private static rankSearchElement(upstreamRank: ResultRank, searchElement: SearchElement, translator: SearchTranslator): ResultRank[] {
 
     if (searchElement) {
       if (searchElement instanceof FieldQuery) {
-        const downStreamRanks: ResultRank[] = SuggestionRanking.rankMatchString(upstreamRank, searchElement);
+        const downStreamRanks: ResultRank[] = SuggestionRanking.rankMatchString(upstreamRank, searchElement, translator);
         return downStreamRanks;
       } else if (searchElement instanceof OperatorAnd) {
         //and, without possible path, remaining text
@@ -56,7 +59,7 @@ export class SuggestionRanking {
         _.forEach(expressions, (element) => {
           let pathWithSolutsion: ResultRank[] = [];
           _.forEach(possiblePaths, path => {
-            const subRanks = SuggestionRanking.rankSearchElement(path, element);
+            const subRanks = SuggestionRanking.rankSearchElement(path, element, translator);
             pathWithSolutsion = _.concat(pathWithSolutsion, subRanks);
           });
           possiblePaths = pathWithSolutsion;
@@ -67,7 +70,7 @@ export class SuggestionRanking {
         const expressions = searchElement.getExpressions();
         const pathWithSolutions: ResultRank[][] = [];
         _.forEach(expressions, (element) => {
-          const subRanks = SuggestionRanking.rankSearchElement(upstreamRank, element);
+          const subRanks = SuggestionRanking.rankSearchElement(upstreamRank, element, translator);
           if (subRanks.length > 0) {
             pathWithSolutions.push(subRanks);
           }
@@ -79,8 +82,8 @@ export class SuggestionRanking {
     return [];
   }
 
-  private static rankMatchString(text: IUpstreamRank | undefined, search: FieldQuery | undefined): ResultRank[] {
-    if (!text || !text.hasRemainingText() || !search || !search.query) {
+  private static rankMatchString(text: IUpstreamRank | undefined, search: FieldQuery | undefined, translator: SearchTranslator): ResultRank[] {
+    if (!text || !text.hasRemainingText() || !search || !search.toQueryComponents(translator).query) {
       return [];
     }
 

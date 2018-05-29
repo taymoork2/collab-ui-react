@@ -241,12 +241,33 @@ describe('Controller: MeetingSettingsCtrl', () => {
       spyOn(this.SetupWizardService, 'hasPendingCCAUserPackage').and.returnValue(true);
       spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(license);
       initController.apply(this);
-      spyOn(this.controller, 'setNextDisableStatus').and.callThrough();
     });
     it('should not get the list of ccaspPartners ', function () {
       expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
     });
     it('should populate partner name from active subscription', function () {
+      expect(this.controller.audioPartnerName).toBe('West IP Communications');
+    });
+  });
+
+  describe('pending when licenses include CCAUser and no active license', function () {
+    beforeEach(function () {
+      const license = {
+        licenseId: 'CCAUser_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        offerName: 'CCAUser',
+        licenseType: 'AUDIO',
+        status: 'INACTIVE',
+        ccaspPartnerName: 'West IP Communications',
+      };
+      spyOn(this.SetupWizardService, 'hasPendingCCAUserPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getPendingCCAUserPackage').and.returnValue(license);
+      spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(null);
+      initController.apply(this);
+    });
+    it('should not get the list of ccaspPartners ', function () {
+      expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
+    });
+    it('should populate partner name from pending subscription', function () {
       expect(this.controller.audioPartnerName).toBe('West IP Communications');
     });
   });

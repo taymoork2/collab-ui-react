@@ -1,0 +1,300 @@
+import * as moment from 'moment';
+import { KeyCodes } from 'modules/core/accessibility';
+import { Notification } from 'modules/core/notifications';
+import { IMeetingDetail } from './partner-search.interfaces';
+import { PartnerSearchService } from './partner-search.service';
+
+interface IGridApiScope extends ng.IScope {
+  gridApi?: uiGrid.IGridApi;
+}
+
+interface IDateRange {
+  start?: {
+    lastEnableDate: string,
+    firstEnableDate: string,
+  };
+  end?: {
+    lastEnableDate: string,
+    firstEnableDate: string,
+  };
+}
+
+enum LimitDays {
+  OneWeek = 7,
+  OneMonth = 30,
+}
+
+class DgcPartnerWebexReportsSearchController implements ng.IComponentController {
+  public gridData: IMeetingDetail[];
+  public gridOptions: uiGrid.IGridOptions = {};
+  public endDate: string;
+  public timeZone: string;
+  public startDate: string;
+  public searchStr: string;
+  public errMsg: { search?: string, datePicker?: string, datePickerAriaLabel?: string, ariaLabel?: string } = {};
+  public dateRange: IDateRange = {};
+  public storeData: { searchStr?: string, startDate?: string, endDate?: string } = {};
+  public isLoadingShow = false;
+  public isDatePickerShow = false;
+
+  private today: string;
+  private email: string;
+  private meetingNumber: string;
+
+  /* @ngInject */
+  public constructor(
+    private $scope: IGridApiScope,
+    private $state: ng.ui.IStateService,
+    private $translate: ng.translate.ITranslateService,
+    private Analytics,
+    private FeatureToggleService,
+    private Notification: Notification,
+    private PartnerSearchService: PartnerSearchService,
+  ) {
+    this.gridData = [];
+    this.timeZone = this.PartnerSearchService.getGuess('');
+    this.errMsg = { search: '', datePicker: '' };
+    this.searchStr = this.PartnerSearchService.getStorage('searchStr');
+  }
+
+  public $onInit(): void {
+    this.setGridOptions();
+    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+      .then((isSupport: boolean) => {
+        if (isSupport) {
+          this.initMeetingList();
+        } else {
+          this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
+            .then((isPartnerWebexEnabled: boolean): void => {
+              if (!isPartnerWebexEnabled) {
+                this.$state.go('login');
+              } else {
+                this.initMeetingList();
+              }
+            });
+        }
+      });
+  }
+
+  private initMeetingList () {
+    this.FeatureToggleService.diagnosticF8234QueryRangeGetStatus()
+      .then((isSupport: boolean) => {
+        this.initDateRange(isSupport);
+        this.Analytics.trackEvent(this.PartnerSearchService.featureName, {});
+        if (this.searchStr) {
+          this.startSearch();
+        }
+      });
+  }
+
+  public showDetail(item: IMeetingDetail): void {
+    this.PartnerSearchService.setStorage('webexMeeting', item);
+    this.PartnerSearchService.setStorage('searchStr', this.searchStr);
+    this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
+  }
+
+  public onKeySearch($event: KeyboardEvent): void {
+    if ($event.which === KeyCodes.ENTER) {
+      this.startSearch();
+    }
+  }
+
+  public onBlur(): void {
+    if (this.searchStr === this.storeData.searchStr) {
+      return;
+    }
+    this.startSearch();
+  }
+
+  public onChangeDate(): void {
+    this.dateRange.end = {
+      lastEnableDate: this.endDate,
+      firstEnableDate: this.startDate,
+    };
+    if (this.startDate === this.storeData.startDate && this.endDate === this.storeData.endDate) {
+      return;
+    }
+    this.errMsg.datePickerAriaLabel = '';
+    this.errMsg.datePicker = '';
+    this.storeData.endDate = this.endDate;
+    this.storeData.startDate = this.startDate;
+    if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
+      this.errMsg.datePickerAriaLabel = this.$translate.instant('webexReports.end-date-tooltip');
+      this.errMsg.datePicker = `<i class="icon icon-warning"></i> ${this.errMsg.datePickerAriaLabel}`;
+    }
+    this.startSearch();
+  }
+
+  public onChangeTz(tz: string): void {
+    this.timeZone = tz;
+    this.PartnerSearchService.setStorage('timeZone', this.timeZone);
+    this.gridData = _.map(this.gridData, (row: IMeetingDetail) => {
+      row.endTime_ = this.PartnerSearchService.utcDateByTimezone(row.endTime);
+      row.startTime_ = this.PartnerSearchService.utcDateByTimezone(row.startTime);
+      return row;
+    });
+  }
+
+  public onClickClearIcon(): void {
+    this.searchStr = '';
+    this.storeData.searchStr = '';
+    this.gridData = [];
+  }
+
+  private initDateRange(isSupportQueryRange: boolean): void {
+    const calendarLimitDays = isSupportQueryRange ? LimitDays.OneMonth : LimitDays.OneWeek;
+    this.today = moment().format('YYYY-MM-DD');
+    this.startDate = moment().subtract(calendarLimitDays - 1, 'days').format('YYYY-MM-DD');
+    this.endDate = this.today;
+    this.storeData.endDate = this.endDate;
+    this.storeData.startDate = this.startDate;
+    this.dateRange.start = {
+      lastEnableDate: this.endDate,
+      firstEnableDate: this.startDate,
+    };
+    this.dateRange.end = this.dateRange.start;
+  }
+
+  private isValidEmail(testStr: string): boolean {
+    const USER_COMPONENT = '^[\\w\\d]([\\w\\d.-])+';
+    const DOMAIN_PREFIX = '([\\w\\d-])+';
+    const DOT = '\\.';
+    const DOMAIN_SUFFIX = '([\\w\\d-]){2,}';
+    const emailRegex = new RegExp(`${USER_COMPONENT}@${DOMAIN_PREFIX}${DOT}${DOMAIN_SUFFIX}`);
+    return emailRegex.test(testStr);
+  }
+
+  private isValidDigitCode(testStr: string): boolean {
+    const DIGITS_8_TO_10 = '^[\\d]{8,10}';
+    const DIGITS_1_TO_4 = '[\\d]{1,4}';
+    const OPTIONAL_SPACE = '[\\s]?';
+    const ACCEPTABLE_CODE_OPTION_1 = `${DIGITS_8_TO_10}`;
+    const ACCEPTABLE_CODE_OPTION_2 = `(${DIGITS_1_TO_4}${OPTIONAL_SPACE}){3}`;
+    const digitalCodeRegex = new RegExp(`^(${ACCEPTABLE_CODE_OPTION_1}|${ACCEPTABLE_CODE_OPTION_2})$`);
+    return digitalCodeRegex.test(testStr);
+  }
+
+  private startSearch(): void {
+    this.gridData = [];
+    this.errMsg.ariaLabel = '';
+    this.errMsg.search = '';
+    this.storeData.searchStr = this.searchStr;
+    const isValidEmail = this.isValidEmail(this.searchStr);
+    const isValidDigital = this.isValidDigitCode(this.searchStr);
+    if (!isValidEmail && !isValidDigital) {
+      this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');
+      this.errMsg.search = `<i class="icon icon-warning"></i> ${this.errMsg.ariaLabel}`;
+      return;
+    }
+
+    if (moment(this.startDate).unix() > moment(this.endDate).unix()) {
+      return;
+    }
+
+    if (isValidEmail) {
+      this.email = this.searchStr;
+      this.meetingNumber = '';
+    }
+
+    if (isValidDigital) {
+      this.email = '';
+      this.meetingNumber = this.searchStr;
+    }
+    this.setGridData();
+  }
+
+  private setGridData(): void {
+    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.today;
+    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.startDate;
+    const data = {
+      endDate : endDate,
+      email: this.email,
+      startDate: startDate,
+      meetingNumber: this.meetingNumber.replace(/\s/g, ''),
+    };
+    this.gridData = [];
+    this.isLoadingShow = true;
+
+    this.PartnerSearchService.getMeetings(data)
+      .then((res: IMeetingDetail[]) => {
+        const meetingList = _.map(res, (meeting: IMeetingDetail) => {
+          meeting.status_ = this.PartnerSearchService.getStatus(meeting.status);
+          meeting.duration_ = this.PartnerSearchService.getDuration(meeting.duration);
+          meeting.endTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.endTime) ;
+          meeting.startTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.startTime);
+          return meeting;
+        });
+        this.gridData = meetingList;
+      })
+      .catch((err) => {
+        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      })
+      .finally(() => {
+        this.isLoadingShow = false;
+      });
+  }
+
+  private setGridOptions(): void {
+    const columnDefs: uiGrid.IColumnDef[] = [{
+      width: '13%',
+      cellTooltip: true,
+      field: 'conferenceID',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.conferenceID'),
+    }, {
+      width: '14%',
+      field: 'meetingNumber',
+      displayName: this.$translate.instant('webexReports.meetingNumber'),
+    }, {
+      cellTooltip: true,
+      field: 'meetingName',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.meetingName'),
+    }, {
+      width: '16%',
+      cellTooltip: true,
+      field: 'startTime_',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.startTime'),
+    }, {
+      width: '9%',
+      field: 'duration_',
+      cellClass: 'text-right',
+      displayName: this.$translate.instant('webexReports.duration'),
+    }, {
+      width: '12%',
+      field: 'hostName',
+      displayName: this.$translate.instant('webexReports.hostName'),
+    }, {
+      width: '8%',
+      cellClass: 'text-center',
+      field: 'numberOfParticipants',
+      headerCellTemplate: require('./number-participants-cell-template.html'),
+    }, {
+      width: '7%',
+      field: 'status_',
+      displayName: this.$translate.instant('webexReports.searchGridHeader.status'),
+      cellTemplate: require('./webex-meeting-status.html'),
+    }];
+
+    this.gridOptions = {
+      rowHeight: 45,
+      data: '$ctrl.gridData',
+      multiSelect: false,
+      columnDefs: columnDefs,
+      enableRowSelection: true,
+      enableColumnMenus: false,
+      enableColumnResizing: true,
+      enableRowHeaderSelection: false,
+      enableVerticalScrollbar: 0,
+      enableHorizontalScrollbar: 0,
+      onRegisterApi: (gridApi) => {
+        gridApi.selection.on.rowSelectionChanged(this.$scope, (row: {entity: IMeetingDetail}) => {
+          this.showDetail(row.entity);
+        });
+      },
+    };
+  }
+}
+
+export class DgcPartnerWebexReportsSearchComponent implements ng.IComponentOptions {
+  public controller = DgcPartnerWebexReportsSearchController;
+  public template = require('./dgc-partner-webex-reports-search.html');
+}

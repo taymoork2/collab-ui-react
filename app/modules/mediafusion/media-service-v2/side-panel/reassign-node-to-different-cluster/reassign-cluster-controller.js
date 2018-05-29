@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, $translate, $modalInstance, Notification, HybridServicesClusterService) {
+  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, MediaServiceAuditService, $translate, $modalInstance, Notification, HybridServicesClusterService) {
     var vm = this;
 
     vm.options = [];
@@ -57,6 +57,9 @@
                 vm.videoPropertySet = _.filter(propertySets, {
                   name: 'videoQualityPropertySet',
                 });
+                vm.qosPropertySet = _.filter(propertySets, {
+                  name: 'qosPropertySet',
+                });
                 if (vm.videoPropertySet.length > 0) {
                   var clusterPayload = {
                     assignedClusters: vm.clusterDetail.id,
@@ -64,8 +67,16 @@
                   // Assign it the property set with cluster list
                   MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
                 }
+                if (vm.qosPropertySet.length > 0) {
+                  var clusterQosPayload = {
+                    assignedClusters: vm.clusterDetail.id,
+                  };
+                  // Assign it the property set with cluster list
+                  MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                }
               }
             });
+          MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);
           moveHost(res);
         }, function () {
           vm.error = $translate.instant('mediaFusion.reassign.reassignErrorMessage', {
@@ -80,6 +91,7 @@
 
     function moveHost() {
       HybridServicesClusterService.moveEcpNode(connector.id, cluster.id, vm.clusterDetail.id).then(function () {
+        MediaServiceAuditService.devOpsAuditEvents('node', 'move', connector.id);
         $modalInstance.close();
         Notification.success('mediaFusion.moveHostSuccess');
       }).catch(function (err) {

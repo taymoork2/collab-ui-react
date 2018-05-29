@@ -1029,10 +1029,37 @@ describe('userCsv.controller', function () {
       initController.apply(this);
     });
 
-    it('should go to users.manage.picker when previous state is users.manage.emailSuppress', function () {
+    it('should go to users.manage.org when previous state is users.manage.emailSuppress', function () {
       this.controller.onBack();
       this.$scope.$apply();
-      expect(this.$state.go).toHaveBeenCalledWith('users.manage.picker');
+      expect(this.$state.go).toHaveBeenCalledWith('users.manage.org');
+    });
+  });
+
+  describe('Import CSV with new batch service', function () {
+    beforeEach(function () {
+      var _this = this;
+      this.FeatureToggleService.atlasCsvImportTaskManagerGetStatus.and.callFake(function () {
+        return _this.$q.resolve(true);
+      });
+      initController.apply(this);
+    });
+
+    it('should go to users.csv.task-manager', function () {
+      this.controller.model.fileName = 'fileName.csv';
+      this.controller.model.file = 'csvContent';
+      this.controller.model.fileChecksum = 'fileChecksum';
+      this.controller.model.enableRemove = true;
+      this.controller.startUpload();
+      this.$scope.$apply();
+      expect(this.$state.go).toHaveBeenCalledWith('users.csv.task-manager', {
+        job: {
+          fileName: 'fileName.csv',
+          fileData: 'csvContent',
+          fileChecksum: 'fileChecksum',
+          exactMatchCsv: true,
+        },
+      });
     });
   });
 });

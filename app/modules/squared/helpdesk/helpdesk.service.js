@@ -1,9 +1,11 @@
+// TODO: refactor to typescript, add enum for
+// orderingTool types here and throughout codebase
 (function () {
   'use strict';
 
   /* @ngInject */
 
-  function HelpdeskService($http, $location, $q, $translate, $window, CacheFactory, Config, CsdmSearchService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
+  function HelpdeskService($log, $http, $location, $q, $translate, $window, CacheFactory, Config, CsdmSearchService, CsdmConverter, FeatureToggleService, HelpdeskHttpRequestCanceller, HelpdeskMockData, ServiceDescriptorService, UrlConfig, USSService, HybridServicesExtrasService) {
     var urlBase = UrlConfig.getAdminServiceUrl();
     var orgCache = CacheFactory.get('helpdeskOrgCache');
     var service = {
@@ -27,6 +29,7 @@
       getOrgDisplayName: getOrgDisplayName,
       findAndResolveOrgsForUserResults: findAndResolveOrgsForUserResults,
       checkIfMobile: checkIfMobile,
+      sendRequestForFullAdminAccess: sendRequestForFullAdminAccess,
       sendVerificationCode: sendVerificationCode,
       filterDevices: filterDevices,
       getHybridStatusesForUser: getHybridStatusesForUser,
@@ -209,7 +212,8 @@
     }
 
     function filterOrders(orders) {
-      var orderToolFilters = ['CCW', 'CCW-CSB'];
+      // TODO: move usage into enum when file is made typescript
+      var orderToolFilters = ['CCW', 'CCW-CSB', 'CCW-CDC'];
       return _.filter(orders, function (el) { return _.includes(orderToolFilters, el.orderingTool); });
     }
 
@@ -478,6 +482,21 @@
       return payload;
     }
 
+    /*
+
+     */
+    function sendRequestForFullAdminAccess(adminUserId, orgId) {
+      $log.debug('*** adminUserId ***', adminUserId);
+      return $http
+        .post(urlBase + 'helpdesk/organizations/' + encodeURIComponent(orgId) + '/elevationrequest', {
+          customerUserId: adminUserId,
+        })
+        .then(extractData);
+    }
+
+    /*
+
+     */
     function invokeInviteEmail(trimmedUserData) {
       var url = service.getInviteResendUrl(trimmedUserData);
       var payload = service.getInviteResendPayload(trimmedUserData);
@@ -487,6 +506,9 @@
         });
     }
 
+    /*
+
+     */
     function sendVerificationCode(displayName, email) {
       return $http
         .post(urlBase + 'helpdesk/actions/sendverificationcode/invoke', {

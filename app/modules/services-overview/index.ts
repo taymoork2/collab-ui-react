@@ -30,6 +30,7 @@ import { HcsActiveCardComponent } from 'modules/services-overview/new-hybrid/act
 import { HcsInactiveCardComponent } from 'modules/services-overview/new-hybrid/inactive/hcs-inactive-card.component';
 import { HcsUpgradeActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-upgrade-active-card.component';
 import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hybrid/active/hcs-license-active-card.component';
+import userOverviewServiceModule from 'modules/core/users/userOverview';
 
 export default angular
   .module('services-overview', [
@@ -52,6 +53,7 @@ export default angular
     require('modules/hercules/services/uss.service').default,
     require('modules/services-overview/new-hybrid/card-users-summary').default,
     require('modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq').default,
+    userOverviewServiceModule,
   ])
   .component('cardCapacityBar', new CardCapacityBarComponent())
   .component('enableUsersModal', new EnableUsersModalComponent())

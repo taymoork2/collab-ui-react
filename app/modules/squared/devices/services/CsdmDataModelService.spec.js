@@ -544,7 +544,7 @@ describe('Service: CsdmDataModelService', function () {
 
         expect(places[huronPlaceWithoutDeviceUrl].displayName).toBe('HuronPlaceWithoutDevices');
         expect(places[huronPlaceWithoutDeviceUrl].type).toBe('huron');
-        expect(places[huronPlaceWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.deskPhone');
+        expect(places[huronPlaceWithoutDeviceUrl].readableType).toBe('addDeviceWizard.chooseDeviceType.ciscoPhone');
         expect(places[huronPlaceWithoutDeviceUrl].cisUuid).toBe('938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev');
         expectExecuted = true;
       });

@@ -4,6 +4,9 @@
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);
+  //TODO: Check if this is necessary once cluster list api is enabled
+  min-height: rem-calc(1000);
+  background-color: $color-white;
 
   .card-body {
     &:hover {
@@ -18,6 +21,7 @@
       h4.cluster-name,
       span.application-name.h5,
       span.application-node-count.h5,
+      footer.cluster-list-footer span span.h6,
       span.cluster-status {
         color: $color-white;
       }
@@ -47,8 +51,17 @@
       span {
         float: right;
         color: $gray-dark-4;
+        i.icon.icon-circle.status-indicator {
+          margin-right: rem-calc(4);
+        }
       }
     }
   }
 
+}
+
+cs-page-sub-header cs-page-sub-header-right {
+  div.columns.medium-2.hcs-right-header-filter {
+    padding-right: 0rem;
+  }
 }

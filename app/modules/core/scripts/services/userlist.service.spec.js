@@ -538,6 +538,26 @@ describe('User List Service', function () {
       this.UserListService.listUsersAsPromise({ orgId: fakeOrgId });
     });
 
+    it('should return a catch call if it responds with a 403', function () {
+      this.$httpBackend.expectGET(/\/identity\/scim\/12345\/v1\/Users/).respond(403);
+      var params = {
+        count: 10,
+        startIndex: 0,
+        sortBy: 'name',
+        sortOrder: 'ascending',
+        filter: {
+          nameStartsWith: 'ab',
+          useUnboundedResultsHack: true,
+        },
+      };
+
+      this.UserListService.listUsersAsPromise(params)
+        .then(fail)
+        .catch(function (response) {
+          expect(response.status).toBe(403);
+        });
+    });
+
     it('calls through to mkFilterExpr() with "params.filter" property', function () {
       needsHttpFlush = false;
       spyOn(this.$http, 'get').and.returnValue(this.$q.resolve());
@@ -555,8 +575,13 @@ describe('User List Service', function () {
       needsHttpFlush = false;
       spyOn(this.$http, 'get').and.returnValue(this.$q.resolve());
       var params = {
+        count: 10,
+        startIndex: 0,
+        sortBy: 'name',
+        sortOrder: 'ascending',
         filter: {
           nameStartsWith: 'ab',
+          useUnboundedResultsHack: true,
         },
       };
       var expectedUrl = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
@@ -564,8 +589,12 @@ describe('User List Service', function () {
       var expectedAttrs = 'name,userName,userStatus,entitlements,displayName,photos,roles,active,trainSiteNames,linkedTrainSiteNames,licenseID,userSettings,userPreferences';
       var expectedGetParams = {
         params: {
-          filter: expectedFilter,
           attributes: expectedAttrs,
+          filter: expectedFilter,
+          count: 10,
+          startIndex: 0,
+          sortBy: 'name',
+          sortOrder: 'ascending',
         },
       };
       this.UserListService.listUsersAsPromise(params);

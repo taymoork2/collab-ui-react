@@ -1,6 +1,16 @@
 <div class="fusion-cluster-settings">
 
   <div class="cs-form">
+    <setting-section  setting="$ctrl.sparkCalls" ng-if="$ctrl.hasMfFirstTimeCallingFeatureToggle">
+        <div class="sub-section">
+          <h5 class="sub-section__label" translate="mediaFusion.easyConfig.testsparkcalls"></h5>
+          <p class="sub-section__description" translate="mediaFusion.easyConfig.sparkcalldesc"></p>
+          <button class="btn" ng-click="$ctrl.openSetUpModal()">
+              <span translate="mediaFusion.easyConfig.begintest"></span>
+            </button>
+        </div>
+    </setting-section>
+
     <setting-section setting="$ctrl.upgradeSchedule">
       <div class="sub-section">
         <h5 class="sub-section__label" translate="hercules.settings.scheduleUpgrade.title"></h5>
@@ -18,7 +28,8 @@
       is-wizard="false"
       mf-toggle="$ctrl.hasMfPhaseTwoToggle"
       mf-trusted-toggle="$ctrl.hasMfTrustedSipToggle"
-      mf-cascade-toggle="$ctrl.hasMfCascadeBwConfigToggle">
+      mf-cascade-toggle="$ctrl.hasMfCascadeBwConfigToggle"
+      mf-first-time-toggle="$ctrl.hasMfFirstTimeCallingFeatureToggle">
     </sip-call-settings>
 
     <release-channel-section cluster="$ctrl.cluster"></release-channel-section>

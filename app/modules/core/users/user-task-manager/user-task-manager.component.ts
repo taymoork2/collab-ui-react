@@ -1,5 +1,5 @@
 import { UserTaskManagerService } from './user-task-manager.service';
-import { TaskListFilterType, TaskType, TaskStatus } from './user-task-manager.constants';
+import { TaskListFilterType, TaskType } from './user-task-manager.constants';
 import { Notification } from 'modules/core/notifications';
 
 interface ICounts {
@@ -75,6 +75,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   private fileData: string;
   private fileName: string;
+  private fileChecksum: string;
   private exactMatchCsv = false;
   private requestedTaskId?: string;
 
@@ -133,6 +134,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.requestedTaskId = _.get(this.activeTask, 'id');
     this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
     this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
+    this.fileChecksum = _.get<string>(this.$stateParams, 'job.fileChecksum', undefined);
     this.exactMatchCsv = _.get<boolean>(this.$stateParams, 'job.exactMatchCsv', undefined);
     this.activeFilter = !_.isUndefined(this.activeTask) || !_.isUndefined(this.fileName) ? TaskListFilterType.ACTIVE : TaskListFilterType.ALL;
   }
@@ -142,7 +144,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       return this.$q.resolve();
     }
 
-    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.exactMatchCsv)
+    return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.fileChecksum, this.exactMatchCsv)
       .then(importedTask => {
         this.activeTask = importedTask;
         this.requestedTaskId = importedTask.id;
@@ -228,35 +230,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private populateTaskStatusTranslate(task: ITask) {
-    switch (task.latestExecutionStatus) {
-      case TaskStatus.CREATED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
-        break;
-      case TaskStatus.STARTED:
-      case TaskStatus.STARTING:
-      case TaskStatus.STOPPING:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
-        break;
-      case TaskStatus.ABANDONED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
-        break;
-      case TaskStatus.COMPLETED:
-        if (task.counts.usersFailed > 0) {
-          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
-        } else {
-          task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
-        }
-        break;
-      case TaskStatus.FAILED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
-        break;
-      case TaskStatus.STOPPED:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
-        break;
-      case TaskStatus.UNKNOWN:
-        task.statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
-        break;
-    }
+    task.statusTranslate = this.UserTaskManagerService.getTaskStatusTranslate(task);
   }
 
   private populateTaskJobType(task: ITask) {

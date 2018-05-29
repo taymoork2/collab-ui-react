@@ -5,7 +5,5 @@
     id="blockExternalCommunication"
     ng-model="externalCommunicationCtrl.isBlockExternalCommunication"
     cs-input-label="{{::'globalSettings.externalCommunication.description'|translate}}"
-    ng-disabled="!externalCommunicationCtrl.isBlockExternalCommunicationSettingLoaded">
+    ng-disabled="!externalCommunicationCtrl.isBlockExternalCommunicationSettingLoaded || !externalCommunicationCtrl.isProPackPurchased">
 </div>
-<!-- algendel: to enabled propack treatment: ng-disabled="!externalCommunicationCtrl.isBlockExternalCommunicationSettingLoaded || !externalCommunicationCtrl.isProPackPurchased"> -->
-

@@ -27,13 +27,6 @@
     state: 'partnercustomers',
     link: '/partner/customers',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-user',
     title: 'tabs.userTab',
@@ -56,7 +49,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'partner-services-overview',
-    feature: 'atlas-hosted-cloud-service',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
     link: '/partner/services-overview',
   }, {
     tab: 'deviceTab',
@@ -74,8 +67,9 @@
     tab: 'reportTab',
     icon: 'icon-bars',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.spark',
-    link: '/partner/spark',
+    state: 'partnerreports',
+    link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
   }, {
     tab: 'taasOverviewTab',
     icon: 'icon-outline',
@@ -148,13 +142,6 @@
     link: '/partner/customers',
     iconClass: 'icon-outline',
   }, {
-    tab: 'gemservicesTab',
-    icon: 'icon-cloud',
-    title: 'tabs.servicesTab',
-    state: 'gemOverview',
-    feature: 'gem-services-tab',
-    link: '/partner/services/overview',
-  }, {
     tab: 'userTab',
     icon: 'icon-people-active',
     title: 'tabs.userTab',
@@ -180,7 +167,7 @@
     icon: 'icon-cloud',
     title: 'tabs.servicesTab',
     state: 'partner-services-overview',
-    feature: 'atlas-hosted-cloud-service',
+    feature: ['atlas-hosted-cloud-service', 'gem-services-tab'],
     link: '/partner/services-overview',
   }, {
     tab: 'deviceTab',
@@ -200,8 +187,17 @@
     tab: 'reportTab',
     icon: 'icon-analysis-active',
     title: 'tabs.reportTab',
-    state: 'partnerreports.tab.spark',
-    link: '/partner/spark',
+    state: 'partnerreports',
+    link: '/partner/reports',
+    feature: ['cca-reports', 'atlas-partner-webex-reports', 'atlas-partner-spark-reports'],
+    iconClass: 'icon-outline',
+  }, {
+    tab: 'troubleshootingTab',
+    icon: 'icon-support',
+    title: 'tabs.troubleshootingTab',
+    state: 'partnertroubleshooting.diagnostics',
+    link: '/partner/troubleshooting',
+    feature: ['diagnostic-f8193-ux3'],
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',

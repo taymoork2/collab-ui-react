@@ -34,6 +34,7 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
       this.isWizard = isWizard.currentValue;
     }
     if (sipSettingsEnabled && sipSettingsEnabled.currentValue) { this.sipSettingsEnabled = sipSettingsEnabled.currentValue; }
+    if (!sipSettingsEnabled) { this.getProperties(this.clusterId); }
   }
 
   private getProperties(clusterId): void {

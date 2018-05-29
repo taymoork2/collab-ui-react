@@ -121,7 +121,7 @@
 
     function manageUsers() {
       $state.go('users.list').then(function () {
-        $state.go('users.manage.picker');
+        $state.go('users.manage.org');
       });
     }
   }

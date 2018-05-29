@@ -11,6 +11,7 @@ export class ClusterDeregisterController {
     private $modalInstance: ng.ui.bootstrap.IModalInstanceService,
     private cluster: ICluster,
     private HybridServicesClusterService: HybridServicesClusterService,
+    private MediaServiceAuditService,
     private PrivateTrunkService: PrivateTrunkService,
     private Notification: Notification,
   ) {  }
@@ -30,6 +31,7 @@ export class ClusterDeregisterController {
     } else {
       this.HybridServicesClusterService.deregisterCluster(this.cluster.id)
         .then(() => {
+          this.MediaServiceAuditService.devOpsAuditEvents('cluster', 'delete', this.cluster.id);
           this.callNotification();
           this.$modalInstance.close();
         })

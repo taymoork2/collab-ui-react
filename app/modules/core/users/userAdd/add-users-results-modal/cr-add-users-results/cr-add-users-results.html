@@ -1,4 +1,78 @@
-<div class="users-upload-results">
+<!-- F7208 enabled -->
+<div ng-if="$ctrl.ftF7208 && $ctrl.convertUsersFlow" class="users-convert-results">
+  <h4 class="users-convert-results__bottom-space--50" translate="convertUsersModal.results.subTitle"></h4>
+  <div class="users-convert-results__bottom-space--500">
+    <h6 translate="convertUsersModal.results.desc" translate-value-count="14" translate-interpolation="messageformat"></h6>
+    <h6 translate="convertUsersModal.results.desc2"></h6>
+  </div>
+  <div class="row collapse">
+    <cr-total-tile-container class="columns small-12 medium-8 medium-offset-2">
+      <cr-total-tile
+        l10n-label="convertUsersModal.results.usersConverted"
+        total-color="green"
+        total-value="$ctrl.convertedUsers.length"
+      ></cr-total-tile>
+      <cr-total-tile
+        l10n-label="convertUsersModal.results.usersPending"
+        total-color="red"
+        total-value="$ctrl.pendingUsers.length"
+      ></cr-total-tile>
+    </cr-total-tile-container>
+  </div>
+  <div class="h4 results-total">
+    <csv-simple-export
+      anchor-text="{{::'convertUsersModal.csv' | translate}}"
+      on-export="$ctrl.exportCSV()"
+      filename="{{::'convertUsersModal.csvResultsFilename' | translate}}"
+      icon="icon-download"
+      tooltip-placement="none">
+    </csv-simple-export>
+  </div>
+  <div class="error-table table-header" ng-if="$ctrl.results.errors.length > 0 || $ctrl.results.warnings.length > 0">
+    <table class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <thead>
+        <tr>
+          <th translate='usersPage.errorWarningMessages'></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div  class="error-table table-body warning-table" ng-if="$ctrl.results.warnings.length > 0">
+    <table id="warningTable" class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <tbody>
+        <tr ng-repeat="msg in $ctrl.results.warnings">
+          <td>
+            <i class="icon icon-warning"></i>
+            {{::msg}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div  class="error-table table-body" ng-if="$ctrl.results.errors.length > 0">
+    <table id="errorTable" class="table table-bordered">
+      <colgroup>
+        <col class="medium-10">
+      </colgroup>
+      <tbody>
+        <tr ng-repeat="msg in $ctrl.results.errors">
+          <td>
+            <i class="icon icon-error"></i>
+            {{::msg}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- F7208 disabled -->
+<div ng-if="!$ctrl.ftF7208 || !$ctrl.convertUsersFlow" class="users-upload-results">
   <i ng-if="$ctrl.results.errors.length === 0" class="icon icon-check-mark-success"></i>
   <div class="results-container">
     <div class="result new-users" ng-class="{disabled: $ctrl.numAddedUsers === 0}">

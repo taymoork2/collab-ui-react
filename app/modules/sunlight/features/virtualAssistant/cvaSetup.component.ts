@@ -2,6 +2,7 @@ import { IToolkitModalService } from 'modules/core/modal';
 import * as _ from 'lodash';
 import { VaCommonSetupCtrl } from './vaCommonSetupCtrl';
 import { AccessibilityService } from 'modules/core/accessibility';
+import { CvaContextFields } from './cvaContextFields';
 
 enum PageFocusKey {
   CVA_CONFIG_OVERVIEW = 'cvaConfigOverview',
@@ -31,7 +32,8 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   public maxTokenLength = 128;
   public tokenForm: ng.IFormController;
-  private tokenFormErrors = {};
+  private cvaInputContext: CvaContextFields;
+  private CVA_CONTENTS_FIELDS: string = 'cvaContextFields';
 
   public template = {
     templateId: '',
@@ -76,6 +78,12 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
           startTimeInMillis: 0,
           eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_AVATAR_PAGE,
         },
+        cvaContextFields: {
+          enabled: true,
+          contextServiceFields: {},
+          startTimeInMillis: 0,
+          eventName: this.Analytics.sections.VIRTUAL_ASSISTANT.eventNames.CVA_CONTEXT_FIELDS,
+        },
         vaSummary: {
           enabled: true,
           visibleError: false,
@@ -90,12 +98,13 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   constructor(
     public $element: ng.IRootElementService,
     public $scope: ng.IScope,
-    public $state: ng.ui.IStateService,
+    public $state,
     public $stateParams: ng.ui.IStateParamsService,
     public $modal: IToolkitModalService,
     public $translate: ng.translate.ITranslateService,
     public $timeout: ng.ITimeoutService,
     public $window: ng.IWindowService,
+    protected $q: ng.IQService,
     public AccessibilityService: AccessibilityService,
     public Analytics,
     public Authinfo,
@@ -103,12 +112,21 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
     public CvaService,
     public Notification,
     public UrlConfig,
+    public ContextFieldsetsService,
+    public ContextFieldsService,
+    public FieldUtils,
   ) {
     super($element, $modal, $scope, $state, $timeout, $translate, $window, Analytics, Authinfo, CTService, Notification, UrlConfig);
     this.service = this.CvaService;
     // states == pages in order as found in storage template
     this.states = Object.keys(this.template.configuration.pages);
+
+    // IF Apple Business Chat is not enabled, then, make sure the page is not visible/active
+    if (!this.$state.isAppleBusinessChatEnabled) {
+      this.states = this.states.filter(entry => entry !== this.CVA_CONTENTS_FIELDS);
+    }
     this.currentState = this.states[0];
+    this.cvaInputContext = new CvaContextFields(this.ContextFieldsetsService, this.ContextFieldsService, $translate, this.FieldUtils, this.$q);
   }
 
   /**
@@ -124,10 +142,20 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       this.template.configuration.pages.cvaAccessToken.accessTokenValue = this.$stateParams.template.config.token;
       this.template.configuration.pages.cvaAccessToken.invalidToken = false;
       this.template.configuration.pages.cvaAccessToken.needsValidation = false;
+      this.template.configuration.pages.cvaContextFields.contextServiceFields = this.$stateParams.template.contextServiceFields;
 
       if (this.$stateParams.template.icon) {
         this.avatarUploadState = this.avatarState.PREVIEW;
         this.template.configuration.pages.vaAvatar.fileValue = this.$stateParams.template.icon;
+      }
+    }
+
+    // Only initialize the input context element if Apple Business Class is enabled
+    if (this.$state.isAppleBusinessChatEnabled) {
+      if (this.$stateParams.isEditFeature) {
+        this.cvaInputContext.init(this.template.configuration.pages.cvaContextFields.contextServiceFields);
+      } else {
+        this.cvaInputContext.init(null);
       }
     }
   }
@@ -169,55 +197,12 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
       case 'vaAvatar':
         this.unsetFocus();
         return !this.isAvatarUploading();
+      case this.CVA_CONTENTS_FIELDS:
+        this.unsetFocus();
+        return this.cvaInputContext.isFormValid();
       case 'vaSummary':
         this.unsetFocus();
         return 'hidden';
-    }
-  }
-
-  /**
-   * called when page corresponding to newState is loaded event
-   * @param {string} newState
-   */
-  public onPageLoaded(newState: string): void {
-    if (newState === 'cvaAccessToken' &&
-      this.isAccessTokenInvalid() &&
-      !_.isEmpty(this.tokenFormErrors) &&
-      !_.isEmpty(this.tokenForm)) {
-      // We've already visited this page and it had errors, so reinstate the messages for them. JIRA CA-104
-
-      const controller = this;
-      controller.tokenForm.tokenInput.$setValidity('invalidToken', false);
-      _.keys(controller.tokenFormErrors).forEach( function (key) {
-        controller.tokenForm.$error[key] = controller.tokenFormErrors[key];
-      });
-      controller.tokenFormErrors = {}; //Clear out as they've served their purpose
-    }
-
-    this.template.configuration.pages[newState].startTimeInMillis = Date.now();
-  }
-
-  /**
-   * conduct certain actions for the just before moving to previous page from another.
-   * @param {string} currentState State before moving to previous page.
-   */
-  public beforePreviousPage(currentState: string): void {
-    if (currentState === 'cvaAccessToken' &&
-      this.isAccessTokenInvalid() &&
-      !_.isEmpty(this.tokenForm)) {
-      // Token is has errors, so save off the error messages in case we come back. JIRA CA-104
-
-      const controller = this;
-      _.keys(controller.tokenForm.$error).forEach(function (key) {
-        controller.tokenFormErrors[key] = controller.tokenForm.$error[key];
-      });
-    }
-    if (currentState === 'name' &&
-      _.isEmpty(this.template.configuration.pages.name.nameValue) &&
-      !_.isEmpty(this.nameForm) &&
-      !this.nameForm.$valid) {
-      //Name was validated and failed validation. The actual value is in the nameform, so set our value to that; JIRA CA-104
-      this.template.configuration.pages.name.nameValue = this.nameForm.nameInput.$viewValue;
     }
   }
 
@@ -227,12 +212,29 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   public submitFeature(): void {
     const name = this.template.configuration.pages.name.nameValue.trim();
     const config = this.createConfigurationObject(); // Note: this is our point of extensibility as other types besides dialogflow are supported.
+
+    const contextServiceFields = this.cvaInputContext.getContextServiceFieldsObject();
+    this.template.configuration.pages.cvaContextFields.contextServiceFields = contextServiceFields;
+
     this.creatingTemplate = true;
     const avatarDataUrl = this.template.configuration.pages.vaAvatar.fileValue;
     if (this.isEditFeature) {
-      this.updateFeature(this.template.templateId, this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataUrl);
+      this.updateFeature(
+        this.template.templateId,
+        this.template.configuration.pages.cvaConfigOverview.configurationType,
+        name,
+        config,
+        this.orgId,
+        contextServiceFields,
+        avatarDataUrl);
     } else {
-      this.createFeature(this.template.configuration.pages.cvaConfigOverview.configurationType, name, config, this.orgId, avatarDataUrl);
+      this.createFeature(
+        this.template.configuration.pages.cvaConfigOverview.configurationType,
+        name,
+        config,
+        this.orgId,
+        contextServiceFields,
+        avatarDataUrl);
     }
   }
 
@@ -289,7 +291,7 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
 
   public isAccessTokenInvalid(): boolean {
     return (this.template.configuration.pages.cvaAccessToken.invalidToken &&
-    !this.template.configuration.pages.cvaAccessToken.needsValidation);
+      !this.template.configuration.pages.cvaAccessToken.needsValidation);
   }
 
   public isAccessTokenValid(): boolean {
@@ -346,9 +348,9 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
    * @param orgId
    * @param avatarDataUrl optional
    */
-  private createFeature(type: string, name: string, config: any, orgId: string, avatarDataUrl?: string): void {
+  private createFeature(type: string, name: string, config: any, orgId: string, contextServiceFields: any, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.addConfig(type, name, config, orgId, avatarDataUrl)
+    controller.service.addConfig(type, name, config, orgId, contextServiceFields, avatarDataUrl)
       .then(function () {
         controller.handleFeatureCreation();
         controller.writeMetrics();
@@ -385,9 +387,9 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
    * @param orgId
    * @param avatarDataURl optional
    */
-  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, avatarDataUrl?: string): void {
+  private updateFeature(templateId: string, type: string, name: string, config: any, orgId: string, contextServiceFields: any, avatarDataUrl?: string): void {
     const controller = this;
-    controller.service.updateConfig(templateId, type, name, config, orgId, avatarDataUrl)
+    controller.service.updateConfig(templateId, type, name, config, orgId, contextServiceFields, avatarDataUrl)
       .then(function () {
         controller.handleFeatureUpdate();
         controller.writeMetrics();

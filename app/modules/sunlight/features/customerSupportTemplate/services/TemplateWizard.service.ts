@@ -14,6 +14,7 @@ export class TemplateWizardService {
     public SunlightConstantsService,
     public CTService: CTService,
     public CvaService: CvaService,
+    public $stateParams,
     public Authinfo,
     public EvaService,
     public $window,
@@ -231,6 +232,7 @@ export class TemplateWizardService {
 
   public setInitialState(): void {
     //TODO: feature flags to be handled
+    this.isEditFeature = this.$stateParams.isEditFeature;
     this.featureFlags = {
       isProactiveFlagEnabled: true,
       isCareAssistantEnabled: true,
@@ -317,37 +319,34 @@ export class TemplateWizardService {
   }
 
   // TODO: markup to be removed
-  public getEvaSpaceDetailsText(listSpaces, evaForOrg) {
-    listSpaces.then((spaces) => {
-      if (spaces && !_.isEmpty(spaces.items)) {
-        const numSpaces = spaces.items.length;
-        const evaOrgName = this.getEvaName(evaForOrg);
-        if (numSpaces === 1) {
-          const evaSpaceDetailsTextOneSpace = this.$translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
-
-          this.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
-          this.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
-        } else {
-          const evaSpaceDetailsText = this.$translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
-
-          this.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
-          this.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
-        }
-        _.forEach(spaces.items, function (space) {
-          if (space.title) {
-            this.evaSpaceTooltipData += '<li>' + space.title + '</li>';
-            this.evaSpaceTooltipAriaLabel += ' ' + space.title;
-            if (space.default) {
-              const defaultSpace = this.$translate.instant('careChatTpl.escalationDetailsDefaultSpace');
-              this.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
-              this.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
-            }
-          }
-        });
+  public getEvaSpaceDetailsText(evaForOrg) {
+    const spaces = evaForOrg.spaces;
+    if (spaces && spaces.length >= 0) {
+      const numSpaces = spaces.length;
+      const evaOrgName = this.getEvaName(evaForOrg);
+      if (numSpaces === 1) {
+        const evaSpaceDetailsTextOneSpace = this.$translate.instant('careChatTpl.evaSpaceDetailsTextOneSpace');
+        this.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsTextOneSpace;
+        this.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsTextOneSpace;
       } else {
-        this.setSpaceDataAsError();
+        const evaSpaceDetailsText = this.$translate.instant('careChatTpl.evaSpaceDetailsText', { numberOfEvaSpaces: numSpaces });
+        this.evaSpaceTooltipData = evaOrgName + evaSpaceDetailsText;
+        this.evaSpaceTooltipAriaLabel = evaOrgName + evaSpaceDetailsText;
       }
-    });
+      _.forEach(spaces,  (space) => {
+        if (space.title) {
+          this.evaSpaceTooltipData += '<li>' + space.title + '</li>';
+          this.evaSpaceTooltipAriaLabel += ' ' + space.title;
+          if (space.default) {
+            const defaultSpace = this.$translate.instant('careChatTpl.escalationDetailsDefaultSpace');
+            this.evaSpaceTooltipData += '<div>' + '    ' + defaultSpace + '<div>';
+            this.evaSpaceTooltipAriaLabel += ' ' + defaultSpace;
+          }
+        }
+      });
+    } else {
+      this.setSpaceDataAsError();
+    }
   }
 
   public setEvaTemplateData() {
@@ -355,7 +354,7 @@ export class TemplateWizardService {
     evaObj.then((data) => {
       if (data && data.items && data.items.length >= 1) {
         this.evaConfig.isEvaConfigured = true;
-        _.forEach(this.evaDataModel, function (evaData) {
+        _.forEach(this.evaDataModel, (evaData) => {
           if (evaData.id !== 'agent') {
             evaData.isDisabled = false;
           }
@@ -364,8 +363,7 @@ export class TemplateWizardService {
         if (this.isEvaObjectValid(evaForOrg)) {
           this.selectedEVA.id = evaForOrg.id;
           this.selectedEVA.name = evaForOrg.name;
-          const listSpaces = this.EvaService.getExpertAssistantSpaces(evaForOrg.id, evaForOrg.orgId);
-          this.getEvaSpaceDetailsText(listSpaces, evaForOrg);
+          this.getEvaSpaceDetailsText(evaForOrg);
         } else {
           this.setSpaceDataAsError();
         }

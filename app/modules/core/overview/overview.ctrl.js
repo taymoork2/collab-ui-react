@@ -1,5 +1,7 @@
 require('./_overview.scss');
 var SsoCertExpNotificationService = require('modules/core/overview/notifications/ssoCertificateExpirationNotification.service').SsoCertificateExpirationNotificationService;
+var OfferName = require('modules/core/shared/offer-name').OfferName;
+var OverviewEvent = require('./overview.keys').OverviewEvent;
 
 (function () {
   'use strict';
@@ -9,11 +11,13 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     .controller('OverviewCtrl', OverviewCtrl);
 
   /* @ngInject */
-  function OverviewCtrl($q,
+  function OverviewCtrl(
+    $location,
+    $q,
     $rootScope,
     $scope,
     $state,
-    $location,
+    $timeout,
     Authinfo,
     AutoAssignTemplateService,
     CardUtils,
@@ -21,19 +25,21 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     Config,
     EvaService,
     FeatureToggleService,
+    HealthService,
     HybridServicesClusterService,
     HybridServicesFlagService,
     HybridServicesUtilsService,
     LearnMoreBannerService,
     LinkedSitesService,
-    Log, Notification,
+    Log,
+    Notification,
     Orgservice,
     OverviewCardFactory,
     OverviewNotificationFactory,
+    PrivacyDataSheetsNotificationService,
     PrivateTrunkService,
     ProPackService,
     PstnService,
-    ReportsService,
     ServiceDescriptorService,
     SetupWizardService,
     SsoCertificateExpirationNotificationService,
@@ -43,13 +49,17 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     SunlightUtilitiesService,
     TrialService,
     UrlConfig,
-    WebExSiteService) {
+    WebExSiteService,
+    WifiProximityService,
+    SparkAssistantService
+  ) {
     var vm = this;
     var PSTN_TOS_ACCEPT = require('modules/huron/pstn/pstnTermsOfService').PSTN_TOS_ACCEPT;
     var PSTN_ESA_DISCLAIMER_ACCEPT = require('modules/huron/pstn/pstn.const').PSTN_ESA_DISCLAIMER_ACCEPT;
 
     var proPackPurchased = false;
 
+    vm.loadingSubscriptions = true;
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
@@ -59,16 +69,17 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
 
     vm.cards = [
-      OverviewCardFactory.createMessageCard(),
-      OverviewCardFactory.createMeetingCard($scope),
-      OverviewCardFactory.createCallCard(),
+      OverviewCardFactory.getMessageCard(),
+      OverviewCardFactory.getMeetingCard(),
+      OverviewCardFactory.getCallCard(),
       OverviewCardFactory.createCareCard(),
-      OverviewCardFactory.createRoomSystemsCard(),
+      OverviewCardFactory.getRoomsCard(),
       OverviewCardFactory.createHybridServicesCard(),
       OverviewCardFactory.createUsersCard(),
     ];
 
     vm.notifications = [];
+    vm.pushNotification = pushNotification;
     vm.pstnToSNotification = null;
     vm.esaDisclaimerNotification = null;
     vm.trialDaysLeft = undefined;
@@ -123,6 +134,10 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
 
     // used to sort notifications in a specific order
     function notificationComparator(a, b) {
+      if (a.type === 'number') {
+        return b.value - a.value;
+      }
+
       var v1 = _.toLower(_.last(_.split(a.value, '.')));
       var v2 = _.toLower(_.last(_.split(b.value, '.')));
       if (_.isEqual(v1, v2)) {
@@ -132,23 +147,31 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       }
     }
 
-    // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
-    function resizeNotifications() {
+    // pushNotification -
+    // zOrder sorts within a particular badge type (e.g. within new notifications).
+    // the higher the zOrder, the higher the notification is placed in the list.  A zero value is default.
+    //
+    function pushNotification(notification, zOrder) {
+      // Set the notification's zOrder if one is specified or does not exist
+      notification.zOrder = zOrder || notification.zOrder || 0;
+      vm.notifications.push(notification);
+
+      // for smaller screens where the notifications are on top, the layout needs to resize after the notifications are loaded
       CardUtils.resize(0, '.fourth.cs-card-layout');
     }
 
     function init() {
+      getHealthStatus();
       findAnyUrgentUpgradeInHybridServices();
       removeCardUserTitle();
+      getWifiProximityOptInStatus();
       if (!Authinfo.isSetupDone() && Authinfo.isCustomerAdmin()) {
-        vm.notifications.push(OverviewNotificationFactory.createSetupNotification());
-        resizeNotifications();
+        pushNotification(OverviewNotificationFactory.createSetupNotification());
       }
 
       LinkedSitesService.linkedSitesNotConfigured().then(function (showNotification) {
         if (showNotification === true) {
-          vm.notifications.push(OverviewNotificationFactory.createLinkedSitesNotification($state));
-          resizeNotifications();
+          pushNotification(OverviewNotificationFactory.createLinkedSitesNotification($state));
         }
       });
 
@@ -176,32 +199,29 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (!supported) {
-                      vm.notifications.push(OverviewNotificationFactory.createCalendarNotification());
-                      resizeNotifications();
+                      pushNotification(OverviewNotificationFactory.createCalendarNotification());
                     }
                   });
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_gcal)) {
                 FeatureToggleService.supports(FeatureToggleService.features.atlasOffice365Support)
                   .then(function (supported) {
                     if (!supported) {
-                      vm.notifications.push(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
-                      resizeNotifications();
+                      pushNotification(OverviewNotificationFactory.createGoogleCalendarNotification($state, CloudConnectorService, HybridServicesFlagService, HybridServicesUtilsService));
                     }
                   });
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_uc)) {
-                vm.notifications.push(OverviewNotificationFactory.createCallAwareNotification());
+                pushNotification(OverviewNotificationFactory.createCallAwareNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.fusion_ec)) {
-                vm.notifications.push(OverviewNotificationFactory.createCallConnectNotification());
+                pushNotification(OverviewNotificationFactory.createCallConnectNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.mediafusion)) {
-                vm.notifications.push(OverviewNotificationFactory.createHybridMediaNotification());
+                pushNotification(OverviewNotificationFactory.createHybridMediaNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.hds) && proPackPurchased) {
-                vm.notifications.push(OverviewNotificationFactory.createHybridDataSecurityNotification());
+                pushNotification(OverviewNotificationFactory.createHybridDataSecurityNotification());
               } else if (flag.name === HybridServicesUtilsService.getAckFlagForHybridServiceId(Config.entitlements.imp)) {
                 FeatureToggleService.supports(FeatureToggleService.features.atlasHybridImp)
                   .then(function (supported) {
                     if (supported) {
-                      vm.notifications.push(OverviewNotificationFactory.createHybridMessagingNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
-                      resizeNotifications();
+                      pushNotification(OverviewNotificationFactory.createHybridMessagingNotification($state, HybridServicesFlagService, HybridServicesUtilsService));
                     }
                   });
               } else if (flag.name === hybridCallHighAvailability && Authinfo.isEntitled(Config.entitlements.fusion_uc)) {
@@ -211,8 +231,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
                       return HybridServicesClusterService.serviceHasHighAvailability('c_ucmc')
                         .then(function (serviceHasHA) {
                           if (!serviceHasHA) {
-                            vm.notifications.push(OverviewNotificationFactory.createCallServiceHighAvailability());
-                            resizeNotifications();
+                            pushNotification(OverviewNotificationFactory.createCallServiceHighAvailability());
                           }
                         });
                     }
@@ -223,15 +242,13 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
                     if (supported) {
                       OverviewNotificationFactory.createAllHybridCalendarsNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService)
                         .then(function (allHybridCalendarsNotification) {
-                          vm.notifications.push(allHybridCalendarsNotification);
-                          resizeNotifications();
+                          pushNotification(allHybridCalendarsNotification);
                         });
                     }
                   });
               }
             }
           });
-          resizeNotifications();
         })
         .catch(function () {
           Log.error('Error in GET service acknowledged status');
@@ -258,25 +275,25 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
         getEsaDisclaimerStatus();
 
         if (!_.get(vm.orgData, 'orgSettings.sipCloudDomain')) {
-          vm.notifications.push(OverviewNotificationFactory.createCloudSipUriNotification());
+          pushNotification(OverviewNotificationFactory.createCloudSipUriNotification());
         }
         if (vm.isDeviceManagement && _.isUndefined(_.get(vm.orgData, 'orgSettings.allowCrashLogUpload'))) {
-          vm.notifications.push(OverviewNotificationFactory.createCrashLogNotification());
+          pushNotification(OverviewNotificationFactory.createCrashLogNotification());
         }
         if (Authinfo.isCare() || Authinfo.isCareVoice()) {
           var hasMessage = Authinfo.isMessageEntitled();
           var hasCall = Authinfo.hasCallLicense();
           if (!hasMessage && !hasCall) {
-            vm.notifications.push(OverviewNotificationFactory
+            pushNotification(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgAndCallMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasMessage) {
-            vm.notifications.push(OverviewNotificationFactory
+            pushNotification(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseMsgMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasCall && !vm.careToggle) {
-            vm.notifications.push(OverviewNotificationFactory
+            pushNotification(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseCallMissingText', 'homePage.careLicenseLinkText'));
           } else if (!hasCall && (!vm.pt && !vm.ept) && vm.careToggle) {
-            vm.notifications.push(OverviewNotificationFactory
+            pushNotification(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
         }
@@ -286,27 +303,32 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
-      Orgservice.getLicensesUsage()
+
+      Orgservice.getInternallyManagedSubscriptions()
         .then(function (subscriptions) {
+          // timeout to prevent event from firing before page finishes loading
+          $timeout(function () {
+            $rootScope.$emit(OverviewEvent.SUBSCRIPTIONS_LOADED_EVENT, subscriptions);
+            vm.loadingSubscriptions = false;
+          });
+
           var activeLicenses = _.filter(_.flatMap(subscriptions, 'licenses'), ['status', Config.licenseStatus.ACTIVE]);
-          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SD]);
+          var sharedDeviceLicenses = _.filter(activeLicenses, ['offerName', OfferName.SD]);
           var sharedDevicesUsage = _.sumBy(sharedDeviceLicenses, 'usage');
           var showSharedDevicesNotification = sharedDeviceLicenses.length > 0 && sharedDevicesUsage === 0;
-          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', Config.offerCodes.SB]);
+          var sparkBoardLicenses = _.filter(activeLicenses, ['offerName', OfferName.SB]);
           var sparkBoardUsage = _.sumBy(sparkBoardLicenses, 'usage');
           var showSparkBoardNotification = sparkBoardLicenses.length > 0 && sparkBoardUsage === 0;
-          if (showSharedDevicesNotification || showSparkBoardNotification) {
-            setRoomSystemEnabledDevice(true);
-            if (showSharedDevicesNotification && showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
-            } else if (showSparkBoardNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
-            } else {
-              vm.notifications.push(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
-            }
-          } else {
-            setRoomSystemEnabledDevice(false);
+
+          if (showSharedDevicesNotification && showSparkBoardNotification) {
+            pushNotification(OverviewNotificationFactory.createDevicesNotification('homePage.setUpDevices'));
+          } else if (showSparkBoardNotification) {
+            pushNotification(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSparkBoardDevices'));
+          } else if (showSharedDevicesNotification) {
+            pushNotification(OverviewNotificationFactory.createDevicesNotification('homePage.setUpSharedDevices'));
           }
+        }).catch(function () {
+          vm.loadingSubscriptions = false;
         });
 
       FeatureToggleService.supports(FeatureToggleService.features.huronEnterprisePrivateTrunking).then(function (result) {
@@ -319,7 +341,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
         if (toggle) {
           AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
             if (!hasDefaultTemplate) {
-              vm.notifications.push(OverviewNotificationFactory.createAutoAssignNotification());
+              pushNotification(OverviewNotificationFactory.createAutoAssignNotification());
             }
           });
         }
@@ -328,6 +350,19 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       TrialService.getDaysLeftForCurrentUser().then(function (daysLeft) {
         vm.trialDaysLeft = daysLeft;
       });
+
+      FeatureToggleService.atlasSparkAssistantGetStatus().then(function (toggle) {
+        if (toggle) {
+          SparkAssistantService.getSpeechServiceOptIn().then(function (response) {
+            if (_.get(response, 'activationStatus').toUpperCase() === 'ENABLED') {
+              pushNotification(OverviewNotificationFactory.createSparkAssistantNotification());
+            }
+          });
+        }
+      });
+
+      // $TODO - remove notification (and all related code) after 8/25/2018
+      pushNotification(PrivacyDataSheetsNotificationService.createNotification(), 100);
     }
 
     // Show Warning if there is an EVA that's missing default expert space
@@ -347,8 +382,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
                     text = 'homePage.evaMissingDefaultSpaceAndNoPermission';
                     owner = EvaService.getEvaOwner(eva);
                   }
-                  vm.notifications.push(OverviewNotificationFactory.createEvaMissingDefaultSpaceNotification($state, eva, linkText, text, owner));
-                  resizeNotifications();
+                  pushNotification(OverviewNotificationFactory.createEvaMissingDefaultSpaceNotification($state, eva, linkText, text, owner));
                 }
               });
           }
@@ -358,8 +392,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
       SunlightUtilitiesService.isCareSetup().then(function (isOrgOnboarded) {
         if (!isOrgOnboarded && SunlightUtilitiesService.showSetUpCareNotification()) {
-          vm.notifications.push(OverviewNotificationFactory.createCareNotSetupNotification());
-          resizeNotifications();
+          pushNotification(OverviewNotificationFactory.createCareNotSetupNotification());
         }
       });
     }
@@ -367,7 +400,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     function checkForUnsyncedSubscriptionLicenses() {
       WebExSiteService.findSubscriptionsWithUnsyncedLicenses().then(function (results) {
         _.forEach(results, function (unsyncedSubscription) {
-          vm.notifications.push(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
+          pushNotification(SubscriptionWithUnsyncedLicensesNotificationService.createNotification(unsyncedSubscription));
         });
       });
     }
@@ -390,8 +423,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
           var certificateExpirationDate = moment(_.get(primaryCert, 'expirationDate'));
           var daysDiff = certificateExpirationDate.diff(today, 'days');
           if (daysDiff <= SsoCertExpNotificationService.CERTIFICATE_EXPIRATION_DAYS) {
-            vm.notifications.push(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
-            resizeNotifications();
+            pushNotification(SsoCertificateExpirationNotificationService.createNotification(daysDiff));
             if (updateSsoCertificateNow) {
               $state.go('sso-certificate.sso-certificate-check');
             }
@@ -410,7 +442,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
             PstnService.getCustomerTrialV2(vm.orgData.id).then(function (trial) {
               if (!_.has(trial, 'acceptedDate')) {
                 vm.pstnToSNotification = OverviewNotificationFactory.createPstnTermsOfServiceNotification();
-                vm.notifications.push(vm.pstnToSNotification);
+                pushNotification(vm.pstnToSNotification);
                 $scope.$on(PSTN_TOS_ACCEPT, onPstnToSAccept);
               }
             });
@@ -433,11 +465,23 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
         PstnService.isSwivelCustomerAndEsaUnsigned(vm.orgData.id).then(function (result) {
           if (result) {
             vm.esaDisclaimerNotification = OverviewNotificationFactory.createEsaDisclaimerNotification();
-            vm.notifications.push(vm.esaDisclaimerNotification);
+            pushNotification(vm.esaDisclaimerNotification);
             $scope.$on(PSTN_ESA_DISCLAIMER_ACCEPT, onPstnEsaDisclaimerAccept);
           }
         });
       }
+    }
+
+    function getHealthStatus() {
+      HealthService.getHealthCheck().then(function (healthData) {
+        $timeout(function () {
+          // timeout to prevent event from firing before page finishes loading
+          $rootScope.$emit(OverviewEvent.HEALTH_STATUS_LOADED_EVENT, healthData);
+
+          // TODO: this is left in for now for the Care card, which needs to be updated to a component
+          forwardEvent('healthStatusUpdatedHandler', healthData);
+        });
+      });
     }
 
     function onPstnEsaDisclaimerAccept() {
@@ -463,10 +507,26 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
               return false;
             });
             if (shouldDisplayNotification) {
-              vm.notifications.push(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
+              pushNotification(OverviewNotificationFactory.createUrgentUpgradeNotification(connectorType));
             }
           });
         });
+    }
+
+    function getWifiProximityOptInStatus() {
+      if (Authinfo.isCustomerLaunchedFromPartner() || !(Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin())) {
+        return;
+      }
+      FeatureToggleService.csdmProximityOptInGetStatus().then(function (optInToggle) {
+        if (!optInToggle) {
+          return;
+        }
+        WifiProximityService.getOptInStatusEverSet().then(function (optInIsEverSet) {
+          if (!optInIsEverSet) {
+            vm.notifications.push(OverviewNotificationFactory.createWifiProximityOptInNotification());
+          }
+        });
+      });
     }
 
     function removeCardUserTitle() {
@@ -475,12 +535,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
           name: 'overview.cards.users.title',
         });
       }
-    }
-
-    function setRoomSystemEnabledDevice(isDeviceEnabled) {
-      (_.find(vm.cards, function (card) {
-        return card.name === 'overview.cards.roomSystem.title';
-      })).isDeviceEnabled = isDeviceEnabled;
     }
 
     function dismissNotification(notification) {
@@ -505,6 +559,7 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
 
         SetupWizardService.getPendingOrderStatusDetails(pendingServiceOrderUUID).then(function (productProvStatus) {
           forwardEvent('provisioningEventHandler', productProvStatus);
+          $rootScope.$emit(OverviewEvent.MEETING_SETTINGS_PROVISIONING_STATUS, productProvStatus);
         });
       }
     }
@@ -530,8 +585,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
       $scope.$on(eventType, _.partial(forwardEvent, 'reportDataEventHandler'));
     });
 
-    ReportsService.getOverviewMetrics(true);
-
     if (Authinfo.isCare()) {
       SunlightReportService.getOverviewData();
     }
@@ -543,8 +596,6 @@ var SsoCertExpNotificationService = require('modules/core/overview/notifications
     Orgservice.getAdminOrg(_.partial(forwardEvent, 'orgEventHandler'), false, params);
 
     Orgservice.getUnlicensedUsers(_.partial(forwardEvent, 'unlicensedUsersHandler'));
-
-    ReportsService.healthMonitor(_.partial(forwardEvent, 'healthStatusUpdatedHandler'));
 
     $scope.$on('DISMISS_SIP_NOTIFICATION', function () {
       vm.notifications = _.reject(vm.notifications, {

@@ -73,7 +73,7 @@ class WebexSiteLicensesCtrl implements ng.IComponentController {
         return _.map(this.centerDetails, (center) => {
           return new WebExSite({
             centerType: center.serviceName,
-            quantity: 0,
+            quantity: (this.sitesArray.length === 1) ? center.quantity : 0,
             siteUrl: site.siteUrl,
             timezone: site.timezone,
             setupType: site.setupType,

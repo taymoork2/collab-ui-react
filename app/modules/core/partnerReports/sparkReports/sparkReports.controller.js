@@ -9,12 +9,15 @@
   function SparkReportsCtrl(
     $sce,
     $scope,
+    $state,
+    $q,
     $window,
     Analytics,
     Authinfo,
     Notification,
     QlikService,
     $log,
+    FeatureToggleService,
     Userservice
   ) {
     var vm = this;
@@ -32,6 +35,15 @@
           if (data.success) {
             if (data.emails) {
               Authinfo.setEmails(data.emails);
+              var promises = {
+                isFeatureToggleOn: FeatureToggleService.atlasPartnerSparkReportsGetStatus(),
+              };
+              $q.all(promises).then(function (features) {
+                $log.log('FeatureToggleService.atlasPartnerSparkReportsGetStatus() is ' + features.isFeatureToggleOn);
+                if (!features.isFeatureToggleOn) {
+                  $state.go('partnerreports.tab.base');
+                }
+              });
               setViewHeight();
               loadSparkReports();
             }
@@ -64,7 +76,7 @@
       getSparkPartnerReportData('spark', vm.viewType, userInfo).then(function (data) {
         vm.sparkReports.appData = {
           QlikTicket: data.ticket,
-          appId: 'partner_spark_v1',
+          appId: data.appName,
           node: data.host,
           qrp: data.qlik_reverse_proxy,
           persistent: true,

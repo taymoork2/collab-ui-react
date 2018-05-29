@@ -205,7 +205,7 @@ class CsdmHuronDeviceService {
     if (jsonTags.length >= 128) {
       return this.$q.reject('List of tags is longer than supported.');
     }
-    if (!/^[^"%\\&<>]*$/.test(jsonTags)) {
+    if (!/^[^"%\\&<>]*$/.test(jsonTags) || _.some(tags, t => /\',\'/.test(CsdmHuronDeviceService.encodeHuronTags(t)))) {
       return this.$q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
     }
 

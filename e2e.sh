@@ -57,7 +57,7 @@ test_suite="$(get_test_suite_arg "$@")"
 node ./protractor/e2e ${test_suite} --sauce
 e2e_exit_code=$?
 
-echo "$e2e_exit_code" > "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}"
+echo "$e2e_exit_code" | tee "${WX2_ADMIN_WEB_CLIENT_HOME}/.cache/${E2E_EXIT_CODE_FILE}"
 
 kill_wait "lite-server"
 set +x

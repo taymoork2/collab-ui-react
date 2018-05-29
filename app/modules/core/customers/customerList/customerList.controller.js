@@ -7,7 +7,7 @@ require('./_customer-list.scss');
     .controller('CustomerListCtrl', CustomerListCtrl);
 
   /* @ngInject */
-  function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridCellService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
+  function CustomerListCtrl($q, $scope, $state, $translate, Analytics, Authinfo, Config, ExternalNumberService, FeatureToggleService, GridService, HuronCompassService, Log, Notification, Orgservice, PartnerService, TrialService) {
     var nameTemplate = require('./grid/nameColumn.tpl.html');
     var compactServiceTemplate = require('./grid/compactServiceColumn.tpl.html');
     var accountStatusTemplate = require('./grid/accountStatusColumn.tpl.html');
@@ -751,7 +751,7 @@ require('./_customer-list.scss');
     }
 
     function selectRow(grid, row) {
-      GridCellService.selectRow(grid, row);
+      GridService.selectRow(grid, row);
       vm.showCustomerDetails(row.entity);
     }
 

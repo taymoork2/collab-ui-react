@@ -1,6 +1,6 @@
 import { SearchTranslator } from './searchTranslator';
 import { QueryParser } from './queryParser';
-import { FieldQuery, OperatorAnd, SearchElement } from './searchElement';
+import { FieldQuery, OperatorAnd, OperatorOr, SearchElement, SearchMatchers, ToString } from './searchElement';
 import {
   IActiveSuggestion, ISuggestion, ISuggestionAndGroupForUi, ISuggestionParam, Suggestion,
 } from './suggestion';
@@ -73,19 +73,19 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
 
   protected abstract get allSuggestions(): ISuggestion[];
 
-  constructor({
-                searchString = '',
-                readableField = '',
-                field = '',
-                textTranslationKey = '',
-                textTranslationParams = null,
-                isFieldSuggestion = true,
-                defaultRank = 0,
-                rank = defaultRank,
-                permanentRank = undefined,
-                limit = Limit.Some,
-                hidden = false,
-              }: ISuggestionGroupParams) {
+  constructor(private translator: SearchTranslator, {
+    searchString = '',
+    readableField = '',
+    field = '',
+    textTranslationKey = '',
+    textTranslationParams = null,
+    isFieldSuggestion = true,
+    defaultRank = 0,
+    rank = defaultRank,
+    permanentRank = undefined,
+    limit = Limit.Some,
+    hidden = false,
+  }: ISuggestionGroupParams) {
     this.searchString = searchString;
     this.readableField = readableField;
     this.field = field;
@@ -97,11 +97,11 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
     this.limit = limit;
     this.hidden = hidden;
     this.defaultRank = defaultRank;
-    this.recalculateRankAndHighlight(null);
+    this.recalculateRankAndHighlight(null, this.translator);
   }
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, _totalCount?: number): void {
-    this.recalculateRankAndHighlight(currentEditedElement);
+    this.recalculateRankAndHighlight(currentEditedElement, this.translator);
     if (!currentEditedElement) {
       this.limit = Limit.All;
       this.hidden = false;
@@ -154,7 +154,8 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
   }
 
   public select(currentSelection: IActiveSuggestion | undefined, overflow: boolean, direction: Direction): { selection: ISuggestion | null; overflow: boolean; } {
-    const newSuggestion = this.getSelectionIfNotInThisGroup(currentSelection, () => direction === Direction.Next ? this.getFirstSuggestion() : this.getLastSuggestion());
+    const newSuggestion = this.getSelectionIfNotInThisGroup(currentSelection,
+      () => direction === Direction.Next ? this.getFirstSuggestion() : this.getLastSuggestion());
     if (!currentSelection || newSuggestion) {
       return { selection: newSuggestion, overflow: false };
     }
@@ -194,11 +195,13 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
     this.activeByKeyboard = active;
   }
 
-  public recalculateRankAndHighlight(workingElement: SearchElement | null) {
+  public recalculateRankAndHighlight(workingElement: SearchElement | null, translator: SearchTranslator) {
     const query = workingElement instanceof FieldQuery && workingElement || null;
-    const { groupRank: groupScore, suggestionBaseline: baselineForSuggestionWhenNoHit } = SuggestionGroupBase.rankGroup(this, query);
+    const { groupRank: groupScore, suggestionBaseline: baselineForSuggestionWhenNoHit } = SuggestionGroupBase.rankGroup(
+      this, query);
 
-    _.forEach(this.allSuggestions, s => s && s.recalculateRankAndHighlight(workingElement, baselineForSuggestionWhenNoHit));
+    _.forEach(this.allSuggestions,
+      s => s && s.recalculateRankAndHighlight(workingElement, translator, baselineForSuggestionWhenNoHit));
     this.rank = this.permanentRank || _.chain(this.allSuggestions)
       .map(s => s && s.rank || 0)
       .reduce((res, r) => {
@@ -235,7 +238,6 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
       case Limit.All:
         return this.inputBasedSuggestions; //except the dummy one
       case Limit.None:
-        // case Limit.Some:
         return _.filter(suggestions, s => !s.hidden);
       case Limit.Some:
         return _.chain(suggestions).filter(s => !s.hidden).take(numberOfSuggestionsToShow).value();
@@ -247,7 +249,7 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
   }
 
   constructor(private searchTranslator: SearchTranslator, public field: string) {
-    super({
+    super(searchTranslator, {
       searchString: `${searchTranslator.translateQueryField(field)}:`,
       readableField: searchTranslator.getTranslatedQueryFieldDisplayName(field),
       field: field,
@@ -260,7 +262,8 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
   }
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount?: number): void {
-    const matchOnField = currentEditedElement && currentEditedElement instanceof FieldQuery && _.startsWith(_.toLower(this.readableField), _.toLower(currentEditedElement.getQueryWithoutField()));
+    const matchOnField = currentEditedElement && currentEditedElement instanceof FieldQuery && _.startsWith(
+      _.toLower(this.readableField), _.toLower(currentEditedElement.getQueryWithoutField()));
     if (currentEditedElement && currentEditedElement instanceof FieldQuery
       && currentEditedElement.field === this.field
       && (currentEditedElement.getQueryWithoutField() !== '' && !matchOnField)) {
@@ -269,10 +272,13 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
         {
           count: totalCount,
           searchString: currentEditedElement.toQuery(),
-          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(currentEditedElement.getCommonField()),
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(
+            currentEditedElement.getCommonField()),
           field: this.field,
-          textTranslationKey: 'spacesPage.containingQuery',
-          textTranslationParams: { query: (currentEditedElement as FieldQuery).getQueryWithoutField() },
+          textTranslationKey: currentEditedElement.type === FieldQuery.QueryTypeExact ? 'spacesPage.equalsQuery' : 'spacesPage.containingQuery',
+          textTranslationParams: {
+            query: (currentEditedElement as FieldQuery).toQueryComponents(this.searchTranslator).query,
+          },
           permanentRank: RankingValues.FieldGroupContainingSuggestionPermanentRank,
           isInputBased: true,
         }),
@@ -297,7 +303,8 @@ export class FieldSuggestionGroup extends SuggestionGroupBase {
   }
 
   public updateSearchSuggestions(suggestions: ISuggestionParam[]): void {
-    this.suggestions = _.chain(suggestions).filter(s => _.toLower(s.field) === _.toLower(this.field)).map(s => new Suggestion(this, s)).value();
+    this.suggestions = _.chain(suggestions).filter(s => _.toLower(s.field) === _.toLower(this.field))
+      .map(s => new Suggestion(this, s)).value();
   }
 }
 
@@ -307,7 +314,7 @@ export class AllContainingGroup extends SuggestionGroupBase {
   }
 
   constructor(private $translate: ng.translate.ITranslateService, private searchTranslator: SearchTranslator) {
-    super({ hidden: true, permanentRank: 1000 });
+    super(searchTranslator, { hidden: true, permanentRank: 1000 });
     this.readableField = this.$translate.instant('spacesPage.allDevices');
     this.hidden = true;
   }
@@ -320,22 +327,26 @@ export class AllContainingGroup extends SuggestionGroupBase {
       return;
     }
 
+    const simpleQuery =
+      currentEditedElement instanceof FieldQuery
+      || (currentEditedElement instanceof OperatorAnd && _.every(currentEditedElement.and, child => (child instanceof FieldQuery && !child.field)))
+      || (currentEditedElement instanceof OperatorOr && _.every(currentEditedElement.or, child => (child instanceof FieldQuery && !child.field)));
     this.suggestions = [new Suggestion(
       this,
       {
         count: totalCount,
         searchString: currentEditedElement.toQuery(),
         readableField: this.$translate.instant('spacesPage.allDevices'),
-        textTranslationKey: 'spacesPage.containingQuery',
+        textTranslationKey: simpleQuery ? 'spacesPage.containingQuery' : 'spacesPage.query',
         textTranslationParams: { query: currentEditedElement.toQuery(this.searchTranslator) },
         isInputBased: true,
       })];
-    if (currentEditedElement instanceof OperatorAnd &&
-      _.every(currentEditedElement.and, child => {
-        return child instanceof FieldQuery;
-      })) {
-      const phraseQuery = `"${_.map(currentEditedElement.and, e => {
-        return e.toQuery();
+    if (currentEditedElement instanceof OperatorAnd && currentEditedElement.isMatching(SearchMatchers.All(SearchMatchers.FieldEmpty()))) {
+      const phraseQuery = `"${_.map(currentEditedElement.and, (e: FieldQuery) => {
+        return e.toQueryComponents().query;
+      }).join(' ')}"`;
+      const phraseQueryTranslated = `"${_.map(currentEditedElement.and, (e: FieldQuery) => {
+        return e.toQueryComponents(this.searchTranslator).query;
       }).join(' ')}"`;
       this.suggestions.push(new Suggestion(
         this,
@@ -343,7 +354,7 @@ export class AllContainingGroup extends SuggestionGroupBase {
           searchString: phraseQuery,
           readableField: this.$translate.instant('spacesPage.allDevices'),
           textTranslationKey: 'spacesPage.containingQuery',
-          textTranslationParams: { query: phraseQuery },
+          textTranslationParams: { query: phraseQueryTranslated },
           isInputBased: true,
         }));
     }
@@ -360,39 +371,78 @@ export class BelongsToGroup extends SuggestionGroupBase {
   }
 
   constructor(private searchTranslator: SearchTranslator) {
-    super({ permanentRank: 8, field: QueryParser.Field_Displayname });
+    super(searchTranslator, { permanentRank: SuggestionRanking.initialGroupRate(QueryParser.Field_Displayname), field: QueryParser.Field_Displayname });
     this.readableField = this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname);
   }
 
   public updateBasedOnInput(currentEditedElement: SearchElement | null, totalCount: number | undefined = undefined): void {
     this.suggestions = [];
+    if (currentEditedElement instanceof OperatorAnd
+      && currentEditedElement.isMatching(
+        SearchMatchers.FirstAndAll(
+          SearchMatchers.FieldEqualOrEmpty(QueryParser.Field_Displayname),
+          SearchMatchers.FieldEqualOrEmpty(QueryParser.Field_Displayname),
+          ))
+    ) {
+      const phraseQuery = `"${_.map(currentEditedElement.and, (e: FieldQuery) => {
+        return e.toQueryComponents().query;
+      }).join(' ')}"`;
+      this.suggestions.push(new Suggestion(
+        this,
+        {
+          searchString: `${QueryParser.Field_Displayname}:${phraseQuery}`,
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
+          field: QueryParser.Field_Displayname,
+          textTranslationKey: 'spacesPage.containingQuery',
+          textTranslationParams: {
+            query: phraseQuery,
+          },
+          isInputBased: true,
+        }));
+      const andedQuery = currentEditedElement.toQuery(undefined, { fieldToString: ToString.ToStringWithoutField() });
+      this.suggestions.push(new Suggestion(
+        this,
+        {
+          searchString: `${QueryParser.Field_Displayname}:(${andedQuery})`,
+          readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
+          field: QueryParser.Field_Displayname,
+          textTranslationKey: 'spacesPage.containingQuery',
+          textTranslationParams: {
+            query: andedQuery,
+          },
+          isInputBased: true,
+        }));
+    }
     if (currentEditedElement instanceof FieldQuery
       && !_.startsWith(_.toLower(this.readableField), _.toLower(currentEditedElement.toQuery()))
       && (currentEditedElement.getCommonField() === ''
         || currentEditedElement.field === this.field)) {
-      this.suggestions = [new Suggestion(
+      this.suggestions.push(new Suggestion(
         this,
         {
           searchString: `${QueryParser.Field_Displayname}:${currentEditedElement.getQueryWithoutField()}`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(QueryParser.Field_Displayname),
           field: QueryParser.Field_Displayname,
-          textTranslationKey: 'spacesPage.containingQuery',
-          textTranslationParams: { query: currentEditedElement.getQueryWithoutField() || '...' },
+          textTranslationKey: currentEditedElement.type === FieldQuery.QueryTypeExact ? 'spacesPage.equalsQuery' : 'spacesPage.containingQuery',
+          textTranslationParams: {
+            query: currentEditedElement.toQueryComponents(this.searchTranslator).query || '...',
+          },
           isInputBased: true,
-        })];
+        }));
     } else {
-      this.suggestions = [new Suggestion(
+      this.suggestions.push(new Suggestion(
         this, {
           count: undefined,
           searchString: `${this.searchTranslator.translateQueryField(this.field)}:`,
           readableField: this.searchTranslator.getTranslatedQueryFieldDisplayName(this.field),
+          surroundCursorWithQuotes: false,
           field: this.field,
           translatedText: '',
           textTranslationKey: null,
           textTranslationParams: null,
           isInputBased: true,
           isFieldSuggestion: true,
-        })];
+        }));
     }
     super.updateBasedOnInput(currentEditedElement, totalCount);
   }

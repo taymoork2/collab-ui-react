@@ -3,12 +3,12 @@
     <p>{{::$ctrl.domainName}}</p>
     <div ng-repeat="connector in $ctrl.connectors track by $index">
       <cs-statusindicator ng-model="connector.status"></cs-statusindicator>
-      <a href
-        ng-class="{'connector-disabled': !connector.isInService}"
-        tooltip="{{::$ctrl.getTooltip(connector)}}"
-        tooltip-trigger="focus mouseenter"
-        tooltip-placement="bottom"
-        aria-label="{{::$ctrl.getTooltip(connector)}}">{{::connector.name}}</a>
+      <text-tooltip
+        tt-class="{{connector.isInService ? '' : 'connector-disabled'}}"
+        tt-tooltip-placement="bottom"
+        tt-tooltip-text="{{::$ctrl.getTooltip(connector)}}">
+        {{::connector.name}}
+      </text-tooltip>
     </div>
   </div>
   <div class="columns medium-4 text-right">

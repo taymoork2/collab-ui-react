@@ -23,6 +23,9 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
   private expiryTime: any;
   private timezone: string;
   public foundUser: string;
+  public isSearching: boolean;
+  public noUserFound: boolean;
+  public searchStringShort: boolean;
 
   /* @ngInject */
   constructor($q: angular.IQService,
@@ -174,17 +177,17 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
 
   public onCopySuccess() {
     this.Notification.success(
-      'generateActivationCodeModal.clipboardSuccess',
+      'addDeviceWizard.showActivationCode.clipboardSuccess',
       undefined,
-      'generateActivationCodeModal.clipboardSuccessTitle',
+      'addDeviceWizard.showActivationCode.clipboardSuccessTitle',
     );
   }
 
   public onCopyError() {
     this.Notification.error(
-      'generateActivationCodeModal.clipboardError',
+      'addDeviceWizard.showActivationCode.clipboardError',
       undefined,
-      'generateActivationCodeModal.clipboardErrorTitle',
+      'addDeviceWizard.showActivationCode.clipboardErrorTitle',
     );
   }
 
@@ -271,7 +274,19 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
     $event.target.select();
   }
 
+  public onUserInputKeyUp() {
+    if (_.size(this.foundUser) > 0) {
+      this.isSearching = true;
+    } else {
+      this.isSearching = false;
+      this.noUserFound = false;
+      this.searchStringShort = false;
+    }
+  }
+
   public searchUser(searchString) {
+    this.noUserFound = false;
+    this.searchStringShort = false;
     if (searchString.length >= 3) {
       const deferredCustomerOrg: IDeferred<IRecipientUser[]> = this.$q.defer();
       const deferredAdmin: IDeferred<IRecipientUser[]> = this.$q.defer();
@@ -304,10 +319,20 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
       }
       return deferredAdmin.promise.then((ownOrgResults) => {
         return deferredCustomerOrg.promise.then((customerOrgResults) => {
-          return _.sortBy(ownOrgResults.concat(customerOrgResults), ['extractedName', 'userName']);
+          const results = ownOrgResults.concat(customerOrgResults);
+          if (_.size(results) < 1) {
+            this.noUserFound = true;
+          }
+          this.isSearching = false;
+          return _.sortBy(results, ['extractedName', 'userName']);
         });
+      }).catch(() => {
+        this.noUserFound = true;
+        this.isSearching = false;
       });
     } else {
+      this.searchStringShort = true;
+      this.isSearching = false;
       return this.$q.resolve([]);
     }
   }
@@ -361,16 +386,16 @@ export class ShowActivationCodeCtrl extends WizardCtrl {
   public sendActivationCodeEmail() {
     const onEmailSent = () => {
       this.Notification.notify(
-        [this.$translate.instant('generateActivationCodeModal.emailSuccess', {
+        [this.$translate.instant('addDeviceWizard.showActivationCode.emailSuccess', {
           address: this.selectedUser.email,
         })],
         'success',
-        this.$translate.instant('generateActivationCodeModal.emailSuccessTitle'),
+        this.$translate.instant('addDeviceWizard.showActivationCode.emailSuccessTitle'),
       );
     };
     const onEmailSendFailure = (error) => {
       this.Notification.errorResponse(error,
-        'generateActivationCodeModal.emailError',
+        'addDeviceWizard.showActivationCode.emailError',
         {
           address: this.selectedUser.email,
         });

@@ -26,8 +26,7 @@ require('./_partnerProfile.scss');
       cisco: 0,
       ext: 1,
     };
-    //For now restrict to one user (who is a partner)
-    //$scope.showClientVersions = Authinfo.getPrimaryEmail() === 'marvelpartners@gmail.com';
+
     $scope.showCrashLogUpload = false;
 
     $scope.sendFeedback = function () {

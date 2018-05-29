@@ -5,7 +5,7 @@
     .module('Mediafusion')
     .controller('AddResourceMainController', AddResourceMainController);
   /* @ngInject */
-  function AddResourceMainController($modal, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFeatureToggle, hasMfSIPFeatureToggle) {
+  function AddResourceMainController($modal, hasMfCascadeBwConfigToggle, hasMfClusterWizardFeatureToggle, hasMfFirstTimeCallingFeatureToggle, hasMfFeatureToggle, hasMfQosFeatureToggle, hasMfSIPFeatureToggle) {
     WizardSelector();
 
     function WizardSelector() {
@@ -23,6 +23,10 @@
             hasMfFeatureToggle: hasMfFeatureToggle,
             hasMfSIPFeatureToggle: hasMfSIPFeatureToggle,
             hasMfCascadeBwConfigToggle: hasMfCascadeBwConfigToggle,
+            hasMfClusterWizardFeatureToggle: hasMfClusterWizardFeatureToggle,
+            hasMfFirstTimeCallingFeatureToggle: hasMfFirstTimeCallingFeatureToggle,
+            hasMfQosFeatureToggle: hasMfQosFeatureToggle,
+
           },
         });
       } else {

@@ -5,7 +5,7 @@ var Spark = require('@ciscospark/spark-core').default;
 
   module.exports = EdiscoveryService;
   /* @ngInject */
-  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, CacheFactory, EdiscoveryMockData, ReportUtilService, TokenService, UrlConfig) {
+  function EdiscoveryService($document, $http, $location, $modal, $q, $state, $timeout, $window, Authinfo, Blob, CacheFactory, EdiscoveryMockData, FeatureToggleService, FileSaver, ReportUtilService, TokenService, UrlConfig) {
     var urlBase = UrlConfig.getAdminServiceUrl();
 
     var avalonRoomsUrlCache = CacheFactory.get('avalonRoomsUrlCache');
@@ -198,6 +198,16 @@ var Spark = require('@ciscospark/spark-core').default;
     }
 
     function downloadReport(report) {
+      return FeatureToggleService.atlasEdiscoveryJumboReportsGetStatus()
+        .then(function (supports) {
+          return (supports) ? downloadReportWithSaveAs(report) : downloadReportLegacy(report);
+        })
+        .catch(function () {
+          return downloadReportLegacy(report);
+        });
+    }
+
+    function downloadReportLegacy(report) {
       return $http.get(report.downloadUrl, {
         responseType: 'arraybuffer',
       }).then(function (response) {
@@ -229,6 +239,17 @@ var Spark = require('@ciscospark/spark-core').default;
       });
     }
 
+    function downloadReportWithSaveAs(report) {
+      return $http.get(report.downloadUrl, {
+        responseType: 'blob',
+      }).then(function (response) {
+        var text = response.data;
+        var fileName = 'report_' + report.id + '.zip';
+        var data = new Blob([text], { type: 'application/zip' });
+        FileSaver.saveAs(data, fileName);
+      });
+    }
+
     return {
       getArgonautServiceUrl: getArgonautServiceUrl,
       getReport: getReport,
@@ -243,6 +264,8 @@ var Spark = require('@ciscospark/spark-core').default;
       setEntitledForCompliance: setEntitledForCompliance,
       openReportModal: openReportModal,
       downloadReport: downloadReport,
+      downloadReportLegacy: downloadReportLegacy,
+      downloadReportWithSaveAs: downloadReportWithSaveAs,
       setupSpark: setupSpark,
     };
   }

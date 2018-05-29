@@ -4,9 +4,11 @@
   </span>
 </div>
 <div ng-if="$ctrl.allEvents.length === 0 && !$ctrl.loadingPage" class="no-events-found-container">
-  <p class="no-events-found" translate="hercules.eventHistory.noEventsFound"></p>
+  <p ng-if="$ctrl.timeFilter === 'last_day'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastDay"></p>
+  <p ng-if="$ctrl.timeFilter === 'last_2_days'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastTwoDays"></p>
+  <p ng-if="$ctrl.timeFilter === 'last_week'" class="no-events-found" translate="hercules.eventHistory.noEventsFoundLastWeek"></p>
 </div>
-<table ng-if="$ctrl.allEvents.length > 1 && !$ctrl.loadingPage">
+<table ng-if="$ctrl.allEvents.length > 0 && !$ctrl.loadingPage">
   <thead>
     <tr>
       <th translate="hercules.eventHistory.table.event"></th>

@@ -2,10 +2,6 @@
 @import '~@collabui/collab-ui/scss/settings/media';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-.user-manage-picker__center-spinner {
-  margin: auto;
-}
-
 .user-manage {
   &__text--margin {
     @include vr-spacing(mt, 0.75);

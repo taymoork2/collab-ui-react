@@ -38,12 +38,7 @@ describe('Huron Functional: add-user', () => {
       utils.click(manageUsersPage.buttons.manageUsers);
     });
     it('should navigate to manually add user with "email" or "Names and email" when hit "Next"', () => {
-      if (featureToggle.features.atlasF3745AutoAssignLicenses) {
-        utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
-      } else {
-        utils.expectIsDisplayed(manageUsersPage.select.radio.orgManual);
-        utils.click(manageUsersPage.buttons.next);
-      }
+      utils.click(manageUsersPage.actionCards.manualAddOrModifyUsers);
       if (featureToggle.features.atlasEmailSuppress) {
         utils.wait(manageUsersPage.emailSuppress.emailSuppressIcon);
         utils.click(manageUsersPage.buttons.next);
@@ -73,7 +68,7 @@ describe('Huron Functional: add-user', () => {
       utils.click(manageUsersPage.buttons.next);
       utils.expectIsDisplayed(CallUser.sparkCallRadio);
     });
-    it('should select Cisco Spark Call', () => {
+    it('should select Cisco Webex Calling', () => {
       utils.expectIsEnabled(manageUsersPage.buttons.save);
       utils.click(CallUser.sparkCallRadio);
       utils.expectIsEnabled(manageUsersPage.buttons.next);

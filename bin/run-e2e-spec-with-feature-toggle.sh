@@ -4,8 +4,8 @@ function ex_usage {
     >&2 echo "usage: $(basename "$0") <usr_label> <feature_toggle_id> <path_to_spec_file>"
     >&2 echo ""
     >&2 echo "ex."
-    >&2 echo "  # set feature-toggle 'atlas-f3745-auto-assign-licenses' temporarily to true for 'seattle-partner' and run spec 'foo_spec.js'"
-    >&2 echo "  $(basename "$0") seattle-partner atlas-f3745-auto-assign-licenses ./test/e2e-protractor/foo_spec.js"
+    >&2 echo "  # set feature-toggle 'atlas-email-suppress' temporarily to true for 'seattle-partner' and run spec 'foo_spec.js'"
+    >&2 echo "  $(basename "$0") seattle-partner atlas-email-suppress ./test/e2e-protractor/foo_spec.js"
 }
 
 # early out if looking for usage

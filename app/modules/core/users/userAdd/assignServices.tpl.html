@@ -9,8 +9,14 @@
     </div>
   </div>
 </div>
+<assignable-services
+  ng-if="isAtlastF3745PortAssignableServices"
+  subscriptions="sortedSubscriptions"
+  on-update=""
+  auto-assign-template-data="">
+</assignable-services>
 <cr-services-panels
-  ng-if="hasAccount"
+  ng-if="hasAccount && !isAtlastF3745PortAssignableServices"
   message-features="messageFeatures"
   radio-states="radioStates"
   check-license-availability="checkLicenseAvailability"

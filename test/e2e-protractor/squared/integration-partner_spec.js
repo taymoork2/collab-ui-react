@@ -17,7 +17,6 @@ describe('Partner flow', function () {
     it('should display correct tabs for user based on role', function () {
       utils.expectIsDisplayed(navigation.homeTab);
       utils.expectIsDisplayed(navigation.customersTab);
-      utils.expectIsDisplayed(navigation.reportsTab);
     });
 
     it('should display trials list', function () {

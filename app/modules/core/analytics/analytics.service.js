@@ -133,8 +133,8 @@
           VISIT_CALL_LIST: 'Visit Hybrid Call Service Cluster List',
           VISIT_CALL_SETTINGS: 'Visit Hybrid Call Service Settings',
           VISIT_CALL_USER_LIST: 'Visit Hybrid Call Service User List',
-          VISIT_MEDIA_LIST: 'Visit Hybrid Media Service Cluster List',
-          VISIT_MEDIA_SETTINGS: 'Visit Hybrid Media Service Settings',
+          VISIT_MEDIA_LIST: 'Visit Webex Video Mesh Cluster List',
+          VISIT_MEDIA_SETTINGS: 'Visit Webex Video Mesh Settings',
           VISIT_NODE_LIST_SETTINGS: 'Visit Hybrid Nodes List',
           OPEN_CONNECTOR_UPGRADE_MODAL: 'Open Connector Upgrade Modal',
           START_CONNECTOR_UPGRADE: 'Start Connector Upgrade',
@@ -247,6 +247,7 @@
           ABC_BUSINESS_ID_PAGE: 'ABC Business Id',
           ABC_NAME_PAGE: 'ABC Name',
           ABC_CVA_SELECTION_PAGE: 'ABC Customer Virtual Assistant Selection',
+          ABC_STATUS_MESSAGE: 'ABC Status Message',
           ABC_SUMMARY_PAGE: 'ABC Summary',
           ABC_START_FINISH: 'ABC the entire wizard',
           ABC_CREATE_SUCCESS: 'ABC created',
@@ -260,6 +261,12 @@
           VIEW_INVOICE: 'Online: View Invoice',
         },
       },
+      DEVICE: {
+        name: 'Device',
+        eventNames: {
+          PROXIMITY: 'wifi proximity',
+        },
+      },
       DEVICE_BULK: {
         name: 'Bulk device',
         eventNames: {
@@ -268,6 +275,8 @@
           DELETE: 'bulk delete',
           DELETE_ASK: 'bulk delete ask',
           DELETE_FAKE: 'bulk delete fake',
+          EXPORT: 'bulk export',
+          EXPORT_ASK: 'bulk export ask',
           SELECT: 'bulk select',
           SELECT_ALL: 'bulk select all',
         },

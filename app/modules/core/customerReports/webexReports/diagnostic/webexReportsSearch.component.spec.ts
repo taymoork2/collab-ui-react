@@ -48,7 +48,7 @@ describe('Component: webexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'SearchService', 'Notification');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'ProPackService', 'SearchService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
@@ -58,6 +58,7 @@ describe('Component: webexReportsSearch', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {
@@ -115,7 +116,6 @@ describe('Component: webexReportsSearch', () => {
 
   it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
-
     spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
@@ -161,5 +161,23 @@ describe('Component: webexReportsSearch', () => {
     initComponent.call(this);
     this.controller.showDetail({ id: 111 });
     expect(this.$state.go).toHaveBeenCalled();
+  });
+
+  describe('calendar date range', function () {
+    it('should allow calendar select one week when FT is set to false', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(6);
+    });
+
+    it('should allow calendar select one month when FT is set to true', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(29);
+    });
   });
 });

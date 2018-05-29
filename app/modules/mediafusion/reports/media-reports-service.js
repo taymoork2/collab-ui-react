@@ -14,6 +14,8 @@
     vm.onPremisesHeading = $translate.instant('mediaFusion.metrics.onPremisesHeading');
     vm.cloudHeading = $translate.instant('mediaFusion.metrics.cloudHeading');
     vm.hybridHeading = $translate.instant('mediaFusion.metrics.hybridHeading');
+    vm.allOn = $translate.instant('mediaFusion.metrics.allOn');
+    vm.allOff = $translate.instant('mediaFusion.metrics.allOff');
     vm.clientTypeTranMap = {
       ANDROID: $translate.instant('mediaFusion.metrics.clientType.android'),
       BLACKBERRY: $translate.instant('mediaFusion.metrics.clientType.blackberry'),
@@ -22,7 +24,9 @@
       IPHONE: $translate.instant('mediaFusion.metrics.clientType.iphone'),
       JABBER: $translate.instant('mediaFusion.metrics.clientType.jabber'),
       SIP: $translate.instant('mediaFusion.metrics.clientType.sip'),
-      SPARK_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_BOARD: $translate.instant('mediaFusion.metrics.clientType.board'),
+      WEBEX_VOICE: $translate.instant('mediaFusion.metrics.clientType.webexvoice'),
+      WEBEX_SHARE: $translate.instant('mediaFusion.metrics.clientType.webexshare'),
       TEST: $translate.instant('mediaFusion.metrics.clientType.test'),
       TP_ENDPOINT: $translate.instant('mediaFusion.metrics.clientType.tp'),
       UC: $translate.instant('mediaFusion.metrics.clientType.uc'),
@@ -207,8 +211,12 @@
       });
     }
 
-    function getCascadeBandwidthData(time, cluster) {
-      vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster';
+    function getCascadeBandwidthData(time, cluster, cascadeBandwidthSelected) {
+      if (cluster === vm.allClusters) {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/media/' + cascadeBandwidthSelected;
+      } else {
+        vm.cascadeBandwidthUrl = '/cascade_bandwidth_usage_for_cluster/';
+      }
       var returnData = {
         graphData: [],
         graphs: [],
@@ -425,6 +433,36 @@
       }
     }
 
+    function legendHandlerForGraphs(graphs, event) {
+      vm.legendGraphs = graphs;
+      var evt = event;
+      var cluster = false;
+      _.forEach(vm.legendGraphs, function (graph) {
+        if (graph.title === evt.dataItem.title && evt.type === 'hideItem') {
+          graph.legendtracker = false;
+        } else if (graph.title === evt.dataItem.title && evt.type === 'showItem') {
+          graph.legendtracker = true;
+        }
+      });
+      _.forEach(vm.legendGraphs, function (graph) {
+        if (!graph.legendtracker && !_.isUndefined(graph.legendtracker)) {
+          cluster = true;
+        } else if (graph.title !== vm.allOff) {
+          cluster = false;
+          return cluster;
+        }
+      });
+      _.forEach(evt.chart.graphs, function (graph) {
+        if (cluster && graph.title === vm.allOff) {
+          graph.title = vm.allOn;
+          evt.chart.showGraph(graph);
+        } else if (!cluster && graph.title === vm.allOn) {
+          graph.title = vm.allOff;
+          evt.chart.showGraph(graph);
+        }
+      });
+    }
+
     return {
       getUtilizationData: getUtilizationData,
       getCallVolumeData: getCallVolumeData,
@@ -442,6 +480,7 @@
       getNumberOfParticipantData: getNumberOfParticipantData,
       getMeetingLocationCardData: getMeetingLocationCardData,
       getOverflowIndicator: getOverflowIndicator,
+      legendHandlerForGraphs: legendHandlerForGraphs,
     };
   }
 })();

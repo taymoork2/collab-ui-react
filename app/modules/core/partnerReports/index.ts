@@ -1,6 +1,7 @@
 import featureToggleModuleName from 'modules/core/featureToggle';
 import loadEventModuleName from 'modules/core/loadEvent';
 import { PartnerReportsTabsComponent } from './partnerReportsTabs.component';
+import { ReportsRedirectController } from './reportsRedirect.controller';
 
 export default angular
   .module('core.partner-reports', [
@@ -13,4 +14,5 @@ export default angular
     loadEventModuleName,
   ])
   .component('partnerReportsTabs', new PartnerReportsTabsComponent())
+  .controller('ReportsRedirectCtrl', ReportsRedirectController)
   .name;

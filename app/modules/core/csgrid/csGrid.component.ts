@@ -1,5 +1,6 @@
 import { KeyCodes } from 'modules/core/accessibility';
 import { CoreEvent } from 'modules/core/shared/event.constants';
+import { GridService } from './index';
 
 class CsGridCtrl {
   public gridOptions: uiGrid.IGridOptions;
@@ -16,6 +17,7 @@ class CsGridCtrl {
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
+    private GridService: GridService,
     private uiGridConstants: uiGrid.IUiGridConstants,
   ) {}
 
@@ -32,11 +34,9 @@ class CsGridCtrl {
 
     this.gridOptions = _.defaults(this.gridOptions, defaultGridOptions);
     const resizeGridEvent = this.$rootScope.$on(CoreEvent.SIDENAV_RESIZED, () => {
-      this.$timeout(() => {
-        if (this.gridApi) {
-          this.gridApi.core.handleWindowResize();
-        }
-      }, 500);
+      if (this.gridApi) {
+        this.GridService.handleResize(this.gridApi, 500);
+      }
     });
     this.$scope.$on('$destroy', resizeGridEvent);
 
@@ -46,11 +46,11 @@ class CsGridCtrl {
       };
     }
 
-    if (this.gridOptions.enableSorting) {
-      this.$timeout((): void => {
+    this.$timeout(() => {
+      if (this.gridOptions.enableSorting) {
         this.setSortableHeaders();
-      });
-    }
+      }
+    });
 
     if (this.state) {
       const stateChangeEvent = this.$rootScope.$on('$stateChangeSuccess', (): void => {
@@ -69,7 +69,7 @@ class CsGridCtrl {
   }
 
   private setSortableHeaders(): void {
-    this.$element.find('.ui-grid-header-cell-primary-focus').each((index: number, elem: Element) => {
+    this.$element.find('.ui-grid-header-cell').each((index: number, elem: Element) => {
       elem.addEventListener('keypress', (event: JQueryEventObject): void => {
         const column = _.get(this.gridApi, `grid.columns[${index}]`, undefined);
         if (_.get(column, 'enableSorting', false)) { // sorting is true by default and must be set false in the columnDef
@@ -101,6 +101,7 @@ export class CsGridComponent implements ng.IComponentOptions {
   public controller = CsGridCtrl;
   public bindings = {
     gridApi: '<?',
+    gridClass: '@?',
     gridOptions: '=',
     name: '@?',
     spinner: '<?',

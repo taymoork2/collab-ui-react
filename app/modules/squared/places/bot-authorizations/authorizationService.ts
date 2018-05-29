@@ -3,7 +3,7 @@ export class AuthorizationService {
   private authUrl: string;
   /* @ngInject  */
   constructor(private $http, UrlConfig) {
-    this.authUrl = UrlConfig.getLyraServiceUrl() + '/authorizations/';
+    this.authUrl = UrlConfig.getXapiServiceUrl() + '/authorizations/';
   }
 
   public getAuthorizations(id: String): IPromise<any[]> {

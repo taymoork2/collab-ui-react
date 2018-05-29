@@ -21,6 +21,7 @@ require('./_user-csv.scss');
     vm.handleHybridServicesResourceGroups = false;
     vm.hybridServicesUserProps = [];
     vm.isLoading = true;
+    vm.maxCsvFileSize = 10;
 
     var maxUsers = UserCsvService.maxUsersInCSV;
     var csvUsersArray = [];
@@ -48,6 +49,9 @@ require('./_user-csv.scss');
       isAtlasCsvImportTaskManagerToggled = promiseData.isAtlasCsvImportTaskManagerToggled;
       isAtlasUserCsvSubscriptionEnabled = promiseData.isAtlasUserCsvSubscriptionEnabled;
       orgHeaders = _.cloneDeep(promiseData.headers.columns || []);
+
+      vm.maxCsvFileSize = (isAtlasCsvImportTaskManagerToggled) ? 250 : 10;
+      maxUsers = (isAtlasCsvImportTaskManagerToggled) ? UserCsvService.newMaxUsersInCSV : UserCsvService.maxUsersInCSV;
     }).catch(function (response) {
       Notification.errorResponse(response);
     }).finally(function () {
@@ -116,9 +120,7 @@ require('./_user-csv.scss');
     vm.onExportDownloadStatus = onExportDownloadStatus;
 
     vm.onFileSizeError = function () {
-      if (!isAtlasCsvImportTaskManagerToggled) {
-        Notification.error('firstTimeWizard.csvMaxSizeError');
-      }
+      Notification.error('firstTimeWizard.csvMaxSizeError');
     };
 
     vm.onFileTypeError = function () {
@@ -138,41 +140,32 @@ require('./_user-csv.scss');
           return;
         }
 
-        // TO-DO $.csv.toArrays() should not be needed after all checks
-        // been moved to the server side
         csvUsersArray = $.csv.toArrays(vm.model.file);
-        if (!isAtlasCsvImportTaskManagerToggled) {
-          // Check if the file is empty, or if the header is valid
-          // TO-DO This check should be moved to the server side.
-          if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
-            Notification.error('firstTimeWizard.uploadCsvBadFormat');
-            vm.resetFile();
-            return;
-          }
 
-          // Check required email column
-          // TO-DO This check should be moved to the server side.
-          if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
-            Notification.error('firstTimeWizard.uploadCsvBadHeaders');
-            vm.resetFile();
-            return;
-          }
+        // Check if the file is empty, or if the header is valid
+        if (!_.isArray(csvUsersArray) || _.isEmpty(csvUsersArray) || !_.isArray(csvUsersArray[0])) {
+          Notification.error('firstTimeWizard.uploadCsvBadFormat');
+          vm.resetFile();
+          return;
+        }
+
+        // Check required email column
+        if (_.indexOf(csvUsersArray[0], USER_ID_EMAIL_HEADER) === -1) {
+          Notification.error('firstTimeWizard.uploadCsvBadHeaders');
+          vm.resetFile();
+          return;
         }
 
         csvHeaders = csvUsersArray.shift();
 
         // Check if exceeds the max user size
-        // TO-DO This check should be moved to the server side.
-        if (!isAtlasCsvImportTaskManagerToggled) {
-          if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
-            warnCsvUserCount();
-            vm.resetFile();
-            return;
-          }
+        if (_.isEmpty(csvUsersArray) || _.size(csvUsersArray) > maxUsers) {
+          warnCsvUserCount();
+          vm.resetFile();
+          return;
         }
 
         // Check column name mis-match
-        // TO-DO This check should be moved to the server side.
         var mismatchHeaderName = findMismatchHeader(orgHeaders, csvHeaders);
         if (mismatchHeaderName) {
           Notification.error('firstTimeWizard.csvHeaderNameMismatch', {
@@ -193,7 +186,7 @@ require('./_user-csv.scss');
 
     var rootState = $previousState.get().state.name;
     if (rootState === 'users.manage.emailSuppress') {
-      rootState = 'users.manage.picker';
+      rootState = 'users.manage.org';
     }
     vm.onBack = function () {
       Analytics.trackAddUsers(Analytics.eventNames.BACK);
@@ -201,16 +194,17 @@ require('./_user-csv.scss');
     };
 
     vm.startUpload = function () {
+      Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
       if (isAtlasCsvImportTaskManagerToggled) {
         $state.go('users.csv.task-manager', {
           job: {
             fileName: vm.model.fileName,
             fileData: vm.model.file,
+            fileChecksum: vm.model.fileChecksum,
             exactMatchCsv: vm.model.enableRemove,
           },
         });
       } else {
-        Analytics.trackAddUsers(Analytics.sections.ADD_USERS.eventNames.CSV_UPLOAD);
         beforeSubmitCsv().then(function () {
           bulkSaveWithIndividualLicenses();
           $state.go('users.csv.results');

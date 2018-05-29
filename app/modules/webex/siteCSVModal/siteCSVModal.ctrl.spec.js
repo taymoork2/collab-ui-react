@@ -12,7 +12,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
   var $controller;
 
   var WebExApiGatewayService;
-  var WebExSiteRowService;
+  var SiteListService;
   var SiteCSVModalCtrl;
   var Notification;
 
@@ -26,7 +26,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     _$controller_,
     _$rootScope_,
     _WebExApiGatewayService_,
-    _WebExSiteRowService_,
+    _SiteListService_,
     _Notification_
   ) {
     $q = _$q_;
@@ -35,7 +35,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $controller = _$controller_;
 
     WebExApiGatewayService = _WebExApiGatewayService_;
-    WebExSiteRowService = _WebExSiteRowService_;
+    SiteListService = _SiteListService_;
     Notification = _Notification_;
 
     deferredCSVImport = $q.defer();
@@ -72,7 +72,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     //Create spies
     spyOn(WebExApiGatewayService, 'csvImport').and.returnValue(deferredCSVImport.promise);
     spyOn(WebExApiGatewayService, 'csvExport').and.returnValue(deferredCSVExport.promise);
-    spyOn(WebExSiteRowService, 'updateCSVStatusInRow');
+    spyOn(SiteListService, 'updateCSVStatusInRow');
     spyOn(Notification, 'success');
     spyOn(Notification, 'error');
 
@@ -112,7 +112,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $rootScope.$apply();
 
     expect(Notification.success).toHaveBeenCalled();
-    expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).toHaveBeenCalled();
   });
 
@@ -132,7 +132,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $rootScope.$apply();
 
     expect(Notification.error).toHaveBeenCalled();
-    expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).toHaveBeenCalled();
   });
 
@@ -150,7 +150,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $rootScope.$apply();
 
     expect(Notification.success).toHaveBeenCalled();
-    expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).toHaveBeenCalled();
   });
 
@@ -163,7 +163,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     SiteCSVModalCtrl.startImport();
 
     expect(Notification.error).toHaveBeenCalled();
-    expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).not.toHaveBeenCalled();
   });
 
@@ -185,7 +185,7 @@ describe('SiteCSVModalCtrl: initiate export', function () {
     $rootScope.$apply();
 
     expect(Notification.error).toHaveBeenCalledWith('siteList.csvRejectedToast-060100');
-    expect(WebExSiteRowService.updateCSVStatusInRow).toHaveBeenCalled();
+    expect(SiteListService.updateCSVStatusInRow).toHaveBeenCalled();
     expect($scope.$close).toHaveBeenCalled();
   });
 }); // describe()
@@ -212,7 +212,7 @@ describe('SiteCSVModalCtrl read only', function () {
     _$rootScope_,
     _Authinfo_,
     _WebExApiGatewayService_,
-    _WebExSiteRowService_,
+    _SiteListService_,
     _Notification_
   ) {
     $rootScope = _$rootScope_;
@@ -241,7 +241,7 @@ describe('SiteCSVModalCtrl read only', function () {
 
     //Create spies
     spyOn(_WebExApiGatewayService_, 'csvImport').and.returnValue(deferredCSVImport.promise);
-    spyOn(_WebExSiteRowService_, 'updateCSVStatusInRow');
+    spyOn(_SiteListService_, 'updateCSVStatusInRow');
     spyOn(_Notification_, 'notifyReadOnly');
     spyOn(_Authinfo_, 'isReadOnlyAdmin').and.returnValue(true);
   })); // beforeEach(inject())

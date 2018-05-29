@@ -4,8 +4,8 @@ function ex_usage {
     >&2 echo "usage: $(basename "$0") <usr_label> <feature_toggle_id> (true|false)"
     >&2 echo ""
     >&2 echo "ex."
-    >&2 echo "  # set feature-toggle 'atlas-f3745-auto-assign-licenses' for account 'seattle-partner' to 'true'"
-    >&2 echo "  $(basename "$0") seattle-partner atlas-f3745-auto-assign-licenses true"
+    >&2 echo "  # set feature-toggle 'atlas-email-suppress' for account 'seattle-partner' to 'true'"
+    >&2 echo "  $(basename "$0") seattle-partner atlas-email-suppress true"
 }
 
 # early out if looking for usage
