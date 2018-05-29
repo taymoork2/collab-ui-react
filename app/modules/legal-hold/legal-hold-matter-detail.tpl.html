@@ -40,7 +40,7 @@
             <label class="cs-input__label"
               translate="common.status"></label>
             <cs-statusindicator ng-model="$ctrl.status"></cs-statusindicator>
-            <span translate="{{$ctrl.l10nStatus}}"></span>
+            <span translate="{{$ctrl.l10nStatus}}"></span><span ng-if="$ctrl.matter.dateReleased">&nbsp;{{$ctrl.matter.dateReleased | date :  "MM/dd/yyyy" }}</span>
           </div>
           <div class="row">
             <div class="cs-input-group medium-12 columns"
@@ -97,8 +97,9 @@
               <div ng-if="$ctrl.isActive()"
                 class="matter-detail__action__release">
                   <button cs-btn type="button"
-                  class="btn btn--circle" loading="$ctrl.isReleasing"
+                  class="btn btn--circle"
                   aria-label="{{::'common.release' | translate}}"
+                  ng-disabled="$ctrl.isProcessing"
                   ng-click="$ctrl.releaseMatter()">
                   <span class="icon icon-circle-data"></span>
                 </button>
@@ -107,7 +108,8 @@
               </div>
               <div class="matter-detail__action__delete">
                 <button cs-btn type="button"
-                  class="btn btn--circle btn--negative" loading="$ctrl.isDeleting"
+                  class="btn btn--circle btn--negative"
+                  ng-disabled="$ctrl.isProcessing"
                   aria-label="{{::'common.delete' | translate}}"
                   ng-click="$ctrl.deleteMatter()">
                   <span class = "icon icon-circle-data"></span>
@@ -127,7 +129,8 @@
             <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
               <div class="matter-detail__action__export" ng-if="$ctrl.matter.numberOfCustodians !== 0">
                 <button cs-btn type="button"
-                  class="btn btn--circle btn--primary" loading="$ctrl.isDownloading"
+                  class="btn btn--circle btn--primary"
+                  ng-disabled="$ctrl.isProcessing"
                   aria-label="{{::'common.export' | translate}}"
                   ng-click="$ctrl.exportCustodians()">
                   <span class="icon icon-search"></span>
