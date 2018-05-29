@@ -1,5 +1,5 @@
 import { ISelectOption } from '../shared/hcs-inventory';
-import { HcsUpgradeService, HcsControllerService, ISoftwareProfile, IHcsUpgradeCustomer } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService, HcsControllerService, ISoftwareProfile, ISoftwareProfilesObject, IHcsUpgradeCustomer } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 
 export class HcsAddCustomerToClusterComponent implements ng.IComponentOptions {
@@ -23,6 +23,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   public form: ng.IFormController;
   public softwareProfileSelected: ISelectOption;
   public softwareProfilesList: ISelectOption[];
+  public disableSwProfileSelect: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -47,19 +48,23 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
     //TODO: get software template default for partner.??
     this.softwareProfileSelected = { label: '', value: '' };
 
-    this.HcsUpgradeService.getSoftwareProfiles()
-      .then((swProfiles: ISoftwareProfile[]) => {
+    this.HcsUpgradeService.listSoftwareProfiles()
+      .then((swProfiles: ISoftwareProfilesObject) => {
         this.softwareProfilesList = [];
-        _.forEach(swProfiles, (swProfile) => {
+        _.forEach(swProfiles.softwareProfiles, (swProfile) => {
           const swProfileListItem = {
             label: swProfile.name,
             value: swProfile.uuid,
           };
           this.softwareProfilesList.push(swProfileListItem);
         });
+
+        if (this.softwareProfilesList.length > 0) {
+          this.disableSwProfileSelect = false;
+        }
       })
       .catch((err) => {
-        this.Notification.error('common.errorMessage', { error: err });
+        this.Notification.errorWithTrackingId(err);
       });
   }
 
@@ -92,7 +97,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
       this.dismiss();
     })
     .catch((err) => {
-      this.Notification.error('common.errorMessage', { error: err });
+      this.Notification.errorWithTrackingId(err);
     });
   }
 

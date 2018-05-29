@@ -11181,7 +11181,8 @@
         "title": "Add new customer",
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
-        "customerExistsErrorMessage": "This customer already exists"
+        "customerExistsErrorMessage": "This customer already exists",
+        "swProfileWarningMsg": "Please add a Software Profile first"
       },
       "nodeStatus": {
         "active":"Active",
@@ -11211,7 +11212,8 @@
         "sftpLocation": {
           "sectionHeader": "Default SFTP Server",
           "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
-          "sftpPlaceholder": "Select a server"
+          "sftpPlaceholder": "Select a server",
+          "sftpWarnMsg": "Please add a SFTP server first"
         },
         "nodes": {
           "accept": "Accept",
@@ -11264,7 +11266,7 @@
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
-      "httpProxies": "HTTP Proxies",
+      "httpProxies": "HTTP Proxies:",
       "httpProxy": "HTTP Proxy",
       "httpProxyDesc": "Enter HTTP Proxies for the Agent to allow access to the cloud services. Specifying multiple proxies will make the Agent to be used more widely. ",
       "invalidChars": "Invalid File Name. File name must not include the chars in the list '~ # % & * { } \\ : ; < > ? / + ' Space",
