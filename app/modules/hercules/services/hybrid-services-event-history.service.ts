@@ -200,43 +200,65 @@ export class HybridServicesEventHistoryService {
   }
 
 
-  public getAllEvents(options: IGetAllEventsOptions, next: string | undefined, updateItems: (items: IHybridServicesEventHistoryItem[]) => void, items: IHybridServicesEventHistoryItem[] | undefined): ng.IPromise<IHybridServicesEventHistoryData | null | undefined> {
+  public getAllEvents(options: IGetAllEventsOptions, next: string | undefined, updateItems: (items: IHybridServicesEventHistoryItem[]) => void, items: IHybridServicesEventHistoryItem[]  ): ng.IPromise<IHybridServicesEventHistoryData | null | undefined> {
     const fromTimestamp = options.eventsSince || moment().subtract(7, 'days').toISOString();
     const toTimestamp = options.eventsTo || moment().toISOString();
     let url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${options.orgId || this.Authinfo.getOrgId()}/events/`;
     const diffInHours = moment(toTimestamp).diff(moment(fromTimestamp)) / (60000 * 60);
 
-    if (diffInHours > 24 * 7) {
-      // If we are asking the API for more than 7 days, we need to issue several request
-      // using the pagination feature
-
+    if (diffInHours > 24 * 7 || (items !== undefined && items.length > 0)) {
+      // to make this more responsive for queries > 7 days, lets make this scope for getting one day at a time
+      // the view will be updated when the data arrives
       let tempOptions: IGetAllEventsOptions | null = options;
       if (next !== undefined) {
         url = next;
         tempOptions = null;
       }
-      return this.getEvents(url, tempOptions, moment(toTimestamp).subtract(7, 'days').toISOString(), toTimestamp)
+      return this.getEvents(url, tempOptions, moment(toTimestamp).subtract(1, 'days').toISOString(), toTimestamp)
         .then((response) => {
           if (moment(response.earliestTimestampSearched) > moment(options.eventsSince)) {
-            items = items ? items.concat(response.items) : [];
+            let getNextOptions: IGetAllEventsOptions = options;
+            if (response.paging === undefined) {
+              // We have gotten all data for the last request (next is not defined)
+              // so continue with setting to = next day and call ourselves
+              getNextOptions = options;
+              getNextOptions.eventsTo = response.earliestTimestampSearched;
+            }
+            items = items ? items.concat(response.items) : items;
+            updateItems(items);
+
+            return this.getAllEvents(getNextOptions, response.paging ? response.paging.next : undefined, updateItems, items);
+          }
+          return this.returnProcessedEvents(items, response);
+        });
+    } else {
+      // For queries >= 7 days, one query will suffice
+      return this.getEvents(url, options, fromTimestamp, toTimestamp)
+        .then((response) => {
+          if (response.paging !== undefined) {
+            // we have more data, call ourselves again
+            items = items ? items.concat(response.items) : items;
             updateItems(items);
 
             return this.getAllEvents(options, response.paging.next, updateItems, items);
           }
-          let processedEvents: IHybridServicesEventHistoryData | null = null;
-          if (items) {
-            processedEvents = {
-              earliestTimestampSearched: response.earliestTimestampSearched,
-              items: items,
-              paging: response.paging,
-            };
-          }
-
-          return this.$q.resolve(processedEvents);
+          return this.returnProcessedEvents(response.items, response);
         });
-    } else {
-      return this.getEvents(url, options, fromTimestamp, toTimestamp);
     }
+  }
+
+  private returnProcessedEvents(items: IHybridServicesEventHistoryItem[], response) {
+    // We have searched past eventsSince, so return
+    let processedEvents: IHybridServicesEventHistoryData | null = null;
+    if (items) {
+      processedEvents = {
+        earliestTimestampSearched: response.earliestTimestampSearched,
+        items: items,
+        paging: response.paging,
+      };
+    }
+
+    return this.$q.resolve(processedEvents);
   }
 
   private getEvents(url: string, options: IGetAllEventsOptions | null, fromTimestamp: string | undefined, toTimestamp: string | undefined) {

@@ -13,7 +13,7 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public serviceFilter: HybridServiceId | 'all_services';
   public timeFilter: ITimeFilterOptions['value'];
   public loadingPage = false;
-  public allEvents: IHybridServicesEventHistoryItem[];
+  public allEvents: IHybridServicesEventHistoryItem[] |undefined;
 
   private openedItem: IHybridServicesEventHistoryItem;
   private debouncedGetData: Function;
@@ -47,12 +47,12 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       eventsSince: fromDate,
       eventsTo: toDate,
     };
-    const updateItems = (items: IHybridServicesEventHistoryItem[]) => {
+    const updateItems = (items: IHybridServicesEventHistoryItem[] | undefined) => {
       this.allEvents = items;
       this.loadingPage = false;
     };
 
-    this.HybridServicesEventHistoryService.getAllEvents(options, undefined, updateItems, undefined)
+    this.HybridServicesEventHistoryService.getAllEvents(options, undefined, updateItems, [])
       .then((data) => {
         this.allEvents = _.clone(data ? data.items : []);
       })
