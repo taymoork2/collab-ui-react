@@ -172,6 +172,13 @@ interface IVersion {
   browserVersion: string;
 }
 
+export enum TrackingEventName {
+  MEETING_SEARCH = 'webexReports.diagnostic.meetingSearch',
+  MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
+  MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
+}
+
+
 export class SearchService {
   private url;
   private data: any = {};

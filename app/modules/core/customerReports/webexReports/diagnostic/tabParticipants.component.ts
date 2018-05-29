@@ -1,6 +1,7 @@
+import { Analytics } from 'modules/core/analytics';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
-import { SearchService, Platforms } from './searchService';
+import { SearchService, Platforms, TrackingEventName } from './searchService';
 import './_search.scss';
 
 export interface IGridApiScope extends ng.IScope {
@@ -24,6 +25,7 @@ class Participants implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private Analytics: Analytics,
     private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private SearchService: SearchService,
@@ -34,6 +36,7 @@ class Participants implements ng.IComponentController {
   }
 
   public $onInit() {
+    this.Analytics.trackEvent(TrackingEventName.MEETING_PARTICIPANTS);
     this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8105ClientVersion)
       .then((isSupport: boolean) => {
         this.getParticipants(isSupport);
