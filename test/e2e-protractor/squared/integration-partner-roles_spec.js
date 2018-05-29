@@ -41,7 +41,6 @@ describe('Org Entitlement flow', function () {
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisplayed(roles.displayNameInput);
     utils.expectIsDisabled(roles.emailInput);
-    utils.expectIsDisplayed(roles.sipAddressesInput);
   });
 
   it('should edit last name and display name and save', function () {

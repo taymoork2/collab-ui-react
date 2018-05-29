@@ -10,7 +10,6 @@ require('./_user-roles.scss');
     var COMPLIANCE = 'compliance';
     var SPARK_COMPLIANCE = 'spark-compliance';
     $scope.currentUser = $stateParams.currentUser;
-    $scope.sipAddr = '';
     $scope.dirsyncEnabled = false;
     $scope.isPartner = !!SessionStorage.get('partnerOrgId');
     $scope.helpDeskFeatureAllowed = Authinfo.isCisco() || _.includes(['fe5acf7a-6246-484f-8f43-3e8c910fc50d'], Authinfo.getOrgId());
@@ -236,25 +235,6 @@ require('./_user-roles.scss');
       };
     }
 
-    function setUserSipAddress() {
-      if (_.isArray(_.get($scope, 'currentUser.sipAddresses'))) {
-        var sipAddrData = _.find($scope.currentUser.sipAddresses, {
-          primary: true,
-          type: 'cloud-calling',
-        });
-
-        if (_.isEmpty(sipAddrData)) {
-          sipAddrData = _.find($scope.currentUser.sipAddresses, {
-            type: 'cloud-calling',
-          });
-        }
-
-        if (_.get(sipAddrData, 'value')) {
-          $scope.sipAddr = sipAddrData.value;
-        }
-      }
-    }
-
     function setFormValuesToMatchRoles() {
       $scope.rolesObj.adminRadioValue = checkMainRoles();
       $scope.rolesObj.salesAdminValue = hasRole(Config.backend_roles.sales);
@@ -315,7 +295,6 @@ require('./_user-roles.scss');
     }
 
     function resetFormData() {
-      setUserSipAddress();
       setFormValuesToMatchRoles();
       setFormUserData();
       resetCCARoles();
