@@ -11242,7 +11242,8 @@
   "hcs": {
     "addService": "Add a Feature",
     "agentInstallFiles": "Agent Install Files",
-    "cardTitle": "Hosted Collaboration Service",
+    "cardTitle": "Hosted Collaboration Solutions",
+    "getStarted": "Get Started",
     "clusterDetail": {
       "addCustomerModal": {
         "title": "Add new customer",
@@ -11329,7 +11330,7 @@
         "title": "Are you sure?",
         "description": "You are about to delete an Agent Install File. You can not undo this action."
       },
-      "description": "Create an Agent Install File (.cop file).  This file will need to be installed on each Unified Communications instance or PLM that you would like to manage with HCS features.  This creation can take serveral minutes.  Once complete, it will be available on the Agent Install File Page to download and install.",
+      "description": "Create an Agent Install file (.cop file). This file will be installed on each Unified Communications instance or Prime License Manager that you want to manage with HCS features. Creation can take several minutes. When it's done, the file is available on the Agent Install File page to download and install.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
@@ -11380,11 +11381,8 @@
       "nextSteps": "Next Steps:",
       "selectDescription": "Choose the HCS features you would like to use.",
       "titleServices": "Choose Features",
-      "finishMsg": "Congratulations! You have set up HCS Services.",
-      "next1": "Once the Agent Install File completes it will show on the Agent Install File page to download it.",
-      "next2": "Install the Agent File on all Unified Communications instances you wish to manage.",
-      "next3": "The agent will register with the cloud service and the corresponding node will appear in the Inventory Page.",
-      "next4": "Once the nodes appear in the list, you can accept them and assign them to a customer or a group."
+      "finishMsg": "Congratulations! You have set up HCS Features.",
+      "finishDetails": "When your Agent Install Build completes, it will appear on the Agent Install File page. Download the Agent File and install it on all Unified Communications instances that you want to manage."
     },
     "sftp":  {
       "add": "Add SFTP Server",
@@ -11407,7 +11405,7 @@
       "passwordMismatch": "The password entered does not match",
       "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
-      "successUpdate": "SFTP server has been successfully updated",
+      "successupdate": "SFTP server has been successfully updated",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"
@@ -11439,7 +11437,7 @@
       "template": "Software Version Template",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
-      "ucxnPlace": "UCXN File"
+      "ucxnPlace": "CUCXN File"
     },
     "upgrade": {
       "title": "HCS Upgrade",

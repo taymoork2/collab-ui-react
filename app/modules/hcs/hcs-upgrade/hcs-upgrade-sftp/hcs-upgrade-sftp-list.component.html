@@ -6,6 +6,9 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
+<div class="hcs-no-data" ng-if="$ctrl.loading">
+  <i class="icon icon-2x icon-spinner"></i>
+</div>
 <div class="hcs-no-data" ng-if="$ctrl.sftpList.length === 0">
   <h2 translate="hcs.sftp.noneSftp"></h2>
   <h5 translate="hcs.sftp.noneSftpDesc"></h5>

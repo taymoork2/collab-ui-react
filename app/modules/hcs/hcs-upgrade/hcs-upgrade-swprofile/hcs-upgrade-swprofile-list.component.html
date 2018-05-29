@@ -6,14 +6,17 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<div class="hcs-no-data" ng-if="$ctrl.currentList.length === 0">
+<div class="hcs-no-data" ng-if="$ctrl.loading">
+  <i class="icon icon-2x icon-spinner"></i>
+</div>
+<div class="hcs-no-data" ng-if="!$ctrl.loading && $ctrl.currentList.length === 0">
   <h2 translate="hcs.softwareProfiles.noneProfile"></h2>
   <h5 translate="hcs.softwareProfiles.noneProfileDesc"></h5>
   <button class="btn btn--primary btn--large" ng-click="$ctrl.addSwProfile()">
     <span translate="hcs.softwareProfiles.add"></span>
   </button>
 </div>
-<div ng-if="$ctrl.currentList.length > 0">
+<div ng-if="!$ctrl.loading && $ctrl.currentList.length > 0">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter
