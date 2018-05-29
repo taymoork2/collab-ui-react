@@ -503,6 +503,7 @@ class Code implements ICode {
 }
 class Place implements IPlaceExtended {
   public sipUrl: string;
+  public additionalSipUrls: string[];
   public readableType: string;
   public isPlace: boolean;
   public devices: Map<string, IDevice>;
@@ -533,6 +534,7 @@ class Place implements IPlaceExtended {
     this.cisUuid = obj.cisUuid || obj.uuid;
     this.displayName = obj.displayName;
     this.sipUrl = obj.sipUrl;
+    this.additionalSipUrls = obj.additionalSipUrls || [];
     this.numbers = obj.numbers;
     this.canDelete = true;
     this.accountType = obj.placeType || 'MACHINE';
