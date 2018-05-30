@@ -13,9 +13,8 @@
         <div class="context-modal-content">
           <!-- Search fields typeahead input box or error messages-->
          <div class="typeahead-search">
-            <div class="default-state cs-input-group">
+           <div ng-if="$ctrl.cvaInputContext.isEnableFieldSelection()" class="default-state cs-input-group">
               <span>
-                <i class="icon icon-search"></i>
                 <input id="fieldInput1" ng-model="$ctrl.cvaInputContext.selectedField" class="context-search-input"
                   ng-class="{'error': $ctrl.error}"
                   typeahead="field for field in $ctrl.cvaInputContext.allSelectableFields | filter:{id:$viewValue}"
@@ -33,20 +32,34 @@
                 <span class="field-drop-down-fieldinfo" ng-bind-html="match.label.fieldInfo | typeaheadHighlight:query" ng-if="match.label.fieldInfo"></span>
               </div>
             </script>
-          </div>
+
+           <div ng-if="$ctrl.cvaInputContext.noMoreFields() || $ctrl.cvaInputContext.isMaxFields()" class="cs-input-group">
+              <span
+                tooltip-class="context-tooltip"
+                tooltip="{{$ctrl.cvaInputContext.noMoreFields() ? $ctrl.getText('contextFields.noFields') : $ctrl.getText('contextFields.limitReached')}}"
+                tooltip-placement="bottom"
+                tooltip-trigger="mouseenter focus"
+                aria-label="{{$ctrl.cvaInputContext.noMoreFields() ? $ctrl.getText('contextFields.noFields') : $ctrl.getText('contextFields.limitReached')}}"
+                tabindex="0">
+
+                <input id="fieldInput" class="disabled-state"
+                       placeholder="{{$ctrl.getText('contextFields.searchText')}}"
+                       ng-disabled="!$ctrl.cvaInputContext.isEnableFieldSelection()"/>
+              </span>
+           </div>
+         </div>
+
 
           <!-- If load of fields failed, then, show error and allow for retry -->
           <div  ng-if="$ctrl.cvaInputContext.isLoadFailure()" class="context-retry-error">
             <i class="icon icon-error"></i>
             <span translate="context.dictionary.fieldsetPage.loadFailure" class="failure-message"></span>
-            <button translate="common.retry" class="retry-action" ng-click="$ctrl.cvaInputContext.fetchData()" ng-disabled="$ctrl.cvaInputContext.fetchInProgress"></button>
+            <button translate="common.retry" class="retry-action" ng-click="$ctrl.cvaInputContext.fetchData()"></button>
           </div>
 
-          <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
+          <!-- No Search Results messages -->
           <div class="no-results">
             <span ng-if="$ctrl.cvaInputContext.noMatches()" translate="context.dictionary.fieldPage.noneFound"></span>
-            <span ng-if="$ctrl.cvaInputContext.noMoreFields()" translate="context.dictionary.fieldsetPage.noFields"></span>
-            <span ng-if="$ctrl.cvaInputContext.isMaxFields()" translate="context.dictionary.fieldPage.limitReached"></span>
           </div>
 
           <!-- List of selected fields -->
@@ -60,7 +73,6 @@
                       <input id="fieldInpu3"
                              autocomplete="off"
                              ng-model="field.contextAssociation"
-                             placeholder="Enter Dialogflow context name here"
                              ng-change="$ctrl.cvaInputContext.validateInput(field)"
                              ng-class="!$ctrl.cvaInputContext.isLineError(field.contextFieldId) ? 'context-input' : 'context-input-error'"
                              required

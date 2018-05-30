@@ -8623,6 +8623,8 @@
         "descLearnMoreLink": "Learn more",
         "descFinal": " about input contexts.",
         "searchText": "Search and add fields",
+        "noFields": "No additional fields to add",
+        "limitReached": "Maximum fields reached",
         "errorMaxContextLength": "Character length cannot be more than 50",
         "errorMinContextLength": "Cannot be empty",
         "errorInvalidCharacters": "Invalid character set"
