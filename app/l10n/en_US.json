@@ -9155,6 +9155,8 @@
       "downloadSubsectionLabelDescription": "Don't allow users to download or preview files in:",
       "uploadSubsectionLabel": "Upload Restrictions",
       "uploadSubsectionLabelDescription": "Don't allow users to upload files in:",
+      "restrictionsSubsectionLabel": "Restrictions Scope",
+      "whiteboardRestriction": "No restrictions applied to whiteboards and annotation.",
       "description": "Applies to internal users only. External users can upload and download files.",
       "desktopApps": "Desktop apps",
       "webApp": "Web app",

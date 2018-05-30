@@ -4,10 +4,10 @@ import { EmailSetting } from './email/emailSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
-import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
-import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
+import { ExternalCommunicationSetting } from './external-communication/external-communication-setting.component';
+import { FileSharingControlSetting } from './file-sharing-control/file-sharing-control-setting.component';
 
-import { SecuritySetting } from './security/securitySetting.component';
+import { SecuritySetting } from './security/security-setting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';

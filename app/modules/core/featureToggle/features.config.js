@@ -93,6 +93,7 @@ module.exports = {
   atlasWebexAddSite: 'atlas-webex-add-site',
   atlasWebexSiteManagementSetting: 'atlas-webex-site-management-setting',
   atlasWebexProvisioningConsole: 'atlas-US25427-webex-provisioning-console',
+  atlasWhiteboardFileShareControl: 'atlas-whiteboard-file-share-control',
   atMentions: 'at-mentions',
   audioPairing: 'audio-pairing',
   autoLicense: 'auto-license',
