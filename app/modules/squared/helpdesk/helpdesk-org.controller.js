@@ -52,28 +52,6 @@
 
     vm.editOrgValidationMessages = {
       required: $translate.instant('common.required'),
-      duplicate: $translate.instant('helpdesk.org.duplicateName'),
-      failure: $translate.instant('helpdesk.org.validationFailure'),
-    };
-    vm.editOrgValidationDefer = $q.defer();
-    vm.editOrgAsyncValidators = {
-      failure: function () {
-        vm.editOrgValidationDefer = $q.defer();
-        return vm.editOrgValidationDefer.promise;
-      },
-      duplicate: function (value) {
-        return Orgservice.validateDisplayName(vm.orgId, value)
-          .catch(function () {
-            vm.editOrgValidationDefer.reject();
-            return true;
-          })
-          .then(function (isValid) {
-            vm.editOrgValidationDefer.resolve();
-            if (!isValid) {
-              return $q.reject();
-            }
-          });
-      },
     };
     vm.updateDisplayName = function (newValue) {
       return Orgservice.updateDisplayName(vm.orgId, newValue)

@@ -590,12 +590,13 @@ describe('orgService', function () {
     });
 
     it('should reject if update is not successful', function () {
-      this.patchRequest.respond({
-        status: 'DUPLICATE',
-      });
+      var failResponse = {
+        status: 'FAILED',
+      };
+      this.patchRequest.respond(failResponse);
       this.Orgservice.updateDisplayName('123', 'new display name').then(fail)
         .catch(function (err) {
-          expect(err).toBe('helpdesk.org.duplicateName');
+          expect(err.status).toBe(failResponse.status);
         });
       this.$httpBackend.flush();
     });
@@ -603,42 +604,6 @@ describe('orgService', function () {
     it('should reject on error', function () {
       this.patchRequest.respond(500);
       this.Orgservice.updateDisplayName('123', 'new display name').then(fail)
-        .catch(function (response) {
-          expect(response.status).toBe(500);
-        });
-      this.$httpBackend.flush();
-    });
-  });
-
-  describe('validateDisplayName()', function () {
-    beforeEach(function () {
-      this.patchRequest = this.$httpBackend.expectPATCH(this.UrlConfig.getAdminServiceUrl() + '/customers/123/displayName?verify=true', {
-        displayName: 'new display name',
-      }).respond({
-        status: 'ALLOWED',
-      });
-    });
-
-    it('should resolve true if validate successfully', function () {
-      var promise = this.Orgservice.validateDisplayName('123', 'new display name');
-      this.$httpBackend.flush();
-
-      expect(promise).toBeResolvedWith(true);
-    });
-
-    it('should resolve false if validate unsuccessfully', function () {
-      this.patchRequest.respond({
-        status: 'DUPLICATE',
-      });
-      var promise = this.Orgservice.validateDisplayName('123', 'new display name');
-      this.$httpBackend.flush();
-
-      expect(promise).toBeResolvedWith(false);
-    });
-
-    it('should reject on error', function () {
-      this.patchRequest.respond(500);
-      this.Orgservice.validateDisplayName('123', 'new display name').then(fail)
         .catch(function (response) {
           expect(response.status).toBe(500);
         });

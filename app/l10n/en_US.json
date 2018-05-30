@@ -9629,8 +9629,6 @@
       }
     },
     "org": {
-      "duplicateName": "Organization name already in use",
-      "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name.",
       "displayNameError": "Could not get customer display name."

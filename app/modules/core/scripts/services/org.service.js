@@ -29,7 +29,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
+  function Orgservice($http, $q, $resource, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -55,7 +55,6 @@
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
-      validateDisplayName: validateDisplayName,
       setOrgEmailSuppress: setOrgEmailSuppress,
       getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
@@ -534,18 +533,9 @@
       return patchDisplayName(orgId, displayName)
         .then(function (response) {
           var status = _.get(response, 'status');
-          if (status === 'DUPLICATE') {
-            return $q.reject($translate.instant('helpdesk.org.duplicateName'));
-          } else if (status !== 'SUCCESS') {
+          if (status !== 'SUCCESS' && status !== 'DUPLICATE') {
             return $q.reject(response);
           }
-        });
-    }
-
-    function validateDisplayName(orgId, displayName) {
-      return patchDisplayName(orgId, displayName, true)
-        .then(function (response) {
-          return _.get(response, 'status') === 'ALLOWED';
         });
     }
 
