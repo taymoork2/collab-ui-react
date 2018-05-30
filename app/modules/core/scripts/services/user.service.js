@@ -602,7 +602,7 @@
           return getUserAsPromise(userId)
             .then(function (ciUserData) {
               if (ciUserData.status === 200) {
-                return checkRolesAndOnboardSunlightUser(userId, ciUserData, sunlightUserData);
+                return checkRolesAndOnboardSunlightUser(userId, ciUserData.data, sunlightUserData);
               }
             });
         } else if (_sunlightHelpers.isCareFeatureGettingRemoved(userLicenses)) {
