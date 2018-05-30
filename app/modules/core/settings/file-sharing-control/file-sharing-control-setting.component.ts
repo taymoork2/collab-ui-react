@@ -5,8 +5,8 @@ import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
 import { ProPackSettingSection } from '../proPackSettingSection';
-import { IDownloadUploadModel, IFileSharingControlModel } from './fileSharingControlSetting.interfaces';
-import { FileSharingControlModelType } from './fileSharingControlSetting.types';
+import { IDownloadUploadModel, IFileSharingControlModel } from './file-sharing-control-setting.interfaces';
+import { FileSharingControlModelType } from './file-sharing-control-setting.types';
 
 export class FileSharingControlSettingController {
   public allowWhiteboards = false;
@@ -253,5 +253,5 @@ export class FileSharingControlSetting extends ProPackSettingSection {
 
 export class FileSharingControlSettingComponent implements ng.IComponentOptions {
   public controller = FileSharingControlSettingController;
-  public template = require('./fileSharingControlSetting.tpl.html');
+  public template = require('./file-sharing-control-setting.html');
 }

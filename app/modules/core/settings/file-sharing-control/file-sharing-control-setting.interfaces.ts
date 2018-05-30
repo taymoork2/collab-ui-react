@@ -1,4 +1,4 @@
-import { FileSharingControlModelType } from './fileSharingControlSetting.types';
+import { FileSharingControlModelType } from './file-sharing-control-setting.types';
 
 export interface IDownloadUploadModel {
   download: boolean;

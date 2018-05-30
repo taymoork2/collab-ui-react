@@ -12,7 +12,7 @@ import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
 import externalCommunicationModule from './external-communication';
-import fileSharingControlModule from './fileSharingControl';
+import fileSharingControlModule from './file-sharing-control';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 import webexModule from './webex';

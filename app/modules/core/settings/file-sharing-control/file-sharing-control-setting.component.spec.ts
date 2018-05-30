@@ -5,7 +5,7 @@ import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
 import { OrgSettingsUtil } from 'modules/core/shared/org-settings/org-settings.util';
-import { FileSharingControlSettingController } from './fileSharingControlSetting.component';
+import { FileSharingControlSettingController } from './file-sharing-control-setting.component';
 import moduleName from './index';
 
 type Test = atlas.test.IComponentTest<FileSharingControlSettingController, {

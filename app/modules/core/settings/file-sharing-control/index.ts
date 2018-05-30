@@ -1,5 +1,5 @@
 
-import { FileSharingControlSettingComponent } from './fileSharingControlSetting.component';
+import { FileSharingControlSettingComponent } from './file-sharing-control-setting.component';
 
 import featureToggleModuleName from 'modules/core/featureToggle';
 import modalModuleName from 'modules/core/modal';
