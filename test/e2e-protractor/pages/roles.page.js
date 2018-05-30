@@ -13,7 +13,6 @@ var RolesPage = function () {
 
   this.saveButton = element(by.id('saveButton'));
   this.closeButton = element(by.css('.close-row'));
-  this.sipAddressesInput = element(by.id('sipAddressesInput'));
 
   this.setFirstName = function (newFirstName) {
     utils.expectIsDisplayed(this.firstNameInput);

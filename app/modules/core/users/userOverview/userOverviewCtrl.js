@@ -52,7 +52,7 @@
       icon: 'icon-circle-call',
       state: 'communication',
       detail: $translate.instant('onboardModal.callFree'),
-      actionAvailable: false,
+      actionAvailable: true,
     };
     var confState = {
       name: $translate.instant('onboardModal.meeting'),
