@@ -52,7 +52,6 @@ describe('Component: webexReports', function () {
   });
 
   it('should load the report when the feaature toggle enabled', function () {
-    expect(this.controller.loadContent).toBeTruthy();
     expect(this.$rootScope.$broadcast).toHaveBeenCalled();
   });
 });

@@ -24,10 +24,16 @@ class PartnerReportsTabs implements ng.IComponentController {
         this.$state.go('unauthorized');
       } else {
         if (toggles.sparkReports) {
-          this.tabs.push({
-            state: `partnerreports.tab.spark`,
-            title: this.$translate.instant(`reportsPage.sparkReports`),
-          });
+          this.tabs.push(
+            {
+              state: `partnerreports.tab.spark({sparktype: 'messaging'})`,
+              title: this.$translate.instant(`reportsPage.messageTab`),
+            },
+            {
+              state: `partnerreports.tab.spark({sparktype: 'calling'})`,
+              title: this.$translate.instant(`reportsPage.callTab`),
+            },
+          );
         }
 
         if (toggles.ccaRole) {
@@ -40,7 +46,7 @@ class PartnerReportsTabs implements ng.IComponentController {
         if (toggles.webexReports) {
           this.tabs.push({
             state: `partnerreports.tab.webexreports.metrics`,
-            title: this.$translate.instant(`reportsPage.webexReports`),
+            title: this.$translate.instant(`reportsPage.webexMetrics.title`),
           });
         }
       }

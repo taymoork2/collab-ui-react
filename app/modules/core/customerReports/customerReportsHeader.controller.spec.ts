@@ -22,8 +22,11 @@ describe('Controller: Customer Reports Ctrl', function () {
   }];
 
   const propackTabs: any = [{
-    title: 'reportsPage.sparkReports',
-    state: 'reports.sparkMetrics',
+    title: 'reportsPage.messageTab',
+    state: `reports.sparkMetrics({sparktype: 'messaging'})`,
+  }, {
+    title: 'reportsPage.callTab',
+    state: `reports.sparkMetrics({sparktype: 'calling'})`,
   }, {
     title: 'reportsPage.webexMetrics.title',
     state: 'reports.webex-metrics',
