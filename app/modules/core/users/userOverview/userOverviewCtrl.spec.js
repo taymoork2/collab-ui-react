@@ -354,7 +354,7 @@ describe('Controller: UserOverviewCtrl', function () {
         initController.apply(this, [callUser]);
         var callState = _.find(this.controller.services, { state: 'communication' });
         expect(callState.detail).toBe('onboardModal.callFree');
-        expect(callState.actionAvailable).toBeFalsy();
+        expect(callState.actionAvailable).toBeTruthy();
       });
 
       it('should show "Call: Hybrid Call" if the user is entitled to Call Service Aware', function () {
@@ -362,7 +362,7 @@ describe('Controller: UserOverviewCtrl', function () {
         initController.apply(this, [callUser]);
         var callState = _.find(this.controller.services, { state: 'communication' });
         expect(callState.detail).toBe('onboardModal.paidCommHybrid');
-        expect(callState.actionAvailable).toBeFalsy();
+        expect(callState.actionAvailable).toBeTruthy();
       });
 
       it('should show "Call: Call" if the user is entitled to Huron, and has a license', function () {
@@ -380,7 +380,7 @@ describe('Controller: UserOverviewCtrl', function () {
         initController.apply(this, [callUser]);
         var callState = _.find(this.controller.services, { state: 'communication' });
         expect(callState.detail).toBe('onboardModal.callFree');
-        expect(callState.actionAvailable).toBeFalsy();
+        expect(callState.actionAvailable).toBeTruthy();
       });
 
       it('should show "Call: Call" if the user is entitled to both Huron and Hybrid Call Service Aware, because Huron is more important', function () {
