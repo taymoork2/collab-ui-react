@@ -7799,6 +7799,10 @@
         "type": "The owner of this device cannot be found",
         "message": "The user or place that this device was associated with is no longer in your organization. Perform a factory reset on the device itself. You can then activate it for a different user or place. Alternatively, delete the device to remove it from this organization."
       },
+      "provisioningdeveloperoptions": {
+        "type": "Software Upgrade Override",
+        "message": "This device has been configured to not automatically upgrade by an engineer. Check if this is intentional as outdated software can cause problems. This configuration is available to change in the xAPI as <samp>{{xconfigpath}}</samp>."
+      },
       "unknown": {
         "type": "Unknown Error Occurred",
         "message": "The device reported an unknown error and there is no description available. Error code is: {{errorCode}}",
