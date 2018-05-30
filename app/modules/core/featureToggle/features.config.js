@@ -131,6 +131,7 @@ module.exports = {
   diagnosticF8193UX3: 'diagnostic-f8193-ux3',
   diagnosticF8194MeetingDetails: 'diagnostic-f8194-meeting-details',
   diagnosticF8234QueryRange: 'diagnostic-f8234-query-range',
+  diagnosticPartnerF8194MeetingDetails: 'diagnostic-partner-f8194-meeting-details',
   enforceSparkContentEncryption: 'enforce-spark-content-encryption',
   featureToggleRules: 'feature-toggle-rules',
   feedbackViaEmail: 'feedback-via-email',

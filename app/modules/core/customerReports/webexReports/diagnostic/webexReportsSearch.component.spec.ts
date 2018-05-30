@@ -48,7 +48,7 @@ describe('Component: webexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'SearchService', 'Notification', 'ProPackService');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'ProPackService', 'SearchService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
@@ -161,5 +161,23 @@ describe('Component: webexReportsSearch', () => {
     initComponent.call(this);
     this.controller.showDetail({ id: 111 });
     expect(this.$state.go).toHaveBeenCalled();
+  });
+
+  describe('calendar date range', function () {
+    it('should allow calendar select one week when FT is set to false', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(6);
+    });
+
+    it('should allow calendar select one month when FT is set to true', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(29);
+    });
   });
 });

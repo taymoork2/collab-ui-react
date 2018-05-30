@@ -882,7 +882,7 @@
     "phone": "Phone",
     "voipQuality": "VoIP Quality",
     "videoQuality": "Video Quality",
-    "cmrQuallity": "CMR Quality",
+    "cmrQuality": "CMR Quality",
     "pstnQuality": "PSTN Quality",
     "latency": "Latency",
     "packetLoss": "Packet Loss",
@@ -9055,7 +9055,6 @@
       "subsectionLabel": "Wi-Fi-based device suggestions",
       "modalTitle": "Enable Wi-Fi-based device suggestions?",
       "wifiOptInLabel": "Provide device suggestions based on Wi-Fi connectivity",
-      "wifiOptInDescription": "Recommended to provide the best meeting room experience. When ultrasound connectivity doesn't work, Webex Teams suggests nearby devices that are available to users. This doesn't store any information that would identify users.<br><a href:''>Learn more about Wi-Fi-based device suggestions</a>",
       "enableItNow": "Do you want to enable this setting?",
       "optOutButton": "Don't enable"
     },
@@ -9400,6 +9399,7 @@
     "customers": "Customers",
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
+    "deviceDetails": "Device Details",
     "orders": "Orders",
     "orderDetails": "Orders Details",
     "orderNumber": "Order Number: {{orderNumber}}",
@@ -11244,7 +11244,8 @@
         "title": "Add new customer",
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
-        "customerExistsErrorMessage": "This customer already exists"
+        "customerExistsErrorMessage": "This customer already exists",
+        "swProfileWarningMsg": "Please add a Software Profile first"
       },
       "nodeStatus": {
         "active":"Active",
@@ -11274,7 +11275,8 @@
         "sftpLocation": {
           "sectionHeader": "Default SFTP Server",
           "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
-          "sftpPlaceholder": "Select a server"
+          "sftpPlaceholder": "Select a server",
+          "sftpWarnMsg": "Please add a SFTP server first"
         },
         "nodes": {
           "accept": "Accept",
@@ -11327,7 +11329,7 @@
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
-      "httpProxies": "HTTP Proxies",
+      "httpProxies": "HTTP Proxies:",
       "httpProxy": "HTTP Proxy",
       "httpProxyDesc": "Enter HTTP Proxies for the Agent to allow access to the cloud services. Specifying multiple proxies will make the Agent to be used more widely. ",
       "invalidChars": "Invalid File Name. File name must not include the chars in the list '~ # % & * { } \\ : ; < > ? / + ' Space",

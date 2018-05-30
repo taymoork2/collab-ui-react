@@ -1,18 +1,21 @@
-import { SearchService } from './searchService';
+import featureToggleService from 'modules/core/featureToggle';
+import notifications from 'modules/core/notifications/index';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
+import { MeetingdetailsComponent } from './tabMeetingdetails.component';
 import { DgcTabComponent } from './dgcTab.component';
 import { DgcTimeLineComponent } from './timeLine.component';
 import { DgcTimeZoneComponent } from './timeZone.component';
-import notifications from 'modules/core/notifications/index';
-import { ProPackService } from 'modules/core/proPack/proPack.service';
-import { ParticipantsComponent } from './tabParticipants.component';
-import { MeetingdetailsComponent } from './tabMeetingdetails.component';
 import { DgcWebexReportsSearchComponent } from './webexReportsSearch.component';
 import { MeetingExportComponent } from './meeting-export.component';
 import { MeetingExportService } from './meeting-export.service';
 import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
+import { ParticipantsComponent } from './tabParticipants.component';
+import { SearchService } from './searchService';
 
 export default angular
   .module('reports.webex.search', [
+    featureToggleService,
     notifications,
     require('angular-translate'),
     require('@collabui/collab-ui-ng').default,
@@ -20,6 +23,7 @@ export default angular
     require('modules/core/config/urlConfig'),
   ])
   .service('SearchService', SearchService)
+  .service('PartnerSearchService', PartnerSearchService)
   .service('ProPackService', ProPackService)
   .service('MeetingExportService', MeetingExportService)
   .component('dgcTab', new DgcTabComponent())

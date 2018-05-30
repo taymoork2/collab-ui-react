@@ -20,7 +20,7 @@ export class ProximitySetting extends SettingSection {
 
 export class ProximitySettingCtrl extends ProximityOptIn implements ng.IComponentController {
   /* @ngInject */
-  public constructor($stateParams: ng.ui.IStateParamsService, $state: ng.ui.IStateService, CsdmAnalyticsHelper: ICsdmAnalyticHelper, Notification: Notification, WifiProximityService: WifiProximityService) {
+  public constructor($stateParams: ng.ui.IStateParamsService, private $state: ng.ui.IStateService, CsdmAnalyticsHelper: ICsdmAnalyticHelper, Notification: Notification, WifiProximityService: WifiProximityService) {
     super(CsdmAnalyticsHelper, Notification, WifiProximityService);
     if ($stateParams.showSettings === 'proximity') {
       $state.go('settings.proximity');
@@ -33,6 +33,7 @@ export class ProximitySettingCtrl extends ProximityOptIn implements ng.IComponen
         originator: CsdmAnalyticsValues.ORIGINATOR_SETTING,
         performer: CsdmAnalyticsValues.PERFORMER_SETTING,
       });
+    this.$state.go('settings.proximity');
   }
 
   public $onInit() {

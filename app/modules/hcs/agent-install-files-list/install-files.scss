@@ -36,8 +36,8 @@
       button.close::before {
         font-size: rem-calc(16);
       }
-      padding-left: rem-calc(24);
-      padding-bottom: rem-calc(24);
+      padding-left: rem-calc(0);
+      padding-bottom: rem-calc(0);
       p.h6 {
         color: $gray-dark-1;
       }

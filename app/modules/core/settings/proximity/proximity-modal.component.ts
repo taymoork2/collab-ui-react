@@ -3,7 +3,7 @@ import { WifiProximityService } from '../../../csdm/services/wifiProximity.servi
 import { Notification } from '../../notifications';
 import {
   CsdmAnalyticsValues,
-  ICsdmAnalyticHelper,
+  ICsdmAnalyticHelper, WifiProximityAction,
 } from '../../../csdm/services/csdm-analytics-helper.service';
 
 class ProximityModalCtrl extends ProximityOptIn implements ng.IComponentController {
@@ -22,6 +22,12 @@ class ProximityModalCtrl extends ProximityOptIn implements ng.IComponentControll
     this.setWifiProximityPolicy(true, { performer: CsdmAnalyticsValues.PERFORMER_MODAL }).then(
       () => this.dismiss(),
     );
+  }
+
+  public cancel() {
+    this.CsdmAnalyticsHelper.trackWifiOptInAction(WifiProximityAction.CANCEL_MODAL,
+      { performer: CsdmAnalyticsValues.PERFORMER_MODAL });
+    this.dismiss();
   }
 
   public optOut() {

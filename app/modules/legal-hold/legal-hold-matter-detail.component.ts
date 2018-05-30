@@ -20,9 +20,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
   private exportMessage: string;
   public isEdit = false;
   public exportResults: ICustodian[];
-  public downloadComponentApi;
-  public cancelExport = false;
-  public isDownloading = false;
+  public isProcessing = false;
 
   /* @ngInject */
   constructor(
@@ -111,7 +109,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       close: this.$translate.instant('common.yes'),
       dismiss: this.$translate.instant('common.no'),
     }).result.then(() => {
-      this.saveInProcess = true;
+      this.isProcessing = true;
       return this.LegalHoldService.releaseMatter(Matter.matterFromResponseData(this.matter), new Date())
         .then(() => {
           this.matter.matterState = MatterState.RELEASED;
@@ -122,7 +120,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
           this.Notification.errorResponse(err);
         })
         .finally(() => {
-          this.saveInProcess = false;
+          this.isProcessing =  false;
         });
     });
   }
@@ -134,7 +132,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       close: this.$translate.instant('common.continue'),
       dismiss: this.$translate.instant('common.cancel'),
     }).result.then(() => {
-      this.saveInProcess = true;
+      this.isProcessing = true;
       this.LegalHoldService.deleteMatter(this.matter.orgId, this.matter.caseId)
         .then(() => {
           this.$rootScope.$emit(Events.CHANGED);
@@ -143,13 +141,15 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
         })
         .catch((err) => {
           this.Notification.errorResponse(err);
-          this.saveInProcess = false;
+        })
+        .finally(() => {
+          this.isProcessing = false;
         });
     });
   }
 
   public exportCustodians(): ng.IPromise<void> {
-    if (this.isDownloading) {
+    if (this.isProcessing) {
       return this.$q.resolve();
     } // notify the user
     return this.ModalService.open({
@@ -159,7 +159,7 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       hideDismiss: true,
     }).result
     .then(() => { //set the spinner and get the users in matter
-      this.isDownloading = true;
+      this.isProcessing = true;
       return this.LegalHoldService.listUsersInMatter(this.Authinfo.getOrgId(), this.matter.caseId);
     })
       .then((userUuidList) => { //get the users in uuid
@@ -173,18 +173,18 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
         if (result) {
           this.exportResults = _.concat(result.success, result.error);
         }
-        this.isDownloading = !_.isEmpty(this.exportResults);
+        this.isProcessing = !_.isEmpty(this.exportResults);
       })
       .catch((errorResponse) => {
         this.exportResults = [];
         this.Notification.errorResponse(errorResponse);
-        this.isDownloading = false;
+        this.isProcessing = false;
       });
   }
 
 
   public finishDownload() {
-    this.isDownloading = false;
+    this.isProcessing = false;
   }
 
   public addCustodians(): void {
@@ -200,7 +200,6 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       mode: ImportMode.REMOVE,
     });
   }
-
 }
 
 export class LegalHoldMatterDetailComponent implements ng.IComponentOptions {
