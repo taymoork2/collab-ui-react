@@ -178,7 +178,6 @@ export enum TrackingEventName {
   MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
 }
 
-
 export class SearchService {
   private url;
   private data: any = {};
