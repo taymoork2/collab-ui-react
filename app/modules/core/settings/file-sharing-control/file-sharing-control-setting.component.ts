@@ -1,12 +1,10 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
-import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings.interfaces';
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
-import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
+import { FileShareControlType, IFileShareControl, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
 import { ProPackSettingSection } from '../proPackSettingSection';
-import { IDownloadUploadModel, IFileSharingControlModel } from './file-sharing-control-setting.interfaces';
-import { FileSharingControlModelType } from './file-sharing-control-setting.types';
+import { FileSharingControlModelType, IDownloadUploadModel, IFileSharingControlModel } from './file-sharing-control-setting.types';
 
 export class FileSharingControlSettingController {
   public allowWhiteboards = false;

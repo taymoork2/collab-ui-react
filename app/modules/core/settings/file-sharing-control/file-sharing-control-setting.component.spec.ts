@@ -1,9 +1,8 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
-import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings.interfaces';
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
-import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
+import { FileShareControlType, IFileShareControl, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
 import { OrgSettingsUtil } from 'modules/core/shared/org-settings/org-settings.util';
 import { FileSharingControlSettingController } from './file-sharing-control-setting.component';
 import moduleName from './index';

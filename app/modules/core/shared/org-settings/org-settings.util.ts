@@ -1,5 +1,4 @@
-import { IFileShareControlOptions } from './org-settings.interfaces';
-import { FileShareControlType } from './org-settings.types';
+import { FileShareControlType, IFileShareControlOptions } from './org-settings.types';
 
 export class OrgSettingsUtil {
   public static mkFileShareControl(settings: IFileShareControlOptions = {}) {

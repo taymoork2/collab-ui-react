@@ -14,3 +14,21 @@ export enum OrgSetting {
   CLIENT_SECURITY_POLICY = 'clientSecurityPolicy',
   WHITEBOARD_FILE_SHARE_CONTROL = 'whiteboardFileShareControl',
 }
+
+export interface IOrgSettingsResponse {
+  orgSettings: string[];
+}
+
+export interface IFileShareControl {
+  desktopFileShareControl: FileShareControlType;
+  mobileFileShareControl: FileShareControlType;
+  webFileShareControl: FileShareControlType;
+  botFileShareControl: FileShareControlType;
+}
+
+export interface IFileShareControlOptions {
+  desktopFileShareControl?: FileShareControlType;
+  mobileFileShareControl?: FileShareControlType;
+  webFileShareControl?: FileShareControlType;
+  botFileShareControl?: FileShareControlType;
+}

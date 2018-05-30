@@ -1,5 +1,4 @@
-import { IFileShareControl, IOrgSettingsResponse } from './org-settings.interfaces';
-import { OrgSetting, WhiteboardFileShareControlType } from './org-settings.types';
+import { IFileShareControl, IOrgSettingsResponse, OrgSetting, WhiteboardFileShareControlType } from './org-settings.types';
 import { OrgSettingsUtil } from './org-settings.util';
 
 export class OrgSettingsService {
@@ -15,14 +14,14 @@ export class OrgSettingsService {
     return `${this.adminServiceUrl}organizations/${orgId}/settings`;
   }
 
-  public getSettings(orgId: string): ng.IPromise<Object> {
+  public getSettings(orgId: string): ng.IPromise<object> {
     const url = this.getSettingsUrl(orgId);
     return this.$http.get<IOrgSettingsResponse>(url).then(response => {
       return JSON.parse(response.data.orgSettings[0]);
     });
   }
 
-  public updateLatestSettings(orgId: string, settings: Object): ng.IHttpPromise<void> {
+  public updateLatestSettings(orgId: string, settings: object): ng.IHttpPromise<void> {
     return this.getSettings(orgId).then(response => {
       const payload = _.assignIn({}, response, settings);
       const url = this.getSettingsUrl(orgId);
