@@ -1,7 +1,7 @@
 import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
-import { ExternalCommunicationSettingController } from './externalCommunicationSetting.component';
+import { ExternalCommunicationSettingController } from './external-communication-setting.component';
 import moduleName from './index';
 
 type Test = atlas.test.IComponentTest<ExternalCommunicationSettingController, {

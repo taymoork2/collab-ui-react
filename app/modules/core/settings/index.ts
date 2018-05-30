@@ -11,7 +11,7 @@ import multiDirSyncModule from 'modules/core/multi-dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
-import externalCommunicationModule from './externalCommunication';
+import externalCommunicationModule from './external-communication';
 import fileSharingControlModule from './fileSharingControl';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';

@@ -1,5 +1,5 @@
 
-import { ExternalCommunicationSettingComponent } from './externalCommunicationSetting.component';
+import { ExternalCommunicationSettingComponent } from './external-communication-setting.component';
 
 import notificationModuleName from 'modules/core/notifications';
 import orgSettingsModuleName from 'modules/core/shared/org-settings';

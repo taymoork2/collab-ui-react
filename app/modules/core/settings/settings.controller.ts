@@ -4,7 +4,7 @@ import { EmailSetting } from './email/emailSetting.component';
 import { BrandingSetting } from './branding/brandingSetting.component';
 import { DomainsSetting } from './domain/domainsSetting.component';
 import { RetentionSetting } from './retention/retentionSetting.component';
-import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
+import { ExternalCommunicationSetting } from './external-communication/external-communication-setting.component';
 import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
 
 import { SecuritySetting } from './security/security-setting.component';
