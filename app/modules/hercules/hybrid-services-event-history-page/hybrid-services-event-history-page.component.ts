@@ -83,18 +83,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
         },
       ],
     },
-    {
-      label: this.$translate.instant('hercules.eventHistory.filters.context'),
-      value: 'context',
-      childOptions: [
-        {
-          label: this.$translate.instant('hercules.eventHistory.filters.allClusters'),
-          value: 'all_context',
-          nodes: [],
-          services: [],
-        },
-      ],
-    },
   ];
 
   public clusterId: string;
@@ -141,8 +129,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
             this.clusterSelected = _.find(this.clusterOptions, { value: 'media' });
           } else if (this.serviceId === 'spark-hybrid-datasecurity') {
             this.clusterSelected = _.find(this.clusterOptions, { value: 'hds' });
-          } else if (this.serviceId === 'contact-center-context') {
-            this.clusterSelected = _.find(this.clusterOptions, { value: 'context' });
           }
           this.clusterSelected.selectedChild = this.clusterSelected.childOptions[0];
           this.clusterSelectedUpdate();
@@ -183,8 +169,8 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
 
   public disableServiceSelect() {
     return this.clusterSelected &&
-      (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value')) ||
-      _.includes(['squared-fusion-media', 'spark-hybrid-datasecurity', 'contact-center-context'], _.get(this.clusterSelected, 'selectedChild.services[1]')));
+      (_.includes(['all_media', 'all_hds'], _.get(this.clusterSelected, 'selectedChild.value')) ||
+      _.includes(['squared-fusion-media', 'spark-hybrid-datasecurity'], _.get(this.clusterSelected, 'selectedChild.services[1]')));
   }
 
   public clusterSelectedUpdate(): void {
@@ -206,7 +192,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     }], _.get(this.clusterSelected, 'selectedChild.services'));
     if (_.find(this.serviceOptions, { value: this.serviceId })) {
       this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
-    } else if (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value')) && this.serviceOptions.length > 1) {
+    } else if (_.includes(['all_media', 'all_hds'], _.get(this.clusterSelected, 'selectedChild.value')) && this.serviceOptions.length > 1) {
       this.serviceSelected = this.serviceOptions[1];
     } else {
       this.serviceSelected = this.serviceOptions[0];
@@ -229,7 +215,7 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
     // If no serviceId selected or if we can't find the requested one
     if (_.find(this.serviceOptions, { value: this.serviceId })) {
       this.serviceSelected = _.find(this.serviceOptions, { value: this.serviceId });
-    } else if (_.includes(['all_media', 'all_hds', 'all_context'], _.get(this.clusterSelected, 'selectedChild.value'))) {
+    } else if (_.includes(['all_media', 'all_hds'], _.get(this.clusterSelected, 'selectedChild.value'))) {
       this.serviceSelected = this.serviceOptions[1];
     } else {
       this.serviceSelected = this.serviceOptions[0];
@@ -288,11 +274,6 @@ class HybridServicesEventHistoryPageCtrl implements ng.IComponentController {
             const allHDSClustersOption = clusterOptions[2].childOptions[0];
             allHDSClustersOption.nodes.concat(clusterMenuItem.nodes);
             allHDSClustersOption.services.concat(clusterMenuItem.services);
-          } else if (cluster.targetType === 'cs_mgmt') {
-            clusterOptions[3].childOptions.push(clusterMenuItem);
-            const allContextClustersOption = clusterOptions[3].childOptions[0];
-            allContextClustersOption.nodes.concat(clusterMenuItem.nodes);
-            allContextClustersOption.services.concat(clusterMenuItem.services);
           }
         });
 
