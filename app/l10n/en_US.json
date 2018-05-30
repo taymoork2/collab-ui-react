@@ -3782,7 +3782,7 @@
           "alarmRaised": "An alarm was raised on the Expressway node {{hostname}}.",
           "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
           "alarmResolved": "The alarm titled <strong>{{title}}</strong> is resolved on node {{hostname}}.",
-          "alarmRaisedNotificationSent": "Cisco Collaboration Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmRaisedNotificationSent": "Cisco Webex has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
           "alarmResolvedNotificationSent": "Cisco Webex emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
         },
         "clusterEvents": {
