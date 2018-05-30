@@ -156,7 +156,7 @@ describe('Component: legalHoldMatterDetail', () => {
     beforeEach(initComponent);
 
     it('should not attempt to export again if previous download is active', function (this: Test) {
-      this.controller.isDownloading = true;
+      this.controller.isProcessing = true;
       const promise: ng.IPromise<any> = this.controller.exportCustodians();
       expect(promise).toBeResolved();
       expect(this.LegalHoldService.convertUsersChunk).not.toHaveBeenCalled();

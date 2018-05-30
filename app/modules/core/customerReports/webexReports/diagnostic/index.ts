@@ -1,6 +1,7 @@
 import featureToggleService from 'modules/core/featureToggle';
 import notifications from 'modules/core/notifications/index';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
 import { MeetingdetailsComponent } from './tabMeetingdetails.component';
 import { DgcTabComponent } from './dgcTab.component';
 import { DgcTimeLineComponent } from './timeLine.component';
@@ -22,6 +23,7 @@ export default angular
     require('modules/core/config/urlConfig'),
   ])
   .service('SearchService', SearchService)
+  .service('PartnerSearchService', PartnerSearchService)
   .service('ProPackService', ProPackService)
   .service('MeetingExportService', MeetingExportService)
   .component('dgcTab', new DgcTabComponent())

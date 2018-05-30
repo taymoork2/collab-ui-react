@@ -178,6 +178,7 @@ export class AutoAssignTemplateService {
         subscriptions = _.reject(subscriptions, (subscription) => {
           return this.MessengerInteropService.subscriptionIsMessengerOnly(subscription);
         });
+        subscriptions = _.reject(subscriptions, (subscription) => _.isEmpty(subscription.licenses));
         return subscriptions;
       });
   }

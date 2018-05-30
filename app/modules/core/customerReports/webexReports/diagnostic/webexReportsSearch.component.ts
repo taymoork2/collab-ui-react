@@ -3,7 +3,7 @@ import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
 import { KeyCodes } from 'modules/core/accessibility';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
-import { SearchService } from './searchService';
+import { SearchService, TrackingEventName } from './searchService';
 import './_search.scss';
 
 export interface IGridApiScope extends ng.IScope {
@@ -142,6 +142,8 @@ class WebexReportsSearch implements ng.IComponentController {
     this.errMsg.ariaLabel = '';
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
+
+    this.Analytics.trackEvent(TrackingEventName.MEETING_SEARCH);
 
     if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
       this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');

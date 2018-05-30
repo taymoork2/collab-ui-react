@@ -153,15 +153,28 @@ describe('User Service', function () {
   });
 
   describe('onboardUsersLegacy():', function () {
+    it('onboardUsers success with sunlight K1 license should send PATCH request to Sunlight Config', function () {
+      this.$httpBackend
+        .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
+        .respond(200, testData.onboard_patch_response);
+      var userId = testData.onboard_patch_response.userResponse[0].uuid;
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_patch_response);
+      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
+      this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
+      '/user' + '/' + userId).respond(200);
+      this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
+    });
+
     it('onboardUsers success with sunlight K1 license should send PUT request to Sunlight Config', function () {
       this.$httpBackend
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(200, testData.onboard_success_response);
       var userId = testData.onboard_success_response.userResponse[0].uuid;
-      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_success_response);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
-        '/user' + '/' + userId).respond(200);
+      '/user' + '/' + userId).respond(200);
       this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
     });
 
@@ -170,8 +183,8 @@ describe('User Service', function () {
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(200, testData.onboard_success_response);
       var userId = testData.onboard_success_response.userResponse[0].uuid;
-      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_success_response);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
       this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
@@ -182,8 +195,8 @@ describe('User Service', function () {
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard', testData.carevoice_user_payload)
         .respond(200, testData.onboard_success_response);
       var userId = testData.onboard_success_response.userResponse[0].uuid;
-      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId, testData.carevoice_user_patch_payload).respond(200);
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_success_response);
       this.$httpBackend.expectPUT(this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() +
         '/user' + '/' + userId).respond(200);
       this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, testData.carevoice_user_license_payload);
@@ -194,8 +207,8 @@ describe('User Service', function () {
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(200, testData.onboard_success_response);
       var userId = testData.onboard_success_response.userResponse[0].uuid;
-      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(500);
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_success_response);
       this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K1_license]);
     });
 
@@ -204,8 +217,8 @@ describe('User Service', function () {
         .expectPOST(this.UrlConfig.getAdminServiceUrl() + 'organization/' + this.Authinfo.getOrgId() + '/users/onboard')
         .respond(200, testData.onboard_success_response);
       var userId = testData.onboard_success_response.userResponse[0].uuid;
-      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(200);
-      this.$httpBackend.expectPATCH(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId).respond(500);
+      this.$httpBackend.expectGET(this.UrlConfig.getScimUrl(this.Authinfo.getOrgId()) + '/' + userId)
+        .respond(200, testData.onboard_success_response);
       this.Userservice.onboardUsersLegacy(testData.usersDataArray, testData.entitlements, [testData.sunlight_K2_license]);
     });
 

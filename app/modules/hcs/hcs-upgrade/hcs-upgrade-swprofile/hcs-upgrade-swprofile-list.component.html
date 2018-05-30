@@ -34,9 +34,9 @@
   </cs-page-sub-header>
   <div class="cs-card-container">
     <cs-card-layout>
-      <cs-card class="cs-card--small header-background hoverable" ng-repeat="swprofile in $ctrl.currentList">
+      <cs-card class="cs-card--medium header-background hoverable hcs-card-default" ng-repeat="swprofile in $ctrl.currentList">
         <article ng-click="$ctrl.editSwProfile(swprofile)" hover-delay>
-          <header>
+          <header class="hcs-min-height-card-header">
             <div class="header-with-right-icon">
               <p class="h4" title="Card Name">{{swprofile.name}}</p>
               <div class="right card-icon-div">

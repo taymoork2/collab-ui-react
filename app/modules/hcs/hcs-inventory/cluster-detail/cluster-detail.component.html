@@ -14,11 +14,10 @@
     <!-- Inventory Name -->
     <div class="cs-form__section">
       <div class="section__info">
-        <h4 class="section__title" translate="hcs.clusterDetail.settings.inventoryName.sectionHeader"></h4>
+        <h4 class="section__title" translate="hcs.clusterDetail.settings.inventoryName.customerSelectLabel"></h4>
       </div>
       <div class="section__content">
-        <div class="sub-section">
-          <label class="sub-section__label" translate="hcs.clusterDetail.settings.inventoryName.customerSelectLabel"></label>
+        <div class="sub-section hcs-sub-section-default-padding">
           <div class="display-flex">
             <div class="medium-6">
               <cs-select
@@ -37,22 +36,25 @@
         </div>
       </div>
     </div>
-    <!-- SFTP Location -->
+    <!-- SFTP Server -->
     <div class="cs-form__section">
       <div class="section__info">
         <h4 class="section__title" translate="hcs.clusterDetail.settings.sftpLocation.sectionHeader"></h4>
       </div>
       <div class="section__content">
-        <div class="sub-section">
+        <div class="sub-section hcs-sub-section-default-padding">
           <div class="display-flex">
             <div class="medium-6">
               <cs-select
                 name="sftpLocationSelect"
+                is-disabled="$ctrl.disableSftpSelect"
                 ng-model="$ctrl.sftpServerSelected"
                 options="$ctrl.sftpServersList"
                 on-change-fn="$ctrl.onSftpLocationChanged()"
                 placeholder="$ctrl.sftpSelectPlaceholder"
-                filter="false">
+                filter="false"
+                is-warn="{{$ctrl.disableSftpSelect}}"
+                warn-msg="{{::'hcs.clusterDetail.settings.sftpLocation.sftpWarnMsg' | translate}}">
               </cs-select>
             </div>
           </div>
@@ -100,63 +102,69 @@
                   </div>
                 </section>
                 <footer class="node-footer">
-                  <div class="row">
-                    <div class="columns medium-8">
-                      <i class="icon icon-info-outline" tooltip-placement="top" tooltip="{{::'hcs.clusterDetail.settings.nodes.verificationCodeTooltip' | translate}}"></i>
-                      <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.agentVerificationCode}}</span>
-                    </div>
-                    <div class="columns medium-4">
-                      <div ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
+                  <div>
+                    <span class="node-verification-code">
+                      <span ng-if="node.status.toLowerCase() !== $ctrl.status.noAgentRunning.toLowerCase()">
+                        <i class="icon icon-info-outline" tooltip-placement="top" tooltip="{{::'hcs.clusterDetail.settings.nodes.verificationCodeTooltip' | translate}}"></i>
+                        <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.agentVerificationCode}}</span>
+                      </span>
+                    </span>
+                    <span class="node-status-container">
+                      <span ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
                         <button class="btn btn--circle btn--small btn--white btn--primary" ng-click="$ctrl.acceptNode(node)" ng-class="{'is-accepted': node.isAccepted}">
                           <span class="icon icon-check"></span>
                         </button>
                         <button class="btn btn--circle btn--small btn--white" ng-click="$ctrl.rejectNode(node)" ng-class="{'is-rejected': node.isRejected}">
                           <span class="icon icon-close"></span>
                         </button>
-                      </div>
-                      <div class="h5 card-section-item node-status" ng-switch="node.status" ng-if="node.status.toLowerCase() !== $ctrl.status.nodeNeedsAcceptance.toLowerCase()">
-                          <div ng-switch-when="AGENT_OFFLINE">
+                      </span>
+                      <span class="h5 card-section-item node-status" ng-switch="node.status" ng-if="node.status.toLowerCase() !== $ctrl.status.nodeNeedsAcceptance.toLowerCase()">
+                        <div ng-switch-when="AGENT_OFFLINE">
+                          <i class="icon icon-circle status-indicator danger"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.agentOffline' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="FAILED_UPGRADE">
+                          <i class="icon icon-circle status-indicator danger"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="NO_AGENT_RUNNING">
                             <i class="icon icon-circle status-indicator danger"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.agentOffline' | translate}}</span>
+                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noAgentRunning' | translate}}</span>
                           </div>
-                          <div ng-switch-when="FAILED_UPGRADE">
-                            <i class="icon icon-circle status-indicator danger"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="NODES_NEED_ACCEPTANCE">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needsAcceptance' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotCoverAll' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="SOFTWARE_VERSION_MISMATCH">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swVersionMismatch' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="SOFTWARE_UPGRADE_NEEDED">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swUpgradeNeeded' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="NEED_TO_UPDATE_BATCH_NUMBER">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needToUpdateBatchNumber' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="UPGRADE_SCHEDULED">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeScheduled' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="UPGRADE_IN_PROGRESS">
-                            <i class="icon icon-circle status-indicator warning"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
-                          </div>
-                          <div ng-switch-when="OPERATIONAL">
-                            <i class="icon icon-circle status-indicator success"></i>
-                            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.operational' | translate}}</span>
-                          </div>
-                      </div>
-                    </div>
+                        <div ng-switch-when="SOFTWARE_PROFILE_NOT_ASSIGNED">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotAssigned' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotCoverAll' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="SOFTWARE_VERSION_MISMATCH">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swVersionMismatch' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="SOFTWARE_UPGRADE_NEEDED">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swUpgradeNeeded' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="NEED_TO_UPDATE_BATCH_NUMBER">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needToUpdateBatchNumber' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="UPGRADE_SCHEDULED">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeScheduled' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="UPGRADE_IN_PROGRESS">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="OPERATIONAL">
+                          <i class="icon icon-circle status-indicator success"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.operational' | translate}}</span>
+                        </div>
+                      </span>
+                    </span>
                   </div>
                 </footer>
               </article>
@@ -171,7 +179,7 @@
         <h4 class="section__title" translate="hcs.clusterDetail.settings.clustername.sectionHeader"></h4>
       </div>
       <div class="section__content">
-        <div class="sub-section">
+        <div class="sub-section hcs-sub-section-default-padding">
           <div class="display-flex">
             <div class="medium-6">
               <input

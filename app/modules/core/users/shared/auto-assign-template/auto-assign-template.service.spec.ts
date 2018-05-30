@@ -29,6 +29,9 @@ describe('Service: AutoAssignTemplateService:', () => {
     }, {
       subscriptionId: 'fake-subscriptionId-1',
       licenses: [{ offerName: 'foo' }],
+    }, {
+      subscriptionId: 'fake-subscriptionId-1',
+      licenses: [],
     }];
     this.autoAssignTemplateData = {};
     _.set(this.autoAssignTemplateData, 'subscriptions', undefined);
@@ -340,12 +343,12 @@ describe('Service: AutoAssignTemplateService:', () => {
     });
 
     it('should not containing subscriptions with only licenses of "MSGR" offer name', function (done) {
-      expect(this.fixtures.fakeLicenseUsage.length).toBe(3);
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(4);
       this.fixtures.fakeLicenseUsage.push({
         subscriptionId: 'fake-subscriptionId-4',
         licenses: [{ offerName: 'MSGR' }],
       });
-      expect(this.fixtures.fakeLicenseUsage.length).toBe(4);
+      expect(this.fixtures.fakeLicenseUsage.length).toBe(5);
       this.AutoAssignTemplateService.getSortedSubscriptions().then(sortedSubscriptions => {
         expect(sortedSubscriptions.length).toBe(3);
         expect(_.get(sortedSubscriptions[0], 'subscriptionId')).toBe('fake-subscriptionId-1');

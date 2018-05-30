@@ -1,5 +1,6 @@
 import { IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, ISessionInReport } from './meeting-export.interface';
-import { IDataStorage, IJoinTime, ISessionDetail, IUniqueParticipant, Platforms, SearchService, SearchStorage } from './searchService';
+import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms, SearchService, SearchStorage } from './searchService';
+import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
 
 export enum MediaType {
   PSTN = 'PSTN',
@@ -9,26 +10,26 @@ export enum MediaType {
 
 export class MeetingExportService {
   public featureName = 'report.webex.diagnostic';
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private SearchService: SearchService,
   ) {
   }
 
   // TODO (yashen2): add call to backend for report data
-  public generateMeetingReport(): IPromise<string> {
+  public generateMeetingReport(dataStoreService: PartnerSearchService | SearchService): IPromise<string> {
     return this.$q((resolve) => {
       const report = {};
-      report['Meeting Summary'] = this.getMeetingSummary();
-      report['Participants'] = this.getParticipantsInName();
-      report['Features'] = this.getFeatures();
+      report['Meeting Summary'] = this.getMeetingSummary(dataStoreService);
+      report['Participants'] = this.getParticipantsInName(dataStoreService);
+      report['Features'] = this.getFeatures(dataStoreService);
       const JSONData: string = JSON.stringify(report, null, '\t');
       resolve(JSONData);
     });
   }
 
-  private getMeetingSummary(): IMeetingSummaryInReport {
+  private getMeetingSummary(dataStoreService: PartnerSearchService | SearchService): IMeetingSummaryInReport {
     const meetingSummary: IMeetingSummaryInReport = {
       'Meeting Name': '',
       'Meeting Number': '',
@@ -43,7 +44,7 @@ export class MeetingExportService {
       'Host Id': '',
       'Host Email': '',
     };
-    return this.searchMeetingSummary(meetingSummary, this.SearchService.getData());
+    return this.searchMeetingSummary(meetingSummary, dataStoreService.getData());
   }
 
   private searchMeetingSummary(meetingSummary: IMeetingSummaryInReport, dataStorage: IDataStorage): IMeetingSummaryInReport {
@@ -88,17 +89,17 @@ export class MeetingExportService {
     return result;
   }
 
-  private getParticipantsInName(): IParticipantsInName {
+  private getParticipantsInName(dataStoreService: PartnerSearchService | SearchService): IParticipantsInName {
     const participantsInName: IParticipantsInName = {};
-    const uniqueParticipants: IUniqueParticipant[] = <IUniqueParticipant[]>this.SearchService.getStorage(SearchStorage.UNIQUE_PARTICIPANTS);
-    const joinMeetingTimes: IJoinTime[] = <IJoinTime[]>this.SearchService.getStorage(SearchStorage.JOIN_MEETING_TIMES);
+    const uniqueParticipants: IUniqueParticipant[] = <IUniqueParticipant[]>dataStoreService.getStorage(SearchStorage.UNIQUE_PARTICIPANTS);
+    const joinMeetingTimes: IJoinTime[] = <IJoinTime[]>dataStoreService.getStorage(SearchStorage.JOIN_MEETING_TIMES);
 
     _.forEach(uniqueParticipants, (uniqueParticipant: IUniqueParticipant) => {
       const userName = uniqueParticipant.userName;
       const session: ISessionInReport = this.mkSessionInReport(uniqueParticipant);
 
       _.forEach(uniqueParticipant.participants, (participant) => {
-        const joinMeetingRecord: IJoinMeetingRecord = this.mkJoinMeetingRecord(participant, joinMeetingTimes, session);
+        const joinMeetingRecord: IJoinMeetingRecord = this.mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService);
         session['Join Meeting Records'].push(joinMeetingRecord);
       });
 
@@ -117,7 +118,7 @@ export class MeetingExportService {
   }
 
   private mkSessionInReport(uniqueParticipant: IUniqueParticipant): ISessionInReport {
-    const session: ISessionInReport = {
+    let session: ISessionInReport = {
       'Session Type': '',
       Platform: '',
       Browser: '',
@@ -133,11 +134,13 @@ export class MeetingExportService {
         session[key] = newValue ? newValue : initialValue;
       }
     });
-
+    if (_.isEmpty(session.Device)) {
+      session = _.omit(session, 'Device');
+    }
     return session;
   }
 
-  private mkJoinMeetingRecord(participant, joinMeetingTimes, session): IJoinMeetingRecord {
+  private mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService: PartnerSearchService | SearchService): IJoinMeetingRecord {
     const joinTime = participant.joinTime;
     const guestId = participant.guestId;
     const userId = participant.userId;
@@ -164,15 +167,15 @@ export class MeetingExportService {
       joinMeetingRecord['Join Meeting Time'] = specificJMT['joinMeetingTime'];
     }
 
-    const mediaReport = this.generateMediaReport(session['Session Type'], nodeId);
+    const mediaReport = this.generateMediaReport(session['Session Type'], nodeId, dataStoreService);
     if (mediaReport) {
       joinMeetingRecord.Media = mediaReport;
     }
     return joinMeetingRecord;
   }
 
-  private getFeatures(): IFeaturesInReport {
-    const webexOneMeeting: any = this.SearchService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
+  private getFeatures(dataStoreService: PartnerSearchService | SearchService): IFeaturesInReport {
+    const webexOneMeeting = <IWebexOneMeeting>dataStoreService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
     const features: IFeaturesInReport = {
       'Screen Share': '',
       Recording: '',
@@ -187,24 +190,24 @@ export class MeetingExportService {
     return features;
   }
 
-  private generateMediaReport(sessionType: string, nodeId: string): IMediaInReport {
+  private generateMediaReport(sessionType: string, nodeId: string, dataStoreService: PartnerSearchService | SearchService): IMediaInReport {
     const mediaReport: IMediaInReport = {};
     if (!nodeId) {
       return {};
     }
     if (sessionType === Platforms.PSTN) {
-      const pstnSessionDetail = <ISessionDetail>this.SearchService.getStorage(SearchStorage.PSTN_SESSION_DETAIL);
+      const pstnSessionDetail = <ISessionDetail>dataStoreService.getStorage(SearchStorage.PSTN_SESSION_DETAIL);
       if (pstnSessionDetail) {
         mediaReport[MediaType.PSTN] = this.buildSpecificMediaReport(pstnSessionDetail, nodeId, MediaType.PSTN);
       }
     } else {
-      const voipSessionDetail = <ISessionDetail>this.SearchService.getStorage(SearchStorage.VOIP_SESSION_DETAIL);
-      const videoSessionDetail = <ISessionDetail>this.SearchService.getStorage(SearchStorage.VIDEO_SESSION_DETAIL);
+      const voipSessionDetail = <ISessionDetail>dataStoreService.getStorage(SearchStorage.VOIP_SESSION_DETAIL);
+      const videoSessionDetail = <ISessionDetail>dataStoreService.getStorage(SearchStorage.VIDEO_SESSION_DETAIL);
       if (voipSessionDetail) {
         mediaReport[MediaType.VoIP] = this.buildSpecificMediaReport(voipSessionDetail, nodeId, MediaType.VoIP);
       }
       if (videoSessionDetail) {
-        mediaReport[MediaType.Video] = this.buildSpecificMediaReport(voipSessionDetail, nodeId, MediaType.Video);
+        mediaReport[MediaType.Video] = this.buildSpecificMediaReport(videoSessionDetail, nodeId, MediaType.Video);
       }
     }
     return mediaReport;
