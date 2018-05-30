@@ -79,5 +79,5 @@ export class SecuritySettingController implements ng.IComponentController {
 
 export class SecuritySettingComponent implements ng.IComponentOptions {
   public controller = SecuritySettingController;
-  public template = require('./securitySetting.tpl.html');
+  public template = require('./security-setting.html');
 }

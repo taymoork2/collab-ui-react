@@ -7,7 +7,7 @@ import { RetentionSetting } from './retention/retentionSetting.component';
 import { ExternalCommunicationSetting } from './externalCommunication/externalCommunicationSetting.component';
 import { FileSharingControlSetting } from './fileSharingControl/fileSharingControlSetting.component';
 
-import { SecuritySetting } from './security/securitySetting.component';
+import { SecuritySetting } from './security/security-setting.component';
 import { SipDomainSetting } from './sipDomain/sipDomainSetting.component';
 import { SupportSetting } from './supportSection/supportSetting.component';
 import { PrivacySetting } from './privacySection/privacySettings.component';

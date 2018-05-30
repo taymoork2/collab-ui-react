@@ -2,7 +2,7 @@ import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import moduleName from './index';
-import { SecuritySettingController } from './securitySetting.component';
+import { SecuritySettingController } from './security-setting.component';
 
 type Test = atlas.test.IComponentTest<SecuritySettingController, {
   $q: ng.IQService,
