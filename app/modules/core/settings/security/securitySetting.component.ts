@@ -1,7 +1,7 @@
-import { ProPackSettingSection } from '../proPackSettingSection';
 import { Notification } from 'modules/core/notifications';
-import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { ProPackSettingSection } from '../proPackSettingSection';
 
 export class SecuritySetting extends ProPackSettingSection {
 
@@ -14,9 +14,9 @@ export class SecuritySetting extends ProPackSettingSection {
 
 export class SecuritySettingController implements ng.IComponentController {
 
-  private _isSparkClientSecurityEnabled: boolean;
-  public isSparkClientSecurityLoaded: boolean = false;
-  public isProPackPurchased: boolean = false;
+  private _isSparkClientSecurityEnabled = false;
+  public isSparkClientSecurityLoaded = false;
+  public isProPackPurchased = false;
 
   private orgId: string;
 
@@ -58,20 +58,22 @@ export class SecuritySettingController implements ng.IComponentController {
 
   set isSparkClientSecurityEnabled(value: boolean) {
     this._isSparkClientSecurityEnabled = value;
-    this.updateSparkClientSecuritySetting();
+    this.updateSparkClientSecuritySetting(value);
   }
 
-  public updateSparkClientSecuritySetting() {
-    if (this._isSparkClientSecurityEnabled !== undefined) {
-      // Calls AppSecuritySetting service to update device security enforcement
-      this.OrgSettingsService.setClientSecurityPolicy(this.orgId, this._isSparkClientSecurityEnabled)
-        .then(() => {
-          this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
-        })
-        .catch((response) => {
-          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerAppSecurityError');
-        });
+  public updateSparkClientSecuritySetting(value: boolean): void {
+    if (!this.isSparkClientSecurityLoaded) {
+      return;
     }
+
+    this.OrgSettingsService.setClientSecurityPolicy(this.orgId, value)
+      .then(() => {
+        this.Notification.success('firstTimeWizard.messengerAppSecuritySuccess');
+      })
+      .catch((response) => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerAppSecurityError');
+        this._isSparkClientSecurityEnabled = !value;
+      });
   }
 }
 

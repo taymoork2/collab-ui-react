@@ -16,7 +16,7 @@
       type="checkbox"
       id="allowWhiteboards"
       ng-model="$ctrl.allowWhiteboards"
-      ng-change="$ctrl.updateAllowWhiteboards()"
+      ng-change="$ctrl.updateAllowWhiteboards($ctrl.allowWhiteboards)"
       cs-input-label="{{::'globalSettings.fileSharingControl.whiteboardRestriction' | translate}}"
       ng-disabled="$ctrl.isCheckboxDisabled"
     >

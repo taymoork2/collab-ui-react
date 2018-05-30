@@ -1,13 +1,13 @@
-import { ProPackSettingSection } from '../proPackSettingSection';
-import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
 import { Notification } from 'modules/core/notifications';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { ProPackSettingSection } from '../proPackSettingSection';
 
 export class ExternalCommunicationSettingController {
 
-  private _isBlockExternalCommunication: boolean = false;
-  public isBlockExternalCommunicationSettingLoaded: boolean = false;
-  public isProPackPurchased: boolean = false;
+  private _isBlockExternalCommunication = false;
+  public isBlockExternalCommunicationSettingLoaded = false;
+  public isProPackPurchased = false;
 
   private orgId: string;
 
@@ -51,19 +51,22 @@ export class ExternalCommunicationSettingController {
 
   public set isBlockExternalCommunication(value: boolean) {
     this._isBlockExternalCommunication = value;
-    this.updateBlockExternalCommunicationSetting();
+    this.updateBlockExternalCommunicationSetting(value);
   }
 
-  public updateBlockExternalCommunicationSetting() {
-    if (this._isBlockExternalCommunication !== undefined) {
-      this.OrgSettingsService.setBlockExternalCommunications(this.orgId, this._isBlockExternalCommunication)
-        .then(() => {
-          this.Notification.success('firstTimeWizard.messengerExternalCommunicationSuccess');
-        })
-        .catch((response) => {
-          this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerExternalCommunicationError');
-        });
+  public updateBlockExternalCommunicationSetting(value: boolean): void {
+    if (!this.isBlockExternalCommunicationSettingLoaded) {
+      return;
     }
+
+    this.OrgSettingsService.setBlockExternalCommunications(this.orgId, value)
+      .then(() => {
+        this.Notification.success('firstTimeWizard.messengerExternalCommunicationSuccess');
+      })
+      .catch((response) => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerExternalCommunicationError');
+        this._isBlockExternalCommunication = !value;
+      });
   }
 }
 

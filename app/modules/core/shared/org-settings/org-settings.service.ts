@@ -1,41 +1,6 @@
-interface IOrgSettingsResponse {
-  orgSettings: string[];
-}
-
-interface IAnyObject {
-  [key: string]: any;
-}
-
-export class FileShareControl {
-  public desktopFileShareControl: FileShareControlType;
-  public mobileFileShareControl: FileShareControlType;
-  public webFileShareControl: FileShareControlType;
-  public botFileShareControl: FileShareControlType;
-
-  constructor(settings: IAnyObject = {}) {
-    this.desktopFileShareControl = _.get(settings, 'desktopFileShareControl', FileShareControlType.NONE);
-    this.mobileFileShareControl = _.get(settings, 'mobileFileShareControl', FileShareControlType.NONE);
-    this.webFileShareControl = _.get(settings, 'webFileShareControl', FileShareControlType.NONE);
-    this.botFileShareControl = _.get(settings, 'botFileShareControl', FileShareControlType.NONE);
-  }
-}
-
-export enum FileShareControlType {
-  BLOCK_BOTH = 'BLOCK_BOTH',
-  BLOCK_UPLOAD = 'BLOCK_UPLOAD',
-  NONE = 'NONE',
-}
-
-export enum WhiteboardFileShareControlType {
-  ALLOW = 'ALLOW',
-  BLOCK = 'BLOCK',
-}
-
-enum OrgSetting {
-  BLOCK_EXTERNAL_COMMUNICATIONS = 'blockExternalCommunications',
-  CLIENT_SECURITY_POLICY = 'clientSecurityPolicy',
-  WHITEBOARD_FILE_SHARE_CONTROL = 'whiteboardFileShareControl',
-}
+import { IFileShareControl, IOrgSettingsResponse } from './org-settings.interfaces';
+import { OrgSetting, WhiteboardFileShareControlType } from './org-settings.types';
+import { OrgSettingsUtil } from './org-settings.util';
 
 export class OrgSettingsService {
   private adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
@@ -50,14 +15,14 @@ export class OrgSettingsService {
     return `${this.adminServiceUrl}organizations/${orgId}/settings`;
   }
 
-  public getSettings(orgId: string): ng.IPromise<IAnyObject> {
+  public getSettings(orgId: string): ng.IPromise<Object> {
     const url = this.getSettingsUrl(orgId);
     return this.$http.get<IOrgSettingsResponse>(url).then(response => {
       return JSON.parse(response.data.orgSettings[0]);
     });
   }
 
-  public updateLatestSettings(orgId: string, settings: IAnyObject): ng.IHttpPromise<void> {
+  public updateLatestSettings(orgId: string, settings: Object): ng.IHttpPromise<void> {
     return this.getSettings(orgId).then(response => {
       const payload = _.assignIn({}, response, settings);
       const url = this.getSettingsUrl(orgId);
@@ -113,11 +78,11 @@ export class OrgSettingsService {
     return this.setSpecificSetting(orgId, OrgSetting.WHITEBOARD_FILE_SHARE_CONTROL, payload);
   }
 
-  public getFileShareControl(orgId: string): ng.IPromise<FileShareControl> {
-    return this.getSettings(orgId).then(response => new FileShareControl(response));
+  public getFileShareControl(orgId: string): ng.IPromise<IFileShareControl> {
+    return this.getSettings(orgId).then(response => OrgSettingsUtil.mkFileShareControl(response));
   }
 
-  public setFileShareControl(orgId: string, fileShareControl: FileShareControl): ng.IHttpPromise<void> {
+  public setFileShareControl(orgId: string, fileShareControl: IFileShareControl): ng.IHttpPromise<void> {
     return this.updateLatestSettings(orgId, fileShareControl);
   }
 

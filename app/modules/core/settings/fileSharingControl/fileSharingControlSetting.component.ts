@@ -1,9 +1,12 @@
-import { ProPackSettingSection } from '../proPackSettingSection';
-import { FileSharingControlModel } from './fileSharingControl.model';
 import { IToolkitModalService } from 'modules/core/modal';
-import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { Notification } from 'modules/core/notifications';
-import { OrgSettingsService, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.service';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings.interfaces';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
+import { ProPackSettingSection } from '../proPackSettingSection';
+import { IDownloadUploadModel, IFileSharingControlModel } from './fileSharingControlSetting.interfaces';
+import { FileSharingControlModelType } from './fileSharingControlSetting.types';
 
 export class FileSharingControlSettingController {
   public allowWhiteboards = false;
@@ -12,7 +15,7 @@ export class FileSharingControlSettingController {
   public supportsWhiteboardFileShareControl = false;
 
   private hasWarningDisplayed = false;
-  private model = new FileSharingControlModel();
+  private model = this.mkFileSharingControlModel();
 
   /* @ngInject */
   constructor(
@@ -24,8 +27,7 @@ export class FileSharingControlSettingController {
     private Notification: Notification,
     private OrgSettingsService: OrgSettingsService,
     private ProPackService: ProPackService,
-  ) {
-  }
+  ) {}
 
   public $onInit() {
     this.loadSetting();
@@ -36,7 +38,7 @@ export class FileSharingControlSettingController {
       supportsWhiteboardFileShareControl: this.FeatureToggleService.atlasWhiteboardFileShareControlGetStatus()
         .then(supportsWhiteboardFileShareControl => this.supportsWhiteboardFileShareControl = supportsWhiteboardFileShareControl),
       fileSharingControl: this.OrgSettingsService.getFileShareControl(this.Authinfo.getOrgId())
-        .then(fileShareControl => this.model = new FileSharingControlModel(fileShareControl)),
+        .then(fileShareControl => this.model = this.mkFileSharingControlModel(fileShareControl)),
       proPackPurchased: this.ProPackService.hasProPackPurchasedOrNotEnabled()
         .then(isPurchased => this.isProPackPurchased = isPurchased),
       whiteboardFileShareControl: this.OrgSettingsService.getWhiteboardFileShareControl(this.Authinfo.getOrgId())
@@ -48,15 +50,15 @@ export class FileSharingControlSettingController {
       .catch(_.noop);
   }
 
-  public updateAllowWhiteboards(): void {
+  public updateAllowWhiteboards(allowWhiteboards: boolean): void {
     this.OrgSettingsService.setWhiteboardFileShareControl(
       this.Authinfo.getOrgId(),
-      this.allowWhiteboards ? WhiteboardFileShareControlType.ALLOW : WhiteboardFileShareControlType.BLOCK,
+      allowWhiteboards ? WhiteboardFileShareControlType.ALLOW : WhiteboardFileShareControlType.BLOCK,
     ).then(() => {
       this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
-    })
-    .catch((response) => {
+    }).catch((response) => {
       this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+      this.allowWhiteboards = !allowWhiteboards;
     });
   }
 
@@ -73,14 +75,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockDesktopAppDownload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockDesktopApp.download = value;
-      if (value) {
-        this.model.blockDesktopApp.upload = value;
-      }
-      this.updateFileSharingControlSetting();
-    })
-    .catch(_.noop);
+    this.setDownloadCheckbox(FileSharingControlModelType.BLOCK_DESKTOP, value);
   }
 
   public get isBlockWebAppDownload(): boolean {
@@ -88,13 +83,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockWebAppDownload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockWebApp.download = value;
-      if (value) {
-        this.model.blockWebApp.upload = value;
-      }
-      this.updateFileSharingControlSetting();
-    });
+    this.setDownloadCheckbox(FileSharingControlModelType.BLOCK_WEBAPP, value);
   }
 
   public get isBlockMobileAppDownload(): boolean {
@@ -102,13 +91,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockMobileAppDownload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockMobileApp.download = value;
-      if (value) {
-        this.model.blockMobileApp.upload = value;
-      }
-      this.updateFileSharingControlSetting();
-    });
+    this.setDownloadCheckbox(FileSharingControlModelType.BLOCK_MOBILE, value);
   }
 
   public get isBlockBotsDownload(): boolean {
@@ -116,13 +99,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockBotsDownload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockBots.download = value;
-      if (value) {
-        this.model.blockBots.upload = value;
-      }
-      this.updateFileSharingControlSetting();
-    });
+    this.setDownloadCheckbox(FileSharingControlModelType.BLOCK_BOTS, value);
   }
 
   public get isBlockDesktopAppUpload(): boolean {
@@ -130,10 +107,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockDesktopAppUpload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockDesktopApp.upload = value;
-      this.updateFileSharingControlSetting();
-    });
+    this.setUploadCheckbox(FileSharingControlModelType.BLOCK_DESKTOP, value);
   }
 
   public get isBlockWebAppUpload(): boolean {
@@ -141,10 +115,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockWebAppUpload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockWebApp.upload = value;
-      this.updateFileSharingControlSetting();
-    });
+    this.setUploadCheckbox(FileSharingControlModelType.BLOCK_WEBAPP, value);
   }
 
   public get isBlockMobileAppUpload(): boolean {
@@ -152,10 +123,7 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockMobileAppUpload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockMobileApp.upload = value;
-      this.updateFileSharingControlSetting();
-    });
+    this.setUploadCheckbox(FileSharingControlModelType.BLOCK_MOBILE, value);
   }
 
   public get isBlockBotsUpload(): boolean {
@@ -163,24 +131,50 @@ export class FileSharingControlSettingController {
   }
 
   public set isBlockBotsUpload(value: boolean) {
-    this.getConfirmation(value).then(() => {
-      this.model.blockBots.upload = value;
-      this.updateFileSharingControlSetting();
-    });
+    this.setUploadCheckbox(FileSharingControlModelType.BLOCK_BOTS, value);
   }
 
-  private updateFileSharingControlSetting() {
-    if (this.isLoaded) {
-      this.OrgSettingsService.setFileShareControl(
-        this.Authinfo.getOrgId(),
-        this.model.toFileShareControl(),
-      ).then(() => {
-        this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
-      })
-      .catch((response) => {
-        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+  private setDownloadCheckbox(modelKey: keyof IFileSharingControlModel, value: boolean): void {
+    this.getConfirmation(value).then(() => {
+      const downloadUploadModel = this.model[modelKey];
+      const {
+        download: origDownload,
+        upload: origUpload,
+      } = downloadUploadModel;
+      downloadUploadModel.download = value;
+      if (value) {
+        downloadUploadModel.upload = true;
+      }
+      this.updateFileSharingControlSetting().catch(() => {
+        downloadUploadModel.download = origDownload;
+        downloadUploadModel.upload = origUpload;
       });
+    }).catch(_.noop);
+  }
+
+  private setUploadCheckbox(modelKey: keyof IFileSharingControlModel, value: boolean): void {
+    this.getConfirmation(value).then(() => {
+      this.model[modelKey].upload = value;
+      this.updateFileSharingControlSetting().catch(() => {
+        this.model[modelKey].upload = !value;
+      });
+    }).catch(_.noop);
+  }
+
+  private updateFileSharingControlSetting(): ng.IPromise<void> {
+    if (!this.isLoaded) {
+      return this.$q.reject();
     }
+    return this.OrgSettingsService.setFileShareControl(
+      this.Authinfo.getOrgId(),
+      this.mkFileShareControl(this.model),
+    ).then(() => {
+      this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
+    })
+    .catch((response) => {
+      this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+      return this.$q.reject(response);
+    });
   }
 
   private getConfirmation(value: boolean): ng.IPromise<void> {
@@ -194,6 +188,55 @@ export class FileSharingControlSettingController {
       close: this.$translate.instant('common.confirm'),
       dismiss: this.$translate.instant('common.cancel'),
     }).result;
+  }
+
+  private mkFileSharingControlModel(fileShareControl?: IFileShareControl): IFileSharingControlModel {
+    const fileSharingControlModel = {
+      blockDesktopApp: { download: false, upload: false },
+      blockWebApp: { download: false, upload: false },
+      blockMobileApp: { download: false, upload: false },
+      blockBots: { download: false, upload: false },
+    };
+
+    if (fileShareControl) {
+      this.setFileShareControlType(fileSharingControlModel.blockDesktopApp, fileShareControl.desktopFileShareControl);
+      this.setFileShareControlType(fileSharingControlModel.blockWebApp, fileShareControl.webFileShareControl);
+      this.setFileShareControlType(fileSharingControlModel.blockMobileApp, fileShareControl.mobileFileShareControl);
+      this.setFileShareControlType(fileSharingControlModel.blockBots, fileShareControl.botFileShareControl);
+    }
+
+    return fileSharingControlModel;
+  }
+
+  private mkFileShareControl(model: IFileSharingControlModel): IFileShareControl {
+    return {
+      desktopFileShareControl: this.getFileShareControlType(model.blockDesktopApp),
+      mobileFileShareControl: this.getFileShareControlType(model.blockMobileApp),
+      webFileShareControl: this.getFileShareControlType(model.blockWebApp),
+      botFileShareControl: this.getFileShareControlType(model.blockBots),
+    };
+  }
+
+  private setFileShareControlType(model: IDownloadUploadModel, type: FileShareControlType): void {
+    switch (type) {
+      case FileShareControlType.BLOCK_BOTH:
+        model.download = true;
+        model.upload = true;
+        break;
+      case FileShareControlType.BLOCK_UPLOAD:
+        model.upload = true;
+        break;
+    }
+  }
+
+  private getFileShareControlType(model: IDownloadUploadModel): FileShareControlType {
+    if (model.upload && model.download) {
+      return FileShareControlType.BLOCK_BOTH;
+    }
+    if (model.upload) {
+      return FileShareControlType.BLOCK_UPLOAD;
+    }
+    return FileShareControlType.NONE;
   }
 }
 

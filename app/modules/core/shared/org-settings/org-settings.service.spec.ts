@@ -1,5 +1,6 @@
 import moduleName from './index';
-import { OrgSettingsService, FileShareControl, FileShareControlType, WhiteboardFileShareControlType } from './org-settings.service';
+import { OrgSettingsService } from './org-settings.service';
+import { FileShareControlType, WhiteboardFileShareControlType } from './org-settings.types';
 
 type Test = atlas.test.IServiceTest<{
   $rootScope: ng.IRootScopeService,
@@ -207,7 +208,6 @@ describe('Component: orgSettings:', () => {
 
       const promise = this.OrgSettingsService.getFileShareControl(this.orgId);
       promise.then(response => {
-        expect(response instanceof FileShareControl).toBe(true);
         expect(response.desktopFileShareControl).toBe(FileShareControlType.BLOCK_BOTH);
         expect(response.mobileFileShareControl).toBe(FileShareControlType.BLOCK_UPLOAD);
         expect(response.webFileShareControl).toBe(FileShareControlType.NONE);

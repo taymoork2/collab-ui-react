@@ -2,7 +2,6 @@
 
 var testModule = require('./accountorgservice');
 
-// TODO: test something meaningful
 describe('Service: AccountOrgService', function () {
   beforeEach(function () {
     this.initModules(testModule);

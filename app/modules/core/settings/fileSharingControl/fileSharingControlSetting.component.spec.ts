@@ -1,24 +1,30 @@
-import testModuleName from './index';
-import { FileSharingControlSettingController } from './fileSharingControlSetting.component';
-import { ProPackService } from 'modules/core/proPack/proPack.service';
 import { IToolkitModalService } from 'modules/core/modal';
-import { OrgSettingsService, FileShareControl, FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.service';
+import { Notification } from 'modules/core/notifications';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { IFileShareControl } from 'modules/core/shared/org-settings/org-settings.interfaces';
+import { OrgSettingsService } from 'modules/core/shared/org-settings/org-settings.service';
+import { FileShareControlType, WhiteboardFileShareControlType } from 'modules/core/shared/org-settings/org-settings.types';
+import { OrgSettingsUtil } from 'modules/core/shared/org-settings/org-settings.util';
+import { FileSharingControlSettingController } from './fileSharingControlSetting.component';
+import moduleName from './index';
 
 type Test = atlas.test.IComponentTest<FileSharingControlSettingController, {
   Authinfo,
   FeatureToggleService,
   ModalService: IToolkitModalService,
+  Notification: Notification,
   OrgSettingsService: OrgSettingsService,
   ProPackService: ProPackService,
 }>;
 
 describe('Component: FileSharingControlSetting', () => {
   beforeEach(function (this: Test) {
-    this.initModules(testModuleName);
+    this.initModules(moduleName);
     this.injectDependencies(
       'Authinfo',
       'FeatureToggleService',
       'ModalService',
+      'Notification',
       'OrgSettingsService',
       'ProPackService',
     );
@@ -36,7 +42,7 @@ describe('Component: FileSharingControlSetting', () => {
     } = {}) => {
       const {
         atlasWhiteboardFileShareControlGetStatus = this.$q.resolve(true),
-        getFileShareControl = this.$q.resolve(new FileShareControl()),
+        getFileShareControl = this.$q.resolve(OrgSettingsUtil.mkFileShareControl()),
         setFileShareControl = this.$q.resolve(),
         getWhiteboardFileShareControl = this.$q.resolve(WhiteboardFileShareControlType.BLOCK),
         setWhiteboardFileShareControl = this.$q.resolve(),
@@ -51,6 +57,7 @@ describe('Component: FileSharingControlSetting', () => {
       spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled').and.returnValue(hasProPackPurchasedOrNotEnabled);
       spyOn(this.ModalService, 'open').and.returnValue({ result: modalResult });
       spyOn(this.Authinfo, 'getOrgId').and.returnValue('12345');
+      spyOn(this.Notification, 'errorWithTrackingId');
     };
   });
 
@@ -124,7 +131,7 @@ describe('Component: FileSharingControlSetting', () => {
 
     it('should set checkboxes based on initial loaded data', function (this: Test) {
       this.initSpies({
-        getFileShareControl: this.$q.resolve(new FileShareControl({
+        getFileShareControl: this.$q.resolve(OrgSettingsUtil.mkFileShareControl({
           desktopFileShareControl: FileShareControlType.BLOCK_BOTH,
           mobileFileShareControl: FileShareControlType.BLOCK_UPLOAD,
           webFileShareControl: FileShareControlType.NONE,
@@ -224,20 +231,20 @@ describe('Component: FileSharingControlSetting', () => {
 
       // check each input
       this.view.find(Checkbox.BLOCK_DESKTOP_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         desktopFileShareControl: FileShareControlType.BLOCK_UPLOAD,
       })));
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_WEBAPP_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         desktopFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         webFileShareControl: FileShareControlType.BLOCK_UPLOAD,
       })));
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_MOBILE_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         desktopFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         webFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         mobileFileShareControl: FileShareControlType.BLOCK_UPLOAD,
@@ -245,7 +252,7 @@ describe('Component: FileSharingControlSetting', () => {
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_BOTS_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         desktopFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         webFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         mobileFileShareControl: FileShareControlType.BLOCK_UPLOAD,
@@ -255,7 +262,7 @@ describe('Component: FileSharingControlSetting', () => {
       // uncheck each input
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_DESKTOP_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         webFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         mobileFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         botFileShareControl: FileShareControlType.BLOCK_UPLOAD,
@@ -263,31 +270,31 @@ describe('Component: FileSharingControlSetting', () => {
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_WEBAPP_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         mobileFileShareControl: FileShareControlType.BLOCK_UPLOAD,
         botFileShareControl: FileShareControlType.BLOCK_UPLOAD,
       })));
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_MOBILE_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
         botFileShareControl: FileShareControlType.BLOCK_UPLOAD,
       })));
 
       (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
       this.view.find(Checkbox.BLOCK_BOTS_UPLOAD).click();
-      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl()));
+      expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl()));
     });
 
     it('should save BLOCK_BOTH when download is checked by also checking and disabling upload input', function (this: Test) {
       this.initSpies();
       this.initComponent();
 
-      const verifyDownloadAndUploadCheckboxClicks = (downloadCheckbox: Checkbox, uploadCheckbox: Checkbox, fileShareControlKey: keyof FileShareControl): void => {
+      const verifyDownloadAndUploadCheckboxClicks = (downloadCheckbox: Checkbox, uploadCheckbox: Checkbox, fileShareControlKey: keyof IFileShareControl): void => {
         // check download will check both download and upload, disable upload, and set to BLOCK_BOTH
         (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
         this.view.find(downloadCheckbox).click();
-        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
           [fileShareControlKey]: FileShareControlType.BLOCK_BOTH,
         })));
         expect(this.view.find(downloadCheckbox)).toBeChecked();
@@ -298,7 +305,7 @@ describe('Component: FileSharingControlSetting', () => {
         // uncheck download will enable upload checkbox and set to BLOCK_UPLOAD
         (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
         this.view.find(downloadCheckbox).click();
-        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
           [fileShareControlKey]: FileShareControlType.BLOCK_UPLOAD,
         })));
         expect(this.view.find(downloadCheckbox)).not.toBeChecked();
@@ -309,7 +316,7 @@ describe('Component: FileSharingControlSetting', () => {
         // uncheck upload will set to NONE
         (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
         this.view.find(uploadCheckbox).click();
-        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(new FileShareControl({
+        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalledWith('12345', jasmine.objectContaining(OrgSettingsUtil.mkFileShareControl({
           [fileShareControlKey]: FileShareControlType.NONE,
         })));
         expect(this.view.find(downloadCheckbox)).not.toBeChecked();
@@ -339,6 +346,54 @@ describe('Component: FileSharingControlSetting', () => {
         'botFileShareControl',
       );
     });
+
+    it('should notify error and undo checkbox change when an error occurs while saving', function (this: Test) {
+      this.initSpies({
+        setFileShareControl: this.$q.reject(),
+      });
+      this.initComponent();
+
+      const clickCheckboxesAndVerifyError = (
+        downloadCheckbox: Checkbox,
+        uploadCheckbox: Checkbox,
+      ) => {
+        (this.Notification.errorWithTrackingId as jasmine.Spy).calls.reset();
+        (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
+        this.view.find(downloadCheckbox).click();
+        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalled();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+        expect(this.view.find(downloadCheckbox)).not.toBeChecked();
+        expect(this.view.find(uploadCheckbox)).not.toBeChecked();
+
+        (this.Notification.errorWithTrackingId as jasmine.Spy).calls.reset();
+        (this.OrgSettingsService.setFileShareControl as jasmine.Spy).calls.reset();
+        this.view.find(uploadCheckbox).click();
+        expect(this.OrgSettingsService.setFileShareControl).toHaveBeenCalled();
+        expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
+        expect(this.view.find(downloadCheckbox)).not.toBeChecked();
+        expect(this.view.find(uploadCheckbox)).not.toBeChecked();
+      };
+
+      clickCheckboxesAndVerifyError(
+        Checkbox.BLOCK_BOTS_DOWNLOAD,
+        Checkbox.BLOCK_BOTS_UPLOAD,
+      );
+
+      clickCheckboxesAndVerifyError(
+        Checkbox.BLOCK_DESKTOP_DOWNLOAD,
+        Checkbox.BLOCK_DESKTOP_UPLOAD,
+      );
+
+      clickCheckboxesAndVerifyError(
+        Checkbox.BLOCK_MOBILE_DOWNLOAD,
+        Checkbox.BLOCK_MOBILE_UPLOAD,
+      );
+
+      clickCheckboxesAndVerifyError(
+        Checkbox.BLOCK_WEBAPP_DOWNLOAD,
+        Checkbox.BLOCK_WEBAPP_UPLOAD,
+      );
+    });
   });
 
   describe('Whiteboard Restriction', () => {
@@ -354,6 +409,20 @@ describe('Component: FileSharingControlSetting', () => {
       (this.OrgSettingsService.setWhiteboardFileShareControl as jasmine.Spy).calls.reset();
       allowWhiteboardCheckbox.click();
       expect(this.OrgSettingsService.setWhiteboardFileShareControl).toHaveBeenCalledWith('12345', WhiteboardFileShareControlType.BLOCK);
+      expect(allowWhiteboardCheckbox).not.toBeChecked();
+    });
+
+    it('should notify error and undo checkbox change when an error occurs while saving', function (this: Test) {
+      this.initSpies({
+        setWhiteboardFileShareControl: this.$q.reject(),
+      });
+      this.initComponent();
+
+      const allowWhiteboardCheckbox = this.view.find(Checkbox.ALLOW_WHITEBOARDS);
+      expect(allowWhiteboardCheckbox).not.toBeChecked();
+      allowWhiteboardCheckbox.click();
+      expect(this.OrgSettingsService.setWhiteboardFileShareControl).toHaveBeenCalled();
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
       expect(allowWhiteboardCheckbox).not.toBeChecked();
     });
   });
