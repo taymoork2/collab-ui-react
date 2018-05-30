@@ -35,16 +35,17 @@
           />
         </div>
     <legal-hold-custodian-import
-      mode="$ctrl.ImportModeType.ADD"
+      mode="$ctrl.ImportModeType.NEW"
       on-file-validation="$ctrl.setFileValid(isValid)"
       on-conversion-completed="$ctrl.addUsersToMatter(custodianLists)"
+      on-conversion-cancelled="$ctrl.cancel()"
       on-import-init="$ctrl.importComponentApi=importComponentApi;"></legal-hold-custodian-import>
       </div>
   </form>
 </div>
 <div class="modal-footer">
   <button class="btn"
-    ng-show="!$ctrl.isDone"
+    ng-show="!$ctrl.matter"
     ng-click="$ctrl.cancelModal()">
     <span translate="common.cancel"></span>
   </button>

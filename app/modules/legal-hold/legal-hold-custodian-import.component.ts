@@ -3,12 +3,13 @@ import { IToolkitModalService } from 'modules/core/modal';
 import { LegalHoldService, GetUserBy } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { ICustodian, IImportComponentApi, IImportResult } from './legal-hold.interfaces';
-import { ImportMode, ImportStep, ImportResultStatus } from './legal-hold.enums';
+import { ImportMode, ImportStep, ImportResultStatus, Events } from './legal-hold.enums';
 
 
 export class LegalHoldCustodianImportController implements ng.IComponentController {
 
   private $: any;
+  private progressEventListener: Function;
 
   private static readonly DEFAULTS = {
     styleFileInputWidth: 7,
@@ -49,6 +50,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   public onFileValidation: Function;
   public onImportInit: Function;
   public onConversionCompleted: Function;
+  public onConversionCancelled: Function;
 
   // for import process
   public progress: number = 0;
@@ -59,7 +61,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   private totalChunks: number;
 
   public errorData: ICustodian[] = [];
-  public csvErrorData: ICustodian[] = [];
+  public csvErrorData: {}[] = [];
   private csvEmailsArray: string[]; // emails uploaded from csv. Data to be converted
   public result: IImportResult | undefined;
   private shouldCancel = false; // triggers cancelation
@@ -78,6 +80,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
+    private $rootScope: ng.IRootScopeService,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
     private Notification: Notification,
@@ -97,8 +100,15 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
         });
       }
     });
+    this.progressEventListener = this.$rootScope.$on(Events.CONVERSION_CHUNK_PROCESSED, () => {
+      this.setUploadProgress();
+    });
     this.setupDefaults();
     this.onImportInit({ importComponentApi: this.api });
+  }
+
+  public $onDestroy() {
+    this.progressEventListener();
   }
 
   // style and text strings setup
@@ -241,6 +251,9 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     this.result = result;
     if (_.isEmpty(_.get(this.result, 'success', []))) {
       this.resultStatus = this.shouldCancel ? ImportResultStatus.CANCELED : ImportResultStatus.FAILED;
+      if (this.shouldCancel) {
+        this.onConversionCancelled();
+      }
     } else {
       this.resultStatus = _.isEmpty(this.result.error) ? ImportResultStatus.SUCCESS : ImportResultStatus.SUCCESS_PARTIAL;
     }
@@ -256,12 +269,18 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     this.progress = Math.round((90.0 * this.chunks) / this.totalChunks);
   }
 
+  public isStatusCanceled(): boolean {
+    return this.resultStatus === ImportResultStatus.CANCELED;
+  }
+
   public displayResults(): void {
     this.errorData = this.getErrorsForDisplay();
-    this.csvErrorData = _.cloneDeep(this.errorData);
-    this.csvErrorData.unshift({
-      emailAddress: this.$translate.instant('common.emailAddress'),
-      error: this.$translate.instant('common.error'),
+    this.csvErrorData = _.map(this.errorData, (record) => {
+      const newRecord = {
+        [this.$translate.instant('common.emailAddress')]: record.emailAddress,
+        [this.$translate.instant('common.error')]: record.error,
+      };
+      return newRecord;
     });
     this.progress = 100;
     this.$timeout(() => {
@@ -287,6 +306,7 @@ export class LegalHoldCustodianImportComponent implements ng.IComponentOptions {
     mode: '<',
     onFileValidation: '&',
     onConversionCompleted: '&',
+    onConversionCancelled: '&',
     styleFileInputWidth: '@?',
     styleProgressWidth: '@?',
     styleResultsWidth: '@?',
