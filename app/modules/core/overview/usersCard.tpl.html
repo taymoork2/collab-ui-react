@@ -4,7 +4,7 @@
   <span>{{card.name | translate}}</span>
   </div>
 </header>
-<section ng-class="{ 'row user-card--auto-assign-enabled' : card.features.atlasF3745AutoAssignLicenses }">
+<section class="row user-card--auto-assign-enabled">
   <div class="columns medium-6 onboard-block">
     <div ng-if="!card.isOnboardingError">
       <span class="onboard-nr h4">{{ card.usersOnboarded }}</span>
@@ -21,7 +21,7 @@
       </a> -->
     </div>
   </div>
-  <div class="status-block" ng-class="[card.features.atlasF3745AutoAssignLicenses ? 'columns medium-6 status-block--auto-assign-enabled' : 'user-border']">
+  <div class="columns medium-6 status-block status-block--auto-assign-enabled">
     <div class="convert-block convert-block--auto-assign-enabled">
       <!-- F7208 GDPR enabled-->
       <div ng-if="card.features.atlasF7208GDPRConvertUser">
@@ -62,14 +62,14 @@
       <li class="status-block__item directory-synchronization">
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
         <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
-        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }" translate="overview.cards.users.directorySynchronization"></span>
+        <span class="body-small" translate="overview.cards.users.directorySynchronization"></span>
         <a href id="viewDirSyncSettings" ng-click="card.showDirSyncSettings()" aria-label="{{::'overview.cards.users.directorySynchronization' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>
       <li class="status-block__item single-sign-on">
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
-        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }" translate="overview.cards.users.singleSignOn"></span>
+        <span class="body-small" translate="overview.cards.users.singleSignOn"></span>
         <a href id="viewSsoSettings" ng-click="card.showSSOSettings()" aria-label="{{::'overview.cards.users.singleSignOn' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
@@ -77,7 +77,7 @@
 
       <li class="status-block__item auto-assign-licenses">
         <i class="icon icon-circle status-indicator" ng-class="card.getAutoAssignLicensesStatusCssClass()"></i>
-        <span ng-class="{ 'body-small': card.features.atlasF3745AutoAssignLicenses }"
+        <span class="body-small"
           translate="overview.cards.users.autoAssignLicenses"></span>
         <a href ng-click="card.showEditAutoAssignTemplateModal()" aria-label="{{::'overview.cards.users.autoAssignLicenses' | translate}}">
           <i class="icon-settings icon"></i>
