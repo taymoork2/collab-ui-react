@@ -1,9 +1,10 @@
-<i ng-if="$ctrl.isSafe"
+<button cs-btn ng-if="$ctrl.isSafe"
   aria-label="{{$ctrl.ariaLabel}}"
-  class="icon"
-  ng-class="$ctrl.classes"
+  loading="$ctrl.loading"
+  ng-class="$ctrl.ttClass"
   ng-click="$ctrl.onClick()"
-  role="{{$ctrl.role}}"
+  ng-disabled="$ctrl.disabled"
+  role="button"
   tabindex="{{$ctrl.tabindex}}"
   tooltip="{{$ctrl.ttTooltipText}}"
   tooltip-animation="{{$ctrl.animation}}"
@@ -11,18 +12,21 @@
   tooltip-class="{{$ctrl.ttTooltipClass}}"
   tooltip-placement="{{$ctrl.placement}}"
   tooltip-trigger="{{$ctrl.trigger}}">
-</i>
-<i ng-if="!$ctrl.isSafe"
+  <span ng-transclude></span>
+</button>
+<button cs-btn ng-if="!$ctrl.isSafe"
   aria-label="{{$ctrl.ariaLabel}}"
-  class="icon"
-  ng-class="$ctrl.classes"
+  loading="$ctrl.loading"
+  ng-class="$ctrl.ttClass"
   ng-click="$ctrl.onClick()"
-  role="{{$ctrl.role}}"
+  ng-disabled="$ctrl.disabled"
+  role="button"
   tabindex="{{$ctrl.tabindex}}"
+  tooltip-html-unsafe="{{$ctrl.ttTooltipText}}"
   tooltip-animation="{{$ctrl.animation}}"
   tooltip-append-to-body="{{$ctrl.appendToBody}}"
-  tooltip-html-unsafe="{{$ctrl.ttTooltipUnsafeText}}"
   tooltip-class="{{$ctrl.ttTooltipClass}}"
   tooltip-placement="{{$ctrl.placement}}"
   tooltip-trigger="{{$ctrl.trigger}}">
-</i>
+  <span ng-transclude></span>
+</button>

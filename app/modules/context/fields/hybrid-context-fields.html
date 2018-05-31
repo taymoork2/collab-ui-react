@@ -1,23 +1,24 @@
 <div class="context-list">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
-      <cs-searchfilter ng-model="contextFields.placeholder.count" search-item-fn="contextFields.filterList(searchStr)" placeholder-text="{{contextFields.placeholder.name}}" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      <cs-searchfilter
+        ng-model="contextFields.placeholder.count"
+        search-item-fn="contextFields.filterList(searchStr)"
+        placeholder-text="{{contextFields.placeholder.name}}"
+        clear-aria-text="{{::'common.clear' | translate}}"
+        search-placeholder-text="{{::'common.search' | translate}}">
       </cs-searchfilter>
     </cs-page-sub-header-left>
     <cs-page-sub-header-right>
-      <span
+      <button-tooltip
         ng-if="!contextFields.showNew"
-        tabindex="0"
-        tooltip-class="context-tooltip"
-        tooltip="{{contextFields.newButtonTooltip}}"
-        tooltip-placement="left"
-        tooltip-trigger="mouseenter focus"
-        aria-label="{{contextFields.newButtonTooltip}}">
-        <button class="btn btn--people"
-          ng-disabled="contextFields.fetchFailed || !contextFields.showNew"
-          translate="common.new">
-        </button>
-      </span>
+        tt-class="btn btn--people"
+        tt-disabled="contextFields.fetchFailed || !contextFields.showNew"
+        tt-tooltip-class="context-tooltip"
+        tt-tooltip-placement="left"
+        tt-tooltip-text="{{contextFields.newButtonTooltip}}">
+        <span translate="common.new"></span>
+      </button-tooltip>
       <span ng-if="contextFields.showNew">
         <button
           class="btn btn--people"
