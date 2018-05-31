@@ -6,6 +6,7 @@
         <span class="reports-header-value" ng-if="$ctrl.value !== $ctrl.parentcntrl.noData">{{$ctrl.value}} </span>
       </div>
       <div id="cs-export-div"></div>
+      <div class='live-reports-expand-icon icon icon-maximize' ng-click="$ctrl.openSetUpModal()" ng-if="$ctrl.isorg"></div>
       <section>
         <div class="metrics-info">
           <div class="spinner-position" ng-if="!$ctrl.chartOptions.isShow">

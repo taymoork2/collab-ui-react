@@ -8,13 +8,15 @@
   /* @ngInject */
   function ClusterInServiceGraphService($rootScope, $translate) {
     var vm = this;
+    vm.legend = 'legend';
     vm.liveReportDiv = 'liveReportDiv';
+    vm.liveReportExpandDiv = 'liveReportExpandDiv';
     vm.exportDiv = 'cs-export-div';
     return {
       setClusterInService: setClusterInService,
     };
 
-    function setClusterInService(data) {
+    function setClusterInService(data, graphSize) {
       AmCharts.addInitHandler(function (chart) {
         // check if there are graphs with autoColor: true set
         for (var i = 0; i < chart.graphs.length; i++) {
@@ -47,8 +49,6 @@
           fillAlphas: 0.8,
           lineAlpha: 0.2,
           type: 'column',
-          labelText: '[[value]]',
-          labelPosition: 'middle',
           valueField: 'value',
           autoColor: true,
           showHandOnHover: true,
@@ -96,8 +96,14 @@
           });
         },
       }];
-      var chart = AmCharts.makeChart(vm.liveReportDiv, chartData);
-      return chart;
+      var chart;
+      if (graphSize === 'minimum') {
+        chart = AmCharts.makeChart(vm.liveReportDiv, chartData);
+        return chart;
+      } else {
+        chart = AmCharts.makeChart(vm.liveReportExpandDiv, chartData);
+        return chart;
+      }
     }
     function formatLabel(label) {
       return label + '%';

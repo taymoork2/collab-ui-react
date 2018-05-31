@@ -33,15 +33,15 @@
         <uc-media-report-flip-chart-card parentcntrl="nav" headername="nav.total_participants_heading" tooltip-value="nav.totalcloudTooltip" headercolor="'grey'" chart-options="nav.totalParticipantschartOptions" card-class="'three-cards'" card-desc="nav.clientTypeDesc"></uc-media-report-flip-chart-card>
         <uc-media-report-card parentcntrl="nav" headername="nav.second_card_heading" value="nav.second_card_value" headercolor="'orange'" card-class="'three-cards'"></uc-media-report-card>
         <uc-media-report-flip-card parentcntrl="nav" headername="nav.availabilityCardHeading" value="nav.clusterAvailability" headercolor="'blue'" card-class="'three-cards'" tooltip-options="nav.availabilityTooltipOptions" dropdown-present="true"></uc-media-report-flip-card>
-        <uc-media-utilization parentcntrl="nav"></uc-media-utilization>
-        <uc-number-of-participant parentcntrl="nav" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
-        <uc-media-participant-distribution parentcntrl="nav"></uc-media-participant-distribution>
-        <uc-media-cascade-bandwith parentcntrl="nav"  ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle"></uc-media-cascade-bandwith>
+        <uc-media-utilization parentcntrl="nav" type="nav.type"></uc-media-utilization>
+        <uc-number-of-participant parentcntrl="nav" type="nav.type" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}"></uc-number-of-participant>
+        <uc-media-participant-distribution parentcntrl="nav" type="nav.type"></uc-media-participant-distribution>
+        <uc-media-cascade-bandwith parentcntrl="nav" type="nav.type" ng-class="{'no-display': nav.clusterSelected !== nav.allClusters && nav.clusterSelected !== undefined}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle"></uc-media-cascade-bandwith>
         <cs-card class="cs-card--full cascade-card-container" ng-class="{'no-display': nav.clusterSelected === nav.allClusters}" ng-if="nav.hasMFCascadeBandwidthFeatureToggle">
-          <uc-cluster-cascade-bandwith class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-cluster-cascade-bandwith>
-          <uc-streams-bandwidth-usage class="columns large-6 medium-6 small-12" parentcntrl="nav"></uc-streams-bandwidth-usage> 
+          <uc-cluster-cascade-bandwith class="columns large-6 medium-6 small-12" parentcntrl="nav" type="nav.type"></uc-cluster-cascade-bandwith>
+          <uc-streams-bandwidth-usage class="columns large-6 medium-6 small-12" parentcntrl="nav" type="nav.type"></uc-streams-bandwidth-usage> 
         </cs-card>
-        <uc-media-availability parentcntrl="nav"></uc-media-availability>
+        <uc-media-availability parentcntrl="nav" type="nav.type"></uc-media-availability>
       </cs-card-layout>
       <cs-card-layout ng-if="nav.displayAdoption">
         <uc-media-report-card parentcntrl="nav" headername="nav.total_meetings" value="nav.totMeetingsShort" tooltip-value="nav.totMeetingsTooltip" headercolor="'grey'" chart-options="'none'" card-class="'three-cards'"></uc-media-report-card>

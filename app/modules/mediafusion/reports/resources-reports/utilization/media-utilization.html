@@ -1,40 +1,65 @@
 <cs-card id='utilization-card' class="cs-card--full media-metrics-report-card low-z-index">
   <article class="media-service-card header-padding">
-    <graphheader>
-        <span class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></span>
-        <i class='icon icon-info-outline icon-large'
-          ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters"
-          tabindex="0"
-          tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}"
-          tooltip-class="metrics-tooltip"
-          tooltip-trigger="mouseenter focus"
-          aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}">
-        </i>
-        <i class='icon icon-info-outline icon-large'
-          ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"
-          tabindex="0"
-          tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}"
-          tooltip-class="metrics-tooltip"
-          tooltip-trigger="mouseenter focus"
-          aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}">
-        </i>
-        <div id="utilization-export-div"></div>
-    </graphheader>
-    <section>
-      <div class="utilization-reports">
-        <div id="utilizationdiv" class="barchart" ng-class="{'utilization-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)}"></div>
-        <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)">
-          <i class='icon icon-spinner icon-2x'></i>
+    <div class="graph-flip">
+      <div class="card" ng-class="{'flipped':isFlipped}">
+        <div class="face front" ng-class="{'no-display': isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></span>
+            <i class='icon icon-info-outline icon-large'
+              ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters && $ctrl.type === 'historical'"
+              tabindex="0"
+              tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}"
+              tooltip-class="metrics-tooltip"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationOrgDesc' | translate}}">
+            </i>
+            <i class='icon icon-info-outline icon-large'
+              ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters && $ctrl.type === 'historical'"
+              tabindex="0"
+              tooltip="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}"
+              tooltip-class="metrics-tooltip"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{::'mediaFusion.metrics.graphDescription.utilizationClusterDesc' | translate}}">
+            </i>
+            <div id="utilization-export-div"></div>
+          </graphheader>
+          <section>
+            <div class="utilization-reports">
+              <div id="utilizationdiv" class="barchart" ng-class="{'utilization-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)}"></div>
+              <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.utilizationStatus)">
+                <i class='icon icon-spinner icon-2x'></i>
+              </div>
+              <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus)">
+                <p>
+                  <h3 class="no-data">
+                    <i class='icon icon-warning no-data-warning'></i>
+                    <span translate='mediaFusion.metrics.nodata'></span>
+                  </h3>
+                <p>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info-outline icon-large graph-flip-icon' ng-click="isFlipped=true" ng-show="$ctrl.type === 'live'"></i>
         </div>
-        <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.utilizationStatus)">
-          <p>
-            <h3 class="no-data">
-              <i class='icon icon-warning no-data-warning'></i>
-              <span translate='mediaFusion.metrics.nodata'></span>
-            </h3>
-          <p>
+        <div class="face back" ng-class="{'no-display': !isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.utilizationTitle'></span>
+          </graphheader>
+          <section>
+            <div class="metrics-info" ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters">
+              <div class="card-desc-small">
+                <span translate="mediaFusion.metrics.graphDescription.utilizationOrgDesc" class="span-desc-small"></span>
+              </div>
+            </div>
+            <div class="metrics-info" ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters">
+              <div class="card-desc-small">
+                <span translate="mediaFusion.metrics.graphDescription.utilizationClusterDesc" class="span-desc-small"></span>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info icon-large graph-flip-icon' ng-click="isFlipped=false"></i>
         </div>
       </div>
-    </section>
+    </div>
   </article>
 </cs-card>
