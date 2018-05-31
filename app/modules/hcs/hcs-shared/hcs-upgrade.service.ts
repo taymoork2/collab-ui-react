@@ -185,7 +185,7 @@ export class HcsUpgradeService {
 
   public getAppVersions(apptype: string): ng.IPromise<IApplicationVersion> {
     return this.appVersionResource.get({
-      type: apptype,
+      application: apptype,
     }).$promise;
   }
 
