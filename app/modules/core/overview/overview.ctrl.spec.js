@@ -89,7 +89,6 @@ describe('Controller: OverviewCtrl', function () {
     }));
     spyOn(this.ProPackService, 'hasProPackEnabledAndNotPurchased').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'atlasF3745AutoAssignLicensesGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
@@ -185,7 +184,7 @@ describe('Controller: OverviewCtrl', function () {
       expect(_.includes(cardnames, 'overview.cards.call.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.care.title')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.hybrid.title')).toBeTruthy();
-      expect(_.includes(cardnames, 'overview.cards.users.title')).toBeTruthy();
+      expect(_.includes(cardnames, 'overview.cards.users.onboardTitle')).toBeTruthy();
       expect(_.includes(cardnames, 'overview.cards.undefined.title')).toBeFalsy();
     });
 
@@ -493,16 +492,15 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Auto Assign Notification - set up now', function () {
-    it('should not display if atlasF3745AutoAssignLicenses is false', function () {
+    it('should display if a default template does NOT exist', function () {
       var TOTAL_NOTIFICATIONS = 8;
       this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
 
-      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false)); // not relevant, just the original scenario
-      this.FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus.and.returnValue(this.$q.resolve(false));
+      this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(false));
       this.initController();
-      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
+      expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
     });
   });
 
