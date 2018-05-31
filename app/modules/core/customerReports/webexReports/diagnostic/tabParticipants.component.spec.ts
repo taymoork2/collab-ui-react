@@ -11,7 +11,7 @@ describe('Component: tabParticipants', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', 'SearchService', 'Notification');
+    this.injectDependencies('$q', '$timeout', 'FeatureToggleService', 'Notification', 'SearchService');
 
     initSpies.apply(this);
   });
@@ -19,6 +19,7 @@ describe('Component: tabParticipants', () => {
   function initSpies() {
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.SearchService, 'getParticipants').and.returnValue(this.$q.resolve());
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent(this) {
@@ -26,15 +27,34 @@ describe('Component: tabParticipants', () => {
     this.$scope.$apply();
   }
 
-  it('Should not loading when call getParticipants', function () {
+  it('should not loading when call getParticipants', function () {
     this.SearchService.getParticipants.and.returnValue(this.$q.resolve(this.participants));
     initComponent.call(this);
     expect(this.controller.loading).toBe(false);
   });
 
-  it('Should call Notification.errorResponse when response status is 404', function () {
+  it('should call Notification.errorResponse when response status is 404', function () {
     this.SearchService.getParticipants.and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('should retry to detect and update device', function () {
+    const mockRealDevice = {
+      completed: true,
+      items: [{
+        deviceType: '',
+      }],
+    };
+    spyOn(this.SearchService, 'getRealDevice').and.returnValue(this.$q.resolve(mockRealDevice));
+    initComponent.call(this);
+    this.controller.gridData = [{
+      platform: '10',
+      deviceCompleted: false,
+    }];
+    this.controller.reqtimes = 4;
+    this.controller.detectAndUpdateDevice();
+    this.$timeout.flush();
+    expect(this.controller.reqtimes).toBe(5);
   });
 });

@@ -22,3 +22,12 @@ export enum MosType {
     FAIR = 3,
     POOR = 0,
 }
+
+export enum SearchStorage {
+    UNIQUE_PARTICIPANTS = 'uniqueParticipants',
+    JOIN_MEETING_TIMES = 'joinMeetingTimes',
+    VOIP_SESSION_DETAIL = 'voipSessionDetail',
+    VIDEO_SESSION_DETAIL = 'videoSessionDetail',
+    PSTN_SESSION_DETAIL = 'pstnSessionDetail',
+    WEBEX_ONE_MEETING = 'webexOneMeeting',
+}

@@ -1,13 +1,18 @@
-import './_search.scss';
 import * as moment from 'moment';
-import { SearchService } from './searchService';
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications';
 import { KeyCodes } from 'modules/core/accessibility';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { SearchService, TrackingEventName } from './searchService';
+import './_search.scss';
 
-const DATERANGE = 6;
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
+}
+
+enum LimitDays {
+  OneWeek = 7,
+  OneMonth = 30,
 }
 
 class WebexReportsSearch implements ng.IComponentController {
@@ -38,6 +43,7 @@ class WebexReportsSearch implements ng.IComponentController {
     private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
     private ProPackService: ProPackService,
+    private FeatureToggleService: FeatureToggleService,
   ) {
     this.gridData = [];
     this.timeZone = this.SearchService.getGuess('');
@@ -48,7 +54,10 @@ class WebexReportsSearch implements ng.IComponentController {
   public $onInit(): void {
     this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
       if (isProPackEnabled) {
-        this.initDateRange();
+        this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8234QueryRange)
+          .then((isSupport: boolean) => {
+            this.initDateRange(isSupport);
+          });
         this.setGridOptions();
         this.Analytics.trackEvent(this.SearchService.featureName, {});
         if (this.searchStr) {
@@ -109,9 +118,10 @@ class WebexReportsSearch implements ng.IComponentController {
     });
   }
 
-  private initDateRange() {
+  private initDateRange(isSupportQueryRange: boolean) {
+    const calendarLimitDays = isSupportQueryRange ? LimitDays.OneMonth : LimitDays.OneWeek;
     this.today = moment().format('YYYY-MM-DD');
-    this.startDate = moment().subtract(DATERANGE, 'days').format('YYYY-MM-DD');
+    this.startDate = moment().subtract(calendarLimitDays - 1, 'days').format('YYYY-MM-DD');
 
     this.endDate = this.today;
     this.storeData.endDate = this.endDate;
@@ -132,6 +142,8 @@ class WebexReportsSearch implements ng.IComponentController {
     this.errMsg.ariaLabel = '';
     this.errMsg.search = '';
     this.storeData.searchStr = this.searchStr;
+
+    this.Analytics.trackEvent(TrackingEventName.MEETING_SEARCH);
 
     if ((!emailReg.test(this.searchStr) && !digitaReg.test(this.searchStr)) || this.searchStr === '') {
       this.errMsg.ariaLabel = this.$translate.instant('webexReports.searchError');
@@ -157,8 +169,8 @@ class WebexReportsSearch implements ng.IComponentController {
   }
 
   private setGridData(): void {
-    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
-    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : '';
+    const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.today;
+    const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.startDate;
     const data = {
       endDate : endDate,
       email: this.email,

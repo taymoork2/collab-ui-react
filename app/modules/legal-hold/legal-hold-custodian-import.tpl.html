@@ -74,12 +74,12 @@
 <div class="custodianImport__results columns medium-{{$ctrl.styleResultsWidth}}"
   ng-class="$ctrl.resultClass"
   ng-if="$ctrl.currentStep === $ctrl.ImportStepEnum.RESULT">
-  <h4 translate="{{::$ctrl.l10nStatusTitle}}"></h4>
-  <div class="cs-input-group">
-    <p translate="{{::$ctrl.l10nResultString}}"
-      translate-values="{fileName: $ctrl.fileName}"></p>
-  </div>
-  <div ng-if="$ctrl.resultStatus!==$ctrl.ImportResultStatusEnum.CANCELED">
+  <div ng-if="!$ctrl.isStatusCanceled()">
+    <h4 translate="{{::$ctrl.l10nStatusTitle}}"></h4>
+    <div class="cs-input-group">
+      <p translate="{{::$ctrl.l10nResultString}}"
+        translate-values="{fileName: $ctrl.fileName}"></p>
+    </div>
     <div class="row">
       <div class="columns cs-input-group"
         ng-class="$ctrl.result.error.length > 0 ? 'medium-8' : 'medium-4'">
@@ -110,5 +110,22 @@
       ng-if="$ctrl.result.error.length > 0"
       table-records="$ctrl.errorData"
       table-fields=":: $ctrl.errorTableMetadata"></cr-table>
+  </div>
+  <div ng-if="$ctrl.isStatusCanceled()">
+    <div class="row">
+        <div class="cs-input-group">
+            <h4 translate="{{::$ctrl.l10nResultString}}"
+              translate-values="{fileName: $ctrl.fileName}"></h4>
+        </div>
+      <div class="columns cs-input-group medium-4">
+        <cr-users-tile-totals new-total="'0'"
+          updated-total="0"
+          error-label="{{::'legalHold.custodianImport.invalidUsers' | translate}}"
+          updated-label="{{::$ctrl.l10nActionPerformed|translate }}"
+          hide-new="true"
+          hide-errors-if-none="true"
+          error-total="0"> </cr-users-tile-totals>
+      </div>
+    </div>
   </div>
 </div>

@@ -27,12 +27,14 @@ class TimeLine implements ng.IComponentController {
   private markLabel: d3;
   private yPanel: d3;
   private lineColorCls: string[] = ['goodLine', 'fairLine', 'poorLine', ''];
+  private isSupportClientVersion = false;
 
   /* @ngInject */
   public constructor(
     private $element: ng.IRootElementService,
     private SearchService: SearchService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService,
   ) {
     this.data = {
       ticks: 0,
@@ -49,6 +51,7 @@ class TimeLine implements ng.IComponentController {
   }
 
   public $onInit() {
+    this.loadFeatureToggle();
     this.initParameters();
     this.initChart();
   }
@@ -64,6 +67,13 @@ class TimeLine implements ng.IComponentController {
         this.drawColorLines(_.get(lineData, 'currentValue'));
       }
     }, 500)();
+  }
+
+  private loadFeatureToggle(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8105ClientVersion)
+      .then((isSupport: boolean) => {
+        this.isSupportClientVersion = isSupport;
+      });
   }
 
   private initParameters(): void {
@@ -247,7 +257,12 @@ class TimeLine implements ng.IComponentController {
             msgArr.push({ key: this.$translate.instant('webexReports.callBack') });
           }
         } else {
-          msgArr.push({ key: item.device });
+          if (this.isSupportClientVersion) {
+            const clientVersion = this.SearchService.getClientVersion(item.clientKey);
+            msgArr.push({ key: `${item.platform_} ${clientVersion.osVersion}: ${item.browser_} ${clientVersion.browserVersion}` });
+          } else {
+            msgArr.push({ key: item.device });
+          }
         }
         msgArr.push({ key: this.$translate.instant('webexReports.joinTime'), value: item.joinTime_ });
 

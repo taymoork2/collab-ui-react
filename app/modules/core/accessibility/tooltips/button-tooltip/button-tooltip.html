@@ -1,0 +1,32 @@
+<button cs-btn ng-if="$ctrl.isSafe"
+  aria-label="{{$ctrl.ariaLabel}}"
+  loading="$ctrl.loading"
+  ng-class="$ctrl.ttClass"
+  ng-click="$ctrl.onClick()"
+  ng-disabled="$ctrl.disabled"
+  role="button"
+  tabindex="{{$ctrl.tabindex}}"
+  tooltip="{{$ctrl.ttTooltipText}}"
+  tooltip-animation="{{$ctrl.animation}}"
+  tooltip-append-to-body="{{$ctrl.appendToBody}}"
+  tooltip-class="{{$ctrl.ttTooltipClass}}"
+  tooltip-placement="{{$ctrl.placement}}"
+  tooltip-trigger="{{$ctrl.trigger}}">
+  <span ng-transclude></span>
+</button>
+<button cs-btn ng-if="!$ctrl.isSafe"
+  aria-label="{{$ctrl.ariaLabel}}"
+  loading="$ctrl.loading"
+  ng-class="$ctrl.ttClass"
+  ng-click="$ctrl.onClick()"
+  ng-disabled="$ctrl.disabled"
+  role="button"
+  tabindex="{{$ctrl.tabindex}}"
+  tooltip-html-unsafe="{{$ctrl.ttTooltipText}}"
+  tooltip-animation="{{$ctrl.animation}}"
+  tooltip-append-to-body="{{$ctrl.appendToBody}}"
+  tooltip-class="{{$ctrl.ttTooltipClass}}"
+  tooltip-placement="{{$ctrl.placement}}"
+  tooltip-trigger="{{$ctrl.trigger}}">
+  <span ng-transclude></span>
+</button>

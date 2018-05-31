@@ -1,4 +1,4 @@
-import { ICallLegs, ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, IParticipant, IObjectDict, IUniqueParticipant, IVersion } from './partner-search.interfaces';
+import { ICallLegs, ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, ISessionDetailItem, IParticipant, IObjectDict, IUniqueParticipant, IVersion } from './partner-search.interfaces';
 
 export enum Platforms {
   WINDOWS = '0',
@@ -347,7 +347,7 @@ export class PartnerSearchService {
     return phone;
   }
 
-  public getClientVersion(key: string): IVersion {/// TODO share the code next time
+  public getClientVersion(key: string): IVersion {// TODO share the code next time
     const empty = {
       osVersion: '',
       browserVersion: '',
@@ -355,5 +355,16 @@ export class PartnerSearchService {
     const clientVersions = this.getStorage('ClientVersion');
     const clientVersion: IVersion = _.get(clientVersions, key);
     return clientVersion ? clientVersion : empty;
+  }
+
+  public getData(): any {// TODO share the code v2.8
+    return this.data;
+  }
+
+  public saveSessionDetailToStorage(sessionType: string, sessionDetail: ISessionDetailItem): void {
+    const sessionDetailByNodeId = {};
+    sessionDetailByNodeId[sessionDetail.key] = sessionDetail.items;
+    const newDetail = _.assign(this.getStorage(sessionType) || {}, sessionDetailByNodeId);
+    this.setStorage(sessionType, newDetail);
   }
 }

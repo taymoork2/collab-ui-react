@@ -12,7 +12,7 @@ export class InstallFilesComponent implements ng.IComponentOptions {
 export class InstallFilesCtrl implements ng.IComponentController {
   public installFilesList: IHcsInstallables[] = [];
   public allInstallFilesList: IHcsInstallables[] = [];
-
+  public loading: boolean = true;
   /* @ngInject */
   constructor(
     private HcsSetupModalService: HcsSetupModalService,
@@ -28,7 +28,9 @@ export class InstallFilesCtrl implements ng.IComponentController {
   }
 
   public listAgentInstallFiles(): void {
+    this.loading = true;
     this.HcsControllerService.listAgentInstallFile().then(resp => {
+      this.loading = false;
       this.allInstallFilesList = resp;
       this.installFilesList = _.cloneDeep(this.allInstallFilesList);
       this.setFileInfo();

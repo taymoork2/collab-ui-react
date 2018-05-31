@@ -13,7 +13,7 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
   public serviceFilter: HybridServiceId | 'all_services';
   public timeFilter: ITimeFilterOptions['value'];
   public loadingPage = false;
-  public allEvents: IHybridServicesEventHistoryItem[];
+  public allEvents: IHybridServicesEventHistoryItem[] |undefined;
 
   private openedItem: IHybridServicesEventHistoryItem;
   private debouncedGetData: Function;
@@ -47,9 +47,14 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       eventsSince: fromDate,
       eventsTo: toDate,
     };
-    this.HybridServicesEventHistoryService.getAllEvents(options)
+    const updateItems = (items: IHybridServicesEventHistoryItem[] | undefined) => {
+      this.allEvents = items;
+      this.loadingPage = false;
+    };
+
+    this.HybridServicesEventHistoryService.getAllEvents(options, undefined, updateItems, [])
       .then((data) => {
-        this.allEvents = _.clone(data.items);
+        this.allEvents = _.clone(data ? data.items : []);
       })
       .catch((error) => {
         this.Notification.errorWithTrackingId(error, 'hercules.eventHistory.cannotReadEventData');
@@ -81,6 +86,8 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       fromDate = moment().subtract(2, 'days').toISOString();
     } else if (timeFilter === 'last_week') {
       fromDate = moment().subtract(7, 'days').toISOString();
+    } else if (timeFilter === 'last_30_days') {
+      fromDate = moment().subtract(30, 'days').toISOString();
     }
     return [fromDate, toDate];
   }
@@ -89,7 +96,7 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
 
   public parseServiceForCluster(connectorType: ConnectorType | 'all'): string {
     if (connectorType === 'all') {
-      return this.$translate.instant(`hercules.eventHistory.allServices`);
+      return this.$translate.instant(`hercules.eventHistory.filters.allServices`);
     }
     const serviceId = this.HybridServicesUtilsService.connectorType2ServicesId(connectorType)[0];
     return this.$translate.instant(`hercules.serviceNames.${serviceId}`);
@@ -113,6 +120,16 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
       return this.$translate.instant('hercules.eventHistory.eventClasses.connector');
     } else if (this.HybridServicesEventHistoryService.isServiceActivationEvent(eventItem)) {
       return this.$translate.instant('hercules.eventHistory.eventClasses.service');
+    } else if (this.HybridServicesEventHistoryService.isResourceGroupEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.resourceGroup');
+    } else if (this.HybridServicesEventHistoryService.isHostEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.host');
+    } else if (this.HybridServicesEventHistoryService.isRedirectTargetEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.redirectTarget');
+    } else if (this.HybridServicesEventHistoryService.isMachineAccountEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.machineAccount');
+    } else if (this.HybridServicesEventHistoryService.isMailSubscriberEvent(eventItem)) {
+      return this.$translate.instant('hercules.eventHistory.eventClasses.mail');
     }
     return this.$translate.instant('common.unknown');
   }

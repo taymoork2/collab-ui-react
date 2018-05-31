@@ -428,7 +428,7 @@ public isSelectedItem(item: IListItem): boolean {
 
 ## Tooltip Wrapper Components
 
-Because of how many tags go in to creating an accessible tooltip, wrapper components are being created to streamline the tooltip creation process.
+Because creating a proper accessible tooltip is very verbose, wrapper components have been created to streamline the tooltip creation process for the most common element types.
 
 Commonalities between tooltip components:
 * All tooltips are added to the tabindex by default, but will include an optional tabindex override: `tt-tabindex`.
@@ -440,12 +440,13 @@ Commonalities between tooltip components:
 ```typescript
 public bindings = {
   ttAriaLabel: '@?',            // optional aria-label text
-  ttClass: '@?',                // optional icon class names; defaults to icon-information
+  ttClass: '@?',                // optional icon class names
   ttTabindex: '<?',             // optional tabindex override
-  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng
-  ttTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng
+  ttTooltipAnimation: '<?',     // same as tooltip-animation from collab-ui-ng - default setting is true
+  ttTooltipAppendToBody: '<?',  // same as tooltip-append-to-body from collab-ui-ng - default setting is false
   ttTooltipClass: '@?',         // same as tooltip-class from collab-ui-ng
-  ttTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng
+  ttTooltipPlacement: '@?',     // same as tooltip-placement from collab-ui-ng - default setting is 'top'
+  ttTooltipTrigger: '@?',       // same as tooltip-trigger from collab-ui-ng - default setting is 'mouseenter focus'
   ttTooltipText: '@',           // safe text for the tooltip to display, used for the aria-label if cs-aria-label is undefined
   ttTooltipUnsafeText: '@?',    // unsafe text passed into tooltip-html-unsafe; should be used in conjunction with cs-aria-label
   onClickFn: '&?',              // optional click function if tooltip doubles as button; changes role from 'tooltip' to 'button' when present
@@ -471,13 +472,12 @@ Examples:
 
 ### text-tooltip
 
-`text-tooltip` is used specifically for tooltips with text triggers.  These are not to be used for button tooltips (those will use [button-tooltip](#button-tooltip) below), though a click function can still be attached using `on-click-fn`.
+`text-tooltip` is used specifically for tooltips with text triggers.  These are not to be used for button tooltips (those will use [button-tooltip](#button-tooltip) below) or input tooltips (which will use [input-tooltip](#input-tooltip)), though a click function can still be attached using `on-click-fn`.
 
 Examples:
 * The minimum effort for an accessible tooltip.
 ```html
-<text-tooltip
-  tt-tooltip-text="{{::'common.tooltip' | translate}}">
+<text-tooltip tt-tooltip-text="{{::'common.tooltip' | translate}}">
   <span translate="transcluded.text"><span>
 </text-tooltip>
 ```
@@ -492,15 +492,63 @@ Examples:
 
 ### link-tooltip
 
-TODO: create tooltip that requires an href value
+`link-tooltip` adds an extra required binding - `tt-href` - to pass in the `href` for the anchor element.  The `link-tooltip` is otherwise similar to the `text-tooltip` in creation.
+
+Examples:
+* The minimum effort for an accessible tooltip.
+```html
+<link-tooltip
+  tt-href="http://www.fakewebsite.com"
+  tt-tooltip-text="{{::'common.tooltip' | translate}}">
+  <span translate="transcluded.text"><span>
+</link-tooltip>
+```
+* The minimum effort for an `html-unsafe` tooltip.
+```html
+<link-tooltip
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-href="http://www.fakewebsite.com"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+  <span translate="transcluded.text"><span>
+</link-tooltip>
+```
 
 ### button-tooltip
 
-TODO: create tooltip with button trigger
+`button-tooltip` combines `tooltip` and `cs-btn` so that the button and the tooltip are a single location when navigating via keyboard.  Two bindings are added to control whether the tooltip is disabled - `tt-disabled` - and the `cs-btn` loading state - `tt-loading`.  They are both optional boolean variables.  If the variables are not provided, both the disabled and loading states will default to false.
 
-### text-input-tooltip
+Examples:
+* The minimum effort for an accessible tooltip.
+```html
+<button-tooltip tt-tooltip-text="{{::'common.tooltip' | translate}}">
+  <span translate="transcluded.text"><span>
+</button-tooltip>
+```
+* The minimum effort for an `html-unsafe` tooltip.
+```html
+<button-tooltip
+  tt-aria-label="{{::'common.tooltip' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.tooltipWithHtml' | translate}}">
+  <span translate="transcluded.text"><span>
+</button-tooltip>
+```
+* `button-tooltip` with a loading state and disabled state
+```html
+<button-tooltip
+  tt-disabled="$ctrl.disabled"
+  tt-loading="$ctrl.loading"
+  tt-tooltip-text="{{::'common.tooltipWithHtml' | translate}}">
+  <span translate="transcluded.text"><span>
+</button-tooltip>
+```
+
+### input-tooltip
 
 TODO: create tooltip with text input trigger
+
+### pro-pack-tooltip
+
+TODO: create a tooltip specifically for the pro-pack icon, as this is a commonly used tooltip that utilizes `cr-pro-pack-icon`
 
 ---
 

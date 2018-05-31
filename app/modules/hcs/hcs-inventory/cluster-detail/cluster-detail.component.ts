@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { ISelectOption, GROUP_TYPE_UNASSIGNED, STATUS_OPERATIONAL, STATUS_NODES_NEED_ACCEPTANCE, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS, STATUS_SOFTWARE_VERSION_MISMATCH, STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_NEED_TO_UPDATE_BATCH_NUMBER, STATUS_UPGRADE_SCHEDULED, STATUS_UPGRADE_IN_PROGRESS, STATUS_FAILED_UPGRADE } from '../shared/hcs-inventory';
+import { ISelectOption, GROUP_TYPE_UNASSIGNED, STATUS_OPERATIONAL, STATUS_NODES_NEED_ACCEPTANCE, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS, STATUS_SOFTWARE_VERSION_MISMATCH, STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_NEED_TO_UPDATE_BATCH_NUMBER, STATUS_UPGRADE_SCHEDULED, STATUS_UPGRADE_IN_PROGRESS, STATUS_FAILED_UPGRADE, STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED } from '../shared/hcs-inventory';
 import { HcsUpgradeService, HcsControllerService } from 'modules/hcs/hcs-shared';
 import { IHcsCluster, IHcsNode, ISftpServersObject } from 'modules/hcs/hcs-shared/hcs-upgrade';
 import { IHcsCustomer, HcsCustomer } from 'modules/hcs/hcs-shared/hcs-controller';
@@ -47,6 +47,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public sftpSelectPlaceholder: string;
   public sftpServersList: ISelectOption[];
   public processing: boolean = false;
+  public disableSftpSelect: boolean = true;
 
   private timer: any;
   private timeoutVal: number;
@@ -63,6 +64,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     upgradeScheduled: STATUS_UPGRADE_SCHEDULED,
     upgradeInProgress: STATUS_UPGRADE_IN_PROGRESS,
     upgradeFailed: STATUS_FAILED_UPGRADE,
+    softwareProfileNotAssigned: STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED,
   };
 
   /* @ngInject */
@@ -146,6 +148,9 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           };
           this.sftpServersList.push(sftpServersListItem);
         });
+        if (this.sftpServersList.length > 0) {
+          this.disableSftpSelect = false;
+        }
       })
       .catch((err) => {
         this.Notification.errorWithTrackingId(err);

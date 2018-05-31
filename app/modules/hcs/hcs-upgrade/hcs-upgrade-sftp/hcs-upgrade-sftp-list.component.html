@@ -6,6 +6,9 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
+<div class="hcs-no-data" ng-if="$ctrl.loading">
+  <i class="icon icon-2x icon-spinner"></i>
+</div>
 <div class="hcs-no-data" ng-if="$ctrl.sftpList.length === 0">
   <h2 translate="hcs.sftp.noneSftp"></h2>
   <h5 translate="hcs.sftp.noneSftpDesc"></h5>
@@ -28,9 +31,9 @@
   </cs-page-sub-header>
   <div class="cs-card-container hcs-card-header" ng-if="$ctrl.currentSftpList.length">
     <cs-card-layout>
-      <cs-card class="cs-card--small header-background hoverable" ng-repeat="sftp in $ctrl.currentSftpList">
+      <cs-card class="cs-card--medium header-background hoverable hcs-card-default" ng-repeat="sftp in $ctrl.currentSftpList">
         <article ng-click="$ctrl.editSftp(sftp)" hover-delay>
-          <header>
+          <header class="hcs-min-height-card-header">
             <div class="header-with-right-icon">
               <p class="h4 ellipsis" title="Card Name">{{sftp.name}}</p>
               <div class="right card-icon-div">
@@ -40,7 +43,7 @@
                   aria-label="{{::'common.delete' | translate}}"></button>
               </div>
             </div>
-            <p class="h6 eliipsis">{{sftp.path}}</p>
+            <p class="h6 eliipsis hcs-sftp-path">{{sftp.path}}</p>
           </header>
           <section class="card-body card-section">
           </section>

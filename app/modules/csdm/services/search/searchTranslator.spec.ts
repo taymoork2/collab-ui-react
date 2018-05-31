@@ -45,6 +45,8 @@ const keyMock = {
   'CsdmStatus.errorCodes.configuredfortestautomation.message': 'Metrikk- og loggrapportering påvirkes.',
   'CsdmStatus.errorCodes.touchpanelconnection.type': 'Berøringsskjerm nødvendig',
   'CsdmStatus.errorCodes.touchpanelconnection.message': 'Det er ingen berøringsskjerm tilkoblet rom-enheten. Sjekk kabelen som kobler berøringsskjermen til rom-enheten.',
+  'CsdmStatus.errorCodes.provisioningdeveloperoptions.type': 'Oppgradering blokkert ',
+  'CsdmStatus.errorCodes.provisioningdeveloperoptions.message': 'Dette systemet har blitt konfigurert til å ikke oppgradere automatisk.',
   'CsdmStatus.errorCodes.networkquality.type': 'Pakketap oppdaget',
   'CsdmStatus.errorCodes.networkquality.message': 'I løpet av den forrige samtalen oppdaget vi et nivå av pakketap som kan ha påvirket samtalekvaliteten. Pakketap forårsakes vanligvis av nettverksblokkering.',
   'CsdmStatus.errorCodes.unknown.type': 'En ukjent feil oppsto',
@@ -89,6 +91,7 @@ describe('SearchTranslator', () => {
 
     it('should translate single term', function () {
       expectQueryToFindTranslation('krypteringsalternativnøkkel', 'errorcodes=missingencryptionkey');
+      expectQueryToFindTranslation('oppgradere automatisk', 'errorcodes=provisioningdeveloperoptions');
       expectQueryToFindTranslation('Online, med problemer', 'connectionstatus=CONNECTED_WITH_ISSUES');
       expectQueryToFindTranslation('Deaktivert', 'connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade');
       expectQueryToFindTranslation('Forhåndsvisning', 'upgradechannel=Preview');

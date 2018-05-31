@@ -26,7 +26,7 @@ export class HcsInactiveCardComponent implements ng.IComponentOptions {
       <div class="inactive-card_content">
       </div>
       <div class="inactive-card_footer" ng-if="!$ctrl.loading">
-        <p><button class="btn btn--primary" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
+      <a><href ng-click="$ctrl.openSetUp()" translate="hcs.getStarted"></a>
       </div>
     </article>
   `;

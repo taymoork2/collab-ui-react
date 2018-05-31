@@ -15,6 +15,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   public backState: string = 'partner-services-overview';
   public sftpList: SftpServer[];
   public currentSftpList: SftpServer[];
+  public loading: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -39,6 +40,7 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
 
   public listSftpServers(): void {
     this.HcsUpgradeService.listSftpServers().then(list => {
+      this.loading = false;
       this.sftpList = _.get(list, 'sftpServers');
       this.currentSftpList = this.sftpList;
     });

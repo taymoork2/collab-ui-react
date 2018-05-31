@@ -38,6 +38,7 @@ export class TooltipUtil {
       ttTooltipClass: '@?',
       ttTooltipPlacement: '@?',
       ttTooltipText: '@',
+      ttTooltipTrigger: '@?',
       ttTooltipUnsafeText: '@?',
     };
 
@@ -85,13 +86,17 @@ export class TooltipUtil {
       },
 
       get role(): string {
-        // overridden by link-tooltip
+        // not used by link-tooltip or button-tooltip
         return _.isFunction(this.onClickFn) ? 'button' : 'tooltip';
       },
 
       get tabindex(): number {
         // tabindex should be an integer; defaults to 0
         return (_.isNumber(this.ttTabindex) && _.isInteger(this.ttTabindex)) ? this.ttTabindex : 0;
+      },
+
+      get trigger(): string {
+        return _.isString(this.ttTooltipTrigger) ? this.ttTooltipTrigger : 'mouseenter focus';
       },
 
       onClick(): void {

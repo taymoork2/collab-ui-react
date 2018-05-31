@@ -1,6 +1,6 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer } from './hcs-upgrade';
-import { ISoftwareProfile, IApplicationVersion, ISoftwareProfilesObject } from './hcs-swprofile';
+import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
@@ -23,9 +23,6 @@ interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IRes
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
 
-type ISwProfileType = ISoftwareProfilesObject & ng.resource.IResource<ISoftwareProfilesObject>;
-interface ISwProfilesResource extends ng.resource.IResourceClass<ISwProfileType> {}
-
 interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.resource.IResource<IApplicationVersion>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
 }
@@ -35,7 +32,6 @@ export class HcsUpgradeService {
   private clusterResource: IClusterResource;
   private customerClustersResource: ICustomerClustersResource;
   private swProfileResource: ISwProfileResource;
-  private swProfilesResource: ISwProfilesResource;
   private appVersionResource: IApplicationVersionResource;
   private nodeResource: INodeResource;
   private customerResource: ICustomerResource;
@@ -159,14 +155,6 @@ export class HcsUpgradeService {
       partnerId: this.Authinfo.getOrgId(),
       id: _id,
     }).$promise;
-  }
-
-  public getSoftwareProfiles(): ng.IPromise<ISoftwareProfile[]> {
-    return this.swProfilesResource.get({
-      partnerId: this.Authinfo.getOrgId(),
-    }).$promise.then(response => {
-      return response.softwareProfiles;
-    });
   }
 
   public updateSoftwareProfile(swProfile: ISoftwareProfile): ng.IPromise<any>  {
