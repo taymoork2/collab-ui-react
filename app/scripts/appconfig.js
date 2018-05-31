@@ -1128,19 +1128,13 @@
               resetOnboardStoreStates: null,
             },
             resolve: {
-              isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService, FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF3745AutoAssignLicenses).then(function (isEnabled) {
-                  if (!isEnabled) {
-                    return;
-                  }
-
-                  if (typeof $stateParams.isDefaultAutoAssignTemplateActivated !== 'undefined') {
-                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = $stateParams.isDefaultAutoAssignTemplateActivated;
-                    return;
-                  }
-                  return AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(function (isDefaultAutoAssignTemplateActivated) {
-                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
-                  });
+              isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService) {
+                if (typeof $stateParams.isDefaultAutoAssignTemplateActivated !== 'undefined') {
+                  AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = $stateParams.isDefaultAutoAssignTemplateActivated;
+                  return;
+                }
+                return AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(function (isDefaultAutoAssignTemplateActivated) {
+                  AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
                 });
               },
               manageUsers: /* @ngInject */ function ($stateParams) {
