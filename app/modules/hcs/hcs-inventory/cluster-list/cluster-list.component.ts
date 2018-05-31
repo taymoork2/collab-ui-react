@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HcsUpgradeService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfilesObject } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { ISelectOption, IHeaderTab } from '../shared/hcs-inventory';
 
@@ -24,9 +24,10 @@ export class ClusterListCtrl implements ng.IComponentController {
   public clusterToBeDeleted: IClusterItem;
   public customerId: string | undefined;
   public softwareVersionSelected: ISelectOption | null;
-  public softwareVersionProfiles: ISelectOption[] | null;
+  public softwareVersionProfiles: ISelectOption[];
   public loading: boolean;
   public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
+  public disableSwProfileSelect: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -35,6 +36,7 @@ export class ClusterListCtrl implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
+    private HcsControllerService: HcsControllerService,
   ) {}
 
   public $onInit() {
@@ -51,37 +53,8 @@ export class ClusterListCtrl implements ng.IComponentController {
     this.softwareVersionSelected = null;
     this.softwareVersionProfiles = [];
 
-    if (this.groupType === this.typeUnassigned.toLowerCase()) {
-      this.groupName = 'Unassigned';
-      this.customerId = undefined;
-    } else {
-      //TODO: get customer name from api
-      this.groupName = 'Betty\'s Flower Shop';
-      this.customerId = this.groupId;
-
-      //TODO: get software template selected for the customer.
-      this.softwareVersionSelected = { label: 'template2', value: 't2' };
-
-      //TODO: get software template available for partner
-      this.softwareVersionProfiles = [{
-        label: 'template1',
-        value: 't1',
-      }, {
-        label: 'template2',
-        value: 't2',
-      }];
-
-    }
-    this.HcsUpgradeService.listClusters(this.customerId)
-      .then((clusters: IHcsClusterSummaryItem[]) => {
-        this.initClusterList(clusters);
-      })
-      .catch(() => {
-        this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+    this.initCustomer();
+    this.initClusters();
   }
 
   public cardSelected(cluster: IClusterItem): void {
@@ -111,7 +84,68 @@ export class ClusterListCtrl implements ng.IComponentController {
     //delete intsall file && update install file list
   }
 
-  public initClusterList(clustersData: IHcsClusterSummaryItem[]): void {
+  public initCustomer(): void {
+    if (this.groupType === this.typeUnassigned.toLowerCase()) {
+      this.groupName = 'Unassigned';
+      this.customerId = undefined;
+    } else {
+      this.customerId = this.groupId;
+      this.HcsControllerService.getHcsControllerCustomer(this.groupId)
+        .then((customer: IHcsCustomer) => {
+          this.groupName = customer.name;
+          this.customerId = customer.uuid;
+        })
+        .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+
+      //initialize sw profile only for upgrade inventory
+      this.initSoftwareProfiles();
+    }
+  }
+
+  public initClusters(): void {
+    this.HcsUpgradeService.listClusters(this.customerId)
+      .then((clusters: IHcsClusterSummaryItem[]) => {
+        this.formatClusterList(clusters);
+      })
+      .catch(() => {
+        this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+  }
+
+  public initSoftwareProfiles(): void {
+    //get software Profiles List
+    this.HcsUpgradeService.listSoftwareProfiles()
+      .then((swProfiles: ISoftwareProfilesObject) => {
+        this.softwareVersionProfiles = [];
+        _.forEach(swProfiles.softwareProfiles, (swProfile) => {
+          const swProfileListItem = {
+            label: swProfile.name,
+            value: swProfile.uuid,
+          };
+          this.softwareVersionProfiles.push(swProfileListItem);
+        });
+
+        if (this.softwareVersionProfiles.length === 0) {
+          this.disableSwProfileSelect = true;
+        }
+      })
+      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+
+    //get selected sw profile for the customer
+    this.HcsUpgradeService.getHcsUpgradeCustomer(this.groupId)
+      .then((customer: IHcsUpgradeCustomer) => {
+        this.softwareVersionSelected = {
+          label: customer.softwareProfile.name,
+          value: customer.softwareProfile.uuid,
+        };
+      })
+      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+  }
+
+  public formatClusterList(clustersData: IHcsClusterSummaryItem[]): void {
     this.clusterList = [];
     //function to get cluster data from response object
     _.forEach(clustersData, (cluster: IHcsClusterSummaryItem) => {

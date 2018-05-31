@@ -23,7 +23,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   public form: ng.IFormController;
   public softwareProfileSelected: ISelectOption;
   public softwareProfilesList: ISelectOption[];
-  public disableSwProfileSelect: boolean = true;
+  public disableSwProfileSelect: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -59,8 +59,8 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
           this.softwareProfilesList.push(swProfileListItem);
         });
 
-        if (this.softwareProfilesList.length > 0) {
-          this.disableSwProfileSelect = false;
+        if (this.softwareProfilesList.length === 0) {
+          this.disableSwProfileSelect = true;
         }
       })
       .catch((err) => {

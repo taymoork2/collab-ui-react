@@ -14,7 +14,10 @@
       ng-model="$ctrl.sftpServerSelected"
       options="$ctrl.sftpServers"
       on-change-fn="$ctrl.onSftpServerChange()"
-      placeholder="$ctrl.sftpSelectPlaceholder">
+      placeholder="$ctrl.sftpSelectPlaceholder"
+      is-warn="{{$ctrl.disableSftpSelect}}"
+      warn-msg="{{::'hcs.clusterDetail.settings.sftpLocation.sftpWarnMsg' | translate}}"
+      is-disabled="$ctrl.disableSftpSelect">
       </cs-select>
     </div>
   </div>

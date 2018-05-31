@@ -11268,7 +11268,7 @@
         "upgradeScheduled": "Upgrade Scheduled",
         "upgradeInProgress": "Upgrade in progress",
         "failedUpgrade": "Failed Upgrade",
-        "unassigned": "Unassigned",
+        "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
         "noAgentRunning": "No Agent Running"
       },
@@ -11310,6 +11310,7 @@
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
+    "error": "{{err}}",
     "inventory": {
       "title": "Inventory",
       "noInventoryTitle": "No Inventory yet",

@@ -56,13 +56,13 @@ export class InventoryListCtrl implements ng.IComponentController {
       type: 'unassigned',
       status: 'Needs Assigned',
     }, {
-      id: 'ax1235b',
-      name: 'Susan\'s Mixing Company',
+      id: '910fe34f-2bc8-42e8-8db2-22ae6e3ec54d',
+      name: 'Shravan_Test_1',
       type: 'custGroup',
       status: 'Software update needed',
     }, {
-      id: 'ax1231c',
-      name: 'Betty\'s Flower Shop',
+      id: '7eab0dd8-5fe2-4206-8702-5f9de3584ba2',
+      name: 'Jeff\'s Testing Company',
       type: 'custGroup',
       status: 'Operational',
     }, {
