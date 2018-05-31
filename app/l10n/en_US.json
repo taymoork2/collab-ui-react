@@ -1372,7 +1372,7 @@
     "extendedMetadata": "Log Metadata",
     "tabs": {
       "status": "Status",
-      "logs": "Calling",
+      "logs": "Logs",
       "orderProvisioning": "Order Provisioning"
     },
     "cards": {
