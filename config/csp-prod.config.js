@@ -60,6 +60,7 @@ module.exports = {
     'http://*.rackcdn.com', // Expert Virtual Assistant avatar icon
   ],
   mediaSrc: [
+    'blob:',
     'https://*.webex.com',
   ],
   // valid sources for sources for JavaScript
