@@ -30,11 +30,12 @@ export class InstallFilesCtrl implements ng.IComponentController {
   public listAgentInstallFiles(): void {
     this.loading = true;
     this.HcsControllerService.listAgentInstallFile().then(resp => {
-      this.loading = false;
       this.allInstallFilesList = resp;
       this.installFilesList = _.cloneDeep(this.allInstallFilesList);
       this.setFileInfo();
-    });
+    }).catch(error => {
+      this.Notification.errorWithTrackingId(error);
+    }).finally(() => this.loading = false);
   }
 
   public setFileInfo(): void {
