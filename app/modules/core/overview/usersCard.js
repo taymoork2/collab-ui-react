@@ -66,34 +66,6 @@
           }
         };
 
-        // notes:
-        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403 status containing an error code of `'200045'`
-        function getNumberOnboardedUsers() {
-          var params = {
-            orgId: Authinfo.getOrgId(),
-            noErrorNotificationOnReject: true,
-            startIndex: 0,
-            count: 100,
-            sortBy: 'name',
-            sortOrder: 'ascending',
-            filter: {
-              nameStartsWith: '',
-              useUnboundedResultsHack: true,
-            },
-          };
-          UserListService.listUsersAsPromise(params).then(function (response) {
-            card.usersOnboarded = response.data.totalResults;
-          }).catch(function (error) {
-            var errors = error.data.Errors;
-            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
-              card.usersOnboarded = '3000+';
-            } else {
-              card.isOnboardingError = true;
-              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
-            }
-          });
-        }
-
         function getUnassignedLicenses() {
           Orgservice.getLicensesUsage().then(function (response) {
             var licenses = _.flatMap(response, 'licenses');
@@ -157,7 +129,7 @@
           }
         }
 
-        var featuresPromise = initFeatureToggles().then(initAutoAssignTemplate);
+        var featuresPromise = initFeatureToggles();
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
@@ -256,19 +228,49 @@
         }
 
         function initAutoAssignTemplate() {
-          if (card.features.atlasF3745AutoAssignLicenses) {
-            card.name = 'overview.cards.users.onboardTitle';
-            getNumberOnboardedUsers();
-            AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
-              card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
-              if (hasDefaultTemplate) {
-                AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
-                  card.isAutoAssignTemplateActive = isActivated;
-                });
-              }
-            });
-          }
+          card.name = 'overview.cards.users.onboardTitle';
+          getNumberOnboardedUsers();
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
+            if (hasDefaultTemplate) {
+              AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
+                card.isAutoAssignTemplateActive = isActivated;
+              });
+            }
+          });
         }
+
+        // TODO (mipark2): refactor this function for re-usability
+        // notes:
+        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403
+        //   status containing an error code of `'200045'`
+        function getNumberOnboardedUsers() {
+          var params = {
+            orgId: Authinfo.getOrgId(),
+            noErrorNotificationOnReject: true,
+            startIndex: 0,
+            count: 100,
+            sortBy: 'name',
+            sortOrder: 'ascending',
+            filter: {
+              nameStartsWith: '',
+              useUnboundedResultsHack: true,
+            },
+          };
+          UserListService.listUsersAsPromise(params).then(function (response) {
+            card.usersOnboarded = response.data.totalResults;
+          }).catch(function (error) {
+            var errors = error.data.Errors;
+            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
+              card.usersOnboarded = '3000+';
+            } else {
+              card.isOnboardingError = true;
+              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
+            }
+          });
+        }
+
+        initAutoAssignTemplate();
 
         return card;
       },
