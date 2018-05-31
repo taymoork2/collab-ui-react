@@ -11310,7 +11310,6 @@
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
-    "error": "{{err}}",
     "inventory": {
       "title": "Inventory",
       "noInventoryTitle": "No Inventory yet",

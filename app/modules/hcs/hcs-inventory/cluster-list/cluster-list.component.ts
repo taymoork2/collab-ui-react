@@ -95,7 +95,7 @@ export class ClusterListCtrl implements ng.IComponentController {
           this.groupName = customer.name;
           this.customerId = customer.uuid;
         })
-        .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+        .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
 
       //initialize sw profile only for upgrade inventory
       this.initSoftwareProfiles();
@@ -107,9 +107,7 @@ export class ClusterListCtrl implements ng.IComponentController {
       .then((clusters: IHcsClusterSummaryItem[]) => {
         this.formatClusterList(clusters);
       })
-      .catch(() => {
-        this.Notification.error('hcs.clustersList.errorGetClusters', { customerName: this.groupName });
-      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => {
         this.loading = false;
       });
@@ -132,7 +130,7 @@ export class ClusterListCtrl implements ng.IComponentController {
           this.disableSwProfileSelect = true;
         }
       })
-      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
 
     //get selected sw profile for the customer
     this.HcsUpgradeService.getHcsUpgradeCustomer(this.groupId)
@@ -142,7 +140,7 @@ export class ClusterListCtrl implements ng.IComponentController {
           value: customer.softwareProfile.uuid,
         };
       })
-      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
   }
 
   public formatClusterList(clustersData: IHcsClusterSummaryItem[]): void {

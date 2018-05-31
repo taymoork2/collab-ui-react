@@ -105,7 +105,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       this.clusterName = this.clusterDetail.name;
       this.initSelectedSftpServer();
     })
-    .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }))
+    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
     .finally(() => {
       this.loading = false;
     });
@@ -137,7 +137,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           this.disableSftpSelect = true;
         }
       })
-      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
   }
 
   public initCustomer(): void {
@@ -155,7 +155,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
             value: customer.uuid,
           };
         })
-        .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }));
+        .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
     }
     //get customer list
     this.initCustomerList();
@@ -176,7 +176,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           this.customerSelectOptions.push(customerSelectOption);
         });
       })
-      .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }))
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => {
         this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
       });
@@ -304,7 +304,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     .then(() => {
       this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: this.clusterId }, { reload: true });
     })
-    .catch((err) => this.Notification.error('hcs.error', { err: err.data.errors[0].message }))
+    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
     .finally(() => {
       this.processing = false;
     });
