@@ -29,9 +29,9 @@
         card.isAutoAssignTemplateActive = false;
         card.hasAutoAssignDefaultTemplate = false;
 
-        card.name = 'overview.cards.users.title';
+        card.name = 'overview.cards.users.onboardTitle';
         card.template = usersCardTemplatePath;
-        card.cardClass = 'user-card';
+        card.cardClass = 'cs-card--x-large user-card';
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
         card.isOnboardingError = false;
@@ -216,19 +216,16 @@
 
         function initFeatureToggles() {
           return $q.all({
-            atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
             atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
             atlasF7208GDPRConvertUser: FeatureToggleService.atlasF7208GDPRConvertUserGetStatus(),
             autoLicense: FeatureToggleService.autoLicenseGetStatus(),
           }).then(function (features) {
             card.features = features;
-            card.cardClass = card.features.atlasF3745AutoAssignLicenses ? 'cs-card--x-large user-card' : 'cs-card--medium user-card';
             card.deferredFT.resolve();
           });
         }
 
         function initAutoAssignTemplate() {
-          card.name = 'overview.cards.users.onboardTitle';
           getNumberOnboardedUsers();
           AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
             card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
