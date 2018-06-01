@@ -28,6 +28,7 @@
       getCustomerAccount: getCustomerAccount,
       isLoggedIn: isLoggedIn,
       setAccessToken: setAccessToken,
+      getClientAccessToken: getClientAccessToken,
       redirectToLogin: redirectToLogin,
       getNewAccessToken: getNewAccessToken,
       refreshAccessToken: refreshAccessToken,
@@ -135,12 +136,20 @@
     }
 
     function setAccessToken() {
+      return getClientAccessToken()
+        .then(function (clientAccessToken) {
+          return updateOauthTokens({ data: { access_token: clientAccessToken } });
+        })
+        .catch(logErrorAndReject('Failed to obtain oauth access token'));
+    }
+
+    function getClientAccessToken() {
       var url = OAuthConfig.getAccessTokenUrl();
       var data = OAuthConfig.getAccessTokenPostData();
       var token = OAuthConfig.getOAuthClientRegistrationCredentials();
 
       return httpPOST(url, data, token)
-        .then(updateOauthTokens)
+        .then(function (response) { return response.data.access_token; })
         .catch(logErrorAndReject('Failed to obtain oauth access token'));
     }
 

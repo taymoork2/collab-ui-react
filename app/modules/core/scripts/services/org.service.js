@@ -46,6 +46,7 @@
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
+      getDeleteStatus: getDeleteStatus,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
@@ -387,7 +388,16 @@
         deleteUsers = true;
       }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } })
+        .then(function (response) { return response.data; });
+    }
+
+    function getDeleteStatus(statusUrl, clientAccessToken) {
+      return $http.get(statusUrl, {
+        headers: {
+          Authorization: 'Bearer ' + clientAccessToken,
+        },
+      }).then(function (response) { return response.data; });
     }
 
     function listOrgs(filter) {

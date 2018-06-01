@@ -5,6 +5,7 @@ describe('Component: organizationDeleteModal', () => {
   const CONTINUE_BUTTON = '#continueButton';
   const BACK_BUTTON = '#backButton';
   const ORG_ID = '12345';
+  const DELETE_STATUS_URL = 'https://atlas.webex.com/admin/api/v1/organizations/123/deleteTasks/456';
 
   beforeEach(function () {
     this.initModules(organizationDeleteModule);
@@ -19,7 +20,7 @@ describe('Component: organizationDeleteModal', () => {
       'Auth',
       'Authinfo',
       'Notification',
-      'Orgservice',
+      'OrganizationDeleteService',
       'UrlConfig',
     );
     this.userCountUrl = this.UrlConfig.getAdminServiceUrl() + 'organizations/12345/users';
@@ -88,8 +89,10 @@ describe('Component: organizationDeleteModal', () => {
 
   describe('successful deletion', () => {
     beforeEach(function () {
-      spyOn(this.Orgservice, 'deleteOrg').and.returnValue(this.$q.resolve({ status: 200 }));
+      spyOn(this.OrganizationDeleteService, 'deleteOrg').and.returnValue(this.$q.resolve(DELETE_STATUS_URL));
+      spyOn(this.OrganizationDeleteService, 'verifyOrgDelete').and.returnValue(this.$q.resolve());
       spyOn(this.controller, 'openAccountClosedModal');
+      spyOn(this.controller, 'deleteOrgSuccess').and.callThrough();
     });
 
     it('should open the Account Closed modal after successful deletion', function () {
@@ -97,46 +100,46 @@ describe('Component: organizationDeleteModal', () => {
       this.view.find(DELETE_BUTTON).click();
       this.$httpBackend.flush();
 
-      expect(this.Orgservice.deleteOrg).toHaveBeenCalledWith(ORG_ID, false);
       expect(this.controller.openAccountClosedModal).toHaveBeenCalled();
+    });
+
+    it('should verify delete status with location url', function () {
+      this.view.find(DELETE_BUTTON).click();
+      this.$httpBackend.flush();
+
+      expect(this.OrganizationDeleteService.verifyOrgDelete).toHaveBeenCalledWith(DELETE_STATUS_URL);
+      expect(this.controller.deleteOrgSuccess).toHaveBeenCalled();
     });
   });
 
   describe('deletion failure', () => {
-    // TODO Remove the getAdminOrgAsPromise code once the deleteOrg API is fixed.
     beforeEach(function () {
-      spyOn(this.Orgservice, 'deleteOrg').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.OrganizationDeleteService, 'deleteOrg').and.returnValue(this.$q.resolve(DELETE_STATUS_URL));
+      spyOn(this.OrganizationDeleteService, 'verifyOrgDelete').and.returnValue(this.$q.reject());
       spyOn(this.controller, 'openAccountClosedModal');
     });
 
-    it('should show failure notification after failed deletion', function () {
-      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve());
+    it('should show failure notification on failed delete verification', function () {
       this.view.find(DELETE_BUTTON).click();
       this.$httpBackend.flush();
 
-      expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
-      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+    });
+
+    it('should show failure notification on failed org deletion', function () {
+      this.OrganizationDeleteService.deleteOrg.and.returnValue(this.$q.reject(''));
+      this.view.find(DELETE_BUTTON).click();
+      this.$httpBackend.flush();
+
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('should not open the Account Closed modal after failed deletion', function () {
-      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve());
       this.view.find(DELETE_BUTTON).click();
       this.$httpBackend.flush();
 
-      expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
-      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
       expect(this.controller.openAccountClosedModal).not.toHaveBeenCalled();
     });
 
-    it('should open the Account Closed modal if org is eventually deleted ', function () {
-      spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.reject({ status: 404 }));
-      this.view.find(DELETE_BUTTON).click();
-      this.$httpBackend.flush();
-
-      expect(this.Orgservice.deleteOrg).toHaveBeenCalled();
-      expect(this.Orgservice.getAdminOrgAsPromise).toHaveBeenCalled();
-      expect(this.controller.openAccountClosedModal).toHaveBeenCalled();
-    });
   });
 });
