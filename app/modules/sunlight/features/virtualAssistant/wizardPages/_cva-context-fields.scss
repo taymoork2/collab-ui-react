@@ -36,10 +36,16 @@
 .context-input {
   width: 100%;
   text-align: left;
-  border-radius: 0rem;
+  border-radius: 3px;
   border:solid rem(1px) $gray-4;
   height: rem-calc(25);
+  padding-left: 2%;
+  padding-right: 2%;
   &:focus {
+    box-shadow: none;
+    border:solid rem(1px) $blue-base;
+  }
+  &:focus:hover {
     box-shadow: none;
     border:solid rem(1px) $blue-base;
   }
@@ -51,14 +57,17 @@
 .context-input-error {
   width: 100%;
   text-align: left;
-  border-radius: 0rem;
+  border-radius: 3px;
   border:solid rem(1px) $red;
   height: rem-calc(25);
+  padding-left: 2%;
+  padding-right: 2%;
   background: $red-light;
   color: $gray-1;
   &:focus {
     box-shadow: none;
     border:solid rem(1px) $red;
+    background: $white;
   }
 }
 
@@ -112,10 +121,10 @@
     font-family: $brand-font-light;
     color: $gray-dark-1;
     text-overflow: ellipsis;
+    padding-top: 2px;
     padding-left: 4%;
     white-space: nowrap;
     overflow: hidden;
-    padding-top: 2px;
     cursor: default;
   }
 
@@ -132,6 +141,7 @@
   }
 
   .typeahead-search {
+    padding-top: 15px;
     .context-fields-searchbox {
       width: 33rem;
     }
@@ -143,23 +153,38 @@
       }
     }
     .context-search-input {
-      .icon {
-        width: 3%;
-      }
-      width: 97%;
+      width: 100%;
       text-align: left;
-      border:0;
-      border-bottom:solid rem(1px) $blue-base;
-      border-radius: 0rem;
+      height: 2rem;
+      font-size: 0.8rem;
+      border-radius: 3px;
+      border:solid rem(1px) $gray-4;
+      padding-left: 2%;
+      padding-right: 2%;
       &:focus {
         box-shadow: none;
-        border-bottom:solid rem(1px) $blue-base;
+        border:solid rem(1px) $blue-base;
       }
-      height: rem-calc(40);
+      &:focus:hover {
+        box-shadow: none;
+        border:solid rem(1px) $blue-base;
+      }
+      &:hover {
+        box-shadow: none;
+        border: solid rem(1px) $gray-3
+      }
     }
 
     .disabled-state {
-      width: 42rem;
+      width: 100%;
+      text-align: left;
+      height: 2rem;
+      font-size: 0.8rem;
+      border-radius: 3px;
+      border:solid rem(1px) $gray-light-1;
+      background: $gray-light-3;
+      padding-left: 2%;
+      padding-right: 2%;
     }
 
     .field-drop-down span.field-drop-down-id {
