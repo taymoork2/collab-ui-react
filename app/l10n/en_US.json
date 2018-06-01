@@ -239,6 +239,7 @@
       "adInstructions": "Updates can be made directly in Cisco Directory Connector.",
       "adStatus": "Directory Synchronization Enabled",
       "adStatusDisabled": "Directory Synchronization Disabled",
+      "turnOffDS": "Turn off Directory Synchronization",
       "dirSyncDisableSuccess": "Directory synchronization disabled successfully.",
       "dirSyncDisableFailure": "Failed to disabled Directory synchronization.",
       "lastSynced": "Last synced on",
