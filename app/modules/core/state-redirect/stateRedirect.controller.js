@@ -3,12 +3,7 @@ require('modules/core/shared/cui-panel/cui-panel.scss');
 (function () {
   'use strict';
 
-  module.exports = angular.module('core.stateredirect', [
-    require('modules/core/auth/auth'),
-    require('modules/core/stateRedirect/previousState.service'),
-  ])
-    .controller('StateRedirectCtrl', StateRedirectCtrl)
-    .name;
+  module.exports = StateRedirectCtrl;
 
   /* @ngInject */
   function StateRedirectCtrl(Auth, PreviousState) {

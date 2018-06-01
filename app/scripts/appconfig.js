@@ -297,7 +297,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/core/state-redirect/stateRedirect.controller'));
+                  done(require('modules/core/state-redirect'));
                 }, 'state-redirect');
               }),
             },

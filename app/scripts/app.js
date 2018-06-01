@@ -96,7 +96,7 @@
     require('modules/core/scripts/services/readonly.interceptor'),
     require('modules/core/scripts/services/timingInterceptor'),
     require('modules/core/scripts/services/serverErrorInterceptor'),
-    require('modules/core/state-redirect/previousState.service'),
+    require('modules/core/state-redirect/shared').default,
     require('modules/core/trackingId/trackingId.module'),
     require('modules/core/window').default,
     require('modules/online/upgrade').default,

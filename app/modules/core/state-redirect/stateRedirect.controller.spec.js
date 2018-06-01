@@ -8,8 +8,7 @@
       controller = $controller = $scope = Auth = PreviousState = undefined;
     });
 
-    beforeEach(angular.mock.module('core.stateredirect'));
-    beforeEach(angular.mock.module('ngSanitize'));
+    beforeEach(angular.mock.module(require('./index').default));
 
     beforeEach(inject(function ($rootScope, _$controller_, _Auth_, _PreviousState_) {
       $scope = $rootScope.$new();

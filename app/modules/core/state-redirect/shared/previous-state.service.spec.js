@@ -9,7 +9,7 @@
       PreviousState = $state = state = stateParams = undefined;
     });
 
-    beforeEach(angular.mock.module('Core'));
+    beforeEach(angular.mock.module(require('./index').default));
 
     beforeEach(inject(function (_PreviousState_, _$state_) {
       PreviousState = _PreviousState_;

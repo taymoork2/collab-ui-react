@@ -28,7 +28,7 @@
     require('modules/core/users/userAdd').default,
     require('modules/core/users/userManage').default,
     'core.pageparam',
-    'core.previousstate',
+    require('modules/core/state-redirect/shared').default,
     'core.trackingId',
     'core.proPack',
     'core.trial',
