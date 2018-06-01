@@ -212,7 +212,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/unauthorized.tpl.html'),
+                template: require('modules/core/state-redirect/unauthorized.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -223,7 +223,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/loginError.tpl.html'),
+                template: require('modules/core/state-redirect/loginError.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -233,7 +233,7 @@
           .state('backend-temp-unavailable', {
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/backendTempUnavailable.tpl.html'),
+                template: require('modules/core/state-redirect/backendTempUnavailable.tpl.html'),
               },
             },
             authenticate: false,
@@ -241,7 +241,7 @@
           .state('server-maintenance', {
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/serverMaintenance.tpl.html'),
+                template: require('modules/core/state-redirect/serverMaintenance.tpl.html'),
               },
             },
             authenticate: false,
@@ -251,7 +251,7 @@
             url: '/404',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/404.tpl.html'),
+                template: require('modules/core/state-redirect/404.tpl.html'),
                 controller: 'StateRedirectCtrl',
                 controllerAs: 'stateRedirect',
               },
@@ -297,7 +297,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/core/stateRedirect/stateRedirect.controller'));
+                  done(require('modules/core/state-redirect/stateRedirect.controller'));
                 }, 'state-redirect');
               }),
             },
