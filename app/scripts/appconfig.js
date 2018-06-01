@@ -1009,11 +1009,6 @@
             controllerAs: 'umoc',
             template: require('modules/core/users/userManage/userManageOrg.tpl.html'),
           })
-          .state('users.manage.activedir', {
-            controller: 'UserManageActiveDirController',
-            controllerAs: 'umadc',
-            template: require('modules/core/users/userManage/userManageActiveDir.tpl.html'),
-          })
           .state('users.manage.emailSuppress', {
             template: '<user-manage-email-suppress dismiss="$dismiss()"></user-manage-email-suppress>',
             params: {
