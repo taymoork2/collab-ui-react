@@ -6876,8 +6876,10 @@
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Video Mesh Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
-        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected.",
-        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation."
+        "redirect": "Number of calls that could not be hosted by this cluster and hence got redirected.",
+        "overflow": "Number of calls that were made within an enterprise but overflowed to a cloud cluster",
+        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation.",
+        "clusterInServiceClusterDesc": "Percentage of nodes that can host calls in the organisation."
       },
       "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",

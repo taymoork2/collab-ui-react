@@ -5,7 +5,7 @@
       <div class="metrics-header reports-header" ng-hide=!$ctrl.isorg> {{$ctrl.headername}}
         <span class="reports-header-value" ng-if="$ctrl.value !== $ctrl.parentcntrl.noData">{{$ctrl.value}} </span>
       </div>
-      <div id="cs-export-div"></div>
+      <div id="cs-export-div" ng-if="$ctrl.isorg"></div>
       <div class='live-reports-expand-icon icon icon-maximize' ng-click="$ctrl.openSetUpModal()" ng-if="$ctrl.isorg"></div>
       <section>
         <div class="metrics-info">
@@ -29,7 +29,8 @@
       <section>
         <div class="metrics-info">
           <div class="card-desc">
-            <span translate="mediaFusion.metrics.cardDescription.clusterInServiceDesc" class="span-desc"></span>
+            <span translate="mediaFusion.metrics.cardDescription.clusterInServiceDesc" ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters" class="span-desc"></span>
+            <span translate="mediaFusion.metrics.cardDescription.clusterInServiceClusterDesc" ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"  class="span-desc"></span>
           </div>
         </div>
       </section>

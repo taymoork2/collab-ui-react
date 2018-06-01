@@ -191,8 +191,8 @@
         setCallVolumeData();
         if (vm.hasMFCascadeBandwidthFeatureToggle) {
           loadClusterCascadeGraphs();
-          refreshReportCards();
         }
+        refreshReportCards();
       });
     }
 

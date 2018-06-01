@@ -51,6 +51,7 @@
           type: 'column',
           valueField: 'value',
           autoColor: true,
+          fixedColumnWidth: 15,
           showHandOnHover: true,
         }],
         chartCursor: {
