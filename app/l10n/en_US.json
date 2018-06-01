@@ -236,26 +236,16 @@
       }
     },
     "ad": {
-      "adLabel": "Active Directory",
       "adInstructions": "Updates can be made directly in Cisco Directory Connector.",
       "adStatus": "Directory Synchronization Enabled",
       "adStatusDisabled": "Directory Synchronization Disabled",
-      "adStatusDetails": "New users will be automatically added from your directory when it synchronizes. Updates can be made directly in Cisco Directory Connector.",
-      "turnOffDSToolTip": "Turning off Directory Synchronization does not affect current users and their authentication options (SSO).",
       "dirSyncDisableSuccess": "Directory synchronization disabled successfully.",
       "dirSyncDisableFailure": "Failed to disabled Directory synchronization.",
       "lastSynced": "Last synced on",
       "dirSyncProcessing": "Processing...",
       "dirSyncSuccess": "Success",
       "dirSyncError": "Error",
-      "typeLabel": "Modify Users",
-      "typeInstructions": "Select a method to modify users and the services they use.",
-      "manualLabel": "Manually modify users",
-      "manualDetails": "All you need are email addresses to edit up to {{maxUsersInManual}} users.",
-      "bulkLabel": "Export and modify users with a CSV file",
-      "bulkDetails": "Best method for editing up to {{maxUsersInCSV}} users at the same time.",
-      "advancedLabel": "Modify all synchronized users",
-      "advancedDetails": "Add new licenses to all users."
+      "typeLabel": "Modify Users"
     },
     "emailSuppress": {
       "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
