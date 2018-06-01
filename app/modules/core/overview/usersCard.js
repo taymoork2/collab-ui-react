@@ -29,9 +29,9 @@
         card.isAutoAssignTemplateActive = false;
         card.hasAutoAssignDefaultTemplate = false;
 
-        card.name = 'overview.cards.users.title';
+        card.name = 'overview.cards.users.onboardTitle';
         card.template = usersCardTemplatePath;
-        card.cardClass = 'user-card';
+        card.cardClass = 'cs-card--x-large user-card';
         card.icon = 'icon-circle-user';
         card.isUpdating = true;
         card.isOnboardingError = false;
@@ -65,34 +65,6 @@
             });
           }
         };
-
-        // notes:
-        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403 status containing an error code of `'200045'`
-        function getNumberOnboardedUsers() {
-          var params = {
-            orgId: Authinfo.getOrgId(),
-            noErrorNotificationOnReject: true,
-            startIndex: 0,
-            count: 100,
-            sortBy: 'name',
-            sortOrder: 'ascending',
-            filter: {
-              nameStartsWith: '',
-              useUnboundedResultsHack: true,
-            },
-          };
-          UserListService.listUsersAsPromise(params).then(function (response) {
-            card.usersOnboarded = response.data.totalResults;
-          }).catch(function (error) {
-            var errors = error.data.Errors;
-            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
-              card.usersOnboarded = '3000+';
-            } else {
-              card.isOnboardingError = true;
-              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
-            }
-          });
-        }
 
         function getUnassignedLicenses() {
           Orgservice.getLicensesUsage().then(function (response) {
@@ -157,7 +129,7 @@
           }
         }
 
-        var featuresPromise = initFeatureToggles().then(initAutoAssignTemplate);
+        var featuresPromise = initFeatureToggles();
         card.orgEventHandler = function (data) {
           if (data.success) {
             card.ssoEnabled = data.ssoEnabled || false;
@@ -244,31 +216,58 @@
 
         function initFeatureToggles() {
           return $q.all({
-            atlasF3745AutoAssignLicenses: FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus(),
             atlasF6980MultiDirSync: FeatureToggleService.atlasF6980MultiDirSyncGetStatus(),
             atlasF7208GDPRConvertUser: FeatureToggleService.atlasF7208GDPRConvertUserGetStatus(),
             autoLicense: FeatureToggleService.autoLicenseGetStatus(),
           }).then(function (features) {
             card.features = features;
-            card.cardClass = card.features.atlasF3745AutoAssignLicenses ? 'cs-card--x-large user-card' : 'cs-card--medium user-card';
             card.deferredFT.resolve();
           });
         }
 
         function initAutoAssignTemplate() {
-          if (card.features.atlasF3745AutoAssignLicenses) {
-            card.name = 'overview.cards.users.onboardTitle';
-            getNumberOnboardedUsers();
-            AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
-              card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
-              if (hasDefaultTemplate) {
-                AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
-                  card.isAutoAssignTemplateActive = isActivated;
-                });
-              }
-            });
-          }
+          getNumberOnboardedUsers();
+          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+            card.hasAutoAssignDefaultTemplate = hasDefaultTemplate;
+            if (hasDefaultTemplate) {
+              AutoAssignTemplateService.isEnabledForOrg().then(function (isActivated) {
+                card.isAutoAssignTemplateActive = isActivated;
+              });
+            }
+          });
         }
+
+        // TODO (mipark2): refactor this function for re-usability
+        // notes:
+        // - as of 2018-04-16, if a GET call is made for an org with too many users (3000+), CI will respond with a 403
+        //   status containing an error code of `'200045'`
+        function getNumberOnboardedUsers() {
+          var params = {
+            orgId: Authinfo.getOrgId(),
+            noErrorNotificationOnReject: true,
+            startIndex: 0,
+            count: 100,
+            sortBy: 'name',
+            sortOrder: 'ascending',
+            filter: {
+              nameStartsWith: '',
+              useUnboundedResultsHack: true,
+            },
+          };
+          UserListService.listUsersAsPromise(params).then(function (response) {
+            card.usersOnboarded = response.data.totalResults;
+          }).catch(function (error) {
+            var errors = error.data.Errors;
+            if (error.status === 403 && _.some(errors, { errorCode: '200045' })) {
+              card.usersOnboarded = '3000+';
+            } else {
+              card.isOnboardingError = true;
+              card.usersOnboardedError = $translate.instant('overview.cards.users.onboardError');
+            }
+          });
+        }
+
+        initAutoAssignTemplate();
 
         return card;
       },

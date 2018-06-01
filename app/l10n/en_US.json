@@ -1372,7 +1372,7 @@
     "extendedMetadata": "Log Metadata",
     "tabs": {
       "status": "Status",
-      "logs": "Calling",
+      "logs": "Logs",
       "orderProvisioning": "Order Provisioning"
     },
     "cards": {
@@ -9629,8 +9629,6 @@
       }
     },
     "org": {
-      "duplicateName": "Organization name already in use",
-      "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name.",
       "displayNameError": "Could not get customer display name."
@@ -11268,7 +11266,7 @@
         "upgradeScheduled": "Upgrade Scheduled",
         "upgradeInProgress": "Upgrade in progress",
         "failedUpgrade": "Failed Upgrade",
-        "unassigned": "Unassigned",
+        "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
         "noAgentRunning": "No Agent Running"
       },

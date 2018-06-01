@@ -47,7 +47,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public sftpSelectPlaceholder: string;
   public sftpServersList: ISelectOption[];
   public processing: boolean = false;
-  public disableSftpSelect: boolean = true;
+  public disableSftpSelect: boolean = false;
 
   private timer: any;
   private timeoutVal: number;
@@ -71,7 +71,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private $log: ng.ILogService,
     private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private $q: ng.IQService,
@@ -89,20 +88,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     };
     this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
     this.clusterNamePlaceholder = this.$translate.instant('hcs.clusterDetail.settings.clustername.enterClusterName');
-    if (this.groupType.toLowerCase() === this.typeUnassigned.toLowerCase()) {
-      this.customerSelected = {
-        label: '',
-        value: '',
-      };
-    } else {
-      //TODO: get current customer
-      this.customerSelected = {
-        label: '',
-        value: this.groupId,
-      };
-    }
 
-    this.initCustomerList();
+    this.initCustomer();
 
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
 
@@ -118,9 +105,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       this.clusterName = this.clusterDetail.name;
       this.initSelectedSftpServer();
     })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
+    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
     .finally(() => {
       this.loading = false;
     });
@@ -148,37 +133,53 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           };
           this.sftpServersList.push(sftpServersListItem);
         });
-        if (this.sftpServersList.length > 0) {
-          this.disableSftpSelect = false;
+        if (this.sftpServersList.length === 0) {
+          this.disableSftpSelect = true;
         }
       })
-      .catch((err) => {
-        this.Notification.errorWithTrackingId(err);
-      });
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
   }
 
+  public initCustomer(): void {
+    if (this.groupType.toLowerCase() === this.typeUnassigned.toLowerCase()) {
+      this.customerSelected = {
+        label: '',
+        value: '',
+      };
+    } else {
+      //get current customer
+      this.HcsControllerService.getHcsControllerCustomer(this.groupId)
+        .then((customer: IHcsCustomer) => {
+          this.customerSelected = {
+            label: customer.name,
+            value: customer.uuid,
+          };
+        })
+        .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
+    }
+    //get customer list
+    this.initCustomerList();
+  }
   public initCustomerList(): void {
     this.customerSelectOptions = [];
     this.customerList = [];
     //TODO: get list of customers for partner from ci.
     this.HcsControllerService.getHcsCustomers()
-    .then((hcsCustomers: IHcsCustomer[]) => {
-      _.forEach(hcsCustomers, (hcsCustomer) => {
-        const customer = new HcsCustomer(hcsCustomer);
-        this.customerList.push(customer);
-        const customerSelectOption = {
-          label: customer.name,
-          value: customer.uuid,
-        };
-        this.customerSelectOptions.push(customerSelectOption);
+      .then((hcsCustomers: IHcsCustomer[]) => {
+        _.forEach(hcsCustomers, (hcsCustomer) => {
+          const customer = new HcsCustomer(hcsCustomer);
+          this.customerList.push(customer);
+          const customerSelectOption = {
+            label: customer.name,
+            value: customer.uuid,
+          };
+          this.customerSelectOptions.push(customerSelectOption);
+        });
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
       });
-    })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
-    .finally(() => {
-      this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
-    });
   }
 
   public getNodeList(nodeList: IHcsNode[] | null): string[] | null {
@@ -199,7 +200,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onCustomerChanged(): void {
-    this.$log.log('On customer change', this.customerSelected);
     if (this.customerSelected.value === 'addCustomer') {
       //reset customer selected
       this.customerSelected = {
@@ -256,7 +256,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onCustomerSearch(filter: string): void {
-    this.$log.log(filter);
     if (this.timer) {
       this.$timeout.cancel(this.timer);
       this.timer = 0;
@@ -305,9 +304,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     .then(() => {
       this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: this.clusterId }, { reload: true });
     })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
+    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
     .finally(() => {
       this.processing = false;
     });

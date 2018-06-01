@@ -14,7 +14,7 @@ export class PrivacyDataSheetsNotificationService {
       canDismiss: false,
       dismiss: () => {},
       link: () => {
-        this.$window.open('https://www.cisco.com/c/en/us/about/trust-center/solutions-privacy-data-sheets.html');
+        this.$window.open('https://www.cisco.com/c/dam/en_us/about/doing_business/trust-center/docs/cisco-webex-service-privacy-data-sheet.pdf');
       },
       linkText: 'common.learnMore',
       name: 'privacyDataSheets',

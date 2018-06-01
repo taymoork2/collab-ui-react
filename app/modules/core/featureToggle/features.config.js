@@ -35,7 +35,6 @@ module.exports = {
   atlasF281TrialRoomKit: 'atlas-f281-trial-room-kit',
   atlasF2993NewDeviceRole: 'atlas-f2993-new-device-role',
   atlasF2993NewUserRole: 'atlas-f2993-new-user-role',
-  atlasF3745AutoAssignLicenses: 'atlas-f3745-auto-assign-licenses',
   atlasF3745PortAssignableServices: 'atlas-f3745-port-assignable-services',
   atlasF3346EdiscoverySearchLimit: 'atlas-f3346-ediscovery-search-limit',
   atlasF5955LegalHold: 'atlas-f5955-legal-hold',
