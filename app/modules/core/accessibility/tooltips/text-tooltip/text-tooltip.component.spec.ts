@@ -30,7 +30,6 @@ describe('Component: textTooltip', () => {
 
     spyOn(this.controller, 'onClickFn');
     this.view.find(SPAN).click();
-    this.$scope.$apply();
     expect(this.controller.onClickFn).toHaveBeenCalled();
   });
 

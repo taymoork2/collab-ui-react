@@ -30,7 +30,6 @@ describe('Component: proPackTooltip', () => {
 
     spyOn(this.controller, 'onClickFn');
     this.view.find(PRO_PACK).click();
-    this.$scope.$apply();
     expect(this.controller.onClickFn).toHaveBeenCalled();
   });
 

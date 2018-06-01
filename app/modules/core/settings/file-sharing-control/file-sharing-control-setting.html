@@ -2,14 +2,12 @@
   <div class="sub-section" ng-if="$ctrl.supportsWhiteboardFileShareControl">
     <h5 class="sub-section__label">
       {{::'globalSettings.fileSharingControl.restrictionsSubsectionLabel' | translate }}&nbsp;
-      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
-        tooltip="{{::'common.proPackTooltip' | translate}}"
-        tooltip-append-to-body="true"
-        tooltip-placement="right"
-        tooltip-trigger="focus mouseenter"
-        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}"
-      >
-      </cr-pro-pack-icon>
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
     </h5>
     <input
       cs-input
@@ -24,13 +22,12 @@
   <div class="sub-section">
     <h5 class="sub-section__label">
       {{::'globalSettings.fileSharingControl.subsectionLabel' | translate }}&nbsp;
-      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
-        tooltip="{{::'common.proPackTooltip' | translate}}"
-        tooltip-append-to-body="true"
-        tooltip-placement="right"
-        tooltip-trigger="focus mouseenter"
-        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}">
-      </cr-pro-pack-icon>
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
     </h5>
     <p class="sub-section__description">
       {{::'globalSettings.fileSharingControl.subsectionDescription' | translate}}
@@ -69,13 +66,12 @@
   <div class="sub-section">
     <h5 class="sub-section__label">
       {{::'globalSettings.fileSharingControl.uploadSubsectionLabel' | translate }}&nbsp;
-      <cr-pro-pack-icon ng-if="! $ctrl.isProPackPurchased"
-        tooltip="{{::'common.proPackTooltip' | translate}}"
-        tooltip-append-to-body="true"
-        tooltip-placement="right"
-        tooltip-trigger="focus mouseenter"
-        tabindex="0" aria-label="{{::'common.proPackTooltip' | translate}}">
-      </cr-pro-pack-icon>
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
     </h5>
     <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
     <input

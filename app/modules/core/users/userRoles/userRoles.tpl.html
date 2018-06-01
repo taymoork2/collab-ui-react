@@ -278,14 +278,11 @@
       <div class="reset-access-panel">
         <p class="reset-access-segment-title">
           <span translate="usersPreview.resetAccess"></span>
-          <cr-pro-pack-icon ng-if="!isProPack"
-            aria-label="{{::roleTooltips.proPack}}"
-            tooltip-trigger="focus mouseenter"
-            tooltip-animation="true"
-            tooltip-placement="right"
-            tooltip="{{::roleTooltips.proPack}}"
-            tabindex="0">
-          </cr-pro-pack-icon>
+          <pro-pack-tooltip
+            ng-if="!isProPack"
+            tt-tooltip-placement="right"
+            tt-tooltip-text="{{::roleTooltips.proPack}}">
+          </pro-pack-tooltip>
         </p>
         <p class="reset-access-segment-description"><span translate="usersPreview.resetAccessDetail"></span><a target="_blank" href="https://collaborationhelp.cisco.com/article/en-us/DOC-19842" translate="usersPreview.learnMore"></a></p>
         <button cs-btn class="btn btn--primary central" ng-click="resetAccess()" type="button" loading="resettingAccess" ng-disabled="!isProPack"><span translate="usersPreview.resetAccess"></button>

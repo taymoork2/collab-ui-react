@@ -548,7 +548,7 @@ TODO: create tooltip with text input trigger
 
 ### pro-pack-tooltip
 
-Pro Pack icons are an svg icon created by `cr-pro-pack-icon` and are thus incompatible with `icon-tooltip`.  `pro-pack-tooltip` thus utilizes `cr-pro-pack-icon` to create a streamlined Pro Pack icon with a tooltip.  There are no additional bindings necessary.
+Pro Pack icons are an svg icon created by `cr-pro-pack-icon` and are thus incompatible with `icon-tooltip`.  `pro-pack-tooltip` utilizes `cr-pro-pack-icon` to create a streamlined Pro Pack icon with a tooltip.  There are no additional bindings necessary.
 
 Examples:
 * The minimum effort for an accessible tooltip.
