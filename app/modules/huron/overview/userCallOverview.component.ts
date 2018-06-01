@@ -7,6 +7,7 @@ import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 import { Config } from 'modules/core/config/config';
 const SNR_CHANGE = 'SNR_CHANGE';
 const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
+const CLOUD_CALLING = 'cloud-calling';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   public currentUser;
@@ -152,12 +153,16 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   private mapSipAddresses(): void {
-    const sipAddresses = _.map(this.currentUser.sipAddresses, (_address) => {
-      return {
-        address: _.get<string>(_address, 'value', ''),
-        isPrimary: _.get<boolean>(_address, 'primary', false),
-      };
-    });
+    const sipAddresses = _.chain(this.currentUser.sipAddresses)
+      .filter({ type: CLOUD_CALLING })
+      .map(_address => {
+        return {
+          address: _.get<string>(_address, 'value', ''),
+          isPrimary: _.get<boolean>(_address, 'primary', false),
+        };
+     })
+     .orderBy(['isPrimary'], ['desc'])
+     .value();
     this.sipAddresses = sipAddresses;
   }
 
