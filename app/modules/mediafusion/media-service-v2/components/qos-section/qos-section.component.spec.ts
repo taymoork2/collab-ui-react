@@ -64,7 +64,7 @@ describe('QosSectionCtrl', () => {
     const controller = initController();
     controller.enableQos = true;
     controller.qosPropertySetId = '1234';
-    controller.setEnableQos();
+    controller.setEnableQos(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('QosSectionCtrl', () => {
     const controller = initController();
     controller.enableQos = true;
     controller.qosPropertySetId = '1234';
-    controller.setEnableQos();
+    controller.setEnableQos(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
@@ -88,7 +88,7 @@ describe('QosSectionCtrl', () => {
     const controller = initController();
     controller.enableQos = true;
     controller.qosPropertySetId = null;
-    controller.setEnableQos();
+    controller.setEnableQos(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();

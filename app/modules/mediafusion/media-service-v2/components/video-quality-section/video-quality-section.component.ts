@@ -90,7 +90,8 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
       });
   }
 
-  public setEnableVideoQuality(): void {
+  public setEnableVideoQuality(setVideoQuality): void {
+    this.enableVideoQuality = setVideoQuality;
     if (this.isWizard) {
       if (_.isFunction(this.onVideoQualityUpdate)) {
         this.onVideoQualityUpdate({ response: { videoQuality: this.enableVideoQuality , videoPropertySetId : this.videoPropertySetId } });
@@ -107,7 +108,7 @@ export class VideoQualitySectionComponent implements ng.IComponentOptions {
   public controller = VideoQualitySectionCtrl;
   public template = require('./video-quality-section.tpl.html');
   public bindings = {
-    isWizard: '=',
+    isWizard: '<',
     onVideoQualityUpdate: '&?',
   };
 }
