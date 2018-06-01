@@ -35,7 +35,15 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
-  ) {}
+    private $modal,
+  ) { }
+
+  public startUpgrade(entity) {
+    this.$modal.open({
+      template: `<hcs-upgrade-modal dismiss="$dismiss()" cluster-name="${entity.clusterName}" cluster-uuid="${entity.clusterUuid}" current-version="${entity.currentVersion}" upgrade-to="${entity.upgradeTo}"></hcs-upgrade-modal>`,
+      type: 'full',
+    });
+  }
 
   public $onInit() {
     this.tabs.push({
@@ -169,7 +177,9 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
       if (!_.isUndefined(cluster.nodes)) {
         _.forEach(cluster.nodes, (node: INodeSummaryItem) => {
           if (node.publisher) {
-            const clusterGridRow: IUpgradeClusterGridRow = {
+            const clusterGridRow: any = {
+              groupType: this.groupType,
+              customerId: this.groupId,
               clusterUuid: _.get(cluster, 'uuid'),
               clusterName: _.get(cluster, 'name'),
               applicationName: _.get(node, 'typeApplication'),

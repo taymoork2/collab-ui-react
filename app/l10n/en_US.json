@@ -1651,6 +1651,10 @@
     "second": "Second",
     "third": "Third",
     "fourth": "Fourth",
+    "fifth": "Fifth",
+    "sixth": "Sixth",
+    "seventh": "Seventh",
+    "eighth": "Eighth",
     "last": "Last"
   },
   "common": {
@@ -11475,6 +11479,19 @@
             "elapsedTime": "Elapsed Time"
           }
         }
+      },
+      "info": {
+        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you endure the prechecks pass before continuing.",
+        "2": "The last time prechecks were run was {{lastRun}} and all passed.",
+        "3": "Before you begin, verify that the correct software version files are located on the SFTP server assigned.",
+        "precheck": "Run Prechecks"
+      },
+      "order" : {
+        "title": "Order Cluster {{clusterName}}",
+        "directions": "Use arrows to set the order that the nodes in the cluster will be upgraded",
+        "addAnother": "Add Upgrade Group",
+        "maxGroups": "Cannot create more than 8 upgrade groups"
+
       }
     },
     "upgradePage": {
