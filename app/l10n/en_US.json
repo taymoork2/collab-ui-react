@@ -11253,6 +11253,7 @@
       },
       "nodeStatus": {
         "active":"Active",
+        "compliant": "Compliant",
         "inactive": "Inactive",
         "needsAcceptance":"Needs Acceptance",
         "needsAssigned":"Needs Assigned",

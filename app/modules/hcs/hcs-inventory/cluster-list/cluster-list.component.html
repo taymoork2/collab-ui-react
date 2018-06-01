@@ -6,7 +6,7 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<cs-page-sub-header ng-hide="$ctrl.groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+<cs-page-sub-header ng-hide="$ctrl.groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
   <cs-page-sub-header-right class="row">
     <div class="columns medium-2 hcs-right-header-filter">
         <cs-select

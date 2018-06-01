@@ -41,13 +41,15 @@ export class ClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.loading = true;
-    this.tabs.push({
-      title: this.$translate.instant('hcs.clustersList.title'),
-      state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
-    }, {
-      title: this.$translate.instant('hcs.upgradePage.title'),
-      state: `hcs.upgradeCluster({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
-    });
+    if (this.groupType !== this.typeUnassigned.toLowerCase()) {
+      this.tabs.push({
+        title: this.$translate.instant('hcs.clustersList.title'),
+        state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+      }, {
+        title: this.$translate.instant('hcs.upgradePage.title'),
+        state: `hcs.upgradeCluster({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+      });
+    }
 
     this.clusterList = [];
     this.softwareVersionSelected = null;

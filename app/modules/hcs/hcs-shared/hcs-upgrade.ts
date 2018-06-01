@@ -150,6 +150,7 @@ export interface INodeSummaryItem {
   typeApplication: string;
   publisher: boolean;
   ipAddress: string;
+  activeVersion: string;
 }
 
 export interface IHcsClusterSummaryItem {
@@ -210,10 +211,12 @@ export class HcsUpgradeCustomer implements IHcsUpgradeCustomer {
 }
 
 export interface IUpgradeClusterGridRow {
+  customerId: string;
   clusterUuid: string;
   clusterName: string;
   applicationName: string;
   currentVersion: string;
-  upgradeTo: string;
+  upgradeTo: string | undefined;
   clusterStatus: string;
+  rowWidth: number;
 }
