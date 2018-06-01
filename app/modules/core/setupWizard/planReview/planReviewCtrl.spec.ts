@@ -236,7 +236,7 @@ describe('Controller: PlanReviewCtrl', function () {
       const billingServiceId = 'SubCt31test20161222111';
       const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
-      expect(this.controller.advancedMeetings[billingServiceId].length).toBe(2);
+      expect(this.controller.advancedMeetings[billingServiceId].length).toBe(3);
     });
 
     it('should return true for a subscriptions that are Trial and have advanced licenses and billing IDs', function () {
@@ -259,7 +259,7 @@ describe('Controller: PlanReviewCtrl', function () {
       const billingServiceId = 'Trial';
       const result = this.controller.selectedSubscriptionHasAdvancedLicenses(billingServiceId);
       expect(result).toEqual(true);
-      expect(this.controller.advancedMeetings[billingServiceId].length).toBe(2);
+      expect(this.controller.advancedMeetings[billingServiceId].length).toBe(3);
     });
   });
 

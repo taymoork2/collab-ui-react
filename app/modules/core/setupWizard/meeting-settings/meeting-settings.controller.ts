@@ -165,7 +165,7 @@ export class MeetingSettingsCtrl {
 
   // For existing trials that have a WebEx site, we will allow the customer to migrate the trial site into a paid subscription
   public findExistingWebexTrialSites(): ExistingWebExSite[] {
-    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true, status: this.Config.licenseStatus.ACTIVE } });
     // Make sure not to touch online trial sites
     conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
       return _.includes(service.license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
