@@ -1,3 +1,5 @@
+require('modules/core/shared/cui-panel/cui-panel.scss');
+
 (function () {
   'use strict';
 
