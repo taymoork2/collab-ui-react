@@ -1,4 +1,6 @@
 import notifications from 'modules/core/notifications';
+import { CommonService } from './common.service';
+import { CustomerSearchService } from './customer-search.service';
 import { DgcPartnerTabComponent } from './dgc-partner-tab.component';
 import { DgcPartnerTimeLineComponent } from './dgc-partner-time-line.component';
 import { DgcPartnerTimeZoneComponent } from './dgc-partner-time-zone.component';
@@ -6,6 +8,7 @@ import { DgcPartnerWebexReportsSearchComponent } from './dgc-partner-webex-repor
 import { DgcPartnerMeetingDetailsComponent } from './dgc-partner-meeting-details.component';
 import { DgcPartnerTabParticipantsComponent } from './dgc-partner-tab-participants.component';
 import { PartnerSearchService } from './partner-search.service';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
 
 export default angular
   .module('partReports.webex.diagnostic', [
@@ -15,7 +18,10 @@ export default angular
     require('modules/core/config/urlConfig'),
     notifications,
   ])
+  .service('CommonService', CommonService)
+  .service('CustomerSearchService', CustomerSearchService)
   .service('PartnerSearchService', PartnerSearchService)
+  .service('ProPackService', ProPackService)
   .component('dgcPartnerTab', new DgcPartnerTabComponent())
   .component('dgcPartnerTimeLine', new DgcPartnerTimeLineComponent())
   .component('dgcPartnerTimeZone', new DgcPartnerTimeZoneComponent())
