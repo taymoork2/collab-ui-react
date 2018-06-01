@@ -12,17 +12,11 @@
       K2: 2,
     };
 
-    vm.asyncWarning = {
-      customerEmail: {
-        show: false,
-      },
-    };
-
     vm.validationMessages = {
       general: {
         required: $translate.instant('common.invalidRequired'),
         email: $translate.instant('common.invalidEmail'),
-        trialUniqueAsyncValidator: '',
+        // if you are looking for either customerName or customerEmail, those are created by the trialUniqueAsyncValidator directive
       },
       roomSystem: {
         max: $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity'),

@@ -9,30 +9,22 @@
       require: 'ngModel',
       link: function (scope, elm, attrs, ngModelCtrl) {
         var params = $parse(attrs.trialUniqueAsyncValidator)(scope);
-        //might need to modify error message depending on the server response
         var messages = scope.$eval(attrs.messages);
-        var warnObj;
-        if (!_.isUndefined(attrs.trialUniqueAsyncWarningObj)) {
-          warnObj = scope.$eval(attrs.trialUniqueAsyncWarningObj);
-        }
+        var status = messages[attrs.name] = {};
+
         ngModelCtrl.$asyncValidators.trialUniqueAsyncValidator = function (modelValue, viewValue) {
           return $q(function (resolve, reject) {
             validateField(viewValue, scope, params.key).then(function (result) {
               if (result.valid) {
-                if (!_.isUndefined(warnObj)) {
-                  if (_.isUndefined(result.warning)) {
-                    warnObj.show = false;
-                  } else {
-                    warnObj.show = true;
-                    warnObj.message = $translate.instant(result.warning);
-                  }
+                if (_.isUndefined(result.message)) {
+                  status.warning = undefined;
+                } else {
+                  status.warning = $translate.instant(result.message);
                 }
                 resolve();
               } else {
-                if (!_.isUndefined(warnObj)) {
-                  warnObj.show = false;
-                }
-                messages.trialUniqueAsyncValidator = $translate.instant(result.error);
+                status.warning = undefined;
+                status.error = $translate.instant(result.message);
                 reject();
               }
             });
@@ -44,9 +36,9 @@
     function validateField(viewValue, scope, key) {
       return TrialService.shallowValidation(key, viewValue).then(function (response) {
         if (!_.isUndefined(response.unique)) {
-          return { valid: true, warning: response.warning };
+          return { valid: true, message: response.warning };
         }
-        return { valid: false, error: response.error };
+        return { valid: false, message: response.error };
       });
     }
   }
