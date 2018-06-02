@@ -21,7 +21,7 @@
     "e2e": "yarn protractor --production-backend --suite jenkins",
     "eslint": "eslint ./app ./config ./karma ./protractor ./test ./utils ./webpack",
     "gauntlet-push": "./bin/gauntlet-push.sh",
-    "json-verify": "node ./utils/json-verify.js",
+    "json-verify": "./bin/json-verify.sh",
     "ktest-all-no-parallel": "./bin/ktest-all --no-parallel",
     "ktest-all-watch": "./bin/ktest-all --no-parallel --no-single-run --auto-watch",
     "ktest-all": "./bin/ktest-all",
