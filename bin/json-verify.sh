@@ -9,3 +9,6 @@ find ./app -iname \*.json | grep -v "app/l10n" | "${this_pwd}/json-lint.sh"
 
 # lint *.json files under './test' (except 'test/coverage', which is machine generated)
 find ./test -iname \*.json | grep -v "test/coverage" | "${this_pwd}/json-lint.sh"
+
+# lint *.json files under './app/l10n'
+"${this_pwd}/json-lint.sh" --use-parallel app/l10n/*.json
