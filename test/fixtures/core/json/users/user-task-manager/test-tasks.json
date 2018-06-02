@@ -3,7 +3,8 @@
     "latestExecutionStatus": "COMPLETED",
     "counts": {
       "usersFailed": 12
-    }
+    },
+    "id": "456"
   },
   "failedStatus": {
     "latestExecutionStatus": "FAILED"

@@ -1,15 +1,10 @@
 <h4 class="user-error-results__title"
-  translate="userManage.bulk.errorUsers"></h4>
-<p>
-  <span translate="userManage.bulk.import.errorResolveInstructions"></span>
-  <i class="icon icon-info user-error-results__tooltip"
-    tooltip="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}"
-    tooltip-placement="top"
-    tooltip-trigger="focus mouseenter"
-    tabindex="0"
-    aria-label="{{::'userManage.bulk.import.errorResolveTooltip' | translate}}">
-  </i>
-</p>
+  translate="userManage.bulk.errorUsers">
+</h4>
+
+<p ng-if="!$ctrl.isOverErrorThreshhold" translate="userManage.bulk.import.errorInstructions"></p>
+<p ng-if="$ctrl.isOverErrorThreshhold" translate="userManage.bulk.import.tooManyErrorsInstructions"></p>
+
 <csv-download
   class="user-error-results__export-csv"
   type="error"
@@ -30,7 +25,7 @@
   <div class="error-table__body">
     <div class="error-table__row" ng-repeat="data in $ctrl.userErrorArray track by $index">
       <span class="error-table__column-one">{{::data.row}}</span>
-      <span class="error-table__column-two">{{::data.message}}</span>
+      <span class="error-table__column-two">{{::data.error}}</span>
     </div>
   </div>
 </div>

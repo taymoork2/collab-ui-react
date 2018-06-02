@@ -118,19 +118,38 @@ describe('Service: UserTaskManagerService', () => {
     });
 
     it('should get task errors', function (this: Test) {
-      const errors = [{
-        error: {
-          key: 'error-key',
-          message: 'error-message',
-        },
-        trackingId: 'error-trackingId',
-        itemNumber: 1,
-        errorMessage: 'error-message',
-      }];
-      this.$httpBackend.expectGET(`${this.URL}/456/errors`).respond({
-        items: errors,
-      });
+      const errors = {
+        items: [{
+          error: {
+            key: 'error-key',
+            message: 'error-message',
+          },
+          trackingId: 'error-trackingId',
+          itemNumber: 1,
+          errorMessage: 'error-message',
+        }],
+        paging: {},
+      };
+      this.$httpBackend.expectGET(`${this.URL}/456/errors?limit=${this.UserTaskManagerService.ERROR_LIMIT}`).respond(errors);
       expect(this.UserTaskManagerService.getTaskErrors('456')).toBeResolvedWith(errors);
+    });
+
+    it('should get next task errors', function (this: Test) {
+      const errors = {
+        items: [{
+          error: {
+            key: 'error-key',
+            message: 'error-message',
+          },
+          trackingId: 'error-trackingId',
+          itemNumber: 1,
+          errorMessage: 'error-message',
+        }],
+        paging: {},
+      };
+      const url = `${this.URL}/456/errors?limit=200&id=1234567890&offset=123123123123123`;
+      this.$httpBackend.expectGET(url).respond(errors);
+      expect(this.UserTaskManagerService.getNextTaskErrors(url)).toBeResolvedWith(errors);
     });
 
     it('should cancel task', function (this: Test) {
