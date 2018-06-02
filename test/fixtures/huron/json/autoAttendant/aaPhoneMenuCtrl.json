@@ -156,7 +156,6 @@
     }],
     "headers": [{
       "description": "",
-      "type": "",
       "key": "",
       "actions": [{
         "name": "",
@@ -211,7 +210,6 @@
     }],
     "headers": [{
       "description": "",
-      "type": "",
       "key": "",
       "actions": [{
         "name": "",
@@ -250,7 +248,6 @@
     }],
     "headers": [{
       "description": "",
-      "type": "",
       "key": "",
       "actions": [{
         "name": "",
@@ -283,7 +280,6 @@
     }],
     "headers": [{
       "description": "",
-      "type": "",
       "key": "",
       "actions": [{
         "name": "",
@@ -316,7 +312,6 @@
       "attempts": 1,
       "entries": [{
         "description": "",
-        "type": "",
         "key": "1",
         "actions": [{
           "name": "repeatActionsOnInput",
@@ -330,7 +325,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "2",
         "language": "",
         "voice": "",
@@ -347,7 +341,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "3",
         "language": "",
         "voice": "",
@@ -364,7 +357,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "4",
         "language": "",
         "voice": "",
@@ -381,7 +373,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "5",
         "language": "",
         "voice": "",
@@ -398,7 +389,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "6",
         "language": "",
         "voice": "",
@@ -415,7 +405,6 @@
         "url": ""
       }, {
         "description": "",
-        "type": "",
         "key": "7",
         "language": "",
         "voice": "",
