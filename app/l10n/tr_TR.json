@@ -6404,12 +6404,6 @@
       "grant-success-information": "Kayıt işlemini tamamlamak için bir saat içinde Karma Ortam Düğümünüze gidin. Kayıt tamamlandığında Karma Ortam Düğümü <br>kullanılmaya hazır olur.",
       "grant-registration-success-header-old-cluster": "Karma Ortam Düğümünüzü artık Cisco İş Birliği Bulutuna kaydedebilirsiniz.<br> Düğüm IP Adresi/FQDN: {{hostname}} Küme: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "En büyük küme basamağı bant genişliği başarıyla kaydedildi.",
-      "title": "En büyük küme basamağı bant genişliği",
-      "description": "Karma Medya Hizmeti kümelerinin bulutta basamaklar için kullanması gereken en büyük bant genişliğini (megabit/saniye cinsinden) girin. En düşük miktar bir etkin 720p akışa izin verir.",
-      "range": "5 ila 50 arasında bir değer girin"
-    },
     "sipconfiguration": {
       "success": "Birleşik CM SIP Deposu başarıyla kaydedildi.",
       "title": "Birleşik CM SIP Deposu",

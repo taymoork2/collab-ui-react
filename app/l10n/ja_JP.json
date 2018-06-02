@@ -6404,12 +6404,6 @@
       "grant-success-information": "1 時間以内にハイブリッド メディア ノードにアクセスして登録を終了してください。登録が完了するとすぐに<br>ハイブリッド メディア ノードを使用できるようになります。",
       "grant-registration-success-header-old-cluster": "Cisco Collaboration Cloud にハイブリッド メディア ノードを登録できるようになりました。<br> ノード IP アドレス/FQDN: {{hostname}} クラスター: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "クラスターのカスケード接続における最大帯域幅が正常に保存されました。",
-      "title": "クラスターのカスケード接続における最大帯域幅",
-      "description": "クラウドへのカスケード接続においてハイブリッド メディア サービスのクラスターが使用すべき最大帯域幅 (メガビット/秒、Mbps) を入力します。最小値において単一のアクティブな 720p のストリームが可能になります。",
-      "range": "5 から 50 までの値を入力してください"
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP トランクは正常に保存されました。",
       "title": "Unified CM SIP トランク",

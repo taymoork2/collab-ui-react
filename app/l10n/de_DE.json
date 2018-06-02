@@ -6404,12 +6404,6 @@
       "grant-success-information": "Gehen Sie innerhalb von einer Stunde zum Hybrid-Medienknoten, um die Registrierung abzuschließen. Der Hybrid-Medienknoten ist sofort nach Abschluss der Registrierung<br> einsatzbereit.",
       "grant-registration-success-header-old-cluster": "Sie können Ihren Hybrid-Medienknoten jetzt bei der Cisco Collaboration Cloud registrieren.<br> IP-Adresse des Knotens/FQDN: {{hostname}} Cluster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Die maximale Weitergabe-Bandbreite für Cluster wurde erfolgreich gespeichert.",
-      "title": "Maximale Weitergabe-Bandbreite für Cluster",
-      "description": "Geben Sie die maximale Bandbreite (in Megabits pro Sekunde), die Cluster des Hybrid-Medien-Service für die Weitergabe an die Cloud verwenden dürfen, an. Die niedrigste Angabe ermöglicht einen aktiven 720p-Stream.",
-      "range": "Geben Sie einen Wert zwischen 5 und 50 an"
-    },
     "sipconfiguration": {
       "success": "Unified CM-SIP-Übertragungsweg erfolgreich gespeichert.",
       "title": "Unified CM-SIP-Übertragungsweg",

@@ -6404,12 +6404,6 @@
       "grant-success-information": "W ciągu godziny przejdź do węzła multimediów hybrydowych, aby dokończyć rejestrację. Węzeł multimediów hybrydowych będzie gotowy do<br> użycia natychmiast po zakończeniu rejestracji.",
       "grant-registration-success-header-old-cluster": "Możesz teraz zarejestrować węzeł multimediów hybrydowych w usłudze Cisco Collaboration Cloud.<br> Adres IP węzła/w pełni kwalifikowana nazwa domeny (FQDN): {{hostname}} Klaster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Pomyślnie zapisano maksymalną przepustowość kaskadową klastra.",
-      "title": "Maksymalna przepustowość kaskadowa klastra",
-      "description": "Wprowadź maksymalną przepustowość (w megabitach na sekundę), z której klastry usług multimediów hybrydowych będą korzystać do przesyłania kaskadowego do chmury. Najmniejsza wartość oznacza jeden aktywny strumień 720p.",
-      "range": "Wprowadź wartość od 5 do 50"
-    },
     "sipconfiguration": {
       "success": "Pomyślnie zapisano adres łącza magistralowego SIP systemu Unified CM.",
       "title": "Adres łącza magistralowego SIP systemu Unified CM",

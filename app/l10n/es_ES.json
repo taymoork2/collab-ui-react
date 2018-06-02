@@ -6404,12 +6404,6 @@
       "grant-success-information": "Vaya al nodo de medios híbrido dentro de una hora para finalizar el registro. El nodo de medios híbrido podrá<br> usarse en cuanto finalice el registro.",
       "grant-registration-success-header-old-cluster": "Ya es posible registrar el nodo de medios híbrido en Cisco Collaboration Cloud.<br> Dirección IP del nodo o FQDN: {{hostname}} Clúster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "El ancho de banda máximo de cascada de clústeres se ha guardado correctamente.",
-      "title": "Ancho de banda máximo de cascada de clústeres",
-      "description": "Introduzca el ancho de banda máximo (en megabits por segundo) que los clústeres del servicio de medios híbridos pueden usar para las cascadas a la nube. La cantidad más baja permite una transmisión activa de 720p.",
-      "range": "Introduzca un valor entre 5 y 50"
-    },
     "sipconfiguration": {
       "success": "El troncal SIP de Unified CM se ha guardado correctamente.",
       "title": "Troncal SIP de Unified CM",

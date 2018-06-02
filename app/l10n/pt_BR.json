@@ -6404,12 +6404,6 @@
       "grant-success-information": "Vá para seu Nó de mídia híbrida dentro de uma hora para finalizar o registro. O Nó de mídia híbrida estará pronto para<br> uso assim que o registro for concluído.",
       "grant-registration-success-header-old-cluster": "Agora você pode registrar o Nó de mídia híbrida ao Cisco Collaboration Cloud.<br> Endereço IP do nó/FQDN: {{hostname}} Grupo: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "A largura de banda máxima em cascata do grupo foi salva com êxito.",
-      "title": "Largura de banda máxima em cascata do grupo",
-      "description": "Insira a largura de banda máxima (em megabits por segundo) que os grupos do serviço de mídia híbrida devem usar para cascatas na nuvem. A quantidade mais baixa permite uma transmissão ativa de 720p.",
-      "range": "Insira um valor entre 5 a 50"
-    },
     "sipconfiguration": {
       "success": "Tronco Unified CM SIP salvo com êxito.",
       "title": "Tronco Unified CM SIP",

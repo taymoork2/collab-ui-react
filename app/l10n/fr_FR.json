@@ -6404,12 +6404,6 @@
       "grant-success-information": "Allez à votre nœud média hybride dans l'intervalle d'une heure pour terminer l'inscription. Le nœud média hybride sera prêt à être <br>utilisé dès que vous aurez terminé l'inscription.",
       "grant-registration-success-header-old-cluster": "Vous pouvez maintenant enregistrer votre nœud média hybride sur Cisco Collaboration Cloud.<br> Adresse IP/FDQN du nœud : {{hostname}} Cluster : {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "La bande passante maximale de cascade pour les clusters a été enregistrée avec succès.",
-      "title": "Bande passante maximum de cascade pour les clusters",
-      "description": "Saisissez la bande passante maximale (en mégabits par seconde) que les clusters du service média hybride doivent utiliser pour les cascades vers le Cloud. La plus petite quantité permet une diffusion active à 720 pixels.",
-      "range": "Saisissez une valeur entre 5 et 50"
-    },
     "sipconfiguration": {
       "success": "Tronc SIP Unified CM enregistré avec succès.",
       "title": "Tronc SIP Unified CM",

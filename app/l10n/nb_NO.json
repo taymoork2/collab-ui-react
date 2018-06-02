@@ -6404,12 +6404,6 @@
       "grant-success-information": "Gå til hybrid medianode innen én time for å fullføre registreringen. Hybrid medianode er klar til<br> bruk så snart du er ferdig med registreringen.",
       "grant-registration-success-header-old-cluster": "Du kan nå registrere din hybrid medianode i Cisco Collaboration Cloud.<br> Node IP-adresse/FQDN: {{hostname}} Klynge: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Maksimum båndbredde for klyngeoverlapping er lagret.",
-      "title": "Maksimum båndbredde for klyngeoverlapping",
-      "description": "Angi maksimum båndbredde (i megabyte per sekund) Hybrid Media Service-klynger skal bruke for overlappinger til nettskyen. Den laveste bredden tillater én aktiv 720 p-strøm.",
-      "range": "Angi en verdi mellom 5 og 50"
-    },
     "sipconfiguration": {
       "success": "Enhetlig SIP Trunk lagret.",
       "title": "Enhetlig CM SIP Trunk",
