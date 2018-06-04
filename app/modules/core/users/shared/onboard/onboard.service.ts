@@ -206,9 +206,9 @@ export default class OnboardService {
         userEntitlements: entitleList,
         onboardMethod,
       }) as ng.IHttpPromise<IOnboardUsersResponse>)
-      .then((response) => {
-        return this.parseOnboardedUsers(response);
-      });
+        .then((response) => {
+          return this.parseOnboardedUsers(response);
+        });
     });
 
     // aggregate all responses into a single result

@@ -140,9 +140,9 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     }
     this.HcsControllerService.createHcsPartner(services)
     //Update the entitlement
-    .then(() => this.HcsControllerService.updateUserEntitlement(this.Authinfo.getUserId(), entitlements))
+      .then(() => this.HcsControllerService.updateUserEntitlement(this.Authinfo.getUserId(), entitlements))
     //update Bearer token with new
-    .then(() => this.Auth.getAccessTokenWithNewScope());
+      .then(() => this.Auth.getAccessTokenWithNewScope());
   }
 
   public createSftp(): void {
@@ -168,44 +168,44 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public createInstallFile(): void {
     this.HcsControllerService.createAgentInstallFile(this.agentInstallFile)
-    .then(() => {
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.Notification.success('hcs.installFiles.success');
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
-        });
-        this.dismissModal();
-      }
-    })
-    .catch(e => {
-      this.Notification.error('hcs.installFiles.error', { message: e });
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.dismissModal();
-      }
-    });
+      .then(() => {
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.Notification.success('hcs.installFiles.success');
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
+          this.dismissModal();
+        }
+      })
+      .catch(e => {
+        this.Notification.error('hcs.installFiles.error', { message: e });
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      });
   }
 
   public createSoftwareProfile(): void {
     this.HcsUpgradeService.createSoftwareProfile(this.softwareProfile)
-    .then(() => {
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.Notification.success('hcs.softwareProfiles.success');
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
-        });
-        this.dismissModal();
-      }
-    })
-    .catch(e => {
-      this.Notification.error('hcs.softwareProfiles.error', { message: e });
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.dismissModal();
-      }
-    });
+      .then(() => {
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.Notification.success('hcs.softwareProfiles.success');
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
+          this.dismissModal();
+        }
+      })
+      .catch(e => {
+        this.Notification.error('hcs.softwareProfiles.error', { message: e });
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      });
   }
 
   public disableNext(): boolean  {

@@ -111,9 +111,9 @@ export class HuronUserService {
       userId: userId,
       wide: true,
     }).$promise
-    .then(user => {
-      return _.get(user, 'primaryNumber');
-    });
+      .then(user => {
+        return _.get(user, 'primaryNumber');
+      });
   }
 
   public updateUserV2(userId: string, data: UserV2): ng.IPromise<any> {

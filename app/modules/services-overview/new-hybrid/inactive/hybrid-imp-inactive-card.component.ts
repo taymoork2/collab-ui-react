@@ -21,9 +21,9 @@ class HybridIMPInactiveCardController implements ng.IComponentController {
       template: require('modules/hercules/service-specific-pages/common-expressway-based/add-resource-modal.html'),
       type: 'small',
     }).result
-    .finally(() => {
-      this.$state.go('services-overview', {}, { reload: true });
-    });
+      .finally(() => {
+        this.$state.go('services-overview', {}, { reload: true });
+      });
   }
 }
 

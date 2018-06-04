@@ -6,5 +6,5 @@ export default angular
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
-.component('hcsUpgradeCluster', new UpgradeClusterComponent())
-.name;
+  .component('hcsUpgradeCluster', new UpgradeClusterComponent())
+  .name;

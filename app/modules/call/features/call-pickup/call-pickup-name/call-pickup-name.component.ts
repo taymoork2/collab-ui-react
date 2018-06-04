@@ -30,10 +30,10 @@ class CallPickupNameCtrl implements ng.IComponentController {
 
   public uniquePickupName(name: string): ng.IPromise<boolean> {
     return this.listOfCallPickups
-    .then((callPickups) => {
-      _.mapValues(callPickups, callPickup => callPickup.name.toLowerCase());
-      return (_.findIndex(callPickups, { name : name.toLowerCase() }) === -1) ?  true : false;
-    });
+      .then((callPickups) => {
+        _.mapValues(callPickups, callPickup => callPickup.name.toLowerCase());
+        return (_.findIndex(callPickups, { name : name.toLowerCase() }) === -1) ?  true : false;
+      });
   }
 
   public keyup($event: KeyboardEvent) {

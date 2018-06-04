@@ -57,13 +57,13 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
     if (this.area) {
       if (this.numberType === NUMTYPE_DID) {
         this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(), this.area.abbreviation)
-        .then((response) => this.setNpaModel(response))
-        .catch((error) => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+          .then((response) => this.setNpaModel(response))
+          .catch((error) => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
       }
       if (this.numberType === NUMTYPE_TOLLFREE) {
         this.PstnService.getCarrierTollFreeInventory(this.PstnModel.getProviderId())
-        .then(response => this.setNpaModel(response))
-        .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+          .then(response => this.setNpaModel(response))
+          .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
       }
     }
   }
@@ -86,8 +86,8 @@ class PstnNpaNxxCtrl implements ng.IComponentController {
       if (this.numberType === NUMTYPE_DID) {
         this.PstnService.getCarrierInventory(this.PstnModel.getProviderId(),
           this.area.abbreviation, this.model.areaCode.code)
-        .then(response => this.setNxxModel(response))
-        .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
+          .then(response => this.setNxxModel(response))
+          .catch(error => this.Notification.errorResponse(error, 'pstnSetup.errors.states'));
       }
     }
   }

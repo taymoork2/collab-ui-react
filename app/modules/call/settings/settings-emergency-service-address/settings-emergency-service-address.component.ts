@@ -48,37 +48,37 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
   private initAddress() {
     if (this.ftHasLocations) {
       this.LocationsService.getDefaultLocation()
-      .then(location => {
-        if (location) {
-          return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), location.uuid || '')
-          .then(addresses => {
-            if (_.isArray(addresses) && addresses.length > 0) {
-              this.originalAddress = _.cloneDeep(addresses[0]);
-              this.initializeAddress(addresses[0], true);
-            }
-          });
-        }
-      })
-      .finally(() => {
-        this.loadingInit = false;
-      });
+        .then(location => {
+          if (location) {
+            return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), location.uuid || '')
+              .then(addresses => {
+                if (_.isArray(addresses) && addresses.length > 0) {
+                  this.originalAddress = _.cloneDeep(addresses[0]);
+                  this.initializeAddress(addresses[0], true);
+                }
+              });
+          }
+        })
+        .finally(() => {
+          this.loadingInit = false;
+        });
     } else {
       return this.PstnServiceAddressService.getAddress(this.Authinfo.getOrgId())
-      .then(address => {
-        if (address) {
-          this.originalAddress = _.cloneDeep(address);
-          this.initializeAddress(address, true);
-        }
-      })
-      .catch(response => {
+        .then(address => {
+          if (address) {
+            this.originalAddress = _.cloneDeep(address);
+            this.initializeAddress(address, true);
+          }
+        })
+        .catch(response => {
         //TODO temp remove 500 status after terminus if fixed
-        if (response && response.status !== 404 && response.status !== 500) {
-          this.Notification.errorResponse(response, 'pstnSetup.listSiteError');
-        }
-      })
-      .finally(() => {
-        this.loadingInit = false;
-      });
+          if (response && response.status !== 404 && response.status !== 500) {
+            this.Notification.errorResponse(response, 'pstnSetup.listSiteError');
+          }
+        })
+        .finally(() => {
+          this.loadingInit = false;
+        });
     }
   }
 
@@ -138,12 +138,12 @@ class EmergencyServiceAddressCtrl implements ng.IComponentController {
       this.originalAddress = _.cloneDeep(this.address);
       this.addressFound = false;
     })
-    .catch(error => {
-      this.Notification.errorResponse(error, 'settingsServiceAddress.saveError');
-    })
-    .finally(() => {
-      this.loadingSave = false;
-    });
+      .catch(error => {
+        this.Notification.errorResponse(error, 'settingsServiceAddress.saveError');
+      })
+      .finally(() => {
+        this.loadingSave = false;
+      });
   }
 
   public cancelSave(): void {

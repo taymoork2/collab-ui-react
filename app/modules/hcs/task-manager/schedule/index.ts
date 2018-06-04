@@ -14,6 +14,6 @@ export default angular
     hcsTestManagertServiceModule,
     notifications,
   ])
-.component('taasScheduleView', new TaasScheduleViewComponent())
-.component('scheduleCreateModal', new ScheduleCreateComponent())
-.name;
+  .component('taasScheduleView', new TaasScheduleViewComponent())
+  .component('scheduleCreateModal', new ScheduleCreateComponent())
+  .name;

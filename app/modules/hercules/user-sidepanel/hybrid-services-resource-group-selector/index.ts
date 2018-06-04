@@ -3,6 +3,6 @@ import { HybridServicesResourceGroupSelectorComponent } from './hybrid-services-
 require('./_hybrid-services-resource-group-selector.scss');
 
 export default angular
-.module('Hercules')
-.component('hybridServicesResourceGroupSelector', new HybridServicesResourceGroupSelectorComponent())
-.name;
+  .module('Hercules')
+  .component('hybridServicesResourceGroupSelector', new HybridServicesResourceGroupSelectorComponent())
+  .name;

@@ -41,9 +41,9 @@ export class InstallFilesCtrl implements ng.IComponentController {
   public setFileInfo(): void {
     _.forEach(this.installFilesList, (file) => {
       this.HcsControllerService.getAgentInstallFile(file.uuid)
-      .then(resp => {
-        file.fileInfo = _.get(resp, 'files');
-      });
+        .then(resp => {
+          file.fileInfo = _.get(resp, 'files');
+        });
     });
   }
 
@@ -67,13 +67,13 @@ export class InstallFilesCtrl implements ng.IComponentController {
 
   public deleteAgentInstallFile(uuid): void {
     this.HcsControllerService.deleteAgentInstallFile(uuid)
-    .then(() => {
-      this.listAgentInstallFiles();
-      this.reInstantiateMasonry();
-    })
-    .catch( error => {
-      this.Notification.error('hcs.installFiles.error', error.data);
-    });
+      .then(() => {
+        this.listAgentInstallFiles();
+        this.reInstantiateMasonry();
+      })
+      .catch( error => {
+        this.Notification.error('hcs.installFiles.error', error.data);
+      });
   }
 
   public addAgentInstallFile(): void {

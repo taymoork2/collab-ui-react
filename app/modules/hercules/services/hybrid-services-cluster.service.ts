@@ -273,11 +273,11 @@ export class HybridServicesClusterService {
       releaseChannel: releaseChannel,
       targetType: targetType,
     })
-    .then(this.extractDataFromResponse)
-    .then((res) => {
-      this.clearCache();
-      return res;
-    });
+      .then(this.extractDataFromResponse)
+      .then((res) => {
+        this.clearCache();
+        return res;
+      });
   }
 
   public processClustersToAggregateStatusForService(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]): HighLevelStatusForService {

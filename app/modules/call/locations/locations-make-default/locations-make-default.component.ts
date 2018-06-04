@@ -16,9 +16,9 @@ class MakeDefaultLocationCtrl implements ng.IComponentController {
   public makeDefaultLocation(): void {
     this.saveInProcess = true;
     this.LocationsService.makeDefault(this.uuid)
-    .then(() => this.close())
-    .catch((error) => this.Notification.errorResponse(error))
-    .finally(() => this.saveInProcess = false);
+      .then(() => this.close())
+      .catch((error) => this.Notification.errorResponse(error))
+      .finally(() => this.saveInProcess = false);
   }
 }
 

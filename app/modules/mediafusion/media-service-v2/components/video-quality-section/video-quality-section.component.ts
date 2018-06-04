@@ -41,26 +41,26 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
       disableCache: true,
     };
     this.Orgservice.getOrg(_.noop, null, params)
-     .then(response => {
-       if (this.isWizard) {
-         this.enableVideoQuality = false;
-       } else {
-         this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
-       }
-       this.MediaClusterServiceV2.getPropertySets()
-        .then((propertySets) => {
-          if (propertySets.length > 0) {
-            this.videoPropertySet = _.filter(propertySets, {
-              name: 'videoQualityPropertySet',
-            });
-            if (this.videoPropertySet.length === 0) {
+      .then(response => {
+        if (this.isWizard) {
+          this.enableVideoQuality = false;
+        } else {
+          this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
+        }
+        this.MediaClusterServiceV2.getPropertySets()
+          .then((propertySets) => {
+            if (propertySets.length > 0) {
+              this.videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              if (this.videoPropertySet.length === 0) {
+                this.createPropertySetAndAssignClusters();
+              }
+            } else if (propertySets.length === 0) {
               this.createPropertySetAndAssignClusters();
             }
-          } else if (propertySets.length === 0) {
-            this.createPropertySetAndAssignClusters();
-          }
-        });
-     });
+          });
+      });
   }
 
   private createPropertySetAndAssignClusters(): void {

@@ -55,7 +55,7 @@ class HuntGroupCtrl implements ng.IComponentController {
         this.nextButton(this.pageIndex);
       }
     })
-    .finally( () => this.isLoading = false);
+      .finally( () => this.isLoading = false);
   }
 
   public setHuntGroupName(name: string): void {
@@ -168,31 +168,31 @@ class HuntGroupCtrl implements ng.IComponentController {
   public createHuntGroup(): void {
     this.saveInProcess = true;
     this.HuntGroupService.createHuntGroup(this.huntGroup)
-    .then( () => {
-      this.$state.go('huronfeatures');
-    })
-    .catch( (response) => {
-      this.Notification.errorWithTrackingId(response);
-    })
-    .finally( () => this.saveInProcess = false);
+      .then( () => {
+        this.$state.go('huronfeatures');
+      })
+      .catch( (response) => {
+        this.Notification.errorWithTrackingId(response);
+      })
+      .finally( () => this.saveInProcess = false);
   }
 
   public save(): void {
     this.saveInProcess = true;
 
     this.HuntGroupService.updateHuntGroup(this.huntGroup.uuid || '', this.huntGroup)
-    .then((huntGroup: HuntGroup) => {
-      this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
-      this.title = this.huntGroup.name || '';
-      this.huntGroup = huntGroup;
-    })
-    .catch( (response) => {
-      this.Notification.errorWithTrackingId(response);
-    })
-    .finally( () => {
-      this.saveInProcess = false;
-      this.resetForm();
-    });
+      .then((huntGroup: HuntGroup) => {
+        this.Notification.success('huronHuntGroup.successUpdate', { huntGroupName: this.huntGroup.name } );
+        this.title = this.huntGroup.name || '';
+        this.huntGroup = huntGroup;
+      })
+      .catch( (response) => {
+        this.Notification.errorWithTrackingId(response);
+      })
+      .finally( () => {
+        this.saveInProcess = false;
+        this.resetForm();
+      });
   }
 
   public evalKeyPress($keyCode): void {

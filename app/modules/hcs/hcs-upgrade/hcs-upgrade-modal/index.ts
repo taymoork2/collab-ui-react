@@ -5,11 +5,11 @@ import { HcsUpgradeOrderComponent } from './hcs-upgrade-order/hcs-upgrade-order.
 import './hcs-upgrade-modal.scss';
 
 export default angular
-.module('hcs.upgradeModal', [
-  require('@collabui/collab-ui-ng').default,
-  require('angular-translate'),
-])
-.component('hcsUpgradeModal', new HcsUpgradeModalComponent())
-.component('hcsUpgradeInfo', new HcsUpgradeInfoComponent())
-.component('hcsUpgradeOrder', new HcsUpgradeOrderComponent())
-.name;
+  .module('hcs.upgradeModal', [
+    require('@collabui/collab-ui-ng').default,
+    require('angular-translate'),
+  ])
+  .component('hcsUpgradeModal', new HcsUpgradeModalComponent())
+  .component('hcsUpgradeInfo', new HcsUpgradeInfoComponent())
+  .component('hcsUpgradeOrder', new HcsUpgradeOrderComponent())
+  .name;

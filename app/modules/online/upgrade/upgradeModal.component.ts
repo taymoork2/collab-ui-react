@@ -39,9 +39,9 @@ class OnlineUpgrade {
     }
     if (!this.showMoreOptionsButton) {
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
-      .then((result) => {
-        this.showMoreOptionsButton = result;
-      });
+        .then((result) => {
+          this.showMoreOptionsButton = result;
+        });
     }
     if (this.showBmmpButton) {
       this.OnlineUpgradeService.getProductInstances(this.Authinfo.getUserId()).then((productInstances: IProdInst[]) => {

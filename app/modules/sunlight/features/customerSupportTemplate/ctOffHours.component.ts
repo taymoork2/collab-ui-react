@@ -84,7 +84,7 @@ class CtOffHoursController extends CtBaseController {
   public isOffHoursPageValid(): boolean {
     this.setOffHoursWarning();
     if (this.TemplateWizardService.isValidField(this.TemplateWizardService.template.configuration.pages.offHours.message,
-        this.lengthValidationConstants.multiLineMaxCharLimit) && this.isBusinessDaySelected &&
+      this.lengthValidationConstants.multiLineMaxCharLimit) && this.isBusinessDaySelected &&
       this.TemplateWizardService.isInputValid(this.TemplateWizardService.template.configuration.pages.offHours.message)) {
       this.TemplateWizardService.pageValidationResult.offHoursValid = true;
       return true;

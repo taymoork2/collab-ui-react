@@ -21,10 +21,10 @@ export class BsftSettingsOptionsService {
     }).then(() => {
       return bsftOptions;
     })
-    .catch(error => {
-      this.Notification.errorWithTrackingId(error);
-      return this.$q.reject();
-    });
+      .catch(error => {
+        this.Notification.errorWithTrackingId(error);
+        return this.$q.reject();
+      });
   }
 
   private loadTimeZoneOptions(): ng.IPromise<IOption[]> {

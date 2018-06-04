@@ -167,13 +167,13 @@ export class TaskManagerService {
     return resource.save({
       customerId: this.customerId,
     }, schedule.getRSchedule(),
-    (_response, headers) => {
-      const locationHeader = headers(LOCATION_HEADER);
-      if (!_.isEmpty(locationHeader)) {
-        scheduleId = _.last(locationHeader.split('/'));
-      }
-    }).$promise
-    .then(() => scheduleId);
+      (_response, headers) => {
+        const locationHeader = headers(LOCATION_HEADER);
+        if (!_.isEmpty(locationHeader)) {
+          scheduleId = _.last(locationHeader.split('/'));
+        }
+      }).$promise
+      .then(() => scheduleId);
   }
 
   public getSchedule(schedule: HtmSchedule): ng.IPromise<HtmSchedule> {
@@ -275,25 +275,25 @@ export class TaskManagerService {
     return resource.save({
       customerId: this.customerId,
     }, suite.getRSuite(),
-    (_response, headers) => {
-      const locationHeader = headers(LOCATION_HEADER);
-      if (!_.isEmpty(locationHeader)) {
-        suiteId = _.last(locationHeader.split('/'));
-      }
-    }).$promise
-    .then(() => {
-      suiteId = '';
-      return this.getSuites().then(suites => {
-        for (let i: number = 0; i < suites.length; i++) {
-          if (suites[i].name === suite.name) {
-            if (!_.isEmpty(suites[i].id)) {
-              return suites[i].id!;
+      (_response, headers) => {
+        const locationHeader = headers(LOCATION_HEADER);
+        if (!_.isEmpty(locationHeader)) {
+          suiteId = _.last(locationHeader.split('/'));
+        }
+      }).$promise
+      .then(() => {
+        suiteId = '';
+        return this.getSuites().then(suites => {
+          for (let i: number = 0; i < suites.length; i++) {
+            if (suites[i].name === suite.name) {
+              if (!_.isEmpty(suites[i].id)) {
+                return suites[i].id!;
+              }
             }
           }
-        }
-        return suiteId;
+          return suiteId;
+        });
       });
-    });
   }
 
   public getSuite(suite: IRHtmSuite): ng.IPromise<HtmSuite> {
@@ -312,23 +312,23 @@ export class TaskManagerService {
     return resource.query({
       customerId: this.customerId,
     }).$promise
-    .then((rsuites: IRHtmSuite[]) => {
-      const suites: HtmSuite[] = [];
-      for (let i: number = 0; i < rsuites.length; i++) {
-        suites.push(new HtmSuite(rsuites[i]));
-      }
+      .then((rsuites: IRHtmSuite[]) => {
+        const suites: HtmSuite[] = [];
+        for (let i: number = 0; i < rsuites.length; i++) {
+          suites.push(new HtmSuite(rsuites[i]));
+        }
       //TODO: REMOVE - Get all tests until API returns tests
-      const promises: ng.IPromise<any>[] = [];
-      for (let i: number = 0; i < suites.length; i++) {
-        promises.push(this.getTests(suites[i]).then(tests => {
-          suites[i].tests = tests;
-        }));
-      }
-      if (promises.length) {
-        return this.$q.all(promises).then(() => suites);
-      }
-      return suites;
-    });
+        const promises: ng.IPromise<any>[] = [];
+        for (let i: number = 0; i < suites.length; i++) {
+          promises.push(this.getTests(suites[i]).then(tests => {
+            suites[i].tests = tests;
+          }));
+        }
+        if (promises.length) {
+          return this.$q.all(promises).then(() => suites);
+        }
+        return suites;
+      });
   }
 
   public setSuite(suite: HtmSuite): ng.IPromise<void> {
@@ -367,13 +367,13 @@ export class TaskManagerService {
       customerId: this.customerId,
       suiteId: suite.id,
     }, test.getRTest(),
-    (_response, headers) => {
-      const locationHeader = headers(LOCATION_HEADER);
-      if (!_.isEmpty(locationHeader)) {
-        testId = _.last(locationHeader.split('/'));
-      }
-    }).$promise
-    .then(() => testId);
+      (_response, headers) => {
+        const locationHeader = headers(LOCATION_HEADER);
+        if (!_.isEmpty(locationHeader)) {
+          testId = _.last(locationHeader.split('/'));
+        }
+      }).$promise
+      .then(() => testId);
   }
 
   public getTest(suite: HtmSuite, test: HtmTest): ng.IPromise<HtmTest> {
@@ -459,41 +459,41 @@ export class TaskManagerService {
 
   public getServiceStatus(serviceId): ng.IPromise<any> {
     return this.getSuites()
-    .then((suites: HtmSuite[]) => {
-      if (suites.length > 0) {
+      .then((suites: HtmSuite[]) => {
+        if (suites.length > 0) {
         //Search for at least one defined Test
-        let testFound: boolean = false;
-        for (let i: number = 0; i < suites.length; i++) {
-          if (!_.isEmpty(suites[i].tests)) {
-            testFound = true;
-            break;
+          let testFound: boolean = false;
+          for (let i: number = 0; i < suites.length; i++) {
+            if (!_.isEmpty(suites[i].tests)) {
+              testFound = true;
+              break;
+            }
           }
-        }
-        if (testFound) {
+          if (testFound) {
           //At least one Suite and one Test found
-          const serviceOptions = _.cloneDeep(SETUP_COMPLETE);
-          serviceOptions.serviceId = serviceId;
-          return serviceOptions;
-        } else {
+            const serviceOptions = _.cloneDeep(SETUP_COMPLETE);
+            serviceOptions.serviceId = serviceId;
+            return serviceOptions;
+          } else {
           //No Tests defined
+            const serviceOptions = _.cloneDeep(SETUP_NOT_COMPLETE);
+            serviceOptions.serviceId = serviceId;
+            serviceOptions.setup = true;
+            return serviceOptions;
+          }
+        } else {
+        //No Suites returned
           const serviceOptions = _.cloneDeep(SETUP_NOT_COMPLETE);
           serviceOptions.serviceId = serviceId;
-          serviceOptions.setup = true;
           return serviceOptions;
         }
-      } else {
-        //No Suites returned
+      })
+      .catch(() => {
+      //Suites API failed
         const serviceOptions = _.cloneDeep(SETUP_NOT_COMPLETE);
         serviceOptions.serviceId = serviceId;
         return serviceOptions;
-      }
-    })
-    .catch(() => {
-      //Suites API failed
-      const serviceOptions = _.cloneDeep(SETUP_NOT_COMPLETE);
-      serviceOptions.serviceId = serviceId;
-      return serviceOptions;
-    });
+      });
   }
 
 }

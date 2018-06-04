@@ -101,9 +101,9 @@ class CallPickupCtrl implements ng.IComponentController {
         }
       });
     })
-    .finally( function() {
-      scope.isLoading = false;
-    });
+      .finally( function() {
+        scope.isLoading = false;
+      });
   }
 
   public getLastIndex(): number {
@@ -242,25 +242,25 @@ class CallPickupCtrl implements ng.IComponentController {
     this.callPickup.members = this.callPickup.numbers;
     this.callPickup = <IPickupGroup>_.omit(this.callPickup, 'numbers');
     this.CallPickupGroupService.updateCallPickup(this.callPickupId, this.callPickup)
-    .then(() => {
-      this.Notification.success('callPickup.successUpdate', {
-        callPickupName: this.callPickup.name,
-      });
-      this.$state.go(this.huronFeaturesUrl);
-    },
-    (error) => {
-      let message = '';
-      if (error
+      .then(() => {
+        this.Notification.success('callPickup.successUpdate', {
+          callPickupName: this.callPickup.name,
+        });
+        this.$state.go(this.huronFeaturesUrl);
+      },
+        (error) => {
+          let message = '';
+          if (error
           && _.has(error, 'data')
           && _.has(error.data, 'errorMessage')) {
-        message = error.data.errorMessage;
-      }
-      this.Notification.error('callPickup.errorUpdate', { message: message });
-    })
-    .finally( () => {
-      this.saveInProcess = false;
-      this.resetForm();
-    });
+            message = error.data.errorMessage;
+          }
+          this.Notification.error('callPickup.errorUpdate', { message: message });
+        })
+      .finally( () => {
+        this.saveInProcess = false;
+        this.resetForm();
+      });
   }
 
   public saveCallPickup(): void {

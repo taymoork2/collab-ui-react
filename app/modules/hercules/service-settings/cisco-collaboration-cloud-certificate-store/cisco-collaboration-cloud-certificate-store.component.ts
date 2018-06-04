@@ -24,7 +24,7 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
 
   public $onInit(): void {
     this.$scope.$watch(() => this.file,
-    file => this.onChangeFile(file),
+      file => this.onChangeFile(file),
     );
 
     this.certLabels = [
@@ -68,22 +68,22 @@ export class CiscoCollaborationCloudCertificateStoreCtrl implements ng.IComponen
   public deleteCert(certId: string) {
 
     this.CiscoCollaborationCloudCertificateService.deleteCert(certId)
-    .then( cert => {
-      if (cert) {
-        this.formattedCertList = cert.formattedCertList || [];
-      }
-      if (!cert.formattedCertList.length) {
-        this.certificateCustom = false;
-      }
-    });
+      .then( cert => {
+        if (cert) {
+          this.formattedCertList = cert.formattedCertList || [];
+        }
+        if (!cert.formattedCertList.length) {
+          this.certificateCustom = false;
+        }
+      });
   }
 
   public deleteAllCerts() {
     this.CiscoCollaborationCloudCertificateService.deleteCerts()
-    .then( () => {
-      this.formattedCertList = [];
-      this.certificateCustom = false;
-    });
+      .then( () => {
+        this.formattedCertList = [];
+        this.certificateCustom = false;
+      });
   }
 
   public onChangeFile(file) {

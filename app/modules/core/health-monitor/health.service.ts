@@ -17,6 +17,6 @@ export class HealthService {
       // statuspage.io doesn't play nice w/ our oauth header, so we unset it specifically here
       headers: { Authorization: undefined },
     })
-    .then((response) => response.data);
+      .then((response) => response.data);
   }
 }

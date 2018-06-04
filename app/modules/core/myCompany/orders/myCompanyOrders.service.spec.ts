@@ -69,10 +69,10 @@ describe('Service: MyCompanyOrdersService', () => {
   it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(orderUrl).respond(500);
     this.MyCompanyOrdersService.getOrderDetails().then(fail)
-    .catch(response => {
-      expect(response.data).toBeUndefined();
-      expect(response.status).toEqual(500);
-    });
+      .catch(response => {
+        expect(response.data).toBeUndefined();
+        expect(response.status).toEqual(500);
+      });
     this.$httpBackend.flush();
   });
 

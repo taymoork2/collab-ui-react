@@ -10,15 +10,15 @@ import webexApiGatewayModuleName from 'modules/webex/apiGateway';
 import webExUtilsModuleName from 'modules/webex/utils';
 
 export default angular
-.module('core.siteList.shared', [
-  require('angular-translate'),
-  authInfoModuleName,
-  featureToggleModuleName,
-  setupWizardServiceModuleName,
-  urlConfigModuleName,
-  userServiceModuleName,
-  webexApiGatewayModuleName,
-  webExUtilsModuleName,
-])
-.service('SiteListService', SiteListService)
-.name;
+  .module('core.siteList.shared', [
+    require('angular-translate'),
+    authInfoModuleName,
+    featureToggleModuleName,
+    setupWizardServiceModuleName,
+    urlConfigModuleName,
+    userServiceModuleName,
+    webexApiGatewayModuleName,
+    webExUtilsModuleName,
+  ])
+  .service('SiteListService', SiteListService)
+  .name;

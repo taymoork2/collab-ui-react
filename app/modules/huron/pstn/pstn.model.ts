@@ -305,6 +305,6 @@ export class PstnModel {
 export default angular.module('huron.pstn.pstn-model', [
   require('angular-resource'),
 ])
-.service('PstnModel', PstnModel)
-.name;
+  .service('PstnModel', PstnModel)
+  .name;
 

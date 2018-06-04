@@ -29,15 +29,15 @@ export class ResourceViewCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.HcsTestManagerService.getResources()
-    .then(resources => {
-      this.resources = resources;
-      if (this.resources.length === 0) {
-        this.pageState = State.New;
-      } else {
-        this.pageState = State.Show;
-      }
-      this.reInstantiateMasonry();
-    }).catch(() => this.handleFailures());
+      .then(resources => {
+        this.resources = resources;
+        if (this.resources.length === 0) {
+          this.pageState = State.New;
+        } else {
+          this.pageState = State.Show;
+        }
+        this.reInstantiateMasonry();
+      }).catch(() => this.handleFailures());
   }
 
   public handleFailures(): void {

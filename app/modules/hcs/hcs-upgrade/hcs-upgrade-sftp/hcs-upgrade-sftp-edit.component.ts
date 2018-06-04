@@ -23,12 +23,12 @@ export class HcsUpgradeSftpEditCtrl implements ng.IComponentController {
 
   public saveSftpServer(): void {
     this.HcsUpgradeService.updateSftpServer(this.sftpServer.uuid, this.sftpServer)
-    .then(() => {
-      this.Notification.success('hcs.sftp.successupdate');
-    })
-    .catch(e => {
-      this.Notification.error(e.message, 'hcs.sftp.error');
-    });
+      .then(() => {
+        this.Notification.success('hcs.sftp.successupdate');
+      })
+      .catch(e => {
+        this.Notification.error(e.message, 'hcs.sftp.error');
+      });
   }
 
   public setSftpServer(sftpServer: ISftpServer): void {

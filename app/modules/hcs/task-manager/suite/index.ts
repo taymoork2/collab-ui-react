@@ -16,6 +16,6 @@ export default angular
     hcsTestManagertServiceModule,
     notifications,
   ])
-.component('taasSuiteView', new SuiteViewComponent())
-.component('suiteCreateModal', new SuiteCreateComponent())
-.name;
+  .component('taasSuiteView', new SuiteViewComponent())
+  .component('suiteCreateModal', new SuiteCreateComponent())
+  .name;

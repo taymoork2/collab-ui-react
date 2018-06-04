@@ -247,27 +247,27 @@ describe('CsvDownloadService', () => {
     it('should reject promise if FAILURE is returned', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportFAILED);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.processStatus).toBe('FAILED');
-      });
+        .catch( function (response) {
+          expect(response.processStatus).toBe('FAILED');
+        });
       this.$httpBackend.flush();
     });
 
     it('should reject promise if processStatus returns something unsupported', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.message).toBe('Unknown status');
-      });
+        .catch( function (response) {
+          expect(response.message).toBe('Unknown status');
+        });
       this.$httpBackend.flush();
     });
 
     it('should reject promise if fetching processStatus returns HTTP error code', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.status).toBe(503);
-      });
+        .catch( function (response) {
+          expect(response.status).toBe(503);
+        });
       this.$httpBackend.flush();
     });
 
@@ -313,9 +313,9 @@ describe('CsvDownloadService', () => {
         });
 
         this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-        .catch( function (response) {
-          expect(response).toBe('extract failed');
-        });
+          .catch( function (response) {
+            expect(response).toBe('extract failed');
+          });
         this.$httpBackend.flush();
       });
 

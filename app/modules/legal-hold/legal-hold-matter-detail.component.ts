@@ -158,10 +158,10 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       close: this.$translate.instant('common.ok'),
       hideDismiss: true,
     }).result
-    .then(() => { //set the spinner and get the users in matter
-      this.isProcessing = true;
-      return this.LegalHoldService.listUsersInMatter(this.Authinfo.getOrgId(), this.matter.caseId);
-    })
+      .then(() => { //set the spinner and get the users in matter
+        this.isProcessing = true;
+        return this.LegalHoldService.listUsersInMatter(this.Authinfo.getOrgId(), this.matter.caseId);
+      })
       .then((userUuidList) => { //get the users in uuid
         if (_.isEmpty(userUuidList)) {
           return this.$q.reject('no users');

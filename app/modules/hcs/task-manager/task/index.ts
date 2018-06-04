@@ -14,5 +14,5 @@ export default angular
     notifications,
     hcsTestManagertServiceModule,
   ])
-.component('taasTaskView', new TaskViewComponent())
-.name;
+  .component('taasTaskView', new TaskViewComponent())
+  .name;

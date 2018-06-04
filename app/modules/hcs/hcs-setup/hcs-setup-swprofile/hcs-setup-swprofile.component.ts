@@ -72,20 +72,20 @@ export class HcsSetupSwprofileController implements ng.IComponentController {
     };
     if (!_.isUndefined(this.swprofile) && this.swprofile) {
       this.HcsUpgradeService.getSoftwareProfile(_.get(this.swprofile, 'uuid'))
-      .then(resp => {
-        this.selectedProfile = _.clone(resp);
-        this.changedProfile = _.clone(this.selectedProfile);
-        this.changedProfile.applicationVersions = [];
-        const appVersions: IApplicationVersion[] = _.get(this.selectedProfile, 'applicationVersions');
-        this.selectedVersion = {
-          cucm: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUCM]), 'fileName'),
-          imp: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.IMP]), 'fileName'),
-          ucxn: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUC]), 'fileName'),
-          plm: '',
-          cer: '',
-          expway: '',
-        };
-      });
+        .then(resp => {
+          this.selectedProfile = _.clone(resp);
+          this.changedProfile = _.clone(this.selectedProfile);
+          this.changedProfile.applicationVersions = [];
+          const appVersions: IApplicationVersion[] = _.get(this.selectedProfile, 'applicationVersions');
+          this.selectedVersion = {
+            cucm: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUCM]), 'fileName'),
+            imp: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.IMP]), 'fileName'),
+            ucxn: _.get(_.find(appVersions, ['typeApplication', EApplicationTypes.CUC]), 'fileName'),
+            plm: '',
+            cer: '',
+            expway: '',
+          };
+        });
     }
     if (this.$state.current.name !== 'swprofilelist') {
       this.changedProfile = new SoftwareProfile({ name: '', uuid: '', applicationVersions: [] });

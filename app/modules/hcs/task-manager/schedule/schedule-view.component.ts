@@ -37,36 +37,36 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
     this.scheduleListData = [];
     this.initUIGrid();
     this.HcsTestManagerService.getSchedules()
-    .then(schedules => {
-      if (schedules.length === 0) {
-        this.pageState = State.New;
-      } else {
-        this.pageState = State.Show;
-        for (const i of schedules) {
-          const cronVal = i.schedule;
-          let cronValArray = [] as string[];
-          cronValArray = cronVal.split(' ');
-          let min = cronValArray[0];
-          if (min.length < 2) {
-            min = '0' + min;
+      .then(schedules => {
+        if (schedules.length === 0) {
+          this.pageState = State.New;
+        } else {
+          this.pageState = State.Show;
+          for (const i of schedules) {
+            const cronVal = i.schedule;
+            let cronValArray = [] as string[];
+            cronValArray = cronVal.split(' ');
+            let min = cronValArray[0];
+            if (min.length < 2) {
+              min = '0' + min;
+            }
+            let hour = cronValArray[1];
+            if (hour.length < 2) {
+              hour = '0' + hour;
+            }
+            const day = cronValArray[3];
+            let month = cronValArray[2];
+            month = this.convertMonth(month);
+            if (day === '*') {
+              i.schedule = 'Daily at ' + hour + ':' + min;
+            } else {
+              i.schedule = month + ' ' + day + ', at ' + hour + ':' + min;
+            }
           }
-          let hour = cronValArray[1];
-          if (hour.length < 2) {
-            hour = '0' + hour;
-          }
-          const day = cronValArray[3];
-          let month = cronValArray[2];
-          month = this.convertMonth(month);
-          if (day === '*') {
-            i.schedule = 'Daily at ' + hour + ':' + min;
-          } else {
-            i.schedule = month + ' ' + day + ', at ' + hour + ':' + min;
-          }
+          this.scheduleListData = schedules;
+          this.gridOptions.data = schedules;
         }
-        this.scheduleListData = schedules;
-        this.gridOptions.data = schedules;
-      }
-    }).catch(() => this.handleFailures());
+      }).catch(() => this.handleFailures());
   }
 
   public initUIGrid() {

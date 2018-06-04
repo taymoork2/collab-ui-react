@@ -8,12 +8,12 @@ describe('Component: OrdersOverview', () => {
   beforeEach(function () {
     this.initModules(ordersOverviewModule);
     this.injectDependencies('PstnService',
-                            'ExternalNumberService',
-                            'FeatureToggleService',
-                            '$q',
-                            '$stateParams',
-                            '$translate',
-                            '$scope',
+      'ExternalNumberService',
+      'FeatureToggleService',
+      '$q',
+      '$stateParams',
+      '$translate',
+      '$scope',
     );
     const customer = { customerOrgId: '1b8b5381-d908-4f28-9f23-bcd61d0792b8' };
     this.$scope.currentCustomer = _.cloneDeep(customer);

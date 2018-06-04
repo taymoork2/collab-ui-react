@@ -87,9 +87,9 @@ describe('Service: Customer Reports Service', function () {
       spyOn(this.CommonReportService, 'getCustomerActiveUserData').and.returnValue(this.$q.reject(this.rejectError));
 
       this.SparkLineReportService.getMostActiveUserData(this.defaults.timeFilter[0]).then(fail)
-      .catch((response: IActiveTableBase[]): void => {
-        expect(response).toEqual([]);
-      });
+        .catch((response: IActiveTableBase[]): void => {
+          expect(response).toEqual([]);
+        });
       this.$scope.$apply();
     });
   });
@@ -163,9 +163,9 @@ describe('Service: Customer Reports Service', function () {
       spyOn(this.CommonReportService, 'getCustomerAltReportByType').and.returnValue(this.$q.reject(this.rejectError));
 
       this.SparkLineReportService.getMetricsData(this.defaults.timeFilter[0]).then(fail)
-      .catch((response: IMetricsData[]): void => {
-        expect(response).toEqual([]);
-      });
+        .catch((response: IMetricsData[]): void => {
+          expect(response).toEqual([]);
+        });
       this.$scope.$apply();
     });
   });

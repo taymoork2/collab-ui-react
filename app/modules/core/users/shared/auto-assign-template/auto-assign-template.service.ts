@@ -151,7 +151,7 @@ export class AutoAssignTemplateService {
       defaultAutoAssignTemplate: this.getDefaultTemplate(),
       subscriptions: this.getSortedSubscriptions(),
     })
-    .then(results => this.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions));
+      .then(results => this.toAutoAssignTemplateData(results.defaultAutoAssignTemplate, results.subscriptions));
   }
 
   public gotoEditAutoAssignTemplate(options: {

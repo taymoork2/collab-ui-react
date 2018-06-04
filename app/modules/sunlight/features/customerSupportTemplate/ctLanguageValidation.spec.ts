@@ -7,12 +7,12 @@ const TRANSLATION_NOT_FOUND = 'TRANSLATION_NOT_FOUND';
 angular.module('SunlightLanguageValidation', [
   require('angular-ui-router'),
   require('angular-translate')])
-    .provider('languages', LanguagesProvider)
-    .controller('LanguageController', function ($scope, $translate) {
-      $scope.switchLanguage = function (locale) {
-        $translate.use(locale);
-      };
-    });
+  .provider('languages', LanguagesProvider)
+  .controller('LanguageController', function ($scope, $translate) {
+    $scope.switchLanguage = function (locale) {
+      $translate.use(locale);
+    };
+  });
 
 describe('Langauage Translations for Config Template Strings', () => {
   beforeEach(angular.mock.module('SunlightLanguageValidation'));
@@ -47,7 +47,7 @@ describe('Langauage Translations for Config Template Strings', () => {
           const translation = translate.instant(translationKey);
           if (!translation.startsWith(TRANSLATION_NOT_FOUND)) {
             expect(translation.length).toBeLessThanOrEqual(characterLimit,
-          `
+              `
           Translation for key "${translationKey}":"${translation}"
           in language bundle "${lang}" exceeds the character limit of "${characterLimit}"
           `);

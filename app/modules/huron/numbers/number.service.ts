@@ -25,34 +25,34 @@ export class NumberService {
 
   public getNumberList(number?: string, type?: NumberType, assigned?: boolean, order?: NumberOrder, limit?: number, offset?: number, locationId?: string): ng.IPromise<INumber[]> {
     return  this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-    .then(supports => {
-      return this.numberResource.get({
-        customerId: this.Authinfo.getOrgId(),
-        number: number,
-        type: type,
-        assigned: assigned,
-        order: order,
-        limit: limit,
-        offset: offset,
-        location: locationId,
-        deprecated: !supports,
-      }).$promise
-        .then(numberList => {
-          return _.get(numberList, 'numbers', []);
-        });
-    });
+      .then(supports => {
+        return this.numberResource.get({
+          customerId: this.Authinfo.getOrgId(),
+          number: number,
+          type: type,
+          assigned: assigned,
+          order: order,
+          limit: limit,
+          offset: offset,
+          location: locationId,
+          deprecated: !supports,
+        }).$promise
+          .then(numberList => {
+            return _.get(numberList, 'numbers', []);
+          });
+      });
   }
 
   public getNumber(number: string): any {
     return  this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-    .then(supports => {
-      return this.numberResource.get({
-        customerId: this.Authinfo.getOrgId(),
-        numberUuid: number,
-        deprecated: !supports,
-        wide: true,
-      }).$promise;
-    });
+      .then(supports => {
+        return this.numberResource.get({
+          customerId: this.Authinfo.getOrgId(),
+          numberUuid: number,
+          deprecated: !supports,
+          wide: true,
+        }).$promise;
+      });
   }
 
   public getUserNumber(userId, numberId): ng.IPromise<any> {

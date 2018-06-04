@@ -224,7 +224,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public removeOrder(order): void {
     this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists())
-        .then(_.partial(this.removeOrderFromCart.bind(this), order));
+      .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 
   public manualTokenChange(tokens, invalidCount): void {
@@ -277,20 +277,20 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     address.zip = this.trialData.details.emergAddr.zip;
     address.country = this.PstnModel.getCountryCode();
     this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
-    .then((_address: Address | null) => {
-      if (_address) {
-        this.addressFound = true;
-        this.readOnly = true;
-        _.extend(this.trialData.details.emergAddr, _address);
-      } else {
-        this.validation = false;
-        this.Notification.error('trialModal.pstn.error.noAddress');
-        this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
-      }
-    })
-    .finally(() => {
-      this.addressLoading = false;
-    });
+      .then((_address: Address | null) => {
+        if (_address) {
+          this.addressFound = true;
+          this.readOnly = true;
+          _.extend(this.trialData.details.emergAddr, _address);
+        } else {
+          this.validation = false;
+          this.Notification.error('trialModal.pstn.error.noAddress');
+          this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
+        }
+      })
+      .finally(() => {
+        this.addressLoading = false;
+      });
     return;
   }
 

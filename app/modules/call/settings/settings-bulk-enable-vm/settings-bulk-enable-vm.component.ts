@@ -84,10 +84,10 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
       this.totalUsersCount = count;
       this.enableVoicemailInLoop();
     },
-    () => {
-      this.totalUsersCount = MAXUSERS;
-      this.enableVoicemailInLoop();
-    });
+      () => {
+        this.totalUsersCount = MAXUSERS;
+        this.enableVoicemailInLoop();
+      });
   }
 
   private enableVoicemailInLoop(): void {
@@ -123,13 +123,13 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
         return;
       });
     },
-    (error) => {
-      this.logError('failed to fetch users', error.status ? error.status : 500, error.statusText ? error.statusText : null,
-        (error.config.headers && error.config.headers.TrackingID) ?
+      (error) => {
+        this.logError('failed to fetch users', error.status ? error.status : 500, error.statusText ? error.statusText : null,
+          (error.config.headers && error.config.headers.TrackingID) ?
           error.config.headers.TrackingID : null);
-      this.processProgress = 100;
-      return this.$q.reject();
-    });
+        this.processProgress = 100;
+        return this.$q.reject();
+      });
   }
 
   private enableVoicemailForOneUser(userId: string, userName: string, voicemailEnabled: boolean): ng.IPromise<any> {
@@ -167,13 +167,13 @@ export class BulkEnableVmCtrl implements ng.IComponentController {
           this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +
             this.usersVoicemailFailedCount + this.userVoicemailSkippedCount) / this.totalUsersCount) * 100);
         },
-        (error) => {
-          this.logError(userName, error.status ? error.status : 0,
-            error.statusText ? error.statusText : null,
-            (error.config && error.config.headers && error.config.headers.TrackingID) ?
+          (error) => {
+            this.logError(userName, error.status ? error.status : 0,
+              error.statusText ? error.statusText : null,
+              (error.config && error.config.headers && error.config.headers.TrackingID) ?
               error.config.headers.TrackingID : null);
-          return this.$q.resolve();
-        });
+            return this.$q.resolve();
+          });
     } else {
       this.userVoicemailSkippedCount++;
       this.processProgress = Math.round(((this.usersVoicemailUpdatedCount +

@@ -33,15 +33,15 @@ export class ResultsViewCtrl implements ng.IComponentController {
     this.resultsListData = [];
     this.initUIGrid();
     this.HcsTestManagerService.getResults()
-    .then(results => {
-      if (results.length === 0) {
-        this.pageState = State.New;
-      } else {
-        this.pageState = State.Show;
-        this.resultsListData = results;
-        this.gridOptions.data = results;
-      }
-    });
+      .then(results => {
+        if (results.length === 0) {
+          this.pageState = State.New;
+        } else {
+          this.pageState = State.Show;
+          this.resultsListData = results;
+          this.gridOptions.data = results;
+        }
+      });
   }
 
   public initUIGrid() {

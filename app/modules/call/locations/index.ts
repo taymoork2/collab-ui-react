@@ -49,6 +49,6 @@ export default angular
     callEmergencyServicesModule,
     DialPlanServiceModule,
   ])
-.component('ucCallLocations', new CallLocationsComponent())
-.component('ucCallLocation', new CallLocationComponent())
-.name;
+  .component('ucCallLocations', new CallLocationsComponent())
+  .component('ucCallLocation', new CallLocationComponent())
+  .name;

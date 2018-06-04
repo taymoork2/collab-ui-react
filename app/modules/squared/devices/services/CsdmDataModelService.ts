@@ -116,10 +116,10 @@ export class CsdmDataModelService implements ICsdmDataModelService {
 
   private hasHuronLicenses() {
     return _.filter(
-        this.Authinfo.getLicenses(),
-        (l: any) => {
-          return l.licenseType === 'COMMUNICATION';
-        }).length > 0;
+      this.Authinfo.getLicenses(),
+      (l: any) => {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
   }
 
   private updateDeviceMap(deviceMap: Map<string, IDevice>, keepFunction) {

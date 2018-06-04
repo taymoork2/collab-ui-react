@@ -125,13 +125,13 @@ export class SipCallSettingsController implements ng.IComponentController {
       template: require('modules/mediafusion/media-service-v2/components/sip-call-settings/confirm-sip-settings-removal.html'),
       type: 'dialog',
     })
-    .result.then((removeConfig) => {
-      if (removeConfig) {
-        if (this.mfToggle && !_.isUndefined(this.sipConfigUrl) && this.sipConfigUrl !== '') { this.SipRegistrationSectionService.saveSipTrunkUrl('', c.id); }
-        if (this.mfTrustedToggle && !_.isUndefined(this.trustedsipconfiguration) && this.trustedsipconfiguration !== '') { this.TrustedSipSectionService.saveSipConfigurations([], c.id); }
-        this.$state.go('mediafusion-cluster.settings', {}, { reload: true });
-      }
-    });
+      .result.then((removeConfig) => {
+        if (removeConfig) {
+          if (this.mfToggle && !_.isUndefined(this.sipConfigUrl) && this.sipConfigUrl !== '') { this.SipRegistrationSectionService.saveSipTrunkUrl('', c.id); }
+          if (this.mfTrustedToggle && !_.isUndefined(this.trustedsipconfiguration) && this.trustedsipconfiguration !== '') { this.TrustedSipSectionService.saveSipConfigurations([], c.id); }
+          this.$state.go('mediafusion-cluster.settings', {}, { reload: true });
+        }
+      });
     this.isSipSettingsEnabled = true;
   }
 

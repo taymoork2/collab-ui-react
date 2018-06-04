@@ -41,10 +41,10 @@ export class HcsUpgradeSftpListCtrl implements ng.IComponentController {
   public listSftpServers(): void {
     this.loading = true;
     this.HcsUpgradeService.listSftpServers()
-    .then(list => {
-      this.sftpList = _.get(list, 'sftpServers');
-      this.currentSftpList = this.sftpList;
-    }).finally(() => this.loading = false);
+      .then(list => {
+        this.sftpList = _.get(list, 'sftpServers');
+        this.currentSftpList = this.sftpList;
+      }).finally(() => this.loading = false);
   }
 
   public filteredList(searchStr: string): void {

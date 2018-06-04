@@ -87,12 +87,12 @@ class Participants implements ng.IComponentController {
       if (item.platform === Platforms.TP && !item.deviceCompleted) {
         this.deviceLoaded = false;
         this.SearchService.getRealDevice(item.conferenceID, item.nodeId)
-        .then((res: any) => {
-          if (res.completed) {
-            item.device = this.updateDevice(res);
-          }
-          item.deviceCompleted = res.completed;
-        });
+          .then((res: any) => {
+            if (res.completed) {
+              item.device = this.updateDevice(res);
+            }
+            item.deviceCompleted = res.completed;
+          });
       }
     });
 

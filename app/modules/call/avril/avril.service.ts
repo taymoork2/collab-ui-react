@@ -47,7 +47,7 @@ export class AvrilService {
       customerId: this.Authinfo.getOrgId(),
       siteId: uuid,
     }).$promise
-    .then(response => new AvrilSite(response));
+      .then(response => new AvrilSite(response));
   }
 
   public createAvrilSite(avrilSite: IAvrilSite): ng.IPromise<string> {
@@ -55,9 +55,9 @@ export class AvrilService {
     return this.avrilSiteResource.save({
       customerId: this.Authinfo.getOrgId(),
     }, avrilSite,
-    (_response, headers) => {
-      location = headers('Location');
-    }).$promise.then(() => location);
+      (_response, headers) => {
+        location = headers('Location');
+      }).$promise.then(() => location);
   }
 
   public updateAvrilSite(avrilSite: IAvrilSite): ng.IPromise<void> {

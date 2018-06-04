@@ -246,13 +246,13 @@ export class HuronSettingsService {
 
   private getVoiceCustomer(): ng.IPromise<CustomerVoice> {
     return this.HuronCustomerService.getVoiceCustomer()
-    .then((customerVoice: CustomerVoice) => {
-      return customerVoice;
-    })
-    .catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-      return this.$q.reject();
-    });
+      .then((customerVoice: CustomerVoice) => {
+        return customerVoice;
+      })
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+        return this.$q.reject();
+      });
   }
 
   private getSite(_siteId?: string): ng.IPromise<ISite> {
@@ -267,10 +267,10 @@ export class HuronSettingsService {
   private getCompanyMedia(): ng.IPromise<string> {
     if (this.supportsCompanyMoh) {
       return this.MediaOnHoldService.getCompanyMedia()
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
+          return this.$q.reject();
+        });
     }
     return this.$q.resolve('');
   }
@@ -369,14 +369,14 @@ export class HuronSettingsService {
     return this.CustomerCosRestrictionServiceV2.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(response => {
-      return _.map(_.get(response, 'restrictions', []), restriction => {
-        return {
-          blocked: _.get(restriction, 'blocked', false),
-          restriction: _.get(restriction, 'restriction'),
-        };
+      .then(response => {
+        return _.map(_.get(response, 'restrictions', []), restriction => {
+          return {
+            blocked: _.get(restriction, 'blocked', false),
+            restriction: _.get(restriction, 'restriction'),
+          };
+        });
       });
-    });
   }
 
   private saveCosRestrictions(data: any): ng.IPromise<void> {
@@ -571,14 +571,14 @@ export class HuronSettingsService {
       return this.$q.resolve(new AvrilSite());
     } else {
       return this.AvrilService.getAvrilSite(site.uuid || '')
-      .catch((error): any => {
-        if (error.status === 404) {
-          return new AvrilSite();
-        } else {
-          this.errors.push(this.Notification.processErrorResponse(error, 'avril get error'));
-          return this.$q.reject(error);
-        }
-      });
+        .catch((error): any => {
+          if (error.status === 404) {
+            return new AvrilSite();
+          } else {
+            this.errors.push(this.Notification.processErrorResponse(error, 'avril get error'));
+            return this.$q.reject(error);
+          }
+        });
     }
   }
 
@@ -642,9 +642,9 @@ export class HuronSettingsService {
       customerId: this.Authinfo.getOrgId(),
       number: pattern,
     }).$promise
-    .then(e911Status => {
-      return _.get(e911Status, 'status', '');
-    });
+      .then(e911Status => {
+        return _.get(e911Status, 'status', '');
+      });
   }
 
 }

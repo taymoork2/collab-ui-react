@@ -171,16 +171,16 @@ export class AddResourceSectionService {
       },
     };
     return this.MediaClusterServiceV2.createPropertySet(payLoad)
-          .then((response) => {
-            this.videoPropertySetId = response.data.id;
-            const clusterPayload = {
-              assignedClusters: _.map(this.clusters, 'id'),
-            };
-            this.MediaClusterServiceV2.updatePropertySetById(this.videoPropertySetId, clusterPayload)
-              .catch((error) => {
-                this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
-              });
+      .then((response) => {
+        this.videoPropertySetId = response.data.id;
+        const clusterPayload = {
+          assignedClusters: _.map(this.clusters, 'id'),
+        };
+        this.MediaClusterServiceV2.updatePropertySetById(this.videoPropertySetId, clusterPayload)
+          .catch((error) => {
+            this.Notification.errorWithTrackingId(error, 'mediaFusion.videoQuality.error');
           });
+      });
   }
   private qosPropertySetsForOrg() {
     const qospayLoad = {
@@ -191,15 +191,15 @@ export class AddResourceSectionService {
       },
     };
     return this.MediaClusterServiceV2.createPropertySet(qospayLoad)
-          .then((response) => {
-            this.qosPropertySetId = response.data.id;
-            const qosclusterPayload = {
-              assignedClusters: _.map(this.clusters, 'id'),
-            };
-            this.MediaClusterServiceV2.updatePropertySetById(this.qosPropertySetId, qosclusterPayload)
-              .catch((error) => {
-                this.Notification.errorWithTrackingId(error, 'mediaFusion.qos.error');
-              });
+      .then((response) => {
+        this.qosPropertySetId = response.data.id;
+        const qosclusterPayload = {
+          assignedClusters: _.map(this.clusters, 'id'),
+        };
+        this.MediaClusterServiceV2.updatePropertySetById(this.qosPropertySetId, qosclusterPayload)
+          .catch((error) => {
+            this.Notification.errorWithTrackingId(error, 'mediaFusion.qos.error');
           });
+      });
   }
 }

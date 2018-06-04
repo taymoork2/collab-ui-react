@@ -16,7 +16,7 @@ export default angular
     metricsModule,
     windowModule,
   ])
-    .config(ToasterConfig)
-    .directive('crBindUnsafeHtml', BindUnsafeHtml.directive)
-    .service('Notification', Notification)
-    .name;
+  .config(ToasterConfig)
+  .directive('crBindUnsafeHtml', BindUnsafeHtml.directive)
+  .service('Notification', Notification)
+  .name;

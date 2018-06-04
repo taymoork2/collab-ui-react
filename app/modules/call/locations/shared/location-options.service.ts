@@ -48,10 +48,10 @@ export class LocationSettingsOptionsService {
     }).then(() => {
       return locationOptions;
     })
-    .catch(error => {
-      this.Notification.errorWithTrackingId(error);
-      return this.$q.reject();
-    });
+      .catch(error => {
+        this.Notification.errorWithTrackingId(error);
+        return this.$q.reject();
+      });
   }
 
   public loadMoHOptions(): ng.IPromise<IOption[]> {
@@ -79,9 +79,9 @@ export class LocationSettingsOptionsService {
 
   private loadPreferredLanguageOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getSiteLanguages()
-    .then(languages => {
-      return _.sortBy(this.ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
-    });
+      .then(languages => {
+        return _.sortBy(this.ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+      });
   }
 
   private loadDefaultToneOptions(): ng.IPromise<IOption[]> {
@@ -97,14 +97,14 @@ export class LocationSettingsOptionsService {
 
   public loadLocationCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
     return this.NumberService.getNumberList(filter, NumberType.EXTERNAL)
-    .then(externalNumbers => {
-      return _.map(externalNumbers, externalNumber => {
-        return {
-          value: _.get(externalNumber, 'external'),
-          label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
-        } as IOption;
+      .then(externalNumbers => {
+        return _.map(externalNumbers, externalNumber => {
+          return {
+            value: _.get(externalNumber, 'external'),
+            label: this.PhoneNumberService.getNationalFormat(_.get(externalNumber, 'external')),
+          } as IOption;
+        });
       });
-    });
   }
 
   public loadCompanyVoicemailNumbers(filter: string | undefined): ng.IPromise<IOption[]> {

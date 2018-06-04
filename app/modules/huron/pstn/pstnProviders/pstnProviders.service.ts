@@ -67,9 +67,9 @@ export class PstnProvidersService {
           return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
         }
       })
-      .catch( () => {
-        return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
-      });
+        .catch( () => {
+          return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
+        });
     } else {
       //Get Reseller Carriers
       return this.PstnService.listResellerCarriersV2().then(carriers => {
@@ -83,9 +83,9 @@ export class PstnProvidersService {
           return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
         }
       })
-      .catch( () => {
-        return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
-      });
+        .catch( () => {
+          return this.getCarriersNetworkDefault(pstnCarriers, pstnCarrierStatics);
+        });
     }
   }
 

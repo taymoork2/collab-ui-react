@@ -8,7 +8,7 @@ export default angular
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
-.component('hcsClusterDetail', new ClusterDetailComponent())
-.component('hcsNodeSftpEdit', new HcsNodeSftpEditComponent())
-.component('hcsAddCustomerToCluster', new HcsAddCustomerToClusterComponent())
-.name;
+  .component('hcsClusterDetail', new ClusterDetailComponent())
+  .component('hcsNodeSftpEdit', new HcsNodeSftpEditComponent())
+  .component('hcsAddCustomerToCluster', new HcsAddCustomerToClusterComponent())
+  .name;

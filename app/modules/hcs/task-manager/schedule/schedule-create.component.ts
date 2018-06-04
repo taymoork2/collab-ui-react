@@ -72,6 +72,6 @@ class ScheduleCreateController implements ng.IComponentController {
     this.HcsTestManagerService.createSchedule(schedule).then(() => {
       this.showConfirmation = true;
     })
-    .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recieved an Error'));
+      .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recieved an Error'));
   }
 }

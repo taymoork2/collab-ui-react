@@ -79,11 +79,11 @@ class EditCalendarService extends BaseExternalLinkedAccountUniqueSafe implements
       conflictWithUserEmailMessageKey: 'addDeviceWizard.editCalendarService.mailAddressBelongsToUser',
       conflictWithExternalLinkedAccountMessageKey: 'addDeviceWizard.editCalendarService.mailAddressBelongsToPlace',
     },
-    CsdmFilteredViewFactory,
-    UserListService,
-    $q,
-    $timeout,
-    $translate);
+      CsdmFilteredViewFactory,
+      UserListService,
+      $q,
+      $timeout,
+      $translate);
 
     this.ServiceDescriptorService.getServices()
       .then((services) => {

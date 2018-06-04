@@ -43,13 +43,13 @@ export class CompleteregistrationOrRemoveExpresswayCtrl implements ng.IComponent
       template: require('modules/hercules/hs-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     }).result
-    .then(() => {
-      if (this.connectorType === 'c_cal') {
-        this.$state.go('calendar-service.list');
-      } else if (this.connectorType === 'c_ucmc') {
-        this.$state.go('call-service.list');
-      }
-    });
+      .then(() => {
+        if (this.connectorType === 'c_cal') {
+          this.$state.go('calendar-service.list');
+        } else if (this.connectorType === 'c_ucmc') {
+          this.$state.go('call-service.list');
+        }
+      });
   }
 
   public goToExpressway(hostname: string): void {

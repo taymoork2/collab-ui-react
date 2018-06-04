@@ -27,10 +27,10 @@ export class PlaceCallOverviewService {
     return this.ServiceSetup.listSites().then(() => {
       if (this.ServiceSetup.sites.length !== 0) {
         return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
-        .then(site => {
-          const siteLanguage = _.get(site, 'preferredLanguage');
-          return siteLanguage ? siteLanguage : this.DEFAULT_LANG;
-        });
+          .then(site => {
+            const siteLanguage = _.get(site, 'preferredLanguage');
+            return siteLanguage ? siteLanguage : this.DEFAULT_LANG;
+          });
       }
     });
   }

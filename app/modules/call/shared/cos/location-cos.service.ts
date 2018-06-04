@@ -45,10 +45,10 @@ export class LocationCosService {
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     }, restriction,
-    (_response, headers) => {
-      locationHeader = headers('Location');
-    }).$promise
-    .then(() => locationHeader);
+      (_response, headers) => {
+        locationHeader = headers('Location');
+      }).$promise
+      .then(() => locationHeader);
   }
 
   public updateLocationCos(locationId: string, restrictionId: string, restriction: IRestriction): ng.IPromise<void> {

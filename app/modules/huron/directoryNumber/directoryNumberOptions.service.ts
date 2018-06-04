@@ -61,8 +61,8 @@ export class DirectoryNumberOptionsService {
       pattern: pattern ? '%' + pattern + '%' : undefined,
     };
     return this.externalNumbersOptions.query(queries).$promise
-    .then(options => {
-      return _.map(options, 'pattern');
-    });
+      .then(options => {
+        return _.map(options, 'pattern');
+      });
   }
 }

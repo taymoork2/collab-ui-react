@@ -52,73 +52,73 @@ class DgcTab implements ng.IComponentController {
 
   private getMeetingDetail() {
     this.SearchService.getMeetingDetail(this.conferenceID)
-    .then((res: any) => {
-      const mbi = res.meetingBasicInfo;
-      let screenShareDuration = 0, recordingDration = 0;
-      const details = _.assign({}, mbi, {
-        status_: this.SearchService.getStatus(mbi.status),
-        startTime_: this.timestampToDate(mbi.startTime, 'h:mm A'),
-        startDate: this.timestampToDate(mbi.startTime, 'YYYY-MM-DD'),
-        endTime_: mbi.endTime ? this.timestampToDate(mbi.endTime, 'h:mm A') : '',
-        endDate: mbi.endTime ? this.timestampToDate(mbi.endTime, 'YYYY-MM-DD') : '',
-      });
-      const overview = _.assignIn({}, mbi, {
-        duration_: moment.duration(mbi.duration * 1000).humanize(),
-        endTime_: this.SearchService.utcDateByTimezone(mbi.endTime),
-        startTime_: this.SearchService.utcDateByTimezone(mbi.startTime),
-        createTime_: this.SearchService.utcDateByTimezone(mbi.createdTime),
-      });
-      const sessions = _.map(res.sessions, (item: any) => {
-        if (item.sessionType === SessionTypes.SCREEN_SHARE) {
-          screenShareDuration += item.duration;
-        }
-        if (item.sessionType === SessionTypes.RECORDING) {
-          recordingDration += item.duration;
-        }
-        return {
-          class: true,
-          val: `${this.$translate.instant('webexReports.duration')} ${moment.duration(item.duration * 1000).humanize()}`,
-          key: this.$translate.instant('webexReports.sessionType.sessionType_' + item.sessionType),
-        };
-      });
-      const features = _.map(res.features, (val: string, key: string) => {
-        const val_ = val ? 'yes' : 'no';
-        if (key === 'appShare') {
-          overview.screenShare = screenShareDuration;
-          overview.screenShare_ = this.formatDuration(screenShareDuration);
-        }
-        return { key: this.$translate.instant('webexReports.meetingFeatures.' + key), val: this.$translate.instant('common.' + val_), class: val_ === 'yes' };
-      });
-      const connections = _.map(res.connection, (val: string, key: string) => {
-        if (key === 'nbr2') {
-          overview.recording = recordingDration;
-          overview.recording_ = this.formatDuration(recordingDration);
-        }
-        return { key: this.$translate.instant('webexReports.connectionFields.' + key), val: this.$translate.instant('common.' + val), class: val === 'yes' };
-      });
-      const featAndconn = _.concat(sessions, features, connections);
-      this.data = _.assignIn({}, {
-        overview: overview,
-        featAndconn: featAndconn,
-        startTime: mbi.startTime,
-        endTime: mbi.status === 2 ? mbi.endTime : null,
-      });
-      this.SearchService.setStorage('webexOneMeeting', this.data);
-      this.details = details;
-
-      if (mbi.status === 1) {
-        this.SearchService.getServerTime()
-        .then( res => {
-          mbi.endTime = _.get(res, 'dateLong');
-          this.SearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
-          details.duration_ = this.SearchService.toMinOrSec(mbi.endTime - mbi.startTime);
-          this.loading = false;
+      .then((res: any) => {
+        const mbi = res.meetingBasicInfo;
+        let screenShareDuration = 0, recordingDration = 0;
+        const details = _.assign({}, mbi, {
+          status_: this.SearchService.getStatus(mbi.status),
+          startTime_: this.timestampToDate(mbi.startTime, 'h:mm A'),
+          startDate: this.timestampToDate(mbi.startTime, 'YYYY-MM-DD'),
+          endTime_: mbi.endTime ? this.timestampToDate(mbi.endTime, 'h:mm A') : '',
+          endDate: mbi.endTime ? this.timestampToDate(mbi.endTime, 'YYYY-MM-DD') : '',
         });
-      } else {
-        details.duration_ = this.SearchService.toMinOrSec(mbi.duration * 1000);
-        this.loading = false;
-      }
-    });
+        const overview = _.assignIn({}, mbi, {
+          duration_: moment.duration(mbi.duration * 1000).humanize(),
+          endTime_: this.SearchService.utcDateByTimezone(mbi.endTime),
+          startTime_: this.SearchService.utcDateByTimezone(mbi.startTime),
+          createTime_: this.SearchService.utcDateByTimezone(mbi.createdTime),
+        });
+        const sessions = _.map(res.sessions, (item: any) => {
+          if (item.sessionType === SessionTypes.SCREEN_SHARE) {
+            screenShareDuration += item.duration;
+          }
+          if (item.sessionType === SessionTypes.RECORDING) {
+            recordingDration += item.duration;
+          }
+          return {
+            class: true,
+            val: `${this.$translate.instant('webexReports.duration')} ${moment.duration(item.duration * 1000).humanize()}`,
+            key: this.$translate.instant('webexReports.sessionType.sessionType_' + item.sessionType),
+          };
+        });
+        const features = _.map(res.features, (val: string, key: string) => {
+          const val_ = val ? 'yes' : 'no';
+          if (key === 'appShare') {
+            overview.screenShare = screenShareDuration;
+            overview.screenShare_ = this.formatDuration(screenShareDuration);
+          }
+          return { key: this.$translate.instant('webexReports.meetingFeatures.' + key), val: this.$translate.instant('common.' + val_), class: val_ === 'yes' };
+        });
+        const connections = _.map(res.connection, (val: string, key: string) => {
+          if (key === 'nbr2') {
+            overview.recording = recordingDration;
+            overview.recording_ = this.formatDuration(recordingDration);
+          }
+          return { key: this.$translate.instant('webexReports.connectionFields.' + key), val: this.$translate.instant('common.' + val), class: val === 'yes' };
+        });
+        const featAndconn = _.concat(sessions, features, connections);
+        this.data = _.assignIn({}, {
+          overview: overview,
+          featAndconn: featAndconn,
+          startTime: mbi.startTime,
+          endTime: mbi.status === 2 ? mbi.endTime : null,
+        });
+        this.SearchService.setStorage('webexOneMeeting', this.data);
+        this.details = details;
+
+        if (mbi.status === 1) {
+          this.SearchService.getServerTime()
+            .then( res => {
+              mbi.endTime = _.get(res, 'dateLong');
+              this.SearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
+              details.duration_ = this.SearchService.toMinOrSec(mbi.endTime - mbi.startTime);
+              this.loading = false;
+            });
+        } else {
+          details.duration_ = this.SearchService.toMinOrSec(mbi.duration * 1000);
+          this.loading = false;
+        }
+      });
   }
 
   private timestampToDate(timestamp, format): string {

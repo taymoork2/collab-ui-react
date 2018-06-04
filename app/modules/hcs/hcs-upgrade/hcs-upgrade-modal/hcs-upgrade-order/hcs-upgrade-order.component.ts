@@ -43,8 +43,8 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
       this.cluster = nodes.upgradeOrder;
       this.nodeOrderChanged();
     })
-    .catch(err => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
-    .finally(() => this.loading = false);
+      .catch(err => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => this.loading = false);
   }
 
   public moveUp(parentIndex, itemIndex) {

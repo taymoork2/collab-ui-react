@@ -95,7 +95,7 @@ class KeywordsSectionCtrl implements ng.IComponentController {
 
   public setDefaultCalendarAction() {
     this.ServiceDescriptorService.setDefaultCalendarAction(this.getEnumKey(webexAction, this.defaultCalendarWebexAction),
-                                                           this.getEnumKey(meetAction, this.defaultCalendarMeetAction))
+      this.getEnumKey(meetAction, this.defaultCalendarMeetAction))
       .then(() => this.Notification.success('hercules.settings.defaultCalendarActionSavingSuccess'))
       .catch(error => this.Notification.errorWithTrackingId(error, 'hercules.settings.defaultCalendarActionSavingError'));
   }

@@ -49,27 +49,27 @@ class SipDestinationSettingsSectionComponentCtrl implements ng.IComponentControl
         });
       }),
     })
-    .then(result => {
-      this.sipDestination = result.defaultSipDestination;
-      this.hasHybridGlobalCallServiceConnectFeature = result.hasHybridGlobalCallServiceConnectFeature;
+      .then(result => {
+        this.sipDestination = result.defaultSipDestination;
+        this.hasHybridGlobalCallServiceConnectFeature = result.hasHybridGlobalCallServiceConnectFeature;
 
-      this.tableData.defaultDestination = result.callClusters.filter(cluster => {
-        return !_.find(result.clustersSipDestination, { clusterId: cluster.id });
+        this.tableData.defaultDestination = result.callClusters.filter(cluster => {
+          return !_.find(result.clustersSipDestination, { clusterId: cluster.id });
+        });
+
+        this.displayOverview = result.clustersSipDestination.length > 0;
+        this.tableData.specificDestinations = result.clustersSipDestination.reduce((acc, info) => {
+          if (!acc[info.sipDomain]) {
+            acc[info.sipDomain] = [];
+          }
+          const clusterInfo = {
+            id: info.clusterId,
+            name: _.find(result.callClusters, { id: info.clusterId }).name,
+          };
+          acc[info.sipDomain].push(clusterInfo);
+          return acc;
+        }, {});
       });
-
-      this.displayOverview = result.clustersSipDestination.length > 0;
-      this.tableData.specificDestinations = result.clustersSipDestination.reduce((acc, info) => {
-        if (!acc[info.sipDomain]) {
-          acc[info.sipDomain] = [];
-        }
-        const clusterInfo = {
-          id: info.clusterId,
-          name: _.find(result.callClusters, { id: info.clusterId }).name,
-        };
-        acc[info.sipDomain].push(clusterInfo);
-        return acc;
-      }, {});
-    });
   }
 }
 

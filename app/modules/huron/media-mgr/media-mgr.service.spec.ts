@@ -82,7 +82,7 @@ describe('Service: mediaMgrService', () => {
       const file = <File>blob;
       const uploadUrl = 'https://sparkcall-mms-int-us-east-1.s3.amazonaws.com/12345/abcd-5678/abcd-5678.raw?X-Amz-Credential=A2DA%2F205';
       this.$httpBackend.expectPUT(uploadUrl)
-      .respond(200);
+        .respond(200);
       this.MediaMgrService.uploadToUrl(file, uploadUrl)
         .then(response => {
           expect(response.status).toBe(200);
@@ -161,9 +161,9 @@ describe('Service: mediaMgrService', () => {
         .respond(200, data);
 
       this.MediaMgrService.downloadFromUrl(this.media)
-      .then(response => {
-        expect(response.status).toBe(200);
-      });
+        .then(response => {
+          expect(response.status).toBe(200);
+        });
     });
   });
 

@@ -28,10 +28,10 @@ class HybridMediaReleaseChannelController implements ng.IComponentController {
 
   public $onInit() {
     this.populateReleaseChannelOptions()
-    .then(() => {
-      this.releaseChannelSelected = this.releaseChannelOptions[0];
-      this.releaseChannelChanged();
-    });
+      .then(() => {
+        this.releaseChannelSelected = this.releaseChannelOptions[0];
+        this.releaseChannelChanged();
+      });
   }
 
   private populateReleaseChannelOptions() {

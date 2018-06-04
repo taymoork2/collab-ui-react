@@ -27,13 +27,13 @@ export class EsaDisclaimerCtrl implements ng.IComponentController {
     return this.TerminusService.customer().update({
       customerId: this.Authinfo.getOrgId(),
     }, payload).$promise
-    .then(() => {
-      this.$rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
-    }).catch(response => {
-      this.Notification.errorResponse(response);
-    }).finally(() => {
-      this.onDismiss();
-    });
+      .then(() => {
+        this.$rootScope.$broadcast(PSTN_ESA_DISCLAIMER_ACCEPT);
+      }).catch(response => {
+        this.Notification.errorResponse(response);
+      }).finally(() => {
+        this.onDismiss();
+      });
   }
 
   public onDismissClick(): void {

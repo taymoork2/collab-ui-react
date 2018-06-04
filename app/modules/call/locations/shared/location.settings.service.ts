@@ -74,13 +74,13 @@ export class CallLocationSettingsService {
       customerVoice: this.getCustomerVoice().then(customerVoice => callLocationSettingsData.customerVoice = customerVoice),
       customer: this.getCustomer().then(customer => callLocationSettingsData.customer = customer),
     })
-    .then(() => this.getAvrilCustomer(callLocationSettingsData.customer.hasVoicemailService)
-      .then(avrilCustomer => callLocationSettingsData.avrilCustomer = avrilCustomer))
-    .then(() => {
-      this.callLocationSettingsDataCopy = this.cloneSettingsData(callLocationSettingsData);
-      return callLocationSettingsData;
-    })
-    .catch(() => this.rejectAndNotifyPossibleErrors());
+      .then(() => this.getAvrilCustomer(callLocationSettingsData.customer.hasVoicemailService)
+        .then(avrilCustomer => callLocationSettingsData.avrilCustomer = avrilCustomer))
+      .then(() => {
+        this.callLocationSettingsDataCopy = this.cloneSettingsData(callLocationSettingsData);
+        return callLocationSettingsData;
+      })
+      .catch(() => this.rejectAndNotifyPossibleErrors());
   }
 
   public save(data: CallLocationSettingsData): ng.IPromise<CallLocationSettingsData> {
@@ -114,16 +114,16 @@ export class CallLocationSettingsService {
     defaultAddress.default = true;
     if (locationId && this.PstnModel.getCustomerId()) {
       return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locationId)
-      .then(addresses => {
-        if (_.isArray(addresses) && addresses.length > 0) {
-          return addresses[0];
-        }
-        return defaultAddress;
-      })
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.getError'));
-        return this.$q.reject();
-      });
+        .then(addresses => {
+          if (_.isArray(addresses) && addresses.length > 0) {
+            return addresses[0];
+          }
+          return defaultAddress;
+        })
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.getError'));
+          return this.$q.reject();
+        });
     }
     return this.$q.resolve(defaultAddress);
   }
@@ -131,10 +131,10 @@ export class CallLocationSettingsService {
   private getEmergencyCallbackNumber(locationId: string): ng.IPromise<EmergencyNumber> {
     if (locationId) {
       return this.LocationsService.getEmergencyCallbackNumber(locationId)
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.getError'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.getError'));
+          return this.$q.reject();
+        });
     }
     return this.$q.resolve(new EmergencyNumber());
   }
@@ -300,10 +300,10 @@ export class CallLocationSettingsService {
   public getInternalNumberRanges(locationId: string): ng.IPromise<InternalNumberRange[]> {
     if (locationId) {
       return this.InternalNumberRangeService.getLocationRangeList(locationId)
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationNumberRangesFailed'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'locations.getLocationNumberRangesFailed'));
+          return this.$q.reject();
+        });
     } else {
       // if locationId is not specified, get the extentions from the default location
       return this.LocationsService.getDefaultLocation()
@@ -399,10 +399,10 @@ export class CallLocationSettingsService {
       //Normally when new address has be validated and the uuid has been removed
       data.address.uuid = this.callLocationSettingsDataCopy.address.uuid;
       return this.PstnAddressService.updateToLocation(this.PstnModel.getCustomerId(), data.location.uuid, data.address)
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.saveError'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceAddress.saveError'));
+          return this.$q.reject();
+        });
     }
     return this.PstnAddressService.addToLocation(this.PstnModel.getCustomerId(), data.location.uuid, data.address)
       .catch(error => {
@@ -418,28 +418,28 @@ export class CallLocationSettingsService {
     }
     if (_.isString(data.emergencyNumber.uuid) && data.emergencyNumber.uuid.length > 0) {
       return this.LocationsService.updateEmergencyCallbackNumber(data.location.uuid, data.emergencyNumber)
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.saveError'));
+          return this.$q.reject();
+        });
+    }
+    return this.LocationsService.createEmergencyCallbackNumber(data.location.uuid, data.emergencyNumber)
+      .then(emergencyNumberId => {
+        data.emergencyNumber.uuid = emergencyNumberId;
+      })
       .catch(error => {
         this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.saveError'));
         return this.$q.reject();
       });
-    }
-    return this.LocationsService.createEmergencyCallbackNumber(data.location.uuid, data.emergencyNumber)
-    .then(emergencyNumberId => {
-      data.emergencyNumber.uuid = emergencyNumberId;
-    })
-    .catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'settingsServiceNumber.saveError'));
-      return this.$q.reject();
-    });
   }
 
   private getAvrilCustomer(hasVoicemailService: boolean): ng.IPromise<AvrilCustomer> {
     if (hasVoicemailService) {
       return this.AvrilService.getAvrilCustomer()
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
+          return this.$q.reject();
+        });
     } else {
       return this.$q.resolve(new AvrilCustomer());
     }

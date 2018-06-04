@@ -104,9 +104,9 @@ describe('OverviewAllHybridCalendarsNotification', () => {
       ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
       CloudConnectorService.getService.and.returnValues($q.resolve({ setup: true }), $q.resolve({ setup: true }));
       OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
-      .catch(err => {
-        expect(err.message).toBe('Hybrid Calendar already set up');
-      });
+        .catch(err => {
+          expect(err.message).toBe('Hybrid Calendar already set up');
+        });
     });
 
   });
@@ -123,9 +123,9 @@ describe('OverviewAllHybridCalendarsNotification', () => {
       ServiceDescriptorService.isServiceEnabled.and.returnValue($q.reject('ERROR!'));
       CloudConnectorService.getService.and.returnValues($q.resolve({ setup: true }), $q.resolve({ setup: true }));
       OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
-      .catch(err => {
-        expect(err.message).toBe('Could not reach one or more services');
-      });
+        .catch(err => {
+          expect(err.message).toBe('Could not reach one or more services');
+        });
       $scope.$apply();
     });
 
@@ -133,9 +133,9 @@ describe('OverviewAllHybridCalendarsNotification', () => {
       ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
       CloudConnectorService.getService.and.returnValues($q.reject('ERROR!'), $q.resolve({ setup: true }));
       OverviewAllHybridCalendarsNotification.createNotification($state, CloudConnectorService, ServiceDescriptorService, HybridServicesFlagService, HybridServicesUtilsService).then(fail)
-      .catch(err => {
-        expect(err.message).toBe('Could not reach one or more services');
-      });
+        .catch(err => {
+          expect(err.message).toBe('Could not reach one or more services');
+        });
       $scope.$apply();
     });
   });

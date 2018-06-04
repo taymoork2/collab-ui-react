@@ -96,8 +96,8 @@ export class EmergencyServicesCtrl {
       this.EmergencyServicesService.getAddress().then(address => {
         this.emergency.emergencyAddress = address;
       })
-      .catch(response => response.errorMessage ? this.Notification.errorResponse(response) : undefined)
-      .finally(() => this.companyAddressLoading = false);
+        .catch(response => response.errorMessage ? this.Notification.errorResponse(response) : undefined)
+        .finally(() => this.companyAddressLoading = false);
     } else {
       this.errorMessage = '';
       this.showAddressEntry = false;

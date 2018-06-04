@@ -41,26 +41,26 @@ class QosSectionCtrl implements ng.IComponentController {
       disableCache: true,
     };
     this.Orgservice.getOrg(_.noop, null, params)
-     .then(response => {
-       if (this.isWizard) {
-         this.enableQos = true;
-       } else {
-         this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
-       }
-       this.MediaClusterServiceV2.getPropertySets()
-        .then((propertySets) => {
-          if (propertySets.length > 0) {
-            this.qosPropertySet = _.filter(propertySets, {
-              name: 'qosPropertySet',
-            });
-            if (this.qosPropertySet.length === 0) {
+      .then(response => {
+        if (this.isWizard) {
+          this.enableQos = true;
+        } else {
+          this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
+        }
+        this.MediaClusterServiceV2.getPropertySets()
+          .then((propertySets) => {
+            if (propertySets.length > 0) {
+              this.qosPropertySet = _.filter(propertySets, {
+                name: 'qosPropertySet',
+              });
+              if (this.qosPropertySet.length === 0) {
+                this.createPropertySetAndAssignClusters();
+              }
+            } else if (propertySets.length === 0) {
               this.createPropertySetAndAssignClusters();
             }
-          } else if (propertySets.length === 0) {
-            this.createPropertySetAndAssignClusters();
-          }
-        });
-     });
+          });
+      });
   }
 
   private createPropertySetAndAssignClusters(): void {

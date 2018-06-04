@@ -62,10 +62,10 @@ export class ClusterCardController implements ng.IComponentController {
       template: require('modules/hercules/hs-cluster-section/deregister-dialog.html'),
       type: 'dialog',
     })
-    .result
-    .then(() => {
-      this.$state.go('cluster-list', {}, { reload: true });
-    });
+      .result
+      .then(() => {
+        this.$state.go('cluster-list', {}, { reload: true });
+      });
   }
 
   public openNodes(type: ClusterTargetType, id: string): void {

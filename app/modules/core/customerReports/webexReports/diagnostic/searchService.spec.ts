@@ -42,7 +42,7 @@ describe('Service: searchService', () => {
     this.$httpBackend.expectGET(url).respond(200, mockData);
 
     this.SearchService.getUniqueParticipants(this.conferenceID)
-    .then( res => expect(_.size(res)).toBe(2) );
+      .then( res => expect(_.size(res)).toBe(2) );
 
     this.$httpBackend.flush();
   });

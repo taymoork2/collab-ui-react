@@ -169,10 +169,10 @@ export class FileSharingControlSettingController {
     ).then(() => {
       this.Notification.success('firstTimeWizard.messengerFileSharingControlSuccess');
     })
-    .catch((response) => {
-      this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
-      return this.$q.reject(response);
-    });
+      .catch((response) => {
+        this.Notification.errorWithTrackingId(response, 'firstTimeWizard.messengerFileSharingControlError');
+        return this.$q.reject(response);
+      });
   }
 
   private getConfirmation(value: boolean): ng.IPromise<void> {

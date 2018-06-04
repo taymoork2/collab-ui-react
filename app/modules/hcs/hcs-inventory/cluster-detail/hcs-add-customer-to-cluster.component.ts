@@ -74,31 +74,31 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
       value: '',
     };
     this.HcsControllerService.addHcsControllerCustomer(this.customerName, ['UPGRADE'])
-    .then((resp) => {
-      const swProfileSelected: ISoftwareProfile = {
-        name: this.softwareProfileSelected.label,
-        uuid: this.softwareProfileSelected.value,
-      };
+      .then((resp) => {
+        const swProfileSelected: ISoftwareProfile = {
+          name: this.softwareProfileSelected.label,
+          uuid: this.softwareProfileSelected.value,
+        };
 
-      const upgradeCustomer: IHcsUpgradeCustomer = {
-        uuid: resp.uuid,
-        softwareProfile: swProfileSelected,
-      };
+        const upgradeCustomer: IHcsUpgradeCustomer = {
+          uuid: resp.uuid,
+          softwareProfile: swProfileSelected,
+        };
 
-      addedCustomer.value = resp.uuid;
-      addedCustomer.label = this.customerName;
-      return this.HcsUpgradeService.addHcsUpgradeCustomer(upgradeCustomer);
-    })
-    .then(() => {
+        addedCustomer.value = resp.uuid;
+        addedCustomer.label = this.customerName;
+        return this.HcsUpgradeService.addHcsUpgradeCustomer(upgradeCustomer);
+      })
+      .then(() => {
       // Change this to send customer object
-      this.addCustomerToCluster({
-        customer: addedCustomer,
+        this.addCustomerToCluster({
+          customer: addedCustomer,
+        });
+        this.dismiss();
+      })
+      .catch((err) => {
+        this.Notification.errorWithTrackingId(err);
       });
-      this.dismiss();
-    })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    });
   }
 
   public onsoftwareProfileChange() {}

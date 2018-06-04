@@ -76,9 +76,9 @@ describe('Component: autoAnswer', () => {
     it('should invoke onChangeFn when mode is changed', function() {
       this.view.find(AUTO_ANSWER_MODE_HEADSET_RADIO).click().trigger('click');
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-          this.$scope.autoAnswer.phones[0].uuid,
-          this.$scope.autoAnswer.phones[0].enabled,
-          AutoAnswerConst.HEADSET,
+        this.$scope.autoAnswer.phones[0].uuid,
+        this.$scope.autoAnswer.phones[0].enabled,
+        AutoAnswerConst.HEADSET,
       );
 
       this.$scope.autoAnswer.phones[0].mode = AutoAnswerConst.HEADSET;
@@ -101,9 +101,9 @@ describe('Component: autoAnswer', () => {
     it('should invoke onChangeFn when phone option is changed', function() {
       this.view.find(AUTO_ANSWER_PHONE_SELECT).find(DROPDOWN_OPTIONS).get(1).click();
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(
-          this.$scope.autoAnswer.phones[1].uuid,
-          true,
-          AutoAnswerConst.SPEAKERPHONE,
+        this.$scope.autoAnswer.phones[1].uuid,
+        true,
+        AutoAnswerConst.SPEAKERPHONE,
       );
 
       this.$scope.autoAnswer.phones[0].enabled = false;

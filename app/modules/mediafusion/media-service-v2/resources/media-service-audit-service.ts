@@ -19,5 +19,5 @@ export class MediaServiceAuditService {
 }
 
 angular
-.module('Mediafusion')
-.service('MediaServiceAuditService', MediaServiceAuditService);
+  .module('Mediafusion')
+  .service('MediaServiceAuditService', MediaServiceAuditService);

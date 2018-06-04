@@ -41,12 +41,12 @@ export class MultiDirSyncSettingController {
         this.dirSyncEnabled = true;
       }
     })
-    .catch((error) => {
-      this.dirSyncEnabled = false;
-      this.MultiDirSyncService.domainsErrorNotification(error);
-    }).finally(() => {
-      this.updatingStatus = false;
-    });
+      .catch((error) => {
+        this.dirSyncEnabled = false;
+        this.MultiDirSyncService.domainsErrorNotification(error);
+      }).finally(() => {
+        this.updatingStatus = false;
+      });
   }
 }
 

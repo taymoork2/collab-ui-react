@@ -103,10 +103,10 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       this.clusterName = this.clusterDetail.name;
       this.initSelectedSftpServer();
     })
-    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
-    .finally(() => {
-      this.loading = false;
-    });
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   public initSelectedSftpServer(): void {
@@ -286,26 +286,26 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       sftpServerUuid: this.sftpServerSelected.value,
     };
     this.HcsUpgradeService.updateCluster(this.clusterId, cluster)
-    .then(() => {
-      if (this.clusterDetail.nodes) {
-        const promises: ng.IPromise<any>[] = [];
-        _.forEach(this.clusterDetail.nodes, (node) => {
-          if (node.isAccepted) {
-            promises.push(this.HcsControllerService.acceptAgent(node));
-          }
-        });
-        return this.$q.all(promises);
-      } else {
-        return;
-      }
-    })
-    .then(() => {
-      this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
-    })
-    .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
-    .finally(() => {
-      this.processing = false;
-    });
+      .then(() => {
+        if (this.clusterDetail.nodes) {
+          const promises: ng.IPromise<any>[] = [];
+          _.forEach(this.clusterDetail.nodes, (node) => {
+            if (node.isAccepted) {
+              promises.push(this.HcsControllerService.acceptAgent(node));
+            }
+          });
+          return this.$q.all(promises);
+        } else {
+          return;
+        }
+      })
+      .then(() => {
+        this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.processing = false;
+      });
   }
 
   public acceptNode(node: IHcsNode): void {

@@ -35,8 +35,8 @@ class CopyLocationCtrl implements ng.IComponentController {
   public save(): void {
     this.saveInProcess = true;
     this.LocationsService.createLocation(this.location).then(() => this.close())
-    .catch(error => this.Notification.errorResponse(error, 'locations.copyFailed'))
-    .finally(() => this.saveInProcess = false);
+      .catch(error => this.Notification.errorResponse(error, 'locations.copyFailed'))
+      .finally(() => this.saveInProcess = false);
   }
 
 }

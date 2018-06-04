@@ -190,7 +190,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
           this.getTollFreeInventory();
         }
       })
-      .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
+        .catch(response => this.Notification.errorResponse(response, 'pstnSetup.errors.capabilities'));
     }
   }
 
@@ -289,36 +289,36 @@ export class PstnWizardCtrl implements ng.IComponentController {
     }
     if (this.ftLocation) {
       this.PstnWizardService.initLocations()
-      .then(() => {
-        this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
+        .then(() => {
+          this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
         //If new PSTN setup show all the carriers even if there only one
-        if (this.PstnModel.isCarrierExists()) {
+          if (this.PstnModel.isCarrierExists()) {
           // Only 1 carrier should exist for a customer
-          if (this.PstnModel.getCarriers().length === 1) {
-            this.PstnModel.setSingleCarrierReseller(true);
-            this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
-            this.goToNumbers();
-            this.getCapabilities();
+            if (this.PstnModel.getCarriers().length === 1) {
+              this.PstnModel.setSingleCarrierReseller(true);
+              this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
+              this.goToNumbers();
+              this.getCapabilities();
+            }
           }
-        }
-        this.showCarriers = true;
-      });
+          this.showCarriers = true;
+        });
     } else {
       this.PstnWizardService.initSites()
-      .then(() => {
-        this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
+        .then(() => {
+          this.address = _.cloneDeep(this.PstnModel.getServiceAddress());
         //If new PSTN setup show all the carriers even if there only one
-        if (this.PstnModel.isCarrierExists()) {
+          if (this.PstnModel.isCarrierExists()) {
           // Only 1 carrier should exist for a customer
-          if (this.PstnModel.getCarriers().length === 1) {
-            this.PstnModel.setSingleCarrierReseller(true);
-            this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
-            this.goToNumbers();
-            this.getCapabilities();
+            if (this.PstnModel.getCarriers().length === 1) {
+              this.PstnModel.setSingleCarrierReseller(true);
+              this.PstnModel.setProvider(this.PstnModel.getCarriers()[0]);
+              this.goToNumbers();
+              this.getCapabilities();
+            }
           }
-        }
-        this.showCarriers = true;
-      });
+          this.showCarriers = true;
+        });
     }
   }
 
@@ -426,7 +426,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
           this.refreshFn();
           this.step = 11;
         })
-        .finally(() => this.placeOrderLoad = false);
+          .finally(() => this.placeOrderLoad = false);
         return;
       case 11:
         this.dismissModal();
@@ -471,16 +471,16 @@ export class PstnWizardCtrl implements ng.IComponentController {
   public validateAddress(): void {
     this.loading = true;
     this.PstnAddressService.lookup(this.PstnModel.getProviderId(), this.address)
-    .then((address: Address | null) => {
-      if (address) {
-        this.address = address;
-        this.PstnModel.setServiceAddress(_.cloneDeep(address));
-      } else {
-        this.Notification.error('pstnSetup.serviceAddressNotFound');
-      }
-    })
-    .catch(error => this.Notification.errorResponse(error))
-    .finally(() => this.loading = false);
+      .then((address: Address | null) => {
+        if (address) {
+          this.address = address;
+          this.PstnModel.setServiceAddress(_.cloneDeep(address));
+        } else {
+          this.Notification.error('pstnSetup.serviceAddressNotFound');
+        }
+      })
+      .catch(error => this.Notification.errorResponse(error))
+      .finally(() => this.loading = false);
   }
 
   public resetAddress(): void {
@@ -556,7 +556,7 @@ export class PstnWizardCtrl implements ng.IComponentController {
 
   public removeOrder(order: IOrder): void {
     this.PstnWizardService.removeOrder(order, this.ftsw)
-        .then(_.partial(this.removeOrderFromCart.bind(this), order));
+      .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 
   public showOrderQuantity(order: IOrder): boolean {
