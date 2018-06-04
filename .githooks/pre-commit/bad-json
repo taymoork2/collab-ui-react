@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function print_added_or_modified_json_file_entries {
+    git diff --cached --name-status | grep -e "^A" -e "^M" | grep "\.json$"
+}
+
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+json_lint="${this_pwd}/../../bin/json-lint.sh"
+
+print_added_or_modified_json_file_entries | awk '{print $2;}' | "${json_lint}"
+exit $?
