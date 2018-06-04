@@ -13,7 +13,6 @@ export class UpgradeClusterComponent implements ng.IComponentOptions {
   public template = require('./hcs-upgrade-cluster.component.html');
   public bindings = {
     groupId: '<',
-    groupType: '<',
   };
 }
 
@@ -22,7 +21,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   public gridColumns;
   public groupId: string;
   public groupName: string;
-  public groupType: string;
   public customerId: string | undefined;
   private clusterGridData: IUpgradeClusterGridRow[];
   public showGrid: boolean = false;
@@ -42,7 +40,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
     private $modal,
     private HcsControllerService: HcsControllerService,
     private $q: ng.IQService,
-    private $log: ng.ILogService,
   ) { }
 
   public startUpgrade(entity) {
@@ -54,13 +51,13 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.loading = true;
-    if (this.groupType !== this.typeUnassigned.toLowerCase()) {
+    if (this.groupId !== this.typeUnassigned.toLowerCase()) {
       this.tabs.push({
         title: this.$translate.instant('hcs.clustersList.title'),
-        state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+        state: `hcs.clusterList({groupId: '${this.groupId}'})`,
       }, {
         title: this.$translate.instant('hcs.upgradePage.title'),
-        state: `hcs.upgradeCluster({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+        state: `hcs.upgradeCluster({groupId: '${this.groupId}'})`,
       });
     }
 
@@ -70,7 +67,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   }
 
   public initCustomer(): void {
-    if (this.groupType === this.typeUnassigned.toLowerCase()) {
+    if (this.groupId === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
       this.customerId = undefined;
     } else {
@@ -96,24 +93,28 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         cellTemplate:  '<cs-grid-cell row="row" grid="grid" cell-value="row.entity.clusterName" ng-hide="{{row.entity.rowWidth === 0}}"></cs-grid-cell>',
       }, {
         field: 'applicationName',
+        enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.application'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
       }, {
         field: 'currentVersion',
+        enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.currentVersion'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
       }, {
         field: 'upgradeTo',
+        enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.upgradeTo'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
       }, {
         field: 'clusterStatus',
+        enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
@@ -121,6 +122,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         cellTemplate: require('./templates/clusterStatusColumn.tpl.html'),
       }, {
         field: 'actions',
+        enableSorting: false,
         displayName: this.$translate.instant('common.actions'),
         width: '20%',
         cellClass: 'cluster-grid-cell',
@@ -188,7 +190,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
             // clusterGridRow.clusterStatus = this.getUpgradeStatus(clusterGridRow);
             this.clusterGridData.push(clusterGridRow);
             multiApp = false;
-            this.$log.log(clusterGridRow);
           }
         });
       }
@@ -211,6 +212,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   public viewUpgradeStatus($event, cluster: IUpgradeClusterGridRow): void {
     $event.stopPropagation();
 
-    this.$state.go('hcs.upgradeClusterStatus', { groupId: this.groupId, cluster: cluster, groupType: this.groupType, clusterId: cluster.clusterUuid });
+    this.$state.go('hcs.upgradeClusterStatus', { groupId: this.groupId, cluster: cluster, clusterId: cluster.clusterUuid });
   }
 }

@@ -23,7 +23,6 @@ export class ClusterDetailComponent implements ng.IComponentOptions {
   public bindings = {
     clusterId: '<',
     groupId: '<',
-    groupType: '<',
   };
 }
 
@@ -31,7 +30,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public clusterId: string;
   public clusterName: string;
   public groupId: string;
-  public groupType: string;
   public back: boolean = true;
   public form: IClusterDetailsForm;
   public sftpServerSelected: ISelectOption;
@@ -141,7 +139,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public initCustomer(): void {
-    if (this.groupType.toLowerCase() === this.typeUnassigned.toLowerCase()) {
+    if (this.groupId.toLowerCase() === this.typeUnassigned.toLowerCase()) {
       this.customerSelected = {
         label: '',
         value: '',
@@ -211,7 +209,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onBack(): void {
-    this.$state.go('hcs.clusterList', { groupId: this.groupId, groupType: this.groupType });
+    this.$state.go('hcs.clusterList', { groupId: this.groupId });
   }
 
   public cancel(): void {
@@ -302,7 +300,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       }
     })
     .then(() => {
-      this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: this.clusterId }, { reload: true });
+      this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
     })
     .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
     .finally(() => {

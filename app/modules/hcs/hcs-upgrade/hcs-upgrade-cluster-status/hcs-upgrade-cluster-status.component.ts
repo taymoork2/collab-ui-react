@@ -6,7 +6,6 @@ export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public bindings = {
     groupId: '<',
     cluster: '<',
-    groupType: '<',
     clusterId: '<',
   };
 }
@@ -18,7 +17,6 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   public showGrid: boolean = false;
   public back: boolean = true;
   public groupId: string;
-  public groupType: string;
   public cluster: IUpgradeClusterGridRow;
   public clusterId: string;
 
@@ -108,6 +106,6 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   }
 
   public onBack(): void {
-    this.$state.go('hcs.upgradeCluster', { groupId: this.groupId, groupType: this.groupType });
+    this.$state.go('hcs.upgradeCluster', { groupId: this.groupId });
   }
 }

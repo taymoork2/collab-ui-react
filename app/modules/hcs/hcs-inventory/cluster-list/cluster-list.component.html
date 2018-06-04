@@ -6,7 +6,7 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<cs-page-sub-header ng-hide="$ctrl.groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
+<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
   <cs-page-sub-header-right class="row">
     <div class="columns medium-2 hcs-right-header-filter">
         <cs-select
@@ -32,7 +32,7 @@
         <header>
           <div class="header-with-right-icon">
             <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
-            <div class="right card-icon-div "  ng-if="groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+            <div class="right card-icon-div "  ng-if="groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
               <button type="button" class="close"
                 ng-click="$ctrl.closeCard((cluster), $event)"
                 ng-keydown=""

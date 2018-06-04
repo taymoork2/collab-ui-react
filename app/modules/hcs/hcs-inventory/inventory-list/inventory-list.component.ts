@@ -52,7 +52,7 @@ export class InventoryListCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.inventoryList.push({
-      id: 'ax1234b',
+      id: 'unassigned',
       type: 'unassigned',
       status: 'Needs Assigned',
     }, {
@@ -146,10 +146,7 @@ export class InventoryListCtrl implements ng.IComponentController {
     }
   }
 
-  public onClickSettings(inventoryId): void {
-    const selectedInventory = this.inventoryListData.filter(inventory => inventory.id === inventoryId);
-    if (selectedInventory[0].type === 'custGroup' || selectedInventory[0].type === 'unassigned') {
-      this.$state.go('hcs.clusterList', { groupId: inventoryId,  groupType: selectedInventory[0].type });
-    }
+  public onClickSettings(inventory: IInventoryObject): void {
+    this.$state.go('hcs.clusterList', { groupId: inventory.id });
   }
 }

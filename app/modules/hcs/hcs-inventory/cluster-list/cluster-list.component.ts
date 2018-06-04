@@ -8,13 +8,11 @@ export class ClusterListComponent implements ng.IComponentOptions {
   public template = require('./cluster-list.component.html');
   public bindings = {
     groupId: '<',
-    groupType: '<',
   };
 }
 
 export class ClusterListCtrl implements ng.IComponentController {
   public groupId: string;
-  public groupType: string;
   public groupName: string;
   public tabs: IHeaderTab[] = [];
   public back: boolean = true;
@@ -41,13 +39,13 @@ export class ClusterListCtrl implements ng.IComponentController {
 
   public $onInit() {
     this.loading = true;
-    if (this.groupType !== this.typeUnassigned.toLowerCase()) {
+    if (this.groupId !== this.typeUnassigned.toLowerCase()) {
       this.tabs.push({
         title: this.$translate.instant('hcs.clustersList.title'),
-        state: `hcs.clusterList({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+        state: `hcs.clusterList({groupId: '${this.groupId}'})`,
       }, {
         title: this.$translate.instant('hcs.upgradePage.title'),
-        state: `hcs.upgradeCluster({groupId: '${this.groupId}', groupType: '${this.groupType}'})`,
+        state: `hcs.upgradeCluster({groupId: '${this.groupId}'})`,
       });
     }
 
@@ -60,7 +58,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   }
 
   public cardSelected(cluster: IClusterItem): void {
-    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: cluster.id });
+    this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: cluster.id });
   }
 
   public closeCard(cluster: IClusterItem, $event: Event): void {
@@ -87,7 +85,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   }
 
   public initCustomer(): void {
-    if (this.groupType === this.typeUnassigned.toLowerCase()) {
+    if (this.groupId === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
       this.customerId = undefined;
     } else {

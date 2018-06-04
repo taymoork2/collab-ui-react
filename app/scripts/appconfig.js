@@ -3305,35 +3305,27 @@
           .state('hcs.clusterList', {
             url: '/hcs/inventory/:groupId/clusters',
             parent: 'partner',
-            template: '<hcs-cluster-list group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-cluster-list>',
+            template: '<hcs-cluster-list group-id="$resolve.groupId"></hcs-cluster-list>',
             params: {
               groupId: '',
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.clusterDetail', {
             url: '/hcs/inventory/:groupId/cluster/:clusterId',
             parent: 'partner',
-            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
+            template: '<hcs-cluster-detail group-id="$resolve.groupId" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
             params: {
               groupId: '',
-              groupType: '',
               clusterId: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
@@ -3343,29 +3335,24 @@
           .state('hcs.upgradeCluster', {
             url: '/hcs/inventory/:groupId/upgrades',
             parent: 'partner',
-            template: '<hcs-upgrade-cluster group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-upgrade-cluster>',
+            template: '<hcs-upgrade-cluster group-id="$resolve.groupId" ></hcs-upgrade-cluster>',
             params: {
               groupId: '',
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.upgradeClusterStatus', {
             url: '/hcs/inventory/:groupId/upgrades/:clusterId',
             parent: 'partner',
-            template: '<hcs-upgrade-cluster-status group-id="$resolve.groupId" cluster="$resolve.cluster" cluster-id="$resolve.clusterId" group-type="$resolve.groupType"></hcs-upgrade-cluster-status>',
+            template: '<hcs-upgrade-cluster-status group-id="$resolve.groupId" cluster="$resolve.cluster" cluster-id="$resolve.clusterId"></hcs-upgrade-cluster-status>',
             params: {
               groupId: '',
               clusterId: '',
               cluster: {},
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
@@ -3376,9 +3363,6 @@
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })

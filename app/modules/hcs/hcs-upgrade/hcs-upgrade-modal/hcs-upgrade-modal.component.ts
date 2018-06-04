@@ -20,7 +20,6 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
   public upgradeTo;
   public upgradeOrder;
   public customerId;
-  public groupType;
 
   /* @ngInject */
   constructor(
@@ -56,7 +55,7 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
     this.HcsUpgradeService.saveUpgradeOrder(this.clusterUuid , this.getNodeIds(this.upgradeOrder))
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .then(() => this.dismiss())
-      .then(() => this.$state.go('hcs.upgradeClusterStatus', { groupId: this.customerId, groupType: this.groupType, clusterId: this.clusterUuid }));
+      .then(() => this.$state.go('hcs.upgradeClusterStatus', { groupId: this.customerId, clusterId: this.clusterUuid }));
   }
 
   public getNodeIds(clusterList) {
@@ -89,6 +88,5 @@ export class HcsUpgradeModalComponent implements ng.IComponentOptions {
     currentVersion: '@',
     upgradeTo: '@',
     customerId: '@',
-    groupType: '@',
   };
 }
