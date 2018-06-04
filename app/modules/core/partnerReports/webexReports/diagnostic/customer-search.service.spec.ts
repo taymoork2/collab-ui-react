@@ -8,7 +8,7 @@ describe('Service: customerSearchService', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$httpBackend', '$q', '$translate', 'CustomerSearchService', 'UrlConfig' );
+    this.injectDependencies('$httpBackend', '$q', '$translate', 'CustomerSearchService', 'UrlConfig');
   });
 
   afterEach(function () {

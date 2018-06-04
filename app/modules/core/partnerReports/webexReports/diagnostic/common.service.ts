@@ -1,5 +1,5 @@
-import { IVersion } from './partner-search.interfaces';
 import { Browser, Devices, Platforms, ResponseStatus } from './partner-meeting.enum';
+import { IVersion } from './partner-search.interfaces';
 
 export class CommonService {
   private data = {};
@@ -19,7 +19,7 @@ export class CommonService {
     return this.$translate.instant(`webexReports.meetingStatus.${statusArr[num - 1]}`);
   }
 
-  public setStorage(key: string, val: any) {
+  public setStorage(key: string, val: any): any {
     _.set(this.data, key, val);
     return this.data[key];
   }
@@ -28,7 +28,7 @@ export class CommonService {
     return _.get(this.data, key);
   }
 
-  public utcDateByTimezone(date: number) {
+  public utcDateByTimezone(date: number): string {
     if (!date) {
       return '';
     }
@@ -115,7 +115,7 @@ export class CommonService {
     return _.includes(mobiles, platform);
   }
 
-  public getDevice(device: { platform: string, browser: string, sessionType: string }) {
+  public getDevice(device: { platform: string, browser: string, sessionType: string }): { icon: string, name: string} {
     const browser = device.browser;
     const platform = device.platform;
     const sessionType = device.sessionType;
@@ -192,15 +192,13 @@ export class CommonService {
       return '';
     }
     let result = '';
-    if (deltaInMs) {
-      const duration = moment.duration(deltaInMs);
-      if (Math.floor(duration.asMinutes())) {
-        const minutes = Math.ceil(duration.asMinutes());
-        result = this.$translate.instant('time.abbreviatedCap.minutes', { time: minutes }, 'messageformat');
-      } else {
-        const seconds = Math.floor(duration.asSeconds());
-        result = this.$translate.instant('time.abbreviatedCap.seconds', { time: seconds }, 'messageformat');
-      }
+    const duration = moment.duration(deltaInMs);
+    if (Math.floor(duration.asMinutes())) {
+      const minutes = Math.ceil(duration.asMinutes());
+      result = this.$translate.instant('time.abbreviatedCap.minutes', { time: minutes }, 'messageformat');
+    } else {
+      const seconds = Math.floor(duration.asSeconds());
+      result = this.$translate.instant('time.abbreviatedCap.seconds', { time: seconds }, 'messageformat');
     }
     return result;
   }

@@ -9,7 +9,7 @@ describe('Service: commonService', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$httpBackend', '$q', '$translate', 'CommonService', 'UrlConfig' );
+    this.injectDependencies('$httpBackend', '$q', '$translate', 'CommonService', 'UrlConfig');
   });
 
   afterEach(function () {
