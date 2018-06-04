@@ -4306,7 +4306,7 @@
         "active": "Active",
         "released": "Released",
         "all": "All Matters",
-        "mine": "Created By Me"
+        "mine": "My Matters"
       },
       "new": "Create Matter"
     },
@@ -4349,7 +4349,7 @@
         "resultPartial": "Some users successfully added, but invalid users were detected in {{fileName}}. Update your file and try again.",
         "resultSuccess": "Users successfully added with {{fileName}}.",
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
-        "resultCanceled": "User import has been canceled",
+        "resultCanceled": "Add Custodians Import Cancelled Successfully",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
       },
       "new": {
@@ -4368,7 +4368,7 @@
         "resultPartial": "Some users successfully removed, but invalid users were detected in {{fileName}}. Update your file and try again.",
         "resultSuccess": "Users successfully removed with {{fileName}}.",
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
-        "resultCanceled": "User import has been canceled",
+        "resultCanceled": "Remove Custodians Import Cancelled Successfully",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
       }
     },
