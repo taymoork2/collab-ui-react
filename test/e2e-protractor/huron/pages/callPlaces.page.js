@@ -21,11 +21,11 @@ export class CallPlacesPage {
     this.overviewPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Overview')).first();
     this.servicesSctn = element(by.cssContainingText('.section-name', 'Services'));
     this.devicesSctn = element(by.cssContainingText('.section-name', 'Devices'));
-    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Spark + Cisco Spark Call'));
+    this.callClick = element(by.cssContainingText('.feature-label', 'Cisco Webex Calling'));
     this.callStngsPg = element.all(by.cssContainingText('.breadcrumbs .current span', 'Call')).first();
     this.clickLocation2 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Naboo'));
     this.clickLocation3 = element(by.cssContainingText('.ui-grid-canvas .ui-grid-cell-contents', 'Eadu'));
-    this.callClick2 = element(by.cssContainingText('.feature-label', 'Cisco Spark only'));
+    this.callClick2 = element(by.cssContainingText('.feature-label', 'Free Calling'));
     this.callOverview = {
       main: element.all(by.css('[ui-sref="place-overview"]')).last(),
       services: {
