@@ -25,7 +25,7 @@
         <!-- new customer -->
         <div ng-if="!trial.isExistingOrg()" class="cs-input-group">
 
-          <div class="cs-input-group" ng-class="{'error': trialForm.customerName.$invalid && (trialForm.customerName.$dirty || trialForm.customerName.$touched)}">
+          <div class="cs-input-group" ng-class="trial.inputValidator.makeErrorClass(trialForm.customerName)">
             <label for="customerName" translate="partnerHomePage.customerName"></label>
             <input id="customerName" name="customerName"
               type="text" messages="trial.validationMessages.general" ng-model="trial.details.customerName"
@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="cs-input-group" ng-class="{'error': trialForm.customerEmail.$invalid && (trialForm.customerEmail.$dirty || trialForm.customerEmail.$touched), 'warning': trialForm.customerEmail.$valid && (trialForm.customerEmail.$dirty || trialForm.customerEmail.$touched) && trial.validationMessages.general.customerEmail.warning}">
+          <div class="cs-input-group" ng-class="trial.inputValidator.makeErrorAndWarnClass(trialForm.customerEmail, trial.validationMessages.general.customerEmail.warning)">
             <label for="customerEmail" translate="partnerHomePage.customerEmail"></label>
             <input id="customerEmail" name="customerEmail"
               type="email" ng-change="trialForm.isValidLocation.$validate()"
