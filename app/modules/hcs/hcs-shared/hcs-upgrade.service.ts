@@ -35,6 +35,7 @@ export class HcsUpgradeService {
   private appVersionResource: IApplicationVersionResource;
   private nodeResource: INodeResource;
   private customerResource: ICustomerResource;
+  private clusterUpgradeResource;
 
   /* @ngInject */
   constructor(
@@ -76,6 +77,7 @@ export class HcsUpgradeService {
       update: updateAction,
     });
     this.customerResource = this.$resource<ICustomerType>(BASE_URL + 'partners/:partnerId/customers/:customerId', {}, {});
+    this.clusterUpgradeResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/upgradeorder', {}, {});
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -187,6 +189,20 @@ export class HcsUpgradeService {
     return this.appVersionResource.get({
       application: apptype,
     }).$promise;
+  }
+
+  public getUpgradeOrder(clusterId: string): ng.IPromise<any> {
+    return this.clusterUpgradeResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterId,
+    }).$promise;
+  }
+
+  public saveUpgradeOrder(clusterId: string, nodeOrder): ng.IPromise<any> {
+    return this.clusterUpgradeResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterId,
+    }, nodeOrder).$promise;
   }
 
   public updateNodeSftp(nodeId: string, sftp: ISftpServerItem): ng.IPromise<any> {
