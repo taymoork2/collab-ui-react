@@ -4,7 +4,7 @@ export class CallUserPage {
       title: element(by.css('.modal-title')),
     };
     this.inactivePlusIcon = element(by.css('.plus-icon-inactive'));
-    this.sparkCallRadio = element(by.css('[cs-input-label="Cisco Spark Call"]+label'));
+    this.sparkCallRadio = element(by.css('[cs-input-label="Cisco Webex Calling"]+label'));
     this.assignNumbers = {
       title: element(by.css('h3.modal-title')),
       subMenu: element(by.id('addDnAndExtToUserOptionButtons')),
