@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfilesObject } from 'modules/hcs/hcs-shared';
+import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfilesObject, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { ISelectOption, IHeaderTab } from '../shared/hcs-inventory';
 
@@ -173,10 +173,13 @@ export class ClusterListCtrl implements ng.IComponentController {
   }
 
   public onSoftwareVersionChanged() {
-  }
-
-
-  public saveSoftwareProfile() {
-
+    if (this.softwareVersionSelected) {
+      const swProfile: ISoftwareProfile = {
+        name: this.softwareVersionSelected.label,
+        uuid: this.softwareVersionSelected.value,
+      };
+      this.HcsUpgradeService.updateHcsUpgradeCustomerSwProfile(this.customerId, swProfile)
+        .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
+    }
   }
 }

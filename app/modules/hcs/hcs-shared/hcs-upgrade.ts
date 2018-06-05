@@ -194,6 +194,8 @@ export interface ISftpServersObject {
 
 export interface IHcsUpgradeCustomer {
   uuid: string;
+  name?: string | null;
+  status?: string | null;
   softwareProfile: ISoftwareProfile;
 }
 
@@ -219,4 +221,37 @@ export interface IUpgradeClusterGridRow {
   upgradeTo: string | undefined;
   clusterStatus: string;
   rowWidth: number;
+}
+
+export interface IHcsClusterTask {
+  status: string;
+  estimatedCompletion: any;
+  nodeStatuses: INodeTaskStatus[];
+}
+
+export interface INodeTaskStatus {
+  uuid: string;
+  sequence: number;
+  hostName: string;
+  typeApplication: string;
+  publisher: boolean;
+  previousDuration: any;
+  started: any;
+  elapsedTime: any;
+  status: string;
+}
+
+export interface INodeTaskGridRow {
+  name: string;
+  application: string;
+  isPublisher: boolean;
+}
+
+export interface IClusterStatusGridRow {
+  orderNumber: number;
+  nodeDetails: INodeTaskGridRow;
+  previousUpgradeTime: any;
+  startTime: any;
+  nodeStatus: string;
+  elapsedTime: any;
 }

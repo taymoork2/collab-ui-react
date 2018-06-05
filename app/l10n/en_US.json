@@ -11466,6 +11466,8 @@
           "upgradeButton": "Upgrade Selected"
         },
         "upgradeClusterStatus": {
+          "upgradeStatus": "Upgrade Status",
+          "estimatedCompletion": "Estimated Completion",
           "gridColumn": {
             "order": "Order",
             "previousUpgradeDuration": "Previous Upgrade Duration",
