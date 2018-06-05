@@ -5,6 +5,7 @@ type Test = atlas.test.IServiceTest<{
   $httpBackend;
   $q;
   $translate;
+  Authinfo;
   CustomerSearchService: CustomerSearchService;
   UrlConfig;
 }>;
@@ -17,7 +18,7 @@ describe('Service: customerSearchService', () => {
 
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
-    this.injectDependencies('$httpBackend', '$q', '$translate', 'CustomerSearchService', 'UrlConfig');
+    this.injectDependencies('$httpBackend', '$q', '$translate', 'Authinfo', 'CustomerSearchService', 'UrlConfig');
   });
 
   afterEach(function (this: Test) {
@@ -166,5 +167,53 @@ describe('Service: customerSearchService', () => {
       .catch(fail);
 
     this.$httpBackend.flush();
+  });
+
+  it('should get correct request url of meetings api in customer view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl('v3/meetings');
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings?customer_orgid=${mockData}`);
+  });
+
+  it('should get correct request url of meetings api in partner view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl('v3/meetings');
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings`);
+  });
+
+  it('should get correct request url of UniqueParticipants api in customer view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/unique-participants`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings/${this.conferenceID}/unique-participants?customer_orgid=${mockData}`);
+  });
+
+  it('should get correct request url of UniqueParticipants api in partner view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v3/meetings/${this.conferenceID}/unique-participants`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v3/meetings/${this.conferenceID}/unique-participants`);
+  });
+
+  it('should get correct request url of VoipSessionDetail api in customer view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(true);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/voip-session-detail`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v2/meetings/${this.conferenceID}/voip-session-detail?customer_orgid=${mockData}`);
+  });
+
+  it('should get correct request url of VoipSessionDetail api in partner view', function (this: Test) {
+    spyOn(this.Authinfo, 'isCustomerView').and.returnValue(false);
+    const mockData = 'bc65f19d-0a70-4b46-b712-2a2c6ebda53f';
+    spyOn(this.Authinfo, 'getOrgId').and.returnValue(mockData);
+    const requestUrl = this.CustomerSearchService.getRequestUrl(`v2/meetings/${this.conferenceID}/voip-session-detail`);
+    expect(requestUrl).toBe(`${this.UrlConfig.getDiagnosticUrl()}v2/meetings/${this.conferenceID}/voip-session-detail`);
   });
 });
