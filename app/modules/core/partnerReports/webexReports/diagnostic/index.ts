@@ -1,5 +1,5 @@
 import notifications from 'modules/core/notifications';
-import { CommonService } from './common.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 import { CustomerSearchService } from './customer-search.service';
 import { DgcPartnerTabComponent } from './dgc-partner-tab.component';
 import { DgcPartnerTimeLineComponent } from './dgc-partner-time-line.component';
@@ -18,7 +18,7 @@ export default angular
     require('modules/core/config/urlConfig'),
     notifications,
   ])
-  .service('CommonService', CommonService)
+  .service('WebexReportsUtilService', WebexReportsUtilService)
   .service('CustomerSearchService', CustomerSearchService)
   .service('PartnerSearchService', PartnerSearchService)
   .service('ProPackService', ProPackService)

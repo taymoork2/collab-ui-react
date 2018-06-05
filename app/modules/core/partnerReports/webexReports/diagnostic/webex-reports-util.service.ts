@@ -1,7 +1,7 @@
 import { Browser, Devices, Platforms, ResponseStatus } from './partner-meeting.enum';
 import { IVersion } from './partner-search.interfaces';
 
-export class CommonService {
+export class WebexReportsUtilService {
   private data = {};
   public featureName = 'partnerReport.webex.diagnostic';
 
@@ -11,7 +11,7 @@ export class CommonService {
   ) {
   }
 
-  public getStatus(num: number): string {
+  public getMeetingStatus(num: number): string {
     const statusArr = [
       ResponseStatus.INPROGRESS,
       ResponseStatus.ENDED,
@@ -28,33 +28,33 @@ export class CommonService {
     return _.get(this.data, key);
   }
 
-  public utcDateByTimezone(date: number): string {
-    if (!date) {
+  public dateToTimezoneAdjustedUtc(dateInMs: number): string {
+    if (!dateInMs) {
       return '';
     }
     const tz: string = this.getStorage('timeZone');
     const timeZone = tz ? tz : moment.tz.guess();
-    const offset = this.getOffset(timeZone);
-    return moment.utc(date).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
+    const offset = this.getTzOffset(timeZone);
+    return moment.utc(dateInMs).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
   }
 
-  public getOffset(timeZone: string): string {
+  public getTzOffset(timeZone: string): string {
     const tz = timeZone ? timeZone : moment.tz.guess();
     return moment().tz(tz).format('Z');
   }
 
-  public getGuess(tz: string): string {
+  public getTzGuess(tz: string): string {
     return tz ? '' : moment.tz.guess();
   }
 
-  public getNames(tz: string): string | string[] {
+  public getTzNames(tz: string): string | string[] {
     return tz ? '' : moment.tz.names();
   }
 
   public timestampToDate(timestamp: number, format: string): string {
     const tz = this.getStorage('timeZone');
     const timeZone: any = tz ? tz : moment.tz.guess();
-    const offset = this.getOffset(timeZone);
+    const offset = this.getTzOffset(timeZone);
     return moment(timestamp).utc().utcOffset(offset).format(format);
   }
 
@@ -160,11 +160,11 @@ export class CommonService {
     return platformCode < _.parseInt(Platforms.IPHONE);
   }
 
-  public getDuration(duration: number): string {
-    if (!duration) {
+  public getDuration(durationInMs: number): string {
+    if (!durationInMs) {
       return '';
     }
-    const momentDuration = moment.duration(duration * 1000);
+    const momentDuration = moment.duration(durationInMs * 1000);
     const days = momentDuration.days();
     let hours = momentDuration.hours();
     if (days > 0) {
