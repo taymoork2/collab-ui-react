@@ -27,6 +27,9 @@ if [ -t 0 ] && [ "$#" -eq 0 ]; then
     exit 1
 fi
 
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+jshint_cmd="${this_pwd}/../node_modules/.bin/jshint"
+
 use_parallel=
 args=( "$@" )
 i=0
@@ -48,8 +51,8 @@ set -- "${1:-$(</dev/stdin)}" "${@:2}"
 
 if [ -n "$use_parallel" ]; then
     # shellcheck disable=SC2068
-    parallel -k jshint ::: $@
+    parallel -k "$jshint_cmd" ::: $@
 else
     # shellcheck disable=SC2068
-    jshint $@
+    "$jshint_cmd" $@
 fi
