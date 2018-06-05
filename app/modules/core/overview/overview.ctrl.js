@@ -23,6 +23,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     CardUtils,
     CloudConnectorService,
     Config,
+    DirConnectorUpgradeNotificationService,
     EvaService,
     FeatureToggleService,
     HealthService,
@@ -262,6 +263,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
         featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
         isAtlasSsoCertificateUpdateToggled: FeatureToggleService.atlasSsoCertificateUpdateGetStatus(),
+        isAtlasDirectoryConnectorUpgradeStopNotificationToggled: FeatureToggleService.atlasDirectoryConnectorUpgradeStopNotificationGetStatus(),
         pt: PrivateTrunkService.getPrivateTrunk(),
         ept: ServiceDescriptorService.getServiceStatus('ept'),
       }).then(function (response) {
@@ -299,6 +301,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
 
         checkForUnsyncedSubscriptionLicenses();
         checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
+        checkForDirConnectorUpgrade(response.isAtlasDirectoryConnectorUpgradeStopNotificationToggled);
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -423,6 +426,12 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
             }
           }
         });
+    }
+
+    function checkForDirConnectorUpgrade(isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
+      if (!isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
+        pushNotification(DirConnectorUpgradeNotificationService.createNotification());
+      }
     }
 
     function getTOSStatus() {

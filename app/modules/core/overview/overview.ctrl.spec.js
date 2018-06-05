@@ -93,6 +93,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
     spyOn(this.LearnMoreBannerService, 'isElementVisible').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'atlasSsoCertificateUpdateGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasDirectoryConnectorUpgradeStopNotificationGetStatus').and.returnValue(this.$q.resolve(false));
 
     var getOrgNoSip = this.orgServiceJSONFixture.getOrgNoSip;
     spyOn(this.Orgservice, 'getAdminOrg').and.callFake(_.noop);
@@ -228,7 +229,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Notifications', function () {
     beforeEach(function () {
-      this.TOTAL_NOTIFICATIONS = 9;
+      this.TOTAL_NOTIFICATIONS = 10;
       this.initController();
     });
 
@@ -370,7 +371,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should call ESA check if logged in as a Partner', function () {
-      var TOTAL_NOTIFICATIONS = 10;
+      var TOTAL_NOTIFICATIONS = 11;
       expect(this.PstnService.isSwivelCustomerAndEsaUnsigned).toHaveBeenCalled();
       expect(this.controller.esaDisclaimerNotification).toBeTruthy();
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
@@ -388,7 +389,7 @@ describe('Controller: OverviewCtrl', function () {
     });
 
     it('should not have ESA notification if isSwivelCustomerAndEsaUnsigned returned false', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 10;
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(this.controller.esaDisclaimerNotification).toBeFalsy();
     });
@@ -396,7 +397,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Notifications - notificationComparator', function () {
     beforeEach(function () {
-      this.TOTAL_NOTIFICATIONS = 9;
+      this.TOTAL_NOTIFICATIONS = 10;
       this.initController();
     });
 
@@ -493,7 +494,7 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('Auto Assign Notification - set up now', function () {
     it('should display if a default template does NOT exist', function () {
-      var TOTAL_NOTIFICATIONS = 8;
+      var TOTAL_NOTIFICATIONS = 9;
       this.AutoAssignTemplateService.hasDefaultTemplate.and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
@@ -506,14 +507,14 @@ describe('Controller: OverviewCtrl', function () {
 
   describe('AccountLinking20 notification', function () {
     it('should not be displayed if no sites need configuration', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 10;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(false));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS);
     });
 
     it('should be displayed if one or several sites needs configuration', function () {
-      var TOTAL_NOTIFICATIONS = 9;
+      var TOTAL_NOTIFICATIONS = 10;
       spyOn(this.LinkedSitesService, 'linkedSitesNotConfigured').and.returnValue(this.$q.resolve(true));
       this.initController();
       expect(this.controller.notifications.length).toBe(TOTAL_NOTIFICATIONS + 1);
@@ -521,7 +522,7 @@ describe('Controller: OverviewCtrl', function () {
   });
 
   describe('Expert Virtual Assistant notification', function () {
-    var TOTAL_NOTIFICATIONS = 9;
+    var TOTAL_NOTIFICATIONS = 10;
     it('should display the Expert Virtual Assistant Notification if there is an EVA missing default space', function () {
       this.EvaService.getMissingDefaultSpaceEva.and.returnValue(this.$q.resolve({ name: 'evaTest' }));
       this.initController();
@@ -559,6 +560,19 @@ describe('Controller: OverviewCtrl', function () {
 
       this.initController();
       expect(this.$state.go).toHaveBeenCalledWith('sso-certificate.sso-certificate-check');
+    });
+  });
+
+  describe('directory connector upgrade notification', function () {
+    it('should be added', function () {
+      this.initController();
+      var dcNotificationExists = false;
+      _.forEach(this.controller.notifications, function (notif) {
+        if (notif.name === 'dirConnectorUpgrade') {
+          dcNotificationExists = true;
+        }
+      });
+      expect(dcNotificationExists).toBeTruthy();
     });
   });
 });
