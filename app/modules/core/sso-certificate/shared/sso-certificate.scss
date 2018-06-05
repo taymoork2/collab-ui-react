@@ -13,7 +13,7 @@ sso-certificate-check, sso-certificate-type, sso-certificate-download-metadata, 
     @include keep-flex-container(column);
 
     &-check {
-      max-width: 26.125rem !important; // override modal-body direct child max-width
+      max-width: 27.25rem !important; // override modal-body direct child max-width
     }
 
     &-type {

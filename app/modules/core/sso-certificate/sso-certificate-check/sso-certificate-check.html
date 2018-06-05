@@ -17,7 +17,8 @@
       ng-class="$ctrl.certificateCheckValue === $ctrl.certificateCheck.NONE ? 'icon-check-circle_100 sso-certificate-content__icon--green' : 'icon-view-list-circle_100'">
     </i>
     <p class="sso-certificate-content__paragraph-question h4"
-      translate="ssoCertificateModal.checkCertificate">
+      translate="ssoCertificateModal.checkCertificate"
+      translate-value-href="{{$ctrl.docHref}}">
     </p>
     <div class="sso-certificate-content__radio cs-radio-group">
       <input cs-input type="radio"
