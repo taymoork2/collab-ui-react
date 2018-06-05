@@ -9847,8 +9847,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "Webex Meetings and Cisco Webex Teams configurations for your organization and individuals.",
-        "SPDescription": "Webex Meetings and Cisco Webex Teams configurations.",
+        "description": "Webex Meetings suite configuration for your organization.",
+        "SPDescription": "Webex Meetings suite configuration.",
         "pmrText": "Configure your Personal Meeting Room",
         "viewWebExSites": "View Webex Meetings Sites"
       },
