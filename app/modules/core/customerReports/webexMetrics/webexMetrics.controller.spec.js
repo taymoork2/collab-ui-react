@@ -147,6 +147,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.iframeContainerClass).toBe('webexMetricsContentWithReadOnly');
   });
 
+  it('should track the loading time event when onTrackLoadStatus called', function () {
+    this.controller.webexMetricsViews = 'metrics';
+    this.controller.timeTrack.start = moment().valueOf();
+    this.controller.timeTrack.status = true;
+    this.controller.onTrackLoadStatus();
+    this.$scope.$apply();
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalled();
+  });
+
   it('should set the metrics tab depends on the rules', function () {
     var testMetricsOptions = [
       testWebexMetrics.states.system,

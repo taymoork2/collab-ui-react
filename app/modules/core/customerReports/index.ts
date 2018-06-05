@@ -9,6 +9,6 @@ export default angular
     FeatureToggleService,
   ])
   .service('WebexMetricsService', WebexMetricsServices)
-  .constant('LoadingTimeout', 120000)
+  .constant('LoadingTimeout', 60000)
   .constant('HybridLoadingTimeout', 120000)
   .name;
