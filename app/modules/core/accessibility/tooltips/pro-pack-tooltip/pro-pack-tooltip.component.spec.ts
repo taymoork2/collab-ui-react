@@ -1,7 +1,7 @@
 import tooltipModuleName from 'modules/core/accessibility/tooltips';
 
-describe('Component: textTooltip', () => {
-  const SPAN = 'span';
+describe('Component: proPackTooltip', () => {
+  const PRO_PACK = 'cr-pro-pack-icon';
 
   beforeEach(function () {
     this.initModules(tooltipModuleName);
@@ -11,7 +11,7 @@ describe('Component: textTooltip', () => {
   it('should display with all default variables and no html-unsafe when tt-tooltip-text is used', function () {
     const tooltipText = 'Tooltip Text';
 
-    this.compileComponent('textTooltip', {
+    this.compileComponent('proPackTooltip', {
       ttTooltipText: tooltipText,
       onClickFn: _.noop,
     });
@@ -29,21 +29,21 @@ describe('Component: textTooltip', () => {
     expect(this.controller.ttTooltipUnsafeText).toBe(undefined);
 
     spyOn(this.controller, 'onClickFn');
-    this.view.find(SPAN).click();
+    this.view.find(PRO_PACK).click();
     expect(this.controller.onClickFn).toHaveBeenCalled();
   });
 
   it('should display with all provided variables and html-unsafe when tt-tooltip-unsafe-text is used', function () {
-    const textClass = 'textClass';
+    const iconClass = 'any-other-icon';
     const left = 'left';
     const mouseenter = 'mouseenter';
     const tooltipClass = 'tooltip';
     const ariaText = 'Tooltip Text';
     const tooltipText = 'Tooltip<br>Text';
 
-    this.compileComponent('textTooltip', {
+    this.compileComponent('proPackTooltip', {
       ttAriaLabel: ariaText,
-      ttClass: textClass,
+      ttClass: iconClass,
       ttTabindex: -1,
       ttTooltipAnimation: false,
       ttTooltipAppendToBody: true,
@@ -56,7 +56,7 @@ describe('Component: textTooltip', () => {
     expect(this.controller.animation).toBe(false);
     expect(this.controller.appendToBody).toBe(true);
     expect(this.controller.ariaLabel).toBe(ariaText);
-    expect(this.controller.classes).toBe(`${textClass} default-pointer`);
+    expect(this.controller.classes).toBe(`${iconClass} default-pointer`);
     expect(this.controller.isSafe).toBe(false);
     expect(this.controller.placement).toBe(left);
     expect(this.controller.role).toBe('tooltip');

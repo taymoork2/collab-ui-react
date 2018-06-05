@@ -30,7 +30,6 @@ describe('Component: iconTooltip', () => {
 
     spyOn(this.controller, 'onClickFn');
     this.view.find(ICON).click();
-    this.$scope.$apply();
     expect(this.controller.onClickFn).toHaveBeenCalled();
   });
 

@@ -4,7 +4,12 @@
       <div class="header-info-wrap">
         <div class="header-title">
           <span>{{customerOverview.currentCustomer.customerName}}</span>
-            <cr-pro-pack-icon ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled" class="premium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::grid.appScope.premiumTooltip}}"></cr-pro-pack-icon>
+          <pro-pack-tooltip
+            ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled"
+            tt-class="premium"
+            tt-tooltip-append-to-body="true"
+            tt-tooltip-text="{{::grid.appScope.premiumTooltip}}">
+          </pro-pack-tooltip>
         </div>
       </div>
     </div>

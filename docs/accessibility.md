@@ -455,7 +455,7 @@ public bindings = {
 
 ### icon-tooltip
 
-The majority of our tooltips have icon only triggers.  `icon-tooltip` is used specifically for these cases and defaults to the `icon-information` class for the trigger icon, as this appears to be one of the most used tooltip trigger icons.
+The majority of our tooltips have icon only triggers.  `icon-tooltip` is used specifically for these cases and defaults to the `icon-information` class for the trigger icon, as this appears to be one of the most used tooltip trigger icons.  `icon-information` can be overriden by passing a different class name into the `tt-class` binding.
 
 Examples:
 * The minimum effort for an accessible tooltip.  Creates an `icon-information` trigger tooltip with the `tooltip-text` used both in the tooltip itself and as the `aria-label`.
@@ -548,7 +548,20 @@ TODO: create tooltip with text input trigger
 
 ### pro-pack-tooltip
 
-TODO: create a tooltip specifically for the pro-pack icon, as this is a commonly used tooltip that utilizes `cr-pro-pack-icon`
+Pro Pack icons are an svg icon created by `cr-pro-pack-icon` and are thus incompatible with `icon-tooltip`.  `pro-pack-tooltip` utilizes `cr-pro-pack-icon` to create a streamlined Pro Pack icon with a tooltip.  There are no additional bindings necessary.
+
+Examples:
+* The minimum effort for an accessible tooltip.
+```html
+<pro-pack-tooltip tt-tooltip-text="{{::'common.proPack' | translate}}"></icon-pro-pack>
+```
+* The minimum effort for an `html-unsafe` tooltip.
+```html
+<pro-pack-tooltip
+  tt-aria-label="{{::'common.proPack' | translate}}"
+  tt-tooltip-unsafe-text="{{::'common.proPackWithHtml' | translate}}">
+</pro-pack-tooltip>
+```
 
 ---
 
