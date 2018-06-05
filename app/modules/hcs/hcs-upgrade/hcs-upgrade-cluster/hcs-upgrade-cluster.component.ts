@@ -35,11 +35,11 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
+    private $q: ng.IQService,
+    private $modal,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
-    private $modal,
     private HcsControllerService: HcsControllerService,
-    private $q: ng.IQService,
   ) { }
 
   public startUpgrade(entity) {
@@ -146,7 +146,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   }
 
   public initClusterGridData() {
-    //TODO: get swprofile info for the customer
     this.HcsUpgradeService.getHcsUpgradeCustomer(this.groupId)
       .then((customer: IHcsUpgradeCustomer) => {
         const swProfilePromise = this.HcsUpgradeService.getSoftwareProfile(customer.softwareProfile.uuid);
@@ -212,6 +211,6 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   public viewUpgradeStatus($event, cluster: IUpgradeClusterGridRow): void {
     $event.stopPropagation();
 
-    this.$state.go('hcs.upgradeClusterStatus', { groupId: this.groupId, cluster: cluster, clusterId: cluster.clusterUuid });
+    this.$state.go('hcs.upgradeClusterStatus', { groupId: this.groupId, clusterId: cluster.clusterUuid });
   }
 }
