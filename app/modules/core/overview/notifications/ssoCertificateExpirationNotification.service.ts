@@ -9,7 +9,7 @@ export class SsoCertificateExpirationNotificationService {
     private $state: ng.ui.IStateService,
   ) {}
 
-  public createNotification(days: string): IOverviewPageNotification {
+  public createNotification(days: number): IOverviewPageNotification {
     return {
       badgeText: 'common.urgent',
       badgeType: 'alert',
@@ -21,7 +21,7 @@ export class SsoCertificateExpirationNotificationService {
       },
       linkText: 'ssoCertificateModal.updateCertificate',
       name: SsoCertificateExpirationNotificationService.SSO_CERTIFICATE_NOTIFICATION_NAME,
-      text: 'ssoCertificateModal.certificateExpirationWarning',
+      text: (days > 0) ? 'ssoCertificateModal.certificateExpirationWarning' : 'ssoCertificateModal.certificateExpirationNotice',
       textValues: {
         days: days,
       },
