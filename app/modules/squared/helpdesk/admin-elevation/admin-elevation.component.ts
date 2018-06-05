@@ -1,5 +1,7 @@
 import { AdminElevationService } from './admin-elevation.service';
-import { DiagnosticKey } from '../../../core/metrics/metrics.keys';
+import { DiagnosticKey } from 'modules/core/metrics/metrics.keys';
+import { MetricsService } from 'modules/core/metrics/metrics.service';
+
 enum ElevationState {
   init = 'INIT',
   validSignature = 'VALID_SIGNATURE',
@@ -25,7 +27,7 @@ class HelpdeskAdminElevationComponentCtrl implements ng.IComponentController {
   constructor(private $log: ng.ILogService,
               private $state: ng.ui.IStateService,
               private AdminElevationService: AdminElevationService,
-              private MetricsService) {
+              private MetricsService: MetricsService) {
   }
 
   public $onInit() {
