@@ -6001,7 +6001,8 @@
     "errorServerDown": "Could not reach server to validate this field.",
     "errorFailSafe": "Could not validate entered valued.",
     "errorInvalid": "Entered value contains invalid characters.",
-    "errorInvalidName": "Entered name contains invalid characters."
+    "errorInvalidName": "Entered name contains invalid characters.",
+    "warningIsConsumer": "This email address belongs to an existing user account. By proceeding, the account will be moved to this organization."
   },
   "trials": {
     "collab": "Standard Team Spaces + Webex Team Meetings",

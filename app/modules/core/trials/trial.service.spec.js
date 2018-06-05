@@ -539,6 +539,7 @@ describe('Service: Trial Service:', function () {
             value: 'Test Name',
             isValid: 'true',
             isExist: 'false',
+            isConsumer: 'false',
           }],
         };
       });
@@ -594,6 +595,25 @@ describe('Service: Trial Service:', function () {
         expectShallowVal.call(this, org, {
           error: 'trialModal.errorServerDown',
           status: 501,
+        });
+      });
+
+      it('should return unique if email IS NOT in Consumer org', function () {
+        valData.properties[0].key = email;
+        this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
+        expectShallowVal.call(this, email, {
+          unique: true,
+        });
+      });
+
+      it('should return warning if email IS in Consumer org', function () {
+        valData.properties[0].key = email;
+        valData.properties[0].isExist = 'true';
+        valData.properties[0].isConsumer = 'true';
+        this.$httpBackend.expectPOST(this.UrlConfig.getAdminServiceUrl() + 'orders/actions/shallowvalidation/invoke').respond(JSON.stringify(valData));
+        expectShallowVal.call(this, email, {
+          unique: true,
+          warning: 'trialModal.warningIsConsumer',
         });
       });
     });
