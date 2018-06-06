@@ -200,7 +200,6 @@ describe('Auth Service', function () {
 
   describe('refreshAccessTokenAndResendRequest()', function () {
     beforeEach(function () {
-      OAuthConfig.getOauth2Url = jasmine.createSpy('Url').and.returnValue('');
       OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('access_token_url');
       TokenService.getRefreshToken = jasmine.createSpy('getRefreshToken').and.returnValue('refresh_token');
       spyOn(TokenService, 'completeLogout');

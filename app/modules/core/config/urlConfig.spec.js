@@ -1,7 +1,7 @@
 'use strict';
 
 describe('UrlConfigSpec', function () {
-  beforeEach(angular.mock.module('core.urlconfig'));
+  beforeEach(angular.mock.module(require('./urlConfig')));
 
   var UrlConfig, $location;
 
@@ -167,7 +167,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct sso setup url', function () {
     whenCalling('getSSOSetupUrl').expectUrlToBe({
       dev: 'https://idbroker.webex.com/idb/idbconfig/',
-      cfe: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
       prod: 'https://idbroker.webex.com/idb/idbconfig/',
     });
@@ -176,9 +176,27 @@ describe('UrlConfigSpec', function () {
   it('should return correct sso test url', function () {
     whenCalling('getSSOTestUrl').expectUrlToBe({
       dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-      cfe: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+    });
+  });
+
+  it('should return correct oauth2 url', function () {
+    whenCalling('getOAuth2Url').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/',
+    });
+  });
+
+  it('should return correct saml2 url', function () {
+    whenCalling('getSaml2Url').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/saml2/',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/',
+      integration: 'https://idbroker.webex.com/idb/saml2/',
+      prod: 'https://idbroker.webex.com/idb/saml2/',
     });
   });
 

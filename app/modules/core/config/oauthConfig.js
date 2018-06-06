@@ -4,13 +4,14 @@
   module.exports = angular
     .module('core.oauthconfig', [
       require('modules/core/config/config').default,
+      require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/utils'),
       require('modules/core/storage').default,
     ])
     .factory('OAuthConfig', OAuthConfig)
     .name;
 
-  function OAuthConfig($location, Config, Utils, SessionStorage) {
+  function OAuthConfig($location, Config, UrlConfig, Utils, SessionStorage) {
     var scopes = [
       'webexsquare:admin',
       'webexsquare:billing',
@@ -64,8 +65,6 @@
       },
       oauthUrl: {
         ciRedirectUrl: 'redirect_uri=%s',
-        oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
-        oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
         oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&cisService=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
@@ -73,7 +72,6 @@
         userInfo: 'user_info=%s',
         oauth2NewCodeUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s',
       },
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=',
     };
 
     return {
@@ -97,19 +95,19 @@
 
     function getLogoutUrl() {
       var acu = getAdminPortalUrl();
-      return config.logoutUrl + encodeURIComponent(acu);
+      return UrlConfig.getSaml2Url() + 'jsp/doSSO.jsp?type=logout&cisService=common&goto=' + encodeURIComponent(acu);
     }
 
     function getAccessTokenUrl() {
-      return getOauth2Url() + 'access_token';
+      return UrlConfig.getOAuth2Url() + 'access_token';
     }
 
     function getOauthDeleteRefreshTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
+      return UrlConfig.getOAuth2Url() + 'tokens/user?refreshtokens=';
     }
 
     function getOAuthRevokeUserTokenUrl() {
-      return getOauth2Url() + 'tokens?username=';
+      return UrlConfig.getOAuth2Url() + 'tokens?username=';
     }
 
     function getOAuthClientRegistrationCredentials() {
@@ -120,7 +118,7 @@
       var redirectUrl = getAdminPortalUrl();
       var pattern = config.oauthUrl.oauth2LoginUrlPattern;
       var params = [
-        getOauth2Url(),
+        UrlConfig.getOAuth2Url(),
         getClientId(),
         oauth2Scope,
         encodeURIComponent(redirectUrl),
@@ -140,7 +138,7 @@
       var pattern = config.oauthUrl.oauth2NewCodeUrlPattern;
       var redirectUrl = 'urn:ietf:wg:oauth:2.0:oob';
       var params = [
-        getOauth2Url(),
+        UrlConfig.getOAuth2Url(),
         getClientId(),
         oauth2Scope,
         encodeURIComponent(redirectUrl),
@@ -150,7 +148,7 @@
     }
 
     function getOauthListTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
+      return UrlConfig.getOAuth2Url() + 'tokens/user/';
     }
 
     function getOauthAccessCodeUrl(refresh_token) {
@@ -211,16 +209,6 @@
         integration: config.oauthClientRegistration.atlas.secret,
       };
       return clientSecret[Config.getEnv()];
-    }
-
-    function getOauth2Url() {
-      var oAuth2Url = {
-        dev: config.oauthUrl.oauth2UrlAtlas,
-        cfe: config.oauthUrl.oauth2UrlCfe,
-        integration: config.oauthUrl.oauth2UrlAtlas,
-        prod: config.oauthUrl.oauth2UrlAtlas,
-      };
-      return oAuth2Url[Config.getEnv()];
     }
 
     function getOauthServiceType() {
