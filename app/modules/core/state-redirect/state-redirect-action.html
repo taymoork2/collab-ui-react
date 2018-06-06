@@ -1,0 +1,59 @@
+<div class="cui" ng-if="::$ctrl.showWebexLayout">
+  <div class="cui-panel cui-panel--full cui-panel--form">
+    <div class="cui-panel__main">
+      <div class="cui-panel__image">
+        <i class="icon icon-circle-comp-negative"></i>
+      </div>
+      <h3 class="cui-panel__title" translate="{{::$ctrl.l10nTitle}}"></h3>
+      <h5 class="cui-panel__message" translate="{{::$ctrl.l10nText}}"></h5>
+      <div class="cui-panel__cta">
+        <button
+          cs-btn
+          class="cui-button cui-button--blue"
+          role="button"
+          ng-click="$ctrl.performRedirect()"
+          loading="$ctrl.loading">
+          <span translate="{{::$ctrl.buttonTextKey}}"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cui-panel__footer">
+      <div class="footer__logo">
+        <i class="icon icon-cisco-logo"></i>
+      </div>
+      <div class="footer__copyright">
+        <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> |
+        <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a>.
+        <span
+          translate="loginPage.copyright"
+          translate-value-year="2018">
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="messagebox-backdrop" ng-if="::!$ctrl.showWebexLayout">
+  <div class="message-box">
+    <section class="message-box__content">
+      <i class="message-box__icon icon-circle-comp-negative"></i>
+      <h3 class="message-box__title message-box__title--alert" translate="{{::$ctrl.l10nTitle}}"></h3>
+      <h5 class="message-box__details" translate="{{::$ctrl.l10nText}}"></h5>
+      <button cs-btn class="btn btn--people btn--large message-box__btn" role="button" ng-click="$ctrl.performRedirect()" loading="$ctrl.loading">
+        <span translate="{{::$ctrl.buttonTextKey}}"></span>
+      </button>
+    </section>
+  </div>
+  <div class="messagebox-backdrop__footer">
+    <i class="icon icon-cisco-logo"></i>
+    <div class="body-smallest">
+      <a href="http://www.ciscospark.com/terms-of-service.html" target="_blank" translate="loginPage.tos"></a> |
+      <a href="http://www.cisco.com/web/siteassets/legal/privacy.html" target="_blank" translate="loginPage.privacy"></a>.
+      <span
+        translate="loginPage.copyright"
+        translate-value-year="2018">
+      </span>
+    </div>
+  </div>
+</div>

@@ -178,6 +178,9 @@ beforeEach(function () {
     if (_.isObject(componentParamsObj)) {
       componentParams = _.reduce(componentParamsObj, function (result, value, key) {
         var valueString;
+        if (_.isUndefined(value)) {
+          return result;
+        }
         if (!_.isString(value)) {
           // set value to the name of the key added to scope
           valueString = key;

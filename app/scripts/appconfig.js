@@ -212,9 +212,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/state-redirect/unauthorized.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="unauthorizedPage.title" l10n-text="unauthorizedPage.text"></state-redirect-action>',
               },
             },
             authenticate: false,
@@ -223,25 +221,25 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/state-redirect/loginError.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="loginErrorPage.title" l10n-text="loginErrorPage.text" l10n-button-text="stateRedirect.tryAgainButton" is-webex-layout="true"></state-redirect-action>',
               },
             },
             authenticate: false,
           })
           .state('backend-temp-unavailable', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/state-redirect/backendTempUnavailable.tpl.html'),
+                template: '<state-redirect-warning l10n-title="backendTempUnavailablePage.title" l10n-text="backendTempUnavailablePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
           })
           .state('server-maintenance', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/state-redirect/serverMaintenance.tpl.html'),
+                template: '<state-redirect-warning l10n-title="serverMaintenancePage.title" l10n-text="serverMaintenancePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
@@ -251,9 +249,7 @@
             url: '/404',
             views: {
               'main@': {
-                template: require('modules/core/state-redirect/404.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="404Page.title" l10n-text="404Page.text"></state-redirect-action>',
               },
             },
             authenticate: false,
