@@ -7,7 +7,9 @@ var shimFileName = _.last(shimFile.split('/'));
 _.assignIn(process.env, args.env);
 var webpackConfig = require('./webpack.config.js')(process.env);
 
-var browser = 'ChromeHeadlessWithMemory';
+// if 'http_proxy' env var present, instruct headless Chrome to bypass
+var browser = process.env['http_proxy'] ? 'ChromeHeadlessBypassHttpProxy' : 'ChromeHeadlessWithMemory';
+
 if (args.debug) {
   browser = 'ChromeWithMemory';
 } else if (args.phantomjs) {
@@ -119,6 +121,16 @@ module.exports = function (config) {
           '--disable-gpu',
           '--remote-debugging-port=9222',
           '--js-flags="--max-old-space-size=4096"',
+        ],
+      },
+      ChromeHeadlessBypassHttpProxy: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--disable-gpu',
+          '--remote-debugging-port=9222',
+          '--js-flags="--max-old-space-size=4096"',
+          '--proxy-server=\'direct://\'',
+          '--proxy-bypass-list=*'
         ],
       },
     },
