@@ -1400,9 +1400,7 @@
           .state('user-overview.csdmDevice', {
             views: {
               'side-panel-container@user-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2553,9 +2551,7 @@
           .state('place-overview.csdmDevice', {
             views: {
               'side-panel-container@place-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2893,9 +2889,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
               'header@device-overview': {
                 template: require('modules/squared/devices/overview/deviceHeader.tpl.html'),
