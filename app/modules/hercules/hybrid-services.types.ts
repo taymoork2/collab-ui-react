@@ -49,6 +49,8 @@ export interface IUpgradeSchedule {
   scheduleTimeZone: string;
   urgentScheduleTime: TimeOfDay;
   url: string;
+  type?: string;
+  jsonSchedule?: string;
 }
 
 export interface ICluster {
