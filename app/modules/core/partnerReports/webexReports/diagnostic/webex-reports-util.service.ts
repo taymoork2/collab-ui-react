@@ -96,7 +96,7 @@ export class WebexReportsUtilService {
     return arr[key] ? arr[key] : this.$translate.instant('webexReports.other');
   }
 
-  public getParticipantEndReason(endReason: string): string {
+  public getParticipantEndReason(endReason: string | null): string {
     if (endReason === null) {
       return '';
     }

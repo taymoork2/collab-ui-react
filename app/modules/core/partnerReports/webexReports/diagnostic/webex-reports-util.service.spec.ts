@@ -1,61 +1,70 @@
 import moduleName from './index';
 import * as moment from 'moment-timezone';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
-describe('Service: commonService', () => {
-  beforeAll(function () {
+type Test = atlas.test.IServiceTest<{
+  $httpBackend;
+  $q;
+  $translate;
+  UrlConfig;
+  WebexReportsUtilService: WebexReportsUtilService;
+}>;
+
+describe('Service: WebexReportsUtilService', () => {
+  beforeAll(function (this: Test) {
     this.conferenceID = '65241608473282200';
     this.nodeId = '2454212';
   });
 
-  beforeEach(function () {
+  beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies('$httpBackend', '$q', '$translate', 'UrlConfig', 'WebexReportsUtilService');
   });
 
-  afterEach(function () {
+  afterEach(function (this: Test) {
     this.$httpBackend.verifyNoOutstandingExpectation();
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should get correct data when call getStatus to get meeting Status', function () {
+  it('should get correct data when call getStatus to get meeting Status', function (this: Test) {
     spyOn(this.$translate, 'instant').and.returnValue('Ended');
     const status = this.WebexReportsUtilService.getMeetingStatus(2);
     expect(status).toBe('Ended');
   });
 
-  it('should get correct data when call setStorage', function () {
+  it('should get correct data when call setStorage', function (this: Test) {
     const item = { conferenceID: 50190706068695610, meetingNumber: 355602502, status: 'Ended', siteID: 700243772 };
     const conferenceID = this.WebexReportsUtilService.setStorage('webexMeeting', item).conferenceID;
     expect(conferenceID).toBe(50190706068695610);
-    const wm = this.WebexReportsUtilService.getStorage('webexMeeting', {});
+    const wm = this.WebexReportsUtilService.getStorage('webexMeeting');
     expect(wm.status).toBe('Ended');
   });
 
-  it('should get correct data when call dateToTimezoneAdjustedUtc', function () {
-    const data = '2017-08-02 07:44:30.0';
+  it('should get correct data when call dateToTimezoneAdjustedUtc', function (this: Test) {
+    const data = 1501659870000;
     moment.tz.setDefault('Asia/Shanghai');
     this.WebexReportsUtilService.setStorage('timeZone', 'Asia/Shanghai');
     const data_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(data);
     expect(data_).toBe('2017-08-02 03:44:30 PM');
   });
 
-  it('should get correct data when call getTzOffset', function () {
+  it('should get correct data when call getTzOffset', function (this: Test) {
     moment.tz.setDefault('Asia/Shanghai');
     const data = this.WebexReportsUtilService.getTzOffset('Asia/Shanghai');
     expect(data).toBe('+08:00');
   });
 
-  it('should get correct data when call getTzGuess', function () {
-    const data = this.WebexReportsUtilService.getTzGuess(12);
+  it('should get correct data when call getTzGuess', function (this: Test) {
+    const data = this.WebexReportsUtilService.getTzGuess('12');
     expect(data).toBe('');
   });
 
-  it('should get correct data when call getTzNames', function () {
-    const data = this.WebexReportsUtilService.getTzNames(12);
+  it('should get correct data when call getTzNames', function (this: Test) {
+    const data = this.WebexReportsUtilService.getTzNames('12');
     expect(data).toBe('');
   });
 
-  it('should get correct data when call timestampToDate', function () {
+  it('should get correct data when call timestampToDate', function (this: Test) {
     const timestamp = 1512543365000;
     moment.tz.setDefault('Asia/Shanghai');
     this.WebexReportsUtilService.setStorage('timeZone', 'Asia/Shanghai');
@@ -64,43 +73,42 @@ describe('Service: commonService', () => {
   });
 
   describe('getBrowser():', () => {
-    it('should get correct data when call getBrowser: Chrome', function () {
+    it('should get correct data when call getBrowser: Chrome', function (this: Test) {
       expect(this.WebexReportsUtilService.getBrowser(6)).toBe('Chrome');
     });
 
-    it('should get correct data when call getBrowser: Other', function () {
-      expect(this.WebexReportsUtilService.getBrowser()).toBe('webexReports.other');
+    it('should get correct data when call getBrowser: Other', function (this: Test) {
+      expect(this.WebexReportsUtilService.getBrowser(100)).toBe('webexReports.other');
     });
   });
 
   describe('getPlatform():', () => {
-    it('should get correct data when call getPlatform: Mac', function () {
+    it('should get correct data when call getPlatform: Mac', function (this: Test) {
       expect(this.WebexReportsUtilService.getPlatform({ platform: '1', sessionType: '0' })).toBe('Mac');
     });
 
-    it('should get correct data when call getPlatform: PSTN', function () {
+    it('should get correct data when call getPlatform: PSTN', function (this: Test) {
       expect(this.WebexReportsUtilService.getPlatform({ platform: '1', sessionType: '25' })).toBe('PSTN');
     });
 
-    it('should get correct data when call getPlatform: Other', function () {
+    it('should get correct data when call getPlatform: Other', function (this: Test) {
       expect(this.WebexReportsUtilService.getPlatform({ platform: '22', sessionType: '0' })).toBe('webexReports.other');
     });
   });
 
   describe('getParticipantEndReason():', () => {
-    it('should get correct data when call getParticipantEndReason: Normal', function () {
+    it('should get correct data when call getParticipantEndReason: Normal', function (this: Test) {
       expect(this.WebexReportsUtilService.getParticipantEndReason('a')).toBe('webexReports.normal');
     });
 
-    it('should get correct data when call getParticipantEndReason: Abnormal', function () {
+    it('should get correct data when call getParticipantEndReason: Abnormal', function (this: Test) {
       expect(this.WebexReportsUtilService.getParticipantEndReason('')).toBe('webexReports.abnormal');
     });
 
-    it('should get correct data when call getParticipantEndReason: <empty>', function () {
+    it('should get correct data when call getParticipantEndReason: <empty>', function (this: Test) {
       expect(this.WebexReportsUtilService.getParticipantEndReason(null)).toBe('');
     });
   });
-
 
   describe('getDevice():', () => {
     it('should get correct device icon when call getDevice: icon-application', function () {
@@ -146,7 +154,9 @@ describe('Service: commonService', () => {
     });
 
     it('should get toMinOrSec value: seconds', function () {
-      expect(this.WebexReportsUtilService.toMinOrSec(2000)).toBe('time.abbreviatedCap.seconds');
+      spyOn(this.$translate, 'instant');
+      this.WebexReportsUtilService.toMinOrSec(2000);
+      expect(this.$translate.instant).toHaveBeenCalledWith('time.abbreviatedCap.seconds', { time: 2 }, 'messageformat');
     });
   });
 
@@ -155,8 +165,8 @@ describe('Service: commonService', () => {
   });
 
   it('should get correct time format', function () {
-    const hms = this.WebexReportsUtilService.getDuration(8071);
-    expect(hms).toBe('2:14:31');
+    const duration = this.WebexReportsUtilService.getDuration(8071);
+    expect(duration).toBe('2:14:31');
   });
 
   it('should get correct data when call getClientVersion', function () {
