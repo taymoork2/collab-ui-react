@@ -2659,7 +2659,8 @@
       "unknown": "Unknown",
       "notFound": "Status not found",
       "pendingNotSetup": "Pending – Service Not Setup",
-      "accountNotActivated": "Account Not Activated"
+      "accountNotActivated": "Account Not Activated",
+      "canNotAccessContextReporting": "Cannot access Context Service reports"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
