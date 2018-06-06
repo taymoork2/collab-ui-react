@@ -55,6 +55,7 @@ module.exports = {
   atlasHybridGlobalCallServiceConnect: 'atlas-hybrid-global-call-service-connect',
   atlasHybridImp: 'atlas-hybrid-imp',
   atlasHybridMediaServiceQlikReports: 'atlas-hybrid-media-service-qlik-reports',
+  atlasIntegrationsManagement: 'atlas-integrations-management',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
   atlasJabberInterop: 'atlas-jabber-interop',

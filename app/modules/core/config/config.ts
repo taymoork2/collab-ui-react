@@ -554,6 +554,7 @@ export class Config {
       'dr-login-forward',
       'editService',
       'firsttimewizard',
+      'integrations-management',
       'my-company',
       'overview',
       'profile',
