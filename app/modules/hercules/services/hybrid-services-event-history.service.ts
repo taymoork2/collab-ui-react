@@ -489,10 +489,19 @@ export class HybridServicesEventHistoryService {
         const urgent = this.$translate.instant('hercules.clusterHistoryTable.urgentUpgrades');
 
         if (event.payload.oldUpgradeSchedule) {
-          previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.oldUpgradeSchedule)}, ${event.payload.oldUpgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
+          if (event.payload.oldUpgradeSchedule.type !== null && event.payload.oldUpgradeSchedule.type === 'CalendarClusterUpgradeSchedule') {
+            // iCal based updgrade schedule (i.e. Webex Video Mesh clusters)
+            previousValue = `${this.HybridServicesI18NService.formatTimeAndDateAndTimeZone(event.payload.oldUpgradeSchedule)}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
+          } else {
+            previousValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.oldUpgradeSchedule)}, ${event.payload.oldUpgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.oldUpgradeSchedule.urgentScheduleTime)}`;
+          }
         }
         if (event.payload.upgradeSchedule) {
-          newValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.upgradeSchedule)}, ${event.payload.upgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.upgradeSchedule.urgentScheduleTime)}`;
+          if (event.payload.upgradeSchedule.type !== null && event.payload.upgradeSchedule.type === 'CalendarClusterUpgradeSchedule') {
+            newValue = `${this.HybridServicesI18NService.formatTimeAndDateAndTimeZone(event.payload.upgradeSchedule)}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.upgradeSchedule.urgentScheduleTime)}`;
+          } else {
+            newValue = `${this.HybridServicesI18NService.formatTimeAndDate(event.payload.upgradeSchedule)}, ${event.payload.upgradeSchedule.scheduleTimeZone}. ${urgent}: ${this.HybridServicesI18NService.labelForTime(event.payload.upgradeSchedule.urgentScheduleTime)}`;
+          }
         }
         formattedEvents.push(this.processClusterUpdateItem(event, 'UpgradeSchedule', previousValue, newValue));
       }
