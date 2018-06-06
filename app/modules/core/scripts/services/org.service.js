@@ -543,7 +543,7 @@
       return patchDisplayName(orgId, displayName)
         .then(function (response) {
           var status = _.get(response, 'status');
-          if (status !== 'SUCCESS' && status !== 'DUPLICATE') {
+          if (status !== 'SUCCESS') {
             return $q.reject(response);
           }
         });
