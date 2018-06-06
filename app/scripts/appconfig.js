@@ -3090,7 +3090,7 @@
           .state('partnercustomers', {
             parent: 'partner',
             template: '<div ui-view></div>',
-            absract: true,
+            abstract: true,
           })
           .state('gem', {
             parent: 'partner',
@@ -3262,7 +3262,7 @@
           .state('hcs', {
             parent: 'partner',
             template: require('modules/hcs/hcs-shared/hcs-base/hcs-shared-base.html'),
-            absract: true,
+            abstract: true,
           })
           .state('hcs.shared', {
             parent: 'hcs',
@@ -5809,7 +5809,7 @@
           })
           .state('legalhold', {
             template: '<div ui-view class="legal-hold"></div>',
-            absract: true,
+            abstract: true,
             parent: 'ediscovery',
             resolve: {
               supportsFeature: /* @ngInject */ function (FeatureToggleService) {
@@ -5871,7 +5871,7 @@
           .state('integrations-management', {
             template: '<div ui-view></div>',
             parent: 'main',
-            absract: true,
+            abstract: true,
             resolve: {
               supportsFeature: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasIntegrationsManagement);
