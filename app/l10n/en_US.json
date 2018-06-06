@@ -323,7 +323,8 @@
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
       "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
-      "exportUserList": "Export user list"
+      "exportUserList": "Export user list",
+      "viewImportHistory": "View import history"
     },
     "advanced": {
       "title": "Advanced",

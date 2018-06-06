@@ -87,6 +87,9 @@
             ng-click="$event.stopPropagation()"
             use-csv-download-directive="true">
           </cr-user-csv-export>
+          <p>
+            <a translate="userManage.bulk.viewImportHistory" ng-click="umoc.showUserTaskManagerModal()"></a>
+          </p>
         </cr-action-card-footer>
       </cr-action-card>
       <cr-action-card ng-if="umoc.convertableUsers" ng-click="umoc.onNext(umoc.ManageType.CONVERT)">
