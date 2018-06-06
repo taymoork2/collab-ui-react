@@ -28,7 +28,13 @@ export class HybridServicesI18NService {
     day = 'every day';
 
     // Also update the time
-    const scheduleString: string = upgradeSchedule.jsonSchedule === undefined ? '' : upgradeSchedule.jsonSchedule;
+
+    if (upgradeSchedule.jsonSchedule === undefined) {
+      // instead of throwing,and thus stop showing the events, handle the unlikely case that the schedule has not been
+      // set by FMS, and show unknown to the end user
+      return 'unknown';
+    }
+    const scheduleString: string = upgradeSchedule.jsonSchedule;
     const jsonSchedule: IJsonSchedule = JSON.parse(scheduleString);
 
     time = this.getLocalTimestamp(jsonSchedule.startAt, 'HH:mm');
