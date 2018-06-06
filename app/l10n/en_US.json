@@ -393,6 +393,7 @@
   },
   "ssoCertificateModal": {
     "certificateExpirationWarning": "SSO certificate may expire in {{days}} days. Check below for next steps.",
+    "certificateExpirationNotice": "SSO certificate expired. Check below for next steps.",
     "updateCertificate": "Update SSO Certificate",
     "checkCertificate": "Let's check if you need to make this update. Do any of these apply to your IdP?",
     "signingRequests": "One of these apply to my IdP: Signing AuthN Requests, Signing SLO Request, or Encrypt Assertion response to SP",
