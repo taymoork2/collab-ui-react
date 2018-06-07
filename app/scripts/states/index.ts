@@ -1,2 +1,5 @@
-export function configureStates(_$stateProvider: ng.ui.IStateProvider) {
+import configureIntegrationsManagement from './integrations-management.states';
+
+export function configureStates($stateProvider: ng.ui.IStateProvider) {
+  configureIntegrationsManagement($stateProvider);
 }
