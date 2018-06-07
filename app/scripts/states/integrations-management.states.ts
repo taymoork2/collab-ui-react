@@ -11,9 +11,9 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
           return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasIntegrationsManagement);
         },
         lazy: resolveLazyLoad(function (done) {
-          (require as any).ensure([], function () {
+          require.ensure([], function () {
             done(require('modules/integrations-management'));
-          }, 'integrations');
+          }, undefined, 'integrations');
         }),
       },
     })
