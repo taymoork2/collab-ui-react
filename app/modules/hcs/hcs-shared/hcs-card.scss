@@ -4,7 +4,7 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
-.reveal-modal.full div.modal-body {
+.reveal-modal.full hcs-setup-modal div.modal-body {
   padding: 1rem 2rem 0.5rem;
 }
 .hcs-card-header {

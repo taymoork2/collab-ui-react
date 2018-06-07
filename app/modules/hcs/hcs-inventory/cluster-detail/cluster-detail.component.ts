@@ -161,7 +161,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public initCustomerList(): void {
     this.customerSelectOptions = [];
     this.customerList = [];
-    //TODO: get list of customers for partner from ci.
+    //After BETA: get list of customers for partner from ci.
     this.HcsControllerService.getHcsCustomers()
       .then((hcsCustomers: IHcsCustomer[]) => {
         _.forEach(hcsCustomers, (hcsCustomer) => {
@@ -292,6 +292,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           _.forEach(this.clusterDetail.nodes, (node) => {
             if (node.isAccepted) {
               promises.push(this.HcsControllerService.acceptAgent(node));
+            } else if (node.isRejected) {
+              promises.push(this.HcsControllerService.rejectAgent(node));
             }
           });
           return this.$q.all(promises);

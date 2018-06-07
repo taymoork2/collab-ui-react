@@ -11251,7 +11251,10 @@
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
         "customerExistsErrorMessage": "This customer already exists",
-        "swProfileWarningMsg": "Please add a Software Profile first"
+        "swProfileWarningMsg": {
+          "addSWProfile": "Please add a Software Profile first",
+          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
+        }
       },
       "nodeStatus": {
         "active":"Active",
@@ -11306,7 +11309,11 @@
     },
     "clustersList": {
       "title":"Clusters",
-      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}",
+      "deleteClusterModal": {
+        "title": "Are you sure?",
+        "description": "You are about to delete an Cluster. You can not undo this action."
+      }
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",

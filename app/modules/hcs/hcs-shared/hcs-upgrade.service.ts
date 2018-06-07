@@ -138,6 +138,13 @@ export class HcsUpgradeService {
     });
   }
 
+  public deleteCluster(_clusterId: string): ng.IPromise<IHcsCluster> {
+    return this.clusterResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: _clusterId,
+    }).$promise;
+  }
+
   public updateCluster(_clusterId: string, cluster: IHcsCluster) {
     return this.clusterResource.update({
       partnerId: this.Authinfo.getOrgId(),
