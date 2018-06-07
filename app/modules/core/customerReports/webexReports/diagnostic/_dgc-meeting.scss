@@ -5,6 +5,7 @@
 .dgc-meeting {
     @extend %page-content-padding;
     $content-padding-size: 1rem;
+    $overview-padding-size: 2rem;
     $room-title-height: 2.5rem;
     $room-info-height: 2rem;
     $grid-title-height: 4.3rem;
@@ -135,7 +136,7 @@
       }
   
       .meeting-overview {
-        padding-top: 2rem;
+        padding-top: $overview-padding-size;
         border-top: 1px solid $gray-light-3;
         background-color: $white;
   
