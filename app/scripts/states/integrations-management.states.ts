@@ -20,5 +20,20 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
     .state('integrations-management.list', {
       template: '<integrations-management-list></integrations-management-list>',
       url: '/integrations',
+    })
+    .state('integrations-management.overview', {
+      parent: 'sidepanel',
+      views: {
+        'sidepanel@': {
+          template: 'overview placeholder',
+        },
+      },
+    })
+    .state('integrations-management.overview.detail', {
+      views: {
+        'sidepanel@': {
+          template: 'detail placeholder',
+        },
+      },
     });
 }
