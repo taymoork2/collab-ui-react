@@ -41,7 +41,8 @@ describe('Service: customerSearchService', () => {
     const url = `${this.UrlConfig.getDiagnosticUrl()}v3/meetings/${this.conferenceID}/meeting-detail`;
     this.$httpBackend.expectGET(url).respond(200, mockData);
     this.CustomerSearchService.getMeetingDetail(this.conferenceID)
-      .then(res => expect(res.features).toBeDefined());
+      .then(res => expect(res.features).toBeDefined())
+      .catch(fail);
 
     this.$httpBackend.flush();
   });
