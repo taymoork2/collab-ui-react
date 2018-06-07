@@ -1762,6 +1762,7 @@
     "optional": "Optional",
     "or": "or",
     "overview": "Overview",
+    "manage": "Manage",
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
@@ -9224,6 +9225,11 @@
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Manage access to integrations for organizations.",
+      "description": "Authorize access for better management.<br/>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {

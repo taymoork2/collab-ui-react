@@ -16,6 +16,7 @@ describe('SettingsCtrl', function () {
     spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasBlockExternalCommunicationSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasEmailSuppressGetStatus').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasIntegrationsManagementGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ProPackService, 'hasProPackPurchasedOrNotEnabled');
   });
 
@@ -107,6 +108,7 @@ describe('SettingsCtrl', function () {
         expect(this.controller.brandingWrapper).toBeTruthy(); //wrapper until toggle is removed
         expect(this.controller.privacy).toBeTruthy();
         expect(this.controller.retention).toBeTruthy();
+        expect(this.controller.integrations).toBeTruthy();
         expect(this.controller.externalCommunication).toBeTruthy();
       });
     });
@@ -135,6 +137,26 @@ describe('SettingsCtrl', function () {
         expect(this.controller.retention).toBeTruthy();
         expect(this.controller.externalCommunication).toBeTruthy();
       });
+    });
+  });
+
+  describe('integrations section', function() {
+    function setIntegrationsToggleAndRole(ftValue, adminValue) {
+      this.FeatureToggleService.atlasIntegrationsManagementGetStatus.and.returnValue(this.$q.resolve(ftValue));
+      this.Authinfo.isCustomerAdmin.and.returnValue(adminValue);
+      initController.apply(this);
+    }
+    it('should not show integrations for  user who is not a full admin', function() {
+      setIntegrationsToggleAndRole.apply(this, [true, false]);
+      expect(this.controller.integrations).toBeFalsy();
+    });
+    it('should not show integrations if integrations FT is not set', function() {
+      setIntegrationsToggleAndRole.apply(this, [false, true]);
+      expect(this.controller.integrations).toBeFalsy();
+    });
+    it('should how integrations if integrations FT is set and user is full amdin', function() {
+      setIntegrationsToggleAndRole.apply(this, [true, true]);
+      expect(this.controller.integrations).toBeTruthy();
     });
   });
 
