@@ -1,4 +1,4 @@
-<div class="cui" ng-if="::$ctrl.showWebexLayout">
+<div class="cui" ng-if="::$ctrl.isWebexLayout">
   <div class="cui-panel cui-panel--full cui-panel--form">
     <div class="cui-panel__main">
       <div class="cui-panel__image">
@@ -10,7 +10,6 @@
         <button
           cs-btn
           class="cui-button cui-button--blue"
-          role="button"
           ng-click="$ctrl.performRedirect()"
           loading="$ctrl.loading">
           <span translate="{{::$ctrl.buttonTextKey}}"></span>
@@ -34,13 +33,13 @@
   </div>
 </div>
 
-<div class="messagebox-backdrop" ng-if="::!$ctrl.showWebexLayout">
+<div class="messagebox-backdrop" ng-if="::!$ctrl.isWebexLayout">
   <div class="message-box">
     <section class="message-box__content">
       <i class="message-box__icon icon-circle-comp-negative"></i>
       <h3 class="message-box__title message-box__title--alert" translate="{{::$ctrl.l10nTitle}}"></h3>
       <h5 class="message-box__details" translate="{{::$ctrl.l10nText}}"></h5>
-      <button cs-btn class="btn btn--people btn--large message-box__btn" role="button" ng-click="$ctrl.performRedirect()" loading="$ctrl.loading">
+      <button cs-btn class="btn btn--people btn--large message-box__btn" ng-click="$ctrl.performRedirect()" loading="$ctrl.loading">
         <span translate="{{::$ctrl.buttonTextKey}}"></span>
       </button>
     </section>

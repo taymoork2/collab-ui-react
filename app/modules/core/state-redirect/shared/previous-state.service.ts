@@ -7,8 +7,9 @@ export class PreviousState {
 
   /* @ngInject */
   constructor (
-      private $state: ng.ui.IStateService,
-    ) {}
+    private $q: ng.IQService,
+    private $state: ng.ui.IStateService,
+  ) {}
 
   public set(_state: string): void {
     this.state = _state;
@@ -26,17 +27,14 @@ export class PreviousState {
     return this.params;
   }
 
-  public isValid(): boolean {
-    return this.isStateValid(this.state);
-  }
-
-  public go() {
-    if (this.isStateValid(this.state)) {
-      return this.$state.go(this.state, this.params);
-    }
-  }
-
-  private isStateValid(state?: string): state is string {
+  public isValid(state = this.state): state is string  {
     return _.isString(state) && state.length > 0 && !_.includes(this.unallowedReturnStates, state);
+  }
+
+  public go(): ng.IPromise<void> {
+    if (!this.isValid(this.state)) {
+      return this.$q.reject();
+    }
+    return this.$state.go(this.state, this.params);
   }
 }

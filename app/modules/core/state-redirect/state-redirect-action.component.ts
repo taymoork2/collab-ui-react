@@ -2,12 +2,11 @@ export class StateRedirectAction implements ng.IComponentController {
   public l10nTitle: string;
   public l10nText: string;
   public l10nButtonText?: string;
-  public isWebexLayout?: string;
+  public isWebexLayout?: boolean;
 
   public loading = false;
 
   private hasPreviousState = this.PreviousState.isValid();
-  private readonly TRUE = 'true';
   private readonly L10N_GO_BACK = 'stateRedirect.goBackButton';
   private readonly L10N_SIGN_IN = 'stateRedirect.signInButton';
 
@@ -16,10 +15,6 @@ export class StateRedirectAction implements ng.IComponentController {
     private Auth,
     private PreviousState,
   ) {}
-
-  public get showWebexLayout(): boolean {
-    return this.isWebexLayout === this.TRUE;
-  }
 
   public get buttonTextKey(): string {
     if (this.l10nButtonText) {
@@ -50,7 +45,7 @@ export class StateRedirectActionComponent implements ng.IComponentOptions {
     l10nTitle: '@',
     l10nText: '@',
     l10nButtonText: '@?',
-    isWebexLayout: '@?',
+    isWebexLayout: '<?',
   };
   public controller = StateRedirectAction;
   public template = require('./state-redirect-action.html');

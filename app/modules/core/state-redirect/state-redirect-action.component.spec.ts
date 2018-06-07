@@ -102,7 +102,7 @@ describe('Component: StateRedirectAction', function () {
         expect(this.view.find(View.BUTTON_TEXT)).toHaveText('stateRedirect.goBackButton');
       });
 
-      it('should go to previous stack on button click', function () {
+      it('should go to previous state on button click', function () {
         this.view.find(View.BUTTON).click();
         expect(this.PreviousState.go).toHaveBeenCalled();
         expect(this.Auth.logout).not.toHaveBeenCalled();

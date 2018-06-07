@@ -6,7 +6,7 @@ import { StateRedirectActionComponent } from './state-redirect-action.component'
 import { StateRedirectWarningComponent } from './state-redirect-warning.component';
 
 export default angular
-  .module('core.state-redirct', [
+  .module('core.state-redirect', [
     authModuleName,
     collabUiModuleName,
     sharedModuleName,
