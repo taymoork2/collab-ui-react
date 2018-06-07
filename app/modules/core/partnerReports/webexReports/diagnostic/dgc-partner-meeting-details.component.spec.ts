@@ -108,9 +108,10 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
 
-    this.PartnerSearchService.setStorage('webexOneMeeting', this.meeting);
+    this.WebexReportsUtilService.setStorage('webexOneMeeting', this.meeting);
+    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
   });
 
   function initComponent(this, isReject?: boolean) {

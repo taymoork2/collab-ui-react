@@ -7,12 +7,12 @@ describe('Service: MeetingExportService', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$window', 'MeetingExportService', 'PartnerSearchService', 'SearchService');
-    this.SearchService.data = this.meetingDetails;
+    this.injectDependencies('$q', '$window', 'MeetingExportService', 'WebexReportsUtilService');
+    this.WebexReportsUtilService.data = this.meetingDetails;
   });
 
   it('should generate report in string format after calling generateMeetingReport', function () {
-    this.MeetingExportService.generateMeetingReport(this.SearchService)
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
       .then(res => expect(res).toContain('Meeting Summary'))
       .catch(fail);
   });

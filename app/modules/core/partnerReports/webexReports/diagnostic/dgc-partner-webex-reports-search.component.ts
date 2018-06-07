@@ -2,7 +2,10 @@ import * as moment from 'moment';
 import { KeyCodes } from 'modules/core/accessibility';
 import { Notification } from 'modules/core/notifications';
 import { IMeetingDetail } from './partner-search.interfaces';
+import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
+import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -40,6 +43,8 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   private today: string;
   private email: string;
   private meetingNumber: string;
+  public isPartnerRole = true;
+  private dataService: (PartnerSearchService | CustomerSearchService);
 
   /* @ngInject */
   public constructor(
@@ -47,40 +52,79 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private Analytics,
-    private FeatureToggleService,
     private Notification: Notification,
+    private CustomerSearchService: CustomerSearchService,
+    private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
+    private ProPackService: ProPackService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.gridData = [];
-    this.timeZone = this.PartnerSearchService.getGuess('');
+    this.timeZone = this.WebexReportsUtilService.getTzGuess('');
     this.errMsg = { search: '', datePicker: '' };
-    this.searchStr = this.PartnerSearchService.getStorage('searchStr');
+    this.searchStr = this.WebexReportsUtilService.getStorage('searchStr');
+
+    this.dataService = this.PartnerSearchService;
+    if (this.$state.current.name === 'reports.webex-metrics.diagnostics') {
+      this.isPartnerRole = false;
+      this.dataService = this.CustomerSearchService;
+    }
+    this.WebexReportsUtilService.setStorage('isPartnerRole', this.isPartnerRole);
   }
 
   public $onInit(): void {
     this.setGridOptions();
+    if (!this.isPartnerRole) {
+      this.initCustomerRoleData();
+    } else {
+      this.initPartnerRoleData();
+    }
+  }
+
+  private initCustomerRoleData(): void {
+    this.ProPackService.hasProPackEnabled().then((isProPackEnabled: boolean): void => {
+      if (isProPackEnabled) {
+        this.initCustomerRoleMeetingList();
+      } else {
+        this.$state.go('login');
+      }
+    });
+  }
+
+  private initPartnerRoleData(): void {
     this.FeatureToggleService.diagnosticPartnerF8193TroubleshootingGetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
-          this.initMeetingList();
+          this.initPartnerRoleMeetingList();
         } else {
           this.FeatureToggleService.atlasPartnerWebexReportsGetStatus()
             .then((isPartnerWebexEnabled: boolean): void => {
               if (!isPartnerWebexEnabled) {
                 this.$state.go('login');
               } else {
-                this.initMeetingList();
+                this.initPartnerRoleMeetingList();
               }
             });
         }
       });
   }
 
-  private initMeetingList () {
+  private initCustomerRoleMeetingList () {
+    this.FeatureToggleService.diagnosticF8234QueryRangeGetStatus()
+      .then((isSupport: boolean) => {
+        this.initDateRange(isSupport);
+        this.Analytics.trackEvent(this.dataService.featureName, {});
+        if (this.searchStr) {
+          this.startSearch();
+        }
+      });
+  }
+
+  private initPartnerRoleMeetingList () {
     this.FeatureToggleService.diagnosticPartnerF8234QueryRangeGetStatus()
       .then((isSupport: boolean) => {
         this.initDateRange(isSupport);
-        this.Analytics.trackEvent(this.PartnerSearchService.featureName, {});
+        this.Analytics.trackEvent(this.dataService.featureName, {});
         if (this.searchStr) {
           this.startSearch();
         }
@@ -88,9 +132,14 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   public showDetail(item: IMeetingDetail): void {
-    this.PartnerSearchService.setStorage('webexMeeting', item);
-    this.PartnerSearchService.setStorage('searchStr', this.searchStr);
-    this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
+    this.WebexReportsUtilService.setStorage('webexMeeting', item);
+    this.WebexReportsUtilService.setStorage('searchStr', this.searchStr);
+
+    if (this.isPartnerRole) {
+      this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
+    } else {
+      this.$state.go('dgc.tab.meetingdetail', { cid: item.conferenceID });
+    }
   }
 
   public onKeySearch($event: KeyboardEvent): void {
@@ -127,10 +176,10 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
 
   public onChangeTz(tz: string): void {
     this.timeZone = tz;
-    this.PartnerSearchService.setStorage('timeZone', this.timeZone);
+    this.WebexReportsUtilService.setStorage('timeZone', this.timeZone);
     this.gridData = _.map(this.gridData, (row: IMeetingDetail) => {
-      row.endTime_ = this.PartnerSearchService.utcDateByTimezone(row.endTime);
-      row.startTime_ = this.PartnerSearchService.utcDateByTimezone(row.startTime);
+      row.endTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(row.endTime);
+      row.startTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(row.startTime);
       return row;
     });
   }
@@ -207,7 +256,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     const endDate = this.isDatePickerShow ? moment(this.endDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.today;
     const startDate = this.isDatePickerShow ? moment(this.startDate + ' ' + moment().format('HH:mm:ss')).utc().format('YYYY-MM-DD') : this.startDate;
     const data = {
-      endDate : endDate,
+      endDate: endDate,
       email: this.email,
       startDate: startDate,
       meetingNumber: this.meetingNumber.replace(/\s/g, ''),
@@ -215,13 +264,13 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     this.gridData = [];
     this.isLoadingShow = true;
 
-    this.PartnerSearchService.getMeetings(data)
+    this.dataService.getMeetings(data)
       .then((res: IMeetingDetail[]) => {
         const meetingList = _.map(res, (meeting: IMeetingDetail) => {
-          meeting.status_ = this.PartnerSearchService.getStatus(meeting.status);
-          meeting.duration_ = this.PartnerSearchService.getDuration(meeting.duration);
-          meeting.endTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.endTime) ;
-          meeting.startTime_ = this.PartnerSearchService.utcDateByTimezone(meeting.startTime);
+          meeting.status_ = this.WebexReportsUtilService.getMeetingStatus(meeting.status);
+          meeting.duration_ = this.WebexReportsUtilService.getDuration(meeting.duration);
+          meeting.endTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(meeting.endTime);
+          meeting.startTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(meeting.startTime);
           return meeting;
         });
         this.gridData = meetingList;

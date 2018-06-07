@@ -1,7 +1,9 @@
+import { ICallType, IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
+import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, TabType } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
-import { PartnerSearchService, Platforms, Quality, QualityRange } from './partner-search.service';
-import { IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
-import { MosType, QualityType, QosType, SearchStorage, TabType } from './partner-meeting.enum';
+import { CustomerSearchService } from './customer-search.service';
+import { PartnerSearchService } from './partner-search.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IDataStore {
   retryTimes: number;
@@ -56,6 +58,7 @@ class MeetingDetailsController implements ng.IComponentController {
   private videoEnabled = false;
   private meetingEndTime: number;
   private qualityLabels = [QualityType.GOOD, QualityType.FAIR, QualityType.POOR, QualityType.NA];
+  private dataService: (PartnerSearchService | CustomerSearchService);
 
   /* @ngInject */
   public constructor(
@@ -63,7 +66,9 @@ class MeetingDetailsController implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
+    private CustomerSearchService: CustomerSearchService,
     private PartnerSearchService: PartnerSearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.data = {
       voip: {},
@@ -77,10 +82,15 @@ class MeetingDetailsController implements ng.IComponentController {
       retryTimes: 4,
       currentQos: QosType.VOIP,
     };
+    const isPartnerRole = this.WebexReportsUtilService.getStorage('isPartnerRole');
+    this.dataService = this.PartnerSearchService;
+    if (!isPartnerRole) {
+      this.dataService = this.CustomerSearchService;
+    }
   }
 
   public $onInit(): void {
-    this.overview = this.PartnerSearchService.getStorage('webexOneMeeting.overview');
+    this.overview = this.WebexReportsUtilService.getStorage('webexOneMeeting.overview');
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.getParticipants();
   }
@@ -100,18 +110,18 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private getParticipants(): void {
-    this.PartnerSearchService.getUniqueParticipants(this.conferenceID)
+    this.dataService.getUniqueParticipants(this.conferenceID)
       .then((res: IUniqueParticipant[]) => {
-        this.PartnerSearchService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
-        const timeZone = this.PartnerSearchService.getStorage('timeZone');
-        const webexOneMeeting = this.PartnerSearchService.getStorage('webexOneMeeting');
+        this.WebexReportsUtilService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
+        const timeZone = this.WebexReportsUtilService.getStorage('timeZone');
+        const webexOneMeeting = this.WebexReportsUtilService.getStorage('webexOneMeeting');
         const lines: IParticipant[][] = this.parseUniqueParticipants(res);
 
         this.dataSet = {
           lines: lines,
           endTime: _.get(webexOneMeeting, 'endTime'),
           startTime: _.get(webexOneMeeting, 'startTime'),
-          offset: this.PartnerSearchService.getOffset(timeZone),
+          offset: this.WebexReportsUtilService.getTzOffset(timeZone),
         };
         this.meetingEndTime = webexOneMeeting['endTime'] * 1;
 
@@ -140,7 +150,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private getJoinMeetingTime(): void {
-    this.PartnerSearchService.getJoinMeetingTime(this.conferenceID)
+    this.dataService.getJoinMeetingTime(this.conferenceID)
       .then((res: IJoinTime[]) => {
         const clientVersion = {};
         _.forEach(res, (joinTime) => {
@@ -150,18 +160,18 @@ class MeetingDetailsController implements ng.IComponentController {
             browserVersion: joinTime.browserVersion,
           };
         });
-        this.PartnerSearchService.setStorage('ClientVersion', clientVersion);
+        this.WebexReportsUtilService.setStorage('ClientVersion', clientVersion);
         this.circleJoinTime = res;
       });
   }
 
   private formatLines(lines: IParticipant[]): IParticipant[] {
-    const wom = this.PartnerSearchService.getStorage('webexOneMeeting');
+    const wom = this.WebexReportsUtilService.getStorage('webexOneMeeting');
     return _.map(lines, (line: any) => { //TODO use better type
       const endTime = _.get(wom, 'endTime');
       const leaveTime = (!line.leaveTime || line.leaveTime > endTime) ? endTime : line.leaveTime;
-      const device = this.PartnerSearchService.getDevice({ platform: line.platform, browser: line.browser, sessionType: line.sessionType });
-      const platform_ = this.PartnerSearchService.getPlatform({ platform: line.platform, sessionType: line.sessionType });
+      const device = this.WebexReportsUtilService.getDevice({ platform: line.platform, browser: line.browser, sessionType: line.sessionType });
+      const platform_ = this.WebexReportsUtilService.getPlatform({ platform: line.platform, sessionType: line.sessionType });
       const mobiles = [
         Platforms.IPHONE,
         Platforms.MOBILE_DEVICE,
@@ -183,8 +193,8 @@ class MeetingDetailsController implements ng.IComponentController {
       line.platform_ = platform_;
       line.device = _.get(device, 'name');
       line.deviceIcon = _.get(device, 'icon');
-      line.browser_ = this.PartnerSearchService.getBrowser(_.parseInt(line.browser));
-      line.joinTime_ = this.PartnerSearchService.timestampToDate(line.joinTime, 'h:mm A');
+      line.browser_ = this.WebexReportsUtilService.getBrowser(_.parseInt(line.browser));
+      line.joinTime_ = this.WebexReportsUtilService.timestampToDate(line.joinTime, 'h:mm A');
       line.mobile = _.includes(mobiles, line.platform) ? platform_ : '';
       line.duration = line.duration ? line.duration : _.round((line.leaveTime - line.joinTime) / 1000);
       line.clientKey = `${line.userId}_${line.userName}`;
@@ -196,7 +206,7 @@ class MeetingDetailsController implements ng.IComponentController {
     if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getVoipSessionDetail(this.conferenceID, nodeIds)
+    this.dataService.getVoipSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
         const retryIds = this.parseVoipSession(res);
         this.setData();
@@ -246,7 +256,7 @@ class MeetingDetailsController implements ng.IComponentController {
     if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getVideoSessionDetail(this.conferenceID, nodeIds)
+    this.dataService.getVideoSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
         const retryIds = this.parseVideoSession(res);
         this.setData();
@@ -296,7 +306,7 @@ class MeetingDetailsController implements ng.IComponentController {
     if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getPSTNSessionDetail(this.conferenceID, nodeIds)
+    this.dataService.getPSTNSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
         const retryIds = this.parsePSTNSession(res);
         this.setData();
@@ -351,7 +361,7 @@ class MeetingDetailsController implements ng.IComponentController {
     if (!_.size(nodeIds)) {
       return;
     }
-    this.PartnerSearchService.getCMRSessionDetail(this.conferenceID, nodeIds)
+    this.dataService.getCMRSessionDetail(this.conferenceID, nodeIds)
       .then((res: ISessionDetail) => {
         const retryIds = this.parseCMRQualities(res);
         this.setData();
@@ -564,6 +574,10 @@ class MeetingDetailsController implements ng.IComponentController {
       : _.filter(participants, (participant: IUniqueParticipant) => participant.sessionType === Platforms.WINDOWS && participant.platform === Platforms.TP);
     const lines = _.map(lineData, (line) => this.formatLines(_.get(line, 'participants')));
     return this.getAllIds(lines);
+  }
+
+  public getDeviceType(conferenceId: string, nodeId: string): IPromise<ICallType> {
+    return this.dataService.getRealDevice(conferenceId, nodeId);
   }
 }
 

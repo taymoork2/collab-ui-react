@@ -48,9 +48,10 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
 
+    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
     initSpies.apply(this);
   });
 
@@ -135,7 +136,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
   });
 
   it('should error notify if PartnerSearchService.getMeetings() rejects', function() {
-    spyOn(this.PartnerSearchService, 'getStorage').and.returnValue('23423432');
+    spyOn(this.WebexReportsUtilService, 'getStorage').and.returnValue('23423432');
     spyOn(this.PartnerSearchService, 'getMeetings').and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
@@ -153,6 +154,14 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     initComponent.call(this);
     this.controller.showDetail({ conferenceID: 111 });
     expect(this.$state.go).toHaveBeenCalledWith('partnerreports.dgc.meetingdetail', { cid: 111 });
+  });
+
+  it('should get empty data when call onClickClearIcon', function () {
+    initComponent.call(this);
+    this.controller.gridData = [{ endTime: '2017-08-09 10:30:33', startTime: '2017-08-07 10:30:33' }];
+    expect(this.controller.gridData.length).toHaveLength(1);
+    this.controller.onClickClearIcon();
+    expect(this.controller.gridData.length).toHaveLength(0);
   });
 
   describe('isValidEmail():', () => {

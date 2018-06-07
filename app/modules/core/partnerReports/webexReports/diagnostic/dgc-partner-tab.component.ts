@@ -1,7 +1,9 @@
-import { Notification } from 'modules/core/notifications/notification.service';
 import { IMeeting, IMeetingDetail, IServerTime, ISession } from './partner-search.interfaces';
-import { PartnerSearchService } from './partner-search.service';
 import { SERVICE_TYPE } from 'modules/core/customerReports/webexReports/diagnostic/meeting-export.component';
+import { Notification } from 'modules/core/notifications/notification.service';
+import { CustomerSearchService } from './customer-search.service';
+import { PartnerSearchService } from './partner-search.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 export enum SessionTypes {
   SCREEN_SHARE = '4',
@@ -32,29 +34,71 @@ class DgcPartnerTab implements ng.IComponentController {
   public overview: IMeetingDetail;
   public loading = true;
   public MEETING_INFO_STATUS = MeetingInfoStatus;
-  public BACK_STATE = 'partnerreports.tab.webexreports.diagnostics';
+  public BACK_STATE = '';
   private timeZone: string;
   private conferenceID: string;
   public isSupportExport = false;
   public SERVICE_TYPE = SERVICE_TYPE;
+  private dataService: (PartnerSearchService | CustomerSearchService);
+  private isPartnerRole = true;
 
   /* @ngInject */
   public constructor(
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
     private Notification: Notification,
+    private CustomerSearchService: CustomerSearchService,
+    private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
-    this.timeZone = this.PartnerSearchService.getStorage('timeZone');
+    this.timeZone = this.WebexReportsUtilService.getStorage('timeZone');
+
+    this.isPartnerRole = this.WebexReportsUtilService.getStorage('isPartnerRole');
+    this.dataService = this.PartnerSearchService;
+    if (!this.isPartnerRole) {
+      this.dataService = this.CustomerSearchService;
+    }
   }
 
   public $onInit(): void {
+    if (this.isPartnerRole) {
+      this.initPartnerRole();
+    } else {
+      this.initCustomerRole();
+    }
+    this.getMeetingDetail();
+  }
+
+  private initCustomerRole(): void {
+    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+      .then((isSupport: boolean) => {
+        if (isSupport) {
+          this.BACK_STATE = 'support.meeting';
+        } else {
+          this.BACK_STATE = 'reports.webex-metrics.diagnostics';
+        }
+      });
+    this.tabs = [
+      {
+        state: `dgc.tab.meetingdetail({cid: '${this.conferenceID}'})`,
+        title: this.$translate.instant(`webexReports.meetingDetails`),
+      },
+      {
+        state: `dgc.tab.participants({cid: '${this.conferenceID}'})`,
+        title: this.$translate.instant(`webexReports.participants`),
+      },
+    ];
+  }
+
+  private initPartnerRole(): void {
     this.FeatureToggleService.diagnosticPartnerF8193TroubleshootingGetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
           this.BACK_STATE = 'partnertroubleshooting.diagnostics';
+        } else {
+          this.BACK_STATE = 'partnerreports.tab.webexreports.diagnostics';
         }
       });
     this.FeatureToggleService.diagnosticPartnerF8194MeetingDetailsGetStatus()
@@ -71,11 +115,10 @@ class DgcPartnerTab implements ng.IComponentController {
         title: this.$translate.instant(`webexReports.participants`),
       },
     ];
-    this.getMeetingDetail();
   }
 
   private getMeetingDetail(): void {
-    this.PartnerSearchService.getMeetingDetail(this.conferenceID)
+    this.dataService.getMeetingDetail(this.conferenceID)
       .then((res: IMeeting) => {
         const mbi = res.meetingBasicInfo;
         const details = this.mkDetails(mbi);
@@ -90,18 +133,18 @@ class DgcPartnerTab implements ng.IComponentController {
           startTime: mbi.startTime,
           endTime: mbi.status ===  MeetingInfoStatus.END ? mbi.endTime : undefined,
         });
-        this.PartnerSearchService.setStorage('webexOneMeeting', this.data);
+        this.WebexReportsUtilService.setStorage('webexOneMeeting', this.data);
         this.details = details;
 
         if (mbi.status === MeetingInfoStatus.GOING) {
-          return this.PartnerSearchService.getServerTime()
+          return this.dataService.getServerTime()
             .then((res: IServerTime) => {
               mbi.endTime = _.get(res, 'dateLong');
-              this.PartnerSearchService.setStorage('webexOneMeeting.endTime', mbi.endTime);
-              details.duration_ = this.PartnerSearchService.toMinOrSec(mbi.endTime - mbi.startTime);
+              this.WebexReportsUtilService.setStorage('webexOneMeeting.endTime', mbi.endTime);
+              details.duration_ = this.WebexReportsUtilService.toMinOrSec(mbi.endTime - mbi.startTime);
             });
         } else {
-          details.duration_ = this.PartnerSearchService.toMinOrSec(mbi.duration * 1000);
+          details.duration_ = this.WebexReportsUtilService.toMinOrSec(mbi.duration * 1000);
         }
       }).catch((response) => {
         this.Notification.errorWithTrackingId(response);
@@ -145,7 +188,7 @@ class DgcPartnerTab implements ng.IComponentController {
 
   private mkDetails(meeting: IMeetingDetail): IMeetingDetail {
     return _.assign({}, meeting, {
-      status_: this.PartnerSearchService.getStatus(meeting.status),
+      status_: this.WebexReportsUtilService.getMeetingStatus(meeting.status),
       startTime_: this.timestampToDate(meeting.startTime, 'h:mm A'),
       startDate: this.timestampToDate(meeting.startTime, 'YYYY-MM-DD'),
       endTime_: meeting.endTime ? this.timestampToDate(meeting.endTime, 'h:mm A') : '',
@@ -156,9 +199,9 @@ class DgcPartnerTab implements ng.IComponentController {
   private mkOverview(meeting: IMeetingDetail): IMeetingDetail {
     return _.assignIn({}, meeting, {
       duration_: moment.duration(meeting.duration * 1000).humanize(),
-      endTime_: this.PartnerSearchService.utcDateByTimezone(meeting.endTime),
-      startTime_: this.PartnerSearchService.utcDateByTimezone(meeting.startTime),
-      createTime_: this.PartnerSearchService.utcDateByTimezone(meeting.createdTime),
+      endTime_: this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(meeting.endTime),
+      startTime_: this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(meeting.startTime),
+      createTime_: this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(meeting.createdTime),
     });
   }
 
@@ -190,7 +233,7 @@ class DgcPartnerTab implements ng.IComponentController {
   }
 
   private timestampToDate(timestamp: number, format: string): string {
-    const offset = this.PartnerSearchService.getOffset(this.timeZone);
+    const offset = this.WebexReportsUtilService.getTzOffset(this.timeZone);
     return moment(timestamp).utc().utcOffset(offset).format(format);
   }
 
