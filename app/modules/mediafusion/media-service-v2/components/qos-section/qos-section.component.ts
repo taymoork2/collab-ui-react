@@ -73,7 +73,7 @@ class QosSectionCtrl implements ng.IComponentController {
           type: 'mf.group',
           name: 'qosPropertySet',
           properties: {
-            'mf.qos': 'true',
+            'mf.qos': this.enableQos,
           },
         };
         this.MediaClusterServiceV2.createPropertySet(payLoad)
@@ -97,7 +97,7 @@ class QosSectionCtrl implements ng.IComponentController {
         this.onQosUpdate({ response: { qos: this.enableQos , qosPropertySetId : this.qosPropertySetId } });
       }
     } else {
-      this.QosSectionService.setQos(this.enableQos, this.qosPropertySetId);
+      this.QosSectionService.setQos(this.enableQos, this.qosPropertySetId, 'false');
     }
   }
 }
