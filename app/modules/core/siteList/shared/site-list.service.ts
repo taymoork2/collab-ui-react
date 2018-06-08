@@ -2,6 +2,7 @@
 // - add missing return types for functions
 // - add missing types for function args
 // - replace instances of `any` with better TS types as-appropriate
+import { OfferNameService } from 'modules/core/shared/offer-name/offer-name.service';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
 // TODO: The state fetching and mutation flow go against best practices.
@@ -20,6 +21,7 @@ export class SiteListService {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private FeatureToggleService,
+    private OfferNameService: OfferNameService,
     private SetupWizardService: SetupWizardService,
     private UrlConfig,
     private Userservice,
@@ -96,7 +98,8 @@ export class SiteListService {
         }
         return licenses;
       }, [])
-      .flatMap((license: any) => license.billingServiceId)
+      .filter((license: any) => this.OfferNameService.isWebexMeetingOfferName(license.offerName))
+      .map((license: any) => license.billingServiceId)
       .uniq()
       .value();
   }
