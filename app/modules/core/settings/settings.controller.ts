@@ -183,8 +183,11 @@ export class SettingsCtrl {
   }
 
   private initIntegrations() {
+    if (!this.Authinfo.isCustomerAdmin()) {
+      return;
+    }
     this.FeatureToggleService.atlasIntegrationsManagementGetStatus().then(toggle => {
-      if (toggle && this.Authinfo.isCustomerAdmin()) {
+      if (toggle) {
         this.integrations = new IntegrationsSetting();
       }
     });

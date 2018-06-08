@@ -148,15 +148,15 @@ describe('SettingsCtrl', function () {
     }
     it('should not show integrations for  user who is not a full admin', function() {
       setIntegrationsToggleAndRole.apply(this, [true, false]);
-      expect(this.controller.integrations).toBeFalsy();
+      expect(this.controller.integrations).toBeUndefined();
     });
     it('should not show integrations if integrations FT is not set', function() {
       setIntegrationsToggleAndRole.apply(this, [false, true]);
-      expect(this.controller.integrations).toBeFalsy();
+      expect(this.controller.integrations).toBeUndefined();
     });
     it('should how integrations if integrations FT is set and user is full amdin', function() {
       setIntegrationsToggleAndRole.apply(this, [true, true]);
-      expect(this.controller.integrations).toBeTruthy();
+      expect(this.controller.integrations).toBeDefined();
     });
   });
 
