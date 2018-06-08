@@ -14,11 +14,7 @@
       <span ng-if="card.isOnboardingError">{{ card.usersOnboardedError }}</span>
     </div>
     <div class="onboard-users-link" ng-if="card.features.autoLicense">
-      <a ui-sref="reports" translate="reports.title"></a>
-      <!-- TODO: Enable onboarding link when onboarding reports gets moved to MyCompany Page. chrispha 4/6/18
-      <a href="/my-company/onboarding" ui-sref="my-company-onboarding">
-        <span translate="reports.title"></span>
-      </a> -->
+      <a ui-sref="my-company.autoLicense" translate="reports.title"></a>
     </div>
   </div>
   <div class="columns medium-6 status-block status-block--auto-assign-enabled">
