@@ -1,4 +1,5 @@
 import { IMeeting, IMeetingDetail, IServerTime, ISession } from './partner-search.interfaces';
+import { SearchStorage } from './partner-meeting.enum';
 import { SERVICE_TYPE } from 'modules/core/customerReports/webexReports/diagnostic/meeting-export.component';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { CustomerSearchService } from './customer-search.service';
@@ -53,13 +54,10 @@ class DgcPartnerTab implements ng.IComponentController {
     private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
-    this.timeZone = this.WebexReportsUtilService.getStorage('timeZone');
+    this.timeZone = this.WebexReportsUtilService.getStorage(SearchStorage.TIME_ZONE);
 
-    this.isPartnerRole = this.WebexReportsUtilService.getStorage('isPartnerRole');
-    this.dataService = this.PartnerSearchService;
-    if (!this.isPartnerRole) {
-      this.dataService = this.CustomerSearchService;
-    }
+    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.dataService = (this.isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {
@@ -133,7 +131,7 @@ class DgcPartnerTab implements ng.IComponentController {
           startTime: mbi.startTime,
           endTime: mbi.status ===  MeetingInfoStatus.END ? mbi.endTime : undefined,
         });
-        this.WebexReportsUtilService.setStorage('webexOneMeeting', this.data);
+        this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_ONE_MEETING, this.data);
         this.details = details;
 
         if (mbi.status === MeetingInfoStatus.GOING) {

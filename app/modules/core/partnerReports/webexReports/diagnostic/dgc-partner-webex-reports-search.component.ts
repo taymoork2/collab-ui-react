@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { KeyCodes } from 'modules/core/accessibility';
 import { Notification } from 'modules/core/notifications';
 import { IMeetingDetail } from './partner-search.interfaces';
+import { SearchStorage } from './partner-meeting.enum';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
@@ -62,22 +63,22 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     this.gridData = [];
     this.timeZone = this.WebexReportsUtilService.getTzGuess('');
     this.errMsg = { search: '', datePicker: '' };
-    this.searchStr = this.WebexReportsUtilService.getStorage('searchStr');
+    this.searchStr = this.WebexReportsUtilService.getStorage(SearchStorage.SEARCH_STRING);
 
     this.dataService = this.PartnerSearchService;
     if (this.$state.current.name === 'reports.webex-metrics.diagnostics') {
       this.isPartnerRole = false;
       this.dataService = this.CustomerSearchService;
     }
-    this.WebexReportsUtilService.setStorage('isPartnerRole', this.isPartnerRole);
+    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, this.isPartnerRole);
   }
 
   public $onInit(): void {
     this.setGridOptions();
-    if (!this.isPartnerRole) {
-      this.initCustomerRoleData();
-    } else {
+    if (this.isPartnerRole) {
       this.initPartnerRoleData();
+    } else {
+      this.initCustomerRoleData();
     }
   }
 
@@ -132,8 +133,8 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   public showDetail(item: IMeetingDetail): void {
-    this.WebexReportsUtilService.setStorage('webexMeeting', item);
-    this.WebexReportsUtilService.setStorage('searchStr', this.searchStr);
+    this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_MEETING, item);
+    this.WebexReportsUtilService.setStorage(SearchStorage.SEARCH_STRING, this.searchStr);
 
     if (this.isPartnerRole) {
       this.$state.go('partnerreports.dgc.meetingdetail', { cid: item.conferenceID });
@@ -176,7 +177,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
 
   public onChangeTz(tz: string): void {
     this.timeZone = tz;
-    this.WebexReportsUtilService.setStorage('timeZone', this.timeZone);
+    this.WebexReportsUtilService.setStorage(SearchStorage.TIME_ZONE, this.timeZone);
     this.gridData = _.map(this.gridData, (row: IMeetingDetail) => {
       row.endTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(row.endTime);
       row.startTime_ = this.WebexReportsUtilService.dateToTimezoneAdjustedUtc(row.startTime);

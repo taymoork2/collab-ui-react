@@ -1,5 +1,5 @@
 import { ICallType, IParticipant } from './partner-search.interfaces';
-import { Platforms } from './partner-meeting.enum';
+import { Platforms, SearchStorage } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -37,11 +37,8 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.platformCellTemplate = require('./platform-cell-template.html');
     this.usernameCellTemplate = require('./username-cell-template.html');
 
-    const isPartnerRole = this.WebexReportsUtilService.getStorage('isPartnerRole');
-    this.dataService = this.PartnerSearchService;
-    if (!isPartnerRole) {
-      this.dataService = this.CustomerSearchService;
-    }
+    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.dataService = (isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {

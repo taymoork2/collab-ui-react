@@ -1,4 +1,4 @@
-import { Browser, Devices, Platforms, ResponseStatus } from './partner-meeting.enum';
+import { Browser, Devices, Platforms, ResponseStatus, SearchStorage } from './partner-meeting.enum';
 import { IVersion } from './partner-search.interfaces';
 
 export class WebexReportsUtilService {
@@ -32,7 +32,7 @@ export class WebexReportsUtilService {
     if (!dateInMs) {
       return '';
     }
-    const tz: string = this.getStorage('timeZone');
+    const tz: string = this.getStorage(SearchStorage.TIME_ZONE);
     const timeZone = tz ? tz : moment.tz.guess();
     const offset = this.getTzOffset(timeZone);
     return moment.utc(dateInMs).utcOffset(offset).format('YYYY-MM-DD hh:mm:ss A');
@@ -215,7 +215,7 @@ export class WebexReportsUtilService {
       osVersion: '',
       browserVersion: '',
     };
-    const clientVersions = this.getStorage('ClientVersion');
+    const clientVersions = this.getStorage(SearchStorage.CLIENT_VERSION);
     const clientVersion: IVersion = _.get(clientVersions, key);
     return clientVersion ? clientVersion : empty;
   }

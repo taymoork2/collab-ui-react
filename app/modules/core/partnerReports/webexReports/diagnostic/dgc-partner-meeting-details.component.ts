@@ -82,15 +82,12 @@ class MeetingDetailsController implements ng.IComponentController {
       retryTimes: 4,
       currentQos: QosType.VOIP,
     };
-    const isPartnerRole = this.WebexReportsUtilService.getStorage('isPartnerRole');
-    this.dataService = this.PartnerSearchService;
-    if (!isPartnerRole) {
-      this.dataService = this.CustomerSearchService;
-    }
+    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.dataService = (isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {
-    this.overview = this.WebexReportsUtilService.getStorage('webexOneMeeting.overview');
+    this.overview = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_OVERVIEW);
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.getParticipants();
   }
@@ -113,8 +110,8 @@ class MeetingDetailsController implements ng.IComponentController {
     this.dataService.getUniqueParticipants(this.conferenceID)
       .then((res: IUniqueParticipant[]) => {
         this.WebexReportsUtilService.setStorage(SearchStorage.UNIQUE_PARTICIPANTS, res);
-        const timeZone = this.WebexReportsUtilService.getStorage('timeZone');
-        const webexOneMeeting = this.WebexReportsUtilService.getStorage('webexOneMeeting');
+        const timeZone = this.WebexReportsUtilService.getStorage(SearchStorage.TIME_ZONE);
+        const webexOneMeeting = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
         const lines: IParticipant[][] = this.parseUniqueParticipants(res);
 
         this.dataSet = {
@@ -160,13 +157,13 @@ class MeetingDetailsController implements ng.IComponentController {
             browserVersion: joinTime.browserVersion,
           };
         });
-        this.WebexReportsUtilService.setStorage('ClientVersion', clientVersion);
+        this.WebexReportsUtilService.setStorage(SearchStorage.CLIENT_VERSION, clientVersion);
         this.circleJoinTime = res;
       });
   }
 
   private formatLines(lines: IParticipant[]): IParticipant[] {
-    const wom = this.WebexReportsUtilService.getStorage('webexOneMeeting');
+    const wom = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
     return _.map(lines, (line: any) => { //TODO use better type
       const endTime = _.get(wom, 'endTime');
       const leaveTime = (!line.leaveTime || line.leaveTime > endTime) ? endTime : line.leaveTime;

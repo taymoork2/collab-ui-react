@@ -30,6 +30,12 @@ export enum SearchStorage {
     VIDEO_SESSION_DETAIL = 'videoSessionDetail',
     PSTN_SESSION_DETAIL = 'pstnSessionDetail',
     WEBEX_ONE_MEETING = 'webexOneMeeting',
+    TIME_ZONE = 'timeZone',
+    PARTNER_ROLE = 'isPartnerRole',
+    WEBEX_OVERVIEW = 'webexOneMeeting.overview',
+    WEBEX_MEETING = 'webexMeeting',
+    SEARCH_STRING = 'searchStr',
+    CLIENT_VERSION = 'ClientVersion',
 }
 
 export enum Platforms {
