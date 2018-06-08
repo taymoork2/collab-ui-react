@@ -75,9 +75,11 @@ export class QosSectionService {
     if (qosValue && firstTimeSetup) {
       this.qosMessage = 'QoS is Enabled by Default';
     } else if (qosValue) {
-      this.qosMessage = 'QoS Enabled';
+      this.qosMessage = 'QoS is Enabled';
+    } else if (!qosValue && firstTimeSetup) {
+      this.qosMessage = 'QoS is Disabled by Default';
     } else {
-      this.qosMessage = 'QoS Disabled';
+      this.qosMessage = 'QoS is Disabled';
     }
     const payload = {
       serviceName: 'QoS',
