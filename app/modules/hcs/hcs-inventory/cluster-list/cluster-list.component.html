@@ -17,7 +17,7 @@
         filter="false"
         is-disabled="$ctrl.disableSwProfileSelect"
         is-warn="{{$ctrl.disableSwProfileSelect}}"
-        warn-msg="{{::'hcs.clusterDetail.addCustomerModal.swProfileWarningMsg' | translate}}">
+        warn-msg="{{$ctrl.warningMsgSwProfileSelect}}">
     </div>
     </cs-select>
   </cs-page-sub-header-right>
@@ -32,7 +32,7 @@
         <header>
           <div class="header-with-right-icon">
             <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
-            <div class="right card-icon-div "  ng-if="groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+            <div class="right card-icon-div">
               <button type="button" class="close"
                 ng-click="$ctrl.closeCard((cluster), $event)"
                 ng-keydown=""

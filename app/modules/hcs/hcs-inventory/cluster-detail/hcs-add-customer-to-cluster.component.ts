@@ -44,8 +44,6 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
     };
     this.customerNamePlaceholder = this.$translate.instant('hcs.clusterDetail.addCustomerModal.enterCustomerNamePlaceholder');
     this.softwareProfilesPlaceholder = this.$translate.instant('hcs.clusterDetail.addCustomerModal.chooseTemplatePlaceholder');
-
-    //TODO: get software template default for partner.??
     this.softwareProfileSelected = { label: '', value: '' };
 
     this.HcsUpgradeService.listSoftwareProfiles()
@@ -83,6 +81,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
         const upgradeCustomer: IHcsUpgradeCustomer = {
           uuid: resp.uuid,
           softwareProfile: swProfileSelected,
+          name: this.customerName,
         };
 
         addedCustomer.value = resp.uuid;
