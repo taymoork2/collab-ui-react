@@ -2,58 +2,14 @@
   'use strict';
 
   /* eslint angular/di:0 */
-  var loadedModules = [];
 
-  function resolveLazyLoad(requireFunction) {
-    // https://github.com/ocombe/ocLazyLoad/issues/321
-    // $$animateJs issue when 'ng' module is "reloaded" through $ocLazyLoad
-    // force $$animateJs to be loaded before we try to lazy load
-    return /* @ngInject */ function lazyLoad($$animateJs, $ocLazyLoad, $q) {
-      return $q(function resolvePromise(resolve) {
-        requireFunction(requireDoneCallback);
+  var StatesHelper = require('./states/states.helper');
+  var resolveLazyLoad = StatesHelper.resolveLazyLoad;
+  var translateDisplayName = StatesHelper.translateDisplayName;
+  var stateParamsToResolveParams = StatesHelper.stateParamsToResolveParams;
 
-        function requireDoneCallback(_module) {
-          var moduleName;
-          if (_.isObject(_module) && _.has(_module, 'default')) {
-            moduleName = _module.default;
-          } else {
-            moduleName = _module;
-          }
-          // Don't reload a loaded module or core angular module
-          if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
-            resolve();
-          } else {
-            loadedModules.push(moduleName);
-            $ocLazyLoad.toggleWatch(true);
-            $ocLazyLoad.inject(moduleName)
-              .finally(function finishLazyLoad() {
-                $ocLazyLoad.toggleWatch(false);
-                resolve();
-              });
-          }
-        }
-      });
-    };
-  }
-
-  function translateDisplayName(translateKey) {
-    return /* @ngInject */ function translate($translate) {
-      _.set(this, 'data.displayName', $translate.instant(translateKey));
-    };
-  }
-
-  function toResolveParam(paramName, defaultVal) {
-    return /* @ngInject */ function ($stateParams) {
-      return _.get($stateParams, paramName, defaultVal);
-    };
-  }
-
-  function stateParamsToResolveParams(stateParams) {
-    return _.reduce(stateParams, function (result, defaultVal, paramName) {
-      result[paramName] = toResolveParam(paramName, defaultVal);
-      return result;
-    }, {});
-  }
+  var States = require('./states');
+  var configureStates = States.configureStates;
 
   angular
     .module('wx2AdminWebClientApp')
@@ -5863,25 +5819,6 @@
                 },
               },
             },
-          })
-          .state('integrations-management', {
-            template: '<div ui-view></div>',
-            parent: 'main',
-            abstract: true,
-            resolve: {
-              supportsFeature: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasIntegrationsManagement);
-              },
-              lazy: resolveLazyLoad(function (done) {
-                require.ensure([], function () {
-                  done(require('modules/integrations-management'));
-                }, 'integrations');
-              }),
-            },
-          })
-          .state('integrations-management.list', {
-            template: '<integrations-management-list></integrations-management-list>',
-            url: '/integrations',
           });
 
         $stateProvider
@@ -6032,6 +5969,7 @@
               actionType: null,
             },
           });
+        configureStates($stateProvider);
       },
     ]);
 })();
