@@ -190,6 +190,78 @@
       "isTestCustomer": true,
       "customerSetupStatus": "COMPLETED",
       "allowSiteManagement": true
+    },
+    {
+      "customerId": "3",
+      "customerName": "Atlas_Test_3",
+      "customerOrgId": "72d99999-1ac0-437b-b772-895751e15555",
+      "customerAdminEmail": "test3@test.com",
+      "subscriptions": [
+        {
+          "subscriptionId": "3d122222-f0c7-4688-9f27-545b12e57777",
+          "externalSubscriptionId": "Subscription-3",
+          "trialDuration": 0,
+          "status": "ACTIVE",
+          "licenses": [
+            {
+              "licenseId": "VoIPOnly_460bef4b-ecc3-4917-b7b9-e6332a1bab31_atlastest3.dmz.webex.com",
+              "offerName": "VoIPOnly",
+              "masterOfferName": "MC1000-MEET-ENT",
+              "licenseType": "AUDIO",
+              "billingServiceId": "Subscription-3",
+              "features": [],
+              "volume": 0,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 0,
+              "siteUrl": "atlastest3.dmz.webex.com",
+              "isCIUnifiedSite": true,
+              "siteId": "1346737"
+            },
+            {
+              "licenseId": "CMR_951065b7-e220-4d5e-aa56-1a1a283545db_atlastest3.dmz.webex.com",
+              "offerName": "CMR",
+              "masterOfferName": "MC1000-MEET-ENT",
+              "licenseType": "CMR",
+              "billingServiceId": "Subscription-3",
+              "features": [],
+              "volume": 20,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 25,
+              "siteUrl": "atlastest3.dmz.webex.com",
+              "isCIUnifiedSite": true,
+              "siteId": "1346737"
+            },
+            {
+              "licenseId": "ST_a514f97a-0239-453c-880f-d9cd2367fd39",
+              "offerName": "ST",
+              "masterOfferName": "MC1000-MEET-ENT",
+              "licenseType": "STORAGE",
+              "billingServiceId": "Subscription-3",
+              "features": [],
+              "volume": 0,
+              "isTrial": false,
+              "status": "ACTIVE",
+              "capacity": 60
+            }
+          ],
+          "startDate": "2018-04-20T23:17:03.033Z",
+          "endDate": "2065-08-02T07:00:00.000Z",
+          "duration": -1,
+          "gracePeriod": 0,
+          "orderingTool": "CCW"
+        }
+      ],
+      "customerType": "Enterprise",
+      "commerceRelation": "Direct",
+      "licenseEnforcement": {
+        "licenseExceedAction": "NOTHING",
+        "licenseExceedThreshold": "NA"
+      },
+      "isTestCustomer": true,
+      "customerSetupStatus": "COMPLETED",
+      "allowSiteManagement": true
     }
   ]
 }
