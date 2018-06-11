@@ -308,6 +308,7 @@
     require('modules/hcs/hcs-upgrade/hcs-upgrade-sftp').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-modal').default,
+    require('modules/hcs/hcs-upgrade/hcs-precheck-modal').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,

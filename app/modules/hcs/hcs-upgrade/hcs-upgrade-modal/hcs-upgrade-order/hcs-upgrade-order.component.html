@@ -1,4 +1,4 @@
-<div ng-if="!$ctrl.loading" class="cs-card-container">
+<div ng-if="!$ctrl.loading" class="cs-card-container hcs-modal-component">
   <h4 translate="hcs.upgrade.order.directions"></h4>
   <div class="top-margin" ng-repeat="group in $ctrl.cluster track by $index" ng-init="parentIndex = $index">
     <h5>{{::'common.upgrade' | translate}} {{$ctrl.groupOrder[$index]}}</h5>
@@ -9,7 +9,7 @@
             <header>
               <h5 class="inline">{{node.hostName}}</h5>
               <div ng-if="!node.pub" class="pull-right">
-                <span ng-if="parentIndex !== 1" ng-click="$ctrl.moveUp(parentIndex, $index)" >
+                <span ng-if="$ctrl.canMoveUp(node, parentIndex)" ng-click="$ctrl.moveUp(parentIndex, $index)" >
                   <i class="icon icon-2x icon-arrow-up"></i>
                 </span>
                 <span ng-if="parentIndex !== 7" ng-click="$ctrl.moveDown(parentIndex, $index)" >

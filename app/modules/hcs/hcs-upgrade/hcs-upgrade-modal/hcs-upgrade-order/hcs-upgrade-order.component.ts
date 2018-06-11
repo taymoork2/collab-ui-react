@@ -38,11 +38,11 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
 
   public getNodesToUpgrade() {
     this.loading = true;
-    this.HcsUpgradeService.getUpgradeOrder(this.clusterUuid).then(nodes => {
-      this.copyList = _.cloneDeep(nodes.upgradeOrder);
-      this.cluster = nodes.upgradeOrder;
-      this.nodeOrderChanged();
-    })
+    this.HcsUpgradeService.getUpgradeOrder(this.clusterUuid)
+      .then(nodes => {
+        this.cluster = this.copyList = _.cloneDeep(nodes.upgradeOrder);
+        this.nodeOrderChanged();
+      })
       .catch(err => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => this.loading = false);
   }
@@ -52,6 +52,16 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
     this.cluster[parentIndex - 1].nodes.push(item[0]);
 
     this.nodeOrderChanged();
+  }
+
+  public canMoveUp(node, parentIndex) {
+    const publisher = _.find(this.cluster[parentIndex - 1].nodes, { pub: true, type: node.type });
+
+    if (publisher || parentIndex === 1) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public moveDown(parentIndex, itemIndex) {
