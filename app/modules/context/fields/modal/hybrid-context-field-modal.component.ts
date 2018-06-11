@@ -1,8 +1,8 @@
-import { Notification } from 'modules/core/notifications';
-import { ContextFieldsService } from 'modules/context/services/context-fields-service';
-import { IActionItem } from '../../../core/components/sectionTitle/sectionTitle.component';
 import IDataTypeDefinition, { ITranslationDictionary } from 'modules/context/fields/dataTypeDefinition';
+import { ContextFieldsService } from 'modules/context/services/context-fields-service';
 import { FieldUtils } from 'modules/context/services/fieldUtils';
+import { Notification } from 'modules/core/notifications';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
 
 type DataDisplay = { label: string, value: string };
 

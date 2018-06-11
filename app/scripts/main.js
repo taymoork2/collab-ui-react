@@ -110,7 +110,6 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/organizations/organization-delete').default,
     require('modules/core/siteList').default,
-    require('modules/core/components/sectionTitle').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));

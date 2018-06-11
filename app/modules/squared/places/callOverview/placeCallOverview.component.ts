@@ -1,8 +1,8 @@
-import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
-import { PlaceCallOverviewService, PlaceCallOverviewData } from './placeCallOverview.service';
-import { PrimaryLineService, PrimaryNumber, IPrimaryLineFeature } from 'modules/huron/primaryLine';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { Line, LineConsumerType, LineService, LINE_CHANGE } from 'modules/huron/lines/services';
+import { IPrimaryLineFeature, PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
+import { PlaceCallOverviewData, PlaceCallOverviewService } from './placeCallOverview.service';
 class PlaceCallOverview implements ng.IComponentController {
 
   public currentPlace;

@@ -1,13 +1,13 @@
+import { LocationListItem, LocationsService, MEMBER_TYPE_PLACE } from 'modules/call/locations';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
+import { Notification } from 'modules/core/notifications';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
+import { IPreferredLanguageFeature, IPreferredLanugageOption, PreferredLanguageFeature } from 'modules/huron/preferredLanguage';
+import { PlaceCallOverviewData, PlaceCallOverviewService } from 'modules/squared/places/callOverview/placeCallOverview.service';
+import { CloudConnectorService } from '../../../hercules/services/calendar-cloud-connector.service';
 import IPlace = csdm.IPlace;
 import ICsdmDataModelService = csdm.ICsdmDataModelService;
-import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
-import { PlaceCallOverviewService, PlaceCallOverviewData } from 'modules/squared/places/callOverview/placeCallOverview.service';
-import { LocationsService, LocationListItem, MEMBER_TYPE_PLACE } from 'modules/call/locations';
-import { IPreferredLanguageFeature, PreferredLanguageFeature, IPreferredLanugageOption } from 'modules/huron/preferredLanguage';
-import { Notification } from 'modules/core/notifications';
-import { CloudConnectorService } from '../../../hercules/services/calendar-cloud-connector.service';
 
 interface IDevice {
 }

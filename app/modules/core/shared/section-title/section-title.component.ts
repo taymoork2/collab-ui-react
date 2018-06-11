@@ -23,7 +23,7 @@ class SectionTitle implements ng.IComponentController {
 }
 
 export class SectionTitleComponent implements ng.IComponentOptions {
-  public template = require('./sectionTitle.tpl.html');
+  public template = require('./section-title.html');
   public controller = SectionTitle;
   public bindings = {
     titleKey: '@',
