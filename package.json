@@ -232,7 +232,7 @@
     "tslint-eslint-rules": "^5.0.0",
     "tslint-jasmine-rules": "^1.3.0",
     "tslint-loader": "^3.3.0",
-    "typescript": "^2.8.1",
+    "typescript": "^2.9.1",
     "unparse-args": "^1.1.0",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",
