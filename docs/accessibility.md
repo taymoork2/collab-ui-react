@@ -62,7 +62,7 @@ It's important that everything in the tabindex be announced by screen readers.  
   * Any interactions that occur on `:hover` should also appear on `:focus` and that element should be included in the tabindex.
   * Radio button groups should be treated as a single element by the screen reader.  Focus should move to the selected button on tab and the up/down arrows used to navigate the list to choose a different option.
   * Checkboxes should only react to the space key, not enter.  If enter is pressed and the click event fires even though the element's checked/unchecked status remains unchanged, then there is an ng-click that should be turned into an ng-change.
-  * All dropdown menus should close on tab out.  Selects/date pickers/time pickers/cs-dropdowns/custom dropdowns... all of those should close when the element is tabbed out of, either with regular tab or with shift-tab.  Additionally, the escape key should close the menu and return focus to the trigger element.  Any page specific escape key behavior should be overridden when navigating an open menu, but not when the menu is closed and focus is on the trigger element.  When an item is selected in the menu and the menu closes, focus should return to the trigger element.
+  * All dropdown menus should close on tab out.  Selects/date pickers/time pickers/cs-dropdowns/custom dropdowns... all of those should close when the element is tabbed out of, either with regular tab or with shift-tab.  Additionally, the escape key should close the menu and return focus to the trigger element.  Any page specific escape key behavior should be overridden when navigating an open menu, but not when the menu is closed and focus is on the trigger element.  When an item is selected in the menu and the menu closes, focus should return to the trigger element.  For the commonly used `icon-three-dots` dropdown, please check out the [three-dots-dropdown](#three-dot-dropdowns) accessibility component.
   * Modals, sidepanels, and overlay panels should have keyboard capture.  Tabbing should be restricted to the inside of the modal/sidepanel/overlay panel only and using the escape key should close the modal/sidepanel/overlay panel without triggering any page specific escape key behavior for the page that launched the modal/sidepanel/overlay panel.
   * When an element is deleted or hidden, focus should jump to the next element in the tabindex.  If there are cards on a page and a card is deleted, focus should move to the next card in the list.  If the element with focus changes from visible to hidden, then focus should jump to the next element as appropriate.
   * All draggable lists should be reorderable using tab and the arrow keys.  For more information on creating keyboard compliant draggable lists, check the examples for the [DraggableService](#draggable-lists) below.
@@ -152,6 +152,35 @@ Example:
 However, if updating the checkbox is inadvisable for any reason, cs-checkboxes have an onchange function that can be used in place of `ng-click` to prevent the tabindex redundancy:
 ```html
 <cs-checkbox on-change-fn="$ctrl.previouslyNgClickFunction()"></cs-checkbox>
+```
+
+### cs-dropdown
+
+When a dropdown is needed that is not a select, `cs-dropdown` should be used.  In cases where the dropdown's trigger element is text, no `aria-label` needs to be provided.  In cases where the trigger element is an icon, an aria-label is required.  `icon-three-dots` is the most common utilization of `cs-dropdown` and the [three-dot-dropdown](#three-dot-dropdown) component has been created to streamline the creation of accessible dropdown menus.
+
+Examples:
+* text trigger
+```html
+<div cs-dropdown class="actions-menu">
+  <button cs-dropdown-toggle class="btn--none dropdown-toggle" translate="common.menu"></button>
+  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+      <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
+      <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>
+  </ul>
+</div>
+```
+* icon trigger
+```html
+<div cs-dropdown class="actions-menu">
+  <button cs-dropdown-toggle
+    aria-label="{{::'common.toggleMenu' | translate}}"
+    class="btn--none dropdown-toggle icon icon-three-dots">
+  </button>
+  <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+      <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
+      <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>
+  </ul>
+</div>
 ```
 
 ### cs-input
@@ -561,6 +590,40 @@ Examples:
   tt-aria-label="{{::'common.proPack' | translate}}"
   tt-tooltip-unsafe-text="{{::'common.proPackWithHtml' | translate}}">
 </pro-pack-tooltip>
+```
+
+## three-dot-dropdowns
+
+Dropdowns utilizing `icon-three-dots` as their button image are common across Atlas and are fairly verbose even when accessibility isn't being taken into account.  The `three-dot-dropdown` is an accessibility compliant dropdown utilizing `cs-dropdown` from the toolkit to create an easy to use, accessibility compliant dropdown that should suit most use cases.  When creating a `three-dot-dropdown` the only thing necessary to provide are the transcluded menu options.
+
+The bindings are:
+```typescript
+buttonClass: '<?',    // added to the cs-dropdown-toggle element using ng-class
+dropdownClass: '<?',  // added to the cs-dropdown element using ng-class
+menuClass: '<?',      // added to the cs-dropdown-menu element using ng-class
+onClickFn: '&?',      // optional onClick function called when toggling the menu open/closed
+tddAriaLabel: '@?',   // optional aria label text; the default text is the translated key 'common.toggleMenu'
+```
+
+Examples:
+* Minimum effor for a `three-dot-dropdown`
+```html
+<three-dot-dropdown>
+  <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
+  <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>
+</three-dot-dropdown
+```
+* Maximum effor for a `three-dot-dropdown`
+```html
+<three-dot-dropdown
+  button-class="button"
+  dropdown-class="{'dropdownClass': $ctrl.sometimes()}"
+  menu-class="menuClass"
+  on-click-fn="$ctrl.preventDefault($event)"
+  tdd-aria-label="{{::'common.otherMenuToggle' | translate}}">
+  <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
+  <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>
+</three-dot-dropdown
 ```
 
 ---

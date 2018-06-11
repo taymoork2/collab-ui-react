@@ -22,6 +22,7 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/accessibility/three-dot-dropdown').default,
     require('modules/core/accessibility/tooltips').default,
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
