@@ -48,6 +48,9 @@ describe('Controller: Care Reports Controller', function () {
   }, {
     name: 'voice',
     label: 'careReportsPage.media_type_voice',
+  }, {
+    name: 'webcall',
+    label: 'careReportsPage.media_type_webcall',
   },
 
   ];
@@ -87,6 +90,7 @@ describe('Controller: Care Reports Controller', function () {
       spyOn(DummyCareReportService, 'dummyOrgStatsData');
       spyOn(Notification, 'errorResponse');
       spyOn(FeatureToggleService, 'atlasCareChatToVideoTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
+      spyOn(FeatureToggleService, 'atlasCareWebcallReportTrialsGetStatus').and.returnValue(deferredFeatureToggle.promise);
       Object.keys(CareReportsService).forEach(function (key) {
         spyOn(CareReportsService, key).and.returnValue([{}, {}]);
       });
@@ -180,7 +184,22 @@ describe('Controller: Care Reports Controller', function () {
       });
       $scope.$digest();
       $timeout.flush();
+      expect(controller.mediaTypeOptions.length).toEqual(4);
       expect(controller.isVideoFeatureEnabled).toEqual(false);
+      expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
+    });
+
+    it('should make calls to data services with correct options when feature flags are true', function () {
+      deferredFeatureToggle.resolve(true);
+      deferredChatConfig.resolve({
+        data: { videoCallEnabled: true },
+      });
+      $scope.$digest();
+      $timeout.flush();
+      expect(controller.mediaTypeOptions.length).toEqual(5);
+      expect(controller.isVideoFeatureEnabled).toEqual(true);
       expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([0]);
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_snapshot_stats', 0, 'chat', true]);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).toEqual(['org_stats', 0, 'chat']);
@@ -284,6 +303,16 @@ describe('Controller: Care Reports Controller', function () {
       expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'callback']);
       expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'callback']);
     });
+
+    it('should send options for last 3 months on selection for video calls / webcall media type', function () {
+      controller.timeSelected = timeOptions[4];
+      controller.mediaTypeSelected = mediaTypeOptions[4];
+      controller.filtersUpdate();
+      $timeout.flush();
+      expect(DummyCareReportService.dummyOrgStatsData.calls.argsFor(0)).toEqual([4]);
+      expect(SunlightReportService.getReportingData.calls.argsFor(0)).toEqual(['org_stats', 4, 'webcall']);
+      expect(SunlightReportService.getReportingData.calls.argsFor(1)).not.toEqual(['org_snapshot_stats', 1, 'webcall']);
+    });
   });
 
   describe('CareReportsController - Show Drill-down table data', function () {
@@ -306,6 +335,24 @@ describe('Controller: Care Reports Controller', function () {
       };
       controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
       expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'chat']);
+      deferredTableData.resolve({
+        data: allUserFifteenMinutesStats.data,
+        isWebcallDataPresent: {},
+      });
+      $scope.$digest();
+    });
+
+    it('should fetch drill-down data on clicking show for webcall media type', function (done) {
+      controller.timeSelected = timeOptions[0];
+      controller.mediaTypeSelected = mediaTypeOptions[4];
+      controller.filtersUpdate();
+      $timeout.flush();
+      var testOnSuccess = function (data) {
+        expect(data).toBeDefined();
+        done();
+      };
+      controller.showTable(testOnSuccess, notCalled, controller.mediaTypeSelected, controller.timeSelected);
+      expect(SunlightReportService.getAllUsersAggregatedData.calls.argsFor(0)).toEqual(['all_user_stats', 0, 'webcall']);
       deferredTableData.resolve({
         data: allUserFifteenMinutesStats.data,
         isWebcallDataPresent: {},
@@ -469,7 +516,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType is non chat', function () {
       setInitFlags(true, 'callback');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(false);
       controller.shouldDisplayBreakdown({});
       expect(controller.showChartWithoutBreakdown.taskIncoming).toBe(true);
       expect(controller.showChartWithoutBreakdown.avgCsat).toBe(true);
@@ -478,7 +525,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is enabled and data is present', function () {
       setInitFlags(true, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(true)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
       });
@@ -489,7 +536,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is enabled and data is not present', function () {
       setInitFlags(true, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
       });
@@ -500,7 +547,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is disabled and data is not present', function () {
       setInitFlags(false, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(false)).toBe(false);
+      expect(controller.shouldVideoDrillDownBeDisplayed(false)).toBe(false);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: false, isAvgCSATPresent: false, isAvgHandleTimePresent: false,
       });
@@ -511,7 +558,7 @@ describe('Controller: Care Reports Controller', function () {
 
     it('selectced mediaType chat, chat-to-video is disabled and data is present', function () {
       setInitFlags(false, 'chat');
-      expect(controller.shouldVideoDrillDownDisplayed(true)).toBe(true);
+      expect(controller.shouldVideoDrillDownBeDisplayed(true)).toBe(true);
       controller.shouldDisplayBreakdown({
         isNumHandledTaskPresent: true, isAvgCSATPresent: true, isAvgHandleTimePresent: true,
       });

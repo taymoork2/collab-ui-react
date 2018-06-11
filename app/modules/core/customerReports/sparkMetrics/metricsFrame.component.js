@@ -1,3 +1,5 @@
+require('./spark-metrics-frame.scss');
+
 (function () {
   'use strict';
 
@@ -14,13 +16,13 @@
   /* @ngInject */
   function metricsFrameController($log, $rootScope, $scope, $timeout, $window, LoadingTimeout) {
     var vm = this;
+    var eventListeners = [];
     vm.isIframeLoaded = false;
+    vm.messageHandle = messageHandle;
 
     $window.addEventListener('message', messageHandle, true);
-    var stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
 
-    $scope.$on('updateIframe', updateIframe);
-    $scope.$on('unfreezeState', unfreezeState);
+    eventListeners.push($scope.$on('updateIframe', updateIframe), $scope.$on('unfreezeState', unfreezeState));
 
     function updateIframe(event, iframeUrl, data) {
       vm.data = data;
@@ -33,12 +35,6 @@
         },
         0
       );
-    }
-
-    function onStateChangeStart(event, toState) {
-      if (!vm.isIframeLoaded && toState.name.substr(0, 7) === 'reports') {
-        event.preventDefault();
-      }
     }
 
     function messageHandle(event) {
@@ -72,7 +68,9 @@
       if (vm.startLoadReportTimer) {
         $timeout.cancel(vm.startLoadReportTimer);
       }
-      stateChangeStart();
+      while (!_.isEmpty(eventListeners)) {
+        _.attempt(eventListeners.pop());
+      }
       $window.removeEventListener('message', messageHandle, true);
     };
   }

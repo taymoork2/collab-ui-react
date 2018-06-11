@@ -11,7 +11,7 @@
   function AABuilderMainCtrl($element, $modalStack, $q, $rootScope, $scope, $state, $stateParams, $translate, AACalendarService, AACommonService,
     AADependencyService, AAMediaUploadService, AAMetricNameService, AAModelService, AANotificationService, AANumberAssignmentService, AARestModelService,
     AATrackChangeService, AAUiModelService, AAUiScheduleService, AAValidationService, AccessibilityService, AutoAttendantCeInfoModelService,
-    AutoAttendantCeMenuModelService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
+    AutoAttendantCeMenuModelService, AutoAttendantHybridCareService, AutoAttendantCeService, AutoAttendantLocationService, Analytics, Authinfo, DoRestService, FeatureToggleService, ServiceSetup) {
     var vm = this;
     vm.isWarn = false;
     vm.overlayTitle = $translate.instant('autoAttendant.builderTitle');
@@ -117,7 +117,8 @@
     // Save the phone number resources originally in the CE (used on exit with no save, and on save error)
     function unAssignAssigned() {
       // check to see if the local assigned list of resources is different than in CE info
-      if (!_.isUndefined(vm.aaModel.aaRecord) && areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')) {
+      if (!_.isUndefined(vm.aaModel.aaRecord) && (areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'id')
+              || areAssignedResourcesDifferent(vm.aaModel.aaRecord.assignedResources, vm.ui.ceInfo.getResources(), 'uuid'))) {
         var ceInfo = AutoAttendantCeInfoModelService.getCeInfo(vm.aaModel.aaRecord);
         return AANumberAssignmentService.setAANumberAssignment(Authinfo.getOrgId(), vm.aaModel.aaRecordUUID, ceInfo.getResources()).then(
           function () {
@@ -171,9 +172,23 @@
             status: response.status,
           });
         });
-      }).finally(function () {
-        $state.go('huronfeatures');
-      });
+      })
+      // unAsignAssigned - calls error notification itself, so no-op here is fine
+        .catch(_.noop)
+        .finally(function () {
+          FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable)
+            .then(function (results) {
+              if (results && $rootScope.isCare === true) {
+                $state.go('care.Features');
+                $rootScope.isCare = false;
+              } else {
+                $state.go('huronfeatures');
+              }
+            })
+            .catch(function () {
+              $state.go('huronfeatures');
+            });
+        });
     }
 
     function populateUiModel() {
@@ -251,6 +266,7 @@
       }
 
       AutoAttendantCeMenuModelService.updateDefaultActionSet(vm.aaModel.aaRecord, vm.ui.hasClosedHours);
+      vm.aaModel.aaRecord.assignedTimeZone = vm.ui.timeZone.id;
     }
 
     // Set the numbers in CMI with error details (involves multiple saves in the AANumberAssignmentService service)
@@ -743,7 +759,50 @@
             AutoAttendantCeService.readCe(aaRecord.callExperienceURL).then(
               function (data) {
                 vm.aaModel.aaRecord = data;
-
+                //Getting Numbers from CES and CMI
+                var cesPilotNumbers = _.map(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                var cmiPilotNumbers = _.map(aaRecord.assignedResources, function (resource) {
+                  return resource.number;
+                });
+                //Getting common Numbers which exists in both CES and CMI
+                var commonPilotNumbers = _.intersection(cesPilotNumbers, cmiPilotNumbers);
+                if (commonPilotNumbers.length > 0) {
+                  var cesUUIDs = [];
+                  //Gettting UUIDs of commmon Numbers from CES and CMI
+                  _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cesUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  var cmiUUIDs = [];
+                  _.forEach(aaRecord.assignedResources, function (resource) {
+                    _.forEach(commonPilotNumbers, function (pilotNumber) {
+                      if (_.isEqual(pilotNumber, resource.number)) {
+                        cmiUUIDs.push(resource.uuid);
+                      }
+                    });
+                  });
+                  //Getting all the conflicting UUIDs from CES and CMI
+                  var conflictingUUIDs = _.difference(cesUUIDs, cmiUUIDs);
+                  //displaying error message for inconsistency if any conflicting UUIDs are found in CES and CMI
+                  if (conflictingUUIDs.length > 0) {
+                    var phoneNumbers = [];
+                    _.forEach(vm.aaModel.aaRecord.assignedResources, function (resource) {
+                      _.forEach(conflictingUUIDs, function (uuid) {
+                        if (_.isEqual(uuid, resource.uuid)) {
+                          phoneNumbers.push(resource.number);
+                        }
+                      });
+                    });
+                    AANotificationService.error('autoAttendant.errorNumberInconsistency', {
+                      phoneNumbers: phoneNumbers,
+                    });
+                  }
+                }
                 // make sure assigned numbers are from CMI, CES might be out of date.
                 vm.aaModel.aaRecord.assignedResources = _.cloneDeep(aaRecord.assignedResources);
 
@@ -884,6 +943,7 @@
       AACommonService.setRestApiTogglePhase2(featureToggleDefault);
       AACommonService.setReturnedCallerToggle(featureToggleDefault);
       AACommonService.setMultiSiteEnabledToggle(featureToggleDefault);
+      AACommonService.setHybridToggle(featureToggleDefault);
       return checkFeatureToggles();
     }
 
@@ -896,6 +956,7 @@
         hasDynAnnounce: FeatureToggleService.supports(FeatureToggleService.features.huronAADynannounce),
         hasReturnedCaller: FeatureToggleService.supports(FeatureToggleService.features.huronAAReturnCaller),
         hasMultiSites: FeatureToggleService.supports(FeatureToggleService.features.huronMultiSite),
+        isHybridOrg: FeatureToggleService.supports(FeatureToggleService.features.atlasHybridEnable),
       });
     }
 
@@ -908,6 +969,7 @@
       AutoAttendantCeMenuModelService.setDynAnnounceToggle(featureToggles.hasDynAnnounce);
       AACommonService.setReturnedCallerToggle(featureToggles.hasReturnedCaller);
       AACommonService.setMultiSiteEnabledToggle(featureToggles.hasMultiSites);
+      AACommonService.setHybridToggle(featureToggles.isHybridOrg);
     }
 
     function populateRoutingLocation() {
@@ -967,6 +1029,11 @@
           AccessibilityService.setFocus($element, '.aa-name-edit', 2000);
         }
       });
+      if (AACommonService.isHybridEnabledOnOrg()) {
+        AutoAttendantHybridCareService.isHybridAndEPTConfigured().then(function (result) {
+          AutoAttendantHybridCareService.setHybridandEPTConfiguration(result);
+        });
+      }
     }
 
     function evalKeyPress($event) {

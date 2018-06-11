@@ -8,6 +8,8 @@
       translate-values="{siteUrl: $ctrl.siteUrl}"></p>
     <p translate="webexSiteManagement.deleteSiteNote"></p>
     <webex-site-licenses sites-array="$ctrl.sitesArray"
+      center-details="$ctrl.centerDetails"
+      existing-webex-sites="$ctrl.existingWebexSites"
       conference-licenses-in-subscription="$ctrl.conferenceLicensesInSubscription"
       is-hide-description="true"
       on-distribution-change="$ctrl.updateSitesWithNewDistribution(sites, isValid)">

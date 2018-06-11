@@ -22,9 +22,10 @@ describe('Component: userTaskListFilter', () => {
   });
 
   it('should render filter buttons', function (this: Test) {
-    expect(this.view.find(FILTERS).length).toBe(2);
+    expect(this.view.find(FILTERS).length).toBe(3);
     expect(this.view.find(FILTERS).eq(0)).toHaveText('common.all');
     expect(this.view.find(FILTERS).eq(1)).toHaveText('common.active');
+    expect(this.view.find(FILTERS).eq(2)).toHaveText('common.errors');
   });
 
   it('should initialize with an active filter', function (this: Test) {

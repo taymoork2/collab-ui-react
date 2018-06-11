@@ -11,7 +11,6 @@ export class IdleTimeoutService {
   private idleSetter;
   private logoutEvent = '';
   private static readonly LOGIN_EVENT = 'Core::loginCompleted';
-  private keepAliveEvent = '';
   private keepAliveDeregistrer;
   private isInitialized = false;
 
@@ -28,7 +27,6 @@ export class IdleTimeoutService {
     private WindowEventService: WindowEventService,
   ) {
     this.logoutEvent = 'logout' + this.Config.getEnv();
-    this.keepAliveEvent = this.Config.idleTabKeepAliveEvent;
 
   }
 
@@ -105,6 +103,7 @@ export class IdleTimeoutService {
       this.LocalStorage.remove(StorageKeys.LOGIN_MESSAGE);
 
       if (!this.isInitialized) {
+        this.isInitialized = true;
 
         this.Log.debug('IDLE TIMEOUT SERVICE: Wiring up events');
         /* This is for long running  import and export operations to keep from timing out this event is emitted by:

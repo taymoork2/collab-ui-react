@@ -1,3 +1,4 @@
+import { CsvDownloadService } from './csvDownload.service';
 import { CsvDownloadTypes } from './csvDownload.service';
 import { Notification } from 'modules/core/notifications';
 
@@ -43,7 +44,9 @@ class CsvDownloadCtrl implements ng.IComponentController {
   public downloadCsv: Function;
 
   private eventListeners: any = [];
+  // TO-DO: remove newUserExportToggle
   private newUserExportToggle = false;
+  private batchServiceToggle = false;
   private FILENAME;
   private downloadAnchor;
   private downloadingIcon;
@@ -59,7 +62,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
     private $modal,
     private $state: ng.ui.IStateService,
     private Analytics,
-    private CsvDownloadService,
+    private CsvDownloadService: CsvDownloadService,
     private Notification: Notification,
     private FeatureToggleService,
   ) {
@@ -76,9 +79,14 @@ class CsvDownloadCtrl implements ng.IComponentController {
     this.type = this.type || CsvDownloadTypes.TYPE_ANY;
     this.downloadCsv = this.beginDownloadCsv;
 
+    // TO-DO: remove newUserExportToggle
     this.FeatureToggleService.atlasNewUserExportGetStatus()
       .then((result) => {
         this.newUserExportToggle = result;
+      });
+    this.FeatureToggleService.atlasCsvImportTaskManagerGetStatus()
+      .then((result) => {
+        this.batchServiceToggle = result;
       });
 
     this.iconClass = '';
@@ -114,6 +122,7 @@ class CsvDownloadCtrl implements ng.IComponentController {
           this.Notification.error('csvDownload.isRunning');
         } else {
           // todo - remove the warning once we remove the feature toggle for new User Export API
+          // TO-DO: remove newUserExportToggle
           if (this.newUserExportToggle || options.suppressWarning) {
             // start export
             this.downloadCsv(options.csvType, tooManyUsers);
@@ -162,7 +171,8 @@ class CsvDownloadCtrl implements ng.IComponentController {
     if (csvType === CsvDownloadTypes.TYPE_TEMPLATE || csvType === CsvDownloadTypes.TYPE_USER || csvType === CsvDownloadTypes.TYPE_ERROR) {
       this.startDownload(csvType);
 
-      this.CsvDownloadService.getCsv(csvType, tooManyUsers, this.FILENAME, this.newUserExportToggle)
+      // TO-DO: remove newUserExportToggle
+      this.CsvDownloadService.getCsv(csvType, tooManyUsers, this.FILENAME, this.newUserExportToggle, this.batchServiceToggle)
         .then((url) => {
           this.finishDownload(csvType, url);
         })

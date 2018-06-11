@@ -33,9 +33,45 @@
         </div>
 
         <div class="callServiceRow emailsControlsParent">
-          <div class="cs-radio-group calendarServiceControls emailControls">
-            <label for="email" translate="addDeviceWizard.editServices.calendarEmail"></label>
-            <input id="email" type="email" autocomplete="off" ng-model="editCalendarService.emailOfMailbox">
+          <div class="cs-radio-group calendarServiceControls emailControls" ng-class="editCalendarService.currentValidationState">
+            <label
+              ng-if="editCalendarService.calService !== 'squared-fusion-gcal'"
+              for="email-cal"
+              translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <div class="input-with-spinner" ng-if="editCalendarService.calService !== 'squared-fusion-gcal'">
+              <input
+                id="email-cal"
+                class="calendar-mail-id"
+                type="email"
+                autocomplete="off"
+                maxlength="321"
+                ng-keyup="editCalendarService.onEmailOfMailboxInputKeyUp()"
+                ng-model="editCalendarService.emailOfMailbox">
+              <div ng-if="editCalendarService.isValidating">
+                <i class="icon icon icon-spinner"></i>
+              </div>
+            </div>
+            <label
+              ng-if="editCalendarService.calService === 'squared-fusion-gcal'"
+              for="email-gcal"
+              translate="addDeviceWizard.editServices.calendarEmail"></label>
+            <div class="input-with-spinner" ng-if="editCalendarService.calService === 'squared-fusion-gcal'">
+              <input
+                id="email-gcal"
+                class="calendar-mail-id"
+                type="text"
+                autocomplete="off"
+                ng-keyup="editCalendarService.onEmailOfMailboxInputKeyUp()"
+                ng-model="editCalendarService.emailOfMailbox"
+                maxlength="321"
+                ng-pattern="/^[^@]+@[^@]+$/">
+              <div ng-if="editCalendarService.isValidating">
+                <i class="icon icon icon-spinner"></i>
+              </div>
+            </div>
+            <div class="cs-input__messages">
+              <div class="message" ng-bind-html="editCalendarService.currentValidationMessage"></div>
+            </div>
           </div>
         </div>
 
@@ -49,17 +85,17 @@
               options="editCalendarService.resourceGroup.options"
               on-change-fn="editCalendarService.selectedResourceGroupChanged()">
             </cs-select>
-            <div class="warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
+            <div class="hybrid-services-warning-message" ng-if="editCalendarService.resourceGroup.shouldWarn">
               <i class="icon icon-warning"></i>
-              <p class="message"
+              <p class="hybrid-services-message"
                  translate="hercules.resourceGroups.groupIsEmptyWarning"
                  translate-values="{ConnectorName: localizedConnectorName}">
               </p>
             </div>
           </div>
-          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="error-message">
+          <div ng-if="editCalendarService.resourceGroup.cannotFindResouceGroup" class="hybrid-services-error-message">
             <i class="icon icon-error"></i>
-            <p class="message"
+            <p class="hybrid-services-message"
                translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
             <form>
               <button class="btn" type="submit" ng-click="editCalendarService.setResourceGroupOnUser('')">

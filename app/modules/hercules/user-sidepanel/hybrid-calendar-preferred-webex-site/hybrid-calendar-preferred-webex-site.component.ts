@@ -26,12 +26,12 @@ export class HybridCalendarPreferredWebexSiteComponent implements ng.IComponentO
   public controller = HybridCalendarPreferredWebexSiteCtrl;
   public template = `<div class="row collapse" ng-if="$ctrl.supportsPreferredWebexSite">
         <div class="columns small-3">
-           <span class="cloud-extension-label">{{'hercules.cloudExtensions.preferredWebExSite' | translate}}:</span>
+           <span class="hybrid-services-label">{{'hercules.cloudExtensions.preferredWebExSite' | translate}}:</span>
         </div>
         <div class="columns small-9">
-          <span cs-loader ng-if="$ctrl.loading" class="cloud-extension-label loader-example--small"></span>
-          <span ng-if="!$ctrl.loading && $ctrl.preferredWebExSiteName" class="cloud-extension-label">{{$ctrl.preferredWebExSiteName}}</span>
-          <span ng-if="!$ctrl.loading && !$ctrl.preferredWebExSiteName" class="cloud-extension-label" translate="common.default"></span>
+          <span cs-loader ng-if="$ctrl.loading" class="hybrid-services-label loader-example--small"></span>
+          <span ng-if="!$ctrl.loading && $ctrl.preferredWebExSiteName" class="hybrid-services-label">{{$ctrl.preferredWebExSiteName}}</span>
+          <span ng-if="!$ctrl.loading && !$ctrl.preferredWebExSiteName" class="hybrid-services-label" translate="common.default"></span>
         </div>
       </div>`;
   public bindings = {

@@ -78,7 +78,9 @@ describe('Controller: CustomerOverviewCtrl', function () {
     spyOn(modal, 'open').and.callThrough();
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
     spyOn(FeatureToggleService, 'atlasJira2126UseAltEndpointGetStatus').and.returnValue($q.resolve(false));
+    spyOn(FeatureToggleService, 'hI1635GetStatus').and.returnValue($q.resolve(false));
     spyOn(PartnerService, 'updateOrgForCustomerView').and.returnValue($q.resolve());
+
     initController();
   }));
 

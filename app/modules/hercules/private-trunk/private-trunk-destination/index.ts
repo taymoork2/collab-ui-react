@@ -3,7 +3,7 @@ import privateTrunkPrereq from 'modules/services-overview/new-hybrid/prerequisit
 import privateTrunkService from 'modules/hercules/private-trunk/private-trunk-services';
 export default angular
   .module('hercules.private-trunk-destination', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/hercules/services/uss.service').default,
     privateTrunkPrereq,

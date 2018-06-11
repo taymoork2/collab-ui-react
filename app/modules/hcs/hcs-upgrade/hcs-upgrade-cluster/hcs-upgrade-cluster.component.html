@@ -1,0 +1,17 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.groupName}}"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
+  tabs="$ctrl.tabs">
+</cs-page-header>
+<div class="hcs-upgrade-group">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <div class="upgrade-cluster-grid" ng-if="!$ctrl.loading">
+    <cs-grid ng-if="$ctrl.showGrid" name="licenseListPanel" grid-api="$ctrl.gridApi" grid-options="$ctrl.gridOptions" spinner="$ctrl.showManagedLicenseRefresh" state="plm.licenseReport"></cs-grid>
+  </div>
+</div>

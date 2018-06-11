@@ -24,7 +24,8 @@
       </div>
 
       <div class="getExportcsv">
-        <a class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
+        <!-- TODO: replace untranslated text -->
+        <a href class="filterBtn" ng-click="$ctrl.onAdvanced = !$ctrl.onAdvanced">{{$ctrl.onAdvanced ? 'Less Filters' : 'More Filters' }}</a>
         <span class="icon icon-download icon-2x" ng-if="!$ctrl.loading" ng-csv="$ctrl.onExportCSV()"></span>
       </div>
     </cs-page-sub-header-right>
@@ -38,22 +39,22 @@
           ng-model="$ctrl.data.siteSelected"
           options="$ctrl.data.siteOptions"
           on-change-fn="$ctrl.onSites()"
-          placeholder="$ctrl.data.sitePlaceholder"
-        ></cs-select>
+          placeholder="$ctrl.data.sitePlaceholder">
+        </cs-select>
       </div>
       <div class="col-sm-5">
         <cs-select
-                multi="true"
-                name="sesstionTypes"
-                plural="Sesstion Types"
-                singular="Sesstion Type"
-                max="$ctrl.data.sessionMax"
-                on-change-fn="$ctrl.onSession()"
-                options="$ctrl.data.sessionOptions"
-                ng-model="$ctrl.data.sessionSelected"
-                ng-if="$ctrl.data.sessionOptions.length"
-                placeholder="$ctrl.data.sessionPlaceholder"
-        ></cs-select>
+          multi="true"
+          name="sesstionTypes"
+          plural="Sesstion Types"
+          singular="Sesstion Type"
+          max="$ctrl.data.sessionMax"
+          on-change-fn="$ctrl.onSession()"
+          options="$ctrl.data.sessionOptions"
+          ng-model="$ctrl.data.sessionSelected"
+          ng-if="$ctrl.data.sessionOptions.length"
+          placeholder="$ctrl.data.sessionPlaceholder">
+        </cs-select>
       </div>
     </div>
 
@@ -66,8 +67,8 @@
           name="duration"
           ng-model="$ctrl.data.durationSelected"
           options="$ctrl.data.durationOptions"
-          on-change-fn="$ctrl.onDuration()"
-        ></cs-select>
+          on-change-fn="$ctrl.onDuration()">
+        </cs-select>
       </div>
     </div>
   </div>
@@ -90,18 +91,20 @@
 
       <div class="tk-example-datepicker start-time pull-right" >
         <div class="example-indent"
-             ng-click="$ctrl.onChangeDate()"
-             tooltip-class="tn-search-error"
-             tooltip-append-to-body="true"
-             tooltip-is-open="$ctrl.errMsg.datePicker !==''"
-             tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
-             ng-class="{'error': $ctrl.errMsg.datePicker !==''}">
+          ng-click="$ctrl.onChangeDate()"
+          tabindex="0"
+          tooltip-class="tn-search-error"
+          tooltip-append-to-body="true"
+          tooltip-is-open="$ctrl.errMsg.datePicker !== ''"
+          tooltip-html-unsafe="{{$ctrl.errMsg.datePicker}}"
+          ng-class="{'error': $ctrl.errMsg.datePicker !==''}"
+          aria-label="{{$ctrl.errMsg.datePicker}}">
 
           <cs-datepicker
-                  ng-model="$ctrl.startDate"
-                  placeholder="{{::'webexReports.placeholder-date' | translate}}"
-                  first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
-                  last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
+            ng-model="$ctrl.startDate"
+            placeholder="{{::'webexReports.placeholder-date' | translate}}"
+            first-enabled-date="{{$ctrl.dateRange.start.firstEnableDate}}"
+            last-enabled-date="{{$ctrl.dateRange.start.lastEnableDate}}">
           </cs-datepicker>
         </div>
       </div>
@@ -111,7 +114,7 @@
 
   <div ng-if="!$ctrl.loading">
     <cs-card-layout class="kpi-banner">
-      <cs-card class="small"  ng-repeat="item in $ctrl.KPIData">
+      <cs-card class="cs-card--small"  ng-repeat="item in $ctrl.KPIData">
         <article>
           <header>
             <h4> {{::'gemini.reports.kpi.'+ item.name | translate}}</h4></header>

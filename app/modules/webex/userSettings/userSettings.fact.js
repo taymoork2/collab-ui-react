@@ -257,7 +257,7 @@
               ); // siteMtgServiceTypes.forEach()
 
               var sessionType = {
-                id: 'sessionType-' + siteMtgServiceTypeID,
+                id: 'sessionType_' + siteMtgServiceTypeID,
                 sessionTypeId: siteMtgServiceTypeID,
                 sessionName: siteMtgProductCodePrefix,
                 sessionDescription: siteMtgDisplayName,

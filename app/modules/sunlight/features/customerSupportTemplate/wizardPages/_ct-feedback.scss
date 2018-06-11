@@ -1,3 +1,5 @@
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
 .ct-feedback {
   align-items: center;
 
@@ -89,7 +91,7 @@
   .ct-attribute-field-label {
     @include vr-spacing(m, 0);
 
-    font-family: 'CiscoSansTT Regular';
+    font-family: $brand-font-regular;
   }
 
   .ct-attribute-field-textbox {
@@ -97,7 +99,7 @@
       line-height: rem-calc(12px);
     }
 
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     width: 90%;
     height: 2rem;
   }
@@ -125,7 +127,7 @@
     @include vr-spacing(pl, 1);
 
     font-size: $h5-font-size;
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     color: $gray-dark-2;
     align-self: center;
     height: 4rem;
@@ -140,7 +142,7 @@
     @include vr-spacing(mh, 1.8);
 
     font-size: $h6-font-size;
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     color: $gray-dark-2;
     align-self: center;
   }
@@ -169,7 +171,7 @@
     height: 8.75rem !important;
     position: relative;
     align-self: center;
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: $h6-font-size;
     resize: none;
     border: 1px solid $gray-light-2;

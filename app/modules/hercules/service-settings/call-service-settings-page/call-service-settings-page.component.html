@@ -17,17 +17,16 @@
       <hs-enable-disable-call-service-connect service-is-enabled="$ctrl.callServiceConnectIsEnabled"
                                               on-call-service-connect-enabled="$ctrl.onCallServiceConnectEnabled()"
                                               on-call-service-connect-disabled="$ctrl.onCallServiceConnectDisabled()">
-
       </hs-enable-disable-call-service-connect>
-      <sip-destination-settings-section ng-if="$ctrl.callServiceConnectIsEnabled">
-      </sip-destination-settings-section>
+      <sip-destination-settings-section ng-if="$ctrl.callServiceConnectIsEnabled"></sip-destination-settings-section>
       <cisco-collaboration-cloud-certificate-store ng-if="$ctrl.callServiceConnectIsEnabled"
                                  is-first-time-setup = "false"
                                  is-certificate-default = "$ctrl.isCertificateDefault"
                                  is-importing = "$ctrl.isImporting"
                                  formatted-cert-list="$ctrl.formattedCertList"
                                  on-change-fn="$ctrl.uploadCertificate(file)"
-                                 on-change-option-fn="$ctrl.onCertificateChanges(isCertificateDefault)">
+                                 on-change-option-fn="$ctrl.onCertificateChanges(isCertificateDefault)"
+                                 service-id="'squared-fusion-ec'">
       </cisco-collaboration-cloud-certificate-store>
     </setting-section>
 

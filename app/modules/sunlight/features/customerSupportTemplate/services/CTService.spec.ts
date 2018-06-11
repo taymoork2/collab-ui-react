@@ -1,5 +1,6 @@
 describe('Chat Template Service', function () {
   const orgId = 'a-b-c-d';
+  const orgName = 'abcdOrg';
   const logoUrl = 'https://www.example.com/logo.png';
   const logoResponse = 'logo';
   const appName = 'testApp.ciscoservice.com';
@@ -13,6 +14,7 @@ describe('Chat Template Service', function () {
   };
   const spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue(orgId),
+    getOrgName: jasmine.createSpy('getOrgName').and.returnValue(orgName),
   };
 
   beforeEach(function () {

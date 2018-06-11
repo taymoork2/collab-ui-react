@@ -17,9 +17,7 @@
     <div class="col-lg-12 input-block--transfer-code">
       <div class="cs-input-group" ng-class="{'error': $ctrl.error.isError}">
         <label class="cs-input__label" translate="firstTimeWizard.transferCode"></label>
-        <input
-          cs-input
-          type="text"
+        <input cs-input type="text"
           cs-input-size="medium-4"
           ng-change="$ctrl.checkValidTransferData()"
           ng-model="$ctrl.transferSiteCode">
@@ -29,9 +27,7 @@
     <div class="col-lg-12">
       <div class="cs-input-group" ng-class="{'error': $ctrl.error.isError}">
         <label class="cs-input__label" translate="firstTimeWizard.siteName"></label>
-        <input
-          cs-input
-          type="text"
+        <input cs-input type="text"
           cs-input-size="medium-4"
           cs-input-secondary-label="{{::'firstTimeWizard.pmrSiteURLDomain' | translate}}"
           ng-change="$ctrl.checkValidTransferData()"
@@ -39,9 +35,12 @@
         <div class="cs-input__messages error-msg-spacing" role="alert" ng-if="$ctrl.error.isError">
           <div class="message">{{$ctrl.error.errorMsg}}</div>
         </div>
-        <i tooltip-html-unsafe="{{'helpdesk.help.webExSiteTooltip' | translate}}" tooltip-placement="right"
-        tooltip-trigger="mouseenter"
-        class="icon icon-help icon-lg"></i>
+        <i tooltip-html-unsafe="{{'helpdesk.help.webExSiteTooltip' | translate}}"
+          tooltip-placement="right"
+          tooltip-trigger="mouseenter focus"
+          tabindex="0"
+          class="icon icon-help icon-lg"
+          aria-label="{{'helpdesk.help.webExSiteTooltip' | translate}}"></i>
       </div>
     </div>
   </div>

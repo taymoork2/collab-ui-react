@@ -6,7 +6,7 @@ import callFeatureMembers from 'modules/call/features/shared/call-feature-member
 
 export default angular
   .module('call.features.paging-group-initiator', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     callFeatureMembers,
   ])

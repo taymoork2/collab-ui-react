@@ -1,24 +1,17 @@
-import { FeatureToggleService } from 'modules/core/featureToggle';
 import { PrivateTrunkPrereqService } from 'modules/services-overview/new-hybrid/prerequisites-modals/private-trunk-prereq';
 import { Notification } from 'modules/core/notifications';
 
 export class EPTInactiveCardController implements ng.IComponentController {
   public loading = true;
   public canSetup = false;
-  public showPrerequisitesButton = false;
 
   /* @ngInject */
   constructor(
-    private FeatureToggleService: FeatureToggleService,
     private Notification: Notification,
     private PrivateTrunkPrereqService: PrivateTrunkPrereqService,
   ) {}
 
   public $onInit(): void {
-    this.FeatureToggleService.hasFeatureToggleOrIsTestOrg(this.FeatureToggleService.features.atlasHybridPrerequisites)
-      .then(support => {
-        this.showPrerequisitesButton = support;
-      });
     this.PrivateTrunkPrereqService.getVerifiedDomains()
       .then(domains => {
         this.canSetup = domains.length > 0;
@@ -54,7 +47,7 @@ export class EPTInactiveCardComponent implements ng.IComponentOptions {
         <p translate="servicesOverview.cards.privateTrunk.description"></p>
       </div>
       <div class="inactive-card_footer" ng-if="!$ctrl.loading">
-        <p ng-if="$ctrl.showPrerequisitesButton"><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
+        <p><button class="btn btn--link" ng-click="$ctrl.openPrerequisites()" translate="servicesOverview.genericButtons.prereq"></button></p>
         <p><button class="btn btn--primary" ng-disabled="!$ctrl.canSetup" ng-click="$ctrl.openSetUp()" translate="servicesOverview.genericButtons.setup"></button></p>
       </div>
     </article>

@@ -3,19 +3,19 @@ require('./_support.scss');
 (function () {
   'use strict';
 
+  var HealthStatusType = require('modules/core/health-monitor').HealthStatusType;
+
   angular.module('Squared')
     .controller('SupportCtrl', SupportCtrl);
 
   /* @ngInject */
-  function SupportCtrl($filter, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, Log, LogService, ModalService, Notification, Orgservice, PageParam, ReportsService, UrlConfig, Userservice, Utils, WindowLocation) {
+  function SupportCtrl($filter, $modal, $scope, $translate, $state, $stateParams, $window, Authinfo, CallflowService, CardUtils, Config, FeatureToggleService, FeedbackService, hasAtlasHybridCallUserTestTool, HealthService, Log, LogService, ModalService, Notification, Orgservice, PageParam, UrlConfig, Userservice, Utils, WindowLocation) {
     $scope.showSupportDetails = false;
     $scope.showSystemDetails = false;
     $scope.problemHandler = $translate.instant('supportPage.byCisco');
     $scope.helpHandler = $translate.instant('supportPage.byCisco');
     $scope.reportingUrl = null;
     $scope.helpUrl = Config.helpUrl;
-    $scope.ssoUrl = Config.ssoUrl;
-    $scope.rolesUrl = Config.rolesUrl;
     $scope.statusPageUrl = UrlConfig.getStatusPageUrl();
     $scope.searchInput = 'none';
     $scope.showCdrCallFlowLink = false;
@@ -31,7 +31,6 @@ require('./_support.scss');
     $scope.gotoProvisioningConsole = gotoProvisioningConsole;
     $scope.hasAtlasHybridCallUserTestTool = hasAtlasHybridCallUserTestTool;
     $scope.showOrderProvisioningConsole = false;
-    $scope.hasAtlasEdiscoveryToggle = false;
 
     var vm = this;
     vm.masonryRefreshed = false;
@@ -64,9 +63,6 @@ require('./_support.scss');
     function initializeShowLinks() {
       FeatureToggleService.atlasOrderProvisioningConsoleGetStatus().then(function (result) {
         $scope.showOrderProvisioningConsole = Authinfo.isOrderAdminUser() && (!Config.isProd() || result);
-      });
-      FeatureToggleService.atlasEdiscoveryGetStatus().then(function (result) {
-        $scope.hasAtlasEdiscoveryToggle = result;
       });
       Userservice.getUser('me', function (user, status) {
         if (user.success) {
@@ -132,7 +128,7 @@ require('./_support.scss');
     };
 
     $scope.showEdiscoveryLink = function () {
-      return Authinfo.isComplianceUser() && $scope.hasAtlasEdiscoveryToggle;
+      return Authinfo.isComplianceUser();
     };
 
     $scope.tabs = [{
@@ -165,21 +161,15 @@ require('./_support.scss');
     };
 
     var getHealthMetrics = function () {
-      ReportsService.healthMonitor(function (data, status) {
-        if (data.success) {
-          $scope.healthMetrics = data.components;
-          $scope.healthyStatus = true;
+      HealthService.getHealthCheck().then(function (data) {
+        $scope.healthMetrics = data.components;
 
-          // check Squared for error
-          for (var health in $scope.healthMetrics) {
-            if ($scope.healthMetrics[health].status !== 'operational') {
-              $scope.healthyStatus = false;
-              return;
-            }
-          }
-        } else {
-          Log.debug('Get health metrics failed. Status: ' + status);
-        }
+        // check Squared for error
+        $scope.healthyStatus = _.every($scope.healthMetrics, function (healthMetric) {
+          return healthMetric.status === HealthStatusType.OPERATIONAL;
+        });
+      }).catch(function (error) {
+        Log.debug('Get health metrics failed. Status: ' + error.status);
       });
     };
 
@@ -379,6 +369,9 @@ require('./_support.scss');
                 date: data.metadataList[index].timestamp,
                 userId: data.metadataList[index].userId,
                 orgId: data.metadataList[index].orgId,
+                feedbackId: data.metadataList[index].meta.feedbackid,
+                correlationId: data.metadataList[index].meta.correlationid,
+                metadata: data.metadataList[index],
               };
               $scope.userLogs.push(log);
               $scope.logSearchBtnLoad = false;
@@ -427,6 +420,16 @@ require('./_support.scss');
           Notification.notify([$translate.instant('supportPage.downloadLogFailed') + ': ' + filename + '. ' + $translate.instant(
             'supportPage.status') + ': ' + status], 'error');
         }
+      });
+    };
+
+    $scope.openExtendedMetadata = function (metadata) {
+      var scope = $scope.$new();
+      scope.metadata = metadata;
+
+      $modal.open({
+        template: '<logs-extended-metadata metadata="metadata" dismiss="$dismiss()"></logs-extended-metadata>',
+        scope: scope,
       });
     };
 
@@ -483,12 +486,8 @@ require('./_support.scss');
       });
     };
 
-    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
-
-    var callFlowTemplate =
-      '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.getCallflowCharts(row.entity.orgId, row.entity.userId, row.entity.locusId, row.entity.callStart, row.entity.fullFilename, false)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
-
-    var callFlowLogsTemplate = '<div class="grid-icon ui-grid-cell-contents"><a ng-click="grid.appScope.openDownloadCallLogModal(row.entity, true)"><span id="download-callflowCharts-icon"><i class="icon icon-download"></i></a></div>';
+    var clientLogTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.downloadLog(row.entity.fullFilename)"><span><i class="icon icon-download"></i></a></div>';
+    var metadataTemplate = '<div class="grid-icon ui-grid-cell-contents"><a href ng-click="grid.appScope.openExtendedMetadata(row.entity.metadata)"><i class="icon icon-data"></i></a></div>';
 
     $scope.gridOptions = {
       data: 'userLogs',
@@ -524,21 +523,18 @@ require('./_support.scss');
         headerCellClass: 'header-client-log',
         maxWidth: 200,
       }, {
-        field: 'callflowLogs',
-        displayName: $filter('translate')('supportPage.callflowLogsAction'),
+        field: 'feedbackId',
+        displayName: $filter('translate')('supportPage.feedbackId'),
         sortable: false,
-        cellTemplate: callFlowLogsTemplate,
-        cellClass: 'call-flow-logs',
-        headerCellClass: 'header-call-flow-logs',
-        maxWidth: 200,
       }, {
-        field: 'callFlow',
-        displayName: $filter('translate')('supportPage.callflowAction'),
+        field: 'correlationId',
+        displayName: $filter('translate')('supportPage.correlationId'),
         sortable: false,
-        cellTemplate: callFlowTemplate,
-        cellClass: 'call-flow',
-        headerCellClass: 'header-call-flow',
-        visible: Authinfo.isCisco(),
+      }, {
+        field: 'metadata',
+        displayName: $filter('translate')('supportPage.metadata'),
+        cellTemplate: metadataTemplate,
+        headerCellClass: 'header-metadata',
       }],
     };
   }

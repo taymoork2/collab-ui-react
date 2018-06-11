@@ -63,7 +63,7 @@ class LineOverview implements ng.IComponentController {
   // Data from services
   public lineOverviewData: LineOverviewData;
   public lineMediaOptions: IOption[] = [];
-  private userVoicemailEnabled: boolean = false;
+  public userVoicemailEnabled: boolean = false;
   private isHI1484: boolean = false;
   /* @ngInject */
   constructor(
@@ -137,27 +137,27 @@ class LineOverview implements ng.IComponentController {
   public getLineOverviewData(): void {
     this.initLineOptions();
     this.LineOverviewService.get(this.consumerType, this.ownerId, this.numberId, this.wide)
-    .then(lineOverviewData => {
-      this.lineOverviewData = lineOverviewData;
-      this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
-      this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
-      this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
-      if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
-        if (this.isHI1484) {
-          this.lineOverviewData.line.internal = _.get(this.internalNumbers, '[0].internal');
-          this.lineOverviewData.line.siteToSite = _.get(this.internalNumbers, '[0].siteToSite');
-        } else if (typeof this.internalNumbers[0] === 'string') {
-          this.lineOverviewData.line.internal = String(this.internalNumbers[0]);
-        }
-        if (lineOverviewData.line.label != null) {
-          if (this.lineOverviewData.line.label != null) {
-            this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal +
-              ' - ' + lineOverviewData.line.label.value.substr(0,  this.MAX_LABEL_LENGTH - this.lineOverviewData.line.internal.length - 3);
+      .then(lineOverviewData => {
+        this.lineOverviewData = lineOverviewData;
+        this.userVoicemailEnabled = lineOverviewData.voicemailEnabled;
+        this.showApplyToAllSharedLines = this.setShowApplyToAllSharedLines();
+        this.showActions = this.setShowActionsFlag(this.lineOverviewData.line);
+        if (!this.lineOverviewData.line.uuid) { // new line, grab first available internal number
+          if (this.isHI1484) {
+            this.lineOverviewData.line.internal = _.get(this.internalNumbers, '[0].internal');
+            this.lineOverviewData.line.siteToSite = _.get(this.internalNumbers, '[0].siteToSite');
+          } else if (typeof this.internalNumbers[0] === 'string') {
+            this.lineOverviewData.line.internal = String(this.internalNumbers[0]);
           }
+          if (lineOverviewData.line.label != null) {
+            if (this.lineOverviewData.line.label != null) {
+              this.lineOverviewData.line.label.value = this.lineOverviewData.line.internal +
+              ' - ' + lineOverviewData.line.label.value.substr(0,  this.MAX_LABEL_LENGTH - this.lineOverviewData.line.internal.length - 3);
+            }
+          }
+          this.form.$setDirty();
         }
-        this.form.$setDirty();
-      }
-    });
+      });
   }
 
   public initLineOptions(): void {
@@ -165,10 +165,10 @@ class LineOverview implements ng.IComponentController {
       .then(supportsMoh => {
         if (supportsMoh && (_.isEqual(this.consumerType, LineConsumerType.USERS) || _.isEqual(this.consumerType, LineConsumerType.PLACES))) {
           this.MediaOnHoldService.getLineMohOptions()
-          .then(mediaList => {
-            this.lineMediaOptions = mediaList;
-          })
-          .catch(error => this.Notification.errorResponse(error, 'serviceSetupModal.mohGetOptionsError'));
+            .then(mediaList => {
+              this.lineMediaOptions = mediaList;
+            })
+            .catch(error => this.Notification.errorResponse(error, 'mediaOnHold.mohGetOptionsError'));
         }
       });
   }
@@ -273,16 +273,16 @@ class LineOverview implements ng.IComponentController {
     }).result.then( () => {
       const redirect: boolean = _.isEqual(this.ownerId, _.get(sharedLine, 'place.uuid')) || _.isEqual(this.ownerId, _.get(sharedLine, 'user.uuid'));
       return this.SharedLineService.deleteSharedLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid, sharedLine.uuid)
-      .then( () => {
-        this.$scope.$emit(LINE_CHANGE);
-        this.Notification.success('directoryNumberPanel.disassociationSuccess');
-        if (redirect) {
-          this.$state.go(this.$state.$current.parent.name);
-        } else {
-          this.initLineOverviewData();
-        }
-      })
-      .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+        .then( () => {
+          this.$scope.$emit(LINE_CHANGE);
+          this.Notification.success('directoryNumberPanel.disassociationSuccess');
+          if (redirect) {
+            this.$state.go(this.$state.$current.parent.name);
+          } else {
+            this.initLineOverviewData();
+          }
+        })
+        .catch( (response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
     });
   }
 
@@ -349,14 +349,14 @@ class LineOverview implements ng.IComponentController {
       if (!this.lineOverviewData.line.primary) {
         return this.deleteSharedLines().then(() => {
           return this.LineService.deleteLine(this.consumerType, this.ownerId, this.lineOverviewData.line.uuid)
-          .then(() => {
-            this.$scope.$emit(LINE_CHANGE);
-            this.Notification.success('directoryNumberPanel.disassociationSuccess');
-            this.$state.go(this.$state.$current.parent.name);
-          })
-          .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+            .then(() => {
+              this.$scope.$emit(LINE_CHANGE);
+              this.Notification.success('directoryNumberPanel.disassociationSuccess');
+              this.$state.go(this.$state.$current.parent.name);
+            })
+            .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
         })
-        .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
+          .catch((response) => this.Notification.errorResponse(response, 'directoryNumberPanel.error'));
       }
     });
   }

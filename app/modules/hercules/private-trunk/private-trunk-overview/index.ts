@@ -3,7 +3,7 @@ import privateTrunkSetup from  'modules/hercules/private-trunk/private-trunk-set
 
 export default angular
   .module('hercules.private-trunk-overview', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     privateTrunkSetup,
   ])

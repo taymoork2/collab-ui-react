@@ -1,9 +1,16 @@
 import * as jstz from 'jstimezonedetect';
 import { TimeOfDay, DayOfWeek } from 'modules/hercules/hybrid-services.types';
+import moment = require('moment');
 
 interface IUpgradeSchedule {
   scheduleDays: DayOfWeek[];
   scheduleTime: TimeOfDay;
+  type?: string;
+  jsonSchedule?: string;
+}
+interface IJsonSchedule {
+  startAt: string;
+  timeZone: string;
 }
 
 export class HybridServicesI18NService {
@@ -11,6 +18,32 @@ export class HybridServicesI18NService {
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {}
+
+  public formatTimeAndDateAndTimeZone = (upgradeSchedule: IUpgradeSchedule): string => {
+    let time: string;
+    let day;
+    let timeZone;
+    // iCal type schedule (i.e. used by Scheduler). In this context, only used by the Webex Video Mesh cluster types
+    // for now, these schedules are only Daily schedules, so just hard code to every day string
+    day = 'every day';
+
+    // Also update the time
+
+    if (upgradeSchedule.jsonSchedule === undefined) {
+      // instead of throwing,and thus stop showing the events, handle the unlikely case that the schedule has not been
+      // set by FMS, and show unknown to the end user
+      return 'unknown';
+    }
+    const scheduleString: string = upgradeSchedule.jsonSchedule;
+    const jsonSchedule: IJsonSchedule = JSON.parse(scheduleString);
+
+    time = this.getLocalTimestamp(jsonSchedule.startAt, 'HH:mm');
+
+    // and the time zone ...
+    timeZone = jsonSchedule.timeZone;
+
+    return `${time} ${day}, ${timeZone}`;
+  }
 
   public formatTimeAndDate = (upgradeSchedule: IUpgradeSchedule): string => {
     const time = this.labelForTime(upgradeSchedule.scheduleTime);

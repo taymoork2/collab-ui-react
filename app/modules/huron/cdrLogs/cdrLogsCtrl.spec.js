@@ -4,18 +4,17 @@ describe('Controller: CdrLogsCtrl', function () {
   beforeEach(angular.mock.module('uc.cdrlogsupport'));
   beforeEach(angular.mock.module('Huron'));
 
-  var controller, state, translate, timeout, Config, formlyConfig, CdrService, Notification;
+  var controller, state, translate, timeout, Config, CdrService, Notification;
   var callLegs = getJSONFixture('huron/json/cdrLogs/callLegs.json');
   var statusResponse = ['primary', 'danger'];
   var dateFormat = 'YYYY-MM-DD';
 
-  beforeEach(inject(function ($rootScope, $controller, _$state_, _$translate_, _$timeout_, _Config_, _formlyConfig_, _Notification_) {
+  beforeEach(inject(function ($rootScope, $controller, _$state_, _$translate_, _$timeout_, _Config_, _Notification_) {
     var $scope = $rootScope.$new();
     state = _$state_;
     translate = _$translate_;
     timeout = _$timeout_;
     Config = _Config_;
-    formlyConfig = _formlyConfig_;
     Notification = _Notification_;
 
     spyOn(state, 'go');
@@ -26,7 +25,6 @@ describe('Controller: CdrLogsCtrl', function () {
       $translate: translate,
       $timeout: timeout,
       Config: Config,
-      formlyConfig: formlyConfig,
       CdrService: CdrService,
       Notification: Notification,
     });
@@ -36,7 +34,6 @@ describe('Controller: CdrLogsCtrl', function () {
 
   it('should be defined', function () {
     expect(controller).toBeDefined();
-    expect(controller.fields).toBeDefined();
   });
 
   it('statusAvalibility should return expected results for error codes', function () {

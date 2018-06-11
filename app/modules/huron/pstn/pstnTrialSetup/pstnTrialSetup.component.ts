@@ -80,8 +80,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
               private $scope: ICustomScope,
               private $timeout: ng.ITimeoutService,
               private Analytics,
-              private PstnServiceAddressService,              //Site Based
-              private PstnAddressService: PstnAddressService, //Location Based
+              private PstnAddressService: PstnAddressService, //Site and Location Based
               private $translate: ng.translate.ITranslateService,
               private HuronCompassService: HuronCompassService,
               private FeatureToggleService) {
@@ -225,7 +224,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public removeOrder(order): void {
     this.PstnService.releaseCarrierInventoryV2(this.PstnModel.getCustomerId(), order.reservationId, order.data.numbers, this.PstnModel.isCustomerExists())
-        .then(_.partial(this.removeOrderFromCart.bind(this), order));
+      .then(_.partial(this.removeOrderFromCart.bind(this), order));
   }
 
   public manualTokenChange(tokens, invalidCount): void {
@@ -270,15 +269,14 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
     this.addressLoading = true;
     this.validation = true;
 
-    if (this.ftLocation) {
-      const address: Address = new Address();
-      address.streetAddress = this.trialData.details.emergAddr.streetAddress;
-      address.unit = this.trialData.details.emergAddr.unit;
-      address.city = this.trialData.details.emergAddr.city;
-      address.state = this.trialData.details.emergAddr.state;
-      address.zip = this.trialData.details.emergAddr.zip;
-      address.country = this.PstnModel.getCountryCode();
-      this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
+    const address: Address = new Address();
+    address.streetAddress = this.trialData.details.emergAddr.streetAddress;
+    address.unit = this.trialData.details.emergAddr.unit;
+    address.city = this.trialData.details.emergAddr.city;
+    address.state = this.trialData.details.emergAddr.state;
+    address.zip = this.trialData.details.emergAddr.zip;
+    address.country = this.PstnModel.getCountryCode();
+    this.PstnAddressService.lookup(this.trialData.details.pstnProvider.uuid, address)
       .then((_address: Address | null) => {
         if (_address) {
           this.addressFound = true;
@@ -293,29 +291,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
       .finally(() => {
         this.addressLoading = false;
       });
-      return;
-    }
-    return this.PstnServiceAddressService.lookupAddressV2({
-      streetAddress: this.trialData.details.emergAddr.streetAddress,
-      unit: this.trialData.details.emergAddr.unit,
-      city: this.trialData.details.emergAddr.city,
-      state: this.trialData.details.emergAddr.state,
-      zip: this.trialData.details.emergAddr.zip,
-    }, this.trialData.details.pstnProvider.uuid)
-      .then(response => {
-        if (!_.isUndefined(response)) {
-          this.addressFound = true;
-          this.readOnly = true;
-          _.extend(this.trialData.details.emergAddr, response);
-        } else {
-          this.validation = false;
-          this.Notification.error('trialModal.pstn.error.noAddress');
-          this.Analytics.trackTrialSteps(this.Analytics.eventNames.VALIDATION_ERROR, this.parentTrialData, { value: this.trialData.details.emergAddr, error: this.$translate.instant('trialModal.pstn.error.noAddress') });
-        }
-      })
-      .finally(() => {
-        this.addressLoading = false;
-      });
+    return;
   }
 
   public resetAddress(): void {
@@ -340,7 +316,7 @@ export class PstnTrialSetupCtrl implements ng.IComponentController {
 
   public isDisabled(): boolean {
     if (this.providerImplementation === this.SWIVEL) {
-      return this.trialForm.$invalid || this.disableNextButton();
+      return this.disableNextButton();
     }
     return this.trialForm.$invalid || !this.addressFound || this.disableNextButton();
   }

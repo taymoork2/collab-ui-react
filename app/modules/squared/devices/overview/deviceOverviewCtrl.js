@@ -20,23 +20,17 @@
     deviceOverview.hideE911Edit = true;
     deviceOverview.faxEnabled = false;
     deviceOverview.showT38 = false;
-    deviceOverview.cpcFeatureToggle = false;
-    deviceOverview.disableAtaRebootSettings = true;
     deviceOverview.actionList = [{
       actionKey: 'common.edit',
       actionFunction: goToEmergencyServices,
     }];
 
     function init() {
-      FeatureToggleService.csdmAtaCpcGetStatus().then(function (response) {
-        deviceOverview.cpcFeatureToggle = response;
-      });
-      FeatureToggleService.csdmAtaRebootGetStatus().then(function (response) {
-        deviceOverview.ataRebootWarningToggle = response;
-        deviceOverview.disableAtaRebootSettings = false;
-      });
-
       displayDevice($stateParams.currentDevice);
+
+      FeatureToggleService.csdmDeviceAccountJumpGetStatus().then(function (response) {
+        deviceOverview.jumpToAccount = response;
+      });
 
       fetchT38Visibility();
       fetchDetailsForLoggedInUser();
@@ -65,21 +59,17 @@
 
     function fetchT38Visibility() {
       if (deviceOverview.currentDevice.isATA) {
-        FeatureToggleService.csdmT38GetStatus().then(function (t38Supported) {
-          if (t38Supported) {
-            if (!PstnModel.getProviderId()) {
-              PstnService.getCustomer(Authinfo.getOrgId()).then(function (customer) {
-                PstnService.getCarrierCapabilities(customer.pstnCarrierId).then(function (capabilities) {
-                  deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
-                });
-              });
-            } else {
-              PstnService.getCarrierCapabilities(PstnModel.getProviderId()).then(function (capabilities) {
-                deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
-              });
-            }
-          }
-        });
+        if (!PstnModel.getProviderId()) {
+          PstnService.getCustomer(Authinfo.getOrgId()).then(function (customer) {
+            PstnService.getCarrierCapabilities(customer.pstnCarrierId).then(function (capabilities) {
+              deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+            });
+          });
+        } else {
+          PstnService.getCarrierCapabilities(PstnModel.getProviderId()).then(function (capabilities) {
+            deviceOverview.showT38 = _.some(capabilities, { capability: 'T38' });
+          });
+        }
       }
     }
 
@@ -132,6 +122,18 @@
       resetSelectedChannel();
       return $q.all(promises);
     }
+
+    deviceOverview.goToAccount = function () {
+      if (deviceOverview.currentDevice.accountType === 'MACHINE') {
+        $state.go('places', {
+          preSelectedPlaceId: deviceOverview.currentDevice.cisUuid,
+        });
+      } else {
+        $state.go('users.list', {
+          preSelectedUserId: deviceOverview.currentDevice.cisUuid,
+        });
+      }
+    };
 
     deviceOverview.reactivateRoomDevice = function () {
       var wizardState = {
@@ -283,7 +285,7 @@
     }
 
     deviceOverview.saveT38Settings = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
           .open({
             name: $translate.instant('ataSettings.t38Label'),
@@ -315,16 +317,12 @@
     }
 
     deviceOverview.saveCpcSettings = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
-        ConfirmAtaRebootModal
-          .open({
-            name: $translate.instant('ataSettings.cpcLabel'),
-          })
-          .then(executeSaveCpcSettings)
-          .catch(getCurrentAtaSettings);
-      } else {
-        executeSaveCpcSettings();
-      }
+      ConfirmAtaRebootModal
+        .open({
+          name: $translate.instant('ataSettings.cpcLabel'),
+        })
+        .then(executeSaveCpcSettings)
+        .catch(getCurrentAtaSettings);
     };
 
     function executeSaveCpcSettings() {
@@ -348,7 +346,7 @@
     }
 
     deviceOverview.saveTimeZoneAndWait = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
           .open({ name: $translate.instant('deviceOverviewPage.timeZone') })
           .then(executeSaveTimeZoneAndWait)
@@ -375,7 +373,7 @@
     }
 
     deviceOverview.saveCountryAndWait = function () {
-      if (deviceOverview.currentDevice.isATA && deviceOverview.ataRebootWarningToggle) {
+      if (deviceOverview.currentDevice.isATA) {
         ConfirmAtaRebootModal
           .open({
             name: $translate.instant('deviceOverviewPage.country'),
@@ -407,6 +405,7 @@
     function goToEmergencyServices() {
       var data = {
         currentAddress: deviceOverview.emergencyAddress,
+        currentHuronDevice: deviceOverview.currentDevice,
         currentNumber: deviceOverview.emergencyCallbackNumber,
         status: deviceOverview.emergencyAddressStatus,
         staticNumber: !deviceOverview.currentDevice.isHuronDevice,

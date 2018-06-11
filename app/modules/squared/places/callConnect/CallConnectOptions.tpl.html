@@ -19,9 +19,23 @@
       <span class="circle">3</span>
       <div class="callServiceControls">
         <label translate="addDeviceWizard.sparkCallConnect.step3"></label>
-        <div class="cs-radio-group callServiceControls emailControls">
-          <label for="email" translate="addDeviceWizard.sparkCallConnect.mailId"></label>
-          <input id="email" type="email" autocomplete="off" ng-model="callConnectOptions.mailID">
+        <div class="cs-input-group callServiceControls emailControls" ng-class="callConnectOptions.currentValidationState">
+          <label class="cs-label" for="email" translate="addDeviceWizard.sparkCallConnect.mailId"></label>
+          <div class="input-with-spinner">
+            <input
+              class="cs-input"
+              id="email"
+              type="email"
+              autocomplete="off"
+              ng-keyup="callConnectOptions.onMailIDInputKeyUp()"
+              ng-model="callConnectOptions.mailID">
+            <div ng-if="callConnectOptions.isValidating">
+              <i class="icon icon icon-spinner"></i>
+            </div>
+          </div>
+          <div class="cs-input__messages">
+            <div class="message" ng-bind-html="callConnectOptions.currentValidationMessage"></div>
+          </div>
         </div>
       </div>
 
@@ -37,17 +51,17 @@
             options="callConnectOptions.resourceGroup.options"
             on-change-fn="callConnectOptions.selectedResourceGroupChanged()">
           </cs-select>
-          <div class="warning-message" ng-if="callConnectOptions.resourceGroup.shouldWarn">
+          <div class="hybrid-services-warning-message" ng-if="callConnectOptions.resourceGroup.shouldWarn">
             <i class="icon icon-warning"></i>
-            <p class="message"
+            <p class="hybrid-services-message"
                translate="hercules.resourceGroups.groupIsEmptyWarning"
                translate-values="{ConnectorName: localizedConnectorName}">
             </p>
           </div>
         </div>
-        <div ng-if="callConnectOptions.resourceGroup.cannotFindResouceGroup" class="error-message">
+        <div ng-if="callConnectOptions.resourceGroup.cannotFindResouceGroup" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>
-          <p class="message"
+          <p class="hybrid-services-message"
              translate="hercules.resourceGroups.groupHasBeenDeleted"></p>
           <form>
             <button class="btn" type="submit" ng-click="callConnectOptions.setResourceGroup('')">

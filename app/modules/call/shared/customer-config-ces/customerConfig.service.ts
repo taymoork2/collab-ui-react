@@ -38,10 +38,10 @@ export class CustomerConfigService {
       extensionLength: extensionLength,
       country: country,
     },
-    (_response, headers) => {
-      customerConfigHeader = headers('CustomerConfig');
-    }).$promise
-    .then(() => customerConfigHeader);
+      (_response, headers) => {
+        customerConfigHeader = headers('CustomerConfig');
+      }).$promise
+      .then(() => customerConfigHeader);
   }
 }
 

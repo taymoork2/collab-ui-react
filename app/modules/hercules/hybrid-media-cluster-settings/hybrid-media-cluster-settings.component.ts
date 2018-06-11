@@ -1,22 +1,17 @@
-import { ICluster, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
+import { IExtendedClusterFusion, ICluster } from 'modules/hercules/hybrid-services.types';
+import { IToolkitModalService } from 'modules/core/modal';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
-import { ClusterService } from 'modules/hercules/services/cluster-service';
-import { Notification } from 'modules/core/notifications';
-import { IDeregisterModalOptions } from 'modules/hercules/rename-and-deregister-cluster-section/hs-rename-and-deregister-cluster.component';
-
-interface ITag {
-  text: string;
-}
+import { IDeregisterModalOptions } from 'modules/hercules/hs-cluster-section/hs-cluster-section.component';
 
 class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
 
   public hasMfPhaseTwoToggle: boolean;
   public hasMfTrustedSipToggle: boolean;
+  public hasMfCascadeBwConfigToggle: boolean;
+  public hasMfFirstTimeCallingFeatureToggle: boolean;
   public clusterId: string;
   public cluster: ICluster;
-
-  public sipurlconfiguration: string | undefined;
-  public trustedsipconfiguration: ITag[] = [];
+  public clusterList: IExtendedClusterFusion[] = [];
 
   public deregisterModalOptions: IDeregisterModalOptions | undefined = {
     resolve: {
@@ -30,19 +25,15 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
   public upgradeSchedule = {
     title: 'hercules.expresswayClusterSettings.upgradeScheduleHeader',
   };
-  public sipRegistration = {
-    title: 'mediaFusion.sipconfiguration.title',
-  };
 
-  public trustedSip = {
-    title: 'mediaFusion.trustedSip.title',
+  public sparkCalls = {
+    title: 'mediaFusion.easyConfig.sparkcalls',
   };
 
   /* @ngInject */
   constructor(
-    private ClusterService: ClusterService,
+    private $modal: IToolkitModalService,
     private HybridServicesClusterService: HybridServicesClusterService,
-    private Notification: Notification,
   ) { }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }) {
@@ -50,8 +41,8 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
     const { clusterId } = changes;
     if (clusterId && clusterId.currentValue) {
       this.clusterId = clusterId.currentValue;
-      this.loadCluster(clusterId.currentValue);
-      this.getProperties(clusterId.currentValue);
+      this.updateClusterList()
+        .then(() => this.loadCluster(clusterId.currentValue));
     }
   }
 
@@ -60,64 +51,33 @@ class HybridMediaClusterSettingsCtrl implements ng.IComponentController {
       .then((cluster) => {
         this.cluster = cluster;
 
-        if (cluster.connectors && cluster.connectors.length === 0) {
-          /* We have cluster data, but there are no nodes. Let's use the default deregistration dialog.  */
+        if (cluster.connectors && cluster.connectors.length === 0 && this.clusterList.length > 1) {
           this.deregisterModalOptions = undefined;
         }
         return cluster;
       });
   }
 
-  private getProperties(clusterId) {
-    this.ClusterService.getProperties(clusterId)
-      .then((properties: IClusterPropertySet) => {
-        if (!_.isUndefined(properties['mf.ucSipTrunk'])) {
-          this.sipurlconfiguration = properties['mf.ucSipTrunk'];
-        }
-        let rawTrustedSipConfigurationData;
-        if (!_.isUndefined(properties['mf.trustedSipSources'])) {
-          rawTrustedSipConfigurationData = properties['mf.trustedSipSources'];
-        }
-        let sipArray: ITag[] = [];
-        if (!_.isUndefined(rawTrustedSipConfigurationData)) {
-          sipArray = _.map(rawTrustedSipConfigurationData.split(','), (value: string) => {
-            return {
-              text: value.trim(),
-            };
-          }) as ITag[];
-        }
-        if (rawTrustedSipConfigurationData !== '') {
-          this.trustedsipconfiguration = sipArray;
-        } else {
-          this.trustedsipconfiguration = [];
-        }
+  private updateClusterList() {
+    return this.HybridServicesClusterService.getAll()
+      .then((clusters) => {
+        this.clusterList = _.filter(clusters, {
+          targetType: 'mf_mgmt',
+        });
       });
   }
 
-  public saveSipTrunk() {
-    const payload: IClusterPropertySet = {
-      'mf.ucSipTrunk': this.sipurlconfiguration,
-    };
-    this.ClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.sipconfiguration.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
-  }
-
-  public saveTrustedSip() {
-    const payload: IClusterPropertySet = {
-      'mf.trustedSipSources': _.map(this.trustedsipconfiguration, 'text').join(', '),
-    };
-    this.ClusterService.setProperties(this.clusterId, payload)
-      .then(() => {
-        this.Notification.success('mediaFusion.trustedSip.success');
-      })
-      .catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'hercules.genericFailure');
-      });
+  public openSetUpModal() {
+    this.$modal.open({
+      template: require('modules/mediafusion/media-service-v2/components/first-time-calling/first-time-calling.html'),
+      type: 'modal',
+      controller: 'FirstTimeCallingController',
+      controllerAs: 'vm',
+      resolve: {
+        cluster: () => this.cluster,
+        spark: () => true,
+      },
+    });
   }
 
 }
@@ -129,5 +89,7 @@ export class HybridMediaClusterSettingsComponent implements ng.IComponentOptions
     clusterId: '<',
     hasMfPhaseTwoToggle: '<',
     hasMfTrustedSipToggle: '<',
+    hasMfCascadeBwConfigToggle: '<',
+    hasMfFirstTimeCallingFeatureToggle: '<',
   };
 }

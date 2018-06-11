@@ -9,36 +9,36 @@ describe('component: emergencyServices', () => {
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200, {});
 
     spyOn(this.EmergencyServicesService, 'getOptions').and
-    .returnValue(this.$q.resolve(['1', '2']));
+      .returnValue(this.$q.resolve(['1', '2']));
 
     spyOn(this.EmergencyServicesService, 'getCompanyECN').and
-    .returnValue(this.$q.resolve('1'));
+      .returnValue(this.$q.resolve('1'));
 
     spyOn(this.EmergencyServicesService, 'getImpactedUsers').and
-    .returnValue(this.$q.resolve([]));
+      .returnValue(this.$q.resolve([]));
 
     spyOn(this.EmergencyServicesService, 'getInitialData').and
-    .returnValue({
-      emergency: {
-        emergencyNumber: '1',
-        emergencyAddress: {
+      .returnValue({
+        emergency: {
+          emergencyNumber: '1',
+          emergencyAddress: {
 
+          },
         },
-      },
-      currentDevice: {
-        cisUuid: '12345',
-      },
-      status: 'ACTIVE',
-      stateOptions: [{ abbreviation: 'TX', name: 'Texas' }],
-    });
+        currentDevice: {
+          cisUuid: '12345',
+        },
+        status: 'ACTIVE',
+        stateOptions: [{ abbreviation: 'TX', name: 'Texas' }],
+      });
 
     spyOn(this.EmergencyServicesService, 'getAddressForNumber').and
-    .returnValue(this.$q.resolve({
-      e911Address: {
+      .returnValue(this.$q.resolve({
+        e911Address: {
 
-      },
-      status: 'PENDING',
-    }));
+        },
+        status: 'PENDING',
+      }));
 
     this.compileComponent('ucEmergencyServices');
     spyOn(this.controller, 'validateAddress').and.returnValue(undefined);

@@ -75,10 +75,31 @@ export class Address implements IAddress {
     this.validated = false;
   }
 }
+const LOCATION_HEADER = 'Location';
+
+interface IServiceAddress {
+  serviceName: string;
+  serviceStreetNumber: string;
+  serviceStreetDirection: string;
+  serviceStreetName: string;
+  serviceStreetSuffix: string;
+  serviceAddressSub: string;
+  serviceCity: string;
+  serviceState: string;
+  serviceZip: string;
+}
+
+interface IRSite {
+  uuid?: string;
+  name: string;
+  url: string;
+  serviceAddress?: IServiceAddress;
+}
 
 export class PstnAddressService {
   /* @ngInject */
   constructor (
+    private $q: ng.IQService,
     private PstnModel: PstnModel,
     private TerminusService: TerminusService,
   ) {}
@@ -99,6 +120,77 @@ export class PstnAddressService {
         }
         return null;
       });
+  }
+
+  private getAddressFromServiceAddress(serviceAddress: IServiceAddress | undefined): Address {
+    const address: Address = new Address();
+    if (!serviceAddress) {
+      return address;
+    }
+    const streetName: string = _.isEmpty(serviceAddress.serviceStreetDirection) ? serviceAddress.serviceStreetName : `${serviceAddress.serviceStreetDirection} ${serviceAddress.serviceStreetName}`;
+    const streetAddress: string = `${serviceAddress.serviceStreetNumber} ${streetName} ${serviceAddress.serviceStreetSuffix}`;
+    address.streetAddress = streetAddress;
+    address.unit = serviceAddress.serviceAddressSub;
+    address.city = serviceAddress.serviceCity;
+    address.state = serviceAddress.serviceState;
+    address.zip = serviceAddress.serviceZip;
+    address.country = this.PstnModel.getCountryCode();
+    return address;
+  }
+
+  public getBySite(customerId: string): ng.IPromise<Address> {
+    //Currently only one site per customer.
+    return this.TerminusService.customerSite<IRSite>()
+      .query({ customerId: customerId })
+      .$promise
+      .then((minSites: IRSite[]) => {
+        if (_.isArray(minSites) && minSites.length > 0) {
+          const promises: ng.IPromise<IRSite>[] = [];
+          for (let i: number = 0; i < minSites.length; i++ ) {
+            promises.push(this.TerminusService.customerSite<IRSite>()
+              .get({ customerId: customerId, siteId: minSites[i].uuid })
+              .$promise);
+          }
+          return this.$q.all(promises).then((sites: IRSite[]) => {
+            const address: Address = this.getAddressFromServiceAddress(sites[0].serviceAddress);
+            address.validated = true;
+            return address;
+          });
+        }
+        return new Address; //The addess is set to invalid by default
+      });
+  }
+
+  private getServiceAddressFromAddress(address: Address, name: string): IServiceAddress {
+    const streetAddressArray = address.streetAddress ? address.streetAddress.split(/\s+/) : [''];
+    const serviceAddress: IServiceAddress = {
+      serviceName: name,
+      serviceStreetNumber: _.head(streetAddressArray),
+      serviceStreetDirection: '',
+      serviceStreetName: _.tail(streetAddressArray).join(' '),
+      serviceStreetSuffix: '',
+      serviceAddressSub: address.unit ? address.unit : '',
+      serviceCity: address.city ? address.city : '',
+      serviceState: address.state ? address.state : '',
+      serviceZip: address.zip ? address.zip : '',
+    };
+    return serviceAddress;
+  }
+
+  public createBySite(customerId: string, name: string, address: Address): ng.IPromise<string> {
+    let siteId: string = '';
+    const payload = {
+      name: name,
+      serviceAddress: this.getServiceAddressFromAddress(address, name),
+    };
+    return this.TerminusService.customerSite<void>()
+      .save({ customerId: customerId }, payload, (_response, headers) => {
+        const locationHeader = headers(LOCATION_HEADER);
+        if (!_.isEmpty(locationHeader)) {
+          siteId = _.last(locationHeader.split('/'));
+        }
+      }).$promise
+      .then(() => siteId);
   }
 
   public addToLocation(customerId: string, locationId: string, address: Address): ng.IPromise<void> {

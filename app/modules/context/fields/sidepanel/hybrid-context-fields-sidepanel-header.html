@@ -2,8 +2,16 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        <span tooltip-class="context-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom"
-          tooltip-animation="true" tooltip="{{$ctrl.field.id}}" class="context-sidepanel-title">{{$ctrl.field.id}}</span>
+        <span tooltip-class="context-tooltip"
+          tooltip-trigger="mouseenter focus"
+          tooltip-placement="bottom"
+          tooltip-animation="true"
+          tooltip="{{$ctrl.field.id}}"
+          class="context-sidepanel-title"
+          aria-label="{{$ctrl.field.id}}"
+          tabindex="0">
+          {{$ctrl.field.id}}
+        </span>
       </div>
       <div class="header-sub-info">
         <span>{{$ctrl.field.publiclyAccessibleUI}}</span>

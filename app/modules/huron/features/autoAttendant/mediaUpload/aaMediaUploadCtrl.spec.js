@@ -702,29 +702,24 @@ describe('Controller: AAMediaUploadCtrl', function () {
           expect(controller.state).toEqual(controller.UPLOADED);
         });
 
-        it('should print an error with a bad server response and a valid file', function () {
-          $httpBackend.whenPOST(uploadUrl).respond(500, false);
+        it('should print an error and not set upload file variables with a bad server response and a valid file', function () {
+          // mocking Upload.http reject due to a PUR inside ng-file-upload-all.js
+          // (see https://github.com/danialfarid/ng-file-upload/issues/2019)
+          var httpDeferred = $q.defer();
+          httpDeferred.promise.abort = function () {};
+          spyOn(Upload, 'http').and.returnValue(httpDeferred.promise);
+
           controller.upload(validFile);
           deferred.resolve(1);
-          $scope.$digest();
+          httpDeferred.reject({ status: 500 });
+          $scope.$apply();
           expect(AAMediaUploadService.upload).toHaveBeenCalled();
-          $httpBackend.flush();
           expect(AANotificationService.error).toHaveBeenCalledWith('autoAttendant.uploadFailed');
           expect(Analytics.trackEvent).not.toHaveBeenCalled();
-        });
-
-        it('should not set upload file variables with a bad server response and a valid file', function () {
-          $httpBackend.whenPOST(uploadUrl).respond(500, false);
-          controller.upload(validFile);
-          deferred.resolve(1);
-          $scope.$digest();
-          expect(AAMediaUploadService.upload).toHaveBeenCalled();
-          $httpBackend.flush();
           expect(controller.uploadFile).toBeFalsy();
           expect(controller.uploadDate).toBeFalsy();
           expect(controller.uploadDuration).toBeFalsy();
           expect(controller.state).toEqual(controller.WAIT);
-          expect(Analytics.trackEvent).not.toHaveBeenCalled();
         });
       });
     });

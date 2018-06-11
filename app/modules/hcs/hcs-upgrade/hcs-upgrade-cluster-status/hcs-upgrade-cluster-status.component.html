@@ -1,0 +1,70 @@
+<cs-page-header
+  class="huron-tabs"
+  title-name="{{$ctrl.cluster.name}}"
+  back="$ctrl.back"
+  back-fxn="$ctrl.onBack()"
+  back-aria-label="{{::'common.back' | translate}}">
+</cs-page-header>
+<cs-page-sub-header>
+  <cs-page-sub-header-left>
+    <div>
+      {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.upgradeStatus' | translate}}:
+      <span class="h5 card-section-item node-status" ng-switch="$ctrl.clusterStatus">
+        <span ng-switch-when="AGENT_OFFLINE">
+          <i class="icon icon-circle status-indicator danger"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.agentOffline' | translate}}</span>
+        </span>
+        <span ng-switch-when="FAILED_UPGRADE">
+          <i class="icon icon-circle status-indicator danger"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
+        </span>
+        <span ng-switch-when="NO_AGENT_RUNNING">
+          <i class="icon icon-circle status-indicator danger"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noAgentRunning' | translate}}</span>
+        </span>
+        <span ng-switch-when="SOFTWARE_PROFILE_NOT_ASSIGNED">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotAssigned' | translate}}</span>
+        </span>
+        <span ng-switch-when="SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotCoverAll' | translate}}</span>
+        </span>
+        <span ng-switch-when="SOFTWARE_VERSION_MISMATCH">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swVersionMismatch' | translate}}</span>
+        </span>
+        <span ng-switch-when="SOFTWARE_UPGRADE_NEEDED">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swUpgradeNeeded' | translate}}</span>
+        </span>
+        <span ng-switch-when="NEED_TO_UPDATE_BATCH_NUMBER">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needToUpdateBatchNumber' | translate}}</span>
+        </span>
+        <span ng-switch-when="UPGRADE_SCHEDULED">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeScheduled' | translate}}</span>
+        </span>
+        <span ng-switch-when="UPGRADE_IN_PROGRESS">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
+        </span>
+        <span ng-switch-when="OPERATIONAL">
+          <i class="icon icon-circle status-indicator success"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.operational' | translate}}</span>
+        </span>
+      </span>
+      <span>, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime}}</span>
+    </div>
+  </cs-page-sub-header-left>
+</cs-page-sub-header>
+<div class="hcs-upgrade-cluster-status">
+  <div class="loading-container" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+  <div class="upgrade-cluster-status-grid" ng-if="!$ctrl.loading">
+    <cs-grid ng-if="$ctrl.showGrid" name="licenseListPanel" grid-api="$ctrl.gridApi" grid-options="$ctrl.gridOptions" spinner="$ctrl.showManagedLicenseRefresh" state="plm.licenseReport"></cs-grid>
+  </div>
+</div>

@@ -11,19 +11,19 @@ describe('Controller: Customer Reports Ctrl', function () {
   beforeEach(function () {
     this.initModules(sparkReports);
     this.injectDependencies('$rootScope',
-                            '$scope',
-                            '$timeout',
-                            '$q',
-                            '$controller',
-                            'CardUtils',
-                            'CommonReportService',
-                            'ReportPrintService',
-                            'ReportConstants',
-                            'SparkGraphService',
-                            'SparkReportService',
-                            'SparkLineReportService',
-                            'DummySparkDataService',
-                            'FeatureToggleService');
+      '$scope',
+      '$timeout',
+      '$q',
+      '$controller',
+      'CardUtils',
+      'CommonReportService',
+      'ReportPrintService',
+      'ReportConstants',
+      'SparkGraphService',
+      'SparkReportService',
+      'SparkLineReportService',
+      'DummySparkDataService',
+      'FeatureToggleService');
 
     spyOn(this.CardUtils, 'resize');
     spyOn(this.ReportPrintService, 'printCustomerPage');

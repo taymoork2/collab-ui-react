@@ -46,12 +46,12 @@ class PrimaryLine implements ng.IComponentController {
       this.lineSelectionCopy = this.lineSelection;
       this.$scope.$emit('PRIMARY_LINE_SELECTION_CHANGE', this.lineSelection.primaryLineEnabled);
     })
-    .catch((response) => {
-      this.Notification.errorResponse(response, 'primaryLine.failedToSaveChanges');
-    })
-    .finally(() => {
-      this.isLineSelectionChanged = false;
-    });
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'primaryLine.failedToSaveChanges');
+      })
+      .finally(() => {
+        this.isLineSelectionChanged = false;
+      });
   }
 
   public onCancel(): void {

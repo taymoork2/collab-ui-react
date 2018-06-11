@@ -7,7 +7,7 @@ export { LocationsVoicemailComponent };
 export default angular
   .module('call.locations.locations-voicemail', [
     require('angular-translate'),
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     phoneNumberModule,
     serviceSetup,
   ])

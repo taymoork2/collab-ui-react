@@ -1,0 +1,97 @@
+<!-- Main View -->
+<div id="trialsPanel" class="container partner-container">
+  <cs-page-header title-name="{{'overview.pageTitle' | translate}}"></cs-page-header>
+  <div class="cs-card-container">
+    <cs-card-layout>
+      <cs-card ng-class="$ctrl.cardSize">
+        <article class="trials-card">
+          <header id="activeTrials" class="trialTitle">
+            <span class="h4" translate="partnerHomePage.trialsHeading"></span>
+            <button id="trialAddButton" class="btn btn--people btn right" translate="partnerHomePage.addTrial" ng-click="$ctrl.openAddTrialModal()"></button>
+          </header>
+          <section class="trialsPanel">
+            <div class="row collapse h5 trialHeader">
+              <span class="h6 columns small-8" translate="partnerHomePage.trialsCustomerName"></span>
+              <span class="h6 columns small-2" translate="partnerHomePage.trialsEndDate"></span>
+              <span class="h6 columns small-2" translate="partnerHomePage.trialsNumUsers"></span>
+            </div>
+            <div id="trials-refresh" class="trials-refresh" ng-show="$ctrl.showTrialsRefresh">
+              <i class='icon icon-spinner'></i>
+            </div>
+            <div class="trial" ng-repeat="trial in $ctrl.activeList | orderBy: 'daysLeft' | limitTo: 10">
+              <div class="row collapse">
+                <div class="columns small-12" id="{{trial.customerName}}">
+                  <a href
+                    class="trialCustomer ellipsis-trials"
+                    ng-click="$ctrl.launchCustomerPortal(trial)"
+                    orgId="{{trial.customerOrgId}}"
+                    trialId="{{trial.trialId}}"
+                    aria-label="{{$ctrl.ariaTrialLabel(trial)}}">
+                      <span>{{trial.customerName}}</span>
+                    </a>
+                </div>
+              </div>
+              <div class="row trialRow collapse">
+                <div class="columns small-8">
+                  <div class="trialbar">
+                    <progressbar max="trial.duration" value="trial.daysUsed" type="{{$ctrl.getProgressStatus(trial)}}"></progressbar>
+                  </div>
+                </div>
+                <div class="columns small-2 trialDays">
+                  <span ng-class="{'trial-danger-text': trial.daysLeft <= 5}">{{trial.daysLeft}}</span>
+                </div>
+                <div class="columns small-2 trialLicense">
+                  <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                </div>
+              </div>
+            </div>
+            <div ng-show="$ctrl.showExpired">
+              <div class="row collapse-both expiredTrials">
+                <div class="columns small-12">
+                  <span class="trialTitle h6" translate="partnerHomePage.expiredHeading"></span>
+                </div>
+              </div>
+              <div class="row trialRow collapse-both" ng-repeat="trial in $ctrl.expiredList | orderBy: 'daysLeft' | limitTo: 3">
+                <a href
+                  class="columns small-8"
+                  id="{{trial.customerName}}"
+                  ng-click="$ctrl.launchCustomerPortal(trial)"
+                  orgId="{{trial.customerOrgId}}"
+                  trialId="{{trial.trialId}}"
+                  aria-label="{{$ctrl.ariaExpLabel(trial)}}">
+                    <span class="primary-color">{{trial.customerName}}</span>
+                </a>
+                <span class="columns small-2 expired" translate="partnerHomePage.daysAgo" translate-values="{ days: $ctrl.getDaysAgo(trial.daysLeft) }"></span>
+                <div class="columns small-2 expired">
+                  <span>{{trial.usage}}</span>/<span>{{trial.licenses}}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer>
+            <div class="row collapse viewAll">
+              <a class="small-12 columns" id="viewAllLink" ui-sref="partnercustomers.list({filter: 'trials'})">
+                <span translate="partnerHomePage.viewAll"></span>
+              </a>
+            </div>
+          </footer>
+        </article>
+      </cs-card>
+      <cs-card class="cs-card--large side-info-card" ng-if="$ctrl.hcsFeatureToggle">
+        <article>
+          <header>
+            <div translate="homePage.notifications"></div>
+          </header>
+          <section class="monitoring-panel" ng-if="$ctrl.notifications.length === 0">
+            <div class="notification-style">
+              <span translate="overview.nonotifications"></span>
+            </div>
+            </section>
+
+          <section class="monitoring-panel" ng-if="$ctrl.notifications.length > 0">
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

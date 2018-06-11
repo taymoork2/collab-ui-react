@@ -1,0 +1,14 @@
+<div ng-form="$ctrl.snrLinesForm" class="snr-lines">
+  <p translate="singleNumberReachPanel.chooseLines"></p>
+  <div class="cs-checkbox-group">
+    <input
+      ng-repeat="line in $ctrl.lines track by $index"
+      cs-input
+      type="checkbox"
+      id="snrLine{{$index}}"
+      name="snrLine{{$index}}"
+      ng-model="line.value"
+      cs-input-label="{{$ctrl.formatLineLabel(line)}}"
+      ng-change="$ctrl.onLineChange(line)">
+  </div>
+</div>

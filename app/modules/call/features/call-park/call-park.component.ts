@@ -69,7 +69,7 @@ class CallParkCtrl implements ng.IComponentController {
         this.nextButton(this.pageIndex);
       }
     })
-    .finally( () => this.isLoading = false);
+      .finally( () => this.isLoading = false);
 
     this.HuronSiteService.listSites().then(sites => {
       this.HuronSiteService.getSite(_.get<string>(sites[0], 'uuid')).then(site => {
@@ -150,30 +150,30 @@ class CallParkCtrl implements ng.IComponentController {
   public createCallPark(): void {
     this.saveInProcess = true;
     this.CallParkService.createCallPark(this.callPark)
-    .then( () => {
-      this.$state.go('huronfeatures');
-    })
-    .catch( (response) => {
-      this.Notification.errorWithTrackingId(response);
-    })
-    .finally( () => this.saveInProcess = false);
+      .then( () => {
+        this.$state.go('huronfeatures');
+      })
+      .catch( (response) => {
+        this.Notification.errorWithTrackingId(response);
+      })
+      .finally( () => this.saveInProcess = false);
   }
 
   public save(): void {
     this.saveInProcess = true;
     this.CallParkService.updateCallPark(this.callPark.uuid, this.callPark)
-    .then( () => {
-      this.Notification.success('callPark.successUpdate', { callParkName: this.callPark.name } );
-      this.title = this.callPark.name || '';
-    })
-    .catch( (response) => {
-      this.Notification.errorWithTrackingId(response);
-    })
-    .finally( () => {
-      this.saveInProcess = false;
-      this.resetForm();
-      this.AccessibilityService.setFocus(this.$element, this.FEATURE_NAME);
-    });
+      .then( () => {
+        this.Notification.success('callPark.successUpdate', { callParkName: this.callPark.name } );
+        this.title = this.callPark.name || '';
+      })
+      .catch( (response) => {
+        this.Notification.errorWithTrackingId(response);
+      })
+      .finally( () => {
+        this.saveInProcess = false;
+        this.resetForm();
+        this.AccessibilityService.setFocus(this.$element, this.FEATURE_NAME);
+      });
   }
 
   public evalKeyPress($keyCode): void {

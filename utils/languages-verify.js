@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const _ = require('lodash');
+const glob = require('glob');
 
 const L10N_DIR = 'app/l10n';
 const L10N_ENGLISH_FILE = `${L10N_DIR}/en_US.json`;
@@ -7,6 +8,7 @@ const L10N_LANGUAGE_VALUE_REGEX = /(value:\s'[a-z]{2}_[A-Z]{2}')/g;
 const L10N_LANGUAGE_REGEX = /[a-z]{2}_[A-Z]{2}/;
 const L10N_LANGUAGE_CONFIGS = 'app/modules/core/l10n/languages.ts';
 
+const PLURAL_KEYWORD_REGEX = /{.*,\s*\bplural\b\s*,/;
 const PLURAL_DISALLOWED_KEYWORDS = [
   'zero',
   'one',
@@ -19,6 +21,19 @@ const VARIABLE_DIFFERENCE_KEY_WHITELIST = [
   'pagingGroup.sayInvalidChar', // TODO 2017-10-16 remove after next language drop
 ];
 
+// Not ideal to have these in language files.
+// Sometimes though a key is calculated dynamically, and some of the keys have values that should not be localized.
+// A suggested improvement on this: https://jira-eng-gpk2.cisco.com/jira/browse/ATLAS-3258
+const STATIC_ACROSS_LANGUAGES_KEY_LIST = [
+  'reportsPage.usageReports.deviceOptions.sparkBoard',
+  'trials.sparkBoardSystem',
+  'customerPage.sparkBoard',
+  'customerPage.filters.sparkBoard',
+  'mediaFusion.metrics.clientType.board',
+  'subscriptions.licenseTypes.SB',
+  'helpdesk.licenseDisplayNames.SB',
+];
+
 // eg. one{, one {, one  {
 const PLURAL_DISALLOWED_REGEXPS = _.map(PLURAL_DISALLOWED_KEYWORDS, keyword => new RegExp(keyword + '( ?)+{'));
 
@@ -28,7 +43,7 @@ const englishFlatTranslations = getEnglishFlatTranslations();
 
 const languages = fs.readFileSync(L10N_LANGUAGE_CONFIGS, 'utf8').match(L10N_LANGUAGE_VALUE_REGEX).map(language => language.match(L10N_LANGUAGE_REGEX)[0]);
 
-const files = fs.readdirSync(L10N_DIR).map(file => file.replace('.json', ''));
+const files = getL10nFiles().map(file => file.replace('.json', ''));
 
 const missingFiles = _.difference(languages, files);
 if (missingFiles.length) {
@@ -89,14 +104,40 @@ ${invalidMessageFormatSyntaxString}
 ${variableDifferencesWithEnglishString}
     `);
   }
+
+  const deviatingTranslations = getDeviatingTranslations(flatTranslations, englishFlatTranslations);
+  if (!_.isEmpty(deviatingTranslations)) {
+    hasError = true;
+    const deviatingTranslationsFromEnglishString = _.map(deviatingTranslations, (val, key) => {
+      const englishValue = englishFlatTranslations[key];
+      return `${key} (${fileName}): ${val}\n${key} (en_US): ${englishValue}`;
+    }).join('\n-----\n');
+    console.error(`[ERROR] ${languageFile} contains values that do not match the source for static texts in ${L10N_ENGLISH_FILE}:
+
+${deviatingTranslationsFromEnglishString}
+    `);
+  }
+
+  const imbalancedBrackets = findImbalancedBrackets(flatTranslations);
+  if (!_.isEmpty(imbalancedBrackets)) {
+    hasError = true;
+    const imbalancedBracketsFormatSyntaxString = formatObjectToMultilineString(imbalancedBrackets);
+    console.error(`[ERROR] ${languageFile} contains unmatched brackets:
+
+${imbalancedBracketsFormatSyntaxString}`);
+  }
 });
 
 if (hasError) {
   throw new Error('Failed to validate all json files. Please see error output for detail.');
 }
 
+function getL10nFiles() {
+  return glob.sync(`${L10N_DIR}/*.json`).map(filePath => _.replace(filePath, `${L10N_DIR}/`, ''));
+}
+
 function filterDisallowedPluralKeywords(value) {
-  return _.includes(value, 'plural,') && _.some(PLURAL_DISALLOWED_REGEXPS, keywordRegExp => keywordRegExp.test(value));
+  return PLURAL_KEYWORD_REGEX.test(value) && _.some(PLURAL_DISALLOWED_REGEXPS, keywordRegExp => keywordRegExp.test(value));
 }
 
 function getDisallowedPluralKeywordTranslations(translationObj) {
@@ -104,7 +145,7 @@ function getDisallowedPluralKeywordTranslations(translationObj) {
 }
 
 function filterMissingOtherPluralKeyword(value) {
-  return _.includes(value, 'plural,') && !PLURAL_OTHER_REGEXP.test(value);
+  return PLURAL_KEYWORD_REGEX.test(value) && !PLURAL_OTHER_REGEXP.test(value);
 }
 
 function getMissingOtherPluralKeywordTranslations(translationObj) {
@@ -173,6 +214,39 @@ function getVariableDifferenceTranslations(checkObj, origObj) {
   });
 }
 
+function getDeviatingTranslations(checkObj, origObj) {
+  return _.pickBy(checkObj, (value, key) => {
+    if (!_.includes(STATIC_ACROSS_LANGUAGES_KEY_LIST, key)) {
+      return false;
+    }
+    const origValue = origObj[key];
+    if (!origValue) {
+      return false;
+    }
+    return value !== origValue;
+  });
+}
+
 function formatObjectToMultilineString(obj) {
   return _.map(obj, (value, key) => `${key}: ${value}`).join('\n');
+}
+
+function findImbalancedBrackets(translations) {
+  let imbalancedBrackets = {
+  };
+
+  _.forEach(translations, function (value, key) {
+    let str = value;
+
+    if (PLURAL_KEYWORD_REGEX.test(value)) {
+      let opens = str.match(/\{/g) || [];
+      let closes = str.match(/\}/g) || [];
+
+      if (opens.length !== closes.length) {
+        imbalancedBrackets[key] = value;
+      }
+    }
+  });
+
+  return imbalancedBrackets;
 }

@@ -30,17 +30,44 @@ describe('Component: crCheckboxItem:', () => {
     it('should render an input[cs-input][type="checkbox"]', function () {
       initComponent.call(this);
       expect(this.view.find('input[cs-input][type="checkbox"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][id="fake_itemId"]').length).toBe(1);
-      expect(this.view.find('input[cs-input][type="checkbox"][name="fake_itemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][id^="fake_itemId"]').length).toBe(1);
+      expect(this.view.find('input[cs-input][type="checkbox"][name^="fake_itemId"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][cs-input-label="fake-label"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][ng-model="$ctrl.isSelected"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][ng-disabled="$ctrl.isDisabled"]').length).toBe(1);
       expect(this.view.find('input[cs-input][type="checkbox"][ng-change="$ctrl.recvChange()"]').length).toBe(1);
     });
 
+    it('should apply a unique(-ish) id by default, unless "useStrictItemId" is set to true', function () {
+      spyOn(Date, 'now').and.returnValue('fake-now-result');
+      this.compileTemplate(`
+        <cr-checkbox-item
+          item-id="itemId"
+          is-selected="isSelected"
+          is-disabled="isDisabled"
+          l10n-label="fake-label"
+          on-update="onUpdate($event)">
+        </cr-checkbox-item>`);
+      expect(this.view.find('[id="fake_itemId__fake_now_result"]').length).toBe(1);
+      expect(this.view.find('[name="fake_itemId__fake_now_result"]').length).toBe(1);
+
+      this.$scope.useStrictItemId = true;
+      this.compileTemplate(`
+        <cr-checkbox-item
+          item-id="itemId"
+          is-selected="isSelected"
+          is-disabled="isDisabled"
+          l10n-label="fake-label"
+          on-update="onUpdate($event)"
+          use-strict-item-id="useStrictItemId">
+        </cr-checkbox-item>`);
+      expect(this.view.find('[id="fake_itemId"]').length).toBe(1);
+      expect(this.view.find('[name="fake_itemId"]').length).toBe(1);
+    });
+
     it('should transclude its contents', function () {
       initComponent.call(this, '<span>fake-contents</span>');
-      expect(this.view.find('.assignable_item_checkbox__description')).toContainText('fake-contents');
+      expect(this.view.find('.cr-checkbox-item__description')).toContainText('fake-contents');
     });
   });
 

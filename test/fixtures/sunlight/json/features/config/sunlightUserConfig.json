@@ -38,6 +38,23 @@
       "status": 200,
       "httpStatus": 201
     }],
+    "schemas":["urn:scim:schemas:core:1.0","urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+    "roles":["spark.synckms"],
+    "entitlements":["contact-center-context"],
+    "status": 200
+  },
+
+  "onboard_patch_response": {
+    "userResponse": [{
+      "uuid": "f0b91ac9-8ba4-4607-afab-03fbc89b25fd",
+      "email": "vnvn@khkkk.com",
+      "displayName": "",
+      "status": 200,
+      "httpStatus": 201
+    }],
+    "schemas":["urn:scim:schemas:core:1.0","urn:scim:schemas:extension:cisco:commonidentity:1.0"],
+    "roles":null,
+    "entitlements":null,
     "status": 200
   },
 
@@ -65,7 +82,7 @@
 
   "carevoice_user_patch_payload": {
     "schemas":["urn:scim:schemas:core:1.0","urn:scim:schemas:extension:cisco:commonidentity:1.0"],
-    "roles":["spark.synckms", "ciscouc.ces"],"entitlements":["contact-center-context"]
+    "roles":["spark.synckms"],"entitlements":["contact-center-context"]
   },
 
   "carevoice_user_license_payload": [

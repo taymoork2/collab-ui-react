@@ -5,19 +5,30 @@
   <cs-page-sub-header-right>
     <div class="page-option-buttons">
       <div ng-if="!cbgsCtrl.exportLoading"
-           class="no-animate"
-           tooltip="{{::'gemini.export.exportToCSV' | translate}}"
-           tooltip-placement="top"
-           tooltip-trigger="mouseenter">
-        <a class="export-users" ng-csv="cbgsCtrl.exportCSV()" ng-show="cbgsCtrl.isDownload" filename="{{'gemini.cbgs.export.csvFilename' | translate}}" quote-strings="true">
-          <button class="btn--none"><i class="icon icon-download icon-lg"></i></button>
+        class="no-animate"
+        tooltip="{{::'gemini.export.exportToCSV' | translate}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        aria-label="{{::'gemini.export.exportToCSV' | translate}}"
+        tabindex="0">
+        <a href class="export-users"
+          ng-csv="cbgsCtrl.exportCSV()"
+          ng-show="cbgsCtrl.isDownload"
+          filename="{{'gemini.cbgs.export.csvFilename' | translate}}"
+          quote-strings="true">
+          <!-- removing button from tabindex to prevent having the csv download in the index twice -->
+          <button class="btn--none" tabindex="-1">
+            <i class="icon icon-download icon-lg"></i>
+          </button>
         </a>
       </div>
       <div ng-if="cbgsCtrl.exportLoading"
-           tooltip="{{::'gemini.export.exportInProcess' | translate}}"
-           tooltip-placement="top"
-           tooltip-trigger="mouseenter"
-           class="btn btn-none no-animate">
+        tooltip="{{::'gemini.export.exportInProcess' | translate}}"
+        tooltip-placement="top"
+        tooltip-trigger="mouseenter focus"
+        tabindex="0"
+        aria-label="{{::'gemini.export.exportInProcess' | translate}}"
+        class="btn btn-none no-animate">
         <span class="export-users">
           <i class="icon icon-spinner"></i>
         </span>

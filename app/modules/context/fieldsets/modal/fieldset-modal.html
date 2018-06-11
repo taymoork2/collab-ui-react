@@ -1,8 +1,15 @@
 <div class="modal-header">
   <button type="button" class="close" ng-click="$ctrl.dismiss()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 ng-if="$ctrl.createMode" class="modal-title" translate="context.dictionary.fieldsetPage.createNew"></h3>
-  <h3 ng-if="!$ctrl.createMode" class="modal-title" tooltip-class="context-tooltip" tooltip-trigger="mouseenter"
-      tooltip-placement="bottom" tooltip-animation="true" tooltip="{{$ctrl.fieldsetData.id}}">
+  <h3 ng-if="!$ctrl.createMode"
+    class="modal-title"
+    tooltip-class="context-tooltip"
+    tooltip-trigger="mouseenter focus"
+    tooltip-placement="bottom"
+    tooltip-animation="true"
+    tooltip="{{$ctrl.fieldsetData.id}}"
+    aria-label="{{$ctrl.fieldsetData.id}}"
+    tabindex="0">
     <span translate="context.dictionary.update"></span>
     <span>{{$ctrl.fieldsetData.id}}</span>
   </h3>
@@ -63,21 +70,27 @@
           <div ng-if="$ctrl.enableFieldsSelection" class="default-state cs-input-group">
             <span>
               <input id="fieldInput" ng-model="$ctrl.selectedField" class="cs-input context-fields-searchbox"
-                     ng-class="{'error': $ctrl.error}"
-                     typeahead="field for field in $ctrl.allSelectableFields | filter:{id:$viewValue}"
-                     typeahead-template-url="fieldTemplate.html"
-                     typeahead-on-select="$ctrl.selectField($item)"
-                     placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
-                     typeahead-wait-ms="500"
-                     ng-disabled="!$ctrl.enableFieldsSelection"
-                     focus-on/>
+                ng-class="{'error': $ctrl.error}"
+                typeahead="field for field in $ctrl.allSelectableFields | filter:{id:$viewValue}"
+                typeahead-template-url="fieldTemplate.html"
+                typeahead-on-select="$ctrl.selectField($item)"
+                placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
+                typeahead-wait-ms="500"
+                ng-disabled="!$ctrl.enableFieldsSelection"
+                focus-on/>
             </span>
           </div>
            <div ng-if="!$ctrl.enableFieldsSelection" class="disabled-state cs-input-group">
-              <span tooltip-class="context-tooltip" tooltip="{{'context.dictionary.fieldsetPage.fieldMaxLimitReached' | translate}}" tooltip-placement="bottom">
+              <span
+                tooltip-class="context-tooltip"
+                tooltip="{{'context.dictionary.fieldsetPage.fieldMaxLimitReached' | translate}}"
+                tooltip-placement="bottom"
+                tooltip-trigger="mouseenter focus"
+                aria-label="{{'context.dictionary.fieldsetPage.fieldMaxLimitReached' | translate}}"
+                tabindex="0">
                 <input id="fieldInput" class="cs-input context-fields-searchbox"
-                        placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
-                        ng-disabled="!$ctrl.enableFieldsSelection"/>
+                  placeholder="{{'context.dictionary.fieldsetPage.searchFields' | translate}}"
+                  ng-disabled="!$ctrl.enableFieldsSelection"/>
               </span>
            </div>
           <script type="text/ng-template" id="fieldTemplate.html">
@@ -88,21 +101,29 @@
           </script>
         </div>
         <!-- No Search Results messages, shows up when the search text is present and no fields match it-->
-        <div ng-show="$ctrl.selectedField && $ctrl.selectedField.length > 0 &&
-             ($ctrl.allSelectableFields | filter:{id:$ctrl.selectedField}).length === 0" class="no-results"
-             translate="context.dictionary.fieldPage.noneFound">
+        <div class="no-results"
+          ng-show="$ctrl.selectedField && $ctrl.selectedField.length > 0 && ($ctrl.allSelectableFields | filter:{id:$ctrl.selectedField}).length === 0"
+          translate="context.dictionary.fieldPage.noneFound">
         </div>
 
         <!-- List of selected fields -->
         <div ng-repeat="field in $ctrl.selectedFields">
           <div class="field-list-item-wrapper">
             <div class="btn btn--white btn--expand field-list-item" enabled>
-          <span class="column-one" tooltip-class="context-tooltip" tooltip-trigger="mouseenter" tooltip-placement="bottom"
-                tooltip-animation="true" tooltip="{{field.id}}">{{field.id}}</span>
+              <span class="column-one"
+                tooltip-class="context-tooltip"
+                tooltip-trigger="mouseenter focus"
+                tooltip-placement="bottom"
+                tooltip-animation="true"
+                tooltip="{{field.id}}"
+                aria-label="{{field.id}}"
+                tabindex="0">
+                {{field.id}}
+              </span>
               <span class="column-two">{{field.fieldInfo}}</span>
               <span class="column-three">
                 <i ng-click="$ctrl.removeFieldFromList(field, fieldsetForm)" class="icon icon-exit"></i>
-          </span>
+              </span>
             </div>
           </div>
         </div>

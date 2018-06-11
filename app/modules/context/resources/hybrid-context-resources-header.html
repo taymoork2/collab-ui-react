@@ -1,7 +1,20 @@
 <div class="context-resources-sub-header">
 <cs-page-sub-header>
   <cs-page-sub-header-right>
-    <button class="btn btn--people" ng-click="$ctrl.addResourceModal()" translate="hercules.overview.add-resource-button"></button>
+    <button-tooltip
+      ng-if="$ctrl.disableAddResourceButton"
+      tt-class="btn btn--people"
+      tt-disabled="true"
+      tt-tooltip-class="context-tooltip"
+      tt-tooltip-placement="left"
+      tt-tooltip-text="{{$ctrl.addResourceButtonTooltip}}">
+      <span translate="hercules.overview.add-resource-button"></span>
+    </button-tooltip>
+    <span ng-if="!$ctrl.disableAddResourceButton">
+      <button  class="btn btn--people" ng-click="$ctrl.addResourceModal()"
+        translate="hercules.overview.add-resource-button">
+      </button>
+    </span>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 </div>

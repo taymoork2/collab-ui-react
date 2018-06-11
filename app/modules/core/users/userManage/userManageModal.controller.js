@@ -4,8 +4,7 @@ require('./_user-manage.scss');
   'use strict';
 
   angular.module('Core')
-    .controller('UserManageModalController', UserManageModalController)
-    .controller('UserManageModalPickerController', UserManageModalPickerController);
+    .controller('UserManageModalController', UserManageModalController);
 
   ///////////////////////////
 
@@ -18,37 +17,12 @@ require('./_user-manage.scss');
 
     vm.onInit();
 
-    ///////////////////////
-
     function onInit() {
     }
 
     function cancelModal() {
       Analytics.trackAddUsers(Analytics.eventNames.CANCEL_MODAL);
       $state.modal.dismiss();
-    }
-  }
-
-  /////////////////////////
-
-  /* @ngInject */
-  function UserManageModalPickerController($state, $q, DirSyncService) {
-    var vm = this;
-
-    vm.onInit = onInit;
-
-    vm.onInit();
-
-    //////////////////
-    function onInit() {
-      var promise = (DirSyncService.requiresRefresh() ? DirSyncService.refreshStatus() : $q.resolve());
-      promise.finally(function () {
-        if (DirSyncService.isDirSyncEnabled()) {
-          $state.go('users.manage.activedir');
-        } else {
-          $state.go('users.manage.org');
-        }
-      });
     }
   }
 }

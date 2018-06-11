@@ -84,8 +84,14 @@
             error: 'trialModal.errorServerDown',
           };
         } else {
-          // we allow duplicate emails for the consumer users and duplicate organization names
-          if (obj.isExist === 'true' && !(key === 'endCustomerEmail' && obj.isConsumer === 'true') && key !== 'organizationName') {
+          // we allow duplicate organization names but not duplicate emails (unless email is consumer in which case we convert)
+          if (obj.isExist === 'true' && key === 'endCustomerEmail') {
+            if (obj.isConsumer === 'true') {
+              return {
+                unique: true,
+                warning: 'trialModal.warningIsConsumer',
+              };
+            }
             return {
               error: 'trialModal.errorInUse',
             };

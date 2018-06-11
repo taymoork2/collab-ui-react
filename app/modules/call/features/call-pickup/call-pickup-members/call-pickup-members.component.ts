@@ -118,10 +118,10 @@ class CallPickupMembersCtrl implements ng.IComponentController {
       .then((numbers: IMemberNumber[]) => {
         _.forEach(numbers, num => {
           this.CallPickupGroupService.isLineInPickupGroup(num.internal)
-          .then((name: string) => {
-            modalScope.lines!.push(num.internal);
-            modalScope.names!.push(name);
-          });
+            .then((name: string) => {
+              modalScope.lines!.push(num.internal);
+              modalScope.names!.push(name);
+            });
         });
       });
     this.$modal.open({

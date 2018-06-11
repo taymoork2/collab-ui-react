@@ -1,17 +1,17 @@
 (function () {
   'use strict';
 
-  var hostnameConfig = require('config/hostname.config');
-
   module.exports = angular
     .module('core.oauthconfig', [
       require('modules/core/config/config').default,
+      require('modules/core/config/urlConfig'),
       require('modules/core/scripts/services/utils'),
+      require('modules/core/storage').default,
     ])
     .factory('OAuthConfig', OAuthConfig)
     .name;
 
-  function OAuthConfig(Utils, Config) {
+  function OAuthConfig($location, Config, UrlConfig, Utils, SessionStorage) {
     var scopes = [
       'webexsquare:admin',
       'webexsquare:billing',
@@ -24,6 +24,8 @@
       'webex-messenger:get_webextoken',
       'cloud-contact-center:admin',
       'spark-compliance:rooms_read',
+      'spark-compliance:people_read',
+      'spark-compliance:organizations_read',
       'compliance:spark_conversations_read',
       'contact-center-context:pod_read',
       'contact-center-context:pod_write',
@@ -43,6 +45,9 @@
       'spark:memberships_read',
       'spark:memberships_write',
       'spark:rooms_read',
+      //for HCS services
+      'ucmgmt-uaas:admin',
+      'ucmgmt-laas:admin',
     ];
 
     var oauth2Scope = encodeURIComponent(scopes.join(' '));
@@ -60,15 +65,13 @@
       },
       oauthUrl: {
         ciRedirectUrl: 'redirect_uri=%s',
-        oauth2UrlAtlas: 'https://idbroker.webex.com/idb/oauth2/v1/',
-        oauth2UrlCfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
         oauth2LoginUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s&cisService=%s',
         oauth2ClientUrlPattern: 'grant_type=client_credentials&scope=',
         oauth2CodeUrlPattern: 'grant_type=authorization_code&code=%s&scope=',
         oauth2AccessCodeUrlPattern: 'grant_type=refresh_token&refresh_token=%s',
         userInfo: 'user_info=%s',
+        oauth2NewCodeUrlPattern: '%sauthorize?response_type=code&client_id=%s&scope=%s&redirect_uri=%s&state=%s',
       },
-      logoutUrl: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=spark&goto=',
     };
 
     return {
@@ -84,25 +87,27 @@
       getNewAccessTokenPostData: getNewAccessTokenPostData,
       getOAuthClientRegistrationCredentials: getOAuthClientRegistrationCredentials,
       getOAuthRevokeUserTokenUrl: getOAuthRevokeUserTokenUrl,
+      getNewOauthAccessCodeUrl: getNewOauthAccessCodeUrl,
+      getOauthState: getOauthState,
     };
 
     // public
 
     function getLogoutUrl() {
       var acu = getAdminPortalUrl();
-      return config.logoutUrl + encodeURIComponent(acu);
+      return UrlConfig.getSaml2Url() + 'jsp/doSSO.jsp?type=logout&cisService=common&goto=' + encodeURIComponent(acu);
     }
 
     function getAccessTokenUrl() {
-      return getOauth2Url() + 'access_token';
+      return UrlConfig.getOAuth2Url() + 'access_token';
     }
 
     function getOauthDeleteRefreshTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=';
+      return UrlConfig.getOAuth2Url() + 'tokens/user?refreshtokens=';
     }
 
     function getOAuthRevokeUserTokenUrl() {
-      return getOauth2Url() + 'tokens?username=';
+      return UrlConfig.getOAuth2Url() + 'tokens?username=';
     }
 
     function getOAuthClientRegistrationCredentials() {
@@ -113,7 +118,7 @@
       var redirectUrl = getAdminPortalUrl();
       var pattern = config.oauthUrl.oauth2LoginUrlPattern;
       var params = [
-        getOauth2Url(),
+        UrlConfig.getOAuth2Url(),
         getClientId(),
         oauth2Scope,
         encodeURIComponent(redirectUrl),
@@ -129,8 +134,21 @@
       return Utils.sprintf(pattern, params);
     }
 
+    function getNewOauthAccessCodeUrl() {
+      var pattern = config.oauthUrl.oauth2NewCodeUrlPattern;
+      var redirectUrl = 'urn:ietf:wg:oauth:2.0:oob';
+      var params = [
+        UrlConfig.getOAuth2Url(),
+        getClientId(),
+        oauth2Scope,
+        encodeURIComponent(redirectUrl),
+        getOauthState(),
+      ];
+      return Utils.sprintf(pattern, params);
+    }
+
     function getOauthListTokenUrl() {
-      return 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/';
+      return UrlConfig.getOAuth2Url() + 'tokens/user/';
     }
 
     function getOauthAccessCodeUrl(refresh_token) {
@@ -173,21 +191,14 @@
       return Utils.sprintf(config.oauthUrl.userInfo, params);
     }
 
-    function getAbsUrlForDev() {
-      var urlAtRootContext = Config.getAbsUrlAtRootContext();
-      var isOkayForRedir = Config.canUseAbsUrlForDevLogin(urlAtRootContext);
-      return (isOkayForRedir) ? urlAtRootContext : 'http://127.0.0.1:8000';
-    }
-
     function getAdminPortalUrl() {
-      var adminPortalUrl = {
-        dev: getAbsUrlForDev(),
-        cfe: 'https://' + hostnameConfig.CFE,
-        integration: 'https://' + hostnameConfig.INTEGRATION + '/',
-        prod: 'https://' + hostnameConfig.PRODUCTION + '/',
-      };
-      var env = Config.isE2E() ? 'dev' : Config.getEnv();
-      return adminPortalUrl[env];
+      var isDev = Config.isE2E() || Config.isDev();
+
+      if (isDev) {
+        return Config.getAbsUrlForDev();
+      }
+
+      return 'https://' + $location.host() + '/';
     }
 
     function getClientSecret() {
@@ -200,18 +211,19 @@
       return clientSecret[Config.getEnv()];
     }
 
-    function getOauth2Url() {
-      var oAuth2Url = {
-        dev: config.oauthUrl.oauth2UrlAtlas,
-        cfe: config.oauthUrl.oauth2UrlCfe,
-        integration: config.oauthUrl.oauth2UrlAtlas,
-        prod: config.oauthUrl.oauth2UrlAtlas,
-      };
-      return oAuth2Url[Config.getEnv()];
+    function getOauthServiceType() {
+      return 'common';
     }
 
-    function getOauthServiceType() {
-      return 'spark';
+    function getOauthState() {
+      var state = SessionStorage.get('oauthState') || generateOauthState();
+      return state;
+    }
+
+    function generateOauthState() {
+      var state = Utils.getUUID();
+      SessionStorage.put('oauthState', state);
+      return state;
     }
   }
 }());

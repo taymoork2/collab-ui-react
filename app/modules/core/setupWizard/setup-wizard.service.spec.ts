@@ -24,10 +24,11 @@ describe('Service: SetupWizard Service', function () {
     this.webexTrialMixed = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/accountWithTrial.json'));
     this.webexTrialOnly = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/aboutToConvert.json'));
     this.noWebexTrial = _.clone(getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASP.json'));
+    this.centerDetails = _.clone(getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json')[0]);
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(this.authinfoPendingSubscriptions);
     spyOn(this.Authinfo, 'getConferenceServices').and.returnValue(this.conferenceServices);
-    spyOn(this.SetupWizardService, 'validateTransferCode').and.callThrough();
-    spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId').and.callThrough();
+    spyOn(this.SetupWizardService, 'validateTransferCode');
+    spyOn(this.SetupWizardService, 'validateTransferCodeBySubscriptionId');
   });
 
   afterEach(function () {
@@ -176,8 +177,8 @@ describe('Service: SetupWizard Service', function () {
       this.$httpBackend.when('GET', url).respond(200, { ccaspPartnerList: partners });
       this.SetupWizardService.getCCASPPartners().then((result) => {
         expect(result.length).toEqual(3);
-        expect(result)[0].toEqual('anotherpartner');
-        expect(result)[2].toEqual('yetanother');
+        expect(result[0]).toEqual('anotherpartner');
+        expect(result[2]).toEqual('yetanother');
       });
       this.$httpBackend.flush();
     });
@@ -237,7 +238,7 @@ describe('Service: SetupWizard Service', function () {
   describe('getConferenceLicensesBySubscriptionId', function () {
     it('should return the list of conference licenses', function () {
       const result = this.SetupWizardService.getConferenceLicensesBySubscriptionId('SubCt31test20161222111');
-      expect(result.length).toBe(2);
+      expect(result.length).toBe(3);
     });
   });
 
@@ -295,6 +296,7 @@ describe('Service: SetupWizard Service', function () {
         orderUuid: undefined,
       };
       const url = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/site/verifytransfercode`;
+      this.SetupWizardService.validateTransferCodeBySubscriptionId.and.callThrough();
       this.SetupWizardService.validateTransferCodeBySubscriptionId({
         siteUrl: 'www.somesite',
         transferCode: '123',
@@ -344,6 +346,22 @@ describe('Service: SetupWizard Service', function () {
       expect(result).toBeTruthy();
       result = this.SetupWizardService.isSubscriptionEnterprise('Sub100449');
       expect(result).toBeFalsy();
+    });
+  });
+  describe('getting existing conference service details:', function () {
+    it ('should return results from the api', function () {
+      this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=Sub-os090944`).respond(200, this.centerDetails);
+      this.SetupWizardService.getExistingConferenceServiceDetails('Sub-os090944').then((result) => {
+        expect(result).toEqual(this.centerDetails);
+      });
+      this.$httpBackend.flush();
+    });
+    it ('should return an empty object if the service call fails', function () {
+      this.$httpBackend.expectGET(`${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=Sub-os090944`).respond(500, 'error-in-request', null, 'error');
+      this.SetupWizardService.getExistingConferenceServiceDetails('Sub-os090944').catch((result) => {
+        expect(result).toEqual({});
+      });
+      this.$httpBackend.flush();
     });
   });
 });

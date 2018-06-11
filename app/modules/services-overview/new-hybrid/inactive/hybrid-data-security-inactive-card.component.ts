@@ -56,7 +56,14 @@ export class HybridDataSecurityInactiveCardComponent implements ng.IComponentOpt
     <article>
       <div class="inactive-card_header">
         <h4 translate="servicesOverview.cards.hybridDataSecurity.title"></h4>
-        <div class="inactive-card_logo"><cr-pro-pack-icon ng-if="!$ctrl.loading && !$ctrl.treatAsPurchased" tooltip="{{::'common.proPackTooltip' | translate}}" tooltip-append-to-body="true" tooltip-placement="right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::$ctrl.infoText| translate}}"></cr-pro-pack-icon></div>
+        <div class="inactive-card_logo">
+          <pro-pack-tooltip
+            ng-if="!$ctrl.loading && !$ctrl.treatAsPurchased"
+            tt-tooltip-append-to-body="true"
+            tt-tooltip-placement="right"
+            tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+          </pro-pack-tooltip>
+        </div>
       </div>
       <div ng-if="$ctrl.loading">
         <i class="icon icon-spinner icon-2x"></i>

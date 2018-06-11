@@ -12,5 +12,5 @@ export default angular
     FeatureToggleService,
     windowModule,
   ])
-   .service('IdleTimeoutService', IdleTimeoutService)
+  .service('IdleTimeoutService', IdleTimeoutService)
   .name;

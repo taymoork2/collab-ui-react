@@ -92,10 +92,12 @@ function print_index_ts {
 import './${html_element_name}.scss';
 
 import { $js_component_name } from './${js_component_file_no_ext}';
+import * as ngTranslateModuleName from 'angular-translate';
+import collabUiModuleName from '@collabui/collab-ui-ng';
 
 export default angular.module('${ng_module_name}', [
-  require('angular-translate'),
-  require('collab-ui-ng').default,
+  ngTranslateModuleName,
+  collabUiModuleName,
 ])
   .component('${js_directive_name}', new ${js_component_name}())
   .name;
@@ -154,13 +156,13 @@ _EOF
 function print_component_scss {
     cat << _EOF
 // TODO: use as-appropriate
-// @import '~collab-ui/scss/settings/typography';
-// @import '~collab-ui/scss/settings/colors';
-// @import 'styles/partials/mixins';  // <- for 'keep-flex()'
+// @import '~@collabui/collab-ui/scss/settings/typography';
+// @import '~@collabui/collab-ui/scss/settings/colors';
+// @import 'styles/partials/mixins';  // <- for 'keep-flex-container()'
 
 ${html_element_name} {
   // TODO: use as-appropriate
-  // @include keep-flex();
+  // @include keep-flex-container();
 }
 _EOF
 }

@@ -6,6 +6,11 @@
     <p class="time-zone" translate-values="{quantity: meetingCtrl.getLicensesForSite(site.siteUrl)}" translate="firstTimeWizard.licenseCountEquals"></p>
     <div ng-if="meetingCtrl.isShowUserManagement && site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaSpark"></div>
     <div ng-if="meetingCtrl.isShowUserManagement && !site.isCIUnifiedSite" class="time-zone" translate="firstTimeWizard.userManagementViaWebex"></div>
-    <p ng-if="meetingCtrl.getSitesAudioPackageDisplay()"> {{:: meetingCtrl.getSitesAudioPackageDisplay()}}</p>
+    <div ng-if="meetingCtrl.getSitesAudioPackageTypeDisplay()"> 
+      <p>{{::meetingCtrl.getSitesAudioPackageTypeDisplay()}}</p>
+      <p ng-if="meetingCtrl.getSitesAudioPartnerDisplay()">
+        {{::meetingCtrl.getSitesAudioPartnerDisplay()}}
+      </p>
+    </div>
   </div>
 </div>

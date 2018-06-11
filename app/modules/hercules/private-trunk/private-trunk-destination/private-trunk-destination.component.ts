@@ -150,13 +150,13 @@ export class PrivateTrunkDestinationCtrl implements ng.IComponentController {
   public uniqueDomainValidation(viewValue: string): ng.IPromise<void> {
     const validateDefer = this.$q.defer<void>();
     this.PrivateTrunkService.isValidUniqueSipDestination(viewValue)
-    .then((res) => {
-      if (res) {
-        validateDefer.resolve();
-      } else {
-        validateDefer.reject();
-      }
-    });
+      .then((res) => {
+        if (res) {
+          validateDefer.resolve();
+        } else {
+          validateDefer.reject();
+        }
+      });
     return validateDefer.promise;
   }
 

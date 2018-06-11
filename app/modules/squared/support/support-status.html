@@ -1,5 +1,5 @@
 <cs-card-layout class="status">
-  <cs-card class="medium">
+  <cs-card class="cs-card--medium">
     <article>
       <header>
         <h4 translate="supportPage.cards.sparkStatus"></h4>
@@ -19,7 +19,7 @@
     </article>
   </cs-card>
 
-  <cs-card id="supportPageToolsCard" class="medium" ng-if="showToolsCard()">
+  <cs-card id="supportPageToolsCard" class="cs-card--medium" ng-if="showToolsCard()">
     <article>
       <header>
         <h4 translate="supportPage.cards.tools.tools"></h4>
@@ -76,7 +76,7 @@
     </article>
   </cs-card>
 
-  <cs-card class="medium">
+  <cs-card class="cs-card--medium">
     <article>
       <header>
         <h4 translate="supportPage.cards.supportResources"></h4>
@@ -89,17 +89,10 @@
           <a href ng-click="sendFeedback()" ng-show="reportingUrl === null" translate="supportPage.sendFeedback"></a>
           <a href="{{reportingUrl}}" ng-show="reportingUrl !== null" target="_blank">{{reportingUrl}}</a>
         </p>
-        <h5 class="content-header" translate="supportPage.help"></h5>
+        <h5 class="content-header" translate="common.help"></h5>
         <p class="content" translate="supportPage.helpContent" translate-values="{ handler: helpHandler}"></p>
         <p class="content">{{'supportPage.helpUrl' | translate}}
           <a href="{{helpUrl}}" target="_blank">{{helpUrl}}</a>
-        </p>
-        <h5 class="content-header" translate="supportPage.faqs"></h5>
-        <p class="content">
-          <a href="{{ssoUrl}}" target="_blank" translate="supportPage.sso"></a>
-        </p>
-        <p class="content">
-          <a href="{{rolesUrl}}" target="_blank" translate="supportPage.roles"></a>
         </p>
       </section>
     </article>

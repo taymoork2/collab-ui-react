@@ -64,22 +64,22 @@ export class HuronSiteService {
       customerId: this.Authinfo.getOrgId(),
       siteId: siteId,
     }).$promise
-    .then(site => {
-      return new Site(site);
-    });
+      .then(site => {
+        return new Site(site);
+      });
   }
 
   public getTheOnlySite(): ng.IPromise<ISite> {
     return this.huronSiteService.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(sites => {
-      if (sites.length > 0) {
-        return this.getSite(_.get<string>(sites[0], 'uuid'));
-      } else {
-        return new Site();
-      }
-    });
+      .then(sites => {
+        if (sites.length > 0) {
+          return this.getSite(_.get<string>(sites[0], 'uuid'));
+        } else {
+          return new Site();
+        }
+      });
   }
 
   public createSite(site: ISite): ng.IPromise<string> {
@@ -103,10 +103,10 @@ export class HuronSiteService {
       regionCodeDialing: site.regionCodeDialing,
       toggleEnabled: true, // TODO (jlowery): remove after 'i751-10d-ext' toggle is removed.
     },
-    (_response, headers) => {
-      location = headers('Location');
-    }).$promise
-    .then( () => location);
+      (_response, headers) => {
+        location = headers('Location');
+      }).$promise
+      .then( () => location);
   }
 
   public updateSite(site: ISite): ng.IPromise<void> {
@@ -137,10 +137,10 @@ export class HuronSiteService {
     return this.huronSiteService.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then( (sites) => {
-      return _.map(sites, (site) => {
-        return _.pick(site, this.sitePickList);
+      .then( (sites) => {
+        return _.map(sites, (site) => {
+          return _.pick(site, this.sitePickList);
+        });
       });
-    });
   }
 }

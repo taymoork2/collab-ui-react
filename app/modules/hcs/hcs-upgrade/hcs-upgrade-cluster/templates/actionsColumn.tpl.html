@@ -1,0 +1,23 @@
+<div class="grid-contents" ng-hide="{{row.entity.rowWidth === 0}}">
+  <span cs-dropdown class="upgrade-cluster-actions-menu">
+    <button cs-dropdown-toggle
+      id="actionsButton"
+      class="btn--none dropdown-toggle"
+      ng-click="$event.stopPropagation()"
+      ng-class="dropdown-toggle"
+      aria-label="{{::'common.toggleMenu' | translate}}">
+      <i class="icon icon-three-dots"></i>
+    </button>
+    <ul cs-dropdown-menu class="dropdown-menu dropdown-primary" role="menu">
+      <li class="actions" ng-click="grid.appScope.viewUpgradeStatus($event, row.entity)">
+        <a><span translate="hcs.upgrade.upgradeGroup.upgrade.gridColumn.actions.viewUpgradeStatus"></span></a>
+      </li>
+      <li class="actions" ng-click="grid.appScope.runPrechecks($event, row.entity)">
+        <a><span translate="hcs.upgrade.upgradeGroup.upgrade.gridColumn.actions.runPrechecks"></span></a>
+      </li>
+      <li class="actions" ng-click="grid.appScope.startUpgrade(row.entity)" ng-show="{{row.entity.clusterStatus === grid.appScope.statusSwUpgradeNeeded}}">
+        <a><span translate="hcs.upgrade.upgradeGroup.upgrade.sectionHeader"></span></a>
+      </li>
+    </ul>
+  </span>
+</div>

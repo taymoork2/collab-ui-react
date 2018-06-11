@@ -21,7 +21,7 @@
     .service('ServiceStateChecker', ServiceStateChecker);
 
   /*@ngInject*/
-  function ServiceStateChecker($translate, Authinfo, ClusterService, DomainManagementService, FmsOrgSettings, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptorService, USSService, Notification) {
+  function ServiceStateChecker($q, $translate, Authinfo, DomainManagementService, FmsOrgSettings, HybridServicesClusterService, HybridServicesExtrasService, HybridServicesUtilsService, NotificationService, Orgservice, ServiceDescriptorService, USSService, Notification) {
     var isSipUriAcknowledged = false;
     var hasSipUriDomainConfigured = false;
     var hasVerifiedDomains = false;
@@ -29,14 +29,17 @@
     var servicesWithUserAssignments = ['squared-fusion-uc', 'squared-fusion-ec', 'squared-fusion-cal', 'spark-hybrid-impinterop', 'squared-fusion-gcal'];
 
     function checkState(serviceId) {
-      if (checkIfFusePerformed()) {
-        checkDomainVerified(serviceId);
-        checkUserStatuses(serviceId);
-        checkCallServiceConnect(serviceId);
-        checkUnassignedClusterReleaseChannels();
-      } else {
-        removeAllServiceAndUserNotifications();
-      }
+      checkIfFusePerformed()
+        .then(function (performed) {
+          if (performed) {
+            checkDomainVerified(serviceId);
+            checkUserStatuses(serviceId);
+            checkCallServiceConnect(serviceId);
+            checkUnassignedClusterReleaseChannels();
+          } else {
+            removeAllServiceAndUserNotifications();
+          }
+        });
       checkServiceAlarms(serviceId);
     }
 
@@ -76,18 +79,20 @@
     }
 
     function checkIfFusePerformed() {
-      var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
-      if (_.size(clusters) === 0) {
-        NotificationService.addNotification(
-          NotificationService.types.TODO,
-          'fuseNotPerformed',
-          1,
-          notificationsFuseNotPerformedTemplatePath, allExpresswayServices);
-        return false;
-      } else {
-        NotificationService.removeNotification('fuseNotPerformed');
-        return true;
-      }
+      return HybridServicesClusterService.getAll().then(function (response) {
+        var clusters = _.filter(response, { targetType: 'c_mgmt' });
+        if (_.size(clusters) === 0) {
+          NotificationService.addNotification(
+            NotificationService.types.TODO,
+            'fuseNotPerformed',
+            1,
+            notificationsFuseNotPerformedTemplatePath, allExpresswayServices);
+          return false;
+        } else {
+          NotificationService.removeNotification('fuseNotPerformed');
+          return true;
+        }
+      });
     }
 
     function setSipUriNotificationAcknowledgedAndRemoveNotification() {
@@ -234,17 +239,18 @@
           }
         }
       }).catch(function (error) {
-        Notification.errorWithTrackingId(error, 'hercules.error.couldNotGetServices');
+        Notification.errorWithTrackingId(error, 'hercules.errors.couldNotGetServices');
       });
     }
 
     function checkUnassignedClusterReleaseChannels() {
-      FmsOrgSettings.get()
-        .then(function (data) {
-          return data.expresswayClusterReleaseChannel;
-        })
-        .then(function (defaultReleaseChannel) {
-          var clusters = ClusterService.getClustersByConnectorType('c_mgmt');
+      $q.all({
+        clusters: HybridServicesClusterService.getAll(),
+        settings: FmsOrgSettings.get(),
+      })
+        .then(function (results) {
+          var defaultReleaseChannel = results.settings.expresswayClusterReleaseChannel;
+          var clusters = _.filter(results.clusters, { targetType: 'c_mgmt' });
           var anomalies = _.filter(clusters, function (cluster) {
             return !cluster.resourceGroupId && cluster.releaseChannel !== defaultReleaseChannel;
           });
@@ -267,7 +273,7 @@
                   clusterId: cluster.id,
                   clusterName: cluster.name,
                   currentReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.releaseChannel),
-                  defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + cluster.defaultReleaseChannel),
+                  defaultReleaseChannel: $translate.instant('hercules.fusion.add-resource-group.release-channel.' + defaultReleaseChannel),
                 }
               );
             });

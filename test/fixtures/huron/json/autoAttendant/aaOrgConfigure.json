@@ -1,0 +1,122 @@
+{
+"hybridConfigurationResponse": {
+"items":[
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-uc",
+"id":"squared-fusion-uc",
+"enabled":true,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/ept",
+"id":"ept",
+"enabled":false,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-gcal",
+"id":"squared-fusion-gcal",
+"enabled":false,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-cal",
+"id":"squared-fusion-cal",
+"enabled":false,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-mgmt",
+"id":"squared-fusion-mgmt",
+"enabled":true,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-ec",
+"id":"squared-fusion-ec",
+"enabled":true,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/contact-center-context",
+"id":"contact-center-context",
+"enabled":false,
+"emailSubscribers":""
+}
+]
+},
+"hybridNotConfiguredResponse": {
+"items":[
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-uc",
+"id":"squared-fusion-uc",
+"enabled":true,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/ept",
+"id":"ept",
+"enabled":false,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/squared-fusion-gcal",
+"id":"squared-fusion-gcal",
+"enabled":false,
+"emailSubscribers":""
+},
+{
+"url":"https://hercules-a.wbx2.com/hercules/api/v2/organizations/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/services/contact-center-context",
+"id":"contact-center-context",
+"enabled":false,
+"emailSubscribers":""
+}
+]
+},
+"EPTConfigureResponse": {
+   "url":"https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks",
+   "domains":[ 
+      "hybridcarelab.com"
+   ],
+   "resources":[ 
+      { 
+         "url":"https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks/resources/67c14ea0-8cfe-4543-a71f-3ac606f4601c",
+         "uuid":"67c14ea0-8cfe-4543-a71f-3ac606f4601c",
+         "name":"Edge2",
+         "address":"edge1.hybridcarelab.com",
+         "port":0
+      }
+   ],
+   "paging":{ 
+      "next":[ 
+         "https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks?offset=200&limit=200"
+      ],
+      "prev":[ 
+         "https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks?offset=0&limit=200"
+      ],
+      "limit":200,
+      "offset":0,
+      "pages":null,
+      "count":null
+   }
+}, 
+"EPTNotConfiguredResponse": {
+   "url":"https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks",
+   "domains":[ 
+      "hybridcarelab.com"
+   ],
+   "resources":[],
+   "paging":{ 
+      "next":[ 
+         "https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks?offset=200&limit=200"
+      ],
+      "prev":[ 
+         "https://cmi.huron-dev.com/api/v2/customers/382a9ff4-8fdd-4a6a-aaab-83a82142d8ec/privatetrunks?offset=0&limit=200"
+      ],
+      "limit":200,
+      "offset":0,
+      "pages":null,
+      "count":null
+   }
+}
+}

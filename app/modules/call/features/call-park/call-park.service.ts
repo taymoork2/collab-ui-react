@@ -64,9 +64,9 @@ export class CallParkService {
     return this.callParkResource.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then( callParks => {
-      return _.get<ICallParkListItem[]>(callParks, 'callparks');
-    });
+      .then( callParks => {
+        return _.get<ICallParkListItem[]>(callParks, 'callparks');
+      });
   }
 
   public getCallPark(callParkId): ng.IPromise<CallPark> {
@@ -77,47 +77,47 @@ export class CallParkService {
         customerId: this.Authinfo.getOrgId(),
         callParkId: callParkId,
       }).$promise
-      .then( (callParkResource) => {
-        const callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
-        callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
+        .then( (callParkResource) => {
+          const callPark = new CallPark(_.pick<CallPark, CallPark>(callParkResource, this.callParkProperties));
+          callPark.fallbackDestination = new FallbackDestination(_.pick<FallbackDestination, FallbackDestination>(callParkResource.fallbackDestination, this.fallbackDestProperties));
         // The timer property is not in GET callpark and needs to be set to null to be consistent.
-        callPark.fallbackDestination.timer = null;
+          callPark.fallbackDestination.timer = null;
 
-        const callParkMembers: CallFeatureMember[] = _.map(callParkResource.members, member => {
-          return new CallFeatureMember({
-            uuid: _.get<string>(member, 'memberUuid'),
-            name: _.get<string>(member, 'memberName'),
-            showName: true,
-            type: _.get<string>(member, 'memberType') === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
-            cardType: CardType.SIMPLE,
-            complexCardType: undefined,
-            number: _.get<string>(member, 'number'),
-            memberItems: [],
-            memberItemId: _.get<string>(member, 'numberUuid'),
-            thumbnailSrc: undefined,
+          const callParkMembers: CallFeatureMember[] = _.map(callParkResource.members, member => {
+            return new CallFeatureMember({
+              uuid: _.get<string>(member, 'memberUuid'),
+              name: _.get<string>(member, 'memberName'),
+              showName: true,
+              type: _.get<string>(member, 'memberType') === USER_PLACE ? MemberType.USER_PLACE : MemberType.USER_REAL_USER,
+              cardType: CardType.SIMPLE,
+              complexCardType: undefined,
+              number: _.get<string>(member, 'number'),
+              memberItems: [],
+              memberItemId: _.get<string>(member, 'numberUuid'),
+              thumbnailSrc: undefined,
+            });
           });
-        });
-        const promises: ng.IPromise<CallFeatureMember>[] = [];
-        _.forEach(callParkMembers, member => {
-          promises.push(this.FeatureMemberService.getMemberPicture(member.uuid)
-            .then(response => {
-              member.thumbnailSrc = _.get(response, 'thumbnailSrc', undefined);
-              return member;
-            })
-            .catch( () => {
-              return member;
-            }));
-        });
+          const promises: ng.IPromise<CallFeatureMember>[] = [];
+          _.forEach(callParkMembers, member => {
+            promises.push(this.FeatureMemberService.getMemberPicture(member.uuid)
+              .then(response => {
+                member.thumbnailSrc = _.get(response, 'thumbnailSrc', undefined);
+                return member;
+              })
+              .catch( () => {
+                return member;
+              }));
+          });
 
-        return this.$q.all(promises).then( (callParkMembers) => {
-          callPark.members = callParkMembers;
+          return this.$q.all(promises).then( (callParkMembers) => {
+            callPark.members = callParkMembers;
+            return callPark;
+          });
+
+        }).then(callPark => {
+          this.callParkDataCopy = this.cloneCallParkData(callPark);
           return callPark;
         });
-
-      }).then(callPark => {
-        this.callParkDataCopy = this.cloneCallParkData(callPark);
-        return callPark;
-      });
     }
   }
 
@@ -144,7 +144,7 @@ export class CallParkService {
     }, (_response, headers) => {
       location = headers('Location');
     }).$promise
-    .then( () => location);
+      .then( () => location);
   }
 
   public updateCallPark(callParkId: string | undefined, data: CallPark): ng.IPromise<CallPark> {
@@ -167,9 +167,9 @@ export class CallParkService {
         sendToVoicemail: data.fallbackDestination.sendToVoicemail,
       },
     }).$promise
-    .then( () => {
-      return this.getCallPark(callParkId);
-    });
+      .then( () => {
+        return this.getCallPark(callParkId);
+      });
   }
 
   public deleteCallPark(callParkId: string): ng.IPromise<any> {
@@ -185,16 +185,16 @@ export class CallParkService {
         customerId: this.Authinfo.getOrgId(),
         locationId: location.uuid,
       }).$promise
-      .then( ranges => {
-        return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
-      });
+        .then( ranges => {
+          return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
+        });
     } else {
       return this.callParkRangeResource.get({
         customerId: this.Authinfo.getOrgId(),
       }).$promise
-      .then( ranges => {
-        return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
-      });
+        .then( ranges => {
+          return _.get<ICallParkRangeItem[]>(ranges, 'ranges', []);
+        });
     }
   }
 
@@ -205,17 +205,17 @@ export class CallParkService {
         locationId: location.uuid,
         startRange: startRange,
       }).$promise
-      .then( endRanges => {
-        return _.get<string[]>(endRanges, 'endRange', []);
-      });
+        .then( endRanges => {
+          return _.get<string[]>(endRanges, 'endRange', []);
+        });
     } else {
       return this.callParkRangeResource.get({
         customerId: this.Authinfo.getOrgId(),
         startRange: startRange,
       }).$promise
-      .then( endRanges => {
-        return _.get<string[]>(endRanges, 'endRange', []);
-      });
+        .then( endRanges => {
+          return _.get<string[]>(endRanges, 'endRange', []);
+        });
     }
   }
 

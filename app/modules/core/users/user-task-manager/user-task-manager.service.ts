@@ -1,6 +1,11 @@
 import { ITask } from './user-task-manager.component';
 import { TaskStatus } from './user-task-manager.constants';
-import { IErrorItem } from './csv-upload-results.component';
+import { IErrorItem, IErrorRow } from './csv-upload-results.component';
+
+export interface IDateAndTime {
+  date: string;
+  time: string;
+}
 
 export interface IPaging {
   count: number;
@@ -19,6 +24,12 @@ export interface IGetTasksResponse {
 export interface IGetFileUrlResponse {
   tempUrl: string;
   uniqueFileName: string;
+}
+
+export interface IGetFileChecksumResponse {
+  tempUrl: string;
+  uniqueFileName: string;
+  md5: string;
 }
 
 export interface IGetTaskErrorsResponse {
@@ -47,6 +58,10 @@ enum IntervalDelay {
 
 export class UserTaskManagerService {
   public IntervalDelay = IntervalDelay;
+  public readonly ERROR_LIMIT = 200;
+  public activeTask?: ITask;
+  private cancelDownloadErrorsDeferred?: ng.IDeferred<void>;
+  public errorArray: IErrorRow[] = [];
 
   private interval: IntervalTypeOf<ng.IPromise<ITask> | undefined> = {
     detail: undefined,
@@ -82,8 +97,11 @@ export class UserTaskManagerService {
   constructor(
     private $http: ng.IHttpService,
     private $interval: ng.IIntervalService,
+    private $translate: ng.translate.ITranslateService,
+    private $q: ng.IQService,
     private Authinfo,
     private UrlConfig,
+    private UserCsvService,
   ) {}
 
   public getTasks(): ng.IPromise<ITask[]> {
@@ -97,27 +115,30 @@ export class UserTaskManagerService {
     return this.$http<IGetTasksResponse>({
       method: 'GET',
       url: this.USER_ONBOARD_URL,
-      params: {
-        status: 'CREATED,STARTING,STARTED,STOPPING',
-      },
-    }).then(response => response.data.items);
+    }).then(response => {
+      return _.filter(_.get(response, 'data.items', []), (task: ITask) => {
+        return this.isTaskPending(task.latestExecutionStatus);
+      });
+    });
   }
 
-  public getTask(jobInstanceId: string): ng.IPromise<ITask> {
+  public getTask(id: string): ng.IPromise<ITask> {
     return this.$http<ITask>({
       method: 'GET',
-      url: this.getJobSpecificUrl(jobInstanceId),
+      url: this.getJobSpecificUrl(id),
     }).then(response => response.data);
   }
 
-  public submitCsvImportTask(fileName: string, fileData: string, exactMatchCsv: boolean): ng.IPromise<ITask> {
+  public submitCsvImportTask(fileName: string, fileData: string, fileChecksum: string, exactMatchCsv: boolean): ng.IPromise<ITask> {
     // submit a CSV file import task procedure:
     // 1. get Swift file location
     // 2. upload CSV file to Swift
-    // 3. create and start the Kafka job
+    // 3. compare checksum
+    // 4. create and start the Kafka job
     return this.getFileUrl(fileName)
       .then(fileUploadObject => {
         return this.uploadToFileStorage(fileUploadObject, fileData)
+          .then(() => this.checkFileChecksum(fileUploadObject, fileChecksum))
           .then(() => this.submitCsvImportJob(fileUploadObject, exactMatchCsv));
       });
   }
@@ -128,13 +149,47 @@ export class UserTaskManagerService {
       .then(response => `${response.data.displayName} (${response.data.userName})`);
   }
 
-  public getDateAndTime(isoDate: string) {
+  public getDateAndTime(isoDate: string | number): IDateAndTime {
     const date = moment(isoDate);
     const isDateValid = date.isValid();
     return {
       date: isDateValid ? date.format('ll') : '',
       time: isDateValid ? date.format('LT') : '',
     };
+  }
+
+  public getTaskStatusTranslate(task: ITask): string {
+    let statusTranslate = '';
+    switch (task.latestExecutionStatus) {
+      case TaskStatus.CREATED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.created');
+        break;
+      case TaskStatus.STARTED:
+      case TaskStatus.STARTING:
+      case TaskStatus.STOPPING:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.processing');
+        break;
+      case TaskStatus.ABANDONED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.canceled');
+        break;
+      case TaskStatus.COMPLETED:
+        if (task.counts.usersFailed > 0) {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completedWithErrors');
+        } else {
+          statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.completed');
+        }
+        break;
+      case TaskStatus.FAILED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.failed');
+        break;
+      case TaskStatus.STOPPED:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.stopped');
+        break;
+      case TaskStatus.UNKNOWN:
+        statusTranslate = this.$translate.instant('userTaskManagerModal.taskStatus.unknown');
+        break;
+    }
+    return statusTranslate;
   }
 
   public isTaskPending(status: string): boolean {
@@ -150,8 +205,9 @@ export class UserTaskManagerService {
            status === TaskStatus.STOPPING;
   }
 
-  public isTaskError(status: string): boolean {
-    return status === TaskStatus.COMPLETED_WITH_ERRORS ||
+  public isTaskError(task: ITask): boolean {
+    const status = task.latestExecutionStatus;
+    return (status === TaskStatus.COMPLETED && task.counts.usersFailed > 0) ||
            status === TaskStatus.FAILED;
   }
 
@@ -159,26 +215,26 @@ export class UserTaskManagerService {
     return status === TaskStatus.ABANDONED;
   }
 
-  public cancelTask(jobInstanceId: string): ng.IPromise<ng.IHttpResponse<{}>> {
+  public cancelTask(id: string): ng.IPromise<ng.IHttpResponse<{}>> {
     const postReq: ng.IRequestConfig = {
       method: 'POST',
-      url: this.getJobSpecificUrl(jobInstanceId, '/actions/abandon/invoke'),
+      url: this.getJobSpecificUrl(id, '/actions/abandon/invoke'),
     };
     return this.$http(postReq);
   }
 
-  public pauseTask(jobInstanceId: string): ng.IPromise<ng.IHttpResponse<{}>> {
+  public pauseTask(id: string): ng.IPromise<ng.IHttpResponse<{}>> {
     const postReq: ng.IRequestConfig = {
       method: 'POST',
-      url: this.getJobSpecificUrl(jobInstanceId, '/actions/pause/invoke'),
+      url: this.getJobSpecificUrl(id, '/actions/pause/invoke'),
     };
     return this.$http(postReq);
   }
 
-  public resumeTask(jobInstanceId: string): ng.IPromise<ng.IHttpResponse<{}>> {
+  public resumeTask(id: string): ng.IPromise<ng.IHttpResponse<{}>> {
     const postReq: ng.IRequestConfig = {
       method: 'POST',
-      url: this.getJobSpecificUrl(jobInstanceId, '/actions/resume/invoke'),
+      url: this.getJobSpecificUrl(id, '/actions/resume/invoke'),
     };
     return this.$http(postReq);
   }
@@ -205,6 +261,32 @@ export class UserTaskManagerService {
     return this.$http(uploadReq);
   }
 
+  private getFileChecksum(uniqueFileName: string): ng.IPromise<IGetFileChecksumResponse> {
+    return this.$http<IGetFileChecksumResponse>({
+      method: 'GET',
+      url: `${this.UrlConfig.getAdminServiceUrl()}csv/organizations/${this.Authinfo.getOrgId()}/downloadurl`,
+      params: {
+        filename: uniqueFileName,
+      },
+    }).then(response => response.data);
+  }
+
+  private checkFileChecksum(fileUploadObject: IGetFileUrlResponse, fileChecksum: string): ng.IPromise<void> {
+    return this.$q((resolve, reject) => {
+      this.getFileChecksum(fileUploadObject.uniqueFileName)
+        .then(fileChecksumObject => {
+          if (fileChecksumObject.md5 === fileChecksum) {
+            resolve();
+          } else {
+            reject(this.$translate.instant('userTaskManagerModal.csvFileChecksumError'));
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
+
   private submitCsvImportJob(fileUploadObject: IGetFileUrlResponse, exactMatchCsv: boolean): ng.IPromise<ITask> {
     const taskReq: ng.IRequestConfig = {
       method: 'POST',
@@ -219,16 +301,84 @@ export class UserTaskManagerService {
       .then(response => response.data);
   }
 
-  public getTaskErrors(jobInstanceId: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IErrorItem[]> {
+  public getTaskErrors(id: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
     return this.$http<IGetTaskErrorsResponse>({
       method: 'GET',
-      url: this.getJobSpecificUrl(jobInstanceId, '/errors'),
+      url: this.getJobSpecificUrl(id, '/errors'),
       timeout: cancelPromise,
-    }).then(response => response.data.items);
+      params: {
+        limit: this.ERROR_LIMIT,
+      },
+    }).then(response => response.data);
   }
 
-  public initTaskDetailPolling(jobInstanceId: string, callback: Function, scope: ng.IScope) {
-    return this.initTaskPolling('detail', () => this.getTask(jobInstanceId), callback, scope);
+  public getNextTaskErrors(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
+    return this.$http<IGetTaskErrorsResponse>({
+      method: 'GET',
+      url: url,
+      timeout: cancelPromise,
+    }).then(response => response.data);
+  }
+
+  private appendErrorArray(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<void> {
+    return this.getNextTaskErrors(url, cancelPromise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], cancelPromise);
+      }
+    });
+  }
+
+  public downloadTaskErrors(): ng.IPromise<void> {
+    this.errorArray = [];
+    this.cancelDownloadErrorsDeferred = this.$q.defer();
+    return this.getTaskErrors(this.activeTask!.id, this.cancelDownloadErrorsDeferred!.promise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], this.cancelDownloadErrorsDeferred!.promise).then(() => {
+          this.cancelDownloadErrorsDeferred = undefined;
+        });
+      }
+    });
+  }
+
+  public transformErrorData(errors: IErrorItem[]): IErrorRow[] {
+    const tempUserErrorArray: IErrorRow[] = [];
+    _.forEach(errors, errorEntry => {
+      _.forEach(errorEntry.error.message, msg => {
+        let errorMessage = '';
+        const errorType = _.split(_.get(msg, 'code'), '-')[0];
+        const errorCode = _.split(_.get(msg, 'code'), '-')[1];
+
+        if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
+          // For EFT, if the code starts with 'BATCH', use the description
+          errorMessage = msg.description;
+        } else if (errorCode) {
+          // get the localized error message
+          errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
+          // For EFT, if the error messages are stock/generic messages, use the description
+          if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
+            errorMessage = msg.description;
+          }
+        } else {
+          errorMessage = msg.description;
+        }
+
+        tempUserErrorArray.push({
+          row: _.get(errorEntry, 'itemNumber'),
+          error: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+        });
+      });
+    });
+    return tempUserErrorArray;
+  }
+
+  public initTaskDetailPolling(id: string, callback: Function, scope: ng.IScope) {
+    return this.initTaskPolling('detail', () => this.getTask(id), callback, scope);
   }
 
   public initRunningTaskListPolling(callback: Function, scope: ng.IScope) {
@@ -257,6 +407,14 @@ export class UserTaskManagerService {
 
   public cleanupAllTaskListPolling(callback: Function) {
     return this.cleanupTaskPolling('list', callback);
+  }
+
+  public setActiveTask(taskSelected: ITask) {
+    if (this.cancelDownloadErrorsDeferred) {
+      this.cancelDownloadErrorsDeferred.resolve();
+      this.cancelDownloadErrorsDeferred = undefined;
+    }
+    this.activeTask = taskSelected;
   }
 
   private changeTaskPollingDelay(intervalType: IntervalType, newDelay: number) {
@@ -328,7 +486,7 @@ export class UserTaskManagerService {
     return `${this.UrlConfig.getAdminBatchServiceUrl()}/customers/${this.Authinfo.getOrgId()}/jobs/general/useronboard`;
   }
 
-  private getJobSpecificUrl(jobInstanceId: string, additionalPath: string = '') {
-    return `${this.USER_ONBOARD_URL}/${encodeURIComponent(jobInstanceId)}${additionalPath}`;
+  private getJobSpecificUrl(id: string, additionalPath: string = '') {
+    return `${this.USER_ONBOARD_URL}/${encodeURIComponent(id)}${additionalPath}`;
   }
 }

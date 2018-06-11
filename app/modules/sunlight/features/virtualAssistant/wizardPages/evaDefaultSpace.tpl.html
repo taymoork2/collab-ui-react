@@ -23,8 +23,13 @@
               placeholder="$ctrl.getText('defaultSpace.placeHolder')"
               required="$ctrl.required"
               filter="true"
-              refresh-data-fn="$ctrl.getFilterDefaultSpaces(filter)">
+              refresh-data-fn="$ctrl.getFilterDefaultSpaces(filter)"
+              is-warn="{{$ctrl.template.missingDefaultSpace}}">
             </cs-select>
+        </div>
+        <div class="warning-message" ng-if="$ctrl.template.missingDefaultSpace">
+          <i class="icon icon-warning icon-lg"></i>
+          <div class="warning-text">{{$ctrl.getText('defaultSpace.noDefaultWarning')}}</div>
         </div>
         <div class="note-info">
           <i class="icon icon-info icon-lg"></i>{{$ctrl.getText('defaultSpace.noteInfo')}}

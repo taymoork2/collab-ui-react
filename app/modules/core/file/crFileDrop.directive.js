@@ -4,6 +4,8 @@
   angular.module('Core')
     .directive('crFileDrop', fileDrop);
 
+  var md5 = require('js-md5');
+
   /* @ngInject */
   function fileDrop($window, $timeout) {
     var directive = {
@@ -11,6 +13,7 @@
       scope: {
         file: '=',
         fileName: '=',
+        fileChecksum: '=?',
         fileMaxSizeError: '&',
         fileTypeError: '&',
         fileValidator: '&',
@@ -102,6 +105,9 @@
             scope.$apply(function () {
               scope.file = loadEvent.target.result;
               scope.fileName = name;
+              if (!_.isUndefined(attrs.fileChecksum)) {
+                scope.fileChecksum = md5(loadEvent.target.result);
+              }
               if (_.isFunction(scope.fileValidator)) {
                 $timeout(function () {
                   scope.fileValidator();

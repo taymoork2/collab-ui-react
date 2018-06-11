@@ -1,0 +1,71 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+
+.install-file-container {
+  padding-bottom: rem-calc(16);
+
+  .cs-card article {
+    height: rem-calc(244);
+
+    section {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      .card-section {
+        @include vr-spacing(pl, 1.5);
+        .card-section-item {
+          display: block;
+          color: $gray-base;
+          font-family: $brand-font-light;
+          font-size: $base-font-size;
+          line-height: rem-calc(24);
+
+          span {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    header {
+      @include vr-spacing(pt, 1);
+      button.close::before {
+        font-size: rem-calc(16);
+      }
+      padding-left: rem-calc(0);
+      padding-bottom: rem-calc(0);
+      p.h6 {
+        color: $gray-dark-1;
+      }
+      p.h4.ellipsis {
+        color: $gray-dark-4;
+      }
+    }
+
+    footer.install-file-footer {
+      background-color: #f5f5f5;
+      padding: .5rem 1.5rem .375rem;
+      .footer-item {
+        float: right;
+        margin-left: 0.75rem;
+      }
+      .footer-creating {
+        color: $gray-light-1;
+        font-family: $brand-font-light;
+        font-size: $h6-font-size;
+        line-height: rem-calc(24);
+        .icon.icon-download {
+          float: right;
+          padding-top: .5rem;
+        }
+      }
+    }
+    .icon-color {
+      color: $color-blue-base;
+    }
+  }
+}

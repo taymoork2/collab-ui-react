@@ -1,0 +1,49 @@
+<multi-step-modal
+  l10n-title="ssoCertificateModal.updateCertificate"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.next()"
+  next-disabled="$ctrl.nextDisabled"
+  custom-finish="$ctrl.submit()"
+  custom-finish-removed="$ctrl.submitRemoved"
+  custom-finish-l10n-label="common.submit"
+  >
+
+  <div class="sso-certificate-content sso-certificate-content-check" ng-if="$ctrl.isLoading">
+    <i class="icon icon-spinner sso-certificate-content__icon sso-certificate-content__icon--size100"></i>
+  </div>
+
+  <div class="sso-certificate-content sso-certificate-content-check" ng-if="!$ctrl.isLoading">
+    <i class="icon sso-certificate-content__icon sso-certificate-content__icon--size100"
+      ng-class="$ctrl.certificateCheckValue === $ctrl.certificateCheck.NONE ? 'icon-check-circle_100 sso-certificate-content__icon--green' : 'icon-view-list-circle_100'">
+    </i>
+    <p class="sso-certificate-content__paragraph-question h4"
+      translate="ssoCertificateModal.checkCertificate"
+      translate-value-href="{{$ctrl.docHref}}">
+    </p>
+    <div class="sso-certificate-content__radio cs-radio-group">
+      <input cs-input type="radio"
+              ng-model="$ctrl.certificateCheckValue"
+              name="certificateRadio"
+              ng-change="$ctrl.onCertificateCheckValueChanged()"
+              id="signingRequests"
+              ng-value="::$ctrl.certificateCheck.SIGNING"
+              cs-input-label="{{::'ssoCertificateModal.signingRequests' | translate}}">
+      <input cs-input type="radio"
+              ng-model="$ctrl.certificateCheckValue"
+              name="certificateRadio"
+              ng-change="$ctrl.onCertificateCheckValueChanged()"
+              id="none"
+              ng-value="::$ctrl.certificateCheck.NONE"
+              cs-input-label="{{::'ssoCertificateModal.noneApply' | translate}}">
+    </div>
+    <p class="sso-certificate-content__paragraph-action1 h5"
+      ng-if="$ctrl.certificateCheckValue !== $ctrl.certificateCheck.NONE
+        && $ctrl.certificateCheckValue !== $ctrl.certificateCheck.NEITHER"
+      translate="ssoCertificateModal.needToUpdateCertificate">
+    </p>
+    <p class="sso-certificate-content__paragraph-action1 h5"
+      ng-if="$ctrl.certificateCheckValue === $ctrl.certificateCheck.NONE"
+      translate="ssoCertificateModal.noActionRequired">
+    </p>
+  </div>
+</multi-step-modal>

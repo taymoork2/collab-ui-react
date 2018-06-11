@@ -1,3 +1,5 @@
+import { OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
+
 import testModule from './index';
 
 describe('Controller: UserManageEmailSuppressController', function () {
@@ -42,7 +44,9 @@ describe('Controller: UserManageEmailSuppressController', function () {
         },
       }]);
       this.controller.onNext();
-      expect(this.$state.go).toHaveBeenCalledWith('users.add');
+      expect(this.$state.go).toHaveBeenCalledWith('users.add.manual', {
+        resetOnboardStoreStates: OnboardCtrlBoundUIStates.ALL,
+      });
       expect(this.Analytics.trackAddUsers).toHaveBeenCalledWith(this.Analytics.eventNames.NEXT, this.Analytics.sections.ADD_USERS.uploadMethods.MANUAL);
     });
   });

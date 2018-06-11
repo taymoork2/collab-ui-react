@@ -4,7 +4,7 @@
 
 describe('Org Entitlement flow', function () {
   var token;
-  var testUser = utils.randomTestGmailwithSalt('roles');
+  var testUser = utils.randomTestGmailWithSalt('roles');
   var newLastName = 'Doe';
   var newDisplayName = 'John Doe ' + utils.randomId();
 
@@ -35,13 +35,12 @@ describe('Org Entitlement flow', function () {
   });
 
   it('should display subdetails panel', function () {
-    utils.expectIsDisplayed(users.rolesChevron);
-    utils.click(users.rolesChevron);
+    utils.expectIsDisplayed(users.userEditIcon);
+    utils.click(users.userEditIcon);
     utils.expectIsDisplayed(roles.rolesDetailsPanel);
     utils.expectIsDisplayed(roles.emailInput);
     utils.expectIsDisplayed(roles.displayNameInput);
     utils.expectIsDisabled(roles.emailInput);
-    utils.expectIsDisplayed(roles.sipAddressesInput);
   });
 
   it('should edit last name and display name and save', function () {
@@ -70,7 +69,7 @@ describe('Org Entitlement flow', function () {
   it('should verify user name change', function () {
     utils.click(users.closeSidePanel);
     utils.searchAndClick(testUser);
-    utils.click(users.rolesChevron);
+    utils.click(users.userEditIcon);
     utils.expectValueToBeSet(roles.displayNameInput, newDisplayName);
   });
 

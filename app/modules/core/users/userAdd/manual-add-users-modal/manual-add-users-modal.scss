@@ -1,0 +1,5 @@
+@import 'styles/partials/mixins';
+
+manual-add-users-modal {
+  @include keep-flex-container(column);
+}

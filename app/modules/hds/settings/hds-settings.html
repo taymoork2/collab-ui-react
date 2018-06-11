@@ -1,133 +1,131 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
-    <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
+  <email-notifications-section service-id="'spark-hybrid-datasecurity'"></email-notifications-section>
+  <keywords-section service-id="'spark-hybrid-datasecurity'"></keywords-section>
 
-    <!-- Service Status -->
-    <setting-section setting="hdsSettings.servicestatus" class="needs-border-top">
-      <div class="sub-section">
-        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRE_TRIAL">
-            <h5 class="sub-section__label" translate="hds.resources.settings.servicePreTrialModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDescHeader0">
-            </p>
-            <p class="sub-section__description">
-                <strong translate="hds.resources.settings.registeredNodes"></strong></br>
-                {{hdsSettings.numResourceNodes}} &nbsp;
-                <span translate="hds.resources.settings.suggestedNodeNumber"></span>
-                <a ng-click="hdsSettings.addResource()" translate="hds.resources.settings.addResource"></a>
-            </p>
-            <div ng-if="hdsSettings.dirsyncEnabled === false && !hdsSettings.groupAssigned()">
-              <i class="icon icon-circle status-indicator danger"></i>
-              <span class="sub-section__description"
-                 translate="hds.resources.settings.noGroupError">
-              </span>
-            </div>
-            <div ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()">
-              <p ng-if="hdsSettings.numTrialUsers <= 250"
-                 class="sub-section__description"
-                 translate="hds.resources.settings.selectGroupDesc"
-                 translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-              </p>
-              <div ng-if="hdsSettings.numTrialUsers > 250">
-                <i class="icon icon-circle status-indicator danger"></i>
-                <span class="sub-section__description"
-                   translate="hds.resources.settings.groupSizeLimitExceeded"
-                   translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-                </span>
-              </div>
-            </div>
-            <div ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()">
-                <i class="icon icon-circle status-indicator danger"></i>
-                <span class="sub-section__description"
-                   translate="hds.resources.settings.selectGroupError"
-                   translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-                </span>
-            </div>
-            <button class="btn btn--people"
-                    ng-if="hdsSettings.groupAssigned() && hdsSettings.numTrialUsers <= 250"
-                    ng-disabled="hdsSettings.numResourceNodes <= 0 || hdsSettings.lock"
-                    ng-click="hdsSettings.startTrial()"
-                    translate="hds.resources.settings.servicePreTrialModeTitle">
-            </button>
-        </div>
-        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
-            <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceDomainDesc"
-                translate-values="{trial : hdsSettings.trialDomain, prod : hdsSettings.prodDomain}">
-            </p>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDescHeader">
-            </p>
-            <p class="sub-section__description">
-                <strong translate="hds.resources.settings.registeredNodes"></strong></br>
-                {{hdsSettings.numResourceNodes}} &nbsp;
-                <span translate="hds.resources.settings.suggestedNodeNumber"></span>
-                <a ng-click="hdsSettings.addResource()" translate="hds.resources.settings.addResource"></a>
-            </p>
-            <div ng-if="hdsSettings.numTrialUsers > 250">
-              <i class="icon icon-circle status-indicator danger"></i>
-              <span class="sub-section__description"
-                    translate="hds.resources.settings.groupSizeLimitExceededinTrail"
-                    translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
-              </span>
-            </div>
-            <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description">
-                <strong translate="hds.resources.settings.users"></strong></br>
-                {{hdsSettings.numTrialUsers}} &nbsp;
-                <a ng-click="hdsSettings.openAddTrialUsersModal()" translate="hds.resources.settings.addUsers"></a>
-                <span translate="hds.resources.settings.or"></span>
-                <a ng-click="hdsSettings.openEditTrialUsersModal()" translate="hds.resources.settings.editUsers"></a>.
-            </p>
-            <p ng-if="hdsSettings.numTrialUsers <= 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description">
-                <strong translate="hds.resources.settings.users"></strong></br>
-                {{hdsSettings.numTrialUsers}} &nbsp;
-                <a ng-click="hdsSettings.openAddTrialUsersModal()" translate="hds.resources.settings.addUsers"></a>.
-            </p>
-            <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === true" class="sub-section__description">
-                <strong translate="hds.resources.settings.users"></strong></br>
-                {{hdsSettings.numTrialUsers}} &nbsp;
-                <a ng-click="hdsSettings.openEditTrialUsersModal()" translate="hds.resources.settings.viewUsers"></a>.
-            </p>
-            <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceProdMoveDesc"></p>
-            <button class="btn btn--people"
-                    ng-disabled="hdsSettings.lock"
-                    ng-click="hdsSettings.moveToProduction()"
-                    translate="hds.resources.settings.moveToProduction">
-            </button>
-        </div>
-        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
-            <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.serviceProductionModeDesc"
-                translate-values="{prod : hdsSettings.prodDomain}">
-            </p>
+  <!-- Service Status -->
+  <setting-section setting="hdsSettings.servicestatus" class="needs-border-top">
+    <div class="sub-section">
+    <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRE_TRIAL">
+      <h5 class="sub-section__label" translate="hds.resources.settings.servicePreTrialModeTitle"></h5>
+      <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDescHeader0"></p>
+      <p class="sub-section__description">
+        <strong translate="hds.resources.settings.registeredNodes"></strong></br>
+        {{hdsSettings.numResourceNodes}} &nbsp;
+        <span translate="hds.resources.settings.suggestedNodeNumber"></span>
+        <a href ng-click="hdsSettings.addResource()" translate="hds.resources.settings.addResource"></a>
+      </p>
+      <div ng-if="hdsSettings.dirsyncEnabled === false && !hdsSettings.groupAssigned()">
+        <i class="icon icon-circle status-indicator danger"></i>
+        <span class="sub-section__description" translate="hds.resources.settings.noGroupError"></span>
+      </div>
+      <div ng-if="hdsSettings.dirsyncEnabled === true && hdsSettings.groupAssigned()">
+        <p ng-if="hdsSettings.numTrialUsers <= 250"
+          class="sub-section__description"
+          translate="hds.resources.settings.selectGroupDesc"
+          translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+        </p>
+        <div ng-if="hdsSettings.numTrialUsers > 250">
+        <i class="icon icon-circle status-indicator danger"></i>
+        <span class="sub-section__description"
+          translate="hds.resources.settings.groupSizeLimitExceeded"
+          translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+        </span>
         </div>
       </div>
-    </setting-section>
-
-    <setting-section setting="hdsSettings.deactivate" class="needs-border-top" ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL || hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
-      <div class="sub-section">
-        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
-            <h5 class="sub-section__label" translate="common.deactivate"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
-            </p>
-            <button class="btn"
-                    ng-disabled="hdsSettings.lock"
-                    ng-click="hdsSettings.deactivateTrialMode()"
-                    translate="common.deactivate">
-            </button>
-        </div>
-        <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
-            <h5 class="sub-section__label" translate="common.deactivate"></h5>
-            <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc">
-            </p>
-            <button class="btn"
-                    ng-disabled="hdsSettings.lock"
-                    ng-click="hdsSettings.deactivateProductionMode()"
-                    translate="common.deactivate">
-            </button>
-        </div>
+      <div ng-if="hdsSettings.dirsyncEnabled === true && !hdsSettings.groupAssigned()">
+        <i class="icon icon-circle status-indicator danger"></i>
+        <span class="sub-section__description"
+          translate="hds.resources.settings.selectGroupError"
+          translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+        </span>
       </div>
-    </setting-section>
+      <button class="btn btn--people"
+        ng-if="hdsSettings.groupAssigned() && hdsSettings.numTrialUsers <= 250"
+        ng-disabled="hdsSettings.numResourceNodes <= 0 || hdsSettings.lock"
+        ng-click="hdsSettings.startTrial()"
+        translate="hds.resources.settings.servicePreTrialModeTitle">
+      </button>
+    </div>
+    <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+      <h5 class="sub-section__label" translate="hds.resources.settings.serviceTrialModeTitle"></h5>
+      <p class="sub-section__description"
+        translate="hds.resources.settings.serviceDomainDesc"
+        translate-values="{trial : hdsSettings.trialDomain, prod : hdsSettings.prodDomain}">
+      </p>
+      <p class="sub-section__description" translate="hds.resources.settings.serviceNodeDescHeader">
+      </p>
+      <p class="sub-section__description">
+        <strong translate="hds.resources.settings.registeredNodes"></strong></br>
+        {{hdsSettings.numResourceNodes}} &nbsp;
+        <span translate="hds.resources.settings.suggestedNodeNumber"></span>
+        <a href ng-click="hdsSettings.addResource()" translate="hds.resources.settings.addResource"></a>
+      </p>
+      <div ng-if="hdsSettings.numTrialUsers > 250">
+        <i class="icon icon-circle status-indicator danger"></i>
+        <span class="sub-section__description"
+          translate="hds.resources.settings.groupSizeLimitExceededinTrail"
+          translate-values="{defaultGroup : hdsSettings.defaultHDSGroupName}">
+        </span>
+      </div>
+      <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description">
+        <strong translate="hds.resources.settings.users"></strong></br>
+        {{hdsSettings.numTrialUsers}} &nbsp;
+        <a href ng-click="hdsSettings.openAddTrialUsersModal()" translate="hds.resources.settings.addUsers"></a>
+        <span translate="hds.resources.settings.or"></span>
+        <a href ng-click="hdsSettings.openEditTrialUsersModal()" translate="hds.resources.settings.editUsers"></a>.
+      </p>
+      <p ng-if="hdsSettings.numTrialUsers <= 0 && hdsSettings.dirsyncEnabled === false" class="sub-section__description">
+        <strong translate="hds.resources.settings.users"></strong></br>
+        {{hdsSettings.numTrialUsers}} &nbsp;
+        <a href ng-click="hdsSettings.openAddTrialUsersModal()" translate="hds.resources.settings.addUsers"></a>.
+      </p>
+      <p ng-if="hdsSettings.numTrialUsers > 0 && hdsSettings.dirsyncEnabled === true" class="sub-section__description">
+        <strong translate="hds.resources.settings.users"></strong></br>
+        {{hdsSettings.numTrialUsers}} &nbsp;
+        <a href ng-click="hdsSettings.openEditTrialUsersModal()" translate="hds.resources.settings.viewUsers"></a>.
+      </p>
+      <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
+      <p class="sub-section__description" translate="hds.resources.settings.serviceProdMoveDesc"></p>
+      <button class="btn btn--people"
+        ng-disabled="hdsSettings.lock"
+        ng-click="hdsSettings.moveToProduction()"
+        translate="hds.resources.settings.moveToProduction">
+      </button>
+    </div>
+    <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
+      <h5 class="sub-section__label" translate="hds.resources.settings.serviceProductionModeTitle"></h5>
+      <p class="sub-section__description"
+        translate="hds.resources.settings.serviceProductionModeDesc"
+        translate-values="{prod : hdsSettings.prodDomain}">
+      </p>
+    </div>
+    </div>
+  </setting-section>
 
-    <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
+  <setting-section setting="hdsSettings.deactivate" class="needs-border-top" ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL || hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
+    <div class="sub-section">
+      <div ng-if="hdsSettings.model.serviceMode === hdsSettings.TRIAL">
+        <h5 class="sub-section__label" translate="common.deactivate"></h5>
+        <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc"></p>
+        <button class="btn"
+          ng-disabled="hdsSettings.lock"
+          ng-click="hdsSettings.deactivateTrialMode()"
+          translate="common.deactivate">
+        </button>
+      </div>
+      <div ng-if="hdsSettings.model.serviceMode === hdsSettings.PRODUCTION">
+        <h5 class="sub-section__label" translate="common.deactivate"></h5>
+        <p class="sub-section__description" translate="hds.resources.settings.deavtivateTrialModeDesc"></p>
+        <button class="btn"
+          ng-disabled="hdsSettings.lock"
+          ng-click="hdsSettings.deactivateProductionMode()"
+          translate="common.deactivate">
+        </button>
+      </div>
+    </div>
+  </setting-section>
+
+  <documentation-section service-id="'spark-hybrid-datasecurity'"></documentation-section>
   </div>
 </div>

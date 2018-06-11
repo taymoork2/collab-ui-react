@@ -1,4 +1,3 @@
-import { ClusterService } from 'modules/hercules/services/cluster-service';
 import { Notification } from 'modules/core/notifications';
 import { ConnectorType, HybridServiceId } from 'modules/hercules/hybrid-services.types';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
@@ -7,15 +6,15 @@ export abstract class ExpresswayContainerController {
 
   public backState = 'services-overview';
   public userStatusesSummary = [];
+  public tabs: any[] = [];
   protected subscribeStatusesSummary: any;
 
   /* @ngInject */
 
   constructor(
     private $modal,
-    private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private ClusterService: ClusterService,
+    private $timeout: ng.ITimeoutService,
     protected Notification: Notification,
     protected ServiceDescriptorService: ServiceDescriptorService,
     private ServiceStateChecker,
@@ -26,13 +25,13 @@ export abstract class ExpresswayContainerController {
     this.firstTimeSetup();
     this.extractSummary();
     this.subscribeStatusesSummary = this.USSService.subscribeStatusesSummary('data', this.extractSummary.bind(this));
-    this.ClusterService.subscribe('data', this.updateNotifications.bind(this), {
-      scope: this.$scope,
-    });
+    this.updateNotifications = this.updateNotifications.bind(this);
+    this.updateNotifications();
   }
 
   private updateNotifications(): void {
     this.ServiceStateChecker.checkState(this.servicesId[0]);
+    this.$timeout(this.updateNotifications, 30 * 1000);
   }
 
   public extractSummary(): void {
@@ -49,7 +48,9 @@ export abstract class ExpresswayContainerController {
         resolve: {
           connectorType: () => this.connectorType,
           serviceId: () => this.servicesId[0],
-          firstTimeSetup: true,
+          options: {
+            firstTimeSetup: true,
+          },
         },
         controller: 'AddResourceController',
         controllerAs: 'vm',
@@ -65,4 +66,7 @@ export abstract class ExpresswayContainerController {
     });
   }
 
+  protected displayAddResourceButton(): boolean {
+    return this.$state.current.name === this.tabs[0].state;
+  }
 }

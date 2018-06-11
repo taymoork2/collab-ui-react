@@ -1,7 +1,8 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
-@import '~collab-ui/scss/tools/mixins/spacing-responsive';
-@import '~collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
 media-mgr {
 
@@ -34,7 +35,7 @@ media-mgr {
     padding: 0.5rem;
 
     .label-download {
-      font-family: 'CiscoSansTT Light';
+      font-family: $brand-font-light;
       font-size: 16px;
       color: $gray-dark-3;
       align-self: center;
@@ -98,7 +99,7 @@ media-mgr {
     overflow-y: auto;
     min-height: 0;
 
-    .cs-card.large {
+    .cs-card.cs-card--large {
       width: 80%;
       margin-top: 6rem;
       border: 1px dashed $gray-light-1;
@@ -211,13 +212,13 @@ media-mgr {
   }
 
   .mb-title {
-    font-family: 'CiscoSansTT Extra Light';
+    font-family: $brand-font-extra-light;
     font-size: 26px;
     color: $gray-dark-2;
   }
 
   .mb-desc {
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-dark-1;
     margin-bottom: 1.5rem;
@@ -264,14 +265,14 @@ media-mgr {
   }
 
   .media-text {
-    font-family: 'CiscoSansTT Light';
+    font-family: $brand-font-light;
     font-size: 14px;
     color: $gray-dark-2;
     margin: 0;
   }
 
   .media-subtext {
-    font-family: 'CiscoSansTT';
+    font-family: $brand-font-regular;
     font-size: 12px;
     color: $gray-light-1;
     margin: 0;
@@ -346,13 +347,13 @@ media-mgr {
     }
 
     .progressbar-label {
-      font-family: 'CiscoSansTT Light';
+      font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-dark-2;
     }
 
     .progressbar-progress {
-      font-family: 'CiscoSansTT Light';
+      font-family: $brand-font-light;
       font-size: 14px;
       color: $gray-dark-2;
     }

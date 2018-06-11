@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  // TODO: Update all callback functions to be promises instead
+
   var angularCacheModule = require('angular-cache');
   var angularResourceModule = require('angular-resource');
   var angularTranslateModule = require('angular-translate');
@@ -27,7 +29,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
+  function Orgservice($http, $q, $resource, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -44,14 +46,16 @@
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
+      getDeleteStatus: getDeleteStatus,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
       setEftSetting: setEftSetting,
+      setAllowCustomerSiteManagementSetting: setAllowCustomerSiteManagementSetting,
+      getAllowCustomerSiteManagementSetting: getAllowCustomerSiteManagementSetting,
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
-      validateDisplayName: validateDisplayName,
       setOrgEmailSuppress: setOrgEmailSuppress,
       getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
@@ -336,6 +340,30 @@
         });
     }
 
+    function returnAllowCustomerSiteManagementApiUrl(orgId) {
+      return UrlConfig.getAdminServiceUrl() + 'organizations/' + orgId + '/settings/allowCustomerSiteManagement';
+    }
+
+    function setAllowCustomerSiteManagementSetting(orgId, settings) {
+      if (_.isUndefined(orgId) || !_.isObject(settings)) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
+
+      return $http.post(url, settings);
+    }
+
+    function getAllowCustomerSiteManagementSetting(orgId) {
+      if (_.isUndefined(orgId)) {
+        return $q.reject('Invalid parameters passed');
+      }
+
+      var url = returnAllowCustomerSiteManagementApiUrl(orgId);
+
+      return $http.get(url);
+    }
+
     function createOrg(enc, country) {
       var orgUrl = UrlConfig.getAdminServiceUrl() + 'organizations';
       var orgRequest = {
@@ -352,16 +380,24 @@
       });
     }
 
-    function deleteOrg(currentOrgId) {
+    function deleteOrg(currentOrgId, deleteUsers) {
       if (!currentOrgId) {
         return $q.reject('currentOrgId is not set');
       }
+      if (_.isUndefined(deleteUsers)) {
+        deleteUsers = true;
+      }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } })
+        .then(function (response) { return response.data; });
+    }
 
-      return $http({
-        method: 'DELETE',
-        url: serviceUrl,
-      });
+    function getDeleteStatus(statusUrl, clientAccessToken) {
+      return $http.get(statusUrl, {
+        headers: {
+          Authorization: 'Bearer ' + clientAccessToken,
+        },
+      }).then(function (response) { return response.data; });
     }
 
     function listOrgs(filter) {
@@ -507,18 +543,9 @@
       return patchDisplayName(orgId, displayName)
         .then(function (response) {
           var status = _.get(response, 'status');
-          if (status === 'DUPLICATE') {
-            return $q.reject($translate.instant('helpdesk.org.duplicateName'));
-          } else if (status !== 'SUCCESS') {
+          if (status !== 'SUCCESS') {
             return $q.reject(response);
           }
-        });
-    }
-
-    function validateDisplayName(orgId, displayName) {
-      return patchDisplayName(orgId, displayName, true)
-        .then(function (response) {
-          return _.get(response, 'status') === 'ALLOWED';
         });
     }
 

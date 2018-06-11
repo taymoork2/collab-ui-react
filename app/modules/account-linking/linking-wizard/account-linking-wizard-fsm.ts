@@ -1,107 +1,150 @@
-// TODO Use builder pattern for FSM
 
-export enum WizardEvent {
-  manual = 'manual',
-  noEmailVerifiedDomain = 'noEmailVerifiedDomain',
-  noEmailAgreement = 'noEmailAgreement',
-  noEmailAgreementAccepted = 'noEmailAgreementAccepted',
-  back = 'back',
+export interface IFsmTransitionCallback {
+  from: string;
+  event: string;
+  state: string;
+
+  startTransition: Date;
+  endTransition: Date;
+
+  problems: string[];
 }
 
-export enum WizardState {
-  entry = 'entry',
-  manualSelected = 'manual_selected',
-  noEmailAgreementSelected = 'no_email_agreement_selected',
-  noEmailAgreementAcceptedOk = 'no_email_agreement_accepted_ok',
-  noEmailVerifiedDomainSelected = 'no_email_verified_domain_selected',
+interface ITransition<STATE, EVENT> {
+  from: STATE;
+  event: EVENT;
+  action?: Function;
+  actionPromise?: Function;
+  to: STATE;
 }
 
-export interface IWizardState {
-  id: WizardState;
-  initial: boolean;
-  final: boolean;
+export enum SpecialEvent {
+  BACK = 'back',
+  ANY = '*',
 }
 
-export interface IWizardAction {
-  (input?: any): void;
-}
+export class WizardFsm<STATE, EVENT> {
+  private transitions: ITransition<STATE, EVENT | SpecialEvent>[] = [];
+  private currTrans: ITransition<STATE, EVENT | SpecialEvent>;
 
-interface ITransition {
-  from: IWizardState;
-  event: WizardEvent;
-  to: IWizardState;
-  action?: IWizardAction;
-}
-
-interface IWizardFsm {
-  from(state: IWizardState, event: WizardEvent): IWizardFsm;
-  to(state: IWizardState, action?: IWizardAction): IWizardFsm;
-  transition(event: WizardEvent): IWizardState;
-  andBack(): void;
-  isFinal(): boolean;
-  isInitial(): boolean;
-}
-
-export class WizardFsm implements IWizardFsm {
-  private transitions: ITransition[] = [];
-  private currTrans: ITransition;
-
-  // TOOD Remove logger argument
-  constructor(private currState: IWizardState, private logger: any) {
+  constructor(
+    private currState: STATE,
+    private callbackFunc?: Function,
+  ) {
   }
 
-  public from(state: IWizardState, event: WizardEvent): IWizardFsm {
+  public from(state: STATE, event: EVENT | SpecialEvent) {
     this.currTrans = {
       from: state,
-      event: event,
+      event : event,
+      action: undefined,
+      actionPromise: undefined,
       to: state,
     };
-    return this;
-  }
-
-  public to(state: IWizardState, action: IWizardAction): IWizardFsm {
-    this.currTrans.to = state;
-    this.currTrans.action = action;
     this.transitions.push(this.currTrans);
     return this;
   }
 
-  public andBack() {
-    const trans: ITransition = {
-      from: this.currTrans.to,
-      to: this.currTrans.from,
-      event: WizardEvent.back,
-    };
-    this.transitions.push(trans);
+  public action(action: Function) {
+    this.currTrans.action = action;
+    return this;
   }
 
-  public getCurrState(): IWizardState {
+  public actionPromise(action: Function) {
+    this.currTrans.actionPromise = action;
+    return this;
+  }
+
+  public to(state: STATE) {
+    this.currTrans.to = state;
+    return this;
+  }
+
+  public andBack() {
+    const backTrans: ITransition<STATE, EVENT | SpecialEvent>  = {
+      from: this.currTrans.to,
+      event : SpecialEvent.BACK,
+      action: undefined,
+      actionPromise: undefined,
+      to: this.currTrans.from,
+    };
+    this.transitions.push(backTrans);
+    this.currTrans = backTrans;
+    return this;
+  }
+
+  public getCurrState(): STATE {
     return this.currState;
   }
 
-  public transition(event: WizardEvent): IWizardState {
-    this.logger.debug('transitions', this.transitions);
-    const transition: ITransition = _.find<ITransition>(this.transitions, (trans: ITransition) => {
-      this.logger.debug(trans.event + ' = ' + event + ', ' + trans.from.id + ' = ' + this.currState.id);
-      return trans.event === event && trans.from.id === this.currState.id;
+  public hasBack() {
+    const back = _.find(this.transitions, (trans: ITransition<STATE, EVENT | SpecialEvent>) => {
+      return trans.from === this.currState && trans.event === SpecialEvent.BACK;
     });
-    this.logger.debug('transition', transition);
-    if (transition) {
+    return (back) ? true : false;
+  }
+
+  public transition = (event: EVENT | SpecialEvent) => {
+    const transition = _.find(this.transitions, (trans: ITransition<STATE, EVENT | SpecialEvent>) => {
+      return (trans.event === event || trans.event === SpecialEvent.ANY) && trans.from === this.currState;
+    });
+    const startTime = new Date();
+    const problems: string[] = [];
+
+    let actionResultPromise;
+    let actionResult;
+
+    if (transition && transition.to) {
       if (transition.action) {
-        transition.action();
+        //this.currStateActionResultPromise = this.$q.when(transition.action(this.currState, event, transition.to));
+        actionResult = transition.action(this.currState, event, transition.to);
       }
-      if (transition.to) {
+
+      if (transition.actionPromise) {
+        actionResultPromise = transition.actionPromise(this.currState, event, transition.to).then((result) => {
+          this.callBack(this.currState, transition.to, event, startTime, problems);
+          this.currState = transition.to;
+          return result;
+        });
+      } else {
+        this.callBack(this.currState, transition.to, event, startTime, problems);
         this.currState = transition.to;
       }
+
+    } else {
+      if (!transition) {
+        problems.push('Event ' + event + ' is not known for state ' + this.currState);
+      } else if (!transition.to) {
+        problems.push('Event ' + event + ' has no to-state in state ' + this.currState);
+      }
     }
-    return this.currState;
+
+    if (actionResultPromise) {
+      return actionResultPromise.then((res) => {
+        this.currState = transition.to;
+        return res;
+      });
+    } else if (actionResult) {
+      return actionResult;
+    }
+
   }
 
-  public isInitial() {
-    return this.currState.initial;
+  private callBack(fromState, toState, event, startTime, problems) {
+    if (this.callbackFunc) {
+      this.callbackFunc(<IFsmTransitionCallback>{
+        from: fromState.toString(),
+        event: event.toString(),
+        state: toState.toString(),
+        startTransition: startTime,
+        endTransition: new Date(),
+        problems: problems,
+      });
+    }
   }
 
-  public isFinal(): boolean {
-    return this.currState.final;
+  public getTransitionList() {
+    return this.transitions;
   }
+
 }

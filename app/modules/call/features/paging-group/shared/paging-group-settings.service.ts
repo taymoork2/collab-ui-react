@@ -6,7 +6,6 @@ import { Notification } from 'modules/core/notifications';
 
 export class PagingGroupSettingsService {
   private pagingGroupCopy: PagingGroup;
-  private errors: string[] = [];
   private missingMembers: boolean = false;
   private missingInitiators: boolean = false;
 
@@ -40,7 +39,6 @@ export class PagingGroupSettingsService {
   }
 
   public get(pagingGroupId: string) {
-    this.errors = [];
     return this.getPagingGroup(pagingGroupId)
       .then(pagingGroup => {
         this.pagingGroupCopy = this.clonePagingGroupData(pagingGroup);
@@ -52,16 +50,16 @@ export class PagingGroupSettingsService {
     if (uuid) {
       return this.PagingGroupService.getPagingGroup(uuid)
         .then(pagingGroup => this.getNumberExtension(pagingGroup.groupId || '')
-        .then(extension => {
-          if (extension) {
-            pagingGroup.extension = extension.number;
-          } else {
-            this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: pagingGroup.name });
-          }
-        })
-        .then(() => this.getMembers(pagingGroup)
-          .then(members => pagingGroup.members = members))
-        .then(() => this.getInitiators(pagingGroup))
+          .then(extension => {
+            if (extension) {
+              pagingGroup.extension = extension.number;
+            } else {
+              this.Notification.error('pagingGroup.errorGetNumber', { pagingGroupName: pagingGroup.name });
+            }
+          })
+          .then(() => this.getMembers(pagingGroup)
+            .then(members => pagingGroup.members = members))
+          .then(() => this.getInitiators(pagingGroup))
           .then(initiators => {
             pagingGroup.initiators = initiators;
             if (this.missingInitiators || this.missingMembers) {
@@ -69,10 +67,10 @@ export class PagingGroupSettingsService {
             }
             return pagingGroup;
           })
-        .catch(error => {
-          this.Notification.errorWithTrackingId(error, 'pagingGroup.loadError');
-          return this.$q.reject();
-        }));
+          .catch(error => {
+            this.Notification.errorWithTrackingId(error, 'pagingGroup.loadError');
+            return this.$q.reject();
+          }));
     } else {
       return this.$q.resolve(new PagingGroup());
     }
@@ -144,19 +142,19 @@ export class PagingGroupSettingsService {
     _.forEach(pagingGroup.initiators, initiator => {
       if (initiator.type === MemberType.USER_REAL_USER) {
         promises.push(this.getUserMember(initiator.uuid)
-        .then(member => {
-          return this.FeatureMemberService.getMemberPicture(member.uuid || '')
-            .then(response => {
-              member.thumbnailSrc = _.get(response, 'thumbnailSrc', undefined);
-              initiators.push(member);
-            })
-            .catch(() => initiators.push(member));
-        })
-        .catch(error => {
-          if (error && error.status === 404) {
-            this.missingMembers = true;
-          }
-        }));
+          .then(member => {
+            return this.FeatureMemberService.getMemberPicture(member.uuid || '')
+              .then(response => {
+                member.thumbnailSrc = _.get(response, 'thumbnailSrc', undefined);
+                initiators.push(member);
+              })
+              .catch(() => initiators.push(member));
+          })
+          .catch(error => {
+            if (error && error.status === 404) {
+              this.missingMembers = true;
+            }
+          }));
       } else if (initiator.type === MemberType.USER_PLACE)  {
         promises.push(this.getPlaceMember(initiator.uuid)
           .then(member => initiators.push(member))

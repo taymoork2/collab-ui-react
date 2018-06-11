@@ -111,9 +111,10 @@ export class DeviceHelper {
   public diagnosticsEventTranslated(e) {
     const type_lower = _.toLower(e.type);
     if (this.isTranslatable('CsdmStatus.errorCodes.' + type_lower + '.type')) {
+      const additionalParameters = this.parametersFromKey(type_lower);
       return {
         type: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.type', e.type),
-        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, e.references),
+        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, _.merge(e.references, additionalParameters)),
       };
     } else if (e.description) {
       return {
@@ -131,6 +132,13 @@ export class DeviceHelper {
         }),
       };
     }
+  }
+
+  public parametersFromKey(key: string) {
+    switch (key) {
+      case 'provisioningdeveloperoptions': return { xconfigpath: 'xConfiguration Spark DeveloperOptions' };
+    }
+    return;
   }
 
   public getState(obj) {
@@ -190,7 +198,7 @@ export class DeviceHelper {
 
   public getLocalizedType(type) {
     if (type === 'huron') {
-      return this.t('addDeviceWizard.chooseDeviceType.deskPhone');
+      return this.t('addDeviceWizard.chooseDeviceType.ciscoPhone');
     }
     return this.t('addDeviceWizard.chooseDeviceType.roomSystem');
   }

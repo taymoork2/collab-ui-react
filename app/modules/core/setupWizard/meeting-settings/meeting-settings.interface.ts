@@ -37,6 +37,11 @@ export interface IConferenceService {
   license: IConferenceLicense;
 }
 
+export interface ICenterDetails {
+  serviceName: string;
+  quantity: number;
+}
+
 export interface IConferenceLicense  extends IPendingLicense {
   billingServiceId: string;
   capacity: number;
@@ -85,6 +90,7 @@ export interface IPendingLicense {
   volume: number;
   isTrial: boolean;
   status: string;
+  capacity?: number;
 }
 
 export interface ICCASPLicense extends IPendingLicense {

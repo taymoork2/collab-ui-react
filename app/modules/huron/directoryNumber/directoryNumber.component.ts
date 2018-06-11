@@ -37,14 +37,14 @@ class DirectoryNumber implements ng.IComponentController {
     this.placeholder = this.$translate.instant('directoryNumberPanel.chooseNumber');
     this.nonePlaceholder = this.$translate.instant('directoryNumberPanel.none');
     return this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-    .then(result => this.isHI1484 = result)
-    .finally( () => {
-      this.noneOption = {
-        value: null,
-        label: this.nonePlaceholder,
-      };
-      this.isLoading = false;
-    });
+      .then(result => this.isHI1484 = result)
+      .finally( () => {
+        this.noneOption = {
+          value: null,
+          label: this.nonePlaceholder,
+        };
+        this.isLoading = false;
+      });
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {

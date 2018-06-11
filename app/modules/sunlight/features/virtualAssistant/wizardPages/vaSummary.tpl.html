@@ -1,17 +1,16 @@
 <div class="va-summary">
   <i class="icon icon-circle-check-mark-success icon-5x success-icon"></i>
-  <div class="h4 description">
-    {{$ctrl.getSummaryDescription()}}
-  </div>
+  <div class="h4 description">{{$ctrl.getSummaryDescription()}}</div>
   <div class="h4 description" ng-if="!$ctrl.saveTemplateErrorOccurred && !$ctrl.isEditFeature">
     {{$ctrl.getText('summary.descCont')}}
   </div>
-  <button loading="$ctrl.creatingTemplate"
-          cs-btn
-          id="vaSetupFinishBtn"
-          class="btn btn--primary vaSetupFinishBtn"
-          ng-click="$ctrl.submitFeature()">
-            {{$ctrl.templateButtonText}}
+  <button cs-btn loading="$ctrl.creatingTemplate"
+    id="vaSetupFinishBtn"
+    ng-disabled="$ctrl.retryButtonDisabled"
+    class="btn btn--primary vaSetupFinishBtn"
+    ng-click="$ctrl.submitFeature()"
+    focus-on>
+    {{$ctrl.templateButtonText}}
   </button>
   <div class="body-small edit-message" ng-if="$ctrl.showEditWarning()">
     <div class="warning-sign">
@@ -21,8 +20,8 @@
       <div>{{$ctrl.getText('summary.editWarning')}}</div>
     </div>
   </div>
-  <div class="h6 retry-message" ng-if="$ctrl.saveTemplateErrorOccurred && !$ctrl.creatingTemplate">
+  <div class="h6 retry-message" ng-if="$ctrl.displayGenericErrorMessage()">
     <i class="icon icon-error"></i>
-    <span class="error-message">{{$ctrl.getText('summary.errorCreateTemplate')}}</span>
+    <span class="error-message">{{$ctrl.summaryErrorMessage}}</span>
   </div>
 </div>

@@ -1,0 +1,8 @@
+@import '~@collabui/collab-ui/scss/settings/page';
+
+.troubleshooting {
+  .meeting-list {
+    padding: 1rem 0rem;
+    height: calc(100vh - #{$page-header-height});
+  }
+}

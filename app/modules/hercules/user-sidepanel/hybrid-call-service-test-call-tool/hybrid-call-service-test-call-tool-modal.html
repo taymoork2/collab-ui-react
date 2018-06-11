@@ -17,24 +17,26 @@
     </p>
 
     <div class="from-and-to-container">
-      <h5 class="from-and-to-texts"
-          translate="hercules.hybridCallServiceTestCallTool.modal.testCallFrom"></h5>
-      <h5 class="from-and-to-texts"
-          translate="hercules.hybridCallServiceTestCallTool.modal.testCallTo"></h5>
+      <h5 class="from-and-to-texts" translate="hercules.hybridCallServiceTestCallTool.modal.testCallFrom"></h5>
+      <h5 class="from-and-to-texts" translate="hercules.hybridCallServiceTestCallTool.modal.testCallTo"></h5>
     </div>
 
     <div class="change-user-container">
       <div class="change-user-link">
-        <a ng-show="vm.showChangeCaller()"
-           class="edit-user"
-           ng-click="vm.resetCaller()"
-           translate="hercules.hybridCallServiceTestCallTool.modal.changeUser"></a>
+        <a href
+          ng-if="vm.showChangeCaller()"
+          class="edit-user"
+          ng-click="vm.resetCaller()"
+          translate="hercules.hybridCallServiceTestCallTool.modal.changeUser">
+        </a>
       </div>
       <div class="change-user-link">
-        <a ng-show="vm.showChangeCallee()"
-           class="edit-user"
-           ng-click="vm.resetCallee()"
-           translate="hercules.hybridCallServiceTestCallTool.modal.changeUser"></a>
+        <a href
+          ng-if="vm.showChangeCallee()"
+          class="edit-user"
+          ng-click="vm.resetCallee()"
+          translate="hercules.hybridCallServiceTestCallTool.modal.changeUser">
+        </a>
       </div>
     </div>
 
@@ -44,29 +46,30 @@
         <div ng-if="vm.caller.photo">
           <img ng-src='{{vm.caller.photo}}' class="user-img" alt=""  />
         </div>
-        <div ng-if="!vm.caller.photo"
-             class="default-user-pic user-img">
+        <div ng-if="!vm.caller.photo" class="default-user-pic user-img">
           <i class="icon icon-user silhouette"></i>
         </div>
-        <h5 ng-if="vm.caller.userId"
-           class="name-field">{{vm.caller.displayName}}</h5>
-        <p ng-if="vm.caller.userId"
-           class="name-field cloud-extensions">
+        <h5 ng-if="vm.caller.userId" class="name-field">{{vm.caller.displayName}}</h5>
+        <p ng-if="vm.caller.userId" class="name-field hybrid-services-user-sidepanel">
           <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
           <span ng-if="vm.caller.ussStatus"
-                class="status-line"
-                ng-class="'status-' + vm.caller.ussStatus"
-                translate="hercules.activationStatus.{{vm.caller.ussStatus}}">{{vm.caller.ussStatus}}</span></p>
+            class="status-line"
+            ng-class="'status-' + vm.caller.ussStatus"
+            translate="hercules.activationStatus.{{vm.caller.ussStatus}}">
+            {{vm.caller.ussStatus}}
+          </span>
+        </p>
         <p class="name-field" ng-if="!vm.caller.userId">
           <input type="text"
-                 class="centered-input"
-                 ng-model="vm.caller.input"
-                 typeahead="user for user in vm.search($viewValue) | limitTo:4"
-                 typeahead-loading="vm.isSearching"
-                 typeahead-template-url="userTemplate.html"
-                 typeahead-on-select="vm.selectCaller($item)"
-                 placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
-                 typeahead-wait-ms="500"/></p>
+            class="centered-input"
+            ng-model="vm.caller.input"
+            typeahead="user for user in vm.search($viewValue) | limitTo:4"
+            typeahead-loading="vm.isSearching"
+            typeahead-template-url="userTemplate.html"
+            typeahead-on-select="vm.selectCaller($item)"
+            placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
+            typeahead-wait-ms="500"/>
+        </p>
         <p class="name-field" ng-if="!vm.caller.userId">&nbsp;</p>
       </div>
       <!-- Callee:  -->
@@ -74,14 +77,11 @@
         <div ng-if="vm.callee.photo">
           <img ng-src='{{vm.callee.photo}}' class="user-img" alt=""  />
         </div>
-        <div ng-if="!vm.callee.photo"
-             class="default-user-pic user-img">
+        <div ng-if="!vm.callee.photo" class="default-user-pic user-img">
           <i class="icon icon-user silhouette"></i>
         </div>
-        <h5 ng-if="vm.callee.userId"
-            class="name-field">{{vm.callee.displayName}}</h5>
-        <p ng-if="vm.callee.userId"
-           class="name-field cloud-extensions">
+        <h5 ng-if="vm.callee.userId" class="name-field">{{vm.callee.displayName}}</h5>
+        <p ng-if="vm.callee.userId" class="name-field hybrid-services-user-sidepanel">
           <span class="status-line" translate="hercules.hybridCallServiceTestCallTool.modal.hybridCallConnectStatus"></span>
           <span ng-if="vm.callee.ussStatus"
                 class="status-line"
@@ -89,36 +89,35 @@
                 translate="hercules.activationStatus.{{vm.callee.ussStatus}}">{{vm.callee.ussStatus}}</span></p>
         <p class="name-field" ng-if="!vm.callee.userId">
           <input type="text"
-                 class="centered-input"
-                 ng-model="vm.callee.input"
-                 typeahead="user for user in vm.search($viewValue) | limitTo:4"
-                 typeahead-loading="vm.isSearching"
-                 typeahead-template-url="userTemplate.html"
-                 typeahead-on-select="vm.selectCallee($item)"
-                 placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
-                 typeahead-wait-ms="500"/></p>
+            class="centered-input"
+            ng-model="vm.callee.input"
+            typeahead="user for user in vm.search($viewValue) | limitTo:4"
+            typeahead-loading="vm.isSearching"
+            typeahead-template-url="userTemplate.html"
+            typeahead-on-select="vm.selectCallee($item)"
+            placeholder="{{'hercules.hybridCallServiceTestCallTool.modal.inputWatermark' | translate}}"
+            typeahead-wait-ms="500"/>
+        </p>
         <p class="name-field" ng-if="!vm.callee.userId">&nbsp;</p>
       </div>
     </div>
 
     <div class="warning-container">
       <!-- Caller:  -->
-      <div class="warning-box cloud-extensions">
-
-      </div>
+      <div class="warning-box hybrid-services-user-sidepanel"></div>
 
       <!-- Callee:  -->
-      <div class="warning-box cloud-extensions">
-        <div ng-if="vm.warnAboutPhonesRinging()" class="warning-message">
+      <div class="warning-box hybrid-services-user-sidepanel">
+        <div ng-if="vm.warnAboutPhonesRinging()" class="hybrid-services-warning-message">
           <i class="icon icon-warning"></i>
-          <p class="message"
-                translate="hercules.hybridCallServiceTestCallTool.modal.warnings.warnAboutPhonesRinging"
-                translate-values="{ caller: vm.caller.displayName, callee: vm.callee.displayName }"></p>
+          <p class="hybrid-services-message"
+            translate="hercules.hybridCallServiceTestCallTool.modal.warnings.warnAboutPhonesRinging"
+            translate-values="{ caller: vm.caller.displayName, callee: vm.callee.displayName }">
+          </p>
         </div>
-        <div ng-if="vm.callerAndCalleeAreTheSame()" class="error-message">
+        <div ng-if="vm.callerAndCalleeAreTheSame()" class="hybrid-services-error-message">
           <i class="icon icon-error"></i>
-          <p class="message"
-             translate="hercules.hybridCallServiceTestCallTool.modal.warnings.callerAndCalleeTheSame"></p>
+          <p class="hybrid-services-message" translate="hercules.hybridCallServiceTestCallTool.modal.warnings.callerAndCalleeTheSame"></p>
         </div>
       </div>
     </div>

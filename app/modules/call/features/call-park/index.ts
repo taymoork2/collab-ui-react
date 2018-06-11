@@ -16,7 +16,7 @@ export * from './call-park';
 
 export default angular
   .module('call.features.call-park', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     callParkNumber,
     callParkFallbackDestination,

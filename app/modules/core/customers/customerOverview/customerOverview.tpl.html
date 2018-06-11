@@ -4,12 +4,17 @@
       <div class="header-info-wrap">
         <div class="header-title">
           <span>{{customerOverview.currentCustomer.customerName}}</span>
-            <cr-pro-pack-icon ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled" class="premium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::grid.appScope.premiumTooltip}}"></cr-pro-pack-icon>
+          <pro-pack-tooltip
+            ng-if="customerOverview.currentCustomer.isPremium && customerOverview.isProPackEnabled"
+            tt-class="premium"
+            tt-tooltip-append-to-body="true"
+            tt-tooltip-text="{{::grid.appScope.premiumTooltip}}">
+          </pro-pack-tooltip>
         </div>
       </div>
     </div>
   </cs-sp-header>
-  <div class="banner-info" ng-if="customerOverview.showContractIncomplete">
+  <div class="banner-info" ng-if="customerOverview.showContractIncompleteFn()">
     <div class="banner-top-stripe"></div>
     <div class="side-panel-header">
       <span translate="customerPage.pstnContractIncomplete"></span>
@@ -90,7 +95,7 @@
           </ul>
         </div>
       </cs-sp-section>
-      <uc-external-number-overview ng-if="customerOverview.isSquaredUC" show-contract-incomplete="customerOverview.showContractIncomplete"></uc-external-number-overview>
+      <uc-external-number-overview ng-if="customerOverview.isSquaredUC" show-contract-incomplete="customerOverview.showContractIncompleteFn()"></uc-external-number-overview>
       <cs-sp-section>
         <div class="section-title-row">
           <span class="section-name" translate="customerPage.branding"></span>
@@ -108,7 +113,13 @@
             <form ng-if="customerOverview.logoOverride" novalidate name="customerOverview.form" novalidate role="form">
               <li class="feature">
                 <span class="feature-name" translate="customerPage.logoOverride"></span>
-                <cs-toggle-switch ng-model="customerOverview.allowCustomerLogos" toggle-id="allowCustomerLogo" name="allowCustomerLogo" size="small"></cs-toggle-switch>
+                <cs-toggle-switch
+                  ng-model="customerOverview.allowCustomerLogos"
+                  toggle-id="allowCustomerLogo"
+                  name="allowCustomerLogo"
+                  size="small"
+                  cs-aria-label="{{::'customerPage.logoOverride' | translate}}">
+                </cs-toggle-switch>
               </li>
             </form>
           </ul>

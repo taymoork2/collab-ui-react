@@ -1,13 +1,13 @@
-<cs-sp-section ng-if="$ctrl.orgHasOneOrMoreServicesEnabled()">
+<cs-sp-section>
   <div class="section-title-row">
     <span class="section-name" translate="cloudExtensions.cloudExtensions"></span>
   </div>
   <p ng-if="!$ctrl.isLicensed" translate="hercules.cloudExtensions.noLicensedServices"></p>
-  <div class="feature-list cloud-extensions" ng-if="$ctrl.isLicensed">
+  <div class="feature-list hybrid-services-user-sidepanel" ng-if="$ctrl.isLicensed">
     <ul>
 
       <!-- Hybrid Calendar -->
-      <li ng-if="$ctrl.showService('squared-fusion-cal') || $ctrl.showService('squared-fusion-gcal')" class="feature">
+      <li class="feature">
         <a href
            id="link_squared-fusion-cal"
            ng-click="$ctrl.drillDown('squared-fusion-cal')">
@@ -19,17 +19,20 @@
           <span ng-if="!$ctrl.loadingPage">
             <span ng-if="$ctrl.bothCalendarTypesWarning" translate="hercules.cloudExtensions.entitledToBothCalendarsShort" class="feature-status status-error"></span>
             <span ng-if="!$ctrl.bothCalendarTypesWarning">
-              <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-cal') && !$ctrl.serviceIsOnForUser('squared-fusion-gcal') && ($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal'))"
+              <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-cal') && !$ctrl.userIsEnabledInUSS('squared-fusion-gcal') && ($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal')) && !$ctrl.isInvitePending"
                     class="feature-status"
-                    translate="hercules.activationStatus.notFound"></span>
-              <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-cal') && !$ctrl.serviceIsOnForUser('squared-fusion-gcal') && !($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal'))"
+                    translate="hercules.activationStatus.pendingNotSetup"></span>
+              <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-cal') && !$ctrl.userIsEnabledInUSS('squared-fusion-gcal') && ($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal')) && $ctrl.isInvitePending"
+                    class="feature-status"
+                    translate="hercules.activationStatus.accountNotActivated"></span>
+              <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-cal') && !$ctrl.userIsEnabledInUSS('squared-fusion-gcal') && !($ctrl.userHasEntitlement('squared-fusion-cal') || $ctrl.userHasEntitlement('squared-fusion-gcal'))"
                     class="feature-status"
                     translate="common.off"></span>
-              <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-cal')"
+              <span ng-if="$ctrl.userIsEnabledInUSS('squared-fusion-cal')"
                     class="feature-status"
                     ng-class="$ctrl.getStatus('squared-fusion-cal') ? 'status-' + $ctrl.getStatus('squared-fusion-cal') : ''"
                     translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-cal')}}"></span>
-              <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-gcal')"
+              <span ng-if="$ctrl.userIsEnabledInUSS('squared-fusion-gcal')"
                     class="feature-status"
                     ng-class="$ctrl.getStatus('squared-fusion-gcal') ? 'status-' + $ctrl.getStatus('squared-fusion-gcal') : ''"
                     translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-gcal')}}"></span>
@@ -40,7 +43,7 @@
       </li>
 
       <!-- Hybrid Call -->
-      <li ng-if="$ctrl.showService('squared-fusion-uc')" class="feature">
+      <li class="feature">
         <a href
            id="link_squared-fusion-uc"
            ng-class="{'no-services': $ctrl.userIsEnabledForHuron }"
@@ -54,13 +57,16 @@
             <span ng-if="$ctrl.userIsEnabledForHuron"
                   class="feature-status status-off"
                   translate="hercules.cloudExtensions.entitledToHuron"></span>
-            <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-uc') && $ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+            <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-uc') && $ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron && !$ctrl.isInvitePending"
                   class="feature-status"
-                  translate="hercules.activationStatus.notFound"></span>
-            <span ng-if="!$ctrl.serviceIsOnForUser('squared-fusion-uc') && !$ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+                  translate="hercules.activationStatus.pendingNotSetup"></span>
+            <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-uc') && $ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron && $ctrl.isInvitePending"
+                  class="feature-status"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+            <span ng-if="!$ctrl.userIsEnabledInUSS('squared-fusion-uc') && !$ctrl.userHasEntitlement('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
                   class="feature-status"
                   translate="common.off"></span>
-            <span ng-if="$ctrl.serviceIsOnForUser('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
+            <span ng-if="$ctrl.userIsEnabledInUSS('squared-fusion-uc') && !$ctrl.userIsEnabledForHuron"
                   class="feature-status"
                   ng-class="$ctrl.getStatus('squared-fusion-uc') ? 'status-' + $ctrl.getStatus('squared-fusion-uc') : ''"
                   translate="hercules.activationStatus.{{$ctrl.getStatus('squared-fusion-uc')}}"></span>
@@ -70,7 +76,7 @@
       </li>
 
       <!-- Hybrid Message -->
-      <li ng-if="$ctrl.showService('spark-hybrid-impinterop') && $ctrl.atlasHybridImpFeatureToggle" class="feature">
+      <li ng-if="$ctrl.atlasHybridImpFeatureToggle" class="feature">
         <a href
            id="link_spark-hybrid-impinterop"
            ng-click="$ctrl.drillDown('spark-hybrid-impinterop')">
@@ -80,13 +86,16 @@
                 class="feature-list-loader"
                 ng-if="$ctrl.loadingPage"></span>
           <span ng-if="!$ctrl.loadingPage">
-            <span ng-if="!$ctrl.serviceIsOnForUser('spark-hybrid-impinterop') && $ctrl.userHasEntitlement('spark-hybrid-impinterop')"
+            <span ng-if="!$ctrl.userIsEnabledInUSS('spark-hybrid-impinterop') && $ctrl.userHasEntitlement('spark-hybrid-impinterop') && !$ctrl.isInvitePending"
                   class="feature-status"
-                  translate="hercules.activationStatus.notFound"></span>
-            <span ng-if="!$ctrl.serviceIsOnForUser('spark-hybrid-impinterop') && !$ctrl.userHasEntitlement('spark-hybrid-impinterop')"
+                  translate="hercules.activationStatus.pendingNotSetup"></span>
+            <span ng-if="!$ctrl.userIsEnabledInUSS('spark-hybrid-impinterop') && $ctrl.userHasEntitlement('spark-hybrid-impinterop') && $ctrl.isInvitePending"
+                  class="feature-status"
+                  translate="hercules.activationStatus.accountNotActivated"></span>
+            <span ng-if="!$ctrl.userIsEnabledInUSS('spark-hybrid-impinterop') && !$ctrl.userHasEntitlement('spark-hybrid-impinterop')"
                   class="feature-status"
                   translate="common.off"></span>
-            <span ng-if="$ctrl.serviceIsOnForUser('spark-hybrid-impinterop')"
+            <span ng-if="$ctrl.userIsEnabledInUSS('spark-hybrid-impinterop')"
                   class="feature-status"
                   ng-class="$ctrl.getStatus('spark-hybrid-impinterop') ? 'status-' + $ctrl.getStatus('spark-hybrid-impinterop') : ''"
                   translate="hercules.activationStatus.{{$ctrl.getStatus('spark-hybrid-impinterop')}}"></span>
@@ -98,16 +107,19 @@
     </ul>
   </div>
 
-  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadOffice365Status"
-                                           translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
-  </hybrid-services-sidepanel-error-message>
+  <hybrid-services-sidepanel-message ng-if="$ctrl.couldNotReadOffice365Status"
+                                     severity="'error'"
+                                     translation-key="'hercules.cloudExtensions.couldNotReadOffice365Status'">
+  </hybrid-services-sidepanel-message>
 
-  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
-                                           translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
-  </hybrid-services-sidepanel-error-message>
+  <hybrid-services-sidepanel-message ng-if="$ctrl.couldNotReadGoogleCalendarStatus"
+                                     severity="'error'"
+                                     translation-key="'hercules.cloudExtensions.couldNotReadGoogleCalendarStatus'">
+  </hybrid-services-sidepanel-message>
 
-  <hybrid-services-sidepanel-error-message ng-if="$ctrl.couldNotReadStatusesFromFMS"
-                                           translation-key="'hercules.cloudExtensions.couldNotReadFMSStatus'">
-  </hybrid-services-sidepanel-error-message>
+  <hybrid-services-sidepanel-message ng-if="$ctrl.couldNotReadStatusesFromFMS"
+                                     severity="'error'"
+                                     translation-key="'hercules.cloudExtensions.couldNotReadFMSStatus'">
+  </hybrid-services-sidepanel-message>
 
 </cs-sp-section>

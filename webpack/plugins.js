@@ -36,9 +36,9 @@ const styleLintPlugin = new StyleLintPlugin({
 function getHtmlWebpackPlugin(options) {
   return new HtmlWebpackPlugin(_.assignIn({
     template: 'index.html',
-    chunks: ['manifest', 'newrelic', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
+    chunks: ['manifest', 'preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
     inject: false,
-    headChunks: ['manifest', 'newrelic'],
+    headChunks: ['manifest'],
     bodyChunks: ['preload', 'styles', 'bootstrap-vendor', 'bootstrap'],
   }, options));
 }

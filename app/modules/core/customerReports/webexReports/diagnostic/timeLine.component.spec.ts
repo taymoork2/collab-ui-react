@@ -1,6 +1,37 @@
 import testModule from './index';
+import * as d3 from 'd3';
 
 describe('Component: dgcTimeLine', () => {
+  const mockNode = {
+    data: () => { return mockNode; },
+    enter: () => { return mockNode; },
+    attr: (name, value) => {
+      if (_.isString(name)) {
+        mockNode.values[name] = value;
+      } else {
+        _.assign(mockNode.values, name);
+      }
+      if (_.isFunction(value)) {
+        value({});
+      }
+      return mockNode;
+    },
+    select: () => { return mockNode; },
+    selectAll: () => { return mockNode; },
+    style: () => { return mockNode; },
+    append: () => { return mockNode; },
+    text: () => { return mockNode; },
+    on: (name, fn) => { mockNode.values[name] = fn; return mockNode; },
+    html: () => { return mockNode; },
+    classed: () => { return mockNode; },
+    transition: () => { return mockNode; },
+    duration: () => { return mockNode; },
+    replace: () => { return mockNode; },
+    remove: () => { return true; },
+    size: () => { return 1; },
+    values: {},
+  };
+
   beforeAll(function () {
     this.sourceData = {
       lines: [],
@@ -14,7 +45,7 @@ describe('Component: dgcTimeLine', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies();
+    this.injectDependencies('$q', 'SearchService', 'Notification', '$timeout');
     moment.tz.setDefault('America/Chicago');
   });
 
@@ -62,5 +93,92 @@ describe('Component: dgcTimeLine', () => {
 
     this.controller.$onChanges({ lineColor: line });
     this.controller.$onChanges({ circleColor: circle });
+  });
+
+  it('Should get correct data with makeTips', function () {
+    mockLines.call(this, 13);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+
+    const msgArr = [{ key: 'Join Time: ', value: '' }];
+    this.controller.tip = {
+      transition: () => { return this.controller.tip; },
+      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
+      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
+      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
+      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      t: (t) => { if (t) { return true; } },
+    };
+    this.controller.makeTips({ arr: msgArr }, 100, 100);
+    expect(msgArr).toExist();
+  });
+
+  it('Should detect and update device type', function () {
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+
+    const msgArr = [{ key: 'SIP', value: '' }];
+    const mockData = { completed: true, items : [{ deviceType: 'SIP' }] };
+    spyOn(this.SearchService, 'getRealDevice').and.callFake(function () {
+      return {
+        then: function (callback) {
+          return callback(mockData);
+        },
+      };
+    });
+
+    const mockParam = { platform: '10' };
+    this.controller.tip = {
+      transition: () => { return this.controller.tip; },
+      html: (ht) => { this.controller.tip.t(ht); return this.controller.tip; },
+      classed: (ht, ft) => { this.controller.tip.t(ht); this.controller.tip.t(ft); return this.controller.tip; },
+      style: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      duration: (time) => { this.controller.tip.t(time); return this.controller.tip; },
+      replace: (n, ftv) => { this.controller.tip.t(n); this.controller.tip.t(ftv); return this.controller.tip; },
+      t: (t) => { if (t) { return true; } },
+    };
+    this.controller.detectAndUpdateDevice(mockParam, msgArr);
+    expect(mockParam['device']).toBe('SIP');
+  });
+
+  it('Should show y axis', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.yAxis();
+    mockData.values['mouseover']({}, 1);
+    mockData.values['mouseout']();
+    expect(mockData.values['class']).toContainText('icon');
+  });
+
+  it('Should update start points: Good', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.updateStartPoints([{ joinMeetingTime: 1 }]);
+    mockData.values['mouseover']();
+    mockData.values['mouseout']();
+    expect(mockData.values['jmtQuality']).toBe('Good');
+  });
+
+  it('Should update start points: Fair', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.updateStartPoints([{ joinMeetingTime: 15 }]);
+    expect(mockData.values['jmtQuality']).toBe('Fair');
+  });
+
+  it('Should update start points: Poor', function () {
+    const mockData = _.clone(mockNode);
+    spyOn(d3, 'select').and.returnValue(mockData);
+    const bindings = { sourceData: this.sourceData };
+    initComponent.call(this, bindings);
+    this.controller.updateStartPoints([{ joinMeetingTime: 30 }]);
+    expect(mockData.values['jmtQuality']).toBe('Poor');
   });
 });

@@ -18,7 +18,7 @@ describe('ApiCacheManagementService', () => {
     spyOn(this.UrlConfig, 'getCsdmServiceUrl').and.returnValue(csdmUrl);
 
     this.numberOfExpectedRequests = 1;
-    this.intervalDelay = 100000;
+    this.intervalDelay = 300000;
 
     this.expectCacheRequests = () => {
       // Add urls for other caches that should be warmed up here
@@ -71,14 +71,16 @@ describe('ApiCacheManagementService', () => {
     spyOn(this.Authinfo, 'isAdmin').and.returnValue(true);
     this.expectCacheRequests();
 
-    this.ApiCacheManagementService.warmUpOnInterval().catch(error => expect(error).toBe('canceled'));
+    this.ApiCacheManagementService.warmUpOnInterval().then(fail)
+      .catch(error => expect(error).toBe('canceled'));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();
     this.expectCacheRequestsAfterInterval();
 
     // retriggering interval should cancel previous interval gracefully
-    this.ApiCacheManagementService.warmUpOnInterval().catch(error => fail(error));
+    this.ApiCacheManagementService.warmUpOnInterval().then(fail)
+      .catch(error => fail(error));
     this.$httpBackend.flush(this.numberOfExpectedRequests);
 
     this.expectCacheRequestsAfterInterval();

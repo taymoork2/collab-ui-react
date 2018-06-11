@@ -1,8 +1,15 @@
-<cs-card id="{{::$ctrl.options.id}}" class="large" ng-class="{'hideCard': !$ctrl.show, 'report-box': !$ctrl.isTable(), 'report-card': $ctrl.isTable(), 'long-card': $ctrl.lowerTooltip && $ctrl.labels}">
+<cs-card id="{{::$ctrl.options.id}}" class="cs-card--large" ng-class="{'hideCard': !$ctrl.show, 'report-box': !$ctrl.isTable(), 'report-card': $ctrl.isTable(), 'long-card': $ctrl.lowerTooltip && $ctrl.labels}">
   <article>
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
-      <i ng-if="$ctrl.isPopover()" class='icon icon-information' tooltip="{{::$ctrl.getPopoverText()}}" tooltip-trigger="mouseenter" tooltip-placement="bottom" tooltip-animation="true"></i>
+      <i ng-if="$ctrl.isPopover()"
+        class='icon icon-information'
+        tooltip="{{::$ctrl.getPopoverText()}}"
+        aria-label="{{::$ctrl.getPopoverText()}}"
+        tooltip-trigger="mouseenter focus"
+        tooltip-placement="bottom"
+        tooltip-animation="true"
+        tabindex="0"></i>
       <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
         <a href ng-click="$ctrl.toggleExportMenu()">
           <i class='icon icon-three-dots export-dots'></i>
@@ -53,7 +60,12 @@
       <div class="row" ng-if="$ctrl.lowerTooltip && $ctrl.isSet() && $ctrl.labels">
         <div class="columns tooltip-column">
           <span class="tooltip-title" translate="{{::$ctrl.lowerTooltip.title}}"></span>
-          <i class="icon icon-information tooltip-icon" tooltip="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}" tooltip-trigger="mouseenter" tooltip-animation="true"></i>
+          <i class="icon icon-information tooltip-icon"
+            tooltip="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}"
+            aria-label="{{::$ctrl.getTranslation($ctrl.lowerTooltip.text)}}"
+            tooltip-trigger="mouseenter focus"
+            tooltip-animation="true"
+            tabindex="0"></i>
         </div>
       </div>
 
@@ -98,13 +110,13 @@
             <span ng-if="$ctrl.secondaryReport" translate="{{::$ctrl.options.id}}.hide"></span>
           </a>
           <div class="pull-right" ng-if="$ctrl.secondaryReport && ($ctrl.totalPages > 1) && $ctrl.secondaryIsSet()">
-            <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1">
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageBackward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage <= 1" aria-label="{{::'common.back' | translate}}">
               <i class='icon icon-chevron-left'></i>
             </button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[0])" ng-class="{'btn--primary': $ctrl.isCurrentPage(0), 'btn--link carousel-btn': !$ctrl.isCurrentPage(0)}"><span>{{$ctrl.pagingButtons[0]}}</span></button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[1])" ng-class="{'btn--primary': $ctrl.isCurrentPage(1), 'btn--link carousel-btn': !$ctrl.isCurrentPage(1)}"><span>{{$ctrl.pagingButtons[1]}}</span></button>
             <button type="button" class="btn" ng-click="$ctrl.changePage($ctrl.pagingButtons[2])" ng-class="{'btn--primary': $ctrl.isCurrentPage(2), 'btn--link carousel-btn': !$ctrl.isCurrentPage(2)}" ng-show="$ctrl.totalPages > 2"><span>{{$ctrl.pagingButtons[2]}}</span></button>
-            <button type="button" class="carousel-control" ng-click="$ctrl.pageForward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage >= $ctrl.totalPages">
+            <button type="button" class="carousel-control" ng-click="$ctrl.pageForward()" ng-show="$ctrl.totalPages > 3" ng-disabled="$ctrl.currentPage >= $ctrl.totalPages" aria-label="{{::'common.next' | translate}}">
               <i class='icon icon-chevron-right'></i>
             </button>
           </div>

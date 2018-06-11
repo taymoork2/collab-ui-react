@@ -39,16 +39,6 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       uuid: 'd3434d78-26452-445a2-845d8-4c1816565b3f0a',
     }];
     spyOn(CustomerAdministratorService, 'removeCustomerAdmin').and.returnValue($q.resolve({}));
-    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
-      data: {
-        Errors: [{
-          code: '403',
-          description: 'Organization has too many users.',
-          errorCode: '200046',
-        }],
-      },
-      status: 403,
-    }));
     spyOn(CustomerAdministratorService, 'getCustomerAdmins').and.returnValue($q.resolve({
       data: {
         Resources: [{
@@ -72,7 +62,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       result: modalDefer.promise,
     });
     spyOn(Analytics, 'trackEvent').and.returnValue($q.resolve({}));
-    spyOn(Notification, 'error');
+    spyOn(Notification, 'errorResponse');
     spyOn(Notification, 'success');
 
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
@@ -88,6 +78,19 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
       $stateParams: $stateParams,
     });
     $scope.$apply();
+  }
+
+  function rejectGetPartnerUsers() {
+    spyOn(CustomerAdministratorService, 'getPartnerUsers').and.returnValue($q.reject({
+      data: {
+        Errors: [{
+          code: '403',
+          description: 'Organization has too many users.',
+          errorCode: '200046',
+        }],
+      },
+      status: 403,
+    }));
   }
 
   describe('getCustomerAdmins():', function () {
@@ -107,6 +110,7 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
     beforeEach(initController);
 
     it('must display too many results error message', function () {
+      rejectGetPartnerUsers();
       controller.getPartnerUsers('a');
       $scope.$apply();
 
@@ -249,17 +253,15 @@ describe('Controller: customerAdministratorDetailCtrl', function () {
   });
 
   describe('addCustomerAdmin call failed', function () {
-    beforeEach(function () {
-      CustomerAdministratorService.addCustomerAdmin = jasmine.createSpy('CustomerAdministratorService').and.returnValue($q.reject());
+    it('must throw Notification.errorResponse', function () {
       initController();
-    });
-
-    it('must throw Notification.error', function () {
+      spyOn(CustomerAdministratorService, 'addCustomerAdmin').and.returnValue($q.reject());
       controller.users = testUsers;
       controller.assignedAdmins = [];
-      controller.addCustomerAdmin('Frank Sinatra').catch(function () {
-        expect(Notification.error()).toHaveBeenCalled();
+      controller.addCustomerAdmin('Frank Sinatra').then(function () {
+        expect(Notification.errorResponse).toHaveBeenCalled();
       });
+      $scope.$apply();
     });
   });
 

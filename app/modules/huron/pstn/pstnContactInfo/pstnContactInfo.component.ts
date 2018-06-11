@@ -32,17 +32,17 @@ export class PstnProvidersCtrl implements ng.IComponentController {
     return this.TerminusService.customerV2().query({
       name: this.contact.companyName,
     })
-    .$promise;
+      .$promise;
   }
 
   public verifyLegalCompanyName() {
     this.checkTerminusCustomer()
-    .then((response) => {
-      this.form.companyName.$setValidity('duplicateCompanyName', (response.length === 0));
-    })
-    .catch(response => {
-      this.Notification.errorResponse(response);
-    });
+      .then((response) => {
+        this.form.companyName.$setValidity('duplicateCompanyName', (response.length === 0));
+      })
+      .catch(response => {
+        this.Notification.errorResponse(response);
+      });
   }
 
   public verifyConfirmEmailAddress() {

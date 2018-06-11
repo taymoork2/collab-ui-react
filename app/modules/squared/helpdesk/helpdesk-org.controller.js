@@ -1,12 +1,14 @@
 (function () {
   'use strict';
 
+  var KeyCodes = require('modules/core/accessibility').KeyCodes;
+
   angular
     .module('Squared')
     .controller('HelpdeskOrgController', HelpdeskOrgController);
 
   /* @ngInject */
-  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, LicenseService, Notification, Orgservice, UrlConfig) {
+  function HelpdeskOrgController($anchorScroll, $location, $modal, $q, $scope, $state, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, HelpdeskService, HelpdeskCardsOrgService, FeatureToggleService, LicenseService, Notification, Orgservice, UrlConfig) {
     $('body').css('background', 'white');
     var vm = this;
     if ($stateParams.org) {
@@ -50,28 +52,6 @@
 
     vm.editOrgValidationMessages = {
       required: $translate.instant('common.required'),
-      duplicate: $translate.instant('helpdesk.org.duplicateName'),
-      failure: $translate.instant('helpdesk.org.validationFailure'),
-    };
-    vm.editOrgValidationDefer = $q.defer();
-    vm.editOrgAsyncValidators = {
-      failure: function () {
-        vm.editOrgValidationDefer = $q.defer();
-        return vm.editOrgValidationDefer.promise;
-      },
-      duplicate: function (value) {
-        return Orgservice.validateDisplayName(vm.orgId, value)
-          .catch(function () {
-            vm.editOrgValidationDefer.reject();
-            return true;
-          })
-          .then(function (isValid) {
-            vm.editOrgValidationDefer.resolve();
-            if (!isValid) {
-              return $q.reject();
-            }
-          });
-      },
     };
     vm.updateDisplayName = function (newValue) {
       return Orgservice.updateDisplayName(vm.orgId, newValue)
@@ -104,7 +84,7 @@
     }
 
     function setReadOnlyLaunchButtonVisibility(orgData) {
-      if (orgData.id == Authinfo.getOrgId()) {
+      if (orgData.id === Authinfo.getOrgId()) {
         vm.allowLaunchAtlas = false;
       } else if (!orgData.orgSettings) {
         vm.allowLaunchAtlas = true;
@@ -156,7 +136,6 @@
       findServiceOrders(vm.orgId);
       findAdminUsers(org);
       vm.supportedBy = isTrials(org.orgSettings) ? $translate.instant('helpdesk.trials') : $translate.instant('helpdesk.ts');
-      angular.element('.helpdesk-details').focus();
       setReadOnlyLaunchButtonVisibility(org);
     }
 
@@ -206,9 +185,11 @@
           IBM: 'Partner Marketplace',
           ATLAS_TRIALS: 'Partner-Led Trial',
           CCW: 'Cisco Commerce',
+          CCW_CDC: 'CCE',
           CCW_CSB: 'Cisco Commerce',
           CISCO_ONLINE_OPC: 'Cisco Online Trial',
           DIGITAL_RIVER: 'Cisco Online Marketplace',
+          ATLAS_SITE_MGMT: 'Cisco Commerce',
         };
         vm.orderSystems = [];
         _.forEach(orders, function (order) {
@@ -217,11 +198,12 @@
           }
           vm.orderSystems.push(orderingSystemTypes[vm.orderingTool] || order.orderingTool);
         });
+        vm.orderSystems = _.uniqWith(vm.orderSystems, _.isEqual);
       }, vm._helpers.notifyError);
     }
 
     function findAdminUsers(org) {
-      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 100).then(function (users) {
+      HelpdeskService.usersWithRole(org.id, 'id_full_admin', 250).then(function (users) {
         vm.adminUsers = users;
         vm.showAllAdminUsersText = $translate.instant('common.showAllAdminUsers', {
           numUsers: users.length,
@@ -252,14 +234,10 @@
       vm.adminUserLimit = vm.initialAdminUserLimit;
     }
 
-    function modalVisible() {
-      return $('#HelpdeskExtendedInfoDialog').is(':visible');
-    }
-
     function keyPressHandler(event) {
-      if (!modalVisible()) {
+      if (!AccessibilityService.isVisible(AccessibilityService.MODAL)) {
         switch (event.keyCode) {
-          case 27: // Esc
+          case KeyCodes.ESCAPE:
             $window.history.back();
             break;
           case 83: // S

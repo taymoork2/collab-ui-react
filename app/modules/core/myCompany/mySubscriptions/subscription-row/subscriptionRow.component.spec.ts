@@ -10,7 +10,6 @@ describe('Component: subscription row', function () {
       '$translate',
       '$window',
       'Config',
-      'FeatureToggleService',
       'ProPackService',
       'SharedMeetingsReportService',
       'WebExUtilsFact',
@@ -21,7 +20,6 @@ describe('Component: subscription row', function () {
 
     spyOn(this.$translate, 'instant').and.callThrough();
     spyOn(this.$window, 'open');
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
     spyOn(this.SharedMeetingsReportService, 'openModal');
     spyOn(this.WebExUtilsFact, 'getSiteAdminUrl').and.returnValue(this.DUMMY_URL);

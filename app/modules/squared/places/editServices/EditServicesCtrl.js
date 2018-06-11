@@ -18,17 +18,19 @@
     vm.service = initialService;
     var initialEnableCalService = getCalServiceEnabled(wizardData.account.entitlements);
     vm.sparkCallConnectEnabled = !!wizardData.csdmHybridCallFeature && wizardData.hybridCallEnabledOnOrg;
-    vm.sparkCalendarPlaceEnabled = !!wizardData.csdmHybridCalendarFeature && wizardData.hybridCalendarEnabledOnOrg;
+    vm.sparkCalendarPlaceEnabled = wizardData.hybridCalendarEnabledOnOrg;
     vm.enableCalService = wizardData.account.enableCalService || initialEnableCalService;
 
     vm.next = function () {
       var updatedEntitlements = getUpdatedEntitlements();
+      var needsCalendarSetup = vm.enableCalService && vm.enableCalService !== initialEnableCalService;
+      var needsCallSetup = vm.service !== 'sparkOnly' && vm.service !== initialService;
       $stateParams.wizard.next({
         account: {
           entitlements: updatedEntitlements,
-          enableCalService: vm.enableCalService,
+          enableCalService: needsCalendarSetup,
         },
-      }, (vm.enableCalService && vm.enableCalService !== initialEnableCalService) ? 'calendar' : vm.service);
+      }, needsCalendarSetup && !needsCallSetup ? 'calendar' : vm.service);
     };
 
     vm.hasNextStep = function () {
@@ -39,12 +41,6 @@
 
     vm.hasBackStep = function () {
       return wizardData.function !== 'editServices';
-    };
-    vm.disableCalendar = function () {
-      return vm.service !== initialService;
-    };
-    vm.disableServices = function () {
-      return vm.enableCalService !== initialEnableCalService;
     };
 
     function getUpdatedEntitlements() {
@@ -57,6 +53,8 @@
         entitlements.push(fusionuc);
       }
       if (vm.enableCalService) {
+        // Only add calendar entitlements if they were present before.
+        // If calendar is being enabled now, editCalendarService will handle the entitlements.
         _.intersection(wizardData.account.entitlements || [], [fusionCal, fusionGCal]).forEach(function (calEntitlement) {
           entitlements.push(calEntitlement);
         });

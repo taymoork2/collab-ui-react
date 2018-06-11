@@ -1,0 +1,25 @@
+export const GROUP_TYPE_UNASSIGNED: string = 'UNASSIGNED';
+export const STATUS_NODES_NEED_ACCEPTANCE: string = 'NODES_NEED_ACCEPTANCE';
+export const STATUS_UNASSIGNED: string = 'UNASSIGNED';
+export const STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED: string = 'SOFTWARE_PROFILE_NOT_ASSIGNED';
+export const STATUS_NO_AGENT_RUNNING: string = 'NO_AGENT_RUNNING';
+export const STATUS_AGENT_OFFLINE: string = 'AGENT_OFFLINE';
+export const STATUS_SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS: string = 'SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS';
+export const STATUS_SOFTWARE_VERSION_MISMATCH: string = 'SOFTWARE_VERSION_MISMATCH';
+export const STATUS_SOFTWARE_UPGRADE_NEEDED: string = 'SOFTWARE_UPGRADE_NEEDED';
+export const STATUS_NEED_TO_UPDATE_BATCH_NUMBER: string = 'NEED_TO_UPDATE_BATCH_NUMBER';
+export const STATUS_UPGRADE_IN_PROGRESS: string = 'UPGRADE_IN_PROGRESS';
+export const STATUS_UPGRADE_SCHEDULED: string = 'UPGRADE_SCHEDULED';
+export const STATUS_FAILED_UPGRADE: string = 'FAILED_UPGRADE';
+export const STATUS_OPERATIONAL: string = 'OPERATIONAL';
+export const STATUS_COMPLIANT: string = 'COMPLIANT';
+
+export interface ISelectOption {
+  label: string;
+  value: string;
+}
+
+export interface IHeaderTab {
+  title: string;
+  state: string;
+}

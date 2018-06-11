@@ -40,7 +40,7 @@ export class EmergencyServicesService {
   }
 
   public getInitialData(): IEmergencyServicesData {
-    this.currentDevice = this.$stateParams.currentDevice;
+    this.currentDevice = this.$stateParams.currentHuronDevice;
     this.huronDeviceService = this.$stateParams.huronDeviceService;
     const emergencyData = {
       emergencyNumber: this.$stateParams.currentNumber,
@@ -62,7 +62,7 @@ export class EmergencyServicesService {
     return this.ServiceSetup.listSites().then(() => {
       if (this.ServiceSetup.sites.length !== 0) {
         return this.ServiceSetup.getSite(this.ServiceSetup.sites[0].uuid)
-        .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
+          .then(site => _.get(site, 'emergencyCallBackNumber.pattern'));
       }
     });
   }
@@ -78,7 +78,7 @@ export class EmergencyServicesService {
             .map(externalNumber => externalNumber.pattern).value();
         });
       }).catch(() => {
-        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId()).then(() => {
+        return this.ExternalNumberService.refreshNumbers(this.Authinfo.getOrgId(), undefined, filter).then(() => {
           return _.chain(this.ExternalNumberService.getAssignedNumbers())
             .map(externalNumber => externalNumber.pattern).value();
         });
@@ -133,26 +133,26 @@ export class EmergencyServicesService {
     const providerId = this.PstnModel.getProviderId();
     if (!_.isString(providerId) || providerId.length === 0) {
       return this.PstnService.getCustomerV2(this.Authinfo.getOrgId())
-      .then((customer) => {
+        .then((customer) => {
         // update PSTN model
-        this.PstnModel.setCustomerId(customer.uuid);
-        this.PstnModel.setCustomerExists(true);
-        this.PstnModel.setCustomerName(customer.name);
-        this.PstnModel.setCustomerFirstName(customer.firstName);
-        this.PstnModel.setCustomerLastName(customer.lastName);
-        this.PstnModel.setCustomerEmail(customer.email);
+          this.PstnModel.setCustomerId(customer.uuid);
+          this.PstnModel.setCustomerExists(true);
+          this.PstnModel.setCustomerName(customer.name);
+          this.PstnModel.setCustomerFirstName(customer.firstName);
+          this.PstnModel.setCustomerLastName(customer.lastName);
+          this.PstnModel.setCustomerEmail(customer.email);
         //Get and save the provider information.
-        const carrier: PstnCarrier = new PstnCarrier();
-        carrier.uuid = customer.pstnCarrierId;
-        this.PstnService.getCarrierDetails([carrier])
-        .then(rCarrier => {
-          if (rCarrier.uuid === customer.pstnCarrierId) {
-            this.PstnModel.setProvider(rCarrier);
-          }
-        });
+          const carrier: PstnCarrier = new PstnCarrier();
+          carrier.uuid = customer.pstnCarrierId;
+          this.PstnService.getCarrierDetails([carrier])
+            .then(rCarrier => {
+              if (rCarrier.uuid === customer.pstnCarrierId) {
+                this.PstnModel.setProvider(rCarrier);
+              }
+            });
         //Validate the address
-        return this.PstnServiceAddressService.lookupAddressV2(address, customer.pstnCarrierId, true);
-      });
+          return this.PstnServiceAddressService.lookupAddressV2(address, customer.pstnCarrierId, true);
+        });
     } else {
       return this.PstnServiceAddressService.lookupAddressV2(address, providerId, true);
     }

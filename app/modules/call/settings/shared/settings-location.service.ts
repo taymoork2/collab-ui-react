@@ -48,12 +48,12 @@ export class CallSettingsService {
       companyMoh: this.getCompanyMedia().then(companyMoh => callSettingsData.companyMoh = companyMoh),
       defaultLocation: this.getDefaultLocation().then(defaultLocation => callSettingsData.defaultLocation = defaultLocation),
     })
-    .then(() => this.getAvrilCustomer(callSettingsData.customer.hasVoicemailService).then(avrilCustomer => callSettingsData.avrilCustomer = avrilCustomer))
-    .then(() => {
-      this.callSettingsDataCopy = this.cloneSettingsData(callSettingsData);
-      return callSettingsData;
-    })
-    .catch(() => this.rejectAndNotifyPossibleErrors());
+      .then(() => this.getAvrilCustomer(callSettingsData.customer.hasVoicemailService).then(avrilCustomer => callSettingsData.avrilCustomer = avrilCustomer))
+      .then(() => {
+        this.callSettingsDataCopy = this.cloneSettingsData(callSettingsData);
+        return callSettingsData;
+      })
+      .catch(() => this.rejectAndNotifyPossibleErrors());
   }
 
   public save(data: CallSettingsData): ng.IPromise<CallSettingsData> {
@@ -117,16 +117,16 @@ export class CallSettingsService {
 
   private getVoiceCustomer(): ng.IPromise<CustomerVoice> {
     return this.HuronCustomerService.getVoiceCustomer()
-    .catch(error => {
-      this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
-      return this.$q.reject();
-    });
+      .catch(error => {
+        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.customerGetError'));
+        return this.$q.reject();
+      });
   }
 
   private getCompanyMedia(): ng.IPromise<string> {
     return this.MediaOnHoldService.getCompanyMedia()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohGetError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohGetError'));
         return this.$q.reject();
       });
   }
@@ -181,10 +181,10 @@ export class CallSettingsService {
   public getAvrilCustomer(hasVoicemailService: boolean): ng.IPromise<AvrilCustomer> {
     if (hasVoicemailService) {
       return this.AvrilService.getAvrilCustomer()
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
-        return this.$q.reject();
-      });
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'huronSettings.avrilCustomerGetError'));
+          return this.$q.reject();
+        });
     } else {
       return this.$q.resolve(new AvrilCustomer());
     }
@@ -205,15 +205,15 @@ export class CallSettingsService {
   public saveExtensionLengthDecrease(customerVoice: CustomerVoice): ng.IPromise<any> {
     if (!_.isEqual(this.callSettingsDataCopy.customerVoice.extensionLength, customerVoice.extensionLength)) {
       return this.ExtensionLengthService.saveExtensionLength(customerVoice.extensionLength, null)
-      .then(() => this.getDefaultLocation())
-      .then(defaultLocation => {
-        const newDefaultInternalNumberRange: InternalNumberRange = this.InternalNumberRangeService.calculateDefaultExtensionRange(_.get(customerVoice, 'extensionLength'));
-        return this.InternalNumberRangeService.createLocationInternalNumberRange(_.get(defaultLocation, 'uuid'), newDefaultInternalNumberRange);
-      })
-      .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionLengthSaveFail'));
-        return this.$q.reject();
-      });
+        .then(() => this.getDefaultLocation())
+        .then(defaultLocation => {
+          const newDefaultInternalNumberRange: InternalNumberRange = this.InternalNumberRangeService.calculateDefaultExtensionRange(_.get(customerVoice, 'extensionLength'));
+          return this.InternalNumberRangeService.createLocationInternalNumberRange(_.get(defaultLocation, 'uuid'), newDefaultInternalNumberRange);
+        })
+        .catch(error => {
+          this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.extensionLengthSaveFail'));
+          return this.$q.reject();
+        });
     } else {
       return this.$q.resolve();
     }
@@ -233,18 +233,18 @@ export class CallSettingsService {
   private updateLocation(location: Location): ng.IPromise<void> {
     if (!_.isEqual(this.callSettingsDataCopy.defaultLocation, location)) {
       return this.LocationsService.updateLocation(location)
-      .catch(error => {
-        const ERRORCODE = '19416';
-        if (_.has(error.data, 'details') &&
+        .catch(error => {
+          const ERRORCODE = '19416';
+          if (_.has(error.data, 'details') &&
             _.isArray(error.data.details) &&
             _.has(error.data.details[0], 'productErrorMessage') &&
             _.includes(error.data.details[0].productErrorMessage, ERRORCODE)) {
-          this.errors.push(this.Notification.processErrorResponse(error, 'locations.voicemailPilotUpdateFailed', { number : location.voicemailPilotNumber ? location.voicemailPilotNumber.number : '' }));
-        } else {
-          this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
-        }
-        return this.$q.reject();
-      });
+            this.errors.push(this.Notification.processErrorResponse(error, 'locations.voicemailPilotUpdateFailed', { number : location.voicemailPilotNumber ? location.voicemailPilotNumber.number : '' }));
+          } else {
+            this.errors.push(this.Notification.processErrorResponse(error, 'locations.updateFailed'));
+          }
+          return this.$q.reject();
+        });
     } else {
       return this.$q.resolve();
     }
@@ -265,14 +265,14 @@ export class CallSettingsService {
   private updateCompanyMediaOnHold(mediaFileId: string): ng.IPromise<void> {
     return this.MediaOnHoldService.updateMediaOnHold(mediaFileId)
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 
   private unassignCompanyMediaOnHold(): ng.IPromise<void> {
     return this.MediaOnHoldService.unassignMediaOnHold()
       .catch(error => {
-        this.errors.push(this.Notification.processErrorResponse(error, 'serviceSetupModal.mohUpdateError'));
+        this.errors.push(this.Notification.processErrorResponse(error, 'mediaOnHold.mohUpdateError'));
       });
   }
 

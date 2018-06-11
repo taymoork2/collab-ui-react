@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 
 export interface IConfigurationResource extends ng.resource.IResourceClass<any> {
   update(any): any;
@@ -9,14 +10,17 @@ export class EvaService {
   public evaServiceCard = {
     id: 'expertVirtualAssistant',
     type: 'expertVirtualAssistant',
-    mediaType: 'virtualAssistant', // for filter
     code: this.getMessageKey('featureText.code'),
     label: this.getMessageKey('featureText.type'),
     description: this.getMessageKey('featureText.selectDesc'),
-    icons: ['icon-bot-two'],
+    icons: ['icon-bot-five'],
+    style: 'virtual-assistant-icon',
     color: 'feature-va-color',
     disabled: false,
     disabledTooltip:  this.getMessageKey('featureText.disabledTooltip'),
+    editDeleteWarning: this.getMessageKey('featureText.nonAdminEditDeleteWarning'),
+    noDefaultSpaceWarning: this.getMessageKey('featureText.noDefaultSpaceWarning'),
+    noDefaultSpaceAndNoAccess: this.getMessageKey('featureText.nonAdminNoDefaultSpace'),
     goToService: this.goToService.bind(this),
   };
 
@@ -40,6 +44,8 @@ export class EvaService {
     private Authinfo,
     private UrlConfig,
     private $q: ng.IQService,
+    private SparkService,
+    private CareFeatureList,
   ) {
   }
 
@@ -95,14 +101,42 @@ export class EvaService {
     });
   }
 
+  private getExpertAssistants (orgId?: string, expertAssistantId?: string): ng.IPromise<any> {
+    return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .get().$promise;
+  }
+
+  /**
+   * Add to all expertAssistants (EVAs), the owner details for those evas if its not the logged in user
+   * @param {Object} expertAssistantsResponse response by calling getExpertAssistants
+   * @returns {angular.IPromise<any>}
+   */
+  private addOtherOwnerDetails (expertAssistants: any): ng.IPromise<any> {
+    const mePersonDetails = this.SparkService.getMyPerson();
+
+    const otherOwnerIds = _.map(_.filter(expertAssistants.items, function (item: any) { return item.ownerId !== mePersonDetails.id; }), 'ownerId');
+    return this.SparkService.listPeopleByIds(otherOwnerIds)
+      .then((owners) => {
+        const ownerMap = {};
+        owners.items.forEach((owner) => { ownerMap[owner['id']] = owner; });
+        expertAssistants.items.forEach((item) => {
+          item.ownerDetails = item.ownerId === mePersonDetails.id ? mePersonDetails : _.get(ownerMap, item.ownerId, {});
+        });
+        return { items: expertAssistants.items };
+      });
+  }
+
   /**
    * list all Expert Virtual Assistants for orgId
    * @param orgId
    * returns {ng.IPromise<any>} promise resolving to JSON array of configurations or empty array on error
    */
   public listExpertAssistants(orgId: string): ng.IPromise<any> {
-    return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId())
-      .get().$promise;
+    const service = this;
+    return this.getExpertAssistants(orgId)
+      .then(function (expertAssistants) {
+        return service.addOtherOwnerDetails(expertAssistants);
+      });
   }
 
   /**
@@ -112,8 +146,20 @@ export class EvaService {
    * returns {ng.IPromise<any>} promise
    */
   public getExpertAssistant(expertAssistantId: string, orgId: string): ng.IPromise<any> {
-    return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
-      .get().$promise;
+    const service = this;
+    return this.getExpertAssistants (orgId, expertAssistantId)
+      .then(function (response) {
+        // in unit test, response found to contain additional properties:
+        //  toJSON function, and '$promise' and '$response'
+        // we want to omit these properties
+        const expertAssistantDataOnly = _.omitBy(response, function (value, key) {
+          return (key || '')[0] === '$' || _.isFunction(value);
+        });
+        return service.addOtherOwnerDetails({ items: [expertAssistantDataOnly] })
+          .then(function (expertAssistants) {
+            return expertAssistants.items[0];
+          });
+      });
   }
 
   /**
@@ -156,17 +202,60 @@ export class EvaService {
    * @param orgId
    * @param email
    * @param defaultSpaceId
-   * @param iconUrl URL to avatar icon file
    * returns {ng.IPromise<any>} promise
    */
-  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string, iconUrl?: string): ng.IPromise<void> {
+  public updateExpertAssistant(expertAssistantId: string, name: string, orgId: string, email: string, defaultSpaceId: string): ng.IPromise<void> {
     return this.getExpertAssistantResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
       .update({
         name: name,
         email: email,
         defaultSpaceId: defaultSpaceId,
+      }).$promise;
+  }
+
+  /**
+   * obtain resource for Expert Virtual Assistant Icon Update API Rest call.
+   * @param orgId
+   * @param expertAssistantId
+   * @returns {IConfigurationResource}
+   */
+  private getExpertAssistantIconResource(orgId: string, expertAssistantId: string): IConfigurationResource {
+    const  baseUrl = this.UrlConfig.getEvaServiceUrl();
+    return <IConfigurationResource>this.$resource(baseUrl + 'config/organization/:orgId/expert-assistant/:expertAssistantId/icon', {
+      orgId,
+      expertAssistantId,
+    }, {
+      update: {
+        method: 'PUT',
+      },
+    });
+  }
+
+  /**
+   * update icon of an identified expert virtual assistant
+   * @param expertAssistantId
+   * @param orgId
+   * @param iconUrl URL to avatar icon file
+   * returns {ng.IPromise<any>} promise
+   */
+  public updateExpertAssistantIcon(expertAssistantId: string, orgId: string, iconUrl: string): ng.IPromise<void> {
+    return this.getExpertAssistantIconResource(orgId || this.Authinfo.getOrgId(), expertAssistantId)
+      .update({
         icon: iconUrl,
       }).$promise;
+  }
+
+  public canIEditThisEva(feature: any): boolean {
+    return feature.ownerId === this.SparkService.getMyPersonId();
+  }
+
+  /**
+   * Return the name of the admin that created this Expert Virtual Assistant
+   * @param feature
+   * @returns {string}
+   */
+  public getEvaOwner(feature: any): string {
+    return _.get(feature, 'ownerDetails.displayName', '');
   }
 
   /**
@@ -180,14 +269,13 @@ export class EvaService {
     const formattedList = _.map(list.items, function (item: any) {
       item.templateId = item.id;
       if (!item.name) {
-        item.name = item.templateId;
+        item.name = service.getFeatureName();
       }
-      item.mediaType = service.evaServiceCard.mediaType;
-      // CA-115: indicates that item.status should not be visible until UX defines the value to be set when "In use"
-      // item.status = 'Not in use';
       item.featureType = feature.name;
       item.color = feature.color;
       item.icons = feature.icons;
+      item.templates = [];
+      item.filterValue = service.CareFeatureList.filterConstants.virtualAssistant;
       return item;
     });
     return _.sortBy(formattedList, function (item: any) {
@@ -245,6 +333,18 @@ export class EvaService {
       };
       fileReader.readAsDataURL(fileObject);
     });
+  }
+
+  public getMissingDefaultSpaceEva(orgId?: string): ng.IPromise<any> {
+    const service = this;
+    return this.listExpertAssistants(orgId || this.Authinfo.getOrgId())
+      .then(function (expertAssistants) {
+        return _.find(expertAssistants.items, service.isMissingDefaultSpace);
+      });
+  }
+
+  public isMissingDefaultSpace(feature: any) {
+    return !_.find(feature.spaces, 'default');
   }
 }
 export default angular

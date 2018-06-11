@@ -10,10 +10,11 @@ var TrialWebexService = require('./trialWebex.service');
     .module('core.trial', [
       require('modules/core/scripts/services/logmetricsservice'),
       require('modules/core/notifications').default,
-      require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
       require('modules/huron/pstn/pstn.service').default,
+      require('modules/huron/pstnSetup/pstnServiceAddress/pstnServiceAddress.service'),
       require('modules/core/scripts/services/userlist.service'),
       require('modules/core/setupWizard/setup-wizard.service').default,
+      require('modules/shared/input-validator').default,
     ])
     .factory('TrialService', TrialService.TrialService)
     .factory('TrialResource', TrialService.TrialResource)

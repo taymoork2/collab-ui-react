@@ -8,7 +8,7 @@ export * from './directoryNumberOptions.service';
 
 export default angular
   .module('huron.directory-number', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     'ngResource',
     require('modules/core/scripts/services/authinfo'),

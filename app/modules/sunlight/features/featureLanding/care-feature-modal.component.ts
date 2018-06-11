@@ -11,7 +11,9 @@ class CareFeatureModalCtrl implements ng.IComponentController {
   constructor(
     public $modal,
     public $state,
-    public Authinfo) {
+    public Authinfo,
+    public AbcService,
+  ) {
   }
 
   /**
@@ -30,12 +32,17 @@ class CareFeatureModalCtrl implements ng.IComponentController {
       disabled: false,
     });
 
+    if (this.$state.isAppleBusinessChatEnabled) {
+      serviceCards.push(this.AbcService.abcServiceCard);
+    }
+
     if (this.$state.isVirtualAssistantEnabled) {
       serviceCards.push({ //Virtual Assistant
         id: 'virtualAssistant',
         label: 'sunlightDetails.newFeatures.virtualAssistant',
         description: 'careChatTpl.virtualAssistant.featureText.selectDesc',
         icons: ['icon-bot-four'],
+        style: 'virtual-assistant-icon',
         color: 'feature-va-color',
         disabled: false,
       });
@@ -48,8 +55,16 @@ class CareFeatureModalCtrl implements ng.IComponentController {
 
   public ok(featureId): void {
     let templateStr = '<customer-support-template-modal dismiss="$dismiss()" class="care-modal"></customer-support-template-modal>';
+    if (this.$state.isHybridToggleEnabled) {
+      templateStr = '<care-hybrid-feature-modal dismiss="$dismiss()" class="care-modal"></care-hybrid-feature-modal>';
+    }
     if (featureId === 'virtualAssistant') {
       templateStr = '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>';
+    }
+    if (featureId === 'appleBusinessChat') {
+      this.$state.go('care.' + featureId);
+      this.dismiss();
+      return;
     }
     this.$modal.open({
       template: templateStr,

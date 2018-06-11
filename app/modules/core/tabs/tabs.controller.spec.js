@@ -368,7 +368,6 @@
         });
         spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
         spyOn(featureToggleService, 'supports').and.returnValue($q.resolve(featureIsEnabled));
-        // featureToggleService.supports = jasmine.stub().and.returnValue($q.resolve(featureIsEnabled));
         initTabsController();
         broadcastEvent('TABS_UPDATED');
         $scope.$apply();
@@ -376,6 +375,7 @@
           tab: tab,
         })).toBe(expectedResult);
       };
+
       it('a tab with a feature toggle should be gone when feature is not available', function () {
         performFeatureToggleTest('featureDependent', 'tab-feature-test', false, false);
       });
@@ -390,6 +390,38 @@
 
       it('a tab with a negated feature toggle should be gone when feature is available', function () {
         performFeatureToggleTest('featureDependent', '!tab-feature-test', true, false);
+      });
+    });
+
+    describe('multiple feature toggles', function () {
+      var performFeatureToggleTest = function (tab, feature, featureIsEnabled, expectedResult) {
+        tabConfig.push({
+          tab: tab,
+          feature: feature,
+        });
+        spyOn(Authinfo, 'isAllowedState').and.returnValue(true);
+        spyOn(featureToggleService, 'supports').and.callFake(function (toggle) {
+          var index = feature.indexOf(toggle);
+          return $q.resolve(featureIsEnabled[index]);
+        });
+        initTabsController();
+        broadcastEvent('TABS_UPDATED');
+        $scope.$apply();
+        expect(_.some(tabsController.tabs, {
+          tab: tab,
+        })).toBe(expectedResult);
+      };
+
+      it('a tab with a feature toggle should be gone when all features are unavailable', function () {
+        performFeatureToggleTest('featureDependent', ['tab-feature-test', 'secondary-toggle-test'], [false, false], false);
+      });
+
+      it('a tab with a feature toggle should be visible when some features are available', function () {
+        performFeatureToggleTest('featureDependent', ['tab-feature-test', 'secondary-toggle-test'], [true, false], true);
+      });
+
+      it('a tab with a feature toggle should be visible when all features are available', function () {
+        performFeatureToggleTest('featureDependent', ['tab-feature-test', 'secondary-toggle-test'], [true, true], true);
       });
     });
 

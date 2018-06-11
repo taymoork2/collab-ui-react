@@ -36,7 +36,9 @@ describe('Component: gmTdModalRequest', () => {
   describe('$onInit', () => {
     it('should call Notification.errorResponse when the http status is 404', function () {
       spyOn(this.gemService, 'getStorage').and.returnValue([]);
-      this.TelephonyDomainService.getRegions.and.returnValue(this.$q.reject({ status: 404 }));
+      this.TelephonyDomainService.getRegions.and.callFake(() => {
+        return this.$q.reject({ status: 404 });
+      });
 
       initComponent.call(this);
       expect(this.Notification.errorResponse).toHaveBeenCalled();

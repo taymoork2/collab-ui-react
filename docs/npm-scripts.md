@@ -16,10 +16,14 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 * `webpack` arguments must be prefixed with `env.`
   * `--env.nolint` to prevent lint loaders during build
   * `--env.analyze` to open the bundle visual analyzer
+  * `--env.noprogress` to hide the progress reporter
 
 #### Common test arguments
 
+* `--env.coverage` to enable code coverage
+* `--env.lint` to enable linting during tests
 * `--debug` to request debug mode
+* `--phantomjs` to run tests through PhantomJS browser
 * `--production-backend` to run e2e against production services
 * `--sauce` to run e2e through SauceLabs
 * `--specs` to specify specific e2e spec files
@@ -35,6 +39,7 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 ### `yarn start`
 
 * Alias for `yarn serve`
+* Installs yarn dependencies before serving
 * Can opt-out of linting with `--env.nolint`
 
 ### `yarn test`
@@ -42,6 +47,7 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 * Alias for `yarn ktest-all`
 * Runs parallel karma unit tests with `karma.conf.js`
 * Can opt-in to linting with `--env.lint`
+* Can opt-in to code coverage with `--env.coverage`
 
 ## Custom Scripts
 
@@ -144,17 +150,9 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 
 * Serves the static content from the `dist` directory
 
-### `yarn ts-spec-delete`
-
-* Backwards-compatible utility to delete old compiled TypeScript spec files in the `app` directory
-
 ### `yarn tslint`
 
 * Run tslint on entire project
-
-### `yarn typings`
-
-* Reinstalls TypeScript definitions from `typings.json`
 
 ### `yarn webdriver`
 

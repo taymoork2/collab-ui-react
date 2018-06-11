@@ -7,7 +7,6 @@ const GENERIC_MEDIA_ID: string = '98765432-DBC2-01BB-476B-CFAF98765432';
 
 export class MediaOnHoldService {
   private mediaOnHoldResource: IMediaOnHoldResource;
-  private lineMediaOnHoldResource: IMediaOnHoldResource;
   private supportsLocation: boolean = false;
 
   /* @ngInject */
@@ -19,7 +18,6 @@ export class MediaOnHoldService {
     private FeatureToggleService,
   ) {
     this.mediaOnHoldResource = this.$resource(this.HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts');
-    this.lineMediaOnHoldResource = this.$resource(this.HuronConfig.getMmsUrl() + '/organizations/:orgId/mohPrompts/lines/:lineId');
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
       .then(result => this.supportsLocation = result);
   }
@@ -28,20 +26,20 @@ export class MediaOnHoldService {
     return this.mediaOnHoldResource.query({
       orgId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(mediaList => {
-      return _.map(mediaList, media => {
-        return <IMediaOnHold> {
-          orgId: _.get(media, 'orgId'),
-          mediaId: _.get(media, 'mediaId'),
-          variantId: _.get(media, 'variantId'),
-          fileName: _.get(media, 'fileName'),
-          displayName: _.get(media, 'displayName'),
-          rhesosId: _.get(media, 'rhesosId'),
-          markForDelete: _.get(media, 'markForDelete'),
-          assignments: _.get(media, 'assignments'),
-        };
+      .then(mediaList => {
+        return _.map(mediaList, media => {
+          return <IMediaOnHold> {
+            orgId: _.get(media, 'orgId'),
+            mediaId: _.get(media, 'mediaId'),
+            variantId: _.get(media, 'variantId'),
+            fileName: _.get(media, 'fileName'),
+            displayName: _.get(media, 'displayName'),
+            rhesosId: _.get(media, 'rhesosId'),
+            markForDelete: _.get(media, 'markForDelete'),
+            assignments: _.get(media, 'assignments'),
+          };
+        });
       });
-    });
   }
 
   public getCompanyMedia(): ng.IPromise<string> {

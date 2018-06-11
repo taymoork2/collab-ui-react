@@ -16,6 +16,7 @@ describe('Controller: TrialDeviceController', function () {
       '$httpBackend',
       '$q',
       '$scope',
+      '$stateParams',
       'Analytics',
       'FeatureToggleService',
       'Notification',
@@ -27,17 +28,29 @@ describe('Controller: TrialDeviceController', function () {
 
     this.trialData = getJSONFixture('core/json/trials/trialData.json');
 
-    // TODO - remove this.$httpBackend when MX300 are officially supported
-    this.$httpBackend
-      .when('GET', 'https://identity.webex.com/identity/scim/null/v1/Users/me')
-      .respond({});
+    this.stateParams = {
+      details: {
+        details: {
+          devices: [
+            {
+              model: 'CISCO_8865',
+              quantity: 1,
+            }, {
+              model: 'CISCO_7832',
+              quantity: 1,
+            }],
+        },
+      },
+    };
+
     spyOn(this.Orgservice, 'getOrg');
     this.limitData = this.TrialDeviceService.getDeviceLimit();
     spyOn(this.Analytics, 'trackTrialSteps');
+    spyOn(this.FeatureToggleService, 'atlasF281TrialRoomKitGetStatus').and.returnValue(this.$q.resolve(false));
 
-    this.initController = function () {
+    this.initController = function (params) {
       this.$scope.trialData = this.trialData.enabled;
-      this.controller = this.$controller('TrialDeviceController', { $scope: this.$scope });
+      this.controller = this.$controller('TrialDeviceController', { $scope: this.$scope, $stateParams: params });
       this.$scope.$apply();
     };
 
@@ -453,6 +466,94 @@ describe('Controller: TrialDeviceController', function () {
       var countryList = this.controller.getCountriesForSelectedDevices();
       expect(countryList.length).toBe(1);
       expect(countryList).toContain({ country: 'United States' });
+    });
+  });
+
+  describe('For existing trials', function () {
+    it('should correctly populate existing device quantities and include them in total quantity calculation', function () {
+      this.initController();
+      var total = this.controller.getTotalQuantity();
+      expect(total).toBe(0);
+      this.initController(this.stateParams);
+      total = this.controller.getTotalQuantity();
+      expect(total).toBe(2);
+      total = this.controller.getTotalQuantityBeingAdded();
+      expect(total).toBe(0);
+    });
+  });
+
+  describe('New RoomKit device', function () {
+    describe('When "atlasF281TrialRoomKitGetStatus" feature toggle is true', function () {
+      beforeEach(function () {
+        this.FeatureToggleService.atlasF281TrialRoomKitGetStatus.and.returnValue(this.$q.resolve(true));
+      });
+
+      it('should show roomkit but not sx10 or mx300 for new trial', function () {
+        this.initController();
+        expect(this.controller.showRoomTrialDevice('sx10')).toBeFalsy();
+        expect(this.controller.showRoomTrialDevice('mx300')).toBeFalsy();
+        expect(this.controller.showRoomTrialDevice('dx80')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('roomKit')).toBeTruthy();
+      });
+
+      it('should show roomkit but not sx10 or mx300 in edit trial if they don\'t have them already in trial', function () {
+        this.stateParams.details.details = {
+          devices: [
+            {
+              model: 'CISCO_8865',
+              quantity: 1,
+            }, {
+              model: 'CISCO_DX80',
+              quantity: 1,
+            },
+          ],
+        };
+
+        this.initController(this.stateParams);
+        expect(this.controller.showRoomTrialDevice('sx10')).toBeFalsy();
+        expect(this.controller.showRoomTrialDevice('mx300')).toBeFalsy();
+        expect(this.controller.showRoomTrialDevice('dx80')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('roomKit')).toBeTruthy();
+      });
+
+      it('should show roomkit and whatever spark room devices they had in the trial if they had one for edit trial ', function () {
+        this.stateParams.details.details = {
+          devices: [
+            {
+              model: 'CISCO_8865',
+              quantity: 1,
+            }, {
+              model: 'CISCO_MX300',
+              quantity: 1,
+            },
+          ],
+        };
+        this.initController(this.stateParams);
+        expect(this.controller.showRoomTrialDevice('sx10')).toBeFalsy();
+        expect(this.controller.showRoomTrialDevice('mx300')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('dx80')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('roomKit')).toBeTruthy();
+      });
+    });
+
+    describe('When "atlasF281TrialRoomKitGetStatus" feature toggle is falsy', function () {
+      beforeEach(function () {
+        this.FeatureToggleService.atlasF281TrialRoomKitGetStatus.and.returnValue(this.$q.resolve(false));
+      });
+
+      it('should show sx10 and mx300 but not roomKit for room devices for a new trial', function () {
+        expect(this.controller.showRoomTrialDevice('sx10')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('mx300')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('dx80')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('roomKit')).toBeFalsy();
+      });
+
+      it('should show sx10 and mx300 but not roomKit for room devices in existing trial', function () {
+        expect(this.controller.showRoomTrialDevice('sx10')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('dx80')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('mx300')).toBeTruthy();
+        expect(this.controller.showRoomTrialDevice('roomKit')).toBeFalsy();
+      });
     });
   });
 });

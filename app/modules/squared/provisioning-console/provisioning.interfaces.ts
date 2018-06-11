@@ -7,6 +7,11 @@ export interface IOrder {
   orderReceived: string;
   lastModified: string;
   adminEmail: string;
+  queueReceived: string;
+  queueCompleted: string;
+  assignedTo: string;
+  completedBy: string;
+
 }
 
 export interface IOrders {
@@ -26,4 +31,5 @@ export interface IOrderDetail {
   lastModified: string;
   orderUUID: string;
   subscriptionUuid: string;
+
 }

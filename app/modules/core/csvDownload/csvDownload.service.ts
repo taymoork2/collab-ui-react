@@ -1,4 +1,5 @@
 import { Config } from 'modules/core/config/config';
+import { UserTaskManagerService } from 'modules/core/users/user-task-manager';
 
 interface IWindowService extends ng.IWindowService {
   webkitURL: any;
@@ -52,13 +53,15 @@ export class CsvDownloadService {
     private UserCsvService,
     private Log,
     private ExtractTarService,
+    private UserTaskManagerService: UserTaskManagerService,
   ) {
   }
 
   ///////////////////////
 
   /* Begin process of exporting the requested file */
-  public getCsv(csvType: string, tooManyUsers: boolean, fileName: string, newUserExportToggle: boolean = false): ng.IPromise<any> {
+  // TO-DO: remove newUserExportToggle
+  public getCsv(csvType: string, tooManyUsers: boolean, fileName: string, newUserExportToggle = false, batchServiceToggle = false): ng.IPromise<any> {
     this.isTooManyUsers = !!tooManyUsers;
     // todo - simplify this once we get rid of newUserExportToggle
     if (!newUserExportToggle && !this.Authinfo.isCisco() && csvType !== CsvDownloadTypes.TYPE_TEMPLATE && tooManyUsers) {
@@ -72,9 +75,10 @@ export class CsvDownloadService {
     } else {
       if (csvType === CsvDownloadTypes.TYPE_USER) {
         this.reportCanceled = false;
+        // TO-DO: remove newUserExportToggle
         return this.exportUserCsv(fileName, newUserExportToggle);
       } else if (csvType === CsvDownloadTypes.TYPE_ERROR) {
-        return this.exportErrorCsv(fileName);
+        return this.exportErrorCsv(fileName, batchServiceToggle);
       } else {
         return this.exportDataCsv(csvType, fileName);
       }
@@ -243,6 +247,7 @@ export class CsvDownloadService {
   }
 
   private exportUserCsv(fileName: string, newUserExportToggle: boolean): ng.IPromise<any> {
+    // TO-DO: remove newUserExportToggle
     if (newUserExportToggle || this.Authinfo.isCisco()) {
       // new Export API
       return this.newExportUserCsv(fileName);
@@ -261,19 +266,37 @@ export class CsvDownloadService {
     }
   }
 
-  private exportErrorCsv(fileName): ng.IPromise<any> {
+  private exportErrorCsv(fileName, batchServiceToggle = false): ng.IPromise<any> {
+    let csvErrorArray = [];
+    let csvString = undefined;
+
     return this.$q((resolve) => {
-      const csvErrorArray = this.UserCsvService.getCsvStat().userErrorArray;
-      const csvString = ($ as any).csv.fromObjects(_.union([{
-        row: 'Row Number',
-        email: 'User ID/Email',
-        error: 'Error Message',
-      }],
-        csvErrorArray), {
-          headers: false,
+      if (batchServiceToggle) {
+        this.UserTaskManagerService.downloadTaskErrors().then(() => {
+          csvString = this.generateErrorCsv({
+            row: 'Row Number',
+            error: 'Error Message',
+          }, this.UserTaskManagerService.errorArray);
+          resolve(this.createObjectUrl(csvString, CsvDownloadTypes.TYPE_ERROR, fileName));
         });
-      resolve(this.createObjectUrl(csvString, CsvDownloadTypes.TYPE_ERROR, fileName));
+      } else {
+        csvErrorArray = this.UserCsvService.getCsvStat().userErrorArray;
+        csvString = this.generateErrorCsv({
+          row: 'Row Number',
+          email: 'User ID/Email',
+          error: 'Error Message',
+        }, csvErrorArray);
+        resolve(this.createObjectUrl(csvString, CsvDownloadTypes.TYPE_ERROR, fileName));
+      }
     });
+  }
+
+  private generateErrorCsv(header: any, csvErrorArray: any[]) {
+    const csvString = ($ as any).csv.fromObjects(_.union([header],
+      csvErrorArray), {
+        headers: false,
+      });
+    return csvString;
   }
 
   private exportDataCsv(csvType, fileName): ng.IPromise<any> {

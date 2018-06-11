@@ -42,7 +42,7 @@ var auth = {
     pass: 'C1sc0123!',
     org: 'c1e59258-29e1-42d7-bfa7-84ab26632b46',
   },
-  'ft--atlas-f3745-auto-assign-licenses': {
+  'auto-assign-licenses': {
     user: 'atlaswebe2e+ft--atlas-f3745-auto-assign-licenses@gmail.com',
     pass: 'Cisco123!',
     org: '8078642f-ab1a-4740-bd0a-61738ea76bf0',
@@ -70,22 +70,27 @@ var auth = {
   'huron-ui-test-partner': {
     user: 'huron.ui.test.partner@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1238': {
     user: 'huron.ui.test.partner+hi1238@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-h-i1484': {
     user: 'huron.ui.test.partner+hi1484@gmail.com',
     pass: 'Cisco@1234!',
-    org: '2381e2e2-e912-4d33-8fe2-021216906eb9',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
+  },
+  'huron-ui-test-partner-h-cos-trial': {
+    user: 'huron.ui.test.partner+hcostrial@gmail.com',
+    pass: 'Cisco@1234!',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'huron-ui-test-partner-prod': {
     user: 'huron.ui.test.partner+production@gmail.com',
     pass: 'Cisco@1234!',
-    org: 'b93be93e-5f57-4977-9db9-3d1e6dc12dca',
+    org: '555daf76-091b-40a0-b3b9-f6ef33084599',
   },
   'invite-admin': {
     user: 'pbr-invite-user@squared2webex.com',
@@ -160,7 +165,7 @@ var auth = {
   },
   'sso-e2e-test-org': {
     user: 'fakegmuser+ssotestorg@gmail.com',
-    pass: 'C1sc0123!',
+    pass: 'C1sc01234!',
     org: '3aa8a8a2-b953-4905-b678-0ae0a3f489f8',
   },
   'sso-e2e-test-org-mailsac': {
@@ -186,9 +191,9 @@ var auth = {
     org: '5abcd266-e194-475e-bc48-010af5da6dde',
   },
   'expertvirtualassistant-admin': {
-    user: 'sparkexpertbot+admin@gmail.com',
-    pass: 'Cisco@123',
-    org: 'a97e8ec7-c885-4990-8b81-ccec270a169f',
+    user: 'sparkcareatlaseva+admin@gmail.com',
+    pass: 'C1sco@123',
+    org: '51a8b0f5-ba13-46c2-8ac1-c4b5b8b3f7ef',
   },
   'wbx-multipleCenterLicenseTestAdmin': {
     user: 't31r1-regression-adm@mailinator.com',
@@ -244,6 +249,11 @@ var auth = {
     user: 't31r1-regression-adm@mailinator.com',
     pass: 'Cisco!23',
     org: 'b322c279-22d8-488f-a670-cdcb6380033e',
+  },
+  'hybrid-org': {
+    user: 'shivani.hybrid0712+a@gmail.com',
+    pass: 'Cisco123!',
+    org: '5abae65f-3157-4d09-ad29-7187b5cfbba2',
   },
 };
 
@@ -356,8 +366,29 @@ var getAccessToken = function (req, code) {
   });
 };
 
+var deleteThisOrgToken = function (req, token, user) {
+  return new Promise(function (resolve, reject) {
+    var orgId = auth[user].org
+    var options = {
+      url: `https://idbroker.webex.com/idb/oauth2/v1/tokens?orgid=${orgId}&clientid=${clientId}`,
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Host': 'idbroker.webex.com',
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+    };
+    req.delete(options, function (err, res, body) {
+      if (err) {
+        console.error(err, body);
+        reject(new Error('Failed to delete Access Token from CI. Status: ' + (res ? res.statusCode : undefined)));
+      }
+      resolve();
+    });
+  });
+};
+
 module.exports = {
-  getBearerToken: function (user, callback) {
+  getBearerToken: function (user) {
     var creds = auth[user];
     if (!creds) {
       var message = 'Credentials for ' + user + ' not found';
@@ -376,7 +407,6 @@ module.exports = {
       .then(function (authCode) {
         return getAccessToken(req, authCode);
       })
-      .then(callback)
       .catch(function (error) {
         console.error('Unable to get bearer token.', error);
         return Promise.reject(error);
@@ -388,6 +418,19 @@ module.exports = {
     } catch (_error) {
       throw new Error('Unable to parse JSON: ' + data);
     }
+  },
+  deleteAllOrgTokens: function (token, user) {
+    var creds = auth[user];
+    if (!creds) {
+      var message = 'Credentials for ' + user + ' not found';
+      console.error(message);
+      return Promise.reject(message);
+    }
+    return deleteThisOrgToken(request, token, user)
+      .catch(function (error) {
+        console.error('Unable to get remove token.', error);
+        return Promise.reject(error)
+      });
   },
   auth: auth,
 };

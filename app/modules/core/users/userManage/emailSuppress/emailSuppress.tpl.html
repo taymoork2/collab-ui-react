@@ -1,15 +1,15 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="$ctrl.cancelModal()" id="closeManageUsers" aria-label="{{::'common.close' | translate}}"></button>
+  <button type="button" class="close" ng-click="$ctrl.cancelModal()" aria-label="{{::'common.close' | translate}}"></button>
   <h3 class="modal-title" translate="usersPage.manageUsers"></h3>
 </div>
 
-<div class="modal-body user-manage" ng-if="!$ctrl.dataLoaded">
+<div class="modal-body" ng-if="!$ctrl.dataLoaded">
   <div class="email-suppress">
     <i class="icon icon-spinner larger"></i>
   </div>
 </div>
 
-<div class="modal-body user-manage" ng-if="$ctrl.dataLoaded && !$ctrl.isEmailSuppressed">
+<div class="modal-body" ng-if="$ctrl.dataLoaded && !$ctrl.isEmailSuppressed">
   <div class="email-suppress">
     <i class="icon icon-circle-email larger"></i>
     <div class="align-center">
@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div class="modal-body user-manage" ng-if="$ctrl.dataLoaded && $ctrl.isEmailSuppressed">
+<div class="modal-body" ng-if="$ctrl.dataLoaded && $ctrl.isEmailSuppressed">
   <div class="email-suppress">
     <i class="icon icon-circle-email larger"></i>
     <div class="align-center">

@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="column-subsription-header free" translate="onboardModal.freeCollab"></div>
+      <div class="column-subscription-header free" translate="onboardModal.freeCollab"></div>
     </div>
     <div class="row full flex-row">
       <div class="small-4 columns column-free">
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="column-subsription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
+      <div class="column-subscription-header paid" translate="firstTimeWizard.paidColumnHeader"></div>
     </div>
     <div class="row full flex-row row-licenses">
       <!-- MESSAGE SERVICES PANEL -->
@@ -140,7 +140,7 @@
                   class="license-entity-type"
                   ng-model="cfLic.confModel"
                   ng-click="$ctrl.checkCMR(cfLic, lic.cmrLic)"
-                  cs-input-label="WebEx {{cfLic.label}}">
+                  cs-input-label="Webex {{cfLic.label}}">
                 <span class="license-entity under-label-reposition">{{$ctrl.determineLicenseType(lic)}}
                   <span class="license-entity-tooltip">
                     <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
@@ -150,12 +150,12 @@
                 </span>
                 <div class="cs-checkbox-group cs-input--nested-1" ng-if="cfLic.offerName === 'MC' || cfLic.offerName === 'EE'">
                   <div ng-repeat="cmrLic in lic.cmrLic">
-                    <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;$ctrl.updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="WebEx {{cmrLic.label}}">
+                    <input type="checkbox" cs-input id="{{cmrLic.licenseId}}" ng-click="cfLic.confModel=true;$ctrl.updateCmrLicensesForMetric(cmrLic.cmrModel, cmrLic.licenseId)" ng-model="cmrLic.cmrModel" cs-input-label="Webex {{cmrLic.label}}">
                   </div>
                 </div>
               </div>
               <div ng-if="!lic.isCISite" class="item-webex">
-                <span>WebEx {{cfLic.label}}</span><br>
+                <span>Webex {{cfLic.label}}</span><br>
                 <span class="license-siteUrl">
                   <a target="_blank"
                     href="{{lic.siteAdminUrl}}"
@@ -207,55 +207,36 @@
       <div ng-if="$ctrl.isCareEnabled" class="small-4 columns column-paid">
         <span class="item-mtg-license" translate="onboardModal.contactCenter"></span>
         <span class="license-entity-tooltip">
-          <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          <i ng-if="!$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
           tooltip-html-unsafe="{{::$ctrl.careTooltip()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltip' | translate}}">
+          </i>
+          <i ng-if="$ctrl.hybridCareToggle" class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
+          tooltip-html-unsafe="{{::$ctrl.careTooltipToggle()}}" tabindex="0" aria-label="{{::'firstTimeWizard.careTooltipToggle' | translate}}">
           </i>
         </span>
         <div class="entitle-check-grp" ng-show="multipleSubscriptions.showCareLicenses($ctrl.careFeatures)">
           <div class="ckbx" id="paidCare">
             <div class="cs-checkbox-group">
-              <fieldset ng-disabled="!$ctrl.radioStates.msgRadio">
-                <div class="under-careradio-reposition">
-                  <input
-                  cs-input
-                  type="radio"
-                  name="careFree"
-                  id="user-add--care-services--fake-license"
-                  ng-model="$ctrl.radioStates.careRadio"
-                  value="{{$ctrl.careRadioValue.NONE}}"
-                  cs-input-label="{{::$ctrl.careRadioValue.NONE}}">
-                </div>
-
-                <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition">
+              <fieldset ng-disabled="$ctrl.isCareRadioFieldSetDisabled()">
+                <div ng-if="$ctrl.isCareAndCDCEnabled" class="under-careradio-reposition"
+                     tooltip="{{::'onboardModal.contextUnauthorized' | translate}}" tooltip-trigger="focus mouseenter"
+                     tooltip-animation="false" tooltip-enable="$ctrl.showCareRadioTooltip()" tooltip-placement="top"
+                     aria-label="{{::'onboardModal.contextUnauthorized' | translate}}" tabindex="0">
                   <input
                     cs-input
-                    type="radio"
-                    name="care"
-                    id="{{$ctrl.cdcCareFeature.license.licenseId}}"
+                    type="checkbox"
                     ng-model="$ctrl.radioStates.careRadio"
-                    value="{{$ctrl.careRadioValue.K1}}"
+                    ng-true-value="'{{$ctrl.careRadioValue.K1}}'"
+                    ng-false-value="'{{$ctrl.careRadioValue.NONE}}'"
+                    ng-checked="$ctrl.radioStates.isK1Enabled"
+                    id="{{$ctrl.cdcCareFeature.license.licenseId}}"
+                    name="careRadio"
                     cs-input-label="{{::$ctrl.careRadioValue.K1}}">
                   <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
                   <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K1 && !$ctrl.currentUserEnablesCall">
                     <div class="icon icon-warning"></div>
-                    <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
-                  </span>
-                </div>
-
-                <div ng-if="$ctrl.isCareAndCVCEnabled" class="under-careradio-reposition">
-                  <input
-                    cs-input
-                    type="radio"
-                    name="careVoice"
-                    id="{{$ctrl.cvcCareFeature.license.licenseId}}"
-                    ng-model="$ctrl.radioStates.careRadio"
-                    value="{{$ctrl.careRadioValue.K2}}"
-                    cs-input-label="{{::$ctrl.careRadioValue.K2}}">
-                  <span ng-class="{false: 'license-entity-disable', true: 'license-entity'}[$ctrl.radioStates.msgRadio]" class="under-label-reposition" translate="firstTimeWizard.namedLicense"></span>
-                  <span ng-if="$ctrl.radioStates.careRadio === $ctrl.careRadioValue.K2 && !$ctrl.currentUserEnablesCall">
-                    <div class="icon icon-warning"></div>
-                    <span class="body-smallest care-information-text under-label-caremsg-reposition" translate="
-                      onboardModal.enableCallInfo"></span>
+                    <span ng-if="!$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfo"></span>
+                    <span ng-if="$ctrl.hybridCareToggle" class="body-smallest care-information-text under-label-caremsg-reposition" translate="onboardModal.enableCallInfoToggle"></span>
                   </span>
                 </div>
               </fieldset>

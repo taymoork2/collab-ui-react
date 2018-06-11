@@ -44,32 +44,32 @@ describe('Directive: crServiceColumnIcon', function () {
   }
 
   it('should properly compile an expired tooltip with communications service', function () {
-    var tooltipHtml = $(compileDirective('communications').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('communications').children().attr('tt-tooltip-unsafe-text'));
     verifyTooltip(tooltipHtml, 'expired', 'call');
   });
 
   it('should properly compile a trial tooltip with roomSystems service', function () {
-    var tooltipHtml = $(compileDirective('roomSystems').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('roomSystems').children().attr('tt-tooltip-unsafe-text'));
     verifyTooltip(tooltipHtml, 'trial', 'roomSystem');
   });
 
   it('should properly compile an trial tooltip with sparkBoard service', function () {
-    var tooltipHtml = $(compileDirective('sparkBoard').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('sparkBoard').children().attr('tt-tooltip-unsafe-text'));
     verifyTooltip(tooltipHtml, 'trial', 'sparkBoard', true);
   });
 
   it('should properly compile an active tooltip with conferencing service', function () {
-    var tooltipHtml = $(compileDirective('conferencing').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('conferencing').children().attr('tt-tooltip-unsafe-text'));
     verifyTooltip(tooltipHtml, 'purchased', 'meeting', true);
   });
 
   it('should properly compile a free tooltip with messaging service', function () {
-    var tooltipHtml = $(compileDirective('messaging').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('messaging').children().attr('tt-tooltip-unsafe-text'));
     verifyTooltip(tooltipHtml, 'free', 'message');
   });
 
   it('should properly compile a webex tooltip', function () {
-    var tooltipHtml = $(compileDirective('webex').children().attr('tooltip-html-unsafe'));
+    var tooltipHtml = $(compileDirective('webex').children().attr('tt-tooltip-unsafe-text'));
     expect(tooltipHtml.find('.service-name').text()).toEqual('customerPage.webex');
     expect(tooltipHtml.find('.tooltip-block').length).toEqual(1);
     expect(tooltipHtml.find('.tooltip-qty').length).toEqual(1);

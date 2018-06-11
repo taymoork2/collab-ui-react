@@ -45,6 +45,8 @@ const keyMock = {
   'CsdmStatus.errorCodes.configuredfortestautomation.message': 'Metrikk- og loggrapportering påvirkes.',
   'CsdmStatus.errorCodes.touchpanelconnection.type': 'Berøringsskjerm nødvendig',
   'CsdmStatus.errorCodes.touchpanelconnection.message': 'Det er ingen berøringsskjerm tilkoblet rom-enheten. Sjekk kabelen som kobler berøringsskjermen til rom-enheten.',
+  'CsdmStatus.errorCodes.provisioningdeveloperoptions.type': 'Oppgradering blokkert ',
+  'CsdmStatus.errorCodes.provisioningdeveloperoptions.message': 'Dette systemet har blitt konfigurert til å ikke oppgradere automatisk.',
   'CsdmStatus.errorCodes.networkquality.type': 'Pakketap oppdaget',
   'CsdmStatus.errorCodes.networkquality.message': 'I løpet av den forrige samtalen oppdaget vi et nivå av pakketap som kan ha påvirket samtalekvaliteten. Pakketap forårsakes vanligvis av nettverksblokkering.',
   'CsdmStatus.errorCodes.unknown.type': 'En ukjent feil oppsto',
@@ -89,6 +91,7 @@ describe('SearchTranslator', () => {
 
     it('should translate single term', function () {
       expectQueryToFindTranslation('krypteringsalternativnøkkel', 'errorcodes=missingencryptionkey');
+      expectQueryToFindTranslation('oppgradere automatisk', 'errorcodes=provisioningdeveloperoptions');
       expectQueryToFindTranslation('Online, med problemer', 'connectionstatus=CONNECTED_WITH_ISSUES');
       expectQueryToFindTranslation('Deaktivert', 'connectionstatus=OFFLINE_EXPIRED or errorcodes=noupgrade');
       expectQueryToFindTranslation('Forhåndsvisning', 'upgradechannel=Preview');
@@ -230,7 +233,7 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateTo('ip', 'translated.deviceoverviewpage.ipaddr');
       expectFieldToTranslateTo('description', 'description');
       expectFieldToTranslateTo('productfamily', 'productfamily');
-      expectFieldToTranslateTo('software', 'software');
+      expectFieldToTranslateTo('software', 'translated.deviceoverviewpage.software');
       expectFieldToTranslateTo('upgradechannel', 'translated.devicesettings.softwareupgradechannel');
       expectFieldToTranslateTo('product', 'translated.spacespage.typeheader');
       expectFieldToTranslateTo('connectionstatus', 'translated.spacespage.statusheader');
@@ -275,7 +278,7 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateToDisplayName('ip', 'translated.deviceOverviewPage.ipAddr');
       expectFieldToTranslateToDisplayName('description', 'description');
       expectFieldToTranslateToDisplayName('productfamily', 'productfamily');
-      expectFieldToTranslateToDisplayName('software', 'software');
+      expectFieldToTranslateToDisplayName('software', 'translated.deviceOverviewPage.software');
       expectFieldToTranslateToDisplayName('upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
       expectFieldToTranslateToDisplayName('product', 'translated.spacesPage.typeHeader');
       expectFieldToTranslateToDisplayName('connectionstatus', 'translated.spacesPage.statusHeader');
@@ -321,6 +324,7 @@ describe('SearchTranslator', () => {
       expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
       expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
       expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.software', 'software');
     });
 
     it('should translate supported search fields case insensitive', function () {

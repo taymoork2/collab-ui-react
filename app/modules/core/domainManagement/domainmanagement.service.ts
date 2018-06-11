@@ -130,18 +130,18 @@ export class DomainManagementService {
       domain: domain,
       claimDomain: false,
     })
-    .then(() => {
-      const domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
-      if (domainInList) {
-        domainInList.status = this.states.verified;
-      }
-      if (this.Authinfo.isCare()) {
-        this.syncDomainsWithCare();
-      }
-    }, err => {
-      this.Log.error('Failed to verify domain: ' + domain, err);
-      return this.$q.reject(this.getErrorMessage(err));
-    });
+      .then(() => {
+        const domainInList = _.find(this._domainList, { text: domain, status: this.states.pending });
+        if (domainInList) {
+          domainInList.status = this.states.verified;
+        }
+        if (this.Authinfo.isCare()) {
+          this.syncDomainsWithCare();
+        }
+      }, err => {
+        this.Log.error('Failed to verify domain: ' + domain, err);
+        return this.$q.reject(this.getErrorMessage(err));
+      });
   }
 
   public claimDomain(domain) {
@@ -152,17 +152,17 @@ export class DomainManagementService {
     return this.$http.post(this._claimDomainUrl, {
       data: [{ domain: domain }],
     })
-    .then(() => {
+      .then(() => {
 
-      const claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
+        const claimedDomain = _.find(this._domainList, { text: domain, status: this.states.verified });
 
-      if (claimedDomain) {
-        claimedDomain.status = this.states.claimed;
-      }
-    }, err => {
-      this.Log.error('Failed to claim domain: ' + domain, err);
-      return this.$q.reject(this.getErrorMessage(err));
-    });
+        if (claimedDomain) {
+          claimedDomain.status = this.states.claimed;
+        }
+      }, err => {
+        this.Log.error('Failed to claim domain: ' + domain, err);
+        return this.$q.reject(this.getErrorMessage(err));
+      });
   }
 
   public unclaimDomain(domain) {
@@ -261,6 +261,6 @@ export class DomainManagementService {
         .value();
       verifiedDomains = verifiedDomains.length > 0 ? verifiedDomains : ['.*'];
       this.$http.put(this._sunlightConfigUrl, { allowedOrigins : verifiedDomains });
-    });
+    }).catch(_.noop);
   }
 }

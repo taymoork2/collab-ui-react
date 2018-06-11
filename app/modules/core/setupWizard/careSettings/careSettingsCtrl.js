@@ -13,17 +13,20 @@ var HttpStatus = require('http-status-codes');
       PENDING: 'Pending',
       SUCCESS: 'Success',
       FAILURE: 'Failure',
+      INITIALIZING: 'Initializing',
     };
 
     vm.ONBOARDED = 'onboarded';
     vm.NOT_ONBOARDED = 'notOnboarded';
     vm.IN_PROGRESS = 'inProgress';
 
+    vm.DEFAULT_QUEUE = 'Queue 1';
+
     vm.defaultQueueStatus = vm.status.UNKNOWN;
     vm.csOnboardingStatus = vm.status.UNKNOWN;
-    vm.aaOnboardingStatus = vm.status.UNKNOWN;
     vm.appOnboardingStatus = vm.status.UNKNOWN;
     vm.jwtAppOnboardingStatus = vm.status.UNKNOWN;
+    vm.cesOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
     vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
@@ -40,15 +43,7 @@ var HttpStatus = require('http-status-codes');
           if (result.status === HttpStatus.ACCEPTED) {
             vm.csOnboardingStatus = vm.status.SUCCESS;
           }
-        });
-      }
-      if (Authinfo.isCareVoice() && vm.aaOnboardingStatus !== vm.status.SUCCESS) {
-        promises.onBoardAA = SunlightConfigService.aaOnboard();
-        promises.onBoardAA.then(function (result) {
-          if (result.status === HttpStatus.NO_CONTENT) {
-            vm.aaOnboardingStatus = vm.status.SUCCESS;
-          }
-        });
+        }).catch(_.noop);
       }
       if (vm.careSetupDoneByAdmin) {
         if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
@@ -57,7 +52,7 @@ var HttpStatus = require('http-status-codes');
             if (result.status === HttpStatus.NO_CONTENT) {
               vm.appOnboardingStatus = vm.status.SUCCESS;
             }
-          });
+          }).catch(_.noop);
         }
         if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
           promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
@@ -65,7 +60,7 @@ var HttpStatus = require('http-status-codes');
             if (result.status === HttpStatus.NO_CONTENT) {
               vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
             }
-          });
+          }).catch(_.noop);
         }
       }
       $q.all(promises).then(function (results) {
@@ -89,7 +84,7 @@ var HttpStatus = require('http-status-codes');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         var createQueueRequest = {
           queueId: Authinfo.getOrgId(),
-          queueName: 'DEFAULT',
+          queueName: vm.DEFAULT_QUEUE,
           notificationUrls: [],
           routingType: 'pick',
         };
@@ -137,9 +132,9 @@ var HttpStatus = require('http-status-codes');
         var onboardingStatus = getOnboardingStatus(result);
         switch (onboardingStatus) {
           case vm.status.SUCCESS:
+            stopPolling();
             Notification.success($translate.instant('firstTimeWizard.careSettingsComplete'));
             vm.state = vm.ONBOARDED;
-            stopPolling();
             enableNext();
             break;
           case vm.status.FAILURE:
@@ -172,7 +167,6 @@ var HttpStatus = require('http-status-codes');
     function getOnboardingStatus(result) {
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      vm.aaOnboardingStatus = _.get(result, 'data.aaOnboardingStatus');
       if (vm.careSetupDoneByAdmin) {
         onboardingStatus = onboardingDoneByAdminStatus(result);
       } else {
@@ -183,16 +177,12 @@ var HttpStatus = require('http-status-codes');
 
     function onboardingDoneByAdminStatus(result) {
       var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
-      var aaOnboarded = onboardingStatusForAA();
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
       vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS
-        && aaOnboarded === vm.status.SUCCESS) {
+      } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
-      } else if (aaOnboarded !== vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = aaOnboarded;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
         onboardingDoneByAdminStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
@@ -205,22 +195,10 @@ var HttpStatus = require('http-status-codes');
       var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
         onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
-      } else if (vm.csOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = onboardingStatusForAA();
-      } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
+      } else {
         onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
       }
       return onboardingDoneByPartnerStatus;
-    }
-
-    function onboardingStatusForAA() {
-      var status;
-      if (Authinfo.isCareVoice()) {
-        status = vm.aaOnboardingStatus;
-      } else {
-        status = vm.status.SUCCESS;
-      }
-      return status;
     }
 
     function enableNext() {
@@ -258,7 +236,7 @@ var HttpStatus = require('http-status-codes');
     function setViewModelStateFromCsConfigForAA() {
       if (vm.sunlightOnboardingState === vm.ONBOARDED) {
         AutoAttendantConfigService.getCSConfig().then(function (result) {
-          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus');
+          var csOnboardingStatusForAA = _.get(result, 'data.csOnboardingStatus', vm.status.UNKNOWN);
           switch (csOnboardingStatusForAA) {
             case vm.status.SUCCESS:
               vm.state = vm.ONBOARDED;

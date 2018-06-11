@@ -1,14 +1,17 @@
 import './webex-site.scss';
 
-import { IWebExSite, IConferenceLicense } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
+import { IWebExSite, IConferenceLicense, ICenterDetails } from 'modules/core/setupWizard/meeting-settings/meeting-settings.interface';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 import { WebExSiteService, Actions } from './webex-site.service';
 import { Notification } from 'modules/core/notifications';
+import { EventNames } from './webex-site.constants';
 
 class WebexDeleteSiteModalController implements ng.IComponentController {
 
   // parameters for child controls
   public sitesArray: IWebExSite[] = [];
+  public centerDetails: ICenterDetails[];
+  public existingWebexSites: IWebExSite[];
   public conferenceLicensesInSubscription: IConferenceLicense[];
   public siteUrl: string;
 
@@ -32,7 +35,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
   ) { }
 
   public $onChanges(changes: ng.IOnChangesObject): void {
-    if (changes.subscriptionId) {
+    if (changes.subscriptionId && changes.subscriptionId.currentValue) {
       this.changeCurrentSubscription(changes.subscriptionId.currentValue);
     }
   }
@@ -56,7 +59,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
       this.saveData();
     } else {
       this.cancel();
-      this.$rootScope.$broadcast('EventNames.SITE_LIST_MODIFIED');
+      this.$rootScope.$broadcast(EventNames.SITE_LIST_MODIFIED);
     }
   }
 
@@ -69,6 +72,7 @@ class WebexDeleteSiteModalController implements ng.IComponentController {
     this.conferenceLicensesInSubscription = this.SetupWizardService.getConferenceLicensesBySubscriptionId(subscriptionId);
     const licensesWithoutDeletedSite = _.reject(this.conferenceLicensesInSubscription, { siteUrl: this.siteUrl });
     this.sitesArray = this.WebExSiteService.transformExistingSites(licensesWithoutDeletedSite);
+    this.existingWebexSites = this.WebExSiteService.getExistingSites(this.conferenceLicensesInSubscription);
   }
 
   // callbacks from components
@@ -108,6 +112,7 @@ export class WebexDeleteSiteModalComponent implements ng.IComponentOptions {
   public template = require('./webex-delete-site-modal.html');
   public bindings = {
     subscriptionId: '<',
+    centerDetails: '<?',
     dismiss: '&',
     siteUrl: '<',
   };

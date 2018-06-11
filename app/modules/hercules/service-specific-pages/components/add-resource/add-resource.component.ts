@@ -43,10 +43,10 @@ class AddResourceComponentCtrl implements ng.IComponentController {
       return;
     }
     this.$modal.open(this.modalWindowOptions)
-    .result
-    .finally(() => {
-      this.$state.reload();
-    });
+      .result
+      .finally(() => {
+        this.$state.reload();
+      });
   }
 }
 

@@ -1,0 +1,74 @@
+<div class="partner-test-view">
+  <cs-page-header
+    title-name="{{'hcs.taas.taskView.title' | translate}}"
+    back="true"
+    back-url="$ctrl.backState"
+    back-aria-label="{{::'common.back' | translate}}">
+  </cs-page-header>
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--people" ng-click="$ctrl.addTest()" ng-disabled="true">
+        <span translate="hcs.taas.taskView.addTest"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div ng-if="$ctrl.pageState !== $ctrl.STATE_NEW" class="test-content content-container">
+    <!-- Show Reload page when all location requests fail-->
+    <div ng-if="$ctrl.pageState === $ctrl.STATE_RELOAD">
+      <div class="features-reload">
+        <p class="h4" translate="huronFeatureDetails.sorryMessage"></p>
+        <div class="h2" translate="huronFeatureDetails.reloadMessage"></div>
+        <button type="button" class="btn btn--link" ng-click="$ctrl.reload()">{{'test.reload' | translate}}</button>
+      </div>
+    </div>
+    <!--Show Spinner Icon until controller receives data from back-end-->
+    <div grid-spinner="$ctrl.pageState === $ctrl.STATE_LOADING"></div>
+
+    <!-- Show Cards whenever data is received by controller-->
+    <div ng-if="$ctrl.pageState === $ctrl.STATE_SHOW">
+      <div class="cs-card-container">
+      <cs-card-layout>
+        <cs-card ng-repeat="test in $ctrl.tests" class="cs-card--small header-bar grey overview-card grey">
+        <article>
+          <header>
+          <div class="header-with-right-icon">
+            <p class="h4 ellipsis" title="{{test.name}}">{{test.name}}</p>
+            <span cs-dropdown class="actions-menu dropdown pull-right">
+            <button cs-dropdown-toggle class="btn-none card-action-btn" aria-label="{{::'common.toggleMenu' | translate}}">
+              <i class="icon icon-three-dots"></i>
+            </button>
+            <ul cs-dropdown-menu class="dropdown-menu dropdown-primary actions-services">
+              <li ng-click="$ctrl.editTest()"><a translate="hcs.taas.taskView.editTest"></a></li>
+              <li ng-click="$ctrl.copyTest()"><a translate="hcs.taas.taskView.copyTest"></a></li>
+              <li ng-click="$ctrl.deleteTest()"><a translate="hcs.taas.taskView.deleteTest"></a></li>
+            </ul>
+            </span>
+          </div>
+          </header>
+          <section class="card-body">
+          <!--<div class="card-section text-left">
+            <ul>
+            <li ng-repeat="block in $ctrl.blocks">{{block.description}}</li>
+            </ul>
+          </div>-->
+          <br>
+          </section>
+          <footer class="text-right">
+          <div class="btn-group text-center">
+            <button type="button" class="btn btn--people" ng-click="$ctrl.runSuiteAction(test)">Run Test</button>
+          </div>
+          </footer>
+        </article>
+        </cs-card>
+      </cs-card-layout>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-loading" ng-if="$ctrl.loading">
+    <i class="icon icon-spinner"></i>
+  </div>
+
+</div>

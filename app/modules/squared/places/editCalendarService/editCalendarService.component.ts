@@ -2,22 +2,27 @@ import ICsdmDataModelService = csdm.ICsdmDataModelService;
 import IExternalLinkedAccount = csdm.IExternalLinkedAccount;
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 import { ResourceGroupService } from 'modules/hercules/services/resource-group.service';
+import { UserListService } from 'modules/core/scripts/services/userlist.service';
 import { USSService, IUserProps } from 'modules/hercules/services/uss.service';
 import { Notification } from 'modules/core/notifications';
 import IWizardData = csdm.IWizardData;
 import { ExternalLinkedAccountHelperService } from '../../devices/services/external-acct-helper.service';
 import { IQService } from 'angular';
+import { ICsdmFilteredViewFactory } from '../csdm-filtered-view-factory';
+import {
+  BaseExternalLinkedAccountUniqueSafe,
+  ValidationState,
+} from '../external-linked-account-validation/base-external-linked-account-unique-safe';
 
-class EditCalendarService implements ng.IComponentController {
+class EditCalendarService extends BaseExternalLinkedAccountUniqueSafe implements ng.IComponentController {
   private dismiss: Function;
   public emailOfMailbox: string;
-  private initialMailBox: string;
   private wizardData: IWizardData;
   private static fusionCal = 'squared-fusion-cal';
   private static fusionGCal = 'squared-fusion-gcal';
   public calService = '';
   private initialCalService: string;
-  private isLoading: boolean;
+  public isLoading: boolean;
   public externalCalendarIdentifier: string;
   private isFirstStep: boolean = false;
   public title: string;
@@ -57,15 +62,29 @@ class EditCalendarService implements ng.IComponentController {
   /* @ngInject */
   constructor(
     private $stateParams: ng.ui.IStateParamsService,
-    private $translate: ng.translate.ITranslateService,
+    $translate: ng.translate.ITranslateService,
     private CsdmDataModelService: ICsdmDataModelService,
+    CsdmFilteredViewFactory: ICsdmFilteredViewFactory,
     private ExtLinkHelperService: ExternalLinkedAccountHelperService,
     private Notification: Notification,
     private ResourceGroupService: ResourceGroupService,
     private ServiceDescriptorService: ServiceDescriptorService,
+    UserListService: UserListService,
     private USSService: USSService,
-    private $q: IQService,
+    $q: IQService,
+    $timeout: ng.ITimeoutService,
   ) {
+    super({
+      nullAccountMessageKey: 'addDeviceWizard.editCalendarService.mailAddressInvalidFormat',
+      conflictWithUserEmailMessageKey: 'addDeviceWizard.editCalendarService.mailAddressBelongsToUser',
+      conflictWithExternalLinkedAccountMessageKey: 'addDeviceWizard.editCalendarService.mailAddressBelongsToPlace',
+    },
+      CsdmFilteredViewFactory,
+      UserListService,
+      $q,
+      $timeout,
+      $translate);
+
     this.ServiceDescriptorService.getServices()
       .then((services) => {
         const enabledServices = ServiceDescriptorService.filterEnabledServices(services);
@@ -87,7 +106,6 @@ class EditCalendarService implements ng.IComponentController {
         }
         if (existingCalLinks) {
           this.calService = existingCalLinks.providerID;
-          this.initialMailBox = existingCalLinks.accountGUID;
           this.emailOfMailbox = existingCalLinks.accountGUID;
         }
       });
@@ -159,7 +177,7 @@ class EditCalendarService implements ng.IComponentController {
   public isNextDisabled() {
     return !(
       this.calService
-      && this.emailOfMailbox
+      && this.currentValidationState === ValidationState.Success
       && (this.resourceGroup.selected || !this.resourceGroup.options || this.resourceGroup.options.length === 0)
     );
   }
@@ -201,6 +219,10 @@ class EditCalendarService implements ng.IComponentController {
       status: 'unconfirmed-email',
     };
     return [newExtLink];
+  }
+
+  public onEmailOfMailboxInputKeyUp() {
+    this.validate(this.emailOfMailbox, this.calService);
   }
 
   public save() {

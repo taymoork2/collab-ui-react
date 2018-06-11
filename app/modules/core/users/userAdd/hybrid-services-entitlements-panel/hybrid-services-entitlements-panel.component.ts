@@ -1,35 +1,27 @@
 import { CloudConnectorService, ICCCService } from 'modules/hercules/services/calendar-cloud-connector.service';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IServiceDescription, ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
-import { IEntitlementNameAndState } from 'modules/hercules/services/hybrid-services-user-sidepanel-helper.service';
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
+import { UserEntitlementName, IUserEntitlementRequestItem } from 'modules/core/users/shared/onboard/onboard.interfaces';
+import { HybridServicesEntitlementsPanelService, IHybridServices } from './hybrid-services-entitlements-panel.service';
+import { IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 
 interface IExtendedServiceDescription extends IServiceDescription {
   entitled?: boolean;
 }
 
-interface IHybridServices {
-  calendarEntitled: boolean;
-  selectedCalendarType: HybridServiceId | null;
-  hybridMessage: IExtendedServiceDescription | null;
-  calendarExchangeOrOffice365: IExtendedServiceDescription | null;
-  calendarGoogle: IExtendedServiceDescription | null;
-  callServiceAware: IExtendedServiceDescription | null;
-  callServiceConnect: IExtendedServiceDescription | null;
-  notSetupText: string;
-  hasHybridMessageService: Function;
-  hasCalendarService: Function;
-  hasCallService: Function;
-  setSelectedCalendarEntitlement: Function;
-}
-
 class HybridServicesEntitlementsPanelController implements ng.IComponentController {
 
-  private isEnabled = false;
-  private entitlements: IEntitlementNameAndState[] = [];
-  private showCalendarChoice: boolean;
+  private allowRemove: boolean;
+  private isHuronCallLicenseSelected: boolean;
+  public isEnabled = false;
+  private entitlements: IUserEntitlementRequestItem[] = [];
+  private saveInstance: Function;
+  public showCalendarChoice: boolean;
   private services: IHybridServices;
   private entitlementsCallback: Function;
+  private restoreInstance: IHybridServices;
+  private restoreUserEntitlements: IUserEntitlementsViewState;
 
   /* @ngInject */
   constructor (
@@ -38,7 +30,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private FeatureToggleService: FeatureToggleService,
-    private OnboardService,
+    private HybridServicesEntitlementsPanelService: HybridServicesEntitlementsPanelService,
     private ServiceDescriptorService: ServiceDescriptorService,
 
   ) {
@@ -88,48 +80,80 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
   }
 
   public $onInit(): void {
+    this.allowRemove = !!this.allowRemove;
+    this.initHybridServices();
+  }
+
+  private initHybridServices() {
+    const restoreUserEntitlements = this.restoreUserEntitlements || {} as IUserEntitlementsViewState;
+    const preselected = {
+      squaredFusionCal: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_CAL}.isSelected`, false),
+      squaredFusionUc: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_UC}.isSelected`, false),
+      squaredFusionEc: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_EC}.isSelected`, false),
+      squaredFusionGcal: _.get(restoreUserEntitlements, `${UserEntitlementName.SQUARED_FUSION_GCAL}.isSelected`, false),
+      sparkHybridImpInterop: _.get(restoreUserEntitlements, `${UserEntitlementName.SPARK_HYBRID_IMP_INTEROP}.isSelected`, false),
+    };
+    // restore from previous instance if present
+    if (this.restoreInstance) {
+      this.services = this.restoreInstance;
+      this.initIsEnabled();
+      return;
+    }
+
+    // otherwise initialize as per usual
     this.$q.all({
       servicesFromFms: this.ServiceDescriptorService.getServices(),
       gcalService: this.CloudConnectorService.getService('squared-fusion-gcal'),
       office365: this.CloudConnectorService.getService('squared-fusion-o365'),
       hasHybridMessageFeatureToggle: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
     }).then((response) => {
-      this.services.calendarExchangeOrOffice365 = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-cal') || this.getServiceIfEnabledInCCC(response.office365);
-      this.services.callServiceAware = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-uc');
-      this.services.callServiceConnect = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-ec');
-      this.services.calendarGoogle = this.getServiceIfEnabledInCCC(response.gcalService);
+      this.services.calendarExchangeOrOffice365 = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-cal', { isPreselected: preselected.squaredFusionCal }) || this.getServiceIfEnabledInCCC(response.office365, { isPreselected: preselected.squaredFusionCal });
+      this.services.callServiceAware = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-uc', { isPreselected: preselected.squaredFusionUc });
+      this.services.callServiceConnect = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'squared-fusion-ec', { isPreselected: preselected.squaredFusionEc });
+      this.services.calendarGoogle = this.getServiceIfEnabledInCCC(response.gcalService, { isPreselected: preselected.squaredFusionGcal });
       if (response.hasHybridMessageFeatureToggle) {
-        this.services.hybridMessage = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'spark-hybrid-impinterop');
+        this.services.hybridMessage = this.getServiceIfEnabledInFMS(response.servicesFromFms, 'spark-hybrid-impinterop', { isPreselected: preselected.sparkHybridImpInterop });
       }
-      this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
+      // if a calendar service was entitled previously, must set calendarEntitled as true and set proper entitlement
+      if (preselected.squaredFusionCal || preselected.squaredFusionGcal) {
+        this.services.calendarEntitled = true;
+        this.services.setSelectedCalendarEntitlement();
+      }
+      this.initIsEnabled();
     });
   }
 
-  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    if (changes.hasAssignableLicenses && !changes.hasAssignableLicenses.currentValue && changes.hasAssignableLicenses.previousValue) {
-      this.clearSelectedHybridServicesEntitlements();
+  private initIsEnabled() {
+    if (!this.services) {
+      this.isEnabled = false;
+      return;
     }
+    this.isEnabled = this.services.hasCalendarService() || this.services.hasCallService() || this.services.hasHybridMessageService();
+    this.saveInstance({ hybridServices: this.services });
+    this.setEntitlements();
   }
 
-  private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId): IExtendedServiceDescription | null {
+  private getServiceIfEnabledInFMS(services: IServiceDescription[], id: HybridServiceId, options?: { isPreselected: boolean }): IExtendedServiceDescription | null {
+    const isPreselected = _.get(options, 'isPreselected', false);
     const service: IExtendedServiceDescription = _.find(services, {
       id: id,
       enabled: true,
     });
     if (service) {
-      service.entitled = false;
+      service.entitled = isPreselected;
       return service;
     } else {
       return null;
     }
   }
 
-  private getServiceIfEnabledInCCC(service: ICCCService): IExtendedServiceDescription | null {
+  private getServiceIfEnabledInCCC(service: ICCCService, options?: { isPreselected: boolean }): IExtendedServiceDescription | null {
+    const isPreselected = _.get(options, 'isPreselected', false);
     if (service.setup) {
       return<IExtendedServiceDescription> {
         id: service.serviceId,
         enabled: true,
-        entitled: false,
+        entitled: isPreselected,
         emailSubscribers: '',
         url: '',
       };
@@ -140,33 +164,7 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
 
   public setEntitlements(): void {
     // US8209 says to only add entitlements, not remove them. Allowing INACTIVE would remove entitlement when users are patched.
-    this.entitlements = [];
-    if (this.services.calendarEntitled) {
-      this.services.setSelectedCalendarEntitlement();
-      if (_.get(this.services, 'calendarExchangeOrOffice365.entitled')) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionCal' });
-      } else if (_.get(this.services, 'calendarGoogle.entitled')) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionGCal' });
-      }
-    } else {
-      this.services.selectedCalendarType = null;
-    }
-    if (!this.hasHuronCallEntitlement() && _.get(this.services, 'callServiceAware.entitled')) {
-      this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionUC' });
-      if (this.services.callServiceConnect && this.services.callServiceConnect.entitled) {
-        this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'squaredFusionEC' });
-      }
-    } else {
-      if (this.services.callServiceAware) {
-        this.services.callServiceAware.entitled = false;
-      }
-      if (this.services.callServiceConnect) {
-        this.services.callServiceConnect.entitled = false;
-      }
-    }
-    if (_.get(this.services, 'hybridMessage.entitled')) {
-      this.entitlements.push({ entitlementState: 'ACTIVE', entitlementName: 'sparkHybridImpInterop' });
-    }
+    this.entitlements = this.HybridServicesEntitlementsPanelService.getEntitlements(this.services, { allowRemove: this.allowRemove });
     if (!_.isUndefined(this.entitlementsCallback)) {
       this.entitlementsCallback({
         entitlements: this.entitlements,
@@ -174,8 +172,24 @@ class HybridServicesEntitlementsPanelController implements ng.IComponentControll
     }
   }
 
-  public hasHuronCallEntitlement(): boolean {
-    return this.OnboardService.huronCallEntitlement;
+  public hasHuronCallEntitlement() {
+    return !!this.isHuronCallLicenseSelected;
+  }
+
+  public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
+    const { isHuronCallLicenseSelected, hasLicenseSelections } = changes;
+    if (isHuronCallLicenseSelected && !!isHuronCallLicenseSelected.currentValue) {
+      if (_.has(this.services, 'callServiceAware')) {
+        _.set(this.services, 'callServiceAware.entitled', false);
+      }
+
+      if (_.has(this.services, 'callServiceConnect')) {
+        _.set(this.services, 'callServiceConnect.entitled', false);
+      }
+    }
+    if (hasLicenseSelections && !hasLicenseSelections.currentValue && hasLicenseSelections.previousValue) {
+      this.clearSelectedHybridServicesEntitlements();
+    }
   }
 
   public clearSelectedHybridServicesEntitlements(): void {
@@ -197,7 +211,12 @@ export class HybridServicesEntitlementsPanelComponent implements ng.IComponentOp
   public controller = HybridServicesEntitlementsPanelController;
   public template = require('./hybrid-services-entitlements-panel.html');
   public bindings = {
+    allowRemove: '<',
     entitlementsCallback: '&',
-    hasAssignableLicenses: '<',
+    restoreInstance: '<',
+    restoreUserEntitlements: '<',
+    saveInstance: '&',
+    isHuronCallLicenseSelected: '<',
+    hasLicenseSelections: '<',
   };
 }

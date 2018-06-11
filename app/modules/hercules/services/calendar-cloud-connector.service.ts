@@ -70,7 +70,7 @@ export class CloudConnectorService {
   }
 
   public getOffice365AdminConsentUrl(): ng.IPromise<string> {
-    const returnUrl = `${this.OAuthConfig.getAdminPortalUrl()}#/services`;
+    const returnUrl = `${this.OAuthConfig.getAdminPortalUrl()}/services`;
     return this.$http.get<IRequestAdminConsentResponse>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/requestAdminConsent`, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
@@ -84,7 +84,7 @@ export class CloudConnectorService {
   public confirmO365Provisioning(email: string): ng.IPromise<''> {
     return this.$http.get<any>(`${this.UrlConfig.getCccUrl()}/orgs/${this.Authinfo.getOrgId()}/services/squared-fusion-cal/provisioning/confirmO365Provisioning`, {
       params: {
-        testEmail: encodeURIComponent(email),
+        testEmail: email,
       },
     }).then(r => r.data);
   }
@@ -243,7 +243,7 @@ export class CloudConnectorService {
 
 export default angular
   .module('hercules.cloud-connector', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('modules/core/scripts/services/authinfo'),
     require('modules/hercules/services/service-descriptor.service').default,
     require('modules/core/config/urlConfig'),

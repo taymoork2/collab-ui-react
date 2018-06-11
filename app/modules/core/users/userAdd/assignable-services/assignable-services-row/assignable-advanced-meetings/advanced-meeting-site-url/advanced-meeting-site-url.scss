@@ -1,16 +1,12 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
 
 advanced-meeting-site-url {
-  display: block;
-
   .license__siteUrl {
     color: $color-primary-base;
-    font-family: $brand-font-light;
-    font-size: 0.75rem;
 
     span {
-      font-size: 0.75rem;
+      font-size: inherit;
     }
   }
 }

@@ -7,6 +7,7 @@ describe('Component: care feature modal', () => {
     this.injectDependencies('$modal', '$scope', 'Authinfo', '$state');
     this.$scope.dismiss = jasmine.createSpy('dismiss');
     this.$state.isVirtualAssistantEnabled = true;
+    this.$state.isAppleBusinessChatEnabled = true;
 
     spyOn(this.$modal, 'open');
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
@@ -14,17 +15,24 @@ describe('Component: care feature modal', () => {
     this.compileComponent('care-feature-modal', { dismiss: 'dismiss()' });
   });
 
-  it('feature list to have care - Customer Support Template only', function () {
+  it('should only have Customer Support Template when VA and ABC are disabled', function () {
     this.$state.isVirtualAssistantEnabled = false;
+    this.$state.isAppleBusinessChatEnabled = false;
     this.compileComponent('care-feature-modal', { dismiss: 'dismiss()' });
     expect(this.controller.features.length).toEqual(1);
   });
 
-  it('virtualAssistant Enabled feature list to have care - Customer Support Template and Virtual Assistant', function () {
+  it('should have Customer Support Template and Virtual Assistant when ABC is disabled', function () {
+    this.$state.isAppleBusinessChatEnabled = false;
+    this.compileComponent('care-feature-modal', { dismiss: 'dismiss()' });
     expect(this.controller.features.length).toEqual(2);
   });
 
-  it('ok function call for for customer support template results in initiating state call and then closing the care new feature Modal with the value chosen.', function () {
+  it('should have Customer Support Template, Apple Business Chat and Virtual Assistant if everything is enabled', function () {
+    expect(this.controller.features.length).toEqual(3);
+  });
+
+  it('should open up customer support template when click on Customer Support Template card', function () {
     this.controller.ok('customerSupportTemplate');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();
     expect(this.$modal.open).toHaveBeenCalledWith({
@@ -32,11 +40,20 @@ describe('Component: care feature modal', () => {
     });
   });
 
-  it('ok function call for for VirtualAssistant with virtual assistant enabled results in initiating state call and then closing the care new feature Modal with the value chosen.', function () {
+  it('should open up Virtual Assistant when click on Virtual Assistant card', function () {
     this.controller.ok('virtualAssistant');
     expect(this.$scope.dismiss).toHaveBeenCalledWith();
     expect(this.$modal.open).toHaveBeenCalledWith({
       template: '<virtual-assistant-modal dismiss="$dismiss()" class="care-modal"></virtual-assistant-modal>',
+    });
+  });
+
+  it('should open up customer support template with hybrid enabled when click on Customer Support Template card with hybrid toggle is enabled', function () {
+    this.$state.isHybridToggleEnabled = true;
+    this.controller.ok('customerSupportTemplate');
+    expect(this.$scope.dismiss).toHaveBeenCalledWith();
+    expect(this.$modal.open).toHaveBeenCalledWith({
+      template: '<care-hybrid-feature-modal dismiss="$dismiss()" class="care-modal"></care-hybrid-feature-modal>',
     });
   });
 });

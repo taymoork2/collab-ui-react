@@ -187,8 +187,8 @@ require('@ciscospark/internal-plugin-search');
       EdiscoveryService.getReports($scope.offset, $scope.limit).then(function (res) {
         var reports = res.reports;
         var paging = res.paging;
-        vm.isReportGenerating = reports[0].state !== (ReportStates.COMPLETED || ReportStates.FAILED);
-        vm.moreReports = !!paging.next;
+        vm.isReportGenerating = _.get(reports, '[0].state') !== (ReportStates.COMPLETED || ReportStates.FAILED);
+        vm.moreReports = !!_.get(paging, 'next');
         if (vm.concat) {
           vm.reports = vm.reports.concat(reports);
         } else {

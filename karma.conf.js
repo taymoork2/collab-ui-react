@@ -7,6 +7,20 @@ var shimFileName = _.last(shimFile.split('/'));
 _.assignIn(process.env, args.env);
 var webpackConfig = require('./webpack.config.js')(process.env);
 
+// if 'http_proxy' env var present, instruct headless Chrome to bypass
+var browser = process.env['http_proxy'] ? 'ChromeHeadlessBypassHttpProxy' : 'ChromeHeadlessWithMemory';
+
+if (args.debug) {
+  browser = 'ChromeWithMemory';
+} else if (args.phantomjs) {
+  browser = 'PhantomJS';
+}
+
+var reporters = ['progress'];
+if (_.has(args, 'env.coverage')) {
+  reporters = reporters.concat('coverage-istanbul');
+}
+
 module.exports = function (config) {
   var _config = {
     preprocessors: {},
@@ -81,7 +95,7 @@ module.exports = function (config) {
       noInfo: true, // please don't spam the console when running in karma!
     },
 
-    reporters: ['progress', 'coverage-istanbul'],
+    reporters: reporters,
 
     port: 9876,
 
@@ -92,12 +106,39 @@ module.exports = function (config) {
 
     autoWatch: false,
 
-    browsers: [args.debug ? 'Chrome' : 'PhantomJS'], // you can also use Chrome
+    browsers: [browser],
+
+    customLaunchers: {
+      ChromeWithMemory: {
+        base: 'Chrome',
+        flags: [
+          '--js-flags="--max-old-space-size=4096"',
+        ],
+      },
+      ChromeHeadlessWithMemory: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--disable-gpu',
+          '--remote-debugging-port=9222',
+          '--js-flags="--max-old-space-size=4096"',
+        ],
+      },
+      ChromeHeadlessBypassHttpProxy: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--disable-gpu',
+          '--remote-debugging-port=9222',
+          '--js-flags="--max-old-space-size=4096"',
+          '--proxy-server=\'direct://\'',
+          '--proxy-bypass-list=*'
+        ],
+      },
+    },
 
     singleRun: true,
 
     // time (ms) karma server waits for a browser message before disconnecting from it
-    browserNoActivityTimeout: 15000, // default 10000
+    browserNoActivityTimeout: args.phantomjs ? 15000 : 60000, // longer startup for Chrome
 
     // if a browser disconnects from karma server, re-attempt N times
     //

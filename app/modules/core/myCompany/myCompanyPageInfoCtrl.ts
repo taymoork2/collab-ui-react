@@ -1,3 +1,5 @@
+import { OrganizationDeleteService } from 'modules/core/organizations/organization-delete/organization-delete.service';
+
 class MyCompanyPageInfoCtrl {
 
   private _companyName: String;
@@ -5,6 +7,7 @@ class MyCompanyPageInfoCtrl {
   private _representatives: Partner[] = [];
   private _accountNumber: String;
   private _isPartner: boolean;
+  private _showDeleteOrg: boolean;
 
   get accountNumber(): String {
     return this._accountNumber;
@@ -30,14 +33,27 @@ class MyCompanyPageInfoCtrl {
     return false; //!_.isEmpty(this.partners) || !_.isEmpty(this.representatives);
   }
 
-  /* @ngInject */
-  constructor(Authinfo, UserListService) {
-    this._companyName = Authinfo.getOrgName();
-    const orgId = Authinfo.getOrgId();
-    this._accountNumber = orgId;
-    this._isPartner = Authinfo.isPartner();
+  get showDeleteOrg(): boolean {
+    return this._showDeleteOrg;
+  }
 
-    UserListService.listPartners(orgId, (data: { partners: Partner[] }) => {
+  /* @ngInject */
+  constructor(
+    private Authinfo,
+    private OrganizationDeleteService: OrganizationDeleteService,
+    private UserListService,
+  ) {
+    this._companyName = this.Authinfo.getOrgName();
+    const orgId = this.Authinfo.getOrgId();
+    this._accountNumber = orgId;
+    this._isPartner = this.Authinfo.isPartner();
+
+    this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+      .then((result) => {
+        this._showDeleteOrg = result;
+      });
+
+    this.UserListService.listPartners(orgId, (data: { partners: Partner[] }) => {
       if (_.isEmpty(data.partners)) {
         return;
       }
@@ -48,6 +64,10 @@ class MyCompanyPageInfoCtrl {
         return !_.endsWith(rep.userName, '@cisco.com');
       });
     });
+  }
+
+  public deleteOrg(): void {
+    this.OrganizationDeleteService.openOrgDeleteModal('organizationDeleteModal.title.deleteAccount');
   }
 }
 

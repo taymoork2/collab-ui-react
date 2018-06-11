@@ -1,0 +1,8 @@
+<div class="ui-grid-cell-contents align-left node-detail-column">
+  <div class="h5">
+    <strong>{{row.entity.nodeDetails.name}}</strong>
+  </div>
+  <div class="body-small">
+    {{row.entity.nodeDetails.application}} {{(row.entity.nodeDetails.isPublisher ? 'hcs.clusterDetail.settings.nodes.publisher' : 'hcs.clusterDetail.settings.nodes.subscriber') | translate}}
+  </div>
+</div>

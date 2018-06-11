@@ -3,7 +3,7 @@ import callFeatureFallbackDestination from 'modules/call/features/shared/call-fe
 
 export default angular
   .module('huron.call-park-fallback-destination', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     callFeatureFallbackDestination,
   ])

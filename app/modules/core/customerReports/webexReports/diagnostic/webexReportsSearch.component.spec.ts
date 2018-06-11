@@ -48,15 +48,17 @@ describe('Component: webexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'SearchService', 'Notification');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'ProPackService', 'SearchService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
   });
 
   function initSpies() {
+    spyOn(this.$state, 'go');
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve());
+    spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
   }
 
   function initComponent() {
@@ -66,7 +68,7 @@ describe('Component: webexReportsSearch', () => {
 
   it('should show the correct data for the grid when search with enter keyup', function () {
     const $event = { type: 'keyup', keyCode: 13, which: 13 };
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
     initComponent.call(this);
 
     this.view.find(this.input).val('355602502').change().triggerHandler($event);
@@ -78,7 +80,7 @@ describe('Component: webexReportsSearch', () => {
 
   it('should show the correct data for the grid when search with email and then trigger blur event', function () {
     this.$timeout.flush();
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
     this.view.find(this.input).val('zoncao@cisco.com').change().triggerHandler('blur');
@@ -109,13 +111,12 @@ describe('Component: webexReportsSearch', () => {
     initComponent.call(this);
     this.controller.errMsg = {};
     this.view.find(this.input).val('23423432ad').change().triggerHandler('blur');
-    expect(this.controller.errMsg.search).toEqual('Please enter the correct email or meeting number');
+    expect(this.controller.errMsg.search).toEqual('<i class="icon icon-warning"></i> Please enter the correct email or meeting number');
   });
 
   it('should updata when change date', function () {
     spyOn(this.$translate, 'instant').and.returnValue('The start date must not be greater than the end date');
-
-    this.SearchService.getMeetings.and.returnValue(this.$q.resolve(this.meetingSearch));
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.resolve(this.meetingSearch));
 
     initComponent.call(this);
     this.view.find(this.input).val('355602502').change().triggerHandler('blur');
@@ -139,14 +140,13 @@ describe('Component: webexReportsSearch', () => {
     this.controller.onChangeDate();
     this.controller.searchStr = '355602502';
     this.controller.startSearch();
-    expect(this.controller.errMsg.datePicker).toEqual('The start date must not be greater than the end date');
+    expect(this.controller.errMsg.datePicker).toEqual('<i class="icon icon-warning"></i> The start date must not be greater than the end date');
   });
 
   it('should notify in message for non 200 http status', function() {
-    this.SearchService.getMeetings.and.returnValue(this.$q.reject({ status: 404 }));
-
+    spyOn(this.SearchService, 'getStorage').and.returnValue('23423432');
+    spyOn(this.SearchService, 'getMeetings').and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
-    this.view.find(this.input).val('23423432').change().triggerHandler('blur');
     expect(this.Notification.errorResponse).toHaveBeenCalled();
   });
 
@@ -155,5 +155,29 @@ describe('Component: webexReportsSearch', () => {
     this.controller.gridData = this.meetingSearch;
     this.controller.onChangeTz('Asia/Shanghai');
     expect(this.controller.gridData[0].startTime_).toBeDefined();
+  });
+
+  it('should call $state.go', function () {
+    initComponent.call(this);
+    this.controller.showDetail({ id: 111 });
+    expect(this.$state.go).toHaveBeenCalled();
+  });
+
+  describe('calendar date range', function () {
+    it('should allow calendar select one week when FT is set to false', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(6);
+    });
+
+    it('should allow calendar select one month when FT is set to true', function () {
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      initComponent.call(this);
+      const endDate = moment(this.controller.endDate);
+      const startDate = moment(this.controller.startDate);
+      expect(endDate.diff(startDate, 'days')).toBe(29);
+    });
   });
 });

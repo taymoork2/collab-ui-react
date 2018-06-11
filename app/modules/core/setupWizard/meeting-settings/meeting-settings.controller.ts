@@ -3,6 +3,7 @@ import { Config } from 'modules/core/config/config';
 import { IConferenceLicense, IConferenceService, IPendingLicense, IWebexLicencesPayload, IWebExSite } from './meeting-settings.interface';
 import { WebExSite, ExistingWebExSite } from './meeting-settings.model';
 import { SetupWizardService } from '../setup-wizard.service';
+import { Notification } from 'modules/core/notifications';
 
 interface ICCASPData {
   partnerOptions: string[];
@@ -35,11 +36,12 @@ export class MeetingSettingsCtrl {
   public ccaspForm: ng.IFormController;
   public existingTrialSites: ExistingWebExSite[] = [];
   public existingWebexSites: WebExSite[] = [];
+  public webexSitesFromTransferredSubscriptionServices: WebExSite[] = [];
   public disableValidateButton: boolean = false;
   public timeZoneOptions = this.TrialTimeZoneService.getTimeZones();
   public sitesArray: IWebExSite[] = [];
   public actingSubscriptionId = '';
-  public tspPartnerOptions = [];
+  public tspPartnerOptions: any[] = [];
   public audioPartnerName: string | null = null;
   public dropdownPlaceholder = this.$translate.instant('common.select');
   public hasTrialSites: boolean = false;
@@ -69,7 +71,7 @@ export class MeetingSettingsCtrl {
     private Analytics,
     private Authinfo,
     private Config: Config,
-    private Notification,
+    private Notification: Notification,
     private SetupWizardService: SetupWizardService,
     private TrialTimeZoneService,
     private TrialWebexService,
@@ -91,6 +93,12 @@ export class MeetingSettingsCtrl {
     });
     this.existingTrialSites = this.findExistingWebexTrialSites();
     this.existingWebexSites = this.findExistingWebexSites();
+
+    /* Sometimes subscription services are transferred to another subscription;
+    those WebEx sites need to be merged into the new subscription. */
+    const pendingTransferServices = this.SetupWizardService.getActingSubscriptionPendingTransferServices();
+    this.webexSitesFromTransferredSubscriptionServices = this.findExistingWebexSites(pendingTransferServices);
+    this.existingWebexSites = this.existingWebexSites.concat(this.webexSitesFromTransferredSubscriptionServices);
 
     // If user clicked back after setting WebEx sites in the meeting-settings tab, we want to preserve the entered sites
     const webexSitesData = this.TrialWebexService.getProvisioningWebexSitesData();
@@ -123,6 +131,12 @@ export class MeetingSettingsCtrl {
         this.ccasp.subscriptionId = activeCCASPPackage.ccaspSubscriptionId;
       }
     }
+    if (this.SetupWizardService.hasPendingCCAUserPackage()) {
+      const active = _.get(this.SetupWizardService.getActiveCCAUserPackage(), 'ccaspPartnerName', null);
+      const pending = _.get(this.SetupWizardService.getPendingCCAUserPackage(), 'ccaspPartnerName', null);
+      this.audioPartnerName = active || pending;
+    }
+
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
   }
 
@@ -151,7 +165,7 @@ export class MeetingSettingsCtrl {
 
   // For existing trials that have a WebEx site, we will allow the customer to migrate the trial site into a paid subscription
   public findExistingWebexTrialSites(): ExistingWebExSite[] {
-    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true } });
+    let conferencingServices = _.filter(this.Authinfo.getConferenceServices(), { license: { isTrial: true, status: this.Config.licenseStatus.ACTIVE } });
     // Make sure not to touch online trial sites
     conferencingServices = _.reject(conferencingServices, (service: IConferenceService) => {
       return _.includes(service.license.masterOfferName, SetupWizardService.ONLINE_SUFFIX);
@@ -176,10 +190,11 @@ export class MeetingSettingsCtrl {
     return existingTrialSites;
   }
 
-  // In the case of modify orders, the order will apply to an active subscription.
-  // If we have WebEx licenses, we need pull those siteUrls and include them in the provision context
-  public findExistingWebexSites(): WebExSite[] {
-    const actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses();
+  /* In the case of modify orders, the order will apply to an active subscription.
+  If we have WebEx licenses, we need to pull those siteUrls and include them in
+  the provisioning context. */
+
+  public findExistingWebexSites(actingSubscriptionLicenses = this.SetupWizardService.getActingSubscriptionLicenses()): WebExSite[] {
     const includedOfferNames = [this.Config.offerCodes.EE, this.Config.offerCodes.MC, this.Config.offerCodes.EC, this.Config.offerCodes.TC, this.Config.offerCodes.SC];
     let existingConferenceServicesInActingSubscripton = _.filter(actingSubscriptionLicenses, (license: IConferenceLicense) =>
       _.includes(includedOfferNames, license.offerName)) as IConferenceLicense[];
@@ -189,7 +204,6 @@ export class MeetingSettingsCtrl {
     });
     // Create an array of existing sites
     const existingWebexSites = _.map(existingConferenceServicesInActingSubscripton, (license) => {
-
       return new WebExSite({
         siteUrl: _.replace(_.get<string>(license, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
         quantity: license.volume,
@@ -198,6 +212,7 @@ export class MeetingSettingsCtrl {
         isCIUnifiedSite: license.isCIUnifiedSite,
       });
     });
+
     return existingWebexSites;
   }
 
@@ -209,7 +224,7 @@ export class MeetingSettingsCtrl {
     this.sitesArray = this.sitesArray.concat(_.map(_.uniqBy(existingWebexSites, 'siteUrl'), (site) => {
       return new ExistingWebExSite({
         siteUrl: _.replace(_.get<string>(site, 'siteUrl'), this.Config.siteDomainUrl.webexUrl, ''),
-        quantity: 1,
+        quantity: 0,
         centerType: '',
         keepExistingSite: true,
         setupType: site.setupType,
@@ -427,19 +442,31 @@ export class MeetingSettingsCtrl {
   Audio partner
   */
 
-  public getSitesAudioPackageDisplay() {
-    const audioPackage = this.SetupWizardService.getPendingAudioLicenses();
-    if (_.isEmpty(audioPackage)) {
+  public getSitesAudioPackageTypeDisplay(): string | null {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicense();
+    if (_.isUndefined(audioPackage)) {
       return null;
     }
-    let audioPackageDisplay = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage[0].offerName);
-    if (this.audioPartnerName) {
-      audioPackageDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
-        partner: this.audioPartnerName,
-        service: audioPackageDisplay,
-      });
+    const audioPackageType = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage.offerName);
+    const audioPackageTypeDisplay = this.$translate.instant('firstTimeWizard.audioPackageWithType', { type: audioPackageType });
+
+    return audioPackageTypeDisplay;
+  }
+
+  public getSitesAudioPartnerDisplay(): string | null {
+    const audioPackage = this.SetupWizardService.getPendingAudioLicense();
+    if (!this.audioPartnerName) {
+      return null;
     }
-    return audioPackageDisplay;
+
+    let audioPartnerDisplay = this.$translate.instant('subscriptions.licenseTypes.' + audioPackage.offerName);
+
+    audioPartnerDisplay = this.$translate.instant('firstTimeWizard.conferencingAudioProvided', {
+      partner: this.audioPartnerName,
+      service: audioPartnerDisplay,
+    }, undefined, undefined, 'sceParameters');
+
+    return audioPartnerDisplay;
   }
 
   public audioPartnerSelectionChange() {

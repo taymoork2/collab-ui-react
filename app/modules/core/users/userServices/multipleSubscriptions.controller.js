@@ -15,12 +15,16 @@
     vm.roomSystemsExist = false;
     vm.showLicenses = showLicenses;
     vm.showCareLicenses = showCareLicenses;
+    vm.showSection = showSection;
 
     init();
 
     function init() {
       Orgservice.getInternallyManagedSubscriptions().then(function (subscriptions) {
-        vm.subscriptionOptions = _.uniq(_.map(subscriptions, 'subscriptionId'));
+        vm.subscriptionOptions = _.uniq(_.map(_.filter(subscriptions, function (subscription) {
+          // if subscription has an empty license array, then it is suspended and should not be an option
+          return !_.isEmpty(subscription.licenses);
+        }), 'subscriptionId'));
         vm.subscriptionOptions = _.sortBy(vm.subscriptionOptions, function (o) {
           return o === 'Trial' ? 1 : -1;
         });
@@ -64,6 +68,12 @@
       }
 
       return vm.oneBilling || isSelected || isTrialSubscription;
+    }
+
+    function showSection(services) {
+      return _.some(services, function (service) {
+        return vm.showLicenses(service.license.billingServiceId, service.license.isTrial);
+      });
     }
   }
 })();

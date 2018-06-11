@@ -57,12 +57,13 @@
     baseVariables['legend'] = {
       color: ChartColors.primaryBase,
       autoMargins: false,
-      align: 'right',
+      align: 'left',
       position: 'bottom',
       switchable: true,
       fontSize: 13,
       markerLabelGap: 10,
       markerType: 'square',
+      marginLeft: '10',
       markerSize: 10,
       equalWidths: false,
       horizontalGap: 5,
@@ -152,6 +153,7 @@
     function getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, categoryField, catAxis, exportData) {
       return _.cloneDeep({
         type: 'serial',
+        zoomOutText: '',
         pathToImages: amchartsImages,
         startEffect: 'easeOutSine',
         addClassNames: true,

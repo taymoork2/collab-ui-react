@@ -13,7 +13,7 @@
   "conferencing": {
     "isTrial": false,
     "licenseId": 12345,
-    "daysLeft": "NaN",
+    "daysLeft": -1,
     "volume": 50,
     "partnerOrgId": "other-partner-org2-id",
     "partnerEmail": "otherPartner@othercompany.com"
@@ -54,14 +54,14 @@
     "isTrial": false,
     "siteUrl": "testurl.webex.com",
     "licenseId": 12345,
-    "daysLeft": "NaN",
+    "daysLeft": -1,
     "volume": 50
   }, {
     "name": "webexEE",
     "isTrial": false,
     "siteUrl": "testurl.webex.com",
     "licenseId": 12346,
-    "daysLeft": "NaN",
+    "daysLeft": -1,
     "volume": 50
   }, {
     "name": "communications",
@@ -79,7 +79,7 @@
     "name": "conferencing",
     "isTrial": false,
     "licenseId": 12345,
-    "daysLeft": "NaN",
+    "daysLeft": -1,
     "volume": 50
   }, {
     "name": "webexCMR",
@@ -91,7 +91,8 @@
   }],
   "orderedServices": {
     "servicesManagedByCurrentPartner": ["messaging", "communications", "webex", "roomSystems"],
-    "servicesManagedByAnotherPartner": ["conferencing", "sparkBoard"]
+    "servicesManagedByAnotherPartner": ["conferencing", "sparkBoard"],
+    "servicesManagedByCustomer": [""]
   },
   "webexEEConferencing": {
     "isTrial": true,

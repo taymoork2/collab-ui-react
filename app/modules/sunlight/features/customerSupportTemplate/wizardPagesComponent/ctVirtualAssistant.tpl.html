@@ -1,0 +1,83 @@
+<div ng-form="virtualAssistant">
+  <div class="ct-title">
+    <span class="h3" translate="careChatTpl.ctVirtualAssistantPageTitle"></span>
+  </div>
+  <div class="h5 ct-title-desc" translate="careChatTpl.virtualAssistantDesc"></div>
+  <div class="cs-card-container ct-virtual-assistant ct-sa-content">
+    <cs-card-layout block-view="true" class="ct-card-center">
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.preview"></div>
+        <article class="profile-preview ct-article">
+          <header>
+            <img ng-if="$ctrl.selectedVA.icon" class="uploded-bot-img"
+              ng-src="{{$ctrl.selectedVA.icon}}"/>
+            <div class="img" ng-if="!$ctrl.selectedVA.icon">
+              <i class="icon bot icon-bot-six icon-2x"></i>
+            </div>
+            <div class="h5 profile-name" ng-bind="$ctrl.template.configuration.virtualAssistant.config.name"></div>
+            <div class="right actions">
+              <i class="icon icon-minus"></i>
+              <i class="icon icon-close"></i>
+            </div>
+          </header>
+          <section>
+            <div class="bot-message" ng-if="$ctrl.template.configuration.virtualAssistant.welcomeMessage.length > 0">
+              <span class="speech-bubble"><span class="top left"></span></span>
+              <span class="message" ng-bind="$ctrl.template.configuration.virtualAssistant.welcomeMessage"></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+            </div>
+            <div class="customer-details">
+              <span class="customer-message" translate="careChatTpl.agentMsg"></span>
+              <span class="speech-bubble"><span class="top right"></span></span>
+              <div class="body-smallest time" translate="careChatTpl.agentMsgTime"></div>
+            </div>
+          </section>
+          <footer class="h6 footer" translate="careChatTpl.typeNewMsg"></footer>
+        </article>
+      </cs-card>
+      <cs-card class="ct-card">
+        <div class="h4 ct-card-info" translate="careChatTpl.attributes"></div>
+        <article class="profile-attributes ct-article">
+          <section ct-attribute-right-section ct-flex-topleft>
+            <div class="h4 subheader-text" translate="careChatTpl.virtualAssistantSelector"></div>
+
+            <div class="row ct-attribute-row">
+              <cs-select
+                id="virtualAssistantSelect"
+                name="virtualAssistantSelect"
+                ng-model="$ctrl.selectedVA"
+                options="$ctrl.configuredVirtualAssistantServices"
+                labelfield="name"
+                valuefield="id"
+                placeholder="$ctrl.virtualAssistantSelectText"
+                on-change-fn="$ctrl.vaSelectionCommit()"
+                filter="false">
+              </cs-select>
+            </div>
+
+            <div class="h4 subheader-text" translate="careChatTpl.virtualAssistantWelcomeMessageLabel"></div>
+            <div class="row ct-attribute-row">
+              <textarea cs-input type="text"
+                name="virtualAssistantWelcomeText"
+                class="h5 inputField ct-attribute-field-textbox large-11"
+                ng-model="$ctrl.template.configuration.virtualAssistant.welcomeMessage"
+                cs-input-messages="$ctrl.multiLineValidationMessage"
+                ng-maxlength="$ctrl.lengthValidationConstants.multiLineMaxCharLimit"
+                validate-characters="$ctrl.InvalidCharacters"
+                ng-model-options="{ allowInvalid: true }"
+                ng-change="$ctrl.isVirtualAssistantValid()"
+                placeholder="{{::'careChatTpl.virtualAssistantWelcomeMessageLabel' | translate}}">
+              </textarea>
+            </div>
+            <p class="body-smallest bot-welcome-msg-help" translate="careChatTpl.virtualAssistantWelcomeMessageHelp"></p>
+            <div class="setting-info">
+              <span><i class="icon icon-info"></i></span>
+              <span class="setting-info-text" translate="careChatTpl.virtualAssistantSettingInfo"></span>
+            </div>
+
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>

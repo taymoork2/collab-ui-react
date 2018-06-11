@@ -26,7 +26,7 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
     if (this.serviceId === 'squared-fusion-media') {
       this.downloadLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova';
       this.downloadDemoLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova';
-      this.helpLink = 'https://www.cisco.com/go/hybrid-services-media';
+      this.helpLink = 'https://www.cisco.com/go/video-mesh';
     }
     if (this.serviceId === 'spark-hybrid-datasecurity') {
       this.downloadLink = 'https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/HybridDataSecurityProduction/hds.ova';
@@ -37,6 +37,14 @@ class DocumentationSectionCtrl implements IDocumentationSectionCtrl, ng.ICompone
     if (this.serviceId === 'squared-fusion-cal' || this.serviceId === 'squared-fusion-uc' || this.serviceId === 'spark-hybrid-impinterop') {
       this.helpLink = 'http://www.cisco.com/go/hybrid-services';
       this.downloadLink = 'https://software.cisco.com/download/find.html?q=expressway&task=default&psaMode=AP';
+    }
+
+    if (this.serviceId === 'squared-fusion-cal') {
+      this.helpLink = 'https://www.cisco.com/go/hybrid-services-calendar';
+    }
+
+    if (this.serviceId === 'squared-fusion-uc') {
+      this.helpLink = 'https://www.cisco.com/go/hybrid-services-call';
     }
 
     if (this.serviceId === 'ept') {

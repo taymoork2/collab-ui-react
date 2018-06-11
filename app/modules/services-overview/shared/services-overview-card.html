@@ -2,9 +2,19 @@
   <h4 class="size-{{card.cardType}}">
     <i class="icon" ng-class="card.icon"></i>
     {{::card.name | translate}}
-    <i ng-if= "card.infoIcon && !card.infoText" class="icon info-icon {{::card.infoIcon}}"></i>
-    <i ng-if= "card.infoIcon && card.infoText" class="icon info-icon has-tooltip {{::card.infoIcon}}" tooltip="{{::card.infoText| translate}}" tooltip-placement="bottom-right" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::card.infoText| translate}}"></i>
-    <cr-pro-pack-icon ng-if="card.showProBadge" tooltip="{{::card.infoText| translate}}" tooltip-append-to-body="true" tooltip-placement="right" tabindex="0" tooltip-trigger="focus mouseenter" aria-label="{{::card.infoText| translate}}"></cr-pro-pack-icon>
+    <i ng-if="card.infoIcon && !card.infoText" class="icon info-icon {{::card.infoIcon}}"></i>
+    <icon-tooltip
+      ng-if="card.infoIcon && card.infoText"
+      tt-class="info-icon has-tooltip {{::card.infoIcon}}"
+      tt-tooltip-placement="bottom-right"
+      tt-tooltip-text="{{::card.infoText| translate}}">
+    </icon-tooltip>
+    <pro-pack-tooltip
+      ng-if="card.showProBadge"
+      tt-tooltip-append-to-body="true"
+      tt-tooltip-placement="right"
+      tt-tooltip-text="{{::card.infoText| translate}}">
+    </pro-pack-tooltip>
   </h4>
 </header>
 <section ng-if="card.loading">
@@ -16,7 +26,7 @@
     <div ng-repeat="button in card.getButtons()">
       <a ng-if="!button.routerState && !button.externalLink" class="disabled" ng-class="button.buttonClass">{{::button.name | translate}}</a>
       <a ng-if="button.routerState && !button.onClick" ui-sref="{{button.routerState}}" ng-class="button.buttonClass">{{::button.name | translate}}</a>
-      <a ng-if="button.routerState && button.onClick" ng-click="button.onClick()" ng-class="button.buttonClass">{{::button.name | translate}}</a>
+      <a href ng-if="button.routerState && button.onClick" ng-click="button.onClick()" ng-class="button.buttonClass">{{::button.name | translate}}</a>
       <a ng-if="button.externalLink" href="{{button.externalLink}}" target="_blank" ng-class="button.buttonClass">{{::button.name | translate}}</a>
     </div>
     <div ng-if="card.getShowMoreButton()">

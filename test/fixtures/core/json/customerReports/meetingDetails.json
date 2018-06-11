@@ -1,0 +1,366 @@
+{
+  "webexOneMeeting": {
+    "overview": {
+      "meetingName": "Bob Ryan's Personal Room",
+      "meetingNumber": "346438185",
+      "conferenceId": "94498985525409163",
+      "status": "2",
+      "siteName": "go",
+      "siteId": "12345701",
+      "startTime": "1525888827000",
+      "endTime": "1525890602000",
+      "duration": "1775",
+      "hostName": "bobryan",
+      "hostId": "489317517",
+      "hostEmail": "bobryan@cisco.com",
+      "audioSession": "PSTN",
+      "videoSession": "Support"
+    },
+    "startTime": "1525888827000",
+    "endTime": "1525890602000"
+  },
+  "uniqueParticipants": [
+    {
+      "sessionType": "0",
+      "userId": "489317517",
+      "guestId": "0",
+      "platform": "1",
+      "browser": "5",
+      "userName": "Bob Ryan",
+      "logUserId": "null",
+      "phoneNumber": "null",
+      "accessNumber": "null",
+      "callType": "null",
+      "callerId": "null",
+      "participants": [
+        {
+          "joinTime": "1525889010000",
+          "leaveTime": "1525890602000",
+          "userName": "Bob Ryan",
+          "duration": "1592",
+          "reason": "0",
+          "platform": "1",
+          "browser": "5",
+          "clientIP": "10.154.177.9",
+          "gatewayIP": "https://10.154.177.9:0",
+          "userId": "489317517",
+          "guestId": "0",
+          "conferenceID": "94498985525409163",
+          "sessionType": "0",
+          "nodeId": "16797697",
+          "callInType": "null",
+          "callInNumber": "null",
+          "deviceType": "null",
+          "logUserId": "null",
+          "phoneNumber": "null",
+          "accessNumber": "null",
+          "accessNumber1": "null",
+          "accessNumber2": "null",
+          "callType": "null",
+          "callerId": "null",
+          "enableStartPoint": "true",
+          "cid": "",
+          "platform_": "Mac",
+          "device": "Mac: Safari",
+          "deviceIcon": "icon-browser",
+          "browser_": "Safari",
+          "joinTime_": "2:03 AM",
+          "mobile": ""
+        }
+      ]
+    },
+    {
+      "sessionType": "0",
+      "userId": "489317517",
+      "guestId": "0",
+      "platform": "10",
+      "browser": "2",
+      "userName": "Bob Ryan",
+      "logUserId": "null",
+      "phoneNumber": "null",
+      "accessNumber": "null",
+      "callType": "null",
+      "callerId": "null",
+      "participants": [
+        {
+          "joinTime": "1525889040000",
+          "leaveTime": "1525890602000",
+          "userName": "Bob Ryan",
+          "duration": "1562",
+          "reason": "0",
+          "platform": "10",
+          "browser": "2",
+          "clientIP": "64.68.122.231",
+          "gatewayIP": "tcp://64.68.122.231:17660",
+          "userId": "489317517",
+          "guestId": "0",
+          "conferenceID": "94498985525409163",
+          "sessionType": "0",
+          "nodeId": "16805889",
+          "callInType": "null",
+          "callInNumber": "null",
+          "deviceType": "null",
+          "logUserId": "null",
+          "phoneNumber": "null",
+          "accessNumber": "null",
+          "accessNumber1": "null",
+          "accessNumber2": "null",
+          "callType": "null",
+          "callerId": "null",
+          "enableStartPoint": "true",
+          "cid": "",
+          "platform_": "Cisco TP",
+          "device": "",
+          "deviceIcon": "icon-devices",
+          "browser_": "Stand alone application",
+          "joinTime_": "2:04 AM",
+          "mobile": ""
+        }
+      ]
+    },
+    {
+      "sessionType": "0",
+      "userId": "481013137",
+      "guestId": "0",
+      "platform": "0",
+      "browser": "6",
+      "userName": "Mukul Khirwadkar",
+      "logUserId": "null",
+      "phoneNumber": "null",
+      "accessNumber": "null",
+      "callType": "null",
+      "callerId": "null",
+      "participants": [
+        {
+          "joinTime": "1525888827000",
+          "leaveTime": "1525890602000",
+          "userName": "Mukul Khirwadkar",
+          "duration": "1775",
+          "reason": "0",
+          "platform": "0",
+          "browser": "6",
+          "clientIP": "10.24.81.103",
+          "gatewayIP": "https://10.24.81.103:0",
+          "userId": "481013137",
+          "guestId": "0",
+          "conferenceID": "94498985525409163",
+          "sessionType": "0",
+          "nodeId": "16781313",
+          "callInType": "null",
+          "callInNumber": "null",
+          "deviceType": "null",
+          "logUserId": "null",
+          "phoneNumber": "null",
+          "accessNumber": "null",
+          "accessNumber1": "null",
+          "accessNumber2": "null",
+          "callType": "null",
+          "callerId": "null",
+          "enableStartPoint": "true",
+          "cid": "",
+          "platform_": "Windows",
+          "device": "Windows: Chrome",
+          "deviceIcon": "icon-browser",
+          "browser_": "Chrome",
+          "joinTime_": "2:00 AM",
+          "mobile": ""
+        }
+      ]
+    },
+    {
+      "sessionType": "25",
+      "userId": "5468",
+      "guestId": "0",
+      "platform": "null",
+      "browser": "null",
+      "userName": "Mukul Khirwadkar",
+      "logUserId": "481013137",
+      "phoneNumber": "1-9167684143",
+      "accessNumber": "4156550000",
+      "callType": "Dial Out",
+      "callerId": "2",
+      "participants": [
+        {
+          "joinTime": "1525888849000",
+          "leaveTime": "1525890590000",
+          "userName": "Mukul Khirwadkar",
+          "duration": "1741",
+          "reason": "0",
+          "platform": "null",
+          "browser": "null",
+          "clientIP": "null",
+          "gatewayIP": "null",
+          "userId": "5468",
+          "guestId": "0",
+          "conferenceID": "94498985525409163",
+          "sessionType": "25",
+          "nodeId": "31",
+          "callInType": "null",
+          "callInNumber": "null",
+          "deviceType": "null",
+          "logUserId": "481013137",
+          "phoneNumber": "1-9167684143",
+          "accessNumber": "4156550000",
+          "accessNumber1": "1-877-668-4488",
+          "accessNumber2": "+1-415-655-0000",
+          "callType": "Dial Out",
+          "callerId": "2",
+          "enableStartPoint": "false",
+          "cid": "2",
+          "platform_": "Other",
+          "device": "Phone",
+          "deviceIcon": "icon-phone",
+          "browser_": "Other",
+          "joinTime_": "2:00 AM",
+          "mobile": ""
+        }
+      ]
+    }
+  ],
+  "voipSessionDetail": {
+    "16793601": [
+      {
+        "startTime": "1525915906000",
+        "endTime": "1525917178000",
+        "nodeId": "16793601",
+        "userId": "2420133230",
+        "userName": "Tianqi Wang",
+        "duration": "1272",
+        "endReason": "Network error/TP time out",
+        "mmpQuality": [
+          {
+            "startTime": "1525915906000",
+            "endTime": "1525915947000",
+            "lossrates": "0.0",
+            "rtts": "136.17021276595744",
+            "fill": "0"
+          },
+          {
+            "startTime": "1525915947000",
+            "endTime": "1525916127000",
+            "lossrates": "0.03317535545023697",
+            "rtts": "129.6208530805687",
+            "fill": "1"
+          }
+        ]
+      }
+    ]
+  },
+  "joinMeetingTimes": [
+    {
+      "joinTime": "1525889010000",
+      "userName": "Bob Ryan",
+      "userId": "489317517",
+      "guestId": "0",
+      "joinMeetingTime": "0",
+      "jmtQuality": "1"
+    },
+    {
+      "joinTime": "1525889040000",
+      "userName": "Bob Ryan",
+      "userId": "489317517",
+      "guestId": "0",
+      "joinMeetingTime": "0",
+      "jmtQuality": "1"
+    },
+    {
+      "joinTime": "1525888827000",
+      "userName": "Mukul Khirwadkar",
+      "userId": "481013137",
+      "guestId": "0",
+      "joinMeetingTime": "13",
+      "jmtQuality": "3"
+    }
+  ],
+  "videoSessionDetail": {
+    "16781313": [
+      {
+        "startTime": "1525889035000",
+        "endTime": "1525890592000",
+        "nodeId": "16781313",
+        "userId": "2418037453",
+        "userName": "Mukul Khirwadkar",
+        "duration": "1557",
+        "endReason": "NORMAL",
+        "mmpQuality": [
+          {
+            "startTime": "1525889035000",
+            "endTime": "1525889041000",
+            "lossrates": "0.0",
+            "rtts": "0.0",
+            "fill": "0"
+          },
+          {
+            "startTime": "1525889041000",
+            "endTime": "1525889221000",
+            "lossrates": "0.33925925925925926",
+            "rtts": "2.0",
+            "fill": "1"
+          }
+        ]
+      }
+    ]
+  },
+  "pstnSessionDetail": {
+    "31": [
+      {
+        "caller": "Mukul Khirwadkar",
+        "attendeeId": "0",
+        "callId": "2",
+        "teleConfId": "548925303",
+        "phoneNum": "19167684143",
+        "callType": "Dial Out",
+        "webexAccessNum": "null",
+        "startTime": "1525888844000",
+        "endTime": "1525890588000",
+        "duration": "1744",
+        "endReasonCode": "103303",
+        "endReason": "Unknown",
+        "sipCallId": "b54fec5808a90b7eb851484919511c58@10.120.172.30",
+        "sipCallIdCms": "a0331855ccd9a04c1c95062143a04177@10.120.172.30",
+        "msIpAddr": "10.120.172.82",
+        "msPort": "19548",
+        "nodeId": "31",
+        "pstnNodeId": "31",
+        "tahoeQuality": [
+          {
+            "startTime": "1525888844000",
+            "endTime": "1525888901356",
+            "rxPackets": "2954",
+            "txPackets": "2955",
+            "audioMos": "4",
+            "packetLost": "0",
+            "packetBad": "0",
+            "fill": "0"
+          },
+          {
+            "startTime": "1525888901356",
+            "endTime": "1525888961357",
+            "rxPackets": "5954",
+            "txPackets": "5955",
+            "audioMos": "4",
+            "packetLost": "0",
+            "packetBad": "0",
+            "fill": "1"
+          }
+        ]
+      }
+    ]
+  },
+  "webexMeeting": {
+    "conferenceID": "94498985525409163",
+    "status": "2",
+    "meetingName": "Bob Ryan's Personal Room",
+    "conferenceDate": "2018-05-09 18:00:27",
+    "startTime": "2018-05-09 18:00:27",
+    "endTime": "2018-05-09 18:29:52",
+    "meetingType": "1",
+    "meetingNumber": "346438185",
+    "siteID": "12345701",
+    "duration": "1764",
+    "hostName": "bobryan",
+    "numberOfParticipants": "3",
+    "Duration": "29:24"
+  },
+  "searchStr": "bobryan@cisco.com"
+}

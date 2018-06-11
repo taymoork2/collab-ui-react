@@ -27,6 +27,10 @@ describe('Huron Functional: call-lines', () => {
     it('should be on call-lines page', () => {
       navigation.expectDriverCurrentUrl('call-lines');
     });
+    it('should close banner if displayed', () => {
+      utils.expectIsDisplayed(element(by.css('.cs-alert-banner-close')));
+      utils.click(element(by.css('.cs-alert-banner-close')));
+    });
     it('should display go back icon', () => {
       utils.expectIsDisplayed(callLines.iconGoBack);
     });

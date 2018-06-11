@@ -1,6 +1,6 @@
-@import '~collab-ui/scss/settings/colors';
-@import '~collab-ui/scss/settings/settings';
-@import '~collab-ui/scss/objects/tables';
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/settings';
+@import '~@collabui/collab-ui/scss/objects/tables';
 
 .gm-td-histories,
 .gm-td-notes-view {
@@ -235,9 +235,9 @@
 
   .tn-error-msg {
     &::before {
-      font-family: "Cisco_Toolkit_Icons";
-      color: #f96452;
-      content: '\E0B0';
+      @extend %icon-error;
+      font-family: $icon-font-name;
+      color: $color-alerts-base;
       margin-right: 4px;
       vertical-align: top;
     }

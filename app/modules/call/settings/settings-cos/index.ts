@@ -5,7 +5,7 @@ import FeatureToggleService from 'modules/core/featureToggle';
 
 export default angular
   .module('call.settings.class-of-service', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     FeatureToggleService,
     require('modules/core/scripts/services/authinfo'),

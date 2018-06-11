@@ -32,9 +32,9 @@ export class MemberService {
       limit: limit,
       offset: offset,
     }).$promise
-    .then(memberList => {
-      return _.get<Member[]>(memberList, 'members', []);
-    });
+      .then(memberList => {
+        return _.get<Member[]>(memberList, 'members', []);
+      });
   }
 
   public getDisplayName(member: Member): string {

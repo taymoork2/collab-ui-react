@@ -13,6 +13,8 @@ export interface IUser {
   pendingStatus: boolean;
   userSettings: string[];
   trainSiteNames: string[];
+  linkedTrainSiteNames: string[];
+  userPreferences: string[];
   roles: string[];
   invitations?: IServiceInvitations;
 }
@@ -30,6 +32,8 @@ export class User implements IUser {
   public pendingStatus: boolean;
   public userSettings: string[];
   public trainSiteNames: string[];
+  public linkedTrainSiteNames: string[];
+  public userPreferences: string[];
   public roles: string[];
   public invitations?: IServiceInvitations;
 
@@ -45,6 +49,8 @@ export class User implements IUser {
     pendingStatus: false,
     userSettings: [],
     trainSiteNames: [],
+    linkedTrainSiteNames: [],
+    userPreferences: [],
     roles: [],
   }) {
     _.extend(this, obj);
@@ -127,7 +133,6 @@ export class UserOverviewService {
     private SunlightConfigService,
     private ServiceSetup,
     private Userservice,
-    private $translate,
   ) {
     this.invitationResource = this.$resource(this.UrlConfig.getAdminServiceUrl() + 'organization/:customerId/invitations/:userId', {
       customerId: '@customerId',
@@ -173,8 +178,7 @@ export class UserOverviewService {
 
     if (_.isEmpty(userData.user.entitlements)) {
 
-      const hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
-      const hasCiscoucCES = _.includes(userData.user.roles, this.Config.backend_roles.ciscouc_ces);
+      const hasSyncKms = _.includes(userData.user.roles, this.Config.backend_roles.spark_synckms);
 
       promise = this.getInvitationsForUser(userData.user.id)
         .then((inviteResponse) => {
@@ -205,7 +209,7 @@ export class UserOverviewService {
               // check if this user exists in Sunlight config, and if so, update the Care Voice invitation
               return this.SunlightConfigService.getUserInfo(userData.user.id)
                 .then(() => {
-                  if (hasSyncKms && hasCiscoucCES && userData.user.invitations) {
+                  if (hasSyncKms && userData.user.invitations) {
                     userData.user.invitations.cc = true;
                   }
                 });
@@ -257,6 +261,10 @@ export class UserOverviewService {
     }
   }
 
+  public userHasActivatedAccountInCommonIdentity(user: IUser): boolean {
+    return !_.includes(user.accountStatus, 'pending');
+  }
+
   public getAccountActiveStatus(user: IUser): boolean {
     // is there a sign-up date for the user?
     if (!_.isEmpty(user.entitlements)) {
@@ -301,13 +309,6 @@ export class UserOverviewService {
       return language_code;
     }
     return _.toLower(userLangSplit[0]) + '_' + _.toUpper(userLangSplit[1]);
-  }
-
-  private get DEFAULT_LANG() {
-    return {
-      label: this.$translate.instant('languages.englishAmerican'),
-      value: 'en_US',
-    };
   }
 
   public updateUserPreferredLanguage(userId: string, languageCode: string) {

@@ -135,25 +135,25 @@
       prod: 'https://api.ciscospark.com/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.devus1.ciscoccservice.com/config/v1',
+      dev: 'https://config.appstaging.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
     SunlightURServiceUrl: {
-      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      dev: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.devus1.ciscoccservice.com',
+      dev: 'https://bubble.appstaging.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com',
     },
     SunlightReportServiceUrl: {
-      dev: 'https://reporting.devus1.ciscoccservice.com/reporting/v1',
+      dev: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
@@ -176,11 +176,23 @@
       integration: 'https://ccaportalbts.webex.com/pcs/api/v2/',
       prod: 'https://ccaportal.webex.com/pcs/api/v2/',
     },
-    GssUrl: {
+    DiagnosticUrl: {
+      dev: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      cfe: 'https://maestroqa.qa.webex.com/pcsmats/pcs/api/',
+      integration: 'https://sapmatsbts.webex.com/pcs/api/',
+      prod: 'https://sapmats.webex.com/pcs/api/',
+    },
+    GssUrlWebexCHP: {
       dev: 'https://statusbts.webex.com/status',
       cfe: 'https://statusbts.webex.com/status',
       integration: 'https://statusbts.webex.com/status',
       prod: 'https://healthstatus.webex.com/status',
+    },
+    GssUrlAWSCHP: {
+      dev: 'https://service-dev-collaborationhelp.cisco.com/status',
+      cfe: 'https://service-dev-collaborationhelp.cisco.com/status',
+      integration: 'https://service-stage-collaborationhelp.cisco.com/status',
+      prod: 'https://service-collaborationhelp.cisco.com/status',
     },
     UccUrl: {
       dev: 'https://ucc-intb.ciscospark.com/ucm-service/api/v1',
@@ -236,6 +248,18 @@
       integration: 'https://lyra-intb.ciscospark.com/lyra/api/v1',
       prod: 'https://lyra-a.wbx2.com/lyra/api/v1',
     },
+    XapiServiceUrl: {
+      dev: 'https://xapi-intb.wbx2.com/xapi/api/v1',
+      cfe: 'https://xapi-loada.ciscospark.com/xapi/api/v1',
+      integration: 'https://xapi-intb.wbx2.com/xapi/api/v1',
+      prod: 'https://xapi-a.wbx2.com/xapi/api/v1',
+    },
+    ProximityServiceUrl: {
+      dev: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      cfe: 'https://proximity-loada.ciscospark.com/proximity/api/v1/ping',
+      integration: 'https://proximity-intb.ciscospark.com/proximity/api/v1',
+      prod: 'https://proximity-a.wbx2.com/proximity/api/v1',
+    },
     QlikServiceUrl: {
       dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
@@ -254,11 +278,41 @@
       integration: 'https://int-expert-assistant.appstaging.ciscoccservice.com/expert-assistant/v1/',
       prod: 'https://expert-assistant.produs1.ciscoccservice.com/expert-assistant/v1/',
     },
+    MediaManagerUrl: {
+      dev: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      cfe: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      integration: 'https://int-media-manager.appstaging.ciscoccservice.com/media-manager/v1/',
+      prod: 'https://media-manager.produs1.ciscoccservice.com/media-manager/v1/',
+    },
     AdminBatchServiceUrl: {
-      dev: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      cfe: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      integration: 'https://admin-batch-service.intb1.ciscospark.com/api/v1',
-      prod: 'https://admin-batch-service.wbx2.com/api/v1',
+      dev: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
+      cfe: 'https://admin-batch-service-loada.ciscospark.com/api/v1',
+      integration: 'https://admin-batch-service-intb.ciscospark.com/api/v1',
+      prod: 'https://admin-batch-service-a.wbx2.com/api/v1',
+    },
+    SpeechServiceUrl: {
+      dev: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
+      cfe: 'https://speech-services-manager-loada1.ciscospark.com/speech-services-manager/api/v1/',
+      integration: 'https://speech-services-manager.intb1.ciscospark.com/speech-services-manager/api/v1/',
+      prod: 'https://speech-services-manager-a.wbx2.com/speech-services-manager/api/v1/',
+    },
+    HcsLicenseServiceUrl: {
+      dev: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://licensing.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://licensing.ucmgmt.cisco.com/api/v1/', //TBD
+    },
+    HcsUpgradeServiceUrl: {
+      dev: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://upgrade.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://upgrade.ucmgmt.cisco.com/api/v1/', //TBD
+    },
+    HcsControllerServiceUrl: {
+      dev: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      cfe: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      integration: 'https://controller.int-ucmgmt.cisco.com/api/v1/',
+      prod: 'https://controller.ucmgmt.cisco.com/api/v1/', //TBD
     },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
@@ -274,9 +328,31 @@
     MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-    SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-    SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
-    EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/apiai/escalation.json',
+    SSOTestUrl: {
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+    },
+    SSOSetupUrl: {
+      dev: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
+      integration: 'https://idbroker.webex.com/idb/idbconfig/',
+      prod: 'https://idbroker.webex.com/idb/idbconfig/',
+    },
+    EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/escalation.json',
+    OAuth2Url: {
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/',
+    },
+    Saml2Url: {
+      dev: 'https://idbroker.webex.com/idb/saml2/',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/',
+      integration: 'https://idbroker.webex.com/idb/saml2/',
+      prod: 'https://idbroker.webex.com/idb/saml2/',
+    },
   };
 
   module.exports = angular
@@ -287,6 +363,7 @@
     .factory('UrlConfig', UrlConfig)
     .name;
 
+  /* @ngInject */
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {
       service['get' + key] = function (specifyEnv) {

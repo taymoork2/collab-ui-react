@@ -1,7 +1,7 @@
 'use strict';
 
 describe('UrlConfigSpec', function () {
-  beforeEach(angular.mock.module('core.urlconfig'));
+  beforeEach(angular.mock.module(require('./urlConfig')));
 
   var UrlConfig, $location;
 
@@ -167,7 +167,7 @@ describe('UrlConfigSpec', function () {
   it('should return correct sso setup url', function () {
     whenCalling('getSSOSetupUrl').expectUrlToBe({
       dev: 'https://idbroker.webex.com/idb/idbconfig/',
-      cfe: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
       prod: 'https://idbroker.webex.com/idb/idbconfig/',
     });
@@ -176,9 +176,27 @@ describe('UrlConfigSpec', function () {
   it('should return correct sso test url', function () {
     whenCalling('getSSOTestUrl').expectUrlToBe({
       dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-      cfe: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
       prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+    });
+  });
+
+  it('should return correct oauth2 url', function () {
+    whenCalling('getOAuth2Url').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/',
+    });
+  });
+
+  it('should return correct saml2 url', function () {
+    whenCalling('getSaml2Url').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/saml2/',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/',
+      integration: 'https://idbroker.webex.com/idb/saml2/',
+      prod: 'https://idbroker.webex.com/idb/saml2/',
     });
   });
 
@@ -364,7 +382,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct Sunlight Config Service url', function () {
     whenCalling('getSunlightConfigServiceUrl').expectUrlToBe({
-      dev: 'https://config.devus1.ciscoccservice.com/config/v1',
+      dev: 'https://config.appstaging.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
@@ -373,7 +391,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct Sunlight UR Service url', function () {
     whenCalling('getSunlightURServiceUrl').expectUrlToBe({
-      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      dev: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
@@ -400,7 +418,7 @@ describe('UrlConfigSpec', function () {
 
   it('should return correct sunlight chat bubble url', function () {
     whenCalling('getSunlightBubbleUrl').expectUrlToBe({
-      dev: 'https://bubble.devus1.ciscoccservice.com',
+      dev: 'https://bubble.appstaging.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com',

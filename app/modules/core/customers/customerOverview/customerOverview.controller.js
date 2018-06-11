@@ -3,12 +3,15 @@ require('./_customer-overview.scss');
 (function () {
   'use strict';
 
+  var CS_UnSigned = require('modules/huron/pstn').ContractStatus.UnSigned;
+  var CS_UnKnown = require('modules/huron/pstn').ContractStatus.UnKnown;
+
   angular
     .module('Core')
     .controller('CustomerOverviewCtrl', CustomerOverviewCtrl);
 
   /* @ngInject */
-  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, TrialPstnService, TrialService, Userservice) {
+  function CustomerOverviewCtrl($modal, $q, $state, $stateParams, $translate, $window, AccountOrgService, Analytics, Authinfo, BrandService, Config, FeatureToggleService, identityCustomer, Log, Notification, Orgservice, PartnerService, PstnService, PstnModel, TrialPstnService, TrialService, Userservice) {
     var vm = this;
     vm.currentCustomer = $stateParams.currentCustomer;
     vm.customerName = vm.currentCustomer.customerName;
@@ -27,6 +30,7 @@ require('./_customer-overview.scss');
     vm.hasSubviews = hasSubviews;
     vm.hasSubview = hasSubview;
     vm.goToSubview = goToSubview;
+    vm.showContractIncompleteFn = showContractIncompleteFn;
 
     vm.uuid = '';
     vm.logoOverride = false;
@@ -42,7 +46,10 @@ require('./_customer-overview.scss');
     vm.isProPackEnabled = false;
     vm.isMediaFusionEnabled = false;
     vm.isNewPatchFlow = false;
+
+    //Feature Toggle -- HI1635
     vm.showContractIncomplete = false;
+    vm.isHI1635Enabled = false;
 
     vm.partnerOrgId = Authinfo.getOrgId();
     vm.isPartnerAdmin = Authinfo.isPartnerAdmin();
@@ -68,6 +75,7 @@ require('./_customer-overview.scss');
       FeatureToggleService.atlasCareInboundTrialsGetStatus(),
       FeatureToggleService.atlasITProPackGetStatus(),
       FeatureToggleService.atlasJira2126UseAltEndpointGetStatus(),
+      FeatureToggleService.hI1635GetStatus(),
     ]).then(function (results) {
       if (_.find(vm.currentCustomer.offers, {
         id: Config.offerTypes.roomSystems,
@@ -76,11 +84,15 @@ require('./_customer-overview.scss');
       }
       var isCareEnabled = results[0];
       var isAdvanceCareEnabled = results[1];
+      setOffers(isCareEnabled, isAdvanceCareEnabled);
       vm.isProPackEnabled = results[2];
       vm.isNewPatchFlow = results[3];
-      setOffers(isCareEnabled, isAdvanceCareEnabled);
+      vm.isHI1635Enabled = results[4];
     });
 
+    function showContractIncompleteFn() {
+      return vm.isHI1635Enabled && vm.showContractIncomplete;
+    }
 
     function setOffers(isCareEnabled, isAdvanceCareEnabled) {
       var licAndOffers = PartnerService.parseLicensesAndOffers(vm.currentCustomer, {
@@ -156,13 +168,18 @@ require('./_customer-overview.scss');
 
     function initSignedContractStatus() {
       if (vm.currentCustomer.purchased) {
-        PstnService.getCustomerV2FetchFromCarrier(vm.currentCustomer.customerOrgId)
+        PstnService.getCustomerV2(vm.currentCustomer.customerOrgId, { deep: true })
           .then(function (response) {
-            var isContractSigned = _.get(response, 'isContractSigned');
-            var isTerminusTrialAccount = _.get(response, 'trial');
-            if (isContractSigned && !isTerminusTrialAccount) {
-              vm.showContractIncomplete = !isContractSigned;
+            var isTrialAccount = _.get(response, 'trial');
+            var contractStatus = _.get(response, 'contractStatus');
+            PstnModel.setContractStatus(contractStatus);
+            if (contractStatus === CS_UnSigned && !isTrialAccount) {
+              vm.showContractIncomplete = true;
             }
+          })
+          .catch(function () {
+            vm.showContractIncomplete = false; //Don't show if unknown
+            PstnModel.setContractStatus(CS_UnKnown);
           });
       }
     }
@@ -419,7 +436,7 @@ require('./_customer-overview.scss');
     function goToSubview(service, options) {
       if (service.hasWebex || service.isMeeting) {
         var isTrial = _.get(options, 'isTrial', false);
-        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList) : service.sub;
+        var services = isTrial ? PartnerService.getTrialMeetingServices(vm.currentCustomer.licenseList, vm.currentCustomer.customerOrgId) : service.sub;
         $state.go('customer-overview.meetingDetail', {
           meetingLicenses: services,
         });
@@ -482,7 +499,7 @@ require('./_customer-overview.scss');
       }, vm.customerOrgId, params);
     }
 
-    //if vm.isMediaFusionEnabled then we ask the user to deactivate hybrid media service and not allowing deletion.
+    //if vm.isMediaFusionEnabled then we ask the user to deactivate Webex Video Mesh and not allowing deletion.
     function deleteTestOrg() {
       if (vm.isTest) {
         if (vm.isMediaFusionEnabled) {

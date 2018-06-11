@@ -1,13 +1,20 @@
-<div class="csv-simple-export" ng-click="$ctrl.beginExport()" aria-label="{{$ctrl.activeTooltip}}"
+<div
+  class="csv-simple-export"
+  ng-click="$ctrl.onClick()"
   tooltip="{{$ctrl.activeTooltip}}"
   tooltip-placement="{{$ctrl.tooltipPlacement}}"
   tooltip-animation="false"
-  tooltip-append-to-body="true">
+  tooltip-trigger="{{$ctrl.tooltipPlacement === 'none' ? '' : 'focus mouseenter'}}"
+  aria-label="{{$ctrl.activeTooltip}}"
+  tabindex="0">
   <span ng-if="!$ctrl.exporting">
-    <i class="icon icon-content-share icon-lg"></i>
+    <i class="icon {{$ctrl.icon}} icon-lg"></i>
   </span>
   <span ng-if="$ctrl.exporting">
-    <i class="icon icon-spinner icon-lg"></i>
-    <span class="download-element" ng-csv="$ctrl.doExport()" filename="{{$ctrl.filename}}"></span>
+    <i class="icon icon-spinner icon-lg download-spinner"></i>
+  </span>
+  <span ng-if="$ctrl.anchorText">
+    {{$ctrl.anchorText}}
   </span>
 </div>
+<div id="{{$ctrl.stubId}}" ng-hide="true" ng-csv="$ctrl.exportedData" filename="{{$ctrl.filename}}"></div>

@@ -15,6 +15,7 @@ describe('Controller: ProvisioningController', function () {
   function initDependencySpies() {
     spyOn(this.ProvisioningService, 'getOrders').and.callFake(function (param) { return orderParams[param]; });
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
   }
 
   function init() {
@@ -28,6 +29,7 @@ describe('Controller: ProvisioningController', function () {
       '$timeout',
       '$translate',
       'Notification',
+      'FeatureToggleService',
       'ProvisioningService');
     initDependencySpies.apply(this);
     initController.apply(this);
@@ -40,9 +42,27 @@ describe('Controller: ProvisioningController', function () {
   beforeEach(init);
 
   describe('init controller', () => {
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(false));
+    });
     it('should populate completed and pending orders', function () {
       expect(this.controller.completedOrders.length).toBe(1);
+      expect(this.controller.gridOptions.pending.columnDefs).toContain({ field: 'lastModified', displayName: 'provisioningConsole.lastModified', type: 'date' });
+      expect(this.controller.gridOptions.pending.columnDefs).not.toContain({ field : 'queueReceived', displayName: 'provisioningConsole.queueReceived' });
       expect(this.controller.pendingOrders.length).toBe(3);
+    });
+  });
+  describe('init new controller', () => {
+    beforeEach(function() {
+      this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));
+      initController.apply(this);
+    });
+    it('should contain new fields like assignedTo, queueReceived, queueCompleted, completedBy', function() {
+      expect(this.controller.gridOptions.completed.columnDefs).toContain({ field: 'queueReceived', displayName: 'provisioningConsole.queueReceived' });
+      expect(this.controller.gridOptions.completed.columnDefs).toContain({ field:  'queueCompleted', displayName: 'provisioningConsole.queueCompleted'  });
+      expect(this.controller.gridOptions.completed.columnDefs).toContain({ field:  'completedBy', displayName: 'provisioningConsole.completedBy' });
+      expect(this.controller.gridOptions.pending.columnDefs).toContain({ field:  'assignedTo', displayName: 'provisioningConsole.assignedTo' });
+      expect(this.controller.gridOptions.pending.columnDefs).toContain({ field:  'queueReceived', displayName: 'provisioningConsole.queueReceived' });
     });
   });
   describe('failure handling', () => {

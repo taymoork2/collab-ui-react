@@ -19,8 +19,8 @@ class DeleteLocationCtrl implements ng.IComponentController {
     this.LocationsService.deleteLocation(this.uuid).then(() => {
       this.close();
     })
-    .catch(error => this.Notification.errorResponse(error, 'locations.deleteFailed'))
-    .finally(() => this.saveInProcess = false);
+      .catch(error => this.Notification.errorResponse(error, 'locations.deleteFailed'))
+      .finally(() => this.saveInProcess = false);
   }
 
   public canDelete(): boolean {

@@ -1,0 +1,223 @@
+import { AutoAssignTemplateModel } from 'modules/core/users/shared/auto-assign-template';
+import { IOnboardScopeForUsersAdd, OnboardCtrlBoundUIStates } from 'modules/core/users/shared/onboard/onboard.store';
+import { KeyCodes } from 'modules/core/accessibility';
+
+// notes:
+// - this is a port of 'onboardUsers.directive.js + 'onboardUsers.tpl.html' + 'onboard.controller.js'
+// - minimal attempt has been made to clean up the logic or variable names:
+//   - added typescript return types for functions
+//   - added types to satisfy typescript compiler
+//   - added 'this.' prefix for instance-methods
+// TODO (mipark2):
+// - rm use of 'OnboardStore'
+// - add output binding(s)
+export class CrOnboardUsersController implements ng.IComponentController {
+
+  public isDefaultAutoAssignTemplateActivated: boolean;
+  public isDirSyncEnabled: boolean;
+  public model: any;
+  public strEmailAddress: string;
+  public strFirstName: string;
+  public strLastName: string;
+  public strNameAndEmailAdress: string;
+  public tokenfieldid: string;
+  public tokenoptions: any;
+  public tokenmethods: any;
+  public tokenplaceholder: string;
+  public userInputOptions: any;
+  private scopeData: IOnboardScopeForUsersAdd;
+
+  // TODO: port 'user.service.js' to typescript, and export 'NAME_DELIMITER' as a constant
+  private readonly NAME_DELIMITER = ' \u000B';
+
+  /* @ngInject */
+  constructor(
+    private $timeout: ng.ITimeoutService,
+    private $translate: ng.translate.ITranslateService,
+    private AutoAssignTemplateModel: AutoAssignTemplateModel,
+    private DirSyncService,
+    private OnboardService,
+    private OnboardStore,
+    private UserListService,
+  ) {
+    // TODO: rm use of 'OnboardStore' once shared references in '$scope' in 'OnboardCtrl' are removed
+    this.scopeData = this.OnboardStore[OnboardCtrlBoundUIStates.USERS_ADD_MANUAL];
+    this.isDefaultAutoAssignTemplateActivated = this.AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated;
+    this.isDirSyncEnabled = this.DirSyncService.isDirSyncEnabled();
+    this.model = this.scopeData.model;
+    this.strFirstName = this.$translate.instant('usersPage.firstNamePlaceHolder');
+    this.strLastName = this.$translate.instant('usersPage.lastNamePlaceHolder');
+    this.strEmailAddress = this.$translate.instant('usersPage.emailAddressPlaceHolder');
+    this.strNameAndEmailAdress = this.$translate.instant('usersPage.nameAndEmailAddress');
+    this.tokenfieldid = 'usersfield';
+    let isDuplicate;
+    this.tokenmethods = {
+      createtoken: (e) => {
+        //Removing anything in brackets from user data
+        const value = _.replace(e.attrs.value, /\s*\([^)]*\)\s*/g, ' ');
+        e.attrs.value = value;
+        isDuplicate = false;
+        if (OnboardService.isEmailAlreadyPresent(e.attrs.value)) {
+          isDuplicate = true;
+        }
+      },
+      createdtoken: (e) => {
+        if (!this.OnboardService.validateEmail(e.attrs.value) || isDuplicate) {
+          this.setInvalidToken(e);
+        } else {
+          this.validateProposedUser(e);
+        }
+        this.sortTokens();
+        this.checkPlaceholder();
+      },
+      edittoken: (e) => {
+        if (angular.element(e.relatedTarget).hasClass('invalid')) {
+          this.scopeData.invalidcount--;
+        }
+      },
+      removedtoken: () => {
+        // Reset the token list and validate all tokens
+        this.$timeout(() => {
+          this.scopeData.invalidcount = 0;
+          this.scopeData.invalidDirSyncUsersCount = 0;
+          (angular.element('#usersfield') as any).tokenfield('setTokens', this.model.userList);
+        }).then(() => {
+          this.sortTokens();
+          this.checkPlaceholder();
+        });
+      },
+    };
+    this.tokenoptions = {
+      delimiter: [',', ','],
+      createTokensOnBlur: true,
+    };
+    this.tokenplaceholder = this.$translate.instant('usersPage.userInput');
+    this.userInputOptions = [{
+      label: this.strEmailAddress,
+      value: 0,
+      name: 'radioOption',
+      id: 'radioEmail',
+    }, {
+      label: this.strNameAndEmailAdress,
+      value: 1,
+      name: 'radioOption',
+      id: 'radioNamesAndEmail',
+    }];
+  }
+
+  public hasErrors(): boolean {
+    return this.OnboardService.hasErrors(this.scopeData);
+  }
+
+  public validateTokens(): ng.IPromise<void> {
+    return this.OnboardService.validateTokens(this.scopeData);
+  }
+
+  public clearPanel(): void {
+    this.resetUsersfield();
+  }
+
+  private resetUsersfield(): void {
+    return this.OnboardService.resetUsersfield(this.scopeData);
+  }
+
+  private checkPlaceholder(): void {
+    return this.OnboardService.checkPlaceholder();
+  }
+
+  public onEnterKey(keyEvent: { which: KeyCodes }): void {
+    if (keyEvent.which === KeyCodes.ENTER) {
+      this.addToUsersfield();
+    }
+  }
+
+  public addToUsersfield(): void {
+    if (this.model.userForm.$valid && this.model.userInfoValid) {
+      const userInfo = this.model.firstName + this.NAME_DELIMITER + this.model.lastName + ' ' + this.model.emailAddress;
+      (angular.element('#usersfield') as any).tokenfield('createToken', userInfo);
+      this.clearNameAndEmailFields();
+      angular.element('#firstName').focus();
+    }
+  }
+
+  private clearNameAndEmailFields(): void {
+    this.model.firstName = '';
+    this.model.lastName = '';
+    this.model.emailAddress = '';
+    this.model.userInfoValid = false;
+  }
+
+  public validateEmailField(): void {
+    if (this.model.emailAddress) {
+      this.model.userInfoValid = this.OnboardService.validateEmail(this.model.emailAddress);
+    } else {
+      this.model.userInfoValid = false;
+    }
+  }
+
+  // notes:
+  // - implementation (and comments) migrated from 'onboard.controller.js'
+  //
+  // sort the token list so that error tokens appear first in the list
+  public sortTokens() {
+    // this is just a sh*tty way of sorting this.  The only info we have
+    // if a token has an error is if it has an 'invalid' class on the element.
+    // the model.userList SHOULD contain this info, but it doesn't.  So,
+    // in order to sort all of the invalid tokens to the front of the list,
+    // we need to do this in the DOM directly. Thankfully, tokenfield doesn't
+    // break when we do this.
+    const start = $(angular.element('.tokenfield input[type=text]')[0]);
+    if (start.length > 0) {
+      const tokens = start.siblings('.token');
+      (tokens as any).sort(function (a, b) {
+        const ainvalid = $(a).hasClass('invalid');
+        const binvalid = $(b).hasClass('invalid');
+        if (ainvalid && !binvalid) {
+          return -1;
+        } else if (!ainvalid && binvalid) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      tokens.detach().insertAfter(start);
+    }
+  }
+
+  public setInvalidToken(token): void {
+    angular.element(token.relatedTarget).addClass('invalid');
+    this.scopeData.invalidcount++;
+  }
+
+  public updateForInvalidUser(e): void {
+    this.setInvalidToken(e);
+    this.sortTokens();
+  }
+
+  public validateProposedUser(e): void {
+    if (!this.isDirSyncEnabled && !this.isDefaultAutoAssignTemplateActivated) {
+      return;
+    }
+    this.UserListService.queryUser(e.attrs.value)
+      .then((response) => {
+        if (this.isDefaultAutoAssignTemplateActivated && response.userName === e.attrs.value) {
+          this.updateForInvalidUser(e);
+          this.scopeData.invalidNewUserCount++;
+        }
+      })
+      .catch(() => {
+        if (this.isDirSyncEnabled) {
+          this.updateForInvalidUser(e);
+          this.scopeData.invalidDirSyncUsersCount++;
+        }
+      });
+  }
+
+}
+
+export class CrOnboardUsersComponent implements ng.IComponentOptions {
+  public controller = CrOnboardUsersController;
+  public template = require('./cr-onboard-users.html');
+  public bindings = {};
+}

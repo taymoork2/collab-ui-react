@@ -1,2 +1,3 @@
-<cs-select aa-key="$index" ng-model="aaRouteUser.userSelected" options="aaRouteUser.users" labelfield="description" valuefield="id" placeholder="aaRouteUser.selectPlaceholder" filter="true" icon="icon-chevron-down" input-placeholder="aaRouteUser.inputPlaceHolder" filter="true" refresh-data-fn="aaRouteUser.getUsers(filter)" on-change-fn="aaRouteUser.saveUiModel()">
+<!-- The wait-time attribute of cs-select is for the time to wait in milliseconds before refreshing data -->
+<cs-select aa-key="$index" ng-model="aaRouteUser.userSelected" options="aaRouteUser.users" labelfield="description" valuefield="id" placeholder="aaRouteUser.selectPlaceholder" filter="true" icon="icon-chevron-down" input-placeholder="aaRouteUser.inputPlaceHolder" filter="true" refresh-data-fn="aaRouteUser.getUsers(filter)" wait-time = "1" on-change-fn="aaRouteUser.saveUiModel()">
 </cs-select>

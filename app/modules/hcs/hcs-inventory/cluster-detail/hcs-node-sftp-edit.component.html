@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button"
+  class="close"
+  ng-click="$ctrl.cancel()"
+  aria-label="{{:: 'common.close' | translate}}" />
+  <h3 class="modal-title" translate="hcs.clusterDetail.editNodeSftpModal.title"></h3>
+</div>
+<div class="modal-body">
+  <label class="sub-section__label" translate="hcs.clusterDetail.editNodeSftpModal.selectLabel" translate-values="{ nodeName: $ctrl.node.hostname }"></label>
+  <div class="display-flex">
+    <div class="medium-6">
+      <cs-select
+      name="NodeSftpSelect"
+      ng-model="$ctrl.sftpServerSelected"
+      options="$ctrl.sftpServers"
+      on-change-fn="$ctrl.onSftpServerChange()"
+      placeholder="$ctrl.sftpSelectPlaceholder"
+      is-warn="{{$ctrl.disableSftpSelect}}"
+      warn-msg="{{::'hcs.clusterDetail.settings.sftpLocation.sftpWarnMsg' | translate}}"
+      is-disabled="$ctrl.disableSftpSelect">
+      </cs-select>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" translate="common.cancel" ng-click="$ctrl.cancel()"></button>
+  <button class="btn btn--primary" translate="common.save" ng-click="$ctrl.save()"></button>
+</div>

@@ -1,6 +1,12 @@
+import * as tabConfigModuleName from 'modules/core/config/tabConfig';
+import testModuleName from './config';
+
 describe('Config', function () {
   beforeEach(function () {
-    this.initModules(require('./config').default, 'core.tabconfig');
+    this.initModules(
+      testModuleName,
+      tabConfigModuleName, // for injected tabConfig in tests
+    );
     this.injectDependencies(
       '$location',
       '$q',
@@ -12,10 +18,15 @@ describe('Config', function () {
     this.blaHost = 'wbx2.com/bla';
     this.devHost = 'localhost';
     this.cfeHost = 'cfe-admin.ciscospark.com';
+    this.cfeWebexHost = 'cfe-admin.webex.com';
     this.intHost = 'int-admin.ciscospark.com';
+    this.intWebexHost = 'int-admin.webex.com';
     this.prodHost = 'admin.ciscospark.com';
+    this.prodWebexHost = 'admin.webex.com';
 
     spyOn(this.$location, 'host').and.returnValue(this.blaHost);
+    spyOn(this.$location, 'port');
+    spyOn(this.$location, 'protocol');
     // Config must be injected after the $location spy is set for returnValue to take effect
     this.injectDependencies('Config');
   });
@@ -31,7 +42,6 @@ describe('Config', function () {
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('partnerreports');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialAdd');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('trialEdit');
-    expect(this.Config.roleStates.PARTNER_SALES_ADMIN).toContain('pstnSetup');
     expect(this.Config.roleStates.PARTNER_SALES_ADMIN).not.toContain('settings');
   });
 
@@ -78,14 +88,54 @@ describe('Config', function () {
     expect(this.Config.isDevHostName(this.devHost)).toBe(true);
     expect(this.Config.isDevHostName('server')).toBe(true);
     expect(this.Config.isDevHostName('dev-admin.ciscospark.com')).toBe(true);
+    expect(this.Config.isDevHostName('dev-admin.webex.com')).toBe(true);
+  });
 
-    expect(this.Config.canUseAbsUrlForDevLogin('http://127.0.0.1:8000')).toBe(true);
-    expect(this.Config.canUseAbsUrlForDevLogin('https://127.0.0.1:8000')).toBe(false);
-    expect(this.Config.canUseAbsUrlForDevLogin('https://127.0.0.1')).toBe(false);
 
-    expect(this.Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com:8000')).toBe(true);
-    expect(this.Config.canUseAbsUrlForDevLogin('https://dev-admin.ciscospark.com:8000')).toBe(false);
-    expect(this.Config.canUseAbsUrlForDevLogin('http://dev-admin.ciscospark.com')).toBe(false);
+  it('should get absolute url for dev hosts or fallback to default for invalid', function () {
+    const setLocation = (location: {
+      protocol?: string,
+      host?: string,
+      port?: string,
+    } = {}) => {
+      const {
+        protocol = 'http',
+        host = '127.0.0.1',
+        port = '8000',
+      } = location;
+      this.$location.protocol.and.returnValue(protocol);
+      this.$location.host.and.returnValue(host);
+      this.$location.port.and.returnValue(port);
+    };
+    setLocation();
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ host: 'unknown-domain.com' }); // invalid host
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ port: '' }); // invalid port
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ protocol: 'https' }); // invalid protocol
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ host: 'dev-admin.ciscospark.com' }); // valid host
+    expect(this.Config.getAbsUrlForDev()).toBe('http://dev-admin.ciscospark.com:8000/');
+
+    setLocation({ host: 'dev-admin.ciscospark.com', port: '' }); // invalid port
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ protocol: 'https', host: 'dev-admin.ciscospark.com' }); // invalid protocol
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ host: 'dev-admin.webex.com' }); // valid host
+    expect(this.Config.getAbsUrlForDev()).toBe('http://dev-admin.webex.com:8000/');
+
+    setLocation({ host: 'dev-admin.webex.com', port: '' }); // invalid port
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
+
+    setLocation({ protocol: 'https', host: 'dev-admin.webex.com' }); // invalid protocol
+    expect(this.Config.getAbsUrlForDev()).toBe('http://127.0.0.1:8000/');
   });
 
   it('should detect load test environment', function () {
@@ -94,6 +144,9 @@ describe('Config', function () {
 
     this.$location.host.and.returnValue(this.prodHost);
     expect(this.Config.isCfe()).toBe(false);
+
+    this.$location.host.and.returnValue(this.cfeWebexHost);
+    expect(this.Config.isCfe()).toBe(true);
   });
 
   it('should detect integration environment', function () {
@@ -102,6 +155,9 @@ describe('Config', function () {
 
     this.$location.host.and.returnValue(this.devHost);
     expect(this.Config.isIntegration()).toBe(false);
+
+    this.$location.host.and.returnValue(this.intWebexHost);
+    expect(this.Config.isIntegration()).toBe(true);
   });
 
   it('should detect prod environment', function () {
@@ -109,6 +165,9 @@ describe('Config', function () {
     expect(this.Config.isProd()).toBe(false);
 
     this.$location.host.and.returnValue(this.prodHost);
+    expect(this.Config.isProd()).toBe(true);
+
+    this.$location.host.and.returnValue(this.prodWebexHost);
     expect(this.Config.isProd()).toBe(true);
   });
 
@@ -119,10 +178,19 @@ describe('Config', function () {
     this.$location.host.and.returnValue(this.cfeHost);
     expect(this.Config.getEnv()).toBe('cfe');
 
+    this.$location.host.and.returnValue(this.cfeWebexHost);
+    expect(this.Config.getEnv()).toBe('cfe');
+
     this.$location.host.and.returnValue(this.intHost);
     expect(this.Config.getEnv()).toBe('integration');
 
+    this.$location.host.and.returnValue(this.intWebexHost);
+    expect(this.Config.getEnv()).toBe('integration');
+
     this.$location.host.and.returnValue(this.prodHost);
+    expect(this.Config.getEnv()).toBe('prod');
+
+    this.$location.host.and.returnValue(this.prodWebexHost);
     expect(this.Config.getEnv()).toBe('prod');
 
     this.$location.host.and.returnValue('random-host-is-prod');

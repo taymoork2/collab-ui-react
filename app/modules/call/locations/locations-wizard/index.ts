@@ -10,7 +10,7 @@ import pstnAddressServiceModule from 'modules/huron/pstn/shared/pstn-address';
 
 export default angular.module('call.locations.wizard', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
+  require('@collabui/collab-ui-ng').default,
   require('modules/core/config/config').default,
   callLocationsModule,
   callSettingsModule,
@@ -19,5 +19,5 @@ export default angular.module('call.locations.wizard', [
   callEmergencyServicesModule,
   pstnAddressServiceModule,
 ])
-.component('ucCallLocationsWizard', new LocationsWizardComponent())
-.name;
+  .component('ucCallLocationsWizard', new LocationsWizardComponent())
+  .name;

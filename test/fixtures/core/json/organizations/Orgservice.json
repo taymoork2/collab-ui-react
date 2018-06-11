@@ -136,6 +136,9 @@
         "capacity": 15,
         "usage": 0
       }]
+    }, {
+      "subscriptionId": "svcid-integ-sunnyway-1b",
+      "licenses": []
     }],
     "singleSub": [{
       "subscriptionId": "srvcid-integ-uitest-1a",
@@ -232,7 +235,7 @@
       "partnerEmail": "admin@fancy-lawyer.com"
     },
     "isCustomerPartner": false
-  }], 
+  }],
       "careK1TrialSub": [
   {
     "label": "Care Free",
@@ -302,7 +305,7 @@
     },
     "isCustomerPartner": false
   }
-], 
+],
 "careFakeTrialSub": [
   {
     "label": "Care Free",

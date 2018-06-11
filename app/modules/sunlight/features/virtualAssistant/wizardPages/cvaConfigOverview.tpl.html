@@ -5,52 +5,37 @@
     </span>
   </div>
   <h6 class="ct-title-desc">
-		{{$ctrl.getText('configOverview.desc')}}
+    {{$ctrl.getText('configOverview.desc')}}
   </h6>
-	<div class="cs-card-container ct-sa-content">
+  <div class="cs-card-container ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="va-box cva-config-overview-box va-card">
-				<h4>{{$ctrl.getText('configOverview.boxTitle')}}</h4>
-				<p class="h6">{{$ctrl.getText('configOverview.boxDesc')}}</p>
-				<form>
-					<div class="radio-group">
-						<input
-							class="radio-row"
-							cs-input
-							type="radio"
-							id="radio-one"
-							name="radio"
-							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
-							ng-value="false"
-							cs-input-label="{{$ctrl.getText('configOverview.boxRadioOne')}}"
-						/>
-						<p class="radio-desc">
-							<span class="h5">{{$ctrl.getText('configOverview.boxRadioOneDesc1')}}</span>
-							<a href="https://dialogflow.com/docs/getting-started/basics" target="_blank">
-								{{$ctrl.getText('configOverview.boxRadioDialogflow')}}
-							</a>
-							<span class="h5">{{$ctrl.getText('configOverview.boxRadioOneDesc2')}}</span>
-							<a href="https://dialogflow.com/docs/getting-started/basics" target="_blank">
-								{{$ctrl.getText('configOverview.boxRadioDialogflowDoc')}}
-							</a>
-						</p>
-						<input
-							class="radio-row"
-							cs-input
-							type="radio"
-							id="radio-two"
-							name="radio"
-							ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
-							ng-value="true"
-							cs-input-label="{{$ctrl.getText('configOverview.boxRadioTwo')}}"
-						/>
-						<p class="radio-desc">
-							<span class="h5">
-								{{$ctrl.getText('configOverview.boxRadioTwoDesc')}}
-							</span>
-						</p>
-					</div>
-				</form>
-			</cs-card>
-		</cs-card-layout>
-	</div>
+        <h4>{{$ctrl.getText('configOverview.boxTitle')}}</h4>
+        <p class="h6">{{$ctrl.getText('configOverview.boxDesc')}}</p>
+        <form>
+          <div class="radio-group">
+            <input cs-input type="radio"
+              class="radio-row"
+              id="radio-one"
+              name="dialogflowRadio"
+              ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
+              ng-value="false"
+              cs-input-label="{{$ctrl.getText('configOverview.boxRadioOne')}}">
+            <p class="radio-desc">
+              <span class="h5" translate="careChatTpl.virtualAssistant.configOverview.boxRadioOneDesc"></span>
+            </p>
+            <input cs-input type="radio"
+              class="radio-row"
+              id="radio-two"
+              name="dialogflowRadio"
+              ng-model="$ctrl.template.configuration.pages.cvaConfigOverview.isDialogflowAgentConfigured"
+              ng-value="true"
+              cs-input-label="{{$ctrl.getText('configOverview.boxRadioTwo')}}">
+            <p class="radio-desc">
+              <span class="h5">{{$ctrl.getText('configOverview.boxRadioTwoDesc')}}</span>
+            </p>
+          </div>
+        </form>
+      </cs-card>
+    </cs-card-layout>
+  </div>

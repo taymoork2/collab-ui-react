@@ -21,6 +21,9 @@ export class TaskListFilterController implements ng.IComponentController {
     }, {
       type: TaskListFilterType.ACTIVE,
       label: this.$translate.instant('common.active'),
+    }, {
+      type: TaskListFilterType.ERROR,
+      label: this.$translate.instant('common.errors'),
     }];
   }
 

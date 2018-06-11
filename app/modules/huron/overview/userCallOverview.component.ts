@@ -4,25 +4,29 @@ import { IFeature } from 'modules/core/components/featureList/featureList.compon
 import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
 import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
 import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
+import { Config } from 'modules/core/config/config';
 const SNR_CHANGE = 'SNR_CHANGE';
 const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
+const CLOUD_CALLING = 'cloud-calling';
 class UserCallOverviewCtrl implements ng.IComponentController {
-
-  private showPhoneButtonLayout: boolean = false;
 
   public currentUser;
   public actionList: IActionItem[];
   public features: IFeature[];
   public directoryNumbers: Line[];
+  public sipAddresses: {
+    address: string,
+    isPrimary: boolean,
+  }[];
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
+  public hasCallFeatures: boolean = false;
   public userServices: string[] = [];
   public snrEnabled: boolean = false;
   public wide: boolean = true;
   public primaryLineEnabled: boolean = false;
   public userPrimaryNumber: PrimaryNumber;
   public isPrimaryLineFeatureEnabled: boolean = true;
-  public buttonLayoutPromise: any;
 
   /* @ngInject */
   constructor(
@@ -30,7 +34,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
-    private FeatureToggleService,
+    private Config: Config,
     private LineService: LineService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
@@ -57,10 +61,8 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.buttonLayoutPromise = this.FeatureToggleService.supports(this.FeatureToggleService.features.huronPhoneButtonLayout)
-      .then(result => {
-        this.showPhoneButtonLayout = result;
-      });
+    this.mapSipAddresses();
+    this.setHasCallFeatures();
     this.initActions();
     this.initNumbers();
     this.initServices();
@@ -91,9 +93,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.checkPrimaryLineFeature(this.userPrimaryNumber);
     }).then(() => {
       this.userVmEnabled = this.HuronVoicemailService.isEnabledForUser(this.userServices);
-      this.buttonLayoutPromise.finally(() => {
-        this.initFeatures();
-      });
+      this.initFeatures();
     });
   }
 
@@ -116,27 +116,13 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     };
     this.features.push(snrService);
 
-    const service: IFeature = {
-      name: this.$translate.instant('telephonyPreview.speedDials'),
-      state: 'speedDials',
-      detail: undefined,
-      actionAvailable: true,
-    };
-    // it should be either "Speed Dials" or "Phone Button Layout" that is displayed.
-    if (!this.showPhoneButtonLayout) {
-      this.features.push(service);
-    }
-
     const phoneButtonLayoutService: IFeature = {
       name: this.$translate.instant('telephonyPreview.phoneButtonLayout'),
       state: 'phoneButtonLayout',
       detail: undefined,
       actionAvailable: true,
     };
-    // "Speed Dials" should be removed when "Phone Button Layout" goes GA
-    if (this.showPhoneButtonLayout) {
-      this.features.push(phoneButtonLayoutService);
-    }
+    this.features.push(phoneButtonLayoutService);
 
     const cosService: IFeature = {
       name: this.$translate.instant('serviceSetupModal.cos.title'),
@@ -165,6 +151,31 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.features.push(primaryLineService);
     }
   }
+
+  private mapSipAddresses(): void {
+    const sipAddresses = _.chain(this.currentUser.sipAddresses)
+      .filter({ type: CLOUD_CALLING })
+      .map(_address => {
+        return {
+          address: _.get<string>(_address, 'value', ''),
+          isPrimary: _.get<boolean>(_address, 'primary', false),
+        };
+     })
+     .orderBy(['isPrimary'], ['desc'])
+     .value();
+    this.sipAddresses = sipAddresses;
+  }
+
+  private setHasCallFeatures(): void {
+    const hasEntitlement = _.includes(this.currentUser.entitlements,  this.Config.entitlements.huron);
+
+    const hasLicense = _.some(this.currentUser.licenseID, licenseId => {
+      return _.startsWith(licenseId.toString(), this.Config.offerCodes.CO);
+    });
+
+    this.hasCallFeatures = hasEntitlement && hasLicense;
+  }
+
 
   public clickFeature(feature: IFeature) {
     const lineSelection = {

@@ -313,9 +313,10 @@ export class SparkLineReportService {
       dummy: false,
     };
 
+    const deferred: ng.IDeferred<IMetricsData[]> = this.$q.defer();
     const options: ITypeQuery = this.CommonReportService.getLineTypeOptions(filter, 'callMetrics', this.SIMPLE_COUNT);
     options.cache = false;
-    return this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): IMetricsData[] => {
+    this.CommonReportService.getCustomerAltReportByType(options, this.metricsDeferred).then((response: any): void => {
       const data: any[] = _.get(response, 'data.data', []);
       _.forEach(data, (dataItem: any): void => {
         const returnItem: IMetricsData = _.cloneDeep(defaultMetrics);
@@ -344,8 +345,12 @@ export class SparkLineReportService {
         responseArray.unshift(returnItem);
       });
 
-      return responseArray;
+      deferred.resolve(responseArray);
+    }).catch((error: any): void => {
+      deferred.reject(this.CommonReportService.returnErrorCheck(error, 'callMetrics.customerError', responseArray));
     });
+
+    return deferred.promise;
   }
 
   // Registered Devices Data

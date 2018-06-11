@@ -1,3 +1,4 @@
-<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.expandDevice(row.entity)"
-              cell-icon-css="icon-circle status-indicator {{row.entity.cssColorClass}}"
-              cell-value="row.entity.state.readableState"></cs-grid-cell>
+<div class="ui-grid-cell-contents" title="{{row.entity.state.readableState}}" ng-click="grid.appScope.selectRow(grid, row)">
+  <i class="icon icon-circle status-indicator" ng-class="row.entity.cssColorClass"></i>
+  <span ng-bind-html="row.entity.state.readableState | highlightFromSearch:grid.appScope.searchObject():'connectionstatus':true"></span>
+</div>

@@ -31,7 +31,11 @@
       <li class="detail-group-item" ng-repeat="info in filteredOrderDetails = ($ctrl.info | filter:$ctrl.filter)">
         <span class="feature-name">{{info.label}}</span>
         <span class="feature-status">{{info.status}}</span>
-        <span ng-if="info.tooltip" class="icon icon-info info-tooltip" tooltip="{{info.tooltip}}" tooltip-placement="top"></span>
+        <icon-tooltip
+          ng-if="info.tooltip"
+          tt-class="icon-info info-tooltip"
+          tt-tooltip-text="{{info.tooltip}}">
+        </icon-tooltip>
       </li>
     </ul>
   </cs-sp-section>

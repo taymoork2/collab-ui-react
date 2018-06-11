@@ -7,28 +7,8 @@
   <span class="h2" translate="hercules.nodesPage.noNodes"></span>
 </div>
 
-<div ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0 && $ctrl.nextUpgradeStartTime">
-  <cs-alert-banner type="info" closeable="true" ng-if="$ctrl.connectorTypesWithUpgrade.length > 0">
-    <span
-      translate="hercules.nodesPage.alertBannerNumber"
-      translate-value-count="{{$ctrl.connectorTypesWithUpgrade.length}}"
-      translate-interpolation="messageformat"
-    ></span>
-    <span
-      translate="hercules.nodesPage.alertBannerTime"
-      translate-values="{date: $ctrl.nextUpgradeStartTime, count: $ctrl.connectorTypesWithUpgrade.length}"
-      translate-interpolation="messageformat"
-    ></span>
-    <br>
-    <span
-      class="upgrade-link"
-      ng-repeat="service in $ctrl.connectorTypesWithUpgrade"
-      translate="hercules.nodesPage.alertBannerLink"
-      translate-value-service="{{::'hercules.shortConnectorNameFromConnectorType.'+service|translate}}"
-      translate-value-onclick="$ctrl.openUpgradeModal(service)"
-      translate-compile
-    ></span>
-  </cs-alert-banner>
+<div ng-if="!$ctrl.loading && $ctrl.data.nodes.length > 0">
+  <connector-upgrade-banner nodes="$ctrl.data.nodes" cluster="$ctrl.clusterCache" on-modal-closed="$ctrl.reloadDataCallback(options)"></connector-upgrade-banner>
   <table>
     <thead>
       <tr>
@@ -44,12 +24,13 @@
           <div class="pull-right">
             <span ng-if="node.platformVersion !== 'unknown'" class="node-serial" translate="hercules.nodesPage.platformVersion" translate-value-version="{{::node.platformVersion}}"></span>
             <span class="node-serial" translate="hercules.nodesPage.serial" translate-value-serial="{{::node.serial}}"></span>
-            <hybrid-services-nodes-page-actions cluster-id="$ctrl.data.id"
-                                                cluster-name="$ctrl.data.name"
-                                                node="node"
-                                                number-of-cluster-nodes="$ctrl.data.nodes.length"
-                                                target-type="$ctrl.data.targetType"
-                                                reload-data-callback="$ctrl.reloadDataCallback(options)">
+            <hybrid-services-nodes-page-actions
+              cluster-id="$ctrl.data.id"
+              cluster-name="$ctrl.data.name"
+              node="node"
+              number-of-cluster-nodes="$ctrl.data.nodes.length"
+              target-type="$ctrl.data.targetType"
+              reload-data-callback="$ctrl.reloadDataCallback(options)">
             </hybrid-services-nodes-page-actions>
           </div>
         </td>
@@ -60,11 +41,28 @@
           <span ng-hide="connector.maintenanceMode === 'on' || (connector.maintenanceMode === 'pending' && connector.extendedProperties.state.name !== 'offline')">
             <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="status">{{::'hercules.status.'+connector.extendedProperties.state.name | translate}}</span>
-            <span class="badge badge-{{connector.extendedProperties.alarmsBadgeCss}}" ng-if="connector.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+            <span class="badge badge-{{connector.extendedProperties.alarmsBadgeCss}}"
+              ng-if="connector.extendedProperties.alarms !== 'none'"
+              translate="hercules.alarms.alarms">
+            </span>
           </span>
-          <span class="badge warning" ng-show="connector.maintenanceMode === 'on' && connector.extendedProperties.state.name !== 'offline'" translate="hercules.nodesPage.maintenanceReady"></span>
-          <span class="badge warning" ng-show="connector.maintenanceMode === 'on' && connector.extendedProperties.state.name === 'offline'" translate="hercules.nodesPage.maintenanceOn"></span>
-          <span class="badge" ng-show="connector.maintenanceMode === 'pending'" translate="hercules.nodesPage.maintenancePending" tooltip="{{::node.pendingTooltip}}" tooltip-trigger="mouseenter" tooltip-placement="top"></span>
+          <span class="badge warning"
+            ng-show="connector.maintenanceMode === 'on' && connector.extendedProperties.state.name !== 'offline'"
+            translate="hercules.nodesPage.maintenanceReady">
+          </span>
+          <span class="badge warning"
+            ng-show="connector.maintenanceMode === 'on' && connector.extendedProperties.state.name === 'offline'"
+            translate="hercules.nodesPage.maintenanceOn">
+          </span>
+          <span class="badge"
+            ng-show="connector.maintenanceMode === 'pending'"
+            translate="hercules.nodesPage.maintenancePending"
+            tooltip="{{::node.pendingTooltip}}"
+            tooltip-trigger="mouseenter focus"
+            tooltip-placement="top"
+            aria-label="{{::node.pendingTooltip}}"
+            tabindex="0">
+          </span>
         </td>
         <td>
           {{::connector.version}}
@@ -76,7 +74,9 @@
           <span class="badge" ng-if="connector.upgradeState === 'pending'" translate="hercules.fusion.list.pending"></span>
         </td>
       </tr>
-      <tr class="connector-row-filler" ng-if="!$last"><td colspan="3"></td></tr>
+      <tr class="connector-row-filler" ng-if="!$last">
+        <td colspan="3"></td>
+      </tr>
     </tbody>
   </table>
 </div>

@@ -1,95 +1,74 @@
 <!-- TODO maximize reuse -->
 
-<div class="modal-content linking-wizard">
+<div class="account-linking-wizard">
   <div class="modal-header">
-    <button type="button" class="close" ng-click="$ctrl.cancelModal()">
-      <span class="sr-only" translate="common.close"></span>
+    <button type="button"
+      class="close"
+      ng-click="$ctrl.cancelModal()"
+      aria-label="{{:: 'common.close' | translate}}">
     </button>
-    <h4 class="modal-title" translate="accountLinking.wizard.title"></h4>
-    <span class="site-url" translate="accountLinking.wizard.siteName" translate-values="{siteName: $ctrl.siteInfo.linkedSiteUrl}"></span>
+    <h4 class="modal-title wizard-title" translate="accountLinking.wizard.title"></h4>
   </div>
-  <div class="modal-body" ng-if="$ctrl.fsmState.id === 'entry'">
-    <div class="row">
-      <div class="columns medium-4">
-        <h4 translate="accountLinking.wizard.mode.automatic.title"></h4>
-        <p translate="accountLinking.wizard.mode.automatic.intro"></p>
-      </div>
-      <div class="columns medium-5 medium-offset-1">
-        <input cs-input type="radio" ng-model="$ctrl.event" id="autoAgreement" name="autoAgreement" value="noEmailAgreement"
-        cs-input-label="{{:: 'accountLinking.wizard.mode.automatic.agreementLabel' | translate}}"
-        cs-input-help-text="{{:: 'accountLinking.wizard.mode.automatic.agreementLabelHelp' | translate}}"
-        />
-        <input cs-input type="radio" ng-model="$ctrl.event" id="autoVerifyDomain" name="autoVerifyDomain" value="noEmailVerifiedDomain"
-        cs-input-label="{{:: 'accountLinking.wizard.mode.automatic.verifyDomainLabel' | translate}}"
-        cs-input-help-text="{{:: 'accountLinking.wizard.mode.automatic.verifyDomainLabelHelp' | translate}}"
-        />
-      </div>
-      <div class="columns medium-2"></div>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="columns medium-4">
-        <h4 translate="accountLinking.wizard.mode.manual.title"></h4>
-        <p translate="accountLinking.wizard.mode.manual.intro"></p>
-      </div>
-      <div class="columns medium-5 medium-offset-1">
-        <input cs-input type="radio" ng-model="$ctrl.event" id="manual" name="manual" value="manual"
-        cs-input-label="{{:: 'accountLinking.wizard.mode.manual.manualLabel' | translate}}"
-        cs-input-help-text="{{:: 'accountLinking.wizard.mode.manual.manualLabelHelp' | translate}}" />
-      </div>
-      <div class="columns medium-2"></div>
-    </div>
-  </div>
-  <div class="modal-body linking-wizard" ng-if="$ctrl.fsmState.id === 'manual_selected'">
-    <i class="final-icon icon icon-check-mark-success"></i>
-    <h3 class="center" translate="accountLinking.wizard.mode.manual.title"></h3>
-    <div class="info" translate="accountLinking.wizard.mode.manual.info"></div>
-  </div>
-  <div class="modal-body linking-wizard" ng-if="$ctrl.fsmState.id === 'no_email_agreement_selected'">
-    <div class="row">
-      <div class="columns medium-4">
-        <h3 translate="accountLinking.wizard.mode.automatic.agreementTitle"></h3>
-        <p translate="accountLinking.wizard.mode.automatic.agreementInfo"></p>
-      </div>
-      <div class="columns medium-5 medium-offset-1">
-        <p class="intro" translate="accountLinking.wizard.mode.automatic.agreementIntro"></p>
-        <!-- TODO Figure out best way to do translation for large text" -->
-        <p class="agreement">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a lectus id lectus malesuada eleifend id ac ante. Curabitur vel nibh a urna finibus fringilla. Donec et justo in velit molestie pharetra eget in risus. Aenean sit amet urna a felis volutpat
-          mattis. Cras tincidunt libero vitae risus euismod convallis. Fusce vehicula magna elit, fermentum gravida nisi malesuada non. Duis eget quam eget nisl lacinia convallis eu vel arcu. Curabitur diam felis, maximus sit amet auctor in, consequat
-          porttitor justo. Mauris pellentesque nunc eu blandit consequat. Maecenas tortor nulla, pharetra a mi et, eleifend egestas velit. Aenean ex quam, euismod ut feugiat a, efficitur eu dolor. Praesent vehicula nulla turpis. Mauris tempus nisl lorem,
-          rutrum dictum enim tincidunt id. Integer eget efficitur risus. Mauris eleifend eget ex vestibulum gravida. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus eros et turpis hendrerit porttitor. Nulla ut nisl non lectus
-          condimentum tincidunt. Pellentesque et lorem eu turpis malesuada accumsan. Quisque volutpat tortor sed velit mattis fermentum. Integer elementum, massa ut tempus faucibus, felis erat elementum ex, vitae porttitor augue eros ac sapien. Duis placerat
-          velit id cursus ullamcorper.
-        </p>
-        <div class="agreement-accept">
-          <input cs-input type="checkbox" ng-model="$ctrl.noEmailAgreementAccepted" id="noEmailAgreementAccepted" name="agreementAccepted" cs-input-label="{{:: 'accountLinking.wizard.mode.automatic.agreementAcceptLabel' | translate}}" />
-        </div>
-      </div>
-      <div class="columns medium-2"></div>
-    </div>
-  </div>
-  <div class="modal-body linking-wizard" ng-if="$ctrl.fsmState.id === 'no_email_agreement_accepted_ok'">
-    <i class="final-icon icon icon-check-mark-success"></i>
-    <h3 class="center" translate="accountLinking.wizard.mode.automatic.agreementAcceptTitle"></h3>
-    <div class="info" translate="accountLinking.wizard.mode.automatic.agreementAcceptInfo"></div>
-  </div>
-  <div class="modal-body linking-wizard" ng-if="$ctrl.fsmState.id === 'no_email_verified_domain_selected'">
-    <i class="final-icon icon icon-check-mark-success"></i>
-    <h3 class="center" translate="accountLinking.wizard.mode.automatic.verifyDomainTitle"></h3>
-    <div class="info" translate="accountLinking.wizard.mode.automatic.verifyDomainInfo"></div>
-  </div>
+  <account-linking-wizard-entry
+    ng-show="$ctrl.fsmState === 'entry'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-entry>
 
-  <!-- TODO Use $ctrl methods for show, hide, disabled -->
-  <div class="modal-footer">
-    <button id="al-wizard-back" ng-show="!$ctrl.initial" class="btn btn--primary" ng-click="$ctrl.back()" translate="common.back">
-    </button>
-    <button id="al-wizard-next" ng-show="!$ctrl.final" ng-disabled="($ctrl.fsmState.id === 'no_email_agreement_selected' && !$ctrl.noEmailAgreementAccepted) || !$ctrl.hasEvent() " class="btn btn--primary" ng-click="$ctrl.next($ctrl.event)" translate="common.next">
-    </button>
-    <button id="al-wizard-confirm" ng-show="$ctrl.final && !($ctrl.fsmState.id === 'no_email_verified_domain_selected')" ng-disabled="!$ctrl.hasEvent()" class="btn btn--primary" ng-click="$ctrl.confirm()" translate="common.confirm">
-    </button>
-    <button ng-show="$ctrl.fsmState.id === 'no_email_verified_domain_selected' && $ctrl.final"
-      ng-disabled="!$ctrl.event" class="btn btn--primary" ng-click="$ctrl.verifyDomain()" translate="accountLinking.wizard.mode.automatic.verifyDomainButton">
-    </button>
-  </div>
+  <account-linking-wizard-verify
+    ng-show="$ctrl.fsmState === 'verify'"
+    site-info="$ctrl.siteInfo"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-verify>
+
+  <account-linking-wizard-fetchingdomains
+    ng-show="$ctrl.fsmState === 'fetchingDomains'"
+    state="$ctrl.fsmState"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-fetchingdomains>
+
+  <account-linking-wizard-domainslist
+    ng-show="$ctrl.fsmState === 'domainsList'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+    domains-func="$ctrl.getDomains(from, to)"
+    public-domains-func="$ctrl.getPublicDomains(from, to)"
+    siteinfo="$ctrl.siteInfo"
+  >
+  </account-linking-wizard-domainslist>
+
+  <account-linking-wizard-showagreement
+    ng-show="$ctrl.fsmState === 'showAgreement'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-showagreement>
+
+  <account-linking-wizard-agreementaccepted
+    ng-show="$ctrl.fsmState === 'agreementAccepted'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-agreementaccepted>
+
+  <account-linking-wizard-verifydomain
+    ng-show="$ctrl.fsmState === 'verifyDomain'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-verifydomain>
+
+  <account-linking-wizard-receiveemail
+    ng-show="$ctrl.fsmState === 'receiveEmail'"
+    next-func="$ctrl.next(event)"
+    back-func="$ctrl.back()"
+  >
+  </account-linking-wizard-receiveemail>
 </div>

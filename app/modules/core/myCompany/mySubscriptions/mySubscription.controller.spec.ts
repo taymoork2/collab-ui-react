@@ -1,5 +1,5 @@
 import subscriptionModule from './index';
-import { IProdInst } from 'modules/online/upgrade/upgrade.service';
+import { IProdInst } from 'modules/online/upgrade/shared/upgrade.service';
 
 describe('Controller: MySubscriptionCtrl', function () {
   const onlineIntSubId: string = 'intSubId';
@@ -31,7 +31,6 @@ describe('Controller: MySubscriptionCtrl', function () {
       'Authinfo',
       'Config',
       'DigitalRiverService',
-      'FeatureToggleService',
       'OnlineUpgradeService',
       'Orgservice',
       'ProPackService',
@@ -43,7 +42,6 @@ describe('Controller: MySubscriptionCtrl', function () {
     this.siteUrl = 'siteUrl';
 
     spyOn(this.ServiceDescriptorService, 'getServices').and.returnValue(this.$q.resolve(this.data.servicesResponse));
-    spyOn(this.FeatureToggleService, 'atlasSharedMeetingsReportsGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.OnlineUpgradeService, 'getProductInstances').and.returnValue(this.$q.resolve(productInstanceResponse));
     spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
     spyOn(this.ProPackService, 'hasProPackPurchased').and.returnValue(this.$q.resolve(false));

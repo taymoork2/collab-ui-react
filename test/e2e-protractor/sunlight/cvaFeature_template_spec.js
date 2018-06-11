@@ -3,7 +3,7 @@
 describe('CVA feature setup', function () {
   // NOTE: these variables will only be saved AFTER DELETE is implemented in the page
   var DialogflowTestClientToken = '22e724e0bc604e99b0cfd281cd6c282a';
-  var DialogflowTestAgentName = 'e2e-customerVirtualAssistant-' + utils.randomId();
+  var DialogflowTestAgentName = 'e2e-customerVirtualAssistant- ' + utils.randomId();
   var RenamedDialogflowTestAgentName = DialogflowTestAgentName + '-NewName';
   beforeAll(function () {
     login.login('virtualassistant-admin', '#/services');
@@ -88,7 +88,18 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
-
+  
+  it('Create: Move to Dialogflow Input Context Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextForm);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextFieldInput1);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+  
   it('Create: Finally Move to Summary Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
@@ -134,7 +145,7 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowClientAccessToken);
 
-    utils.click(careVirtualAssistantTemplateSetupPage.validateBtn);
+    utils.expectIsDisabled(careVirtualAssistantTemplateSetupPage.validateBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.checkMarkIcon);
   });
 
@@ -158,7 +169,18 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
   });
-
+  
+  it('Edit: Move to Dialogflow Input Context Modal', function () {
+    utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+    
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.title);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.titleDesc);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextForm);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.dialogflowInputContextFieldInput1);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
+  });
+  
   it('Edit: Finally Move to Summary Modal', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 

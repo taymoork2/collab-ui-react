@@ -11,11 +11,13 @@ import onboardModule from 'modules/core/users/userAdd';
 const coreAuthModule = require('modules/core/auth/auth');
 const ngResourceModule = require('angular-resource');
 
+import serviceSetupModuleName from 'modules/huron/serviceSetup';
+
 import './_user-overview.scss';
 export * from './userOverview.service';
 export default angular
   .module('core.users.userOverview', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     messagingPreviewModule,
     sunlightServiceModule,
     ngResourceModule,
@@ -24,6 +26,7 @@ export default angular
     featureToggleServiceModule,
     webExUtilsModule,
     onboardModule,
+    serviceSetupModuleName,
   ])
   .service('UserOverviewService', UserOverviewService)
   .controller('UserOverviewCtrl', UserOverviewCtrl)

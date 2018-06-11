@@ -1,0 +1,40 @@
+<cs-card class="flip large-3 medium-6 small-12 menu-card overview-card {{$ctrl.cardClass}}">
+  <div class="card" ng-class="{'flipped':isFlipped, 'card-on-top': $ctrl.dropdownPresent === true}">
+    <article class="face front" ng-class="{'no-display': isFlipped}">
+      <div class="metrics-header reports-header" ng-hide=$ctrl.isorg> {{$ctrl.headername}}</div>
+      <div class="metrics-header reports-header" ng-hide=!$ctrl.isorg> {{$ctrl.headername}}
+        <span class="reports-header-value" ng-if="$ctrl.value !== $ctrl.parentcntrl.noData">{{$ctrl.value}} </span>
+      </div>
+      <div id="cs-export-div" ng-if="$ctrl.isorg"></div>
+      <div class='live-reports-expand-icon icon icon-maximize' ng-click="$ctrl.openSetUpModal()" ng-if="$ctrl.isorg"></div>
+      <section>
+        <div class="metrics-info">
+          <div class="spinner-position" ng-if="!$ctrl.chartOptions.isShow">
+            <p>
+              <h5><i class='icon icon-spinner icon-2x'></i></h5>
+            </p>
+          </div>
+        <div  ng-if="!$ctrl.isorg && $ctrl.chartOptions.isShow && $ctrl.value !== $ctrl.parentcntrl.noData" ng-class="{'no-data': $ctrl.value === $ctrl.parentcntrl.noData, 'call-counts': !$ctrl.isorg && $ctrl.value !== $ctrl.parentcntrl.noData && $ctrl.chartOptions.isShow}">{{$ctrl.value}}</div>
+        <span ng-if="$ctrl.value === $ctrl.parentcntrl.noData"class="no-data" >{{$ctrl.value}}</span>
+          <div id="{{$ctrl.chartOptions.cardChartDiv}}" class="chartContainer" ng-class="{'no-display': !$ctrl.isorg}">
+        </div>
+      </section>
+      <i class='icon icon-info-outline media-flip-icon' ng-click="isFlipped=true"></i>
+    </article>
+
+    <article class="face back" ng-class="{'no-display': !isFlipped}">
+      <header>
+        <div class="metrics-header reports-header-back"> {{$ctrl.headername}} </div>
+      </header>
+      <section>
+        <div class="metrics-info">
+          <div class="card-desc">
+            <span translate="mediaFusion.metrics.cardDescription.clusterInServiceDesc" ng-if="$ctrl.parentcntrl.clusterSelected === $ctrl.parentcntrl.allClusters" class="span-desc"></span>
+            <span translate="mediaFusion.metrics.cardDescription.clusterInServiceClusterDesc" ng-if="$ctrl.parentcntrl.clusterSelected !== $ctrl.parentcntrl.allClusters"  class="span-desc"></span>
+          </div>
+        </div>
+      </section>
+      <i class='icon icon-info media-flip-icon' ng-click="isFlipped=false"></i>
+    </article>
+  </div>
+</cs-card>

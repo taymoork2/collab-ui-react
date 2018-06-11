@@ -3,6 +3,8 @@
 describe('Controller: AARouteCallMenuCtrl', function () {
   var controller;
   var AAUiModelService, AutoAttendantCeMenuModelService, QueueHelperService;
+  var autoAttendantHybridCareService;
+  var AACommonService;
   var $rootScope, $scope, $q;
   var aaUiModel = {
     openHours: {},
@@ -27,11 +29,22 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }, {
     label: 'autoAttendant.phoneMenuRouteVM',
   }];
+
+  var sortedOptionsWithoutSparkCall = [{
+    label: 'autoAttendant.phoneMenuRouteAA',
+  }, {
+    label: 'autoAttendant.phoneMenuRouteQueue',
+  }, {
+    label: 'autoAttendant.phoneMenuRouteToExtNum',
+  }, {
+    label: 'autoAttendant.phoneMenuRouteUser',
+  }];
+
   beforeEach(angular.mock.module('uc.autoattendant'));
   beforeEach(angular.mock.module('Huron'));
   beforeEach(angular.mock.module('Sunlight'));
 
-  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$q_, _AAUiModelService_, _AutoAttendantCeMenuModelService_, _QueueHelperService_, _AutoAttendantHybridCareService_, _AACommonService_) {
     $rootScope = _$rootScope_;
     $scope = $rootScope;
     $q = _$q_;
@@ -39,6 +52,8 @@ describe('Controller: AARouteCallMenuCtrl', function () {
     AAUiModelService = _AAUiModelService_;
     AutoAttendantCeMenuModelService = _AutoAttendantCeMenuModelService_;
     QueueHelperService = _QueueHelperService_;
+    autoAttendantHybridCareService = _AutoAttendantHybridCareService_;
+    AACommonService = _AACommonService_;
 
     spyOn(AAUiModelService, 'getUiModel').and.returnValue(aaUiModel);
     spyOn(QueueHelperService, 'listQueues').and.returnValue($q.resolve(queues));
@@ -52,7 +67,8 @@ describe('Controller: AARouteCallMenuCtrl', function () {
   }));
 
   afterEach(function () {
-
+    autoAttendantHybridCareService = null;
+    AACommonService = null;
   });
 
   describe('setSelects', function () {
@@ -91,6 +107,32 @@ describe('Controller: AARouteCallMenuCtrl', function () {
 
       for (var i = 0; i < sortedOptions.length; i++) {
         expect(controller.options[i].label).toEqual(sortedOptions[i].label);
+      }
+    });
+
+    it('should add sparkcallOptions when hybrid toggle is enabled and sparkCall is not configured', function () {
+      spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(true);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      controller = controller('AARouteCallMenuCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      expect(controller.options.length).toBe(6);
+      for (var i = 0; i < sortedOptions.length; i++) {
+        expect(controller.options[i].label).toBe(sortedOptions[i].label);
+      }
+    });
+
+    it('should not add spark call options when hybrid toggle is enabled and sparkCall is also configured', function () {
+      spyOn(autoAttendantHybridCareService, 'isSparkCallConfigured').and.returnValue(false);
+      spyOn(AACommonService, 'isHybridEnabledOnOrg').and.returnValue(true);
+      controller = controller('AARouteCallMenuCtrl', {
+        $scope: $scope,
+      });
+      $scope.$apply();
+      expect(controller.options.length).toBe(4);
+      for (var i = 0; i < sortedOptionsWithoutSparkCall.length; i++) {
+        expect(controller.options[i].label).toBe(sortedOptionsWithoutSparkCall[i].label);
       }
     });
   });

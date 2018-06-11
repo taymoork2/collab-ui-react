@@ -1,16 +1,7 @@
 (function () {
   'use strict';
 
-  var urlConfigModuleName = require('modules/core/config/urlConfig');
-  var USSServiceModuleName = require('modules/hercules/services/uss.service').default;
-
-  module.exports = angular
-    .module('hercules.service-specific-pages.components.user-status-report.user-details', [
-      urlConfigModuleName,
-      USSServiceModuleName,
-    ])
-    .service('UserDetails', UserDetails)
-    .name;
+  module.exports = UserDetails;
 
   /* @ngInject  */
   function UserDetails($http, $translate, UrlConfig, USSService, $q) {

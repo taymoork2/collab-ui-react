@@ -298,6 +298,20 @@ describe('HelpdeskService', function () {
     });
   });
 
+  describe('search orders', function () {
+    it('should filter orders matching allowable order tools', function () {
+      var orders = [
+        { orderingTool: 'CCW' },
+        { orderingTool: 'CCW-CSB' },
+        { orderingTool: 'CCW-CDC' },
+        { orderingTool: 'foo' },
+      ];
+      var result = Service.filterOrders(orders);
+
+      expect(result.length).toBe(3);
+    });
+  });
+
   it('finds cloudberry devices by display name', function () {
     var result = Service.filterDevices('Testing DR', CsdmConverter.convertCloudberryDevices(HelpdeskMockData.devices), 5);
     expect(result.length).toBe(1);

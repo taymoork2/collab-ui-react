@@ -6,14 +6,14 @@ describe ('component: userVoicemail', () => {
   beforeEach(function() {
     this.initModules('huron.voicemail');
     this.injectDependencies('$scope',
-    '$modal',
-    '$translate',
-    '$q',
-    'HuronUserService',
-    'HuronVoicemailService',
-    'Authinfo',
-    'FeatureToggleService',
-    'Notification',
+      '$modal',
+      '$translate',
+      '$q',
+      'HuronUserService',
+      'HuronVoicemailService',
+      'Authinfo',
+      'FeatureToggleService',
+      'Notification',
     );
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
     this.services = ['voice'];

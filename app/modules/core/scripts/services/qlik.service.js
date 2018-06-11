@@ -14,14 +14,21 @@
       webexPremium: ['premium_webex_v1', 'webex-report-premium'],
       sparkBasic: ['basic_spark_v1', 'spark-report-basic'],
       sparkPremium: ['premium_spark_v1', 'spark-report-premium'],
-      sparkPartner: ['basic_webex_v1', 'spark-report-partner'],
+      sparkPartner: ['partner_spark_v1', 'spark-report-partner'],
+      hybridMediaBasic: ['basic_hybrid_media_v1', 'hms-report-full-v1'],
       webexMEI: ['mei', 'MEI'],
       webexSystem: ['system_webex_v1', 'webex-report-system'],
+      webexDashboard: ['system_webex_v1', 'webex-report-dashboard'],
+      webexJMS: ['system_webex_v1', 'webex-report-jms'],
+      webexJMT: ['system_webex_v1', 'webex-report-jmt'],
+      license: ['basic_license_v1', 'license'],
+      webexPartner: ['partner_webex_v1', 'webex-report-partner'],
     };
     var service = {
       getQBSInfo: getQBSInfo,
       getQlikMashupUrl: getQlikMashupUrl,
       getProdToBTSQBSInfo: getProdToBTSQBSInfo,
+      callReportQBSBTS: callReportQBSBTS,
     };
 
     return service;
@@ -29,7 +36,7 @@
     function getQlikServiceUrl(reportType, viewType, env) {
       var paramType = reportType + viewType;
       var qbsParam = QlikUrlParams[paramType][0];
-      if (_.isUndefined(env)) {
+      if (_.isUndefined(env) || _.isEmpty(env)) {
         return UrlConfig.getQlikServiceUrl(qbsParam);
       } else {
         return UrlConfig.getQlikServiceUrl(env, qbsParam);
@@ -62,7 +69,7 @@
 
       if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
         $log.log('turns to call QBS BTS');
-        return callReportQBSBTS(reportType, viewType, data);
+        return service.callReportQBSBTS(reportType, viewType, data);
       }
 
       if (isError) {

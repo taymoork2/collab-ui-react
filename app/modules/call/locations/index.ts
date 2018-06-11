@@ -28,7 +28,7 @@ export * from './locations-user-details';
 export default angular
   .module('call.locations', [
     require('modules/core/cards').default,
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-resource'),
     notifications,
     locationsServiceModule,
@@ -49,6 +49,6 @@ export default angular
     callEmergencyServicesModule,
     DialPlanServiceModule,
   ])
-.component('ucCallLocations', new CallLocationsComponent())
-.component('ucCallLocation', new CallLocationComponent())
-.name;
+  .component('ucCallLocations', new CallLocationsComponent())
+  .component('ucCallLocation', new CallLocationComponent())
+  .name;

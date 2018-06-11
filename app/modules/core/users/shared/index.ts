@@ -1,20 +1,19 @@
-export * from './onboard.interfaces';
-
-import { AutoAssignTemplateService } from './auto-assign-template.service';
 import crUsersErrorResultsModuleName from './cr-users-error-results';
 import crUsersTileTotalsModuleName from './cr-users-tile-totals';
-import * as authinfoModuleName from 'modules/core/scripts/services/authinfo';
-import * as urlConfigModuleName from 'modules/core/config/urlConfig';
 import crCheckboxItemModuleName from './cr-checkbox-item';
+import crCollapsibleRowModuleName from './cr-collapsible-row';
+import autoAssignTemplateModuleName from './auto-assign-template';
+import onboardModuleName from './onboard';
+import crActionCardsModuleName from './cr-action-cards';
 
 export default angular.module('core.users.shared', [
   require('angular-translate'),
-  require('collab-ui-ng').default,
-  authinfoModuleName,
+  require('@collabui/collab-ui-ng').default,
   crUsersErrorResultsModuleName,
   crUsersTileTotalsModuleName,
-  urlConfigModuleName,
   crCheckboxItemModuleName,
-])
-  .service('AutoAssignTemplateService', AutoAssignTemplateService)
-  .name;
+  crCollapsibleRowModuleName,
+  autoAssignTemplateModuleName,
+  onboardModuleName,
+  crActionCardsModuleName,
+]).name;

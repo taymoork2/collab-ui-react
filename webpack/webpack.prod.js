@@ -13,7 +13,9 @@ function webpackConfig(env) {
   function patchScssLoader(conf) {
     const scssLoaderRule = _.find(conf.module.rules, loaders.scss);
     // removes 'style-loader'
-    const scssLoaders = _.tail(scssLoaderRule.use);
+    const scssLoaders = _.reject(scssLoaderRule.use, {
+      loader: 'style-loader',
+    });
     const cssLoader = _.find(scssLoaders, {
       use: 'css-loader',
     });
@@ -38,10 +40,9 @@ function webpackConfig(env) {
     plugins: plugins.commonsChunkPlugins.concat([
       plugins.getHtmlWebpackPlugin({
         ngStrictDi: '',
-        loadAdobeScripts: true,
       }),
       new ExtractTextPlugin({
-        filename: 'styles/[name].[chunkhash].css',
+        filename: 'styles/[name].[contenthash].css',
         allChunks: true,
       }),
       new webpack.NoEmitOnErrorsPlugin(),

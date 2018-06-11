@@ -4,19 +4,19 @@ describe('Service: CallLocationSettingsService', () => {
   beforeEach(function() {
     this.initModules(CallLocationSettingsService);
     this.injectDependencies(
-        '$q',
-        '$rootScope',
-        'LocationsService',
-        'PstnModel',
-        'PstnAddressService',
-        'MediaOnHoldService',
-        'LocationCosService',
-        'InternalNumberRangeService',
-        'HuronCustomerService',
-        'ExtensionLengthService',
-        'AvrilService',
-        'SettingSetupInitService',
-        'CallLocationSettingsService',
+      '$q',
+      '$rootScope',
+      'LocationsService',
+      'PstnModel',
+      'PstnAddressService',
+      'MediaOnHoldService',
+      'LocationCosService',
+      'InternalNumberRangeService',
+      'HuronCustomerService',
+      'ExtensionLengthService',
+      'AvrilService',
+      'SettingSetupInitService',
+      'CallLocationSettingsService',
     );
     spyOn(this.CallLocationSettingsService, 'getLocation').and.returnValue(this.$q.resolve());
     spyOn(this.CallLocationSettingsService, 'getEmergencyCallbackNumber').and.returnValue(this.$q.resolve());

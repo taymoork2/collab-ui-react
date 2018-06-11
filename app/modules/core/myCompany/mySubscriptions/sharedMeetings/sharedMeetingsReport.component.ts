@@ -258,8 +258,8 @@ class SharedMeetingsReportCtrl {
           const csvMaxConcurrentData = ($ as any).csv.fromObjects(concurrentData, { headers: false });
 
           this.makeCSV(
-              this.SharedMeetingsReportService.getDownloadCSV(csvData),
-              this.SharedMeetingsReportService.getDownloadCSV(csvMaxConcurrentData),
+            this.SharedMeetingsReportService.getDownloadCSV(csvData),
+            this.SharedMeetingsReportService.getDownloadCSV(csvMaxConcurrentData),
             );
 
         } else {

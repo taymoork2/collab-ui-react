@@ -1,0 +1,49 @@
+<header>
+  <div class="overview-header">
+    <i class="icon" ng-class="$ctrl.headerClass"></i>
+    <span translate="{{$ctrl.l10nTitle}}"></span>
+  </div>
+</header>
+
+<section ng-if="$ctrl.hasLicenses() && !$ctrl.loading">
+  <div class="overview-info">
+    <div class="overview-count">
+      <a
+        aria-label="{{::$ctrl.l10nTitle | translate}} {{$ctrl.totalLicenses}} {{::$ctrl.l10nLicenseDescription | translate}}"
+        ui-sref="my-company.subscriptions">
+        {{$ctrl.totalLicenses | number}}
+      </a>
+    </div>
+    <div translate="{{::$ctrl.l10nLicenseDescription}}"></div>
+  </div>
+</section>
+<section class="disabled-section" ng-if="!$ctrl.hasLicenses() && !$ctrl.loading">
+  <span translate="{{$ctrl.l10nDefaultMessage}}"></span>
+</section>
+<section class="disabled-section spinner-section" ng-if="$ctrl.loading">
+  <div class="license-spinner">
+    <i class="icon icon-spinner icon-2x"></i>
+  </div>
+</section>
+
+<footer class="footer-menu overview-footer-content-trial overview-footer-content" ng-if="$ctrl.hasLicenses() && !$ctrl.loading">
+  <span class="footer-content">
+    <a
+      aria-label="{{$ctrl.l10nTitle | translate}} {{$ctrl.healthStatusAria}}"
+      class="monitoring-cell"
+      ng-href="{{$ctrl.statusPageUrl}}"
+      ng-if="$ctrl.showHealth()"
+      target="_blank">
+      <cs-statusindicator ng-model="$ctrl.healthStatus"></cs-statusindicator>
+    </a>
+  </span>
+  &nbsp;
+  <span class="footer-icons" ng-if="$ctrl.displaySettingsUrl()">
+    <a ng-href="{{$ctrl.settingsUrlObject.url}}" aria-label="{{$ctrl.l10nTitle | translate}} {{'common.settings' | translate}}">
+      <i class="icon icon-settings"></i>
+    </a>
+  </span>
+</footer>
+<footer class="disabled-footer" ng-if="!$ctrl.hasLicenses() && !$ctrl.loading">
+  <p translate="overview.contactPartner"></p>
+</footer>

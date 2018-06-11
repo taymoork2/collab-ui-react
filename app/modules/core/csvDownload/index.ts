@@ -4,6 +4,7 @@ import { ExtractTarService } from './extractTar.service';
 import notificationsModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
 import csvSimpleExportModule from './csvSimpleExport';
+import userTaskManagerModule from 'modules/core/users/user-task-manager';
 
 const analyticsModule = require('modules/core/analytics');
 const userListServiceModule = require('modules/core/scripts/services/userlist.service');
@@ -16,13 +17,14 @@ export { CsvDownloadService, CsvDownloadTypes, ExtractTarService };
 export default angular
   .module('core.csvDownload', [
     'ngResource',
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     analyticsModule,
     config,
     featureToggleModule,
     notificationsModule,
     userListServiceModule,
     csvSimpleExportModule,
+    userTaskManagerModule,
     'core.users.userCsv', // WARNING: This is creating a circular dependency!!
   ])
   .service('CsvDownloadTypes', CsvDownloadTypes)

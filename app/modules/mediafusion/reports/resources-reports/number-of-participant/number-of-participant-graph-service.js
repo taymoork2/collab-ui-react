@@ -143,11 +143,11 @@
         }
       });
       var exportFields = [];
-      _.each(columnNames, function (key) {
+      _.forEach(columnNames, function (value, key) {
         exportFields.push(key);
       });
       dateLabel = _.replace(dateLabel, /\s/g, '_');
-      var ExportFileName = 'MediaService_Number_of_Participants' + dateLabel + '_' + new Date();
+      var ExportFileName = 'MediaService_Number_of_Participants' + '_' + dateLabel + '_' + new Date();
       var chartData = CommonReportsGraphService.getBaseStackSerialGraph(data, startDuration, valueAxes, graphs, 'time', catAxis, CommonReportsGraphService.getBaseExportForGraph(exportFields, ExportFileName, columnNames, exportDiv));
       chartData.chartCursor.balloonPointerOrientation = 'vertical';
       chartData.legend = CommonReportsGraphService.getBaseVariable(LEGEND);

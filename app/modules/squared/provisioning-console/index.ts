@@ -1,6 +1,7 @@
 
 require('./provisioning.scss');
 
+import featureToggleServiceModule from 'modules/core/featureToggle';
 import { ProvisioningService } from './provisioning.service';
 import { ProvisioningController } from './provisioning.controller';
 import { ProvisioningDetailsController } from './overview/provisioning-details.controller';
@@ -9,14 +10,15 @@ export *  from './provisioning.interfaces';
 
 
 export default angular
- .module('squared.provisioning-console', [
-   require('modules/core/config/urlConfig'),
-   require('angular-translate'),
-   require('angular-ui-router'),
-   require('angular-sanitize'),
-   notifications,
- ])
- .service('ProvisioningService', ProvisioningService)
- .controller('ProvisioningController', ProvisioningController)
- .controller('ProvisioningDetailsController', ProvisioningDetailsController)
+  .module('squared.provisioning-console', [
+    require('modules/core/config/urlConfig'),
+    require('angular-translate'),
+    require('angular-ui-router'),
+    require('angular-sanitize'),
+    featureToggleServiceModule,
+    notifications,
+  ])
+  .service('ProvisioningService', ProvisioningService)
+  .controller('ProvisioningController', ProvisioningController)
+  .controller('ProvisioningDetailsController', ProvisioningDetailsController)
   .name;

@@ -72,7 +72,20 @@ describe('RateLimitInterceptor', () => {
 
   it('should retry until some error code', function () {
     this.$httpBackend.expectGET(this.URL).respond(503);
-    const promise = this.$http.get(this.URL);
+    this.$http.get(this.URL).then(fail)
+      .catch(response => {
+        expect(response.status).toBe(500);
+        this.expectOperationalMetric(0, {
+          state: 'retry',
+          delay_in_millis: 100,
+          orig_http_status: 503,
+        });
+        this.expectOperationalMetric(1, {
+          state: 'success', // still a "successful" retry even with 500 status code
+          delay_in_millis: 200,
+          orig_http_status: 429,
+        });
+      });
     this.$httpBackend.flush();
 
     this.$httpBackend.expectGET(this.URL).respond(429);
@@ -82,25 +95,39 @@ describe('RateLimitInterceptor', () => {
     this.$httpBackend.expectGET(this.URL).respond(500);
     this.$timeout.flush(200);
     this.$httpBackend.flush();
-
-    expect(promise).toBeRejectedWith(jasmine.objectContaining({
-      status: 500,
-    }));
-    this.expectOperationalMetric(0, {
-      state: 'retry',
-      delay_in_millis: 100,
-      orig_http_status: 503,
-    });
-    this.expectOperationalMetric(1, {
-      state: 'success', // still a "successful" retry even with 500 status code
-      delay_in_millis: 200,
-      orig_http_status: 429,
-    });
   });
 
   it('should retry until max retry delay', function () {
     this.$httpBackend.expectGET(this.URL).respond(503);
-    const promise = this.$http.get(this.URL);
+    this.$http.get(this.URL).then(fail)
+      .catch(response => {
+        expect(response.status).toBe(429);
+        this.expectOperationalMetric(0, {
+          state: 'retry',
+          delay_in_millis: 100,
+          orig_http_status: 503,
+        });
+        this.expectOperationalMetric(1, {
+          state: 'retry',
+          delay_in_millis: 200,
+          orig_http_status: 503,
+        });
+        this.expectOperationalMetric(2, {
+          state: 'retry',
+          delay_in_millis: 400,
+          orig_http_status: 503,
+        });
+        this.expectOperationalMetric(3, {
+          state: 'retry',
+          delay_in_millis: 800,
+          orig_http_status: 429,
+        });
+        this.expectOperationalMetric(4, {
+          state: 'fail',
+          delay_in_millis: 1000,
+          orig_http_status: 429,
+        });
+      });
     this.$httpBackend.flush();
 
     this.$httpBackend.expectGET(this.URL).respond(503);
@@ -122,34 +149,5 @@ describe('RateLimitInterceptor', () => {
     this.$httpBackend.expectGET(this.URL).respond(429);
     this.$timeout.flush(1000);
     this.$httpBackend.flush();
-
-    expect(promise).toBeRejectedWith(jasmine.objectContaining({
-      status: 429,
-    }));
-    this.expectOperationalMetric(0, {
-      state: 'retry',
-      delay_in_millis: 100,
-      orig_http_status: 503,
-    });
-    this.expectOperationalMetric(1, {
-      state: 'retry',
-      delay_in_millis: 200,
-      orig_http_status: 503,
-    });
-    this.expectOperationalMetric(2, {
-      state: 'retry',
-      delay_in_millis: 400,
-      orig_http_status: 503,
-    });
-    this.expectOperationalMetric(3, {
-      state: 'retry',
-      delay_in_millis: 800,
-      orig_http_status: 429,
-    });
-    this.expectOperationalMetric(4, {
-      state: 'fail',
-      delay_in_millis: 1000,
-      orig_http_status: 429,
-    });
   });
 });

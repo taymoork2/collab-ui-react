@@ -47,15 +47,12 @@
 
   .aa-sm-action-select {
     @extend %aa-menu-select;
+    max-width: $aa-sm-action-max-width;
   }
 
   .aa-sm-key-select {
     @include aa-menu-toggle-button(0, -0.5);
     @include aa-menu-key-button($color-primary-darker, 56);
-  }
-
-  .aa-sm-action-select {
-    max-width: $aa-sm-action-max-width;
   }
 
   .aa-sm-add-text {

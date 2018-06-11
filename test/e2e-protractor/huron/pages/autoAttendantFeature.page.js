@@ -4,7 +4,7 @@ export class AutoAttendantPage {
     this.repeatMenu = 'Repeat this Menu';
     this.playSubmenu = 'Play Submenu';
     this.goBack = 'Go Back';
-    this.routeToQueue = 'Route to Cisco Spark Care';
+    this.routeToQueue = 'Route to Cisco Care';
     this.key0 = '0';
     this.key1 = '1';
     this.key2 = '2';
@@ -330,6 +330,7 @@ export class AutoAttendantPage {
       .get(9);
 
     this.restApi = element(by.css('div.aa-panel-body[name="REST API"]'));
+    this.restApiError = element(by.id('aaRestErrorMessage'));
     this.configureApi = element(by.id('configureApi'));
     this.configureApiURL = element(by.id('configureApiUrl'));
     this.addDynamicFeature = element(by.id('addDynamicFeature'));

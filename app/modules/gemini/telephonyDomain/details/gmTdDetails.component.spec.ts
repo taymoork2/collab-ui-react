@@ -126,15 +126,13 @@ describe('Component: gmTdDetails', () => {
     };
 
     initSpies.apply(this);
+    initComponent.call(this);
   });
 
   function initSpies() {
     spyOn(this.$state, 'go');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.$modal, 'open').and.returnValue(this.fakeModal);
-    spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
-    spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve());
     spyOn(this.TelephonyDomainService, 'cancelTDSubmission').and.returnValue(this.$q.resolve());
   }
 
@@ -149,73 +147,75 @@ describe('Component: gmTdDetails', () => {
   }
 
   describe('$onInit', () => {
-
     it('should watch', function () {
       spyOn(this.$scope, '$on').and.callThrough();
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(this.telephonyDomain));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve(this.telephonyDomain));
 
-      initComponent.call(this);
       this.controller.$onInit();
       this.$scope.$broadcast('detailWatch', { isEdit: true, domainName: 'testTitle', notes: this.notes, sitesLength: this.sites.length });
       expect(this.controller.isEdit).toBeTruthy();
     });
 
     it('Should call Notification.errorResponse when the http status is 404', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.reject({ status: 404 }));
 
-      initComponent.call(this);
       this.$scope.$emit('detailWatch', { notes: this.notes, sitesLength: this.sites.length });
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
     it('Should return correct Remedy Ticket info', function() {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.resolve(this.remedyTicket));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(this.telephonyDomain));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.resolve(this.remedyTicket));
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve(this.telephonyDomain));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.reject( { status: 404 } ));
 
-      initComponent.call(this);
+      this.controller.$onInit();
       this.view.find('.remedyTicket a').click();
+      this.$scope.$apply();
       expect(this.view.find('.remedyTicket a')).toContainText(this.remedyTicket[0].remedyTicketId);
     });
 
     it('Should return correct data for TelephonyDomainService.getTelephonyDomain', function () {
-      const Element = '.gm-td-side-panel .feature-name';
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.telephonyDomain ));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve( this.telephonyDomain ));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.reject( { status: 404 } ));
 
-      initComponent.call(this);
+      this.controller.$onInit();
+      this.$scope.$apply();
+      const Element = '.gm-td-side-panel .feature-name';
       expect(this.view.find(Element).get(1)).toHaveText(this.telephonyDomain.customerAttribute);
     });
 
     it('Should get TD histories successfully', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.reject( { status: 404 } ));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.resolve( this.histories ));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.reject( { status: 404 } ));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve( this.histories ));
 
-      initComponent.call(this);
+      this.controller.$onInit();
+      this.$scope.$apply();
       expect(this.controller.histories.length).toBe(1);
     });
 
     it('Should call onSeeAllPhoneNumbers when click the phone numbers section in page', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(this.telephonyDomain));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve(this.telephonyDomain));
 
-      initComponent.call(this);
+      this.controller.$onInit();
+      this.$scope.$apply();
+
       this.view.find('li.feature a').click();
+      this.$scope.$apply();
       expect(this.$state.go).toHaveBeenCalled();
     });
 
     it('OnEdit', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve(this.telephonyDomain));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.resolve());
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve(this.telephonyDomain));
 
       this.gemService.setStorage('currentTelephonyDomain', { region: 'US' });
-      initComponent.call(this);
       this.controller.onEditTD();
       this.fakeModal.ok();
       expect(this.controller.domainName).not.toBeEmpty();
@@ -224,22 +224,22 @@ describe('Component: gmTdDetails', () => {
 
   describe('TD histories', () => {
     it('click Show All Histories button', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.reject( { status: 404 } ));
-      this.TelephonyDomainService.getHistories.and.returnValue(this.$q.reject( { status: 404 } ));
+      spyOn(this.gemService, 'getRemedyTicket').and.returnValue(this.$q.reject({ status: 404 }));
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.reject( { status: 404 } ));
+      spyOn(this.TelephonyDomainService, 'getHistories').and.returnValue(this.$q.reject( { status: 404 } ));
 
-      initComponent.call(this);
       this.controller.onShowAllHistories();
       expect(this.controller.isShowAllHistories).toBeFalsy();
     });
   });
 
   describe('TD status', () => {
+    beforeEach(function () {
+      spyOn(this.TelephonyDomainService, 'getTelephonyDomain').and.returnValue(this.$q.resolve( this.telephonyDomain ));
+    });
+
     it('Should call Notification.errorResponse for submission cancellation when request or response error occurred', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.reject({ status: 404 }));
       this.TelephonyDomainService.cancelTDSubmission.and.returnValue(this.$q.reject( { status: 404 } ));
-      initComponent.call(this);
       this.controller.model = {
         telephonyDomainId: 'mockTelephonyDomainId',
         btnCancelLoading: true,
@@ -251,10 +251,6 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('Should cancel submission successfully', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.telephonyDomain ));
-      this.TelephonyDomainService.cancelTDSubmission.and.returnValue(this.$q.resolve());
-      initComponent.call(this);
       this.controller.model = {
         telephonyDomainId: 'mockTelephonyDomainId',
         btnCancelLoading: true,
@@ -266,10 +262,6 @@ describe('Component: gmTdDetails', () => {
     });
 
     it('Should open the modal dialog to confirm submission cancellation when cancel request', function () {
-      this.gemService.getRemedyTicket.and.returnValue(this.$q.reject({ status: 404 }));
-      this.TelephonyDomainService.getTelephonyDomain.and.returnValue(this.$q.resolve( this.telephonyDomain ));
-      this.TelephonyDomainService.cancelTDSubmission.and.returnValue(this.$q.resolve());
-      initComponent.call(this);
       this.controller.onCancelSubmission();
       this.$scope.$apply();
       expect(this.$modal.open).toHaveBeenCalled();

@@ -583,8 +583,8 @@ export class SparkReportService {
   public getCDRReport(): ng.IPromise<any> {
     const url = 'http://localhost:8080/s3transporter/squared/getObjects';
     return this.$http.get(url)
-        .then(function (response) {
-          return response;
-        });
+      .then(function (response) {
+        return response;
+      });
   }
 }

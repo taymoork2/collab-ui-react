@@ -5,7 +5,6 @@ require('@ciscospark/internal-plugin-search');
 require('angular-ui-grid/ui-grid.js');
 
 var EdiscoverySearchResultDirectiveFactory = require('./ediscovery-search-result.directive').EdiscoverySearchResultDirectiveFactory;
-var EdiscoverySearchResultAdvDirectiveFactory = require('./ediscovery-search-result-adv.directive').EdiscoverySearchResultAdvDirectiveFactory;
 
 (function () {
   'use strict';
@@ -15,6 +14,7 @@ var EdiscoverySearchResultAdvDirectiveFactory = require('./ediscovery-search-res
       require('angular-ui-router'),
       require('angular-translate'),
       require('angular-cache'),
+      require('angular-file-saver'),
       require('modules/core/analytics'),
       require('modules/core/featureToggle').default,
       require('modules/core/notifications').default,
@@ -36,7 +36,6 @@ var EdiscoverySearchResultAdvDirectiveFactory = require('./ediscovery-search-res
     .directive('searchResultsGenerate', require('./search-results/search-results-generate.directive'))
     .directive('searchResultsReport', require('./search-results/search-results-report.directive'))
     .directive('ediscoverySearchResult', EdiscoverySearchResultDirectiveFactory)
-    .directive('ediscoverySearchResultAdv', EdiscoverySearchResultAdvDirectiveFactory)
     .name;
 })();
 

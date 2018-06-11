@@ -3,14 +3,26 @@ import { HybridServicesI18NService } from 'modules/hercules/services/hybrid-serv
 import { HybridServiceId } from 'modules/hercules/hybrid-services.types';
 
 interface IStatusSummary {
-  'spark-hybrid-impinterop': IStatusSummaryForAService;
-  'squared-fusion-cal': IStatusSummaryForAService;
-  'squared-fusion-ec': IStatusSummaryForAService;
-  'squared-fusion-gcal': IStatusSummaryForAService;
-  'squared-fusion-o365': IStatusSummaryForAService;
-  'squared-fusion-uc': IStatusSummaryForAService;
+  countsByCluster: {
+    'spark-hybrid-impinterop': IStatusSummaryForACluster;
+    'squared-fusion-cal': IStatusSummaryForACluster;
+    'squared-fusion-ec': IStatusSummaryForACluster;
+    'squared-fusion-gcal': IStatusSummaryForACluster;
+    'squared-fusion-uc': IStatusSummaryForACluster;
+  };
+  countsByState: {
+    'spark-hybrid-impinterop': IStatusSummaryForAService;
+    'squared-fusion-cal': IStatusSummaryForAService;
+    'squared-fusion-ec': IStatusSummaryForAService;
+    'squared-fusion-gcal': IStatusSummaryForAService;
+    'squared-fusion-o365': IStatusSummaryForAService;
+    'squared-fusion-uc': IStatusSummaryForAService;
+  };
 }
 
+interface IStatusSummaryForACluster {
+  [clusterId: string]: number;
+}
 interface IStatusSummaryForAService {
   activated: number;
   activatedWithWarning: number;
@@ -18,6 +30,16 @@ interface IStatusSummaryForAService {
   notActivated: number;
   notActivatedWithWarning: number;
   total: number;
+}
+interface IClusterSipDomain {
+  clusterId: string;
+  sipDomain: string;
+}
+
+export interface IExtendedStatusByClusters {
+  id: string;
+  serviceId: HybridServiceId;
+  users: number;
 }
 
 export type IExtendedStatusSummary = IStatusSummaryForAService & {serviceId: HybridServiceId};
@@ -63,7 +85,7 @@ export interface IMessage {
   title?: string;
 }
 
-interface IMessageExtended extends IMessage {
+export interface IMessageExtended extends IMessage {
   iconClass: string;
 }
 
@@ -183,12 +205,33 @@ export class USSService {
     if (!this.cachedUserStatusSummary) {
       return [];
     }
-    return _.map(servicesId, (serviceId) => {
+    const result = _.map(servicesId, (serviceId) => {
       return {
-        ...this.cachedUserStatusSummary[serviceId],
+        ...this.cachedUserStatusSummary.countsByState[serviceId],
         serviceId: serviceId,
       };
     });
+    return result;
+  }
+
+  public extractSummaryForClusters(servicesId: HybridServiceId[]): IExtendedStatusByClusters[] {
+    if (!this.cachedUserStatusSummary) {
+      return [];
+    }
+    let result = _.map(servicesId, (serviceId) => {
+      return _.reduce(this.cachedUserStatusSummary.countsByCluster[serviceId], (acc, users, id) => {
+        if (id) {
+          acc.push({
+            id: id,
+            serviceId: serviceId,
+            users: users,
+          });
+        }
+        return acc;
+      }, <any>[]);
+    });
+    result = _.flatten(result);
+    return result;
   }
 
   public getAllStatuses(serviceId: HybridServiceId, state?: UserStatus): ng.IPromise<IUserStatusWithExtendedMessages[]> {
@@ -218,7 +261,7 @@ export class USSService {
   }
 
   public getStatusesSummary(): IStatusSummary | {} {
-    return this.cachedUserStatusSummary || {};
+    return (this.cachedUserStatusSummary && this.cachedUserStatusSummary.countsByState) || {};
   }
 
   public getUserJournal(userId: string, orgId = this.Authinfo.getOrgId(), limit?: number, serviceId?: HybridServiceId): ng.IPromise<IJournalEntry[]> {
@@ -293,6 +336,34 @@ export class USSService {
       .then(this.extractData);
   }
 
+  public getSipDestinationForClusters(orgId = this.Authinfo.getOrgId()): ng.IPromise<IClusterSipDomain[]> {
+    return this.$http
+      .get<{ items: IClusterSipDomain[] }>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`)
+      .then(this.extractData)
+      .then(response => response.items);
+  }
+
+  public addSipDomainForCluster(clusterId: string, sipDomain: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains`, {
+        clusterId: clusterId,
+        sipDomain: sipDomain,
+      })
+      .then(this.extractData);
+  }
+
+  public deleteSipDomainForCluster(clusterId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .delete<any>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains/${clusterId}`)
+      .then(this.extractData);
+  }
+
+  public removeSipDomainForCluster(clusterId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
+    return this.$http
+      .delete<''>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains/${clusterId}`)
+      .then(this.extractData);
+  }
+
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {
     if (!messageReplacementValues) {
       return {};
@@ -307,7 +378,7 @@ export class USSService {
     return this.$http
       .get(`${this.USSUrl}/orgs/${this.Authinfo.getOrgId()}/userStatuses/summary`)
       .then((res) => {
-        this.cachedUserStatusSummary  = _.get(res, 'data.countsByState');
+        this.cachedUserStatusSummary  = _.get(res, 'data');
         // res.data.countsByOwnerAndState.squared-fusion-cal.XXX can be undefined
         const o365 = _.get<IStatusSummaryForAService>(res, 'data.countsByOwnerAndState.squared-fusion-cal.ccc', {
           total:	0,
@@ -327,10 +398,10 @@ export class USSService {
         });
         // Add an entry to the cache for Office 365
         if (o365) {
-          this.cachedUserStatusSummary['squared-fusion-o365'] = o365;
+          this.cachedUserStatusSummary.countsByState['squared-fusion-o365'] = o365;
         }
         // Override `squared-fusion-cal` by the value for on-premise Exchange (otherwise it's the sum of on-premise Exchange + Office 365)
-        this.cachedUserStatusSummary['squared-fusion-cal'] = onPremExchange;
+        this.cachedUserStatusSummary.countsByState['squared-fusion-cal'] = onPremExchange;
       });
   }
 

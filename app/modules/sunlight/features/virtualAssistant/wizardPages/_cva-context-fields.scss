@@ -1,0 +1,254 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.context-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .modal-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.context-va-box {
+  height: rem-calc(650px);
+  width: rem-calc(760px);
+  margin: 75px auto auto;
+  border: 2px solid $gray-light-2;
+  border-radius: 3px;
+
+  justify-content: center;
+}
+.context-va-error {
+  line-height: 1.25rem;
+  text-align: left;
+  color: $red;
+
+  .icon {
+    vertical-align: middle;
+  }
+}
+
+.context-input {
+  width: 100%;
+  text-align: left;
+  border-radius: 3px;
+  border:solid rem(1px) $gray-4;
+  height: rem-calc(25);
+  padding-left: 2%;
+  padding-right: 2%;
+  &:focus {
+    box-shadow: none;
+    border:solid rem(1px) $blue-base;
+  }
+  &:focus:hover {
+    box-shadow: none;
+    border:solid rem(1px) $blue-base;
+  }
+  &:hover {
+    box-shadow: none;
+    border: solid rem(1px) $gray-3
+  }
+}
+.context-input-error {
+  width: 100%;
+  text-align: left;
+  border-radius: 3px;
+  border:solid rem(1px) $red;
+  height: rem-calc(25);
+  padding-left: 2%;
+  padding-right: 2%;
+  background: $red-light;
+  color: $gray-1;
+  &:focus {
+    box-shadow: none;
+    border:solid rem(1px) $red;
+    background: $white;
+  }
+}
+
+.conditionalScroll{
+  max-height: 550px;
+  overflow-y: auto;
+}
+
+.context-va-body {
+  label.cs-checkbox {
+    width: 0;
+  }
+
+  .context-modal-content {
+    width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .field-list-item-wrapper {
+    text-align: center;
+  }
+
+  .field-list-item {
+    text-align: left;
+    padding: 2px 0px;
+    cursor: default;
+    width: 100%;
+  }
+
+  .field-list-item .column-one {
+    float: left;
+    width: 45%;
+    line-height: 3;
+    font-size: 0.8rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    text-overflow: ellipsis;
+    padding-left: 2%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 2px;
+    cursor: default;
+  }
+
+  .field-list-item .column-two {
+    float: left;
+    width: 50%;
+    line-height: 3;
+    font-size: 0.8rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    text-overflow: ellipsis;
+    padding-top: 2px;
+    padding-left: 4%;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .field-list-item .column-three {
+    float: left;
+    width: 5%;
+    line-height: 3;
+    font-size: 0.8rem;
+    font-family: $brand-font-light;
+    color: $gray-dark-1;
+    padding-top: 1px;
+    padding-left: 1%;
+    cursor: pointer;
+  }
+
+  .typeahead-search {
+    padding-top: 15px;
+    .context-fields-searchbox {
+      width: 33rem;
+    }
+    .dropdown-menu {
+      width: 33rem;
+
+      &.active:hover {
+        background: $gray-light-3;
+      }
+    }
+    .context-search-input {
+      width: 100%;
+      text-align: left;
+      height: 2rem;
+      font-size: 0.8rem;
+      border-radius: 3px;
+      border:solid rem(1px) $gray-4;
+      padding-left: 2%;
+      padding-right: 2%;
+      &:focus {
+        box-shadow: none;
+        border:solid rem(1px) $blue-base;
+      }
+      &:focus:hover {
+        box-shadow: none;
+        border:solid rem(1px) $blue-base;
+      }
+      &:hover {
+        box-shadow: none;
+        border: solid rem(1px) $gray-3
+      }
+    }
+
+    .disabled-state {
+      width: 100%;
+      text-align: left;
+      height: 2rem;
+      font-size: 0.8rem;
+      border-radius: 3px;
+      border:solid rem(1px) $gray-light-1;
+      background: $gray-light-3;
+      padding-left: 2%;
+      padding-right: 2%;
+    }
+
+    .field-drop-down span.field-drop-down-id {
+      float: left;
+      width: 50%;
+      line-height: 24px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-top: 6px;
+      padding-left: 16px;
+    }
+
+    .field-drop-down span.field-drop-down-fieldinfo {
+      float: left;
+      width: 50%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 24px;
+      padding-top: 6px;
+      padding-left: 16px;
+    }
+  }
+}
+
+.no-results {
+  font-size: 0.875rem;
+  font-family: $brand-font-light;
+  color: $gray-dark-1;
+  line-height: 24px;
+}
+
+.context-retry-error {
+  i {
+    font-size: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+    color: $color-negative-base;
+  }
+  .failure-message {
+    font-family: $brand-font-regular;
+    font-size: 14px;
+    color: $color-negative-base;
+  }
+  .retry-action {
+    font-family: $brand-font-regular;
+    font-size: 14px;
+    color: $color-primary-base;
+    background: none;
+    padding: 0;
+    min-width: 0;
+  }
+  .retry-action:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .retry-action:disabled {
+    color: $gray-base;
+  }
+}
+
+.tooltip[popup-class="context-tooltip"] .c-nub {
+  font-size: small;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 300px;
+}

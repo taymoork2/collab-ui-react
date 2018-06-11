@@ -33,10 +33,11 @@ describe('Service: CallForwardService', () => {
 
   it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/12345/numbers/0000000/features/callforwards').respond(500);
-    this.CallForwardService.getCallForward(LineConsumerType.PLACES, '12345', '0000000').then(response => {
-      expect(response.data).toBeUndefined();
-      expect(response.status).toEqual(500);
-    });
+    this.CallForwardService.getCallForward(LineConsumerType.PLACES, '12345', '0000000').then(fail)
+      .catch(response => {
+        expect(response.data).toBeUndefined();
+        expect(response.status).toEqual(500);
+      });
     this.$httpBackend.flush();
   });
 

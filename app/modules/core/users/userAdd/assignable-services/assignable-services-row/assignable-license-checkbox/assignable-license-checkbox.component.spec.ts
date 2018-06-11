@@ -19,17 +19,17 @@ describe('Component: assignableLicenseCheckbox:', () => {
     };
     this.$scope.fakeLabel = 'fakeLabel';
     this.$scope.onUpdate = jasmine.createSpy('onUpdate');
-    this.$scope.stateData = {};
+    this.$scope.autoAssignTemplateData = {};
   });
 
-  function initComponent(_transcludeContent) {
-    const transcludeContent = _transcludeContent || '';
+  function initComponent(transcludeContent = '', extraBindings = '') {
     this.compileTemplate(`
       <assignable-license-checkbox
+        ${extraBindings}
         license="fakeLicense"
         l10n-label="fake-label"
         on-update="onUpdate()"
-        state-data="stateData">
+        auto-assign-template-data="autoAssignTemplateData">
         ${transcludeContent}
       </assignable-license-checkbox>`);
     this.controller = this.view.controller('assignableLicenseCheckbox');
@@ -58,10 +58,10 @@ describe('Component: assignableLicenseCheckbox:', () => {
       expect(this.controller.getTotalLicenseVolume()).toBe(5);
     });
 
-    it('should initialize an entry in "stateData", if one does not exist yet', function () {
-      expect(this.$scope.stateData).toEqual({});
+    it('should initialize an entry in "autoAssignTemplateData", if one does not exist yet', function () {
+      expect(this.$scope.autoAssignTemplateData).toEqual({});
       initComponent.call(this);
-      expect(this.$scope.stateData).toEqual({
+      expect(this.$scope.autoAssignTemplateData.viewData).toEqual({
         LICENSE: {
           'fake-licenseId': {
             isSelected: false,
@@ -77,32 +77,81 @@ describe('Component: assignableLicenseCheckbox:', () => {
       });
     });
 
-    it('should get "isSelected" according to value in "stateData"', function () {
-      initComponent.call(this);
-      expect(this.controller.isSelected).toBe(false);
-      this.$scope.stateData.LICENSE['fake-licenseId'].isSelected = true;
-      expect(this.controller.isSelected).toBe(true);
+    it('should initialize its entry "isSelected" and "isDisabled" values according to input bindings', function () {
+      const emptyTranscludeContent = '';
+      this.$scope.isSelected = true;
+      this.$scope.isDisabled = true;
+      const additionalBindingsString = 'is-selected="isSelected" is-disabled="isDisabled"';
+      initComponent.call(this, emptyTranscludeContent, additionalBindingsString);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected).toBe(true);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled).toBe(true);
+      delete this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'];
+
+      this.$scope.isSelected = false;
+      this.$scope.isDisabled = true;
+      initComponent.call(this, emptyTranscludeContent, additionalBindingsString);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected).toBe(false);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled).toBe(true);
+      delete this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'];
+
+      this.$scope.isSelected = false;
+      this.$scope.isDisabled = false;
+      initComponent.call(this, emptyTranscludeContent, additionalBindingsString);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected).toBe(false);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled).toBe(false);
     });
 
-    it('should get "isDisabled" according to value in "stateData", "isLicenseStatusOk()", and "hasVolume()"', function () {
+    it('should ignore "isSelected" and "isDisabled" input bindings if corresponding entry data already exists', function () {
       initComponent.call(this);
-      spyOn(this.controller, 'isLicenseStatusOk').and.returnValue(true);
-      spyOn(this.controller, 'hasVolume').and.returnValue(true);
-      expect(this.controller.isDisabled).toBe(false);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected).toBe(false);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled).toBe(false);
 
-      // 'isDisabled' in 'stateData' entry is true
-      this.$scope.stateData.LICENSE['fake-licenseId'].isDisabled = true;
-      expect(this.controller.isDisabled).toBe(true);
+      // manually set entry data
+      this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected = true;
+      this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled = true;
 
-      // reset 'isDisabled', 'isLicenseStatusOk()' is false
-      this.$scope.stateData.LICENSE['fake-licenseId'].isDisabled = false;
-      this.controller.isLicenseStatusOk.and.returnValue(false);
-      expect(this.controller.isDisabled).toBe(true);
+      // attempt to set both input bindings to "false"
+      this.$scope.isSelected = false;
+      this.$scope.isDisabled = false;
+      const emptyTranscludeContent = '';
+      const additionalBindingsString = 'is-selected="isSelected" is-disabled="isDisabled"';
+      initComponent.call(this, emptyTranscludeContent, additionalBindingsString);
 
-      // reset 'isLicenseStatusOk()', 'hasVolume()' is false
-      this.controller.isLicenseStatusOk.and.returnValue(true);
-      this.controller.hasVolume.and.returnValue(false);
-      expect(this.controller.isDisabled).toBe(true);
+      // entry data already existed for this license, so entry data values override input binding values
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected).toBe(true);
+      expect(this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled).toBe(true);
+    });
+
+    describe('isSelectedLicense():', () => {
+      it('should return value from its entry in "autoAssignTemplateData"', function () {
+        initComponent.call(this);
+        expect(this.controller.isSelectedLicense()).toBe(false);
+        this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isSelected = true;
+        expect(this.controller.isSelectedLicense()).toBe(true);
+      });
+    });
+
+    describe('isDisabledLicense():', () => {
+      it('should return value from its entry in "autoAssignTemplateData", combined with "isLicenseStatusOk()", and "hasVolume()"', function () {
+        initComponent.call(this);
+        spyOn(this.controller, 'isLicenseStatusOk').and.returnValue(true);
+        spyOn(this.controller, 'hasVolume').and.returnValue(true);
+        expect(this.controller.isDisabledLicense()).toBe(false);
+
+        // 'isDisabled' in 'autoAssignTemplateData' entry is true
+        this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled = true;
+        expect(this.controller.isDisabledLicense()).toBe(true);
+
+        // reset 'isDisabled', 'isLicenseStatusOk()' is false
+        this.$scope.autoAssignTemplateData.viewData.LICENSE['fake-licenseId'].isDisabled = false;
+        this.controller.isLicenseStatusOk.and.returnValue(false);
+        expect(this.controller.isDisabledLicense()).toBe(true);
+
+        // reset 'isLicenseStatusOk()', 'hasVolume()' is false
+        this.controller.isLicenseStatusOk.and.returnValue(true);
+        this.controller.hasVolume.and.returnValue(false);
+        expect(this.controller.isDisabledLicense()).toBe(true);
+      });
     });
 
     describe('isLicenseStatusOk():', () => {

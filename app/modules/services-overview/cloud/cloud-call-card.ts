@@ -1,4 +1,3 @@
-import { Config } from 'modules/core/config/config';
 import { ServicesOverviewCard, ICardButton } from '../shared/services-overview-card';
 
 export class ServicesOverviewCallCard extends ServicesOverviewCard {
@@ -8,11 +7,7 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
 
   private _buttons: ICardButton[] = [{
     name: 'servicesOverview.cards.call.buttons.numbers',
-    routerState: 'huronlines',
-    buttonClass: 'btn-link',
-  }, {
-    name: 'servicesOverview.cards.call.buttons.settings',
-    routerState: 'huronsettings',
+    routerState: this.Authinfo.isBroadCloud() ? 'bclines' : 'huronlines',
     buttonClass: 'btn-link',
   }];
 
@@ -56,17 +51,10 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       });
     }
   }
-  private showFeatureTab() {
-    return this.Authinfo.getLicenses()
-      .filter((license) => {
-        return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
-      }).length > 0;
-  }
 
   /* @ngInject */
   public constructor(
     private Authinfo,
-    private Config: Config,
   ) {
     super({
       active: Authinfo.isAllowedState('huronsettings'),
@@ -75,10 +63,18 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
       icon: 'icon-circle-call',
       name: 'servicesOverview.cards.call.title',
     });
-    if (this.showFeatureTab()) {
-      this._buttons.splice(1, 0, {
+    if (this.Authinfo.hasCallLicense() && !this.Authinfo.isBroadCloud()) {
+      this._buttons.push({
         name: 'servicesOverview.cards.call.buttons.features',
         routerState: 'huronfeatures',
+        buttonClass: 'btn-link',
+      });
+    }
+
+    if (!this.Authinfo.isBroadCloud()) {
+      this._buttons.push({
+        name: 'servicesOverview.cards.call.buttons.settings',
+        routerState: 'huronsettings',
         buttonClass: 'btn-link',
       });
     }

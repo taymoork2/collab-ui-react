@@ -21,7 +21,7 @@
       dummyAvailabilityData: dummyAvailabilityData,
       dummyLineChartData: dummyLineChartData,
       dummyUtilizationGraph: dummyUtilizationGraph,
-      dummyParticipantDistributionGraph: dummyParticipantDistributionGraph,
+      dummyClusterLineChartGraph: dummyClusterLineChartGraph,
       dummyClientTypeGraph: dummyClientTypeGraph,
       dummyMeetingLocationGraph: dummyMeetingLocationGraph,
       dummyNumberOfParticipantGraph: dummyNumberOfParticipantGraph,
@@ -222,7 +222,7 @@
       return dummyGraph;
     }
 
-    function dummyParticipantDistributionGraph() {
+    function dummyClusterLineChartGraph() {
       var dummyGraph = [];
       dummyGraph.push({
         title: vm.clusterHeading,

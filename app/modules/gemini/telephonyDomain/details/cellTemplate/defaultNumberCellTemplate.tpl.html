@@ -1,20 +1,22 @@
 <div id="{{row.uid}}-defaultNumber"
-     ng-if="grid.appScope.isEdit"
-     ng-mouseover="row.entity.isEdit=true"
-     class="ui-grid-cell-contents select-overflow"
-     ng-class="{'error': row.entity.defaultNumberValidation.invalid}"
-     tooltip-class="tn-error"
-     tooltip-append-to-body="true"
-     tooltip-is-open="row.entity.defaultNumberValidation.show"
-     tooltip-html-unsafe="{{row.entity.defaultNumberValidation.message}}">
+  ng-if="grid.appScope.isEdit"
+  ng-mouseover="row.entity.isEdit=true"
+  class="ui-grid-cell-contents select-overflow"
+  ng-class="{'error': row.entity.defaultNumberValidation.invalid}"
+  tabindex="0"
+  tooltip-class="tn-error"
+  tooltip-append-to-body="true"
+  tooltip-is-open="row.entity.defaultNumberValidation.show"
+  tooltip-html-unsafe="{{row.entity.defaultNumberValidation.message}}"
+  aria-label="{{row.entity.defaultNumberValidation.ariaLabel}}">
   <cs-select ng-if="row.entity.isEdit"
-             is-disabled="row.entity.denbDisabled || grid.appScope.submitLoading"
-             title="{{row.entity.defaultNumber.label}}"
-             options="row.entity.defaultNumberOptions"
-             on-change-fn="grid.appScope.changeDefaultNumber(row)"
-             labelfield="label"
-             valuefield="value"
-             ng-model="row.entity.defaultNumber">
+    is-disabled="row.entity.denbDisabled || grid.appScope.submitLoading"
+    title="{{row.entity.defaultNumber.label}}"
+    options="row.entity.defaultNumberOptions"
+    on-change-fn="grid.appScope.changeDefaultNumber(row)"
+    labelfield="label"
+    valuefield="value"
+    ng-model="row.entity.defaultNumber">
   </cs-select>
   <div ng-if="!row.entity.isEdit" class="select-list">
     <span class="select-toggle form-control" tabindex="0" aria-expanded="false" ng-class="{ disabled: row.entity.denbDisabled || grid.appScope.submitLoading }">
@@ -24,7 +26,7 @@
   </div>
 </div>
 <div ng-if="!grid.appScope.isEdit"
-     class="ui-grid-cell-contents read-only-text"
-     title="{{row.entity.defaultNumber.label}}">
+  class="ui-grid-cell-contents read-only-text"
+  title="{{row.entity.defaultNumber.label}}">
   {{row.entity.defaultNumber.label}}
 </div>

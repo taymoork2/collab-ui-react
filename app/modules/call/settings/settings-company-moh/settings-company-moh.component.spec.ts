@@ -30,7 +30,7 @@ describe('Component: companyMoh', () => {
     this.$scope.$apply();
   });
 
-  it('should have a select element with options', function(){
+  it('should have a select element with options', function() {
     expect(this.view).toContainElement(COMPANY_MOH_SELECT);
     expect(this.view.find(COMPANY_MOH_SELECT).find(DROPDOWN_OPTIONS).get(0)).toHaveText('sample-media-1');
     expect(this.view.find(COMPANY_MOH_SELECT).find(DROPDOWN_OPTIONS).get(1)).toHaveText('sample-media-2');

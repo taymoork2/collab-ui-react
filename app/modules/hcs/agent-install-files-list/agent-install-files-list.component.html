@@ -1,0 +1,72 @@
+<div class="hcs-no-data" ng-if="$ctrl.loading">
+  <i class="icon icon-2x icon-spinner"></i>
+</div>
+<div ng-if="!$ctrl.loading && $ctrl.allInstallFilesList.length !== 0">
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <cs-searchfilter search-item-fn="$ctrl.filteredList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+      </cs-searchfilter>
+      <div>
+        <span translate="common.all"/> <span class="count">{{$ctrl.installFilesList.length}}</span>
+      </div>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <button class="btn btn--primary" ng-click="$ctrl.addAgentInstallFile()">
+        <span translate="hcs.installFiles.addFile"></span>
+      </button>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="cs-card-container install-file-container">
+    <cs-card-layout>
+      <cs-card class="cs-card--medium" ng-repeat="installFile in $ctrl.installFilesList">
+        <article>
+          <header>
+            <div class="header-with-right-icon">
+              <p class="h4 ellipsis" title="Card Name">{{installFile.label}}</p>
+              <div class="right card-icon-div ">
+                <button type="button" class="close"
+                  ng-click="$ctrl.deleteCard(installFile.uuid, $event)"
+                  ng-keydown=""
+                  aria-label="{{::'common.delete' | translate}}"></button>
+              </div>
+            </div>
+            <p class="h6">{{installFile.version}}</p>
+          </header>
+          <section class="card-body">
+            <div class="card-section">
+              <div class="card-section-item" translate="hcs.installFiles.httpProxies"></div>
+              <div class="card-section-item">
+                <span ng-repeat="proxy in installFile.proxies">
+                  <span ng-if="$index > 0">, </span>
+                  <span>{{proxy}}</span>
+                </span>
+              </div>
+            </div>
+          </section>
+          <footer class="install-file-footer">
+            <!-- <span class="footer-item">
+              <a href ><span translate="hcs.installFiles.tarFile"></span></a>
+            </span> -->
+            <span>
+              <span class="footer-creating" ng-if="!installFile.fileInfo[0]">
+              <span translate="hcs.installFiles.creating"></span>
+                <i class="icon icon-download"/>
+              </span>
+              <span class="footer-item" ng-if="installFile.fileInfo[0]">
+                <i class="icon icon-download icon-color"/>
+                <a ng-if="installFile.fileInfo[0]" ng-href="{{installFile.fileInfo[0].downloadUrl}}" translate="hcs.installFiles.copFile"></a>
+              </span>
+            </span>
+          </footer>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>
+<div class="hcs-no-data" ng-if="!$ctrl.loading && $ctrl.allInstallFilesList.length === 0">
+  <h2 translate="hcs.installFiles.nofileTitle"></h2>
+  <h5 translate="hcs.installFiles.nofileDescription"></h5>
+  <button class="btn btn--primary btn--large" ng-click="$ctrl.addAgentInstallFile()">
+    <span translate="hcs.installFiles.addFile"></span>
+  </button>
+</div>

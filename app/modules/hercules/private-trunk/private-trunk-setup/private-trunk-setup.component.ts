@@ -29,7 +29,7 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
   public privateTrunkResource: PrivateTrunkResource;
   private resourceAddSuccess: boolean = true;
   private privateTrunkAddError: boolean = false;
-  private setupTitle: string;
+  public setupTitle: string;
   //certs
   public formattedCertList: IformattedCertificate[];
   public isImporting: boolean = false;

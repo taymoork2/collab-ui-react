@@ -8,6 +8,7 @@
   /* @ngInject */
   function WebExMetricsCtrl(
     $log,
+    $location,
     $q,
     $rootScope,
     $sce,
@@ -64,6 +65,18 @@
           view: 'System',
           appName: 'system',
         },
+        dashboard: {
+          view: 'Dashboard',
+          appName: 'dashboard_webex_v1',
+        },
+        jms: {
+          view: 'JMS',
+          appName: 'jms_webex_v1',
+        },
+        jmt: {
+          view: 'JMT',
+          appName: 'jmt_webex_v1',
+        },
       },
       states: {
         metrics: {
@@ -91,16 +104,33 @@
           state: 'reports.webex-metrics.classic',
           initialed: true,
         },
+        dashboard: {
+          title: 'reportsPage.webexMetrics.dashboard',
+          state: 'reports.webex-metrics.dashboard',
+          initialed: true,
+        },
+        jms: {
+          title: 'reportsPage.webexMetrics.JMS',
+          state: 'reports.webex-metrics.jms',
+          initialed: true,
+        },
+        jmt: {
+          title: 'reportsPage.webexMetrics.JMT',
+          state: 'reports.webex-metrics.jmt',
+          initialed: true,
+        },
       },
     };
 
     vm.$state = $state;
     vm.init = init;
+    vm.checkClassic = checkClassic;
     vm.checkStatePermission = checkStatePermission;
     vm.goMetricsInitState = goMetricsInitState;
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
+    vm.pushClassicTab = pushClassicTab;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
 
@@ -120,7 +150,7 @@
     function bindEvents() {
       hasClassicEnabled = $scope.$on('classicEnabled', function (event, isWebexClassicEnabled) {
         vm.isWebexClassicEnabled = isWebexClassicEnabled;
-        checkClassic(vm.isWebexClassicEnabled);
+        vm.checkClassic(vm.isWebexClassicEnabled);
       });
       $stateChangeStart = $rootScope.$on('$stateChangeStart', onStateChangeStart);
       $stateChangeSuccess = $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
@@ -129,7 +159,7 @@
     function checkClassic() {
       FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
         if (isMetricsOn && vm.isWebexClassicEnabled) {
-          pushClassicTab();
+          vm.pushClassicTab();
           if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
             $timeout(goMetricsInitState, 0);
           }
@@ -153,7 +183,16 @@
       if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.diagnostics.state)) {
         isRedirected = true;
       }
-      if (!vm.features.isSystemOn && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
+      if (!(vm.features.isSystemOn && isCiscoUser()) && _.isEqual(stateName, vm.webexMetrics.states.system.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.webexMetrics.states.dashboard.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.webexMetrics.states.jms.state)) {
+        isRedirected = true;
+      }
+      if (!vm.features.isInternalOn && _.isEqual(stateName, vm.webexMetrics.states.jmt.state)) {
         isRedirected = true;
       }
       if (!vm.features.isMEIOn && _.isEqual(stateName, vm.webexMetrics.states.mei.state)) {
@@ -181,6 +220,16 @@
           $state.reload($state.current.name);
         }
       }
+    }
+
+    function getReportType() {
+      var urlPath = $location.path();
+      urlPath = urlPath.split('/');
+      var reportType = '';
+      if (urlPath.length > 0) {
+        reportType = urlPath[urlPath.length - 1];
+      }
+      return _.toLower(reportType);
     }
 
     function initSiteUrl() {
@@ -217,9 +266,17 @@
       });
     }
 
+    function isReportsChanged(viewType, userInfo) {
+      return (isMetrics() && userInfo.siteUrl !== vm.metricsSelected.toLowerCase()) || (!isMetrics() && _.get(vm.webexMetrics.views[vm.webexMetricsViews], 'view') !== viewType);
+    }
+
+    function isMetrics() {
+      return vm.webexMetricsViews === 'metrics';
+    }
+
     function loadMetricsReport() {
       var reportView = vm.webexMetrics.views[vm.webexMetricsViews];
-      if (vm.webexMetricsViews === 'metrics') {
+      if (isMetrics()) {
         reportView = vm.webexMetrics.views[vm.webexMetricsViews][vm.viewType];
       }
 
@@ -231,7 +288,7 @@
 
       var viewType = _.get(reportView, 'view');
       var getWebExReportData = _.get(QlikService, 'getQBSInfo');
-      if (vm.selectEnable) {
+      if (isMetrics()) {
         getWebExReportData = _.get(QlikService, 'getProdToBTSQBSInfo');
       }
 
@@ -239,7 +296,7 @@
         return;
       }
       getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
-        if (!_.isUndefined(data)) {
+        if (!_.isUndefined(data) && !isReportsChanged(viewType, userInfo)) {
           vm.webexMetrics.appData = {
             ticket: data.ticket,
             appId: data.appName,
@@ -275,11 +332,14 @@
       vm.isStateReady = true;
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
+
       $log.log('onStateChangeStart: checkStatePermission -----------');
       if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
         event.preventDefault();
-        if (!isSubState) {
+        if (!isSubState || (isSubState && toState.name.indexOf('classic') !== -1)) {
           $state.go(fromState);
+        } else {
+          goLogin();
         }
       }
 
@@ -309,6 +369,28 @@
           break;
         case vm.webexMetrics.states.system.state:
           vm.webexMetricsViews = 'system';
+          vm.selectEnable = false;
+          vm.updateWebexMetrics();
+          break;
+        case 'reports.webex-metrics.main':
+          vm.selectEnable = false;
+          vm.webexMetricsViews = getReportType();
+          if (vm.webexMetricsViews) {
+            vm.updateWebexMetrics();
+          }
+          break;
+        case vm.webexMetrics.states.dashboard.state:
+          vm.webexMetricsViews = 'dashboard';
+          vm.selectEnable = false;
+          vm.updateWebexMetrics();
+          break;
+        case vm.webexMetrics.states.jms.state:
+          vm.webexMetricsViews = 'jms';
+          vm.selectEnable = false;
+          vm.updateWebexMetrics();
+          break;
+        case vm.webexMetrics.states.jmt.state:
+          vm.webexMetricsViews = 'jmt';
           vm.selectEnable = false;
           vm.updateWebexMetrics();
           break;
@@ -355,20 +437,29 @@
         isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
         // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
-        isMEIOn: FeatureToggleService.webexMEIGetStatus(),
+        isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
+        isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
+        isProPackEnabled: ProPackService.hasProPackEnabled(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
-        if (features.isSystemOn) {
+        if (features.isSystemOn && isCiscoUser()) {
           vm.metricsOptions.splice(0, 0, vm.webexMetrics.states.system);
         }
+        if (features.isInternalOn) {
+          vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
+        }
         if (features.isMetricsOn && features.hasMetricsSite) {
-          vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          if (features.isProPackEnabled) {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
+          } else {
+            vm.metricsOptions.push(vm.webexMetrics.states.metrics);
+          }
         }
-        if (features.isMEIOn) {
+        /*if (features.isMEIOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.mei);
-        }
+        }*/
         if ($scope.header.isWebexClassicEnabled) {
           vm.isWebexClassicEnabled = true;
           pushClassicTab();
@@ -377,11 +468,17 @@
       });
     }
 
+    function isCiscoUser() {
+      var isCiscoUser = false;
+      isCiscoUser = Authinfo.isCisco();
+      return isCiscoUser;
+    }
+
     function updateIframe() {
       var iframeUrl = vm.webexMetrics.appData.url;
       var data = {
         trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
-        appId: vm.webexMetrics.appData.appId,
+        appid: vm.webexMetrics.appData.appId,
         QlikTicket: vm.webexMetrics.appData.ticket,
         node: vm.webexMetrics.appData.node,
         persistent: vm.webexMetrics.appData.persistent,

@@ -11,7 +11,7 @@ export class OrdersOverviewComponent implements ng.IComponentOptions {
 export class OrdersOverviewCtrl implements ng.IComponentController {
   public currentCustomer: any;
   public loading: boolean = true;
-  private orders: any[] = [];
+  public orders: any[] = [];
   private ordersWithDuplicates: any[] = [];
   private PENDING = this.$translate.instant('pstnOrderOverview.inProgress');
   public isPartner: boolean;

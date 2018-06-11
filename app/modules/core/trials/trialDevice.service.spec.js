@@ -27,11 +27,14 @@ describe('Service: Trial Device Service:', function () {
       });
     });
 
-    it('should have a longer list for  CISCO_DX80 and contain for example "Germany"', function () {
+    it('should have a longer list for  CISCO_DX80 and contain for example "Germany and Brazil"', function () {
       var countries = this.TrialDeviceService.getCountries(['CISCO_DX80']);
       expect(countries.length).toBeGreaterThan(1);
       expect(countries).toContain({
         country: 'Germany',
+      });
+      expect(countries).toContain({
+        country: 'Brazil',
       });
     });
 
@@ -40,6 +43,14 @@ describe('Service: Trial Device Service:', function () {
       expect(countries.length).toBeGreaterThan(1);
       expect(countries).toContain({
         country: 'Croatia',
+      });
+    });
+
+    it('should not contain "Brazil" if devices other than  CISCO_DX80 are also included', function () {
+      var countries = this.TrialDeviceService.getCountries(['CISCO_SX10', 'CISCO_DX80']);
+      expect(countries.length).toBeGreaterThan(1);
+      expect(countries).not.toContain({
+        country: 'Brazil',
       });
     });
 

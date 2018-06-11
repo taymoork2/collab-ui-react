@@ -1,0 +1,70 @@
+.ct-agent-unavailable {
+  align-items: center;
+
+  .ct-agent-unavailable-icon {
+    color: $alert-color;
+  }
+
+  .unavailable-preview {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+
+    @include vr-spacing(mt, 5);
+
+    > button {
+      width: 7rem;
+    }
+
+    .unavailable {
+      display: flex;
+      text-align: center;
+      flex-flow: column nowrap;
+      width: 80%;
+      color: $alert-color;
+
+      .icon-warning {
+        font-size: 2rem;
+      }
+    }
+
+    .unavailable-msg {
+      @include vr-spacing(mb, 1);
+      @include vr-spacing(pb, 1);
+      white-space: pre-line;
+      height: 14rem;
+      width: rem-calc(300px);
+      overflow: hidden;
+      font-family: $brand-font-cisco-TT-Light;
+      color: $alert-color;
+      text-align: center;
+    }
+  }
+
+  .cs-card article.attributes {
+    background-color: $gray-light-4;
+  }
+
+  .unavailable-attributes {
+    @include vr-spacing(pl, 1);
+
+    .message-area {
+      @include vr-spacing(p, 1);
+
+      height: 5rem;
+      width: 95%;
+      resize: none;
+      color: $gray-dark-1;
+      font-size: $h6-font-size;
+      line-height: 1.4rem;
+    }
+  }
+
+  .unavailable-attributes-label {
+    font-family: $brand-font-cisco-TT-Regular;
+  }
+
+  .no-click {
+    pointer-events: none;
+  }
+}

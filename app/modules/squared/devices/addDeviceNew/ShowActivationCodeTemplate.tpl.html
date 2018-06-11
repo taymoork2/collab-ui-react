@@ -8,17 +8,7 @@
     <div class="device-wizard view-activation-code" id="printActivationCode" print-element-margin="3rem 3rem">
       <h4 translate="addDeviceWizard.showActivationCode.activationCode"></h4>
       <p class="wizardDescription">
-        <span ng-if="showActivationCode.showPersonalText"
-              translate="addDeviceWizard.showActivationCode.plugInPersonal"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showHuronWithoutATAText"
-              translate="addDeviceWizard.showActivationCode.plugInDeskPhone"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showHuronWithATAText"
-              translate="addDeviceWizard.showActivationCode.plugInDeskPhoneExtra"
-              translate-values="{ belongsTo: showActivationCode.account.name }"></span>
-        <span ng-if="showActivationCode.showCloudberryText"
-              translate="addDeviceWizard.showActivationCode.plugInRoomSystem"
+        <span translate="addDeviceWizard.showActivationCode.plugInDevice"
               translate-values="{ belongsTo: showActivationCode.account.name }"></span>
         <br>
         <span ng-if="showActivationCode.account.type === 'personal'"
@@ -33,15 +23,17 @@
         <img class="qrCodeImage"
              ng-style="{'visibility': showActivationCode.qrCode === undefined ? 'hidden' : 'visible'}"
              data-ng-src="data:image/PNG;base64,{{showActivationCode.qrCode}}"
-             aria-label="{{::'addDeviceWizard.qrCode' | translate}}"
+             aria-label="{{showActivationCode.friendlyActivationCode}}"
              tabindex="0">
         <div class="activation-code">
           <h2 tabindex="0">
             {{showActivationCode.friendlyActivationCode}}
           </h2>
         </div>
-        <p class="expiryTime" translate="addDeviceWizard.showActivationCode.expires"
+        <p class="qr-footnote expiryTime" translate="addDeviceWizard.showActivationCode.expires"
            translate-values="{ expiryDate: showActivationCode.getExpiresOn() }" tabindex="0"></p>
+        <p class="qr-footnote" ng-if="showActivationCode.codeOnlyForPhones" translate="addDeviceWizard.showActivationCode.codeOnlyForPhones"></p>
+        <p class="qr-footnote" ng-if="showActivationCode.codeNotForPhones" translate="addDeviceWizard.showActivationCode.codeOnlyForRoomDevices"></p>
       </div>
     </div>
 
@@ -49,16 +41,16 @@
       <div class="qrCodeSection">
         <div class="qrCodeButtons">
           <a href sq-clipboard="showActivationCode.friendlyActivationCode">
-            <span translate="generateActivationCodeModal.copyToClipboard"></span>
+            <span translate="common.copy"></span>
           </a>
 
           <a href ng-disabled="genAuthCode.showEmail"
             ng-click="showActivationCode.activateEmail()"
-            translate="generateActivationCodeModal.emailCode">
+            translate="common.email">
           </a>
 
           <a href cr-print print-element-id="printActivationCode">
-            <span translate="generateActivationCodeModal.print"></span>
+            <span translate="common.print"></span>
           </a>
         </div>
 
@@ -74,11 +66,13 @@
               <input id="userInput"
                      ng-model="showActivationCode.foundUser"
                      class="underline userInput"
+                     ng-class="{'error': showActivationCode.noUserFound, 'short': showActivationCode.searchStringShort}"
                      typeahead="user for user in showActivationCode.searchUser($viewValue) | limitTo:6"
                      typeahead-template-url="stateTemplate.html"
                      typeahead-on-select="showActivationCode.selectUser($item)"
                      placeholder="{{'addDeviceWizard.showActivationCode.searchAnotherUser' | translate}}"
                      ng-click="showActivationCode.onTextClick($event)"
+                     ng-keyup="showActivationCode.onUserInputKeyUp()"
                      typeahead-wait-ms="500"/>
               <script type="text/ng-template" id="stateTemplate.html">
                 <a>
@@ -86,7 +80,16 @@
                   ng-bind-html="'' + match.label.extractedName + ' (' + match.label.userName + ')' | typeaheadHighlight:query"></span>
                 </a>
               </script>
+              <div class="userSearchSpinner">
+                <i ng-if="showActivationCode.isSearching" class="icon icon icon-spinner"></i>
+              </div>
             </div>
+            <div class="userSearchMessage userSearchError"
+                 ng-if="showActivationCode.noUserFound"
+                 translate="addDeviceWizard.showActivationCode.noUsersFound"></div>
+            <div class="userSearchMessage userSearchWarning"
+                 ng-if="showActivationCode.searchStringShort"
+                 translate="addDeviceWizard.showActivationCode.searchStringTooShort"></div>
             <div class="scrollSpace"></div>
           </div>
         </div>

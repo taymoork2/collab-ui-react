@@ -1,9 +1,13 @@
 'use strict';
 
+/* eslint-env es6 */
+
 var _ = require('lodash');
-var helmetCspConfig = require('./csp-prod.config');
-var cspHeaderValue = convertToHeaderValue(helmetCspConfig);
-var customHttpHeaders = {
+var args = require('yargs').argv;
+
+var cspConfig = require(`./csp-${args.env}.config`);
+var cspHeaderValue = convertToHeaderValue(cspConfig);
+var CustomHttpHeaders = {
   'Content-Security-Policy': cspHeaderValue,
 };
 
@@ -16,7 +20,7 @@ function convertToHeaderValue(directives) {
     directiveEntries.push(directiveEntry + ' ' + rulesAsStr);
   });
 
-  return directiveEntries.join('; ');
+  return `${directiveEntries.join('; ').concat(';')}`;
 }
 
-module.exports = customHttpHeaders;
+module.exports = CustomHttpHeaders;

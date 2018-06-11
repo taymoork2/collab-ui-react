@@ -7,8 +7,16 @@
   <div class="header-info">
     <div class="header-info-wrap">
       <div class="header-title">
-        <span tooltip-class="cluster-name" tooltip-trigger="mouseenter" tooltip-placement="bottom"
-              tooltip-animation="true" tooltip="{{$ctrl.cluster.name}}">{{$ctrl.cluster.name}}</span>
+        <span
+          tooltip-class="cluster-name"
+          tooltip-trigger="mouseenter focus"
+          tooltip-placement="bottom"
+          tooltip-animation="true"
+          tooltip="{{$ctrl.cluster.name}}"
+          aria-label="{{$ctrl.cluster.name}}"
+          tabindex="0">
+          {{$ctrl.cluster.name}}
+        </span>
       </div>
     </div>
   </div>

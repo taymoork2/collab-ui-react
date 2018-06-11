@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function HostDeregisterControllerV2($translate, $modalInstance, HybridServicesClusterService, Notification, connectorId) {
+  function HostDeregisterControllerV2($translate, $modalInstance, HybridServicesClusterService, MediaServiceAuditService, Notification, connectorId) {
     var vm = this;
 
     vm.saving = false;
@@ -12,6 +12,7 @@
       HybridServicesClusterService
         .deregisterEcpNode(connectorId)
         .then(function () {
+          MediaServiceAuditService.devOpsAuditEvents('node', 'delete', connectorId);
           $modalInstance.close();
           Notification.success('mediaFusion.deleteNodeSuccess');
         })

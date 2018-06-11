@@ -4,46 +4,77 @@
   <span>{{card.name | translate}}</span>
   </div>
 </header>
-<section>
-  <div class="convert-block">
-    <div class="convert-text">
-      <div ng-if="!card.showLicenseCard">
-        <span class="convert-nr h4">{{(card.usersToConvert | number) || 'N/A'}}</span>&nbsp;
-        <span translate="overview.cards.users.convertText" id="convertText"></span>
-      </div>
-      <div ng-if="card.showLicenseCard">
-        <span translate="overview.cards.users.unassignedLicenses"
-          translate-values="{licenseNumber: card.licenseNumber, licenseType: card.licenseType}"></span>
-      </div>
+<section class="row user-card--auto-assign-enabled">
+  <div class="columns medium-6 onboard-block">
+    <div ng-if="!card.isOnboardingError">
+      <span class="onboard-nr h4">{{ card.usersOnboarded }}</span>
     </div>
-    <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--cta" translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()" ng-disabled="card.isConvertButtonDisabled()">
-    </button>
-    <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary" translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
-    </button>
+    <div class="onboard-users-text h6">
+      <span ng-if="!card.isOnboardingError" translate="overview.cards.users.onboardText"></span>
+      <span ng-if="card.isOnboardingError">{{ card.usersOnboardedError }}</span>
+    </div>
+    <div class="onboard-users-link" ng-if="card.features.autoLicense">
+      <a ui-sref="my-company.autoLicense" translate="reports.title"></a>
+    </div>
   </div>
-  <div class="status-block">
+  <div class="columns medium-6 status-block status-block--auto-assign-enabled">
+    <div class="convert-block convert-block--auto-assign-enabled">
+      <!-- F7208 GDPR enabled-->
+      <div ng-if="card.features.atlasF7208GDPRConvertUser">
+        <div ng-if="!card.showLicenseCard">
+          <span class="convert-nr h4">{{(card.potentialConversions | number) || ('usersPage.notApplicable' | translate)}}</span>&nbsp;<span class="h6" translate="overview.cards.users.potentialConversions" translate-value-total="{{card.potentialConversions}}" translate-interpolation="messageformat"></span>
+        </div>
+        <div ng-if="!card.showLicenseCard">
+          <span class="convert-pending h4">{{(card.pendingConversions | number) || ('usersPage.notApplicable' | translate)}}</span>&nbsp;<span class="h6" translate="overview.cards.users.pendingConversions" translate-value-total="{{card.pendingConversions}}" translate-interpolation="messageformat"></span>
+        </div>
+        <div ng-if="card.showLicenseCard">
+          <div class="convert-nr h4">{{card.licenseNumber}}</div>
+          <div class="h6" translate="overview.cards.users.unassignedLicensesOnboarding"
+            translate-values="{licenseType: card.licenseType}"></div>
+        </div>
+      </div>
+      <!-- F7208 GDPR disabled -->
+      <div ng-if="!card.features.atlasF7208GDPRConvertUser">
+        <div ng-if="!card.showLicenseCard">
+          <div class="convert-nr h4">{{(card.usersToConvert | number) || ('usersPage.notApplicable' | translate)}}</div>
+          <div class="h6" translate="overview.cards.users.convertText"></div>
+        </div>
+        <div ng-if="card.showLicenseCard">
+          <div class="convert-nr h4">{{card.licenseNumber}}</div>
+          <div class="h6" translate="overview.cards.users.unassignedLicensesOnboarding"
+            translate-values="{licenseType: card.licenseType}"></div>
+        </div>
+      </div>
+      <!-- F7208 GPPR end -->
+      <button ng-if="!card.showLicenseCard" id="convertButton" class="btn btn--primary"
+        translate="overview.cards.users.convertButton" ng-click="card.openConvertModal()"
+        ng-disabled="card.isConvertButtonDisabled()">
+      </button>
+      <button ng-if="card.showLicenseCard" id="convertButton" class="btn btn--primary"
+        translate="overview.cards.licenses.manageUsersButton" ng-click="card.manageUsers()">
+      </button>
+    </div>
     <ul>
       <li class="status-block__item directory-synchronization">
         <i class="icon icon-spinner" ng-if="card.isUpdating"></i>
         <i class="icon icon-circle status-indicator" ng-class="{ 'success' : card.dirsyncEnabled, 'disabled': !card.dirsyncEnabled }" ng-if="!card.isUpdating"></i>
-        <span translate="overview.cards.users.directorySynchronization"></span>
+        <span class="body-small" translate="overview.cards.users.directorySynchronization"></span>
         <a href id="viewDirSyncSettings" ng-click="card.showDirSyncSettings()" aria-label="{{::'overview.cards.users.directorySynchronization' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>
       <li class="status-block__item single-sign-on">
         <i class="icon icon-circle status-indicator" ng-class="card.ssoEnabled ? 'success' : 'disabled' "></i>
-        <span translate="overview.cards.users.singleSignOn"></span>
+        <span class="body-small" translate="overview.cards.users.singleSignOn"></span>
         <a href id="viewSsoSettings" ng-click="card.showSSOSettings()" aria-label="{{::'overview.cards.users.singleSignOn' | translate}}">
           <i class="icon-settings icon"></i>
         </a>
       </li>
 
-      <li class="status-block__item auto-assign-licenses" cr-feature-toggle feature-show="atlas-f3745-auto-assign-licenses">
-        <!-- TODO: f3745 - apply logic for values returned by backend, once known -->
-        <!-- - currently assume enum of ('ACTIVATED'|'DEACTIVATED'|null) -->
+      <li class="status-block__item auto-assign-licenses">
         <i class="icon icon-circle status-indicator" ng-class="card.getAutoAssignLicensesStatusCssClass()"></i>
-        <span translate="overview.cards.users.autoAssignLicenses"></span>
+        <span class="body-small"
+          translate="overview.cards.users.autoAssignLicenses"></span>
         <a href ng-click="card.showEditAutoAssignTemplateModal()" aria-label="{{::'overview.cards.users.autoAssignLicenses' | translate}}">
           <i class="icon-settings icon"></i>
         </a>

@@ -5,7 +5,6 @@ import { CsdmDeviceService } from './CsdmDeviceService';
 import { CsdmCodeService } from './CsdmCodeService';
 import IDeferred = ng.IDeferred;
 import ITimeoutService = ng.ITimeoutService;
-import { CsdmHubFactory, CsdmPollerFactory } from './CsdmPoller';
 import { CsdmConverter } from './CsdmConverter';
 import { CsdmCacheUpdater } from './CsdmCacheUpdater';
 import IPlace = csdm.IPlace;
@@ -37,9 +36,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
               private CsdmCodeService: CsdmCodeService,
               private CsdmPlaceService: CsdmPlaceService,
               CsdmHuronOrgDeviceService,
-              private CsdmPoller: CsdmPollerFactory,
               private CsdmConverter: CsdmConverter,
-              private CsdmHubFactory: CsdmHubFactory,
               private Authinfo) {
 
     this.placesUrl = CsdmPlaceService.getPlacesUrl();
@@ -119,10 +116,10 @@ export class CsdmDataModelService implements ICsdmDataModelService {
 
   private hasHuronLicenses() {
     return _.filter(
-        this.Authinfo.getLicenses(),
-        (l: any) => {
-          return l.licenseType === 'COMMUNICATION';
-        }).length > 0;
+      this.Authinfo.getLicenses(),
+      (l: any) => {
+        return l.licenseType === 'COMMUNICATION';
+      }).length > 0;
   }
 
   private updateDeviceMap(deviceMap: Map<string, IDevice>, keepFunction) {
@@ -345,9 +342,11 @@ export class CsdmDataModelService implements ICsdmDataModelService {
         const existingDevice = this.theDeviceMap[objectToUpdate.url];
         if (existingDevice) {
           existingDevice.tags = newTags;
+          return existingDevice;
+        } else {
+          objectToUpdate.tags = newTags;
+          return objectToUpdate;
         }
-
-        return existingDevice || objectToUpdate;
       });
   }
 
@@ -361,8 +360,9 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       return service.fetchItem(item.url).then((reloadedPlace) => {
         let deviceDeleted = false;
         _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), (deletedDevice: any) => {
-
-          if (!reloadedPlace.devices[deletedDevice.url] || _.some(_.difference(item.devices[deletedDevice.url], deletedDevice))) {
+          const deviceInReloadedPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+          const deviceInPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+          if (!deviceInReloadedPlace || _.some(_.difference(deviceInPlace, deletedDevice))) {
             _.unset(this.theDeviceMap, [deletedDevice.url]);
             deviceDeleted = true;
           }
@@ -533,14 +533,6 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       });
       return searchRes;
     });
-  }
-
-  public devicePollerOn(event, listener, opts) {
-    const hub = this.CsdmHubFactory.create();
-    this.CsdmPoller.create(() => {
-      return this.fetchDevices();
-    }, hub);
-    hub.on(event, listener, opts);
   }
 }
 module.exports =

@@ -102,7 +102,7 @@ class CloudberryDevice implements IDevice {
   public readonly type: string;
   public mac: string;
   public ip: any;
-  private createTime: string;
+  public createTime: string;
   public product: string;
   public productFamily: string;
   public hasIssues: boolean;
@@ -113,10 +113,10 @@ class CloudberryDevice implements IDevice {
   public upgradeChannel: { label: string; value: string };
   public readableActiveInterface: string;
   public diagnosticsEvents: { type: string; message: string }[];
-  private rsuKey: string;
-  private hasRemoteSupport: boolean;
-  private hasAdvancedSettings: boolean;
-  private update: (updated) => any;
+  public rsuKey: string;
+  public hasRemoteSupport: boolean;
+  public hasAdvancedSettings: boolean;
+  public update: (updated) => any;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -152,7 +152,7 @@ class CloudberryDevice implements IDevice {
     this.update = (updated) => {
       this.displayName = updated.displayName;
     };
-    this.image = 'images/devices-hi/' + (obj.imageFilename || 'unknown.png');
+    this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
 }
 
@@ -184,8 +184,8 @@ class HuronDevice implements IDevice {
   public tags: string[];
   public readonly type: string;
   public isHuronDevice: boolean;
-  private huronId: string;
-  private addOnModuleCount: number;
+  public huronId: string;
+  public addOnModuleCount: number;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
@@ -265,7 +265,7 @@ class HuronHelper {
   };
 
   public static decodeHuronTags(description) {
-    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/',/g, '",').replace(/,'/g, ',"');
+    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/','/g, '","');
     return tagString;
   }
 
@@ -383,9 +383,10 @@ export class Helper {
   public diagnosticsEventTranslated(e) {
     const type_lower = _.toLower(e.type);
     if (this.isTranslatable('CsdmStatus.errorCodes.' + type_lower + '.type')) {
+      const additionalParameters = this.parametersFromKey(type_lower);
       return {
         type: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.type', e.type),
-        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, e.references),
+        message: this.translateOrDefault('CsdmStatus.errorCodes.' + type_lower + '.message', e.description, _.merge(e.references, additionalParameters)),
       };
     } else if (e.description) {
       return {
@@ -403,6 +404,13 @@ export class Helper {
         }),
       };
     }
+  }
+
+  public parametersFromKey(key: string) {
+    switch (key) {
+      case 'provisioningdeveloperoptions': return { xconfigpath: 'xConfiguration Spark DeveloperOptions' };
+    }
+    return;
   }
 
   public getState(obj) {
@@ -464,7 +472,7 @@ export class Helper {
 
   public getLocalizedType(type) {
     if (type === 'huron') {
-      return this.t('addDeviceWizard.chooseDeviceType.deskPhone');
+      return this.t('addDeviceWizard.chooseDeviceType.ciscoPhone');
     }
     return this.t('addDeviceWizard.chooseDeviceType.roomSystem');
   }
@@ -493,8 +501,8 @@ export class Helper {
 }
 
 class Code implements ICode {
-  private expiryTime: any;
-  private activationCode: string;
+  public expiryTime: any;
+  public activationCode: string;
 
   constructor(obj) {
     this.expiryTime = obj.expiryTime;
@@ -503,6 +511,7 @@ class Code implements ICode {
 }
 class Place implements IPlaceExtended {
   public sipUrl: string;
+  public additionalSipUrls: string[];
   public readableType: string;
   public isPlace: boolean;
   public devices: Map<string, IDevice>;
@@ -514,11 +523,11 @@ class Place implements IPlaceExtended {
   public displayName: string;
   public externalLinkedAccounts: any[] | undefined;
   public tags: string[];
-  private numbers: string[];
-  private canDelete: boolean;
+  public numbers: string[];
+  public canDelete: boolean;
   public accountType: string;
   public image: string;
-  private codes: Map<string, Code>;
+  public codes: Map<string, Code>;
 
   constructor(helper: Helper, converter: CsdmConverter, obj) {
     this.updateFrom(helper, converter, obj);
@@ -533,6 +542,7 @@ class Place implements IPlaceExtended {
     this.cisUuid = obj.cisUuid || obj.uuid;
     this.displayName = obj.displayName;
     this.sipUrl = obj.sipUrl;
+    this.additionalSipUrls = obj.additionalSipUrls || [];
     this.numbers = obj.numbers;
     this.canDelete = true;
     this.accountType = obj.placeType || 'MACHINE';

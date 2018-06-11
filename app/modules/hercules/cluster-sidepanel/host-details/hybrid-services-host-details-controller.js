@@ -6,7 +6,7 @@
     .controller('HybridServicesHostDetailsController', HybridServicesHostDetailsController);
 
   /* @ngInject */
-  function HybridServicesHostDetailsController($modal, $rootScope, $scope, $state, $stateParams, $translate, ClusterService) {
+  function HybridServicesHostDetailsController($modal, $rootScope, $state, $stateParams, $timeout, $translate, HybridServicesClusterService) {
     var cluster;
     var vm = this;
     var type = $stateParams.specificType || $stateParams.connectorType;
@@ -20,23 +20,27 @@
     $state.current.data.displayName = localizedConnectorName;
     $rootScope.$broadcast('displayNameUpdated');
 
-    $scope.$watch(function () {
-      return ClusterService.getCluster(type, $stateParams.clusterId);
-    }, function (newValue) {
-      cluster = newValue;
-      vm.clustername = cluster.name;
-      vm.host = _.find(cluster.connectors, {
-        hostSerial: $stateParams.hostSerial,
-        connectorType: type,
-      });
-      if (vm.host && vm.host.hostname) {
-        vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
-          connectorName: localizedConnectorName,
-          hostname: vm.host.hostname,
+    updateCluster();
+
+    function updateCluster() {
+      HybridServicesClusterService.getAll()
+        .then(function (clusters) {
+          cluster = _.find(clusters, { id: $stateParams.clusterId });
+          vm.clustername = cluster.name;
+          vm.host = _.find(cluster.connectors, {
+            hostSerial: $stateParams.hostSerial,
+            connectorType: type,
+          });
+          if (vm.host && vm.host.hostname) {
+            vm.localizedConnectorSectionHeader = $translate.instant('hercules.connectors.localizedConnectorAndHostHeader', {
+              connectorName: localizedConnectorName,
+              hostname: vm.host.hostname,
+            });
+            vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
+          }
+          $timeout(updateCluster, 30 * 1000);
         });
-        vm.isHybridContextCluster = (cluster.targetType === 'cs_mgmt');
-      }
-    }, true);
+    }
 
     function deleteExpressway() {
       $modal.open({
@@ -55,7 +59,7 @@
       });
     }
 
-    /* Only used for Hybrid Media nodes  */
+    /* Only used for Video Mesh nodes  */
     function showReassignHostDialog() {
       $modal.open({
         resolve: {
@@ -77,7 +81,7 @@
         });
     }
 
-    /* Only used for Hybrid Media nodes and Hybrid Data Security nodes  */
+    /* Only used for Video Mesh nodes and Hybrid Data Security nodes  */
     function showDeregisterHostDialog() {
       $modal.open({
         resolve: {
@@ -111,6 +115,7 @@
     function goToNodesPage() {
       $state.go('mediafusion-cluster.nodes', {
         id: cluster.id,
+        backState: 'media-service-v2.list',
       });
     }
   }

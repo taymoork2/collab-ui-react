@@ -1,44 +1,51 @@
-import hybridCallServiceAggregatedSection from './index';
+import hybridCallServiceAggregatedSectionModuleName from './index';
 
 describe('HybridCallServiceAggregatedSectionComponent', () => {
 
-  let $componentController, $httpBackend, $q, $state, $scope, ctrl, FeatureToggleService, HybridServiceUserSidepanelHelperService, ServiceDescriptorService;
-
-  beforeEach(angular.mock.module('Hercules'));
+  let $componentController, $q, $state, $scope, ctrl, HybridServiceUserSidepanelHelperService, ServiceDescriptorService, UserOverviewService;
 
   beforeEach(function () {
-    this.initModules(hybridCallServiceAggregatedSection);
+    this.initModules(hybridCallServiceAggregatedSectionModuleName);
   });
 
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$httpBackend_, _$q_, _$state_, $rootScope, _FeatureToggleService_, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptorService_) {
+  function dependencies (_$componentController_, _$q_, _$state_, $rootScope, _HybridServiceUserSidepanelHelperService_, _ServiceDescriptorService_, _UserOverviewService_) {
     $componentController = _$componentController_;
-    $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope;
     $state = _$state_;
-    FeatureToggleService = _FeatureToggleService_;
     HybridServiceUserSidepanelHelperService = _HybridServiceUserSidepanelHelperService_;
     ServiceDescriptorService = _ServiceDescriptorService_;
+    UserOverviewService = _UserOverviewService_;
   }
 
   function cleanup() {
-    $componentController = $httpBackend = $q = $state = $scope = ctrl = FeatureToggleService = HybridServiceUserSidepanelHelperService = ServiceDescriptorService = undefined;
+    $componentController = $q = $state = $scope = ctrl = HybridServiceUserSidepanelHelperService = UserOverviewService = ServiceDescriptorService = undefined;
   }
 
   function initSpies() {
-    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve({}));
     spyOn(HybridServiceUserSidepanelHelperService, 'getDataFromUSS').and.returnValue($q.resolve([{}, {}]));
-    spyOn(ServiceDescriptorService, 'isServiceEnabled').and.returnValue($q.resolve({}));
-    $httpBackend.expectGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
+    spyOn(UserOverviewService, 'getUser').and.returnValue($q.resolve({
+      user: {
+        entitlements: ['squared-fusion-uc'],
+        pendingStatus: false,
+      },
+    }));
+    spyOn(ServiceDescriptorService, 'getServices').and.returnValue($q.resolve([{
+      id: 'squared-fusion-uc',
+      enabled: true,
+    }, {
+      id: 'squared-fusion-ec',
+      enabled: true,
+    }]));
   }
 
-  function initController() {
+  function initController(userId: string = '1234') {
     ctrl = $componentController('hybridCallServiceAggregatedSection', {}, {
-      userUpdatedCallback: function () {},
+      userId: userId,
     });
   }
 
@@ -58,14 +65,12 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
 
   it('should call FMS to get the Call Service Connect setup status', () => {
 
-    ServiceDescriptorService.isServiceEnabled.and.returnValue($q.resolve(true));
-
     initController();
     ctrl.$onInit();
     $scope.$apply();
 
-    expect(ServiceDescriptorService.isServiceEnabled).toHaveBeenCalledWith('squared-fusion-ec');
-    expect(ServiceDescriptorService.isServiceEnabled.calls.count()).toBe(1);
+    expect(ServiceDescriptorService.getServices.calls.count()).toBe(1);
+    expect(ctrl.callServiceAwareEnabledForOrg).toBe(true);
     expect(ctrl.callServiceConnectEnabledForOrg).toBe(true);
   });
 
@@ -90,20 +95,18 @@ describe('HybridCallServiceAggregatedSectionComponent', () => {
 
   });
 
-  it('should update the Call Service Aware and Connect statuses based upon data from the callback', () => {
+  it('should get data from Common Identity on init', () => {
 
-    initController();
+    const userId = 'kjetil-1234-5678';
+
+    initController(userId);
     ctrl.$onInit();
     $scope.$apply();
 
-    ctrl.onEntitlementChanges({
-      callServiceAware: 'new data 01',
-      callServiceConnect: 'new data 02',
-    });
-
-    expect(ctrl.callServiceAware).toBe('new data 01');
-    expect(ctrl.callServiceConnect).toBe('new data 02');
-
+    expect(UserOverviewService.getUser).toHaveBeenCalledWith(userId);
+    expect(UserOverviewService.getUser.calls.count()).toBe(1);
+    expect(ctrl.isInvitePending).toBe(false);
+    expect(ctrl.allUserEntitlements).toEqual(['squared-fusion-uc']);
   });
 
 });

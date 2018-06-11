@@ -48,9 +48,15 @@ export class PrivateTrunkService {
     return this.privateTrunkService.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then((resp) => {
-      return _.pick(resp, 'resources', 'domains');
-    });
+      .catch(() => {
+        return {
+          resources: [],
+          domains: undefined,
+        } as IPrivateTrunkInfo;
+      })
+      .then((resp) => {
+        return _.pick(resp, 'resources', 'domains');
+      });
   }
 
   public setPrivateTrunk(domains: string[]): ng.IPromise<void> {
@@ -81,9 +87,9 @@ export class PrivateTrunkService {
     return this.privateTrunkResourceService.get({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(res => {
-      return _.pick(res, 'resources');
-    });
+      .then(res => {
+        return _.pick(res, 'resources');
+      });
   }
 
   public setPrivateTrunkResource(resourceId: string, name: string): ng.IPromise<void> {
@@ -118,7 +124,7 @@ export class PrivateTrunkService {
       customerId: this.Authinfo.getOrgId(),
       value: sipDestination,
     }).$promise
-    .then(res => _.get(res, 'unique'));
+      .then(res => _.get(res, 'unique'));
   }
 
 }

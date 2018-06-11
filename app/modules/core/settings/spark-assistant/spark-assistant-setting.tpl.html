@@ -1,14 +1,23 @@
 <div class="setting" ng-class="{'sparkAssistant-subsection': !ctrl.ftsw}">
-  <input
+    <div class="setting-section spark-assistant-badge">
+      <span ng-if= "$ctrl.inProgress"
+        tooltip="{{'globalSettings.sparkAssistant.tooltip' | translate}}"
+        tooltip-class="spark-badge-tooltip"
+        tooltip-append-to-body="true"
+        tooltip-trigger="focus mouseenter"
+        tabindex="0"
+        aria-label="{{ $ctrl.label }}">
+        <p class="badge warning" translate="globalSettings.sparkAssistant.inprogress"></p>
+      </span>
+    </div>
+</div>
+   <input
     cs-input
     type="checkbox"
-    ng-model="ctrl.value"
+    ng-model="$ctrl.sparkAssistantEnabled"
     id="sparkAssistant"
-    name="sparkAssistant"
-    ng-change=""
-    cs-input-label="{{ctrl.label}}">
+    cs-input-label="{{$ctrl.label}}">
   <div>
-    <p ng-if="ctrl.ftsw" class="margin-tos" translate="globalSettings.sparkAssistant.description"></p>
+    <p ng-if="$ctrl.ftsw" class="margin-tos" translate="globalSettings.sparkAssistant.description"></p>
   </div>
-    <a href class="primary" ng-click="" translate="globalSettings.sparkAssistant.termsOfService" id="tos"></a>
 </div>

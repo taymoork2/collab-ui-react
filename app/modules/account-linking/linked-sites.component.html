@@ -1,6 +1,11 @@
 <div class="account-linking">
   <linked-sites-grid
     sites-info="$ctrl.sitesInfo"
-    on-site-selected-fn="$ctrl.onSiteSelectedFn(site)">
+    on-site-selected-fn="$ctrl.onSiteSelectedFn(site)"
+    launch-webex-fn="$ctrl.launchWebexFn(site, useHomepage)"
+    show-wizard-fn="$ctrl.showWizardFn(siteInfo)"
+    loading="$ctrl.loading">
   </linked-sites-grid>
 </div>
+
+<linked-sites-goto-webex webex-site-launch-details="$ctrl.webexSiteLaunchDetails"></linked-sites-goto-webex>

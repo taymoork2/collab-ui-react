@@ -6,7 +6,7 @@
     .controller('RedirectAddResourceControllerV2', RedirectAddResourceControllerV2);
 
   /* @ngInject */
-  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, AddResourceCommonServiceV2, $window, $state, $q) {
+  function RedirectAddResourceControllerV2($modalInstance, $translate, firstTimeSetup, yesProceed, $modal, Authinfo, AddResourceCommonServiceV2, MediaServiceAuditService, $window, $state, $q) {
     var vm = this;
     vm.clusterList = [];
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
@@ -22,8 +22,10 @@
     vm.radio = 1;
     vm.ovaType = 1;
     vm.noProceed = false;
+    vm.validNode = true;
     vm.yesProceed = yesProceed;
     vm.canGoNext = canGoNext;
+    vm.validateHostName = validateHostName;
 
     AddResourceCommonServiceV2.updateClusterLists().then(function (clusterList) {
       vm.clusterList = clusterList;
@@ -41,12 +43,13 @@
             AddResourceCommonServiceV2.createFirstTimeSetupCluster(hostName, enteredCluster).then(function () {
               //call the rest of the services which needs to be enabled
               AddResourceCommonServiceV2.enableMediaService();
+              MediaServiceAuditService.devOpsAuditEvents('org', 'add', Authinfo.getOrgId());
               AddResourceCommonServiceV2.redirectPopUpAndClose(hostName, enteredCluster);
-            }, function () {
-              $state.go('services-overview');
+            }).then(function () {
+              $state.go('media-service-v2.list');
             });
           } else {
-            $state.go('services-overview');
+            $state.go('services-overview', {}, { reload: true });
           }
         });
       } else {
@@ -103,10 +106,14 @@
       }
     }
 
+    function validateHostName() {
+      vm.validNode = AddResourceCommonServiceV2.validateHostName(vm.hostName);
+    }
+
     function canGoNext() {
       if (vm.firstTimeSetup && vm.showDownloadableOption) {
         return true;
-      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
+      } else if (vm.yesProceed && !_.isUndefined(vm.hostName) && vm.hostName != '' && vm.validNode && !_.isUndefined(vm.selectedCluster) && vm.selectedCluster != '') {
         return true;
       } else {
         return false;

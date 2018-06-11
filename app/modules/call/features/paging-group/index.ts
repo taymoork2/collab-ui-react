@@ -13,7 +13,7 @@ import accessibilityModule from 'modules/core/accessibility';
 
 export default angular
   .module('call.features.paging-group', [
-    require('collab-ui-ng').default,
+    require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('modules/core/notifications').default,
     accessibilityModule,
@@ -26,5 +26,5 @@ export default angular
     pagingGroupInitiator,
     huronPlaceModule,
   ])
-   .component('ucPagingGroup', new PagingGroupComponent())
+  .component('ucPagingGroup', new PagingGroupComponent())
   .name;

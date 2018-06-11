@@ -5,7 +5,7 @@
      class="fullSize">
     <br/>
     <i ng-hide="nav.isNoData" class="icon icon-spinner metrics-loading-icon"></i>
-    <p class="metrics-loading-data" translate="reportsPage.loadingData"></p>
+    <p class="h3 metrics-loading-data" translate="reportsPage.loadingData"></p>
     <p class="metrics-loading-description" translate="reportsPage.loadingDescription"></p>
     <div ng-show="nav.isNoData" translate="reportsPage.noData"></div>
 </div>
@@ -17,7 +17,8 @@
     <iframe id="webexMetricsIframeContainer"
             name="webexMetricsIframeContainer"
             class="fullSize"
-            frameborder="0">
+            frameborder="0"
+            ng-src={{$ctrl.qlikReportUrl}}>
     </iframe>
 </div>
 <form id="iframeForm"

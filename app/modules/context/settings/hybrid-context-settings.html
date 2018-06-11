@@ -1,0 +1,26 @@
+<div class="settings context-settings">
+  <div class="cs-form">
+    <div class="cs-form__section">
+      <div class="section__info">
+        <h4 class="section__title" translate="context.dictionary.settingPage.adminAuthorization"></h4>
+        <p class="sub-section__description ng-scope" translate="context.dictionary.settingPage.adminAuthorizationDescription"></p>
+
+      </div>
+      <div class="section__content">
+        <div class="sub-section">
+          <span tooltip="{{$ctrl.synchronizeButtonTooltip}}" tooltip-class="context-tooltip" tooltip-placement="right">
+            <button cs-btn
+                        id="contextAdminSynchronizationButton"
+                        class="btn--primary loading-button"
+                        ng-click="$ctrl.synchronize()"
+                        ng-disabled="$ctrl.disableSynchronization()"
+                        loading="$ctrl.isSynchronizationInProgress">
+              <span translate="context.dictionary.settingPage.synchronize"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="cs-form__section"></div>
+  </div>
+</div>
