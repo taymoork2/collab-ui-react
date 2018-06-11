@@ -56,7 +56,7 @@
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         id: vm.hgSelected.id,
       }), 'description', '');
-      if (vm.hgSelected.description == '') {
+      if (!_.isEqual(vm.hgSelected.id, '') && vm.hgSelected.description == '') {
         AANotificationService.error('autoAttendant.userNotExist', {
           schedule: schedule,
           route: rtHG,
