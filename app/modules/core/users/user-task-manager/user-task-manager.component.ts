@@ -170,8 +170,13 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.loading = false;
   }
 
+  private intervalFailureCallback = (response) => {
+    this.Notification.errorResponse(response);
+    this.dismissModal();
+  }
+
   private initPolling() {
-    this.UserTaskManagerService.initAllTaskListPolling(this.intervalCallback, this.$scope);
+    this.UserTaskManagerService.initAllTaskListPolling(this.intervalCallback, this.$scope, this.intervalFailureCallback);
   }
 
   public setActiveFilter(activeFilter: TaskListFilterType): void {
