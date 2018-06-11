@@ -3702,7 +3702,7 @@
         "installing": "{{connectorType}} installing",
         "not_installed": "{{connectorType}} not installed",
         "disabled": "{{connectorType}} disabled",
-        "not_initialized": "{{connectorType}} not initialized",
+        "not_initialized": "{{connectorType}} initializing",
         "not_operational": "{{connectorType}} not operational",
         "not_configured": "{{connectorType}} not configured",
         "running": "{{connectorType}} version {{version}} running and operational"
