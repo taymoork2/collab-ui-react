@@ -11498,8 +11498,17 @@
         "directions": "Use arrows to set the order that the nodes in the cluster will be upgraded",
         "addAnother": "Add Upgrade Group",
         "maxGroups": "Cannot create more than 8 upgrade groups"
-
       }
+    },
+    "prechecks" : {
+      "title": "Prechecks",
+      "choose": "Choose the Upgrade Prechecks to run",
+      "availableSpace": "Check available space",
+      "availableSpaceDesc": "Check all nodes in the cluster for enough available space for this upgrade.",
+      "copFiles": "Collect list of installed COP files.",
+      "copFilesDesc": "Collect COP file information from each node.",
+      "runningPrechecks": "Running Prechecks",
+      "runPrechecks": "Run Prechecks"
     },
     "upgradePage": {
       "title": "Upgrades"

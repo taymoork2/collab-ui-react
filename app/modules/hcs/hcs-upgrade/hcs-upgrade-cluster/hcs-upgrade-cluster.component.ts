@@ -49,6 +49,13 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
     });
   }
 
+  public startPrechecks(entity) {
+    this.$modal.open({
+      template: `<hcs-precheck-modal dismiss="$dismiss()" cluster-uuid="${entity.clusterUuid}"></hcs-precheck-modal>`,
+      type: 'small',
+    });
+  }
+
   public $onInit() {
     this.loading = true;
     if (this.groupId !== this.typeUnassigned.toLowerCase()) {
