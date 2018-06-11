@@ -12,6 +12,8 @@
   }, {
     "name": "Hybrid Call Service Resource Group"
   }, {
+    "name": "Hybrid Message Service Resource Group"
+  },{
     "name": "Calendar Service",
     "entitlements": [
       "squaredFusionCal"
@@ -20,6 +22,11 @@
     "name": "Call Service Aware",
     "entitlements": [
       "squaredFusionUC"
+    ]
+  }, {
+    "name": "Hybrid Message Service",
+    "entitlements": [
+      "sparkHybridImpInterop"
     ]
   }]
 }
