@@ -1,5 +1,4 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
-@import '~@collabui/collab-ui/scss/settings/typography';
 
 // Most CSS is reusing the toolkit forms styles
 setting-section {
@@ -11,17 +10,6 @@ setting-section + setting-section,
 setting-section + .setting-section,
 .setting-section + .setting-section {
   border-top: 1px solid $gray-light-2;
-}
-
-a.as-button {
-  color: $anchor-font-color;
-}
-
-a.as-arrow {
-  font-size: 1.5rem;
-  line-height: 2.25rem;
-  width: auto;
-  color: $gray-dark-1;
 }
 
 .subheader {
