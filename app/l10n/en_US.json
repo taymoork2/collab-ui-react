@@ -7646,6 +7646,7 @@
     "configureSite": "Configure Site",
     "deleteSite": "Delete Site",
     "partnerHelpMsg": "The ability to delete this site or redistribute licenses between sites has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to delete this site or to redistribute licenses between sites.",
+    "trialHelpMsg": "The ability to delete this site or redistribute licenses between sites is disallowed for trial sites.",
     "webexUsers": "Webex Users",
     "bulkManageUsers": "Bulk Manage Users",
     "reports": "Reports",

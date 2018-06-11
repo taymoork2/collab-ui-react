@@ -42,7 +42,8 @@
           </li>
       </ul>
       <div ng-if="!$ctrl.canManage" class="message">
-        <div translate="webexSiteManagement.partnerHelpMsg"></div>
+        <div ng-if="!$ctrl.isTrial" translate="webexSiteManagement.partnerHelpMsg"></div>
+        <div ng-if="$ctrl.isTrial" translate="webexSiteManagement.trialHelpMsg"></div>
       </div>
       <div ng-if="$ctrl.showPendingAction" class="message">
         <div class="section-title-row">
