@@ -9,8 +9,8 @@
   function AARouteToUserCtrl($q, $scope, $translate, AANotificationService, AutoAttendantHybridCareService, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
     var vm = this;
     var conditional = 'conditional';
-    var schedule;
-    var routeToUserOrVM;
+    var schedule = undefined;
+    var routeToUserOrVM = undefined;
 
     vm.userSelected = {
       description: '',
@@ -144,7 +144,7 @@
         if (user.success) {
           return deferred.resolve(user);
         } else {
-          AANotificationService.error('autoAttendant.userNotExist', {
+          AANotificationService.error('autoAttendant.userDoesNotExist', {
             schedule: schedule,
             route: routeToUserOrVM,
           });

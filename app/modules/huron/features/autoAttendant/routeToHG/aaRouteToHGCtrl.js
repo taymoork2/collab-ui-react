@@ -6,7 +6,7 @@
     .controller('AARouteToHGCtrl', AARouteToHGCtrl);
 
   /* @ngInject */
-  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AANotificationService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToHGCtrl($scope, $translate, AACommonService, AANotificationService, AAUiModelService, AutoAttendantCeMenuModelService, HuntGroupService) {
     var vm = this;
     var conditional = 'conditional';
     var schedule;
@@ -57,7 +57,7 @@
         id: vm.hgSelected.id,
       }), 'description', '');
       if (!_.isEqual(vm.hgSelected.id, '') && vm.hgSelected.description == '') {
-        AANotificationService.error('autoAttendant.userNotExist', {
+        AANotificationService.error('autoAttendant.userDoesNotExist', {
           schedule: schedule,
           route: rtHG,
         });
