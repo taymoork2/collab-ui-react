@@ -49,7 +49,10 @@ describe('LicenseUsageUtilService:', () => {
       });
 
       it('should reject if the given function arg rejects', function (this: Test, done) {
-        const fooFn = jasmine.createSpy('fooFn').and.returnValue(this.$q.reject());
+        const fooFn = jasmine.createSpy('fooFn').and.callFake(() => {
+          return this.$q.reject();
+        });
+
         this.RetryingPromiseService.tryUntil(fooFn, 'foo')
           .then(fail)
           .catch(done);

@@ -30,7 +30,7 @@ describe('Service: WebExSite Service', function () {
     this.allConferenceLicenses = getJSONFixture('core/json/setupWizard/sites/conference-licenses.json');
     spyOn(this.Authinfo, 'getLicenses').and.returnValue(this.allLicenses);
     spyOn(this.SetupWizardService, 'updateSitesInActiveSubscription');
-    spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.callFake(function (subId) {
+    spyOn(this.SetupWizardService, 'getConferenceLicensesBySubscriptionId').and.callFake(subId => {
       if (subId === 'ex123') {
         return this.allConferenceLicenses[0];
       }
@@ -38,7 +38,7 @@ describe('Service: WebExSite Service', function () {
         return this.allConferenceLicenses[1];
       }
     });
-    spyOn(this.SetupWizardService, 'getExistingConferenceServiceDetails').and.callFake(function(subId) {
+    spyOn(this.SetupWizardService, 'getExistingConferenceServiceDetails').and.callFake(subId => {
       if (subId === 'ex123') {
         return allCenterDetails[0];
       }
@@ -73,7 +73,7 @@ describe('Service: WebExSite Service', function () {
       this.WebExSiteService.findSubscriptionsWithUnsyncedLicenses().then(function(result) {
         expect(result.length).toBe(1);
         expect(result[0].externalSubscriptionId).toBe('ex123');
-      });
+      }).catch(fail);
       this.$scope.$apply();
     });
   });
