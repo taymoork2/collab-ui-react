@@ -1,11 +1,8 @@
 <div class="messagebox-backdrop login-box" ng-class="{loading: loading}">
-  <div class="message-box" ng-class="checkForIeWorkaround()">
+  <div class="message-box user-redirect__message-box">
     <div class="message-box__content">
       <i class="icon icon-2x icon-cisco-logo message-box__icon"></i>
       <div class="h3 message-box__title" translate="usersPage.telstraAppRedirect"></div>
-      <div ng-show="result">
-        <div class="results alert alert-danger" ng-bind-html="result"></div>
-      </div>
       <div class="login-spinner">
         <i class="icon icon-3x icon-spinner"></i>
       </div>
