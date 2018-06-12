@@ -44,10 +44,13 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public selectedCalendarType: 'squared-fusion-cal' | 'squared-fusion-gcal';
   public originalEntitledToggle: boolean = false;
   public selectedEntitledToggle: boolean = false;
+  public isActivation2User: boolean = false;
 
   /* @ngInject */
   constructor(
+    private $modal,
     private $q: ng.IQService,
+    private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -120,17 +123,22 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         this.userMicrosoftCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-cal' });
         this.userGoogleCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-gcal' });
         this.userStatus = this.userMicrosoftCalendarStatus || this.userGoogleCalendarStatus;
-        if (this.userStatus && this.userStatus.connectorId) {
-          this.connectorId = this.userStatus.connectorId;
-        }
-        if (this.userStatus && this.userStatus.lastStateChange) {
-          this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
-        }
-        if (this.userStatus && this.userStatus.owner === 'ccc') {
-          this.userOwnedByCCC = true;
-        }
-        if (this.userStatus && this.userStatus.resourceGroupId) {
-          this.resourceGroupId = this.userStatus.resourceGroupId;
+        if (this.userStatus) {
+          if (this.userStatus.connectorId) {
+            this.connectorId = this.userStatus.connectorId;
+          }
+          if (this.userStatus.lastStateChange) {
+            this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+          }
+          if (this.userStatus.owner === 'ccc') {
+            this.userOwnedByCCC = true;
+          }
+          if (this.userStatus.resourceGroupId) {
+            this.resourceGroupId = this.userStatus.resourceGroupId;
+          }
+          if (this.userStatus.assignments) {
+            this.isActivation2User = true;
+          }
         }
       })
       .catch((error) => {
@@ -274,6 +282,15 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   public resourceGroupRefreshCallback() {
     this.loadUserData();
+  }
+
+  public openRestartActivationModal(): void {
+    this.$modal.open({
+      template: '<reactivate-user-modal user-id="\'' + this.userId + '\'" service="\'' + this.userStatus.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
+      type: 'dialog',
+    }).result.then(() => {
+      this.$state.reload();
+    });
   }
 
 }

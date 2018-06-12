@@ -22,6 +22,13 @@
             class="hybrid-services-label loader-example--small"
             ng-if="$ctrl.loadingPage"></span>
     </div>
+
+    <div class="row restart-activation-row" ng-if="!$ctrl.loadingPage && $ctrl.originalEntitledToggle && !$ctrl.userOwnedByCCC && $ctrl.isActivation2User">
+      <span class="hybrid-services-label right">
+        <a ng-click="$ctrl.openRestartActivationModal()">{{::'hercules.userSidepanel.reactivateUser.title' | translate}}</a>
+      </span>
+    </div>
+
     <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.squared-fusion-cal"></p>
 
     <div ng-if="!$ctrl.loadingPage">
@@ -134,8 +141,11 @@
         </div>
       </div>
 
-      <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.originalEntitledToggle && $ctrl.connectorId && !$ctrl.userOwnedByCCC && !$ctrl.hasChangedCalendarType()"
+      <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.originalEntitledToggle && $ctrl.connectorId && !$ctrl.userOwnedByCCC && !$ctrl.hasChangedCalendarType() && !$ctrl.isActivation2User"
                                                        connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+
+      <hybrid-services-user-assignments ng-if="$ctrl.originalEntitledToggle && $ctrl.isActivation2User && $ctrl.userStatus.assignments.length > 0 && !$ctrl.userOwnedByCCC && !$ctrl.hasChangedCalendarType()"
+                                                       user-status="$ctrl.userStatus"></hybrid-services-user-assignments>
 
       <hybrid-calendar-preferred-webex-site preferred-web-ex-site-name="$ctrl.preferredWebExSiteName" ng-if="$ctrl.originalEntitledToggle && !$ctrl.hasChangedCalendarType()"></hybrid-calendar-preferred-webex-site>
 

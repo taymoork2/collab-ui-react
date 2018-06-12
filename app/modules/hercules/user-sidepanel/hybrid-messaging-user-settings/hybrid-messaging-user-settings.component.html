@@ -28,6 +28,13 @@
             class="hybrid-services-label loader-example--small"
             ng-if="$ctrl.loadingPage"></span>
     </div>
+
+    <div class="row restart-activation-row" ng-if="!$ctrl.loadingPage && $ctrl.userIsCurrentlyEntitled && $ctrl.isActivation2User">
+      <span class="hybrid-services-label right">
+        <a ng-click="$ctrl.openRestartActivationModal()">{{::'hercules.userSidepanel.reactivateUser.title' | translate}}</a>
+      </span>
+    </div>
+
     <div>
       <p class="hybrid-service-description" translate="hercules.cloudExtensions.serviceDescriptions.spark-hybrid-impinterop"></p>
 
@@ -81,12 +88,9 @@
             </span>
         </div>
 
-        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId"
-                                                         connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
-
         <div class="row collapse" ng-if="$ctrl.userStatus.messages.length && !$ctrl.isServiceEnabledInFMS()">
           <div class="columns small-3">
-            <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+            <span class="hybrid-services-label ">{{'cloudExtensions.details' | translate}}:</span>
           </div>
           <div class="columns small-9" ng-if="!$ctrl.loadingPage">
             <user-status-messages messages="$ctrl.userStatus.messages"
@@ -99,6 +103,12 @@
             <span cs-loader class="hybrid-services-label loader-example--small"></span>
           </div>
         </div>
+
+        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId && !$ctrl.isActivation2User"
+                                                         connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+
+        <hybrid-services-user-assignments ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.isActivation2User && $ctrl.userStatus.assignments.length > 0"
+                                          user-status="$ctrl.userStatus"></hybrid-services-user-assignments>
 
       </div>
 

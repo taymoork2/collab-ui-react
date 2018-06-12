@@ -39,8 +39,11 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public domainVerificationError = false;
   public resourceGroupId: string;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
+    private $modal,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
@@ -113,6 +116,11 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         if (this.userIsCurrentlyEntitled && this.userStatusAware) {
           this.getDataFromUCC(userId);
         }
+
+        if (this.userStatusAware && this.userStatusAware.assignments) {
+          this.isActivation2User = true;
+        }
+
       })
       .catch((error) => {
         this.couldNotReadUser = true;
@@ -169,7 +177,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   }
 
   public saveData() {
-
     this.savingPage = true;
 
     const entitlements: IEntitlementNameAndState[] = [{
@@ -212,6 +219,15 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     } else {
       this.saveData();
     }
+  }
+
+  public openRestartActivationModal(): void {
+    this.$modal.open({
+      template: '<reactivate-user-modal user-id="\'' + this.userId! + '\'" service="\'' + this.userStatusAware!.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
+      type: 'dialog',
+    }).result.then(() => {
+      this.$state.reload();
+    });
   }
 
   private confirmBecauseConnectIsEnabled(): void {

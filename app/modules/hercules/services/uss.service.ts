@@ -62,6 +62,8 @@ export interface IUserStatusWithExtendedMessages extends IUserStatus {
 
 type UserStatus = 'activated' | 'notActivated' | 'error';
 
+type AssignmentStatus = 'waiting' | 'success' | 'failure' | 'nonOperational';
+
 interface IUserStatus {
   connectorId?: string;
   clusterId?: string;
@@ -75,6 +77,16 @@ interface IUserStatus {
   state: UserStatus;
   userId: string;
   owner?: string;
+  assignments?: IUserAssignment[];
+}
+
+export interface IUserAssignment {
+  connectorId: string;
+  clusterId: string;
+  status: AssignmentStatus;
+  assignedAt?: string;
+  acknowledgedAt?: string;
+  details?: IMessage[];
 }
 
 export interface IMessage {
@@ -364,6 +376,12 @@ export class USSService {
       .then(this.extractData);
   }
 
+  public reactivateUser(userId: string, serviceId: HybridServiceId, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/users/${userId}/actions/retryActivation/invoke?service=${serviceId}`, null)
+      .then(this.extractData);
+  }
+
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {
     if (!messageReplacementValues) {
       return {};
@@ -411,6 +429,40 @@ export class USSService {
     const result = _.chain(userStatuses)
       .map((userStatus) => {
         userStatus.messages = this.sortAndTweakUserMessages(userStatus.messages);
+        // TESTING; REMOVE ME!!!!
+        /*userStatus.assignments = [
+          {
+            connectorId: 'c_cal@fe5acf7a-3adce673-1',
+            clusterId: '3adce673-52e4-4efc-be8c-a2e7178bb4a3',
+            status: 'success',
+          },
+          {
+            connectorId: 'c_cal@fe5acf7a-3adce673-2',
+            clusterId: '3adce673-52e4-4efc-be8c-a2e7178bb4a3',
+            status: 'nonOperational',
+          },
+          {
+            connectorId: 'c_cal@fe5acf7a-3adce673-2',
+            clusterId: '3adce673-52e4-4efc-be8c-a2e7178bb4a3',
+            status: 'failure',
+            details: [{
+              key: "yalla",
+              title: "Shame on you",
+              description: "The connector is na working so well man!",
+              severity: "error"
+            }]
+          },
+          {
+            connectorId: 'c_cal@fe5acf7a-3adce673-2',
+            clusterId: '3adce673-52e4-4efc-be8c-a2e7178bb4a3',
+            status: 'failure',
+          },
+          {
+            connectorId: 'c_cal@fe5acf7a-3adce673-2',
+            clusterId: '3adce673-52e4-4efc-be8c-a2e7178bb4a3',
+            status: 'waiting',
+          },
+        ];*/
         return userStatus;
       })
       .value();

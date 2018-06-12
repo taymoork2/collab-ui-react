@@ -29,8 +29,12 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   public resourceGroupId: string;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
+    private $modal,
+    private $state: ng.ui.IStateService,
     private $q: ng.IQService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private HybridServicesI18NService: HybridServicesI18NService,
@@ -87,6 +91,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
         if (this.userStatus && this.userStatus.resourceGroupId) {
           this.resourceGroupId = this.userStatus.resourceGroupId;
         }
+
+        if (this.userStatus && this.userStatus.assignments) {
+          this.isActivation2User = true;
+        }
       })
       .catch((error) => {
         this.couldNotReadUser = true;
@@ -128,6 +136,15 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
         this.savingPage = false;
       });
 
+  }
+
+  public openRestartActivationModal(): void {
+    this.$modal.open({
+      template: '<reactivate-user-modal user-id="\'' + this.userId + '\'" service="\'' + this.userStatus.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
+      type: 'dialog',
+    }).result.then(() => {
+      this.$state.reload();
+    });
   }
 
   public changeEntitlement(newEntitlementValue) {

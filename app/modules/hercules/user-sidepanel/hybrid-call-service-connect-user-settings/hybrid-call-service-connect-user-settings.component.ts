@@ -29,6 +29,8 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
 
   public userTestToolFeatureToggled: boolean;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
@@ -80,6 +82,9 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
         if (this.userStatusAware && this.userStatusAware.resourceGroupId) {
           /* The Aware Resource Group is also used for Connect  */
           this.resourceGroupId = this.userStatusAware.resourceGroupId;
+        }
+        if (this.userStatusAware && this.userStatusAware.assignments) {
+          this.isActivation2User = true;
         }
       })
       .catch((error) => {
