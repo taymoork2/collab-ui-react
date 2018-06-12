@@ -25,7 +25,6 @@ describe('Component: WebexSiteTransferComponent', function () {
     });
   });
 
-
   function initSpies() {
     this.$scope.onValidationChangedFn = jasmine.createSpy('onValidationChangedFn');
     this.$scope.onSitesReceivedFn = jasmine.createSpy('onSitesReceivedFn');
@@ -155,4 +154,3 @@ describe('Component: WebexSiteTransferComponent', function () {
     });
   });
 });
-

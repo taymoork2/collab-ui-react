@@ -38,7 +38,6 @@ describe('Component: PstnWizardComponent', () => {
     installPromiseMatchers();
   });
 
-
   beforeEach(inject((_$componentController_) => {
     $componentController = _$componentController_;
   }));

@@ -148,7 +148,6 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
-
   describe('when a second transfer code is used', function () {
     beforeEach(function () {
       initController.apply(this);

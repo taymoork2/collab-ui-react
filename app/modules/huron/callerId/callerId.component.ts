@@ -310,7 +310,6 @@ export class CallerIdOption {
   }
 }
 
-
 export class CallerIdComponent implements ng.IComponentOptions {
   public controller = CallerId;
   public template = require('modules/huron/callerId/callerId.html');

@@ -3,7 +3,6 @@ import ModuleName from './index';
 describe('Component: addResourceSection', function () {
   let $componentController, $q, $scope, controller, AddResourceSectionService;
 
-
   afterEach(function () {
     $componentController = $q = $scope = controller = AddResourceSectionService  = undefined;
 
@@ -13,7 +12,6 @@ describe('Component: addResourceSection', function () {
   beforeEach(angular.mock.module(ModuleName));
 
   beforeEach(inject(dependencies));
-
 
   function dependencies(_$componentController_, _$q_, $rootScope, _AddResourceSectionService_) {
     $componentController = _$componentController_;
@@ -72,4 +70,3 @@ describe('Component: addResourceSection', function () {
   });
 
 });
-

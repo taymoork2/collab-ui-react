@@ -136,7 +136,6 @@ class FieldsetModalCtrl implements ng.IComponentController {
     this.enableFieldsSelection = this.selectedFields.length < this.maxFieldsPerFieldsetAllowed;
   }
 
-
   /**
    * Get the maximum fields allowed value per org
    */

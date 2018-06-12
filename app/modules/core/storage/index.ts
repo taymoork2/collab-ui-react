@@ -7,4 +7,3 @@ export default angular
   .service('SessionStorage', SessionStorageService)
   .constant('StorageKeys', StorageKeys)
   .name;
-

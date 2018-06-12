@@ -198,7 +198,6 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
       });
   }
 
-
   private getUserFromCommonIdentity = (): ng.IPromise<void> => {
     return this.UserOverviewService.getUser(this.userId)
       .then((commonIdentityUserData: IUserData) => {

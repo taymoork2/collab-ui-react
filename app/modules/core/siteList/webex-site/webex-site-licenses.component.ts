@@ -218,4 +218,3 @@ export class WebexSiteLicensesComponent implements ng.IComponentOptions {
     onSendTracking: '&?',
   };
 }
-

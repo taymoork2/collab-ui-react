@@ -8,7 +8,6 @@ import { ProvisioningDetailsController } from './overview/provisioning-details.c
 import notifications from 'modules/core/notifications';
 export *  from './provisioning.interfaces';
 
-
 export default angular
   .module('squared.provisioning-console', [
     require('modules/core/config/urlConfig'),

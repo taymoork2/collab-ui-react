@@ -101,7 +101,6 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
     }
   }
 
-
 }
 
 export class VideoQualitySectionComponent implements ng.IComponentOptions {

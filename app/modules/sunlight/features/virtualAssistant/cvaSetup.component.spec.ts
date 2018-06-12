@@ -2,7 +2,6 @@ import cvaSetupModule from './cvaSetup.component';
 import { KeyCodes } from 'modules/core/accessibility';
 import * as _ from 'lodash';
 
-
 describe('Care Customer Virtual Assistant Setup Component', () => {
   const OrgName = 'Test-Org-Name';
   const OrgId = 'Test-Org-Id';

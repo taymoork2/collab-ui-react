@@ -37,4 +37,3 @@ module.exports = angular
   .module('Squared')
   .service('DirectoryService', DirectoryService)
   .name;
-

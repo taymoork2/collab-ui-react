@@ -1,7 +1,6 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import uuid = require('uuid');
 
-
 export class CTService {
   /* @ngInject */
   constructor(

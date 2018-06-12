@@ -151,7 +151,6 @@ export class CtProfileComponent implements ng.IComponentOptions {
   };
 }
 
-
 export default angular
   .module('Sunlight')
   .component('ctProfileComponent', new CtProfileComponent())

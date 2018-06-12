@@ -14,7 +14,6 @@ describe('HybridServiceUserSidepanelHelperService', () => {
     entitlementState: 'ACTIVE',
   }];
 
-
   beforeEach(angular.mock.module(hybridServiceUserSidepanelHelperServiceModuleName));
   beforeEach(inject(dependencies));
 

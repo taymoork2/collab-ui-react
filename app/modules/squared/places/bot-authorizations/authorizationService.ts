@@ -56,4 +56,3 @@ module.exports = angular
   .module('Squared')
   .service('AuthorizationService', AuthorizationService)
   .name;
-

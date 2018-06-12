@@ -87,4 +87,3 @@ module.exports = angular
   .module('Squared')
   .service('CsdmDeviceService', CsdmDeviceService)
   .name;
-

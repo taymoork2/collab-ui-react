@@ -85,7 +85,6 @@ describe('Service: WebExSite Service', function () {
     });
   });
 
-
   describe('getting audiopartner info', function () {
     it('should return audio partner name and ccaspSubscriptionId for CCASP ', function () {
       const result = this.WebExSiteService.getAudioPackageInfo('Sub100448');

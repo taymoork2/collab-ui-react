@@ -32,7 +32,6 @@ declare namespace csdm {
     userName: string;
   }
 
-
   interface IRecipientUser extends ICIdentity {
     extractedName?: string;
     email?: string;

@@ -44,4 +44,3 @@ export class GridSpinnerDirective implements ng.IDirective {
     return new GridSpinnerDirective($compile);
   }
 }
-

@@ -16,7 +16,6 @@ import waitingIntervalModuleName from './waiting-interval';
 export { RetryingPromiseService };
 export { StringUtilService };
 
-
 export default angular
   .module('core.shared', [
     bannerModuleName,

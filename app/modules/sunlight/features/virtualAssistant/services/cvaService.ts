@@ -46,7 +46,6 @@ export class CvaService {
     filterValue: this.CareFeatureList.filterConstants.virtualAssistant,
   };
 
-
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,

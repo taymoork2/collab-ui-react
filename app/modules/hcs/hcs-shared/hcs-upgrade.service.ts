@@ -21,7 +21,6 @@ interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ICustomerType>>;
 }
 
-
 interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }

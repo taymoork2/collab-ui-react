@@ -90,4 +90,3 @@ export class FieldUtils {
 export default angular.module('context.services.context-field-utils-service', [])
   .service('FieldUtils', FieldUtils)
   .name;
-

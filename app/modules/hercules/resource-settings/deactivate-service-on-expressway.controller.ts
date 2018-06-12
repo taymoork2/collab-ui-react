@@ -52,4 +52,3 @@ export default angular
   ])
   .controller('DeactivateServiceOnExpresswayModalController', DeactivateServiceOnExpresswayModalController)
   .name;
-

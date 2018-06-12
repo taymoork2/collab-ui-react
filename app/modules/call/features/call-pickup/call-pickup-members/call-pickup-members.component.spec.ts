@@ -342,7 +342,6 @@ describe('Component: callPickupMembers', () => {
       expect(this.controller.getActiveMember()).toEqual(model);
     });
 
-
     it('is active member disabled test', function () {
       spyOn(this.controller, 'getActiveMember').and.returnValue(model);
       expect(this.controller.isActiveMemberDisabled()).toBeTruthy();

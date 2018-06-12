@@ -202,7 +202,6 @@ class FieldModalCtrl implements ng.IComponentController {
     this.defaultOption = this.fieldData.defaultValue;
     this.optionRadios = this.getOptionRadioList();
 
-
     this.actionListCopy.push({
       actionKey: 'context.dictionary.fieldPage.enumOptionsReorder',
       actionFunction: this.setReorder.bind(this),
@@ -716,4 +715,3 @@ export class FieldModalComponent implements ng.IComponentOptions {
 export default angular
   .module('Context')
   .component('contextFieldModal', new FieldModalComponent());
-

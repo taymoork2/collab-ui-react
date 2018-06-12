@@ -17,4 +17,3 @@ export class LocalStorageService extends StorageBase {
     }
   }
 }
-

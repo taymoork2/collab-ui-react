@@ -124,4 +124,3 @@ export class CustomerSupportTemplateModalComponent implements ng.IComponentOptio
 export default angular
   .module('Sunlight')
   .component('customerSupportTemplateModal', new CustomerSupportTemplateModalComponent());
-

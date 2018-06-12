@@ -6,7 +6,6 @@ import hybridServicesExtrasServiceModuleName from 'modules/hercules/services/hyb
 import hybridServicesClusterServiceModuleName from 'modules/hercules/services/hybrid-services-cluster.service';
 import { AddResourceSectionService } from './add-resource-section.service';
 
-
 export default angular.module('mediafusion.media-service-v2.components.add-resource-section', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,

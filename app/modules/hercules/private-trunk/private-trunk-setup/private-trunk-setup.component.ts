@@ -269,7 +269,6 @@ export class PrivateTrunkSetupCtrl implements ng.IComponentController {
     this.CiscoCollaborationCloudCertificateService.deleteUploadedCerts();
   }
 
-
   public setupComplete(): void {
     this.PrivateTrunkPrereqService.dismissModal();
     this.$state.go('private-trunk-overview.settings');

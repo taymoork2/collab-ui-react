@@ -12,7 +12,6 @@ import {
 } from '../../pstn.const';
 import { Notification } from 'modules/core/notifications';
 
-
 class PstnNpaNxxCtrl implements ng.IComponentController {
   //Passed-in Properties
   public model: NumberModel;

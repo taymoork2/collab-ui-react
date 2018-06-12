@@ -75,7 +75,6 @@ describe('Component: gmImportTd', () => {
     });
   });
 
-
   describe('View: ', () => {
     it('should show grid data when selected one option and click select all checkbox then the Import button should be availabe', function () {
       spyOn(this.$timeout, 'cancel');

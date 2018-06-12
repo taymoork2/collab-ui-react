@@ -1,7 +1,6 @@
 import { HtmSuite, TaskManagerService } from '../shared';
 import { Notification } from 'modules/core/notifications';
 
-
 export class SuiteCreateComponent implements ng.IComponentOptions {
   public controller = SuiteCreateController;
   public template = require('./suite-create.component.html');
@@ -45,4 +44,3 @@ class SuiteCreateController implements ng.IComponentController {
   }
 
 }
-

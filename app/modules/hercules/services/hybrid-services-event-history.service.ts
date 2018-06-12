@@ -199,7 +199,6 @@ export class HybridServicesEventHistoryService {
     return res.data;
   }
 
-
   public getAllEvents(options: IGetAllEventsOptions, next: string | undefined, updateItems: (items: IHybridServicesEventHistoryItem[]) => void, items: IHybridServicesEventHistoryItem[]  ): ng.IPromise<IHybridServicesEventHistoryData | null | undefined> {
     const fromTimestamp = options.eventsSince || moment().subtract(7, 'days').toISOString();
     const toTimestamp = options.eventsTo || moment().toISOString();
@@ -726,7 +725,6 @@ export class HybridServicesEventHistoryService {
       resourceName: this.$translate.instant('hercules.eventHistory.allResources'),
     };
   }
-
 
   private processClusterItem(event: IRawClusterEvent, type: EventType, name: string, title: string): IHybridServicesEventHistoryItem {
     event.payload.type = type;

@@ -64,4 +64,3 @@ describe('Component: WebexSiteResultDisplayComponent', function () {
     });
   });
 });
-

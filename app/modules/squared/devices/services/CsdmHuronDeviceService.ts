@@ -2,7 +2,6 @@ import { CsdmConverter } from './CsdmConverter';
 
 class CsdmHuronUserDeviceService {
 
-
   /* @ngInject  */
   constructor(private $http, private $q, private Authinfo, private  HuronConfig, private CsdmConverter, private  UrlConfig) {
   }

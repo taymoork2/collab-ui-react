@@ -541,7 +541,6 @@ export class MeetingSettingsCtrl {
     }
   }
 
-
   public sendMetrics(event, properties?) {
     const analyticsProperties: IDecouplingFlowAnalyticsProperties = {
       subscriptionId: this.SetupWizardService.getActingSubscriptionId(),

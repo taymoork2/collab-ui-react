@@ -45,4 +45,3 @@ export class DomainManageClaimCtrl {
     this.$previousState.go();
   }
 }
-

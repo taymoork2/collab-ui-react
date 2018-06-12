@@ -176,7 +176,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     this.hasCallFeatures = hasEntitlement && hasLicense;
   }
 
-
   public clickFeature(feature: IFeature) {
     const lineSelection = {
       primaryLineEnabled: this.primaryLineEnabled,

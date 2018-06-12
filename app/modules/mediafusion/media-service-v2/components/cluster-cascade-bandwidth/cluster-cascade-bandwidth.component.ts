@@ -13,7 +13,6 @@ export class ClusterCascadeBandwidthController implements ng.IComponentControlle
   public isWizard: boolean = false;
   public sipSettingsEnabled: boolean = false;
 
-
   public clusterBandwidth = {
     title: 'mediaFusion.clusterBandwidth.title',
   };
