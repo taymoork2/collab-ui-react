@@ -46,6 +46,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     private $modal,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private DomainManagementService: DomainManagementService,
     private ModalService: IToolkitModalService,
@@ -195,6 +196,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       .then(() => {
         this.userIsCurrentlyEntitled = !!this.newEntitlementValue;
         this.newEntitlementValue = undefined;
+        this.delayedGetUserData();
         return this.getUserData(this.userId);
       })
       .catch((error) => {
@@ -226,7 +228,8 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       template: '<reactivate-user-modal user-id="\'' + this.userId! + '\'" service="\'' + this.userStatusAware!.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
       type: 'dialog',
     }).result.then(() => {
-      this.$state.reload();
+      this.getUserData(this.userId);
+      this.delayedGetUserData();
     });
   }
 
@@ -244,6 +247,15 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       .catch(() => {
         this.cancel();
       });
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData(this.userId);
+    }, 3000);
   }
 
 }

@@ -378,7 +378,7 @@ export class USSService {
 
   public reactivateUser(userId: string, serviceId: HybridServiceId, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
     return this.$http
-      .post<any>(`${this.USSUrl}/orgs/${orgId}/users/${userId}/actions/retryActivation/invoke?service=${serviceId}`, null)
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/users/${userId}/actions/reactivate/invoke?service=${serviceId}`, null)
       .then(this.extractData);
   }
 

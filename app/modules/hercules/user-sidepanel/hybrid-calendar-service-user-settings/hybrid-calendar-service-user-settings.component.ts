@@ -50,7 +50,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   constructor(
     private $modal,
     private $q: ng.IQService,
-    private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -265,6 +265,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
         this.originalCalendarType = this.selectedCalendarType;
         this.originalEntitledToggle = this.selectedEntitledToggle;
+
+        this.delayedGetUserData();
+
         return this.getUserData();
       })
       .catch((error) => {
@@ -282,6 +285,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   public resourceGroupRefreshCallback() {
     this.loadUserData();
+    this.delayedGetUserData();
   }
 
   public openRestartActivationModal(): void {
@@ -289,8 +293,18 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
       template: '<reactivate-user-modal user-id="\'' + this.userId + '\'" service="\'' + this.userStatus.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
       type: 'dialog',
     }).result.then(() => {
-      this.$state.reload();
+      this.getUserData();
+      this.delayedGetUserData();
     });
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData();
+    }, 3000);
   }
 
 }
