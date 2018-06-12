@@ -48,10 +48,7 @@
       "trace",
       "warn"
     ],
-    "no-consecutive-blank-lines": [
-      true,
-      2
-    ],
+    "no-consecutive-blank-lines": true,
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
