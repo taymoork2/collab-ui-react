@@ -95,7 +95,19 @@
       true,
       2,
       {
-        "SwitchCase": 1
+        "SwitchCase": 1,
+        "MemberExpression": 1,
+        "FunctionDeclaration": {
+          "parameters": "first",
+          "body": 1
+        },
+        "FunctionExpression": {
+          "parameters": "first",
+          "body": 1
+        },
+        "CallExpression": {
+          "arguments": 1
+        }
       }
     ],
     "ter-no-irregular-whitespace": true,

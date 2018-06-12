@@ -64,7 +64,7 @@ describe('VideoQualitySectionCtrl', () => {
     const controller = initController();
     controller.enableVideoQuality = true;
     controller.videoPropertySetId = '1234';
-    controller.setEnableVideoQuality();
+    controller.setEnableVideoQuality(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('VideoQualitySectionCtrl', () => {
     const controller = initController();
     controller.enableVideoQuality = true;
     controller.videoPropertySetId = '1234';
-    controller.setEnableVideoQuality();
+    controller.setEnableVideoQuality(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.updatePropertySetById).toHaveBeenCalled();
@@ -88,7 +88,7 @@ describe('VideoQualitySectionCtrl', () => {
     const controller = initController();
     controller.enableVideoQuality = true;
     controller.videoPropertySetId = null;
-    controller.setEnableVideoQuality();
+    controller.setEnableVideoQuality(true);
     $httpBackend.verifyNoOutstandingExpectation();
     expect(Orgservice.setOrgSettings).toHaveBeenCalled();
     expect(MediaClusterServiceV2.getPropertySets).toHaveBeenCalled();

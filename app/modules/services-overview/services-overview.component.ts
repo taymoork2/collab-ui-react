@@ -157,10 +157,10 @@ export class ServicesOverviewController implements ng.IComponentController {
                 }));
             } else if (serviceId === 'spark-hybrid-testing') {
               return this.HcsTestManagerService.getServiceStatus(serviceId)
-              .catch(() => ({
-                serviceId: serviceId,
-                setup: false,
-              }));
+                .catch(() => ({
+                  serviceId: serviceId,
+                  setup: false,
+                }));
             }
           }));
           // Now get all from FMS
@@ -229,17 +229,17 @@ export class ServicesOverviewController implements ng.IComponentController {
           template: '<office-365-test-modal class="modal-content" close="$close()" dismiss="$dismiss()"></office-365-test-modal>',
           type: 'full',
         }).result
-        .then(() => {
-          this.$state.go('.', { office365: null });
-        });
+          .then(() => {
+            this.$state.go('.', { office365: null });
+          });
       } else if (this.urlParams.office365 === 'failure') {
         this.$modal.open({
           template: `<office-365-fail-modal class="modal-content" reason="${this.urlParams.reason}" close="$close()" dismiss="$dismiss()"></office-365-fail-modal>`,
           type: 'full',
         }).result
-        .then(() => {
-          this.$state.go('.', { office365: null, reason: null });
-        });
+          .then(() => {
+            this.$state.go('.', { office365: null, reason: null });
+          });
       }
     }
   }
@@ -251,33 +251,33 @@ export class ServicesOverviewController implements ng.IComponentController {
       geminiCCA: this.FeatureToggleService.supports(this.FeatureToggleService.features.gemServicesTab),
     });
     partnerFeatures
-    .then((response) => {
+      .then((response) => {
       //Cloud Cards
-      this.forwardEvent('geminiCCAToggleEventHandler', response.geminiCCA);
+        this.forwardEvent('geminiCCAToggleEventHandler', response.geminiCCA);
       //Hybrid Cards
-      if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
-        this._servicesToDisplay.push('hcs');
-        this.UserOverviewService.getUser(this.Authinfo.getUserId())
-        .then((response) => {
-          const user = response.user;
-          const isUpgrade = _.includes(user.entitlements, 'ucmgmt-uaas');
-          const isLicensing = _.includes(user.entitlements, 'ucmgmt-laas');
-          if (isUpgrade) {
-            this._servicesActive.push('hcs');
-            this._servicesToDisplay.push('hcs-upgrade');
-            this._servicesActive.push('hcs-upgrade');
-          } else {
-            this._servicesInactive.push('hcs');
-          }
-          if (isLicensing) { //To-do
-            this._servicesToDisplay.push('hcs-licensing');
-            this._servicesActive.push('hcs-licensing');
-          }
-        });
-      }
-    }).finally(() => {
-      this.loadingHybridServicesCards = false;
-    });
+        if (response.atlasHostedCloudService && this.isPartnerAdmin()) {
+          this._servicesToDisplay.push('hcs');
+          this.UserOverviewService.getUser(this.Authinfo.getUserId())
+            .then((response) => {
+              const user = response.user;
+              const isUpgrade = _.includes(user.entitlements, 'ucmgmt-uaas');
+              const isLicensing = _.includes(user.entitlements, 'ucmgmt-laas');
+              if (isUpgrade) {
+                this._servicesActive.push('hcs');
+                this._servicesToDisplay.push('hcs-upgrade');
+                this._servicesActive.push('hcs-upgrade');
+              } else {
+                this._servicesInactive.push('hcs');
+              }
+              if (isLicensing) { //To-do
+                this._servicesToDisplay.push('hcs-licensing');
+                this._servicesActive.push('hcs-licensing');
+              }
+            });
+        }
+      }).finally(() => {
+        this.loadingHybridServicesCards = false;
+      });
   }
 
   public isActive(serviceId: HybridServiceId): boolean {

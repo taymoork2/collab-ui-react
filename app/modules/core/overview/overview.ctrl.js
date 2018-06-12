@@ -23,6 +23,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     CardUtils,
     CloudConnectorService,
     Config,
+    DirConnectorUpgradeNotificationService,
     EvaService,
     FeatureToggleService,
     HealthService,
@@ -63,7 +64,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     vm.isCSB = Authinfo.isCSB();
     vm.isDeviceManagement = Authinfo.isDeviceMgmt();
     vm.orgData = null;
-    vm.atlasF3745AutoAssignLicensesToggle = false;
 
     var hybridCallHighAvailability = 'atlas.notification.squared-fusion-uc-high-availability.acknowledged';
     var allHybridCalendarsNotification = 'atlas.notification.squared-fusion-all-calendars.acknowledged';
@@ -263,6 +263,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         orgDetails: Orgservice.getOrg(_.noop, Authinfo.getOrgId(), params),
         featureToggle: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
         isAtlasSsoCertificateUpdateToggled: FeatureToggleService.atlasSsoCertificateUpdateGetStatus(),
+        isAtlasDirectoryConnectorUpgradeStopNotificationToggled: FeatureToggleService.atlasDirectoryConnectorUpgradeStopNotificationGetStatus(),
         pt: PrivateTrunkService.getPrivateTrunk(),
         ept: ServiceDescriptorService.getServiceStatus('ept'),
       }).then(function (response) {
@@ -300,6 +301,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
 
         checkForUnsyncedSubscriptionLicenses();
         checkForSsoCertificateExpiration(response.isAtlasSsoCertificateUpdateToggled);
+        checkForDirConnectorUpgrade(response.isAtlasDirectoryConnectorUpgradeStopNotificationToggled);
       }).catch(function (response) {
         Notification.errorWithTrackingId(response, 'firstTimeWizard.sparkDomainManagementServiceErrorMessage');
       });
@@ -336,14 +338,9 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
         getEsaDisclaimerStatus();
       });
 
-      FeatureToggleService.atlasF3745AutoAssignLicensesGetStatus().then(function (toggle) {
-        vm.atlasF3745AutoAssignLicensesToggle = toggle;
-        if (toggle) {
-          AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
-            if (!hasDefaultTemplate) {
-              pushNotification(OverviewNotificationFactory.createAutoAssignNotification());
-            }
-          });
+      AutoAssignTemplateService.hasDefaultTemplate().then(function (hasDefaultTemplate) {
+        if (!hasDefaultTemplate) {
+          pushNotification(OverviewNotificationFactory.createAutoAssignNotification());
         }
       });
 
@@ -429,6 +426,12 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
             }
           }
         });
+    }
+
+    function checkForDirConnectorUpgrade(isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
+      if (!isAtlasDirectoryConnectorUpgradeStopNotificationToggled) {
+        pushNotification(DirConnectorUpgradeNotificationService.createNotification());
+      }
     }
 
     function getTOSStatus() {

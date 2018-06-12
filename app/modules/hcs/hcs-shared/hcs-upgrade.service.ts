@@ -1,6 +1,6 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
 import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer } from './hcs-upgrade';
-import { ISoftwareProfile, IApplicationVersion, ISoftwareProfilesObject } from './hcs-swprofile';
+import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISftpServer>>;
@@ -17,32 +17,40 @@ interface INodeResource extends ng.resource.IResourceClass<ng.resource.IResource
 interface ICustomerClustersResource extends ng.resource.IResourceClass<ng.resource.IResource<IHcsCustomerClusters>> {}
 
 type ICustomerType = IHcsUpgradeCustomer & ng.resource.IResource<IHcsUpgradeCustomer>;
-interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {}
+interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {
+  update: ng.resource.IResourceMethod<ng.resource.IResource<ICustomerType>>;
+}
+
 
 interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
 
-type ISwProfileType = ISoftwareProfilesObject & ng.resource.IResource<ISoftwareProfilesObject>;
-interface ISwProfilesResource extends ng.resource.IResourceClass<ISwProfileType> {}
-
 interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.resource.IResource<IApplicationVersion>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
 }
+
+//type IClusterTaskType = IHcsClusterTask & ng.resource.IResource<IHcsClusterTask>;
+//interface IClusterTaskResource extends ng.resource.IResourceClass<IClusterTaskType> {}
 
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
   private clusterResource: IClusterResource;
   private customerClustersResource: ICustomerClustersResource;
   private swProfileResource: ISwProfileResource;
-  private swProfilesResource: ISwProfilesResource;
   private appVersionResource: IApplicationVersionResource;
   private nodeResource: INodeResource;
   private customerResource: ICustomerResource;
+  private clusterUpgradeResource;
+  //private clusterTaskStatusResource: IClusterTaskResource;
+  private tasksResource;
+  private statusCheckResource;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
+    private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
     private Authinfo,
     private UrlConfig,
   ) {
@@ -76,8 +84,18 @@ export class HcsUpgradeService {
 
     this.appVersionResource = <IApplicationVersionResource>this.$resource(BASE_URL + 'applicationVersions', {}, {});
 
-    this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {});
-    this.customerResource = this.$resource<ICustomerType>(BASE_URL + 'partners/:partnerId/customers', {}, {});
+    this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {
+      update: updateAction,
+    });
+    this.customerResource = <ICustomerResource>this.$resource(BASE_URL + 'partners/:partnerId/customers/:customerId', {}, {
+      update: updateAction,
+      query: queryAction,
+    });
+    this.clusterUpgradeResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/upgradeorder', {}, {});
+
+    //this.clusterTaskStatusResource = this.$resource<IClusterTaskType>(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/latest', {}, {});
+    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks', {}, {});
+    this.statusCheckResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/statusCheck', {}, {});
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -124,6 +142,13 @@ export class HcsUpgradeService {
     });
   }
 
+  public deleteCluster(_clusterId: string): ng.IPromise<IHcsCluster> {
+    return this.clusterResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: _clusterId,
+    }).$promise;
+  }
+
   public updateCluster(_clusterId: string, cluster: IHcsCluster) {
     return this.clusterResource.update({
       partnerId: this.Authinfo.getOrgId(),
@@ -161,14 +186,6 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
-  public getSoftwareProfiles(): ng.IPromise<ISoftwareProfile[]> {
-    return this.swProfilesResource.get({
-      partnerId: this.Authinfo.getOrgId(),
-    }).$promise.then(response => {
-      return response.softwareProfiles;
-    });
-  }
-
   public updateSoftwareProfile(swProfile: ISoftwareProfile): ng.IPromise<any>  {
     return this.swProfileResource.update({
       partnerId: this.Authinfo.getOrgId(),
@@ -195,8 +212,22 @@ export class HcsUpgradeService {
 
   public getAppVersions(apptype: string): ng.IPromise<IApplicationVersion> {
     return this.appVersionResource.get({
-      type: apptype,
+      application: apptype,
     }).$promise;
+  }
+
+  public getUpgradeOrder(clusterId: string): ng.IPromise<any> {
+    return this.clusterUpgradeResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterId,
+    }).$promise;
+  }
+
+  public saveUpgradeOrder(clusterId: string, nodeOrder): ng.IPromise<any> {
+    return this.clusterUpgradeResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterId,
+    }, nodeOrder).$promise;
   }
 
   public updateNodeSftp(nodeId: string, sftp: ISftpServerItem): ng.IPromise<any> {
@@ -210,5 +241,93 @@ export class HcsUpgradeService {
     return this.customerResource.save({
       partnerId: this.Authinfo.getOrgId(),
     }, customer).$promise;
+  }
+
+  public getHcsUpgradeCustomer(customerId: string | undefined): ng.IPromise<IHcsUpgradeCustomer> {
+    return this.customerResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      customerId: customerId,
+    }).$promise;
+  }
+
+  public updateHcsUpgradeCustomerSwProfile(customerId: string | undefined, swProfile: ISoftwareProfile): ng.IPromise<IHcsUpgradeCustomer> {
+    return this.customerResource.update({
+      partnerId: this.Authinfo.getOrgId(),
+      customerId: customerId,
+    }, { softwareProfile: swProfile }).$promise;
+  }
+
+  public listHcsUpgradeCustomers(): ng.IPromise<IHcsUpgradeCustomer[]> {
+    return this.customerResource.query({
+      partnerId: this.Authinfo.getOrgId(),
+    }).$promise;
+  }
+
+  public getClusterTasksStatus(clusterId: string): ng.IPromise<any> {
+    // return this.clusterTaskStatusResource.get({
+    //   partnerId: this.Authinfo.getOrgId(),
+    //   clusterId: clusterId,
+    // }).$promise;
+    const clusterTaskStatusData = {
+      status: 'UPGRADE_IN_PROGRESS',
+      estimatedCompletion: '2018-05-04 04:19:45.895',
+      nodeStatuses: [
+        {
+          uuid: 'd20538ef-3861-4f44-b633-e093e0a4aef1',
+          sequence: 1,
+          hostName: 'CCM-01',
+          typeApplication: 'CUCM',
+          publisher: true,
+          previousDuration: '00:59:00.000',
+          started: '2018-05-04 04:00:29.895',
+          elapsedTime: '00:59:00.000',
+          status: 'OPERATIONAL',
+        },
+        {
+          uuid: 'd20538ef-3861-4f44-b633-e093e0a4aef2',
+          sequence: 2,
+          hostName: 'IMP-01',
+          typeApplication: 'IM&P',
+          publisher: true,
+          previousDuration: '00:35:00.000',
+          started: '2018-05-04 04:01:30.895',
+          elapsedTime: '00:08:13.000',
+          status: 'UPGRADE_IN_PROGRESS',
+        },
+      ],
+    };
+
+    this.$timeout(() => {
+      if (clusterId) {
+        deferred.resolve(clusterTaskStatusData);
+      } else {
+        deferred.reject('No cluster ID');
+      }
+    }, 200);
+
+    const deferred = this.$q.defer();
+    return deferred.promise;
+  }
+
+  public startTasks(clusterUuid: string, taskType: string, prechecks?: string[]) {
+    const taskObj = {
+      taskType: taskType,
+    };
+
+    if (prechecks) {
+      taskObj['actions'] = prechecks;
+    }
+
+    return this.tasksResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+    }, taskObj).$promise;
+  }
+
+  public getPrecheckStatus(clusterUuid: string) {
+    return this.statusCheckResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterUuid: clusterUuid,
+    }, {}).$promise;
   }
 }

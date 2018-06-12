@@ -1,5 +1,15 @@
 <div class="ui-grid-cell-contents" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
   <span ng-bind="row.entity.customerName"></span>
-  <span ng-if="grid.appScope.isPartnerOrg(row.entity.customerOrgId)" id="partner" class="badge badge--managed" ng-class="row.isSelected ? 'orgselected' : 'orgnotselected'" translate="customerPage.myOrganization"></span>
-  <cr-pro-pack-icon ng-if="row.entity.isPremium" tooltip="{{::grid.appScope.premiumTooltip}}" tooltip-append-to-body="true" tooltip-trigger="focus mouseenter" tabindex="0" aria-label="{{::grid.appScope.premiumTooltip}}"></cr-pro-pack-icon>
+  <span
+    ng-if="grid.appScope.isPartnerOrg(row.entity.customerOrgId)"
+    id="partner"
+    class="badge badge--managed"
+    ng-class="row.isSelected ? 'orgselected' : 'orgnotselected'"
+    translate="customerPage.myOrganization">
+  </span>
+  <pro-pack-tooltip
+    ng-if="row.entity.isPremium"
+    tt-tooltip-append-to-body="true"
+    tt-tooltip-text="{{::grid.appScope.premiumTooltip}}">
+  </pro-pack-tooltip>
 </div>

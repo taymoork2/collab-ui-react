@@ -2131,7 +2131,7 @@
       "autoAttendantPost": "L'enregistrement des informations site du répondeur automatique a échoué.",
       "updateVoicemailPostalCode": "La modification du code postal de la messagerie vocale a échoué.",
       "updateVoicemailAddress": "Échec de la mise à jour de l'adresse de messagerie vocale",
-      "updateCustomerVoice": "Échec de la mise à jour de l'abonnement vocal du client."
+      "updateCustomerVoice": "Échec de la mise à jour de l'abonnement vocal du client."
     },
     "warning": {
       "siteSteering": "Le premier chiffre du préfixe d'accès à la messagerie vocale est en conflit avec le premier chiffre d'une plage d'extension interne. Si vous utilisez ce préfixe, un délai peut être observé lors de la numérotation d'extensions commençant par le même numéro.",
@@ -6181,7 +6181,7 @@
       "placeNotFound": "Emplacement non trouvé, réessayez de le trouver dans la liste"
     },
     "editServices": {
-      "whichServices": "Quel est le service nécessaire dans cet emplacement ?",
+      "whichServices": "Quel est le service nécessaire dans cet emplacement ?",
       "sparkOnly": "Cisco Spark uniquement (par défaut)",
       "sparkOnlyHelp": "Les appels en provenance et vers cet emplacement, appairés à l'application Cisco Spark ou via les adresses SIP.",
       "sparkCall": "Cisco Spark + Appel Cisco Spark",
@@ -6403,12 +6403,6 @@
       "upgradeschedule": "Programme de mise à niveau",
       "grant-success-information": "Allez à votre nœud média hybride dans l'intervalle d'une heure pour terminer l'inscription. Le nœud média hybride sera prêt à être <br>utilisé dès que vous aurez terminé l'inscription.",
       "grant-registration-success-header-old-cluster": "Vous pouvez maintenant enregistrer votre nœud média hybride sur Cisco Collaboration Cloud.<br> Adresse IP/FDQN du nœud : {{hostname}} Cluster : {{clustername}}"
-    },
-    "clusterBandwidth": {
-      "success": "La bande passante maximale de cascade pour les clusters a été enregistrée avec succès.",
-      "title": "Bande passante maximum de cascade pour les clusters",
-      "description": "Saisissez la bande passante maximale (en mégabits par seconde) que les clusters du service média hybride doivent utiliser pour les cascades vers le Cloud. La plus petite quantité permet une diffusion active à 720 pixels.",
-      "range": "Saisissez une valeur entre 5 et 50"
     },
     "sipconfiguration": {
       "success": "Tronc SIP Unified CM enregistré avec succès.",

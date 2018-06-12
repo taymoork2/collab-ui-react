@@ -153,25 +153,25 @@ export class CallPickupGroupService {
   public createCheckboxesForEdit(member: IMember, memberNumbers: IMemberNumber[], pickupName: string): ICardMemberCheckbox[] {
     _.forEach(memberNumbers, (number, index) => {
       this.isLineInPickupGroup(this.hasLocations ? number.siteToSite : number.internal)
-      .then((pickupGroupName: string) => {
-        let disabled = false;
-        let sublabel = '';
-        let value = false;
-        if (pickupGroupName === pickupName) {
-          value = true;
-        } else if (pickupGroupName !== '' && pickupGroupName !== pickupName) {
-          disabled = true;
-          sublabel = this.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName });
-          value = false;
-        }
-        member.checkboxes[index] = {
-          label: (this.hasLocations ? number.siteToSite : number.internal) + (number.external ? ' & ' + number.external : ''),
-          sublabel: sublabel,
-          value: value,
-          numberUuid: number.uuid,
-          disabled: disabled,
-        };
-      });
+        .then((pickupGroupName: string) => {
+          let disabled = false;
+          let sublabel = '';
+          let value = false;
+          if (pickupGroupName === pickupName) {
+            value = true;
+          } else if (pickupGroupName !== '' && pickupGroupName !== pickupName) {
+            disabled = true;
+            sublabel = this.$translate.instant('callPickup.assignmentMsg', { pickupGroupName: pickupGroupName });
+            value = false;
+          }
+          member.checkboxes[index] = {
+            label: (this.hasLocations ? number.siteToSite : number.internal) + (number.external ? ' & ' + number.external : ''),
+            sublabel: sublabel,
+            value: value,
+            numberUuid: number.uuid,
+            disabled: disabled,
+          };
+        });
     });
     return member.checkboxes;
   }

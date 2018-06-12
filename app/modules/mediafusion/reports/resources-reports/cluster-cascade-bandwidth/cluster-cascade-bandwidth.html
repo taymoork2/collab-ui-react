@@ -1,29 +1,50 @@
 <div id='cluster-cascade-bandwidth-card' class="cs-card--medium media-metrics-report-card cascade-bandwidth-card">
-    <article class="media-service-card header-padding">
-      <graphheader>
-        <span class='report-section-header' translate='mediaFusion.metrics.cascadeBandwidthCardClusterHeading'></span>
-        <i class='icon icon-info-outline icon-large'
-        tooltip-html="$ctrl.parentcntrl.cascadeBandwidthClusterDesc"
-        tooltip-class="metrics-tooltip"
-        tooltip-trigger="mouseenter focus"
-        aria-label="{{::'mediaFusion.metrics.cascadeBandwidthClusterDesc' | translate}}">
-        </i>
-        <div id="clusterCascadeBandwidthExportDiv"></div>
-      </graphheader>
-      <section>
-        <div class="cluster-cascade-bandwidth-reports">
-          <div id="clusterCascadeBandwidthDiv" class="barchart" ng-class="{'cluster-cascade-bandwidth-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clusterCascadebandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clusterCascadebandwidthStatus)}"></div>
-          <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clusterCascadebandwidthStatus)">
-            <i class='icon icon-spinner icon-2x'></i>
-          </div>
-          <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clusterCascadebandwidthStatus)">
-            <h3 class="no-data">
-              <i class='icon icon-warning no-data-warning'></i>
-              <span translate='mediaFusion.metrics.nodata'></span>
-            </h3>
-          </div>
+  <article class="media-service-card header-padding">
+    <div class="graph-flip">
+      <div class="card" ng-class="{'flipped':isFlipped}">
+        <div class="face front" ng-class="{'no-display': isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.cascadeBandwidthCardClusterHeading'></span>
+            <i class='icon icon-info-outline icon-large'
+              ng-if="$ctrl.type === 'historical'"
+              tooltip-html="$ctrl.parentcntrl.cascadeBandwidthClusterDesc"
+              tooltip-class="metrics-tooltip"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{::'mediaFusion.metrics.cascadeBandwidthClusterDesc' | translate}}">
+            </i>
+            <div id="clusterCascadeBandwidthExportDiv"></div>
+          </graphheader>
+          <section>
+            <div class="cluster-cascade-bandwidth-reports">
+              <div id="clusterCascadeBandwidthDiv" class="barchart" ng-class="{'cluster-cascade-bandwidth-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clusterCascadebandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clusterCascadebandwidthStatus)}"></div>
+              <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.clusterCascadebandwidthStatus)">
+                <i class='icon icon-spinner icon-2x'></i>
+              </div>
+              <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.clusterCascadebandwidthStatus)">
+                <h3 class="no-data">
+                  <i class='icon icon-warning no-data-warning'></i>
+                  <span translate='mediaFusion.metrics.nodata'></span>
+                </h3>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info-outline icon-large graph-flip-icon' ng-show="$ctrl.type === 'live'" ng-click="isFlipped=true"></i>
         </div>
-      </section>
-    </article>
-  </div>
+        <div class="face back" ng-class="{'no-display': !isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.cascadeBandwidthCardClusterHeading'></span>
+          </graphheader>
+          <section>
+            <div class="metrics-info">
+              <div class="card-desc-small">
+                <span translate="mediaFusion.metrics.cascadeBandwidthClusterDesc" class="span-desc-small"></span>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info icon-large graph-flip-icon' ng-click="isFlipped=false"></i>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
   

@@ -116,14 +116,14 @@ export class EvaService {
 
     const otherOwnerIds = _.map(_.filter(expertAssistants.items, function (item: any) { return item.ownerId !== mePersonDetails.id; }), 'ownerId');
     return this.SparkService.listPeopleByIds(otherOwnerIds)
-    .then((owners) => {
-      const ownerMap = {};
-      owners.items.forEach((owner) => { ownerMap[owner['id']] = owner; });
-      expertAssistants.items.forEach((item) => {
-        item.ownerDetails = item.ownerId === mePersonDetails.id ? mePersonDetails : _.get(ownerMap, item.ownerId, {});
+      .then((owners) => {
+        const ownerMap = {};
+        owners.items.forEach((owner) => { ownerMap[owner['id']] = owner; });
+        expertAssistants.items.forEach((item) => {
+          item.ownerDetails = item.ownerId === mePersonDetails.id ? mePersonDetails : _.get(ownerMap, item.ownerId, {});
+        });
+        return { items: expertAssistants.items };
       });
-      return { items: expertAssistants.items };
-    });
   }
 
   /**
@@ -156,9 +156,9 @@ export class EvaService {
           return (key || '')[0] === '$' || _.isFunction(value);
         });
         return service.addOtherOwnerDetails({ items: [expertAssistantDataOnly] })
-        .then(function (expertAssistants) {
-          return expertAssistants.items[0];
-        });
+          .then(function (expertAssistants) {
+            return expertAssistants.items[0];
+          });
       });
   }
 

@@ -3,9 +3,9 @@
 describe('Controller: HelpdeskOrgController', function () {
   beforeEach(angular.mock.module('Squared'));
 
-  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification, Orgservice;
+  var Authinfo, q, $stateParams, HelpdeskService, LicenseService, $controller, $translate, $scope, orgController, Config, FeatureToggleService, HelpdeskHuronService, Notification;
 
-  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_, _Orgservice_) {
+  beforeEach(inject(function (_$controller_, _$q_, _$rootScope_, _$stateParams_, _$translate_, _Authinfo_, _Config_, _FeatureToggleService_, _HelpdeskHuronService_, _HelpdeskService_, _LicenseService_, _Notification_) {
     HelpdeskService = _HelpdeskService_;
     FeatureToggleService = _FeatureToggleService_;
     $scope = _$rootScope_.$new();
@@ -18,7 +18,6 @@ describe('Controller: HelpdeskOrgController', function () {
     Authinfo = _Authinfo_;
     HelpdeskHuronService = _HelpdeskHuronService_;
     Notification = _Notification_;
-    Orgservice = _Orgservice_;
   }));
 
   describe('Org controller', function () {
@@ -446,62 +445,6 @@ describe('Controller: HelpdeskOrgController', function () {
       $scope.$apply();
       orgController.findServiceOrders('12345');
       expect(orgController.orderSystems).toEqual([undefined]);
-    });
-  });
-
-  describe('Edit Org Name', function () {
-    beforeEach(function () {
-      installPromiseMatchers();
-
-      spyOn(Orgservice, 'validateDisplayName');
-      // we don't care about init logic
-      spyOn(HelpdeskService, 'getOrg').and.returnValue(q.reject());
-      spyOn(FeatureToggleService, 'supports').and.returnValue(q.reject());
-
-      $stateParams.id = 'whatever';
-      orgController = $controller('HelpdeskOrgController', {
-        $scope: $scope,
-        $stateParams: $stateParams,
-      });
-    });
-
-    it('should resolve validators if validateDisplayName resolves true', function () {
-      Orgservice.validateDisplayName.and.returnValue(q.resolve(true));
-
-      var validationPromises = {};
-      _.forEach(orgController.editOrgAsyncValidators, function (validator, key) {
-        validationPromises[key] = validator();
-      });
-      $scope.$apply();
-
-      expect(validationPromises.failure).toBeResolved();
-      expect(validationPromises.duplicate).toBeResolved();
-    });
-
-    it('should reject duplicate validator if validateDisplayName resolves false', function () {
-      Orgservice.validateDisplayName.and.returnValue(q.resolve(false));
-
-      var validationPromises = {};
-      _.forEach(orgController.editOrgAsyncValidators, function (validator, key) {
-        validationPromises[key] = validator();
-      });
-      $scope.$apply();
-
-      expect(validationPromises.failure).toBeResolved();
-      expect(validationPromises.duplicate).toBeRejected();
-    });
-
-    it('should reject failure validator if validateDisplayName throws an error', function () {
-      Orgservice.validateDisplayName.and.returnValue(q.reject());
-
-      var validationPromises = {};
-      _.forEach(orgController.editOrgAsyncValidators, function (validator, key) {
-        validationPromises[key] = validator();
-      });
-      $scope.$apply();
-
-      expect(validationPromises.failure).toBeRejected();
-      expect(validationPromises.duplicate).toBeResolved();
     });
   });
 });

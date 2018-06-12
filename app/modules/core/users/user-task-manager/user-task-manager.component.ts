@@ -109,6 +109,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
   public setActiveTask(taskSelection: ITask): void {
     this.activeTask = taskSelection;
+    this.UserTaskManagerService.setActiveTask(this.activeTask);
   }
 
   public dismissModal(): void {
@@ -130,7 +131,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
   }
 
   private initActives() {
-    this.activeTask = _.get<ITask>(this.$stateParams, 'task', undefined);
+    this.setActiveTask(_.get<ITask>(this.$stateParams, 'task', undefined));
     this.requestedTaskId = _.get(this.activeTask, 'id');
     this.fileName = _.get<string>(this.$stateParams, 'job.fileName', undefined);
     this.fileData = _.get<string>(this.$stateParams, 'job.fileData', undefined);
@@ -146,7 +147,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
 
     return this.UserTaskManagerService.submitCsvImportTask(this.fileName, this.fileData, this.fileChecksum, this.exactMatchCsv)
       .then(importedTask => {
-        this.activeTask = importedTask;
+        this.setActiveTask(importedTask);
         this.requestedTaskId = importedTask.id;
       })
       .catch(response => {
@@ -169,8 +170,13 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
     this.loading = false;
   }
 
+  private intervalFailureCallback = (response) => {
+    this.Notification.errorResponse(response);
+    this.dismissModal();
+  }
+
   private initPolling() {
-    this.UserTaskManagerService.initAllTaskListPolling(this.intervalCallback, this.$scope);
+    this.UserTaskManagerService.initAllTaskListPolling(this.intervalCallback, this.$scope, this.intervalFailureCallback);
   }
 
   public setActiveFilter(activeFilter: TaskListFilterType): void {
@@ -184,7 +190,7 @@ export class UserTaskManagerModalCtrl implements ng.IComponentController {
       return;
     }
 
-    this.activeTask = this.taskList[0];
+    this.setActiveTask(this.taskList[0]);
   }
 
   private getTaskById(id: string): ITask | undefined {

@@ -1,0 +1,27 @@
+<multi-step-modal
+  class="modal-content full"
+  l10n-title="{{$ctrl.title}}"
+  l10n-title-values="{clusterName: $ctrl.clusterName}"
+  dismiss="$ctrl.dismissModal()"
+  next="$ctrl.upgradeStep()"
+  cancel="$ctrl.dismissModal()"
+  cancel-removed="$ctrl.cancelRemoved"
+  next-removed="$ctrl.removeNext"
+  custom-finish="$ctrl.saveUpgradeOrder()"
+  custom-finish-removed="$ctrl.finishModal()"
+  custom-finish-l10n-label="common.upgrade"
+  custom="$ctrl.runPrechecks()"
+  custom-button-removed="$ctrl.removeCustom"
+  custom-button-l10n="hcs.upgrade.info.precheck">
+  <hcs-upgrade-info
+    ng-if="$ctrl.currentStepIndex === 1"
+    cluster-name="$ctrl.clusterName"
+    current-version="$ctrl.currentVersion"
+    upgrade-to="$ctrl.upgradeTo">
+  </hcs-upgrade-info>
+  <hcs-upgrade-order
+    ng-if="$ctrl.currentStepIndex === 2"
+    on-change-fn="$ctrl.setUpgradeOrder(cluster)"
+    cluster-uuid="$ctrl.clusterUuid">
+  </hcs-upgrade-order>
+</multi-step-modal>

@@ -68,16 +68,14 @@
             </span>
             |
             <span>
-              <a
-                href="{{sync.orgAdminUrl}}"
-                target="_blank"
-                tooltip-placement="left"
-                tooltip="{{sync.orgAdminLinkTooltip}}"
-                tooltip-trigger="mouseenter focus"
-                translate="messengerCiSync.orgAdminLinkText"
-                aria-label="{{::'messengerCiSync.orgAdminLinkText' | translate}} {{sync.orgAdminLinkTooltip}}">
-                <!-- aria-label must include both the link text and the tooltip text -->
-              </a>
+              <!-- aria-label should include both the link text and the tooltip text -->
+              <link-tooltip
+                tt-aria-label="{{::'messengerCiSync.orgAdminLinkText' | translate}} {{sync.orgAdminLinkTooltip}}"
+                tt-href="{{sync.orgAdminUrl}}"
+                tt-tooltip-text="{{sync.orgAdminLinkTooltip}}"
+                tt-tooltip-placement="left">
+                <span translate="messengerCiSync.orgAdminLinkText"></span>
+              </link-tooltip>
             </span>
           </div>
         </div>
@@ -85,13 +83,9 @@
 
       <setting-section setting="sync.subSections.options" class="options-section">
         <div cr-feature-toggle feature-show="atlas-jabber-interop" class="row row--first">
-          <span tabindex="0"
-            tooltip="{{sync.jabberInteropTooltip}}"
-            tooltip-trigger="mouseenter focus"
-            translate="messengerCiSync.jabberInteropHeading"
-            aria-label="{{::'messengerCiSync.jabberInteropHeading' | translate}} {{sync.jabberInteropTooltip}}">
-            <!-- aria-label must include both the link text and the tooltip text -->
-          </span>
+          <text-tooltip tt-tooltip-text="{{sync.jabberInteropTooltip}}">
+            <span translate="messengerCiSync.jabberInteropHeading"></span>
+          </text-tooltip>
           <toggle-switch-with-read-only
             value="sync.settings.jabberInterop"
             toggle-id="toggleJabberInterop"
@@ -101,14 +95,9 @@
         </div>
 
         <div ng-if="sync.settings.syncInfo.isMessengerSyncRawMode" class="row"> <!-- Native Messenger Sync mode -->
-          <span tabindex="0"
-            tooltip-placement="top"
-            tooltip="{{sync.syncStatusTooltip}}"
-            tooltip-trigger="mouseenter focus"
-            translate="messengerCiSync.syncStatusHeading"
-            aria-label="{{::'messengerCiSync.syncStatusHeading' | translate}} {{sync.syncStatusTooltip}}">
-            <!-- aria-label must include both the link text and the tooltip text -->
-          </span>
+          <text-tooltip tt-tooltip-text="{{sync.syncStatusTooltip}}">
+            <span translate="messengerCiSync.syncStatusHeading"></span>
+          </text-tooltip>
           <toggle-switch-with-read-only
             value="sync.settings.syncInfo.isSyncEnabled"
             is-read-only="!sync.isOpsAdmin()"
@@ -119,26 +108,16 @@
         </div>
 
         <div ng-if="!sync.settings.syncInfo.isMessengerSyncRawMode" class="row"> <!-- Native CI DirSync mode -->
-          <span tabindex="0"
-            tooltip-placement="top"
-            tooltip="{{sync.dirsyncStatusTooltip}}"
-            tooltip-trigger="mouseenter focus"
-            translate="messengerCiSync.dirsyncStatusHeading"
-            aria-label="{{::'messengerCiSync.dirsyncStatusHeading' | translate}} {{sync.dirsyncStatusTooltip}}">
-            <!-- aria-label must include both the link text and the tooltip text -->
-          </span>
+          <text-tooltip tt-tooltip-text="{{sync.dirsyncStatusTooltip}}">
+            <span translate="messengerCiSync.dirsyncStatusHeading"></span>
+          </text-tooltip>
           <boolean-text-field value="sync.settings.syncInfo.isSyncEnabled"></boolean-text-field>
         </div>
 
         <div class="row">
-          <span tabindex="0"
-            tooltip-placement="top"
-            tooltip="{{sync.authRedirectTooltip}}"
-            tooltip-trigger="mouseenter focus"
-            translate="messengerCiSync.authRedirectHeading"
-            aria-label="{{::'messengerCiSync.authRedirectHeading' | translate}} {{sync.authRedirectTooltip}}">
-            <!-- aria-label must include both the link text and the tooltip text -->
-          </span>
+          <text-tooltip tt-tooltip-text="{{sync.authRedirectTooltip}}">
+            <span translate="messengerCiSync.authRedirectHeading"></span>
+          </text-tooltip>
           <toggle-switch-with-read-only
             value="sync.settings.syncInfo.isAuthRedirect"
             is-read-only="!sync.isOpsAdmin()"
@@ -150,14 +129,9 @@
 
         <div ng-if="sync.settings.syncInfo.isNewDataFormat"> <!-- new org ext data -->
           <div class="row">
-            <span tabindex="0"
-              tooltip-placement="top"
-              tooltip="{{sync.pwdSyncTooltip}}"
-              tooltip-trigger="mouseenter focus"
-              translate="messengerCiSync.pwdSyncHeading"
-              aria-label="{{::'messengerCiSync.pwdSyncHeading' | translate}} {{sync.pwdSyncTooltip}}">
-              <!-- aria-label must include both the link text and the tooltip text -->
-            </span>
+            <text-tooltip tt-tooltip-text="{{sync.pwdSyncTooltip}}">
+              <span translate="messengerCiSync.pwdSyncHeading"></span>
+            </text-tooltip>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isPwdSync"
               is-read-only="!sync.isOpsAdmin()"
@@ -166,14 +140,9 @@
           </div>
 
           <div class="row">
-            <span tabindex="0"
-              tooltip-placement="top"
-              tooltip="{{sync.sparkEntTooltip}}"
-              tooltip-trigger="mouseenter focus"
-              translate="messengerCiSync.sparkEntHeading"
-              aria-label="{{::'messengerCiSync.sparkEntHeading' | translate}} {{sync.sparkEntTooltip}}">
-              <!-- aria-label must include both the link text and the tooltip text -->
-            </span>
+            <text-tooltip tt-tooltip-text="{{sync.sparkEntTooltip}}">
+              <span translate="messengerCiSync.sparkEntHeading"></span>
+            </text-tooltip>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isSparkEnt"
               is-read-only="!sync.isOpsAdmin()"
@@ -184,14 +153,9 @@
           </div>
 
           <div class="row">
-            <span tabindex="0"
-              tooltip-placement="top"
-              tooltip="{{sync.usrDisTooltip}}"
-              tooltip-trigger="mouseenter focus"
-              translate="messengerCiSync.usrDisHeading"
-              aria-label="{{::'messengerCiSync.usrDisHeading' | translate}} {{sync.usrDisTooltip}}">
-              <!-- aria-label must include both the link text and the tooltip text -->
-            </span>
+            <text-tooltip tt-tooltip-text="{{sync.usrDisTooltip}}">
+              <span translate="messengerCiSync.usrDisHeading"></span>
+            </text-tooltip>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isUsrDis"
               is-read-only="!sync.isOpsAdmin()"
@@ -202,14 +166,9 @@
           </div>
 
           <div class="row">
-            <span tabindex="0"
-              tooltip-placement="top"
-              tooltip="{{sync.usrDelTooltip}}"
-              tooltip-trigger="mouseenter focus"
-              translate="messengerCiSync.usrDelHeading"
-              aria-label="{{::'messengerCiSync.usrDelHeading' | translate}} {{sync.usrDelTooltip}}">
-              <!-- aria-label must include both the link text and the tooltip text -->
-            </span>
+            <text-tooltip tt-tooltip-text="{{sync.usrDelTooltip}}">
+              <span translate="messengerCiSync.usrDelHeading"></span>
+            </text-tooltip>
             <toggle-switch-with-read-only
               value="sync.settings.syncInfo.isUsrDel"
               is-read-only="!sync.isOpsAdmin()"

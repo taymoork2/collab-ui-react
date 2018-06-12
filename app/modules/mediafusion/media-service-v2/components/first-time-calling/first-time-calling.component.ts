@@ -98,21 +98,21 @@ export class FirstTimeCallingController implements ng.IComponentController {
       }
       this.callParticipants = response.clientTypes;
     })
-    . finally( () => {
-      if (this.callParticipants.length === 0 && !this.retry) {
-        this.$timeout( () => {
-          this.retry = true;
-          this.firstTimeCallDetails();
-        }, 60000);
-      } else if (this.callParticipants.length !== 0) {
-        this.loading = false;
-        this.callExists = true;
-      } else if (this.callParticipants.length === 0 && this.retry) {
-        this.callParticipants.length = 5;
-        this.loading = false;
-        this.callExists = false;
-      }
-    });
+      . finally( () => {
+        if (this.callParticipants.length === 0 && !this.retry) {
+          this.$timeout( () => {
+            this.retry = true;
+            this.firstTimeCallDetails();
+          }, 60000);
+        } else if (this.callParticipants.length !== 0) {
+          this.loading = false;
+          this.callExists = true;
+        } else if (this.callParticipants.length === 0 && this.retry) {
+          this.callParticipants.length = 5;
+          this.loading = false;
+          this.callExists = false;
+        }
+      });
   }
 
   public closeSetupModal() {

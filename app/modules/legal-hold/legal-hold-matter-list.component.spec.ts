@@ -112,12 +112,12 @@ describe('Component: legalHoldMatterList', () => {
   describe('basic functions', () => {
     beforeEach(initComponent);
     it('should filter records', function (this: Test) {
-      this.controller.onChangeFilter(this.controller.filters[1]);
+      this.controller.onChangeFilter(this.controller.filters[2]);
       const gridData = _.get(this.controller.gridOptions, 'data', []);
       expect(this.controller.gridData_.length).toBe(3);
       expect(gridData.length).toBe(2);
       expect(_.every(gridData, { matterState: 'active' })).toBeTruthy();
-      expect(this.controller.currentFilter).toEqual(this.controller.filters[1]);
+      expect(this.controller.currentFilter).toEqual(this.controller.filters[2]);
     });
 
     it('should search matter name and description for an entered string', function (this: Test) {

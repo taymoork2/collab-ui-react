@@ -15,6 +15,6 @@ export default angular
     hcsTestManagertServiceModule,
     notifications,
   ])
-.component('taasResourceView', new ResourceViewComponent())
-.component('resourceCreateModal', new ResourceCreateComponent())
-.name;
+  .component('taasResourceView', new ResourceViewComponent())
+  .component('resourceCreateModal', new ResourceCreateComponent())
+  .name;

@@ -12,7 +12,7 @@ export class InstallFilesComponent implements ng.IComponentOptions {
 export class InstallFilesCtrl implements ng.IComponentController {
   public installFilesList: IHcsInstallables[] = [];
   public allInstallFilesList: IHcsInstallables[] = [];
-
+  public loading: boolean = true;
   /* @ngInject */
   constructor(
     private HcsSetupModalService: HcsSetupModalService,
@@ -28,19 +28,22 @@ export class InstallFilesCtrl implements ng.IComponentController {
   }
 
   public listAgentInstallFiles(): void {
+    this.loading = true;
     this.HcsControllerService.listAgentInstallFile().then(resp => {
       this.allInstallFilesList = resp;
       this.installFilesList = _.cloneDeep(this.allInstallFilesList);
       this.setFileInfo();
-    });
+    }).catch(error => {
+      this.Notification.errorWithTrackingId(error);
+    }).finally(() => this.loading = false);
   }
 
   public setFileInfo(): void {
     _.forEach(this.installFilesList, (file) => {
       this.HcsControllerService.getAgentInstallFile(file.uuid)
-      .then(resp => {
-        file.fileInfo = _.get(resp, 'files');
-      });
+        .then(resp => {
+          file.fileInfo = _.get(resp, 'files');
+        });
     });
   }
 
@@ -64,13 +67,13 @@ export class InstallFilesCtrl implements ng.IComponentController {
 
   public deleteAgentInstallFile(uuid): void {
     this.HcsControllerService.deleteAgentInstallFile(uuid)
-    .then(() => {
-      this.listAgentInstallFiles();
-      this.reInstantiateMasonry();
-    })
-    .catch( error => {
-      this.Notification.error('hcs.installFiles.error', error.data);
-    });
+      .then(() => {
+        this.listAgentInstallFiles();
+        this.reInstantiateMasonry();
+      })
+      .catch( error => {
+        this.Notification.error('hcs.installFiles.error', error.data);
+      });
   }
 
   public addAgentInstallFile(): void {

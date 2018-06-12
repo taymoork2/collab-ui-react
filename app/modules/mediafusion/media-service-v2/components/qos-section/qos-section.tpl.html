@@ -2,7 +2,7 @@
   <div class="sub-section">
     <h5 class="sub-section__label" translate="mediaFusion.qos.fulltitle"></h5>
     <p class="sub-section__description" translate="mediaFusion.qos.description"></p>
-    <cs-toggle-switch ng-model="$ctrl.enableQos" ng-click="$ctrl.setEnableQos()"
+    <cs-toggle-switch ng-model="$ctrl.enableQos" cs-change="$ctrl.setEnableQos(toggleValue)"
       toggle-id="toggleEnableQoS" name="toggleEnableQoS" size="small">
     </cs-toggle-switch>
   </div>

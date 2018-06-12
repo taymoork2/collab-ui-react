@@ -238,7 +238,7 @@ describe('Service: SetupWizard Service', function () {
   describe('getConferenceLicensesBySubscriptionId', function () {
     it('should return the list of conference licenses', function () {
       const result = this.SetupWizardService.getConferenceLicensesBySubscriptionId('SubCt31test20161222111');
-      expect(result.length).toBe(2);
+      expect(result.length).toBe(3);
     });
   });
 

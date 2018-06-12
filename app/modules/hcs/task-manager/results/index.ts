@@ -14,5 +14,5 @@ export default angular
     hcsTestManagerServiceModule,
     notifications,
   ])
-.component('taasResultsView', new ResultsViewComponent())
-.name;
+  .component('taasResultsView', new ResultsViewComponent())
+  .name;

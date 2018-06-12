@@ -5,7 +5,7 @@
     .controller('TrialCtrl', TrialCtrl);
 
   /* @ngInject */
-  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
+  function TrialCtrl($q, $state, $scope, $stateParams, $translate, $window, Analytics, Authinfo, Config, InputValidatorService, HuronCustomer, FeatureToggleService, Notification, Orgservice, TrialContextService, TrialDeviceService, TrialPstnService, TrialService, HuronCompassService) {
     var vm = this;
     vm.careTypes = {
       K1: 1,
@@ -16,7 +16,7 @@
       general: {
         required: $translate.instant('common.invalidRequired'),
         email: $translate.instant('common.invalidEmail'),
-        trialUniqueAsyncValidator: '',
+        // if you are looking for either customerName or customerEmail, those are created by the trialUniqueAsyncValidator directive
       },
       roomSystem: {
         max: $translate.instant('partnerHomePage.invalidTrialRoomSystemQuantity'),
@@ -41,6 +41,8 @@
       trialLicenseMax: 1000,
       careMax: 50,
     };
+
+    vm.inputValidator = InputValidatorService;
 
     var _careDefaultQuantity = 15;
     var _roomSystemDefaultQuantity = 5;

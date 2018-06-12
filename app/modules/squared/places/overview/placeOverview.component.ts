@@ -86,14 +86,14 @@ class PlaceOverview implements ng.IComponentController {
 
   public initPlaceCallOverviewData(): void {
     this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-        .then( placeCallOverviewData => {
-          this.placeCallOverviewData = placeCallOverviewData;
-          this.preferredLanguage = placeCallOverviewData.preferredLanguage;
-          this.preferredLanguageFeature.languageOptions = placeCallOverviewData.preferredLanguageOptions;
-          this.preferredLanguageFeature.save = this.savePreferredLanguage.bind(this);
-        }).finally(() => {
-          this.plIsLoaded = true;
-        });
+      .then( placeCallOverviewData => {
+        this.placeCallOverviewData = placeCallOverviewData;
+        this.preferredLanguage = placeCallOverviewData.preferredLanguage;
+        this.preferredLanguageFeature.languageOptions = placeCallOverviewData.preferredLanguageOptions;
+        this.preferredLanguageFeature.save = this.savePreferredLanguage.bind(this);
+      }).finally(() => {
+        this.plIsLoaded = true;
+      });
   }
 
   public initPreferredLanguage() {
@@ -101,9 +101,9 @@ class PlaceOverview implements ng.IComponentController {
     this.preferredLanguageFeature.hasSparkCall = this.hasSparkCall;
     this.preferredLanguageFeature.currentUserId = this.currentPlace.cisUuid;
     this.PlaceCallOverviewService.getPlaceCallOverviewData(this.currentPlace.cisUuid)
-        .then( placeCallOverviewData => {
-          this.preferredLanguageFeature.selectedLanguageCode = placeCallOverviewData.preferredLanguage.value;
-        });
+      .then( placeCallOverviewData => {
+        this.preferredLanguageFeature.selectedLanguageCode = placeCallOverviewData.preferredLanguage.value;
+      });
     this.PlaceCallOverviewService.getSiteLanguages().then( (langOptions: IPreferredLanugageOption[]) => {
       this.preferredLanguageFeature.languageOptions = langOptions;
     });
@@ -218,7 +218,7 @@ class PlaceOverview implements ng.IComponentController {
     this.fetchDetailsForLoggedInUser();
 
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-    .then(result => this.ishI1484 = result);
+      .then(result => this.ishI1484 = result);
   }
 
   private fetchDetailsForLoggedInUser() {

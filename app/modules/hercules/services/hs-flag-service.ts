@@ -53,7 +53,7 @@ export class HybridServicesFlagService {
         orgId: orgId,
         flagName: flagName,
       },
-      new HybridServicesFlag(flagName, raised))
+        new HybridServicesFlag(flagName, raised))
       .$promise;
   }
 

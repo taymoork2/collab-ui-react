@@ -243,7 +243,7 @@ export class HuntGroupService {
       }, (_response, headers) => {
         location = headers('Location');
       }).$promise
-      .then( () => location);
+        .then( () => location);
     });
   }
 
@@ -288,9 +288,9 @@ export class HuntGroupService {
           return member.uuid;
         }),
       }).$promise
-      .then( () => {
-        return this.getHuntGroup(huntGroupId);
-      });
+        .then( () => {
+          return this.getHuntGroup(huntGroupId);
+        });
     });
   }
 

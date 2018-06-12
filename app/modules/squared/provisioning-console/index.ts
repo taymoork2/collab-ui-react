@@ -10,15 +10,15 @@ export *  from './provisioning.interfaces';
 
 
 export default angular
- .module('squared.provisioning-console', [
-   require('modules/core/config/urlConfig'),
-   require('angular-translate'),
-   require('angular-ui-router'),
-   require('angular-sanitize'),
-   featureToggleServiceModule,
-   notifications,
- ])
- .service('ProvisioningService', ProvisioningService)
- .controller('ProvisioningController', ProvisioningController)
- .controller('ProvisioningDetailsController', ProvisioningDetailsController)
+  .module('squared.provisioning-console', [
+    require('modules/core/config/urlConfig'),
+    require('angular-translate'),
+    require('angular-ui-router'),
+    require('angular-sanitize'),
+    featureToggleServiceModule,
+    notifications,
+  ])
+  .service('ProvisioningService', ProvisioningService)
+  .controller('ProvisioningController', ProvisioningController)
+  .controller('ProvisioningDetailsController', ProvisioningDetailsController)
   .name;

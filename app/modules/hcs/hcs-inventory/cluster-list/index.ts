@@ -6,5 +6,5 @@ export default angular
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
-.component('hcsClusterList', new ClusterListComponent())
-.name;
+  .component('hcsClusterList', new ClusterListComponent())
+  .name;

@@ -74,12 +74,12 @@ describe('Service: PhoneButtonLayoutService', () => {
 
   it('should update user\'s phonebuttons', function() {
     this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/100000/buttonlayouts',
-    function(putUserButtonLayouts) {
-      putUserButtonLayouts = JSON.parse(putUserButtonLayouts);
-      expect(putUserButtonLayouts).toBeDefined();
-      expect(putUserButtonLayouts.buttonLayout).toBeDefined();
-      return true;
-    }).respond(200);
+      function(putUserButtonLayouts) {
+        putUserButtonLayouts = JSON.parse(putUserButtonLayouts);
+        expect(putUserButtonLayouts).toBeDefined();
+        expect(putUserButtonLayouts.buttonLayout).toBeDefined();
+        return true;
+      }).respond(200);
     this.PhoneButtonLayoutService.updatePhoneButtons('users', 100000, this.putUserButtonLayouts);
     this.$httpBackend.flush();
   });
@@ -95,12 +95,12 @@ describe('Service: PhoneButtonLayoutService', () => {
 
   it('should update place\'s phonebuttons', function() {
     this.$httpBackend.expectPUT(this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/places/100000/buttonlayouts',
-    function(putUserButtonLayouts) {
-      putUserButtonLayouts = JSON.parse(putUserButtonLayouts);
-      expect(putUserButtonLayouts).toBeDefined();
-      expect(putUserButtonLayouts.buttonLayout).toBeDefined();
-      return true;
-    }).respond(200);
+      function(putUserButtonLayouts) {
+        putUserButtonLayouts = JSON.parse(putUserButtonLayouts);
+        expect(putUserButtonLayouts).toBeDefined();
+        expect(putUserButtonLayouts.buttonLayout).toBeDefined();
+        return true;
+      }).respond(200);
     this.PhoneButtonLayoutService.updatePhoneButtons('places', 100000, this.putUserButtonLayouts);
     this.$httpBackend.flush();
   });

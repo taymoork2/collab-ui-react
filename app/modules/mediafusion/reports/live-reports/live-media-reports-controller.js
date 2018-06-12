@@ -29,6 +29,7 @@
     vm.liveReports = true;
     vm.type = 'live';
     vm.exportDiv = 'cs-export-div';
+    vm.graphSize = 'minimum';
     vm.utilizationStatus = vm.REFRESH;
     vm.callVolumeStatus = vm.REFRESH;
     vm.participantDistributionStatus = vm.REFRESH;
@@ -190,8 +191,8 @@
         setCallVolumeData();
         if (vm.hasMFCascadeBandwidthFeatureToggle) {
           loadClusterCascadeGraphs();
-          refreshReportCards();
         }
+        refreshReportCards();
       });
     }
 
@@ -482,7 +483,7 @@
       }
       vm.clusterinServicechartOptions.isShow = true;
       vm.clusterinServicechartOptions.noData = vm.clusterAvailability;
-      vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService);
+      vm.clusterinServiceChart = ClusterInServiceGraphService.setClusterInService(vm.clusterinService, vm.graphSize);
       return vm.clusterinServiceChart;
     }
 

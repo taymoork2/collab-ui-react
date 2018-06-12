@@ -42,16 +42,16 @@ class CallSettingsCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484)
-    .then(isSupported => {
-      this.isHI1484 = isSupported;
-      this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( response => {
-        if (response.data.countryCode) {
-          this.countryCode = response.data.countryCode;
-        } else {
-          this.countryCode = 'US';
-        }
+      .then(isSupported => {
+        this.isHI1484 = isSupported;
+        this.Orgservice.getOrg(_.noop, null, { basicInfo: true }).then( response => {
+          if (response.data.countryCode) {
+            this.countryCode = response.data.countryCode;
+          } else {
+            this.countryCode = 'US';
+          }
+        });
       });
-    });
     this.showRegionAndVoicemail = this.Authinfo.getLicenses().filter(license => {
       return license.licenseType === this.Config.licenseTypes.COMMUNICATION;
     }).length > 0;
@@ -125,25 +125,25 @@ class CallSettingsCtrl implements ng.IComponentController {
       showEnableVoicemailModal = true;
     }
     return this.CallSettingsService.save(this.callSettingsData)
-    .then(callSettingsData => {
-      if (callSettingsData) {
-        this.callSettingsData = callSettingsData;
-      }
-      this.Notification.success('serviceSetupModal.saveSuccess');
-    }).finally(() => {
-      this.processing = false;
-      this.resetForm();
-      if (showEnableVoicemailModal) {
-        this.$state.go('users.enableVoicemail');
-      }
-    });
+      .then(callSettingsData => {
+        if (callSettingsData) {
+          this.callSettingsData = callSettingsData;
+        }
+        this.Notification.success('serviceSetupModal.saveSuccess');
+      }).finally(() => {
+        this.processing = false;
+        this.resetForm();
+        if (showEnableVoicemailModal) {
+          this.$state.go('users.enableVoicemail');
+        }
+      });
   }
 
   public showSaveDialogs(): void {
     if (this.showDialPlanChangedDialog && this.showVoiceMailDisableDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.openDisableVoicemailWarningDialog()
-        .then(() => this.save()));
+          .then(() => this.save()));
     } else if (this.showDialPlanChangedDialog) {
       this.openDialPlanChangeDialog()
         .then(() => this.save());

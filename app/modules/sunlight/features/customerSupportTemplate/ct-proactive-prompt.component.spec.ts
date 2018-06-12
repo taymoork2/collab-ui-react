@@ -164,7 +164,7 @@ describe('Test', () => {
 
     it('should set default promptTitle to Org Name (up-to first 50 characters only)', function () {
       expect(controller.template.configuration.proactivePrompt.fields.promptTitle.displayText)
-      .toBe(orgName.slice(0, 50));
+        .toBe(orgName.slice(0, 50));
     });
   });
 });

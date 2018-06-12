@@ -1,11 +1,7 @@
-<div class="hcs-no-data" ng-if="$ctrl.allInstallFilesList.length === 0">
-  <h2 translate="hcs.installFiles.nofileTitle"></h2>
-  <h5 translate="hcs.installFiles.nofileDescription"></h5>
-  <button class="btn btn--primary btn--large" ng-click="$ctrl.addAgentInstallFile()">
-    <span translate="hcs.installFiles.addFile"></span>
-  </button>
+<div class="hcs-no-data" ng-if="$ctrl.loading">
+  <i class="icon icon-2x icon-spinner"></i>
 </div>
-<div ng-if="$ctrl.allInstallFilesList.length !== 0">
+<div ng-if="!$ctrl.loading && $ctrl.allInstallFilesList.length !== 0">
   <cs-page-sub-header>
     <cs-page-sub-header-left>
       <cs-searchfilter search-item-fn="$ctrl.filteredList(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
@@ -22,7 +18,7 @@
   </cs-page-sub-header>
   <div class="cs-card-container install-file-container">
     <cs-card-layout>
-      <cs-card class="cs-card--small" ng-repeat="installFile in $ctrl.installFilesList">
+      <cs-card class="cs-card--medium" ng-repeat="installFile in $ctrl.installFilesList">
         <article>
           <header>
             <div class="header-with-right-icon">
@@ -66,4 +62,11 @@
       </cs-card>
     </cs-card-layout>
   </div>
+</div>
+<div class="hcs-no-data" ng-if="!$ctrl.loading && $ctrl.allInstallFilesList.length === 0">
+  <h2 translate="hcs.installFiles.nofileTitle"></h2>
+  <h5 translate="hcs.installFiles.nofileDescription"></h5>
+  <button class="btn btn--primary btn--large" ng-click="$ctrl.addAgentInstallFile()">
+    <span translate="hcs.installFiles.addFile"></span>
+  </button>
 </div>

@@ -147,28 +147,28 @@ export class ProvisioningDetailsController {
     this.$q.all (
       {updateOrderPromise: this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus, userName ),
         featureTogglePromise: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole) })
-    .then( promises => {
-      this.featureToggleFlag = promises.featureTogglePromise.valueOf();
-      const result: any = promises.updateOrderPromise;
-      if (result) {
-        this.order.status = newStatus;
-        if (this.featureToggleFlag) {
-          if (newStatus === Status.PENDING || newStatus === Status.PROGRESS) {
-            this.order.assignedTo = result.assignedTo;
-          } else if ( newStatus === Status.COMPLETED ) {
-            this.order.completedBy = result.assignedTo;
-            this.order.queueCompleted = result.queueCompleted;
+      .then( promises => {
+        this.featureToggleFlag = promises.featureTogglePromise.valueOf();
+        const result: any = promises.updateOrderPromise;
+        if (result) {
+          this.order.status = newStatus;
+          if (this.featureToggleFlag) {
+            if (newStatus === Status.PENDING || newStatus === Status.PROGRESS) {
+              this.order.assignedTo = result.assignedTo;
+            } else if ( newStatus === Status.COMPLETED ) {
+              this.order.completedBy = result.assignedTo;
+              this.order.queueCompleted = result.queueCompleted;
+            }
           }
         }
-      }
-      this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
-    })
-    .catch((error) => {
-      this.Notification.errorResponse(error);
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
+        this.$rootScope.$broadcast(STATUS_UPDATE_EVENT_NAME, order);
+      })
+      .catch((error) => {
+        this.Notification.errorResponse(error);
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }
 

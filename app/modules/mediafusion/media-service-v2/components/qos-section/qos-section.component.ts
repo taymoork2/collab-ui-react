@@ -41,26 +41,26 @@ class QosSectionCtrl implements ng.IComponentController {
       disableCache: true,
     };
     this.Orgservice.getOrg(_.noop, null, params)
-     .then(response => {
-       if (this.isWizard) {
-         this.enableQos = true;
-       } else {
-         this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', true);
-       }
-       this.MediaClusterServiceV2.getPropertySets()
-        .then((propertySets) => {
-          if (propertySets.length > 0) {
-            this.qosPropertySet = _.filter(propertySets, {
-              name: 'qosPropertySet',
-            });
-            if (this.qosPropertySet.length === 0) {
+      .then(response => {
+        if (this.isWizard) {
+          this.enableQos = true;
+        } else {
+          this.enableQos  = _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
+        }
+        this.MediaClusterServiceV2.getPropertySets()
+          .then((propertySets) => {
+            if (propertySets.length > 0) {
+              this.qosPropertySet = _.filter(propertySets, {
+                name: 'qosPropertySet',
+              });
+              if (this.qosPropertySet.length === 0) {
+                this.createPropertySetAndAssignClusters();
+              }
+            } else if (propertySets.length === 0) {
               this.createPropertySetAndAssignClusters();
             }
-          } else if (propertySets.length === 0) {
-            this.createPropertySetAndAssignClusters();
-          }
-        });
-     });
+          });
+      });
   }
 
   private createPropertySetAndAssignClusters(): void {
@@ -90,7 +90,8 @@ class QosSectionCtrl implements ng.IComponentController {
       });
   }
 
-  public setEnableQos(): void {
+  public setEnableQos(qosValue): void {
+    this.enableQos = qosValue;
     if (this.isWizard) {
       if (_.isFunction(this.onQosUpdate)) {
         this.onQosUpdate({ response: { qos: this.enableQos , qosPropertySetId : this.qosPropertySetId } });
@@ -99,15 +100,13 @@ class QosSectionCtrl implements ng.IComponentController {
       this.QosSectionService.setQos(this.enableQos, this.qosPropertySetId);
     }
   }
-
-
 }
 
 export class QosSectionComponent implements ng.IComponentOptions {
   public controller = QosSectionCtrl;
   public template = require('./qos-section.tpl.html');
   public bindings = {
-    isWizard: '=',
+    isWizard: '<',
     onQosUpdate: '&?',
   };
 }

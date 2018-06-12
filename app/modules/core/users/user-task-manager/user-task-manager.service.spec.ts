@@ -118,19 +118,38 @@ describe('Service: UserTaskManagerService', () => {
     });
 
     it('should get task errors', function (this: Test) {
-      const errors = [{
-        error: {
-          key: 'error-key',
-          message: 'error-message',
-        },
-        trackingId: 'error-trackingId',
-        itemNumber: 1,
-        errorMessage: 'error-message',
-      }];
-      this.$httpBackend.expectGET(`${this.URL}/456/errors`).respond({
-        items: errors,
-      });
+      const errors = {
+        items: [{
+          error: {
+            key: 'error-key',
+            message: 'error-message',
+          },
+          trackingId: 'error-trackingId',
+          itemNumber: 1,
+          errorMessage: 'error-message',
+        }],
+        paging: {},
+      };
+      this.$httpBackend.expectGET(`${this.URL}/456/errors?limit=${this.UserTaskManagerService.ERROR_LIMIT}`).respond(errors);
       expect(this.UserTaskManagerService.getTaskErrors('456')).toBeResolvedWith(errors);
+    });
+
+    it('should get next task errors', function (this: Test) {
+      const errors = {
+        items: [{
+          error: {
+            key: 'error-key',
+            message: 'error-message',
+          },
+          trackingId: 'error-trackingId',
+          itemNumber: 1,
+          errorMessage: 'error-message',
+        }],
+        paging: {},
+      };
+      const url = `${this.URL}/456/errors?limit=200&id=1234567890&offset=123123123123123`;
+      this.$httpBackend.expectGET(url).respond(errors);
+      expect(this.UserTaskManagerService.getNextTaskErrors(url)).toBeResolvedWith(errors);
     });
 
     it('should cancel task', function (this: Test) {
@@ -244,6 +263,23 @@ describe('Service: UserTaskManagerService', () => {
       expect(callbackSpy).toHaveBeenCalledTimes(2);
       this.expectRequestAfterIntervalPeriod(INTERVAL_DELAY);
       expect(callbackSpy).toHaveBeenCalledTimes(3);
+
+      scope.$destroy();
+      this.$interval.flush(INTERVAL_DELAY);
+      expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
+    });
+
+    it('should call failureCallback when get task list returns 403 on interval', function (this: Test) {
+      this.$httpBackend.whenGET(this.URL).respond(403);
+      const INTERVAL_DELAY = 30000;
+      const callbackSpy = jasmine.createSpy('callbackSpy');
+      const failureCallbackSpy = jasmine.createSpy('callbackSpy');
+      const scope = this.$rootScope.$new();
+      this.UserTaskManagerService.initAllTaskListPolling(callbackSpy, scope, failureCallbackSpy);
+
+      this.$httpBackend.flush(1); // initial request before interval starts
+      expect(callbackSpy).toHaveBeenCalledTimes(0);
+      expect(failureCallbackSpy).toHaveBeenCalledTimes(1);
 
       scope.$destroy();
       this.$interval.flush(INTERVAL_DELAY);

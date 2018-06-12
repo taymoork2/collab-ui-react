@@ -15,6 +15,7 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
   public backState: string = 'partner-services-overview';
   public swprofileList: ISoftwareProfile[];
   public currentList: ISoftwareProfile[];
+  public loading: boolean = true;
 
   /* @ngInject */
   constructor(
@@ -38,11 +39,11 @@ export class HcsUpgradeSwprofileListCtrl implements ng.IComponentController {
   }
 
   public listSwProfile(): void {
+    this.loading = true;
     this.HcsUpgradeService.listSoftwareProfiles().then(data => {
       this.swprofileList = _.get(data, 'softwareProfiles');
       this.currentList = this.swprofileList;
-    });
-
+    }).finally(() => this.loading = false);
   }
 
   public filteredList(searchStr: string): void {

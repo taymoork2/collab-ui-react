@@ -18,13 +18,13 @@ describe('Service: AutoAnswerService', () => {
     this.autoAnswerData = new AutoAnswer();
     _.forEach(_.get(this.autoAnswerRead, AutoAnswerConst.PHONES, []), (phone: AutoAnswerPhone) => {
       this.autoAnswerData.phones.push(
-            new AutoAnswerPhone({
-              uuid: phone.uuid,
-              name: phone.name,
-              description: phone.description,
-              model: phone.model,
-              enabled: phone.enabled,
-              mode: phone.enabled ? phone.mode : undefined }));
+        new AutoAnswerPhone({
+          uuid: phone.uuid,
+          name: phone.name,
+          description: phone.description,
+          model: phone.model,
+          enabled: phone.enabled,
+          mode: phone.enabled ? phone.mode : undefined }));
     });
     this.autoAnswerData.member = new AutoAnswerMember(_.get(this.autoAnswerRead, AutoAnswerConst.MEMBER));
 

@@ -7,7 +7,7 @@ interface IInstallablesResource extends ng.resource.IResourceClass<ng.resource.I
 interface INodeListResource extends ng.resource.IResourceClass<IHcsNodeListType> {}
 
 type IHcsCustomerType = IHcsCustomer & ng.resource.IResource<IHcsCustomer>;
-interface IHcsCustomersResource extends ng.resource.IResourceClass<IHcsCustomerType> {}
+interface IHcsCustomerResource extends ng.resource.IResourceClass<IHcsCustomerType> {}
 
 interface IHcsAgentResource extends ng.resource.IResourceClass<ng.resource.IResource<any>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<any>>;
@@ -18,8 +18,9 @@ export class HcsControllerService {
   private installablesResource: IInstallablesResource;
   private nodeListResource: INodeListResource;
 
-  private customersResource: IHcsCustomersResource;
+  private customerResource: IHcsCustomerResource;
   private agentResource: IHcsAgentResource;
+  private agentVerifyResource: IHcsAgentResource;
   private partnerResource: IHcsPartnerResource;
 
   /* @ngInject */
@@ -56,15 +57,17 @@ export class HcsControllerService {
         save: postAction,
       });
 
-    this.customersResource = this.$resource<IHcsCustomerType>(BASE_URL + 'partners/:partnerId/customers', {},
+    this.customerResource = this.$resource<IHcsCustomerType>(BASE_URL + 'partners/:partnerId/customers/:customerId', {},
       {
         query: queryAction,
       });
 
-    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
+    this.agentVerifyResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
       {
         update: updateAction,
       });
+
+    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId', {}, {});
 
     this.partnerResource = <IHcsPartnerResource>this.$resource(BASE_URL + 'partners/:partnerId', {},
       {
@@ -113,7 +116,7 @@ export class HcsControllerService {
   }
 
   public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
-    return this.customersResource.query({
+    return this.customerResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => {
       return response;
@@ -122,7 +125,7 @@ export class HcsControllerService {
 
 
   public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
-    return this.customersResource.save({
+    return this.customerResource.save({
       partnerId: this.Authinfo.getOrgId(),
     }, {
       name: customerName,
@@ -130,8 +133,22 @@ export class HcsControllerService {
     }).$promise;
   }
 
+  public getHcsControllerCustomer(customerId: string| undefined): ng.IPromise<IHcsCustomer> {
+    return this.customerResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      customerId: customerId,
+    }).$promise;
+  }
+
+  public rejectAgent(node: IHcsNode): ng.IPromise<any> {
+    return this.agentResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      agentId: node.agentUuid,
+    }, {}).$promise;
+  }
+
   public acceptAgent(node: IHcsNode): ng.IPromise<any> {
-    return this.agentResource.update({
+    return this.agentVerifyResource.update({
       partnerId: this.Authinfo.getOrgId(),
       agentId: node.agentUuid,
     }, {}).$promise;

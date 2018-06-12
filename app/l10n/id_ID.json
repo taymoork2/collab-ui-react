@@ -6404,12 +6404,6 @@
       "grant-success-information": "Buka Nodus Media Hybrid Anda dalam waktu satu jam setelah menyelesaikan pendaftaran. Nodus Media Hybrid akan siap<br> digunakan segera setelah Anda menyelesaikan pendaftaran.",
       "grant-registration-success-header-old-cluster": "Anda kini dapat mendaftarkan Nodus Media Hybrid Anda pada Cisco Collaboration Cloud.<br> Alamat IP/FQDN Nodus: {{hostname}} Klaster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Bandwidth kaskade klaster maksimum berhasil disimpan.",
-      "title": "Bandwidth kaskade klaster maksimum",
-      "description": "Masukkan bandwidth maksimum (dalam megabit per detik) yang harus digunakan oleh klaster Layanan Media Hybrid untuk kaskade ke awan. Jumlah terendah memungkinkan satu streaming 720p aktif.",
-      "range": "Masukkan nilai antara 5 sampai 50"
-    },
     "sipconfiguration": {
       "success": "CM SIP Trunk Gabungan berhasil disimpan.",
       "title": "CM SIP Trunk Gabungan",

@@ -98,7 +98,7 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       locationId,
     }).$promise
-    .then(response => new Location(response));
+      .then(response => new Location(response));
   }
 
   public getUserLocation(userId: string): ng.IPromise<Location> {
@@ -106,7 +106,7 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       userId,
     }).$promise
-    .then(response => _.get<Location>(response, 'location'));
+      .then(response => _.get<Location>(response, 'location'));
   }
 
   public getPlaceLocation(placeId: string): ng.IPromise<Location> {
@@ -114,7 +114,7 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       placeId,
     }).$promise
-    .then(response => _.get<Location>(response, 'location'));
+      .then(response => _.get<Location>(response, 'location'));
   }
 
   public getUserOrPlaceLocation(userOrPlaceUuid, userOrPlaceType): ng.IPromise<any> {
@@ -168,10 +168,10 @@ export class LocationsService {
         number: _.get(location, 'callerId.number', null),
       },
     },
-    (_response, headers) => {
-      locationHeader = headers('Location');
-    }).$promise
-    .then(() => locationHeader);
+      (_response, headers) => {
+        locationHeader = headers('Location');
+      }).$promise
+      .then(() => locationHeader);
   }
 
   public updateLocation(location: Location): ng.IPromise<void> {
@@ -275,13 +275,13 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     })
-    .$promise
-    .then((rEmergencyNumberData: IREmergencyNumberData) => {
-      if (_.isArray(rEmergencyNumberData.emergencyNumbers) && rEmergencyNumberData.emergencyNumbers.length > 0) {
-        return new EmergencyNumber(rEmergencyNumberData.emergencyNumbers[0]);
-      }
-      return new EmergencyNumber();
-    });
+      .$promise
+      .then((rEmergencyNumberData: IREmergencyNumberData) => {
+        if (_.isArray(rEmergencyNumberData.emergencyNumbers) && rEmergencyNumberData.emergencyNumbers.length > 0) {
+          return new EmergencyNumber(rEmergencyNumberData.emergencyNumbers[0]);
+        }
+        return new EmergencyNumber();
+      });
   }
 
   public createEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<string> {
@@ -290,12 +290,12 @@ export class LocationsService {
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     },
-    emergencyNumber.getREmergencyNumber(),
-    (_response, headers) => {
-      location = headers('Location');
-    })
-    .$promise
-    .then(() => location);
+      emergencyNumber.getREmergencyNumber(),
+      (_response, headers) => {
+        location = headers('Location');
+      })
+      .$promise
+      .then(() => location);
   }
 
   public updateEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<void> {
@@ -304,7 +304,7 @@ export class LocationsService {
       locationId: locationId,
       emergencyNumberId: emergencyNumber.uuid,
     }, emergencyNumber.getREmergencyNumber())
-    .$promise;
+      .$promise;
   }
 
   public deletEmergencyCallbackNumber(locationId: string, emergencyNumber: EmergencyNumber): ng.IPromise<void> {
@@ -313,8 +313,8 @@ export class LocationsService {
       locationId: locationId,
       emergencyNumberId: emergencyNumber.uuid,
     })
-    .$promise
-    .then(() => {});
+      .$promise
+      .then(() => {});
   }
 
 }

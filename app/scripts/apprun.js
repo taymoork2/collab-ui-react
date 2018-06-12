@@ -106,6 +106,8 @@
           $state.go('unauthorized');
         } else if (error === Config.oauthError.serverError || error === Config.oauthError.temporarilyUnavailable || error === Config.oauthError.serviceUnavailable) {
           $state.go('backend-temp-unavailable');
+        } else {
+          $state.go('login-error');
         }
       } else {
         Log.debug('No access code data.');

@@ -150,6 +150,7 @@ export interface INodeSummaryItem {
   typeApplication: string;
   publisher: boolean;
   ipAddress: string;
+  activeVersion: string;
 }
 
 export interface IHcsClusterSummaryItem {
@@ -193,6 +194,8 @@ export interface ISftpServersObject {
 
 export interface IHcsUpgradeCustomer {
   uuid: string;
+  name?: string | null;
+  status?: string | null;
   softwareProfile: ISoftwareProfile;
 }
 
@@ -210,10 +213,45 @@ export class HcsUpgradeCustomer implements IHcsUpgradeCustomer {
 }
 
 export interface IUpgradeClusterGridRow {
+  customerId: string;
   clusterUuid: string;
   clusterName: string;
   applicationName: string;
   currentVersion: string;
-  upgradeTo: string;
+  upgradeTo: string | undefined;
   clusterStatus: string;
+  rowWidth: number;
+}
+
+export interface IHcsClusterTask {
+  status: string;
+  estimatedCompletion: any;
+  nodeStatuses: INodeTaskStatus[];
+}
+
+export interface INodeTaskStatus {
+  uuid: string;
+  sequence: number;
+  hostName: string;
+  typeApplication: string;
+  publisher: boolean;
+  previousDuration: any;
+  started: any;
+  elapsedTime: any;
+  status: string;
+}
+
+export interface INodeTaskGridRow {
+  name: string;
+  application: string;
+  isPublisher: boolean;
+}
+
+export interface IClusterStatusGridRow {
+  orderNumber: number;
+  nodeDetails: INodeTaskGridRow;
+  previousUpgradeTime: any;
+  startTime: any;
+  nodeStatus: string;
+  elapsedTime: any;
 }

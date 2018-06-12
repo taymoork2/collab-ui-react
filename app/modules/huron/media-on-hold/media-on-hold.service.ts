@@ -26,20 +26,20 @@ export class MediaOnHoldService {
     return this.mediaOnHoldResource.query({
       orgId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(mediaList => {
-      return _.map(mediaList, media => {
-        return <IMediaOnHold> {
-          orgId: _.get(media, 'orgId'),
-          mediaId: _.get(media, 'mediaId'),
-          variantId: _.get(media, 'variantId'),
-          fileName: _.get(media, 'fileName'),
-          displayName: _.get(media, 'displayName'),
-          rhesosId: _.get(media, 'rhesosId'),
-          markForDelete: _.get(media, 'markForDelete'),
-          assignments: _.get(media, 'assignments'),
-        };
+      .then(mediaList => {
+        return _.map(mediaList, media => {
+          return <IMediaOnHold> {
+            orgId: _.get(media, 'orgId'),
+            mediaId: _.get(media, 'mediaId'),
+            variantId: _.get(media, 'variantId'),
+            fileName: _.get(media, 'fileName'),
+            displayName: _.get(media, 'displayName'),
+            rhesosId: _.get(media, 'rhesosId'),
+            markForDelete: _.get(media, 'markForDelete'),
+            assignments: _.get(media, 'assignments'),
+          };
+        });
       });
-    });
   }
 
   public getCompanyMedia(): ng.IPromise<string> {

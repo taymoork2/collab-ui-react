@@ -2854,7 +2854,7 @@
         "item3": "Klicken Sie auf <strong>API-Client-Zugriff verwalten</strong>.",
         "item4": "Kopieren Sie den Client-Namen und das Ziel in die Zwischenablage.",
         "item5": "Rufen Sie Ihr G Suite-Konto-Dashboard auf, und fügen Sie den Client-Namen und das Ziel ein.",
-        "item6": "Klicken Sie auf „Autorisieren“. Kehren Sie dann zu dieser Seite zurück, und klicken Sie auf „Weiter“."
+        "item6": "Klicken Sie auf „Autorisieren“. Kehren Sie dann zu dieser Seite zurück, und klicken Sie auf „Weiter“."
       },
       "testAccount": {
         "title": "Testkonto",
@@ -6403,12 +6403,6 @@
       "upgradeschedule": "Upgrade-Zeitplan",
       "grant-success-information": "Gehen Sie innerhalb von einer Stunde zum Hybrid-Medienknoten, um die Registrierung abzuschließen. Der Hybrid-Medienknoten ist sofort nach Abschluss der Registrierung<br> einsatzbereit.",
       "grant-registration-success-header-old-cluster": "Sie können Ihren Hybrid-Medienknoten jetzt bei der Cisco Collaboration Cloud registrieren.<br> IP-Adresse des Knotens/FQDN: {{hostname}} Cluster: {{clustername}}"
-    },
-    "clusterBandwidth": {
-      "success": "Die maximale Weitergabe-Bandbreite für Cluster wurde erfolgreich gespeichert.",
-      "title": "Maximale Weitergabe-Bandbreite für Cluster",
-      "description": "Geben Sie die maximale Bandbreite (in Megabits pro Sekunde), die Cluster des Hybrid-Medien-Service für die Weitergabe an die Cloud verwenden dürfen, an. Die niedrigste Angabe ermöglicht einen aktiven 720p-Stream.",
-      "range": "Geben Sie einen Wert zwischen 5 und 50 an"
     },
     "sipconfiguration": {
       "success": "Unified CM-SIP-Übertragungsweg erfolgreich gespeichert.",

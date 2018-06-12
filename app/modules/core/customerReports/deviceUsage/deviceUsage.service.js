@@ -63,8 +63,8 @@
 
     function addMissingDaysInfo(usageData, start, end) {
       return getMissingDays(start, end).then(function (missingDays) {
-        var current = moment(start);
-        var final = moment(end);
+        var current = moment.utc(start);
+        var final = moment.utc(end);
         while (current.isSameOrBefore(final)) {
           var day = current.format('YYYY-MM-DD');
           if (isDayMissing(missingDays, day)) {
@@ -93,7 +93,7 @@
 
     function isDayMissing(missingDays, currentDay) {
       var dateMissing = _.find(missingDays, function (missingDay) {
-        return (moment(missingDay.date).format('YYYYMMDD') == (moment(currentDay).format('YYYYMMDD')));
+        return (moment.utc(missingDay.date).format('YYYYMMDD') == (moment.utc(currentDay).format('YYYYMMDD')));
       });
       return dateMissing != undefined;
     }
@@ -262,16 +262,17 @@
       });
     }
 
-    function pickDateBucket(item, granularity) {
-      var date = moment(item.date).startOf(granularity);
-      switch (granularity) {
-        case 'day':
-          return date.format('YYYYMMDD');
-        case 'week':
-          return moment(item.date).startOf('isoWeek').format('YYYYMMDD');
-        case 'month':
-          return date.format('YYYYMMDD');
-      }
+    function pickDateBucket(item, granularity, dateFormat) {
+      var granularities = {
+        day: 'day',
+        week: 'isoWeek',
+        month: 'month',
+      };
+      var momentGranularity = granularities[granularity];
+      var date = moment.utc(item.date).startOf(momentGranularity);
+      var DEFAULT_DATE_FORMAT = 'YYYYMMDD';
+      dateFormat = dateFormat || DEFAULT_DATE_FORMAT;
+      return date.format(dateFormat);
     }
 
     function resolveDeviceData(devices, api) {

@@ -6404,12 +6404,6 @@
       "grant-success-information": "在一個小時內移至「混合媒體節點」以完成註冊。在您完成註冊後，<br>「混合媒體節點」便已備妥使用。",
       "grant-registration-success-header-old-cluster": "現在，可以向 Cisco Collaboration Cloud 註冊您的「混合媒體節點」。<br>節點 IP 位址/FQDN：{{hostname}} 叢集：{{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "已成功儲存最大叢集串聯頻寬。",
-      "title": "最大叢集串聯頻寬",
-      "description": "輸入「混合媒體服務」叢集應該用於雲端串聯的最大頻寬 (Mbps)。最小數量允許一個使用中 720p 串流。",
-      "range": "輸入一個介於 5 到 50 之間的值"
-    },
     "sipconfiguration": {
       "success": "已成功儲存 Unified CM SIP 主幹。",
       "title": "Unified CM SIP 主幹",

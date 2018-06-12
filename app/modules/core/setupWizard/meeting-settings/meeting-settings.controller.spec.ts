@@ -62,7 +62,7 @@ describe('Controller: MeetingSettingsCtrl', () => {
       expect(hasSiteUrlFromTransferredWebexLicence).toBe(true);
     });
 
-    it('should find existing trial WebEx licenses on acting subscription and push them to sitesArray', function () {
+    it('should find existing Webex trial licenses on acting subscription and push them to sitesArray', function () {
       expect(this.Authinfo.getConferenceServices).toHaveBeenCalled();
       const hasSiteUrlFromTrialLicense = _.some(this.controller.existingTrialSites, { siteUrl: 'sqcie2e30.dmz' });
       expect(hasSiteUrlFromTrialLicense).toBe(true);
@@ -73,6 +73,14 @@ describe('Controller: MeetingSettingsCtrl', () => {
       const addsTrialSiteToExistingWebexSites = _.some(this.controller.existingWebexSites, { siteUrl: 'someonlinesite.my' });
       expect(hasSiteUrlFromOnlineTrialLicense).toBe(false);
       expect(addsTrialSiteToExistingWebexSites).toBe(false);
+      expect(this.controller.existingTrialSites.length).toBe(1);
+    });
+
+    it('should ignore trial site that is not status active', function () {
+      const hasSiteUrlfromInactiveTrialLicense = _.some(this.controller.existingTrialSites, { siteUrl: 'testsqcie2e30inactive.dmz' });
+      const addsInactiveTrialSiteToExistingWebexSites = _.some(this.controller.existingWebexSites, { siteUrl: 'testsqcie2e30inactive.dmz' });
+      expect(hasSiteUrlfromInactiveTrialLicense).toBe(false);
+      expect(addsInactiveTrialSiteToExistingWebexSites).toBe(false);
       expect(this.controller.existingTrialSites.length).toBe(1);
     });
 

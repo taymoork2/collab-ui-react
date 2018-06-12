@@ -46,7 +46,7 @@ describe('OnboardService:', () => {
     });
   });
 
-  // TODO (f3745): relocate 'isEmailAlreadyPresent()' once 'users.add' UI state is decoupled from 'OnboardCtrl'
+  // TODO (mipark2): relocate 'isEmailAlreadyPresent()' once 'users.add' UI state is decoupled from 'OnboardCtrl'
   describe('isEmailAlreadyPresent():', () => {
     it('should return true if a provided email exists in in a list provided by "getTokenEmailArray()" method', function () {
       spyOn(this.OnboardService, 'getTokenEmailArray').and.returnValue(['user1@example.com']);

@@ -1,6 +1,7 @@
 import { Config } from 'modules/core/config/config';
 import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
+import { OrganizationDeleteService } from 'modules/core/organizations/organization-delete/organization-delete.service';
 
 class OrganizationDeleteModalController {
   public readonly states = {
@@ -16,6 +17,7 @@ class OrganizationDeleteModalController {
   public checked: boolean[];
   public deleteLoading = false;
   public orgName: string = this.Authinfo.getOrgName();
+  public orgId: string = this.Authinfo.getOrgId();
   public l10nTitle;
   private href = 'http://www.webex.com';
   public allChecked = false;
@@ -59,7 +61,7 @@ class OrganizationDeleteModalController {
     private Authinfo,
     private Config: Config,
     private Notification: Notification,
-    private Orgservice,
+    private OrganizationDeleteService: OrganizationDeleteService,
     private UrlConfig,
   ) {}
 
@@ -78,6 +80,10 @@ class OrganizationDeleteModalController {
         this.moveOrDeleteLabel = this.$translate.instant('organizationDeleteModal.multMoveOrDelete');
       }
     });
+  }
+
+  public $onDestroy() {
+    this.OrganizationDeleteService.cancelDeleteVerify();
   }
 
   public checkboxesChanged(): void {
@@ -117,37 +123,21 @@ class OrganizationDeleteModalController {
 
   public deleteOrg(): void {
     this.deleteLoading = true;
-    const orgId = this.Authinfo.getOrgId();
-    this.Orgservice.deleteOrg(orgId, this.action === this.actions.DELETE)
-      .then(() => {
-        this.deleteOrgSuccess(orgId);
-      }).catch((error) => {
-        // TODO Remove this code once the deleteOrg API has been fixed
-        // Even though the API returned a failure the org may have been deleted
-        const params = {
-          disableCache: true,
-          basicInfo: true,
-        };
-        this.Orgservice.getAdminOrgAsPromise(orgId, params).then(() => {
-          // Error case: org should not still exist
-          this.deleteLoading = false;
-          this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
-            orgName: this.Authinfo.getOrgName(),
-          });
-        }).catch(() => {
-          // Org was eventually deleted
-          this.deleteOrgSuccess(orgId);
-        });
-      });
+    const deleteUsers = this.action === this.actions.DELETE;
+
+    this.OrganizationDeleteService.deleteOrg(this.orgId, deleteUsers)
+      .then(statusUrl => this.OrganizationDeleteService.verifyOrgDelete(statusUrl))
+      .then(() => this.deleteOrgSuccess())
+      .catch(error => this.notifyDeleteError(error));
   }
 
-  public deleteOrgSuccess(orgId): void {
+  private deleteOrgSuccess(): void {
     this.deleteLoading = false;
     this.customerType = this.Authinfo.isOnlineCustomer()
       ? this.Config.customerTypes.online
       : this.Config.customerTypes.enterprise;
     this.Analytics.trackEvent(this.Analytics.sections.ORGANIZATION.eventNames.DELETE, {
-      organizationId: orgId,
+      organizationId: this.orgId,
       customerType: this.customerType,
       deleteType: this.action,
     });
@@ -179,6 +169,13 @@ class OrganizationDeleteModalController {
   private getUserCount(): ng.IPromise<number> {
     return this.$http.get(`${this.UrlConfig.getAdminServiceUrl()}organizations/${this.Authinfo.getOrgId()}/users`)
       .then(response => _.get(response.data, 'totalResults', 1));
+  }
+
+  private notifyDeleteError(error) {
+    this.deleteLoading = false;
+    this.Notification.errorResponse(error, 'organizationDeleteModal.deleteOrgError', {
+      orgName: this.orgName,
+    });
   }
 }
 

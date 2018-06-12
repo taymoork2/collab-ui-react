@@ -4,14 +4,17 @@ export class QosSectionService {
 
   /* @ngInject */
   constructor(
+    private $http: ng.IHttpService,
     private Authinfo,
     private HybridServicesClusterService,
     private MediaClusterServiceV2,
     private Notification: Notification,
     private Orgservice,
+    private UrlConfig,
   ) { }
 
   public clusters: ICluster[] = [];
+  public qosMessage: string = '';
 
   public setQos(qosSettings, qosPropertySetId): void {
     const settings = {
@@ -50,7 +53,8 @@ export class QosSectionService {
         this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet.id, clusterPayload)
           .then(() => {
             this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet.id, payLoad)
-              .then(() => {
+              .then((response) => {
+                this.qosEnablementTracking(response, payLoad.properties['mf.qos']);
                 this.Notification.success('mediaFusion.qos.success');
               })
               .catch((error) => {
@@ -62,5 +66,21 @@ export class QosSectionService {
           });
       });
 
+  }
+
+  private qosEnablementTracking (response, qosValue) {
+    const trackingId = this.Notification.getTrackingId(response);
+    if (qosValue) {
+      this.qosMessage = 'QoS Enabled';
+    } else {
+      this.qosMessage = 'QoS Disabled';
+    }
+    const payload = {
+      serviceName: 'QoS',
+      message: this.qosMessage,
+      trackingId: trackingId,
+    };
+    const url = this.UrlConfig.getAthenaServiceUrl() + '/devops/organizations/' + this.Authinfo.getOrgId() + '/log_message';
+    return this.$http.post(url, payload);
   }
 }

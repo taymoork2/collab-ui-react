@@ -7,7 +7,7 @@ export interface IApplicationVersion {
 
 export interface IFileData {
   uuid: string;
-  version?: string;
+  appVersion?: string;
   fileName?: string;
 }
 
@@ -18,17 +18,17 @@ export interface ISoftwareAppVersion extends IFileData {
 export class SoftwareAppVersion implements ISoftwareAppVersion {
   public typeApplication: string;
   public uuid: string;
-  public version?: string;
+  public appVersion?: string;
   public fileName?: string;
   constructor (obj: {
     typeApplication: '',
     uuid: '',
-    version: '',
+    appVersion: '',
     fileName: '',
   }) {
     this.typeApplication = obj.typeApplication;
     this.uuid = obj.uuid;
-    this.version = obj.version;
+    this.appVersion = obj.appVersion;
     this.fileName = obj.fileName;
   }
 }

@@ -11,13 +11,14 @@ import multiDirSyncModule from 'modules/core/multi-dirsync';
 import privacySectionModule from './privacySection';
 import retentionModule from './retention';
 import securityModule from './security';
-import externalCommunicationModule from './externalCommunication';
-import fileSharingControlModule from './fileSharingControl';
+import externalCommunicationModule from './external-communication';
+import fileSharingControlModule from './file-sharing-control';
 import sipDomainModule from './sipDomain';
 import supportSectionModule from './supportSection';
 import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
 import proximityModule from './proximity';
+import integrationsModule from './integrations';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -39,6 +40,7 @@ export default angular.module('core.settings', [
   sparkAssistantModule,
   multiDirSyncModule,
   proximityModule,
+  integrationsModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

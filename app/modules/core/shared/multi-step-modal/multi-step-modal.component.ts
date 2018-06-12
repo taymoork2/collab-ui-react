@@ -3,6 +3,7 @@ class MultiStepModalController implements ng.IComponentController {
   public back?: Function;
   public next?: Function;
   public save?: Function;
+  public custom?: Function;
   public showBodyScrollIndicator?: string;
   public customFinish?: Function;
 
@@ -22,6 +23,7 @@ export class MultiStepModalComponent implements ng.IComponentOptions {
   public transclude = true;
   public bindings = {
     l10nTitle: '@',
+    l10nTitleValues: '<',
     l10nWarningFooter: '@?',
     dismiss: '&?',
     close: '&?',
@@ -39,6 +41,10 @@ export class MultiStepModalComponent implements ng.IComponentOptions {
     saveDisabled: '<?',
     saveRemoved: '<?',
     saveLoading: '<?',
+    custom: '&?',
+    customButtonRemoved: '<?',
+    customDisabled: '<?',
+    customButtonL10n: '@?',
     showBodyScrollIndicator: '@?',
     customFinish: '&?',
     customFinishDisabled: '<?',

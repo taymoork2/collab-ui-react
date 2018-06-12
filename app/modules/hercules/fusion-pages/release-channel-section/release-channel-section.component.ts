@@ -111,11 +111,11 @@ class ReleaseChannelSectionController implements ng.IComponentController {
       template: require('modules/hercules/fusion-pages/change-release-channel-dialog/change-release-channel-dialog.html'),
       type: 'dialog',
     })
-    .result
-    .then(() => {
-      this.data.releaseChannel = this.releaseChannelSelected.value;
-    })
-    .catch(() => this.setSelectedReleaseChannelOption(oldReleaseChannel));
+      .result
+      .then(() => {
+        this.data.releaseChannel = this.releaseChannelSelected.value;
+      })
+      .catch(() => this.setSelectedReleaseChannelOption(oldReleaseChannel));
   }
 
   public resetReleaseChannel(): ng.IPromise<any> {

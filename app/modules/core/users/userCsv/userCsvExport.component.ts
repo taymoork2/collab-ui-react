@@ -88,25 +88,25 @@ class UserCsvExportController implements ng.IComponentController {
         type: 'dialog',
         template: require('modules/core/users/userCsv/userCsvExportConfirm.tpl.html'),
       }).result
-      .then(() => {
-        if (this.isOverExportThreshold) {
+        .then(() => {
+          if (this.isOverExportThreshold) {
           // warn that entitlements won't be exported since there are too many users
-          this.$modal.open({
-            type: 'dialog',
-            template: require('modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html'),
-            controller: function () {
-              const modalCtrl = this;
-              modalCtrl.maxUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
-            },
-            controllerAs: 'ctrl',
-          }).result
-          .then(() => {
+            this.$modal.open({
+              type: 'dialog',
+              template: require('modules/core/users/userCsv/userCsvExportConfirm10K.tpl.html'),
+              controller: function () {
+                const modalCtrl = this;
+                modalCtrl.maxUsers = CsvDownloadService.USER_EXPORT_THRESHOLD;
+              },
+              controllerAs: 'ctrl',
+            }).result
+              .then(() => {
+                this.beginUserCsvDownload();
+              });
+          } else {
             this.beginUserCsvDownload();
-          });
-        } else {
-          this.beginUserCsvDownload();
-        }
-      });
+          }
+        });
     });
   }
 

@@ -26,12 +26,12 @@ export class HcsUpgradeSwprofileEditCtrl implements ng.IComponentController {
   public saveSoftwareProfile(): void {
     this.form.$setPristine();
     this.HcsUpgradeService.updateSoftwareProfile(this.selectedProfile)
-    .then(() => {
-      this.Notification.success('hcs.softwareProfiles.successupdate');
-    })
-    .catch(e => {
-      this.Notification.error(e.message, 'hcs.softwareProfiles.errorupdate');
-    });
+      .then(() => {
+        this.Notification.success('hcs.softwareProfiles.successupdate');
+      })
+      .catch(e => {
+        this.Notification.error(e.message, 'hcs.softwareProfiles.errorupdate');
+      });
 
   }
 

@@ -12,6 +12,7 @@ export const STATUS_UPGRADE_IN_PROGRESS: string = 'UPGRADE_IN_PROGRESS';
 export const STATUS_UPGRADE_SCHEDULED: string = 'UPGRADE_SCHEDULED';
 export const STATUS_FAILED_UPGRADE: string = 'FAILED_UPGRADE';
 export const STATUS_OPERATIONAL: string = 'OPERATIONAL';
+export const STATUS_COMPLIANT: string = 'COMPLIANT';
 
 export interface ISelectOption {
   label: string;

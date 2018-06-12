@@ -26,5 +26,5 @@ export default angular
     pagingGroupInitiator,
     huronPlaceModule,
   ])
-   .component('ucPagingGroup', new PagingGroupComponent())
+  .component('ucPagingGroup', new PagingGroupComponent())
   .name;

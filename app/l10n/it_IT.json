@@ -6404,12 +6404,6 @@
       "grant-success-information": "Andare al nodo multimediale ibrido entro un'ora per terminare la registrazione. Il nodo multimediale ibrido sarà pronto per l'uso<br> non appena si termina la registrazione.",
       "grant-registration-success-header-old-cluster": "Ora è possibile registrare il nodo multimediale ibrido in Cisco Collaboration Cloud.<br> Indirizzo IP nodo/FQDN: Cluster {{hostname}}: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Larghezza di banda massima per propagazione a catena del cluster salvata correttamente.",
-      "title": "Larghezza di banda massima per propagazione a catena del cluster",
-      "description": "Inserire la larghezza di banda massima (in megabit al secondo) che i cluster del servizio multimediale ibrido devono utilizzare per la propagazione a catena sul cloud. La quantità minima consente un flusso attivo da 720 p.",
-      "range": "Inserire un valore compreso tra 5 e 50"
-    },
     "sipconfiguration": {
       "success": "Trunk SIP Unified CM salvato correttamente.",
       "title": "Trunk SIP Unified CM",

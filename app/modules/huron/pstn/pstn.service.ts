@@ -224,7 +224,7 @@ export class PstnService {
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_DID;
     return this.TerminusService.carrierNumberV2().get(paramObj).$promise
-        .then(response => _.get(response, 'numbers', []));
+      .then(response => _.get(response, 'numbers', []));
   }
 
   public searchCarrierTollFreeInventory(carrierId: string, params: any): ng.IPromise<any> {
@@ -232,7 +232,7 @@ export class PstnService {
     paramObj.carrierId = carrierId;
     paramObj.numberType = NUMTYPE_TOLLFREE;
     return this.TerminusService.carrierNumberV2().get(paramObj).$promise
-        .then(response => _.get(response, 'numbers', []));
+      .then(response => _.get(response, 'numbers', []));
   }
 
   public reserveCarrierInventoryV2(customerId: string, carrierId: string, numbers: string[], isCustomerExists: boolean): ng.IPromise<any> {
@@ -546,13 +546,13 @@ export class PstnService {
   public listPendingOrders(customerId: string): ng.IPromise<any> {
     const pendingOrders: any = [];
     pendingOrders.push(
-        this.queryPendingOrders(customerId, PSTN),
+      this.queryPendingOrders(customerId, PSTN),
       );
     pendingOrders.push(
-        this.queryPendingOrders(customerId, TYPE_PORT),
+      this.queryPendingOrders(customerId, TYPE_PORT),
       );
     return this.$q.all(pendingOrders)
-        .then(_.flatten);
+      .then(_.flatten);
   }
 
     // TODO (jlowery): Remove this function when Terminus implements
@@ -562,30 +562,30 @@ export class PstnService {
   public listPendingOrdersWithDetail(customerId: string): ng.IPromise<any> {
     const pendingOrdersWithDetail: any = [];
     pendingOrdersWithDetail.push(
-        this.queryPendingOrders(customerId, PSTN)
-          .then(orders => {
-            const orderDetailPromises: any = [];
-            _.forEach(orders, (order) => {
-              orderDetailPromises.push(
-                this.getOrder(customerId, order.uuid).then(orderDetail => {
-                  return orderDetail;
-                }));
-            });
-            return this.$q.all(orderDetailPromises);
-          }),
+      this.queryPendingOrders(customerId, PSTN)
+        .then(orders => {
+          const orderDetailPromises: any = [];
+          _.forEach(orders, (order) => {
+            orderDetailPromises.push(
+              this.getOrder(customerId, order.uuid).then(orderDetail => {
+                return orderDetail;
+              }));
+          });
+          return this.$q.all(orderDetailPromises);
+        }),
       );
     pendingOrdersWithDetail.push(
-        this.queryPendingOrders(customerId, TYPE_PORT)
-          .then(orders => {
-            const orderDetailPromises: any = [];
-            _.forEach(orders, (order) => {
-              orderDetailPromises.push(
-                this.getOrder(customerId, order.uuid).then(orderDetail => {
-                  return orderDetail;
-                }));
-            });
-            return this.$q.all(orderDetailPromises);
-          }),
+      this.queryPendingOrders(customerId, TYPE_PORT)
+        .then(orders => {
+          const orderDetailPromises: any = [];
+          _.forEach(orders, (order) => {
+            orderDetailPromises.push(
+              this.getOrder(customerId, order.uuid).then(orderDetail => {
+                return orderDetail;
+              }));
+          });
+          return this.$q.all(orderDetailPromises);
+        }),
       );
     return this.$q.all(pendingOrdersWithDetail).then(_.flatten);
   }
@@ -830,15 +830,15 @@ export class PstnService {
   public createLocation(terminusLocation: TerminusLocation): ng.IPromise<string> {
     let uuid: string;
     return this.TerminusService.customerLocations<IRTerminusLocation>()
-    .save({
-      customerId: this.PstnModel.getCustomerId(),
-    },
-    terminusLocation,
-    (_response, headers) => {
-      uuid = headers('location').split('/').pop();
-    })
-    .$promise
-    .then(() => uuid);
+      .save({
+        customerId: this.PstnModel.getCustomerId(),
+      },
+        terminusLocation,
+        (_response, headers) => {
+          uuid = headers('location').split('/').pop();
+        })
+      .$promise
+      .then(() => uuid);
   }
 
 }

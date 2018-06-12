@@ -144,7 +144,7 @@ describe('Test sunlight Util Service for admin profile', function () {
     it('should get CareOnboardStatusForAdmin when careVoice not enabled', function () {
       this.Authinfo.isCareVoice.and.returnValue(false);
       expect(this.SunlightUtilitiesService.getCareOnboardStatusForAdmin(this.status.SUCCESS,
-      this.status.SUCCESS, this.status.SUCCESS)).toBe(true);
+        this.status.SUCCESS, this.status.SUCCESS)).toBe(true);
     });
 
     it('should get getCareOnboardStatusForAdmin negative', function () {

@@ -6404,12 +6404,6 @@
       "grant-success-information": "请在一小时内转至混合媒体节点以完成注册。完成注册后，混合媒体节点将立即<br>可供使用。",
       "grant-registration-success-header-old-cluster": "现在可以将混合媒体节点注册到 Cisco Collaboration Cloud。<br>节点 IP 地址/FQDN：{{hostname}} 集群：{{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "已成功保存最大集群级联带宽。",
-      "title": "最大集群级联带宽",
-      "description": "输入混合媒体服务集群应对到云的级联使用的最大带宽（以兆字节/秒为单位）。一个活动 720p 流允许的最低数量。",
-      "range": "请输入介于 5 到 50 之间的一个值"
-    },
     "sipconfiguration": {
       "success": "已成功保存 Unified CM SIP 中继。",
       "title": "Unified CM SIP 中继",

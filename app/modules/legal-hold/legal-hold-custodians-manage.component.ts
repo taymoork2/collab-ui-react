@@ -10,6 +10,7 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   public mode: ImportMode;
   public isFileValid: boolean;
   public isDone: boolean;
+  public isConverting = false;
   public fileError: string;
   public dismiss: Function;
   public importComponentApi: IImportComponentApi;
@@ -28,11 +29,16 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   }
 
   public startImport(): void {
+    this.isConverting = true;
     this.importComponentApi.convertEmailsToUsers();
   }
 
   public cancelModal(): void {
     this.dismiss();
+  }
+
+  public cancel() {
+    this.isDone = true;
   }
 
   public updateCustodians(custodianList: string[]): ng.IPromise<void> {

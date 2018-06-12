@@ -6404,12 +6404,6 @@
       "grant-success-information": "Gå til din Hybrid-medieknude inden for en time for at færdiggøre registreringen. Hybrid-medieknuden er klar til<br> brug, så snart du har færdiggjort registreringen.",
       "grant-registration-success-header-old-cluster": "Du kan nu registrere din Hybrid-medieknude for Cisco Cloud til samarbejde.<br> Knudens IP-adresse/FQDN: {{hostname}} Klynge: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Maksimal båndbredde for klyngekaskade er gemt.",
-      "title": "Maksimal båndbredde for klyngekaskade",
-      "description": "Indtast den maksimale båndbredde (i megabit pr. sekund), som Hybrid Media Service-klynger skal bruge for kaskader til skyen. Det laveste tal giver mulighed for en aktiv stream på 720p.",
-      "range": "Indtast en værdi mellem 5 og 50"
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP Trunk blev gemt.",
       "title": "Unified CM SIP Trunk",

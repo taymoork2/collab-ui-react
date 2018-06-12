@@ -1,5 +1,6 @@
 import './_search.scss';
-import { ISessionDetailItem, SearchService, SearchStorage, Platforms, Quality, QualityRange } from './searchService';
+import { Analytics } from 'modules/core/analytics';
+import { ISessionDetailItem, SearchService, SearchStorage, TrackingEventName, Platforms, Quality, QualityRange } from './searchService';
 import { Notification } from 'modules/core/notifications';
 
 class Meetingdetails implements ng.IComponentController {
@@ -31,6 +32,7 @@ class Meetingdetails implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
+    private Analytics: Analytics,
   ) {
     this.data = {
       voip: {},
@@ -51,6 +53,7 @@ class Meetingdetails implements ng.IComponentController {
   }
 
   public $onInit() {
+    this.Analytics.trackEvent(TrackingEventName.MEETING_DETAILS);
     this.overview = this.SearchService.getStorage('webexOneMeeting.overview');
     this.featAndconn = this.SearchService.getStorage('webexOneMeeting.featAndconn');
     this.conferenceID = _.get(this.$stateParams, 'cid');

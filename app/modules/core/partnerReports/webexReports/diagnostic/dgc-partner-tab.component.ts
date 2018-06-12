@@ -1,6 +1,7 @@
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IMeeting, IMeetingDetail, IServerTime, ISession } from './partner-search.interfaces';
 import { PartnerSearchService } from './partner-search.service';
+import { SERVICE_TYPE } from 'modules/core/customerReports/webexReports/diagnostic/meeting-export.component';
 
 export enum SessionTypes {
   SCREEN_SHARE = '4',
@@ -34,6 +35,8 @@ class DgcPartnerTab implements ng.IComponentController {
   public BACK_STATE = 'partnerreports.tab.webexreports.diagnostics';
   private timeZone: string;
   private conferenceID: string;
+  public isSupportExport = false;
+  public SERVICE_TYPE = SERVICE_TYPE;
 
   /* @ngInject */
   public constructor(
@@ -48,11 +51,15 @@ class DgcPartnerTab implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.diagnosticF8193UX3GetStatus()
+    this.FeatureToggleService.diagnosticPartnerF8193TroubleshootingGetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
           this.BACK_STATE = 'partnertroubleshooting.diagnostics';
         }
+      });
+    this.FeatureToggleService.diagnosticPartnerF8194MeetingDetailsGetStatus()
+      .then((isSupport: boolean) => {
+        this.isSupportExport = isSupport;
       });
     this.tabs = [
       {

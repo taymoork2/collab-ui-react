@@ -1,12 +1,12 @@
 <cs-page-header
   class="huron-tabs"
-  title-name="{{$ctrl.groupName && $ctrl.groupName || ('common.unassigned' | translate)}}"
+  title-name="{{$ctrl.groupName}}"
   back="$ctrl.back"
   back-url="$ctrl.backState"
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<cs-page-sub-header ng-hide="$ctrl.groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
   <cs-page-sub-header-right class="row">
     <div class="columns medium-2 hcs-right-header-filter">
         <cs-select
@@ -14,7 +14,10 @@
         ng-model="$ctrl.softwareVersionSelected"
         options="$ctrl.softwareVersionProfiles"
         on-change-fn="$ctrl.onSoftwareVersionChanged()"
-        filter="false">
+        filter="false"
+        is-disabled="$ctrl.disableSwProfileSelect"
+        is-warn="{{$ctrl.disableSwProfileSelect}}"
+        warn-msg="{{$ctrl.warningMsgSwProfileSelect}}">
     </div>
     </cs-select>
   </cs-page-sub-header-right>
@@ -29,7 +32,7 @@
         <header>
           <div class="header-with-right-icon">
             <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
-            <div class="right card-icon-div "  ng-if="groupType.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+            <div class="right card-icon-div">
               <button type="button" class="close"
                 ng-click="$ctrl.closeCard((cluster), $event)"
                 ng-keydown=""

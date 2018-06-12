@@ -236,28 +236,17 @@
       }
     },
     "ad": {
-      "adLabel": "Active Directory",
       "adInstructions": "Updates can be made directly in Cisco Directory Connector.",
       "adStatus": "Directory Synchronization Enabled",
       "adStatusDisabled": "Directory Synchronization Disabled",
-      "adStatusDetails": "New users will be automatically added from your directory when it synchronizes. Updates can be made directly in Cisco Directory Connector.",
       "turnOffDS": "Turn off Directory Synchronization",
-      "turnOffDSToolTip": "Turning off Directory Synchronization does not affect current users and their authentication options (SSO).",
-      "confirmDirSyncDisableMsg": "Are you sure that you want to turn off directory synchronization? It can only be enabled again from Cisco Directory Connector. After it's turned off, you must manually add new users.",
       "dirSyncDisableSuccess": "Directory synchronization disabled successfully.",
       "dirSyncDisableFailure": "Failed to disabled Directory synchronization.",
       "lastSynced": "Last synced on",
       "dirSyncProcessing": "Processing...",
       "dirSyncSuccess": "Success",
       "dirSyncError": "Error",
-      "typeLabel": "Modify Users",
-      "typeInstructions": "Select a method to modify users and the services they use.",
-      "manualLabel": "Manually modify users",
-      "manualDetails": "All you need are email addresses to edit up to {{maxUsersInManual}} users.",
-      "bulkLabel": "Export and modify users with a CSV file",
-      "bulkDetails": "Best method for editing up to {{maxUsersInCSV}} users at the same time.",
-      "advancedLabel": "Modify all synchronized users",
-      "advancedDetails": "Add new licenses to all users."
+      "typeLabel": "Modify Users"
     },
     "emailSuppress": {
       "willGetEmail": "Users will automatically be sent a welcome email from Cisco.",
@@ -303,6 +292,8 @@
         "exportErrors": "Export errors to CSV",
         "errorResolveInstructions": "To resolve errors, update your user attributes CSV file and reimport.",
         "errorResolveTooltip": "Export errors to CSV and download an updated user attributes CSV file. Edit the user attributes to address reported errors, then reimport.",
+        "errorInstructions": "To resolve errors listed below, download the CSV file and make changes then resubmit the file.",
+        "tooManyErrorsInstructions": "Errors shown below are limited to the first 200 occurrences per file upload. To review the entire list and resolve any conflicts, download the CSV file and make changes before resubmitting.",
         "headerRow": "Row",
         "headerErrorMessage": "Error Message",
         "completedAt": "Completed {{filename}} at"
@@ -332,7 +323,8 @@
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
       "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
-      "exportUserList": "Export user list"
+      "exportUserList": "Export user list",
+      "viewImportHistory": "View import history"
     },
     "advanced": {
       "title": "Advanced",
@@ -402,8 +394,9 @@
   },
   "ssoCertificateModal": {
     "certificateExpirationWarning": "SSO certificate may expire in {{days}} days. Check below for next steps.",
+    "certificateExpirationNotice": "SSO certificate expired. Check below for next steps.",
     "updateCertificate": "Update SSO Certificate",
-    "checkCertificate": "Let's check if you need to make this update. Do any of these apply to your IdP?",
+    "checkCertificate": "Let's check if you need to make this update. Do any of these apply to your IdP? <a href='{{href}}' target='_blank'>Documentation</a>",
     "signingRequests": "One of these apply to my IdP: Signing AuthN Requests, Signing SLO Request, or Encrypt Assertion response to SP",
     "noneApply": "None of these apply my IdP",
     "needToUpdateCertificate": "Start the certificate update process by clicking Next below.",
@@ -477,8 +470,8 @@
     "careServices": "Chat and Callback",
     "careVoiceServices": "Chat, Callback and Inbound Call",
     "enableCallInfo": "Cisco Webex Calling is required for voice-based interactions.",
-    "enableCallInfoToggle": "You must have Cisco Webex Calling or Hybrid Call to use Webex Care voice features.",
-    "contextUnauthorized": "To modify Webex Care services for this user, contact an authorized administrator",
+    "enableCallInfoToggle": "You must have Cisco Webex Calling or Hybrid Call to use Care voice features.",
+    "contextUnauthorized": "To modify Care services for this user, contact an authorized administrator",
     "paidContactCenterVoice": "Chat, Callback and Inbound Call",
     "paidContactCenter": "Chat and Callback",
     "enterpriseEdition": "Enterprise Edition {{capacity}}",
@@ -1372,7 +1365,7 @@
     "extendedMetadata": "Log Metadata",
     "tabs": {
       "status": "Status",
-      "logs": "Calling",
+      "logs": "Logs",
       "orderProvisioning": "Order Provisioning"
     },
     "cards": {
@@ -1651,6 +1644,10 @@
     "second": "Second",
     "third": "Third",
     "fourth": "Fourth",
+    "fifth": "Fifth",
+    "sixth": "Sixth",
+    "seventh": "Seventh",
+    "eighth": "Eighth",
     "last": "Last"
   },
   "common": {
@@ -1765,6 +1762,7 @@
     "optional": "Optional",
     "or": "or",
     "overview": "Overview",
+    "manage": "Manage",
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
@@ -1946,7 +1944,7 @@
     "setUpHybridDataSecurity": "Create an on-premises security realm with Hybrid Data Security.",
     "careLicenseMsgMissingText": "Message is mandatory for Care services. To enable Message,",
     "careLicenseCallMissingText": "Call is mandatory for voice-based Care services. To enable Call,",
-    "careLicenseCallMissingTextToggle": "To use Cisco Webex Care voice features, contact partner to enable Cisco Webex Calling or Setup Hybrid Call and Enterprise SIP Trunking.",
+    "careLicenseCallMissingTextToggle": "To use Cisco Care voice features, contact partner to enable Cisco Webex Calling or Setup Hybrid Call and Enterprise SIP Trunking.",
     "careLicenseMsgAndCallMissingText": "Message and Call are mandatory for Care services like chat and voice interaction respectively. To enable Message and Call,",
     "careLicenseLinkText": "contact your partner or Cisco sales.",
     "proPackNotification": "Unleash the full power of the Cisco Webex Control Hub with Pro Pack.",
@@ -1959,8 +1957,8 @@
     "setUpAllCalendarsOnlyGoogleIsSetup": "Use it with Exchange or Office365.",
     "setUpAllCalendarsGoogleAndOffice365AreSetup": "Use it with Exchange.",
     "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
-    "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Webex Care.",
-    "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Webex Care yet!",
+    "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Care.",
+    "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Care yet!",
     "setUpCareLinkText": "Setup Care Service",
     "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
     "autoAssignLink": "Set Up Now",
@@ -3700,16 +3698,19 @@
         "lastDay": "Last 24 hours",
         "last2Days": "Last 48 hours",
         "lastWeek": "Last 7 days",
+        "last30Days": "Last 30 days",
         "clusterFilter": "Cluster",
         "nodeFilter": "Node",
         "serviceFilter": "Service (on selected resource)",
         "dateSince": "Since"
       },
       "connectorProvisioned": "Cluster has been provisioned with {{connectorName}} version {{newVersion}}",
-      "connectorDeprovisioned": "{{connectorName}} has been removed from cluster",
+      "clusterCreated": "Cluster {{clusterName}} was created",
+      "clusterDeleted": "Cluster {{clusterName}} was deleted",
+      "connectorDeprovisioned": "{{connectorName}} was removed from cluster",
       "connectorProvisioningChanged": "{{connectorName}} upgrade to {{newVersion}} initiated",
-      "serviceEnabled": "{{serviceName}} has been enabled",
-      "serviceDisabled": "{{serviceName}} has been disabled",
+      "serviceEnabled": "{{serviceName}} was enabled",
+      "serviceDisabled": "{{serviceName}} was disabled",
       "newUpgradeSchedule": "New Upgrade Schedule: {{newSchedule}}",
       "clusterRenamed": "Cluster Name Updated",
       "resourceGroupChanged": "Resource Group Changed",
@@ -3719,7 +3720,7 @@
         "installing": "{{connectorType}} installing",
         "not_installed": "{{connectorType}} not installed",
         "disabled": "{{connectorType}} disabled",
-        "not_initialized": "{{connectorType}} not initialized",
+        "not_initialized": "{{connectorType}} initializing",
         "not_operational": "{{connectorType}} not operational",
         "not_configured": "{{connectorType}} not configured",
         "running": "{{connectorType}} version {{version}} running and operational"
@@ -3744,7 +3745,36 @@
         "cluster": "Cluster",
         "connector": "Connector",
         "alarm": "Alarm",
-        "service": "Service"
+        "service": "Service",
+        "resourceGroup": "Resource Group",
+        "host": "Host",
+        "redirectTarget": "Redirect Target",
+        "machineAccount": "Machine Account",
+        "mail": "Mail"
+      },
+      "resourceGroupEvents": {
+        "created": "Resource group {{resourceGroupName}} was created.",
+        "updated": "Resource group {{resourceGroupName}} was updated.",
+        "deleted": "Resource group {{resourceGroupName}} was deleted."
+      },
+      "hostEvents": {
+        "updated": "Host was updated."
+      },
+      "connectorEvents": {
+        "updated": "{{connectorType}} updated.",
+        "created": "{{connectorType}} created.",
+        "deregistered": "{{connectorType}} de-registered.",
+        "removed": "{{connectorType}} removed."
+      },
+      "redirectTargetEvents": {
+        "created": "Redirect target created.",
+        "deleted": "Redirect target deleted."
+      },
+      "machineAccountEvents": {
+        "created": "Machine account created."
+      },
+      "mailSubscriberEvents": {
+        "updated": "Mail subscriber list updated."
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3764,13 +3794,11 @@
         "alarmEvents": {
           "alarmRaisedEmailsSentTitle": "Emails sent about new alarm",
           "alarmResolvedEmailsSentTitle": "Emails sent about resolved alarm",
-          "alarmRaised": "An alarm has been raised on the Expressway node {{hostname}}.",
+          "alarmRaised": "An alarm was raised on the Expressway node {{hostname}}.",
           "alarmRaised-description": "The Expressway provided the following alarm description: <strong>{{description}}</strong>",
-          "alarmResolved": "The alarm titled <strong>{{title}}</strong> has now been resolved on node {{hostname}}.",
-          "alarmDebounced": "An alarm titled <strong>{{title}}</strong> was raised on the Expressway, and then marked as resolved within a few minutes.",
-          "alarmDebounced-help": "This alarm was resolved so quickly that Cisco Webex Cloud did not send an email notification about it. Alarms that auto-resolve are normally not a cause for concern, and do not require admin intervention unless they keep being raised for a substantial amount of time.",
-          "alarmRaisedNotificationSent": "Cisco Webex Cloud has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
-          "alarmResolvedNotificationSent": "Cisco CollabWebexoration Cloud has emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
+          "alarmResolved": "The alarm titled <strong>{{title}}</strong> is resolved on node {{hostname}}.",
+          "alarmRaisedNotificationSent": "Cisco Webex has emailed {{recipientCount}} recipients about the new alarm titled <strong>{{title}}</strong> on node {{hostname}}.",
+          "alarmResolvedNotificationSent": "Cisco Webex emailed {{recipientCount}} recipients because the alarm titled <strong>{{title}}</strong> on node {{hostname}} was marked as resolved."
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
@@ -3793,12 +3821,14 @@
           "removedResourceGroup": "The cluster is no longer part of a Resource Group. The cluster was previously part of {{oldGroup}}.",
           "changedReleaseChannel": "{{username}} changed the cluster's Release Channel.",
           "oldAndNewReleaseChannel": "The new Release Channel is: <strong>{{newReleaseChannel}}</strong>. The old Release Channel was: {{oldReleaseChannel}}.",
-          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if its existing Resource Group changes its associated Release Channel."
+          "changedReleaseChannelHelp": "An Expressway cluster's Release Channel can change either if the cluster is moved in or out of a Resource Group, or if someone changes the Release Channel in the associated Resource Group.",
+          "created": "{{username}} created the cluster {{clusterName}}.",
+          "deleted": "{{username}} deleted the cluster {{clusterName}}."
         },
         "serviceActivationEvents": {
-          "serviceEnabled": "{{username}} has activated {{serviceName}} in the Cisco Webex organization. This usually happens when an admin user registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
-          "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Webex organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
-          "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Webex organization.",
+          "serviceEnabled": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
+          "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
+          "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
           "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
           "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} entitlements are automatically removed from users, and remote device configurations deleted."
         },
@@ -3814,6 +3844,36 @@
           "timestamp": "Timestamp:",
           "userId": "User ID:",
           "trackingId": "Tracking ID:"
+        },
+        "resourceGroupEvents": {
+          "createdHelpText": "{{username}} created <strong>{{resourceGroupName}}</strong> with release channel <strong>{{releaseChannel}}</strong>.",
+          "updatedHelpTextIntro": "{{username}} updated the resource group.",
+          "updatedHelpTextNameChanged": "The resource group name was changed from <strong>{{oldName}}</strong> to <strong>{{newName}}</strong>",
+          "updatedHelpTextReleaseChannelChanged": "The release channel was changed from <strong>{{oldReleaseChannel}}</strong> to <strong>{{newReleaseChannel}}</strong>",
+          "deletedHelpText": "{{username}} deleted resource group <strong>{{resourceGroupName}}</strong>."
+        },
+        "hostEvents": {
+          "updatedHelpText": "{{username}} updated the host. The maintenance mode was changed from <strong>{{oldMaintenanceMode}}</strong> to <strong>{{maintenanceMode}}</strong>."
+        },
+        "connectorUpdatedEvents": {
+          "updatedHelpText" : "{{localizedConnectorName}} was updated.",
+          "updatedHelpTextRegistrationState" : "Registration state changed from <strong>{{oldRegistrationState}}</strong> to <strong>{{registrationState}}</strong>.",
+          "updatedHelpTextMaintenanceMode" : "Maintenance mode changed from <strong>{{maintenanceMode}}</strong> to <strong>{{oldMaintenanceMode}}</strong>.",
+          "updatedHelpTextClusterId" : "Cluster Id changed from <strong>{{oldClusterId}}</strong> to <strong>{{clusterId}}</strong>.",
+          "updatedHelpTextUpgradeState" : "Upgrade state changed from <strong>{{oldUpgradeState}}</strong> to <strong>{{upgradeState}}</strong>.",
+          "createdHelpText" : "{{localizedConnectorName}} was created.",
+          "deregisteredHelpText" : "{{localizedConnectorName}} was de-registered.",
+          "removedHelpText" : "{{localizedConnectorName}} was removed."
+        },
+        "redirectTargetEvents" : {
+          "createdHelpText" : "{{username}} has created the redirect target for {{hostName}}. The redirect target is valid for {{ttl}} seconds.",
+          "deletedHelpText" : "{{username}} has deleted the redirect target for {{hostName}}."
+        },
+        "machineAccountEvents" : {
+          "createdHelpText" : "A machine account was created with entitlements {{entitlements}} and roles {{roles}}."
+        },
+        "mailSubscriberEvents" : {
+          "updatedHelpText" : "{{username}} updated the mail subscriber list from {{oldUserList}} to {{newUserList}}."
         }
       }
     }
@@ -4266,7 +4326,7 @@
         "active": "Active",
         "released": "Released",
         "all": "All Matters",
-        "mine": "Created By Me"
+        "mine": "My Matters"
       },
       "new": "Create Matter"
     },
@@ -4309,7 +4369,7 @@
         "resultPartial": "Some users successfully added, but invalid users were detected in {{fileName}}. Update your file and try again.",
         "resultSuccess": "Users successfully added with {{fileName}}.",
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were added.",
-        "resultCanceled": "User import has been canceled",
+        "resultCanceled": "Add Custodians Import Cancelled Successfully",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be added"
       },
       "new": {
@@ -4328,7 +4388,7 @@
         "resultPartial": "Some users successfully removed, but invalid users were detected in {{fileName}}. Update your file and try again.",
         "resultSuccess": "Users successfully removed with {{fileName}}.",
         "resultFailure": "Invalid users were detected in {{fileName}}. No users were removed.",
-        "resultCanceled": "User import has been canceled",
+        "resultCanceled": "Remove Custodians Import Cancelled Successfully",
         "cancelConfirm": "Are you sure you want to cancel your import? If you stop your import, no users will be removed"
       }
     },
@@ -4526,7 +4586,7 @@
     "sharedLicenseTooltip": "Each Shared Meetings license allows up to 250 users to be entitled as meeting hosts. Shared Meetings hosts can hold unlimited meetings but not exceed 1 concurrent meeting per Shared Meetings license.",
     "namedLicenses": "Named User Licenses",
     "careTooltip": "All Care users require Cisco Webex Teams license as a prerequisite. Additionally, they require Cisco Webex Calling license for voice-based interactions.",
-    "careTooltipToggle": "You must have Cisco Webex Teams license to use Webex Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
+    "careTooltipToggle": "You must have Cisco Webex Teams license to use Care. For voice features, you also need Cisco Webex Calling or Hybrid Call license.",
     "partnerProvidedAudio": "Partner-provided Audio",
     "webexProvidedAudio": "Webex-provided Audio",
     "meetingsInSpark": "Webex Team Meetings",
@@ -4666,6 +4726,7 @@
     "tosTermsAndConditions": "terms and conditions",
     "invalidCalendarServiceResourceGroup": "Hybrid Calendar Service Resource Group \"{{group}}\" not found",
     "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
+    "invalidMessageServiceResourceGroup": "Hybrid Message Service Resource Group \"{{group}}\" not found",
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
@@ -4851,7 +4912,7 @@
     "phoneMenuRouteVM": "Route to Voicemail",
     "phoneMenuRouteAA": "Route to Auto Attendant",
     "phoneMenuGoBack": "Go Back",
-    "phoneMenuRouteQueue": "Route to Cisco Webex Care",
+    "phoneMenuRouteQueue": "Route to Cisco Care",
     "phoneMenuRouteToSipEndpoint": "Route to SIP Endpoint",
     "phoneMenuListening": "While listening for the following user input",
     "phoneMenuRepeatOnce": "Once",
@@ -5961,7 +6022,8 @@
     "errorServerDown": "Could not reach server to validate this field.",
     "errorFailSafe": "Could not validate entered valued.",
     "errorInvalid": "Entered value contains invalid characters.",
-    "errorInvalidName": "Entered name contains invalid characters."
+    "errorInvalidName": "Entered name contains invalid characters.",
+    "warningIsConsumer": "This email address belongs to an existing user account. By proceeding, the account will be moved to this organization."
   },
   "trials": {
     "collab": "Standard Team Spaces + Webex Team Meetings",
@@ -6831,8 +6893,10 @@
         "totalCallsDesc": "<b>Cloud Calls</b> : Number of calls that could not utilize enterprise Video Mesh Nodes, because of no connection to the enterprise network or being subject to enforced policy.<br> <b>Overflowed to Cloud</b> : Number of calls made within an enterprise but overflowed to a cloud cluster.<br> <b>On-Premises</b>: Number of calls hosted on any of the enterprise clusters.",
         "totalCallsClusterDesc": "<b>Redirected by this Cluster</b> : Number of calls that could not be hosted by this cluster and hence got redirected.<br><b>On-Premises</b> : Number of calls hosted on any of the enterprise clusters.",
         "meetsHostTypeDesc": "Summary of meetings based on where the organization’s calls were hosted.<br><b>On Premises</b> : Meeting and participants were hosted on the enterprise clusters<br><b>Cloud</b> : Meeting and participants were hosted on cloud clusters<br><b>Cloud and On-Premises</b> : Meeting and participants cascaded between enterprise and cloud clusters",
-        "redirect": ": Number of calls that could not be hosted by this cluster and hence got redirected.",
-        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation."
+        "redirect": "Number of calls that could not be hosted by this cluster and hence got redirected.",
+        "overflow": "Number of calls that were made within an enterprise but overflowed to a cloud cluster",
+        "clusterInServiceDesc": "Percentage of clusters that can host calls in the organisation.",
+        "clusterInServiceClusterDesc": "Percentage of nodes that can host calls in the organisation."
       },
       "graphDescription": {
         "utilizationOrgDesc": "Average utilization trend for all clusters in an organization",
@@ -7331,7 +7395,7 @@
     "communicationDesc": "Basic external calling and call routing features enabled for your organization.",
     "conferencingTitle": "Meeting",
     "conferencingSubtitle": "Meeting Center",
-    "conferencingDesc": "Join up to 25 colleagues in a Team Space Sync-up or many more in a Webex Meetings Center.",
+    "conferencingDesc": "Join up to 25 colleagues in a Team Space Sync-up or many more in Webex Meetings.",
     "shared_devicesTitle": "Room Devices",
     "shared_devicesSubtitle": "Shared Devices",
     "MS": "Message",
@@ -7599,6 +7663,7 @@
     "configureSite": "Configure Site",
     "deleteSite": "Delete Site",
     "partnerHelpMsg": "The ability to delete this site or redistribute licenses between sites has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to delete this site or to redistribute licenses between sites.",
+    "trialHelpMsg": "The ability to delete this site or redistribute licenses between sites is disallowed for trial sites.",
     "webexUsers": "Webex Users",
     "bulkManageUsers": "Bulk Manage Users",
     "reports": "Reports",
@@ -7753,6 +7818,10 @@
       "accountmissing": {
         "type": "The owner of this device cannot be found",
         "message": "The user or place that this device was associated with is no longer in your organization. Perform a factory reset on the device itself. You can then activate it for a different user or place. Alternatively, delete the device to remove it from this organization."
+      },
+      "provisioningdeveloperoptions": {
+        "type": "Software Upgrade Override",
+        "message": "This device has been configured to not automatically upgrade by an engineer. Check if this is intentional as outdated software can cause problems. This configuration is available to change in the xAPI as <samp>{{xconfigpath}}</samp>."
       },
       "unknown": {
         "type": "Unknown Error Occurred",
@@ -7970,14 +8039,14 @@
     "feature": "Feature"
   },
   "careVoiceFeatures": {
-    "title": "Enable Webex Care Voice Features",
-    "heading": "Choose a call service to enable Webex Care voice features:",
+    "title": "Enable Care Voice Features",
+    "heading": "Choose a call service to enable Care voice features:",
     "enableSparkCall": "Enable Webex Calling",
-    "scDescription": "Allow Webex Care agents to use Webex Calling for voice features.",
+    "scDescription": "Allow Care agents to use Webex Calling for voice features.",
     "enableSC": "Contact your partner to enable Webex Calling.",
     "contactPartner": "<a href = #>Contact Partner</a>",
     "useHybridCall": "Use Hybrid Call",
-    "hcDescription": "Allow Webex Care agents to use on-premises infrastructure for voice features.",
+    "hcDescription": "Allow Care agents to use on-premises infrastructure for voice features.",
     "enableHybrid": "Set up Hybrid Call and Enterprise Private Trunking to enable your organization to use Cisco Unified Communications Manager.",
     "setUpHybrid": "<a href ng-click=\"{{onsetuphybrid}}\">Set up Hybrid Call</a><br><a href ng-click=\"{{onsetuptrunk}}\">Set up Enterprise Private Trunking</a>"
   },
@@ -8126,7 +8195,7 @@
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Webex expert spaces.",
-    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use iMessage to interact with Webex Care agents or Customer Virtual Assistants.",
+    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use iMessage to interact with Care agents or Customer Virtual Assistants.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -8157,7 +8226,7 @@
     "chatEscalatioAgent": "Agents only",
     "chatEscalatioExpert": "Experts only",
     "chatEscalatioAgentPlusExpert": "Agents and Experts",
-    "chatEscalatioAgentDesc": "Chat requests offered to agents using Cisco Webex Care Desktop.",
+    "chatEscalatioAgentDesc": "Chat requests offered to agents using Cisco Care Desktop.",
     "chatEscalatioExpertDesc": "Chat requests offered to Cisco Webex Teams users working in expert spaces.",
     "chatEscalatioAgentPlusExpertDesc": "Chat requests simultaneously offered to agents and experts.",
     "chatEscalatioAgentTooltip": "The routing method configured <br> on the Care Settings page <br> determines how the escalation <br> selects agents.",
@@ -8574,6 +8643,8 @@
         "descLearnMoreLink": "Learn more",
         "descFinal": " about input contexts.",
         "searchText": "Search and add fields",
+        "noFields": "No additional fields to add",
+        "limitReached": "Maximum fields reached",
         "errorMaxContextLength": "Character length cannot be more than 50",
         "errorMinContextLength": "Cannot be empty",
         "errorInvalidCharacters": "Invalid character set"
@@ -8648,7 +8719,7 @@
     "user_cva": "Customer Virtual Assistant and Users",
     "profile_org_info_cva_eva": "Use a single profile to represent the Customer Virtual Assistant and all users in your organization.",
     "user_alias_desc": "Expert users do not have an alias, so their Cisco Webex Teams account name is always displayed.",
-    "display_text_desc": "The display text is the same as the agent's profile in Cisco Webex Care or the expert's profile in Cisco Webex Teams.",
+    "display_text_desc": "The display text is the same as the agent's profile in Cisco Care or the expert's profile in Cisco Webex Teams.",
     "userSettingInfo": "You cannot change the default user avatar seen in the Preview.",
     "orgEvaSettingInfo": "You can change the logo seen in the Preview on the Settings page.",
     "profile_org_info_eva": "Use a single profile to represent all users in your organization.",
@@ -8925,7 +8996,7 @@
       },
       "care": {
         "title": "Care",
-        "notEnabledText": "Use Cisco Webex Care services to collaborate with your customer. Customize care interfaces using the configuration wizard."
+        "notEnabledText": "Use Cisco Care services to collaborate with your customer. Customize care interfaces using the configuration wizard."
       },
       "roomSystem": {
         "title": "Room Devices",
@@ -9106,6 +9177,8 @@
       "downloadSubsectionLabelDescription": "Don't allow users to download or preview files in:",
       "uploadSubsectionLabel": "Upload Restrictions",
       "uploadSubsectionLabelDescription": "Don't allow users to upload files in:",
+      "restrictionsSubsectionLabel": "Restrictions Scope",
+      "whiteboardRestriction": "No restrictions applied to whiteboards and annotation.",
       "description": "Applies to internal users only. External users can upload and download files.",
       "desktopApps": "Desktop apps",
       "webApp": "Web app",
@@ -9170,6 +9243,11 @@
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Manage access to integrations for organizations.",
+      "description": "Authorize access for better management.<br/>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {
@@ -9354,6 +9432,7 @@
     "customers": "Customers",
     "customerDetails": "Customer Details",
     "userDetails": "User Details",
+    "deviceDetails": "Device Details",
     "orders": "Orders",
     "orderDetails": "Orders Details",
     "orderNumber": "Order Number: {{orderNumber}}",
@@ -9414,7 +9493,7 @@
     },
     "lastLog": "Last Log",
     "lastClientLog": "Last Cisco Webex Client Log",
-    "lastCareLog": "Last Cisco Webex Care Log:",
+    "lastCareLog": "Last Cisco Care Log:",
     "noLog": "No Log Available",
     "userStatuses": {
       "active": "Active",
@@ -9577,8 +9656,6 @@
       }
     },
     "org": {
-      "duplicateName": "Organization name already in use",
-      "validationFailure": "Unable to validate",
       "editNameSuccess": "Organization name successfully updated.",
       "editNameFailure": "Failed to update customer name.",
       "displayNameError": "Could not get customer display name."
@@ -9798,8 +9875,8 @@
       },
       "meeting": {
         "title": "Meeting",
-        "description": "Webex Meetings Center and Cisco Webex Teams configurations for your organization and individuals.",
-        "SPDescription": "Webex Meetings Center and Cisco Webex Teams configurations.",
+        "description": "Webex Meetings suite configuration for your organization.",
+        "SPDescription": "Webex Meetings suite configuration.",
         "pmrText": "Configure your Personal Meeting Room",
         "viewWebExSites": "View Webex Meetings Sites"
       },
@@ -9859,7 +9936,7 @@
           "providePortAccessHelp3": "LDAP outbound from Expressway to Active Directory: TCP port 636 (secure) or TCP port 389 (nonsecure)",
           "providePortAccessHelp4": "Microsoft Global Catalog search: TCP port 3269 (for Global Catalog search secured by SSL) or TCP port 3268 (for unsecured Global Catalog search).",
           "forWebExFunctionality": "For @webex functionality",
-          "configureWebEx": "Configure or use a Cisco Webex Meetings Center site with CMR Cloud",
+          "configureWebEx": "Configure or use a Cisco Webex Meetings site with CMR Cloud",
           "toMakeOBTP": "To make One Button to Push (OBTP) available for Unified CM-registered endpoints managed by Cisco TMS on @spark or @webex meetings:",
           "setUpTMS": "Set up Cisco TMS 15.0 and Cisco TMSXE 5.0 or higher with Microsoft Exchange integration (Cisco Collaboration Meeting Rooms (CMR) Hybrid Configuration Guide). Cisco TMS and Cisco TMSXE require no additional configuration to support Hybrid Calendar Service.",
           "configureTMSXE": "To make conference rooms schedulable in Microsoft Outlook/Exchange, configure them in Cisco TMSXE as if you were using on-premises conferencing (Cisco TelePresence Management Suite Extension for Microsoft Exchange Administration Guide).",
@@ -9870,7 +9947,7 @@
           "title": "Hybrid Calendar (Google) Prerequisites",
           "intro": "Use this checklist alongside the Google Calendar deployment documentation. Make sure you complete all the prerequisites necessary for deploying Hybrid Calendar Service in your G Suite organization.",
           "gSuiteOrganization": "A Google G Suite organization (formerly Google Apps for Work) with Google accounts for all users in the organization",
-          "webExSite": "Cisco Webex Meetings site: Minimum versions of Webex for @webex scheduling and Webex Meetings Center Video for One Button to Push (OBTP) on room devices.",
+          "webExSite": "Cisco Webex Meetings site: Minimum versions of Webex for @webex scheduling and Webex Meetings Video for One Button to Push (OBTP) on room devices.",
           "sparkOrganization": "A Cisco Webex organization with a minimum of Webex Teams and Business Messaging (M1)",
           "matchingEmails": "User email addresses that are exact matches in Cisco Webex Teams and Google.",
           "aclAdminAccount": "(Optional) If you use room resources, an authorized access control list (ACL) admin account.",
@@ -11192,16 +11269,22 @@
   "hcs": {
     "addService": "Add a Feature",
     "agentInstallFiles": "Agent Install Files",
-    "cardTitle": "Hosted Collaboration Service",
+    "cardTitle": "Hosted Collaboration Solutions",
+    "getStarted": "Get Started",
     "clusterDetail": {
       "addCustomerModal": {
         "title": "Add new customer",
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
-        "customerExistsErrorMessage": "This customer already exists"
+        "customerExistsErrorMessage": "This customer already exists",
+        "swProfileWarningMsg": {
+          "addSWProfile": "Please add a Software Profile first",
+          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
+        }
       },
       "nodeStatus": {
         "active":"Active",
+        "compliant": "Compliant",
         "inactive": "Inactive",
         "needsAcceptance":"Needs Acceptance",
         "needsAssigned":"Needs Assigned",
@@ -11214,7 +11297,7 @@
         "upgradeScheduled": "Upgrade Scheduled",
         "upgradeInProgress": "Upgrade in progress",
         "failedUpgrade": "Failed Upgrade",
-        "unassigned": "Unassigned",
+        "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
         "noAgentRunning": "No Agent Running"
       },
@@ -11228,7 +11311,8 @@
         "sftpLocation": {
           "sectionHeader": "Default SFTP Server",
           "sftpSelectLabel": "Choose the default SFTP Server for this cluster.",
-          "sftpPlaceholder": "Select a server"
+          "sftpPlaceholder": "Select a server",
+          "sftpWarnMsg": "Please add a SFTP server first"
         },
         "nodes": {
           "accept": "Accept",
@@ -11251,7 +11335,11 @@
     },
     "clustersList": {
       "title":"Clusters",
-      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}",
+      "deleteClusterModal": {
+        "title": "Are you sure?",
+        "description": "You are about to delete an Cluster. You can not undo this action."
+      }
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
@@ -11277,11 +11365,11 @@
         "title": "Are you sure?",
         "description": "You are about to delete an Agent Install File. You can not undo this action."
       },
-      "description": "Create an Agent Install File (.cop file).  This file will need to be installed on each Unified Communications instance or PLM that you would like to manage with HCS features.  This creation can take serveral minutes.  Once complete, it will be available on the Agent Install File Page to download and install.",
+      "description": "Create an Agent Install file (.cop file). This file will be installed on each Unified Communications instance or Prime License Manager that you want to manage with HCS features. Creation can take several minutes. When it's done, the file is available on the Agent Install File page to download and install.",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
-      "httpProxies": "HTTP Proxies",
+      "httpProxies": "HTTP Proxies:",
       "httpProxy": "HTTP Proxy",
       "httpProxyDesc": "Enter HTTP Proxies for the Agent to allow access to the cloud services. Specifying multiple proxies will make the Agent to be used more widely. ",
       "invalidChars": "Invalid File Name. File name must not include the chars in the list '~ # % & * { } \\ : ; < > ? / + ' Space",
@@ -11328,11 +11416,8 @@
       "nextSteps": "Next Steps:",
       "selectDescription": "Choose the HCS features you would like to use.",
       "titleServices": "Choose Features",
-      "finishMsg": "Congratulations! You have set up HCS Services.",
-      "next1": "Once the Agent Install File completes it will show on the Agent Install File page to download it.",
-      "next2": "Install the Agent File on all Unified Communications instances you wish to manage.",
-      "next3": "The agent will register with the cloud service and the corresponding node will appear in the Inventory Page.",
-      "next4": "Once the nodes appear in the list, you can accept them and assign them to a customer or a group."
+      "finishMsg": "Congratulations! You have set up HCS Features.",
+      "finishDetails": "When your Agent Install Build completes, it will appear on the Agent Install File page. Download the Agent File and install it on all Unified Communications instances that you want to manage."
     },
     "sftp":  {
       "add": "Add SFTP Server",
@@ -11355,7 +11440,7 @@
       "passwordMismatch": "The password entered does not match",
       "setupTitle": "Create SFTP Server",
       "success": "SFTP server has been successfully created",
-      "successUpdate": "SFTP server has been successfully updated",
+      "successupdate": "SFTP server has been successfully updated",
       "title": "SFTP Servers",
       "userName": "User Name",
       "userPlace": "Enter User Name"
@@ -11387,7 +11472,7 @@
       "template": "Software Version Template",
       "title": "Create a Software Profile",
       "ucxn": "Cisco Unity Connection Version",
-      "ucxnPlace": "UCXN File"
+      "ucxnPlace": "CUCXN File"
     },
     "upgrade": {
       "title": "HCS Upgrade",
@@ -11416,6 +11501,8 @@
           "upgradeButton": "Upgrade Selected"
         },
         "upgradeClusterStatus": {
+          "upgradeStatus": "Upgrade Status",
+          "estimatedCompletion": "Estimated Completion",
           "gridColumn": {
             "order": "Order",
             "previousUpgradeDuration": "Previous Upgrade Duration",
@@ -11423,7 +11510,29 @@
             "elapsedTime": "Elapsed Time"
           }
         }
+      },
+      "info": {
+        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you endure the prechecks pass before continuing.",
+        "2": "The last time prechecks were run was {{lastRun}} and all passed.",
+        "3": "Before you begin, verify that the correct software version files are located on the SFTP server assigned.",
+        "precheck": "Run Prechecks"
+      },
+      "order" : {
+        "title": "Order Cluster {{clusterName}}",
+        "directions": "Use arrows to set the order that the nodes in the cluster will be upgraded",
+        "addAnother": "Add Upgrade Group",
+        "maxGroups": "Cannot create more than 8 upgrade groups"
       }
+    },
+    "prechecks" : {
+      "title": "Prechecks",
+      "choose": "Choose the Upgrade Prechecks to run",
+      "availableSpace": "Check available space",
+      "availableSpaceDesc": "Check all nodes in the cluster for enough available space for this upgrade.",
+      "copFiles": "Collect list of installed COP files.",
+      "copFilesDesc": "Collect COP file information from each node.",
+      "runningPrechecks": "Running Prechecks",
+      "runPrechecks": "Run Prechecks"
     },
     "upgradePage": {
       "title": "Upgrades"
@@ -11561,5 +11670,11 @@
     "banner": {
       "text": "Pardon our dust while Cisco Spark becomes Cisco Webex Teams. <a href='https://video.cisco.com/detail/video/5772918811001' target='_blank'>Learn more.</a>"
     }
+  },
+  "dirConnectorUpgradeNotification": {
+    "text": "To address critical security issues, Cisco will no longer support TLS1.0 and TLS1.1 in the near future. Customers should upgrade to Cisco Directory Connector version 3.0 as soon as possible. If customers do not upgrade, the Cisco Directory Connector will not work; user synchronization to the Cisco Webex cloud (provisioning, updating, and de-provisioning) will not occur. To prepare for this update, please make sure the VM or Windows OS has the required Microsoft .NET 4.5 or later installed."
+  },
+  "integrations": {
+    "mainTitle": "Integrations"
   }
 }

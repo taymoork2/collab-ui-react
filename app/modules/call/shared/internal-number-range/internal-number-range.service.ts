@@ -38,13 +38,13 @@ export class InternalNumberRangeService {
       customerId: this.Authinfo.getOrgId(),
       locationId: locationId,
     }).$promise
-    .then(response => {
-      return _.map<any, IRInternalNumberRange>(response, range => {
-        return new InternalNumberRange(range);
-      }).sort( (a, b) => { // sort - order by beginNumber ascending
-        return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
+      .then(response => {
+        return _.map<any, IRInternalNumberRange>(response, range => {
+          return new InternalNumberRange(range);
+        }).sort( (a, b) => { // sort - order by beginNumber ascending
+          return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
+        });
       });
-    });
   }
 
   public createLocationInternalNumberRange(locationId: string, internalNumberRange: InternalNumberRange): ng.IPromise<string> {
@@ -62,7 +62,7 @@ export class InternalNumberRangeService {
     }, (_response, headers) => {
       locationHeader = headers('Location');
     }).$promise
-    .then(() => locationHeader);
+      .then(() => locationHeader);
   }
 
   public deleteLocationInternalNumberRange(locationId: string, internalNumberRange: InternalNumberRange): ng.IPromise<InternalNumberRange> {
@@ -77,13 +77,13 @@ export class InternalNumberRangeService {
     return this.customerInternalNumberRangeResource.query({
       customerId: this.Authinfo.getOrgId(),
     }).$promise
-    .then(response => {
-      return _.map<any, IRInternalNumberRange>(response, range => {
-        return new InternalNumberRange(range);
-      }).sort( (a, b) => { // sort - order by beginNumber ascending
-        return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
+      .then(response => {
+        return _.map<any, IRInternalNumberRange>(response, range => {
+          return new InternalNumberRange(range);
+        }).sort( (a, b) => { // sort - order by beginNumber ascending
+          return _.toSafeInteger(a.beginNumber) - _.toSafeInteger(b.beginNumber);
+        });
       });
-    });
   }
 
   public createCustomerInternalNumberRange(internalNumberRange: InternalNumberRange): ng.IPromise<string> {
@@ -101,7 +101,7 @@ export class InternalNumberRangeService {
     , (_response, headers) => {
       locationHeader = headers('Location');
     }).$promise
-    .then(() => locationHeader);
+      .then(() => locationHeader);
   }
 
   public deleteCustomerInternalNumberRange(internalNumberRange: InternalNumberRange): ng.IPromise<InternalNumberRange> {

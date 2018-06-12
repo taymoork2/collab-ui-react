@@ -1,8 +1,11 @@
+import { HcsUpgradeService } from 'modules/hcs/hcs-shared';
+import { Notification } from 'modules/core/notifications';
+
 interface IInventoryObject {
   id: string;
   name?: string;
   status: string;
-  type: string;
+  type?: string;
 }
 interface IFilterObject {
   value?: any;
@@ -31,6 +34,7 @@ export class InventoryListCtrl implements ng.IComponentController {
   public inventoryList: IInventoryObject[] = [];
   public inventoryListData: IInventoryObject[] = [];
   public currentSearchString: string = '';
+  public loading: boolean = false;
 
   public filter: IFilterComponent = {
     selected: [],
@@ -45,24 +49,28 @@ export class InventoryListCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
     private $state: ng.ui.IStateService,
+    private HcsUpgradeService: HcsUpgradeService,
+    private $q: ng.IQService,
+    private Notification: Notification,
   ) {
     this.timer = 0;
     this.timeoutVal = 1000;
   }
 
   public $onInit(): void {
+    //this.initInventoryList();
     this.inventoryList.push({
-      id: 'ax1234b',
+      id: 'unassigned',
       type: 'unassigned',
       status: 'Needs Assigned',
     }, {
-      id: 'ax1235b',
-      name: 'Susan\'s Mixing Company',
+      id: '910fe34f-2bc8-42e8-8db2-22ae6e3ec54d',
+      name: 'Shravan_Test_1',
       type: 'custGroup',
       status: 'Software update needed',
     }, {
-      id: 'ax1231c',
-      name: 'Betty\'s Flower Shop',
+      id: '7eab0dd8-5fe2-4206-8702-5f9de3584ba2',
+      name: 'Jeff\'s Testing Company',
       type: 'custGroup',
       status: 'Operational',
     }, {
@@ -99,6 +107,37 @@ export class InventoryListCtrl implements ng.IComponentController {
         label: filterOption,
       });
     });
+  }
+
+  public initInventoryList(): void {
+    this.loading = true;
+    this.inventoryList = [];
+    //check if unassigned is needed
+    const unassignedClustersPromise = this.HcsUpgradeService.listClusters(undefined);
+    const customerListPromise = this.HcsUpgradeService.listHcsUpgradeCustomers();
+    this.$q.all([ unassignedClustersPromise, customerListPromise ])
+      .then(response => {
+        if (response[0].length > 0) {
+          this.inventoryList.push({
+            id: 'unassigned',
+            name: 'unassigned',
+            status: 'Needs Assigned',
+          });
+        }
+        _.forEach(response[1], (customer) => {
+          const inventory: IInventoryObject = {
+            id: customer.uuid,
+            status: customer.status ? customer.status : '',
+            name: customer.name ? customer.name : undefined,
+          };
+          this.inventoryList.push(inventory);
+        });
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.loading = false;
+      });
+
   }
 
   public searchInventoryFunction(str): void {
@@ -146,10 +185,7 @@ export class InventoryListCtrl implements ng.IComponentController {
     }
   }
 
-  public onClickSettings(inventoryId): void {
-    const selectedInventory = this.inventoryListData.filter(inventory => inventory.id === inventoryId);
-    if (selectedInventory[0].type === 'custGroup' || selectedInventory[0].type === 'unassigned') {
-      this.$state.go('hcs.clusterList', { groupId: inventoryId,  groupType: selectedInventory[0].type });
-    }
+  public onClickSettings(inventory: IInventoryObject): void {
+    this.$state.go('hcs.clusterList', { groupId: inventory.id });
   }
 }

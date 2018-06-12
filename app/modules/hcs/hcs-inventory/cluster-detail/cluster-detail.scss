@@ -1,8 +1,18 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/mixins/grid';
 
 .section__content.node__info {
-  width: 75%;
+  @media #{$medium-up} {
+    @include vr-spacing(mt, .25);
+    @include grid-column( $columns: 8, $last-column: true, $center: false, $offset: 1, $push: 0, $pull: 0, $collapse: true, $float: left);
+  }
+  @media #{$large-up} {
+    @include grid-column( $columns: 8, $last-column: true, $center: false, $offset: 1, $push: 0, $pull: 0, $collapse: true, $float: left);
+  }
+  @media #{$xlarge-up} {
+    @include grid-column( $columns: 8, $last-column: true, $center: false, $offset: 1, $push: 0, $pull: 0, $collapse: true, $float: left);
+  }
   .cs-card article {
     min-height: rem-calc(200);
     header.node-header {
@@ -55,7 +65,7 @@
     footer.node-footer {
       padding: 1rem 0.5rem 1rem 1.25rem;
       background-color: $gray-light-4;
-      .columns.medium-8 {
+      .node-verification-code {
         padding-left: 0rem;
         color: $gray-dark-4;
         .icon-info-outline {
@@ -63,9 +73,9 @@
           margin-right: rem-calc(4);
         }
       }
-      .columns.medium-4 {
+      .node-status-container {
+        float: right;
         .node-status {
-          float: right;
           color: $gray-dark-4;
         }
         button.btn--circle.btn--small.btn--white {
@@ -96,6 +106,11 @@
 
 .hcs-edit-modal-class{
   hcs-node-sftp-edit, hcs-add-customer-to-cluster{
+    .modal-body {
+      .modal-customer-name-input{
+        width: 100%;
+      }
+    }
     .modal-footer{
       button{
         border-radius: 100px;
@@ -106,4 +121,8 @@
 
 .cs-form__section.save-section.cluster-detail-save {
   padding-bottom: rem-calc(16);
+}
+
+.sub-section.hcs-sub-section-default-padding {
+  padding-left: 0.5rem;
 }

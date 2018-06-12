@@ -6,5 +6,5 @@ export default angular
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
   ])
-.component('hcsInventoryList', new InventoryListComponent())
-.name;
+  .component('hcsInventoryList', new InventoryListComponent())
+  .name;

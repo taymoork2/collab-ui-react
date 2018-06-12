@@ -7,7 +7,7 @@ describe('Controller: DevicesReduxCtrl', () => {
   beforeEach(function () {
     this.initModules(searchModule, devicesReduxModule/*, userServiceModuleName, serviceDescriptorModuleName*/);
     this.injectDependencies('$rootScope', '$state', '$timeout', '$controller', '$httpBackend', '$q', 'UrlConfig',
-        'AccountOrgService', 'Authinfo', 'FeatureToggleService', 'Userservice', 'ServiceDescriptorService');
+      'AccountOrgService', 'Authinfo', 'FeatureToggleService', 'Userservice', 'ServiceDescriptorService');
   });
   beforeEach(initSpies);
   beforeEach(initController);

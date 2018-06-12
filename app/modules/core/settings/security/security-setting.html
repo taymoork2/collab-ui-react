@@ -1,0 +1,9 @@
+<div class="setting">
+  <input
+    cs-input
+    type="checkbox"
+    id="sparkClientSecurityEnabled"
+    ng-model="$ctrl.isSparkClientSecurityEnabled"
+    cs-input-label="{{'globalSettings.security.description'|translate}}"
+    ng-disabled="!$ctrl.isSparkClientSecurityLoaded || !$ctrl.isProPackPurchased">
+</div>

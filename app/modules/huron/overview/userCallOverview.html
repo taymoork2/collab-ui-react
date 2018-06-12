@@ -1,6 +1,16 @@
 <cs-sp-container>
   <cs-sp-section>
     <section-title
+      title-key="usersPage.sipDomain">
+    </section-title>
+    <div class="feature-list">
+      <ul ng-repeat="address in $ctrl.sipAddresses track by address.address" class="sip-address-list">
+        <li>{{:: address.address}}&nbsp;<span class="badge primary" translate="common.primary" ng-if="address.isPrimary && $ctrl.sipAddresses.length > 1"></span></li>
+      </ul>
+    </div>
+  </cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.hasCallFeatures">
+    <section-title
       title-key="directoryNumberPanel.directNumbers"
       action-list="$ctrl.actionList"
       as-button="true">
@@ -12,7 +22,7 @@
       voicemail-enabled="$ctrl.voicemailEnabled">
     </directory-number-list>
   </cs-sp-section>
-  <cs-sp-section>
+  <cs-sp-section ng-if="$ctrl.hasCallFeatures">
     <section-title
       title-key="telephonyPreview.features">
     </section-title>

@@ -197,7 +197,7 @@
     title: 'tabs.troubleshootingTab',
     state: 'partnertroubleshooting.diagnostics',
     link: '/partner/troubleshooting',
-    feature: ['diagnostic-f8193-ux3'],
+    feature: ['diagnostic-partner-f8193-troubleshooting'],
     iconClass: 'icon-outline',
   }, {
     tab: 'supportTab',

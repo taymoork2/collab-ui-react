@@ -21,11 +21,11 @@ export class CiscoCollaborationCloudCertificateService {
   public uploadCertificate(file: File): ng.IPromise<any> {
     this.isImporting = true;
     return this.CertService.uploadCertificate(this.Authinfo.getOrgId(), file)
-    .then( (res) => this.readCerts(res))
-    .catch (error => {
-      this.isImporting = false;
-      this.Notification.errorResponse(error, 'servicesOverview.cards.privateTrunk.error.certUploadError');
-    });
+      .then( (res) => this.readCerts(res))
+      .catch (error => {
+        this.isImporting = false;
+        this.Notification.errorResponse(error, 'servicesOverview.cards.privateTrunk.error.certUploadError');
+      });
 
   }
 
@@ -36,16 +36,16 @@ export class CiscoCollaborationCloudCertificateService {
       this.uploadedCertIds.push(certId);
     }
     return this.CertService.getCerts(this.Authinfo.getOrgId())
-    .then( res => {
-      const certificates: ICertificate[] = res || [];
-      this.formattedCertList = this.CertificateFormatterService.formatCerts(certificates);
-      this.isImporting = false;
-      return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });
-    }, error => {
-      this.Notification.errorResponse(error, 'hercules.settings.call.certificatesCannotRead');
-      this.isImporting = false;
-      return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });
-    });
+      .then( res => {
+        const certificates: ICertificate[] = res || [];
+        this.formattedCertList = this.CertificateFormatterService.formatCerts(certificates);
+        this.isImporting = false;
+        return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });
+      }, error => {
+        this.Notification.errorResponse(error, 'hercules.settings.call.certificatesCannotRead');
+        this.isImporting = false;
+        return ({ formattedCertList: this.formattedCertList, isImporting: this.isImporting });
+      });
   }
 
   public deleteCert(certId: string): ng.IPromise<any> {

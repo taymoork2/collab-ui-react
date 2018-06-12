@@ -7,6 +7,10 @@ import { Notification } from 'modules/core/notifications';
 export class HcsSetupModalCtrl implements ng.IComponentController {
   private static readonly MAX_INDEX: number = 5;
   private static readonly FIRST_INDEX: number = 0;
+  private static readonly LICENSING: string = 'LICENSING';
+  private static readonly LAAS: string = 'ucmgmt-laas';
+  private static readonly UPGRADE: string = 'UPGRADE';
+  private static readonly UAAS: string = 'ucmgmt-uaas';
 
   public currentStepIndex: number;
   public hcsServices: ICheckbox;
@@ -127,26 +131,26 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
     const services: string[] = [];
     const entitlements: string[] = [];
     if (this.hcsServices.license) {
-      services.push('LICENSING');
-      entitlements.push('ucmgmt-laas');
+      services.push(HcsSetupModalCtrl.LICENSING);
+      entitlements.push(HcsSetupModalCtrl.LAAS);
     }
     if (this.hcsServices.upgrade) {
-      services.push('UPGRADE');
-      entitlements.push('ucmgmt-uaas');
+      services.push(HcsSetupModalCtrl.UPGRADE);
+      entitlements.push(HcsSetupModalCtrl.UAAS);
     }
     this.HcsControllerService.createHcsPartner(services)
     //Update the entitlement
-    .then(() => this.HcsControllerService.updateUserEntitlement(this.Authinfo.getUserId(), entitlements))
+      .then(() => this.HcsControllerService.updateUserEntitlement(this.Authinfo.getUserId(), entitlements))
     //update Bearer token with new
-    .then(() => this.Auth.getAccessTokenWithNewScope());
+      .then(() => this.Auth.getAccessTokenWithNewScope());
   }
 
   public createSftp(): void {
     this.HcsUpgradeService.createSftpServer(this.sftpServer)
       .then(() => {
-        this.Notification.success('hcs.sftp.success');
         this.loading = false;
         if (!this.isFirstTimeSetup) {
+          this.Notification.success('hcs.sftp.success');
           this.$state.go(this.$state.current, {}, {
             reload: true,
           });
@@ -164,44 +168,44 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
 
   public createInstallFile(): void {
     this.HcsControllerService.createAgentInstallFile(this.agentInstallFile)
-    .then(() => {
-      this.Notification.success('hcs.installFiles.success');
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
-        });
-        this.dismissModal();
-      }
-    })
-    .catch(e => {
-      this.Notification.error('hcs.installFiles.error', { message: e });
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.dismissModal();
-      }
-    });
+      .then(() => {
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.Notification.success('hcs.installFiles.success');
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
+          this.dismissModal();
+        }
+      })
+      .catch(e => {
+        this.Notification.error('hcs.installFiles.error', { message: e });
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      });
   }
 
   public createSoftwareProfile(): void {
     this.HcsUpgradeService.createSoftwareProfile(this.softwareProfile)
-    .then(() => {
-      this.Notification.success('hcs.softwareProfiles.success');
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
-        });
-        this.dismissModal();
-      }
-    })
-    .catch(e => {
-      this.Notification.error('hcs.softwareProfiles.error', { message: e });
-      this.loading = false;
-      if (!this.isFirstTimeSetup) {
-        this.dismissModal();
-      }
-    });
+      .then(() => {
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.Notification.success('hcs.softwareProfiles.success');
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
+          this.dismissModal();
+        }
+      })
+      .catch(e => {
+        this.Notification.error('hcs.softwareProfiles.error', { message: e });
+        this.loading = false;
+        if (!this.isFirstTimeSetup) {
+          this.dismissModal();
+        }
+      });
   }
 
   public disableNext(): boolean  {
@@ -238,6 +242,9 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   }
 
   public dismissModal(): void {
+    this.$state.go(this.$state.current, {}, {
+      reload: true,
+    });
     this.HcsSetupModalService.dismissModal();
   }
 

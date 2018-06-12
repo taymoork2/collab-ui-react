@@ -5,6 +5,7 @@ export enum DiagnosticKey {
   ANALYTICS_FAILURE = 'atlas_analytics_failure',
   ACCOUNT_LINKING_OPERATION = 'atlas_account_linking_operation',
   ACCOUNT_LINKING_WIZARD_OPERATION = 'atlas_account_linking_wizard_operation',
+  HELPDESK_ADMIN_ELEVATION = 'atlas_helpdesk_admin_elevation',
 }
 
 export enum OperationalKey {

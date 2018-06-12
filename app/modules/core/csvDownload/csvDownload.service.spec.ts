@@ -17,6 +17,7 @@ describe('CsvDownloadService', () => {
       'UrlConfig',
       'Authinfo',
       'ExtractTarService',
+      'UserTaskManagerService',
     );
 
     initDependencySpies.apply(this);
@@ -94,10 +95,21 @@ describe('CsvDownloadService', () => {
         spyOn(this.UserCsvService, 'getCsvStat').and.returnValue({
           userErrorArray: errorArray,
         });
+        spyOn(this.UserTaskManagerService, 'downloadTaskErrors').and.returnValue(this.$q.resolve({
+          userErrorArray: errorArray,
+        }));
       });
 
       it('should get error export file', function () {
         const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_ERROR)
+          .then(function (data) {
+            expect(data).toContain('blob:http://');
+          });
+        expect(promise).toBeResolved();
+      });
+
+      it('should get error export file with batchServiceToggle on', function () {
+        const promise = this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_ERROR, false, 'errors.csv', false, true)
           .then(function (data) {
             expect(data).toContain('blob:http://');
           });
@@ -235,27 +247,27 @@ describe('CsvDownloadService', () => {
     it('should reject promise if FAILURE is returned', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportFAILED);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.processStatus).toBe('FAILED');
-      });
+        .catch( function (response) {
+          expect(response.processStatus).toBe('FAILED');
+        });
       this.$httpBackend.flush();
     });
 
     it('should reject promise if processStatus returns something unsupported', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(200, this.getUserReportINVALID);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.message).toBe('Unknown status');
-      });
+        .catch( function (response) {
+          expect(response.message).toBe('Unknown status');
+        });
       this.$httpBackend.flush();
     });
 
     it('should reject promise if fetching processStatus returns HTTP error code', function () {
       this.$httpBackend.expectGET('http://example.com/getUserReport').respond(503);
       this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-      .catch( function (response) {
-        expect(response.status).toBe(503);
-      });
+        .catch( function (response) {
+          expect(response.status).toBe(503);
+        });
       this.$httpBackend.flush();
     });
 
@@ -301,9 +313,9 @@ describe('CsvDownloadService', () => {
         });
 
         this.CsvDownloadService.getCsv(CsvDownloadTypes.TYPE_USER, false, 'filename', true).then(fail)
-        .catch( function (response) {
-          expect(response).toBe('extract failed');
-        });
+          .catch( function (response) {
+            expect(response).toBe('extract failed');
+          });
         this.$httpBackend.flush();
       });
 

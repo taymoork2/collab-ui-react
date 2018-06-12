@@ -2,58 +2,14 @@
   'use strict';
 
   /* eslint angular/di:0 */
-  var loadedModules = [];
 
-  function resolveLazyLoad(requireFunction) {
-    // https://github.com/ocombe/ocLazyLoad/issues/321
-    // $$animateJs issue when 'ng' module is "reloaded" through $ocLazyLoad
-    // force $$animateJs to be loaded before we try to lazy load
-    return /* @ngInject */ function lazyLoad($$animateJs, $ocLazyLoad, $q) {
-      return $q(function resolvePromise(resolve) {
-        requireFunction(requireDoneCallback);
+  var StatesHelper = require('./states/states.helper');
+  var resolveLazyLoad = StatesHelper.resolveLazyLoad;
+  var translateDisplayName = StatesHelper.translateDisplayName;
+  var stateParamsToResolveParams = StatesHelper.stateParamsToResolveParams;
 
-        function requireDoneCallback(_module) {
-          var moduleName;
-          if (_.isObject(_module) && _.has(_module, 'default')) {
-            moduleName = _module.default;
-          } else {
-            moduleName = _module;
-          }
-          // Don't reload a loaded module or core angular module
-          if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
-            resolve();
-          } else {
-            loadedModules.push(moduleName);
-            $ocLazyLoad.toggleWatch(true);
-            $ocLazyLoad.inject(moduleName)
-              .finally(function finishLazyLoad() {
-                $ocLazyLoad.toggleWatch(false);
-                resolve();
-              });
-          }
-        }
-      });
-    };
-  }
-
-  function translateDisplayName(translateKey) {
-    return /* @ngInject */ function translate($translate) {
-      _.set(this, 'data.displayName', $translate.instant(translateKey));
-    };
-  }
-
-  function toResolveParam(paramName, defaultVal) {
-    return /* @ngInject */ function ($stateParams) {
-      return _.get($stateParams, paramName, defaultVal);
-    };
-  }
-
-  function stateParamsToResolveParams(stateParams) {
-    return _.reduce(stateParams, function (result, defaultVal, paramName) {
-      result[paramName] = toResolveParam(paramName, defaultVal);
-      return result;
-    }, {});
-  }
+  var States = require('./states');
+  var configureStates = States.configureStates;
 
   angular
     .module('wx2AdminWebClientApp')
@@ -212,9 +168,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/unauthorized.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="unauthorizedPage.title" l10n-text="unauthorizedPage.text"></state-redirect-action>',
               },
             },
             authenticate: false,
@@ -223,25 +177,25 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/loginError.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="loginErrorPage.title" l10n-text="loginErrorPage.text" l10n-button-text="stateRedirect.tryAgainButton" is-webex-layout="true"></state-redirect-action>',
               },
             },
             authenticate: false,
           })
           .state('backend-temp-unavailable', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/backendTempUnavailable.tpl.html'),
+                template: '<state-redirect-warning l10n-title="backendTempUnavailablePage.title" l10n-text="backendTempUnavailablePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
           })
           .state('server-maintenance', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/serverMaintenance.tpl.html'),
+                template: '<state-redirect-warning l10n-title="serverMaintenancePage.title" l10n-text="serverMaintenancePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
@@ -251,9 +205,7 @@
             url: '/404',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/404.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="404Page.title" l10n-text="404Page.text"></state-redirect-action>',
               },
             },
             authenticate: false,
@@ -297,7 +249,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/core/stateRedirect/stateRedirect.controller'));
+                  done(require('modules/core/state-redirect'));
                 }, 'state-redirect');
               }),
             },
@@ -1009,11 +961,6 @@
             controllerAs: 'umoc',
             template: require('modules/core/users/userManage/userManageOrg.tpl.html'),
           })
-          .state('users.manage.activedir', {
-            controller: 'UserManageActiveDirController',
-            controllerAs: 'umadc',
-            template: require('modules/core/users/userManage/userManageActiveDir.tpl.html'),
-          })
           .state('users.manage.emailSuppress', {
             template: '<user-manage-email-suppress dismiss="$dismiss()"></user-manage-email-suppress>',
             params: {
@@ -1128,19 +1075,13 @@
               resetOnboardStoreStates: null,
             },
             resolve: {
-              isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService, FeatureToggleService) {
-                return FeatureToggleService.supports(FeatureToggleService.features.atlasF3745AutoAssignLicenses).then(function (isEnabled) {
-                  if (!isEnabled) {
-                    return;
-                  }
-
-                  if (typeof $stateParams.isDefaultAutoAssignTemplateActivated !== 'undefined') {
-                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = $stateParams.isDefaultAutoAssignTemplateActivated;
-                    return;
-                  }
-                  return AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(function (isDefaultAutoAssignTemplateActivated) {
-                    AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
-                  });
+              isDefaultAutoAssignTemplateActivated: /* @ngInject */ function ($stateParams, AutoAssignTemplateModel, AutoAssignTemplateService) {
+                if (typeof $stateParams.isDefaultAutoAssignTemplateActivated !== 'undefined') {
+                  AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = $stateParams.isDefaultAutoAssignTemplateActivated;
+                  return;
+                }
+                return AutoAssignTemplateService.isDefaultAutoAssignTemplateActivated().then(function (isDefaultAutoAssignTemplateActivated) {
+                  AutoAssignTemplateModel.isDefaultAutoAssignTemplateActivated = isDefaultAutoAssignTemplateActivated;
                 });
               },
               manageUsers: /* @ngInject */ function ($stateParams) {
@@ -3101,7 +3042,7 @@
           .state('partnercustomers', {
             parent: 'partner',
             template: '<div ui-view></div>',
-            absract: true,
+            abstract: true,
           })
           .state('gem', {
             parent: 'partner',
@@ -3273,7 +3214,7 @@
           .state('hcs', {
             parent: 'partner',
             template: require('modules/hcs/hcs-shared/hcs-base/hcs-shared-base.html'),
-            absract: true,
+            abstract: true,
           })
           .state('hcs.shared', {
             parent: 'hcs',
@@ -3316,35 +3257,27 @@
           .state('hcs.clusterList', {
             url: '/hcs/inventory/:groupId/clusters',
             parent: 'partner',
-            template: '<hcs-cluster-list group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-cluster-list>',
+            template: '<hcs-cluster-list group-id="$resolve.groupId"></hcs-cluster-list>',
             params: {
               groupId: '',
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.clusterDetail', {
             url: '/hcs/inventory/:groupId/cluster/:clusterId',
             parent: 'partner',
-            template: '<hcs-cluster-detail group-id="$resolve.groupId" group-type="$resolve.groupType" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
+            template: '<hcs-cluster-detail group-id="$resolve.groupId" cluster-id="$resolve.clusterId"></hcs-cluster-detail>',
             params: {
               groupId: '',
-              groupType: '',
               clusterId: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
@@ -3354,42 +3287,30 @@
           .state('hcs.upgradeCluster', {
             url: '/hcs/inventory/:groupId/upgrades',
             parent: 'partner',
-            template: '<hcs-upgrade-cluster group-id="$resolve.groupId" group-type="$resolve.groupType"></hcs-upgrade-cluster>',
+            template: '<hcs-upgrade-cluster group-id="$resolve.groupId" ></hcs-upgrade-cluster>',
             params: {
               groupId: '',
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })
           .state('hcs.upgradeClusterStatus', {
             url: '/hcs/inventory/:groupId/upgrades/:clusterId',
             parent: 'partner',
-            template: '<hcs-upgrade-cluster-status group-id="$resolve.groupId" cluster="$resolve.cluster" cluster-id="$resolve.clusterId" group-type="$resolve.groupType"></hcs-upgrade-cluster-status>',
+            template: '<hcs-upgrade-cluster-status group-id="$resolve.groupId" cluster-id="$resolve.clusterId"></hcs-upgrade-cluster-status>',
             params: {
               groupId: '',
               clusterId: '',
-              cluster: {},
-              groupType: '',
             },
             resolve: {
               groupId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.groupId;
               },
-              cluster: /* @ngInject */ function ($stateParams) {
-                return $stateParams.cluster;
-              },
               clusterId: /* @ngInject */ function ($stateParams) {
                 return $stateParams.clusterId;
-              },
-              groupType: /* @ngInject */ function ($stateParams) {
-                return $stateParams.groupType;
               },
             },
           })
@@ -5840,7 +5761,7 @@
           })
           .state('legalhold', {
             template: '<div ui-view class="legal-hold"></div>',
-            absract: true,
+            abstract: true,
             parent: 'ediscovery',
             resolve: {
               supportsFeature: /* @ngInject */ function (FeatureToggleService) {
@@ -6048,6 +5969,7 @@
               actionType: null,
             },
           });
+        configureStates($stateProvider);
       },
     ]);
 })();

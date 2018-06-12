@@ -33,3 +33,11 @@ export enum OfferType {
   CONFERENCING = 'CONFERENCING',
   MESSAGING = 'MESSAGING',
 }
+
+export enum WebexMeetingOfferName {
+  EC = OfferName.EC,   // Webex Events
+  EE = OfferName.EE,   // Enterprise Edition (WebEx)
+  MC = OfferName.MC,   // Webex Meetings
+  SC = OfferName.SC,   // Webex Support
+  TC = OfferName.TC,   // Webex Training
+}

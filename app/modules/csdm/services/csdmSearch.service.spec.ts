@@ -61,10 +61,10 @@ describe('CsdmSearchService', () => {
       this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryOneExecuted = true;
       })
-      .catch(_.noop)
-      .finally(() => {
-        queryOneFinally = true;
-      });
+        .catch(_.noop)
+        .finally(() => {
+          queryOneFinally = true;
+        });
       this.CsdmSearchService.search(searchObj, Caller.searchOrLoadMore).then(() => {
         queryTwoExecuted = true;
       });

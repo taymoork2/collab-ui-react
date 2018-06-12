@@ -7,10 +7,6 @@
       "type": "directoryNumber",
       "trigger": "incomingCall"
     }],
-	"defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours"
-    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -94,10 +90,6 @@
       "id": "81005005",
       "number": "5005"
     }],
-    "defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours"
-    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -172,10 +164,6 @@
       "type": "directoryNumber",
       "trigger": "incomingCall"
     }],
-    "defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours"
-    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -281,10 +269,6 @@
       "id": "81005005",
       "number": "5005"
     }],
-    "defaultActionSet": "openHours",
-    "scheduleEventTypeMap": {
-      "open": "openHours"
-    },
     "actionSets": [{
       "name": "openHours",
       "actions": [{
@@ -331,7 +315,7 @@
                   "description": "Input Option 4: dial by extension",
                   "input": "4",
                   "actions": [{
-                  
+
                     "runActionsOnInput": {
                       "inputType": 2,
                       "repeats": 2,
@@ -344,16 +328,16 @@
                        "description":"",
                       "minNumberOfCharacters": 4,
                       "maxNumberOfCharacters": 4,
-                      
+
                       "rawInputActions": [{
-                      
+
                         "routeToExtension": {
                           "description": "",
                           "destination": "$Input"
                         }
                       }]
                     }
-                    
+
                   }]
                 }]
               }

@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const _ = require('lodash');
+const glob = require('glob');
 
 const L10N_DIR = 'app/l10n';
 const L10N_ENGLISH_FILE = `${L10N_DIR}/en_US.json`;
@@ -42,7 +43,7 @@ const englishFlatTranslations = getEnglishFlatTranslations();
 
 const languages = fs.readFileSync(L10N_LANGUAGE_CONFIGS, 'utf8').match(L10N_LANGUAGE_VALUE_REGEX).map(language => language.match(L10N_LANGUAGE_REGEX)[0]);
 
-const files = fs.readdirSync(L10N_DIR).map(file => file.replace('.json', ''));
+const files = getL10nFiles().map(file => file.replace('.json', ''));
 
 const missingFiles = _.difference(languages, files);
 if (missingFiles.length) {
@@ -129,6 +130,10 @@ ${imbalancedBracketsFormatSyntaxString}`);
 
 if (hasError) {
   throw new Error('Failed to validate all json files. Please see error output for detail.');
+}
+
+function getL10nFiles() {
+  return glob.sync(`${L10N_DIR}/*.json`).map(filePath => _.replace(filePath, `${L10N_DIR}/`, ''));
 }
 
 function filterDisallowedPluralKeywords(value) {

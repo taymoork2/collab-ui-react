@@ -43,13 +43,13 @@ class CtSummaryComponentController extends CtBaseController {
 
   public createChatTemplate(template) {
     this.SunlightConfigService.createChatTemplate(template)
-    .then((response) => {
-      this.handleChatTemplateCreation(response, template);
-      this.LogMetricsService.logMetrics('Created template for Care', this.LogMetricsService.getEventType('careTemplateFinish'), this.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
-    }).catch((error) => {
-      this.handleChatTemplateError();
-      this.Notification.errorWithTrackingId(error, this.getLocalisedText('careChatTpl.createTemplateFailureText'));
-    });
+      .then((response) => {
+        this.handleChatTemplateCreation(response, template);
+        this.LogMetricsService.logMetrics('Created template for Care', this.LogMetricsService.getEventType('careTemplateFinish'), this.LogMetricsService.getEventAction('buttonClick'), 200, moment(), 1, null);
+      }).catch((error) => {
+        this.handleChatTemplateError();
+        this.Notification.errorWithTrackingId(error, this.getLocalisedText('careChatTpl.createTemplateFailureText'));
+      });
   }
 
   public handleChatTemplateError() {

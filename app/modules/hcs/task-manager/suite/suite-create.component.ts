@@ -41,7 +41,7 @@ class SuiteCreateController implements ng.IComponentController {
       suite.id = suiteId;
       this.$state.go('taasTaskView', { suite: suite });
     })
-    .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recevied an Error'));
+      .catch(error => this.Notification.errorResponse(error.data.error.message, 'Recevied an Error'));
   }
 
 }

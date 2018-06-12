@@ -6,5 +6,5 @@ export default angular
   .module('hcs.installFiles', [
     modalServiceModule,
   ])
-.component('hcsInstallFiles', new InstallFilesComponent())
-.name;
+  .component('hcsInstallFiles', new InstallFilesComponent())
+  .name;

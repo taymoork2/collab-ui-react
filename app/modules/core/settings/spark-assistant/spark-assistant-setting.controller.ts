@@ -33,13 +33,13 @@ export class SparkAssistantSettingController {
 
   public $onInit() {
     this.SparkAssistantService.getSpeechServiceOptIn()
-    .then(response => {
-      this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
-      this.inProgress = _.get<string>(response, 'activationStatus').toUpperCase() === ActivationStatusEnum.PROCESSING;
-      if (!_.isUndefined(this.inProgress) && this.inProgress) {
-        this.fetchSparkAssistantStatus();
-      }
-    });
+      .then(response => {
+        this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
+        this.inProgress = _.get<string>(response, 'activationStatus').toUpperCase() === ActivationStatusEnum.PROCESSING;
+        if (!_.isUndefined(this.inProgress) && this.inProgress) {
+          this.fetchSparkAssistantStatus();
+        }
+      });
     this.setInputLabel();
   }
 
@@ -88,38 +88,38 @@ export class SparkAssistantSettingController {
   public updateSparkAssistantEnabled() {
     if (this._sparkAssistantEnabled !== undefined) {
       this.SparkAssistantService.updateSpeechService(this._sparkAssistantEnabled)
-      .then(() => {
-        this.getSparkAssistantStatus();
-      }).catch((error) => {
-        this.Notification.errorWithTrackingId(error, 'globalSettings.sparkAssistant.failure');
-      }).finally(() => {
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
+        .then(() => {
+          this.getSparkAssistantStatus();
+        }).catch((error) => {
+          this.Notification.errorWithTrackingId(error, 'globalSettings.sparkAssistant.failure');
+        }).finally(() => {
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
         });
-      });
     }
   }
 
   public getSparkAssistantStatus(): void {
     this.SparkAssistantService.getSpeechServiceOptIn()
-    .then(response => {
-      this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
-      const status: string = _.get<string>(response, 'activationStatus').toUpperCase();
-      this.inProgress = (status === ActivationStatusEnum.PROCESSING);
-      if (this.inProgress) {
-        this.Notification.warning('globalSettings.sparkAssistant.progress');
-        this.$state.go(this.$state.current, {}, {
-          reload: true,
-        });
-      } else if (status === ActivationStatusEnum.ENABLED || status === ActivationStatusEnum.DISABLED) {
-        this.Notification.success('globalSettings.sparkAssistant.success');
-      } else if (status === ActivationStatusEnum.UNKNOWN) {
+      .then(response => {
+        this._sparkAssistantEnabled = _.get<boolean>(response, 'optIn');
+        const status: string = _.get<string>(response, 'activationStatus').toUpperCase();
+        this.inProgress = (status === ActivationStatusEnum.PROCESSING);
+        if (this.inProgress) {
+          this.Notification.warning('globalSettings.sparkAssistant.progress');
+          this.$state.go(this.$state.current, {}, {
+            reload: true,
+          });
+        } else if (status === ActivationStatusEnum.ENABLED || status === ActivationStatusEnum.DISABLED) {
+          this.Notification.success('globalSettings.sparkAssistant.success');
+        } else if (status === ActivationStatusEnum.UNKNOWN) {
         //TO-DO REMOVE this check once Api is ready, keeping current behavior
-        this.Notification.success('globalSettings.sparkAssistant.success');
-      }
-    }).catch((error) => {
-      this.Notification.errorWithTrackingId(error, 'globalSettings.sparkAssistant.failureGet');
-    });
+          this.Notification.success('globalSettings.sparkAssistant.success');
+        }
+      }).catch((error) => {
+        this.Notification.errorWithTrackingId(error, 'globalSettings.sparkAssistant.failureGet');
+      });
   }
 
   public optOutModal(): void {

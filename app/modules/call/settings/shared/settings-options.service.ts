@@ -94,9 +94,9 @@ export class HuronSettingsOptionsService {
 
   private loadPreferredLanguageOptions(): ng.IPromise<IOption[]> {
     return this.ServiceSetup.getSiteLanguages()
-    .then(languages => {
-      return _.sortBy(this.ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
-    });
+      .then(languages => {
+        return _.sortBy(this.ServiceSetup.getTranslatedSiteLanguages(languages), 'label');
+      });
   }
 
   public loadCompanyCallerIdNumbers(filter: string | undefined): ng.IPromise<IOption[]> {
@@ -134,9 +134,9 @@ export class HuronSettingsOptionsService {
       .then(supportsCompanyMoh => {
         if (supportsCompanyMoh) {
           return this.MediaOnHoldService.getCompanyMohOptions()
-          .then(mediaOptions => {
-            return mediaOptions;
-          });
+            .then(mediaOptions => {
+              return mediaOptions;
+            });
         } else {
           return this.$q.resolve([]);
         }

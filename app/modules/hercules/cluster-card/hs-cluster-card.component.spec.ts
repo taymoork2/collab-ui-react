@@ -166,7 +166,7 @@ describe('Component: hsClusterCard', function () {
     it('clicking on settings should change state to hds-cluster.settings', function () {
       spyOn($state, 'go');
       controllerHdsCluster.openSettings(controllerHdsCluster.cluster.targetType,
-                                        controllerHdsCluster.cluster.id);
+        controllerHdsCluster.cluster.id);
       expect($state.go).toHaveBeenCalledWith('hds-cluster.settings',
                                              { id: controllerHdsCluster.cluster.id });
     });
@@ -174,7 +174,7 @@ describe('Component: hsClusterCard', function () {
     it('clicking on service name should change state to hds-cluster.list', function () {
       spyOn($state, 'go');
       controllerHdsCluster.openSettings(controllerHdsCluster.cluster.targetType,
-                                        controllerHdsCluster.cluster.id);
+        controllerHdsCluster.cluster.id);
       expect($state.go).toHaveBeenCalledWith('hds-cluster.settings', { id: 2 });
     });
 

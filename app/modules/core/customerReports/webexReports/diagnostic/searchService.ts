@@ -172,6 +172,12 @@ interface IVersion {
   browserVersion: string;
 }
 
+export enum TrackingEventName {
+  MEETING_SEARCH = 'webexReports.diagnostic.meetingSearch',
+  MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
+  MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
+}
+
 export class SearchService {
   private url;
   private data: any = {};
@@ -260,7 +266,7 @@ export class SearchService {
     return this.data[key];
   }
 
-  public getStorage(key) {
+  public getStorage(key: string): any {
     return _.get(this.data, key);
   }
 

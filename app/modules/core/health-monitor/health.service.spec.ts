@@ -36,9 +36,9 @@ describe('HealthService', function () {
       this.$httpBackend.expectGET(this.pingRegex).respond(404);
 
       this.HealthService.getHealthStatus().then(fail)
-      .catch(response => {
-        expect(response.status).toBe(404);
-      });
+        .catch(response => {
+          expect(response.status).toBe(404);
+        });
 
       this.$httpBackend.flush();
     });

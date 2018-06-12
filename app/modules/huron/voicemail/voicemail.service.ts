@@ -113,19 +113,19 @@ export class HuronVoicemailService {
       return this.HuronUserService.getUserV2Numbers(userId).then((data) => {
         _.set(user, 'voicemail.dtmfAccessId', _.get(data[0], 'siteToSite'));
         return this.isFeatureEnabledAvrilOnly()
-        .then((data: boolean) => {
-          if (!data && !_.isUndefined(user.services) && !_.includes(services, VOICEMAIL)) {
-            user.services.push(VOICEMAIL);
-          }
-          return this.isFeatureEnabledAvril().then((data: boolean) => {
-            if (data && !_.isUndefined(user.services) && !_.includes(services, AVRIL)) {
-              user.services.push(AVRIL);
+          .then((data: boolean) => {
+            if (!data && !_.isUndefined(user.services) && !_.includes(services, VOICEMAIL)) {
+              user.services.push(VOICEMAIL);
             }
-            return this.HuronUserService.updateUserV1(userId, user).then(() => {
-              return user.services;
+            return this.isFeatureEnabledAvril().then((data: boolean) => {
+              if (data && !_.isUndefined(user.services) && !_.includes(services, AVRIL)) {
+                user.services.push(AVRIL);
+              }
+              return this.HuronUserService.updateUserV1(userId, user).then(() => {
+                return user.services;
+              });
             });
           });
-        });
       });
     } else {
       if (this.isEnabledForUser(services)) {

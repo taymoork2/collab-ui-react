@@ -4,7 +4,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskCloudberryDeviceController($stateParams, $window, AccessibilityService, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
+  function HelpdeskCloudberryDeviceController($modal, $stateParams, $window, FeatureToggleService, AccessibilityService, Authinfo, HelpdeskLogService, HelpdeskService, Notification, WindowLocation) {
     $('body').css('background', 'white');
     var vm = this;
     vm.deviceId = decodeURIComponent($stateParams.id);
@@ -13,6 +13,8 @@
     vm.keyPressHandler = keyPressHandler;
     vm.downloadLog = downloadLog;
     vm.isAuthorizedForLog = isAuthorizedForLog;
+    vm.openExtendedInformation = openExtendedInformation;
+    vm.supportsExtendedInformation = false;
     if ($stateParams.device && $stateParams.device.organization) {
       vm.org = $stateParams.device.organization;
     } else {
@@ -24,6 +26,10 @@
     vm._helpers = {
       notifyError: notifyError,
     };
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasHelpDeskExt).then(function (result) {
+      vm.supportsExtendedInformation = result;
+    });
 
     HelpdeskService.getCloudberryDevice(vm.orgId, vm.deviceId).then(initDeviceView, vm._helpers.notifyError);
 
@@ -55,6 +61,24 @@
     function keyPressHandler(event) {
       if (!AccessibilityService.isVisible(AccessibilityService.MODAL) && event.keyCode === KeyCodes.ESCAPE) {
         $window.history.back();
+      }
+    }
+
+    function openExtendedInformation() {
+      if (vm.supportsExtendedInformation) {
+        $modal.open({
+          template: require('modules/squared/helpdesk/helpdesk-extended-information.html'),
+          controller: 'HelpdeskExtendedInfoDialogController as modal',
+          modalId: 'HelpdeskExtendedInfoDialog',
+          resolve: {
+            title: function () {
+              return 'helpdesk.deviceDetails';
+            },
+            data: function () {
+              return vm.device;
+            },
+          },
+        });
       }
     }
 

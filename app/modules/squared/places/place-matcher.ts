@@ -20,9 +20,9 @@ export class PlaceMatcher implements IMatcher<IPlace> {
 
   private termMatchesAnyFieldOfItem(term: string, item: IPlace): boolean {
     return item && (['displayName', 'readableType', 'sipUrl']
-        .some((field) => {
-          return _.includes(_.toLower(item[field]), term);
-        })
+      .some((field) => {
+        return _.includes(_.toLower(item[field]), term);
+      })
       || _.some(item['entitlements'] || [], (entitlement) => {
         return _.includes(_.toLower(entitlement), term);
       })

@@ -4,6 +4,9 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
+.reveal-modal.full hcs-setup-modal div.modal-body {
+  padding: 1rem 2rem 0.5rem;
+}
 .hcs-card-header {
 
   header {
@@ -73,3 +76,18 @@
     max-width: 60.25rem;
   }
 }
+
+.hcs-card-default {
+  header {
+    padding-left: 0rem;
+    .hcs-sftp-path {
+      padding-top: 0rem;
+    }
+  }
+
+  header.hcs-min-height-card-header {
+    min-height: rem-calc(160);
+  }
+}
+
+

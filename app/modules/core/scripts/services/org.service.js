@@ -29,7 +29,7 @@
     .name;
 
   /* @ngInject */
-  function Orgservice($http, $q, $resource, $translate, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
+  function Orgservice($http, $q, $resource, Auth, Authinfo, CacheFactory, Log, UrlConfig, Utils, HuronCompassService) {
     var service = {
       getOrg: getOrg,
       getAdminOrg: getAdminOrg,
@@ -46,6 +46,7 @@
       setOrgSettings: setOrgSettings,
       createOrg: createOrg,
       deleteOrg: deleteOrg,
+      getDeleteStatus: getDeleteStatus,
       listOrgs: listOrgs,
       getOrgCacheOption: getOrgCacheOption,
       getEftSetting: getEftSetting,
@@ -55,7 +56,6 @@
       validateSiteUrl: validateSiteUrl,
       setHybridServiceReleaseChannelEntitlement: setHybridServiceReleaseChannelEntitlement,
       updateDisplayName: updateDisplayName,
-      validateDisplayName: validateDisplayName,
       setOrgEmailSuppress: setOrgEmailSuppress,
       getInternallyManagedSubscriptions: getInternallyManagedSubscriptions,
     };
@@ -388,7 +388,16 @@
         deleteUsers = true;
       }
       var serviceUrl = UrlConfig.getAdminServiceUrl() + 'organizations/' + currentOrgId;
-      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } });
+      return $http.delete(serviceUrl, { params: { deleteUsers: deleteUsers } })
+        .then(function (response) { return response.data; });
+    }
+
+    function getDeleteStatus(statusUrl, clientAccessToken) {
+      return $http.get(statusUrl, {
+        headers: {
+          Authorization: 'Bearer ' + clientAccessToken,
+        },
+      }).then(function (response) { return response.data; });
     }
 
     function listOrgs(filter) {
@@ -534,18 +543,9 @@
       return patchDisplayName(orgId, displayName)
         .then(function (response) {
           var status = _.get(response, 'status');
-          if (status === 'DUPLICATE') {
-            return $q.reject($translate.instant('helpdesk.org.duplicateName'));
-          } else if (status !== 'SUCCESS') {
+          if (status !== 'SUCCESS') {
             return $q.reject(response);
           }
-        });
-    }
-
-    function validateDisplayName(orgId, displayName) {
-      return patchDisplayName(orgId, displayName, true)
-        .then(function (response) {
-          return _.get(response, 'status') === 'ALLOWED';
         });
     }
 

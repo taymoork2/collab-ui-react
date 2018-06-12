@@ -152,13 +152,13 @@ export class SparkService {
       service: 'hydra',
       resource: 'people/' + peopleId,
     })
-    .then(response => <ISparkPerson>response.body)
-    .catch(error => {
-      if (_.has(error, 'message')) {
-        error.message = error.message + ': SparkService getPerson';
-      }
-      return this.$q.reject(error);
-    });
+      .then(response => <ISparkPerson>response.body)
+      .catch(error => {
+        if (_.has(error, 'message')) {
+          error.message = error.message + ': SparkService getPerson';
+        }
+        return this.$q.reject(error);
+      });
   }
 
   /**
@@ -210,13 +210,13 @@ export class SparkService {
       service: 'hydra',
       resource: `people/?email=${email}`,
     })
-    .then(response => <ISparkPerson>response.body)
-    .catch(error => {
-      if (_.has(error, 'message')) {
-        error.message = error.message + ': SparkService getPersonByEmail';
-      }
-      return this.$q.reject(error);
-    });
+      .then(response => <ISparkPerson>response.body)
+      .catch(error => {
+        if (_.has(error, 'message')) {
+          error.message = error.message + ': SparkService getPersonByEmail';
+        }
+        return this.$q.reject(error);
+      });
   }
 
   /**
@@ -228,13 +228,13 @@ export class SparkService {
       service: 'hydra',
       resource: 'memberships',
     })
-    .then(response => <ISparkPage<ISparkMembership>>new Page(response, this.sdk()))
-    .catch(error => {
-      if (_.has(error, 'message')) {
-        error.message = error.message + ': SparkService listMemberships';
-      }
-      return this.$q.reject(error);
-    });
+      .then(response => <ISparkPage<ISparkMembership>>new Page(response, this.sdk()))
+      .catch(error => {
+        if (_.has(error, 'message')) {
+          error.message = error.message + ': SparkService listMemberships';
+        }
+        return this.$q.reject(error);
+      });
   }
 
   /**
@@ -246,13 +246,13 @@ export class SparkService {
       service: 'hydra',
       resource: 'rooms',
     })
-    .then(response => <ISparkPage<ISparkRoom>>new Page(response, this.sdk()))
-    .catch(error => {
-      if (_.has(error, 'message')) {
-        error.message = error.message + ': SparkService listRooms';
-      }
-      return this.$q.reject(error);
-    });
+      .then(response => <ISparkPage<ISparkRoom>>new Page(response, this.sdk()))
+      .catch(error => {
+        if (_.has(error, 'message')) {
+          error.message = error.message + ': SparkService listRooms';
+        }
+        return this.$q.reject(error);
+      });
   }
 
   /**
@@ -268,13 +268,13 @@ export class SparkService {
         roomId: roomId,
       },
     })
-    .then(response => <ISparkPage<ISparkMembership>>new Page(response, this.sdk()))
-    .catch(error => {
-      if (_.has(error, 'message')) {
-        error.message = error.message + ': SparkService listRoomMemberships';
-      }
-      return this.$q.reject(error);
-    });
+      .then(response => <ISparkPage<ISparkMembership>>new Page(response, this.sdk()))
+      .catch(error => {
+        if (_.has(error, 'message')) {
+          error.message = error.message + ': SparkService listRoomMemberships';
+        }
+        return this.$q.reject(error);
+      });
   }
 }
 export default angular

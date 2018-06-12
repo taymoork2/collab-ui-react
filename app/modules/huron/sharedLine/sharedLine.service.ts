@@ -61,25 +61,25 @@ export class SharedLineService {
       typeId: typeId,
       numberId: numberId,
     }).$promise
-    .then(sharedLineList => {
-      return _.map(_.get<SharedLine[]>(sharedLineList, 'sharedLines', []), (sharedLine) => {
-        return new SharedLine({
-          uuid: sharedLine.uuid,
-          primary: sharedLine.primary,
-          place: new SharedLinePlace({
-            uuid: sharedLine.place.uuid,
-            displayName: sharedLine.place.displayName,
-          }),
-          user: new SharedLineUser({
-            uuid: sharedLine.user.uuid,
-            firstName: sharedLine.user.firstName,
-            lastName: sharedLine.user.lastName,
-            userName: sharedLine.user.userName,
-          }),
-          phones: new Array<SharedLinePhone>(),
+      .then(sharedLineList => {
+        return _.map(_.get<SharedLine[]>(sharedLineList, 'sharedLines', []), (sharedLine) => {
+          return new SharedLine({
+            uuid: sharedLine.uuid,
+            primary: sharedLine.primary,
+            place: new SharedLinePlace({
+              uuid: sharedLine.place.uuid,
+              displayName: sharedLine.place.displayName,
+            }),
+            user: new SharedLineUser({
+              uuid: sharedLine.user.uuid,
+              firstName: sharedLine.user.firstName,
+              lastName: sharedLine.user.lastName,
+              userName: sharedLine.user.userName,
+            }),
+            phones: new Array<SharedLinePhone>(),
+          });
         });
       });
-    });
   }
 
   public createSharedLine(type: LineConsumerType, typeId: string, numberId: string, data: Member): ng.IPromise<string> {
@@ -107,7 +107,7 @@ export class SharedLineService {
     }, payload, (_response, headers) => {
       location = headers('Location');
     }).$promise
-    .then( () => location);
+      .then( () => location);
   }
 
   public deleteSharedLine(type: LineConsumerType, typeId: string, numberId: string = '', sharedLineId: string): ng.IPromise<any> {
@@ -128,16 +128,16 @@ export class SharedLineService {
       numberId: numberId,
       sharedLineId: sharedLineId,
     }).$promise
-    .then(sharedLinePhoneList => {
-      const sharedLinePhones = _.get<SharedLinePhone[]>(sharedLinePhoneList, 'phones', []);
-      return _.map(sharedLinePhones, (phone) => {
-        return new SharedLinePhone({
-          uuid: phone.uuid,
-          description: phone.description,
-          assigned: phone.assigned,
+      .then(sharedLinePhoneList => {
+        const sharedLinePhones = _.get<SharedLinePhone[]>(sharedLinePhoneList, 'phones', []);
+        return _.map(sharedLinePhones, (phone) => {
+          return new SharedLinePhone({
+            uuid: phone.uuid,
+            description: phone.description,
+            assigned: phone.assigned,
+          });
         });
       });
-    });
   }
 
   public updateSharedLinePhoneList(type: LineConsumerType, typeId: string, numberId: string, sharedLineId: string, data: SharedLinePhoneListItem[]): ng.IPromise<void> {

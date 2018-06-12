@@ -8,6 +8,98 @@ describe('DeviceUsageService', function () {
   var Authinfo;
   var UrlConfig;
   var now = moment('2016-10-27T00:00:00.000Z').toDate(); // Fri, Oct, 2016
+  var usageData = {
+    day1: [
+      {
+        date: '2016-10-28T00:00:00.000Z',
+        accountId: '*',
+        category: 'ce',
+        model: 'SX20',
+        countryCode: '*',
+        callCount: 6,
+        callDuration: 2500,
+      },
+      {
+        date: '2016-10-28T00:00:00.000Z',
+        accountId: '*',
+        category: 'ce',
+        model: 'MX700',
+        countryCode: '*',
+        callCount: 5,
+        callDuration: 1000,
+      },
+    ],
+    day2: [
+      {
+        date: '2016-10-27T00:00:00.000Z',
+        accountId: '*',
+        category: 'ce',
+        model: 'SX20',
+        countryCode: '*',
+        callCount: 4,
+        callDuration: 500,
+      }, {
+        date: '2016-10-27T00:00:00.000Z',
+        accountId: '*',
+        category: 'SparkBoard',
+        model: 'SparkBoard 55',
+        countryCode: '*',
+        callCount: 2,
+        callDuration: 1000,
+      },
+    ],
+    day4: [
+      {
+        date: '2016-10-25T00:00:00.000Z',
+        accountId: '*',
+        category: 'ce',
+        model: 'SX20',
+        countryCode: '*',
+        callCount: 2,
+        callDuration: 500,
+      },
+      {
+        date: '2016-10-25T00:00:00.000Z',
+        accountId: '*',
+        category: 'SparkBoard',
+        model: 'SparkBoard 55',
+        countryCode: '*',
+      },
+    ],
+  };
+
+  var expectedResult = [{
+    callCount: 2,
+    totalDuration: 500,
+    totalDurationY: '0.14',
+    time: '2016-10-25',
+  }, {
+    callCount: 6,
+    totalDuration: 1500,
+    totalDurationY: '0.42',
+    time: '2016-10-27',
+  }, {
+    callCount: 11,
+    totalDuration: 3500,
+    totalDurationY: '0.97',
+    time: '2016-10-28',
+  }];
+
+  var availableDataResponse = [
+    {
+      date: '2016-10-25T00:00:00.000Z',
+      available: true,
+    }, {
+      date: '2016-10-26T00:00:00.000Z',
+      available: false,
+    }, {
+      date: '2017-10-27T00:00:00.000Z',
+      available: true,
+    }, {
+      date: '2017-10-28T00:00:00.000Z',
+      available: true,
+    },
+  ];
 
   // TODO: Swap when production ready
   var urlBase = 'http://berserk.rd.cisco.com:8080/atlas-server/admin/api/v1/organization';
@@ -21,7 +113,7 @@ describe('DeviceUsageService', function () {
     $httpBackend = _$httpBackend_;
     UrlConfig = _UrlConfig_;
     Authinfo = _Authinfo_;
-    moment.tz.setDefault('Europe/London');
+    moment.tz.setDefault('America/Los_Angeles');
     jasmine.clock().install();
     var baseTime = now;
     jasmine.clock().mockDate(baseTime);
@@ -35,115 +127,27 @@ describe('DeviceUsageService', function () {
 
   describe('get usage data', function () {
     var usageDataResponse;
-    var availableDataResponse;
-
     beforeEach(function () {
-      var usageDataResponseDay1 = [
-        {
-          date: '2016-10-28T00:00:00.000Z',
-          accountId: '*',
-          category: 'ce',
-          model: 'SX20',
-          countryCode: '*',
-          callCount: 6,
-          callDuration: 2500,
-        },
-        {
-          date: '2016-10-28T00:00:00.000Z',
-          accountId: '*',
-          category: 'ce',
-          model: 'MX700',
-          countryCode: '*',
-          callCount: 5,
-          callDuration: 1000,
-        },
-      ];
-
-      var usageDataResponseDay2 = [
-        {
-          date: '2016-10-27T00:00:00.000Z',
-          accountId: '*',
-          category: 'ce',
-          model: 'SX20',
-          countryCode: '*',
-          callCount: 4,
-          callDuration: 500,
-        }, {
-          date: '2016-10-27T00:00:00.000Z',
-          accountId: '*',
-          category: 'SparkBoard',
-          model: 'SparkBoard 55',
-          countryCode: '*',
-          callCount: 2,
-          callDuration: 1000,
-        },
-      ];
-
-      //var usageDataResponseDay3 = undefined; // missing data
-
-      var usageDataResponseDay4 = [
-        {
-          date: '2016-10-25T00:00:00.000Z',
-          accountId: '*',
-          category: 'ce',
-          model: 'SX20',
-          countryCode: '*',
-          callCount: 2,
-          callDuration: 500,
-        },
-        {
-          date: '2016-10-25T00:00:00.000Z',
-          accountId: '*',
-          category: 'SparkBoard',
-          model: 'SparkBoard 55',
-          countryCode: '*',
-          // "callCount": 0, // missing callCount same as 0
-          // "callDuration": 500  // missing callDuration same as 0
-        },
-      ];
-
-      usageDataResponse = usageDataResponseDay4
-        //.concat(usageDataResponseDay3) // missing
-        .concat(usageDataResponseDay2)
-        .concat(usageDataResponseDay1);
-
-
-      availableDataResponse = [
-        {
-          date: '2016-10-25T00:00:00.000Z',
-          available: true,
-        }, {
-          date: '2016-10-26T00:00:00.000Z',
-          available: false,
-        }, {
-          date: '2017-10-27T00:00:00.000Z',
-          available: true,
-        }, {
-          date: '2017-10-28T00:00:00.000Z',
-          available: true,
-        },
-      ];
+      usageDataResponse = usageData.day4
+        .concat(usageData.day2)
+        .concat(usageData.day1);
     });
 
-    it('reduces data to calculated totals pr day', function () {
-      var expectedResult = [{
-        callCount: 2,
-        totalDuration: 500,
-        totalDurationY: '0.14',
-        time: '2016-10-25',
-      }, {
-        callCount: 6,
-        totalDuration: 1500,
-        totalDurationY: '0.42',
-        time: '2016-10-27',
-      }, {
-        callCount: 11,
-        totalDuration: 3500,
-        totalDurationY: '0.97',
-        time: '2016-10-28',
-      }];
-
+    function testReduceAllDataWithTZ(usageDataResponse, timeZone) {
+      moment.tz.setDefault(timeZone);
       var result = DeviceUsageService.reduceAllData(usageDataResponse, 'day');
+      return result;
+    }
+
+    function testGetDataForRangeWithTZ(timeZone) {
+      moment.tz.setDefault(timeZone);
+      return DeviceUsageService.getDataForRange('2010-10-25', '2016-10-28', 'day', [], 'backend');
+    }
+
+    it('reduces data to calculated totals pr day', function () {
+      var result = testReduceAllDataWithTZ(usageDataResponse, 'America/Toronto');
+      expect(result).toEqual(expectedResult);
+      result = testReduceAllDataWithTZ(usageDataResponse, 'America/Los_Angeles');
       expect(result).toEqual(expectedResult);
     });
 
@@ -160,38 +164,38 @@ describe('DeviceUsageService', function () {
         .when('GET', availabilityRequest)
         .respond({ items: availableDataResponse });
 
-      var expectedResult = [{
-        callCount: 2,
-        totalDuration: 500,
-        totalDurationY: '0.14',
-        time: '2016-10-25',
-      }, {
+      var expectedResultWith0Day = _.cloneDeep(expectedResult);
+      var emptyDay = {
         callCount: 0,
         totalDuration: 0,
         totalDurationY: '0.00',
         time: '2016-10-26',
-      }, {
-        callCount: 6,
-        totalDuration: 1500,
-        totalDurationY: '0.42',
-        time: '2016-10-27',
-      }, {
-        callCount: 11,
-        totalDuration: 3500,
-        totalDurationY: '0.97',
-        time: '2016-10-28',
-      }];
-
+      };
+      expectedResultWith0Day.splice(1, 0, emptyDay);
       var dataResponse;
 
-      DeviceUsageService.getDataForRange('2010-10-25', '2016-10-28', 'day', [], 'backend').then(function (result) {
-        dataResponse = result;
-      });
+      testGetDataForRangeWithTZ('America/Toronto')
+        .then(function (result) {
+          dataResponse = result;
+        })
+        .catch(fail);
       $httpBackend.flush();
-      expect(dataResponse.reportItems).toEqual(expectedResult);
+      expect(dataResponse.reportItems).toEqual(expectedResultWith0Day);
+      expect(dataResponse.missingDays).toEqual({ missingDays: true, count: 1 });
+
+      testGetDataForRangeWithTZ('America/Los_Angeles')
+        .then(function (result) {
+          dataResponse = result;
+        })
+        .catch(fail);
+      $httpBackend.flush();
+
+      expect(dataResponse.reportItems).toEqual(expectedResultWith0Day);
       expect(dataResponse.missingDays).toEqual({ missingDays: true, count: 1 });
     });
+  });
 
+  describe('get usage data', function () {
     it('calls backend to get least and most used', function () {
       var usageData1 =
         {

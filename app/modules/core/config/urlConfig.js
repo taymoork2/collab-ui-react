@@ -135,25 +135,25 @@
       prod: 'https://api.ciscospark.com/v1',
     },
     SunlightConfigServiceUrl: {
-      dev: 'https://config.devus1.ciscoccservice.com/config/v1',
+      dev: 'https://config.appstaging.ciscoccservice.com/config/v1',
       cfe: 'https://config.appstaging.ciscoccservice.com/config/v1',
       integration: 'https://config.appstaging.ciscoccservice.com/config/v1',
       prod: 'https://config.produs1.ciscoccservice.com/config/v1',
     },
     SunlightURServiceUrl: {
-      dev: 'https://pick.devus1.ciscoccservice.com/qnr/v1',
+      dev: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       cfe: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       integration: 'https://pick.appstaging.ciscoccservice.com/qnr/v1',
       prod: 'https://pick.produs1.ciscoccservice.com/qnr/v1',
     },
     SunlightBubbleUrl: {
-      dev: 'https://bubble.devus1.ciscoccservice.com',
+      dev: 'https://bubble.appstaging.ciscoccservice.com',
       cfe: 'https://bubble.appstaging.ciscoccservice.com',
       integration: 'https://bubble.appstaging.ciscoccservice.com',
       prod: 'https://bubble.produs1.ciscoccservice.com',
     },
     SunlightReportServiceUrl: {
-      dev: 'https://reporting.devus1.ciscoccservice.com/reporting/v1',
+      dev: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       cfe: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
@@ -328,9 +328,31 @@
     MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-    SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-    SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    SSOTestUrl: {
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+    },
+    SSOSetupUrl: {
+      dev: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
+      integration: 'https://idbroker.webex.com/idb/idbconfig/',
+      prod: 'https://idbroker.webex.com/idb/idbconfig/',
+    },
     EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/escalation.json',
+    OAuth2Url: {
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/',
+    },
+    Saml2Url: {
+      dev: 'https://idbroker.webex.com/idb/saml2/',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/',
+      integration: 'https://idbroker.webex.com/idb/saml2/',
+      prod: 'https://idbroker.webex.com/idb/saml2/',
+    },
   };
 
   module.exports = angular
@@ -341,6 +363,7 @@
     .factory('UrlConfig', UrlConfig)
     .name;
 
+  /* @ngInject */
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {
       service['get' + key] = function (specifyEnv) {

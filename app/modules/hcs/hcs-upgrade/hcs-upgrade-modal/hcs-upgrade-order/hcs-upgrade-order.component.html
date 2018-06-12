@@ -1,0 +1,36 @@
+<div ng-if="!$ctrl.loading" class="cs-card-container hcs-modal-component">
+  <h4 translate="hcs.upgrade.order.directions"></h4>
+  <div class="top-margin" ng-repeat="group in $ctrl.cluster track by $index" ng-init="parentIndex = $index">
+    <h5>{{::'common.upgrade' | translate}} {{$ctrl.groupOrder[$index]}}</h5>
+    <div class="height-min">
+      <cs-card-layout>
+        <cs-card class="medium" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
+          <article>
+            <header>
+              <h5 class="inline">{{node.hostName}}</h5>
+              <div ng-if="!node.pub" class="pull-right">
+                <span ng-if="$ctrl.canMoveUp(node, parentIndex)" ng-click="$ctrl.moveUp(parentIndex, $index)" >
+                  <i class="icon icon-2x icon-arrow-up"></i>
+                </span>
+                <span ng-if="parentIndex !== 7" ng-click="$ctrl.moveDown(parentIndex, $index)" >
+                  <i class="icon icon-2x icon-arrow-down"></i>
+                </span>
+              </div>
+            </header>
+            <section >
+              <p class="inline">{{node.type}}</p>
+              <p class="pull-right">{{node.pub ? $ctrl.pubTranslate : $ctrl.subTranslate}}</p>
+            </section>
+          </article>
+        </cs-card>
+      </cs-card-layout>
+    </div>
+  </div>
+  <div class="container row top-margin">
+    <button ng-click="$ctrl.createAnotherGroup()" translate="hcs.upgrade.order.addAnother"></button>
+    <button ng-click="$ctrl.resetNodes()" translate="common.reset"></button>
+  </div>
+</div>
+<div ng-if="$ctrl.loading">
+  <i class="icon icon-3x icon-spinner center"></i>
+</div>

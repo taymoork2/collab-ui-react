@@ -6404,12 +6404,6 @@
       "grant-success-information": "Gå till Hybrid Media-noden inom en timme för att slutföra registreringen. Hybrid Media-noden kommer att vara klar att<br> användas så fort som du slutför registreringen.",
       "grant-registration-success-header-old-cluster": "Du kan nu registrera Hybrid Media-noden till Cisco Collaboration Cloud. <br>Nodens IP-adress/FQDN: {{hostname}} Kluster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Maximal bandbredd för kaskader för kluster har sparats.",
-      "title": "Maximal bandbredd för kaskader för kluster",
-      "description": "Ange den maximala bandbredd (i megabit per sekund) som Hybrid Media-tjänstkluster ska använda för kaskader till molnet. Det lägsta värdet tillåter en aktiv 720p ström.",
-      "range": "Ange ett värde mellan 5 och 50"
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP-trunk har sparats.",
       "title": "Unified CM SIP-trunk",

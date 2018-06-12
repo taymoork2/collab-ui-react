@@ -4,16 +4,23 @@ import { IFeature } from 'modules/core/components/featureList/featureList.compon
 import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
 import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
 import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
+import { Config } from 'modules/core/config/config';
 const SNR_CHANGE = 'SNR_CHANGE';
 const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
+const CLOUD_CALLING = 'cloud-calling';
 class UserCallOverviewCtrl implements ng.IComponentController {
 
   public currentUser;
   public actionList: IActionItem[];
   public features: IFeature[];
   public directoryNumbers: Line[];
+  public sipAddresses: {
+    address: string,
+    isPrimary: boolean,
+  }[];
   public customerVmEnabled: boolean = false;
   public userVmEnabled: boolean = false;
+  public hasCallFeatures: boolean = false;
   public userServices: string[] = [];
   public snrEnabled: boolean = false;
   public wide: boolean = true;
@@ -27,6 +34,7 @@ class UserCallOverviewCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private $stateParams: any,
     private $translate: ng.translate.ITranslateService,
+    private Config: Config,
     private LineService: LineService,
     private HuronVoicemailService: HuronVoicemailService,
     private HuronUserService: HuronUserService,
@@ -53,6 +61,8 @@ class UserCallOverviewCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.mapSipAddresses();
+    this.setHasCallFeatures();
     this.initActions();
     this.initNumbers();
     this.initServices();
@@ -141,6 +151,31 @@ class UserCallOverviewCtrl implements ng.IComponentController {
       this.features.push(primaryLineService);
     }
   }
+
+  private mapSipAddresses(): void {
+    const sipAddresses = _.chain(this.currentUser.sipAddresses)
+      .filter({ type: CLOUD_CALLING })
+      .map(_address => {
+        return {
+          address: _.get<string>(_address, 'value', ''),
+          isPrimary: _.get<boolean>(_address, 'primary', false),
+        };
+     })
+     .orderBy(['isPrimary'], ['desc'])
+     .value();
+    this.sipAddresses = sipAddresses;
+  }
+
+  private setHasCallFeatures(): void {
+    const hasEntitlement = _.includes(this.currentUser.entitlements,  this.Config.entitlements.huron);
+
+    const hasLicense = _.some(this.currentUser.licenseID, licenseId => {
+      return _.startsWith(licenseId.toString(), this.Config.offerCodes.CO);
+    });
+
+    this.hasCallFeatures = hasEntitlement && hasLicense;
+  }
+
 
   public clickFeature(feature: IFeature) {
     const lineSelection = {

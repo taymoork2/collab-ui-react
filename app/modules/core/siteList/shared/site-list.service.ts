@@ -2,6 +2,7 @@
 // - add missing return types for functions
 // - add missing types for function args
 // - replace instances of `any` with better TS types as-appropriate
+import { OfferNameService } from 'modules/core/shared/offer-name/offer-name.service';
 import { SetupWizardService } from 'modules/core/setupWizard/setup-wizard.service';
 
 // TODO: The state fetching and mutation flow go against best practices.
@@ -20,6 +21,7 @@ export class SiteListService {
     private $translate: ng.translate.ITranslateService,
     private Authinfo,
     private FeatureToggleService,
+    private OfferNameService: OfferNameService,
     private SetupWizardService: SetupWizardService,
     private UrlConfig,
     private Userservice,
@@ -96,7 +98,8 @@ export class SiteListService {
         }
         return licenses;
       }, [])
-      .flatMap((license: any) => license.billingServiceId)
+      .filter((license: any) => this.OfferNameService.isWebexMeetingOfferName(license.offerName))
+      .map((license: any) => license.billingServiceId)
       .uniq()
       .value();
   }
@@ -167,7 +170,7 @@ export class SiteListService {
 
   public hasNonPendingSubscriptions() {
     return _.some(this.SetupWizardService.getEnterpriseSubscriptionListWithStatus(),
-     (sub: any) => !sub.isPending);
+      (sub: any) => !sub.isPending);
   }
 
   // TODO: Convert to pure function
@@ -330,232 +333,232 @@ export class SiteListService {
   public updateLicenseTypesColumn() {
     this.WebExUtilsFact.getAllSitesWebexLicenseInfo().then((allSitesLicenseInfo) => {
       _.filter(this.siteRows.gridData, { isLinkedSite: false })
-      .forEach((siteRow: any) => {
+        .forEach((siteRow: any) => {
         // linked site don't need to process license
-        if (siteRow.isLinkedSite) {
-          return false;
-        }
-        const siteUrl = siteRow.license.siteUrl;
-        let count = 0;
-        siteRow.licenseTooltipDisplay = '';
-        siteRow.licenseAriaLabel = '';
+          if (siteRow.isLinkedSite) {
+            return false;
+          }
+          const siteUrl = siteRow.license.siteUrl;
+          let count = 0;
+          siteRow.licenseTooltipDisplay = '';
+          siteRow.licenseAriaLabel = '';
 
         //Get the site's MC, EC, SC, TC, CMR license information
         //MC
-        const siteMC = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'MC',
-        });
+          const siteMC = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'MC',
+          });
 
-        if (
+          if (
           (siteMC != null) &&
           (siteMC.length > 0)
         ) {
-          siteRow.MCLicensed = true;
+            siteRow.MCLicensed = true;
 
-          siteMC.forEach((mc: any) => {
+            siteMC.forEach((mc: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
-              capacity: mc.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                capacity: mc.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'MC' + mc.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'MC' + mc.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
-              capacity: mc.capacity,
-            });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + mc.offerCode, {
+                capacity: mc.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
 
-            count += 1;
-          });
-        } else {
-          siteRow.MCLicensed = false;
-        }
+              count += 1;
+            });
+          } else {
+            siteRow.MCLicensed = false;
+          }
 
         //EE
-        const siteEE = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'EE',
-        });
+          const siteEE = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'EE',
+          });
 
-        if (
+          if (
           (siteEE != null) &&
           (siteEE.length > 0)
         ) {
-          siteRow.EELicensed = true;
+            siteRow.EELicensed = true;
 
-          siteEE.forEach((ee: any) => {
+            siteEE.forEach((ee: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-              capacity: ee.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                capacity: ee.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'EE' + ee.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'EE' + ee.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
-              capacity: ee.capacity,
-            });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + ee.offerCode, {
+                capacity: ee.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
 
-            count += 1;
-          });
-        } else {
-          siteRow.EELicensed = false;
-        }
+              count += 1;
+            });
+          } else {
+            siteRow.EELicensed = false;
+          }
 
         //CMR
-        const siteCMR = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'CMR',
-        });
+          const siteCMR = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'CMR',
+          });
 
-        if (
+          if (
           (siteCMR != null) &&
           (siteCMR.length > 0)
         ) {
-          siteRow.CMRLicensed = true;
+            siteRow.CMRLicensed = true;
 
-          siteCMR.forEach((cmr: any) => {
+            siteCMR.forEach((cmr: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-              capacity: cmr.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                capacity: cmr.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'CMR' + cmr.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'CMR' + cmr.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
-              capacity: cmr.capacity,
-            });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + cmr.offerCode, {
+                capacity: cmr.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
 
-            count += 1;
-          });
-        } else {
-          siteRow.CMRLicensed = false;
-        }
+              count += 1;
+            });
+          } else {
+            siteRow.CMRLicensed = false;
+          }
 
         //EC
-        const siteEC = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'EC',
-        });
+          const siteEC = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'EC',
+          });
 
-        if (
+          if (
           (siteEC != null) &&
           (siteEC.length > 0)
         ) {
-          siteRow.ECLicensed = true;
+            siteRow.ECLicensed = true;
 
-          siteEC.forEach((ec: any) => {
+            siteEC.forEach((ec: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
-              capacity: ec.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                capacity: ec.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'EC' + ec.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'EC' + ec.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
-              capacity: ec.capacity,
-            });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + ec.offerCode, {
+                capacity: ec.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
 
-            count += 1;
-          });
-        } else {
-          siteRow.ECLicensed = false;
-        }
+              count += 1;
+            });
+          } else {
+            siteRow.ECLicensed = false;
+          }
 
         //SC
-        const siteSC = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'SC',
-        });
+          const siteSC = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'SC',
+          });
 
-        if (
+          if (
           (siteSC != null) &&
           (siteSC.length > 0)
         ) {
-          siteRow.SCLicensed = true;
+            siteRow.SCLicensed = true;
 
-          siteSC.forEach((sc: any) => {
+            siteSC.forEach((sc: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
-              capacity: sc.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                capacity: sc.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'SC' + sc.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'SC' + sc.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
-              capacity: sc.capacity,
-            });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + sc.offerCode, {
+                capacity: sc.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
 
-            count += 1;
-          });
-        } else {
-          siteRow.SCLicensed = false;
-        }
+              count += 1;
+            });
+          } else {
+            siteRow.SCLicensed = false;
+          }
 
         //TC
-        const siteTC = _.filter(allSitesLicenseInfo, {
-          webexSite: siteUrl,
-          offerCode: 'TC',
-        });
+          const siteTC = _.filter(allSitesLicenseInfo, {
+            webexSite: siteUrl,
+            offerCode: 'TC',
+          });
 
-        if (
+          if (
           (siteTC != null) &&
           (siteTC.length > 0)
         ) {
-          siteRow.TCLicensed = true;
+            siteRow.TCLicensed = true;
 
-          siteTC.forEach((tc: any) => {
+            siteTC.forEach((tc: any) => {
             //Grid content display
-            siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
-              capacity: tc.capacity,
-            });
+              siteRow.licenseTypeContentDisplay = this.$translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                capacity: tc.capacity,
+              });
 
-            siteRow.licenseTypeId = siteRow.licenseTypeId + 'TC' + tc.capacity + '-';
+              siteRow.licenseTypeId = siteRow.licenseTypeId + 'TC' + tc.capacity + '-';
 
             //Tooltip display
-            const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
-              capacity: tc.capacity,
+              const offerCode = this.$translate.instant('helpdesk.licenseDisplayNames.' + tc.offerCode, {
+                capacity: tc.capacity,
+              });
+              siteRow.licenseTooltipDisplay += '<br>' + offerCode;
+              siteRow.licenseAriaLabel += ' ' + offerCode;
+
+              count += 1;
             });
-            siteRow.licenseTooltipDisplay += '<br>' + offerCode;
-            siteRow.licenseAriaLabel += ' ' + offerCode;
+          } else {
+            siteRow.TCLicensed = false;
+          }
 
-            count += 1;
-          });
-        } else {
-          siteRow.TCLicensed = false;
-        }
+          siteRow.licenseTypeId = siteRow.licenseTypeId + 'license';
 
-        siteRow.licenseTypeId = siteRow.licenseTypeId + 'license';
+          if (count > 1) {
+            siteRow.multipleWebexServicesLicensed = true;
+            siteRow.licenseTypeContentDisplay = this.$translate.instant('siteList.multipleLicenses');
+            siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
+          } else if (count === 1) {
+            siteRow.multipleWebexServicesLicensed = false;
+            siteRow.licenseTooltipDisplay = null;
+            siteRow.licenseAriaLabel = null;
+          } else if (siteRow.isPending) {
+            siteRow.licenseTooltipDisplay = this.$translate.instant('siteList.licenseUnavailableTooltip');
+            siteRow.licenseAriaLabel = this.$translate.instant('siteList.licenseUnavailableTooltip');
+          }
 
-        if (count > 1) {
-          siteRow.multipleWebexServicesLicensed = true;
-          siteRow.licenseTypeContentDisplay = this.$translate.instant('siteList.multipleLicenses');
-          siteRow.licenseTooltipDisplay = _.replace(siteRow.licenseTooltipDisplay, '<br>', '');
-        } else if (count === 1) {
-          siteRow.multipleWebexServicesLicensed = false;
-          siteRow.licenseTooltipDisplay = null;
-          siteRow.licenseAriaLabel = null;
-        } else if (siteRow.isPending) {
-          siteRow.licenseTooltipDisplay = this.$translate.instant('siteList.licenseUnavailableTooltip');
-          siteRow.licenseAriaLabel = this.$translate.instant('siteList.licenseUnavailableTooltip');
-        }
-
-        siteRow.showLicenseTypes = true;
-      });
+          siteRow.showLicenseTypes = true;
+        });
     });
   }
 

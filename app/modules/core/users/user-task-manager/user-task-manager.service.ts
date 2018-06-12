@@ -1,6 +1,6 @@
 import { ITask } from './user-task-manager.component';
 import { TaskStatus } from './user-task-manager.constants';
-import { IErrorItem } from './csv-upload-results.component';
+import { IErrorItem, IErrorRow } from './csv-upload-results.component';
 
 export interface IDateAndTime {
   date: string;
@@ -58,6 +58,10 @@ enum IntervalDelay {
 
 export class UserTaskManagerService {
   public IntervalDelay = IntervalDelay;
+  public readonly ERROR_LIMIT = 200;
+  public activeTask?: ITask;
+  private cancelDownloadErrorsDeferred?: ng.IDeferred<void>;
+  public errorArray: IErrorRow[] = [];
 
   private interval: IntervalTypeOf<ng.IPromise<ITask> | undefined> = {
     detail: undefined,
@@ -66,6 +70,12 @@ export class UserTaskManagerService {
   };
 
   private intervalCallbacks: IntervalTypeOf<Function[]> = {
+    detail: [],
+    list: [],
+    running: [],
+  };
+
+  private intervalFailureCallbacks: IntervalTypeOf<Function[]> = {
     detail: [],
     list: [],
     running: [],
@@ -97,6 +107,7 @@ export class UserTaskManagerService {
     private $q: ng.IQService,
     private Authinfo,
     private UrlConfig,
+    private UserCsvService,
   ) {}
 
   public getTasks(): ng.IPromise<ITask[]> {
@@ -296,12 +307,80 @@ export class UserTaskManagerService {
       .then(response => response.data);
   }
 
-  public getTaskErrors(id: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IErrorItem[]> {
+  public getTaskErrors(id: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
     return this.$http<IGetTaskErrorsResponse>({
       method: 'GET',
       url: this.getJobSpecificUrl(id, '/errors'),
       timeout: cancelPromise,
-    }).then(response => response.data.items);
+      params: {
+        limit: this.ERROR_LIMIT,
+      },
+    }).then(response => response.data);
+  }
+
+  public getNextTaskErrors(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<IGetTaskErrorsResponse> {
+    return this.$http<IGetTaskErrorsResponse>({
+      method: 'GET',
+      url: url,
+      timeout: cancelPromise,
+    }).then(response => response.data);
+  }
+
+  private appendErrorArray(url: string, cancelPromise?: ng.IPromise<void>): ng.IPromise<void> {
+    return this.getNextTaskErrors(url, cancelPromise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], cancelPromise);
+      }
+    });
+  }
+
+  public downloadTaskErrors(): ng.IPromise<void> {
+    this.errorArray = [];
+    this.cancelDownloadErrorsDeferred = this.$q.defer();
+    return this.getTaskErrors(this.activeTask!.id, this.cancelDownloadErrorsDeferred!.promise).then(response => {
+      this.errorArray = _.concat(this.errorArray, this.transformErrorData(response.items));
+      if (!_.isEmpty(response.paging.next)) {
+        return this.appendErrorArray(response.paging.next[0], this.cancelDownloadErrorsDeferred!.promise).then(() => {
+          this.cancelDownloadErrorsDeferred = undefined;
+        });
+      }
+    });
+  }
+
+  public transformErrorData(errors: IErrorItem[]): IErrorRow[] {
+    const tempUserErrorArray: IErrorRow[] = [];
+    _.forEach(errors, errorEntry => {
+      _.forEach(errorEntry.error.message, msg => {
+        let errorMessage = '';
+        const errorType = _.split(_.get(msg, 'code'), '-')[0];
+        const errorCode = _.split(_.get(msg, 'code'), '-')[1];
+
+        if (!_.isUndefined(errorType) && _.startsWith(errorType, 'BATCH')) {
+          // For EFT, if the code starts with 'BATCH', use the description
+          errorMessage = msg.description;
+        } else if (errorCode) {
+          // get the localized error message
+          errorMessage = this.UserCsvService.getBulkErrorResponse(_.parseInt(_.get(errorEntry, 'error.key')), errorCode);
+          // For EFT, if the error messages are stock/generic messages, use the description
+          if (errorMessage === this.$translate.instant('firstTimeWizard.bulk400Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk401And403Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk404Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk408Error')
+          || errorMessage === this.$translate.instant('firstTimeWizard.bulk409Error')) {
+            errorMessage = msg.description;
+          }
+        } else {
+          errorMessage = msg.description;
+        }
+
+        tempUserErrorArray.push({
+          row: _.get(errorEntry, 'itemNumber'),
+          error: `${errorMessage} TrackingID: ${_.get(errorEntry, 'trackingId')}`,
+        });
+      });
+    });
+    return tempUserErrorArray;
   }
 
   public initTaskDetailPolling(id: string, callback: Function, scope: ng.IScope) {
@@ -312,8 +391,8 @@ export class UserTaskManagerService {
     return this.initTaskPolling('running', () => this.getInProcessTasks(), callback, scope);
   }
 
-  public initAllTaskListPolling(callback: Function, scope: ng.IScope) {
-    return this.initTaskPolling('list', () => this.getTasks(), callback, scope);
+  public initAllTaskListPolling(callback: Function, scope: ng.IScope, failureCallback?: Function) {
+    return this.initTaskPolling('list', () => this.getTasks(), callback, scope, failureCallback);
   }
 
   public changeRunningTaskListPolling(newDelay: number) {
@@ -336,6 +415,14 @@ export class UserTaskManagerService {
     return this.cleanupTaskPolling('list', callback);
   }
 
+  public setActiveTask(taskSelected: ITask) {
+    if (this.cancelDownloadErrorsDeferred) {
+      this.cancelDownloadErrorsDeferred.resolve();
+      this.cancelDownloadErrorsDeferred = undefined;
+    }
+    this.activeTask = taskSelected;
+  }
+
   private changeTaskPollingDelay(intervalType: IntervalType, newDelay: number) {
     const interval = this.interval[intervalType];
     const intervalFunction = this.intervalFunction[intervalType];
@@ -350,16 +437,22 @@ export class UserTaskManagerService {
     this.initInterval(intervalType);
   }
 
-  private initTaskPolling(intervalType: IntervalType, intervalFunction: () => ng.IPromise<any>, callback: Function, scope: ng.IScope) {
+  private initTaskPolling(intervalType: IntervalType, intervalFunction: () => ng.IPromise<any>, callback: Function, scope: ng.IScope, failureCallback?: Function) {
     const interval = this.interval[intervalType];
     const intervalCallbacks = this.intervalCallbacks[intervalType];
+    const intervalFailureCallbacks = this.intervalFailureCallbacks[intervalType];
     this.intervalFunction[intervalType] = intervalFunction;
 
     if (!_.includes(intervalCallbacks, callback)) {
       intervalCallbacks.push(callback);
     }
+    if (_.isFunction(failureCallback)) {
+      if (!_.includes(intervalFailureCallbacks, failureCallback)) {
+        intervalFailureCallbacks.push(failureCallback);
+      }
+    }
 
-    scope.$on('$destroy', () => this.cleanupTaskPolling(intervalType, callback));
+    scope.$on('$destroy', () => this.cleanupTaskPolling(intervalType, callback, failureCallback));
 
     if (interval) {
       return;
@@ -387,15 +480,22 @@ export class UserTaskManagerService {
     this.intervalInProgress[intervalType] = true;
     intervalFunction()
       .then((...args) => _.forEach(this.intervalCallbacks[intervalType], intervalCallback => intervalCallback(...args)))
+      .catch(response => {
+        _.forEach(this.intervalFailureCallbacks[intervalType], intervalFailureCallback => intervalFailureCallback(response));
+      })
       .finally(() => this.intervalInProgress[intervalType] = false);
   }
 
-  private cleanupTaskPolling(intervalType: IntervalType, callback: Function) {
+  private cleanupTaskPolling(intervalType: IntervalType, callback: Function, failureCallback?: Function) {
     const interval = this.interval[intervalType];
     const intervalCallbacks = this.intervalCallbacks[intervalType];
+    const intervalFailureCallbacks = this.intervalFailureCallbacks[intervalType];
     _.pull(intervalCallbacks, callback);
+    if (_.isFunction(failureCallback)) {
+      _.pull(intervalFailureCallbacks, failureCallback);
+    }
 
-    if (intervalCallbacks.length === 0 && interval) {
+    if (intervalCallbacks.length === 0 && intervalFailureCallbacks.length === 0 && interval) {
       this.$interval.cancel(interval);
       this.interval[intervalType] = undefined;
     }

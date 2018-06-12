@@ -1,36 +1,57 @@
 <div id='streams-bandwidth-usage-card' class="cs-card--medium media-metrics-report-card cascade-bandwidth-card">
-    <article class="media-service-card header-padding">
-      <graphheader>
-        <span class='report-section-header' translate='mediaFusion.metrics.streamsBandwidthHeading'></span>
-        <i class='icon icon-info-outline icon-large'
-        tooltip-html="$ctrl.parentcntrl.streamsBandwidthDesc"
-        tooltip-class="metrics-tooltip"
-        tooltip-trigger="mouseenter focus"
-        aria-label="{{::'mediaFusion.metrics.streamsBandwidthDesc' | translate}}">
-        </i>
-        <cs-select 
-        class='mf-streams-filter' 
-        ng-model="$ctrl.parentcntrl.streamsBandwidthSelected" 
-        options="$ctrl.parentcntrl.streamsBandwidthOptions" 
-        on-change-fn="$ctrl.parentcntrl.streamsBandwidthUpdate()"
-        ng-if="!$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)">
-        </cs-select>
-        <div id="streamsBandwidthUsageExportDiv"></div>
-      </graphheader>
-      <section>
-        <div class="streams-bandwidth-usage-reports">
-          <div id="streamsBandwidthUsageDiv" class="barchart" ng-class="{'cluster-cascade-bandwidth-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)}"></div>
-          <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)">
-            <i class='icon icon-spinner icon-2x'></i>
-          </div>
-          <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus)">
-            <h3 class="no-data">
-              <i class='icon icon-warning no-data-warning'></i>
-              <span translate='mediaFusion.metrics.nodata'></span>
-            </h3>
-          </div>
+  <article class="media-service-card header-padding">
+    <div class="graph-flip">
+      <div class="card" ng-class="{'flipped':isFlipped}">
+        <div class="face front" ng-class="{'no-display': isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.streamsBandwidthHeading'></span>
+            <i class='icon icon-info-outline icon-large'
+              ng-if="$ctrl.type === 'historical'"
+              tooltip-html="$ctrl.parentcntrl.streamsBandwidthDesc"
+              tooltip-class="metrics-tooltip"
+              tooltip-trigger="mouseenter focus"
+              aria-label="{{::'mediaFusion.metrics.streamsBandwidthDesc' | translate}}">
+            </i>
+            <cs-select 
+            class='mf-streams-filter' 
+            ng-model="$ctrl.parentcntrl.streamsBandwidthSelected" 
+            options="$ctrl.parentcntrl.streamsBandwidthOptions" 
+            on-change-fn="$ctrl.parentcntrl.streamsBandwidthUpdate()"
+            ng-if="!$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)">
+            </cs-select>
+            <div id="streamsBandwidthUsageExportDiv"></div>
+          </graphheader>
+          <section>
+            <div class="streams-bandwidth-usage-reports">
+              <div id="streamsBandwidthUsageDiv" class="barchart" ng-class="{'cluster-cascade-bandwidth-chart': !$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus) && !$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)}"></div>
+              <div class="spinner-position" ng-if="$ctrl.parentcntrl.isRefresh($ctrl.parentcntrl.streamsBandwidthStatus)">
+                <i class='icon icon-spinner icon-2x'></i>
+              </div>
+              <div class="no-data-center" ng-if="$ctrl.parentcntrl.isEmpty($ctrl.parentcntrl.streamsBandwidthStatus)">
+                <h3 class="no-data">
+                  <i class='icon icon-warning no-data-warning'></i>
+                  <span translate='mediaFusion.metrics.nodata'></span>
+                </h3>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info-outline icon-large graph-flip-icon' ng-show="$ctrl.type === 'live'" ng-click="isFlipped=true"></i>
         </div>
-      </section>
-    </article>
-  </div>
+        <div class="face back" ng-class="{'no-display': !isFlipped}">
+          <graphheader>
+            <span class='report-section-header' translate='mediaFusion.metrics.streamsBandwidthHeading'></span>
+          </graphheader>
+          <section>
+            <div class="metrics-info">
+              <div class="card-desc-small">
+                <span translate="mediaFusion.metrics.streamsBandwidthDesc" class="span-desc-small"></span>
+              </div>
+            </div>
+          </section>
+          <i class='icon icon-info icon-large graph-flip-icon' ng-click="isFlipped=false"></i>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
   

@@ -84,16 +84,16 @@ export class PstnWizardService {
         this.PstnModel.setCountryCode(data.countryCode);
       }
       this.PstnService.getCustomerV2(this.PstnModel.getCustomerId())
-      .then((response) => {
-        this.PstnModel.setCustomerExists(true);
-        if (response.e911Signee) {
-          this.PstnModel.setEsaSigned(true);
-        }
-        deferred.resolve(true);
-      }, () => {
-        this.PstnModel.setCustomerExists(false);
-        deferred.resolve(true);
-      });
+        .then((response) => {
+          this.PstnModel.setCustomerExists(true);
+          if (response.e911Signee) {
+            this.PstnModel.setEsaSigned(true);
+          }
+          deferred.resolve(true);
+        }, () => {
+          this.PstnModel.setCustomerExists(false);
+          deferred.resolve(true);
+        });
     }, this.PstnModel.getCustomerId(), params);
     return deferred.promise;
   }
@@ -126,14 +126,14 @@ export class PstnWizardService {
   private checkReseller(): void {
     if (!this.PstnModel.isResellerExists()) {
       this.PstnService.getResellerV2().then(() => this.PstnModel.setResellerExists(true))
-      .catch(() => this.createReseller());
+        .catch(() => this.createReseller());
     }
   }
 
   //PSTN register the Partner as a carrier reseller
   private createReseller(): void {
     this.PstnService.createResellerV2().then(() => this.PstnModel.setResellerExists(true))
-    .catch(error => this.Notification.errorResponse(error, 'pstnSetup.resellerCreateError'));
+      .catch(error => this.Notification.errorResponse(error, 'pstnSetup.resellerCreateError'));
   }
 
   private get provider(): any {
@@ -144,26 +144,26 @@ export class PstnWizardService {
     //On success the default location is saved in the LocationsService
     //and will be updated if the default changes.
     return this.LocationsService.getDefaultLocation(this.PstnModel.getCustomerId())
-    .then((location: Location) => {
-      const locaionId: string = _.isString(location.uuid) ? location.uuid : '';
+      .then((location: Location) => {
+        const locaionId: string = _.isString(location.uuid) ? location.uuid : '';
       //Save the default ESA
-      return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locaionId)
-      .then((addresses: Address[]) => {
-        this.PstnModel.setServiceAddress(addresses[0]);
-        return location;
+        return this.PstnAddressService.getByLocation(this.PstnModel.getCustomerId(), locaionId)
+          .then((addresses: Address[]) => {
+            this.PstnModel.setServiceAddress(addresses[0]);
+            return location;
+          });
+      })
+      .catch(error => {
+        this.Notification.errorResponse(error, 'settingsServiceAddress.getError');
+        return undefined;
       });
-    })
-    .catch(error => {
-      this.Notification.errorResponse(error, 'settingsServiceAddress.getError');
-      return undefined;
-    });
   }
 
   public createLocation(): ng.IPromise<string | void> {
     return this.PstnService.createLocation(this.location)
-    .catch(error => {
-      this.Notification.errorResponse(error, 'locations.createFailed');
-    });
+      .catch(error => {
+        this.Notification.errorResponse(error, 'locations.createFailed');
+      });
   }
 
   public initSites(): ng.IPromise<any> {
@@ -223,7 +223,7 @@ export class PstnWizardService {
 
   private getLocationFeatureToggle(): ng.IPromise<boolean> {
     return this.FeatureToggleService.getCallFeatureForCustomer(this.PstnModel.getCustomerId(), this.FeatureToggleService.features.hI1484)
-    .then((enabled) => this.ftLocation = enabled);
+      .then((enabled) => this.ftLocation = enabled);
   }
 
   private createNumbers(): ng.IPromise<any> {
@@ -323,37 +323,37 @@ export class PstnWizardService {
 
   private createCustomerV2(): ng.IPromise<boolean> {
     return this.Orgservice.getAdminOrgUsage(this.PstnModel.getCustomerId())
-    .then((org) => {
-      let isTrial: boolean = true;
-      const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data[0]');
-      if (customer) {
-        isTrial = this.isTrialCallOrRoom(customer.licenses);
-      }
-      return this.PstnService.createCustomerV2(
-        this.PstnModel.getCustomerId(),
-        this.PstnModel.getCustomerName(),
-        this.PstnModel.getCustomerFirstName(),
-        this.PstnModel.getCustomerLastName(),
-        this.PstnModel.getCustomerEmail(),
-        this.PstnModel.getProviderId(),
-        isTrial,
-      )
-      .then(() => {
-        if (this.ftLocation) {
-          //Setup Location Object
-          this.location.name = this.PstnModel.getCustomerName();
-          this.location.default = true; //This is the first location on a new customer
-          const address: Address = this.PstnModel.getServiceAddress();
-          address.default = true; //This is the first address on a new location
-          this.location.addresses = [address.getRAddress()];
+      .then((org) => {
+        let isTrial: boolean = true;
+        const customer: IAuthCustomer = _.get<IAuthCustomer>(org, 'data[0]');
+        if (customer) {
+          isTrial = this.isTrialCallOrRoom(customer.licenses);
         }
-        return true;
-      })
-      .catch(function (response) {
-        this.Notification.errorResponse(response, 'PstnModel.customerCreateError');
-        return this.$q.reject(response);
+        return this.PstnService.createCustomerV2(
+          this.PstnModel.getCustomerId(),
+          this.PstnModel.getCustomerName(),
+          this.PstnModel.getCustomerFirstName(),
+          this.PstnModel.getCustomerLastName(),
+          this.PstnModel.getCustomerEmail(),
+          this.PstnModel.getProviderId(),
+          isTrial,
+      )
+          .then(() => {
+            if (this.ftLocation) {
+          //Setup Location Object
+              this.location.name = this.PstnModel.getCustomerName();
+              this.location.default = true; //This is the first location on a new customer
+              const address: Address = this.PstnModel.getServiceAddress();
+              address.default = true; //This is the first address on a new location
+              this.location.addresses = [address.getRAddress()];
+            }
+            return true;
+          })
+          .catch(function (response) {
+            this.Notification.errorResponse(response, 'PstnModel.customerCreateError');
+            return this.$q.reject(response);
+          });
       });
-    });
   }
 
   public placeOrder(ftsw?: boolean): ng.IPromise<any> {
@@ -819,13 +819,13 @@ export class PstnWizardService {
 
   public hasTollFreeCapability(): ng.IPromise<boolean> {
     return this.PstnService.getCarrierCapabilities(this.PstnModel.getProviderId())
-        .then(response => {
-          const supportedCapabilities: string[] = [];
-          Object.keys(response)
-            .filter(x => response[x].capability)
-            .map(x => supportedCapabilities.push(response[x].capability));
-          return supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1;
-        });
+      .then(response => {
+        const supportedCapabilities: string[] = [];
+        Object.keys(response)
+          .filter(x => response[x].capability)
+          .map(x => supportedCapabilities.push(response[x].capability));
+        return supportedCapabilities.indexOf(TOLLFREE_ORDERING_CAPABILITY) !== -1;
+      });
   }
 
   public removeOrder(order: IOrder, ftsw: boolean): ng.IPromise<any> {

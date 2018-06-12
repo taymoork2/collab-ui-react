@@ -66,7 +66,7 @@ describe('CtProfileComponent, ', () => {
 
   it('should return valid careVirtualAssistantName', function() {
     this.TemplateWizardService.careVirtualAssistantName.and.
-    returnValue('Care-GT');
+      returnValue('Care-GT');
     expect(controller.careVirtualAssistantName).toBe('Care-GT');
   });
 

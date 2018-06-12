@@ -12,6 +12,7 @@
       <label class="sub-section__label" translate="hcs.customerName"></label>
       <input
         cs-input
+        class="modal-customer-name-input"
         type="text"
         name="clusterNameInput"
         placeholder="{{:: $ctrl.customerNamePlaceholder}}"
@@ -27,7 +28,10 @@
       ng-model="$ctrl.softwareProfileSelected"
       options="$ctrl.softwareProfilesList"
       on-change-fn="$ctrl.onsoftwareProfileChange()"
-      placeholder="$ctrl.softwareProfilesPlaceholder">
+      placeholder="$ctrl.softwareProfilesPlaceholder"
+      is-disabled="$ctrl.disableSwProfileSelect"
+      is-warn="{{$ctrl.disableSwProfileSelect}}"
+      warn-msg="{{::'hcs.clusterDetail.addCustomerModal.swProfileWarningMsg' | translate}}">
       </cs-select>
     </div>
   </form>

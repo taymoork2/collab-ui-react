@@ -6404,12 +6404,6 @@
       "grant-success-information": "등록을 마치려면 한 시간 내에 하이브리드 미디어 노드로 이동하십시오. 등록을 마치면 하이브리드 미디어 노드를 사용할 준비가 완료됩니다.<br>",
       "grant-registration-success-header-old-cluster": "이제 하이브리드 미디어 노드를 Cisco 협업 클라우드에 등록할 수 있습니다.<br> 노드 IP 주소/FQDN: {{hostname}} 클러스터: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "최대 클러스터 캐스케이드 대역폭이 성공적으로 저장되었습니다.",
-      "title": "최대 클러스터 캐스케이드 대역폭",
-      "description": "클라우드에 캐스케이드하기 위해 하이브리드 미디어 서비스 클러스터에서 사용해야 하는 최대 대역폭을 입력하십시오(Mbps 단위). 가장 낮은 대역폭으로 한 개의 활동 중인 720p 스트림을 사용할 수 있습니다.",
-      "range": "5부터 50 사이의 값을 입력하십시오."
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP 트렁크가 성공적으로 저장되었습니다.",
       "title": "Unified CM SIP 트렁크",
@@ -8386,7 +8380,7 @@
     "orgEvaSettingInfo": "설정 페이지에서 미리 보기에 표시되는 로고를 변경할 수 있습니다.",
     "profile_org_info_eva": "한 개의 프로필을 사용하여 조직에 있는 모든 사용자를 표시하십시오.",
     "user_non_cva": "개인 사용자",
-    "user_info_non_cva": "고유한 프로필을 사용하여 조직에서 다른 ‎사용자를 표시하십시오.",
+    "user_info_non_cva": "고유한 프로필을 사용하여 조직에서 다른 사용자를 표시하십시오.",
     "helpTextWaitingEVA": "고객의 요청이 응답될 때까지 기다리는 동안 고객에게 이 메시지가 표시됩니다.",
     "waitingMessageEVA": "곧 도와드리겠습니다…",
     "helpTextLeaveRoomEVA": "고객과 사용자의 상호 작업 때문에 채팅이 종료될 때 고객에게 이 메시지가 표시됩니다.",

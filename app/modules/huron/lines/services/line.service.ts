@@ -56,9 +56,9 @@ export class LineService {
       typeId: typeId,
       wide: wide,
     }).$promise
-    .then(lineList => {
-      return _.get<Line[]>(lineList, 'numbers', []);
-    });
+      .then(lineList => {
+        return _.get<Line[]>(lineList, 'numbers', []);
+      });
   }
 
   public createLine(type: LineConsumerType, typeId: string, data: Line): ng.IPromise<string> {
@@ -74,7 +74,7 @@ export class LineService {
     }, (_response, headers) => {
       location = headers('Location');
     }).$promise
-    .then( () => location);
+      .then( () => location);
   }
 
   public updateLine(type: LineConsumerType, typeId: string, numberId: string, data: Line): ng.IPromise<void> {

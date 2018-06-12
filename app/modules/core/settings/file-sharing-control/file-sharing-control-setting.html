@@ -1,0 +1,106 @@
+<div class="setting">
+  <div class="sub-section" ng-if="$ctrl.supportsWhiteboardFileShareControl">
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.restrictionsSubsectionLabel' | translate }}&nbsp;
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
+    </h5>
+    <input
+      cs-input
+      type="checkbox"
+      id="allowWhiteboards"
+      ng-model="$ctrl.allowWhiteboards"
+      ng-change="$ctrl.updateAllowWhiteboards($ctrl.allowWhiteboards)"
+      cs-input-label="{{::'globalSettings.fileSharingControl.whiteboardRestriction' | translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"
+    >
+  </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.subsectionLabel' | translate }}&nbsp;
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
+    </h5>
+    <p class="sub-section__description">
+      {{::'globalSettings.fileSharingControl.subsectionDescription' | translate}}
+      <br>
+      {{::'globalSettings.fileSharingControl.downloadSubsectionLabelDescription' | translate}}
+    </p>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockDesktopAppDownload"
+      ng-model="$ctrl.isBlockDesktopAppDownload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockWebAppDownload"
+      ng-model="$ctrl.isBlockWebAppDownload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockMobileAppDownload"
+      ng-model="$ctrl.isBlockMobileAppDownload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockBotsDownload"
+      ng-model="$ctrl.isBlockBotsDownload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.bots'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled"/>
+  </div>
+  <div class="sub-section">
+    <h5 class="sub-section__label">
+      {{::'globalSettings.fileSharingControl.uploadSubsectionLabel' | translate }}&nbsp;
+      <pro-pack-tooltip
+        ng-if="!$ctrl.isProPackPurchased"
+        tt-tooltip-append-to-body="true"
+        tt-tooltip-placement="right"
+        tt-tooltip-text="{{::'common.proPackTooltip' | translate}}">
+      </pro-pack-tooltip>
+    </h5>
+    <p class="sub-section__description" translate="globalSettings.fileSharingControl.uploadSubsectionLabelDescription"></p>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockDesktopAppUpload"
+      ng-model="$ctrl.isBlockDesktopAppUpload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.desktopApps'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled || $ctrl.isBlockDesktopAppDownload"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockWebAppUpload"
+      ng-model="$ctrl.isBlockWebAppUpload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.webApp'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled || $ctrl.isBlockWebAppDownload"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockMobileAppUpload"
+      ng-model="$ctrl.isBlockMobileAppUpload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.mobileApps'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled || $ctrl.isBlockMobileAppDownload"/>
+    <input
+      cs-input
+      type="checkbox"
+      id="blockBotsUpload"
+      ng-model="$ctrl.isBlockBotsUpload"
+      cs-input-label="{{::'globalSettings.fileSharingControl.bots'|translate}}"
+      ng-disabled="$ctrl.isCheckboxDisabled || $ctrl.isBlockBotsDownload"/>
+  </div>
+</div>

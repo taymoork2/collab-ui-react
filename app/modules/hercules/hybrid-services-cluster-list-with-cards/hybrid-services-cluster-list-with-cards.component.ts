@@ -131,8 +131,8 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
       controllerAs: 'vm',
       template: require('modules/hercules/hybrid-services-cluster-list-with-cards/add-resource-group.html'),
     })
-    .result
-    .then(this.loadResources);
+      .result
+      .then(this.loadResources);
   }
 
   public setFilter(filter: IFilter): void {
@@ -191,8 +191,8 @@ class HybridServicesClusterListWithCardsCtrl implements ng.IComponentController 
         unassignedClusters: () => this.groupsCache[0].unassigned,
       },
     })
-    .result
-    .then(this.loadResources);
+      .result
+      .then(this.loadResources);
   }
 
   private formatDataForTheUI(response: IResourceGroups): IGroupCache[] {

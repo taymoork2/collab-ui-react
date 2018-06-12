@@ -21,6 +21,7 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
   public sftpServers: ISelectOption[];
   public node: IHcsNode;
   public sftpSelectPlaceholder: string;
+  public disableSftpSelect: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -43,6 +44,9 @@ export class HcsNodeSftpEditCtrl implements ng.IComponentController {
       this.sftpServerSelected = { label: '', value: '' };
     }
     this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
+    if (this.sftpServers.length === 0) {
+      this.disableSftpSelect = true;
+    }
   }
 
   public save() {

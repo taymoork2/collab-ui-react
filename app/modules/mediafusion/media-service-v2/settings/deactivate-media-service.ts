@@ -37,23 +37,23 @@ export class DeactivateMediaService {
       .then(() => {
         const promises = _.map(this.clusterIds, (clusterId) => this.HybridServicesClusterService.deregisterCluster(clusterId));
         this.$q.all(promises)
-        .then(() => {
-          this.ServiceDescriptorService.disableService(this.serviceId);
-          this.MediaServiceActivationV2.setIsMediaServiceEnabled(false);
-          this.MediaServiceActivationV2.disableOrpheusForMediaFusion();
-          this.MediaServiceActivationV2.deactivateHybridMedia();
-          return this.MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
-        })
-        .catch((error) => {
-          this.Notification.errorWithTrackingId(error, 'mediaFusion.deactivate.error');
-        })
-        .finally(() => {
-          this.$state.go('services-overview');
-        });
+          .then(() => {
+            this.ServiceDescriptorService.disableService(this.serviceId);
+            this.MediaServiceActivationV2.setIsMediaServiceEnabled(false);
+            this.MediaServiceActivationV2.disableOrpheusForMediaFusion();
+            this.MediaServiceActivationV2.deactivateHybridMedia();
+            return this.MediaServiceActivationV2.disableMFOrgSettingsForDevOps();
+          })
+          .catch((error) => {
+            this.Notification.errorWithTrackingId(error, 'mediaFusion.deactivate.error');
+          })
+          .finally(() => {
+            this.$state.go('services-overview');
+          });
       });
   }
 }
 
 angular
-.module('Mediafusion')
-.service('DeactivateMediaService', DeactivateMediaService);
+  .module('Mediafusion')
+  .service('DeactivateMediaService', DeactivateMediaService);

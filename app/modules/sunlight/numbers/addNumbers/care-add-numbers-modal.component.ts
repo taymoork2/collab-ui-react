@@ -75,17 +75,17 @@ class CareAddNumbersModalCtrl implements ng.IComponentController {
 
     this.$q.all({
       customerAndReseller: this.PstnWizardService.init()
-                           .then(() => this.PstnProvidersService.getCarriers())
-                           .then(() => {
-                             if (this.PstnModel.isCarrierExists()) {
-                               const bypstnCarriers = _.filter(this.PstnModel.getCarriers(), (carrier: any) => {
-                                 return carrier.name === 'BYO-PSTN';
-                               });
-                               if (_.isArray(bypstnCarriers) && bypstnCarriers.length > 0) {
-                                 this.PstnModel.setProvider(bypstnCarriers[0]);
-                               }
-                             }
-                           }),
+        .then(() => this.PstnProvidersService.getCarriers())
+        .then(() => {
+          if (this.PstnModel.isCarrierExists()) {
+            const bypstnCarriers = _.filter(this.PstnModel.getCarriers(), (carrier: any) => {
+              return carrier.name === 'BYO-PSTN';
+            });
+            if (_.isArray(bypstnCarriers) && bypstnCarriers.length > 0) {
+              this.PstnModel.setProvider(bypstnCarriers[0]);
+            }
+          }
+        }),
       intiallizeSettings: this.initSettingsComponent(),
     }).finally(() => this.loading = false);
   }

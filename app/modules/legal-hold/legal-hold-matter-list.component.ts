@@ -18,9 +18,9 @@ export interface IFilter {
 
 export enum FilterValue {
   ALL = 0,
-  ACTIVE = 1,
-  RELEASED = 2,
-  MINE = 3,
+  MINE = 1,
+  ACTIVE = 2,
+  RELEASED = 3,
 }
 
 export interface IHash {
@@ -40,6 +40,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
   public gridApi: uiGrid.IGridApi;
   public loadingMore = false;
   public loadingMoreSpinner = false;
+  private changeEventListener: Function;
 
   /* @ngInject */
   constructor(
@@ -58,7 +59,14 @@ export class LegalHoldMatterListController implements ng.IComponentController {
         name: this.$translate.instant('legalHold.matterList.filter.all'),
         count: 0,
         filterFunction: () => true,
-      }, {
+      },
+      {
+        filterValue: FilterValue.MINE,
+        name: this.$translate.instant('legalHold.matterList.filter.mine'),
+        count: 0,
+        filterFunction: (row) => row.createdBy === this.Authinfo.getUserId(),
+      },
+      {
         filterValue: FilterValue.ACTIVE,
         name: this.$translate.instant('legalHold.matterList.filter.active'),
         count: 0,
@@ -69,39 +77,38 @@ export class LegalHoldMatterListController implements ng.IComponentController {
         name: this.$translate.instant('legalHold.matterList.filter.released'),
         count: 0,
         filterFunction: (row) => row.matterState === MatterState.RELEASED,
-      },
-      {
-        filterValue: FilterValue.MINE,
-        name: this.$translate.instant('legalHold.matterList.filter.mine'),
-        count: 0,
-        filterFunction: (row) => row.createdBy === this.Authinfo.getUserId(),
       }];
   }
 
   public $onInit(): void {
     this.setGridOptions();
     this.setGridData();
-    this.$rootScope.$on(Events.CHANGED, () => {
+    this.changeEventListener = this.$rootScope.$on(Events.CHANGED, () => {
       this.setGridData();
     });
   }
 
+
+  public $onDestroy() {
+    this.changeEventListener();
+  }
+
   private setGridOptions(): void {
     const columnDefs = [{
-      width: '10%',
+      width: '20%',
       sortable: true,
       cellTooltip: true,
       field: 'matterName',
       displayName: this.$translate.instant('legalHold.matterName'),
     }, {
-      width: '15%',
+      width: '11%',
       sortable: true,
       field: 'creationDate',
       type: 'date',
       cellFilter: 'date:\'MM/dd/yyyy\'',
       displayName: this.$translate.instant('legalHold.matterList.dateCreated'),
     }, {
-      width: '15%',
+      width: '25%',
       sortable: true,
       field: 'matterDescription',
       displayName: this.$translate.instant('common.description'),
@@ -112,7 +119,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
       displayName: this.$translate.instant('legalHold.matterList.createdBy'),
       cellTemplate: require('./cell-template-createdBy.tpl.html'),
     }, {
-      width: '15%',
+      width: '10%',
       cellTooltip: true,
       field: 'numberOfCustodians',
       displayName: this.$translate.instant('legalHold.matterList.custodians'),
@@ -154,8 +161,8 @@ export class LegalHoldMatterListController implements ng.IComponentController {
   }
 
   public search(searchString: string) {
-    searchString = searchString.toLowerCase();
     if (!_.isEmpty(searchString)) {
+      searchString = searchString.toLowerCase();
       this.currentFilter = _.find(this.filters, { filterValue: FilterValue.ALL });
       this.gridOptions.data = _.filter(this.gridData_, row => {
         return (_.includes(row.matterDescription.toLowerCase(), searchString) || _.includes(row.matterName.toLowerCase(), searchString));

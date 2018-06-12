@@ -1,5 +1,5 @@
 import { IToolkitModalService } from 'modules/core/modal';
-import { ISelectOption, GROUP_TYPE_UNASSIGNED, STATUS_OPERATIONAL, STATUS_NODES_NEED_ACCEPTANCE, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS, STATUS_SOFTWARE_VERSION_MISMATCH, STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_NEED_TO_UPDATE_BATCH_NUMBER, STATUS_UPGRADE_SCHEDULED, STATUS_UPGRADE_IN_PROGRESS, STATUS_FAILED_UPGRADE } from '../shared/hcs-inventory';
+import { ISelectOption, GROUP_TYPE_UNASSIGNED, STATUS_OPERATIONAL, STATUS_NODES_NEED_ACCEPTANCE, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS, STATUS_SOFTWARE_VERSION_MISMATCH, STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_NEED_TO_UPDATE_BATCH_NUMBER, STATUS_UPGRADE_SCHEDULED, STATUS_UPGRADE_IN_PROGRESS, STATUS_FAILED_UPGRADE, STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED } from '../shared/hcs-inventory';
 import { HcsUpgradeService, HcsControllerService } from 'modules/hcs/hcs-shared';
 import { IHcsCluster, IHcsNode, ISftpServersObject } from 'modules/hcs/hcs-shared/hcs-upgrade';
 import { IHcsCustomer, HcsCustomer } from 'modules/hcs/hcs-shared/hcs-controller';
@@ -23,7 +23,6 @@ export class ClusterDetailComponent implements ng.IComponentOptions {
   public bindings = {
     clusterId: '<',
     groupId: '<',
-    groupType: '<',
   };
 }
 
@@ -31,7 +30,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public clusterId: string;
   public clusterName: string;
   public groupId: string;
-  public groupType: string;
   public back: boolean = true;
   public form: IClusterDetailsForm;
   public sftpServerSelected: ISelectOption;
@@ -47,6 +45,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public sftpSelectPlaceholder: string;
   public sftpServersList: ISelectOption[];
   public processing: boolean = false;
+  public disableSftpSelect: boolean = false;
 
   private timer: any;
   private timeoutVal: number;
@@ -63,13 +62,13 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     upgradeScheduled: STATUS_UPGRADE_SCHEDULED,
     upgradeInProgress: STATUS_UPGRADE_IN_PROGRESS,
     upgradeFailed: STATUS_FAILED_UPGRADE,
+    softwareProfileNotAssigned: STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED,
   };
 
   /* @ngInject */
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private $log: ng.ILogService,
     private $modal: IToolkitModalService,
     private $timeout: ng.ITimeoutService,
     private $q: ng.IQService,
@@ -87,20 +86,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     };
     this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
     this.clusterNamePlaceholder = this.$translate.instant('hcs.clusterDetail.settings.clustername.enterClusterName');
-    if (this.groupType.toLowerCase() === this.typeUnassigned.toLowerCase()) {
-      this.customerSelected = {
-        label: '',
-        value: '',
-      };
-    } else {
-      //TODO: get current customer
-      this.customerSelected = {
-        label: '',
-        value: this.groupId,
-      };
-    }
 
-    this.initCustomerList();
+    this.initCustomer();
 
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
 
@@ -116,12 +103,10 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       this.clusterName = this.clusterDetail.name;
       this.initSelectedSftpServer();
     })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
-    .finally(() => {
-      this.loading = false;
-    });
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   public initSelectedSftpServer(): void {
@@ -146,34 +131,53 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           };
           this.sftpServersList.push(sftpServersListItem);
         });
+        if (this.sftpServersList.length === 0) {
+          this.disableSftpSelect = true;
+        }
       })
-      .catch((err) => {
-        this.Notification.errorWithTrackingId(err);
-      });
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
   }
 
+  public initCustomer(): void {
+    if (this.groupId.toLowerCase() === this.typeUnassigned.toLowerCase()) {
+      this.customerSelected = {
+        label: '',
+        value: '',
+      };
+    } else {
+      //get current customer
+      this.HcsControllerService.getHcsControllerCustomer(this.groupId)
+        .then((customer: IHcsCustomer) => {
+          this.customerSelected = {
+            label: customer.name,
+            value: customer.uuid,
+          };
+        })
+        .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
+    }
+    //get customer list
+    this.initCustomerList();
+  }
   public initCustomerList(): void {
     this.customerSelectOptions = [];
     this.customerList = [];
-    //TODO: get list of customers for partner from ci.
+    //After BETA: get list of customers for partner from ci.
     this.HcsControllerService.getHcsCustomers()
-    .then((hcsCustomers: IHcsCustomer[]) => {
-      _.forEach(hcsCustomers, (hcsCustomer) => {
-        const customer = new HcsCustomer(hcsCustomer);
-        this.customerList.push(customer);
-        const customerSelectOption = {
-          label: customer.name,
-          value: customer.uuid,
-        };
-        this.customerSelectOptions.push(customerSelectOption);
+      .then((hcsCustomers: IHcsCustomer[]) => {
+        _.forEach(hcsCustomers, (hcsCustomer) => {
+          const customer = new HcsCustomer(hcsCustomer);
+          this.customerList.push(customer);
+          const customerSelectOption = {
+            label: customer.name,
+            value: customer.uuid,
+          };
+          this.customerSelectOptions.push(customerSelectOption);
+        });
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
       });
-    })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
-    .finally(() => {
-      this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
-    });
   }
 
   public getNodeList(nodeList: IHcsNode[] | null): string[] | null {
@@ -194,7 +198,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onCustomerChanged(): void {
-    this.$log.log('On customer change', this.customerSelected);
     if (this.customerSelected.value === 'addCustomer') {
       //reset customer selected
       this.customerSelected = {
@@ -206,7 +209,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onBack(): void {
-    this.$state.go('hcs.clusterList', { groupId: this.groupId, groupType: this.groupType });
+    this.$state.go('hcs.clusterList', { groupId: this.groupId });
   }
 
   public cancel(): void {
@@ -251,7 +254,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   }
 
   public onCustomerSearch(filter: string): void {
-    this.$log.log(filter);
     if (this.timer) {
       this.$timeout.cancel(this.timer);
       this.timer = 0;
@@ -284,28 +286,28 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       sftpServerUuid: this.sftpServerSelected.value,
     };
     this.HcsUpgradeService.updateCluster(this.clusterId, cluster)
-    .then(() => {
-      if (this.clusterDetail.nodes) {
-        const promises: ng.IPromise<any>[] = [];
-        _.forEach(this.clusterDetail.nodes, (node) => {
-          if (node.isAccepted) {
-            promises.push(this.HcsControllerService.acceptAgent(node));
-          }
-        });
-        return this.$q.all(promises);
-      } else {
-        return;
-      }
-    })
-    .then(() => {
-      this.$state.go('hcs.clusterDetail', { groupId: this.groupId, groupType: this.groupType, clusterId: this.clusterId }, { reload: true });
-    })
-    .catch((err) => {
-      this.Notification.errorWithTrackingId(err);
-    })
-    .finally(() => {
-      this.processing = false;
-    });
+      .then(() => {
+        if (this.clusterDetail.nodes) {
+          const promises: ng.IPromise<any>[] = [];
+          _.forEach(this.clusterDetail.nodes, (node) => {
+            if (node.isAccepted) {
+              promises.push(this.HcsControllerService.acceptAgent(node));
+            } else if (node.isRejected) {
+              promises.push(this.HcsControllerService.rejectAgent(node));
+            }
+          });
+          return this.$q.all(promises);
+        } else {
+          return;
+        }
+      })
+      .then(() => {
+        this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.processing = false;
+      });
   }
 
   public acceptNode(node: IHcsNode): void {

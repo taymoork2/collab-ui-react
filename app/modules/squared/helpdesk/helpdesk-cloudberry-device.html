@@ -10,7 +10,10 @@
 
   <div class="row full">
     <div class="columns medium-12">
-      <h3 class="display-name ellipsis">{{helpdeskDeviceCtrl.device.displayName}}</h3>
+      <h3 ng-class="{'pointer': helpdeskDeviceCtrl.supportsExtendedInformation}" ng-click="helpdeskDeviceCtrl.openExtendedInformation()">
+        {{helpdeskDeviceCtrl.device.displayName}}
+      </h3>
+
 
       <div class="row">
         <div class="small-4 medium-3 large-2 columns details-heading">

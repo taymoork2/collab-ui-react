@@ -39,13 +39,13 @@ class AutoAssignTemplateManageOptionsController implements ng.IComponentControll
       btnType: 'alert',
     }).result.then(() => {
       return this.AutoAssignTemplateService.deactivateTemplate()
-      .then(() => {
-        this.Notification.success('userManage.org.deactivateAutoAssign.deactivateSuccess');
-        this.onActivateToggle({ isActivated: false });
-      })
-      .catch((response) => {
-        this.Notification.errorResponse(response, 'userManage.org.deactivate.deactivateError');
-      });
+        .then(() => {
+          this.Notification.success('userManage.org.deactivateAutoAssign.deactivateSuccess');
+          this.onActivateToggle({ isActivated: false });
+        })
+        .catch((response) => {
+          this.Notification.errorResponse(response, 'userManage.org.deactivate.deactivateError');
+        });
     });
   }
 

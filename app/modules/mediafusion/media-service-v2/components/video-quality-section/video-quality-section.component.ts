@@ -41,26 +41,26 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
       disableCache: true,
     };
     this.Orgservice.getOrg(_.noop, null, params)
-     .then(response => {
-       if (this.isWizard) {
-         this.enableVideoQuality = false;
-       } else {
-         this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
-       }
-       this.MediaClusterServiceV2.getPropertySets()
-        .then((propertySets) => {
-          if (propertySets.length > 0) {
-            this.videoPropertySet = _.filter(propertySets, {
-              name: 'videoQualityPropertySet',
-            });
-            if (this.videoPropertySet.length === 0) {
+      .then(response => {
+        if (this.isWizard) {
+          this.enableVideoQuality = false;
+        } else {
+          this.enableVideoQuality  = _.get(response.data, 'orgSettings.isMediaFusionFullQualityVideo', false);
+        }
+        this.MediaClusterServiceV2.getPropertySets()
+          .then((propertySets) => {
+            if (propertySets.length > 0) {
+              this.videoPropertySet = _.filter(propertySets, {
+                name: 'videoQualityPropertySet',
+              });
+              if (this.videoPropertySet.length === 0) {
+                this.createPropertySetAndAssignClusters();
+              }
+            } else if (propertySets.length === 0) {
               this.createPropertySetAndAssignClusters();
             }
-          } else if (propertySets.length === 0) {
-            this.createPropertySetAndAssignClusters();
-          }
-        });
-     });
+          });
+      });
   }
 
   private createPropertySetAndAssignClusters(): void {
@@ -90,7 +90,8 @@ class VideoQualitySectionCtrl implements ng.IComponentController {
       });
   }
 
-  public setEnableVideoQuality(): void {
+  public setEnableVideoQuality(setVideoQuality): void {
+    this.enableVideoQuality = setVideoQuality;
     if (this.isWizard) {
       if (_.isFunction(this.onVideoQualityUpdate)) {
         this.onVideoQualityUpdate({ response: { videoQuality: this.enableVideoQuality , videoPropertySetId : this.videoPropertySetId } });
@@ -107,7 +108,7 @@ export class VideoQualitySectionComponent implements ng.IComponentOptions {
   public controller = VideoQualitySectionCtrl;
   public template = require('./video-quality-section.tpl.html');
   public bindings = {
-    isWizard: '=',
+    isWizard: '<',
     onVideoQualityUpdate: '&?',
   };
 }

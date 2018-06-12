@@ -200,7 +200,6 @@ describe('Auth Service', function () {
 
   describe('refreshAccessTokenAndResendRequest()', function () {
     beforeEach(function () {
-      OAuthConfig.getOauth2Url = jasmine.createSpy('Url').and.returnValue('');
       OAuthConfig.getAccessTokenUrl = jasmine.createSpy('getAccessTokenUrl').and.returnValue('access_token_url');
       TokenService.getRefreshToken = jasmine.createSpy('getRefreshToken').and.returnValue('refresh_token');
       spyOn(TokenService, 'completeLogout');
@@ -314,19 +313,17 @@ describe('Auth Service', function () {
       OAuthConfig.getAccessTokenPostData = jasmine.createSpy('getAccessTokenPostData').and.returnValue('data');
     });
 
-    it('should set access and refresh token', function () {
+    it('should set client access token', function () {
       $httpBackend
         .expectPOST('url', 'data', assertCredentials)
         .respond(200, {
           access_token: 'accessTokenFromAPI',
-          refresh_token: 'refreshTokenFromAPI',
         });
 
       var promise = Auth.setAccessToken();
-
       $httpBackend.flush();
+
       expect(promise).toBeResolvedWith('accessTokenFromAPI');
-      expect(TokenService.getRefreshToken()).toBe('refreshTokenFromAPI');
     });
 
     it('should return rejected promise if setAccessToken fails', function () {

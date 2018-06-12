@@ -9,6 +9,7 @@ export class SsoCertificateCheckController implements ng.IComponentController {
   public certificateCheckValue = CertificateCheck.NEITHER;
   public certificateCheck = CertificateCheck;
   public isLoading = true;
+  public docHref = 'https://collaborationhelp.cisco.com/article/ebxovd';
 
   /* @ngInject */
   constructor(

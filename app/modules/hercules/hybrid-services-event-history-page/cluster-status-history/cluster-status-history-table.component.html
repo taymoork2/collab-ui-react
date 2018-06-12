@@ -21,7 +21,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="event in $ctrl.allEvents | orderBy:'timeStamp' track by $index" ng-click="$ctrl.openSidepanel(event)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
+    <tr ng-repeat="event in $ctrl.allEvents" ng-click="$ctrl.openSidepanel(event)" ng-class="{'active': $ctrl.isSidepanelOpen(event)}">
       <td>{{::event.title}}</td>
       <td ng-if="event.severity === 'critical'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.critical"></span></td>
       <td ng-if="event.severity === 'error'"><span class="badge badge--outline alert" translate="hercules.eventHistory.table.error"></span></td>
@@ -35,7 +35,7 @@
       <td>{{::event.resourceName}}</td>
       <td ng-if="event.username">{{::event.username}}</td>
       <td ng-if="!event.username">{{::event.userId}}</td>
-      <td>{{::$ctrl.formatTime(event.timestamp)}}</td>
+      <td nowrap>{{::$ctrl.formatTime(event.timestamp)}}</td>
     </tr>
   </tbody>
 </table>

@@ -27,6 +27,7 @@
     vm.onNext = onNext;
     vm.convertableUsers = false;
     vm.autoAssignTemplates = {};
+    vm.showUserTaskManagerModal = showUserTaskManagerModal;
 
     Object.defineProperties(vm, {
       dirSyncText: {
@@ -149,6 +150,10 @@
       }
 
       UserManageService.gotoNextStateForManageType(vm.manageType);
+    }
+
+    function showUserTaskManagerModal() {
+      $state.go('users.csv.task-manager');
     }
   }
 })();

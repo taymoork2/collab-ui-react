@@ -3,10 +3,10 @@ describe('Component: OrderDetail', () => {
   beforeEach(function () {
     this.initModules(orderDetailModule);
     this.injectDependencies('PstnService',
-                            '$q',
-                            '$stateParams',
-                            '$translate',
-                            '$scope',
+      '$q',
+      '$stateParams',
+      '$translate',
+      '$scope',
     );
     const customer = { customerOrgId: '1b8b5381-d908-4f28-9f23-bcd61d0792b8' };
     this.$scope.currentCustomer = _.cloneDeep(customer);

@@ -49,9 +49,9 @@ class MyCompanyPageInfoCtrl {
     this._isPartner = this.Authinfo.isPartner();
 
     this.OrganizationDeleteService.canOnlineOrgBeDeleted()
-    .then((result) => {
-      this._showDeleteOrg = result;
-    });
+      .then((result) => {
+        this._showDeleteOrg = result;
+      });
 
     this.UserListService.listPartners(orgId, (data: { partners: Partner[] }) => {
       if (_.isEmpty(data.partners)) {

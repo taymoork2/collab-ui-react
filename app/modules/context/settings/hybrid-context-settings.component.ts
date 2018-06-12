@@ -42,16 +42,16 @@ class SettingsController implements ng.IComponentController {
     this.isSynchronizationInProgress = true;
 
     return this.synchronizeAdminsOrMigrateOrganization()
-    .then(() => this.Notification.success('context.dictionary.settingPage.synchronizationSuccessful'))
-    .catch(response => {
-      const statusText = _.get(response, 'data.error.statusText');
-      if (statusText === invalidAdminType) {
-        this.Notification.error('context.dictionary.settingPage.invalidAdminType');
-      } else {
-        this.Notification.error('context.dictionary.settingPage.synchronizationFailure');
-      }
-    })
-    .finally(() => this.isSynchronizationInProgress = false);
+      .then(() => this.Notification.success('context.dictionary.settingPage.synchronizationSuccessful'))
+      .catch(response => {
+        const statusText = _.get(response, 'data.error.statusText');
+        if (statusText === invalidAdminType) {
+          this.Notification.error('context.dictionary.settingPage.invalidAdminType');
+        } else {
+          this.Notification.error('context.dictionary.settingPage.synchronizationFailure');
+        }
+      })
+      .finally(() => this.isSynchronizationInProgress = false);
   }
 
   protected synchronizeAdminsOrMigrateOrganization() {

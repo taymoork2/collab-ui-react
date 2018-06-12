@@ -6404,12 +6404,6 @@
       "grant-success-information": "Ga binnen één uur naar uw knooppunt voor hybride media om de registratie te voltooien. Het knooppunt voor hybride media is gereed voor<br> gebruik zodra u klaar bent met registratie.",
       "grant-registration-success-header-old-cluster": "U kunt uw knooppunt voor hybride media nu registreren in de Cisco Collaboration Cloud.<br> Knooppunt IP-adres/FQDN: {{hostname}} Cluster: {{clustername}}"
     },
-    "clusterBandwidth": {
-      "success": "Maximale bandbreedte clustercascade is opgeslagen.",
-      "title": "Maximale bandbreedte clustercascade",
-      "description": "Voer de maximale bandbreedte (in megabits per seconde) in die in clusters van de service voor hybride media moet worden gebruikt voor cascades naar de cloud. Met de laagste waarde is één actieve 720p-stream mogelijk.",
-      "range": "Voer een waarde tussen 5 en 50 in"
-    },
     "sipconfiguration": {
       "success": "Unified CM SIP-trunk opgeslagen.",
       "title": "Unified CM SIP-trunk",

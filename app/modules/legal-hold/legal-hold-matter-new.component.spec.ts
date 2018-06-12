@@ -69,12 +69,12 @@ describe('Component: legalHoldMatterNew', () => {
   describe('initial state', () => {
     beforeEach(initComponent);
 
-    it('should display name and description inputs, file import should be in "add" mode', function (this: Test) {
+    it('should display name and description inputs, file import should be in "new" mode', function (this: Test) {
       const saveButton = this.view.find(SAVE_BUTTON);
       const nameInput = this.view.find(NAME_INPUT);
       const descInput = this.view.find(DESCRIPTION_INPUT);
 
-      expect(this.components.legalHoldCustodianImport.bindings[0].mode).toBe(ImportMode.ADD);
+      expect(this.components.legalHoldCustodianImport.bindings[0].mode).toBe(ImportMode.NEW);
       expect(nameInput.length).toBe(1);
       expect(saveButton.length).toBe(1);
       expect(descInput.length).toBe(1);

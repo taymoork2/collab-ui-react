@@ -14,7 +14,7 @@ class WebexReportsTabs implements ng.IComponentController {
         title: `reportsPage.webexMetrics.metrics`,
       },
     ];
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8193UX3)
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticPartnerF8193Troubleshooting)
       .then((isSupport: boolean) => {
         if (!isSupport) {
           this.tabs.push({

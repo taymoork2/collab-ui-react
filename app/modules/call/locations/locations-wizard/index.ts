@@ -19,5 +19,5 @@ export default angular.module('call.locations.wizard', [
   callEmergencyServicesModule,
   pstnAddressServiceModule,
 ])
-.component('ucCallLocationsWizard', new LocationsWizardComponent())
-.name;
+  .component('ucCallLocationsWizard', new LocationsWizardComponent())
+  .name;
