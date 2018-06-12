@@ -44,6 +44,7 @@
     "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "yarn ktest-all",
     "tslint": "tsc --noEmit && tslint --format stylish --project ./tsconfig.json",
+    "tslint-fix": "tslint --format fileslist --project ./tsconfig.json | xargs tslint --fix",
     "webdriver": "webdriver-manager update"
   },
   "//dependencies": [
