@@ -17,4 +17,12 @@
   .inline {
     display: inline-block;
   }
+
+  .grid-display {
+    display: inline-grid;
+  }
+
+  .large.cs-card article {
+    min-height: rem-calc(152);
+  }
 }

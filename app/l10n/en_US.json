@@ -11495,7 +11495,7 @@
         }
       },
       "info": {
-        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you endure the prechecks pass before continuing.",
+        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you ensure the prechecks pass before continuing.",
         "2": "The last time prechecks were run was {{lastRun}} and all passed.",
         "3": "Before you begin, verify that the correct software version files are located on the SFTP server assigned.",
         "precheck": "Run Prechecks"
