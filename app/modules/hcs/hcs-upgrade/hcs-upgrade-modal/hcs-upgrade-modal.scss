@@ -1,31 +1,20 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
-.modal-content.full {
-  .hcs-modal-component{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: calc(100vh - 48px);
+.hcs-modal-component {
+  .top-margin {
+    margin-top: 1rem;
+  }
 
-    .top-margin {
-      margin-top: 1rem;
-    }
+  .center {
+    display: block;
+    margin: auto;
+  }
 
-    .center {
-      display: block;
-      margin: auto;
-    }
+  .height-min {
+    min-height: 6rem;
+  }
 
-    .height-min {
-      min-height: 6rem;
-    }
-
-    .inline {
-      display: inline-block;
-    }
+  .inline {
+    display: inline-block;
   }
 }

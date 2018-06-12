@@ -1,4 +1,4 @@
-import { AdvancedMeetingOfferName, OfferName } from './offer-name.keys';
+import { AdvancedMeetingOfferName, OfferName, WebexMeetingOfferName } from './offer-name.keys';
 
 export class OfferNameService {
   public isAdvancedMeetingOfferName(offerName: OfferName): boolean {
@@ -7,5 +7,9 @@ export class OfferNameService {
 
   public getSortedAdvancedMeetingOfferNames(): OfferName[] {
     return _.sortBy(_.values(AdvancedMeetingOfferName));
+  }
+
+  public isWebexMeetingOfferName(offerName: OfferName): boolean {
+    return _.has(WebexMeetingOfferName, offerName);
   }
 }

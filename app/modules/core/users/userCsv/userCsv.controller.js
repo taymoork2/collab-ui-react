@@ -578,7 +578,8 @@ require('./_user-csv.scss');
           });
           var calResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-cal', currentProps);
           var ucResourceGroupChanged = tweakResourceGroups(user, 'squared-fusion-uc', currentProps);
-          if (calResourceGroupChanged || ucResourceGroupChanged) {
+          var msgResourceGroupChanged = tweakResourceGroups(user, 'spark-hybrid-impinterop', currentProps);
+          if (calResourceGroupChanged || ucResourceGroupChanged || msgResourceGroupChanged) {
             updatedUserProps.push({ userId: user.uuid, resourceGroups: user.resourceGroups });
           }
         });
@@ -652,6 +653,7 @@ require('./_user-csv.scss');
         var isWrongLicenseFormat = false;
         var calendarServiceResourceGroup = null;
         var callServiceResourceGroup = null;
+        var messageServiceResourceGroup = null;
 
         // Basic data
         firstName = _.trim(userRow[findHeaderIndex('First Name')]);
@@ -667,41 +669,12 @@ require('./_user-csv.scss');
           directLine = _.trim(userRow[index]);
         }
         if (vm.handleHybridServicesResourceGroups) {
-          index = findHeaderIndex('Hybrid Calendar Service Resource Group');
-          var resourceGroup;
-          if (index !== -1) {
-            calendarServiceResourceGroup = _.trim(userRow[index]);
-            if (calendarServiceResourceGroup) {
-              resourceGroup = getResourceGroup(calendarServiceResourceGroup);
-              if (!resourceGroup) {
-                processingError = true;
-                addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidCalendarServiceResourceGroup', {
-                  group: calendarServiceResourceGroup,
-                }));
-              } else {
-                calendarServiceResourceGroup = resourceGroup.id;
-              }
-            } else {
-              calendarServiceResourceGroup = NO_RESOURCE_GROUP;
-            }
-          }
-          index = findHeaderIndex('Hybrid Call Service Resource Group');
-          if (index !== -1) {
-            callServiceResourceGroup = _.trim(userRow[index]);
-            if (callServiceResourceGroup) {
-              resourceGroup = getResourceGroup(callServiceResourceGroup);
-              if (!resourceGroup) {
-                processingError = true;
-                addUserError(csvRowIndex, id, $translate.instant('firstTimeWizard.invalidCallServiceResourceGroup', {
-                  group: callServiceResourceGroup,
-                }));
-              } else {
-                callServiceResourceGroup = resourceGroup.id;
-              }
-            } else {
-              callServiceResourceGroup = NO_RESOURCE_GROUP;
-            }
-          }
+          calendarServiceResourceGroup = processResourceGroupItem('Hybrid Calendar Service Resource Group',
+            'firstTimeWizard.invalidCalendarServiceResourceGroup');
+          callServiceResourceGroup = processResourceGroupItem('Hybrid Call Service Resource Group',
+            'firstTimeWizard.invalidCallServiceResourceGroup');
+          messageServiceResourceGroup = processResourceGroupItem('Hybrid Message Service Resource Group',
+            'firstTimeWizard.invalidMessageServiceResourceGroup');
         }
         licenseList = [];
         entitleList = [];
@@ -800,11 +773,40 @@ require('./_user-csv.scss');
               if (callServiceResourceGroup) {
                 user.resourceGroups['squared-fusion-uc'] = callServiceResourceGroup;
               }
+              if (messageServiceResourceGroup) {
+                user.resourceGroups['spark-hybrid-impinterop'] = messageServiceResourceGroup;
+              }
             }
             return user;
           } else {
             return null;
           }
+        }
+
+        function processResourceGroupItem(resGroupHeaderName, invalidResGroupMessage) {
+          var resourceGroup;
+          var resourceGroupItem;
+
+          index = findHeaderIndex(resGroupHeaderName);
+          if (index !== -1) {
+            resourceGroupItem = _.trim(userRow[index]);
+            if (resourceGroupItem) {
+              resourceGroup = getResourceGroup(resourceGroupItem);
+              if (!resourceGroup) {
+                processingError = true;
+                addUserError(csvRowIndex, id, $translate.instant(invalidResGroupMessage, {
+                  group: resourceGroupItem,
+                }));
+              } else {
+                resourceGroupItem = resourceGroup.id;
+              }
+            } else {
+              resourceGroupItem = NO_RESOURCE_GROUP;
+            }
+          } else {
+            resourceGroupItem = null;
+          }
+          return resourceGroupItem;
         }
       }
 

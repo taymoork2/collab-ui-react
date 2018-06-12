@@ -18,6 +18,7 @@ import supportSectionModule from './supportSection';
 import webexModule from './webex';
 import sparkAssistantModule from './spark-assistant';
 import proximityModule from './proximity';
+import integrationsModule from './integrations';
 
 export default angular.module('core.settings', [
   require('angular-cache'),
@@ -39,6 +40,7 @@ export default angular.module('core.settings', [
   sparkAssistantModule,
   multiDirSyncModule,
   proximityModule,
+  integrationsModule,
 ])
   .controller('SettingsCtrl', SettingsCtrl)
   .name;

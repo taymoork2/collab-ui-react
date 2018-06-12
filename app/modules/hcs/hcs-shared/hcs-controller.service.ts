@@ -20,6 +20,7 @@ export class HcsControllerService {
 
   private customerResource: IHcsCustomerResource;
   private agentResource: IHcsAgentResource;
+  private agentVerifyResource: IHcsAgentResource;
   private partnerResource: IHcsPartnerResource;
 
   /* @ngInject */
@@ -61,10 +62,12 @@ export class HcsControllerService {
         query: queryAction,
       });
 
-    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
+    this.agentVerifyResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
       {
         update: updateAction,
       });
+
+    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId', {}, {});
 
     this.partnerResource = <IHcsPartnerResource>this.$resource(BASE_URL + 'partners/:partnerId', {},
       {
@@ -137,8 +140,15 @@ export class HcsControllerService {
     }).$promise;
   }
 
+  public rejectAgent(node: IHcsNode): ng.IPromise<any> {
+    return this.agentResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      agentId: node.agentUuid,
+    }, {}).$promise;
+  }
+
   public acceptAgent(node: IHcsNode): ng.IPromise<any> {
-    return this.agentResource.update({
+    return this.agentVerifyResource.update({
       partnerId: this.Authinfo.getOrgId(),
       agentId: node.agentUuid,
     }, {}).$promise;

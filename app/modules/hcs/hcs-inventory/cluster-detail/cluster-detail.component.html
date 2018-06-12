@@ -72,14 +72,8 @@
             <cs-card class="cs-card--large" ng-repeat="node in $ctrl.clusterDetail.nodes">
               <article>
                 <header class="node-header">
-                  <div class="header-with-right-icon">
+                  <div>
                     <h5 class="node-name" title="Node Name">{{node.hostname}}</h5>
-                    <div class="right card-icon-div" ng-if="node.status.toLowerCase() !== $ctrl.status.nodeNeedsAcceptance.toLowerCase()">
-                      <button type="button" class="close node-close"
-                        ng-click="$ctrl.closeCard()"
-                        ng-keydown=""
-                        aria-label="{{::'common.delete' | translate}}"></button>
-                    </div>
                   </div>
                   <div class="node-type" ng-if="node.ipAddress">
                     {{node.ipAddress}}

@@ -323,7 +323,8 @@
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
       "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
-      "exportUserList": "Export user list"
+      "exportUserList": "Export user list",
+      "viewImportHistory": "View import history"
     },
     "advanced": {
       "title": "Advanced",
@@ -1761,6 +1762,7 @@
     "optional": "Optional",
     "or": "or",
     "overview": "Overview",
+    "manage": "Manage",
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
@@ -3701,7 +3703,7 @@
         "installing": "{{connectorType}} installing",
         "not_installed": "{{connectorType}} not installed",
         "disabled": "{{connectorType}} disabled",
-        "not_initialized": "{{connectorType}} not initialized",
+        "not_initialized": "{{connectorType}} initializing",
         "not_operational": "{{connectorType}} not operational",
         "not_configured": "{{connectorType}} not configured",
         "running": "{{connectorType}} version {{version}} running and operational"
@@ -4707,6 +4709,7 @@
     "tosTermsAndConditions": "terms and conditions",
     "invalidCalendarServiceResourceGroup": "Hybrid Calendar Service Resource Group \"{{group}}\" not found",
     "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
+    "invalidMessageServiceResourceGroup": "Hybrid Message Service Resource Group \"{{group}}\" not found",
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
@@ -7643,6 +7646,7 @@
     "configureSite": "Configure Site",
     "deleteSite": "Delete Site",
     "partnerHelpMsg": "The ability to delete this site or redistribute licenses between sites has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to delete this site or to redistribute licenses between sites.",
+    "trialHelpMsg": "The ability to delete this site or redistribute licenses between sites is disallowed for trial sites.",
     "webexUsers": "Webex Users",
     "bulkManageUsers": "Bulk Manage Users",
     "reports": "Reports",
@@ -9222,6 +9226,11 @@
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Manage access to integrations for organizations.",
+      "description": "Authorize access for better management.<br/>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {
@@ -11251,7 +11260,10 @@
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
         "customerExistsErrorMessage": "This customer already exists",
-        "swProfileWarningMsg": "Please add a Software Profile first"
+        "swProfileWarningMsg": {
+          "addSWProfile": "Please add a Software Profile first",
+          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
+        }
       },
       "nodeStatus": {
         "active":"Active",
@@ -11306,7 +11318,11 @@
     },
     "clustersList": {
       "title":"Clusters",
-      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}",
+      "deleteClusterModal": {
+        "title": "Are you sure?",
+        "description": "You are about to delete an Cluster. You can not undo this action."
+      }
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
@@ -11489,8 +11505,17 @@
         "directions": "Use arrows to set the order that the nodes in the cluster will be upgraded",
         "addAnother": "Add Upgrade Group",
         "maxGroups": "Cannot create more than 8 upgrade groups"
-
       }
+    },
+    "prechecks" : {
+      "title": "Prechecks",
+      "choose": "Choose the Upgrade Prechecks to run",
+      "availableSpace": "Check available space",
+      "availableSpaceDesc": "Check all nodes in the cluster for enough available space for this upgrade.",
+      "copFiles": "Collect list of installed COP files.",
+      "copFilesDesc": "Collect COP file information from each node.",
+      "runningPrechecks": "Running Prechecks",
+      "runPrechecks": "Run Prechecks"
     },
     "upgradePage": {
       "title": "Upgrades"

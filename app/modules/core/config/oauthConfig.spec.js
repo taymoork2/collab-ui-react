@@ -79,9 +79,30 @@ describe('OAuthConfig', function () {
   });
 
   it('should return correct logout url', function () {
-    $location.host.and.returnValue('fake-domain');
-    var url = OAuthConfig.getLogoutUrl();
-    expect(url).toBe('https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=https%3A%2F%2Ffake-domain%2F');
+    whenCalling('getLogoutUrl').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=http%3A%2F%2F127.0.0.1%3A8000%2F',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=https%3A%2F%2Fcfe-admin.webex.com%2F',
+      integration: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=https%3A%2F%2Fint-admin.webex.com%2F',
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/doSSO.jsp?type=logout&cisService=common&goto=https%3A%2F%2Fadmin.webex.com%2F',
+    });
+  });
+
+  it('should return correct access token url', function () {
+    whenCalling('getAccessTokenUrl').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/access_token',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/access_token',
+    });
+  });
+
+  it('should return correct delete refresh token url', function () {
+    whenCalling('getOauthDeleteRefreshTokenUrl').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user?refreshtokens=',
+    });
   });
 
   it('should return correct revoke access token url', function () {
@@ -90,6 +111,15 @@ describe('OAuthConfig', function () {
       cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens?username=',
       integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
       prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens?username=',
+    });
+  });
+
+  it('should return correct refresh token list url', function () {
+    whenCalling('getOauthListTokenUrl').expectUrlToBe({
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/tokens/user/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/tokens/user/',
     });
   });
 

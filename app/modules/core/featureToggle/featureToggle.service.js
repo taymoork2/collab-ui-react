@@ -143,7 +143,10 @@
     function shouldFeatureAllowState(isSupported) {
       if (!isSupported) {
         if (currentlyInState()) {
-          return $q.reject('Requested feature is not supported by requested state');
+          return $q.reject('Requested feature is not supported by requested state')
+            .finally(function () {
+              $state.go('unauthorized');
+            });
         } else {
           $state.go('login');
         }
