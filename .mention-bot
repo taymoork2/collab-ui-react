@@ -61,6 +61,12 @@
       "app/modules/sunlight/**/*"
     ]
   }, {
+    "name": "WebExSquared/atlas-webex-troubleshooting",
+    "files": [
+      "app/modules/core/customerReports/**/*",
+      "app/modules/core/partnerReports/**/*"
+    ]
+  }, {
     "name": "mipark2",
     "files": [
       "app/modules/core/users/userAdd/onboard.controller.js"
