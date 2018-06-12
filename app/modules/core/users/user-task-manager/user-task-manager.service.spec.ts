@@ -269,6 +269,23 @@ describe('Service: UserTaskManagerService', () => {
       expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
     });
 
+    it('should call failureCallback when get task list returns 403 on interval', function (this: Test) {
+      this.$httpBackend.whenGET(this.URL).respond(403);
+      const INTERVAL_DELAY = 30000;
+      const callbackSpy = jasmine.createSpy('callbackSpy');
+      const failureCallbackSpy = jasmine.createSpy('callbackSpy');
+      const scope = this.$rootScope.$new();
+      this.UserTaskManagerService.initAllTaskListPolling(callbackSpy, scope, failureCallbackSpy);
+
+      this.$httpBackend.flush(1); // initial request before interval starts
+      expect(callbackSpy).toHaveBeenCalledTimes(0);
+      expect(failureCallbackSpy).toHaveBeenCalledTimes(1);
+
+      scope.$destroy();
+      this.$interval.flush(INTERVAL_DELAY);
+      expect(() => this.$httpBackend.flush(1)).toThrow(); // nothing to flush because interval was destroyed
+    });
+
     it('should manually cleanup interval', function (this: Test) {
       this.$httpBackend.whenGET(this.URL).respond({
         items: this.taskList,
