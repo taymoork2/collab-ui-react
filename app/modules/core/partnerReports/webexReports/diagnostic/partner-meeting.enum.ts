@@ -36,6 +36,7 @@ export enum SearchStorage {
     WEBEX_MEETING = 'webexMeeting',
     SEARCH_STRING = 'searchStr',
     CLIENT_VERSION = 'ClientVersion',
+    WEBEX_MEETING_ENDTIME = 'webexOneMeeting.endTime',
 }
 
 export enum Platforms {

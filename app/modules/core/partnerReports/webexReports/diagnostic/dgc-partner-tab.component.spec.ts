@@ -1,4 +1,5 @@
 import moduleName from './index';
+import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTab', () => {
   beforeAll(function() {
@@ -25,7 +26,7 @@ describe('Component: DgcPartnerTab', () => {
     this.initModules(moduleName);
     this.injectDependencies('$q', 'PartnerSearchService', 'WebexReportsUtilService');
 
-    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
+    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
     initSpies.apply(this);
   });
 
@@ -46,7 +47,7 @@ describe('Component: DgcPartnerTab', () => {
     spyOn(this.PartnerSearchService, 'getServerTime').and.returnValue(this.$q.resolve({ dateLong: 1513319154000 }));
     this.compileComponent('dgcPartnerTab');
 
-    const meeting = this.WebexReportsUtilService.getStorage('webexOneMeeting');
+    const meeting = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
     expect(meeting.endTime).toBe(1513319154000);
   });
 });

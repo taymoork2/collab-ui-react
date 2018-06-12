@@ -138,7 +138,7 @@ class DgcPartnerTab implements ng.IComponentController {
           return this.dataService.getServerTime()
             .then((res: IServerTime) => {
               mbi.endTime = _.get(res, 'dateLong');
-              this.WebexReportsUtilService.setStorage('webexOneMeeting.endTime', mbi.endTime);
+              this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_MEETING_ENDTIME, mbi.endTime);
               details.duration_ = this.WebexReportsUtilService.toMinOrSec(mbi.endTime - mbi.startTime);
             });
         } else {
