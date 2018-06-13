@@ -33,7 +33,6 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   /* @ngInject */
   constructor(
-    private $modal,
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -140,14 +139,13 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
       });
   }
 
-  public openRestartActivationModal(): void {
-    this.$modal.open({
-      template: '<reactivate-user-modal user-id="\'' + this.userId + '\'" service="\'' + this.userStatus.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
-      type: 'dialog',
-    }).result.then(() => {
-      this.getUserData(this.userId);
-      this.delayedGetUserData();
-    });
+  public reactivateCallback(): void {
+    this.getUserData(this.userId);
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.userIsCurrentlyEntitled && this.isActivation2User;
   }
 
   public changeEntitlement(newEntitlementValue) {

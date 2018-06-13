@@ -29,11 +29,7 @@
               ng-if="$ctrl.loadingPage"></span>
       </div>
 
-      <div class="row restart-activation-row" ng-if="!$ctrl.loadingPage && $ctrl.userIsCurrentlyEntitled && $ctrl.isActivation2User">
-        <span class="hybrid-services-label right">
-          <a ng-click="$ctrl.openRestartActivationModal()">{{::'hercules.userSidepanel.reactivateUser.title' | translate}}</a>
-        </span>
-      </div>
+      <reactivate-user-modal-link ng-if="$ctrl.showReactivateLink()" user-id="$ctrl.userId" service="$ctrl.userStatusAware.serviceId" callback="$ctrl.reactivateCallback()"></reactivate-user-modal-link>
 
       <div>
         <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>

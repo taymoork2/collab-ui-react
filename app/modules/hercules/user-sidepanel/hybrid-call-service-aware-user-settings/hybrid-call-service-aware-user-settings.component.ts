@@ -43,7 +43,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
 
   /* @ngInject */
   constructor(
-    private $modal,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $timeout: ng.ITimeoutService,
@@ -223,14 +222,13 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
-  public openRestartActivationModal(): void {
-    this.$modal.open({
-      template: '<reactivate-user-modal user-id="\'' + this.userId! + '\'" service="\'' + this.userStatusAware!.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
-      type: 'dialog',
-    }).result.then(() => {
-      this.getUserData(this.userId);
-      this.delayedGetUserData();
-    });
+  public reactivateCallback(): void {
+    this.getUserData(this.userId);
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.userIsCurrentlyEntitled && this.isActivation2User;
   }
 
   private confirmBecauseConnectIsEnabled(): void {

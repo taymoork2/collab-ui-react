@@ -2643,9 +2643,10 @@
       "reactivateUser": {
         "title": "Reactivate User",
         "line1": "Are you sure you want to reactivate this user?",
-        "line2": "Note that reactivating the user will first deactivate and remove any existing assignments for the user followed by a new activation.",
+        "line2": "The user will temporarily loose service during reactivation.",
         "confirm": "Reactivate",
-        "success": "Reactivate started successfully"
+        "success": "Reactivate started successfully",
+        "tooltip": "Reactivate a user to retry activation for a user in error or to pick up changes in the user configuration"
       }
     },
     "placeSidepanel": {

@@ -48,7 +48,6 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
-    private $modal,
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
@@ -288,14 +287,13 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     this.delayedGetUserData();
   }
 
-  public openRestartActivationModal(): void {
-    this.$modal.open({
-      template: '<reactivate-user-modal user-id="\'' + this.userId + '\'" service="\'' + this.userStatus.serviceId + '\'" class="modal-content" dismiss="$dismiss()" close="$close()"></reactivate-user-modal>',
-      type: 'dialog',
-    }).result.then(() => {
-      this.getUserData();
-      this.delayedGetUserData();
-    });
+  public reactivateCallback(): void {
+    this.getUserData();
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.originalEntitledToggle && !this.userOwnedByCCC && this.isActivation2User;
   }
 
   private delayedGetUserData(): void {
