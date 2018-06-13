@@ -58,7 +58,7 @@ class MeetingDetailsController implements ng.IComponentController {
   private videoEnabled = false;
   private meetingEndTime: number;
   private qualityLabels = [QualityType.GOOD, QualityType.FAIR, QualityType.POOR, QualityType.NA];
-  private dataService: (PartnerSearchService | CustomerSearchService);
+  private dataService: PartnerSearchService | CustomerSearchService;
 
   /* @ngInject */
   public constructor(

@@ -159,9 +159,9 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
   it('should get empty data when call onClickClearIcon', function () {
     initComponent.call(this);
     this.controller.gridData = [{ endTime: '2017-08-09 10:30:33', startTime: '2017-08-07 10:30:33' }];
-    expect(this.controller.gridData.length).toHaveLength(1);
+    expect(this.controller.gridData.length).toBe(1);
     this.controller.onClickClearIcon();
-    expect(this.controller.gridData.length).toHaveLength(0);
+    expect(this.controller.gridData.length).toBe(0);
   });
 
   describe('isValidEmail():', () => {
