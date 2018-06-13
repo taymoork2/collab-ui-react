@@ -7,7 +7,7 @@
   var LanguageConfigs = require('../l10n/languages').languageConfigs;
 
   /* @ngInject */
-  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, ApiCacheManagementService, Auth, Authinfo, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService, Utils) {
+  function LoginCtrl($location, $rootScope, $scope, $state, $stateParams, $translate, ApiCacheManagementService, Auth, Authinfo, Log, LocalStorage, LogMetricsService, MetricsService, PageParam, SessionStorage, StorageKeys, TokenService) {
     MetricsService.startTimer(TimingKey.LOGIN_DURATION);
     var queryParams = SessionStorage.popObject(StorageKeys.REQUESTED_QUERY_PARAMS);
 
@@ -53,8 +53,6 @@
     if ($stateParams.bmmp_env) {
       SessionStorage.put(StorageKeys.BMMP_ENV, _.toLower($stateParams.bmmp_env));
     }
-
-    $scope.checkForIeWorkaround = Utils.checkForIeWorkaround();
 
     $scope.login = function (keyCode) {
       if (!keyCode || (keyCode === KeyCodes.ENTER && $scope.loginForm.email.$valid)) {

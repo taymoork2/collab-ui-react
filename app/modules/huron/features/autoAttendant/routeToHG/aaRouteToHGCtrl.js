@@ -6,9 +6,10 @@
     .controller('AARouteToHGCtrl', AARouteToHGCtrl);
 
   /* @ngInject */
-  function AARouteToHGCtrl($scope, $translate, HuntGroupService, AAUiModelService, AutoAttendantCeMenuModelService, AACommonService) {
+  function AARouteToHGCtrl($scope, $translate, AACommonService, AANotificationService, AAUiModelService, AutoAttendantCeMenuModelService, HuntGroupService) {
     var vm = this;
     var conditional = 'conditional';
+    var schedule;
 
     vm.hgSelected = {
       description: '',
@@ -55,6 +56,12 @@
       vm.hgSelected.description = _.result(_.find(vm.huntGroups, {
         id: vm.hgSelected.id,
       }), 'description', '');
+      if (!_.isEqual(vm.hgSelected.id, '') && vm.hgSelected.description == '') {
+        AANotificationService.error('autoAttendant.userDoesNotExist', {
+          schedule: schedule,
+          route: rtHG,
+        });
+      }
     }
 
     function saveUiModel() {
@@ -97,6 +104,7 @@
 
     function activate() {
       var ui = AAUiModelService.getUiModel();
+      schedule = $scope.schedule;
 
       if ($scope.fromDecision) {
         var conditionalAction;

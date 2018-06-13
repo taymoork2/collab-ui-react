@@ -17,10 +17,3 @@
   font-size: 0.875rem;
   max-width: 36rem;
 }
-
-/* Remove when Microsoft fixes flexbox problem *\
-   when min-height is defined.  See
-\* message-box in ToolKit.                */
-.vertical-ie-workaround {
-  height: 0px;
-}

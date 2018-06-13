@@ -23,6 +23,11 @@ describe('MailValidatorService', () => {
     expect(Service.isValidEmailCsv(str)).toBe(true);
   });
 
+  it('email in upper case is okay', () => {
+    const str = 'FOO@bar.com';
+    expect(Service.isValidEmailCsv(str)).toBe(true);
+  });
+
   it('single bad email is bad', () => {
     const str = 'foo.bar.com';
     expect(Service.isValidEmailCsv(str)).toBe(false);
