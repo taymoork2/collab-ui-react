@@ -104,6 +104,16 @@
         </a>
       </li>
 
+      <!-- Hybrid Context Service -->
+      <li ng-if="$ctrl.showContextService" class="feature">
+        <a href>
+          <i class="feature-icon" ng-class="$ctrl.serviceIcon('contact-center-context')"></i>
+          <span class="feature-name" translate="hercules.serviceNames.contact-center-context"></span>
+          <span class="feature-status" translate="hercules.activationStatus.canNotAccessContextReporting"></span>
+          <i class="feature-arrow" ng-if="!$ctrl.loadingPage"></i>
+        </a>
+      </li>
+
     </ul>
   </div>
 

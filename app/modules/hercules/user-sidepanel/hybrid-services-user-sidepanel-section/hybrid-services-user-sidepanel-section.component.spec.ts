@@ -223,4 +223,31 @@ describe('HybridServicesUserSidepanelSectionComponent', () => {
       expect(this.controller['intervalPromise']).not.toBeDefined();
     });
   });
+
+  describe('Hybrid Context Service menu option', function() {
+    it('should show context service option if feature flag exists and org has context service entitlement', function(this: Test) {
+      spyOn(this.Authinfo, 'isContactCenterContext').and.returnValue(true);
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      this.initComponent();
+      expect(this.controller.showContextService).toBe(true);
+    });
+    it('should not show context service option if feature flag does not exist and org has context service entitlement', function(this: Test) {
+      spyOn(this.Authinfo, 'isContactCenterContext').and.returnValue(true);
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.initComponent();
+      expect(this.controller.showContextService).toBe(false);
+    });
+    it('should not show context service option if feature flag exists and org does not have context service entitlement', function(this: Test) {
+      spyOn(this.Authinfo, 'isContactCenterContext').and.returnValue(false);
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));
+      this.initComponent();
+      expect(this.controller.showContextService).toBe(false);
+    });
+    it('should not show context service option if feature flag does not exist and org does not have context service entitlement', function(this: Test) {
+      spyOn(this.Authinfo, 'isContactCenterContext').and.returnValue(false);
+      spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+      this.initComponent();
+      expect(this.controller.showContextService).toBe(false);
+    });
+  });
 });

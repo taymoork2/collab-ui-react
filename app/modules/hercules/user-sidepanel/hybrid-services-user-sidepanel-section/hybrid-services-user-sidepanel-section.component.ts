@@ -35,6 +35,7 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
   public couldNotReadGoogleCalendarStatus: boolean;
   public userIsEnabledForHuron: boolean;
   public bothCalendarTypesWarning: boolean;
+  public showContextService: boolean;
 
   public loadingPage = false;
   private intervalPromise?: ng.IPromise<void>;
@@ -52,6 +53,7 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
     private UserOverviewService: UserOverviewService,
     private USSService: USSService,
     private WaitingIntervalService: WaitingIntervalService,
+    private $q: ng.IQService,
   ) { }
 
   public $onChanges(changes: {[bindings: string]: ng.IChangesObject<any>}) {
@@ -67,10 +69,14 @@ export class HybridServicesUserSidepanelSectionComponentCtrl implements ng.IComp
 
   public $onInit() {
     this.loadData();
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp)
-      .then((supported) => {
-        this.atlasHybridImpFeatureToggle = supported;
-      });
+
+    this.$q.all({
+      atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
+      atlasContextServiceReporting: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasContextServiceReporting),
+    }).then(features => {
+      this.atlasHybridImpFeatureToggle = features.atlasHybridImp;
+      this.showContextService = features.atlasContextServiceReporting && this.Authinfo.isContactCenterContext();
+    });
   }
 
   public $onDestroy() {
