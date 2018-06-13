@@ -224,6 +224,9 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/user-sidepanel/user-status-messages').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-user-assignments').default,
+    require('modules/hercules/user-sidepanel/reactivate-user-modal').default,
+    require('modules/hercules/user-sidepanel/reactivate-user-modal/reactivate-user-modal-link').default,
     require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
   ]);
 

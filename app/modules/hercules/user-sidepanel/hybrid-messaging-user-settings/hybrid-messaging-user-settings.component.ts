@@ -29,9 +29,12 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   public resourceGroupId: string;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private Notification: Notification,
@@ -87,6 +90,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
         if (this.userStatus && this.userStatus.resourceGroupId) {
           this.resourceGroupId = this.userStatus.resourceGroupId;
         }
+
+        if (this.userStatus && this.userStatus.assignments) {
+          this.isActivation2User = true;
+        }
       })
       .catch((error) => {
         this.couldNotReadUser = true;
@@ -117,7 +124,10 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     }];
 
     this.HybridServiceUserSidepanelHelperService.saveUserEntitlements(this.userId, this.userEmailAddress, entitlements)
-      .then(() => this.getUserData(this.userId))
+      .then(() => {
+        this.delayedGetUserData();
+        return this.getUserData(this.userId);
+      })
       .catch((error) => {
         this.Notification.error('hercules.userSidepanel.not-updated-specific', {
           userName: this.userEmailAddress,
@@ -127,7 +137,15 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
       .finally(() => {
         this.savingPage = false;
       });
+  }
 
+  public reactivateCallback(): void {
+    this.getUserData(this.userId);
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.userIsCurrentlyEntitled && this.isActivation2User;
   }
 
   public changeEntitlement(newEntitlementValue) {
@@ -149,6 +167,16 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
 
   public resourceGroupRefreshCallback() {
     this.getUserData(this.userId);
+    this.delayedGetUserData();
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData(this.userId);
+    }, 3000);
   }
 
 }

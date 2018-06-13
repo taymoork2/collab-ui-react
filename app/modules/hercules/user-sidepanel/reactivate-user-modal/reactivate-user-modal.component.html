@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title" translate="hercules.userSidepanel.reactivateUser.title"></h4>
+</div>
+<div class="modal-body">
+  <div ng-if="$ctrl.loading" class="modal-step">
+    <div class="text-center">
+      <i class="icon icon-spinner icon-3x"></i>
+    </div>
+  </div>
+  <div ng-if="!$ctrl.loading" class="modal-step">
+    <p translate="hercules.userSidepanel.reactivateUser.line1"></p>
+    <p translate="hercules.userSidepanel.reactivateUser.line2"></p>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$ctrl.cancel()" translate="common.cancel"></button>
+  <button class="btn btn--primary" ng-disabled="$ctrl.loading" ng-click="$ctrl.submit()" cs-btn>
+    <span translate="hercules.userSidepanel.reactivateUser.confirm"></span>
+  </button>
+</div>

@@ -2475,6 +2475,7 @@
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
       "host_name": "Node",
+      "host_names": "Nodes",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",
@@ -2638,6 +2639,14 @@
         "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
         "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache."
+      },
+      "reactivateUser": {
+        "title": "Reactivate User",
+        "line1": "Are you sure you want to reactivate this user?",
+        "line2": "The user will temporarily loose service during reactivation.",
+        "confirm": "Reactivate",
+        "success": "Reactivate started successfully",
+        "tooltip": "Reactivate a user to retry activation for a user in error or to pick up changes in the user configuration"
       }
     },
     "placeSidepanel": {
@@ -2661,6 +2670,15 @@
       "notFound": "Status not found",
       "pendingNotSetup": "Pending – Service Not Setup",
       "accountNotActivated": "Account Not Activated"
+    },
+    "userAssignment": {
+      "status": {
+        "success": "Assigned",
+        "failure": "Assignment failed",
+        "waiting": "Assigned, awaiting confirmation from connector",
+        "nonOperational": "This connector is currently reported as non-operational. When the connector is operational again, the user will automatically be assigned."
+      },
+      "connectorNotFound": "Connector not found"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",

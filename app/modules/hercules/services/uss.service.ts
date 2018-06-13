@@ -62,6 +62,8 @@ export interface IUserStatusWithExtendedMessages extends IUserStatus {
 
 type UserStatus = 'activated' | 'notActivated' | 'error';
 
+type AssignmentStatus = 'waiting' | 'success' | 'failure' | 'nonOperational';
+
 interface IUserStatus {
   connectorId?: string;
   clusterId?: string;
@@ -75,6 +77,16 @@ interface IUserStatus {
   state: UserStatus;
   userId: string;
   owner?: string;
+  assignments?: IUserAssignment[];
+}
+
+export interface IUserAssignment {
+  connectorId: string;
+  clusterId: string;
+  status: AssignmentStatus;
+  assignedAt?: string;
+  acknowledgedAt?: string;
+  details?: IMessage[];
 }
 
 export interface IMessage {
@@ -361,6 +373,12 @@ export class USSService {
   public removeSipDomainForCluster(clusterId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<''> {
     return this.$http
       .delete<''>(`${this.USSUrl}/orgs/${orgId}/clusterSipDomains/${clusterId}`)
+      .then(this.extractData);
+  }
+
+  public reactivateUser(userId: string, serviceId: HybridServiceId, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/users/${userId}/actions/reactivate/invoke?service=${serviceId}`, null)
       .then(this.extractData);
   }
 
