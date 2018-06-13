@@ -19,9 +19,6 @@ export class CardNotificationsCtrl implements ng.IComponentController {
   public dismissNotificationFn: Function;
   public notifications: IOverviewPageNotification[];
 
-  /* @ngInject */
-  constructor() {}
-
   public dismissNotification(notification: IOverviewPageNotification): void {
     this.dismissNotificationFn({ notification: notification });
   }

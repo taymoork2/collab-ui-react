@@ -1,7 +1,6 @@
 import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
 
 export class HcsFeatureAvailableNotification {
-
   public createNotification($state: ng.ui.IStateService): IOverviewPageNotification {
     return {
       badgeText: 'common.new',
@@ -14,6 +13,4 @@ export class HcsFeatureAvailableNotification {
       text: 'hcs.notifications.featureAvailable.infoText',
     };
   }
-
 }
-
