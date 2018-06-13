@@ -598,28 +598,30 @@ Dropdowns utilizing `icon-three-dots` as their button image are common across At
 
 The bindings are:
 ```typescript
+buttonAriaLabel: '@?',   // optional aria label text; the default text is the translated key 'common.toggleMenu'
 buttonClass: '<?',    // added to the cs-dropdown-toggle element using ng-class
 dropdownClass: '<?',  // added to the cs-dropdown element using ng-class
 menuClass: '<?',      // added to the cs-dropdown-menu element using ng-class
-onClickFn: '&?',      // optional onClick function called when toggling the menu open/closed
-tddAriaLabel: '@?',   // optional aria label text; the default text is the translated key 'common.toggleMenu'
+onClickFn: '&?',      // optional onClick function called when toggling the menu open/closed; will also be called for space/enter keydown events if there is no onKeydownFn provided
+onKeydownFn: '&?',      // optional onKeydown function called when toggling the menu open/closed
 ```
 
 Examples:
-* Minimum effor for a `three-dot-dropdown`
+* Minimum effort for a `three-dot-dropdown`
 ```html
 <three-dot-dropdown>
   <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
   <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>
 </three-dot-dropdown
 ```
-* Maximum effor for a `three-dot-dropdown`
+* Maximum effort for a `three-dot-dropdown`
 ```html
 <three-dot-dropdown
   button-class="button"
   dropdown-class="{'dropdownClass': $ctrl.sometimes()}"
   menu-class="menuClass"
-  on-click-fn="$ctrl.preventDefault($event)"
+  on-click-fn="$event.preventDefault()"
+  on-keydown-fn="$ctrl.keydownEvent($event)"
   tdd-aria-label="{{::'common.otherMenuToggle' | translate}}">
   <li ng-click="doSomething()"><a translate="common.optionOne"></a></li>
   <li ng-click="doSomethingElse()"><a translate="common.optionTwo"></a></li>

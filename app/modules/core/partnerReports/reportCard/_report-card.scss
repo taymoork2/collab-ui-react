@@ -185,23 +185,6 @@
     }
   }
 
-  .export-dots {
-    color: $gray-base;
-  }
-  .export-dots:hover {
-    color: $color-primary-base;
-  }
-  .dropdown-menu.dropdown-primary.export-visible {
-    display: inline-block;
-    width: rem-calc(100);
-    position: absolute;
-    left: rem-calc(-75);
-    @include vr-spacing(p, 0);
-    .export-item:first-of-type:hover {
-      background: none;
-    }
-  }
-
   .row.label-row {
     width: 75%;
     margin-left: auto;

@@ -131,13 +131,8 @@ class ReportCardCtrl {
   // export menu Controls
   public dropdownSelect(menuItem: IExportMenu): void {
     if (menuItem.click) {
-      this.toggleExportMenu();
       menuItem.click();
     }
-  }
-
-  public toggleExportMenu(): void {
-    this.exportMenu = !this.exportMenu;
   }
 
   // Secondary Report Controls
