@@ -5230,7 +5230,8 @@
     "reversionTimerLabel": "Call Reversion Timer",
     "reversionTimerDesc": "If the call is not answered, send it to the reversion destination after the following wait time",
     "reversionTimerSeconds": "Seconds",
-    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
+    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}",
+    "misconfigured": "The {{callParkName}} call park contains a reversion destination to an internal number that is no longer associated with a user.  Please click the link below to edit the configuation."
   },
   "callPickup": {
     "nameLabel": "Call Pickup Name",
@@ -8905,7 +8906,8 @@
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"
-    }
+    },
+    "misconfigured": "The {{huntGroupName}} hunt group contains a reference to a fallback destination that is no longer associated with a user.  Please click the link below to edit the configuation."
   },
   "digitalRiver": {
     "enterEmailAddr": {
