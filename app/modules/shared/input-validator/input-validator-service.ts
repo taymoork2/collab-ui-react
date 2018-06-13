@@ -1,15 +1,5 @@
 // Input Validator Service - for use with forms and inputs
 
-interface IFormField {
-  $dirty: boolean;
-  $touched: boolean;
-  $invalid?: boolean;
-  $valid?: boolean;
-  $setPristine: Function;
-  $setUntouched: Function;
-  $setValidity: Function;
-}
-
 interface IResult {
   error: boolean;
   warning?: boolean;
@@ -20,23 +10,18 @@ export class InputValidatorService {
   constructor(
   ) {}
 
-  // returns an object in the form {error: boolean} for use with an input field
-  // usage:  ng-class="$ctrl.validatorSvc.makeErrorClass(myForm.myField))"
-  public makeErrorClass(name: IFormField): IResult {
+  public makeErrorClass(name: ng.INgModelController): IResult {
     if (_.isUndefined(name)) {
-      name = this.createEmptyFormField();
+      return { error: false };
     }
     return {
       error: !!(name.$invalid && (name.$dirty || name.$touched)),
     };
   }
 
-  // creates an obect in the form {error: boolean, warning: boolean} for use with an input field
-  // usage: ng-class="$ctrl.validatorSvc.makeErrorAndWarnClass(myForm.myField, warningFlag)"
-  // (typically warning flag will be set by the validator as something like '$ctrl.messages.myField.warning')
-  public makeErrorAndWarnClass(name: IFormField, warnFlag: boolean): IResult {
+  public makeErrorAndWarnClass(name: ng.INgModelController, warnFlag: boolean): IResult {
     if (_.isUndefined(name)) {
-      name = this.createEmptyFormField();
+      return { error: false, warning: false };
     }
     return {
       error: !!(name.$invalid && (name.$dirty || name.$touched)),
@@ -44,24 +29,35 @@ export class InputValidatorService {
     };
   }
 
-  // clears field conditions that would show an error or warning (to be used with ng-keyup on input)
-  // usage: ng-keyup="$ctrl.validatorSvc.resetField(myForm.myField, $ctrl, 'myValidatorInCamelCase')"
-  public resetField(field: IFormField, controller: ng.IController, validator: string): void {
-    field.$setPristine();
-    field.$setUntouched();
-    if (controller && !_.isEmpty(validator)) {
-      field.$setValidity(validator, false, controller);
+/**
+ * @ngdoc function
+ * @name resetField
+ * @module shared.inputValidator
+ * @kind function
+ *
+ * @description
+ * Reset form field to clear validation messages for use with debounced inputs.
+ * NOTE incompatible with ngModelOption allowInvalid
+ *
+ * @param {Object} field - form field to reset (e.g. `form.myInput`)
+ * @param {string} validator - the affected validater in camelCase form
+ *
+ */
+  public resetField(field, validator: string): void {
+    if (_.isUndefined(field.$modelValue) && (_.get(field, '$error.' + validator) === true) && (field.$viewValue === field.$$lastCommittedViewValue)) {
+      // user modifies value then resets it during a validation cycle while error message present
+      field.$setDirty();
+    } else if (field.$viewValue !== field.$modelValue) {
+      // value changed
+      field.$setPristine();
+      field.$setUntouched();
+      if (field.$modelValue) {
+        field.$setValidity(validator, false);
+      }
+    } else if (field.$modelValue && (field.$invalid === true)) {
+      // user modifies value then resets it during validation cycle while warning message present
+      field.$setDirty();
+      field.$validate();
     }
-  }
-
-  private createEmptyFormField(): IFormField {
-    return {
-      $dirty: false,
-      $invalid: false,
-      $touched: false,
-      $setPristine: _.noop,
-      $setUntouched: _.noop,
-      $setValidity: _.noop,
-    };
   }
 }
