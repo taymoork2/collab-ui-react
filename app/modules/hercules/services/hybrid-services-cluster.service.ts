@@ -633,10 +633,14 @@ export class HybridServicesClusterService {
 
   // TODO: add unit tests
   private getMaintenanceModeForCluster(cluster: IClusterWithExtendedConnectors): ConnectorMaintenanceMode {
-    if (_.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'pending')) {
+    if (cluster.connectors.length !== 0 && _.every(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'pending')) {
       return 'pending';
-    } else if (_.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'on')) {
+    } else if (cluster.connectors.length !== 0 && _.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'pending')) {
+      return 'partial';
+    } else if (cluster.connectors.length !== 0 && _.every(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'on')) {
       return 'on';
+    } else if (cluster.connectors.length !== 0 && _.some(cluster.connectors, (connector) => connector.extendedProperties.maintenanceMode === 'on')) {
+      return 'partial';
     } else {
       return 'off';
     }

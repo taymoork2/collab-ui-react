@@ -81,7 +81,7 @@
     function defuseHost(host) {
       HybridServicesClusterService.deregisterEcpNode(host.id)
         .then(incrementSuccessDefuse(host))
-        .then(MediaServiceAuditService.devOpsAuditEvents('node', 'delete', host.id))
+        .then(MediaServiceAuditService.devOpsAuditEvents('node', 'delete', host.hostSerial))
         .catch(incrementFailureCount(host));
     }
 
@@ -187,7 +187,7 @@
         fromCluster = vm.cluster;
         HybridServicesClusterService.moveEcpNode(host.id, fromCluster.id, toCluster.id)
           .then(incrementSuccessCount(host, toCluster))
-          .then(MediaServiceAuditService.devOpsAuditEvents('node', 'move', host.id))
+          .then(MediaServiceAuditService.devOpsAuditEvents('node', 'move', host.hostSerial))
           .catch(incrementFailureCount(host));
       }
     }
