@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var DiagnosticKey = require('modules/core/metrics').DiagnosticKey;
+
   angular
     .module('Squared')
     .controller('HelpdeskUserController', HelpdeskUserController);
@@ -8,7 +10,7 @@
   var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
   /* @ngInject */
-  function HelpdeskUserController($modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
+  function HelpdeskUserController(MetricsService, $modal, $q, $stateParams, $translate, $window, AccessibilityService, Authinfo, Config, FeatureToggleService, HelpdeskCardsUserService, HelpdeskHuronService, HelpdeskLogService, HelpdeskService, LicenseService, Notification, USSService, WindowLocation, HybridServicesI18NService, HybridServicesClusterService, ResourceGroupService, UCCService) {
     var vm = this;
     var SUPPRESSED_STATE = {
       LOADING: 'loading',
@@ -52,6 +54,7 @@
     vm.hasEmailStatus = hasEmailStatus;
     vm.hasEmailProblem = hasEmailProblem;
     vm.clear = clear;
+    vm.logMetrics = logMetrics;
     vm._helpers = {
       notifyError: notifyError,
     };
@@ -114,11 +117,15 @@
 
     function sendRequestForFullAdminAccess() {
       HelpdeskService.sendRequestForFullAdminAccess(vm.user.id, vm.user.orgId).then(function () {
+        logMetrics({ type: 'sendRequestForFullAdminAccess', status: 'success' });
         Notification.success('helpdesk.requestFullAdminSentSuccess', {
           customerUser: vm.user.displayName,
         });
         vm.sendRequestForFullAdminAccess = false;
-      }, vm._helpers.notifyError);
+      }).catch(function (err) {
+        logMetrics({ type: 'sendRequestForFullAdminAccess', status: 'failed', details: err });
+        vm._helpers.notifyError(err);
+      });
     }
 
     function sendCode() {
@@ -575,6 +582,10 @@
         .finally(function () {
           vm.loadingHSData = false;
         });
+    }
+
+    function logMetrics(info) {
+      MetricsService.trackDiagnosticMetric(DiagnosticKey.HELPDESK_ADMIN_ELEVATION, info);
     }
   }
 }());
