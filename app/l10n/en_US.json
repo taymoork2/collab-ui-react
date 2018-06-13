@@ -5841,6 +5841,7 @@
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials.",
     "errGetOrgs": "Failed to retrieve orgranizations.",
+    "errInitPartnerNotifications": "Error initializing partner notifications",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -11296,6 +11297,7 @@
       },
       "nodeStatus": {
         "active":"Active",
+        "assignmentNeeded": "Assignment Needed",
         "compliant": "Compliant",
         "inactive": "Inactive",
         "needsAcceptance":"Needs Acceptance",
@@ -11311,7 +11313,8 @@
         "failedUpgrade": "Failed Upgrade",
         "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
-        "noAgentRunning": "No Agent Running"
+        "noAgentRunning": "No Agent Running",
+        "noClusters": "No Clusters Assigned"
       },
       "settings": {
         "inventoryName": {
@@ -11422,6 +11425,11 @@
     },
     "nodesList": {
       "title": "Nodes"
+    },
+    "notifications": {
+      "featureAvailable": {
+        "infoText": "Hosted Collaboration Features are available. Simplify your process by utilizing this new feature."
+      }
     },
     "setup": {
       "finish": "Finish",

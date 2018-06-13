@@ -58,55 +58,7 @@ export class InventoryListCtrl implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    //this.initInventoryList();
-    this.inventoryList.push({
-      id: 'unassigned',
-      type: 'unassigned',
-      status: 'Needs Assigned',
-    }, {
-      id: '910fe34f-2bc8-42e8-8db2-22ae6e3ec54d',
-      name: 'Shravan_Test_1',
-      type: 'custGroup',
-      status: 'Software update needed',
-    }, {
-      id: '7eab0dd8-5fe2-4206-8702-5f9de3584ba2',
-      name: 'Jeff\'s Testing Company',
-      type: 'custGroup',
-      status: 'Operational',
-    }, {
-      id: 'ax12345',
-      name: 'Mary\'s Bar',
-      type: 'custGroup',
-      status: 'Operational',
-    }, {
-      id: 'ax1236r',
-      name: 'Roger\'s Burgers',
-      type: 'custGroup',
-      status: 'Agent Offline',
-    }, {
-      id: 'ax1235m',
-      name: 'Jays BBQ',
-      type: 'custGroup',
-      status: 'Operational',
-    }, {
-      id: 'ax1239x',
-      name: 'Wally World',
-      type: 'custGroup',
-      status: 'Operational',
-    }, {
-      id: 'ax1249y',
-      name: 'Target',
-      type: 'custGroup',
-      status: 'Nodes need Accepted',
-    });
-    this.inventoryListData = this.inventoryList;
-    this.tempFilterOptions = _.uniq(this.inventoryList.map(item => _.get(item, 'status')));
-    this.tempFilterOptions.map(filterOption => {
-      this.filter.options.push({
-        value: filterOption,
-        label: filterOption,
-      });
-    });
+    this.initInventoryList();
   }
 
   public initInventoryList(): void {
@@ -120,8 +72,8 @@ export class InventoryListCtrl implements ng.IComponentController {
         if (response[0].length > 0) {
           this.inventoryList.push({
             id: 'unassigned',
-            name: 'unassigned',
-            status: 'Needs Assigned',
+            name: 'Unassigned',
+            status: 'ASSIGNMENT_NEEDED',
           });
         }
         _.forEach(response[1], (customer) => {
@@ -135,6 +87,67 @@ export class InventoryListCtrl implements ng.IComponentController {
       })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => {
+        this.inventoryListData = this.inventoryList;
+        this.tempFilterOptions = _.uniq(this.inventoryList.map(item => _.get(item, 'status')));
+        this.tempFilterOptions.map(filterOption => {
+          let filterOptionLabel: string;
+          switch (filterOption) {
+            case 'UNASSIGNED':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.unassigned');
+              break;
+            case 'ASSIGNMENT_NEEDED':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.assignmentNeeded');
+              break;
+            case 'NO_AGENT_RUNNING':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.noAgentRunning');
+              break;
+            case 'AGENT_OFFLINE':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.agentOffline');
+              break;
+            case 'FAILED_UPGRADE':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.failedUpgrade');
+              break;
+            case 'SOFTWARE_PROFILE_NOT_ASSIGNED':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.swProfileNotAssigned');
+              break;
+            case 'NO_CLUSTERS':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.noClusters');
+              break;
+            case 'NODES_NEED_ACCEPTANCE':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.needsAcceptance');
+              break;
+            case 'SOFTWARE_PROFILE_DOES_NOT_COVER_ALL_APPLICATIONS':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.swProfileNotCoverAll');
+              break;
+            case 'SOFTWARE_VERSION_MISMATCH':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.swVersionMismatch');
+              break;
+            case 'SOFTWARE_UPGRADE_NEEDED':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.swUpgradeNeeded');
+              break;
+            case 'NEED_TO_UPDATE_BATCH_NUMBER':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.needToUpdateBatchNumber');
+              break;
+            case 'UPGRADE_SCHEDULED':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.upgradeScheduled');
+              break;
+            case 'UPGRADE_IN_PROGRESS':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.upgradeInProgress');
+              break;
+            case 'OPERATIONAL':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.operational');
+              break;
+            case 'COMPLIANT':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.compliant');
+              break;
+            default:
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.unassigned');
+          }
+          this.filter.options.push({
+            value: filterOption,
+            label: filterOptionLabel,
+          });
+        });
         this.loading = false;
       });
 

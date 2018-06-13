@@ -7,7 +7,7 @@
 </cs-page-header>
 <div class="hcs-cluster-settings hcs-container">
   <div class="loading-container" ng-if="$ctrl.loading">
-    <i class="icon icon-spinner"></i>
+    <i class="icon icon-2x icon-spinner"></i>
   </div>
 
   <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="hcs-cluster-settings-main-container cs-form content-container">
@@ -73,7 +73,7 @@
               <article>
                 <header class="node-header">
                   <div>
-                    <h5 class="node-name" title="Node Name">{{node.hostname}}</h5>
+                    <h5 class="node-name ellipsis" title="{{node.hostname}}">{{node.hostname}}</h5>
                   </div>
                   <div class="node-type" ng-if="node.ipAddress">
                     {{node.ipAddress}}

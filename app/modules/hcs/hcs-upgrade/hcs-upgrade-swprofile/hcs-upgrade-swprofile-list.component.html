@@ -41,7 +41,7 @@
         <article ng-click="$ctrl.editSwProfile(swprofile)" hover-delay>
           <header class="hcs-min-height-card-header">
             <div class="header-with-right-icon">
-              <p class="h4" title="Card Name">{{swprofile.name}}</p>
+              <p class="h4 ellipsis" title="{{swprofile.name}}">{{swprofile.name}}</p>
               <div class="right card-icon-div">
                 <button type="button" class="close"
                   ng-click="$ctrl.deleteSwProfile(swprofile, $event)"

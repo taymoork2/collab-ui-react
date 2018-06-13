@@ -7,6 +7,7 @@ describe('Component: partnerHome', () => {
   const HREF = 'href';
   const MESSAGE_FORMAT = 'messageformat';
   const USER_TOTALS = 'partnerHomePage.aria.userTotals';
+  let enabledFeatureToggles: string[] = [];
 
   const ACTIVE_TRIAL = {
     customerName: 'active Customer',
@@ -43,19 +44,21 @@ describe('Component: partnerHome', () => {
       'Orgservice',
       'PartnerService',
       'TrialService',
+      'UserOverviewService',
+      'HcsFeatureAvailableNotification',
     );
 
     this.$state.modal = {
       result: this.$q.resolve(true),
     };
-
+    enabledFeatureToggles = [];
     spyOn(this.$state, 'href').and.returnValue(HREF);
     spyOn(this.$state, 'go').and.returnValue(this.$q.resolve(true));
     spyOn(this.$translate, 'instant').and.callThrough();
     spyOn(this.$window, 'open');
     spyOn(this.Analytics, 'trackTrialSteps');
     spyOn(this.CardUtils, 'resize');
-    spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'supports').and.callFake((name) => this.$q.resolve(_.includes(enabledFeatureToggles, name)));
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.TrialService, 'getTrialsList').and.returnValue(this.$q.resolve(true));
     spyOn(this.TrialService, 'getAddTrialRoute').and.returnValue({
@@ -83,7 +86,7 @@ describe('Component: partnerHome', () => {
       expect(this.controller.cardSize).toEqual(FULL_CARD);
 
       // API Calls
-      expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
+      expect(this.CardUtils.resize).toHaveBeenCalledTimes(1);
     });
 
     it('ariaTrialLabel should return a translated string', function () {
@@ -168,6 +171,62 @@ describe('Component: partnerHome', () => {
       expect(this.$window.open).toHaveBeenCalledWith(HREF);
       expect(this.$state.href).toHaveBeenCalledWith('login', {
         customerOrgId: EXPIRED_TRIAL.customerOrgId,
+      });
+    });
+  });
+
+  describe('atlasHostedCloudService feature tests', function () {
+    beforeEach(function () {
+      enabledFeatureToggles = [this.FeatureToggleService.features.atlasHostedCloudService];
+    });
+
+    describe('when uaas entitlement is not present', function() {
+      beforeEach(function () {
+        spyOn(this.UserOverviewService, 'getUser').and.returnValue(this.$q.resolve({
+          user: {
+            entitlements: [],
+          },
+        }));
+        spyOn(this.HcsFeatureAvailableNotification, 'createNotification').and.returnValue(this.$q.resolve({
+          badgeText: 'common.new',
+          badgeType: 'success',
+          canDismiss: true,
+          linkText: 'homePage.getStarted',
+          name: 'hcsFeatureAvailable',
+          text: 'hcs.notifications.featureAvailable.infoText',
+        }));
+        this.compileComponent('partnerHome', {});
+      });
+
+      it('feature toggle should enable and push notification function should execute', function () {
+        expect(this.controller.hcsFeatureToggle).toBeTruthy();
+        expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
+        expect(this.HcsFeatureAvailableNotification.createNotification).toHaveBeenCalled();
+      });
+    });
+
+    describe('when uaas entitlement is present', function() {
+      beforeEach(function () {
+        spyOn(this.UserOverviewService, 'getUser').and.returnValue(this.$q.resolve({
+          user: {
+            entitlements: ['ucmgmt-uaas'],
+          },
+        }));
+        spyOn(this.HcsFeatureAvailableNotification, 'createNotification').and.returnValue(this.$q.resolve({
+          badgeText: 'common.new',
+          badgeType: 'success',
+          canDismiss: true,
+          linkText: 'homePage.getStarted',
+          name: 'hcsFeatureAvailable',
+          text: 'hcs.notifications.featureAvailable.infoText',
+        }));
+        this.compileComponent('partnerHome', {});
+      });
+
+      it('feature toggle should enable and push notification function should execute', function () {
+        expect(this.controller.hcsFeatureToggle).toBeTruthy();
+        expect(this.CardUtils.resize).toHaveBeenCalledTimes(2);
+        expect(this.HcsFeatureAvailableNotification.createNotification).not.toHaveBeenCalled();
       });
     });
   });
