@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: DeviceOverviewCtrl', function () {
-  var $scope, $controller, $state, controller, $httpBackend;
+  var $scope, $componentController, $state, controller, $httpBackend;
   var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
   var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusService;
   var PstnAreaService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
@@ -22,11 +22,11 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
+  function dependencies(_$q_, $rootScope, _$componentController_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
     _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
     _PstnAreaService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusService_) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $state = {};
@@ -78,18 +78,20 @@ describe('Controller: DeviceOverviewCtrl', function () {
   };
 
   function initControllerWithSettings(channels, stateParams) {
-    controller = $controller('DeviceOverviewCtrl', {
+    controller = $componentController('deviceOverview', {
       $element: {
         find: jasmine.createSpy('find').and.returnValue({
           focus: _.noop,
         }),
       },
       $scope: $scope,
-      channels: channels,
       $stateParams: stateParams,
       $state: $state,
       Userservice: Userservice,
       FeatureToggleService: FeatureToggleService,
+    },
+    {
+      channels: channels,
     });
     $scope.$apply();
   }
@@ -244,7 +246,9 @@ describe('Controller: DeviceOverviewCtrl', function () {
     });
 
     it('should not show remote support button when not supported', function () {
-      controller.currentDevice = {};
+      controller.currentDevice = {
+        hasRemoteSupport: false,
+      };
 
       expect(controller.showRemoteSupportButton()).toBe(false);
     });
@@ -365,7 +369,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
 });
 
 describe('Huron Device', function () {
-  var $scope, $controller, controller, $httpBackend;
+  var $scope, $componentController, controller, $httpBackend;
   var $q, UrlConfig;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig,
     ConfirmAtaRebootModal, PstnModel, PstnService;
@@ -380,10 +384,10 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
+  function dependencies(_$q_, $rootScope, _$componentController_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
     _$timeout_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $timeout = _$timeout_;
@@ -478,15 +482,17 @@ describe('Huron Device', function () {
   }
 
   function initController() {
-    controller = $controller('DeviceOverviewCtrl', {
+    controller = $componentController('deviceOverview', {
       $element: {
         find: jasmine.createSpy('find').and.returnValue({
           focus: _.noop,
         }),
       },
       $scope: $scope,
-      channels: {},
       $stateParams: $stateParams,
+    },
+    {
+      channels: {},
     });
 
     $scope.$apply();
@@ -580,7 +586,7 @@ describe('Huron Device', function () {
     });
 
     it('should update CPC setting', function () {
-      spyOn(ConfirmAtaRebootModal, 'open').and.returnValue($q.resolve(true));
+      spyOn(ConfirmAtaRebootModal, 'open').and.returnValue($q.resolve());
       controller.saveCpcSettings();
       $scope.$apply();
 
