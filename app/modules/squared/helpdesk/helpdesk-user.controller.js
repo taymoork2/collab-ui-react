@@ -112,6 +112,8 @@
         template: require('modules/squared/helpdesk/helpdesk-confirm-full-admin-elevation.html'),
       }).result.then(function () {
         sendRequestForFullAdminAccess();
+      }, function () {
+        logMetrics({ type: 'sendRequestForFullAdminAccess', status: 'cancel' });
       });
     }
 
