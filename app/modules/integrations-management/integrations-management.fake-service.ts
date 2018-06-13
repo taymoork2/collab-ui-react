@@ -8,23 +8,10 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private customPolicies: ICustomPolicy[] = [];
   private customPolicyId = 1;
-
-  private applicationUsages: IApplicationUsage[] = [{
-    id: '11111',
-    orgId: '55555',
-    appId: '77777',
-    appName: 'Fake Integration',
-    appClientId: '88888',
-    appPrivacyUrl: 'http://fake.privacy.url/',
-    appCompanyUrl: 'http://fake.company.url/',
-    appContactName: 'Fake Contact Name',
-    appContactEmail: 'fake@contact-email.com',
-    appUserAdoption: 500,
-    policyAction: PolicyAction.DENY,
-    appCreated: '2018-06-08T20:50:19.355Z',
-  }];
-
+  private applicationUsages: IApplicationUsage[] = this.createApplicationUsages();
   private globalAccessPolicy?: IGlobalPolicy;
+
+  private readonly ORG_ID = '55555';
 
   public listIntegrations(_options?: IListOptions): IPromise<IApplicationUsage[]> {
     return this.$q.resolve(this.applicationUsages);
@@ -45,7 +32,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
   public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<void> {
     this.globalAccessPolicy = {
       id: '11111',
-      orgId: '55555',
+      orgId: this.ORG_ID,
       name: 'Global Access Policy',
       type: PolicyType.DEFAULT,
       action,
@@ -67,7 +54,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     const policyId = `${this.customPolicyId}`;
     const customPolicy = {
       id: policyId,
-      orgId: '55555',
+      orgId: this.ORG_ID,
       name: 'Custom Policy',
       type: PolicyType.CUSTOM,
       action,
@@ -125,5 +112,24 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private getCustomPolicyById(id: string): ICustomPolicy {
     return _.find(this.customPolicies, customPolicy => customPolicy.id === id);
+  }
+
+  private createApplicationUsages(): IApplicationUsage[] {
+    return _.times(100, index => {
+      return {
+        id: `${index}`,
+        orgId: this.ORG_ID,
+        appId: `${index}`,
+        appName: `Fake Integration ${index}`,
+        appClientId: `${index}`,
+        appPrivacyUrl: `http://fake-${index}.privacy.url/`,
+        appCompanyUrl: `http://fake-${index}.company.url/`,
+        appContactName: `Fake Contact Name ${index}`,
+        appContactEmail: `fake-${index}@contact-email.com`,
+        appUserAdoption: 500,
+        policyAction: PolicyAction.DENY,
+        appCreated: '2018-06-08T20:50:19.355Z',
+      };
+    });
   }
 }
