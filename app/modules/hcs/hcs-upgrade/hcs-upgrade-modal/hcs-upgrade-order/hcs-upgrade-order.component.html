@@ -4,11 +4,11 @@
     <h5>{{::'common.upgrade' | translate}} {{$ctrl.groupOrder[$index]}}</h5>
     <div class="height-min">
       <cs-card-layout>
-        <cs-card class="medium" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
+        <cs-card class="large" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
           <article>
             <header>
               <h5 class="inline">{{node.hostName}}</h5>
-              <div ng-if="!node.pub" class="pull-right">
+              <div ng-if="!node.pub" class="pull-right grid-display">
                 <span ng-if="$ctrl.canMoveUp(node, parentIndex)" ng-click="$ctrl.moveUp(parentIndex, $index)" >
                   <i class="icon icon-2x icon-arrow-up"></i>
                 </span>

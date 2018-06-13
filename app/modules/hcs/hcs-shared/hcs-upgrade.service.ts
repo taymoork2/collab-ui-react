@@ -93,7 +93,7 @@ export class HcsUpgradeService {
     this.clusterUpgradeResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/upgradeorder', {}, {});
 
     //this.clusterTaskStatusResource = this.$resource<IClusterTaskType>(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/latest', {}, {});
-    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks', {}, {});
+    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/:taskId', {}, {});
     this.statusCheckResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/statusCheck', {}, {});
   }
 
@@ -323,10 +323,18 @@ export class HcsUpgradeService {
     }, taskObj).$promise;
   }
 
+  public getTask(clusterUuid, taskId) {
+    return this.tasksResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+      taskId: taskId,
+    }).$promise;
+  }
+
   public getPrecheckStatus(clusterUuid: string) {
     return this.statusCheckResource.get({
       partnerId: this.Authinfo.getOrgId(),
-      clusterUuid: clusterUuid,
+      clusterId: clusterUuid,
     }, {}).$promise;
   }
 }
