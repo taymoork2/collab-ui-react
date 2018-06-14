@@ -30,7 +30,7 @@ describe('searchRequestCompressor', () => {
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_ErrorCodes))).toBe('AFe');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_Displayname))).toBe('AFf');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_AccountType))).toBe('AFg');
-      expect(compressor.compress(new FieldQuery('', QueryParser.Field_SipUrl))).toBe('AFh');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_SipUrls))).toBe('AFh');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_IP))).toBe('AFi');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_CisUUID))).toBe('AFj');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_Serial))).toBe('AFk');
@@ -38,6 +38,7 @@ describe('searchRequestCompressor', () => {
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_Mac))).toBe('AFm');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_UpgradeChannel))).toBe('AFn');
       expect(compressor.compress(new FieldQuery('', QueryParser.Field_Product))).toBe('AFo');
+      expect(compressor.compress(new FieldQuery('', QueryParser.Field_PrimarySipUrl))).toBe('AFp');
       expect(compressor.compress(new FieldQuery('', 'nico'))).toBe('AFzGbmljbw');
     });
 

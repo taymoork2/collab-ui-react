@@ -59,7 +59,8 @@ export class QueryParser {
   public static readonly Field_IP = 'ip';
   public static readonly Field_Description = 'description';
   public static readonly Field_Software = 'software';
-  public static readonly Field_SipUrl = 'sipurl';
+  public static readonly Field_SipUrls = 'sipurls';
+  public static readonly Field_PrimarySipUrl = 'primarysipurl';
 
   public static readonly validFieldNames = [QueryParser.Field_Displayname,
     QueryParser.Field_CisUUID,
@@ -73,7 +74,8 @@ export class QueryParser {
     QueryParser.Field_UpgradeChannel,
     QueryParser.Field_Product,
     QueryParser.Field_ConnectionStatus,
-    QueryParser.Field_SipUrl,
+    QueryParser.Field_SipUrls,
+    QueryParser.Field_PrimarySipUrl,
     QueryParser.Field_ErrorCodes,
     QueryParser.Field_Tag];
 

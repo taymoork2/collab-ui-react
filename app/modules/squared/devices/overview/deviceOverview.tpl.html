@@ -123,10 +123,10 @@
           <label class="col-sm-4 control-label">Lines</label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
           <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
-            <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
-              <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
-              <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
-              <span class="badge primary primaryLineBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
+            <p class="form-control-static" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
+              <span class="form-control-static">{{line.directoryNumber}}&nbsp;</span><span
+              class="form-control-static" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span><span
+              class="badge primaryItemBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
             </p>
             <p class="form-control-static" ng-hide="deviceOverview.lines && deviceOverview.lines.length > 0" translate="common.none"></p>
           </div>
@@ -149,10 +149,19 @@
             <p class="form-control-static">{{deviceOverview.currentDevice.mac}}</p>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl || deviceOverview.currentDevice.additionalSipUrls">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
           <div class="col-sm-8">
-            <p class="form-control-static" title="{{deviceOverview.currentDevice.sipUrl}}">{{deviceOverview.currentDevice.sipUrl}}</p>
+            <p class="form-control-static"
+               title="{{deviceOverview.currentDevice.sipUrl}}">
+              {{ deviceOverview.currentDevice.sipUrl | giveBreakOpportunities }}<span class="badge primaryItemBadge"
+                    ng-if="deviceOverview.currentDevice.additionalSipUrls.length > 0" translate="common.primary">
+              </span>
+            </p>
+            <p class="form-control-static"
+               ng-repeat="sipUrl in deviceOverview.currentDevice.additionalSipUrls">
+              {{ sipUrl | giveBreakOpportunities }}
+            </p>
           </div>
         </div>
         <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
@@ -301,8 +310,8 @@
             <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
             <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
             <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
-              <p class="form-control-static line-row">
-                <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
+              <p class="form-control-static">
+                <span class="form-control-static">{{deviceOverview.emergencyCallbackNumber}}</span>
               </p>
             </div>
           </div>
