@@ -3360,6 +3360,18 @@
               },
             },
           })
+          .state('hcs.sidePanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hcs-side-panel></hcs-side-panel>',
+              },
+            },
+            params: {
+              status: null,
+              node: null,
+            },
+          })
           .state('taasSuites', {
             parent: 'main',
             url: '/taasSuite',

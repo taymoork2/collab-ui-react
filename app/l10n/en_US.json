@@ -11547,6 +11547,11 @@
         "maxGroups": "Cannot create more than 8 upgrade groups"
       }
     },
+    "sidePanel": {
+      "postTime": "Post Check Time",
+      "spaceAvailable": "Available Space",
+      "copInstalled": "COP files Installed"
+    },
     "prechecks" : {
       "title": "Prechecks",
       "choose": "Choose the Upgrade Prechecks to run",
