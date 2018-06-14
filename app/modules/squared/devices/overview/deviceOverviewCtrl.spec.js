@@ -21,6 +21,10 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   function dependencies(_$q_, $rootScope, _$componentController_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
     _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
@@ -113,6 +117,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   it('should init controller', function () {
     initController();
     expect(controller).toBeDefined();
+    $httpBackend.flush();
   });
 
   describe('upgrade channel', function () {
@@ -134,6 +139,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should be able to change channels if there are channels to choose for a Spark Board device', function () {
@@ -142,6 +148,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBe(true);
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything if there are no channels to choose', function () {
@@ -149,6 +156,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings([], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything for Huron devices', function () {
@@ -156,6 +164,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
     });
 
@@ -175,6 +184,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should show current channel if there are channels to choose for a Spark Board device', function () {
@@ -183,6 +193,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should not show anything if there are no channels to choose', function () {
@@ -190,6 +201,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings([], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything for Huron devices', function () {
@@ -197,6 +209,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
     });
   });
@@ -215,6 +228,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).toHaveBeenCalledTimes(1);
       expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should not show remote support modal when not supported for device', function () {
@@ -228,6 +242,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
       expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should show remote support modal when supported and not readonly', function () {
@@ -243,6 +258,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
       expect(RemoteSupportModal.open).toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should not show remote support button when not supported', function () {
@@ -251,6 +267,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       };
 
       expect(controller.showRemoteSupportButton()).toBe(false);
+      $httpBackend.flush();
     });
 
     it('should show remote support button when supported', function () {
@@ -258,6 +275,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
         hasRemoteSupport: true,
       };
       expect(controller.showRemoteSupportButton()).toBe(true);
+      $httpBackend.flush();
     });
   });
 
@@ -271,6 +289,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should ignore already present tags', function () {
@@ -281,6 +300,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should ignore leading and trailing whitespace when checking for existing tags', function () {
@@ -291,6 +311,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should post new tags to CsdmDeviceService for cloudberry devices', function () {
@@ -300,11 +321,33 @@ describe('Controller: DeviceOverviewCtrl', function () {
         tags: [],
         url: 'testUrl',
       };
-      spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
+      spyOn(CsdmDeviceService, 'updateTags').and.callThrough();
+      $httpBackend.expectPATCH('testUrl').respond(200);
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
+    });
+
+    it('should post new tags to CsdmDeviceService for Huron devices', function () {
+      controller.newTag = 'new tag';
+      controller.currentDevice = {
+        isHuronDevice: true,
+        tags: [],
+        url: 'testUrl',
+        huronId: 'testhuronId',
+        cisUuid: 'testcisUuid',
+      };
+      spyOn(CsdmDeviceService, 'updateTags').and.callThrough();
+
+      var deviceUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/testhuronId?type=huron&cisUuid=testcisUuid';
+      $httpBackend.expectPATCH(deviceUrl).respond(200);
+      controller.addTag();
+      $scope.$apply();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
     });
 
     it('should append new tags to existing tags', function () {
@@ -318,7 +361,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag', 'new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['old tag', 'new tag']);
+      $httpBackend.flush();
     });
 
     it('should remove deleted tag from existing tags', function () {
@@ -331,7 +375,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.removeTag('old tag');
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag2']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['old tag2']);
+      $httpBackend.flush();
     });
 
     it('should leave out leading and trailing whitespace when posting new tags to CsdmDeviceService', function () {
@@ -345,7 +390,8 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
     });
 
     it('should ignore keys other than Enter', function () {
@@ -355,6 +401,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should call addTag on Enter', function () {
@@ -364,6 +411,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
+      $httpBackend.flush();
     });
   });
 });
@@ -500,7 +548,6 @@ describe('Huron Device', function () {
 
   describe('timezone support', function () {
     beforeEach(initController);
-
 
     it('should init controller', function () {
       expect(controller).toBeDefined();

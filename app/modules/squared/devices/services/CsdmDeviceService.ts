@@ -10,6 +10,10 @@ export class CsdmDeviceService {
     this.devicesFastUrlPostFix = '?checkDisplayName=false&checkOnline=false';
   }
 
+  private createCsdmHuronDeviceUrl(device): string {
+    return `${this.devicesUrl}/${device.huronId}?type=huron&cisUuid=${device.cisUuid}`;
+  }
+
   public fetchDevices(requestFullData?: boolean) {
     let url = this.devicesUrl;
     if (!requestFullData) {
@@ -42,9 +46,13 @@ export class CsdmDeviceService {
     return this.$http.delete(device.url + '?keepPlace=true');
   }
 
-  public updateTags(deviceUrl, tags) {
+  public updateTags(device, tags: string[]) {
+    let deviceUrl = device.url;
+    if (device.isHuronDevice && device.huronId) {
+      deviceUrl = this.createCsdmHuronDeviceUrl(device);
+    }
     return this.$http.patch(deviceUrl, {
-      description: JSON.stringify(tags || []),
+      tags: tags || [],
     });
   }
 

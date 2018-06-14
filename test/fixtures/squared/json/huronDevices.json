@@ -37,6 +37,8 @@
   "https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa":{
     "displayName":"aardvark100",
     "cisUuid":"68351854-Place2WithHuronDevice-c9c844421ec2",
+    "huronId":"2c586b22-hurondev_inplace2-ace151f631fa",
+    "isHuronDevice":true,
     "accountType": "MACHINE",
     "url":"https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa",
     "mac":"50:06:ab:80:07:48",

@@ -61,10 +61,6 @@ class CsdmHuronDeviceService {
     return this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId + '/ata190s';
   }
 
-  private static encodeHuronTags(description) {
-    return _.replace(description, /"/g, "'");
-  }
-
   public fetch() {
     return this.huronEnabled().then((enabled) => {
       return !enabled ? this.$q.resolve([]) : this.$http.get(this.devicesUrl).then((res) => {
@@ -196,20 +192,6 @@ class CsdmHuronDeviceService {
       actions: {
         reset: true,
       },
-    });
-  }
-
-  public updateTags(url, tags) {
-    const jsonTags = CsdmHuronDeviceService.encodeHuronTags(JSON.stringify(tags || []));
-    if (jsonTags.length >= 128) {
-      return this.$q.reject('List of tags is longer than supported.');
-    }
-    if (!/^[^"%\\&<>]*$/.test(jsonTags) || _.some(tags, t => /\',\'/.test(CsdmHuronDeviceService.encodeHuronTags(t)))) {
-      return this.$q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
-    }
-
-    return this.$http.put(url, {
-      description: jsonTags,
     });
   }
 
