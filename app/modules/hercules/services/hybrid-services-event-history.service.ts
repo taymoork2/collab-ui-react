@@ -567,7 +567,7 @@ export class HybridServicesEventHistoryService {
     return formattedEvents;
   }
 
-  private buildConnectorEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem{
+  private buildConnectorEvent(event: IRawClusterEvent): IHybridServicesEventHistoryItem {
     let resName = _.get(event, 'payload.currentState.hostname', '');
     if (event.payload.type === 'ConnectorUpdated' || event.payload.type === 'ConnectorCreated'
       || event.payload.type === 'ConnectorDeregistered' || event.payload.type === 'ConnectorRemoved') {
