@@ -3765,28 +3765,28 @@
         "mail": "Mail"
       },
       "resourceGroupEvents": {
-        "created": "Resource group {{resourceGroupName}} was created.",
-        "updated": "Resource group {{resourceGroupName}} was updated.",
-        "deleted": "Resource group {{resourceGroupName}} was deleted."
+        "created": "Resource group {{resourceGroupName}} was created",
+        "updated": "Resource group {{resourceGroupName}} was updated",
+        "deleted": "Resource group {{resourceGroupName}} was deleted"
       },
       "hostEvents": {
-        "updated": "Host was updated."
+        "updated": "Host was updated"
       },
       "connectorEvents": {
-        "updated": "{{connectorType}} updated.",
-        "created": "{{connectorType}} created.",
-        "deregistered": "{{connectorType}} de-registered.",
-        "removed": "{{connectorType}} removed."
+        "updated": "{{connectorType}} updated",
+        "created": "{{connectorType}} created",
+        "deregistered": "{{connectorType}} de-registered",
+        "removed": "{{connectorType}} removed"
       },
       "redirectTargetEvents": {
-        "created": "Redirect target created.",
-        "deleted": "Redirect target deleted."
+        "created": "Redirect target created",
+        "deleted": "Redirect target deleted"
       },
       "machineAccountEvents": {
-        "created": "Machine account created."
+        "created": "Machine account created"
       },
       "mailSubscriberEvents": {
-        "updated": "Mail subscriber list updated."
+        "updated": "Mail subscriber list updated"
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3800,7 +3800,7 @@
           "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
-          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational.",
           "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
         },
         "alarmEvents": {

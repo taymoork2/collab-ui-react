@@ -342,8 +342,38 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
+
     return type === 'ConnectorStateUpdated' || type === 'ConnectorUpdated' || type === 'ConnectorCreated'
       || type === 'ConnectorDeregistered' || type === 'ConnectorRemoved';
+  }
+
+  public hideConnectorEvent(event: IRawClusterEvent): boolean {
+    let type: EventType | undefined = undefined;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    }
+
+    // Only show the last transition: from upgrading -> upgraded
+    if ( type === 'ConnectorUpdated') {
+      const e = (<IRawClusterEvent>event);
+      if (e.payload !== undefined && e.payload.oldUpgradeState !== undefined && e.payload.upgradeState !== undefined) {
+        if (e.payload.upgradeState !== 'upgraded') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Hide the `initializing` event
+    if (type === 'ConnectorStateUpdated') {
+      const modifiedState = this.getConnectorStateUpdatedType(event) || undefined;
+      if (modifiedState === 'initializing') {
+        return true;
+      }
+    }
+
+    // default show all
+    return false;
   }
 
   public isServiceActivationEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -410,7 +440,7 @@ export class HybridServicesEventHistoryService {
       if (this.isClusterEvent(event)) {
         processedEvents = _.concat(processedEvents, this.buildClusterItems(event));
       }
-      if (this.isConnectorEvent(event)) {
+      if (this.isConnectorEvent(event) && !this.hideConnectorEvent(event)) {
         processedEvents.push(this.buildConnectorEvent(event));
       }
       if (this.isServiceActivationEvent(event)) {
