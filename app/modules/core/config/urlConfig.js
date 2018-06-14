@@ -261,7 +261,7 @@
       prod: 'https://proximity-a.wbx2.com/proximity/api/v1',
     },
     QlikServiceUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
+      dev: 'https://qlik-broker-service.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',

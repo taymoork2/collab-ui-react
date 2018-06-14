@@ -30,31 +30,6 @@
     @include vr-spacing(pl, 1.25);
   }
 
-  .metricsContent {
-    overflow: hidden !important;
-    padding: 0 !important;
-  }
-
-  .fullSize {
-    height: 100%;
-    width: 100%;
-  }
-
-  .metrics-loading-icon {
-    margin-top: 10vh;
-    font-size: 7rem;
-  }
-
-  .metrics-loading-data {
-    margin-top: 1rem;
-    font-size: 1.8rem;
-    font-family: $brand-font-extra-light;
-  }
-
-  .metrics-loading-description {
-    margin-top: 1rem;
-  }
-
   .report-subheader {
     @include vr-spacing(mt, 0.25);
     @include vr-spacing(mr, 1);

@@ -557,7 +557,7 @@
     "userTab": "Users",
     "deviceTab": "Devices",
     "placeTab": "Places",
-    "reportTab": "Reports",
+    "reportTab": "Analytics",
     "troubleshootingTab": "Troubleshooting",
     "taasOverviewTab": "TaaS",
     "supportTab": "Support",
@@ -719,7 +719,7 @@
     "loadingData": "Loading Data",
     "notFound": "Resource not Found",
     "loadingDescription": "For best results, allow reports to finish loading.",
-    "pageTitle": "Reports",
+    "pageTitle": "Analytics",
     "ccaTab": "CCA",
     "engagement": "Engagement",
     "quality": "Quality",
@@ -753,6 +753,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Webex Teams",
     "webexReports": "Webex Meetings",
+    "messageTab": "Messaging",
+    "callTab": "Calling",
     "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
@@ -785,7 +787,7 @@
       "to": "to"
     },
     "usageReports": {
-      "usageReportTitle": "Room Devices",
+      "usageReportTitle": "Devices",
       "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
@@ -832,7 +834,7 @@
       }
     },
     "webexMetrics": {
-      "title": "Webex Meetings",
+      "title": "Meetings",
       "metrics": "Metrics",
       "MEI": "MEI",
       "system": "System",

@@ -4,7 +4,7 @@
   module.exports = WebexMetricsService;
 
   /* @ngInject */
-  function WebexMetricsService($http, $log, $q, Authinfo, Config, FeatureToggleService, UrlConfig, WebExApiGatewayService) {
+  function WebexMetricsService($http, $q, Authinfo, Config, FeatureToggleService, UrlConfig, WebExApiGatewayService) {
     var metricsSites = [], hasClassic = null;
 
     var service = {
@@ -23,8 +23,6 @@
     function getMetricsSites() {
       if (_.isEmpty(metricsSites)) {
         metricsSites = getMetricsData();
-        $log.log('webex metrics service http request to get site list');
-        $log.log(metricsSites);
       }
       return metricsSites;
     }

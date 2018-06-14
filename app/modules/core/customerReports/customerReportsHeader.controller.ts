@@ -20,10 +20,15 @@ class CustomerReportsHeaderCtrl {
     }
     this.$q.all(this.promises).then((features: any): void => {
       if (features.webexMetrics && features.proPackEnabled) {
-        this.headerTabs.push({
-          title: this.$translate.instant('reportsPage.sparkReports'),
-          state: 'reports.sparkMetrics',
-        });
+        this.headerTabs.push(
+          {
+            title: this.$translate.instant('reportsPage.messageTab'),
+            state: `reports.sparkMetrics({sparktype: 'messaging'})`,
+          },
+          {
+            title: this.$translate.instant('reportsPage.callTab'),
+            state: `reports.sparkMetrics({sparktype: 'calling'})`,
+          });
       } else {
         this.headerTabs.push({
           title: this.$translate.instant('reportsPage.sparkReports'),
@@ -54,7 +59,7 @@ class CustomerReportsHeaderCtrl {
 
   public isWebexClassicEnabled: boolean = false;
   public isWebexMetricsEnabled: boolean = false;
-  public headerTabs = new Array<any>();
+  public headerTabs = new Array<{ title: string, state: string}>();
 
   private promises: any = {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
@@ -81,10 +86,12 @@ class CustomerReportsHeaderCtrl {
               this.isWebexClassicEnabled = true;
               this.$scope.$broadcast('classicEnabled', this.isWebexMetricsEnabled);
               if (!isSupported) {
-                this.headerTabs.push({
-                  title: this.$translate.instant('reportsPage.webexMetrics.title'),
-                  state: 'reports.webex-metrics',
-                });
+                this.headerTabs.push(
+                  {
+                    title: this.$translate.instant('reportsPage.webexMetrics.title'),
+                    state: 'reports.webex-metrics',
+                  },
+               );
               }
             }
           });
@@ -103,8 +110,18 @@ class CustomerReportsHeaderCtrl {
   }
 
   public goToFirstReportsTab(): void {
-    const firstTab = this.headerTabs[0];
-    this.$state.go(firstTab.state);
+    if (this.headerTabs.length > 0) {
+      const firstTabState: string = _.get(this.headerTabs, '[0].state');
+
+      if (!firstTabState) {
+        return;
+      }
+
+      const sanitizedFirstTabState: string = _.first(_.split(firstTabState, '('));
+
+      this.$state.go(sanitizedFirstTabState);
+
+    }
   }
 }
 
