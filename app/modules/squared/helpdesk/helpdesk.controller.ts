@@ -523,4 +523,3 @@ class HelpdeskController {
 angular
   .module('Squared')
   .controller('HelpdeskController', HelpdeskController);
-
