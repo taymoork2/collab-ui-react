@@ -11,7 +11,7 @@ export class CsdmDeviceService {
   }
 
   private createCsdmHuronDeviceUrl(device): string {
-    return this.devicesUrl + '/' + device.huronId + '?type=huron&cisUuid=' + device.cisUuid;
+    return `${this.devicesUrl}/${device.huronId}?type=huron&cisUuid=${device.cisUuid}`;
   }
 
   public fetchDevices(requestFullData?: boolean) {
