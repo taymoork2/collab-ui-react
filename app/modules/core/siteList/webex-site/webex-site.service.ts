@@ -57,7 +57,10 @@ export class WebExSiteService {
   // Gets center details directly from api.
   // Used when modifying existing license distribution
   private getCenterDetailsForAllSubscriptions(): ng.IPromise<ICenterDetailsFromAPI[]> {
-    const externalIds: string[] = _.map(this.Authinfo.getSubscriptions(), 'externalSubscriptionId');
+    const externalIds: string[] = _.chain(this.Authinfo.getSubscriptions())
+      .filter((subscription) => subscription.status !== this.Config.subscriptionStatus.PENDING)
+      .map((subscription) => subscription.externalSubscriptionId)
+      .value();
     const centerDetailsPromises: ng.IPromise<any>[] = _.map(externalIds, subId => {
       return this.SetupWizardService.getExistingConferenceServiceDetails(subId);
     });
