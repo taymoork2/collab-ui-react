@@ -83,7 +83,9 @@ class DeviceOverview implements ng.IComponentController {
   public jumpToAccount = false;
   public actionList = [{
     actionKey: 'common.edit',
-    actionFunction: this.goToEmergencyServices,
+    actionFunction: () => {
+      this.goToEmergencyServices();
+    },
   }];
 
   /* @ngInject */
