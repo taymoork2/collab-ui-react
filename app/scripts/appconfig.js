@@ -1352,9 +1352,7 @@
           .state('user-overview.csdmDevice', {
             views: {
               'side-panel-container@user-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2143,13 +2141,16 @@
             },
           })
           .state('reports.sparkMetrics', {
-            url: '/sparkMetrics',
+            url: '/analytics/:sparktype',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
                 template: require('modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html'),
               },
+            },
+            params: {
+              sparktype: 'messaging',
             },
           })
           .state('my-company.autoLicense', {
@@ -2505,9 +2506,7 @@
           .state('place-overview.csdmDevice', {
             views: {
               'side-panel-container@place-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2845,9 +2844,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
               'header@device-overview': {
                 template: require('modules/squared/devices/overview/deviceHeader.tpl.html'),
@@ -2986,10 +2983,13 @@
             template: '<partner-reports-tabs></partner-reports-tabs>',
           })
           .state('partnerreports.tab.spark', {
-            url: '/spark',
+            url: '/analytics/:sparktype',
             template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
             controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
+            params: {
+              sparktype: 'messaging',
+            },
           })
           .state('partnerreports.tab.ccaReports', {
             template: '<cca-reports-tabs></cca-reports-tabs>',
@@ -3002,7 +3002,7 @@
             template: '<webex-reports-tabs></webex-reports-tabs>',
           })
           .state('partnerreports.tab.webexreports.metrics', {
-            url: '/webexreports/metrics',
+            url: '/webexreports/meetings',
             template: '<webex-reports></webex-reports>',
           })
           .state('partnerreports.tab.webexreports.diagnostics', {

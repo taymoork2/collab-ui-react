@@ -557,4 +557,3 @@ module.exports = angular
   .module('Squared')
   .service('CsdmConverter', CsdmConverter)
   .name;
-

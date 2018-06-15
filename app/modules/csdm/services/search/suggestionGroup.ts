@@ -160,7 +160,6 @@ abstract class SuggestionGroupBase implements ISuggestionGroup {
       return { selection: newSuggestion, overflow: false };
     }
 
-
     const uiSuggestions = this.uiSuggestions;
     let i = direction === Direction.Next ? 0 : uiSuggestions.length - 1;
 

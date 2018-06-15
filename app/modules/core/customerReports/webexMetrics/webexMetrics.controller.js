@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    $log,
     $location,
     $q,
     $rootScope,
@@ -332,8 +331,6 @@
       vm.isStateReady = true;
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
-
-      $log.log('onStateChangeStart: checkStatePermission -----------');
       if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
         event.preventDefault();
         if (!isSubState || (isSubState && toState.name.indexOf('classic') !== -1)) {
@@ -494,6 +491,7 @@
 
     function updateWebexMetrics() {
       $scope.$broadcast('unfreezeState', false);
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_SITE_SELECTED);
 
       if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
         vm.isNoData = true;

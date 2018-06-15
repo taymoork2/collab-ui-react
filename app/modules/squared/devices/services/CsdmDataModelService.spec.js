@@ -17,9 +17,10 @@ describe('Service: CsdmDataModelService', function () {
   var device1Url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
   var devicesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices';
 
-  var huronDevicesUrl = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron';
+  var huronDevicesUrl = devicesUrl + '/?type=huron';
   var pWithHuronDevice2Url = placesUrl + '68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronDevice2Url = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa';
+  var huronDevice2CsdmUrl = devicesUrl + '/2c586b22-hurondev_inplace2-ace151f631fa?type=huron&cisUuid=68351854-Place2WithHuronDevice-c9c844421ec2';
   var huronPersonalDeviceUrl = 'https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-PERSON-ace151f631fa';
   var nonExistentPlaceBasedOnPersonalUserUrl = placesUrl + '68351854-PERSON-c9c844421ec2';
   var huronPlaceWithoutDeviceUrl = placesUrl + '938d9c32-huronPlaceWithoutDevice-88d7c1a7f63ev';
@@ -301,14 +302,10 @@ describe('Service: CsdmDataModelService', function () {
       expect(promiseRejected).toBeTruthy();
     });
 
-    function testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, placeUrl) {
+    function testAddTagIsReflectedInDevAndPlaceList(deviceUrlForUpdateTags, deviceUrlToUpdate, placeUrl) {
       var promiseExecuted;
 
-      if (deviceUrlToUpdate.indexOf('huron') > -1) {
-        $httpBackend.expectPUT(deviceUrlToUpdate).respond(204);
-      } else {
-        $httpBackend.expectPATCH(deviceUrlToUpdate).respond(204);
-      }
+      $httpBackend.expectPATCH(deviceUrlForUpdateTags).respond(204);
 
       CsdmDataModelService.getDevicesMap().then(function (devices) {
         var deviceToUpdate = devices[deviceUrlToUpdate];
@@ -351,11 +348,11 @@ describe('Service: CsdmDataModelService', function () {
 
     it('add a cloudberry device tag is reflected in device list and place list', function () {
       var deviceUrlToUpdate = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f';
-      testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, pWithDeviceUrl);
+      testAddTagIsReflectedInDevAndPlaceList(deviceUrlToUpdate, deviceUrlToUpdate, pWithDeviceUrl);
     });
 
     it('add a huron device tag is reflected in device list and place list', function () {
-      testAddTagIsReflectedInDevAndPlaceList(huronDevice2Url, pWithHuronDevice2Url);
+      testAddTagIsReflectedInDevAndPlaceList(huronDevice2CsdmUrl, huronDevice2Url, pWithHuronDevice2Url);
     });
 
     it('add a device tag and sending in a cloned object is reflected in device list and place list', function () {

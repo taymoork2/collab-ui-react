@@ -8,4 +8,3 @@ export default angular
   ])
   .component('ucEsaDisclaimerMsg', new EsaDisclaimerMsgComponent())
   .name;
-

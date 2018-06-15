@@ -34,4 +34,3 @@ export class HybridTestingActiveCardComponent implements ng.IComponentOptions {
     serviceStatus: '<',
   };
 }
-

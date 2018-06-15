@@ -17,7 +17,6 @@ class LocationCallerIdCtrl implements ng.IComponentController {
   public keyPress: Function;
   public origCallerId: LocationCallerId;
 
-
   /* @ngInject */
   constructor(
     private PhoneNumberService: PhoneNumberService,
@@ -75,7 +74,6 @@ class LocationCallerIdCtrl implements ng.IComponentController {
     }
     this.onChange(this.callerId);
   }
-
 
   public getNumbers(filter: string): void {
     this.onNumberFilter({

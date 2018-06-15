@@ -3,7 +3,6 @@ import { UniqueEmailValidator } from './uniqueEmailValidator.directive';
 import * as _ from 'lodash';
 import { VaCommonSetupCtrl } from './vaCommonSetupCtrl';
 
-
 // TODO: refactor - do not use 'ngtemplate-loader' or ng-include directive
 // preserve the ng-include module paths
 const requireContext = (require as any).context(`ngtemplate-loader?module=Sunlight&relativeTo=app/!modules/sunlight/features/virtualAssistant/wizardPages/`, false, /^\.\/.*\.tpl\.html$/);

@@ -1,15 +1,15 @@
+import { LocationsService } from 'modules/call/locations';
+import { Notification } from 'modules/core/notifications';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { AutoAnswerService } from 'modules/huron/autoAnswer';
 import { CallForward } from 'modules/huron/callForward';
-import { LineService, LineConsumerType, LINE_CHANGE, Line } from 'modules/huron/lines/services';
-import { LineOverviewService, LineOverviewData } from './index';
-import { DirectoryNumberOptionsService, Availability, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
+import { IOption } from 'modules/huron/dialing';
+import { Availability, DirectoryNumberOptionsService, ExternalNumberType, Pattern } from 'modules/huron/directoryNumber';
+import { Line, LineConsumerType, LineService, LINE_CHANGE } from 'modules/huron/lines/services';
 import { MediaOnHoldService } from 'modules/huron/media-on-hold';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { Member, MemberService } from 'modules/huron/members';
 import { SharedLine, SharedLineService } from 'modules/huron/sharedLine';
-import { Notification } from 'modules/core/notifications';
-import { AutoAnswerService } from 'modules/huron/autoAnswer';
-import { IOption } from 'modules/huron/dialing';
-import { LocationsService } from 'modules/call/locations';
+import { LineOverviewData, LineOverviewService } from './index';
 
 export interface IInternalNumber {
   assigned?: boolean;

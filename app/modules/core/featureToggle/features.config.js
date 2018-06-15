@@ -21,6 +21,7 @@ module.exports = {
   atlasCareWebcallReportTrials: 'care-webcall-report-trials',
   atlasComplianceRole: 'atlas-compliance-role',
   atlasContextServiceOnboarding: 'context-onboarding-trials',
+  atlasContextServiceReporting: 'context-reporting',
   atlasCsvImportTaskManager: 'atlas-csv-import-task-manager',
   atlasCCARole: 'atlas-cca-role',
   atlasDarling: 'atlas-darling',

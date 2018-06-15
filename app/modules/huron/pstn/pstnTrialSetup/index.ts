@@ -5,7 +5,6 @@ import pstnAddressServiceModule from '../shared/pstn-address';
 import notificationsModule from 'modules/core/notifications';
 import phoneNumberModule from 'modules/huron/phoneNumber';
 
-
 export default angular
   .module('huron.pstn.pstn-trial-setup', [
     require('@collabui/collab-ui-ng').default,

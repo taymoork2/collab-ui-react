@@ -119,7 +119,6 @@ export class TaasScheduleViewCtrl implements ng.IComponentController {
     this.gridOptions.data = this.scheduleListData;
   }
 
-
   public handleFailures(): void {
     this.showReloadPageIfNeeded();
   }

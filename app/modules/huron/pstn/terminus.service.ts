@@ -216,4 +216,3 @@ export default angular
   ])
   .service('TerminusService', TerminusService)
   .name;
-

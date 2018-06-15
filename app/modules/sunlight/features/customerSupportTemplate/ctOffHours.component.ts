@@ -13,7 +13,6 @@ class CtOffHoursController extends CtBaseController {
     this.TemplateWizardService.setCardMode(this.cardMode);
   }
 
-
   private cardMode;
   public days;
   public isBusinessHoursDisabled = false;

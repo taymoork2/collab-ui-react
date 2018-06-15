@@ -35,7 +35,6 @@ export class CtBaseController implements ng.IComponentController {
   }
   public InvalidCharacters = /[<>]/i;
 
-
   public selectedMediaType(): string {
     return this.TemplateWizardService.selectedMediaType();
   }

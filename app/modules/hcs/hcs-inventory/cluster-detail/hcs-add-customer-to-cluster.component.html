@@ -37,6 +37,6 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-default" translate="common.cancel" ng-click="$ctrl.cancel()"></button>
-  <button class="btn btn--primary" translate="common.save" ng-click="$ctrl.save()"  ng-disabled="$ctrl.form.$invalid"></button>
+  <button class="btn btn-default" ng-click="$ctrl.cancel()"><span translate="common.cancel"></span></button>
+  <button class="btn btn--primary" cs-btn ng-click="$ctrl.save()" loading="$ctrl.processing" ng-disabled="$ctrl.form.$invalid"><span translate="common.save"></span></button>
 </div>

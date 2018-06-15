@@ -30,6 +30,7 @@ declare namespace csdm {
     getSearchPlacesMap(searchString: string): ng.IPromise<{ [url: string]: IPlace; }>;
     getDevicesMap(refreshHuron: boolean): ng.IPromise<{ [url: string]: IDevice; }>;
     subscribeToChanges($scope: ng.IScope, listener: Function): void;
+    updateTags(objectToUpdate: IDevicePlaceCommon, newTags: string[]);
   }
   export interface IExternalLinkedAccount {
     providerID: string;

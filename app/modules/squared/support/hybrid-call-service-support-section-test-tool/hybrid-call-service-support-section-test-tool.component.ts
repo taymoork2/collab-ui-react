@@ -32,7 +32,6 @@ class HybridCallServiceSupportSectionTestToolCtrl implements ng.IComponentContro
 
 }
 
-
 export class HybridCallServiceSupportSectionTestToolComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceSupportSectionTestToolCtrl;
   public template = require('modules/squared/support/hybrid-call-service-support-section-test-tool/hybrid-call-service-support-section-test-tool.component.html');

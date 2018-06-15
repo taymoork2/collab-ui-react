@@ -260,7 +260,6 @@ describe('Care Expert Virtual Assistant Service', function () {
     expect(EvaService.getEvaOwner(testFeature)).toEqual(TEST_OWNER_PERSON_DETAILS.displayName);
   });
 
-
   it('should return one EVA when it is missing the default expert space', function () {
     const url = new RegExp('.*/organization/' + TEST_ORG_ID + '/expert-assistant');
     const evaList = {

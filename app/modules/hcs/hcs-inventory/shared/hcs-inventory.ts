@@ -13,6 +13,8 @@ export const STATUS_UPGRADE_SCHEDULED: string = 'UPGRADE_SCHEDULED';
 export const STATUS_FAILED_UPGRADE: string = 'FAILED_UPGRADE';
 export const STATUS_OPERATIONAL: string = 'OPERATIONAL';
 export const STATUS_COMPLIANT: string = 'COMPLIANT';
+export const STATUS_NO_CLUSTERS: string = 'NO_CLUSTERS';
+export const STATUS_ASSIGNMENT_NEEDED: string = 'ASSIGNMENT_NEEDED';
 
 export interface ISelectOption {
   label: string;

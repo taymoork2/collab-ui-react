@@ -41,7 +41,6 @@ describe('L2SIP Service', () => {
 
     });
 
-
     it ('should send the customer org id if logged in as a partner', () => {
 
       Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);

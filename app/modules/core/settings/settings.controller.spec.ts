@@ -11,7 +11,6 @@ describe('SettingsCtrl', function () {
     spyOn(this.Authinfo, 'isDirectCustomer').and.returnValue(false);
     spyOn(this.Authinfo, 'isEnterpriseCustomer').and.returnValue(false);
 
-
     spyOn(this.FeatureToggleService, 'atlasDataRetentionSettingsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'csdmDeviceBrandingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'atlasBlockExternalCommunicationSettingsGetStatus').and.returnValue(this.$q.resolve(true));

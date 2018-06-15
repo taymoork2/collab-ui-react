@@ -182,7 +182,6 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
       });
   }
 
-
   public finishDownload() {
     this.isProcessing = false;
   }

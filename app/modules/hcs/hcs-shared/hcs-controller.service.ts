@@ -33,7 +33,6 @@ export class HcsControllerService {
   ) {
     const BASE_URL = this.UrlConfig.getHcsControllerServiceUrl();
 
-
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
@@ -122,7 +121,6 @@ export class HcsControllerService {
       return response;
     });
   }
-
 
   public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
     return this.customerResource.save({

@@ -245,7 +245,6 @@ describe('BaseExternalLinkedAccountUniqueSafe class', () => {
       state.$timeout.flush();
       state.$rootScope.$digest();
 
-
       expect(state.UserListService.listUsersAsPromise).toHaveBeenCalledTimes(2);
     });
   });

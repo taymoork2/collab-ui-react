@@ -1,3 +1,5 @@
+import moduleName from './index';
+
 describe('Component: sectionTitle', () => {
   afterEach(function () {
     if (this.view) {
@@ -5,7 +7,7 @@ describe('Component: sectionTitle', () => {
     }
   });
   beforeEach(function () {
-    this.initModules('Core');
+    this.initModules(moduleName);
     this.injectDependencies(
       '$scope',
     );
@@ -33,7 +35,7 @@ describe('Component: sectionTitle', () => {
         actionList: 'actionList',
       });
 
-      expect(this.controller.asButton).toBeFalsy();
+      expect(this.controller.asButton).toBe(false);
       expect(this.view).toContainElement('.section-title-row button.actions-button');
       expect(this.view).not.toContainElement('.section-title-row a.as-button');
     });
@@ -44,7 +46,7 @@ describe('Component: sectionTitle', () => {
         actionList: 'actionList',
         asButton: 'false',
       });
-      expect(this.controller.asButton).toBeFalsy();
+      expect(this.controller.asButton).toBe(false);
       expect(this.view).toContainElement('.section-title-row button.actions-button');
       expect(this.view).not.toContainElement('.section-title-row a.as-button');
 
@@ -62,7 +64,7 @@ describe('Component: sectionTitle', () => {
         asButton: 'true',
       });
 
-      expect(this.controller.asButton).toBeTruthy();
+      expect(this.controller.asButton).toBe(true);
       expect(this.view).not.toContainElement('.section-title-row button.actions-button');
       expect(this.view).toContainElement('.section-title-row a.as-button');
       expect(this.view.find('.section-title-row a.as-button')).toHaveText('action.key');
@@ -79,35 +81,21 @@ describe('Component: sectionTitle', () => {
         actionList: 'actionList',
         asButton: 'true',
       });
-      expect(this.controller.asButton).toBeTruthy();
-
-      this.compileComponent('sectionTitle', {
-        titleKey: 'custom.key',
-        actionList: 'actionList',
-        asButton: '2',
-      });
-      expect(this.controller.asButton).toBeTruthy();
-
-      this.compileComponent('sectionTitle', {
-        titleKey: 'custom.key',
-        actionList: 'actionList',
-        asButton: '0',
-      });
-      expect(this.controller.asButton).toBeFalsy();
+      expect(this.controller.asButton).toBe(true);
 
       this.compileComponent('sectionTitle', {
         titleKey: 'custom.key',
         actionList: 'actionList',
         asButton: 'FALSE',
       });
-      expect(this.controller.asButton).toBeFalsy();
+      expect(this.controller.asButton).toBe(false);
 
       this.compileComponent('sectionTitle', {
         titleKey: 'custom.key',
         actionList: 'actionList',
         asButton: '',
       });
-      expect(this.controller.asButton).toBeFalsy();
+      expect(this.controller.asButton).toBe(false);
     });
   });
 

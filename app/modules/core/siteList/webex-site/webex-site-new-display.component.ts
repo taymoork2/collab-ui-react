@@ -25,4 +25,3 @@ export class WebexSiteNewDisplayComponent implements ng.IComponentOptions {
     index: '<',
   };
 }
-

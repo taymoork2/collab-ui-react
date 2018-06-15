@@ -58,6 +58,7 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/health-monitor').default,
     require('modules/core/account').default,
+    require('modules/core/card-notifications').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -293,6 +294,7 @@
 
   angular.module('HCS', [
     'Core',
+    require('modules/core/partner-home/notifications').default,
     require('modules/hcs/task-manager').default,
     require('modules/hcs/task-manager/resource').default,
     require('modules/hcs/task-manager/schedule').default,

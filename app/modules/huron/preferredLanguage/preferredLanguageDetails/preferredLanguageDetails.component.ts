@@ -1,7 +1,6 @@
 import { IPreferredLanugageOption, IPreferredLanguageFeature } from 'modules/huron/preferredLanguage';
 import { IToolkitModalService } from 'modules/core/modal';
 
-
 class PreferredLanguageDetails implements ng.IComponentController {
   public preferredLanguageFeature: IPreferredLanguageFeature;
   public preferredLanguageFeatureCopy: IPreferredLanguageFeature;

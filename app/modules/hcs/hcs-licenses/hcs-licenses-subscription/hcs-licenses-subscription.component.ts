@@ -94,7 +94,6 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     headerCellClass: 'status',
   }];
 
-
   /* @ngInject */
   constructor(
     private $scope,

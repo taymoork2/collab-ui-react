@@ -9,7 +9,6 @@ export class SearchRequestCompressor {
     this.MAX_COUNT_VALUE = this.keyset.charAt(this.keyset.length - 1);
     this.encodingChunkSize = 4;
 
-
     this.fieldCompressionMap[QueryParser.Field_ActiveInterface] = 'a';
     this.fieldCompressionMap[QueryParser.Field_Tag] = 'b';
     this.fieldCompressionMap[QueryParser.Field_ConnectionStatus] = 'c';

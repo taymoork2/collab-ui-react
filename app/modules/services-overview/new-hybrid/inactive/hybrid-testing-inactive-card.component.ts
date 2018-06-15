@@ -29,4 +29,3 @@ export class HybridTestingInactiveCardComponent implements ng.IComponentOptions 
       </article>
     `;
 }
-

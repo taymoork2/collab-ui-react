@@ -7,7 +7,6 @@ import { PstnModel } from '../pstn.model';
 import { PstnService } from '../pstn.service';
 import { Notification } from 'modules/core/notifications/notification.service';
 
-
 const CC_CANADA = 'CA';
 const THINKTEL = 'THINKTEL';
 const SUCCESS = 200;

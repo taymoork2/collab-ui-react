@@ -148,7 +148,6 @@ export class LegalHoldService {
       .then(result => <string[]>result.data);
   }
 
-
   // this is a recursive function that processes emails one chunk at a time.
   // the reason for using recursion is to wait for the server call to complete
   // before sending additional data in order to avoid the server overload and
@@ -238,7 +237,6 @@ export class LegalHoldService {
         return this.$q.reject(user);
       });
   }
-
 
   public getCustodian(orgId: string, searchType: GetUserBy, queryParam: string): ng.IPromise<ICustodian> {
     if (searchType === GetUserBy.ID) {

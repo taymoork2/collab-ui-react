@@ -19,6 +19,11 @@ describe('Service: WebExSite Service', function () {
         subscriptionId: '284bcf35-dc0e-441c-ae1b-11a255959016',
         externalSubscriptionId: 'ex456',
       },
+      {
+        subscriptionId: 'af3bcf35-dc0e-441c-ae1b-11a255959016',
+        externalSubscriptionId: 'ex789',
+        status: 'PENDING',
+      },
     ];
     this.allLicenses = getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json').allLicenses;
     const allCenterDetails = getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json');
@@ -84,7 +89,6 @@ describe('Service: WebExSite Service', function () {
       expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription(this.allConferenceLicenses[1])).toEqual(expectedResults);
     });
   });
-
 
   describe('getting audiopartner info', function () {
     it('should return audio partner name and ccaspSubscriptionId for CCASP ', function () {

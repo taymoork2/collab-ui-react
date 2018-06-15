@@ -330,24 +330,18 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     }
   }
 
-  public updateTags(objectToUpdate, newTags) {
+  public updateTags(objectToUpdate, newTags: string[]) {
 
-    const service = this.getServiceForDevice(objectToUpdate);
-    if (!service) {
-      return this.$q.reject();
-    }
-    return service.updateTags(objectToUpdate.url, newTags)
-      .then(() => {
-
-        const existingDevice = this.theDeviceMap[objectToUpdate.url];
-        if (existingDevice) {
-          existingDevice.tags = newTags;
-          return existingDevice;
-        } else {
-          objectToUpdate.tags = newTags;
-          return objectToUpdate;
-        }
-      });
+    return this.CsdmDeviceService.updateTags(objectToUpdate, newTags).then(() => {
+      const existingDevice = this.theDeviceMap[objectToUpdate.url];
+      if (existingDevice) {
+        existingDevice.tags = newTags;
+        return existingDevice;
+      } else {
+        objectToUpdate.tags = newTags;
+        return objectToUpdate;
+      }
+    });
   }
 
   public reloadItem(item) {

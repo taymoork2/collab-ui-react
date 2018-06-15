@@ -227,7 +227,6 @@ describe('Service: SearchService', () => {
     });
   });
 
-
   describe('getDevice():', () => {
     it('should get correct device icon when call getDevice: icon-application', function () {
       const obj = { browser: '2', platform: '6' };

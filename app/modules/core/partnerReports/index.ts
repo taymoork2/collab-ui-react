@@ -1,3 +1,4 @@
+import './partner-reports.scss';
 import featureToggleModuleName from 'modules/core/featureToggle';
 import loadEventModuleName from 'modules/core/loadEvent';
 import { PartnerReportsTabsComponent } from './partnerReportsTabs.component';

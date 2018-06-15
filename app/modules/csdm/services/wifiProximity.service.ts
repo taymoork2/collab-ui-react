@@ -52,7 +52,6 @@ export class WifiProximityService {
   }
 }
 
-
 export interface IProximityPolicy {
   enabled: boolean;
   updatedAt: Date;

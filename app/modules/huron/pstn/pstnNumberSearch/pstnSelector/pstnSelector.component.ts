@@ -4,7 +4,6 @@ import {
   MIN_VALID_CODE, MAX_VALID_CODE, NUMTYPE_TOLLFREE,
 } from 'modules/huron/pstn/pstn.const';
 
-
 class PstnSelectorCtrl implements ng.IComponentController {
   public model: NumberModel;
   public search: Function;

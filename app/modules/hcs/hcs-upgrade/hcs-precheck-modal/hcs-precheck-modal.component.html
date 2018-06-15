@@ -31,15 +31,15 @@
       <h4 style="margin-bottom: 2rem;" translate="hcs.prechecks.runningPrechecks"></h4>
       <div ng-if="$ctrl.spacePrecheck" class="container row">
         <span class="medium-2">
-          <i ng-if="$ctrl.spacePrecheckRunning" class="icon icon-spinner"></i>
-          <i ng-if="!$ctrl.spacePrecheckRunning" class="icon icon-check"></i>
+          <i ng-if="$ctrl.checkingStatus" class="icon icon-spinner"></i>
+          <i ng-if="!$ctrl.checkingStatus" class="icon icon-check"></i>
         </span>
         <span class="h5" translate="hcs.prechecks.availableSpace"></span>
       </div>
       <div ng-if="$ctrl.copPrecheck" class="container row">
         <span class="medium-2">
-          <i ng-if="$ctrl.copPrecheckRunning" class="icon icon-spinner"></i>
-          <i ng-if="!$ctrl.copPrecheckRunning" class="icon icon-check"></i>
+          <i ng-if="$ctrl.checkingStatus" class="icon icon-spinner"></i>
+          <i ng-if="!$ctrl.checkingStatus" class="icon icon-check"></i>
         </span>
         <span class="h5" translate="hcs.prechecks.copFiles"></span>
       </div>
@@ -47,6 +47,7 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" ng-click="$ctrl.dismissModal()" translate="common.cancel"></button>
-    <button class="btn btn-primary" ng-click="$ctrl.runPrechecks()" ng-disabled="$ctrl.runningPrechecks" translate="hcs.prechecks.runPrechecks"></button>
+    <button class="btn btn-primary" ng-click="$ctrl.runPrechecks()" ng-hide="$ctrl.runningPrechecks && !$ctrl.checkingStatus" ng-disabled="$ctrl.runningPrechecks" translate="hcs.prechecks.runPrechecks"></button>
+    <button class="btn btn-primary" ng-click="$ctrl.continue()" ng-show="$ctrl.runningPrechecks && !$ctrl.checkingStatus" translate="common.continue"></button>
   </div>
 </div>

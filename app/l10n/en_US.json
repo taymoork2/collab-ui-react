@@ -557,7 +557,7 @@
     "userTab": "Users",
     "deviceTab": "Devices",
     "placeTab": "Places",
-    "reportTab": "Reports",
+    "reportTab": "Analytics",
     "troubleshootingTab": "Troubleshooting",
     "taasOverviewTab": "TaaS",
     "supportTab": "Support",
@@ -719,7 +719,7 @@
     "loadingData": "Loading Data",
     "notFound": "Resource not Found",
     "loadingDescription": "For best results, allow reports to finish loading.",
-    "pageTitle": "Reports",
+    "pageTitle": "Analytics",
     "ccaTab": "CCA",
     "engagement": "Engagement",
     "quality": "Quality",
@@ -753,6 +753,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Webex Teams",
     "webexReports": "Webex Meetings",
+    "messageTab": "Messaging",
+    "callTab": "Calling",
     "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
@@ -785,7 +787,7 @@
       "to": "to"
     },
     "usageReports": {
-      "usageReportTitle": "Room Devices",
+      "usageReportTitle": "Devices",
       "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
@@ -832,7 +834,7 @@
       }
     },
     "webexMetrics": {
-      "title": "Webex Meetings",
+      "title": "Meetings",
       "metrics": "Metrics",
       "MEI": "MEI",
       "system": "System",
@@ -2669,7 +2671,8 @@
       "unknown": "Unknown",
       "notFound": "Status not found",
       "pendingNotSetup": "Pending – Service Not Setup",
-      "accountNotActivated": "Account Not Activated"
+      "accountNotActivated": "Account Not Activated",
+      "canNotAccessContextReporting": "Cannot access Context Service reports"
     },
     "userAssignment": {
       "status": {
@@ -2970,7 +2973,7 @@
       },
       "testAccount": {
         "title": "Test account",
-        "line1": "Enter the G Suite account you want to use to test the connection with Google Calendar.",
+        "line1": "Enter the G Suite account email you want to use to test the connection with Google Calendar. Email entered must have a G Suite license. Cisco Webex will add a test event to the calendar associated with the email, with a subject line \"Test Event from Cisco Webex\".",
         "title2": "Calendar resources",
         "useResources": "My organization uses calendar resources (such as conference devices)",
         "line2": "If you use room resources, you may need to make access control list (ACL) changes to their calendars.",
@@ -3147,11 +3150,21 @@
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
         "cta": "Update",
         "provisioningResults": {
-          "OK": "The Hybrid Calendar Service is successfully set up with your Office 365 organization.",
+          "OK": "The Hybrid Calendar Service is successfully set up with your organization.",
+          "INVALID_API_ACCESS_KEY": "Invalid API access key.",
+          "DATABASE_ERROR": "Database error.",
+          "REQUIRED_SCOPE_MISSING": "Missing required authorization scope.",
+          "SECURITY_FAILURE": "A security error occurred.",
           "GENERAL_ERROR": "An unexpected error occurred.",
-          "TEST_ACCOUNT_NONEXISTENT": "The test account credentials didn't work. Retest with a licensed Office 365 user with an Exchange Online mailbox.",
-          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize Office 365 from the settings page.",
-          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize."
+          "TEST_ACCOUNT_NONEXISTENT": "The test account does not exist. Retest with a licensed user/mailbox.",
+          "SYNC_KMS_ROLE_FAILURE": "Error creating machine account role.",
+          "MACHINE_ACCOUNT_CREATION_FAILURE": "Error creating machine account.",
+          "PASSWORD_CREATION_FAILURE": "Error creating passwords.",
+          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize from the settings page.",
+          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize.",
+          "PRECONDITIONS_NOT_MET": "Preconditions not met.",
+          "MACHINE_ACCOUNT_DELETION_FAILURE": "Error deleting machine account.",
+          "ORGANIZATION_ADDITION_FAILURE": "Error adding organization."
         }
       },
       "hybridCalendarCommon": {
@@ -3662,7 +3675,7 @@
     "office365SuccessModal": {
       "test": {
         "subtitle": "Test Account",
-        "inputLabel": "Enter the Office 365 account you want to use to test the connection with Exchange Online."
+        "inputLabel": "Enter the Office 365 account email you want to use to test the connection with Office 365 Calendar. Email entered must have an Office 365 license. Cisco Webex will add a test event to the calendar associated with the email, with a subject line \"Test Event from Cisco Webex\"."
       },
       "success": {
         "subtitle": "Setup complete",
@@ -3754,28 +3767,28 @@
         "mail": "Mail"
       },
       "resourceGroupEvents": {
-        "created": "Resource group {{resourceGroupName}} was created.",
-        "updated": "Resource group {{resourceGroupName}} was updated.",
-        "deleted": "Resource group {{resourceGroupName}} was deleted."
+        "created": "Resource group {{resourceGroupName}} was created",
+        "updated": "Resource group {{resourceGroupName}} was updated",
+        "deleted": "Resource group {{resourceGroupName}} was deleted"
       },
       "hostEvents": {
-        "updated": "Host was updated."
+        "updated": "Host was updated"
       },
       "connectorEvents": {
-        "updated": "{{connectorType}} updated.",
-        "created": "{{connectorType}} created.",
-        "deregistered": "{{connectorType}} de-registered.",
-        "removed": "{{connectorType}} removed."
+        "updated": "{{connectorType}} updated",
+        "created": "{{connectorType}} created",
+        "deregistered": "{{connectorType}} de-registered",
+        "removed": "{{connectorType}} removed"
       },
       "redirectTargetEvents": {
-        "created": "Redirect target created.",
-        "deleted": "Redirect target deleted."
+        "created": "Redirect target created",
+        "deleted": "Redirect target deleted"
       },
       "machineAccountEvents": {
-        "created": "Machine account created."
+        "created": "Machine account created"
       },
       "mailSubscriberEvents": {
-        "updated": "Mail subscriber list updated."
+        "updated": "Mail subscriber list updated"
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3789,7 +3802,7 @@
           "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
-          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational.",
           "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
         },
         "alarmEvents": {
@@ -5831,6 +5844,7 @@
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials.",
     "errGetOrgs": "Failed to retrieve orgranizations.",
+    "errInitPartnerNotifications": "Error initializing partner notifications",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -11286,6 +11300,7 @@
       },
       "nodeStatus": {
         "active":"Active",
+        "assignmentNeeded": "Assignment Needed",
         "compliant": "Compliant",
         "inactive": "Inactive",
         "needsAcceptance":"Needs Acceptance",
@@ -11301,7 +11316,8 @@
         "failedUpgrade": "Failed Upgrade",
         "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
-        "noAgentRunning": "No Agent Running"
+        "noAgentRunning": "No Agent Running",
+        "noClusters": "No Clusters Assigned"
       },
       "settings": {
         "inventoryName": {
@@ -11413,6 +11429,11 @@
     "nodesList": {
       "title": "Nodes"
     },
+    "notifications": {
+      "featureAvailable": {
+        "infoText": "Hosted Collaboration Features are available. Simplify your process by utilizing this new feature."
+      }
+    },
     "setup": {
       "finish": "Finish",
       "nextSteps": "Next Steps:",
@@ -11514,7 +11535,7 @@
         }
       },
       "info": {
-        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you endure the prechecks pass before continuing.",
+        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you ensure the prechecks pass before continuing.",
         "2": "The last time prechecks were run was {{lastRun}} and all passed.",
         "3": "Before you begin, verify that the correct software version files are located on the SFTP server assigned.",
         "precheck": "Run Prechecks"

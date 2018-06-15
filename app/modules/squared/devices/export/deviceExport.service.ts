@@ -59,4 +59,3 @@ export function DeviceExportService($q, $document, $window, $log, $timeout, $htt
     cancelExport: cancelExport,
   };
 }
-

@@ -4,7 +4,6 @@ import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messe
 import { IAutoAssignTemplateData, IAutoAssignTemplateDataViewData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
 import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
 
-
 export class AutoAssignTemplateService {
 
   public readonly DEFAULT = 'Default';
