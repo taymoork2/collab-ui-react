@@ -19,6 +19,7 @@ declare namespace csdm {
     upgradeChannel: IDeviceUpgradeChannel;
     hasIssues: boolean;
     readableActiveInterface: string;
+    wdmUrl?: string;
   }
 
   interface IBasePlace {

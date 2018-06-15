@@ -6,6 +6,7 @@ import { SearchRequestCompressor } from './search/searchRequestCompressor';
 import { CsdmBulkService } from './csdmBulk.service';
 import { CsdmAnalyticsHelper } from './csdm-analytics-helper.service';
 import { WifiProximityService } from './wifiProximity.service';
+import { CsdmLyraConfigurationService } from './csdm-lyra-configuration.service';
 
 export default angular
   .module('Csdm.services', [
@@ -18,6 +19,7 @@ export default angular
   ])
   .service('CsdmAnalyticsHelper', CsdmAnalyticsHelper)
   .service('CsdmBulkService', CsdmBulkService)
+  .service('CsdmLyraConfigurationService', CsdmLyraConfigurationService)
   .service('CsdmSearchService', CsdmSearchService)
   .service('DeviceSearchConverter', DeviceSearchConverter)
   .service('DeviceSearchTranslator', SearchTranslator)

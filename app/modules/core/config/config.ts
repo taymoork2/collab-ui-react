@@ -376,6 +376,7 @@ export class Config {
       'callpickupedit',
       'device-overview',
       'bulk-overview',
+      'deviceConfiguration',
       'devices',
       'deviceBulkFlow',
       'didadd',
