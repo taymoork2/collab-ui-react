@@ -8211,7 +8211,7 @@
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Webex expert spaces.",
-    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use iMessage to interact with Care agents or Customer Virtual Assistants.",
+    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use Messages to interact with Care agents or Customer Virtual Assistants.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -8523,7 +8523,7 @@
       "featureText": {
         "name": "Apple Business Chat",
         "type": "Apple Business Chat",
-        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using iMessage."
+        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using Messages."
       },
       "businessId": {
         "title": "Apple Business Chat ID Verification",
