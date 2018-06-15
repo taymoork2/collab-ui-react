@@ -61,9 +61,9 @@ export interface IIntegrationsManagementService {
   getGlobalAccessPolicy(): ng.IPromise<IGlobalPolicy | undefined>;
   createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<void>;
   updateGlobalAccessPolicy(id: string, action: PolicyAction): ng.IPromise<void>;
-  getCustomPolicy(id: string): ng.IPromise<ICustomPolicy | undefined>;
+  getCustomPolicy(id: string): ng.IPromise<ICustomPolicy>;
   createCustomPolicy(appId: string, action: PolicyAction, userIds?: string[]): ng.IPromise<void>;
-  updateCustomPolicy(id: string, action: PolicyAction, userIds?: string[]): ng.IPromise<void>;
+  updateCustomPolicy(id: string, appId: string, action: PolicyAction, userIds?: string[]): ng.IPromise<void>;
   deleteCustomPolicy(id: string): ng.IPromise<void>;
   hasCustomPolicyByAction(action: PolicyAction): ng.IPromise<boolean>;
   revokeTokensForIntegration(clientId: string): ng.IPromise<void>;
