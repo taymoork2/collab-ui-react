@@ -86,7 +86,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
       if (keyCode === 40 && parentIndex !== 7) {
         //down arrow
         this.moveDown(parentIndex, itemIndex);
-      } else if (keyCode === 38 && parentIndex !== 1 && this.canMoveUp(node, parentIndex)) {
+      } else if (keyCode === 38 && this.canMoveUp(node, parentIndex)) {
         //up arrow
         this.moveUp(parentIndex, itemIndex);
       } else {
@@ -107,7 +107,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
   }
 
   public resetNodes() {
-    this.cluster = this.copyList;
+    this.cluster = _.cloneDeep(this.copyList);
     this.nodeOrderChanged();
   }
 }
