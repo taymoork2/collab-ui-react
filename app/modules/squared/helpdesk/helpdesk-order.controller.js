@@ -91,6 +91,8 @@
       initOrderView(vm.order);
     }
 
+    // TODO: This init function coupled with the above initial logic should be refactored
+    // into more manageable and testable abstractions
     function initOrderView(order) {
       FeatureToggleService.atlasHelpDeskOrderSetupGetStatus().then(function (result) {
         vm.supportsHelpDeskOrderSetup = result;
@@ -135,10 +137,11 @@
         partnerEmailUpdates = _.last(partnerEmailUpdates);
         vm.partnerAdminEmail = _.get(partnerEmailUpdates, 'adminDetails.emailId');
       } else {
+        var resellerInfo = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo', {});
         vm.rtm = _.get(orderObj, 'orderContent.common.rtm').toLowerCase();
         if (vm.rtm === oneTier) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
-        } else if (orderObj.orderContent.common.customerInfo.resellerInfo && orderObj.orderContent.common.customerInfo.resellerInfo.id) {
+        } else if (resellerInfo.id) {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.resellerInfo.adminDetails.emailId');
         } else {
           vm.partnerAdminEmail = _.get(orderObj, 'orderContent.common.customerInfo.partnerInfo.adminDetails.emailId');
