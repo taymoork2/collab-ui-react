@@ -2408,6 +2408,11 @@
       "unavailableMessage": "Connecting to the device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the device.",
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the device."
     },
+    "deviceConfiguration": {
+      "modalTitle": "Advanced device configurations",
+      "subHeader": "Select and edit configurations",
+      "openDeviceWebPortal": "Open in Device Web Portal"
+    },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
     "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
     "export": {

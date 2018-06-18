@@ -1,0 +1,247 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/forms';
+@import '~@collabui/collab-ui/scss/settings/typography';
+@import '~@collabui/collab-ui/scss/settings/settings-collab-ui';
+@import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/tools/mixins/easing';
+@import '../../../styles/variables';
+
+.device-configuration-modal {
+  &.modal-content {
+    max-height: unset !important;
+    height: auto !important;
+
+    .device {
+      width: 100%;
+      align-self: center;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      img {
+        height: 150px;
+      }
+      .overview-holder {
+        position: relative;
+        top: 50px;
+        height: 80px;
+        .overviewDescription {
+          width: 250px;
+          position: absolute;
+          margin-left: 1rem;
+        }
+      }
+    }
+    .search-expand {
+      height: 300px;
+      > input {
+        width: 100%;
+      }
+      width: 100%;
+    }
+
+    #config {
+      overflow-x: scroll;
+    }
+    .line-holder {
+      align-items: center;
+      .vline {
+        height: 40px;
+        margin: 4px 0;
+        width: 50%;
+        align-self: center;
+        border-right: solid 1px;
+      }
+    }
+  }
+
+  .config-area {
+    display: flex;
+    .search-expand {
+      flex-grow: 1;
+    }
+  }
+
+  .config-input-area {
+    text-decoration: none;
+    margin-right: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    .config-input.searcherror {
+      background-color: $color-attention-lighter !important;
+      border-color: $color-attention;
+      &:focus {
+        border-color: $color-attention;
+      }
+      transition-property: background-color, border-color;
+      transition-duration: .1s;
+      transition-delay: 1s
+    }
+
+    .config-input {
+      flex-grow: 1;
+      display: flex;
+      justify-content: baseline;
+      flex-wrap: wrap;
+      background: $brand-white;
+      border: 1px solid $gray-light-2;
+      border-radius: 4px;
+      height: 36px;
+      padding: 4px;
+
+      &.focus, &.focus:hover {
+        background: $input-focus-bg-color;
+        border-color: $input-focus-border-color;
+        transition: border-color ease-in .15s, box-shadow ease-in .15s;
+      }
+
+      &:hover {
+        border-color: $input-hover-border-color;
+      }
+
+      > input {
+        position: relative;
+        top: 1px;
+        font-family: $brand-font-light;
+        margin-right: 0;
+        min-width: 35px;
+        font-size: 1rem;
+        background: inherit;
+        padding: 1px;
+        margin-left: 4px;
+        margin-bottom: 0;
+        border: none;
+        height: 22px;
+        display: inline-block;
+        @include easing-transition(width, 500ms, $easeOutQuint);
+        &:focus {
+          outline: none !important;
+          box-shadow: none !important;
+        }
+      }
+    }
+
+    .config-suggest-pos {
+      flex-basis: 100%;
+      position: relative;
+      height: 0;
+      .config-suggest {
+        display: flex;
+        user-select: none;
+        position: absolute;
+        background-color: white;
+        z-index: 1;
+        border: 1px solid $gray-light-2;
+        border-radius: 4px;
+        max-height: 200px;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        padding: 4px;
+        span {
+          font-size: 1rem;
+        }
+        .active {
+          background-color: $gray-light-3;
+        }
+        .hover {
+          background-color: $gray-light-4;
+        }
+        .path {
+          flex-grow: 1;
+          border-right: 1px solid $gray-light-2;
+        }
+        .value {
+          width: 250px;
+        }
+        .path, .value {
+          overflow-x: hidden;
+          overflow-y: auto;
+          ul {
+            margin-left: 0;
+            > li {
+              list-style: none;
+              user-select: none;
+              margin-left: 4px;
+              .parents {
+                display: none;
+                visibility: hidden;
+                padding: 0 4px;
+                word-spacing: 4px;
+              }
+              &.selected {
+                background-color: $blue-base;
+              }
+              config-value {
+                display: inline-flex;
+              }
+            }
+          }
+          .group :last-child {
+            border-bottom: none;
+          }
+          .group > li {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+            border-bottom: 1px solid $gray-light-2;
+            .field {
+              min-width: 90px;
+              margin-left: 1rem;
+              margin-right: 4px;
+            }
+            .suggestions {
+              margin-left: 0;
+              flex-grow: 2;
+            }
+            .suggestion {
+              display: flex;
+            }
+            .text {
+              flex-grow: 2;
+            }
+            .count {
+              align-self: flex-end;
+              margin-right: 4px;
+              font-size: 0.75rem;
+              color: $gray-base;
+            }
+          }
+        }
+        p {
+          padding: 4px;
+        }
+      }
+    }
+  }
+  .log {
+    li {
+      list-style: none;
+    }
+  }
+  .spacer {
+    flex-grow: 1;
+  }
+  .bullet {
+    display: inline-block;
+    background-color: $gray-light-3;
+    border-radius: 4px;
+    padding: 0 4px;
+    margin: 0 1px;
+    font-size: 1rem;
+    color: $gray-dark-2;
+    &:hover {
+      background-color: $blue-base;
+    }
+    span {
+      font-size: 0.875rem;
+      line-height: 1rem;
+    }
+    i {
+      display: inline-block;
+      top: 4px;
+      margin: 2px;
+      font-size: 1rem;
+    }
+  }
+}

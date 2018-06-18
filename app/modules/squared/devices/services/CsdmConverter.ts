@@ -100,6 +100,7 @@ class CloudberryDevice implements IDevice {
   public accountType: string;
   public displayName: string;
   public url: string;
+  public wdmUrl: string;
   public isCloudberryDevice: boolean;
   public readonly type: string;
   public mac: string;
@@ -122,6 +123,7 @@ class CloudberryDevice implements IDevice {
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
+    this.wdmUrl = _.get(obj, 'status.wdmUrl');
     this.isCloudberryDevice = true;
     this.type = 'cloudberry';
     this.mac = obj.mac;
