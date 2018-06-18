@@ -73,7 +73,7 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {}, {});
+    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters', {}, {});
 
     this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {},
       {
@@ -86,7 +86,7 @@ export class HcsUpgradeService {
     this.nodeResource = <INodeResource>this.$resource(BASE_URL + 'partners/:partnerId/upgradeNodeInfos/:nodeId', {}, {
       update: updateAction,
     });
-    this.customerResource = <ICustomerResource>this.$resource(BASE_URL + 'partners/:partnerId/customers/:customerId?clusterAssigned=:clusterAssigned', {}, {
+    this.customerResource = <ICustomerResource>this.$resource(BASE_URL + 'partners/:partnerId/customers/:customerId', {}, {
       update: updateAction,
       query: queryAction,
     });
