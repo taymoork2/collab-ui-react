@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: RemPlaceController', function () {
-  var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, place;
+  var controller, $q, $rootScope, $httpBackend, CsdmPlaceService, CsdmConverter, place;
   var fakeModal = {
     close: jasmine.createSpy('close'),
   };
@@ -21,7 +21,7 @@ describe('Controller: RemPlaceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, CsdmDataModelService, _CsdmPlaceService_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, CsdmDataModelService, _CsdmPlaceService_, _CsdmConverter_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
 
@@ -29,6 +29,7 @@ describe('Controller: RemPlaceController', function () {
       $rootScope = _$rootScope_;
       $httpBackend = _$httpBackend_;
       CsdmPlaceService = _CsdmPlaceService_;
+      CsdmConverter = _CsdmConverter_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/testOrg/v1/Users/me').respond({});
       $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/testOrg/devices/?type=huron&checkDisplayName=false').respond([]);
@@ -55,12 +56,11 @@ describe('Controller: RemPlaceController', function () {
 
 
     it('should call CsdmDeviceService to delete a Cloudberry place (without devices)', function () {
-      controller.place = {
+      controller.place = CsdmConverter.convertPlace({
         type: 'cloudberry',
         url: pWithoutDeviceUrl,
         cisUuid: cisUidOfPlace,
-        isPlace: true,
-      };
+      });
       controller.deletePlace();
       $rootScope.$digest();
 
@@ -69,12 +69,11 @@ describe('Controller: RemPlaceController', function () {
     });
 
     it('should call CsdmDeviceService to delete a Cloudberry place (with devices)', function () {
-      controller.place = {
+      controller.place = CsdmConverter.convertPlace({
         type: 'cloudberry',
         url: pWithDeviceUrl,
         cisUuid: cisUidOfPlaceWithDev,
-        isPlace: true,
-      };
+      });
       controller.deletePlace();
       $rootScope.$digest();
 
@@ -83,12 +82,11 @@ describe('Controller: RemPlaceController', function () {
     });
 
     it('should call CsdmDeviceService to delete a Huron place', function () {
-      controller.place = {
+      controller.place = CsdmConverter.convertPlace({
         type: 'huron',
-        isHuronDevice: true,
+        isHuronDevice2: function () { return true; },
         url: 'fake url',
-        isPlace: true,
-      };
+      });
       controller.deletePlace();
       $rootScope.$digest();
 

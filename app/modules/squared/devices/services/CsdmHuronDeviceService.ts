@@ -1,4 +1,5 @@
 import { CsdmConverter } from './CsdmConverter';
+import IHuronDevice = csdm.IHuronDevice;
 
 class CsdmHuronUserDeviceService {
 
@@ -12,7 +13,7 @@ class CsdmHuronUserDeviceService {
 
   }
 }
-class CsdmHuronOrgDeviceService {
+export class CsdmHuronOrgDeviceService {
   private devicesUrl: string;
 
   /* @ngInject  */
@@ -20,12 +21,12 @@ class CsdmHuronOrgDeviceService {
     this.devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
   }
 
-  public create() {
+  public create(): CsdmHuronDeviceService {
     return new CsdmHuronDeviceService(this.$http, this.$q, this.Authinfo, this.HuronConfig, this.CsdmConverter, this.UrlConfig, this.devicesUrl);
   }
 }
 
-class CsdmHuronDeviceService {
+export class CsdmHuronDeviceService {
 
   private deviceList = {};
   private loadedData = false;
@@ -78,7 +79,7 @@ class CsdmHuronDeviceService {
     });
   }
 
-  public fetchItem(url) {
+  public fetchItem(url: string): IPromise<IHuronDevice> {
     return this.$http.get(url).then((res) => {
       return this.CsdmConverter.convertHuronDevice(res.data);
     });

@@ -217,7 +217,7 @@
 
     function setOwnerAndDeviceDetails(devices) {
       _.each(devices, function (device) {
-        if (device.isHuronDevice) {
+        if (device.isHuronDevice2()) {
           if (!device.user && device.ownerUser) {
             HelpdeskService.getUser(device.organization.id, device.ownerUser.uuid).then(function (user) {
               device.user = user;
@@ -288,7 +288,7 @@
 
     function massageDevice(device) {
       device.displayName = device.name;
-      device.isHuronDevice = true;
+      device.isHuronDevice2 = function () { return true; };
       device.image = device.model ? 'images/devices-hi/' + (device.model.trim().replace(/ /g, '_') + '.png').toLowerCase() : 'images/devices-hi/unknown.png';
       if (!device.deviceStatus) {
         if (device.registrationStatus) {

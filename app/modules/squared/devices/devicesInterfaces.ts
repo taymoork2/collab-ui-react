@@ -10,6 +10,7 @@ declare namespace csdm {
     canDelete: boolean;
     canReportProblem: boolean;
     supportsCustomTags: boolean;
+    hasRemoteSupport: boolean;
     state: { key: string, readableState: string };
     cssColorClass: string;
     photos: string[];
@@ -18,7 +19,19 @@ declare namespace csdm {
     diagnosticsEvents: IDeviceDiagnosticEvent[];
     upgradeChannel: IDeviceUpgradeChannel;
     hasIssues: boolean;
+    software: string;
     readableActiveInterface: string;
+    isHuronDevice2(): this is IHuronDevice;
+    isCloudberryDevice2(): this is ICloudBerryDevice;
+  }
+
+  interface IHuronDevice extends IDevice {
+    huronId: string;
+    addOnModuleCount: number;
+  }
+
+  interface ICloudBerryDevice extends IDevice {
+
   }
 
   interface IBasePlace {
@@ -29,12 +42,14 @@ declare namespace csdm {
   interface IDevicePlaceCommon extends IBasePlace {
     accountType: string;
     image: string;
-    isPlace?: boolean;
     readonly type?: string;
     sipUrl: string;
     tags: string[];
     url: string;
-    devices?: Map<string, IDevicePlaceCommon>;
+    devices?: Map<string, IDevice>;
+
+    isPlace(): this is IPlace;
+    isDevice(): this is IDevice;
   }
 
   interface IDeviceDiagnosticEvent {

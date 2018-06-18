@@ -16,18 +16,18 @@ export class DeviceHelper {
   }
 
   public static getNotOkEvents(obj) {
-    const events = _.reject(this.getEvents(obj), (e) => {
+    const events = _.reject(this.getEvents(obj.status), (e) => {
       return e.level === 'INFO' && (e.type === 'ip' || e.type === 'software' || e.type === 'upgradeChannel');
     });
     return events;
   }
 
-  public static getEvents(obj): { type: string, level: string, description: string }[] {
-    return (obj.status && obj.status.events) || [];
+  public static getEvents(status: { events: { type: string, level: string, description: string }[]}): { type: string, level: string, description: string }[] {
+    return (status && status.events) || [];
   }
 
-  public static getIsOnline(obj) {
-    const conStatus = (obj.status || {}).connectionStatus;
+  public static getIsOnline(status) {
+    const conStatus = (status || {}).connectionStatus;
     return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
@@ -37,12 +37,12 @@ export class DeviceHelper {
     return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
   }
 
-  public static getProduct(obj) {
-    return obj.product === 'UNKNOWN' ? '' : obj.product || obj.description;
+  public static getProduct(prod) {
+    return prod === 'UNKNOWN' ? '' : prod;
   }
 
   public static getSoftware(obj): any {
-    return _.head(_.chain(this.getEvents(obj))
+    return _.head(_.chain(this.getEvents(obj.status))
       .filter({
         type: 'software',
         level: 'INFO',
@@ -52,7 +52,7 @@ export class DeviceHelper {
   }
 
   public getUpgradeChannel(obj): { label: string, value: string } {
-    const channel: any = _.head(_.chain(DeviceHelper.getEvents(obj))
+    const channel: any = _.head(_.chain(DeviceHelper.getEvents(obj.status))
       .filter({
         type: 'upgradeChannel',
         level: 'INFO',
@@ -82,7 +82,7 @@ export class DeviceHelper {
   }
 
   public static getIp(obj): any {
-    return _.head(_.chain(this.getEvents(obj))
+    return _.head(_.chain(this.getEvents(obj.status))
       .filter({
         type: 'ip',
         level: 'INFO',
@@ -91,12 +91,12 @@ export class DeviceHelper {
       .value());
   }
 
-  public static hasIssues(obj) {
-    return this.getIsOnline(obj) && obj.status && obj.status.level && obj.status.level !== 'OK';
+  public static hasIssues(status) {
+    return this.getIsOnline(status) && status && status.level && status.level !== 'OK';
   }
 
   public getDiagnosticsEvents(obj) {
-    if (DeviceHelper.hasIssues(obj)) {
+    if (DeviceHelper.hasIssues(obj.status)) {
       return _.map(DeviceHelper.getNotOkEvents(obj), (e) => {
         return this.diagnosticsEventTranslated(e);
       });
@@ -144,7 +144,7 @@ export class DeviceHelper {
   public getState(obj) {
     switch ((obj || {}).connectionStatus) {
       case 'CONNECTED':
-        if (DeviceHelper.hasIssues(obj)) {
+        if (DeviceHelper.hasIssues(obj.status)) {
           return {
             readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
             priority: '1',
@@ -181,7 +181,7 @@ export class DeviceHelper {
   public static getCssColorClass(obj) {
     switch ((obj || {}).connectionStatus) {
       case 'CONNECTED':
-        if (DeviceHelper.hasIssues(obj)) {
+        if (DeviceHelper.hasIssues(obj.status)) {
           return 'warning';
         }
         return 'success';

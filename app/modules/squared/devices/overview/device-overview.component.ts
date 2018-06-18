@@ -12,6 +12,8 @@ import { Notification } from 'modules/core/notifications';
 import { PstnModel, PstnService } from 'modules/huron/pstn';
 import IDevice = csdm.IDevice;
 import { IPromise } from 'angular';
+import { CsdmHuronDeviceService } from '../services/CsdmHuronDeviceService';
+import { CsdmConverter } from '../services/CsdmConverter';
 
 interface ITimeZoneOption {
   id: string;
@@ -38,11 +40,17 @@ interface IChannel {
   value: string;
 }
 
+export interface IDeviceOverviewStateParams {
+  currentDevice: IDevice;
+  huronDeviceService: CsdmHuronDeviceService;
+  deviceDeleted: (url: string) => boolean;
+}
+
 class DeviceOverview implements ng.IComponentController {
   private adminUserDetails: IAdminUserDetais;
   private huronDeviceService = this.$stateParams.huronDeviceService;
   private channels: string[];
-  public currentDevice;
+  public currentDevice: IDevice;
   public deviceHasInformation = false;
   public canChangeUpgradeChannel = false;
   public shouldShowUpgradeChannel = false;
@@ -93,7 +101,7 @@ class DeviceOverview implements ng.IComponentController {
               private $interval: ng.IIntervalService,
               private $q: ng.IQService,
               private $state,
-              private $stateParams: ng.ui.IStateParamsService,
+              private $stateParams: IDeviceOverviewStateParams,
               private $scope: ng.IScope,
               private $timeout: ng.ITimeoutService,
               private $translate: ng.translate.ITranslateService,
@@ -102,6 +110,7 @@ class DeviceOverview implements ng.IComponentController {
               private AtaDeviceModal: AtaDeviceModal,
               private Authinfo: Authinfo,
               private ConfirmAtaRebootModal,
+              private CsdmConverter: CsdmConverter,
               private CsdmDataModelService: ICsdmDataModelService,
               private CsdmDeviceService: CsdmDeviceService,
               private CsdmUpgradeChannelService: CsdmUpgradeChannelService,
@@ -131,7 +140,7 @@ class DeviceOverview implements ng.IComponentController {
     this.fetchT38Visibility();
     this.fetchDetailsForLoggedInUser();
 
-    this.CsdmDataModelService.reloadItem(this.$stateParams.currentDevice).then((updatedDevice) => {
+    this.CsdmDataModelService.reloadDevice(this.$stateParams.currentDevice).then((updatedDevice) => {
       this.displayDevice(updatedDevice);
     });
   }
@@ -170,9 +179,13 @@ class DeviceOverview implements ng.IComponentController {
   private displayDevice(device: IDevice): IPromise<void[]> {
     const lastDevice = this.currentDevice;
     const promises: IPromise<any>[] = [];
+
+    if (!_.isFunction(device.isHuronDevice2)) {
+      device = this.CsdmConverter.convertDevice(device);
+    }
     this.currentDevice = device;
 
-    if (!lastDevice || lastDevice.product !== this.currentDevice.product) {
+    if (this.currentDevice.isHuronDevice2() && (!lastDevice || lastDevice.product !== this.currentDevice.product)) {
       this.isKEMAvailable = this.KemService.isKEMAvailable(this.currentDevice.product);
       this.kemNumber = this.isKEMAvailable ? this.KemService.getKemOption(this.currentDevice.addOnModuleCount) : '';
     }
@@ -185,7 +198,7 @@ class DeviceOverview implements ng.IComponentController {
     }
     promises.push(this.pollLines());
 
-    if (this.currentDevice.isHuronDevice) {
+    if (this.currentDevice.isHuronDevice2()) {
       if (!this.tzIsLoaded) {
         const timeZonePromise = this.initTimeZoneOptions().then(() => {
           return this.getCurrentDeviceInfo();
@@ -207,8 +220,8 @@ class DeviceOverview implements ng.IComponentController {
     this.deviceHasInformation = !!(this.currentDevice.ip || this.currentDevice.mac || this.currentDevice.serial || this.currentDevice.software || this.currentDevice.hasRemoteSupport);
 
     const placeUpgradeChannelSupported = this.currentDevice.productFamily === 'Cloudberry' || this.currentDevice.productFamily === 'Novum';
-    this.canChangeUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice && this.currentDevice.isOnline && !placeUpgradeChannelSupported;
-    this.shouldShowUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice && (!this.currentDevice.isOnline || placeUpgradeChannelSupported);
+    this.canChangeUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice2() && this.currentDevice.isOnline && !placeUpgradeChannelSupported;
+    this.shouldShowUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice2() && (!this.currentDevice.isOnline || placeUpgradeChannelSupported);
 
     this.upgradeChannelOptions = _.map(this.channels, (c) => {
       return this.getUpgradeChannelObject(c);
@@ -274,7 +287,7 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private getEmergencyInformation(): void {
-    if (!this.currentDevice.isHuronDevice) {
+    if (!this.currentDevice.isHuronDevice2()) {
       this.emergencyCallbackNumber = _.get(this, 'lines[0].alternate');
       this.showE911 = !!this.emergencyCallbackNumber;
       if (this.showE911) {
@@ -363,7 +376,7 @@ class DeviceOverview implements ng.IComponentController {
       this.lines = result;
       this.linesAreLoaded = true;
     }).then(() => {
-      if (!this.currentDevice.isHuronDevice) {
+      if (!this.currentDevice.isHuronDevice2()) {
         this.getEmergencyInformation();
       }
     });
@@ -525,7 +538,7 @@ class DeviceOverview implements ng.IComponentController {
       currentHuronDevice: this.currentDevice,
       currentNumber: this.emergencyCallbackNumber,
       status: this.emergencyAddressStatus,
-      staticNumber: !this.currentDevice.isHuronDevice,
+      staticNumber: !this.currentDevice.isHuronDevice2(),
     };
 
     if (this.$state.current.name === 'user-overview.csdmDevice' || this.$state.current.name === 'place-overview.csdmDevice') {
@@ -581,7 +594,7 @@ class DeviceOverview implements ng.IComponentController {
   public reportProblem(): void {
     let uploadLogsPromise;
     let feedbackId;
-    if (this.currentDevice.isHuronDevice) {
+    if (this.currentDevice.isHuronDevice2()) {
       const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       feedbackId = '';
       for (let i = 32; i > 0; --i) {
@@ -743,7 +756,7 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private pollDeviceForNewChannel(newValue, endTime, deferred): void {
-    this.CsdmDataModelService.reloadItem(this.currentDevice).then((device) => {
+    this.CsdmDataModelService.reloadDevice(this.currentDevice).then((device) => {
       this.currentDevice = device;
       if (device.upgradeChannel.value === newValue) {
         this.Notification.success('deviceOverviewPage.channelUpdated');

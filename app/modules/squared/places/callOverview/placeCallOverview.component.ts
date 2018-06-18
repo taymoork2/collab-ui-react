@@ -41,7 +41,7 @@ class PlaceCallOverview implements ng.IComponentController {
 
     this.displayPlace($stateParams.currentPlace);
 
-    CsdmDataModelService.reloadItem($stateParams.currentPlace)
+    CsdmDataModelService.reloadPlace($stateParams.currentPlace)
       .then((updatedPlace) => this.displayPlace(updatedPlace));
 
     this.hasSparkCall = this.hasEntitlement('ciscouc');

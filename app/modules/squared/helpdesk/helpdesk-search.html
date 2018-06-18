@@ -163,7 +163,7 @@
           <cs-card class="cs-card--full pointer device-card-{{$index}}"
             ng-repeat="device in helpdeskCtrl.currentSearch.deviceSearchResults | limitTo:helpdeskCtrl.currentSearch.deviceLimit | filter:notFound">
             <article tabindex="0"
-              ui-sref="{{device.isHuronDevice ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.encoded_id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}"
+              ui-sref="{{device.isHuronDevice2() ? 'helpdesk.huron-device({device:device, id:device.uuid, orgId:helpdeskCtrl.currentSearch.orgFilter.id})' : 'helpdesk.cloudberry-device({device:device, id:device.encoded_id, orgId:helpdeskCtrl.currentSearch.orgFilter.id})'}}"
               ng-keydown="helpdeskCtrl.arrowNavigation($event, $index, 'device')">
               <div class="device-result-picture">
                 <div style="background-image:url('{{device.image}}');"></div>

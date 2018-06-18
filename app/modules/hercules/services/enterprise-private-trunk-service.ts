@@ -1,7 +1,6 @@
 import { IConnectorAlarm } from 'modules/hercules/hybrid-services.types';
 import { PrivateTrunkService } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk.service';
 import { IPrivateTrunkInfo, IPrivateTrunkResource } from 'modules/hercules/private-trunk/private-trunk-services/private-trunk';
-import { CsdmCacheUpdater } from 'modules/squared/devices/services/CsdmCacheUpdater';
 import { CsdmHubFactory, CsdmPollerFactory } from 'modules/squared/devices/services/CsdmPoller';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
@@ -41,7 +40,6 @@ export class EnterprisePrivateTrunkService {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-    private CsdmCacheUpdater: CsdmCacheUpdater,
     private CsdmHubFactory: CsdmHubFactory,
     private CsdmPoller: CsdmPollerFactory,
     private PrivateTrunkService: PrivateTrunkService,
@@ -71,13 +69,13 @@ export class EnterprisePrivateTrunkService {
         return _.sortBy(trunksWithStatus, (trunk) => trunk.name);
       })
       .then((sortedTrunks) => {
-        this.CsdmCacheUpdater.update(this.trunkCache, sortedTrunks);
+        this.trunkCache = sortedTrunks;
         return sortedTrunks;
       });
   }
 
-  public getAllResources() {
-    return this.trunkCache;
+  public getAllResources(): IPrivateTrunkResourceWithStatus[] {
+    return _.values(this.trunkCache);
   }
 
   public getTrunk(trunkId: string) {

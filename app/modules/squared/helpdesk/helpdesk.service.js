@@ -115,10 +115,9 @@
     }
 
     function convertCsdmDevice(device) {
-      var d = CsdmConverter.convertCloudberryDevice(device);
+      var d = CsdmConverter.convertCloudberryDevice(device);//We render devices from csdm as csdm devices until huron cards are fixed.
       d.id = device.url.split('?')[0].split('/').pop();
       d.encoded_id = encodeURIComponent(device.url.split('/').pop());
-      d.isHuronDevice = false; //We render devices from csdm as csdm devices until huron cards are fixed.
       return d;
     }
 

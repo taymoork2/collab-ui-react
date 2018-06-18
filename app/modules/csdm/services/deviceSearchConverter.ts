@@ -5,7 +5,7 @@ import { SearchResult } from './search/searchResult';
 interface IPlace {
   displayName: string;
   cisUuid: string;
-  isPlace?: boolean;
+  isPlace(): boolean;
   url: string;
 }
 
@@ -38,7 +38,7 @@ export class DeviceSearchConverter {
     return {
       cisUuid: device.cisUuid,
       displayName: device.displayName,
-      isPlace: true,
+      isPlace: () => true,
       url: newPlaceUrl };
   }
 }
@@ -54,17 +54,30 @@ export class Device implements IIdentifiableDevice {
   public ip: string;
   public state: { readableState: string };
   public product: string;
-  public isCloudberryDevice?: boolean;
-  public isHuronDevice?: boolean;
   public url: string;
   public displayName: string;
   public cisUuid: string;
+  public type: string;
+  private _isCloudberry: boolean;
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);
   }
 
+  public isDevice(): boolean {
+    return true;
+  }
+
+  public isCloudberryDevice2(): boolean {
+    return this._isCloudberry;
+  }
+
+  public isHuronDevice2(): boolean {
+    return !this._isCloudberry;
+  }
+
   private static init(deviceHelper: DeviceHelper, device: Device) {
+    device.isDevice = () => { return true; };
     device.image = 'images/devices-hi/' + (device.imageFilename || 'unknown.png');
     device.cssColorClass = DeviceHelper.getCssColorClass(device);
     device.ip = device.ip || DeviceHelper.getIp(device);
@@ -74,18 +87,22 @@ export class Device implements IIdentifiableDevice {
     } else {
       Device.initAsCloudberry(device);
     }
-
   }
 
   private static initAsHuron(device: Device) {
-    device.isHuronDevice = true;
+    device._isCloudberry = false;
+    device.isCloudberryDevice2 = () => { return false; };
+    device.isHuronDevice2 = () => { return true; };
+    device.type = 'huron';
     device.imageThumb = device.imageFilename ? `images/devices-hi/transparent/${device.imageFilename}` : null;
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
-    device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device);
+    device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device.product);
   }
 
   private static initAsCloudberry(device: Device) {
-    device.isCloudberryDevice = true;
+    device._isCloudberry = true;
+    device.isCloudberryDevice2 = () => { return true; };
+    device.isHuronDevice2 = () => { return false; };
     device.imageThumb = device.imageFilename ? device.image : null;
     device.tags = DeviceHelper.getTags(device.description);
   }

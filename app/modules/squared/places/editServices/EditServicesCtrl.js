@@ -124,7 +124,7 @@
       if (vm.service === 'sparkOnly' || vm.enableCalService != initialEnableCalService) {
         vm.isLoading = true;
         if (vm.service !== initialService || vm.enableCalService != initialEnableCalService) {
-          CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
+          CsdmDataModelService.reloadPlaceByCisUuid(wizardData.account.cisUuid).then(function (place) {
             if (place) {
               var updatedEntitlements = getUpdatedEntitlements();
               CsdmDataModelService.updateCloudberryPlace(place, {

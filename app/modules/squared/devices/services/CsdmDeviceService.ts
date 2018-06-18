@@ -1,5 +1,8 @@
 import { CsdmConverter } from './CsdmConverter';
 import IHttpService = angular.IHttpService;
+import IDevice = csdm.IDevice;
+import IHuronDevice = csdm.IHuronDevice;
+import ICloudBerryDevice = csdm.ICloudBerryDevice;
 
 export class CsdmDeviceService {
   private devicesUrl: string;
@@ -10,7 +13,7 @@ export class CsdmDeviceService {
     this.devicesFastUrlPostFix = '?checkDisplayName=false&checkOnline=false';
   }
 
-  private createCsdmHuronDeviceUrl(device): string {
+  private createCsdmHuronDeviceUrl(device: IHuronDevice): string {
     return `${this.devicesUrl}/${device.huronId}?type=huron&cisUuid=${device.cisUuid}`;
   }
 
@@ -36,21 +39,22 @@ export class CsdmDeviceService {
     });
   }
 
-  public fetchItem(url) {
+  public fetchItem(url: string): IPromise<IDevice> {
     return this.$http.get(url).then((res) => {
-      return this.CsdmConverter.convertCloudberryDevice(res.data);
+      return this.CsdmConverter.convertDevice(res.data);
     });
   }
 
-  public deleteItem(device) {
-    return this.$http.delete(device.url + '?keepPlace=true');
+  public deleteItem(device: ICloudBerryDevice): IPromise<boolean> {
+    return this.$http.delete(device.url + '?keepPlace=true').then(() => true);
   }
 
-  public updateTags(device, tags: string[]) {
+  public updateTags(device: IDevice, tags: string[]) {
     let deviceUrl = device.url;
-    if (device.isHuronDevice && device.huronId) {
+    if (device.isHuronDevice2()) {
       deviceUrl = this.createCsdmHuronDeviceUrl(device);
     }
+
     return this.$http.patch(deviceUrl, {
       tags: tags || [],
     });

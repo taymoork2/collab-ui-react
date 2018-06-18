@@ -61,7 +61,7 @@ class PlaceOverview implements ng.IComponentController {
     private CloudConnectorService: CloudConnectorService,
   ) {
     this.csdmHuronUserDeviceService = this.CsdmHuronUserDeviceService.create(this.$stateParams.currentPlace.cisUuid);
-    CsdmDataModelService.reloadItem(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
+    CsdmDataModelService.reloadPlace(this.$stateParams.currentPlace).then((updatedPlace) => this.displayPlace(updatedPlace));
     this.displayPlace(this.$stateParams.currentPlace);
     this.hasSparkCall = this.hasEntitlement('ciscouc');
   }

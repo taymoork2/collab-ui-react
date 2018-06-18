@@ -3,6 +3,9 @@ import IPlace = csdm.IPlace;
 import Dictionary = _.Dictionary;
 import IPlaceExtended = csdm.IPlaceExtended;
 import ICode = csdm.ICode;
+import IHuronDevice = csdm.IHuronDevice;
+import ICloudBerryDevice = csdm.ICloudBerryDevice;
+import IDevicePlaceCommon = csdm.IDevicePlaceCommon;
 
 export class CsdmConverter {
   private helper: Helper;
@@ -11,64 +14,69 @@ export class CsdmConverter {
     this.helper = new Helper($translate);
   }
 
-  public updatePlaceFromItem(place, item) {
-    if (item.isPlace) {
+  public updatePlaceFromItem(place: IPlace, item: IDevicePlaceCommon) {
+    if (item.isPlace()) {
       this.updatePlaceFromPlace(place, item);
-    } else {
+    } else if (item.isDevice()) {
       this.updatePlaceFromDevice(place, item);
     }
   }
 
-  private updatePlaceFromDevice(updatedPlace: Place, device) {
+  private updatePlaceFromDevice(updatedPlace: IPlace, device: IDevice) {
 
-    updatedPlace.updateFrom(this.helper, this,
-      {
-        url: updatedPlace.url,
-        type: device.type || updatedPlace.type,
-        cisUuid: device.cisUuid || device.uuid,
-        displayName: device.displayName,
-        sipUrl: device.sipUrl,
-      });
+    if (updatedPlace instanceof Place) {
+      updatedPlace.updateFrom(this.helper, this,
+        {
+          url: updatedPlace.url,
+          type: device.type || updatedPlace.type,
+          cisUuid: device.cisUuid,
+          displayName: device.displayName,
+          sipUrl: device.sipUrl,
+        });
+    }
 
     _.each(updatedPlace.devices, (existingDevice) => {
       existingDevice.displayName = device.displayName;
     });
   }
 
-  private updatePlaceFromPlace(place: Place, placeToUpdateFrom) {
-    place.updateFrom(this.helper, this, placeToUpdateFrom);
+  private updatePlaceFromPlace(place: IPlace, placeToUpdateFrom: IPlace) {
+    if (place instanceof Place) {
+      place.updateFrom(this.helper, this, placeToUpdateFrom);
+    }
     if (placeToUpdateFrom.devices !== null) {
       place.devices = placeToUpdateFrom.devices;
     }
   }
 
   // Hack, these two fields should be set correctly in CSDM. Adding here until we can fix this.
-  public convertDevicesForPlace(devices, type, displayName) {
+  public convertDevicesForPlace(devices: Dictionary<IDevice>, type, displayName: string): Dictionary<IDevice> {
     const converted: Dictionary<IDevice> = type === 'huron' ? this.convertHuronDevices(devices) : this.convertCloudberryDevices(devices);
-    return _.map(converted, (device) => {
+    _.forEach(converted, (device) => {
       device.accountType = 'MACHINE';
       device.displayName = displayName;
       return device;
     });
+    return converted;
   }
 
-  public convertCloudberryDevices(data): Dictionary<IDevice> {
+  public convertCloudberryDevices(data): Dictionary<ICloudBerryDevice> {
     return _.mapValues(data, d => this.convertCloudberryDevice(d));
   }
 
-  public convertHuronDevices(data): Dictionary<IDevice> {
+  public convertHuronDevices(data): Dictionary<IHuronDevice> {
     return _.mapValues(data, d => this.convertHuronDevice(d));
   }
 
-  public convertPlaces(data): IPlace {
+  public convertPlaces(data): Dictionary<IPlace> {
     return _.mapValues(data, d => this.convertPlace(d));
   }
 
-  public convertCloudberryDevice(data): IDevice {
+  public convertCloudberryDevice(data): ICloudBerryDevice {
     return new CloudberryDevice(this.helper, data);
   }
 
-  public convertHuronDevice(data): IDevice {
+  public convertHuronDevice(data): IHuronDevice {
     return new HuronDevice(this.helper, data);
   }
 
@@ -79,9 +87,16 @@ export class CsdmConverter {
   public convertCode(data): Code {
     return new Code(data);
   }
+
+  public convertDevice(data): IDevice {
+    if (data.type === 'huron' || data.productFamily === 'Huron') {
+      return this.convertHuronDevice(data);
+    }
+    return this.convertCloudberryDevice(data);
+  }
 }
 
-class CloudberryDevice implements IDevice {
+class CloudberryDevice implements ICloudBerryDevice {
   public state: { key: string, readableState: string };
   public isATA: boolean;
   public serial: string;
@@ -98,7 +113,6 @@ class CloudberryDevice implements IDevice {
   public accountType: string;
   public displayName: string;
   public url: string;
-  public isCloudberryDevice: boolean;
   public readonly type: string;
   public mac: string;
   public ip: any;
@@ -117,24 +131,25 @@ class CloudberryDevice implements IDevice {
   public hasRemoteSupport: boolean;
   public hasAdvancedSettings: boolean;
   public update: (updated) => any;
+  private status: any;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
-    this.isCloudberryDevice = true;
     this.type = 'cloudberry';
+    this.status = obj.status;
     this.mac = obj.mac;
-    this.ip = Helper.getIp(obj);
+    this.ip = obj.ip || Helper.getIp(obj);
     this.serial = obj.serial;
     this.sipUrl = obj.sipUrl;
     this.createTime = obj.createTime;
     this.cisUuid = obj.cisUuid;
-    this.product = Helper.getProduct(obj);
+    this.product = Helper.getProduct(obj.product);
     this.productFamily = obj.productFamily;
-    this.hasIssues = Helper.hasIssues(obj);
+    this.hasIssues = Helper.hasIssues(this.status);
     this.software = Helper.getSoftware(obj);
-    this.isOnline = Helper.getIsOnline(obj);
+    this.isOnline = Helper.getIsOnline(this.status);
     this.lastConnectionTime = Helper.getLastConnectionTime(obj);
-    this.tags = Helper.getTags(obj.description);
+    this.tags = obj.tags;
     this.displayName = obj.displayName;
     this.accountType = obj.accountType || 'MACHINE';
     this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
@@ -154,13 +169,31 @@ class CloudberryDevice implements IDevice {
     };
     this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
+
+  public isHuronDevice2(): this is IHuronDevice {
+    return false;
+  }
+
+  public isCloudberryDevice2(): this is ICloudBerryDevice {
+    return true;
+  }
+
+  public isPlace(): this is IPlace {
+    return false;
+  }
+
+  public isDevice(): this is IDevice {
+    return true;
+  }
 }
 
-class HuronDevice implements IDevice {
+class HuronDevice implements IHuronDevice {
   public state: { key: string, readableState: string };
   public diagnosticsEvents: csdm.IDeviceDiagnosticEvent[];
   public upgradeChannel: csdm.IDeviceUpgradeChannel;
   public hasIssues: boolean;
+  public hasRemoteSupport: boolean;
+  public software: string;
   public readableActiveInterface: string;
   public cssColorClass: string;
   public photos: string[];
@@ -183,35 +216,51 @@ class HuronDevice implements IDevice {
   public url: string;
   public tags: string[];
   public readonly type: string;
-  public isHuronDevice: boolean;
   public huronId: string;
   public addOnModuleCount: number;
+  private status: any;
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
+    this.status = obj.status;
     this.type = 'huron';
     this.isATA = (obj.product || '').indexOf('ATA') > 0;
     this.mac = obj.mac;
-    this.ip = Helper.getIp(obj);
+    this.ip = obj.ip || Helper.getIp(obj);
     this.cisUuid = obj.cisUuid;
     this.sipUrl = obj.sipUrl;
-    this.isOnline = Helper.getIsOnline(obj);
+    this.isOnline = Helper.getIsOnline(this.status);
     this.canReset = true;
     this.canDelete = true;
     this.canReportProblem = true;
     this.supportsCustomTags = true;
     this.accountType = obj.accountType || 'PERSON';
     this.displayName = obj.displayName;
-    this.tags = Helper.getTags(HuronHelper.decodeHuronTags(obj.description));
-    this.cssColorClass = Helper.getCssColorClass(obj);
-    this.state = helper.getState(obj);
+    this.tags = obj.tags;
+    this.cssColorClass = this.cssColorClass || Helper.getCssColorClass(obj);
+    this.state = obj.state || helper.getState(obj);
     this.photos = _.isEmpty(obj.photos) ? null : obj.photos;
-    this.isHuronDevice = true;
-    this.product = obj.product in HuronHelper.huron_model_map ? HuronHelper.huron_model_map[obj.product].displayName : Helper.getProduct(obj);
+    this.product = obj.product in HuronHelper.huron_model_map ? HuronHelper.huron_model_map[obj.product].displayName : Helper.getProduct(obj.product);
     this.productFamily = obj.productFamily;
     this.image = 'images/devices-hi/' + (obj.imageFilename || 'unknown.png');
     this.huronId = HuronHelper.getHuronId(obj);
     this.addOnModuleCount = obj.addOnModuleCount;
+  }
+
+  public isHuronDevice2(): this is IHuronDevice {
+    return true;
+  }
+
+  public isCloudberryDevice2(): this is ICloudBerryDevice {
+    return false;
+  }
+
+  public isPlace(): this is IPlace {
+    return false;
+  }
+
+  public isDevice(): this is IDevice {
+    return true;
   }
 }
 
@@ -264,11 +313,6 @@ class HuronHelper {
     },
   };
 
-  public static decodeHuronTags(description) {
-    const tagString = _.replace(description, /\['/g, '["').replace(/']/g, '"]').replace(/','/g, '","');
-    return tagString;
-  }
-
   public static getHuronId(obj) {
     return obj.url && obj.url.substr(obj.url.lastIndexOf('/') + 1);
   }
@@ -292,18 +336,18 @@ export class Helper {
   }
 
   public static getNotOkEvents(obj) {
-    const events = _.reject(this.getEvents(obj), (e) => {
+    const events = _.reject(this.getEvents(obj.status), (e) => {
       return e.level === 'INFO' && (e.type === 'ip' || e.type === 'software' || e.type === 'upgradeChannel');
     });
     return events;
   }
 
-  public static getEvents(obj): { type: string, level: string, description: string }[] {
-    return (obj.status && obj.status.events) || [];
+  public static getEvents(status: { events: { type: string, level: string, description: string }[]}): { type: string, level: string, description: string }[] {
+    return (status && status.events) || [];
   }
 
-  public static getIsOnline(obj) {
-    const conStatus = (obj.status || {}).connectionStatus;
+  public static getIsOnline(status) {
+    const conStatus = (status || {}).connectionStatus;
     return conStatus === 'CONNECTED' || conStatus === 'CONNECTED_WITH_ISSUES';
   }
 
@@ -313,12 +357,12 @@ export class Helper {
     return (obj.status && obj.status.lastStatusReceivedTime) ? moment(obj.status.lastStatusReceivedTime).calendar() : null;
   }
 
-  public static getProduct(obj) {
-    return obj.product === 'UNKNOWN' ? '' : obj.product || obj.description;
+  public static getProduct(prod) {
+    return prod === 'UNKNOWN' ? '' : prod;
   }
 
   public static getSoftware(obj): any {
-    return _.head(_.chain(this.getEvents(obj))
+    return _.head(_.chain(this.getEvents(obj.status))
       .filter({
         type: 'software',
         level: 'INFO',
@@ -328,7 +372,7 @@ export class Helper {
   }
 
   public getUpgradeChannel(obj): { label: string, value: string } {
-    const channel: any = _.head(_.chain(Helper.getEvents(obj))
+    const channel: any = _.head(_.chain(Helper.getEvents(obj.status))
       .filter({
         type: 'upgradeChannel',
         level: 'INFO',
@@ -358,7 +402,7 @@ export class Helper {
   }
 
   public static getIp(obj): any {
-    return _.head(_.chain(this.getEvents(obj))
+    return _.head(_.chain(this.getEvents(obj.status))
       .filter({
         type: 'ip',
         level: 'INFO',
@@ -367,12 +411,12 @@ export class Helper {
       .value());
   }
 
-  public static hasIssues(obj) {
-    return obj.status && obj.status.level && obj.status.level !== 'OK';
+  public static hasIssues(status) {
+    return status && status.level && status.level !== 'OK';
   }
 
   public getDiagnosticsEvents(obj) {
-    if (Helper.hasIssues(obj)) {
+    if (Helper.hasIssues(obj.status)) {
       return _.map(Helper.getNotOkEvents(obj), (e) => {
         return this.diagnosticsEventTranslated(e);
       });
@@ -408,7 +452,8 @@ export class Helper {
 
   public parametersFromKey(key: string) {
     switch (key) {
-      case 'provisioningdeveloperoptions': return { xconfigpath: 'xConfiguration Spark DeveloperOptions' };
+      case 'provisioningdeveloperoptions':
+        return { xconfigpath: 'xConfiguration Spark DeveloperOptions' };
     }
     return;
   }
@@ -423,7 +468,7 @@ export class Helper {
           priority: '1',
         };
       case 'CONNECTED':
-        if (Helper.hasIssues(obj)) {
+        if (Helper.hasIssues(obj.status)) {
           return {
             key: 'CONNECTED_WITH_ISSUES',
             readableState: this.t('CsdmStatus.connectionStatus.CONNECTED_WITH_ISSUES'),
@@ -455,7 +500,7 @@ export class Helper {
   public static getCssColorClass(obj) {
     switch ((obj.status || {}).connectionStatus) {
       case 'CONNECTED':
-        if (Helper.hasIssues(obj)) {
+        if (Helper.hasIssues(obj.status)) {
           return 'warning';
         }
         return 'success';
@@ -480,24 +525,6 @@ export class Helper {
   private t(key) {
     return this.$translate.instant(key);
   }
-
-  public static getTags(description): string[] {
-    if (!description) {
-      return [];
-    }
-    let tags: string[];
-    try {
-      tags = JSON.parse(description);
-      return _.uniq(tags);
-    } catch (e) {
-      try {
-        tags = JSON.parse('["' + description + '"]');
-        return _.uniq(tags);
-      } catch (e) {
-        return [];
-      }
-    }
-  }
 }
 
 class Code implements ICode {
@@ -509,12 +536,12 @@ class Code implements ICode {
     this.activationCode = obj.activationCode;
   }
 }
+
 class Place implements IPlaceExtended {
   public sipUrl: string;
   public additionalSipUrls: string[];
   public readableType: string;
-  public isPlace: boolean;
-  public devices: Map<string, IDevice>;
+  public devices: { [url: string]: IDevice; };
   public cisUuid: string;
   public id: string;
   public type: string;
@@ -533,9 +560,16 @@ class Place implements IPlaceExtended {
     this.updateFrom(helper, converter, obj);
   }
 
+  public isPlace(): this is IPlace {
+    return true;
+  }
+
+  public isDevice(): this is IDevice {
+    return false;
+  }
+
   public updateFrom(helper: Helper, converter: CsdmConverter, obj) {
     this.url = obj.url;
-    this.isPlace = true;
     this.type = obj.type || (obj.machineType === 'lyra_space' ? 'cloudberry' : 'huron');
     this.readableType = helper.getLocalizedType(this.type);
     this.entitlements = obj.entitlements;

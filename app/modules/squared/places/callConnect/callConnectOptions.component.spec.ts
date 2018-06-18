@@ -139,7 +139,7 @@ describe('CallConnectOptions component:', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         spyOn(test.Notification, 'success');
         const place = { cisUuid: uid };
-        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
@@ -177,7 +177,7 @@ describe('CallConnectOptions component:', () => {
       it('should only clean the calendar of entitlements not present', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         const place = { cisUuid: uid };
-        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
@@ -214,7 +214,7 @@ describe('CallConnectOptions component:', () => {
       it('should only clean the calendar of entitlments not present', () => {
         spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
         const place = { cisUuid: uid };
-        spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+        spyOn(test.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(test.$q.resolve(place));
         spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
         spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
@@ -242,7 +242,7 @@ describe('CallConnectOptions component:', () => {
     it('should call CsdmDataModelService with correct entitlement and extLinkAccts', () => {
       spyOn(test.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(test.$q.resolve({}));
       const place = { cisUuid: uid };
-      spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve(place));
+      spyOn(test.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(test.$q.resolve(place));
       spyOn(test.USSService, 'updateBulkUserProps').and.returnValue(test.$q.resolve({}));
       spyOn(test.USSService, 'refreshEntitlementsForUser').and.returnValue(test.$q.resolve({}));
 
