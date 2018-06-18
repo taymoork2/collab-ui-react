@@ -1,0 +1,63 @@
+[{
+        "id": "0",
+        "orgId": "13345",
+        "appId": "0",
+        "appName": "Fake Integration 0",
+        "appClientId": "0",
+        "appPrivacyUrl": "http://fake-0.privacy.url/",
+        "appCompanyUrl": "http://fake-0.company.url/",
+        "appContactName": "Fake Contact Name 0",
+        "appContactEmail": "fake-0@contact-email.com",
+        "appUserAdoption": 500,
+        "policyAction": "deny",
+        "appCreated": "3018-06-08T30:50:19.355Z"
+
+    },
+
+    {
+        "id": "1",
+        "orgId": "133456",
+        "appId": "1",
+        "appName": "Fake Integration 1",
+        "appClientId": "1",
+        "appPrivacyUrl": "http://fake-1.privacy.url/",
+        "appCompanyUrl": "http://fake-1.company.url/",
+        "appContactName": "Fake Contact Name 1",
+        "appContactEmail": "fake-1@contact-email.com",
+        "appUserAdoption": 500,
+        "policyAction": "deny",
+        "appCreated": "2018-06-08T20:50:19.355Z"
+
+    },
+
+     {
+        "id": "2",
+        "orgId": "223456",
+        "appId": "2",
+        "appName": "Fake Integration 2",
+        "appClientId": "2",
+        "appPrivacyUrl": "http://fake-2.privacy.url/",
+        "appCompanyUrl": "http://fake-2.company.url/",
+        "appContactName": "Fake Contact Name 2",
+        "appContactEmail": "fake-2@contact-email.com",
+        "appUserAdoption": 500,
+        "policyAction": "deny",
+        "appCreated": "2018-06-08T20:50:19.355Z"
+
+    },
+    {
+        "id": "3",
+        "orgId": "223456",
+        "appId": "3",
+        "appName": "Fake Integration 3",
+        "appClientId": "3",
+        "appPrivacyUrl": "http://fake-3.privacy.url/",
+        "appCompanyUrl": "http://fake-3.company.url/",
+        "appContactName": "Fake Contact Name 3",
+        "appContactEmail": "fake-3@contact-email.com",
+        "appUserAdoption": 500,
+        "policyAction": "deny",
+        "appCreated": "2018-06-08T20:50:19.355Z"
+
+    }
+  ]
