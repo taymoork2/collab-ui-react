@@ -301,7 +301,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
         }
       })
       .then(() => {
-        this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
+        //reload state with assigned customer id
+        this.$state.go('hcs.clusterDetail', { groupId: this.customerSelected.value, clusterId: this.clusterId }, { reload: true });
       })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => {

@@ -11334,7 +11334,8 @@
         "unassigned": "Customer Unassigned",
         "swProfileNotAssigned": "Software profile not Assigned",
         "noAgentRunning": "No Agent Running",
-        "noClusters": "No Clusters Assigned"
+        "noClusters": "No Clusters Assigned",
+        "noActiveVersion": "No Active Version"
       },
       "settings": {
         "inventoryName": {

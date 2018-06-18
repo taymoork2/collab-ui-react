@@ -153,6 +153,10 @@
                           <i class="icon icon-circle status-indicator warning"></i>
                           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
                         </div>
+                        <div ng-switch-when="NO_ACTIVE_VERSION">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noActiveVersion' | translate}}</span>
+                        </div>
                         <div ng-switch-when="OPERATIONAL">
                           <i class="icon icon-circle status-indicator success"></i>
                           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.operational' | translate}}</span>

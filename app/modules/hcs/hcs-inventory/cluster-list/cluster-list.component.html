@@ -86,6 +86,10 @@
               <i class="icon icon-circle status-indicator warning"></i>
               <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swUpgradeNeeded' | translate}}</span>
             </div>
+            <div ng-switch-when="NO_ACTIVE_VERSION">
+              <i class="icon icon-circle status-indicator warning"></i>
+              <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noActiveVersion' | translate}}</span>
+            </div>
             <div ng-switch-when="NEED_TO_UPDATE_BATCH_NUMBER">
               <i class="icon icon-circle status-indicator warning"></i>
               <span class="h6">{{::'hcs.clusterDetail.nodeStatus.needToUpdateBatchNumber' | translate}}</span>
