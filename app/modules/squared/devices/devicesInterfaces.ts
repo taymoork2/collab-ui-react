@@ -32,6 +32,7 @@ declare namespace csdm {
     isPlace?: boolean;
     readonly type?: string;
     sipUrl: string;
+    additionalSipUrls: string[];
     tags: string[];
     url: string;
     devices?: Map<string, IDevicePlaceCommon>;
