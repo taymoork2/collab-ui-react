@@ -73,7 +73,7 @@ class DgcPartnerTab implements ng.IComponentController {
     this.FeatureToggleService.diagnosticF8193UX3GetStatus()
       .then((isSupport: boolean) => {
         if (isSupport) {
-          this.BACK_STATE = 'support.meeting';
+          this.BACK_STATE = 'reports.webex-metrics.diagnostics'; //TODO xiaopeli this code is based on PR '#8794', when the PR '#8794' is merged then it will be replaced with 'support.meeting'
         } else {
           this.BACK_STATE = 'reports.webex-metrics.diagnostics';
         }
