@@ -128,7 +128,7 @@ export class CsdmHuronDeviceService {
       });
   }
 
-  public getDeviceInfo(huronDevice) {
+  public getDeviceInfo(huronDevice: IHuronDevice) {
     return this.$http.get(this.getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
       .then((res) => {
         const response: any = {

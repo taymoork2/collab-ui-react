@@ -355,6 +355,9 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private getCurrentDeviceInfo(): IPromise<void> {
+    if (!this.currentDevice.isHuronDevice()) {
+      return this.$q.reject();
+    }
     return this.huronDeviceService.getDeviceInfo(this.currentDevice).then((result: ITimeZone) => {
       this.timeZone = result.timeZone;
       this.emergencyCallbackNumber = result.emergencyCallbackNumber;
@@ -566,6 +569,9 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private pollDeviceForNewTimeZone(newValue, endTime, deferred): void {
+    if (!this.currentDevice.isHuronDevice()) {
+      return;
+    }
     this.huronDeviceService.getDeviceInfo(this.currentDevice).then((result) => {
       if (result.timeZone === newValue) {
         this.Notification.success('deviceOverviewPage.timeZoneUpdated');
@@ -581,6 +587,9 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private pollDeviceForNewCountry(newValue, endTime, deferred): void {
+    if (!this.currentDevice.isHuronDevice()) {
+      return;
+    }
     this.huronDeviceService.getDeviceInfo(this.currentDevice).then((result) => {
       //Temporary workaround to handle null reset until CMI Device API returns null.
       if (result.country === newValue || newValue === null) {

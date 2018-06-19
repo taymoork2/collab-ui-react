@@ -59,6 +59,7 @@ export class Device implements IIdentifiableDevice {
   public cisUuid: string;
   public type: string;
   private _isCloudberry: boolean;
+  public huronId: string;
 
   constructor(deviceHelper) {
     Device.init(deviceHelper, this);
@@ -97,6 +98,7 @@ export class Device implements IIdentifiableDevice {
     device.imageThumb = device.imageFilename ? `images/devices-hi/transparent/${device.imageFilename}` : null;
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
     device.product = device.product in HuronDeviceHelper.huron_model_map ? HuronDeviceHelper.huron_model_map[device.product].displayName : DeviceHelper.getProduct(device.product);
+    device.huronId = HuronDeviceHelper.getHuronId(device);
   }
 
   private static initAsCloudberry(device: Device) {
