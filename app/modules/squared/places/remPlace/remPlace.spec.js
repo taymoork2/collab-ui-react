@@ -84,7 +84,7 @@ describe('Controller: RemPlaceController', function () {
     it('should call CsdmDeviceService to delete a Huron place', function () {
       controller.place = CsdmConverter.convertPlace({
         type: 'huron',
-        isHuronDevice2: function () { return true; },
+        isHuronDevice: function () { return true; },
         url: 'fake url',
       });
       controller.deletePlace();

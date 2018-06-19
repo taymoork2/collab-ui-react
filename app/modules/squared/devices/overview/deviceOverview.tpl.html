@@ -29,7 +29,7 @@
           <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
           <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
             <span ng-bind-html="tag"></span>
-            <i id="deleteTag{{$index}}" class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice2() || !$first" ng-click="deviceOverview.removeTag(tag, $index)"></i>
+            <i id="deleteTag{{$index}}" class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice() || !$first" ng-click="deviceOverview.removeTag(tag, $index)"></i>
           </span>
           </div>
           <div class="tag-container">
@@ -170,7 +170,7 @@
             <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice2()">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice()">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
           <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
@@ -190,7 +190,7 @@
             <div cs-loader class="loader-example--small"></div>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice2()">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice()">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.country"></label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.countryIsLoaded"></div>
           <div class="col-sm-3" ng-show="deviceOverview.countryIsLoaded">

@@ -21,9 +21,9 @@ declare namespace csdm {
     hasIssues: boolean;
     software: string;
     readableActiveInterface: string;
-	wdmUrl?: string;
-    isHuronDevice2(): this is IHuronDevice;
-    isCloudberryDevice2(): this is ICloudBerryDevice;
+    wdmUrl?: string;
+    isHuronDevice(): this is IHuronDevice;
+    isCloudberryDevice(): this is ICloudBerryDevice;
   }
 
   interface IHuronDevice extends IDevice {

@@ -138,7 +138,7 @@ class CloudberryDevice implements ICloudBerryDevice {
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
-	this.wdmUrl = _.get(obj, 'status.wdmUrl');
+    this.wdmUrl = _.get(obj, 'status.wdmUrl');
     this.type = 'cloudberry';
     this.status = obj.status;
     this.mac = obj.mac;
@@ -175,11 +175,11 @@ class CloudberryDevice implements ICloudBerryDevice {
     this.image = 'images/devices-hi/' + (obj.imageFilename || obj.imageFileName || 'unknown.png');
   }
 
-  public isHuronDevice2(): this is IHuronDevice {
+  public isHuronDevice(): this is IHuronDevice {
     return false;
   }
 
-  public isCloudberryDevice2(): this is ICloudBerryDevice {
+  public isCloudberryDevice(): this is ICloudBerryDevice {
     return true;
   }
 
@@ -254,11 +254,11 @@ class HuronDevice implements IHuronDevice {
     this.addOnModuleCount = obj.addOnModuleCount;
   }
 
-  public isHuronDevice2(): this is IHuronDevice {
+  public isHuronDevice(): this is IHuronDevice {
     return true;
   }
 
-  public isCloudberryDevice2(): this is ICloudBerryDevice {
+  public isCloudberryDevice(): this is ICloudBerryDevice {
     return false;
   }
 

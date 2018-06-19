@@ -13,7 +13,6 @@ import { PstnModel, PstnService } from 'modules/huron/pstn';
 import IDevice = csdm.IDevice;
 import { IPromise } from 'angular';
 import { CsdmHuronDeviceService } from '../services/CsdmHuronDeviceService';
-import { CsdmConverter } from '../services/CsdmConverter';
 
 interface ITimeZoneOption {
   id: string;
@@ -112,7 +111,6 @@ class DeviceOverview implements ng.IComponentController {
               private AtaDeviceModal: AtaDeviceModal,
               private Authinfo: Authinfo,
               private ConfirmAtaRebootModal,
-              private CsdmConverter: CsdmConverter,
               private CsdmDataModelService: ICsdmDataModelService,
               private CsdmDeviceService: CsdmDeviceService,
               private CsdmUpgradeChannelService: CsdmUpgradeChannelService,
@@ -190,12 +188,9 @@ class DeviceOverview implements ng.IComponentController {
     const lastDevice = this.currentDevice;
     const promises: IPromise<any>[] = [];
 
-    if (!_.isFunction(device.isHuronDevice2)) {
-      device = this.CsdmConverter.convertDevice(device);
-    }
     this.currentDevice = device;
 
-    if (this.currentDevice.isHuronDevice2() && (!lastDevice || lastDevice.product !== this.currentDevice.product)) {
+    if (this.currentDevice.isHuronDevice() && (!lastDevice || lastDevice.product !== this.currentDevice.product)) {
       this.isKEMAvailable = this.KemService.isKEMAvailable(this.currentDevice.product);
       this.kemNumber = this.isKEMAvailable ? this.KemService.getKemOption(this.currentDevice.addOnModuleCount) : '';
     }
@@ -208,7 +203,7 @@ class DeviceOverview implements ng.IComponentController {
     }
     promises.push(this.pollLines());
 
-    if (this.currentDevice.isHuronDevice2()) {
+    if (this.currentDevice.isHuronDevice()) {
       if (!this.tzIsLoaded) {
         const timeZonePromise = this.initTimeZoneOptions().then(() => {
           return this.getCurrentDeviceInfo();
@@ -230,8 +225,8 @@ class DeviceOverview implements ng.IComponentController {
     this.deviceHasInformation = !!(this.currentDevice.ip || this.currentDevice.mac || this.currentDevice.serial || this.currentDevice.software || this.currentDevice.hasRemoteSupport);
 
     const placeUpgradeChannelSupported = this.currentDevice.productFamily === 'Cloudberry' || this.currentDevice.productFamily === 'Novum';
-    this.canChangeUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice2() && this.currentDevice.isOnline && !placeUpgradeChannelSupported;
-    this.shouldShowUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice2() && (!this.currentDevice.isOnline || placeUpgradeChannelSupported);
+    this.canChangeUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice() && this.currentDevice.isOnline && !placeUpgradeChannelSupported;
+    this.shouldShowUpgradeChannel = _.size(this.channels) > 1 && !this.currentDevice.isHuronDevice() && (!this.currentDevice.isOnline || placeUpgradeChannelSupported);
 
     this.upgradeChannelOptions = _.map(this.channels, (c) => {
       return this.getUpgradeChannelObject(c);
@@ -297,7 +292,7 @@ class DeviceOverview implements ng.IComponentController {
   }
 
   private getEmergencyInformation(): void {
-    if (!this.currentDevice.isHuronDevice2()) {
+    if (!this.currentDevice.isHuronDevice()) {
       this.emergencyCallbackNumber = _.get(this, 'lines[0].alternate');
       this.showE911 = !!this.emergencyCallbackNumber;
       if (this.showE911) {
@@ -386,7 +381,7 @@ class DeviceOverview implements ng.IComponentController {
       this.lines = result;
       this.linesAreLoaded = true;
     }).then(() => {
-      if (!this.currentDevice.isHuronDevice2()) {
+      if (!this.currentDevice.isHuronDevice()) {
         this.getEmergencyInformation();
       }
     });
@@ -548,7 +543,7 @@ class DeviceOverview implements ng.IComponentController {
       currentHuronDevice: this.currentDevice,
       currentNumber: this.emergencyCallbackNumber,
       status: this.emergencyAddressStatus,
-      staticNumber: !this.currentDevice.isHuronDevice2(),
+      staticNumber: !this.currentDevice.isHuronDevice(),
     };
 
     if (this.$state.current.name === 'user-overview.csdmDevice' || this.$state.current.name === 'place-overview.csdmDevice') {
@@ -604,7 +599,7 @@ class DeviceOverview implements ng.IComponentController {
   public reportProblem(): void {
     let uploadLogsPromise;
     let feedbackId;
-    if (this.currentDevice.isHuronDevice2()) {
+    if (this.currentDevice.isHuronDevice()) {
       const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       feedbackId = '';
       for (let i = 32; i > 0; --i) {

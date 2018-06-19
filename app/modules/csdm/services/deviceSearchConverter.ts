@@ -68,11 +68,11 @@ export class Device implements IIdentifiableDevice {
     return true;
   }
 
-  public isCloudberryDevice2(): boolean {
+  public isCloudberryDevice(): boolean {
     return this._isCloudberry;
   }
 
-  public isHuronDevice2(): boolean {
+  public isHuronDevice(): boolean {
     return !this._isCloudberry;
   }
 
@@ -91,8 +91,8 @@ export class Device implements IIdentifiableDevice {
 
   private static initAsHuron(device: Device) {
     device._isCloudberry = false;
-    device.isCloudberryDevice2 = () => { return false; };
-    device.isHuronDevice2 = () => { return true; };
+    device.isCloudberryDevice = () => { return false; };
+    device.isHuronDevice = () => { return true; };
     device.type = 'huron';
     device.imageThumb = device.imageFilename ? `images/devices-hi/transparent/${device.imageFilename}` : null;
     device.tags = DeviceHelper.getTags(HuronDeviceHelper.decodeHuronTags(device.description));
@@ -101,8 +101,8 @@ export class Device implements IIdentifiableDevice {
 
   private static initAsCloudberry(device: Device) {
     device._isCloudberry = true;
-    device.isCloudberryDevice2 = () => { return true; };
-    device.isHuronDevice2 = () => { return false; };
+    device.isCloudberryDevice = () => { return true; };
+    device.isHuronDevice = () => { return false; };
     device.imageThumb = device.imageFilename ? device.image : null;
     device.tags = DeviceHelper.getTags(device.description);
   }

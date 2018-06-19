@@ -240,7 +240,7 @@ describe('Service: CsdmDataModelService', function () {
       CsdmDataModelService.getDevicesMap().then(function (devices) {
         CsdmDataModelService.getPlacesMap().then(function (places) {
           var deviceToDelete = devices[deviceUrlToDelete];
-          if (deviceToDelete.isCloudberryDevice2()) {
+          if (deviceToDelete.isCloudberryDevice()) {
             $httpBackend.expectDELETE(deviceUrlToDelete + '?keepPlace=true').respond(204);
           } else {
             $httpBackend.expectDELETE(deviceUrlToDelete).respond(204);
@@ -261,7 +261,7 @@ describe('Service: CsdmDataModelService', function () {
 
           CsdmDataModelService.deleteItem(deviceToDelete).then(function () {
             expect(devices[deviceUrlToDelete]).toBeUndefined();
-            if (!deviceToDelete.isHuronDevice2() && !deviceToDelete.isCloudberryDevice2()) {
+            if (!deviceToDelete.isHuronDevice() && !deviceToDelete.isCloudberryDevice()) {
               expect(places[placeUrl]).toBeUndefined();
             } else {
               expect(places[placeUrl]).toBeDefined();
@@ -313,7 +313,7 @@ describe('Service: CsdmDataModelService', function () {
     });
 
     function cloneDevice(device) {
-      return device.isHuronDevice2() ? CsdmConverter.convertHuronDevice(device) : CsdmConverter.convertCloudberryDevice(device);
+      return device.isHuronDevice() ? CsdmConverter.convertHuronDevice(device) : CsdmConverter.convertCloudberryDevice(device);
     }
 
     function testAddTagIsReflectedInDevAndPlaceList(deviceUrlForUpdateTags, deviceUrlToUpdate, placeUrl) {

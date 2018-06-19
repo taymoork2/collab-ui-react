@@ -80,7 +80,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
         .then((deviceMap) => {
           if (!this.slowResolved) {
             this.updateDeviceMap(deviceMap, (existing) => {
-              return !existing.isCloudberryDevice2();
+              return !existing.isCloudberryDevice();
             });
           }
         })
@@ -93,7 +93,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       .then((deviceMapSlow) => {
         this.slowResolved = true;
         this.updateDeviceMap(deviceMapSlow, (existing) => {
-          return !existing.isCloudberryDevice2();
+          return !existing.isCloudberryDevice();
         });
       })
       .finally(() => {
@@ -108,7 +108,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       this.csdmHuronOrgDeviceService.fetchDevices()
         .then((huronDeviceMap) => {
           this.updateDeviceMap(huronDeviceMap, (existing) => {
-            return !existing.isHuronDevice2();
+            return !existing.isHuronDevice();
           });
         })
         .finally(() => {
@@ -248,7 +248,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     }
 
     if (item.isDevice()) {
-      return (item.isHuronDevice2() ? this.csdmHuronOrgDeviceService.deleteItem(item) : this.CsdmDeviceService.deleteItem(item))
+      return (item.isHuronDevice() ? this.csdmHuronOrgDeviceService.deleteItem(item) : this.CsdmDeviceService.deleteItem(item))
         .then(() => {
           _.unset(this.theDeviceMap, [item.url]);
           const placeUrl = this.getPlaceUrl(item);
@@ -362,7 +362,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
 
   public reloadDevice(item: IDevice): IPromise<IDevice> {
 
-    const service = (item.isHuronDevice2() ? this.csdmHuronOrgDeviceService : this.CsdmDeviceService);
+    const service = (item.isHuronDevice() ? this.csdmHuronOrgDeviceService : this.CsdmDeviceService);
 
     return service.fetchItem(item.url).then((reloadedDevice) => {
       const deviceIsNew = !this.theDeviceMap[item.url];
@@ -437,7 +437,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       placeAddedToCache = true;
     }
 
-    const wasRenamed = <boolean>(item.displayName && item.displayName !== reloadedPlace.displayName);
+    const wasRenamed = !!(item.displayName && item.displayName !== reloadedPlace.displayName);
     this.CsdmConverter.updatePlaceFromItem(reloadedPlace, item);
     const updatedPlace = this.CsdmCacheUpdater.updateOne(this.placesDataModel, reloadedPlace.url, reloadedPlace, undefined, true);
     let hasNewDevice = false;

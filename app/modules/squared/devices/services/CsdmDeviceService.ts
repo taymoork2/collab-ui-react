@@ -51,7 +51,7 @@ export class CsdmDeviceService {
 
   public updateTags(device: IDevice, tags: string[]) {
     let deviceUrl = device.url;
-    if (device.isHuronDevice2()) {
+    if (device.isHuronDevice()) {
       deviceUrl = this.createCsdmHuronDeviceUrl(device);
     }
 
