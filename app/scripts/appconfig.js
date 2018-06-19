@@ -2929,6 +2929,27 @@
               selectedDevices: [],
             },
           })
+          .state('deviceConfiguration', {
+            parent: 'modal',
+            abstract: true,
+          })
+          .state('deviceConfiguration.show', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<configuration-modal ui-view dismiss="$dismiss()"></configuration-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-configuration-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevice: {},
+              title: 'deviceConfiguration.configureDeviceTitle',
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {

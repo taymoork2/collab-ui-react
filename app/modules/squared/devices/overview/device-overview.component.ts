@@ -89,6 +89,8 @@ class DeviceOverview implements ng.IComponentController {
   public newTag;
   public isAddingTag;
   public jumpToAccount = false;
+  public showNewAdvancedSettings = false;
+  public showAdvancedSettings = false;
   public actionList = [{
     actionKey: 'common.edit',
     actionFunction: () => {
@@ -135,6 +137,14 @@ class DeviceOverview implements ng.IComponentController {
 
     this.FeatureToggleService.csdmDeviceAccountJumpGetStatus().then((response) => {
       this.jumpToAccount = response;
+    });
+
+    FeatureToggleService.csdmDeviceConfigGetStatus().then((response) => {
+      this.showNewAdvancedSettings = response;
+    });
+
+    FeatureToggleService.atlasDevicesAdvancedSettingsGetStatus().then((response) => {
+      this.showAdvancedSettings = response;
     });
 
     this.fetchT38Visibility();
@@ -648,6 +658,12 @@ class DeviceOverview implements ng.IComponentController {
 
   public showAdvancedSettingsDialog(): void {
     this.LaunchAdvancedSettingsModal.open(this.currentDevice);
+  }
+
+  public showNewAdvancedSettingsDialog() {
+    this.$state.go('deviceConfiguration.show', {
+      selectedDevice: this.currentDevice,
+    });
   }
 
   public showRemoteSupportDialog(): void {

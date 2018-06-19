@@ -21,6 +21,7 @@ declare namespace csdm {
     hasIssues: boolean;
     software: string;
     readableActiveInterface: string;
+	wdmUrl?: string;
     isHuronDevice2(): this is IHuronDevice;
     isCloudberryDevice2(): this is ICloudBerryDevice;
   }
@@ -31,7 +32,6 @@ declare namespace csdm {
   }
 
   interface ICloudBerryDevice extends IDevice {
-
   }
 
   interface IBasePlace {
@@ -44,6 +44,7 @@ declare namespace csdm {
     image: string;
     readonly type?: string;
     sipUrl: string;
+    additionalSipUrls: string[];
     tags: string[];
     url: string;
     devices?: Map<string, IDevice>;
