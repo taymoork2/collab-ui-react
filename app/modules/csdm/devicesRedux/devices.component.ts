@@ -8,6 +8,7 @@ import { SearchTranslator } from '../services/search/searchTranslator';
 import { SearchElement } from '../services/search/searchElement';
 import { SearchLinkExpiredkError, SearchRequestCompressor } from '../services/search/searchRequestCompressor';
 import { CloudConnectorService } from '../../hercules/services/calendar-cloud-connector.service';
+import { IScope } from 'angular';
 
 require('./_devices.scss');
 
@@ -48,7 +49,7 @@ export class DevicesCtrl implements ng.IComponentController {
               private Notification: Notification,
               private WizardFactory,
               private $state,
-              private $scope,
+              private $scope: IScope,
               private FeatureToggleService,
               private $q,
               private Userservice,
@@ -73,7 +74,7 @@ export class DevicesCtrl implements ng.IComponentController {
 
     this._searchObject = SearchObject.createWithQuery(new QueryParser(this.DeviceSearchTranslator), '');
 
-    this.$scope.$on('$stateChangeStart', (_event, toState, toParams) => {
+    this.$scope.$on('stateChangeSuccess', (_event, toState, toParams) => {
       if (toState.name === 'devices.search' || toState.name === 'devices') {
         this.updateSearchObjectFromUrlParam(toParams.q);
         this.searchInteraction.searchChange(true);
