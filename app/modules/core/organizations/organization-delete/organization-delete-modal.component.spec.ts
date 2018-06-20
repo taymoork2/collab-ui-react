@@ -115,11 +115,11 @@ describe('Component: organizationDeleteModal', () => {
   describe('deletion failure', () => {
     beforeEach(function () {
       spyOn(this.OrganizationDeleteService, 'deleteOrg').and.returnValue(this.$q.resolve(DELETE_STATUS_URL));
-      spyOn(this.OrganizationDeleteService, 'verifyOrgDelete').and.returnValue(this.$q.reject());
       spyOn(this.controller, 'openAccountClosedModal');
     });
 
     it('should show failure notification on failed delete verification', function () {
+      spyOn(this.OrganizationDeleteService, 'verifyOrgDelete').and.returnValue(this.$q.reject());
       this.view.find(DELETE_BUTTON).click();
       this.$httpBackend.flush();
 
@@ -135,6 +135,7 @@ describe('Component: organizationDeleteModal', () => {
     });
 
     it('should not open the Account Closed modal after failed deletion', function () {
+      spyOn(this.OrganizationDeleteService, 'verifyOrgDelete').and.returnValue(this.$q.reject());
       this.view.find(DELETE_BUTTON).click();
       this.$httpBackend.flush();
 
