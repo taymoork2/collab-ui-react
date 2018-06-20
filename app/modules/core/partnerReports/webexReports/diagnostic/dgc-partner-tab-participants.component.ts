@@ -39,7 +39,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.usernameCellTemplate = require('./username-cell-template.html');
 
     this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
-    this.dataService = (this.isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
+    this.dataService = this.isPartnerRole ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {
