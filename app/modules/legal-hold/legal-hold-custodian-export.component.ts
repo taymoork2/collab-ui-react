@@ -34,6 +34,7 @@ export class LegalHoldCustodianExportController implements ng.IComponentControll
   public export() {
     this.exportCustodians()
       .then(() => {
+        //small timeout to allow for the toaster and also display the file in download bar
         this.$timeout(() => {
           this.$state.go('legalhold.landing');
         }, 100);
