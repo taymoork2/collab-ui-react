@@ -43,17 +43,10 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   public $onInit(): void {
-    if (this.isPartnerRole) {
-      this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-        .then((isSupport: boolean) => {
-          this.isSupportClientVersion = isSupport;
-        });
-    } else {
-      this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
-        .then((isSupport: boolean) => {
-          this.isSupportClientVersion = isSupport;
-        });
-    }
+    const promise = this.isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
+    promise.then((isSupport: boolean) => {
+      this.isSupportClientVersion = isSupport;
+    });
     this.getParticipants();
   }
 

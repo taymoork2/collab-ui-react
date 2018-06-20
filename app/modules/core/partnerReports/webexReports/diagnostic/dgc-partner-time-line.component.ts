@@ -129,17 +129,10 @@ class TimeLineController implements ng.IComponentController {
 
   private loadFeatureToggle(): void {
     const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
-    if (isPartnerRole) {
-      this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-        .then((isSupport: boolean) => {
-          this.isSupportClientVersion = isSupport;
-        });
-    } else {
-      this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
-        .then((isSupport: boolean) => {
-          this.isSupportClientVersion = isSupport;
-        });
-    }
+    const promise = isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
+    promise.then((isSupport: boolean) => {
+      this.isSupportClientVersion = isSupport;
+    });
   }
 
   private initChart(): void {
