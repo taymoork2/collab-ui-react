@@ -62,6 +62,23 @@
       margin-top: 1rem;
     }
   }
+
+  .tab-meeting {
+    padding: 0;
+    background-color: $white;
+
+    .meeting-list {
+      height: 100%;
+      padding-left: 0;
+      padding-right: 0;
+
+      .meeting-search {
+        .gridStyle {
+          height: calc(100vh - #{$page-header-height});
+        }
+      }
+    }
+  }
 }
 
 .support-row {
