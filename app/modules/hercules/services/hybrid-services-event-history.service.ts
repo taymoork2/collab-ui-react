@@ -899,7 +899,7 @@ export class HybridServicesEventHistoryService {
     return '';
   }
 
-  private getTimestampIfChanged(event: IRawClusterEvent) : string | undefined {
+  private getTimestampIfChanged(event: IRawClusterEvent): string | undefined {
     if (event.payload && event.payload.currentState && event.payload.previousState) {
       if (!_.isEqual(event.payload.currentState.startTimestamp, event.payload.previousState.startTimestamp)) {
         if (event.payload.currentState !== undefined && event.payload.currentState.startTimestamp !== '') {
