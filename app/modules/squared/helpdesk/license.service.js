@@ -59,16 +59,14 @@
       });
     }
 
-    function aggregatedLicenses(licenses, type) {
-      var matchingLicenses = _.clone(_.filter(licenses, {
-        type: type,
-      }));
+    function aggregatedLicenses(licenses, types) {
+      var matchingLicenses = _.clone(_.filter(licenses, function(t) { return types.includes(t.type); }));
       var aggregatedLics = [];
       _.each(matchingLicenses, function (l) {
         var displayName = $translate.instant('helpdesk.licenseDisplayNames.' + l.offerCode, {
           capacity: l.capacity,
         });
-        var key = l.offerCode;
+        var key = [l.offerCode, l.type, l.siteUrl];
         var aggregate = _.find(aggregatedLics, {
           key: key,
         });

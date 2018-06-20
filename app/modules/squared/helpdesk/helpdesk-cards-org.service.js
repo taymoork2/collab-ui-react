@@ -5,12 +5,12 @@
   function HelpdeskCardsOrgService($translate, Config, HelpdeskHuronService, LicenseService) {
     function getMessageCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'webex-squared');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.MESSAGING);
+      return new OrgCard(entitled, licenses, [Config.licenseTypes.MESSAGING]);
     }
 
     function getMeetingCardForOrg(org, licenses) {
       // TODO: Entitlement check? squaredSyncUp || cloudMeetings?
-      return new OrgCard(true, licenses, Config.licenseTypes.CONFERENCING);
+      return new OrgCard(true, licenses, [Config.licenseTypes.CONFERENCING, Config.licenseTypes.CMR]);
     }
 
     function getCallCardForOrg(org, licenses) {
@@ -41,17 +41,17 @@
 
     function getRoomSystemsCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'spark-room-system');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.SHARED_DEVICES);
+      return new OrgCard(entitled, licenses, [Config.licenseTypes.SHARED_DEVICES]);
     }
 
-    function OrgCard(entitled, licenses, licenseType) {
+    function OrgCard(entitled, licenses, licenseTypes) {
       this.entitled = entitled;
-      this.aggregatedLicenses = LicenseService.aggregatedLicenses(licenses, licenseType);
+      this.aggregatedLicenses = LicenseService.aggregatedLicenses(licenses, licenseTypes);
     }
 
     function getCareCardForOrg(org, licenses) {
       var entitled = LicenseService.orgIsEntitledTo(org, 'cloud-contact-center');
-      return new OrgCard(entitled, licenses, Config.licenseTypes.CARE);
+      return new OrgCard(entitled, licenses, [Config.licenseTypes.CARE]);
     }
 
     return {
