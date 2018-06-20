@@ -57,6 +57,10 @@
                     <i class="icon icon-circle status-indicator warning"></i>
                     <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotAssigned' | translate}}</span>
                   </div>
+                  <div ng-switch-when="NO_ACTIVE_VERSION">
+                    <i class="icon icon-circle status-indicator warning"></i>
+                    <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noActiveVersion' | translate}}</span>
+                  </div>
                   <div ng-switch-when="NO_CLUSTERS">
                     <i class="icon icon-circle status-indicator warning"></i>
                     <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noClusters' | translate}}</span>

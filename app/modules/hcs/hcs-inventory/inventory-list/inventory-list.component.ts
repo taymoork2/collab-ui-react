@@ -66,7 +66,7 @@ export class InventoryListCtrl implements ng.IComponentController {
     this.inventoryList = [];
     //check if unassigned is needed
     const unassignedClustersPromise = this.HcsUpgradeService.listClusters(undefined);
-    const customerListPromise = this.HcsUpgradeService.listHcsUpgradeCustomers();
+    const customerListPromise = this.HcsUpgradeService.listAssignedHcsUpgradeCustomers();
     this.$q.all([ unassignedClustersPromise, customerListPromise ])
       .then(response => {
         if (response[0].length > 0) {
@@ -139,6 +139,9 @@ export class InventoryListCtrl implements ng.IComponentController {
               break;
             case 'COMPLIANT':
               filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.compliant');
+              break;
+            case 'NO_ACTIVE_VERSION':
+              filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.noActiveVersion');
               break;
             default:
               filterOptionLabel = this.$translate.instant('hcs.clusterDetail.nodeStatus.unassigned');

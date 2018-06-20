@@ -1,0 +1,40 @@
+[ {
+  "uuid" : "c724e6a8-c65e-45ad-aa1a-13f0738b2755",
+  "label" : "SantoshAgent",
+  "partnerOrgId" : "51f7bc28-eb94-4e17-84d9-2141497a04da",
+  "proxies" : [ "http://proxy-wsa.esl.cisco.com:80", "http://proxy.esl.cisco.com:80" ],
+  "files" : [ {
+    "uuid" : "b309dc8c-2e18-4784-aa5a-a66ec743ae53",
+    "fileName" : "ciscocm-ucmgmt-SantoshAgent.v217.k3.cop.sgn",
+    "md5" : "f966c4b2e18e8ae7ea017b7d4693212c",
+    "location" : "51f7bc28-eb94-4e17-84d9-2141497a04da/SantoshAgent/",
+    "size" : 2227407,
+    "fileType" : null
+  } ]
+}, {
+  "uuid" : "5332bb0b-cb66-49e0-9f93-31845c6a61fd",
+  "label" : "Shashi",
+  "partnerOrgId" : "51f7bc28-eb94-4e17-84d9-2141497a04da",
+  "proxies" : [ "http://proxy.esl.cisco.com:8080", "http://proxy-wsa.esl.cisco.com:80" ],
+  "files" : [ {
+    "uuid" : "f06f8dd3-0005-495c-ad23-e6ba0e373111",
+    "fileName" : "ciscocm-ucmgmt-Shashi.v219.k3.cop.sgn",
+    "md5" : "b2171fe53c8fbbaf4bc09d63e8cc446e",
+    "location" : "51f7bc28-eb94-4e17-84d9-2141497a04da/Shashi/",
+    "size" : 2227336,
+    "fileType" : null
+  } ]
+}, {
+  "uuid" : "4e7aa7dc-bb91-40cc-a5b2-824c698776b3",
+  "label" : "Test123",
+  "partnerOrgId" : "51f7bc28-eb94-4e17-84d9-2141497a04da",
+  "proxies" : [ "http://cisco.com" ],
+  "files" : [ {
+    "uuid" : "b157b485-2b3f-4505-8194-cbb043e9876f",
+    "fileName" : "ciscocm-ucmgmt-Test123.v200.k3.cop.sgn",
+    "md5" : "40b9fd5a3993062dccc0283bddf00565",
+    "location" : "51f7bc28-eb94-4e17-84d9-2141497a04da/Test123/",
+    "size" : 2225777,
+    "fileType" : null
+  } ]
+} ]
