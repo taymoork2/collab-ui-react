@@ -2236,7 +2236,7 @@
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
+                template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
               },
             },
           })
@@ -2245,13 +2245,13 @@
             template: '<div ui-view></div>',
           })
           .state('dgc.tab', {
-            template: '<dgc-tab></dgc-tab>',
+            template: '<dgc-partner-tab></dgc-partner-tab>',
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+                template: '<dgc-partner-tab-meeting-detail></dgc-partner-tab-meeting-detail>',
               },
             },
           })
@@ -2259,7 +2259,7 @@
             url: '/diagnostics/participants/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-participants></dgc-tab-participants>',
+                template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
               },
             },
           })

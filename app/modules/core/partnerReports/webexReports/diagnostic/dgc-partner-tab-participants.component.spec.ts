@@ -11,8 +11,8 @@ describe('Component: DgcPartnerTabParticipants', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'FeatureToggleService', 'Notification', 'PartnerSearchService');
-
+    this.injectDependencies('$q', 'FeatureToggleService', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
+    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
     initSpies.apply(this);
   });
 
