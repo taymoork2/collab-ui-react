@@ -17,5 +17,23 @@
         on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
       </uc-time-zone>
     </div>
+    <div class="row full service-setup">
+      <bsft-contact-first-name
+        first-name="$ctrl.bsftSettingsData.bsftSettings.contactInfo.contactFirstName"
+        on-change-fn="$ctrl.onContactFirstNameChanged(name)">
+      </bsft-contact-first-name>
+    </div>
+    <div class="row full service-setup">
+      <bsft-contact-last-name
+        last-name="$ctrl.bsftSettingsData.bsftSettings.contactInfo.contactLastName"
+        on-change-fn="$ctrl.onContactLastNameChanged(name)">
+      </bsft-contact-last-name>
+    </div>
+    <div class="row full service-setup bottom-margin">
+      <bsft-contact-email
+        email="$ctrl.bsftSettingsData.bsftSettings.contactInfo.emailAddress"
+        on-change-fn="$ctrl.onContactEmailChanged(email)">
+      </bsft-contact-email>
+    </div>
   </div>
 </form>
