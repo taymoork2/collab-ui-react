@@ -4,7 +4,7 @@ import moduleName from './index';
 describe('Component: DgcPartnerTimeZone', () => {
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$scope', 'PartnerSearchService');
+    this.injectDependencies('$q', '$scope', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
     this.$scope.onChangeFn = jasmine.createSpy('onChangeFn');
   });

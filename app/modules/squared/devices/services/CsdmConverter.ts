@@ -28,6 +28,7 @@ export class CsdmConverter {
         cisUuid: device.cisUuid || device.uuid,
         displayName: device.displayName,
         sipUrl: device.sipUrl,
+        additionalSipUrls: device.additionalSipUrls,
       });
 
     _.each(updatedPlace.devices, (existingDevice) => {
@@ -93,11 +94,13 @@ class CloudberryDevice implements IDevice {
   public cisUuid: string;
   public image: string;
   public sipUrl: string;
+  public additionalSipUrls: string[];
   public tags: string[];
 
   public accountType: string;
   public displayName: string;
   public url: string;
+  public wdmUrl: string;
   public isCloudberryDevice: boolean;
   public readonly type: string;
   public mac: string;
@@ -120,12 +123,14 @@ class CloudberryDevice implements IDevice {
 
   constructor(helper: Helper, obj) {
     this.url = obj.url;
+    this.wdmUrl = _.get(obj, 'status.wdmUrl');
     this.isCloudberryDevice = true;
     this.type = 'cloudberry';
     this.mac = obj.mac;
     this.ip = Helper.getIp(obj);
     this.serial = obj.serial;
     this.sipUrl = obj.sipUrl;
+    this.additionalSipUrls = obj.additionalSipUrls || [];
     this.createTime = obj.createTime;
     this.cisUuid = obj.cisUuid;
     this.product = Helper.getProduct(obj);
@@ -175,6 +180,7 @@ class HuronDevice implements IDevice {
   public cisUuid: string;
   public image: string;
   public sipUrl: string;
+  public additionalSipUrls: string[];
   public isATA: boolean;
   public ip: string;
   public mac: string;
@@ -195,6 +201,7 @@ class HuronDevice implements IDevice {
     this.ip = Helper.getIp(obj);
     this.cisUuid = obj.cisUuid;
     this.sipUrl = obj.sipUrl;
+    this.additionalSipUrls = obj.additionalSipUrls || [];
     this.isOnline = Helper.getIsOnline(obj);
     this.canReset = true;
     this.canDelete = true;
