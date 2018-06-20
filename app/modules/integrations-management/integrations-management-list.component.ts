@@ -17,7 +17,10 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   public gridApi: uiGrid.IGridApi;
 
   public isGridLoading = true;
-  private accessStatusCellTemplate: string;
+  private cellTemplates = {
+    accessStatusCellTemplate: require('./list-cell-templates/access-status-cell-template.html'),
+    appNameCellTemplate: require('./list-cell-templates/app-name-cell-template.html'),
+  };
   private hasDataLoaded = false;
   public listOptions: IListOptions = {
     start: 0,
@@ -30,7 +33,6 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   private lastUpdate = moment(); //algendel TODO: where do we get this data??
   public PolicyActionEnum = PolicyAction;
   public globalAccessPolicy: IGlobalPolicy | undefined;
- //public globalAccessPolicyAction: boolean;
 
   /* @ngInject */
   public constructor(
@@ -42,7 +44,6 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     private $timeout: ng.ITimeoutService,
     private Notification: Notification,
   ) {
-    this.accessStatusCellTemplate = require('./access-status-cell-template.html');
   }
 
   public $onInit() {
@@ -128,13 +129,13 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   private initGridOptions(): void {
     const columnDefs: uiGrid.IColumnDef[] = [{
       width: '34%',
-      cellTooltip: true,
+      cellTemplate: this.cellTemplates.appNameCellTemplate,
       field: 'appName',
       displayName: this.$translate.instant('integrations.list.integrationName'),
     }, {
       width: '33%',
       field: 'policyAction',
-      cellTemplate: this.accessStatusCellTemplate,
+      cellTemplate: this.cellTemplates.accessStatusCellTemplate,
       displayName: this.$translate.instant('integrations.list.accessStatus'),
     }, {
       field: 'appUserAdoption',
