@@ -6,6 +6,10 @@ integrations-management-list {
  @include keep-flex-container();
  background-color: $white;
 
+ .page-sub-header__right {
+   display: block;
+ }
+
  .global-access {
    display:flex;
    justify-content: flex-end;
@@ -20,6 +24,7 @@ integrations-management-list {
     color: $black;
     font-size: .9rem;
   }
+
   .global-access__value {
     margin-right: 1rem;
   }
@@ -29,6 +34,7 @@ integrations-management-list {
    font-size: .85rem;
    color: $gray-base;
    padding-bottom: 0;
+   text-align: right;
  }
 }
 

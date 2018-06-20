@@ -1,8 +1,8 @@
 
 import { IntegrationsManagementFakeService } from './integrations-management.fake-service';
-import { IApplicationUsage, SortOrder, IListOptions, PolicyAction } from './integrations-management.types';
+import { IApplicationUsage, SortOrder, IListOptions, PolicyAction, IGlobalPolicy } from './integrations-management.types';
 import { Notification } from 'modules/core/notifications/notification.service';
-import { IGridApi, IUiGridConstants } from 'ui-grid';
+
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
 }
@@ -16,10 +16,9 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   public gridOptions: uiGrid.IGridOptions = {};
   public gridApi: uiGrid.IGridApi;
 
-  public gridData: IApplicationUsage[] = [];
-  public gridRefresh = true;
+  public isGridLoading = true;
   private accessStatusCellTemplate: string;
-  private loadData = true;
+  private hasDataLoaded = false;
   public listOptions: IListOptions = {
     start: 0,
     count: 20,
@@ -30,11 +29,13 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   public dateFormat = 'LLLL';
   private lastUpdate = moment(); //algendel TODO: where do we get this data??
   public PolicyActionEnum = PolicyAction;
-  public globalAccessPolicy = true;
+  public globalAccessPolicy: IGlobalPolicy | undefined;
+ //public globalAccessPolicyAction: boolean;
 
   /* @ngInject */
   public constructor(
-    private uiGridConstants: IUiGridConstants,
+    private uiGridConstants: uiGrid.IUiGridConstants,
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
     private IntegrationsManagementFakeService: IntegrationsManagementFakeService,
@@ -45,16 +46,28 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   }
 
   public $onInit() {
-    this.setGridOptions();
-    this.getGridData();
-    this.IntegrationsManagementFakeService.getGlobalAccessPolicy()
-      // algendelTODO: this is likely incorrect? how do we populate it?
-      .then(result => this.globalAccessPolicy = !_.isUndefined(result));
+    this.initGridOptions();
+    this.populateGridData();
+    this.IntegrationsManagementFakeService.getGlobalAccessPolicy().then(result => this.globalAccessPolicy = result);
   }
 
-  public onGlobalAccessChange(value): void {
-    this.globalAccessPolicy = value;
-    //algendel TODO: there needs to be a service call here.
+  public get globalAccessPolicyAction(): boolean {
+    return this.globalAccessPolicy ? this.globalAccessPolicy.action === PolicyAction.ALLOW : false;
+  }
+
+  public onGlobalAccessChange(value): ng.IPromise<void> {
+    const policyAction = value ? PolicyAction.ALLOW : PolicyAction.DENY;
+    if (this.globalAccessPolicy === undefined) {
+      return this.IntegrationsManagementFakeService.createGlobalAccessPolicy(policyAction).then(result => {
+        this.globalAccessPolicy = result;
+      });
+    } else {
+      return this.IntegrationsManagementFakeService.updateGlobalAccessPolicy(this.globalAccessPolicy.id, policyAction).then(() => {
+        if (this.globalAccessPolicy) {
+          this.globalAccessPolicy.action = policyAction;
+        }
+      });
+    }
   }
 
   public get lastUpdateDate(): string {
@@ -63,7 +76,7 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   }
 
   public get l10nGlobalAccessPolicyString(): string {
-    return this.globalAccessPolicy ? 'integrations.globalAccessOn' : 'integrations.globalAccessOff';
+    return _.get(this.globalAccessPolicy, 'action') === PolicyAction.ALLOW ? 'integrations.list.globalAccessOn' : 'integrations.list.globalAccessOff';
   }
 
   public filterList(str) {
@@ -75,33 +88,36 @@ export class IntegrationsManagementListController implements ng.IComponentContro
       if (str.length >= 3 || str === '') {
         this.listOptions.searchStr = str;
         this.listOptions.start = 0;
-        this.getGridData();
+        this.populateGridData();
       }
     }, this.timeoutVal);
   }
 
-  private getGridData(): IPromise<boolean> {
+  private populateGridData(): ng.IPromise<boolean> {
+    this.isGridLoading = true;
     return this.IntegrationsManagementFakeService.listIntegrations(this.listOptions)
       .then(result => {
-        if (this.listOptions.start === 0) {
-          this.gridData = _.clone(result);
+        if (this.listOptions.start === 0 || _.isEmpty(this.gridOptions.data)) {
+          //this.gridData = _.clone(result);
+          this.gridOptions.data = _.clone(result);
         } else {
-          this.gridData = _.concat(this.gridData, result);
+          //this.gridData = [...this.gridData, ...result];
+          this.gridOptions.data = [...this.gridOptions.data as IApplicationUsage[], ...result];
         }
-        this.gridOptions.data = this.gridData;
-        this.loadData = true;
+        //this.gridOptions.data = this.gridData;
+        this.hasDataLoaded = true;
         return !_.isEmpty(result);
       })
       .catch(response => {
-        this.Notification.errorResponse(response, 'integrations.getIntegrationListError');
+        this.Notification.errorResponse(response, 'integrations.list.getIntegrationListError');
         return false;
       })
       .finally(() => {
-        this.gridRefresh = false;
+        this.isGridLoading = false;
       });
   }
 
-  public getPolicyAction(action: PolicyAction): string {
+  public mapPolicyAction(action: PolicyAction): string {
     if (action === PolicyAction.ALLOW) {
       return StatusEnum.SUCCESS;
     } else {
@@ -109,20 +125,20 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     }
   }
 
-  private setGridOptions(): void {
+  private initGridOptions(): void {
     const columnDefs: uiGrid.IColumnDef[] = [{
       width: '34%',
       cellTooltip: true,
       field: 'appName',
-      displayName: this.$translate.instant('integrations.integrationName'),
+      displayName: this.$translate.instant('integrations.list.integrationName'),
     }, {
       width: '33%',
       field: 'policyAction',
       cellTemplate: this.accessStatusCellTemplate,
-      displayName: this.$translate.instant('integrations.accessStatus'),
+      displayName: this.$translate.instant('integrations.list.accessStatus'),
     }, {
       field: 'appUserAdoption',
-      displayName: this.$translate.instant('integrations.userAdoption'),
+      displayName: this.$translate.instant('integrations.list.userAdoption'),
     }];
 
     this.gridOptions = {
@@ -136,26 +152,28 @@ export class IntegrationsManagementListController implements ng.IComponentContro
       useExternalSorting: true,
     };
     this.gridOptions.appScopeProvider = this;
-    this.gridOptions.onRegisterApi = (gridApi: IGridApi) => {
+    this.gridOptions.onRegisterApi = (gridApi: uiGrid.IGridApi) => {
       this.gridApi = gridApi;
-      gridApi.selection.on.rowSelectionChanged.call(this, null, (row: uiGrid.IGridRow) => {
+      gridApi.selection.on.rowSelectionChanged(null as any, (row: uiGrid.IGridRow) => {
         this.showDetail(row.entity);
       });
       gridApi.infiniteScroll.on.needLoadMoreData(null, () => {
         this.gridApi.infiniteScroll.saveScrollPercentage();
         this.loadMoreData();
       });
-      gridApi.core.on.sortChanged.call(this, null, (_, sortColumns) => {
+      gridApi.core.on.sortChanged(null as any, (_anything, sortColumns) => {
         this.sortColumn(sortColumns);
       });
     };
   }
 
-  public loadMoreData() {
-    if (this.loadData) {
+  public loadMoreData(): ng.IPromise<void> {
+    if (!this.hasDataLoaded) {
+      return this.$q.resolve();
+    } else {
       this.listOptions.start = (this.listOptions.start || 0) + (this.listOptions.count || 0);
-      this.loadData = false;
-      this.getGridData()
+      this.hasDataLoaded = false;
+      return this.populateGridData()
         .then((hasMore) => {
           this.gridApi.infiniteScroll.dataLoaded(false, hasMore);
         });
@@ -169,8 +187,8 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     this.listOptions.sortOrder = this.getSortDirection(sortColumns[0].sort.direction);
     this.listOptions.sortBy = sortColumns[0].field;
     this.listOptions.start = 0;
-    this.loadData = false;
-    this.getGridData();
+    this.hasDataLoaded = false;
+    this.populateGridData();
   }
 
   private getSortDirection(direction: string): SortOrder {

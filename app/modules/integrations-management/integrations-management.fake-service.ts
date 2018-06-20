@@ -13,13 +13,16 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private readonly ORG_ID = '55555';
 
-  public listIntegrations(_options?: IListOptions): IPromise<IApplicationUsage[]> {
+  public listIntegrations(options: IListOptions = {}): IPromise<IApplicationUsage[]> {
 
-    const start = _.get(_options, 'start', 0);
-    const count = _.get(_options, 'count', 20);
-    const searchStr = _.get(_options, 'searchStr', null);
-    const sortBy = _.get(_options,  'sortBy');
-    const sortOrder = _.get(_options,  'sortOrder', SortOrder.ASC);
+    const {
+      count = 20,
+      start = 0,
+      searchStr = null,
+      sortBy,
+      sortOrder = SortOrder.ASC,
+    } = options;
+
     let result =  _.clone(this.applicationUsages);
     if (sortBy) {
       result = _.orderBy(result, sortBy, sortOrder);
@@ -48,7 +51,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     return this.$q.resolve(this.globalAccessPolicy);
   }
 
-  public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<void> {
+  public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<IGlobalPolicy> {
     this.globalAccessPolicy = {
       id: '11111',
       orgId: this.ORG_ID,
@@ -56,7 +59,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
       type: PolicyType.DEFAULT,
       action,
     };
-    return this.$q.resolve();
+    return this.$q.resolve(this.globalAccessPolicy);
   }
 
   public updateGlobalAccessPolicy(_id: string, action: PolicyAction): ng.IPromise<void> {

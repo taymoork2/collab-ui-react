@@ -28,22 +28,7 @@ describe('Component: integrationsManagementList:', () => {
     );
     installPromiseMatchers();
     spyOn(this.Notification, 'errorResponse').and.returnValue('');
-    spyOn(this.IntegrationsManagementFakeService, 'listIntegrations').and.callFake((options: IListOptions) => {
-      const start: number = _.get(options, 'start', 0);
-      let count: number = _.get(options, 'count', 0);
-      //override with smaller default so that we can have smaller test data
-      if (count === 20) {
-        count = 3;
-      }
-      let result = integrations;
-      if (!_.get(options, 'searchStr')) {
-        result = integrations;
-      } else {
-        result = [_.cloneDeep(integrations[0])];
-        result[0].appName = 'Found!';
-      }
-      return this.$q.resolve(result.slice(start, (start + count)));
-    });
+    spyOn(this.IntegrationsManagementFakeService, 'listIntegrations').and.returnValue(this.$q.resolve(integrations.slice(0, 3)));
   });
 
   function initComponent(this: Test) {
@@ -59,7 +44,6 @@ describe('Component: integrationsManagementList:', () => {
         count: 20,
       };
       expect(this.view.find('cs-grid').length).toBe(1);
-      expect(this.controller.gridData.length).toBe(3);
       expect(_.get(this.controller.gridOptions, 'data.length')).toBe(3);
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
       expect(this.controller.listOptions.searchStr).toBeUndefined();
@@ -67,7 +51,7 @@ describe('Component: integrationsManagementList:', () => {
     it('should display empty grid if no integrations are returned', function (this: Test) {
       this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.resolve([]));
       initComponent.apply(this);
-      expect(this.view.find('cs-grid').length).toBe(1);
+      expect(this.view.find('cs-grid')).toExist();
       expect(_.get(this.controller.gridOptions, 'data.length')).toBe(0);
       expect(this.Notification.errorResponse).not.toHaveBeenCalled();
     });
@@ -75,7 +59,7 @@ describe('Component: integrationsManagementList:', () => {
       this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.reject({}));
       initComponent.apply(this);
       expect(this.view.find('cs-grid').length).toBe(1);
-      expect(this.controller.gridData.length).toBe(0);
+
       expect(_.get(this.controller.gridOptions, 'data.length')).toBeUndefined();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
@@ -88,12 +72,20 @@ describe('Component: integrationsManagementList:', () => {
         start: 20,
         count: 20,
       };
-      this.controller.loadMoreData();
-      expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
-      expect(this.controller.gridData.length).toBe(3);
+      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(3);
+      this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.resolve(integrations.slice(3, 6)));
+      this.controller.loadMoreData()
+        .then(() => {
+          expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
+          expect(_.get(this.controller.gridOptions, 'data.length')).toBe(6);
+        })
+        .catch(fail);
     });
 
     it('should search records', function (this: Test) {
+      const result = [_.cloneDeep(integrations[0])];
+      result[0].appName = 'Found!';
+      this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.resolve(result.slice(0, 3)));
       this.controller.filterList('findMe');
       this.$timeout.flush();
       const expectedOptions = {
@@ -102,8 +94,8 @@ describe('Component: integrationsManagementList:', () => {
         searchStr: 'findMe',
       };
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
-      expect(this.controller.gridData.length).toBe(1);
-      expect(this.controller.gridData[0].appName).toBe('Found!');
+      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(1);
+      expect(_.get(this.controller.gridOptions, 'data[0].appName')).toBe('Found!');
     });
 
     it('should sort records', function (this: Test) {
@@ -122,7 +114,6 @@ describe('Component: integrationsManagementList:', () => {
         sortOrder: SortOrder.DESC,
       };
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
-      expect(this.controller.gridData.length).toBe(3);
     });
   });
 });
