@@ -5,7 +5,7 @@
     "accountType": "MACHINE",
     "url":"https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-68a7-44e4-91d6-a27460e0ac5c/sipendpoints/dbdf25eb-hurondev_inplace1-a7c64d2597a8",
     "mac":"dc:ce:c1:14:6a:c1",
-    "description":" cloud_huron_test (Cisco 8841 SIP)",
+    "tags":[" cloud_huron_test (Cisco 8841 SIP)"],
     "product":"MODEL_CISCO_8841",
     "addOnModuleCount":0,
     "status":{
@@ -42,7 +42,7 @@
     "accountType": "MACHINE",
     "url":"https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-ace151f631fa",
     "mac":"50:06:ab:80:07:48",
-    "description":"['hey','ho','letsgo']",
+    "tags":["hey", "ho", "letsgo"],
     "product":"MODEL_CISCO_8865",
     "addOnModuleCount":0,
     "status":{
@@ -77,7 +77,11 @@
     "accountType": "PERSON",
     "url":"https://cmi.huron-int.com/api/v1/voice/customers/3a6ff373-unittest-a27460e0ac5c/sipendpoints/2c586b22-hurondev_inplace2-PERSON-ace151f631fa",
     "mac":"50:06:ab:80:07:48",
-    "description":"['sheena','was','a punkrocker']",
+    "tags":[
+      "sheena",
+      "was",
+      "a punkrocker"
+    ],
     "product":"MODEL_CISCO_8865",
     "addOnModuleCount":0
   }

@@ -8,10 +8,15 @@ import ITimeoutService = ng.ITimeoutService;
 import { CsdmConverter } from './CsdmConverter';
 import { CsdmCacheUpdater } from './CsdmCacheUpdater';
 import IPlace = csdm.IPlace;
+import IDevicePlaceCommon = csdm.IDevicePlaceCommon;
+import { CsdmHuronDeviceService, CsdmHuronOrgDeviceService } from './CsdmHuronDeviceService';
+import IBasePlace = csdm.IBasePlace;
+import { Dictionary } from 'lodash';
+
 export class CsdmDataModelService implements ICsdmDataModelService {
 
-  private theDeviceMap: Map<string, IDevice> = {};
-  private placesDataModel: Map<string, IPlace> = {};
+  private theDeviceMap: Dictionary<IDevice> = {};
+  private placesDataModel: Dictionary<IPlace> = {};
   private cloudBerryDevicesLoaded = false;
   private huronDevicesLoaded = false;
   private placesLoaded = false;
@@ -20,12 +25,12 @@ export class CsdmDataModelService implements ICsdmDataModelService {
   private devicesFetchedDeferred;  // TODO: revisit using Map with polyfill support - this es5 stub is not really a Map and causes type errors
   private devicesFastFetchedDeferred;
   private placesMapReadyDeferred;
-  private accountsFetchedDeferred: IDeferred<Map<string, IPlace>>;
+  private accountsFetchedDeferred: IDeferred<Dictionary<IPlace>>;
   private slowResolved;
 
   private isBigOrgPromise: IPromise<boolean>;
   private placesUrl: string;
-  private csdmHuronOrgDeviceService;
+  private csdmHuronOrgDeviceService: CsdmHuronDeviceService;
 
   /* @ngInject  */
   constructor(private $q: angular.IQService,
@@ -35,16 +40,16 @@ export class CsdmDataModelService implements ICsdmDataModelService {
               private CsdmDeviceService: CsdmDeviceService,
               private CsdmCodeService: CsdmCodeService,
               private CsdmPlaceService: CsdmPlaceService,
-              CsdmHuronOrgDeviceService,
+              CsdmHuronOrgDeviceService: CsdmHuronOrgDeviceService,
               private CsdmConverter: CsdmConverter,
               private Authinfo) {
 
     this.placesUrl = CsdmPlaceService.getPlacesUrl();
 
-    this.csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create(Authinfo.getOrgId());
+    this.csdmHuronOrgDeviceService = CsdmHuronOrgDeviceService.create();
   }
 
-  public isBigOrg() {
+  public isBigOrg(): IPromise<boolean> {
 
     if (!this.isBigOrgPromise) {
       this.isBigOrgPromise = this.CsdmPlaceService.getSearchPlacesList('xy')//This method/hack was adapted from the users pages
@@ -75,7 +80,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
         .then((deviceMap) => {
           if (!this.slowResolved) {
             this.updateDeviceMap(deviceMap, (existing) => {
-              return !existing.isCloudberryDevice;
+              return !existing.isCloudberryDevice();
             });
           }
         })
@@ -88,7 +93,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       .then((deviceMapSlow) => {
         this.slowResolved = true;
         this.updateDeviceMap(deviceMapSlow, (existing) => {
-          return !existing.isCloudberryDevice;
+          return !existing.isCloudberryDevice();
         });
       })
       .finally(() => {
@@ -103,7 +108,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       this.csdmHuronOrgDeviceService.fetchDevices()
         .then((huronDeviceMap) => {
           this.updateDeviceMap(huronDeviceMap, (existing) => {
-            return !existing.isHuronDevice;
+            return !existing.isHuronDevice();
           });
         })
         .finally(() => {
@@ -114,7 +119,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     }
   }
 
-  private hasHuronLicenses() {
+  private hasHuronLicenses(): boolean {
     return _.filter(
       this.Authinfo.getLicenses(),
       (l: any) => {
@@ -122,7 +127,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       }).length > 0;
   }
 
-  private updateDeviceMap(deviceMap: Map<string, IDevice>, keepFunction) {
+  private updateDeviceMap(deviceMap: Dictionary<IDevice>, keepFunction) {
 
     this.CsdmCacheUpdater.update(this.theDeviceMap, deviceMap, (deletedDevice) => {
       const shouldKeep = keepFunction && keepFunction(deletedDevice);
@@ -210,7 +215,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.accountsFetchedDeferred.promise;
   }
 
-  public getDevicesMap(refreshHuron?) {
+  public getDevicesMap(refreshHuron?: boolean): IPromise<Dictionary<IDevice>> {
     if (!this.devicesFetchedDeferred) {
       this.fetchDevices();
     } else if (refreshHuron) {
@@ -220,7 +225,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.devicesFetchedDeferred.promise;
   }
 
-  private getAccountsMap() {
+  private getAccountsMap(): IPromise<Dictionary<IPlace>> {
 
     if (!this.accountsFetchedDeferred) {
       this.fetchAccounts();
@@ -228,50 +233,55 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.accountsFetchedDeferred.promise;
   }
 
-  public deleteItem(item): IPromise<boolean> {
-    const service = this.getServiceForDevice(item);
-    if (!service) {
-      return this.$q.reject();
-    }
+  public deleteItem(item: IDevicePlaceCommon): IPromise<boolean> {
 
-    return service.deleteItem(item)
-      .then(() => {
-        if (item.isPlace) {
+    if (item.isPlace()) {
+      return this.CsdmPlaceService.deleteItem(item)
+        .then(() => {
           _.unset(this.placesDataModel, [item.url]);
-          _.each(item.devices, (dev) => {
+          _.each(_.values(item.devices), (dev: IDevice) => {
             _.unset(this.theDeviceMap, [dev.url]);
           });
-        } else {
+          this.notifyListeners();
+          return true;
+        });
+    }
+
+    if (item.isDevice()) {
+      return (item.isHuronDevice() ? this.csdmHuronOrgDeviceService.deleteItem(item) : this.CsdmDeviceService.deleteItem(item))
+        .then(() => {
           _.unset(this.theDeviceMap, [item.url]);
           const placeUrl = this.getPlaceUrl(item);
           if (this.placesDataModel[placeUrl]) {
             _.unset(this.placesDataModel, [placeUrl, 'devices', item.url]); // delete device from the place
           }
-        }
-        this.notifyListeners();
-      });
+          this.notifyListeners();
+          return true;
+        });
+    }
+    return this.$q.reject();
   }
 
-  private getPlaceUrl(device) {
+  private getPlaceUrl(device: IBasePlace): string {
     return this.placesUrl + device.cisUuid;
   }
 
-  public createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts): ng.IPromise<IPlace> {
+  public createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts): IPromise<IPlace> {
     return this.CsdmPlaceService.createCsdmPlace(name, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
-  public createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): ng.IPromise<IPlace> {
+  public createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): IPromise<IPlace> {
     return this.CsdmPlaceService.createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber)
       .then((place) => {
         return this.onCreatedPlace(place);
       });
   }
 
-  public updateCloudberryPlace(objectToUpdate,
-                               { entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts }) {
+  public updateCloudberryPlace(objectToUpdate: IPlace,
+                               { entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts }): IPromise<IPlace> {
     const placeUrl = this.getPlaceUrl(objectToUpdate);
     return this.CsdmPlaceService.updatePlace(placeUrl, entitlements, locationUuid, directoryNumber, externalNumber, externalLinkedAccounts)
       .then((place) => {
@@ -285,16 +295,11 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.CsdmCodeService.createCodeForExisting(cisUuid);
   }
 
-  public updateItemName(objectToUpdate, newName) {
-    if (!objectToUpdate.isPlace) {
+  public updateItemName(objectToUpdate: IDevicePlaceCommon, newName) {
+    if (!objectToUpdate.isPlace()) {
       return this.$q.reject();
     }
-    const service = this.getServiceForDevice(objectToUpdate);
-    if (!service) {
-      return this.$q.reject();
-    }
-
-    return service.updateItemName(objectToUpdate, newName)
+    return this.CsdmPlaceService.updateItemName(objectToUpdate, newName)
       .then((updatedObject) => {
 
         //Keep the devices reference in the places dm:
@@ -314,23 +319,13 @@ export class CsdmDataModelService implements ICsdmDataModelService {
           }
         });
 
-        const updatedPlace = this.CsdmCacheUpdater.updateOne(this.placesDataModel, updatedObject.url, updatedObject, null, true);
+        const updatedPlace = this.CsdmCacheUpdater.updateOne(this.placesDataModel, updatedObject.url, updatedObject, undefined, true);
         this.notifyListeners();
         return updatedPlace;
       });
   }
 
-  private getServiceForDevice(unknownDevice) {
-    if (unknownDevice.isCloudberryDevice) {
-      return this.CsdmDeviceService;
-    } else if (unknownDevice.isPlace) {
-      return this.CsdmPlaceService;
-    } else if (unknownDevice.isHuronDevice) {
-      return this.csdmHuronOrgDeviceService;
-    }
-  }
-
-  public updateTags(objectToUpdate, newTags: string[]) {
+  public updateTags(objectToUpdate: IDevice, newTags: string[]): IPromise<IDevice> {
 
     return this.CsdmDeviceService.updateTags(objectToUpdate, newTags).then(() => {
       const existingDevice = this.theDeviceMap[objectToUpdate.url];
@@ -344,52 +339,48 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     });
   }
 
-  public reloadItem(item) {
-    const service = this.getServiceForDevice(item);
-    if (!service) {
-      return this.$q.reject();
-    }
-
-    if (item.isPlace) {
-      return service.fetchItem(item.url).then((reloadedPlace) => {
-        let deviceDeleted = false;
-        _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), (deletedDevice: any) => {
-          const deviceInReloadedPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
-          const deviceInPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
-          if (!deviceInReloadedPlace || _.some(_.difference(deviceInPlace, deletedDevice))) {
-            _.unset(this.theDeviceMap, [deletedDevice.url]);
-            deviceDeleted = true;
-          }
-        });
-
-        const updateRes = this.addOrUpdatePlaceInDataModel(reloadedPlace);
-
-        if (!updateRes.placeAddedToCache && (deviceDeleted || updateRes.deviceAdded || updateRes.placeRenamed)) {
-          this.notifyListeners();
+  public reloadPlace(item: IPlace): IPromise<IPlace> {
+    return this.CsdmPlaceService.fetchItem(item.url || this.getPlaceUrl(item)).then((reloadedPlace) => {
+      let deviceDeleted = false;
+      _.each(_.difference(_.values(item.devices), _.values(reloadedPlace.devices)), (deletedDevice: any) => {
+        const deviceInReloadedPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+        const deviceInPlace: any = _.find(reloadedPlace.devices, { url: deletedDevice.url });
+        if (!deviceInReloadedPlace || _.some(_.difference(deviceInPlace, deletedDevice))) {
+          _.unset(this.theDeviceMap, [deletedDevice.url]);
+          deviceDeleted = true;
         }
-        return updateRes.item;
       });
-    } else if (item.type === 'huron') {
-      return this.$q.reject();
-    } else {
-      return service.fetchItem(item.url).then((reloadedDevice) => {
-        const deviceIsNew = !this.theDeviceMap[item.url];
-        const updatedDevice = this.CsdmCacheUpdater.updateOne(this.theDeviceMap, item.url, reloadedDevice);
-        if (deviceIsNew) {
-          this.notifyListeners();
-        }
-        return updatedDevice;
-      });
-    }
+
+      const updateRes = this.addOrUpdatePlaceInDataModel(reloadedPlace);
+
+      if (!updateRes.placeAddedToCache && (deviceDeleted || updateRes.deviceAdded || updateRes.placeRenamed)) {
+        this.notifyListeners();
+      }
+      return updateRes.item;
+    });
   }
 
-  public reloadPlace(cisUuid) {
-    const placeUrl = this.getPlaceUrl({ cisUuid: cisUuid });
+  public reloadDevice(item: IDevice): IPromise<IDevice> {
+
+    const service = (item.isHuronDevice() ? this.csdmHuronOrgDeviceService : this.CsdmDeviceService);
+
+    return service.fetchItem(item.url).then((reloadedDevice) => {
+      const deviceIsNew = !this.theDeviceMap[item.url];
+      const updatedDevice = this.CsdmCacheUpdater.updateOne(this.theDeviceMap, item.url, reloadedDevice);
+      if (deviceIsNew) {
+        this.notifyListeners();
+      }
+      return updatedDevice;
+    });
+  }
+
+  public reloadPlaceByCisUuid(cisUuid: string): IPromise<IPlace> {
+    const placeUrl = this.getPlaceUrl({ cisUuid: cisUuid, displayName: '' });
     let place = this.placesDataModel[placeUrl];
     if (!place) {
-      place = this.CsdmConverter.convertPlace({ url: placeUrl, cisUuid: cisUuid, isPlace: true, devices: {} });
+      place = this.CsdmConverter.convertPlace({ url: placeUrl, cisUuid: cisUuid, devices: {} });
     }
-    return this.reloadItem(place);
+    return this.reloadPlace(place);
   }
 
   public reloadDevicesForUser(cisUuid, type) {
@@ -416,12 +407,17 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return updatedPlace;
   }
 
-  private addOrUpdatePlaceInDataModel(item) {
+  private addOrUpdatePlaceInDataModel(item: IDevicePlaceCommon): {
+    item: IPlace,
+    placeAddedToCache: boolean,
+    deviceAdded: boolean,
+    placeRenamed: boolean,
+  } {
 
     const newPlaceUrl = this.getPlaceUrl(item);
     let reloadedPlace = this.placesDataModel[newPlaceUrl];
 
-    if (reloadedPlace && !item.isPlace) {
+    if (reloadedPlace && !item.isPlace()) {
       return {
         item: reloadedPlace,
         placeAddedToCache: false,
@@ -430,20 +426,20 @@ export class CsdmDataModelService implements ICsdmDataModelService {
       };
     }
 
-    if (!reloadedPlace && item.isPlace && item.url) {
+    if (!reloadedPlace && item.isPlace() && item.url) {
       reloadedPlace = this.placesDataModel[item.url];
     }
 
-    let placeAddedToCache;
+    let placeAddedToCache = false;
 
     if (!reloadedPlace) {
-      reloadedPlace = this.CsdmConverter.convertPlace({ url: newPlaceUrl, isPlace: true, devices: {} });
+      reloadedPlace = this.CsdmConverter.convertPlace({ url: newPlaceUrl, devices: {} });
       placeAddedToCache = true;
     }
 
-    const wasRenamed = item.displayName && item.displayName !== reloadedPlace.displayName;
+    const wasRenamed = !!(item.displayName && item.displayName !== reloadedPlace.displayName);
     this.CsdmConverter.updatePlaceFromItem(reloadedPlace, item);
-    const updatedPlace = this.CsdmCacheUpdater.updateOne(this.placesDataModel, reloadedPlace.url, reloadedPlace, null, true);
+    const updatedPlace = this.CsdmCacheUpdater.updateOne(this.placesDataModel, reloadedPlace.url, reloadedPlace, undefined, true);
     let hasNewDevice = false;
 
     _.each(reloadedPlace.devices, (reloadedDevice) => {
@@ -510,7 +506,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return placesMapReadyPromise;
   }
 
-  public getPlacesMap(refreshIfOld): ng.IPromise<{ [url: string]: IPlace; }> {
+  public getPlacesMap(refreshIfOld): ng.IPromise<Dictionary<IPlace>> {
 
     if (!this.placesMapReadyDeferred) {
       this.placesMapReadyDeferred = this.retrieveDevicesAndAccountsAndGeneratePlaceMap();
@@ -520,7 +516,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     return this.placesMapReadyDeferred.promise;
   }
 
-  public getSearchPlacesMap(searchString) {
+  public getSearchPlacesMap(searchString: string): IPromise<Dictionary<IPlace>> {
     return this.CsdmPlaceService.getSearchPlacesList(searchString).then((searchRes) => {
       _.each(_.values(searchRes), (place) => {
         this.addOrUpdatePlaceInDataModel(place);
@@ -529,6 +525,7 @@ export class CsdmDataModelService implements ICsdmDataModelService {
     });
   }
 }
+
 module.exports =
   angular
     .module('Squared')
