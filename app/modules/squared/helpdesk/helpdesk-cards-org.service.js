@@ -16,7 +16,7 @@
     function getCallCardForOrg(org, licenses) {
       var callCard = {
         entitled: LicenseService.orgIsEntitledTo(org, 'ciscouc'),
-        aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, Config.licenseTypes.COMMUNICATION),
+        aggregatedLicenses: LicenseService.aggregatedLicenses(licenses, [Config.licenseTypes.COMMUNICATION]),
       };
       HelpdeskHuronService.getOrgSiteInfo(org.id).then(function (site) {
         callCard.voiceMailPrefix = site.siteSteeringDigit + site.siteCode;
