@@ -7,6 +7,7 @@ export default angular
   .module('hcs.clusterDetail', [
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
+    require('modules/hcs/hcs-shared').default,
   ])
   .component('hcsClusterDetail', new ClusterDetailComponent())
   .component('hcsNodeSftpEdit', new HcsNodeSftpEditComponent())

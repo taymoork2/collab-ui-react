@@ -28,6 +28,7 @@ export class HcsUpgradeSwprofileEditCtrl implements ng.IComponentController {
     this.HcsUpgradeService.updateSoftwareProfile(this.selectedProfile)
       .then(() => {
         this.Notification.success('hcs.softwareProfiles.successupdate');
+        this.$state.go('hcs.swprofile-edit', { swprofile: this.selectedProfile }, { reload: true });
       })
       .catch(e => {
         this.Notification.error(e.message, 'hcs.softwareProfiles.errorupdate');

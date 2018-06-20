@@ -5,7 +5,7 @@ import { IHcsCluster, IHcsNode, ISftpServersObject } from 'modules/hcs/hcs-share
 import { IHcsCustomer, HcsCustomer } from 'modules/hcs/hcs-shared/hcs-controller';
 import { Notification } from 'modules/core/notifications';
 
-enum HcsModalTypeSelect {
+export enum HcsModalTypeSelect {
   editSftp = 0,
   addCustomer = 1,
 }
@@ -85,11 +85,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     };
     this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
     this.clusterNamePlaceholder = this.$translate.instant('hcs.clusterDetail.settings.clustername.enterClusterName');
-
-    this.initCustomer();
-
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
-
+    this.initCustomer();
     //get cluster details info and initialize the cluster
     this.initSftpServers();
     this.initClusterDetails();
@@ -161,7 +158,7 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     this.customerSelectOptions = [];
     this.customerList = [];
     //After BETA: get list of customers for partner from ci.
-    this.HcsControllerService.getHcsCustomers()
+    this.HcsControllerService.listHcsCustomers()
       .then((hcsCustomers: IHcsCustomer[]) => {
         _.forEach(hcsCustomers, (hcsCustomer) => {
           const customer = new HcsCustomer(hcsCustomer);
@@ -177,23 +174,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       .finally(() => {
         this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
       });
-  }
-
-  public getNodeList(nodeList: IHcsNode[] | null): string[] | null {
-    if (nodeList) {
-      const nodeArray: string[] = [];
-      _.forEach(nodeList, (node) => {
-        if (node.nodeUuid) {
-          nodeArray.push(node.nodeUuid);
-        }
-      });
-      return nodeArray;
-    } else {
-      return null;
-    }
-  }
-
-  public onSftpLocationChanged(): void {
   }
 
   public onCustomerChanged(): void {

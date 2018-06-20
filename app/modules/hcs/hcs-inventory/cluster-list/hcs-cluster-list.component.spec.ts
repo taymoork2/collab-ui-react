@@ -2,7 +2,7 @@ import testModule from './index';
 
 describe('Component: cluster-list', () => {
   const CLUSTER_LIST = getJSONFixture('hcs/hcs-inventory/hcs-cluster-list.json');
-  const SW_PROFILE_LIST = getJSONFixture('hcs/hcs-sw-profiles/hcs-sw-profiles-list.json');
+  const SW_PROFILE_LIST = getJSONFixture('hcs/hcs-upgrade/hcs-sw-profiles-list.json');
   const TEST_CUSTOMER = {
     uuid: '0000',
     name: 'test_customer',
@@ -30,9 +30,9 @@ describe('Component: cluster-list', () => {
   });
   describe('Unassigned Cluster list', function() {
     beforeEach(function () {
-      this.$scope.clusterId = 'unassigned';
+      this.$scope.groupId = 'unassigned';
       this.compileComponent('hcsClusterList', {
-        groupId: 'clusterId',
+        groupId: 'groupId',
       });
       spyOn(this.HcsUpgradeService, 'deleteCluster').and.returnValue(this.$q.resolve(undefined));
     });
@@ -63,7 +63,7 @@ describe('Component: cluster-list', () => {
 
   describe('Assigned Cluster list', function() {
     beforeEach(function () {
-      this.$scope.clusterId = TEST_CUSTOMER.uuid;
+      this.$scope.groupId = TEST_CUSTOMER.uuid;
       spyOn(this.HcsUpgradeService, 'listSoftwareProfiles').and.returnValue(this.$q.resolve({
         softwareProfiles: SW_PROFILE_LIST,
       }));
@@ -72,7 +72,7 @@ describe('Component: cluster-list', () => {
         softwareProfile: SW_PROFILE_LIST[0],
       }));
       this.compileComponent('hcsClusterList', {
-        groupId: 'clusterId',
+        groupId: 'groupId',
       });
       spyOn(this.HcsUpgradeService, 'updateHcsUpgradeCustomerSwProfile').and.returnValue(this.$q.resolve(undefined));
     });
@@ -98,7 +98,7 @@ describe('Component: cluster-list', () => {
 
   describe('Assigned Cluster list with no sw profiles', function() {
     beforeEach(function () {
-      this.$scope.clusterId = TEST_CUSTOMER.uuid;
+      this.$scope.groupId = TEST_CUSTOMER.uuid;
       spyOn(this.HcsUpgradeService, 'listSoftwareProfiles').and.returnValue(this.$q.resolve({
         softwareProfiles: [],
       }));
@@ -107,7 +107,7 @@ describe('Component: cluster-list', () => {
         softwareProfile: undefined,
       }));
       this.compileComponent('hcsClusterList', {
-        groupId: 'clusterId',
+        groupId: 'groupId',
       });
       spyOn(this.HcsUpgradeService, 'updateHcsUpgradeCustomerSwProfile').and.returnValue(this.$q.resolve(undefined));
     });
