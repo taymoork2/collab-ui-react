@@ -3737,7 +3737,9 @@
         "not_initialized": "{{connectorType}} initializing",
         "not_operational": "{{connectorType}} not operational",
         "not_configured": "{{connectorType}} not configured",
-        "running": "{{connectorType}} version {{version}} running and operational"
+        "running": "{{connectorType}} version {{version}} running and operational",
+        "restarted": "{{connectorType}} restarted",
+        "upgraded": "{{connectorType}} upgraded from {{previousVersion}} to {{version}}"
       },
       "table": {
         "event": "Event",
@@ -3758,6 +3760,7 @@
       "eventClasses": {
         "cluster": "Cluster",
         "connector": "Connector",
+        "node": "Node",
         "alarm": "Alarm",
         "service": "Service",
         "resourceGroup": "Resource Group",
@@ -3800,10 +3803,13 @@
           "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Webex Control Hub.",
           "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Webex Cloud. It will be installed when it has finished downloading.",
           "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "installingMf": "{{localizedConnectorName}} version {{softwareVersion}} finished downloading from Cisco Webex, and is now installing on the Video Mesh node. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
           "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational.",
-          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
+          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation.",
+          "restarted": "The {{localizedConnectorName}} restarted. This is expected after a successful upgrade or new installation.",
+          "upgraded": "The {{localizedConnectorName}} upgraded from {{previousVersion}} to {{version}} and is operational."
         },
         "alarmEvents": {
           "alarmRaisedEmailsSentTitle": "Emails sent about new alarm",
@@ -3816,14 +3822,17 @@
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
+          "firstUpgradeScheduleMf": "All the nodes in the Video Mesh cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
           "changedUpgradeSchedule": "{{username}} has changed the upgrade schedule for all connectors in the Expressway cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
+          "changedUpgradeScheduleMf": "{{username}} changed the upgrade schedule for all nodes in the Video Mesh cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
           "automatedProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. This happened as part of a scheduled upgrade.",
           "automatedProvisioning": "The Expressway cluster has been provisioned with {{connectorName}}. This happened automatically.",
           "automatedDeprovisioning": "The Expressway cluster will no longer run {{connectorName}}.",
           "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
           "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
           "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
-          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
+          "upgradeHelpText": "Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
+          "upgradeHelpTextMf": "The nodes in the cluster will start to upgrade to the new version. The upgrade succeeds when all nodes are on the new software version, report to Cisco Webex that they are operational.",
           "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
           "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
           "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Webex organization's configuration, for example because an entitlement was removed or a service was deactivated.",
@@ -3841,6 +3850,7 @@
         },
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
+          "serviceEnabledMf": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers a Video Mesh cluster.",
           "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
           "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
           "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
