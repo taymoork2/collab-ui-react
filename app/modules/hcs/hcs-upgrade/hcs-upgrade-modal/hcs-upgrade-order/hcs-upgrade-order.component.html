@@ -4,33 +4,40 @@
     <h5>{{::'common.upgrade' | translate}} {{$ctrl.groupOrder[$index]}}</h5>
     <div class="height-min">
       <cs-card-layout>
-        <cs-card class="large" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
-          <article>
-            <header>
-              <h5 class="inline">{{node.hostName}}</h5>
-              <div ng-if="!node.pub" class="pull-right grid-display">
-                <span ng-if="$ctrl.canMoveUp(node, parentIndex)" ng-click="$ctrl.moveUp(parentIndex, $index)" >
+        <cs-card class="medium" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
+          <article class="columns collapse small-12">
+            <div class="row collapse">
+              <div class="columns medium-10 bottom-margin">
+                <header class="ellipsis">
+                  <span alt="{{node.hostName}}">{{node.hostName}}</span>
+                </header>
+                <header class="row collapse top-padding">
+                  <span class="columns medium-6 small">{{node.type}}</span>
+                  <span class="columns medium-6 small">{{node.pub ? $ctrl.pubTranslate : $ctrl.subTranslate}}</span>
+                </header>
+              </div>
+              <div ng-if="!node.pub" class="columns medium-2 arrow-margin">
+                <span ng-class="{'invisible': !$ctrl.canMoveUp(node, parentIndex)}" ng-click="$ctrl.moveUp(parentIndex, $index)" >
                   <i class="icon icon-2x icon-arrow-up"></i>
                 </span>
-                <span ng-if="parentIndex !== 7" ng-click="$ctrl.moveDown(parentIndex, $index)" >
+                <span ng-class="{'invisible': parentIndex === 7}" ng-click="$ctrl.moveDown(parentIndex, $index)" >
                   <i class="icon icon-2x icon-arrow-down"></i>
                 </span>
               </div>
-            </header>
-            <section >
-              <p class="inline">{{node.type}}</p>
-              <p class="pull-right">{{node.pub ? $ctrl.pubTranslate : $ctrl.subTranslate}}</p>
-            </section>
+            </div>
           </article>
         </cs-card>
       </cs-card-layout>
     </div>
   </div>
   <div class="container row top-margin">
-    <button ng-click="$ctrl.createAnotherGroup()" translate="hcs.upgrade.order.addAnother"></button>
-    <button ng-click="$ctrl.resetNodes()" translate="common.reset"></button>
+    <div class="medium-offset-8">
+      <button ng-click="$ctrl.createAnotherGroup()" translate="hcs.upgrade.order.addAnother"></button>
+      <button ng-click="$ctrl.resetNodes()" translate="common.reset"></button>
+    </div>
+
   </div>
 </div>
-<div ng-if="$ctrl.loading">
+<div ng-if="$ctrl.loading" class="hcs-modal-component">
   <i class="icon icon-3x icon-spinner center"></i>
 </div>
