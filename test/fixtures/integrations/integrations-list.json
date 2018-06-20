@@ -1,4 +1,5 @@
-[{
+[
+    {
         "id": "0",
         "orgId": "13345",
         "appId": "0",
@@ -11,9 +12,7 @@
         "appUserAdoption": 500,
         "policyAction": "deny",
         "appCreated": "3018-06-08T30:50:19.355Z"
-
     },
-
     {
         "id": "1",
         "orgId": "133456",
@@ -27,10 +26,8 @@
         "appUserAdoption": 500,
         "policyAction": "deny",
         "appCreated": "2018-06-08T20:50:19.355Z"
-
     },
-
-     {
+    {
         "id": "2",
         "orgId": "223456",
         "appId": "2",
@@ -43,7 +40,6 @@
         "appUserAdoption": 500,
         "policyAction": "deny",
         "appCreated": "2018-06-08T20:50:19.355Z"
-
     },
     {
         "id": "3",
@@ -58,6 +54,5 @@
         "appUserAdoption": 500,
         "policyAction": "deny",
         "appCreated": "2018-06-08T20:50:19.355Z"
-
     }
-  ]
+]

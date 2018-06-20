@@ -52,6 +52,10 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     this.IntegrationsManagementFakeService.getGlobalAccessPolicy().then(result => this.globalAccessPolicy = result);
   }
 
+  public get l10nGlobalAccessPolicyString(): string {
+    return _.get(this.globalAccessPolicy, 'action') === PolicyAction.ALLOW ? 'integrations.list.globalAccessOn' : 'integrations.list.globalAccessOff';
+  }
+
   public get globalAccessPolicyAction(): boolean {
     return this.globalAccessPolicy ? this.globalAccessPolicy.action === PolicyAction.ALLOW : false;
   }
@@ -76,10 +80,6 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     return moment(this.lastUpdate).format(this.dateFormat);
   }
 
-  public get l10nGlobalAccessPolicyString(): string {
-    return _.get(this.globalAccessPolicy, 'action') === PolicyAction.ALLOW ? 'integrations.list.globalAccessOn' : 'integrations.list.globalAccessOff';
-  }
-
   public filterList(str) {
     if (this.timer) {
       this.$timeout.cancel(this.timer);
@@ -99,13 +99,10 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     return this.IntegrationsManagementFakeService.listIntegrations(this.listOptions)
       .then(result => {
         if (this.listOptions.start === 0 || _.isEmpty(this.gridOptions.data)) {
-          //this.gridData = _.clone(result);
           this.gridOptions.data = _.clone(result);
         } else {
-          //this.gridData = [...this.gridData, ...result];
           this.gridOptions.data = [...this.gridOptions.data as IApplicationUsage[], ...result];
         }
-        //this.gridOptions.data = this.gridData;
         this.hasDataLoaded = true;
         return !_.isEmpty(result);
       })

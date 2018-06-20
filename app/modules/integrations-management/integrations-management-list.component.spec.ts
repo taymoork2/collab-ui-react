@@ -1,6 +1,6 @@
 import moduleName from './index';
 import { IntegrationsManagementListController } from './integrations-management-list.component';
-import { IApplicationUsage, IListOptions, SortOrder } from './integrations-management.types';
+import { IApplicationUsage, IListOptions, SortOrder, PolicyType, PolicyAction, IGlobalPolicy } from './integrations-management.types';
 
 type Test = atlas.test.IComponentTest<IntegrationsManagementListController,
   {
@@ -18,6 +18,14 @@ describe('Component: integrationsManagementList:', () => {
 
   const integrations = <IApplicationUsage[]>_.cloneDeep(getJSONFixture('integrations/integrations-list.json'));
 
+  const globalAccessPolicy = {
+    id: '123',
+    orgId: 'orgId',
+    name: 'Global Access Policy',
+    type: PolicyType.DEFAULT,
+    action: PolicyAction.ALLOW,
+  };
+
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies(
@@ -29,6 +37,9 @@ describe('Component: integrationsManagementList:', () => {
     installPromiseMatchers();
     spyOn(this.Notification, 'errorResponse').and.returnValue('');
     spyOn(this.IntegrationsManagementFakeService, 'listIntegrations').and.returnValue(this.$q.resolve(integrations.slice(0, 3)));
+    spyOn(this.IntegrationsManagementFakeService, 'getGlobalAccessPolicy').and.returnValue(this.$q.resolve(globalAccessPolicy));
+    spyOn(this.IntegrationsManagementFakeService, 'createGlobalAccessPolicy').and.returnValue(this.$q.resolve(globalAccessPolicy));
+    spyOn(this.IntegrationsManagementFakeService, 'updateGlobalAccessPolicy').and.returnValue(this.$q.resolve());
   });
 
   function initComponent(this: Test) {
@@ -44,7 +55,7 @@ describe('Component: integrationsManagementList:', () => {
         count: 20,
       };
       expect(this.view.find('cs-grid').length).toBe(1);
-      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(3);
+      expect((this.controller.gridOptions.data as any[]).length).toBe(3);
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
       expect(this.controller.listOptions.searchStr).toBeUndefined();
     });
@@ -52,15 +63,14 @@ describe('Component: integrationsManagementList:', () => {
       this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.resolve([]));
       initComponent.apply(this);
       expect(this.view.find('cs-grid')).toExist();
-      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(0);
+      expect((this.controller.gridOptions.data as any[]).length).toBe(0);
       expect(this.Notification.errorResponse).not.toHaveBeenCalled();
     });
     it('should display error notification and empty grid if service call is rejected', function (this: Test) {
       this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.reject({}));
       initComponent.apply(this);
       expect(this.view.find('cs-grid').length).toBe(1);
-
-      expect(_.get(this.controller.gridOptions, 'data.length')).toBeUndefined();
+      expect(this.controller.gridOptions.data).toBeUndefined();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
   });
@@ -72,12 +82,11 @@ describe('Component: integrationsManagementList:', () => {
         start: 20,
         count: 20,
       };
-      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(3);
       this.IntegrationsManagementFakeService.listIntegrations.and.returnValue(this.$q.resolve(integrations.slice(3, 6)));
       this.controller.loadMoreData()
         .then(() => {
           expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
-          expect(_.get(this.controller.gridOptions, 'data.length')).toBe(6);
+          expect((this.controller.gridOptions.data as any[]).length).toBe(6);
         })
         .catch(fail);
     });
@@ -93,9 +102,10 @@ describe('Component: integrationsManagementList:', () => {
         count: 20,
         searchStr: 'findMe',
       };
+      const data = this.controller.gridOptions.data as any[];
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
-      expect(_.get(this.controller.gridOptions, 'data.length')).toBe(1);
-      expect(_.get(this.controller.gridOptions, 'data[0].appName')).toBe('Found!');
+      expect(data.length).toBe(1);
+      expect(data[0].appName).toBe('Found!');
     });
 
     it('should sort records', function (this: Test) {
@@ -114,6 +124,32 @@ describe('Component: integrationsManagementList:', () => {
         sortOrder: SortOrder.DESC,
       };
       expect(this.IntegrationsManagementFakeService.listIntegrations).toHaveBeenCalledWith(expectedOptions);
+    });
+  });
+
+  describe('global access policy', () => {
+    beforeEach(initComponent);
+    it('should get global access policy', function (this: Test) {
+      expect(this.controller.globalAccessPolicy).toEqual(globalAccessPolicy);
+    });
+
+    it('should create global access policy of none exists', function (this: Test) {
+      this.IntegrationsManagementFakeService.getGlobalAccessPolicy.and.returnValue(this.$q.resolve(undefined));
+      initComponent.apply(this);
+      expect(this.controller.globalAccessPolicy).toBeUndefined();
+      this.controller.onGlobalAccessChange(true);
+      expect(this.IntegrationsManagementFakeService.createGlobalAccessPolicy).toHaveBeenCalled();
+    });
+
+    it('should update global access policy if one exists', function (this: Test) {
+      expect(this.controller.globalAccessPolicy).not.toBeUndefined();
+      this.controller.onGlobalAccessChange(false)
+        .then(() => {
+          expect(this.IntegrationsManagementFakeService.updateGlobalAccessPolicy).toHaveBeenCalledWith('123', PolicyAction.DENY);
+          const policy = this.controller.globalAccessPolicy as IGlobalPolicy;
+          expect(policy.action).toBe(PolicyAction.DENY);
+        })
+        .catch(fail);
     });
   });
 });
