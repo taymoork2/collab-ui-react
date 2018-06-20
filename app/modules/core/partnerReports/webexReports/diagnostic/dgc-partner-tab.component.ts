@@ -78,6 +78,10 @@ class DgcPartnerTab implements ng.IComponentController {
           this.BACK_STATE = 'reports.webex-metrics.diagnostics';
         }
       });
+    this.FeatureToggleService.diagnosticF8194MeetingDetailsGetStatus()
+      .then((isSupport: boolean) => {
+        this.isSupportExport = isSupport;
+      });
     this.tabs = [
       {
         state: `dgc.tab.meetingdetail({cid: '${this.conferenceID}'})`,

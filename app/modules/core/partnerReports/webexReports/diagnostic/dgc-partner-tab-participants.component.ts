@@ -20,6 +20,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   public usernameCellTemplate: string;
   private isSupportClientVersion = false;
   private dataService: (PartnerSearchService | CustomerSearchService);
+  private isPartnerRole: boolean;
 
   /* @ngInject */
   public constructor(
@@ -37,16 +38,23 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.platformCellTemplate = require('./platform-cell-template.html');
     this.usernameCellTemplate = require('./username-cell-template.html');
 
-    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
-    this.dataService = (isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
+    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.dataService = (this.isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-      .then((isSupport: boolean) => {
-        this.isSupportClientVersion = isSupport;
-        this.getParticipants();
-      });
+    if (this.isPartnerRole) {
+      this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
+        .then((isSupport: boolean) => {
+          this.isSupportClientVersion = isSupport;
+        });
+    } else {
+      this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
+        .then((isSupport: boolean) => {
+          this.isSupportClientVersion = isSupport;
+        });
+    }
+    this.getParticipants();
   }
 
   private getParticipants(): void {

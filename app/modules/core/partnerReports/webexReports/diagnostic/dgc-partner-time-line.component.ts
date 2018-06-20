@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { ICallType, IParticipant, IUniqueData } from './partner-search.interfaces';
-import { Platforms, QualityType, TabType } from './partner-meeting.enum';
+import { Platforms, QualityType, SearchStorage, TabType } from './partner-meeting.enum';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IDataStore {
@@ -128,10 +128,18 @@ class TimeLineController implements ng.IComponentController {
   }
 
   private loadFeatureToggle(): void {
-    this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-      .then((isSupport: boolean) => {
-        this.isSupportClientVersion = isSupport;
-      });
+    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    if (isPartnerRole) {
+      this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
+        .then((isSupport: boolean) => {
+          this.isSupportClientVersion = isSupport;
+        });
+    } else {
+      this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus()
+        .then((isSupport: boolean) => {
+          this.isSupportClientVersion = isSupport;
+        });
+    }
   }
 
   private initChart(): void {
