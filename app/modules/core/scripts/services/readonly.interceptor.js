@@ -36,6 +36,8 @@
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',
+      '/devices/?field=',
+      '/devices/bulk/export',
       '/preloadCaches',
       'webex.com/status',
       'collaborationhelp.cisco.com/status',
