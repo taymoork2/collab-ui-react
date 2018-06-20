@@ -111,6 +111,7 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/organizations/organization-delete').default,
     require('modules/core/siteList').default,
+    require('modules/call/shared/hunt-group-call-park-misconfig').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));

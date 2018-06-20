@@ -32,7 +32,8 @@ describe('Controller: OverviewCtrl', function () {
       'TrialService',
       'LinkedSitesService',
       'EvaService',
-      'SsoCertificateService'
+      'SsoCertificateService',
+      'HuntGroupCallParkMisconfigService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -68,6 +69,7 @@ describe('Controller: OverviewCtrl', function () {
     spyOn(this.Authinfo, 'isCare').and.returnValue(true);
     spyOn(this.Authinfo, 'isMessageEntitled').and.returnValue(false);
     spyOn(this.Authinfo, 'isSquaredUC').and.returnValue(false);
+    spyOn(this.Authinfo, 'hasCallLicense').and.returnValue(false);
 
     spyOn(this.EvaService, 'getMissingDefaultSpaceEva').and.returnValue(this.$q.resolve());
 
@@ -120,6 +122,7 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
     spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
+    spyOn(this.HuntGroupCallParkMisconfigService, 'getMisconfiguredServices').and.returnValue(this.$q.resolve());
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,
@@ -148,6 +151,7 @@ describe('Controller: OverviewCtrl', function () {
         LinkedSitesService: this.LinkedSitesService,
         EvaService: this.EvaService,
         SsoCertificateService: this.SsoCertificateService,
+        HuntGroupCallParkMisconfigService: this.HuntGroupCallParkMisconfigService,
       });
       this.$scope.$apply();
     };
@@ -392,6 +396,34 @@ describe('Controller: OverviewCtrl', function () {
       var TOTAL_NOTIFICATIONS = 10;
       expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
       expect(this.controller.esaDisclaimerNotification).toBeFalsy();
+    });
+  });
+
+  describe('Notifications - Login as Customer, Call Park and Hunt Group misconfigurations do not exist', function () {
+    beforeEach(function () {
+      this.Authinfo.hasCallLicense.and.returnValue(true);
+      this.initController();
+    });
+
+    it('should not show any notifications initially', function () {
+      var TOTAL_NOTIFICATIONS = 10;
+      expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
+    });
+  });
+
+  describe('Notifications - Login as Customer, Call Park and Hunt Group misconfigurations do exist', function () {
+    beforeEach(function () {
+      this.Authinfo.hasCallLicense.and.returnValue(true);
+      this.HuntGroupCallParkMisconfigService.getMisconfiguredServices.and.returnValue(this.$q.resolve({
+        callParks: [{ uuid: '597ecfde-8a77-4bc0-800c-7cebf5c38f3e', url: 'https://cmi.huron-int.com/api/v2/customers/e17d321b-d97c-4296-b526-e0b4ae558c91/features/callparks/597ecfde-8a77-4bc0-800c-7cebf5c38f3e', name: 'JeffCP' }],
+        huntGroups: [{ uuid: '840975cd-e1ae-4f6c-a5f9-179276379473', url: 'https://cmi.huron-int.com/api/v2/customers/e17d321b-d97c-4296-b526-e0b4ae558c91/features/huntgroups/840975cd-e1ae-4f6c-a5f9-179276379473', name: 'JeffHG' }],
+      }));
+      this.initController();
+    });
+
+    it('should show notifications', function () {
+      var TOTAL_NOTIFICATIONS = 12;
+      expect(this.controller.notifications.length).toEqual(TOTAL_NOTIFICATIONS);
     });
   });
 

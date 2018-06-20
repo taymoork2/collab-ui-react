@@ -27,6 +27,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     EvaService,
     FeatureToggleService,
     HealthService,
+    HuntGroupCallParkMisconfigService,
     HybridServicesClusterService,
     HybridServicesFlagService,
     HybridServicesUtilsService,
@@ -274,6 +275,10 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
             pushNotification(OverviewNotificationFactory
               .createCareLicenseNotification('homePage.careLicenseCallMissingTextToggle', 'careChatTpl.learnMoreLink', FeatureToggleService));
           }
+        }
+
+        if (Authinfo.hasCallLicense()) {
+          checkForMisconfiguredHuntGroupsCallParks();
         }
 
         checkForUnsyncedSubscriptionLicenses();
@@ -546,6 +551,18 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
 
     function showUserTaskManagerModal() {
       $state.go('users.csv.task-manager');
+    }
+
+    function checkForMisconfiguredHuntGroupsCallParks() {
+      HuntGroupCallParkMisconfigService.getMisconfiguredServices()
+        .then(function (invalidServices) {
+          _.forEach(invalidServices.huntGroups, function (huntGroup) {
+            pushNotification(OverviewNotificationFactory.createHuntGroupMisconfigNotification($state, huntGroup.uuid, huntGroup.name));
+          });
+          _.forEach(invalidServices.callParks, function (callPark) {
+            pushNotification(OverviewNotificationFactory.createCallParkMisconfigNotification($state, callPark.uuid, callPark.name));
+          });
+        });
     }
 
     forwardEvent('licenseEventHandler', Authinfo.getLicenses());
