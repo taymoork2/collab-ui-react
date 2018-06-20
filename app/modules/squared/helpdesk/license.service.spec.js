@@ -235,7 +235,7 @@ describe('LicenseService', function () {
     }];
 
     // MESSAGING
-    var aggregated = LicenseService.aggregatedLicenses(licenses, 'MESSAGING');
+    var aggregated = LicenseService.aggregatedLicenses(licenses, ['MESSAGING']);
     expect(aggregated.length).toEqual(1);
     var aggregate = aggregated[0];
     expect(aggregate.totalVolume).toEqual(130);
@@ -246,24 +246,24 @@ describe('LicenseService', function () {
     expect(aggregate.licenses.length).toEqual(3);
 
     // CONFERENCING
-    aggregated = LicenseService.aggregatedLicenses(licenses, 'CONFERENCING');
-    expect(aggregated.length).toEqual(4);
+    aggregated = LicenseService.aggregatedLicenses(licenses, ['CONFERENCING', 'CMR']);
+    expect(aggregated.length).toEqual(5);
 
     // MC
     aggregate = _.find(aggregated, {
-      key: 'MC',
+      key: ['MC'],
     });
-    expect(aggregate.totalVolume).toEqual(2300);
+    expect(aggregate.totalVolume).toEqual(2000);
     expect(aggregate.totalUsage).toEqual(150);
-    expect(aggregate.usagePercentage).toEqual(7);
+    expect(aggregate.usagePercentage).toEqual(8);
     expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.MC');
     expect(aggregate.isTrial).toBeFalsy();
-    expect(aggregate.licenses.length).toEqual(3);
+    expect(aggregate.licenses.length).toEqual(2);
 
 
     // TC
     aggregate = _.find(aggregated, {
-      key: 'TC',
+      key: ['TC'],
     });
     expect(aggregate.totalVolume).toEqual(1250);
     expect(aggregate.totalUsage).toEqual(500);
@@ -272,20 +272,9 @@ describe('LicenseService', function () {
     expect(aggregate.isTrial).toBeFalsy();
     expect(aggregate.licenses.length).toEqual(2);
 
-    // CMR
-    aggregate = _.find(aggregated, {
-      key: 'CMR',
-    });
-    expect(aggregate.totalVolume).toEqual(250);
-    expect(aggregate.totalUsage).toEqual(250);
-    expect(aggregate.usagePercentage).toEqual(100);
-    expect(aggregate.displayName).toEqual('helpdesk.licenseDisplayNames.CMR');
-    expect(aggregate.isTrial).toBeFalsy();
-    expect(aggregate.licenses.length).toEqual(1);
-
     // CF
     aggregate = _.find(aggregated, {
-      key: 'CF',
+      key: ['CF'],
     });
     expect(aggregate.totalVolume).toEqual(600);
     expect(aggregate.totalUsage).toEqual(0);
