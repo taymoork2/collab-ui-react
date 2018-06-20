@@ -42,7 +42,6 @@ export class ProvisioningController {
     private Notification: Notification,
     private FeatureToggleService: FeatureToggleService ) {
 
-
     this.sharedColumDefs = [{
       field: 'webOrderID',
       displayName: this.$translate.instant('provisioningConsole.orderNumber'),
@@ -76,7 +75,6 @@ export class ProvisioningController {
     this.init();
   }
 
-
   private init(): void {
     this.isLoading = true;
     this.actionMenuOpened = false;
@@ -104,7 +102,6 @@ export class ProvisioningController {
         this.isLoading = false;
       });
   }
-
 
   public showDetails(row) {
     if (!this.actionMenuOpened) {
@@ -225,4 +222,3 @@ export class ProvisioningController {
     });
   }
 }
-

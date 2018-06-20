@@ -230,7 +230,7 @@ class EditCalendarService extends BaseExternalLinkedAccountUniqueSafe implements
     const directoryNumber = this.wizardData.account.directoryNumber || undefined;
     const externalNumber = this.wizardData.account.externalNumber || undefined;
 
-    this.CsdmDataModelService.reloadPlace(this.wizardData.account.cisUuid).then((place) => {
+    this.CsdmDataModelService.reloadPlaceByCisUuid(this.wizardData.account.cisUuid).then((place) => {
       if (place) {
         const updatedEntitlements = this.getUpdatedEntitlements();
         this.CsdmDataModelService.updateCloudberryPlace(

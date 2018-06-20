@@ -18,7 +18,6 @@ export class FirstTimeCallingController implements ng.IComponentController {
   public callExists: boolean = false;
   public retry: boolean = false;
 
-
   /* @ngInject */
   constructor(
     private $modalInstance: ng.ui.bootstrap.IModalInstanceService,

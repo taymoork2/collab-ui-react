@@ -145,7 +145,6 @@ export class SuggestionDropdown implements ISuggestionDropdown {
     this.setActiveByKeyboard(Direction.Next);
   }
 
-
   private setActiveByKeyboard(direction: Direction) {
     if (!this.activeSuggestionByKeyboard) {
       this.setFirstActiveByKeyboard();

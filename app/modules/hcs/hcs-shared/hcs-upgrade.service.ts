@@ -21,7 +21,6 @@ interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ICustomerType>>;
 }
 
-
 interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
@@ -43,6 +42,8 @@ export class HcsUpgradeService {
   private customerResource: ICustomerResource;
   private clusterUpgradeResource;
   //private clusterTaskStatusResource: IClusterTaskResource;
+  private tasksResource;
+  private statusCheckResource;
 
   /* @ngInject */
   constructor(
@@ -92,6 +93,8 @@ export class HcsUpgradeService {
     this.clusterUpgradeResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/upgradeorder', {}, {});
 
     //this.clusterTaskStatusResource = this.$resource<IClusterTaskType>(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/latest', {}, {});
+    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/:taskId', {}, {});
+    this.statusCheckResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/statusCheck', {}, {});
   }
 
   public createSftpServer(sftpServer: ISftpServer): ng.IPromise<any> {
@@ -303,5 +306,35 @@ export class HcsUpgradeService {
 
     const deferred = this.$q.defer();
     return deferred.promise;
+  }
+
+  public startTasks(clusterUuid: string, taskType: string, prechecks?: string[]) {
+    const taskObj = {
+      taskType: taskType,
+    };
+
+    if (prechecks) {
+      taskObj['actions'] = prechecks;
+    }
+
+    return this.tasksResource.save({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+    }, taskObj).$promise;
+  }
+
+  public getTask(clusterUuid, taskId) {
+    return this.tasksResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+      taskId: taskId,
+    }).$promise;
+  }
+
+  public getPrecheckStatus(clusterUuid: string) {
+    return this.statusCheckResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+    }, {}).$promise;
   }
 }

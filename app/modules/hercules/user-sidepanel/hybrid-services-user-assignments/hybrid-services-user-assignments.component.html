@@ -1,0 +1,42 @@
+<div class="row collapse">
+  <div class="columns small-3">
+    <span class="hybrid-services-label">{{::'cloudExtensions.cluster' | translate}}:</span>
+  </div>
+  <div class="columns small-9">
+    <span cs-loader
+          class="hybrid-services-label loader-example--small"
+          ng-if="$ctrl.loading"></span>
+    <span class="hybrid-services-label" ng-if="!$ctrl.loading">{{$ctrl.clustername}}</span>
+  </div>
+</div>
+
+<div class="row collapse">
+  <div class="columns small-3">
+    <span class="hybrid-services-label" ng-if="$ctrl.serviceId === 'squared-fusion-uc'">{{::'hercules.connectors.host_names' | translate}}:</span>
+    <span class="hybrid-services-label" ng-if="$ctrl.serviceId !== 'squared-fusion-uc'">{{::'hercules.connectors.host_name' | translate}}:</span>
+  </div>
+  <div class="columns small-9">
+    <div ng-repeat="assignment in $ctrl.assignments">
+      <span class="hybrid-services-label" ng-if="assignment.connector">
+        {{assignment.connector.hostname}}
+      </span>
+      <div class="row collapse">
+        <div class="icon-column">
+          <i ng-if="assignment.assignment.status === 'failure' || assignment.assignment.status === 'nonOperational'" class="icon icon-priority"></i>
+          <i ng-if="assignment.assignment.status === 'success'" class="icon icon-circle-check-mark-success"></i>
+          <i ng-if="assignment.assignment.status === 'waiting'" class="icon icon-info"></i>
+        </div>
+        <div class="message-column">
+          <span class="hybrid-services-assignment-message" ng-if="assignment.assignment.status === 'failure' && assignment.assignment.details.length > 0">
+            {{assignment.assignment.details[0].description}}
+          </span>
+          <span class="hybrid-services-assignment-message" ng-if="assignment.assignment.status === 'failure' && !assignment.assignment.details" translate="hercules.userAssignment.status.failure"></span>
+          <span class="hybrid-services-assignment-message" ng-if="assignment.assignment.status !== 'failure'" >
+            {{::'hercules.userAssignment.status.' + assignment.assignment.status | translate}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

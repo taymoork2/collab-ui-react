@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Controller: RemDeviceController', function () {
-  var controller, $q, $rootScope, $httpBackend, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, device;
+  var controller, $q, $rootScope, $httpBackend, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, CsdmConverter, device;
   var fakeModal = {
     close: jasmine.createSpy('close'),
   };
@@ -23,7 +23,7 @@ describe('Controller: RemDeviceController', function () {
   }));
 
   describe('Expected Responses', function () {
-    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_) {
+    beforeEach(inject(function (_$rootScope_, $controller, _$q_, _$httpBackend_, _CsdmDeviceService_, _CsdmPlaceService_, _CsdmConverter_) {
       var initialDevices = getJSONFixture('squared/json/devices.json');
       var accounts = getJSONFixture('squared/json/accounts.json');
       var initialHuronDevices = getJSONFixture('squared/json/huronDevices.json');
@@ -33,6 +33,7 @@ describe('Controller: RemDeviceController', function () {
       $httpBackend = _$httpBackend_;
       CsdmDeviceService = _CsdmDeviceService_;
       CsdmPlaceService = _CsdmPlaceService_;
+      CsdmConverter = _CsdmConverter_;
 
       $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond({});
       $httpBackend.whenGET('https://csdm-intb.ciscospark.com/csdm/api/v1/organization/null/devices/?type=huron').respond(initialHuronDevices);
@@ -56,12 +57,11 @@ describe('Controller: RemDeviceController', function () {
     });
 
     it('should call CsdmDeviceService to delete a Cloudberry device', function () {
-      controller.device = {
+      controller.device = CsdmConverter.convertCloudberryDevice({
         type: 'cloudberry',
-        isCloudberryDevice: true,
         url: device1Url,
         cisUuid: cisUidOfPlace,
-      };
+      });
       controller.deleteDevice();
       $rootScope.$digest();
 
@@ -70,13 +70,12 @@ describe('Controller: RemDeviceController', function () {
     });
 
     it('should call CsdmHuronDeviceService to delete a Huron device', function () {
-      controller.device = {
+      controller.device = CsdmConverter.convertHuronDevice({
         needsActivation: false,
         type: 'huron',
-        isHuronDevice: true,
         url: huronDevice2Url,
         cisUuid: '68351854-Place2WithHuronDevice-c9c844421ec2',
-      };
+      });
       controller.deleteDevice();
       $rootScope.$digest();
 

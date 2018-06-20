@@ -5,7 +5,6 @@ import { Notification } from 'modules/core/notifications';
 import { ICustodian, IImportComponentApi, IImportResult } from './legal-hold.interfaces';
 import { ImportMode, ImportStep, ImportResultStatus, Events } from './legal-hold.enums';
 
-
 export class LegalHoldCustodianImportController implements ng.IComponentController {
 
   private $: any;

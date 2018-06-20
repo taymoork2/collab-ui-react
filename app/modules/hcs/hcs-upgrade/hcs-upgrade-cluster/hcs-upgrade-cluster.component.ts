@@ -44,8 +44,15 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
 
   public startUpgrade(entity) {
     this.$modal.open({
-      template: `<hcs-upgrade-modal dismiss="$dismiss()" cluster-name="${entity.clusterName}" cluster-uuid="${entity.clusterUuid}" current-version="${entity.currentVersion}" upgrade-to="${entity.upgradeTo}"></hcs-upgrade-modal>`,
+      template: `<hcs-upgrade-modal dismiss="$dismiss()" group-id="${this.groupId}" cluster-name="${entity.clusterName}" cluster-uuid="${entity.clusterUuid}" current-version="${entity.currentVersion}" upgrade-to="${entity.upgradeTo}"></hcs-upgrade-modal>`,
       type: 'full',
+    });
+  }
+
+  public startPrechecks(entity) {
+    this.$modal.open({
+      template: `<hcs-precheck-modal dismiss="$dismiss()" group-id="${this.groupId}" cluster-uuid="${entity.clusterUuid}"></hcs-precheck-modal>`,
+      type: 'small',
     });
   }
 

@@ -34,4 +34,3 @@ export enum Events {
   CONVERSION_CANCEL_INITIATED = 'LegalHold::custodianConversionCancelSignalled',
   CONVERSION_CHUNK_PROCESSED = 'LegalHold::custodianConversionChunkProcessed',
 }
-

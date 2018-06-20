@@ -1,7 +1,6 @@
 import { Analytics } from 'modules/core/analytics';
 import { MeetingExportService } from './meeting-export.service';
-import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
-import { SearchService } from './searchService';
+import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
 
 export enum SERVICE_TYPE {
   PARTNER = 'PARTNER',
@@ -26,8 +25,7 @@ class MeetingExportController implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private Analytics: Analytics,
     private MeetingExportService: MeetingExportService,
-    private PartnerSearchService: PartnerSearchService,
-    private SearchService: SearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.anchorText = this.$translate.instant('webexReports.meetingExport.btnTitle');
     this.tooltipMessage = this.$translate.instant('webexReports.meetingExport.tooltipMessage');
@@ -44,15 +42,10 @@ class MeetingExportController implements ng.IComponentController {
     }
 
     this.downloading = true;
-    const dataStoreService = this.getDataStoreService(this.serviceType);
-    this.MeetingExportService.generateMeetingReport(dataStoreService)
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
       .then((meetingReport) => {
         this.reportData = meetingReport;
       });
-  }
-
-  private getDataStoreService(serviceType: string): PartnerSearchService | SearchService {
-    return (serviceType === SERVICE_TYPE.PARTNER) ? this.PartnerSearchService : this.SearchService;
   }
 
   public restoreToOriginalState(): void {

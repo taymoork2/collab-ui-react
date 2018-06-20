@@ -87,4 +87,3 @@ describe('Component: WebexSiteSubscription', function () {
     });
   });
 });
-

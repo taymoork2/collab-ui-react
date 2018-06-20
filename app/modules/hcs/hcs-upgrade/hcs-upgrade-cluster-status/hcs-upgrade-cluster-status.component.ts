@@ -21,6 +21,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   public clusterId: string;
   public clusterStatus: string;
   public estCompletionTime: any;
+  public clusterStatuses;
 
   /* @ngInject */
   constructor(
@@ -52,12 +53,21 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
     this.initUIGrid();
   }
 
+  public getNodeStatus(entity) {
+    //TODO: samwi - fix when inventory is available
+    this.$state.go('hcs.sidePanel', { node: entity, status: this.clusterStatuses[Object.keys(this.clusterStatuses)[0]] });
+  }
+
   public initCluster() {
     this.HcsUpgradeService.getCluster(this.clusterId)
       .then((cluster: IHcsCluster) => {
         this.cluster = cluster;
       })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
+
+    this.HcsUpgradeService.getPrecheckStatus(this.clusterId).then(cluster => {
+      this.clusterStatuses = cluster.statusChecks;
+    });
   }
 
   public initClusterStatuses(): void {
@@ -101,6 +111,8 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        //TODO: samwi - fix when inventory is available
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)"></cs-grid-cell>',
       }, {
         field: 'nodeStatus',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),

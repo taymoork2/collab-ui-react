@@ -18,6 +18,7 @@ import { WebexSiteManagementSetting } from './webex/webexSiteManagement/webex-si
 import { WebexSetting } from './webex/webex-settings-wrapper.component';
 import { SparkAssistantSetting } from './spark-assistant/spark-assistant-setting.component';
 import { ProximitySetting } from './proximity/proximity.component';
+import { IntegrationsSetting } from './integrations/integrations-setting.component';
 
 export class SettingsCtrl {
 
@@ -39,6 +40,7 @@ export class SettingsCtrl {
   public webexSiteManagement: SettingSection;
   public sparkAssistant: SettingSection;
   public proximity: SettingSection;
+  public integrations: SettingSection;
 
   // Footer and broadcast controls
   public saveCancelFooter: boolean = false;
@@ -63,6 +65,7 @@ export class SettingsCtrl {
   public $onInit(): void {
     // provide these settings to everyone
     this.initBranding();
+    this.initIntegrations();
     this.support = new SupportSetting();
 
     this.$scope.$on(this.REMOVE_SAVE_BUTTONS, (): void => {
@@ -175,6 +178,17 @@ export class SettingsCtrl {
     this.FeatureToggleService.csdmProximityOptInGetStatus().then(toggle => {
       if (toggle) {
         this.proximity = new ProximitySetting();
+      }
+    });
+  }
+
+  private initIntegrations() {
+    if (!this.Authinfo.isCustomerAdmin()) {
+      return;
+    }
+    this.FeatureToggleService.atlasIntegrationsManagementGetStatus().then(toggle => {
+      if (toggle) {
+        this.integrations = new IntegrationsSetting();
       }
     });
   }

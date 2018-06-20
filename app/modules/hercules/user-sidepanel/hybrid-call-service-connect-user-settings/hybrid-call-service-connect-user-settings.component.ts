@@ -29,10 +29,13 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
 
   public userTestToolFeatureToggled: boolean;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private HybridServicesI18NService: HybridServicesI18NService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
     private Notification: Notification,
@@ -81,6 +84,9 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
           /* The Aware Resource Group is also used for Connect  */
           this.resourceGroupId = this.userStatusAware.resourceGroupId;
         }
+        if (this.userStatusAware && this.userStatusAware.assignments) {
+          this.isActivation2User = true;
+        }
       })
       .catch((error) => {
         this.couldNotReadUser = true;
@@ -127,6 +133,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
           this.userIsCurrentlyEntitled = true;
         }
         this.newEntitlementValue = undefined;
+        this.delayedGetUserData();
         return this.getUserData(this.userId);
       })
       .catch((error) => {
@@ -167,6 +174,15 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
       userId: this.userId,
       userEmailAddress: this.userEmailAddress,
     });
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData(this.userId);
+    }, 3000);
   }
 
 }

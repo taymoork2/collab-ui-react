@@ -19,7 +19,6 @@ export interface IServiceItemsSet {
   cmr?: IServiceItem[];
 }
 
-
 export class ProvisioningDetailsController {
 
   public order: any;
@@ -61,7 +60,6 @@ export class ProvisioningDetailsController {
     this.items = {};
     this.init();
   }
-
 
   private makeItem(itemType: string): IDetailItem | undefined {
     if (!this.serviceItems[itemType]) {
@@ -137,7 +135,6 @@ export class ProvisioningDetailsController {
     return result;
   }
 
-
    /*
   * Move an order between pending, in progress and completed.
   */
@@ -171,4 +168,3 @@ export class ProvisioningDetailsController {
       });
   }
 }
-

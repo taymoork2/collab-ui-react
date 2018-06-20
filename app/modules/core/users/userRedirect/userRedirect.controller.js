@@ -8,7 +8,7 @@ require('./_user-redirect.scss');
     .controller('userRedirectCtrl', userRedirectCtrl);
 
   /*ng-Inject*/
-  function userRedirectCtrl($timeout, WindowLocation, Utils) {
+  function userRedirectCtrl($timeout, WindowLocation) {
     var vm = this;
 
     vm.loadingDelay = 2000;
@@ -18,7 +18,5 @@ require('./_user-redirect.scss');
     function redirect() {
       WindowLocation.set('https://marketplace.telstra.com/');
     }
-
-    Utils.checkForIeWorkaround();
   }
 })();

@@ -151,4 +151,3 @@ export class HighlightMask {
     return output;
   }
 }
-

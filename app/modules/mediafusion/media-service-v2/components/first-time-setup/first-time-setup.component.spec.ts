@@ -34,4 +34,3 @@ describe('Component: firstTimeSetup:', () => {
     });
   });
 });
-

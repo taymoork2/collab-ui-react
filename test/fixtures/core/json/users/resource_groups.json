@@ -7,6 +7,10 @@
     {
       "id": "be46e71f-c8ea-470b-ba13-2342d310a202",
       "name": "Resource Group B"
+    },
+    {
+      "id": "0cb73b29-7f06-494c-b008-66bb8a3e8ad2",
+      "name": "Resource Group C"
     }
   ]
 }

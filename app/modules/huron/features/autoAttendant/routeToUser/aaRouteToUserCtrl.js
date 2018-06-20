@@ -6,9 +6,11 @@
     .controller('AARouteToUserCtrl', AARouteToUserCtrl);
 
   /* @ngInject */
-  function AARouteToUserCtrl($q, $scope, $translate, AutoAttendantHybridCareService, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
+  function AARouteToUserCtrl($q, $scope, $translate, AANotificationService, AutoAttendantHybridCareService, AAUiModelService, AAUserService, AACommonService, Authinfo, AutoAttendantCeMenuModelService, LineResource, UserListService, Userservice, UserServiceVoice) {
     var vm = this;
     var conditional = 'conditional';
+    var schedule = undefined;
+    var routeToUserOrVM = undefined;
 
     vm.userSelected = {
       description: '',
@@ -142,6 +144,10 @@
         if (user.success) {
           return deferred.resolve(user);
         } else {
+          AANotificationService.error('autoAttendant.userDoesNotExist', {
+            schedule: schedule,
+            route: routeToUserOrVM,
+          });
           return $q.reject();
         }
       });
@@ -399,9 +405,10 @@
     }
 
     function activate() {
-      var routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
+      routeToUserOrVM = !_.isUndefined($scope.voicemail) ? routeToVoiceMail : routeToUser;
 
       var ui = AAUiModelService.getUiModel();
+      schedule = $scope.schedule;
 
       if ($scope.fromDecision) {
         var conditionalAction;

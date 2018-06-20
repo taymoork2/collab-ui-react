@@ -764,7 +764,7 @@ describe('userCsv.controller', function () {
 
     function initMocks() {
       this.setCsv = function (users, csvHeader) {
-        var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Calendar Service', 'Call Service Aware'];
+        var header = csvHeader || ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Hybrid Calendar Service Resource Group', 'Hybrid Call Service Resource Group', 'Hybrid Message Service Resource Group', 'Calendar Service', 'Call Service Aware', 'Hybrid Message Service'];
         var csv = [header];
         csv.push(users);
         this.controller.model.file = $.csv.fromArrays(csv);
@@ -789,7 +789,7 @@ describe('userCsv.controller', function () {
     }
 
     it('should not update USS when no resource group changes', function () {
-      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', '', 'true', 'true', 'true']);
       this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
       this.controller.startUpload();
       this.$scope.$apply();
@@ -803,7 +803,7 @@ describe('userCsv.controller', function () {
     });
 
     it('should add an error if the calendar resource group does not exist in FMS', function () {
-      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'DoesNotExist', '', 'true', 'true']);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'DoesNotExist', '', '', 'true', 'true', 'true']);
       this.controller.startUpload();
       this.$scope.$apply();
       this.$timeout.flush();
@@ -818,7 +818,7 @@ describe('userCsv.controller', function () {
     });
 
     it('should add an error if the call resource group does not exist in FMS', function () {
-      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'DoesNotExist', 'true', 'true']);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'DoesNotExist', '', 'true', 'true', 'true']);
       this.controller.startUpload();
       this.$scope.$apply();
       this.$timeout.flush();
@@ -832,22 +832,49 @@ describe('userCsv.controller', function () {
       expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
     });
 
+    it('should add an error if the message resource group does not exist in FMS', function () {
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'DoesNotExist', 'true', 'true', 'true']);
+      this.controller.startUpload();
+      this.$scope.$apply();
+      this.$timeout.flush();
+      expect(this.controller.model.numTotalUsers).toEqual(1);
+      expect(this.controller.model.userErrorArray.length).toEqual(1);
+      expect(this.controller.model.userErrorArray[0].email).toEqual('tvasset@cisco.com');
+      expect(this.controller.model.userErrorArray[0].error).toEqual('firstTimeWizard.invalidMessageServiceResourceGroup');
+      expect(this.ResourceGroupService.getAll.calls.count()).toEqual(1);
+      expect(this.USSService.getAllUserProps.calls.count()).toEqual(1);
+      expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
+      expect(this.Userservice.bulkOnboardUsers.calls.count()).toEqual(0);
+    });
+
     it('should update USS with a new calendar resource group assignment', function () {
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', '', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
       expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('445a3f8e-06a3-476b-b6f1-215a7db09083');
       expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toBeUndefined();
+      expect(updatedUserProps[0].resourceGroups['spark-hybrid-impinterop']).toBeUndefined();
     });
 
     it('should update USS with a new call resource group assignment', function () {
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', '', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
       expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('be46e71f-c8ea-470b-ba13-2342d310a202');
       expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toBeUndefined();
+      expect(updatedUserProps[0].resourceGroups['spark-hybrid-impinterop']).toBeUndefined();
+    });
+
+    it('should update USS with a new message resource group assignment', function () {
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'Resource Group C', 'true', 'true', 'true']);
+      expect(updatedUserProps.length).toEqual(1);
+      expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
+      expect(updatedUserProps[0].resourceGroups).toBeDefined();
+      expect(updatedUserProps[0].resourceGroups['spark-hybrid-impinterop']).toEqual('0cb73b29-7f06-494c-b008-66bb8a3e8ad2');
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toBeUndefined();
+      expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toBeUndefined();
     });
 
     it('should not update USS when the current resource groups are the same', function () {
@@ -857,10 +884,11 @@ describe('userCsv.controller', function () {
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': 'be46e71f-c8ea-470b-ba13-2342d310a202',
+            'spark-hybrid-impinterop': 'be46e71f-c8ea-470b-ba13-2342d310a202',
           },
         },
       ]));
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group B', 'Resource Group B', 'Resource Group B', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
     });
@@ -872,15 +900,17 @@ describe('userCsv.controller', function () {
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+            'spark-hybrid-impinterop': '0cb73b29-7f06-494c-b008-66bb8a3e8ad2',
           },
         },
       ]));
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', 'Resource Group B', 'Resource Group C', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
       expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('be46e71f-c8ea-470b-ba13-2342d310a202');
       expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('445a3f8e-06a3-476b-b6f1-215a7db09083');
+      expect(updatedUserProps[0].resourceGroups['spark-hybrid-impinterop']).toEqual('0cb73b29-7f06-494c-b008-66bb8a3e8ad2');
     });
 
     it('should update USS with empty resource groups when no longer in the CSV', function () {
@@ -890,20 +920,22 @@ describe('userCsv.controller', function () {
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+            'spark-hybrid-impinterop': '0cb73b29-7f06-494c-b008-66bb8a3e8ad2',
           },
         },
       ]));
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', '', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(1);
       expect(updatedUserProps[0].userId).toEqual('b345abe1-5b9d-43b2-9a89-1e4e64ad478c');
       expect(updatedUserProps[0].resourceGroups).toBeDefined();
       expect(updatedUserProps[0].resourceGroups['squared-fusion-uc']).toEqual('');
       expect(updatedUserProps[0].resourceGroups['squared-fusion-cal']).toEqual('');
+      expect(updatedUserProps[0].resourceGroups['spark-hybrid-impinterop']).toEqual('');
     });
 
     it('should add an error of the USS update fails', function () {
       var _this = this;
-      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', 'true', 'true']);
+      this.setCsv(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'Resource Group A', '', '', 'true', 'true', 'true']);
       this.Userservice.bulkOnboardUsers.and.callFake(this.bulkOnboardUsersResponseMock(201));
       this.USSService.updateBulkUserProps.and.callFake(function () {
         return _this.$q.reject();
@@ -921,7 +953,7 @@ describe('userCsv.controller', function () {
       this.ResourceGroupService.getAll.and.callFake(function () {
         return ngq.reject();
       });
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', '', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
       expect(this.controller.handleHybridServicesResourceGroups).toBeFalsy();
@@ -932,7 +964,7 @@ describe('userCsv.controller', function () {
       this.USSService.getAllUserProps.and.callFake(function () {
         return ngq.reject();
       });
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', 'Resource Group B', 'true', 'true']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', '', '', 'Resource Group B', 'true', 'true', 'true']);
       expect(updatedUserProps.length).toEqual(0);
       expect(this.USSService.updateBulkUserProps.calls.count()).toEqual(0);
       expect(this.controller.handleHybridServicesResourceGroups).toBeFalsy();
@@ -945,10 +977,11 @@ describe('userCsv.controller', function () {
           resourceGroups: {
             'squared-fusion-cal': 'be46e71f-c8ea-470b-ba13-2342d310a202',
             'squared-fusion-uc': '445a3f8e-06a3-476b-b6f1-215a7db09083',
+            'spark-hybrid-impinterop': '0cb73b29-7f06-494c-b008-66bb8a3e8ad2',
           },
         },
       ]));
-      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware']);
+      var updatedUserProps = this.initAndCaptureUpdatedUserProps(['Tom', 'Vasset', 'Tom Vasset', 'tvasset@cisco.com', 'true', 'true'], ['First Name', 'Last Name', 'Display Name', 'User ID/Email (Required)', 'Calendar Service', 'Call Service Aware', 'Hybrid Message Service']);
       expect(updatedUserProps.length).toEqual(0);
     });
   });

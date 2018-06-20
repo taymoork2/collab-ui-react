@@ -307,4 +307,3 @@ export default angular.module('huron.pstn.pstn-model', [
 ])
   .service('PstnModel', PstnModel)
   .name;
-

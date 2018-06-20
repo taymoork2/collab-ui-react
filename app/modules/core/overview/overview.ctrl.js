@@ -85,7 +85,6 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     vm.trialDaysLeft = undefined;
     vm.isEnterpriseCustomer = isEnterpriseCustomer;
     vm.dismissNotification = dismissNotification;
-    vm.notificationComparator = notificationComparator;
     vm.ftEnterpriseTrunking = false;
     vm.showUserTaskManagerModal = showUserTaskManagerModal;
     var updateSsoCertificateNow = false;
@@ -121,30 +120,8 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       init();
     });
 
-    var notificationOrder = [
-      'alert',
-      'todo',
-      'info',
-      'new',
-    ];
-
     function isEnterpriseCustomer() {
       return Authinfo.isEnterpriseCustomer();
-    }
-
-    // used to sort notifications in a specific order
-    function notificationComparator(a, b) {
-      if (a.type === 'number') {
-        return b.value - a.value;
-      }
-
-      var v1 = _.toLower(_.last(_.split(a.value, '.')));
-      var v2 = _.toLower(_.last(_.split(b.value, '.')));
-      if (_.isEqual(v1, v2)) {
-        return 0;
-      } else {
-        return (_.indexOf(notificationOrder, v1) < _.indexOf(notificationOrder, v2)) ? -1 : 1;
-      }
     }
 
     // pushNotification -

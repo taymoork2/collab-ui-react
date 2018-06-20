@@ -3,7 +3,7 @@
 /* global LONG_TIMEOUT */
 
 var ReportsPage = function () {
-  this.pageTitle = element(by.cssContainingText('span', 'Reports'));
+  this.pageTitle = element(by.cssContainingText('span', 'Analytics'));
   this.timeSelect = element(by.id('timeFilter'));
   this.timeSelectCare = element(by.id('timeFilterCare'));
   this.customerSelect = element(by.id('customerFilter'));

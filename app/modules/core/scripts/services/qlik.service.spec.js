@@ -32,11 +32,19 @@ describe('Service: QlikService', function () {
   });
 
   describe('WebEx Metrics Status for server', function () {
-    it('should return spark appId and ticket if call getQBSInfo API', function () {
+    it('should return spark appId and ticket if call getQBSInfo API for messaging report', function () {
       $httpBackend.expectPOST(/.*\/basic_spark_v1\.*/, testData.postParam).respond(200, testData.appSuccessResult);
-      QlikService.getQBSInfo('spark', 'Basic', testData.postParam).then(function (response) {
+      QlikService.getQBSInfo('messaging', 'Basic', testData.postParam).then(function (response) {
         expect(response).toEqual(testData.appSuccessResult);
-      });
+      }).catch(fail);
+      $httpBackend.flush();
+    });
+
+    it('should return spark appId and ticket if call getQBSInfo API for calling report', function () {
+      $httpBackend.expectPOST(/.*\/premium_spark_v1\.*/, testData.postParam).respond(200, testData.appSuccessResult);
+      QlikService.getQBSInfo('calling', 'Premium', testData.postParam).then(function (response) {
+        expect(response).toEqual(testData.appSuccessResult);
+      }).catch(fail);
       $httpBackend.flush();
     });
 
@@ -44,7 +52,7 @@ describe('Service: QlikService', function () {
       $httpBackend.expectPOST(/.*\/basic_webex_v1\.*/, testData.postParam).respond(200, testData.appSuccessResult);
       QlikService.getProdToBTSQBSInfo('webex', 'Basic', testData.postParam).then(function (response) {
         expect(response).toEqual(testData.appSuccessResult);
-      });
+      }).catch(fail);
       $httpBackend.flush();
     });
 
@@ -55,7 +63,7 @@ describe('Service: QlikService', function () {
       QlikService.getProdToBTSQBSInfo('webex', 'Premium', testData.postParam, 'prod').then(function (response) {
         expect(QlikService.callReportQBSBTS).toHaveBeenCalled();
         expect(response).toEqual(testData.appSuccessResult);
-      });
+      }).catch(fail);
       $httpBackend.flush();
     });
   });
@@ -64,8 +72,8 @@ describe('Service: QlikService', function () {
     it('should return Qlik mashup address if error code not exist', function () {
       spyOn(UrlConfig, 'getQlikReportAppUrl');
       UrlConfig.getQlikReportAppUrl.and.returnValue(testData.qlikMashupUrl);
-      var appUrl = QlikService.getQlikMashupUrl(testData.qlikMashupUrl, 'spark', 'Basic');
-      expect(appUrl).toEqual('qlik-loader/spark-report-basic/spark-report-basic.html');
+      var appUrl = QlikService.getQlikMashupUrl(testData.qlikMashupUrl, 'messaging', 'Basic');
+      expect(appUrl).toEqual('qlik-loader/messaging-report-basic/messaging-report-basic.html');
     });
   });
 });

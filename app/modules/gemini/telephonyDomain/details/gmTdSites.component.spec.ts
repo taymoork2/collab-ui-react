@@ -96,7 +96,6 @@ describe('Component: gmTdSites', () => {
       expect(this.Notification.errorResponse).toHaveBeenCalled();
     });
 
-
     it('Should go to previous state when click cancel button', function () {
       this.controller.onCancel();
       expect(this.PreviousState.go).toHaveBeenCalled();

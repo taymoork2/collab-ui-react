@@ -24,6 +24,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   public softwareProfileSelected: ISelectOption;
   public softwareProfilesList: ISelectOption[];
   public disableSwProfileSelect: boolean = false;
+  public processing: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -67,6 +68,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   }
 
   public save() {
+    this.processing = true;
     const addedCustomer: ISelectOption = {
       label: '',
       value: '',
@@ -97,6 +99,9 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
       })
       .catch((err) => {
         this.Notification.errorWithTrackingId(err);
+      })
+      .finally(() => {
+        this.processing = false;
       });
   }
 

@@ -117,4 +117,3 @@ export class WebexDeleteSiteModalComponent implements ng.IComponentOptions {
     siteUrl: '<',
   };
 }
-

@@ -139,7 +139,8 @@ describe('QueryParser', () => {
     expectLookupByTranslatedField('translated.spacesPage.typeHeader', 'product');
     expectLookupByTranslatedField('translated.deviceOverviewPage.macAddr', 'mac');
     expectLookupByTranslatedField('translated.deviceOverviewPage.ipAddr', 'ip');
-    expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrl', 'sipurl');
+    expectLookupByTranslatedField('translated.deviceOverviewPage.primarySipUrl', 'primarysipurl');
+    expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrls', 'sipurls');
     expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
     expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
     expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');

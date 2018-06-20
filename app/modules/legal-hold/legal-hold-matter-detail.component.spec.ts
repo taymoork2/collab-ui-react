@@ -22,7 +22,6 @@ type Test = atlas.test.IComponentTest<LegalHoldMatterDetailController, {
     },
   }>;
 
-
 describe('Component: legalHoldMatterDetail', () => {
 
   const testMatter = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'))[1];

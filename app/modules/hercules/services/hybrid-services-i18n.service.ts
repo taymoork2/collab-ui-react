@@ -58,7 +58,6 @@ export class HybridServicesI18NService {
     return `${time} ${day}`;
   }
 
-
   public getLocalizedReleaseChannel = (channel: string): string => {
     return this.$translate.instant(`hercules.fusion.add-resource-group.release-channel.${channel}`);
   }

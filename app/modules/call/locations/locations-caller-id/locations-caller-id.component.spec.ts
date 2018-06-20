@@ -74,7 +74,6 @@ describe('Component: locations-caller-id', () => {
       expect(this.$scope.onChangeFn).toHaveBeenCalledWith(this.controller.callerId);
     });
 
-
     it('should have Caller ID Name and Caller ID Number when Caller ID is enabled', function() {
       this.view.find(CALLER_ID_TOGGLE).click();
       expect(this.view).toContainElement(CALLER_ID_NAME);

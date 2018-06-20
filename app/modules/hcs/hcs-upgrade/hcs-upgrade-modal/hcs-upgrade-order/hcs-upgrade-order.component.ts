@@ -38,11 +38,12 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
 
   public getNodesToUpgrade() {
     this.loading = true;
-    this.HcsUpgradeService.getUpgradeOrder(this.clusterUuid).then(nodes => {
-      this.copyList = _.cloneDeep(nodes.upgradeOrder);
-      this.cluster = nodes.upgradeOrder;
-      this.nodeOrderChanged();
-    })
+    this.HcsUpgradeService.getUpgradeOrder(this.clusterUuid)
+      .then(nodes => {
+        this.copyList = _.cloneDeep(nodes.upgradeOrder);
+        this.cluster = nodes.upgradeOrder;
+        this.nodeOrderChanged();
+      })
       .catch(err => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => this.loading = false);
   }
@@ -52,6 +53,16 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
     this.cluster[parentIndex - 1].nodes.push(item[0]);
 
     this.nodeOrderChanged();
+  }
+
+  public canMoveUp(node, parentIndex) {
+    const publisher = _.find(this.cluster[parentIndex - 1].nodes, { pub: true, type: node.type });
+
+    if (publisher || parentIndex === 1) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public moveDown(parentIndex, itemIndex) {
@@ -75,7 +86,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
       if (keyCode === 40 && parentIndex !== 7) {
         //down arrow
         this.moveDown(parentIndex, itemIndex);
-      } else if (keyCode === 38 && parentIndex !== 1) {
+      } else if (keyCode === 38 && this.canMoveUp(node, parentIndex)) {
         //up arrow
         this.moveUp(parentIndex, itemIndex);
       } else {
@@ -96,7 +107,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
   }
 
   public resetNodes() {
-    this.cluster = this.copyList;
+    this.cluster = _.cloneDeep(this.copyList);
     this.nodeOrderChanged();
   }
 }
@@ -107,5 +118,6 @@ export class HcsUpgradeOrderComponent implements ng.IComponentOptions {
   public bindings = {
     clusterUuid: '<',
     onChangeFn: '&',
+    groupId: '@',
   };
 }

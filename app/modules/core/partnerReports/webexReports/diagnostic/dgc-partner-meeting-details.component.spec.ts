@@ -1,4 +1,5 @@
 import moduleName from './index';
+import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTabMeetingDetail', () => {
   beforeAll(function() {
@@ -108,9 +109,10 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
 
-    this.PartnerSearchService.setStorage('webexOneMeeting', this.meeting);
+    this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_ONE_MEETING, this.meeting);
+    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
   });
 
   function initComponent(this, isReject?: boolean) {

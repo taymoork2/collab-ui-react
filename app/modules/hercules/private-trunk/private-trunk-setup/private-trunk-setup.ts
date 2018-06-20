@@ -33,4 +33,3 @@ export class PrivateTrunkResource {
     this.hybridDestination = obj.hybridDestination;
   }
 }
-

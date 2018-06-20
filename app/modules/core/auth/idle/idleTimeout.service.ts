@@ -43,14 +43,12 @@ export class IdleTimeoutService {
     }, this.Config.idleTabTimeout);
   }
 
-
   private resetTimeout(e) {
     //cancel death clock
     this.Log.debug('IDLE TIMEOUT SERVICE: reactivated by: ' + e.type);
     this.$timeout.cancel(this.idleSetter);
     this.idleSetter = this.initIdleTimer();
   }
-
 
   private resetAndBroadcast(e) {
     this.resetTimeout(e);
@@ -94,7 +92,6 @@ export class IdleTimeoutService {
   /* User actions on the current tab will reset the death clock on this tab.
   /* They will also modify the LS value which would trigger the reset on other tabs by LS event.
   */
-
 
   public init() {
     this.Log.debug('IDLE TIMEOUT SERVICE: Starting Tab Timer');

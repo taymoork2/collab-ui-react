@@ -73,8 +73,12 @@
       </webex-settings-wrapper>
     </setting-section>
 
-    <setting-section setting="settingsCtrl.retention" hide-bottom-line=true ng-if="settingsCtrl.retention">
+    <setting-section setting="settingsCtrl.retention" ng-if="settingsCtrl.retention">
       <retention-setting></retention-setting>
+    </setting-section>
+
+    <setting-section setting="settingsCtrl.integrations" ng-if="settingsCtrl.integrations">
+      <integrations-setting></integrations-setting>
     </setting-section>
   </div>
 

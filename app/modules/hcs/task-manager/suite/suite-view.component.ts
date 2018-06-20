@@ -61,7 +61,6 @@ export class SuiteViewCtrl implements ng.IComponentController {
     }
   }
 
-
   /* This function does an in-page search for the string typed in search box*/
   public searchData(searchStr: string): void {
     this.HcsTestManagerService.getSuites().then((result) => {

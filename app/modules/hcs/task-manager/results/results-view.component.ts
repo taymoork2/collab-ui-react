@@ -100,7 +100,6 @@ export class ResultsViewCtrl implements ng.IComponentController {
     this.gridOptions.data = this.resultsListData;
   }
 
-
   public handleFailures(): void {
     this.showReloadPageIfNeeded();
   }

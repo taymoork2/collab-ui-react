@@ -44,6 +44,7 @@
     "stylelint": "stylelint './app/**/**/*.scss'",
     "test": "yarn ktest-all",
     "tslint": "tsc --noEmit && tslint --format stylish --project ./tsconfig.json",
+    "tslint-fix": "tslint --format fileslist --project ./tsconfig.json | xargs tslint --fix",
     "webdriver": "webdriver-manager update"
   },
   "//dependencies": [
@@ -57,7 +58,7 @@
     "@ciscospark/plugin-logger": "1.28.5",
     "@ciscospark/spark-core": "1.28.5",
     "@collabui/collab-amcharts": "~3.19.4",
-    "@collabui/collab-ui": "~5.4.2",
+    "@collabui/collab-ui": "~5.4.3",
     "@collabui/collab-ui-formly": "~2.0.3",
     "@collabui/collab-ui-ng": "~8.1.2",
     "acorn": "=5.0.3",
@@ -232,7 +233,7 @@
     "tslint-eslint-rules": "^5.0.0",
     "tslint-jasmine-rules": "^1.3.0",
     "tslint-loader": "^3.3.0",
-    "typescript": "^2.8.1",
+    "typescript": "^2.9.1",
     "unparse-args": "^1.1.0",
     "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.10.0",

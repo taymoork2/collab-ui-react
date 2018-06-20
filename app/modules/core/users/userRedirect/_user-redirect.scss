@@ -1,15 +1,3 @@
-.alert::before {
-  content: '';
-}
-
-.results {
-  margin: 50px auto 0;
-  width: 280px;
-}
-
-/* Remove when Microsoft fixes flexbox problem *\
-   when min-height is defined.  See
-\* message-box in ToolKit.                */
-.vertical-ie-workaround {
-  height: 0px;
+.user-redirect__message-box {
+  justify-content: flex-start;
 }

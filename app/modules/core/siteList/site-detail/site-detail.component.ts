@@ -52,6 +52,10 @@ class SiteDetailComponentCtrl implements ng.IComponentController {
     return this.$translate.instant(labels[this.csvStatus]);
   }
 
+  public get isTrial(): boolean {
+    return this.selectedSite.license.isTrial;
+  }
+
   public get resultsLabel(): string {
     const labels = {
       exportCompletedNoErr: 'siteList.siteCsvExportResultsLinkLabel',

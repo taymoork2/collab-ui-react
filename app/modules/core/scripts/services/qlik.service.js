@@ -23,6 +23,13 @@
       webexJMT: ['system_webex_v1', 'webex-report-jmt'],
       license: ['basic_license_v1', 'license'],
       webexPartner: ['partner_webex_v1', 'webex-report-partner'],
+      //UX 3.0
+      messagingBasic: ['basic_spark_v1', 'messaging-report-basic'],
+      messagingPremium: ['premium_spark_v1', 'messaging-report-premium'],
+      callingBasic: ['basic_spark_v1', 'calling-report-basic'],
+      callingPremium: ['premium_spark_v1', 'calling-report-premium'],
+      messagingPartner: ['partner_spark_v1', 'messaging-report-partner'],
+      callingPartner: ['partner_spark_v1', 'calling-report-partner'],
     };
     var service = {
       getQBSInfo: getQBSInfo,

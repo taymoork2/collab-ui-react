@@ -1,0 +1,40 @@
+<p ng-if="!vctrl.selection.value">
+  Select a config or search for it.
+</p>
+<ul ng-if="vctrl.selection.value">
+  <li ng-class="{selected: $index ===vctrl.highlightedSuggestion}" ng-if="vctrl.enumValue" ng-repeat="value in vctrl.enumValues" ng-click="vctrl.selectValue(value)">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span ng-bind-html="value | highlight:vctrl.selectedValue">{{value}}</span>
+  </li>
+
+  <!-- string values-->
+  <li ng-if="vctrl.stringValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>{{vctrl.currentValue.value || 'not set'}}   -Current value</span>
+  </li>
+  <li ng-if="vctrl.stringValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>{{''}}    -Default value</span>
+  </li>
+  <li ng-if="vctrl.stringValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>Enter a string, max length of ##</span>
+  </li>
+
+  <!-- int values-->
+  <li ng-if="vctrl.intValue">
+    <rzslider rz-slider-model="vctrl.selectedValue" rz-slider-options="vctrl.sliderInputOptions"></rzslider>
+  </li>
+  <li ng-if="vctrl.intValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>{{vctrl.currentValue.value}}   -Current value</span>
+  </li>
+  <li ng-if="vctrl.intValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>{{''}}    -Default value</span>
+  </li>
+  <li ng-if="vctrl.intValue">
+    <span class="parents" ng-if="vctrl.selection.parent">{{vctrl.selection.getNameFrom()}}</span>
+    <span>Enter a number, between ## and ##</span>
+  </li>
+</ul>

@@ -28,8 +28,11 @@
               class="hybrid-services-label loader-example--small"
               ng-if="$ctrl.loadingPage"></span>
       </div>
+
+      <reactivate-user-modal-link ng-if="$ctrl.showReactivateLink()" user-id="$ctrl.userId" service="$ctrl.userStatusAware.serviceId" callback="$ctrl.reactivateCallback()"></reactivate-user-modal-link>
+
       <div>
-      <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
+        <p class="hybrid-service-description">{{'hercules.cloudExtensions.serviceDescriptions.squared-fusion-uc' | translate}}</p>
 
         <p ng-if="!$ctrl.loadingPage && $ctrl.showSaveButton() && !$ctrl.isServiceEnabledInFMS() && !$ctrl.isInvitePending && $ctrl.entitledToggle">
           <hybrid-services-sidepanel-message severity="'warning'" translation-key="'hercules.cloudExtensions.serviceNotEnabledInCloud'"></hybrid-services-sidepanel-message>
@@ -86,7 +89,7 @@
 
           <div class="row collapse" ng-if="$ctrl.userStatusAware.messages.length && $ctrl.isServiceEnabledInFMS()">
             <div class="columns small-3">
-              <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+              <span class="hybrid-services-label">{{'cloudExtensions.details' | translate}}:</span>
             </div>
             <div class="columns small-9" ng-if="!$ctrl.loadingPage">
               <user-status-messages messages="$ctrl.userStatusAware.messages"
@@ -100,8 +103,12 @@
           </div>
         </div>
 
-        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId"
+        <hybrid-services-user-homed-cluster-and-hostname ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.connectorId && !$ctrl.isActivation2User"
                                                          connector-id="$ctrl.connectorId"></hybrid-services-user-homed-cluster-and-hostname>
+
+        <hybrid-services-user-assignments ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.isActivation2User && $ctrl.userStatusAware.assignments.length > 0"
+                                          user-status="$ctrl.userStatusAware"></hybrid-services-user-assignments>
+
         <div ng-if="$ctrl.isServiceEnabledInFMS()">
 
         <div class="row collapse" ng-if="$ctrl.directoryUri">

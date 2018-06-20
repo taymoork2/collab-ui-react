@@ -16,4 +16,3 @@ export class SupportSettingComponent implements ng.IComponentOptions {
   public controllerAs = 'ctrl';
   public template = require('modules/core/settings/supportSection/supportSection.tpl.html');
 }
-

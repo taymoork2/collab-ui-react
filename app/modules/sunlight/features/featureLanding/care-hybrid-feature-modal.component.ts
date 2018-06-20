@@ -86,4 +86,3 @@ export class CareHybridFeatureModalComponent implements ng.IComponentOptions {
 export default angular
   .module('Sunlight')
   .component('careHybridFeatureModal', new CareHybridFeatureModalComponent());
-

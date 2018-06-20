@@ -78,7 +78,6 @@ export class PstnCarrierStatic implements IPstnCarrierStatic {
   }
 }
 
-
 export interface IPstnCarrierCapability {
   capability: string;
   url: string;

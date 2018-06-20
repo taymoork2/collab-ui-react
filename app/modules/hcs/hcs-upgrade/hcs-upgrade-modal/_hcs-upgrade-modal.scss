@@ -1,0 +1,28 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+
+.hcs-modal-component {
+  .top-margin {
+    margin-top: 1rem;
+  }
+
+  .center {
+    display: block;
+    margin: auto;
+  }
+
+  .height-min {
+    min-height: 6rem;
+  }
+
+  .inline {
+    display: inline-block;
+  }
+
+  .grid-display {
+    display: inline-grid;
+  }
+
+  .large.cs-card article {
+    min-height: rem-calc(152);
+  }
+}

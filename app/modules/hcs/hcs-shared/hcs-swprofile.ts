@@ -45,7 +45,6 @@ export interface ISoftwareVersion {
   uuid: string;
 }
 
-
 export class SoftwareProfile implements ISoftwareProfile {
   public name: string;
   public uuid: string;

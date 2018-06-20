@@ -917,6 +917,7 @@
   .cui-panel--full {
     z-index: 1039;
     width: 100vw;
+    height: 0px; // IE fix
     min-height: 100vh;
   }
   .cui-panel__main {

@@ -20,9 +20,11 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
   public upgradeTo;
   public upgradeOrder;
   public customerId;
+  public upgradeTaskType: string = 'upgrade';
 
   /* @ngInject */
   constructor(
+    private $modal,
     private $state,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
@@ -54,6 +56,7 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
   public saveUpgradeOrder(): void {
     this.HcsUpgradeService.saveUpgradeOrder(this.clusterUuid , this.getNodeIds(this.upgradeOrder))
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .then(() => this.HcsUpgradeService.startTasks(this.clusterUuid, this.upgradeTaskType))
       .then(() => this.dismiss())
       .then(() => this.$state.go('hcs.upgradeClusterStatus', { groupId: this.customerId, clusterId: this.clusterUuid }));
   }
@@ -75,6 +78,10 @@ export class HcsUpgradeModalCtrl implements ng.IComponentController {
 
   public runPrechecks() {
     this.dismiss();
+    this.$modal.open({
+      template: `<hcs-precheck-modal dismiss="$dismiss()" cluster-uuid="${this.clusterUuid}"></hcs-precheck-modal>`,
+      type: 'small',
+    });
   }
 }
 

@@ -297,14 +297,6 @@
         return ($window.navigator.userAgent.indexOf('MSIE') > 0 || $window.navigator.userAgent.indexOf('Trident') > 0);
       },
 
-      checkForIeWorkaround: function () {
-        if (this.isIe()) {
-          return 'vertical-ie-workaround';
-        } else {
-          return '';
-        }
-      },
-
       mailTo: mailTo,
       toUriString: toUriString,
     };

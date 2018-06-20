@@ -75,6 +75,12 @@ export class UserTaskManagerService {
     running: [],
   };
 
+  private intervalFailureCallbacks: IntervalTypeOf<Function[]> = {
+    detail: [],
+    list: [],
+    running: [],
+  };
+
   private intervalInProgress: IntervalTypeOf<boolean> = {
     detail: false,
     list: false,
@@ -385,8 +391,8 @@ export class UserTaskManagerService {
     return this.initTaskPolling('running', () => this.getInProcessTasks(), callback, scope);
   }
 
-  public initAllTaskListPolling(callback: Function, scope: ng.IScope) {
-    return this.initTaskPolling('list', () => this.getTasks(), callback, scope);
+  public initAllTaskListPolling(callback: Function, scope: ng.IScope, failureCallback?: Function) {
+    return this.initTaskPolling('list', () => this.getTasks(), callback, scope, failureCallback);
   }
 
   public changeRunningTaskListPolling(newDelay: number) {
@@ -431,16 +437,22 @@ export class UserTaskManagerService {
     this.initInterval(intervalType);
   }
 
-  private initTaskPolling(intervalType: IntervalType, intervalFunction: () => ng.IPromise<any>, callback: Function, scope: ng.IScope) {
+  private initTaskPolling(intervalType: IntervalType, intervalFunction: () => ng.IPromise<any>, callback: Function, scope: ng.IScope, failureCallback?: Function) {
     const interval = this.interval[intervalType];
     const intervalCallbacks = this.intervalCallbacks[intervalType];
+    const intervalFailureCallbacks = this.intervalFailureCallbacks[intervalType];
     this.intervalFunction[intervalType] = intervalFunction;
 
     if (!_.includes(intervalCallbacks, callback)) {
       intervalCallbacks.push(callback);
     }
+    if (_.isFunction(failureCallback)) {
+      if (!_.includes(intervalFailureCallbacks, failureCallback)) {
+        intervalFailureCallbacks.push(failureCallback);
+      }
+    }
 
-    scope.$on('$destroy', () => this.cleanupTaskPolling(intervalType, callback));
+    scope.$on('$destroy', () => this.cleanupTaskPolling(intervalType, callback, failureCallback));
 
     if (interval) {
       return;
@@ -468,15 +480,22 @@ export class UserTaskManagerService {
     this.intervalInProgress[intervalType] = true;
     intervalFunction()
       .then((...args) => _.forEach(this.intervalCallbacks[intervalType], intervalCallback => intervalCallback(...args)))
+      .catch(response => {
+        _.forEach(this.intervalFailureCallbacks[intervalType], intervalFailureCallback => intervalFailureCallback(response));
+      })
       .finally(() => this.intervalInProgress[intervalType] = false);
   }
 
-  private cleanupTaskPolling(intervalType: IntervalType, callback: Function) {
+  private cleanupTaskPolling(intervalType: IntervalType, callback: Function, failureCallback?: Function) {
     const interval = this.interval[intervalType];
     const intervalCallbacks = this.intervalCallbacks[intervalType];
+    const intervalFailureCallbacks = this.intervalFailureCallbacks[intervalType];
     _.pull(intervalCallbacks, callback);
+    if (_.isFunction(failureCallback)) {
+      _.pull(intervalFailureCallbacks, failureCallback);
+    }
 
-    if (intervalCallbacks.length === 0 && interval) {
+    if (intervalCallbacks.length === 0 && intervalFailureCallbacks.length === 0 && interval) {
       this.$interval.cancel(interval);
       this.interval[intervalType] = undefined;
     }

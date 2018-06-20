@@ -290,7 +290,7 @@ describe('EditCalendarService component:', () => {
         id: FUSION_CAL_ENTITLEMENT,
         enabled: true,
       }]));
-      spyOn(test.CsdmDataModelService, 'reloadPlace').and.returnValue(test.$q.resolve({ cisUuid: id }));
+      spyOn(test.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(test.$q.resolve({ cisUuid: id }));
       state.wizardData = {
         state: () => {
           return {

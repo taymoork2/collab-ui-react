@@ -18,7 +18,6 @@ export class ServicesOverviewCallCard extends ServicesOverviewCard {
     return [];
   }
 
-
   //Shows Locations tab when hI148 Feature toggle is enabled
   public hI1484FeatureToggleEventhandler(hasFeature: boolean) {
     if (hasFeature) {

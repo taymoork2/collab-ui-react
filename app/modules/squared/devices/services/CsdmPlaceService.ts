@@ -14,14 +14,14 @@ export class CsdmPlaceService {
     return this.csdmPlacesUrl;
   }
 
-  public getPlacesList() {
+  public getPlacesList(): IPromise<{ [url: string]: IPlace; }> {
     return this.$http.get(this.csdmPlacesUrl + '?shallow=true&type=all')
       .then((res) => {
         return this.CsdmConverter.convertPlaces(res.data);
       });
   }
 
-  public getSearchPlacesList(searchStr) {
+  public getSearchPlacesList(searchStr: string): IPromise<{ [url: string]: IPlace; }> {
     return this.$http.get(this.csdmPlacesUrl + '?type=all&query=' + searchStr)
       .then((res) => {
         return this.CsdmConverter.convertPlaces(res.data);
@@ -37,17 +37,17 @@ export class CsdmPlaceService {
     });
   }
 
-  public fetchItem(placeUrl) {
+  public fetchItem(placeUrl: string): IPromise<IPlace> {
     return this.$http.get(placeUrl).then((res) => {
       return this.CsdmConverter.convertPlace(res.data);
     });
   }
 
-  public deletePlace(place) {
+  public deletePlace(place: IPlace): IPromise<boolean>  {
     return this.$http.delete(place.url);
   }
 
-  public deleteItem(item) {
+  public deleteItem(item: IPlace): IPromise<boolean>  {
     return this.deletePlace(item);
   }
 

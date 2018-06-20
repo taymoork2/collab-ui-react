@@ -154,6 +154,10 @@ eg. `yarn start --noopen` passes the `--noopen` argument to underlying `start` s
 
 * Run tslint on entire project
 
+### `yarn tslint-fix`
+
+* Auto-fix tslint errors on entire project
+
 ### `yarn webdriver`
 
 * Update webdriver

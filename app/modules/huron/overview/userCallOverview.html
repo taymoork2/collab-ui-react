@@ -1,11 +1,11 @@
 <cs-sp-container>
   <cs-sp-section>
     <section-title
-      title-key="usersPage.sipDomain">
+      title-key="common.ciscoWebexSipAddress">
     </section-title>
     <div class="feature-list">
       <ul ng-repeat="address in $ctrl.sipAddresses track by address.address" class="sip-address-list">
-        <li>{{:: address.address}}&nbsp;<span class="badge primary" translate="common.primary" ng-if="address.isPrimary && $ctrl.sipAddresses.length > 1"></span></li>
+        <li>{{:: address.address | giveBreakOpportunities}}<span class="badge" translate="common.primary" ng-if="address.isPrimary && $ctrl.sipAddresses.length > 1"></span></li>
       </ul>
     </div>
   </cs-sp-section>

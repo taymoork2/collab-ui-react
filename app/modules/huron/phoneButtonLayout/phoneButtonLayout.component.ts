@@ -1,8 +1,8 @@
-import { PhoneButtonLayoutService, IPhoneButton } from './phoneButtonLayout.service';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
-import { Notification } from 'modules/core/notifications';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
-import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+import { DraggableInstance, DraggableService } from 'modules/core/accessibility';
+import { Notification } from 'modules/core/notifications';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { IPhoneButton, PhoneButtonLayoutService } from './phoneButtonLayout.service';
 
 interface IValidationMessages {
   required: string;

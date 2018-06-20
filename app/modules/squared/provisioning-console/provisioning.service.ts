@@ -51,7 +51,6 @@ export class ProvisioningService {
     });
   }
 
-
   public updateOrderStatus<T>(order: IOrder, newStatus: Status, assignedTo?: string): ng.IPromise<T> {
     if (assignedTo) {
       const results: string[] = _.split(assignedTo, '@');
@@ -81,4 +80,3 @@ export class ProvisioningService {
     });
   }
 }
-

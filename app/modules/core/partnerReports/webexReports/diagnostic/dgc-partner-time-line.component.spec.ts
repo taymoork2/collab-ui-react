@@ -45,7 +45,7 @@ describe('Component: DgcPartnerTimeLine', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService', 'Notification', '$timeout');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
   });
 
@@ -121,7 +121,7 @@ describe('Component: DgcPartnerTimeLine', () => {
     const msgArr = [{ key: 'SIP', value: '' }];
     const mockData = { completed: true, items: [{ deviceType: 'SIP' }] };
     initComponent.call(this, bindings);
-    spyOn(this.PartnerSearchService, 'getRealDevice').and.callFake(function () { return { then: function (callback) { return callback(mockData); } }; });
+    spyOn(this.controller, 'getDeviceType').and.callFake(function () { return { then: function (callback) { return callback(mockData); } }; });
 
     const mockParam = { conferenceID: '1234340', nodeId: '544234' };
     spyOn(this.controller, 'makeTips').and.returnValue('');

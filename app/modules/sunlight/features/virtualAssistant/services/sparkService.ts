@@ -59,7 +59,6 @@ export interface ISparkMembership {
   created: string; // datetime string
 }
 
-
 export class SparkService {
 
   private spark;

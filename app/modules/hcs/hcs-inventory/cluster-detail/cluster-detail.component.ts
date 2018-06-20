@@ -10,7 +10,6 @@ enum HcsModalTypeSelect {
   addCustomer = 1,
 }
 
-
 interface IClusterDetailsForm extends ng.IFormController {
   clusterCustomerSelect: ng.INgModelController;
   sftpLocationSelect: ng.INgModelController;
