@@ -29,7 +29,9 @@
     OverviewSetupNotification,
     OverviewUrgentUpgradeNotification,
     OverviewSparkAssistantNotification,
-    OverviewWifiProximityNotification
+    OverviewWifiProximityNotification,
+    OverviewHuntGroupMisconfigNotification,
+    OverviewCallParkMisconfigNotification
   ) {
     return {
       createCrashLogNotification: OverviewCrashLogNotification.createNotification,
@@ -55,6 +57,8 @@
       createEvaMissingDefaultSpaceNotification: OverviewEVAMissingDefaultSpaceNotification.createNotification,
       createSparkAssistantNotification: OverviewSparkAssistantNotification.createNotification,
       createWifiProximityOptInNotification: OverviewWifiProximityNotification.createNotification,
+      createHuntGroupMisconfigNotification: OverviewHuntGroupMisconfigNotification.createNotification,
+      createCallParkMisconfigNotification: OverviewCallParkMisconfigNotification.createNotification,
     };
   }
 })();

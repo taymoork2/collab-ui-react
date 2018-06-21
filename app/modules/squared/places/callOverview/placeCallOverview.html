@@ -1,10 +1,10 @@
 <cs-sp-container>
-  <cs-sp-section ng-if="$ctrl.currentPlace.sipUrl">
+  <cs-sp-section ng-if="$ctrl.currentPlace.sipUrl || $ctrl.currentPlace.additionalSipUrls">
     <section-title
-      title-key="deviceOverviewPage.sipUrl">
+      title-key="common.ciscoWebexSipAddress">
     </section-title>
-    <p>{{$ctrl.currentPlace.sipUrl}}<span class="badge primary primaryLineBadge" ng-if="$ctrl.currentPlace.additionalSipUrls.length > 0">Primary</span></p>
-    <p ng-repeat="sipUrl in $ctrl.currentPlace.additionalSipUrls">{{sipUrl}}</p>
+    <p>{{$ctrl.currentPlace.sipUrl | giveBreakOpportunities}}<span class="badge primaryItemBadge" ng-if="$ctrl.currentPlace.additionalSipUrls.length > 0" translate="common.primary"></span></p>
+    <p ng-repeat="sipUrl in $ctrl.currentPlace.additionalSipUrls">{{sipUrl | giveBreakOpportunities}}</p>
   </cs-sp-section>
   <cs-sp-section ng-if="$ctrl.hasSparkCall">
     <section-title

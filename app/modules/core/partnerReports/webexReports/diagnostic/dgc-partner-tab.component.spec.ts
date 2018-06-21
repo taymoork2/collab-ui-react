@@ -1,4 +1,5 @@
 import moduleName from './index';
+import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTab', () => {
   beforeAll(function() {
@@ -23,8 +24,9 @@ describe('Component: DgcPartnerTab', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService');
+    this.injectDependencies('$q', 'FeatureToggleService', 'PartnerSearchService', 'WebexReportsUtilService');
 
+    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
     initSpies.apply(this);
   });
 
@@ -45,7 +47,28 @@ describe('Component: DgcPartnerTab', () => {
     spyOn(this.PartnerSearchService, 'getServerTime').and.returnValue(this.$q.resolve({ dateLong: 1513319154000 }));
     this.compileComponent('dgcPartnerTab');
 
-    const meeting = this.PartnerSearchService.getStorage('webexOneMeeting');
+    const meeting = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
     expect(meeting.endTime).toBe(1513319154000);
+  });
+
+  it('should get the correct init data when call initCustomerRole', function () {
+    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
+    spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'diagnosticF8194MeetingDetailsGetStatus').and.returnValue(this.$q.resolve(true));
+
+    this.compileComponent('dgcPartnerTab');
+    this.controller.initCustomerRole();
+    expect(this.controller.isSupportExport).toBe(true);
+    expect(this.controller.BACK_STATE).toBe('reports.webex-metrics.diagnostics');
+  });
+
+  it('should get the correct init data when call initPartnerRole', function () {
+    spyOn(this.FeatureToggleService, 'diagnosticPartnerF8193TroubleshootingGetStatus').and.returnValue(this.$q.resolve(false));
+    spyOn(this.FeatureToggleService, 'diagnosticPartnerF8194MeetingDetailsGetStatus').and.returnValue(this.$q.resolve(true));
+
+    this.compileComponent('dgcPartnerTab');
+    this.controller.initPartnerRole();
+    expect(this.controller.isSupportExport).toBe(true);
+    expect(this.controller.BACK_STATE).toBe('partnerreports.tab.webexreports.diagnostics');
   });
 });

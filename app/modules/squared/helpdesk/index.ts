@@ -1,3 +1,4 @@
+import './helpdesk.scss';
 import configModuleName from 'modules/core/config/config';
 import * as urlConfigModuleName from 'modules/core/config/urlConfig';
 import * as ngTranslateModuleName from 'angular-translate';

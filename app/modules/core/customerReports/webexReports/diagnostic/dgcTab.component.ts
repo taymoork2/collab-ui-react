@@ -22,10 +22,10 @@ class DgcTab implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
-    private FeatureToggleService: FeatureToggleService,
-    private SearchService: SearchService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
+    private SearchService: SearchService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.timeZone = this.SearchService.getStorage('timeZone');
@@ -36,7 +36,12 @@ class DgcTab implements ng.IComponentController {
       .then((isSupport: boolean) => {
         this.isSupportExport = isSupport;
       });
-
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.diagnosticF8193UX3)
+      .then((isSupport: boolean) => {
+        if (isSupport) {
+          this.backState = 'support.meeting';
+        }
+      });
     this.tabs = [
       {
         state: `dgc.tab.meetingdetail({cid: '${this.conferenceID}'})`,

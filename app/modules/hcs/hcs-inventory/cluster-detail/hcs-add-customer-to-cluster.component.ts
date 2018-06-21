@@ -73,7 +73,8 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
       label: '',
       value: '',
     };
-    this.HcsControllerService.addHcsControllerCustomer(this.customerName, ['UPGRADE'])
+    const services: string[] = ['UPGRADE'];
+    this.HcsControllerService.addHcsControllerCustomer(this.customerName, services)
       .then((resp) => {
         const swProfileSelected: ISoftwareProfile = {
           name: this.softwareProfileSelected.label,
@@ -104,6 +105,4 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
         this.processing = false;
       });
   }
-
-  public onsoftwareProfileChange() {}
 }

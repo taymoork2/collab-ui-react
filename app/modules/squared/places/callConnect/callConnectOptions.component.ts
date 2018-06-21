@@ -146,7 +146,7 @@ export class CallConnectOptions extends BaseExternalLinkedAccountUniqueSafe impl
 
   public save() {
     this.isLoading = true;
-    this.CsdmDataModelService.reloadPlace(this.wizardData.account.cisUuid).then((place) => {
+    this.CsdmDataModelService.reloadPlaceByCisUuid(this.wizardData.account.cisUuid).then((place) => {
       if (place) {
         this.CsdmDataModelService.updateCloudberryPlace(
           place, {

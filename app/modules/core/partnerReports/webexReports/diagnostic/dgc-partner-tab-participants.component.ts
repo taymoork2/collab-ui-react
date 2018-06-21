@@ -1,6 +1,9 @@
-import { Notification } from 'modules/core/notifications';
-import { PartnerSearchService, Platforms } from './partner-search.service';
 import { ICallType, IParticipant } from './partner-search.interfaces';
+import { Platforms, SearchStorage } from './partner-meeting.enum';
+import { Notification } from 'modules/core/notifications';
+import { CustomerSearchService } from './customer-search.service';
+import { PartnerSearchService } from './partner-search.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -16,6 +19,8 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   public platformCellTemplate: string;
   public usernameCellTemplate: string;
   private isSupportClientVersion = false;
+  private dataService: (PartnerSearchService | CustomerSearchService);
+  private isPartnerRole: boolean;
 
   /* @ngInject */
   public constructor(
@@ -23,25 +28,30 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
-    private FeatureToggleService,
     private Notification: Notification,
+    private CustomerSearchService: CustomerSearchService,
+    private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.platformCellTemplate = require('./platform-cell-template.html');
     this.usernameCellTemplate = require('./username-cell-template.html');
+
+    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.dataService = this.isPartnerRole ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {
-    this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-      .then((isSupport: boolean) => {
-        this.isSupportClientVersion = isSupport;
-        this.getParticipants();
-      });
+    const promise = this.isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
+    promise.then((isSupport: boolean) => {
+      this.isSupportClientVersion = isSupport;
+    });
+    this.getParticipants();
   }
 
   private getParticipants(): void {
-    this.PartnerSearchService.getParticipants(this.conferenceID)
+    this.dataService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
         this.gridData = this.getGridData(res);
         this.setGridOptions();
@@ -57,19 +67,19 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
 
   private getGridData(participants: IParticipant[]): IParticipant[] {
     return _.map(participants, (participant: IParticipant) => {
-      const device = this.PartnerSearchService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
+      const device = this.WebexReportsUtilService.getDevice({ platform: participant.platform, browser: participant.browser, sessionType: participant.sessionType });
       if (participant.platform === Platforms.TP && !device.name) {
         device.name = this.$translate.instant('reportsPage.webexMetrics.CMR3DefaultDevice');
       }
 
       const deviceName = this.getDeviceName(participant, device);
       return _.assignIn({}, participant, {
-        phoneNumber: this.PartnerSearchService.getPhoneNumber(participant.phoneNumber),
-        callInNumber: this.PartnerSearchService.getPhoneNumber(participant.callInNumber),
+        phoneNumber: this.WebexReportsUtilService.getPhoneNumber(participant.phoneNumber),
+        callInNumber: this.WebexReportsUtilService.getPhoneNumber(participant.callInNumber),
         platform_: deviceName,
-        duration: this.PartnerSearchService.getDuration(participant.duration),
-        endReason: this.PartnerSearchService.getParticipantEndReason(participant.reason),
-        startDate: this.PartnerSearchService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+        duration: this.WebexReportsUtilService.getDuration(participant.duration),
+        endReason: this.WebexReportsUtilService.getParticipantEndReason(participant.reason),
+        startDate: this.WebexReportsUtilService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
       });
     });
   }
@@ -77,10 +87,10 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   private getDeviceName(participant: IParticipant, device: { name: string, icon: string }): string {
     let deviceName: string = _.get(device, 'name');
     if (!(participant.platform === Platforms.TP || participant.sessionType === Platforms.PSTN) && this.isSupportClientVersion) {
-      const devicePlatform = this.PartnerSearchService.getPlatform(_.get(participant, 'platform'));
-      const deviceBrowser = this.PartnerSearchService.getBrowser(_.get(participant, 'browser'));
+      const devicePlatform = this.WebexReportsUtilService.getPlatform(_.get(participant, 'platform'));
+      const deviceBrowser = this.WebexReportsUtilService.getBrowser(_.get(participant, 'browser'));
       if (devicePlatform && deviceBrowser) {
-        const clientVersion = this.PartnerSearchService.getClientVersion(`${ participant.userId }_${ participant.userName }`);
+        const clientVersion = this.WebexReportsUtilService.getClientVersion(`${ participant.userId }_${ participant.userName }`);
         deviceName = `${ devicePlatform } ${ clientVersion.osVersion }: ${ deviceBrowser } ${ clientVersion.browserVersion }`;
       }
     }
@@ -92,7 +102,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.gridData.forEach((item: ICallType) => {
       if (item.platform === Platforms.TP && !item.deviceCompleted) {
         this.deviceLoaded = false;
-        this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
+        this.dataService.getRealDevice(item.conferenceID, item.nodeId)
           .then((res: ICallType) => {
             if (res.completed) {
               item.device = this.getDeviceType(res);

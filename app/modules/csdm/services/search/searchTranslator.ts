@@ -216,8 +216,11 @@ export class SearchTranslator {
     ip: {
       tKey: 'deviceOverviewPage.ipAddr',
     },
-    sipurl: {
-      tKey: 'deviceOverviewPage.sipUrl',
+    primarysipurl: {
+      tKey: 'deviceOverviewPage.primarySipUrl',
+    },
+    sipurls: {
+      tKey: 'deviceOverviewPage.sipUrls',
     },
     errorcodes: {
       tKey: 'deviceOverviewPage.issues',

@@ -73,7 +73,7 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {}, {});
+    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters', {}, {});
 
     this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {},
       {
@@ -259,6 +259,13 @@ export class HcsUpgradeService {
   public listHcsUpgradeCustomers(): ng.IPromise<IHcsUpgradeCustomer[]> {
     return this.customerResource.query({
       partnerId: this.Authinfo.getOrgId(),
+    }).$promise;
+  }
+
+  public listAssignedHcsUpgradeCustomers(): ng.IPromise<IHcsUpgradeCustomer[]> {
+    return this.customerResource.query({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterAssigned: true,
     }).$promise;
   }
 

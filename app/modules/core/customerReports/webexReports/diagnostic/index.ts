@@ -1,7 +1,6 @@
 import featureToggleService from 'modules/core/featureToggle';
 import notifications from 'modules/core/notifications/index';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
-import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
 import { MeetingdetailsComponent } from './tabMeetingdetails.component';
 import { DgcTabComponent } from './dgcTab.component';
 import { DgcTimeLineComponent } from './timeLine.component';
@@ -12,6 +11,7 @@ import { MeetingExportService } from './meeting-export.service';
 import { CrCsvDownloadComponent } from 'modules/core/shared/cr-csv-download/cr-csv-download.component';
 import { ParticipantsComponent } from './tabParticipants.component';
 import { SearchService } from './searchService';
+import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
 
 export default angular
   .module('reports.webex.search', [
@@ -23,9 +23,9 @@ export default angular
     require('modules/core/config/urlConfig'),
   ])
   .service('SearchService', SearchService)
-  .service('PartnerSearchService', PartnerSearchService)
   .service('ProPackService', ProPackService)
   .service('MeetingExportService', MeetingExportService)
+  .service('WebexReportsUtilService', WebexReportsUtilService)
   .component('dgcTab', new DgcTabComponent())
   .component('dgcTimeLine', new DgcTimeLineComponent())
   .component('dgcTimeZone', new DgcTimeZoneComponent())

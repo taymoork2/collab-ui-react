@@ -114,7 +114,7 @@ export class HcsControllerService {
     });
   }
 
-  public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
+  public listHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
     return this.customerResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => {

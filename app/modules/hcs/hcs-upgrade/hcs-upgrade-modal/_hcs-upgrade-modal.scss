@@ -5,6 +5,14 @@
     margin-top: 1rem;
   }
 
+  .bottom-margin {
+    margin-bottom: 1.5rem;
+  }
+
+  .arrow-margin {
+    margin-top: 1.25rem;
+  }
+
   .center {
     display: block;
     margin: auto;
@@ -14,15 +22,7 @@
     min-height: 6rem;
   }
 
-  .inline {
-    display: inline-block;
-  }
-
-  .grid-display {
-    display: inline-grid;
-  }
-
-  .large.cs-card article {
-    min-height: rem-calc(152);
+  .cs-card.medium>article header.top-padding {
+    padding-top: .25rem
   }
 }

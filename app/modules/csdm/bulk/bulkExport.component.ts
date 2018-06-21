@@ -25,7 +25,8 @@ class BulkExportCtrl implements IComponentController {
     this.addField(QueryParser.Field_Mac, true);
     this.addField(QueryParser.Field_IP, true);
     this.addField(QueryParser.Field_Serial, true);
-    this.addField(QueryParser.Field_SipUrl, false);
+    this.addField(QueryParser.Field_PrimarySipUrl, true);
+    this.addField(QueryParser.Field_SipUrls, false);
     this.addField(QueryParser.Field_Software, false);
     this.addField(QueryParser.Field_ConnectionStatus, false);
     this.addField(QueryParser.Field_ActiveInterface, false);

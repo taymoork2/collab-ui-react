@@ -10,13 +10,14 @@ import { Device, DeviceSearchConverter, IIdentifiableDevice } from '../services/
 import { BulkAction, CsdmBulkService } from '../services/csdmBulk.service';
 import { Dictionary } from 'lodash';
 import { BulkActionName, ICsdmAnalyticHelper } from '../services/csdm-analytics-helper.service';
+import { CsdmHuronDeviceService } from '../../squared/devices/services/CsdmHuronDeviceService';
 
 class DeviceList implements ng.IComponentController {
   private devicePlaceLink: boolean;
   private static RowHeight = 45;
   private static HeaderHeight = 45;
 
-  private huronDeviceService: any;
+  private huronDeviceService: CsdmHuronDeviceService;
   public gridOptions: uiGrid.IGridOptions;
   public gridApi: uiGrid.IGridApi;
   public loadingMore = false;
@@ -308,7 +309,7 @@ class DeviceList implements ng.IComponentController {
       });
   }
 
-  public expandDevice(device) {
+  public expandDevice(device: IDevice) {
     if (this.devicePlaceLink && device.accountType === 'MACHINE') {
       this.$state.go('place-overview.csdmDevice', {
         currentPlace: this.DeviceSearchConverter.createPlaceholderPlace(device),
@@ -328,12 +329,13 @@ class DeviceList implements ng.IComponentController {
   }
 
   public deviceDeleted(searchHits) {
-    return function (url) {
+    return function (url: string): boolean {
       if (searchHits && searchHits.hits) {
         _.remove(searchHits.hits, (device: Device) => {
           return device.url === url;
         });
       }
+      return false;
     };
   }
 

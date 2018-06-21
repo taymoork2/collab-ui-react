@@ -45,7 +45,7 @@ require('../devices/_devices.scss');
           vm.gridOptions.data = vm.filteredView.getResult();
 
           if ($state.params.preSelectedPlaceId) {
-            CsdmDataModelService.reloadPlace($state.params.preSelectedPlaceId).then(function (place) {
+            CsdmDataModelService.reloadPlaceByCisUuid($state.params.preSelectedPlaceId).then(function (place) {
               vm.showPlaceDetails(place);
             });
           }

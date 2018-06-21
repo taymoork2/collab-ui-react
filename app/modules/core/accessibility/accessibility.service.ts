@@ -17,6 +17,17 @@ export enum KeyCodes {
   UP = 38,
 }
 
+export enum Codes {
+  // Codes used for KeyboardEvent.code
+  ArrowDown = 'ArrowDown',
+  ArrowUp = 'ArrowUp',
+  ArrowLeft = 'ArrowLeft',
+  ArrowRight = 'ArrowRight',
+  Enter = 'Enter',
+  Tab = 'Tab',
+  Backspace = 'Backspace',
+}
+
 export class AccessibilityService {
   public readonly MODAL = '.modal-content';
 

@@ -1,9 +1,11 @@
+import { Dictionary } from 'lodash';
+
 export class CsdmCacheUpdater {
   /* @ngInject  */
   constructor() {
   }
 
-  public updateSingle(currentObj, updatedObj, mergeOnly) {
+  public updateSingle<T>(currentObj: T, updatedObj: T, mergeOnly): T {
     if (!mergeOnly) {
       _.forEach(currentObj, (...args) => {
         const [, key] = args;
@@ -16,7 +18,7 @@ export class CsdmCacheUpdater {
     return currentObj;
   }
 
-  public updateOne(current, url, updatedObj, addedFunction?, mergeOnly?: boolean) {
+  public updateOne<T>(current: Dictionary<T>, url: string, updatedObj: T, addedFunction?: (T) => void, mergeOnly?: boolean): T {
     if (!current[url]) {
       current[url] = updatedObj;
       if (addedFunction) {
@@ -28,13 +30,13 @@ export class CsdmCacheUpdater {
     }
   }
 
-  private addAndUpdate(current, updated, addedFunction) {
+  private addAndUpdate<T>(current: Dictionary<T>, updated: Dictionary<T>, addedFunction?: (T) => void) {
     _.forEach(updated, (updatedObj, url) => {
-      this.updateOne(current, url, updatedObj, addedFunction);
+      this.updateOne(current, url || '', updatedObj, addedFunction);
     });
   }
 
-  private removeDeleted(current, updated, keepFunction) {
+  private removeDeleted<T>(current: Dictionary<T>, updated: Dictionary<T>, keepFunction?: (T) => void) {
     _.forEach(_.difference(_.keys(current), _.keys(updated)), (deletedUrl) => {
       if (!keepFunction || !keepFunction(current[deletedUrl])) {
         delete current[deletedUrl];
@@ -42,7 +44,7 @@ export class CsdmCacheUpdater {
     });
   }
 
-  public update(current, updated, keepFunction?, addedFunction?) {
+  public update<T>(current: Dictionary<T>, updated: Dictionary<T>, keepFunction?: (T) => boolean, addedFunction?: (T) => void): Dictionary<T> {
     this.addAndUpdate(current, updated, addedFunction);
     this.removeDeleted(current, updated, keepFunction);
     return current;

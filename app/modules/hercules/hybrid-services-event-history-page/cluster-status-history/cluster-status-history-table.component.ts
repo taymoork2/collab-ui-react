@@ -117,6 +117,9 @@ class HybridServicesClusterStatusHistoryTableCtrl implements ng.IComponentContro
     } else if (this.HybridServicesEventHistoryService.isClusterEvent(eventItem)) {
       return this.$translate.instant('hercules.eventHistory.eventClasses.cluster');
     } else if (this.HybridServicesEventHistoryService.isConnectorEvent(eventItem)) {
+      if (eventItem.connectorType === 'mf_mgmt' || eventItem.connectorType === 'hds_app') {
+        return this.$translate.instant('hercules.eventHistory.eventClasses.node');
+      }
       return this.$translate.instant('hercules.eventHistory.eventClasses.connector');
     } else if (this.HybridServicesEventHistoryService.isServiceActivationEvent(eventItem)) {
       return this.$translate.instant('hercules.eventHistory.eventClasses.service');

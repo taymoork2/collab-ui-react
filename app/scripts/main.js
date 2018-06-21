@@ -111,6 +111,7 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/organizations/organization-delete').default,
     require('modules/core/siteList').default,
+    require('modules/call/shared/hunt-group-call-park-misconfig').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -130,6 +131,7 @@
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
     require('modules/squared/devices/addDeviceNew/Wizard').default,
+    require('modules/squared/support/support-meeting.component').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -314,6 +316,7 @@
     require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-modal').default,
     require('modules/hcs/hcs-upgrade/hcs-precheck-modal').default,
+    require('modules/hcs/hcs-upgrade/hcs-side-panel').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,

@@ -3,8 +3,9 @@
 describe('Controller: HelpdeskOrderController', function () {
   beforeEach(angular.mock.module('Squared'));
   var $stateParams, $controller, $scope, $timeout, HelpdeskService, Notification, orderController, $q;
-  var order1TierJson = getJSONFixture('core/json/orders/order.json');
-  var order2TierJson = getJSONFixture('core/json/orders/order2Tier.json');
+  var order1TierJson = _.clone(getJSONFixture('core/json/orders/order.json'));
+  var order2TierJson = _.clone(getJSONFixture('core/json/orders/order2Tier.json'));
+  var cancelOrderJson = _.clone(getJSONFixture('core/json/orders/cancelOrder.json'));
   beforeEach(inject(function (_$controller_, _$rootScope_, _$stateParams_, _$timeout_, _HelpdeskService_, _Notification_, _$q_) {
     HelpdeskService = _HelpdeskService_;
     $controller = _$controller_;
@@ -74,6 +75,25 @@ describe('Controller: HelpdeskOrderController', function () {
       $scope.$apply();
       expect(Notification.errorResponse).toHaveBeenCalled();
       expect(Notification.errorResponse).toHaveBeenCalledWith(rejectData, 'helpdesk.unexpectedError');
+    });
+  });
+
+  describe('Order Controller Initialization with cancel order', function () {
+    beforeEach(function () {
+      $stateParams.id = '12345678-M';
+      spyOn(HelpdeskService, 'searchOrders').and.returnValue($q.resolve(cancelOrderJson));
+      orderController = $controller('HelpdeskOrderController', {
+        HelpdeskService: HelpdeskService,
+        $stateParams: $stateParams,
+      });
+    });
+
+    it('verify order info is correct for cancel order', function () {
+      $scope.$apply();
+      expect(orderController.orderId).toBe('12345678-M');
+      expect(orderController.account).not.toBeDefined();
+      expect(orderController.orderUuid).toBe('abc12345-88e4-4dd4-aa82-69d89e8ae491');
+      expect(orderController.endCustomerName).not.toBeDefined();
     });
   });
 

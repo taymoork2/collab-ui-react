@@ -13,6 +13,7 @@
     call-legs-data="$ctrl.callLegsData"
     line-data="$ctrl.lineData"
     tab-type="$ctrl.tabType"
+    get-device-type="$ctrl.getDeviceType(conferenceId, nodeId)"
     ng-if="!$ctrl.loading"></dgc-partner-time-line>
   <div ng-if="$ctrl.loading" class="loading">
     <i class="icon icon-spinner icon-3x"></i>
