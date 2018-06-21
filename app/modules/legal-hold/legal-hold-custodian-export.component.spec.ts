@@ -8,6 +8,7 @@ type Test = atlas.test.IComponentTest<LegalHoldCustodianExportController, {
   $componentController,
   $q;
   $scope;
+  $state;
   Authinfo;
   LegalHoldService;
   ModalService;
@@ -41,6 +42,7 @@ describe('Component: legalHoldMatterDetail', () => {
       '$componentController',
       '$q',
       '$scope',
+      '$state',
       'Authinfo',
       'LegalHoldService',
       'ModalService',
@@ -53,6 +55,7 @@ describe('Component: legalHoldMatterDetail', () => {
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.LegalHoldService, 'convertUsersChunk').and.returnValue(this.$q.resolve(userConversionResult));
     spyOn(this.LegalHoldService, 'listUsersInMatter').and.returnValue(this.$q.resolve(usersInMatterResult));
+    spyOn(this.$state, 'go');
     this.$scope.fakeOrgId = testMatter.orgId;
     this.$scope.fakeMatterName = testMatter.matterName;
     this.$scope.fakeCaseId = testMatter.caseId;
@@ -87,6 +90,13 @@ describe('Component: legalHoldMatterDetail', () => {
       expect(this.LegalHoldService.convertUsersChunk).toHaveBeenCalledWith([usersInMatterResult], GetUserBy.ID);
       expect(this.LegalHoldService.listUsersInMatter).toHaveBeenCalledWith(this.controller.orgId, this.controller.caseId);
       expect(this.components.crCsvDownload.bindings[0].csvData).toEqual(['something', 'something_else']);
+    });
+
+    it('should pass finishDownload function to the download component', function (this: Test) {
+      spyOn(this.controller, 'finishDownload').and.callThrough();
+      this.components.crCsvDownload.bindings[0].downloadFinishedFn();
+      expect(this.controller.finishDownload).toHaveBeenCalled();
+      expect(this.$state.go).toHaveBeenCalledWith('legalhold.landing');
     });
   });
 });
