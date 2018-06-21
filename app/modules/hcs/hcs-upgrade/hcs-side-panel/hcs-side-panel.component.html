@@ -12,6 +12,19 @@
     <cs-sp-container>
       <cs-sp-section>
         <div class="section-title-row">
+          <span class="section-name">{{$ctrl.node.nodeStatus}}</span>
+        </div>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.activeVersion"></strong></span>
+          <!-- <span>{{$ctrl.status.activeVersion}}</span> -->
+        </div>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.inactiveVersion"></strong></span>
+          <!-- <span>{{$ctrl.status.inactiveVersion}}</span> -->
+        </div>
+      </cs-sp-section>
+      <cs-sp-section>
+        <div class="section-title-row">
           <span class="section-name"><strong translate="hcs.sidePanel.postTime"></strong></span>
           <span>{{$ctrl.status.checkTime | date: 'yyyy-MM-dd HH:mm:ss Z'}}</span>
         </div>
@@ -24,7 +37,7 @@
         <div class="section-title-row">
           <span class="section-name"><strong translate="hcs.sidePanel.copInstalled"></strong></span>
         </div>
-        <div ng-repeat="file in $ctrl.status.activeOptions">
+        <div ng-repeat="file in $ctrl.status.activeOptions" class="bottom-padding">
           <span>{{file}}</span>
         </div>
       </cs-sp-section>

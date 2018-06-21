@@ -1,16 +1,13 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
 .hcs-modal-component {
   .top-margin {
     margin-top: 1rem;
   }
 
-  .bottom-margin {
-    margin-bottom: 1.5rem;
-  }
-
   .arrow-margin {
-    margin-top: 1.25rem;
+    margin-top: rem-calc(14);
   }
 
   .center {
@@ -22,7 +19,17 @@
     min-height: 6rem;
   }
 
-  .cs-card.medium>article header.top-padding {
-    padding-top: .25rem
+  .cs-card.medium > article header {
+    padding-top: 1rem;
+    &.no-right-pad  {
+      padding-right: 0;
+    }
+    &.top-padding {
+      padding-top: 0;
+      margin-bottom: 1rem;
+      h5 {
+        color: $gray-base;
+      }
+    }
   }
 }
