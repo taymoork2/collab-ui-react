@@ -9298,7 +9298,9 @@
       "modalTitle": "Enable Wi-Fi-based device suggestions?",
       "wifiOptInLabel": "Provide device suggestions based on Wi-Fi connectivity",
       "enableItNow": "Do you want to enable this setting?",
-      "optOutButton": "Don't enable"
+      "optOutButton": "Don't enable",
+      "wifiDescription": "Recommended to provide the best meeting room experience. When ultrasound connectivity doesn't work, Webex Teams suggests nearby devices that are available to users. This doesn't store any information that would identify users.",
+      "wifiLearnMore": "<a href='{{url}}'>Learn more about Wi-Fi-based device suggestions</a>"
     },
     "webexVersion": {
       "title": "Webex Version"
