@@ -97,13 +97,13 @@
                 </section>
                 <footer class="node-footer">
                   <div>
-                    <span class="node-verification-code">
+                    <span class="node-verification-code" ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
                       <span ng-if="node.status.toLowerCase() !== $ctrl.status.noAgentRunning.toLowerCase()">
                         <i class="icon icon-info-outline" tooltip-placement="top" tooltip="{{::'hcs.clusterDetail.settings.nodes.verificationCodeTooltip' | translate}}"></i>
                         <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.agentVerificationCode}}</span>
                       </span>
                     </span>
-                    <span class="node-status-container">
+                    <span class="node-status-container" ng-class="{'move-right' : (node.status === $ctrl.status.nodeNeedsAcceptance)}">
                       <span ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
                         <button class="btn btn--circle btn--small btn--white btn--primary" ng-click="$ctrl.acceptNode(node)" ng-class="{'is-accepted': node.isAccepted}">
                           <span class="icon icon-check"></span>
