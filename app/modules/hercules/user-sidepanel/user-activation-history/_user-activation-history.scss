@@ -1,0 +1,32 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/typography';
+
+user-activation-history {
+  .side-panel-section {
+    padding-top: 1rem;
+  }
+
+  .timestamp {
+    font-size: 12px;
+  }
+
+  .last-entries-label {
+    padding-top: 1rem;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .history-label {
+    font-weight: 500;
+    margin: 0;
+    font-size: 0.875rem;
+    font-family: $brand-font-light;
+    a {
+      color: $color-primary-base;
+    }
+  }
+
+  .row {
+    padding-top: 0.5rem;
+  }
+}

@@ -78,6 +78,10 @@
             <span ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatusConnect"
                   class="hybrid-services-label right">
               <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings.ec-history"
+                 ng-if="!$ctrl.isActivation2User"
+                 translate="hercules.userHistory.seeHistory"></a>
+              <a ui-sref="user-overview.hybrid-services-squared-fusion-uc.connect-settings.activationHistory"
+                 ng-if="$ctrl.isActivation2User"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
         </div>

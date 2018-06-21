@@ -47,6 +47,7 @@
     "place": "Place",
     "sessionEnablement": "Session Enablement",
     "statusHistory": "Status History",
+    "history": "History",
     "userOverViewMessage": "Message",
     "voiceMail": "Voice Mail",
     "privileges": "Privileges",
@@ -2645,10 +2646,10 @@
       "reactivateUser": {
         "title": "Reactivate User",
         "line1": "Are you sure you want to reactivate this user?",
-        "line2": "The user will temporarily loose service during reactivation.",
+        "line2": "The user will temporarily lose service during the reactivation period.",
         "confirm": "Reactivate",
         "success": "Reactivate started successfully",
-        "tooltip": "Reactivate a user to retry activation for a user in error or to pick up changes in the user configuration"
+        "tooltip": "Reactivate a user who is unexpectedly in error state or if you want to speed up synchronized configuration changes"
       }
     },
     "placeSidepanel": {
@@ -3473,6 +3474,37 @@
         "AddUserResourceGroup": "Resource group changed",
         "RemoveUserResourceGroup": "Resource group changed",
         "SetUserStatus": "User status updated"
+      }
+    },
+    "userActivationHistory": {
+      "types": {
+        "AddUserService": "Service enabled",
+        "DeleteUserService": "Service disabled",
+        "UpdateUserStatus": "Status set to {{status}}",
+        "SetUserActivationRetry": "Activation will be retried at {{retryAt}}",
+        "RequestUserReactivation": "Reactivation requested",
+        "UpdateUserResourceGroupWithReactivate": "Resource group changed (user will be reactivated)",
+        "DeleteUserResourceGroupWithReactivate": "Resource group changed (user will be reactivated)",
+        "DeleteUserResourceGroup": "Resource group changed",
+        "UpdateUserResourceGroup": "Resource group changed",
+        "AssignUser": "Assignment(s) updated",
+        "UpdateDiscoverStatus": {
+          "found": "User found in cluster",
+          "notFound": "User not found in cluster",
+          "error": "Discover error",
+          "waiting": "Discover requested"
+        },
+        "SetAssignmentState": {
+          "success": "Assignment successful",
+          "failure": "Assignment failed",
+          "nonOperational": "Assignment non-operational"
+        },
+        "DeleteUserAssignment": "Assignment removed",
+        "UpdateConfigureStatus": {
+          "success": "Configuration successful",
+          "failure": "Configuration failed",
+          "waiting": "Configuration requested"
+        }
       }
     },
     "nodesPage": {
