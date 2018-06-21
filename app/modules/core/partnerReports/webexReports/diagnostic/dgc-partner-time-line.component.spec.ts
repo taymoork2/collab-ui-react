@@ -173,22 +173,25 @@ describe('Component: DgcPartnerTimeLine', () => {
   });
 
   describe('loadFeatureToggle():', () => {
-    it('should update isSupportClientVersion: diagnosticPartnerF8105ClientVersionGetStatus', function () {
-      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
+    beforeEach(function() {
       spyOn(this.FeatureToggleService, 'diagnosticPartnerF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
-      const bindings = { sourceData: this.sourceData };
-      initComponent.call(this, bindings);
-      this.controller.loadFeatureToggle();
-      expect(this.controller.isSupportClientVersion).toBe(true);
-    });
-
-    it('should update isSupportClientVersion: diagnosticF8105ClientVersionGetStatus', function () {
-      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
       spyOn(this.FeatureToggleService, 'diagnosticF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
       const bindings = { sourceData: this.sourceData };
       initComponent.call(this, bindings);
+    });
+
+    it('should call diagnosticPartnerF8105ClientVersionGetStatus if is partner role', function () {
+      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
       this.controller.loadFeatureToggle();
-      expect(this.controller.isSupportClientVersion).toBe(true);
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).not.toHaveBeenCalledTimes(2);
+    });
+
+    it('should call diagnosticF8105ClientVersionGetStatus if is not customer role', function () {
+      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
+      this.controller.loadFeatureToggle();
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).not.toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).toHaveBeenCalledTimes(2);
     });
   });
 });
