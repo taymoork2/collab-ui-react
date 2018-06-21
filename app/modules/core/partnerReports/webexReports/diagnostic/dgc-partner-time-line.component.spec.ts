@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import moduleName from './index';
+import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTimeLine', () => {
   const mockNode = {
@@ -45,7 +46,7 @@ describe('Component: DgcPartnerTimeLine', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'FeatureToggleService', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
   });
 
@@ -168,6 +169,29 @@ describe('Component: DgcPartnerTimeLine', () => {
       initComponent.call(this, bindings);
       this.controller.updateStartPoints([{ joinMeetingTime: 30 }]);
       expect(mockData.values['jmtQuality']).toBe('Poor');
+    });
+  });
+
+  describe('loadFeatureToggle():', () => {
+    beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'diagnosticPartnerF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'diagnosticF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
+      const bindings = { sourceData: this.sourceData };
+      initComponent.call(this, bindings);
+    });
+
+    it('should call diagnosticPartnerF8105ClientVersionGetStatus if is partner role', function () {
+      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
+      this.controller.loadFeatureToggle();
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).not.toHaveBeenCalledTimes(2);
+    });
+
+    it('should call diagnosticF8105ClientVersionGetStatus if is not customer role', function () {
+      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
+      this.controller.loadFeatureToggle();
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).not.toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).toHaveBeenCalledTimes(2);
     });
   });
 });
