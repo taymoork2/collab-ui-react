@@ -224,14 +224,15 @@ export interface IUpgradeClusterGridRow {
 }
 
 export interface IHcsClusterTask {
+  taskUuid: string;
   status: string;
   estimatedCompletion: any;
   nodeStatuses: INodeTaskStatus[];
 }
 
 export interface INodeTaskStatus {
-  uuid: string;
-  sequence: number;
+  nodeUuid: string;
+  order: number;
   hostName: string;
   typeApplication: string;
   publisher: boolean;

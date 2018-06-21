@@ -152,7 +152,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         isPublisher: nodeTask.publisher,
       };
       const clusterStatusGridRow: IClusterStatusGridRow = {
-        orderNumber: nodeTask.sequence,
+        orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
         previousUpgradeTime: nodeTask.previousDuration,
         startTime: nodeTask.started,

@@ -91,7 +91,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   public initCustomer(): void {
     if (this.groupId === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
-      this.customerId = undefined;
+      this.customerId = '';
     } else {
       this.customerId = this.groupId;
       this.HcsControllerService.getHcsControllerCustomer(this.groupId)
