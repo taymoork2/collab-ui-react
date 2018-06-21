@@ -1,6 +1,6 @@
 import moduleName from './index';
 import { IntegrationsManagementService } from './integrations-management.service';
-import { IApplicationUsage, IApplicationUsageList, ICustomPolicy, IGlobalPolicy, PolicyAction, PolicyType } from './integrations-management.types';
+import { IApplicationUsage, IApplicationUsageList, ICustomPolicy, IGlobalPolicy, PolicyAction, PolicyType, SortOrder } from './integrations-management.types';
 
 type Test = atlas.test.IServiceTest<{
   Authinfo,
@@ -36,11 +36,11 @@ describe('Service: IntegrationsManagementService', () => {
       const promise = this.IntegrationsManagementService.listIntegrations();
       expect(promise).toBeResolvedWith(applicationUsages);
 
-      this.$httpBackend.expectGET('hydra-url/applications/usage?orgId=org-id&count=100&sortBy=sort-by&sortOrder=sort-order&start=1').respond(response);
+      this.$httpBackend.expectGET('hydra-url/applications/usage?orgId=org-id&count=100&sortBy=sort-by&sortOrder=asc&start=1').respond(response);
       const promise2 = this.IntegrationsManagementService.listIntegrations({
         count: 100,
         sortBy: 'sort-by',
-        sortOrder: 'sort-order',
+        sortOrder: SortOrder.ASC,
         start: 1,
       });
       expect(promise2).toBeResolvedWith(applicationUsages);

@@ -1,4 +1,4 @@
-import { IApplicationUsage, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, PolicyAction, PolicyType } from './integrations-management.types';
+import { IApplicationUsage, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, PolicyAction, PolicyType, SortOrder } from './integrations-management.types';
 
 export class IntegrationsManagementFakeService implements IIntegrationsManagementService {
   /* @ngInject */
@@ -13,8 +13,30 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private readonly ORG_ID = '55555';
 
-  public listIntegrations(_options?: IListOptions): IPromise<IApplicationUsage[]> {
-    return this.$q.resolve(this.applicationUsages);
+  public listIntegrations(options: IListOptions = {}): IPromise<IApplicationUsage[]> {
+
+    const {
+      count = 20,
+      start = 0,
+      searchStr = null,
+      sortBy,
+      sortOrder = SortOrder.ASC,
+    } = options;
+
+    let result =  _.clone(this.applicationUsages);
+    if (sortBy) {
+      result = _.orderBy(result, sortBy, sortOrder);
+    }
+    if (!searchStr) {
+      result = result.slice(start, start + count);
+    } else {
+      const filteredList = _.filter(result, usage => _.includes(usage.appName, searchStr));
+      result = filteredList.slice(start, start + count);
+    }
+    if (sortBy) {
+      result = _.orderBy(result, sortBy, sortOrder);
+    }
+    return this.$q.resolve(result);
   }
 
   public getIntegration(appId: string): IPromise<IApplicationUsage> {
@@ -129,6 +151,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private createApplicationUsages(): IApplicationUsage[] {
     return _.times(100, index => {
+      const action = _.random(0, 1, false);
       return {
         id: `${index}`,
         orgId: this.ORG_ID,
@@ -140,7 +163,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
         appContactName: `Fake Contact Name ${index}`,
         appContactEmail: `fake-${index}@contact-email.com`,
         appUserAdoption: 500,
-        policyAction: PolicyAction.DENY,
+        policyAction: action === 0 ? PolicyAction.DENY : PolicyAction.ALLOW,
         appCreated: '2018-06-08T20:50:19.355Z',
       };
     });

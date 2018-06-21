@@ -48,9 +48,14 @@ export interface IApplicationAdoptedUsers {
   emails: string[];
 }
 
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}
 export interface IListOptions {
   sortBy?: string;
-  sortOrder?: string;
+  sortOrder?: SortOrder;
+  searchStr?: string;
   start?: number;
   count?: number;
 }

@@ -11732,6 +11732,18 @@
     "text": "To address critical security issues, Cisco will no longer support TLS1.0 and TLS1.1 in the near future. Customers should upgrade to Cisco Directory Connector version 3.0 as soon as possible. If customers do not upgrade, the Cisco Directory Connector will not work; user synchronization to the Cisco Webex cloud (provisioning, updating, and de-provisioning) will not occur. To prepare for this update, please make sure the VM or Windows OS has the required Microsoft .NET 4.5 or later installed."
   },
   "integrations": {
-    "mainTitle": "Integrations"
+    "list": {
+      "mainTitle": "Integrations",
+      "integrationName": "Integration Name",
+      "accessStatus": "Access Status",
+      "userAdoption": "User Adoption",
+      "policyActionAllow": "Allowed",
+      "policyActionDeny": "Denied",
+      "globalAccess": "Global Access: {{value}} ",
+      "globalAccessOn": "On",
+      "globalAccessOff": "Off",
+      "getIntegrationListError": "Could not get records. Need official copy",
+      "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
+    }
   }
 }
