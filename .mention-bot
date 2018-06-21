@@ -12,6 +12,7 @@
     "files": [
       "*.sh",
       ".githooks/**/*",
+      ".mention-bot",
       "bin/**/*",
       "config/**/*",
       "karma/**/*",
@@ -30,7 +31,13 @@
   }, {
     "name": "WebExSquared/atlas-web-core-team",
     "files": [
+      "app/modules/bmmp/**/*",
       "app/modules/core/**/*",
+      "app/modules/ediscovery/**/*",
+      "app/modules/integrations-management/**/*",
+      "app/modules/legal-hold/**/*",
+      "app/modules/online/**/*",
+      "app/modules/shared/**/*",
       "package.json"
     ]
   }, {
@@ -52,6 +59,7 @@
     "name": "WebExSquared/atlas-call-team",
     "files": [
       "app/modules/call/**/*",
+      "app/modules/hcs/**/*",
       "app/modules/huron/**/*",
       "app/modules/squared/places/**/*"
     ]
@@ -79,6 +87,7 @@
   "userBlacklist": [
     "admolla",
     "atlas-ui-bot-gen",
+    "chrispha",
     "cidylle",
     "claughbo",
     "cstoy",
