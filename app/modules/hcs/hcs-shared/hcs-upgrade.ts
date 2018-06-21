@@ -246,6 +246,7 @@ export interface INodeTaskGridRow {
   name: string;
   application: string;
   isPublisher: boolean;
+  uuid?: string;
 }
 
 export interface IClusterStatusGridRow {

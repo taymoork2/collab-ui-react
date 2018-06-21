@@ -7,13 +7,13 @@
         <cs-card class="medium" ng-repeat="node in group.nodes track by $index" ng-keydown="$ctrl.handleKeyPress($event.keyCode, node, parentIndex, $index)" tabindex="0">
           <article class="columns collapse small-12">
             <div class="row collapse">
-              <div class="columns medium-10 bottom-margin">
-                <header class="ellipsis">
-                  <span alt="{{node.hostName}}">{{node.hostName}}</span>
+              <div class="columns bottom-margin" ng-class="{'medium-10 no-right-pad': !node.pub, 'medium-12': node.pub}">
+                <header ng-class="{'no-right-pad': !node.pub}">
+                  <h5 class="ellipsis" alt="{{node.hostName}}">{{node.hostName}}</h5>
                 </header>
                 <header class="row collapse top-padding">
-                  <span class="columns medium-6 small">{{node.type}}</span>
-                  <span class="columns medium-6 small">{{node.pub ? $ctrl.pubTranslate : $ctrl.subTranslate}}</span>
+                  <h5 class="columns medium-6 small">{{node.type}}</h5>
+                  <h5 class="columns medium-6 small">{{node.pub ? $ctrl.pubTranslate : $ctrl.subTranslate}}</h5>
                 </header>
               </div>
               <div ng-if="!node.pub" class="columns medium-2 arrow-margin">
@@ -35,7 +35,6 @@
       <button ng-click="$ctrl.createAnotherGroup()" translate="hcs.upgrade.order.addAnother"></button>
       <button ng-click="$ctrl.resetNodes()" translate="common.reset"></button>
     </div>
-
   </div>
 </div>
 <div ng-if="$ctrl.loading" class="hcs-modal-component">

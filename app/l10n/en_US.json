@@ -11573,7 +11573,9 @@
       }
     },
     "sidePanel": {
-      "postTime": "Post Check Time",
+      "activeVersion": "Active Version",
+      "inactiveVersion": "Inactive Version",
+      "postTime": "Check Results",
       "spaceAvailable": "Available Space",
       "copInstalled": "COP files Installed"
     },
