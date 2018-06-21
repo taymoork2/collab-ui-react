@@ -11340,7 +11340,9 @@
         "upgradeInProgress": "Upgrade in progress",
         "failedUpgrade": "Failed Upgrade",
         "unassigned": "Customer Unassigned",
+        "started": "Started",
         "swProfileNotAssigned": "Software profile not Assigned",
+        "success": "Success",
         "noAgentRunning": "No Agent Running",
         "noClusters": "No Clusters Assigned",
         "noActiveVersion": "No Active Version"
