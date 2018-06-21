@@ -51,7 +51,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     return this.$q.resolve(this.globalAccessPolicy);
   }
 
-  public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<IGlobalPolicy> {
+  public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<void> {
     this.globalAccessPolicy = {
       id: '11111',
       orgId: this.ORG_ID,
@@ -59,7 +59,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
       type: PolicyType.DEFAULT,
       action,
     };
-    return this.$q.resolve(this.globalAccessPolicy);
+    return this.$q.resolve();
   }
 
   public updateGlobalAccessPolicy(_id: string, action: PolicyAction): ng.IPromise<void> {

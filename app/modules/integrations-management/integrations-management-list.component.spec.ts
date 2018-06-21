@@ -139,17 +139,27 @@ describe('Component: integrationsManagementList:', () => {
       expect(this.controller.globalAccessPolicy).toBeUndefined();
       this.controller.onGlobalAccessChange(true);
       expect(this.IntegrationsManagementFakeService.createGlobalAccessPolicy).toHaveBeenCalled();
+      const promise = this.controller.onGlobalAccessChange(false);
+      promise
+        .then(() => {
+          expect(this.IntegrationsManagementFakeService.createGlobalAccessPolicy).toHaveBeenCalled();
+          expect(this.IntegrationsManagementFakeService.getGlobalAccessPolicy).toHaveBeenCalled();
+        })
+        .catch(fail);
+      expect(promise).toBeResolved();
     });
 
     it('should update global access policy if one exists', function (this: Test) {
       expect(this.controller.globalAccessPolicy).not.toBeUndefined();
-      this.controller.onGlobalAccessChange(false)
+      const promise = this.controller.onGlobalAccessChange(false);
+      promise
         .then(() => {
           expect(this.IntegrationsManagementFakeService.updateGlobalAccessPolicy).toHaveBeenCalledWith('123', PolicyAction.DENY);
           const policy = this.controller.globalAccessPolicy as IGlobalPolicy;
           expect(policy.action).toBe(PolicyAction.DENY);
         })
         .catch(fail);
+      expect(promise).toBeResolved();
     });
   });
 });

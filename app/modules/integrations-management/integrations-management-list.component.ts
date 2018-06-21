@@ -13,7 +13,7 @@ export enum StatusEnum {
 }
 
 export class IntegrationsManagementListController implements ng.IComponentController {
-  public gridOptions: uiGrid.IGridOptions = {};
+  public gridOptions: uiGrid.IGridOptionsOf<IApplicationUsage> = {};
   public gridApi: uiGrid.IGridApi;
 
   public isGridLoading = true;
@@ -49,7 +49,12 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   public $onInit() {
     this.initGridOptions();
     this.populateGridData();
-    this.IntegrationsManagementFakeService.getGlobalAccessPolicy().then(result => this.globalAccessPolicy = result);
+    this.setGlobalAccessPolicy();
+  }
+
+  private setGlobalAccessPolicy(): ng.IPromise<IGlobalPolicy | undefined> {
+    return this.IntegrationsManagementFakeService.getGlobalAccessPolicy()
+      .then(result => this.globalAccessPolicy = result);
   }
 
   public get l10nGlobalAccessPolicyString(): string {
@@ -63,8 +68,8 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   public onGlobalAccessChange(value): ng.IPromise<void> {
     const policyAction = value ? PolicyAction.ALLOW : PolicyAction.DENY;
     if (this.globalAccessPolicy === undefined) {
-      return this.IntegrationsManagementFakeService.createGlobalAccessPolicy(policyAction).then(result => {
-        this.globalAccessPolicy = result;
+      return this.IntegrationsManagementFakeService.createGlobalAccessPolicy(policyAction).then(() => {
+        this.setGlobalAccessPolicy();
       });
     } else {
       return this.IntegrationsManagementFakeService.updateGlobalAccessPolicy(this.globalAccessPolicy.id, policyAction).then(() => {
