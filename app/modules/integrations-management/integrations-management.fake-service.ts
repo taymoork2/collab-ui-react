@@ -82,7 +82,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     }
 
     const policyId = `${this.customPolicyId}`;
-    const customPolicy = {
+    const customPolicy: ICustomPolicy = {
       id: policyId,
       orgId: this.ORG_ID,
       name: 'Custom Policy',
@@ -95,6 +95,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     this.customPolicyId += 1;
 
     applicationUsage.policyId = policyId;
+    applicationUsage.policyAction = action;
     return this.$q.resolve();
   }
 
@@ -103,9 +104,17 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     if (!customPolicy) {
       return this.$q.reject('Custom Policy not found');
     }
+
+    const applicationUsage = this.getApplicationUsageByAppId(appId);
+    if (!applicationUsage) {
+      return this.$q.reject('Application Usage not found');
+    }
+
     customPolicy.action = action;
     customPolicy.appId = appId;
     customPolicy.personIds = userIds;
+    applicationUsage.policyAction = action;
+
     return this.$q.resolve();
   }
 
@@ -116,6 +125,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
       return this.$q.reject('Application Usage not found');
     }
     delete applicationUsage.policyId;
+    applicationUsage.policyAction = this.globalAccessPolicy ? this.globalAccessPolicy.action : PolicyAction.DENY;
     return this.$q.resolve();
   }
 

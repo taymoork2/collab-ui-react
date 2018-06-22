@@ -1,0 +1,19 @@
+integrations-management-overview {
+  .integrations-management-overview {
+    // TODO(brspence) create generic toolkit class
+    &__header-icon {
+      font-size: 60px;
+      line-height: 70px;
+    }
+
+    &__feature--center {
+      align-items: center;
+    }
+
+    &__custom-policy-tooltip-icon {
+      font-size: 1rem;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+  }
+}

@@ -1,4 +1,5 @@
-import { resolveLazyLoad } from './states.helper';
+import { PolicyAction } from 'modules/integrations-management/integrations-management.types';
+import { resolveLazyLoad, stateParamsToResolveParams, translateDisplayName } from './states.helper';
 
 export default function configureStates($stateProvider: ng.ui.IStateProvider) {
   $stateProvider
@@ -25,15 +26,31 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
       parent: 'sidepanel',
       views: {
         'sidepanel@': {
-          template: 'overview placeholder',
+          template: '<integrations-management-overview integration="$resolve.integration" global-policy-action="$resolve.globalPolicyAction"><integrations-management-overview>',
         },
       },
+      params: {
+        globalPolicyAction: PolicyAction.DENY,
+        integration: undefined,
+      },
+      resolve: _.assignIn(
+        stateParamsToResolveParams({
+          globalPolicyAction: PolicyAction.DENY,
+          integration: undefined,
+        }),
+        {
+          displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+        },
+      ),
     })
     .state('integrations-management.overview.detail', {
       views: {
-        'sidepanel@': {
-          template: 'detail placeholder',
+        'side-panel-container': {
+          template: '<cs-sp-container><cs-sp-section>detail placeholder</cs-sp-section></cs-sp-container>',
         },
+      },
+      resolve: {
+        displayName: translateDisplayName('integrations.overview.details'),
       },
     });
 }

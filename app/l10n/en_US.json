@@ -11791,6 +11791,23 @@
       "globalAccessOff": "Off",
       "getIntegrationListError": "Could not get records. Need official copy",
       "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
+    },
+    "overview": {
+      "sectionTitle": "Integration Access",
+      "download": "Download",
+      "revokeAccess": "Revoke Access",
+      "details": "Integration Details",
+      "userAdoption": "User Adoption",
+      "access": "Access for Future Users",
+      "accessTooltip": "Any action doesn't impact the existing users of the integration.",
+      "allUsers": "All users",
+      "specificUsers": "Specific users",
+      "revokeAccessDialog": {
+        "title": "Revoke Access Alert",
+        "message": "{count, plural, =1{# user} other{All # users}} will lose access to this integration. Do you want to revoke access?"
+      },
+      "saveSuccess": "Successfully saved integration access.",
+      "saveError": "Error saving integration access."
     }
   }
 }

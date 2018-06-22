@@ -1,7 +1,7 @@
 
-import { IntegrationsManagementFakeService } from './integrations-management.fake-service';
-import { IApplicationUsage, SortOrder, IListOptions, PolicyAction, IGlobalPolicy } from './integrations-management.types';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { IntegrationsManagementFakeService } from './integrations-management.fake-service';
+import { IApplicationUsage, IGlobalPolicy, IListOptions, PolicyAction, SortOrder } from './integrations-management.types';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -199,7 +199,10 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   }
 
   private showDetail(entity: IApplicationUsage) {
-    this.$state.go('integrations-management.overview', { appId: entity.appId });
+    this.$state.go('integrations-management.overview', {
+      globalAccessPolicy: this.globalAccessPolicy && this.globalAccessPolicy.action,
+      integration: entity,
+    });
   }
 }
 

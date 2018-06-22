@@ -10,6 +10,11 @@ export enum PolicyType {
   DEFAULT = 'default',
 }
 
+export enum PolicyRestriction {
+  ALL,
+  SPECIFIC,
+}
+
 export interface IApplicationUsage {
   id: string;
   orgId: string;

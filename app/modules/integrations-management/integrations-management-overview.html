@@ -1,0 +1,100 @@
+<cs-sp-header>
+  <div class="header-image">
+    <i class="icon icon-webex integrations-management-overview__header-icon"></i>
+  </div>
+  <div class="header-info">
+    <div class="header-info-wrap">
+      <div class="header-title">
+          {{::$ctrl.name}}
+      </div>
+      <div class="header-sub-info">
+        <span class="user-info-1">{{::$ctrl.contact}}</span>
+        <span class="user-info-2"></span>
+      </div>
+    </div>
+  </div>
+</cs-sp-header>
+<div ui-view="side-panel-container" class="side-panel-container-view">
+  <cs-sp-buttons ng-if="$ctrl.showSaveButtons">
+    <button cs-btn
+      class="btn-primary"
+      ng-click="$ctrl.saveForm()"
+      loading="$ctrl.formSaving"
+    >
+      <span translate="common.save"></span>
+    </button>
+    <button cs-btn
+      class="btn-default"
+      ng-click="$ctrl.resetForm()"
+      ng-disabled="$ctrl.formSaving"
+    >
+      <span translate="common.cancel"></span>
+    </button>
+  </cs-sp-buttons>
+  <cs-sp-container>
+    <cs-sp-section ng-form="$ctrl.form">
+      <section-title
+        title-key="integrations.overview.sectionTitle"
+        action-list="::$ctrl.actionList"
+      >
+      </section-title>
+      <div class="feature-list">
+        <ul>
+          <li class="feature">
+            <a href ui-sref=".detail">
+              <span class="feature-name" translate="integrations.overview.details"></span>
+              <i class="feature-arrow"></i>
+            </a>
+          </li>
+          <li class="feature">
+            <span class="feature-name" translate="integrations.overview.userAdoption"></span>
+            <span class="feature-details">{{$ctrl.userAdoptionCount}}</span>
+          </li>
+          <li class="feature integrations-management-overview__feature--center">
+            <div class="feature-name">
+              {{::'integrations.overview.access' | translate}}
+              <icon-tooltip
+                tt-class="icon-info-outline integrations-management-overview__custom-policy-tooltip-icon"
+                tt-tooltip-text="{{::'integrations.overview.accessTooltip' | translate}}"
+              ></icon-tooltip>
+            </div>
+            <cs-toggle-switch
+              class="v-center"
+              ng-model="$ctrl.customPolicyAction"
+              size="small"
+              toggle-id="custom-policy"
+              name="customPolicyAction"
+              cs-true-value="'{{::$ctrl.policyAction.ALLOW}}'"
+              cs-false-value="'{{::$ctrl.policyAction.DENY}}'"
+            ></cs-toggle-switch>
+          </li>
+        </ul>
+      </div>
+      <div class="cs-radio-group" ng-if="$ctrl.showCustomPolicy">
+        <input cs-input
+          type="radio"
+          ng-model="$ctrl.customPolicyRestriction"
+          id="custom-policy-all"
+          name="customPolicyRestriction"
+          ng-value="$ctrl.policyRestriction.ALL"
+          cs-input-label="{{::'integrations.overview.allUsers' | translate}}">
+        <input cs-input
+          type="radio"
+          ng-model="$ctrl.customPolicyRestriction"
+          id="custom-policy-specific"
+          name="customPolicyRestriction"
+          ng-value="$ctrl.policyRestriction.SPECIFIC"
+          cs-input-label="{{::'integrations.overview.specificUsers' | translate}}">
+        <div class="row" ng-if="$ctrl.showCustomPolicySpecificList">
+          <input
+            cs-input
+            cs-input-group-size="small-offset-1 small-11"
+            type="text"
+            id="custom-policy-specific-list"
+            name="customPolicySpecificList"
+            placeholder="Temporary Placeholder Control">
+        </div>
+      </div>
+    </cs-sp-section>
+  </cs-sp-container>
+</div>
