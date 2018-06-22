@@ -3498,7 +3498,7 @@
         "DeleteUserResourceGroupWithReactivate": "Resource group changed (user will be reactivated)",
         "DeleteUserResourceGroup": "Resource group changed",
         "UpdateUserResourceGroup": "Resource group changed",
-        "AssignUser": "Assignment(s) updated",
+        "AssignUser": "Assignment updated",
         "UpdateDiscoverStatus": {
           "found": "User found in cluster",
           "notFound": "User not found in cluster",
@@ -3512,10 +3512,25 @@
         },
         "DeleteUserAssignment": "Assignment removed",
         "UpdateConfigureStatus": {
-          "success": "Configuration successful",
-          "failure": "Configuration failed",
-          "waiting": "Configuration requested"
-        }
+          "success": "{{service}} configuration successful",
+          "failure": "{{service}} configuration failed",
+          "waiting": "{{service}} configuration requested"
+        },
+        "UpdateUserActivationState": {
+          "activate": "Activation job started",
+          "deactivate": "Deactivate job started",
+          "configureConnect": "Configure Call Service Connect job started",
+          "unconfigureConnect": "Remove Call Service Connect job started",
+          "reactivate": "Reactivate job started"
+        },
+        "UpdateUserActivationStateQueued": {
+          "activate": "Activation job queued",
+          "deactivate": "Deactivate job queued",
+          "configureConnect": "Configure Call Service Connect job queued",
+          "unconfigureConnect": "Remove Call Service Connect job queued",
+          "reactivate": "Reactivate job queued"
+        },
+        "DeleteServiceConfigurationState": "{{service}} configuration removed"
       }
     },
     "nodesPage": {

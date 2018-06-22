@@ -17,7 +17,7 @@ class UserActivationHistoryCtrl implements ng.IComponentController {
   public serviceId: HybridServiceId;
   public historyEntries: any[];
   private readonly userId;
-  private readonly eventTypes = ['UpdateConfigureStatus', 'DeleteUserAssignment', 'DeleteUserService', 'AddUserService', 'SetAssignmentState', 'UpdateDiscoverStatus', 'AssignUser', 'UpdateUserStatus', 'SetUserActivationRetry', 'RequestUserReactivation', 'UpdateUserResourceGroupWithReactivate', 'UpdateUserResourceGroup', 'DeleteUserResourceGroup', 'DeleteUserResourceGroupWithReactivate'];
+  private readonly eventTypes = ['DeleteServiceConfigurationState', 'UpdateUserActivationState', 'UpdateConfigureStatus', 'DeleteUserAssignment', 'DeleteUserService', 'AddUserService', 'SetAssignmentState', 'UpdateDiscoverStatus', 'AssignUser', 'UpdateUserStatus', 'SetUserActivationRetry', 'RequestUserReactivation', 'UpdateUserResourceGroupWithReactivate', 'UpdateUserResourceGroup', 'DeleteUserResourceGroup', 'DeleteUserResourceGroupWithReactivate'];
 
   /* @ngInject */
   constructor(
@@ -60,13 +60,29 @@ class UserActivationHistoryCtrl implements ng.IComponentController {
         break;
       case 'SetUserActivationRetry':
         entry.title = this.$translate.instant('hercules.userActivationHistory.types.SetUserActivationRetry', {
-          retryAt: this.HybridServicesI18NService.getLocalTimestamp(entry.payload.retryAt, 'lll (z)'),
+          retryAt: this.HybridServicesI18NService.getLocalTimestamp(entry.payload.retryAt, 'LT'),
         });
         break;
       case 'UpdateDiscoverStatus':
       case 'SetAssignmentState':
-      case 'UpdateConfigureStatus':
         entry.title = this.$translate.instant('hercules.userActivationHistory.types.' + entry.payload.type + '.' + entry.payload.status);
+        break;
+      case 'UpdateConfigureStatus':
+        entry.title = this.$translate.instant('hercules.userActivationHistory.types.' + entry.payload.type + '.' + entry.payload.status, {
+          service: this.$translate.instant('hercules.serviceNames.' + entry.payload.configuredService + '.full'),
+        });
+        break;
+      case 'DeleteServiceConfigurationState':
+        entry.title = this.$translate.instant('hercules.userActivationHistory.types.' + entry.payload.type, {
+          service: this.$translate.instant('hercules.serviceNames.' + entry.payload.configuredService + '.full'),
+        });
+        break;
+      case 'UpdateUserActivationState':
+        if (entry.payload.state === 'queued') {
+          entry.title = this.$translate.instant('hercules.userActivationHistory.types.UpdateUserActivationStateQueued.' + entry.payload.jobType);
+        } else {
+          entry.title = this.$translate.instant('hercules.userActivationHistory.types.UpdateUserActivationState.' + entry.payload.jobType);
+        }
         break;
       default:
         entry.title = this.$translate.instant('hercules.userActivationHistory.types.' + entry.payload.type);
@@ -92,22 +108,26 @@ class UserActivationHistoryCtrl implements ng.IComponentController {
           forEach(this.historyEntries, entry => {
             switch (entry.payload.type) {
               case 'AssignUser':
-                entry.assignments = _.chain(<IUserAssignment[]>entry.payload.assignments)
-                  .filter(assignment => _.find(connectors, { id: assignment.connectorId }))
-                  .map(assignment => {
-                    return {
-                      assignment: assignment,
-                      connector: _.find(connectors, { id: assignment.connectorId }),
-                    };
-                  }).value();
-                entry.assignedCluster = _.find(clusters, { id: _.first(<IUserAssignment[]>entry.payload.assignments).clusterId });
+                if (entry.payload.assignments && entry.payload.assignments.length > 0) {
+                  entry.assignments = _.chain(<IUserAssignment[]>entry.payload.assignments)
+                    .filter(assignment => _.find(connectors, { id: assignment.connectorId }))
+                    .map(assignment => {
+                      return {
+                        assignment: assignment,
+                        connector: _.find(connectors, { id: assignment.connectorId }),
+                      };
+                    }).value();
+                  entry.assignedCluster = _.find(clusters, { id: _.first(<IUserAssignment[]>entry.payload.assignments).clusterId });
+                }
                 break;
               case 'UpdateDiscoverStatus':
               case 'SetAssignmentState':
               case 'DeleteUserAssignment':
               case 'UpdateConfigureStatus':
                 entry.connector = _.find(connectors, { id: entry.payload.connectorId });
-                entry.cluster = _.find(clusters, { id: entry.payload.clusterId });
+                if (entry.payload.clusterId) {
+                  entry.cluster = _.find(clusters, { id: entry.payload.clusterId });
+                }
                 break;
             }
           });
