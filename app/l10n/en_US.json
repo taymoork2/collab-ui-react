@@ -9335,7 +9335,7 @@
     "integrations": {
       "title": "Integrations",
       "subtitle": "Manage access to integrations for organizations.",
-      "description": "Authorize access for better management.<br/>This allows or denies your users access to integrations available in your organization."
+      "description": "Authorize access for better management.<br>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {
@@ -11786,9 +11786,12 @@
       "userAdoption": "User Adoption",
       "policyActionAllow": "Allowed",
       "policyActionDeny": "Denied",
-      "globalAccess": "Global Access: {{value}} ",
-      "globalAccessOn": "On",
-      "globalAccessOff": "Off",
+      "globalAccess": {
+        "globalAccessValue": "Global Access: {{value}} ",
+        "modalTitle": "Global Access Alert",
+        "modalOnBody": "Do you want to turn on access to all integrations? ",
+        "modalOffBody": "Do you want to turn off access to all integrations?<br>Note: ALL existing user adoptions will be revoked."
+      },
       "getIntegrationListError": "Could not get records. Need official copy",
       "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
     },

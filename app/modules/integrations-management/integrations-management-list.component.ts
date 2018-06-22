@@ -2,6 +2,7 @@
 import { Notification } from 'modules/core/notifications/notification.service';
 import { IntegrationsManagementFakeService } from './integrations-management.fake-service';
 import { IApplicationUsage, IGlobalPolicy, IListOptions, PolicyAction, SortOrder } from './integrations-management.types';
+import { IToolkitModalService, IToolkitModalSettings } from 'modules/core/modal';
 
 export interface IGridApiScope extends ng.IScope {
   gridApi?: uiGrid.IGridApi;
@@ -10,6 +11,11 @@ export interface IGridApiScope extends ng.IScope {
 export enum StatusEnum {
   SUCCESS = 'success',
   DANGER = 'danger',
+}
+
+enum ModalButtonType {
+  ALERT = 'alert',
+  PRIMARY = 'primary',
 }
 
 export class IntegrationsManagementListController implements ng.IComponentController {
@@ -33,10 +39,12 @@ export class IntegrationsManagementListController implements ng.IComponentContro
   private lastUpdate = moment(); //algendel TODO: where do we get this data??
   public PolicyActionEnum = PolicyAction;
   public globalAccessPolicy: IGlobalPolicy | undefined;
+  public globalAccessPolicyAction: PolicyAction;
 
   /* @ngInject */
   public constructor(
     private uiGridConstants: uiGrid.IUiGridConstants,
+    private ModalService: IToolkitModalService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
@@ -52,32 +60,44 @@ export class IntegrationsManagementListController implements ng.IComponentContro
     this.setGlobalAccessPolicy();
   }
 
-  private setGlobalAccessPolicy(): ng.IPromise<IGlobalPolicy | undefined> {
+  private setGlobalAccessPolicy(): ng.IPromise<void> {
     return this.IntegrationsManagementFakeService.getGlobalAccessPolicy()
-      .then(result => this.globalAccessPolicy = result);
+      .then(globalAccessPolicy => {
+        this.globalAccessPolicy = _.clone(globalAccessPolicy);
+        this.globalAccessPolicyAction = globalAccessPolicy ? globalAccessPolicy.action : PolicyAction.DENY;
+      });
   }
 
   public get l10nGlobalAccessPolicyString(): string {
-    return _.get(this.globalAccessPolicy, 'action') === PolicyAction.ALLOW ? 'integrations.list.globalAccessOn' : 'integrations.list.globalAccessOff';
+    return _.get(this.globalAccessPolicy, 'action') === PolicyAction.ALLOW ? 'common.on' : 'common.off';
   }
 
-  public get globalAccessPolicyAction(): boolean {
-    return this.globalAccessPolicy ? this.globalAccessPolicy.action === PolicyAction.ALLOW : false;
-  }
-
-  public onGlobalAccessChange(value): ng.IPromise<void> {
-    const policyAction = value ? PolicyAction.ALLOW : PolicyAction.DENY;
-    if (this.globalAccessPolicy === undefined) {
-      return this.IntegrationsManagementFakeService.createGlobalAccessPolicy(policyAction).then(() => {
-        this.setGlobalAccessPolicy();
-      });
-    } else {
-      return this.IntegrationsManagementFakeService.updateGlobalAccessPolicy(this.globalAccessPolicy.id, policyAction).then(() => {
-        if (this.globalAccessPolicy) {
-          this.globalAccessPolicy.action = policyAction;
+  public onGlobalAccessChange(newPolicyAction: PolicyAction): ng.IPromise<void> {
+    const options: IToolkitModalSettings = {
+      type: 'dialog',
+      title: this.$translate.instant('integrations.list.globalAccess.modalTitle'),
+      message: (newPolicyAction === PolicyAction.ALLOW) ? this.$translate.instant('integrations.list.globalAccess.modalOnBody') : this.$translate.instant('integrations.list.globalAccess.modalOffBody'),
+      close: this.$translate.instant('common.yes'),
+      dismiss: this.$translate.instant('common.no'),
+      btnType: (newPolicyAction === PolicyAction.ALLOW) ? ModalButtonType.PRIMARY :  ModalButtonType.ALERT,
+    } as IToolkitModalSettings;
+    return this.ModalService.open(options).result
+      .then(() => {
+        if (this.globalAccessPolicy === undefined) {
+          return this.IntegrationsManagementFakeService.createGlobalAccessPolicy(newPolicyAction).then(() => {
+            this.setGlobalAccessPolicy();
+          });
+        } else {
+          return this.IntegrationsManagementFakeService.updateGlobalAccessPolicy(this.globalAccessPolicy.id, newPolicyAction).then(() => {
+            if (this.globalAccessPolicy) {
+              this.globalAccessPolicy.action = newPolicyAction;
+            }
+          });
         }
+      })
+      .catch(() => {
+        this.globalAccessPolicyAction = (newPolicyAction === PolicyAction.ALLOW) ? PolicyAction.DENY : PolicyAction.ALLOW;
       });
-    }
   }
 
   public get lastUpdateDate(): string {
