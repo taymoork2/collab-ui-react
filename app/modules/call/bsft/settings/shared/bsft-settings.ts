@@ -1,4 +1,4 @@
-const DEFAULT_TIME_ZONE: string = 'America/Phoenix';
+const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
 
 export interface IBsftSettings {
   orgId: string;
@@ -136,7 +136,7 @@ export class Site implements Site {
   public timeZone: string;
 
   constructor(site: ISite = {
-    name: 'TEST_SITE_NAME',
+    name: '',
     timeZone: DEFAULT_TIME_ZONE,
   }) {
     this.name = site.name;

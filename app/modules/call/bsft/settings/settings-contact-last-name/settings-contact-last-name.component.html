@@ -1,15 +1,14 @@
-<div ng-form="siteNameForm">
-  <label class="sub-section__label" translate="locations.locationName"></label>
+<div ng-form="contactLastNameForm">
+  <label class="sub-section__label" translate="common.lastName"></label>
   <div class="row">
     <input
       cs-input
       type="text"
-      name="siteName"
-      ng-model="$ctrl.name"
+      name="lastName"
+      ng-model="$ctrl.lastName"
       ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
       ng-change="$ctrl.onNameChanged()"
-      placeholder="{{'common.name' | translate}}"
-      focus-on
+      placeholder="{{'common.lastName' | translate}}"
       cs-input-messages="$ctrl.messages"
       cs-input-group-size="medium-6"
       required>

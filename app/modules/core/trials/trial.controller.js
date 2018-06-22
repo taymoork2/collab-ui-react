@@ -229,6 +229,7 @@
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        supportsBsftTrial: FeatureToggleService.supports(FeatureToggleService.features.hI1776),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -251,6 +252,7 @@
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
           vm.hybridCare = results.hybridCare;
+          vm.supportsBsftTrial = results.supportsBsftTrial;
 
           vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
 
