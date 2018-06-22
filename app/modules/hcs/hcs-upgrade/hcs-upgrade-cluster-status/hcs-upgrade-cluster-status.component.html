@@ -7,12 +7,20 @@
 </cs-page-header>
 <cs-page-sub-header>
   <cs-page-sub-header-left>
-    <div>
+    <div ng-show="$ctrl.showGrid">
       {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.upgradeStatus' | translate}}:
       <span class="h5 card-section-item node-status" ng-switch="$ctrl.clusterStatus">
         <span ng-switch-when="AGENT_OFFLINE">
           <i class="icon icon-circle status-indicator danger"></i>
           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.agentOffline' | translate}}</span>
+        </span>
+        <span ng-switch-when="failed">
+          <i class="icon icon-circle status-indicator danger"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
+        </span>
+        <span ng-switch-when="started">
+          <i class="icon icon-circle status-indicator warning"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.started' | translate}}</span>
         </span>
         <span ng-switch-when="FAILED_UPGRADE">
           <i class="icon icon-circle status-indicator danger"></i>
@@ -54,17 +62,17 @@
           <i class="icon icon-circle status-indicator success"></i>
           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.operational' | translate}}</span>
         </span>
+        <span ng-switch-when="success">
+          <i class="icon icon-circle status-indicator success"></i>
+          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.success' | translate}}</span>
+        </span>
       </span>
       <span>, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime}}</span>
     </div>
   </cs-page-sub-header-left>
 </cs-page-sub-header>
 <div class="hcs-upgrade-cluster-status">
-  <div class="loading-container" ng-if="$ctrl.loading">
-    <i class="icon icon-spinner"></i>
-  </div>
-
-  <div class="upgrade-cluster-status-grid" ng-if="!$ctrl.loading">
+  <div class="upgrade-cluster-status-grid">
     <cs-grid ng-if="$ctrl.showGrid" name="licenseListPanel" grid-api="$ctrl.gridApi" grid-options="$ctrl.gridOptions" spinner="$ctrl.showManagedLicenseRefresh" state="plm.licenseReport"></cs-grid>
   </div>
 </div>

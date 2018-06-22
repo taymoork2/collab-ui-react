@@ -1,0 +1,40 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import 'styles/partials/mixins';
+
+integrations-management-list {
+  // TODO: use as-appropriate
+ @include keep-flex-container();
+ background-color: $white;
+
+ .page-sub-header__right {
+   display: block;
+ }
+
+ .global-access {
+   display:flex;
+   justify-content: flex-end;
+   margin-top: .5rem;
+
+   label {
+    padding-bottom: 0;
+    margin-bottom:0;
+   }
+
+   .global-access__label {
+    color: $black;
+    font-size: .9rem;
+  }
+
+  .global-access__value {
+    margin-right: 1rem;
+  }
+ }
+
+ .refresh-time {
+   font-size: .85rem;
+   color: $gray-base;
+   padding-bottom: 0;
+   text-align: right;
+ }
+}
+

@@ -27,9 +27,17 @@ describe('Service: OrganizationDeleteService', () => {
     let canDelete;
     it('should allow an online org with no paid subscriptions to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+      ]);
+      spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([
+        {
+          orderingTool: 'CISCO_ONLINE_OPC',
+        },
+      ]);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -40,8 +48,16 @@ describe('Service: OrganizationDeleteService', () => {
 
     it('should not allow an online org with a paid subscription to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(true);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+      ]);
+      spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([
+        {
+          orderingTool: 'DIGITAL_RIVER',
+        },
+      ]);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
@@ -53,8 +69,14 @@ describe('Service: OrganizationDeleteService', () => {
 
     it('should not allow an org with both online and enterprise to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(false);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+        {
+          customerType: 'Enterprise',
+        },
+      ]);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
@@ -82,6 +104,17 @@ describe('Service: OrganizationDeleteService', () => {
       spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
       spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(true);
+      this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+        .then((result) => {
+          canDelete = result;
+        });
+      this.$scope.$apply();
+      expect(canDelete).toBe(false);
+    });
+
+    it('should not allow an org with no accounts to be deleted', function () {
+      spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([]);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;

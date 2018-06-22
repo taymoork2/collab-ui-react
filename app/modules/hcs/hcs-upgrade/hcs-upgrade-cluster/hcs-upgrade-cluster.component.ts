@@ -1,6 +1,5 @@
 import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, INodeSummaryItem, IHcsClusterSummaryItem, IUpgradeClusterGridRow, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
-//import { STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_UPGRADE_IN_PROGRESS, STATUS_UPGRADE_SCHEDULED, STATUS_FAILED_UPGRADE } from 'modules/hcs/hcs-inventory/shared';
 import { STATUS_SOFTWARE_UPGRADE_NEEDED } from 'modules/hcs/hcs-inventory/shared';
 
 export interface IHeaderTab {

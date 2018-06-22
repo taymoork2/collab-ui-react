@@ -6226,7 +6226,7 @@
     "branding": "Customer Branding",
     "MS": "Message",
     "CF": "Meeting",
-    "MC": "Webex Team Meetings",
+    "MC": "Webex Meetings",
     "WebExMC": "Webex Meeting Center",
     "SC": "Webex Support Center",
     "CMR": "Webex Collaboration Meeting Rooms",
@@ -7472,7 +7472,7 @@
     "shared_devicesSubtitle": "Shared Devices",
     "MS": "Message",
     "CF": "Webex Team Meetings",
-    "MC": "Webex Team Meetings",
+    "MC": "Webex Meetings",
     "WebExMC": "Webex Meeting Center",
     "SC": "Webex Support Center",
     "TC": "Webex Training Center",
@@ -9377,7 +9377,7 @@
     "licenseTypes": {
       "MS": "Webex Teams",
       "CF": "Webex Team Meetings",
-      "MC": "Webex Team Meetings",
+      "MC": "Webex Meetings",
       "SC": "Webex Support",
       "TC": "Webex Training",
       "EC": "Webex Events",
@@ -11372,7 +11372,9 @@
         "upgradeInProgress": "Upgrade in progress",
         "failedUpgrade": "Failed Upgrade",
         "unassigned": "Customer Unassigned",
+        "started": "Started",
         "swProfileNotAssigned": "Software profile not Assigned",
+        "success": "Success",
         "noAgentRunning": "No Agent Running",
         "noClusters": "No Clusters Assigned",
         "noActiveVersion": "No Active Version"
@@ -11605,7 +11607,9 @@
       }
     },
     "sidePanel": {
-      "postTime": "Post Check Time",
+      "activeVersion": "Active Version",
+      "inactiveVersion": "Inactive Version",
+      "postTime": "Check Results",
       "spaceAvailable": "Available Space",
       "copInstalled": "COP files Installed"
     },
@@ -11760,6 +11764,18 @@
     "text": "To address critical security issues, Cisco will no longer support TLS1.0 and TLS1.1 in the near future. Customers should upgrade to Cisco Directory Connector version 3.0 as soon as possible. If customers do not upgrade, the Cisco Directory Connector will not work; user synchronization to the Cisco Webex cloud (provisioning, updating, and de-provisioning) will not occur. To prepare for this update, please make sure the VM or Windows OS has the required Microsoft .NET 4.5 or later installed."
   },
   "integrations": {
-    "mainTitle": "Integrations"
+    "list": {
+      "mainTitle": "Integrations",
+      "integrationName": "Integration Name",
+      "accessStatus": "Access Status",
+      "userAdoption": "User Adoption",
+      "policyActionAllow": "Allowed",
+      "policyActionDeny": "Denied",
+      "globalAccess": "Global Access: {{value}} ",
+      "globalAccessOn": "On",
+      "globalAccessOff": "Off",
+      "getIntegrationListError": "Could not get records. Need official copy",
+      "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
+    }
   }
 }

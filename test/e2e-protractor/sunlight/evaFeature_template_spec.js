@@ -1,6 +1,6 @@
 'use strict';
 
-describe('EVA feature setup', function () {
+xdescribe('EVA feature setup', function () {
   // Added a space for name
   var evaTestName = 'e2e-expertVirtualAssistant -' + utils.randomId();
   var evaTestRename = evaTestName + '-NewName';

@@ -1,5 +1,6 @@
 import { HcsUpgradeService, IHcsClusterTask, IHcsCluster, INodeTaskStatus, IClusterStatusGridRow, INodeTaskGridRow } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
+import { GridService } from 'modules/core/csgrid';
 
 export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public controller = UpgradeClusterStatusCtrl;
@@ -29,6 +30,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
     private $state: ng.ui.IStateService,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
+    private GridService: GridService,
   ) {}
 
   public $onInit(): void {
@@ -56,6 +58,11 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   public getNodeStatus(entity) {
     //TODO: samwi - fix when inventory is available
     this.$state.go('hcs.sidePanel', { node: entity, status: this.clusterStatuses[Object.keys(this.clusterStatuses)[0]] });
+  }
+
+  public selectRow(grid, row) {
+    this.GridService.selectRow(grid, row);
+    this.getNodeStatus(row.entity);
   }
 
   public initCluster() {
@@ -86,6 +93,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '10%',
         cellClass: 'cluster-grid-cell text-center',
         headerCellClass: 'cluster-grid-header align-center',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.orderNumber"></cs-grid-cell>',
       }, {
         field: 'nodeDetails',
         displayName: this.$translate.instant('sidePanelBreadcrumb.node'),
@@ -99,12 +107,14 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.previousUpgradeTime"></cs-grid-cell>',
       }, {
         field: 'startTime',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgradeClusterStatus.gridColumn.startTime'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.startTime"></cs-grid-cell>',
       }, {
         field: 'elapsedTime',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgradeClusterStatus.gridColumn.elapsedTime'),
@@ -112,7 +122,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
         //TODO: samwi - fix when inventory is available
-        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)"></cs-grid-cell>',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.elapsedTime"></cs-grid-cell>',
       }, {
         field: 'nodeStatus',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),
@@ -152,7 +162,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         isPublisher: nodeTask.publisher,
       };
       const clusterStatusGridRow: IClusterStatusGridRow = {
-        orderNumber: nodeTask.sequence,
+        orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
         previousUpgradeTime: nodeTask.previousDuration,
         startTime: nodeTask.started,

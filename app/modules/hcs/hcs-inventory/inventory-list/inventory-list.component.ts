@@ -65,7 +65,7 @@ export class InventoryListCtrl implements ng.IComponentController {
     this.loading = true;
     this.inventoryList = [];
     //check if unassigned is needed
-    const unassignedClustersPromise = this.HcsUpgradeService.listClusters(undefined);
+    const unassignedClustersPromise = this.HcsUpgradeService.listClusters('');
     const customerListPromise = this.HcsUpgradeService.listAssignedHcsUpgradeCustomers();
     this.$q.all([ unassignedClustersPromise, customerListPromise ])
       .then(response => {
