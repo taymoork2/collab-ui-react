@@ -60,6 +60,18 @@ class BsftSettingsCtrl implements ng.IComponentController {
     _.set(this.bsftSettingsData.bsftSettings.site, 'timeZone', timeZone);
   }
 
+  public onContactFirstNameChanged(firstName) {
+    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'contactFirstName', firstName);
+  }
+
+  public onContactLastNameChanged(lastName) {
+    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'contactLastName', lastName);
+  }
+
+  public onContactEmailChanged(email) {
+    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'emailAddress', email);
+  }
+
   public setupBsftNext(): ng.IPromise<void> {
     return this.save();
   }

@@ -87,7 +87,7 @@
             ng-click="$event.stopPropagation()"
             use-csv-download-directive="true">
           </cr-user-csv-export>
-          <p>
+          <p cr-feature-toggle feature-show="atlas-csv-import-task-manager">
             <a translate="userManage.bulk.viewImportHistory" ng-click="umoc.showUserTaskManagerModal()"></a>
           </p>
         </cr-action-card-footer>

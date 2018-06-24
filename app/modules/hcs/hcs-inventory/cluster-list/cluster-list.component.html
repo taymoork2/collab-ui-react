@@ -6,9 +6,9 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
+<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading" ng-class="{'hcs-upgrade-cluster-list-page-sub-header-warning': $ctrl.disableSwProfileSelect}">
   <cs-page-sub-header-right class="row">
-    <div class="columns medium-2 hcs-right-header-filter">
+    <div class="columns medium-4 hcs-right-header-filter">
         <cs-select
         name="softwareVersionSelect"
         ng-model="$ctrl.softwareVersionSelected"
@@ -26,8 +26,8 @@
   <div class="loading-container" ng-if="$ctrl.loading">
     <i class="icon icon-2x icon-spinner"></i>
   </div>
-  <cs-card-layout>
-    <cs-card ng-if="!$ctrl.loading" class="cs-card--medium header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
+  <cs-card-layout ng-if="!$ctrl.loading">
+    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
       <article  ng-click="$ctrl.cardSelected(cluster)" hover-delay>
         <header>
           <div class="header-with-right-icon">

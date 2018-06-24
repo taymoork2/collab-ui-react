@@ -96,12 +96,12 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         width: '20%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
-        cellTemplate:  '<cs-grid-cell row="row" grid="grid" cell-value="row.entity.clusterName" ng-hide="{{row.entity.rowWidth === 0}}"></cs-grid-cell>',
+        cellTemplate:  '<div class="ui-grid-cell-contents align-left name-column" ng-hide="{{row.entity.rowWidth === 0}}">{{row.entity.clusterName}}</div>',
       }, {
         field: 'applicationName',
         enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.application'),
-        width: '15%',
+        width: '10%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
       }, {
@@ -122,7 +122,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         field: 'clusterStatus',
         enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),
-        width: '15%',
+        width: '20%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
         cellTemplate: require('./templates/clusterStatusColumn.tpl.html'),

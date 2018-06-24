@@ -71,7 +71,7 @@ export class ClusterListCtrl implements ng.IComponentController {
       controller: () => {
         return {
           deleteFn: () => this.deleteCluster(cluster.id),
-          title: this.$translate.instant('hcs.clustersList.deleteClusterModal.title'),
+          title: this.$translate.instant('hcs.clustersList.deleteClusterModal.title', { clusterName: cluster.name }),
           description: this.$translate.instant('hcs.clustersList.deleteClusterModal.description'),
         };
       },

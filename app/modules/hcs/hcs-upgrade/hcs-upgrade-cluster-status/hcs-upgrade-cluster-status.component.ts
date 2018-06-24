@@ -35,22 +35,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
 
   public $onInit(): void {
     this.showGrid = false;
-    //demo temp grid data
     this.initCluster();
-    // this.clusterGridData = [
-    //   {
-    //     orderNumber: '1',
-    //     nodeDetails: {
-    //       name: 'CUCM-01',
-    //       application: 'CUCM',
-    //       isPublisher: true,
-    //     },
-    //     previousUpgradeTime: '00:59:00',
-    //     startTime: '2018-05-04:00:29',
-    //     nodeStatus: 'Needs Update',
-    //     elapsedTime: '00:59:00',
-    //   },
-    // ];
     this.initClusterStatuses();
     this.initUIGrid();
   }

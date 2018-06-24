@@ -11372,27 +11372,27 @@
       },
       "nodeStatus": {
         "active":"Active",
-        "assignmentNeeded": "Assignment Needed",
+        "assignmentNeeded": "Assignment needed",
         "compliant": "Compliant",
         "inactive": "Inactive",
-        "needsAcceptance":"Needs Acceptance",
-        "needsAssigned":"Needs Assigned",
+        "needsAcceptance":"Needs acceptance",
+        "needsAssigned":"Needs assigned",
         "operational": "Operational",
-        "agentOffline": "Agent Offline",
-        "swProfileNotCoverAll": "Software profile does not cover all application",
-        "swVersionMismatch": "Software profile version mismatch",
-        "swUpgradeNeeded": "Software Upgrade Needed",
-        "needToUpdateBatchNumber": "Need to Update Batch Number",
-        "upgradeScheduled": "Upgrade Scheduled",
+        "agentOffline": "Agent offline",
+        "swProfileNotCoverAll": "Software profile incomplete",
+        "swVersionMismatch": "Software mismatch",
+        "swUpgradeNeeded": "Upgrade needed",
+        "needToUpdateBatchNumber": "Update batch number",
+        "upgradeScheduled": "Upgrade scheduled",
         "upgradeInProgress": "Upgrade in progress",
-        "failedUpgrade": "Failed Upgrade",
-        "unassigned": "Customer Unassigned",
+        "failedUpgrade": "Failed upgrade",
+        "unassigned": "Customer unassigned",
         "started": "Started",
-        "swProfileNotAssigned": "Software profile not Assigned",
+        "swProfileNotAssigned": "No profile",
         "success": "Success",
-        "noAgentRunning": "No Agent Running",
-        "noClusters": "No Clusters Assigned",
-        "noActiveVersion": "No Active Version"
+        "noAgentRunning": "No agent",
+        "noClusters": "No clusters",
+        "noActiveVersion": "No active version"
       },
       "settings": {
         "inventoryName": {
@@ -11430,8 +11430,8 @@
       "title":"Clusters",
       "errorGetClusters": "Error fetching clusters information for {{customerName}}",
       "deleteClusterModal": {
-        "title": "Are you sure?",
-        "description": "You are about to delete an Cluster. You can not undo this action."
+        "title": "Delete {{clusterName}}?",
+        "description": "Deleting the cluster will also remove the agents from all the nodes. Are you sure?"
       }
     },
     "customerName": "Customer Name",
