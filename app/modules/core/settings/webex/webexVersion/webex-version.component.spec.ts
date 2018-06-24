@@ -14,6 +14,7 @@ describe('WebexVersionSetting Component', function () {
     spyOn(this.WebexClientVersion, 'getWbxClientVersions').and.returnValue(this.$q.resolve(clientVersionsFixture.clientVersions));
     spyOn(this.WebexClientVersion, 'getPartnerIdGivenOrgId').and.returnValue(this.$q.resolve({}));
     spyOn(this.WebexClientVersion, 'postOrPutTemplate').and.returnValue(this.$q.resolve({}));
+    spyOn(this.WebexClientVersion, 'getTemplate').and.returnValue(this.$q.resolve({}));
   });
 
   function initComponent() {

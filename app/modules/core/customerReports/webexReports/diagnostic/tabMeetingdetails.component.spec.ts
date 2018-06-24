@@ -82,13 +82,19 @@ describe('Component: dgcTabMeetingdetail', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', 'SearchService', 'Notification', '$timeout');
+    this.injectDependencies(
+      'Analytics',
+      'SearchService',
+      'Notification',
+      '$q',
+      '$timeout');
     initSpies.call(this);
 
     this.SearchService.setStorage('webexOneMeeting', this.meeting);
   });
 
   function initSpies() {
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.SearchService, 'getUniqueParticipants').and.returnValue(this.$q.resolve(this.uniqueParticipants));
 
     const mockJoinData = { 50335745: 'Good' };

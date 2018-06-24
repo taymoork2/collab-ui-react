@@ -35,6 +35,7 @@
       setProvisioningWebexSendCustomerEmailFlag: setProvisioningWebexSendCustomerEmailFlag,
       setProvisioningWebexSitesData: setProvisioningWebexSitesData,
       getProvisioningWebexSitesData: getProvisioningWebexSitesData,
+      _siteValidationResponseMessage: _siteValidationResponseMessage,
     };
 
     return service;

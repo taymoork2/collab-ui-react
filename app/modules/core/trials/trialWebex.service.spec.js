@@ -44,7 +44,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(true);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -59,7 +60,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.VALID_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -73,7 +75,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DOMAIN_INVALID);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -87,7 +90,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -101,7 +105,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -115,7 +120,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -129,7 +135,8 @@ describe('Service: Webex Trial Service', function () {
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.isValid).toBe(false);
         expect(response.errorCode).toBe(this.TrialWebexService._siteValidationResponseMessage.DUPLICATE_SITE);
-      });
+      }.bind(this))
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -142,7 +149,8 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('trial-acmecorp.webex.com').then(function (response) {
         expect(response.isValid).toBe(false);
-      });
+      })
+        .catch(fail);
       this.$httpBackend.flush();
     });
 
@@ -155,7 +163,8 @@ describe('Service: Webex Trial Service', function () {
       });
       this.TrialWebexService.validateSiteUrl('acmecorp.com').then(function (response) {
         expect(response.errorCode).toBe('invalidSite');
-      });
+      })
+        .catch(fail);
       this.$httpBackend.flush();
     });
   });
@@ -164,26 +173,30 @@ describe('Service: Webex Trial Service', function () {
     it('should not be pending', function () {
       this.TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.pending).not.toBe(true);
-      });
+      })
+        .catch(fail);
     });
 
     it('should be pending', function () {
       this.TrialWebexService.getTrialStatus('trial-pending').then(function (data) {
         expect(data.pending).toBe(true);
-      });
+      })
+        .catch(fail);
     });
 
     it('should have timezoneId', function () {
       this.TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.timeZoneId).toEqual('4');
         expect(typeof data.timeZoneId).toEqual('string');
-      });
+      })
+        .catch(fail);
     });
 
     it('should have existing trial', function () {
       this.TrialWebexService.getTrialStatus('trial-ready').then(function (data) {
         expect(data.trialExists).toBe(true);
-      });
+      })
+        .catch(fail);
     });
   });
 
@@ -204,7 +217,8 @@ describe('Service: Webex Trial Service', function () {
       this.$httpBackend.whenPOST(this.UrlConfig.getAdminServiceUrl() + 'subscriptions/' + subscriptionId + '/provision').respond(response);
       this.TrialWebexService.provisionSubscription(payload, subscriptionId).then(function (response) {
         expect(response.status).toBe(200);
-      });
+      })
+        .catch(fail);
       var payloadHasSendCustomerEmailParam = _.has(payload, 'sendCustomerEmail');
       expect(payloadHasSendCustomerEmailParam).toBe(true);
       this.$httpBackend.flush();

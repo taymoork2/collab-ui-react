@@ -55,6 +55,7 @@ describe('Controller: Spark partner report Ctrl', function () {
     }));
     spyOn(this.QlikService, 'getQlikMashupUrl').and.returnValue(_this.testData.postAppResult);
     spyOn(this.Analytics, 'trackReportsEvent');
+    spyOn(this.Userservice, 'getUser');
   }
 
   beforeEach(init);
