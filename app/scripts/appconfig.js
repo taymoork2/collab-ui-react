@@ -1646,6 +1646,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'spark-hybrid-impinterop\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
@@ -1675,6 +1689,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-cal.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-cal\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},
@@ -1732,6 +1760,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-uc\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
@@ -1765,6 +1807,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-ec\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},

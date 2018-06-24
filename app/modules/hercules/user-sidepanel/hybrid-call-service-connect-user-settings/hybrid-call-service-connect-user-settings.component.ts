@@ -182,7 +182,7 @@ class HybridCallServiceConnectUserSettingsCtrl implements ng.IComponentControlle
     }
     this.$timeout(() => {
       this.getUserData(this.userId);
-    }, 3000);
+    }, 5000);
   }
 
 }

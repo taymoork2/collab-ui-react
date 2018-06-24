@@ -176,7 +176,7 @@ class HybridMessageUserSettingsComponentCtrl implements ng.IComponentController 
     }
     this.$timeout(() => {
       this.getUserData(this.userId);
-    }, 3000);
+    }, 5000);
   }
 
 }

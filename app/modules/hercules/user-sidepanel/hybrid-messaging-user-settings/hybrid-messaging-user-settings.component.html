@@ -80,6 +80,10 @@
             <span ng-if="$ctrl.userIsCurrentlyEntitled && $ctrl.userStatus"
                   class="hybrid-services-label right">
               <a ui-sref="user-overview.hybrid-services-spark-hybrid-impinterop.history"
+                 ng-if="!$ctrl.isActivation2User"
+                 translate="hercules.userHistory.seeHistory"></a>
+              <a ui-sref="user-overview.hybrid-services-spark-hybrid-impinterop.activationHistory"
+                 ng-if="$ctrl.isActivation2User"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
         </div>

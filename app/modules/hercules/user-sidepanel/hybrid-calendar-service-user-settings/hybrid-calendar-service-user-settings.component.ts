@@ -302,7 +302,7 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
     }
     this.$timeout(() => {
       this.getUserData();
-    }, 3000);
+    }, 5000);
   }
 
 }

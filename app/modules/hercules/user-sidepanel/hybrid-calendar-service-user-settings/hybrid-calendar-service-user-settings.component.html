@@ -100,7 +100,9 @@
       <div class="columns small-2">
             <span ng-if="$ctrl.originalEntitledToggle && $ctrl.userStatus && !$ctrl.hasChangedCalendarType()"
                   class="hybrid-services-label right">
-              <a ui-sref="user-overview.hybrid-services-squared-fusion-cal.history"
+              <a ui-sref="user-overview.hybrid-services-squared-fusion-cal.history" ng-if="!$ctrl.isActivation2User"
+                 translate="hercules.userHistory.seeHistory"></a>
+              <a ui-sref="user-overview.hybrid-services-squared-fusion-cal.activationHistory" ng-if="$ctrl.isActivation2User"
                  translate="hercules.userHistory.seeHistory"></a>
             </span>
       </div>
