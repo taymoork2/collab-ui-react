@@ -26,19 +26,13 @@ export class LegalHoldCustodianExportController implements ng.IComponentControll
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private $timeout: ng.ITimeoutService,
     private LegalHoldService: LegalHoldService,
     private Notification: Notification,
   ) { }
 
-  public export() {
-    this.exportCustodians()
-      .then(() => {
-        //small timeout to allow for the toaster and also display the file in download bar
-        this.$timeout(() => {
-          this.$state.go('legalhold.landing');
-        }, 100);
-      });
+  public finishDownload(): void {
+    this.isExporting = false;
+    this.$state.go('legalhold.landing');
   }
 
   public exportCustodians(): IPromise<ICustodian[]> {
@@ -58,10 +52,8 @@ export class LegalHoldCustodianExportController implements ng.IComponentControll
       })
       .catch((errorResponse) => {
         this.Notification.errorResponse(errorResponse);
-        return [];
-      })
-      .finally(() => {
         this.isExporting = false;
+        return [];
       });
   }
 
