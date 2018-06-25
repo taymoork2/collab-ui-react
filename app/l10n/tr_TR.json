@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "{{serviceName}} hizmetini devre dışı bırak",
       "deactivateServiceCommon": "{{serviceName}} hizmetini devre dışı bırakmak, kullanıcıların hizmetle ilgili tüm özelliklerini kaldırır.",
       "expresswayDataWiped": "{{connectorName}} tüm Expressway kümelerinizden kaldırılacak ve bağlayıcıların tüm yerel ayarları silinecektir.",
-      "noClustersWillBeDeregistered": "Kümelerin Cisco İş Birliği Bulutu’ndan kaydı kaldırılmayacaktır.",
       "deactivateServiceConfirmationHeader": "{{serviceName}} hizmetini devre dışı bırak",
       "deactivateServiceConfirmationTextCloudCalendar": "Emin misiniz? Kullanıcılardan hizmetle ilgili özellikler kaldırılacak.",
-      "deactivateServiceConfirmationText": "Emin misiniz? {{connectorName}} ve ilgili yapılandırması kümelerinizden kaldırılacak. Ayrıca kullanıcılardan hizmetle ilgili özellikler kaldırılacak.",
       "serviceWasDeactivated": "{{serviceName}} başarıyla devre dışı bırakıldı.",
       "connectWarning": "Emin misiniz? Uzak cihaz yapılandırması hizmetten kaldırılacak ve hizmet kullanıcılarınız için devre dışı bırakılacak.",
       "deactivateCallServiceConnect": "Çağrı Hizmetiyle Bağlantıyı Devre Dışı Bırak",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}}, Cisco Spark kuruluşunda {{serviceName}} adlı hizmeti etkinleştirdi. Bu, genellikle bir yönetici kullanıcı {{connectorName}} çalıştıran Expressway kümesini kaydettiğinde ya da ilk {{connectorName}} bağlayıcısını mevcut bir Expressway kümesine eklediğinde gerçekleşir.",
           "callServiceConnectEnabled": "{{username}}, Cisco Spark kuruluşunda {{serviceName}} adlı hizmeti etkinleştirdi. {{connectorName}} çalıştıran tüm Expressway kümeleri, otomatik olarak {{serviceName}} için de kullanılacaktır.",
-          "serviceDisabled": "{{username}}, Cisco Spark kuruluşunda {{serviceName}} adlı hizmeti devre dışı bıraktı.",
-          "serviceDisabledHelpText": "{{serviceName}} yetkilendirmeleri, kullanıcılardan otomatik olarak alındı ve {{connectorName}} tüm Expressway kümelerinden otomatik olarak kaldırıldı.",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} yetkilendirmeleri kullanıcılardan otomatik olarak alındı ve uzak cihaz yapılandırmaları silindi."
+          "serviceDisabled": "{{username}}, Cisco Spark kuruluşunda {{serviceName}} adlı hizmeti devre dışı bıraktı."
         },
         "technicalDetails": {
           "heading": "Teknik Ayrıntılar",

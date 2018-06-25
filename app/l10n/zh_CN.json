@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "停用 {{serviceName}}",
       "deactivateServiceCommon": "停用 {{serviceName}} 将删除用户所有的服务相关功能。",
       "expresswayDataWiped": "{{connectorName}} 将从所有的 Expressway 集群中删除，所有连接器的本地设置也将被删除。",
-      "noClustersWillBeDeregistered": "集群不会从 Cisco Collaboration Cloud 中取消注册。",
       "deactivateServiceConfirmationHeader": "停用 {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "确定吗？将为用户删除与服务相关的功能。",
-      "deactivateServiceConfirmationText": "确定吗？将从您的集群中删除 {{connectorName}} 和相关配置，并为用户删除与服务相关的功能。",
       "serviceWasDeactivated": "已成功停用 {{serviceName}}。",
       "connectWarning": "确定吗？将删除远程设备配置，并为您的用户禁用该服务。",
       "deactivateCallServiceConnect": "停用呼叫服务连接",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} 已激活 Cisco Spark 组织中的 {{serviceName}}。在管理员用户注册可运行 {{connectorName}} 的 Expressway 集群，或向现有 Expressway 集群添加首个 {{connectorName}} 后，通常会出现此情况。",
           "callServiceConnectEnabled": "{{username}} 已激活 Cisco Spark 组织中的 {{serviceName}}。所有运行 {{connectorName}} 的 Expressway 集群也将自动用于 {{serviceName}}。",
-          "serviceDisabled": "{{username}} 已禁用 Cisco Spark 组织中的 {{serviceName}}。",
-          "serviceDisabledHelpText": "系统会自动删除用户的 {{serviceName}} 授权，并自动卸载所有 Expressway 集群中的 {{connectorName}}。",
-          "serviceDisabledHelpTextCallServiceConnect": "系统会自动删除用户的 {{serviceName}} 授权，并删除远程设备配置。"
+          "serviceDisabled": "{{username}} 已禁用 Cisco Spark 组织中的 {{serviceName}}。"
         },
         "technicalDetails": {
           "heading": "技术详情",

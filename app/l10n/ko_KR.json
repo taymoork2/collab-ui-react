@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "{{serviceName}} 비활성화",
       "deactivateServiceCommon": "{{serviceName}}을(를) 비활성화하면 사용자에 대한 모든 서비스 관련 기능을 제거합니다.",
       "expresswayDataWiped": "{{connectorName}}은(는) 모든 Expressway 클러스터에서 제거되며, 모든 커넥터의 로컬 설정이 삭제됩니다.",
-      "noClustersWillBeDeregistered": "클러스터는 Cisco 협업 클라우드에서 등록 해제되지 않습니다.",
       "deactivateServiceConfirmationHeader": "{{serviceName}} 비활성화",
       "deactivateServiceConfirmationTextCloudCalendar": "실행하시겠습니까? 사용자에 대한 서비스 관련 기능은 제거됩니다.",
-      "deactivateServiceConfirmationText": "실행하시겠습니까? 클러스터에서 {{connectorName}} 및 관련 구성이 제거되고, 사용자에 대한 서비스 관련 기능이 제거됩니다.",
       "serviceWasDeactivated": "{{serviceName}}을(를) 성공적으로 비활성화했습니다.",
       "connectWarning": "실행하시겠습니까? 원격 장치 구성이 제거되고 사용자에 대한 서비스가 비활성화됩니다.",
       "deactivateCallServiceConnect": "통화 서비스 연결 비활성화",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "Cisco Spark 조직에서 {{username}} 님이 {{serviceName}}을(를) 활성화했습니다. 이는 일반적으로 관리 사용자가 {{connectorName}}을(를) 실행하는 Expressway 클러스터를 등록하거나, 첫 번째 {{connectorName}}을(를) Expressway 클러스터에 추가할 때 발생합니다.",
           "callServiceConnectEnabled": "Cisco Spark 조직에서 {{username}} 님이 {{serviceName}}을(를) 활성화했습니다. {{connectorName}}을(를) 실행하는 모든 Expressway 클러스터는 {{serviceName}}에 대해서도 자동으로 사용됩니다.",
-          "serviceDisabled": "Cisco Spark 조직에서 {{username}} 님이 {{serviceName}}을(를) 비활성화했습니다.",
-          "serviceDisabledHelpText": "{{serviceName}} 권한이 사용자로부터 자동으로 제거되고, 모든 Expressway 클러스터에서 {{connectorName}}이(가) 자동으로 제거됩니다.",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} 권한이 사용자로부터 자동으로 제거되고, 원격 장치 구성이 삭제됩니다."
+          "serviceDisabled": "Cisco Spark 조직에서 {{username}} 님이 {{serviceName}}을(를) 비활성화했습니다."
         },
         "technicalDetails": {
           "heading": "기술 세부 사항",

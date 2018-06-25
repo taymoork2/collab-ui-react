@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "停用 {{serviceName}}",
       "deactivateServiceCommon": "停用 {{serviceName}} 會移除使用者所有與服務相關的功能。",
       "expresswayDataWiped": "{{connectorName}} 將從您的所有 Expressway 叢集中移除，且會刪除所有連接器的本端設定。",
-      "noClustersWillBeDeregistered": "將不會從 Cisco Collaboration Cloud 取消註冊叢集。",
       "deactivateServiceConfirmationHeader": "停用 {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "您確定嗎？將針對使用者移除服務相關功能。",
-      "deactivateServiceConfirmationText": "您確定嗎？將針對使用者從叢集中移除 {{connectorName}} 及相關設定並且移除服務相關功能。",
       "serviceWasDeactivated": "已成功停用 {{serviceName}}。",
       "connectWarning": "您確定嗎？將針對使用者移除遠端裝置設定並且將停用服務。",
       "deactivateCallServiceConnect": "停用「通話服務連線」",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} 已在 Cisco Spark 組織中啟動 {{serviceName}}。當管理者使用者登錄執行 {{connectorName}} 的 Expressway 叢集，或將第一個 {{connectorName}} 新增至現有 Expressway 叢集時，通常會發生這種情況。",
           "callServiceConnectEnabled": "{{username}} 已在 Cisco Spark 組織中啟動 {{serviceName}}。執行 {{connectorName}} 的 Expressway 叢集也將自動用於 {{serviceName}}。",
-          "serviceDisabled": "{{username}} 已在 Cisco Spark 組織中停用了 {{serviceName}}。",
-          "serviceDisabledHelpText": "已自動移除使用者的 {{serviceName}} 授權，且自動從所有 Expressway 叢集中解除安裝 {{connectorName}}。",
-          "serviceDisabledHelpTextCallServiceConnect": "已自動移除使用者的 {{serviceName}} 授權，且刪除了遠端裝置設定。"
+          "serviceDisabled": "{{username}} 已在 Cisco Spark 組織中停用了 {{serviceName}}。"
         },
         "technicalDetails": {
           "heading": "技術詳細資料",

@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Desativar {{serviceName}}",
       "deactivateServiceCommon": "Desativar o {{serviceName}} remove todos os recursos relacionados ao serviço para os usuários.",
       "expresswayDataWiped": "{{connectorName}} será removido de todos os grupos Expressway e as configurações locais de todos os conectores serão excluídas.",
-      "noClustersWillBeDeregistered": "Os grupos não terão o registro cancelado do Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Desativar {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Você tem certeza? Os recursos relacionados ao serviços serão removidos para os usuários.",
-      "deactivateServiceConfirmationText": "Você tem certeza? {{connectorName}} e a configuração relacionada serão removidos dos grupos e os recursos relacionados aos serviços serão removidos para os usuários.",
       "serviceWasDeactivated": "{{serviceName}} foi desativado com êxito.",
       "connectWarning": "Você tem certeza? A configuração do dispositivo remoto será removida e o serviço será desabilitado para seus usuários.",
       "deactivateCallServiceConnect": "Desativar a conexão do serviço de chamadas",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} ativou o {{serviceName}} na organização Cisco Spark. Isso geralmente acontece quando um usuário administrador registra um grupo Expressway que executa o {{connectorName}} ou adiciona o primeiro {{connectorName}} a um grupo Expressway existente.",
           "callServiceConnectEnabled": "{{username}} ativou o {{serviceName}} na organização Cisco Spark. Todos os grupos Expressway que executam o {{connectorName}} também serão usados automaticamente para o {{serviceName}}.",
-          "serviceDisabled": "{{username}} desativou o {{serviceName}} na organização Cisco Spark.",
-          "serviceDisabledHelpText": "Os direitos do {{serviceName}} são automaticamente removidos dos usuários e o {{connectorName}} é automaticamente desinstalado de todos os grupos Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Os direitos do {{serviceName}} são automaticamente removidos dos usuários e as configurações do dispositivo remoto são excluídas."
+          "serviceDisabled": "{{username}} desativou o {{serviceName}} na organização Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Detalhes técnicos",

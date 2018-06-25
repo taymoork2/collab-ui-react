@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "{{serviceName}} のアクティベート解除",
       "deactivateServiceCommon": "{{serviceName}} をアクティベート解除すると、ユーザーのためのサービスに関連するすべての機能が削除されます。",
       "expresswayDataWiped": "{{connectorName}} がすべての Expressway クラスターから削除され、すべてのコネクタのローカル設定が削除されます。",
-      "noClustersWillBeDeregistered": "クラスターが Cisco Collaboration Cloud から登録解除されることはありません。",
       "deactivateServiceConfirmationHeader": "{{serviceName}} のアクティベート解除",
       "deactivateServiceConfirmationTextCloudCalendar": "よろしいですか? ユーザーのためのサービスに関連する機能が削除されます。",
-      "deactivateServiceConfirmationText": "よろしいですか? {{connectorName}} および関連する構成がクラスターから削除され、ユーザーのためのサービスに関連する機能が削除されます。",
       "serviceWasDeactivated": "{{serviceName}} のアクティベート解除に成功しました。",
       "connectWarning": "よろしいですか? リモート デバイスの構成が削除され、ユーザーのためのサービスが無効化されます。",
       "deactivateCallServiceConnect": "Call Service Connect のアクティベート解除",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} が Cisco Spark 組織で {{serviceName}} をアクティベートしました。これは、通常、管理者ユーザーが {{connectorName}} を実行する Expressway クラスターを登録するか、既存の Expressway クラスターに最初の {{connectorName}} を追加すると実行されます。",
           "callServiceConnectEnabled": "{{username}} が Cisco Spark 組織で {{serviceName}} をアクティベートしました。{{connectorName}} を実行しているすべての Expressway クラスターは自動的に {{serviceName}} のために使用されるようになります。",
-          "serviceDisabled": "{{username}} が Cisco Spark 組織で {{serviceName}} を無効化しました。",
-          "serviceDisabledHelpText": "{{serviceName}} の利用資格がユーザーから自動的に削除され、{{connectorName}} はすべての Expressway クラスターから自動的にアンインストールされます。",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} の利用資格がユーザーから自動的に削除され、リモート デバイスの構成も削除されます。"
+          "serviceDisabled": "{{username}} が Cisco Spark 組織で {{serviceName}} を無効化しました。"
         },
         "technicalDetails": {
           "heading": "技術的な詳細",

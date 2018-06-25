@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Nonaktifkan {{serviceName}}",
       "deactivateServiceCommon": "Menonaktifkan {{serviceName}} menghapus semua fitur yang berkaitan dengan layanan untuk pengguna.",
       "expresswayDataWiped": "{{connectorName}} akan dihapus dari semua klaster Expressway Anda, dan semua pengaturan lokal konektor akan dihapus.",
-      "noClustersWillBeDeregistered": "Pendaftaran klaster tidak akan dihapus dari Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Nonaktifkan {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Anda yakin? Fitur terkait layanan akan dihapus untuk pengguna.",
-      "deactivateServiceConfirmationText": "Anda yakin? {{connectorName}} dan konfigurasi terkait akan dihapus dari klaster Anda dan fitur terkait layanan akan dihapus untuk pengguna.",
       "serviceWasDeactivated": "{{serviceName}} berhasil dinonaktifkan.",
       "connectWarning": "Anda yakin? Konfigurasi perangkat jarak jauh akan dihapus dan layanan akan dinonaktifkan untuk pengguna Anda.",
       "deactivateCallServiceConnect": "Nonaktifkan Layanan Panggilan Connect",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} telah mengaktifkan {{username}} dalam organisasi Cisco Spark. Hal ini biasanya terjadi ketika pengguna admin mendaftarkan kluster Expressway yang menjalankan {{connectorName}}, atau menambahkan {{connectorName}} pertama ke kluster Expressway yang sudah ada.",
           "callServiceConnectEnabled": "{{username}} telah mengaktifkan {{serviceName}} dalam organisasi Cisco Spark. Semua kluster Expressway yang menjalankan {{connectorName}} akan digunakan juga untuk {{serviceName}} secara otomatis.",
-          "serviceDisabled": "{{username}} telah menonaktifkan {{serviceName}} dalam organisasi Cisco Spark.",
-          "serviceDisabledHelpText": "Hak {{serviceName}} dihapus secara otomatis dari para pengguna, dan {{connectorName}} dihapus instalasinya secara otomatis dari semua kluster Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Hak {{serviceName}} dihapus secara otomatis dari para pengguna, dan konfigurasi perangkat jarak jauh dihapus."
+          "serviceDisabled": "{{username}} telah menonaktifkan {{serviceName}} dalam organisasi Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Rincian Teknis",

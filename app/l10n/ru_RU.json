@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Деактивировать службу {{serviceName}}",
       "deactivateServiceCommon": "Деактивация службы {{serviceName}} приводит к удалению всех связанных с ней функций, доступных пользователям.",
       "expresswayDataWiped": "Соединитель {{connectorName}} будет удален изо всех ваших кластеров Expressway, а также будут удалены все локальные настройки соединителя.",
-      "noClustersWillBeDeregistered": "Регистрация кластеров в Cisco Collaboration Cloud не будет отменена.",
       "deactivateServiceConfirmationHeader": "Деактивировать службу {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Вы уверены? Функции, связанные со службой, будут удалены для пользователей.",
-      "deactivateServiceConfirmationText": "Вы уверены? {{connectorName}} и связанная конфигурация будут удалены из ваших кластеров, а функции, связанные со службой, будут удалены для пользователей.",
       "serviceWasDeactivated": "Служба {{serviceName}} успешно деактивирована.",
       "connectWarning": "Вы уверены? Конфигурация удаленного устройства будет удалена, а служба будет отключена для пользователей.",
       "deactivateCallServiceConnect": "Деактивировать службу вызовов Connect",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "Пользователь {{username}} активировал службу {{serviceName}} в организации Cisco Spark. Как правило, это происходит при регистрации администратором кластера Expressway, на котором запущен соединитель {{connectorName}} или при добавлении первого соединителя {{connectorName}} в существующий кластер Expressway.",
           "callServiceConnectEnabled": "Пользователь {{username}} активировал службу {{serviceName}} в организации Cisco Spark. Все кластеры Expressway, на которых запущен соединитель {{connectorName}}, автоматически также будут использованы для службы {{serviceName}}.",
-          "serviceDisabled": "Пользователь {{username}} отключил службу {{serviceName}} в организации Cisco Spark.",
-          "serviceDisabledHelpText": "У пользователей автоматически удалены права на использование службы {{serviceName}}. Соединитель {{connectorName}} автоматически удален из всех кластеров Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Права на использование службы {{serviceName}} автоматически удалены у пользователей. Настройки удаленного устройства удалены."
+          "serviceDisabled": "Пользователь {{username}} отключил службу {{serviceName}} в организации Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Технические сведения",
