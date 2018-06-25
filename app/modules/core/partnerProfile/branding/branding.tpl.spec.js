@@ -10,6 +10,7 @@ describe('Template: branding', function () {
   var CUSTOM_LOGO_RADIO = 'customLogoRadio';
 
   var ALLOW_LOGO_CHECKBOX = '#allowCustomerLogo';
+  var PARTNER_NAME = 'Atlas_Test Partner';
 
   afterEach(function () {
     if (view) {
@@ -46,7 +47,9 @@ describe('Template: branding', function () {
     spyOn(Orgservice, 'getOrg').and.callFake(function (callback) {
       callback({
         success: true,
-        orgSettings: {},
+        orgSettings: {
+          supportProviderCompanyName: PARTNER_NAME,
+        },
       });
     });
     spyOn(BrandService, 'getLogoUrl').and.returnValue($q.resolve());
@@ -80,6 +83,10 @@ describe('Template: branding', function () {
     it('Partner logo radio should have an appropriate label', verifyRadioAndLabel(PARTNER_LOGO_RADIO));
     it('Custom logo radio should have an appropriate label', verifyRadioAndLabel(CUSTOM_LOGO_RADIO));
     it('Allow logo checkbox should have an appropriate label', verifyCheckboxAndLabel(ALLOW_LOGO_CHECKBOX));
+
+    it('should have partner org name', function () {
+      expect(controller.supportProviderCompanyName).toEqual(PARTNER_NAME);
+    });
 
     describe('Save function should benn called', function () {
       it('by clicking allow logo checkbox', function () {

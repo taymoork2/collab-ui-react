@@ -58,6 +58,8 @@ module.exports = function BrandingCtrl($log, $state, $modal, $scope, $translate,
         if (!_.isUndefined(settings.logoUrl)) {
           brand.logoUrl = settings.logoUrl;
         }
+
+        brand.supportProviderCompanyName = _.get(settings, 'supportProviderCompanyName', $translate.instant('branding.partner'));
       } else {
         Log.debug('Get existing org failed. Status: ' + status);
       }
