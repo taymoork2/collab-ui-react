@@ -884,6 +884,8 @@
     "mosScore": "MOS Score",
     "callType": "Call Type",
     "callIn": "Call In",
+    "shared": "Shared",
+    "host": "Host",
     "callBack": "Call Back",
     "features": "Features",
     "screenShare": "Screen Share",
@@ -953,6 +955,7 @@
     },
     "participantsTable": {
       "userName": "User Name",
+      "activity": "Activity",
       "startDate": "Start Date",
       "duration": "Duration",
       "endpoint": "Endpoint",

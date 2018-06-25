@@ -1,4 +1,4 @@
-import { ICallType, IJoinTime, IMeeting, IMeetingDetail, IServerTime, ISessionDetail, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
+import { ICallType, IJoinTime, IMeeting, IMeetingDetail, IParticipant, IRoleData, IServerTime, ISessionDetail, IUniqueParticipant } from './partner-search.interfaces';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 export class CustomerSearchService {
@@ -66,5 +66,15 @@ export class CustomerSearchService {
   public getRealDevice(conferenceID: string, nodeID: string): ng.IPromise<ICallType> {
     const url = `${this.url}v2/meetings/${conferenceID}/participants/${nodeID}/device`;
     return this.$http.get<ICallType>(url).then(this.WebexReportsUtilService.extractData);
+  }
+
+  public getRoleChange(conferenceID: string): ng.IPromise<IRoleData[]> {
+    const url = `${this.url}v3/meetings/${conferenceID}/rolechange`;
+    return this.$http.get<IRoleData[]>(url).then(this.WebexReportsUtilService.extractData);
+  }
+
+  public getSharingSessionDetail(conferenceID: string, nodeID: string = ''): ng.IPromise<ISessionDetail> {
+    const url = `${this.url}v2/meetings/${conferenceID}/sharing-session-detail`;
+    return this.$http.post<ISessionDetail>(url, { nodeIds: nodeID }).then(this.WebexReportsUtilService.extractData);
   }
 }
