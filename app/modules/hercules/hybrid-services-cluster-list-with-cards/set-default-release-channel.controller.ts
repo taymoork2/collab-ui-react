@@ -9,7 +9,7 @@ interface IOptions {
 }
 
 export class SetDefaultReleaseChannelController {
-  private restrictedChannels = ['beta', 'latest'];
+  private restrictedChannels = ['beta', 'alpha', 'latest'];
   private saving = false;
 
   public releaseChannelSelected: IOptions | undefined = undefined;
