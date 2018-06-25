@@ -2914,10 +2914,10 @@
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
-      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Webex.",
+      "noClustersWillBeDeregistered": "Clusters will remain registered to the Webex cloud and services will remain assigned to users.",
       "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Are you sure? Service-related features will be removed for users.",
-      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
       "deactivateCallServiceConnect": "Deactivate Call Service Connect",
@@ -3911,8 +3911,8 @@
           "serviceEnabledMf": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers a Video Mesh cluster.",
           "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
           "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
-          "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} entitlements are automatically removed from users, and remote device configurations deleted."
+          "serviceDisabledHelpText": "{{connectorName}} is automatically uninstalled from all Expressway clusters.",
+          "serviceDisabledHelpTextCallServiceConnect": "Remote device configurations are automatically deleted."
         },
         "technicalDetails": {
           "heading": "Technical Details",
