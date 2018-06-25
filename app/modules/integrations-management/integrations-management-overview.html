@@ -64,8 +64,8 @@
               size="small"
               toggle-id="custom-policy"
               name="customPolicyAction"
-              cs-true-value="'{{::$ctrl.policyAction.ALLOW}}'"
-              cs-false-value="'{{::$ctrl.policyAction.DENY}}'"
+              cs-true-value="'{{::$ctrl.PolicyAction.ALLOW}}'"
+              cs-false-value="'{{::$ctrl.PolicyAction.DENY}}'"
             ></cs-toggle-switch>
           </li>
         </ul>
@@ -76,14 +76,14 @@
           ng-model="$ctrl.customPolicyRestriction"
           id="custom-policy-all"
           name="customPolicyRestriction"
-          ng-value="$ctrl.policyRestriction.ALL"
+          ng-value="$ctrl.PolicyRestriction.ALL"
           cs-input-label="{{::'integrations.overview.allUsers' | translate}}">
         <input cs-input
           type="radio"
           ng-model="$ctrl.customPolicyRestriction"
           id="custom-policy-specific"
           name="customPolicyRestriction"
-          ng-value="$ctrl.policyRestriction.SPECIFIC"
+          ng-value="$ctrl.PolicyRestriction.SPECIFIC"
           cs-input-label="{{::'integrations.overview.specificUsers' | translate}}">
         <div class="row" ng-if="$ctrl.showCustomPolicySpecificList">
           <input

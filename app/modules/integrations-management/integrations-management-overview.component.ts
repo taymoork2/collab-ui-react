@@ -18,8 +18,9 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
     actionKey: 'integrations.overview.revokeAccess',
     actionFunction: () => this.revokeAccess(),
   }];
-  public policyAction = PolicyAction;
-  public policyRestriction = PolicyRestriction;
+  public formSaving = false;
+  public PolicyAction = PolicyAction;
+  public PolicyRestriction = PolicyRestriction;
 
   /* @ngInject */
   constructor(
@@ -90,11 +91,13 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
   }
 
   public saveForm(): void {
+    this.formSaving = true;
     this.saveCustomPolicy()
       .then(() => this.loadIntegration())
       .then(() => this.form.$setPristine())
       .then(() => this.Notification.success('integrations.overview.saveSuccess'))
-      .catch(response => this.Notification.errorResponse(response, 'integrations.overview.saveError'));
+      .catch(response => this.Notification.errorResponse(response, 'integrations.overview.saveError'))
+      .finally(() => this.formSaving = false);
   }
 
   public resetForm(): void {
