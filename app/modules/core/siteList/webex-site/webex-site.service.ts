@@ -75,11 +75,11 @@ export class WebExSiteService {
 
   public findSubscriptionsWithUnsyncedLicenses(): ng.IPromise<(ICenterDetailsFromAPI | undefined)[]> {
     return this.getAllCenterDetailsFromSubscriptions().then(centerDetailsFromSubscriptions => {
-      return _.map(centerDetailsFromSubscriptions, subscriptionCenterDetails => {
+      return _.compact(_.map(centerDetailsFromSubscriptions, subscriptionCenterDetails => {
         if (this.subscriptionHasUnsyncedLicenses(subscriptionCenterDetails.purchasedServices, this.getComparisonCenterDetailsFromSubscriptionId(subscriptionCenterDetails.subscriptionId))) {
           return subscriptionCenterDetails;
         }
-      });
+      }));
     });
   }
 

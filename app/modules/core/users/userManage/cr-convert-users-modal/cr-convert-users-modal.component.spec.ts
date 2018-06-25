@@ -47,6 +47,8 @@ describe('Component: crConvertUsersModal:', () => {
     spyOn(this.Orgservice, 'getUnlicensedUsers').and.callFake(callback => {
       callback(this.mock.unlicensedUsers);
     });
+
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(false));
   }
 
   function initFakeGridApi() {
