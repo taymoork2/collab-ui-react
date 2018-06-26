@@ -9,15 +9,17 @@
   <cs-page-sub-header-right>
     <div class="global-access">
       <label>
-        <span translate="integrations.list.globalAccess"
+        <span translate="integrations.list.globalAccess.globalAccessValue"
           class="global-access__label"></span>
-        <span translate="{{$ctrl.l10nGlobalAccessPolicyString }}"
+        <span translate="{{$ctrl.l10nGlobalAccessPolicyString}}"
           class="global-access__value"></span>
       </label>
       <cs-toggle-switch ng-model="$ctrl.globalAccessPolicyAction"
         toggle-id="globalAccessToggle"
         name="globalAccessToggle"
         cs-change="$ctrl.onGlobalAccessChange(toggleValue)"
+        cs-true-value="'{{::$ctrl.PolicyActionEnum.ALLOW}}'"
+        cs-false-value="'{{::$ctrl.PolicyActionEnum.DENY}}'"
         size="small"></cs-toggle-switch>
     </div>
     <div class="refresh-time"
