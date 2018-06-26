@@ -3215,6 +3215,22 @@
           "title": "Urgent upgrade schedule",
           "description": "Urgent upgrades for this cluster are applied as soon as they are available."
         }
+      },
+      "migrateSipAddress": {
+        "title": "Migrate SIP Addresses",
+        "subsectionTitle": "Migrate Cisco Spark SIP Addresses",
+        "subsectionDescription": "Cisco Spark SIP Addresses are changing to reflect the Webex rebranding. You must migrate your organization to the new *.webex.com domain for calling and meetings. We recommend that you test a few users or devices before you do the full migration. For more information, <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>.",
+        "test": "Test",
+        "undoTest": "Undo Test",
+        "migrateAll": "Migrate All",
+        "undoTestModal": {
+          "title": "Undo Migration Test",
+          "message": "This step undoes the test SIP addresses. Are you sure?"
+        },
+        "migrateAllModal": {
+          "title": "Migrate All SIP Addresses to Webex",
+          "message": "This step migrates all SIP addresses to the new Webex domain. Are you sure?"
+        }
       }
     },
     "notifications": {

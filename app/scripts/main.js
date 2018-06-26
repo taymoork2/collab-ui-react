@@ -193,6 +193,7 @@
     require('modules/hercules/resource-settings/deactivate-service-on-expressway.controller').default,
     require('modules/hercules/service-settings/calendar-service-setup').default,
     require('modules/hercules/service-settings/call-service-settings-page').default,
+    require('modules/hercules/service-settings/migrate-sip-address-section').default,
     require('modules/hercules/service-settings/sip-destination-settings-section').default,
     require('modules/hercules/service-specific-pages/components/calendar-service-users-page').default,
     require('modules/hercules/service-specific-pages/components/call-service-users-page').default,

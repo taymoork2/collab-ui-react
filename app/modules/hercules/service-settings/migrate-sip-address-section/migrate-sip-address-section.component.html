@@ -1,0 +1,21 @@
+<setting-section setting="$ctrl.settingSection">
+  <div class="sub-section">
+    <h5 class="sub-section__label"
+      translate="hercules.settings.migrateSipAddress.subsectionTitle"
+    ></h5>
+    <p class="sub-section__description"
+      translate="hercules.settings.migrateSipAddress.subsectionDescription"
+      translate-value-href="https://collaborationhelp.cisco.com/article/q8lgf5"
+    ></p>
+    <button class="btn btn--primary"
+      ng-click="$ctrl.runOrUndoTest()"
+    >
+      <span translate="{{$ctrl.l10nTestOrUndo}}"></span>
+    </button>
+    <button class="btn btn--primary"
+      ng-click="$ctrl.migrate()"
+    >
+      <span translate="hercules.settings.migrateSipAddress.migrateAll"></span>
+    </button>
+  </div>
+</setting-section>
