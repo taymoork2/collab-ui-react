@@ -180,7 +180,9 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         _.forEach(cluster.nodes, (node: INodeSummaryItem) => {
           if (node.publisher) {
             let upgradeVersion: string | undefined;
-            swProfile.applicationVersions ? upgradeVersion = _.find(swProfile.applicationVersions, { typeApplication: node.typeApplication }).appVersion : upgradeVersion = '';
+            if (node.typeApplication) {
+              swProfile.applicationVersions ? upgradeVersion = _.find(swProfile.applicationVersions, { typeApplication: node.typeApplication }).appVersion : upgradeVersion = '';
+            }
             const clusterGridRow: IUpgradeClusterGridRow = {
               customerId: this.groupId,
               clusterUuid: _.get(cluster, 'uuid'),

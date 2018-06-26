@@ -1,0 +1,46 @@
+{
+  "taskUuid" : "b46bd3a1-c811-4752-ab69-30054bfdb60c",
+  "status" : "started",
+  "estimatedCompletion" : null,
+  "nodeStatuses" : [ {
+    "nodeUuid" : "0626b325-232b-408b-8b4d-c926fd2c76d7",
+    "order" : 1,
+    "hostName" : "rcdn6-vm85-56.cisco.com",
+    "typeApplication" : "CUCM",
+    "publisher" : true,
+    "previousDuration" : null,
+    "started" : "2018-06-25T18:45:14.994Z",
+    "elapsedTime" : 9559598,
+    "status" : "success"
+  }, {
+    "nodeUuid" : "7312f420-ce2d-4c1d-8a8b-39a3d848725f",
+    "order" : 2,
+    "hostName" : "rcdn6-vm81-84.cisco.com",
+    "typeApplication" : "CUCM",
+    "publisher" : false,
+    "previousDuration" : null,
+    "started" : "2018-06-25T18:45:15.036Z",
+    "elapsedTime" : 9559556,
+    "status" : "success"
+  }, {
+    "nodeUuid" : "4fa17415-d9f8-4286-9865-f3e22bd9f580",
+    "order" : 2,
+    "hostName" : "rcdn6-vm81-127.cisco.com",
+    "typeApplication" : "IM&P",
+    "publisher" : true,
+    "previousDuration" : null,
+    "started" : "2018-06-25T18:45:15.015Z",
+    "elapsedTime" : 9559577,
+    "status" : "success"
+  }, {
+    "nodeUuid" : "8f7eb1dd-f396-4df3-8ea9-8e4b250e6981",
+    "order" : 3,
+    "hostName" : "rcdn6-vm81-33.cisco.com",
+    "typeApplication" : "IM&P",
+    "publisher" : false,
+    "previousDuration" : null,
+    "started" : "2018-06-25T18:45:15.055Z",
+    "elapsedTime" : 9559537,
+    "status" : "started"
+  } ]
+}

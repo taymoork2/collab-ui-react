@@ -67,7 +67,7 @@
           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.success' | translate}}</span>
         </span>
       </span>
-      <span>, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime}}</span>
+      <span>, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime | date:'dd MMM y HH:mm':'UTC'}}</span>
     </div>
   </cs-page-sub-header-left>
 </cs-page-sub-header>
