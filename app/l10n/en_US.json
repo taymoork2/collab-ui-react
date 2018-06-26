@@ -691,16 +691,16 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Webex account. Your Webex site will not be converted to a free site and will be deleted.",
-    "singleMoveUsers": "Convert to a free Cisco Webex account.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free user account that can be used with the Webex Teams app. Your Webex site will not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Webex Teams user account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Webex account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Webex Teams user accounts.",
     "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Webex Teams spaces.",
-    "multMoveUsers": "Convert users to their own free Cisco Webex account.",
+    "multMoveUsers": "Convert users to their own free Webex Teams user accounts.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleUserMove": "You will be converted to a free Cisco Webex account.",
-    "multiUserMove": "All users will be converted to their own free Cisco Webex account.",
+    "singleUserMove": "You will be eligible to use free services in the Webex Teams app.",
+    "multiUserMove": "All users will be eligible to use free services in the Webex Teams app.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
     "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Webex Boards and Cisco TelePresence video conferencing endpoints.",
@@ -9436,7 +9436,7 @@
         "admin": "Admin access to Cisco Webex Control Hub"
       },
       "useFree": {
-        "header": "Use Free Cisco Webex",
+        "header": "Use Free Cisco Webex Teams",
         "meetings": "Free Cisco Webex Meetings with 3 people",
         "messaging": "Free Cisco Webex Teams",
         "button": "Use Free"
