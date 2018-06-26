@@ -18,7 +18,7 @@ function runProtractor() {
   if (_.isString(args.specs)) {
     args.specs = processFilePatterns_(args.specs);
   }
-  protractorLauncher.init('./protractor-config.js', args);
+  protractorLauncher.init('./protractor.conf.js', args);
 }
 
 function processFilePatterns_(list) {
