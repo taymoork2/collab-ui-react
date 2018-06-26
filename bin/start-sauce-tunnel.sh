@@ -2,12 +2,9 @@
 
 set -e
 
-if [ -z "${WX2_ADMIN_WEB_CLIENT_HOME}" ]; then
-    >&2 echo "Error: WX2_ADMIN_WEB_CLIENT_HOME is not set, please export this environment variable first."
-    exit 1
-fi
+this_pwd="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-source "${WX2_ADMIN_WEB_CLIENT_HOME}/bin/include/env-var-helpers"
+source "${this_pwd}/include/env-var-helpers"
 
 if ! is_ci; then
     echo "Warning: using limited-privilege Sauce creds."
@@ -24,7 +21,7 @@ export SAUCE_ACCESS_KEY="${SAUCE__ACCESS_KEY}"
 
 PLATFORM=$(uname)
 SC_VERSION="${SAUCE__SC_VERSION}"
-WORK_DIR="${WX2_ADMIN_WEB_CLIENT_HOME}/.sauce"
+WORK_DIR="${this_pwd}/../.sauce"
 
 SC_DIR="${WORK_DIR}/sc"
 READY_FILE="${WORK_DIR}/sc.ready"
