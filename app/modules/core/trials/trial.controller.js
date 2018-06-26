@@ -166,6 +166,7 @@
     vm.setDefaultCountry = setDefaultCountry;
 
     vm.hasRegisteredContextService = hasRegisteredContextService;
+    vm.disableStartTrialButton = false;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -923,13 +924,15 @@
         return;
       }
       if (vm.contextTrial.enabled) {
-        return TrialContextService.addService(customerOrgId).catch(function (response) {
+        return TrialContextService.addService(customerOrgId, vm.isNewTrial()).catch(function (response) {
           // ignore only the "org already registered" error
           if (_.get(response, 'data.error.statusText') === orgAlreadyRegistered) {
             return;
           }
 
           Notification.errorResponse(response, errorAddResponse);
+          vm.disableStartTrialButton = true;
+          vm.contextTrial.enabled = false;
           return $q.reject(response);
         });
       } else if (isEditTrial()) {

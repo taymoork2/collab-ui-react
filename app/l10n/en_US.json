@@ -6100,7 +6100,7 @@
     "addError": "An error occurred starting a trial for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "editError": "An error occurred editing a trial for {{customerName}}.",
-    "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
+    "startTrialContextServiceError": "Created trial, but failed to enable Context Service. Please go to Edit Trial to try again.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
     "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
     "errorInUse": "Entered value is already in use. Try a different value.",
