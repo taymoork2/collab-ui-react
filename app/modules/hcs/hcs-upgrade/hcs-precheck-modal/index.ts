@@ -4,6 +4,7 @@ export default angular
   .module('hcs.precheckModal', [
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
+    require('modules/hcs/hcs-shared').default,
   ])
   .component('hcsPrecheckModal', new HcsPrecheckModalComponent())
   .name;

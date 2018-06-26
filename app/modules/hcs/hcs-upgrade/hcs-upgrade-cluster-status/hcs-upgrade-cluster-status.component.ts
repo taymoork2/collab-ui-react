@@ -41,8 +41,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   }
 
   public getNodeStatus(entity) {
-    //TODO: samwi - fix when inventory is available
-    this.$state.go('hcs.sidePanel', { node: entity, status: this.clusterStatuses[Object.keys(this.clusterStatuses)[0]] });
+    this.$state.go('hcs.sidePanel', { node: entity, status: this.clusterStatuses[entity.nodeDetails.uuid] });
   }
 
   public selectRow(grid, row) {
@@ -106,7 +105,6 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
-        //TODO: samwi - fix when inventory is available
         cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.elapsedTime"></cs-grid-cell>',
       }, {
         field: 'nodeStatus',
@@ -145,6 +143,7 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         name: nodeTask.hostName,
         application: nodeTask.typeApplication,
         isPublisher: nodeTask.publisher,
+        uuid: nodeTask.nodeUuid,
       };
       const clusterStatusGridRow: IClusterStatusGridRow = {
         orderNumber: nodeTask.order,

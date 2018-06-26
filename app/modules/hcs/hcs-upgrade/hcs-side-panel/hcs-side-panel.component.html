@@ -12,15 +12,15 @@
     <cs-sp-container>
       <cs-sp-section>
         <div class="section-title-row">
-          <span class="section-name">{{$ctrl.node.nodeStatus}}</span>
+          <span class="section-name">{{$ctrl.cap($ctrl.node.nodeStatus)}}</span>
         </div>
         <div class="section-title-row">
           <span class="section-name"><strong translate="hcs.sidePanel.activeVersion"></strong></span>
-          <!-- <span>{{$ctrl.status.activeVersion}}</span> -->
+          <span>{{$ctrl.status.activeVersion}}</span>
         </div>
         <div class="section-title-row">
           <span class="section-name"><strong translate="hcs.sidePanel.inactiveVersion"></strong></span>
-          <!-- <span>{{$ctrl.status.inactiveVersion}}</span> -->
+          <span>{{$ctrl.status.inactiveVersion}}</span>
         </div>
       </cs-sp-section>
       <cs-sp-section>
