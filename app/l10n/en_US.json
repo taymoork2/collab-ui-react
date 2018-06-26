@@ -8656,10 +8656,22 @@
         "invalidChars": "Name cannot contain the following characters: <>"
       },
       "cvaSelection": {
-        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
-        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantPageTitle": "Customer Virtual Assistant",
+        "virtualAssistantOrig": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantDesc": "Enable a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
         "virtualAssistantSelector": "Customer Virtual Assistant",
-        "virtualAssistantSelectText": "Select ..."
+        "virtualAssistantSelectText": "Select ...",
+        "virtualAssistantTooltip": "Create a new Customer Virtual Assistant from the Care Features page.",
+        "virtualAssistantEnableOptional": "Enable Optional Customer Virtual Assistant",
+        "virtualAssistantStorageLocationTitle": "File Storage Location",
+        "virtualAssistantStorageLocationDesc": "Specify a location to store files that customers send to the Customer Virtual Assistant.",
+        "virtualAssistantStorageLocationHelp": "Enter the URL starting with http:// or https://. Apple Business Chat customers cannot send files over 100MB.",
+        "virtualAssistantStorageError": "Cannot access storage location. Verify the URL and try again.",
+        "virtualAssistantStorageProtocolError": "URL must start with 'http://' or 'https://'.",
+        "virtualAssistantStorageToken": "Authentication Token",
+        "virtualAssistantStorageTokenHelp": "Enter the token and click <strong>Validate</strong> to test your storage location.",
+        "virtualAssistantStorageTokenError": "Invalid token. Verify token for storage location and try again.",
+        "virtualAssistantValidateButton": "Validate"
       },
       "statusMessage": {
         "title": "Status Messages",
