@@ -1,6 +1,13 @@
 'use strict';
 
-xdescribe('EVA feature setup', function () {
+// If this test fails in production, do the following:
+// 1. login into admin.webex.com using
+// user: sparkcareatlaseva+admin@gmail.com
+// pwd: C1sco@123
+// 2. Go to Services -> Care Features
+// 3. Delete the card name started with e2e-expertVirtualAssistant -
+// Then this test should pass again.
+describe('EVA feature setup', function () {
   // Added a space for name
   var evaTestName = 'e2e-expertVirtualAssistant -' + utils.randomId();
   var evaTestRename = evaTestName + '-NewName';
