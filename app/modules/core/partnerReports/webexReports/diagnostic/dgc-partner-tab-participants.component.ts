@@ -1,5 +1,5 @@
 import { ICallType, IParticipant } from './partner-search.interfaces';
-import { Platforms, SearchStorage } from './partner-meeting.enum';
+import { Platforms, SearchStorage, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -28,6 +28,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private $timeout: ng.ITimeoutService,
+    private Analytics,
     private Notification: Notification,
     private CustomerSearchService: CustomerSearchService,
     private FeatureToggleService,
@@ -43,6 +44,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.Analytics.trackEvent(TrackingEventName.MEETING_PARTICIPANTS);
     const promise = this.isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
     promise.then((isSupport: boolean) => {
       this.isSupportClientVersion = isSupport;
