@@ -1,6 +1,13 @@
 <div class="fusion-cluster-settings">
   <div class="cs-form">
-    <email-notifications-section service-id="'squared-fusion-uc'" set-focus="true"></email-notifications-section>
+    <migrate-sip-address-section
+      ng-if="$ctrl.showMigrateSipAddressSection"
+    ></migrate-sip-address-section>
+    <email-notifications-section
+      ng-class="{'needs-border-top': $ctrl.showMigrateSipAddressSection}"
+      service-id="'squared-fusion-uc'"
+      set-focus="true"
+    ></email-notifications-section>
 
     <setting-section class="needs-border-top" setting="$ctrl.callServiceAwareSection">
       <div class="sub-section">
