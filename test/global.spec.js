@@ -117,6 +117,13 @@ beforeEach(function () {
    * @param {String} templateString String to compile
    */
   this.compileTemplateNoApply = function (templateString) {
+    // if we're recompiling another view in the same test
+    // Cleanup Detached DOM and DocumentFragments
+    if (this.view) {
+      this.view.remove();
+      this.view = undefined;
+    }
+
     this.injectDependencies('$compile', '$scope');
     this.view = this.$compile(angular.element(templateString))(this.$scope);
   };
