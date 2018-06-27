@@ -106,3 +106,9 @@ export enum ResponseStatus {
     INPROGRESS = 'inProgress',
     ENDED = 'ended',
 }
+
+export enum TrackingEventName {
+    MEETING_SEARCH = 'webexReports.diagnostic.meetingSearch',
+    MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
+    MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
+}
