@@ -69,14 +69,14 @@ describe('Service: Trial Context Service', function () {
       });
 
       describe('Edit Trial', function () {
-        it('should add entitlement, add the customer org to managedOrgList for Partner Full Admin, onboard context service, and also log metrics', function () {
+        it('add the customer org to managedOrgList for Partner Full Admin, add entitlement, onboard context service, and also log metrics', function () {
           spyOn(this.Authinfo, 'getManagedOrgs').and.returnValue([]);
           var postURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/1/services/contactCenterContext';
           var onboardPostURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard';
           var onboardGetURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard/1';
           var adminPatchURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/9/users/partnerFullAdmin/actions/configureCustomerAdmin/invoke?customerOrgId=1';
-          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectPOST(adminPatchURL).respond(204);
+          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectGET(onboardGetURL).respond(404);
           this.$httpBackend.expectPOST(onboardPostURL).respond(201);
           this.TrialContextService.addService('1', false).then(function (response) {
@@ -86,13 +86,13 @@ describe('Service: Trial Context Service', function () {
           this.$httpBackend.flush();
         });
 
-        it('should add entitlement, add the customer org to managedOrgList for Partner Full Admin, and also log metrics', function () {
+        it('should add the customer org to managedOrgList for Partner Full Admin, add entitlement, and also log metrics', function () {
           spyOn(this.Authinfo, 'getManagedOrgs').and.returnValue([]);
           var postURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/1/services/contactCenterContext';
           var onboardGetURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard/1';
           var adminPatchURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/9/users/partnerFullAdmin/actions/configureCustomerAdmin/invoke?customerOrgId=1';
-          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectPOST(adminPatchURL).respond(204);
+          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectGET(onboardGetURL).respond(200);
           this.TrialContextService.addService('1', false).then(function (response) {
             expect(response.status).toEqual(200);
@@ -101,13 +101,13 @@ describe('Service: Trial Context Service', function () {
           this.$httpBackend.flush();
         });
 
-        it('should add entitlement, add the customer org to managedOrgList for Partner Full Admin, but failed on Get Onboard. Still log metrics', function () {
+        it('should add the customer org to managedOrgList for Partner Full Admin, add entitlement, but failed on Get Onboard. Still log metrics', function () {
           spyOn(this.Authinfo, 'getManagedOrgs').and.returnValue([]);
           var postURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/1/services/contactCenterContext';
           var onboardGetURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard/1';
           var adminPatchURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/9/users/partnerFullAdmin/actions/configureCustomerAdmin/invoke?customerOrgId=1';
-          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectPOST(adminPatchURL).respond(204);
+          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectGET(onboardGetURL).respond(400);
           this.TrialContextService.addService('1', false).then(function (response) {
             expect(response.status).toEqual(400);
@@ -116,14 +116,14 @@ describe('Service: Trial Context Service', function () {
           this.$httpBackend.flush();
         });
 
-        it('should add entitlement, add the customer org to managedOrgList for Partner Full Admin, but fail to onboard to context service. Still log metrics', function () {
+        it('should add the customer org to managedOrgList for Partner Full Admin, add entitlement, but fail to onboard to context service. Still log metrics', function () {
           spyOn(this.Authinfo, 'getManagedOrgs').and.returnValue([]);
           var postURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/1/services/contactCenterContext';
           var onboardPostURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard';
           var onboardGetURL = 'https://ccfs.appstaging.ciscoccservice.com/v1/onboard/1';
           var adminPatchURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/9/users/partnerFullAdmin/actions/configureCustomerAdmin/invoke?customerOrgId=1';
-          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectPOST(adminPatchURL).respond(204);
+          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectGET(onboardGetURL).respond(404);
           this.$httpBackend.expectPOST(onboardPostURL).respond(400);
           this.TrialContextService.addService('1', false).then(function (response) {
@@ -146,10 +146,9 @@ describe('Service: Trial Context Service', function () {
           this.$httpBackend.flush();
         });
 
-        it('should add entitlement, but fail to enable context service due to patch admin failure. still log metrics', function () {
-          var postURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/1/services/contactCenterContext';
+        it('fail to enable context service due to patch admin failure. still log metrics', function () {
+          spyOn(this.Authinfo, 'getManagedOrgs').and.returnValue([]);
           var adminPatchURL = 'https://atlas-intb.ciscospark.com/admin/api/v1/organizations/9/users/partnerFullAdmin/actions/configureCustomerAdmin/invoke?customerOrgId=1';
-          this.$httpBackend.expectPOST(postURL).respond(204);
           this.$httpBackend.expectPOST(adminPatchURL).respond(400);
           this.TrialContextService.addService('1', false).then(function (response) {
             expect(response.status).toEqual(400);
