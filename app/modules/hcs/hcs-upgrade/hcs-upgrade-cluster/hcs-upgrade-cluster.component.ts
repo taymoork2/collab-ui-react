@@ -1,6 +1,6 @@
 import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, INodeSummaryItem, IHcsClusterSummaryItem, IUpgradeClusterGridRow, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
-import { STATUS_SOFTWARE_UPGRADE_NEEDED } from 'modules/hcs/hcs-inventory/shared';
+import { STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_FAILED_UPGRADE } from 'modules/hcs/hcs-inventory/shared';
 
 export interface IHeaderTab {
   title: string;
@@ -29,6 +29,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
   public loading: boolean;
   public statusSwUpgradeNeeded: string = STATUS_SOFTWARE_UPGRADE_NEEDED;
+  public statusFailedUpgrade: string = STATUS_FAILED_UPGRADE;
 
   /* @ngInject */
   constructor(

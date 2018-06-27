@@ -11382,6 +11382,7 @@
         "swProfileNotCoverAll": "Software profile incomplete",
         "swVersionMismatch": "Software mismatch",
         "swUpgradeNeeded": "Upgrade needed",
+        "scheduled": "Scheduled",
         "needToUpdateBatchNumber": "Update batch number",
         "upgradeScheduled": "Upgrade scheduled",
         "upgradeInProgress": "Upgrade in progress",
