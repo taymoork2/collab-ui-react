@@ -49,7 +49,7 @@
     }
 
     function trialHasService(orgId) {
-      return $q.all([$http.get(_getAdminServiceUrl(orgId)), $http.get(_getContextCcfsOnboardUrl() + '/' + orgId)])
+      return $q.all([$http.get(_getAdminServiceUrl(orgId)), $http.get([_getContextCcfsOnboardUrl(), '/', orgId].join(''), { headers: { 'x-cisco-cacheCiInfo': false } })])
         .then(function (results) {
           return results[0].status === 200 && results[1].status === 200;
         })
@@ -77,7 +77,7 @@
       if (isNewTrial) {
         return $http.post(_getContextCcfsOnboardUrl(), { orgId: customerOrgId });
       }
-      return $http.get([_getContextCcfsOnboardUrl(), '/', customerOrgId].join(''))
+      return $http.get([_getContextCcfsOnboardUrl(), '/', customerOrgId].join(''), { headers: { 'x-cisco-cacheCiInfo': false } })
         .then(function (response) {
           return response;
         })
