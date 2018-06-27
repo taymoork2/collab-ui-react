@@ -11,6 +11,7 @@ require('./metrics-frame.scss');
       bindings: {
         timeTrack: '=',
         onTrackLoadStatus: '&',
+        onIframeLoad: '&',
       },
     });
 

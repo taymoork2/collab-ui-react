@@ -15,6 +15,7 @@
     $state,
     $stateParams,
     $timeout,
+    $window,
     Analytics,
     Authinfo,
     FeatureToggleService,
@@ -299,19 +300,14 @@
       }
       getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
         if (!_.isUndefined(data) && !isReportsChanged(viewType, userInfo)) {
-          vm.webexMetrics.appData = {
-            ticket: data.ticket,
-            appId: data.appName,
-            node: data.host,
-            qrp: data.qlik_reverse_proxy,
-            persistent: data.isPersistent,
-            vID: data.siteId,
-          };
-          //TODO remove this 'if' segment, if QBS can handle this parameter
-          if (vm.webexMetrics.appData.persistent === 'false') {
-            vm.webexMetrics.appData.appId = reportView.appName;
+          if (_.isObject(data)) {
+            vm.webexMetrics.appData = data;
           }
-          var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.webexMetrics.appData.qrp, vm.reportType, viewType);
+          //TODO remove this 'if' segment, if QBS can handle this parameter
+          if (vm.webexMetrics.appData.isPersistent === 'false') {
+            vm.webexMetrics.appData.appName = reportView.appName;
+          }
+          var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.webexMetrics.appData.qlik_reverse_proxy, vm.reportType, viewType);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
           setStorageSite(vm.metricsSelected);
           updateIframe();
@@ -498,11 +494,14 @@
       var iframeUrl = vm.webexMetrics.appData.url;
       var data = {
         trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
-        appid: vm.webexMetrics.appData.appId,
+        appid: vm.webexMetrics.appData.appName,
         QlikTicket: vm.webexMetrics.appData.ticket,
-        node: vm.webexMetrics.appData.node,
-        persistent: vm.webexMetrics.appData.persistent,
-        vID: vm.webexMetrics.appData.vID,
+        node: vm.webexMetrics.appData.host,
+        persistent: vm.webexMetrics.appData.isPersistent,
+        vID: vm.webexMetrics.appData.vid,
+        responseid: vm.webexMetrics.appData.responseid,
+        qbs: vm.webexMetrics.appData.qbsUrl,
+        package: vm.webexMetrics.appData.package,
       };
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
@@ -522,5 +521,15 @@
         vm.loadMetricsReport();
       }
     }
+
+    $scope.iframeLoaded = function (elem) {
+      elem.ready(function () {
+        if (!_.startsWith(elem[0].src, 'about')) {
+          var token = $window.sessionStorage.getItem('accessToken');
+          var orgID = Authinfo.getOrgId();
+          elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        }
+      });
+    };
   }
 })();

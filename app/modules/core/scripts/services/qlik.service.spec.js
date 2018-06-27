@@ -22,6 +22,9 @@ describe('Service: QlikService', function () {
       appSuccessResult: {
         appUrl: 'https://qlik-loader/custportal/sense/app/7799d0da-e138-4e21-a9ad-0a5f2cee053a/?QlikTicket=acOEkuE_YU4WFUQL',
         ticket: 'acOEkuE_YU4WFUQL',
+        package: 'qlik-gtwy-server-1.0-SNAPSHOT',
+        qbsUrl: 'qlik-broker-service.cisco.com',
+        responseid: 'NONE',
       },
       qlikMashupUrl: 'qlik-loader/',
     };
