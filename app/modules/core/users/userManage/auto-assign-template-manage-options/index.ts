@@ -8,6 +8,7 @@ import notificationModuleName from 'modules/core/notifications';
 export default angular.module('core.users.userManage.auto-assign-template-manage-options', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
+  require('modules/core/accessibility/three-dot-dropdown').default,
   usersSharedAutoAssignTemplateModuleName,
   modalModuleName,
   notificationModuleName,

@@ -37,9 +37,7 @@ export class MultiDirSyncSettingController {
     this.updatingStatus = true;
     this.MultiDirSyncService.getEnabledDomains().then((enabledDomains) => {
       this.dirSyncArray = enabledDomains;
-      if (this.dirSyncArray.length > 0) {
-        this.dirSyncEnabled = true;
-      }
+      this.dirSyncEnabled = this.dirSyncArray.length > 0;
     })
       .catch((error) => {
         this.dirSyncEnabled = false;
