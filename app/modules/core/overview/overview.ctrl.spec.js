@@ -33,7 +33,8 @@ describe('Controller: OverviewCtrl', function () {
       'LinkedSitesService',
       'EvaService',
       'SsoCertificateService',
-      'HuntGroupCallParkMisconfigService'
+      'HuntGroupCallParkMisconfigService',
+      'UserListService'
     );
 
     this.$httpBackend.whenGET('https://identity.webex.com/identity/scim/1/v1/Users/me').respond(200);
@@ -123,7 +124,19 @@ describe('Controller: OverviewCtrl', function () {
 
     spyOn(this.PrivateTrunkService, 'getPrivateTrunk').and.returnValue(this.$q.resolve({ resources: [] }));
     spyOn(this.ServiceDescriptorService, 'getServiceStatus').and.returnValue(this.$q.resolve({ state: 'unknown' }));
-    spyOn(this.HuntGroupCallParkMisconfigService, 'getMisconfiguredServices').and.returnValue(this.$q.resolve());
+    spyOn(this.HuntGroupCallParkMisconfigService, 'getMisconfiguredServices').and.returnValue(this.$q.resolve({
+      huntGroups: {},
+      callParks: {},
+    }));
+
+    this.listUsersData = {
+      status: 200,
+      data: {
+        totalResults: 10,
+      },
+    };
+    spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve(this.listUsersData));
+
     this.initController = function () {
       this.controller = this.$controller('OverviewCtrl', {
         $q: this.$q,

@@ -12,6 +12,7 @@ describe('Controller: SupportCtrl', function () {
       '$q',
       '$scope',
       '$state',
+      'Analytics',
       'Authinfo',
       'Config',
       'FeatureToggleService',
@@ -29,6 +30,7 @@ describe('Controller: SupportCtrl', function () {
     };
 
     var _this = this;
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Userservice, 'getUser').and.callFake(function (uid, callback) {
       callback(_this.currentUser, 200);
     });
