@@ -312,7 +312,7 @@
   <!-- add for new customer -->
 
   <button id="startTrialButton" class="btn btn--primary" type="button" cs-btn loading="trial.isLoading(trialForm)" ng-click="trialForm.$setPristine(true); trial.nextStep()"
-    ng-disabled="!trial.isAddTrialValid(trialForm.$valid)" ng-if="trial.isNewTrial() && !trial.isExistingOrg()">
+    ng-disabled="!trial.isAddTrialValid(trialForm.$valid) || trial.disableStartTrialButton" ng-if="trial.isNewTrial() && !trial.isExistingOrg()">
       <span ng-if="!trial.hasNextStep()" translate="partnerHomePage.startTrial"></span>
       <span ng-if="trial.hasNextStep()" translate="common.next"></span>
   </button>

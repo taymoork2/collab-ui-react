@@ -7,6 +7,7 @@ type Test = atlas.test.IComponentTest<IntegrationsManagementListController,
     $state;
     $timeout;
     IntegrationsManagementFakeService;
+    ModalService;
     Notification;
   },
   {
@@ -32,10 +33,12 @@ describe('Component: integrationsManagementList:', () => {
       '$state',
       '$timeout',
       'IntegrationsManagementFakeService',
+      'ModalService',
       'Notification',
     );
     installPromiseMatchers();
     spyOn(this.Notification, 'errorResponse').and.returnValue('');
+    spyOn(this.ModalService, 'open').and.returnValue({ result: this.$q.resolve() });
     spyOn(this.IntegrationsManagementFakeService, 'listIntegrations').and.returnValue(this.$q.resolve(integrations.slice(0, 3)));
     spyOn(this.IntegrationsManagementFakeService, 'getGlobalAccessPolicy').and.returnValue(this.$q.resolve(globalAccessPolicy));
     spyOn(this.IntegrationsManagementFakeService, 'createGlobalAccessPolicy').and.returnValue(this.$q.resolve(globalAccessPolicy));
@@ -136,27 +139,49 @@ describe('Component: integrationsManagementList:', () => {
     it('should create global access policy of none exists', function (this: Test) {
       this.IntegrationsManagementFakeService.getGlobalAccessPolicy.and.returnValue(this.$q.resolve(undefined));
       initComponent.apply(this);
+      expect(this.controller.globalAccessPolicyAction).toBe(PolicyAction.DENY);
       expect(this.controller.globalAccessPolicy).toBeUndefined();
-      this.controller.onGlobalAccessChange(true);
-      expect(this.IntegrationsManagementFakeService.createGlobalAccessPolicy).toHaveBeenCalled();
-      const promise = this.controller.onGlobalAccessChange(false);
+      this.IntegrationsManagementFakeService.getGlobalAccessPolicy.and.returnValue(this.$q.resolve(globalAccessPolicy));
+      const promise = this.controller.onGlobalAccessChange(PolicyAction.ALLOW);
       promise
         .then(() => {
           expect(this.IntegrationsManagementFakeService.createGlobalAccessPolicy).toHaveBeenCalled();
           expect(this.IntegrationsManagementFakeService.getGlobalAccessPolicy).toHaveBeenCalled();
+          expect(this.controller.globalAccessPolicyAction).toBe(PolicyAction.ALLOW);
+          expect(this.controller.globalAccessPolicy).toBeDefined();
         })
         .catch(fail);
       expect(promise).toBeResolved();
     });
 
     it('should update global access policy if one exists', function (this: Test) {
-      expect(this.controller.globalAccessPolicy).not.toBeUndefined();
-      const promise = this.controller.onGlobalAccessChange(false);
+      const policy = <IGlobalPolicy>this.controller.globalAccessPolicy;
+      expect(policy.action).toBe(PolicyAction.ALLOW);
+      this.controller.globalAccessPolicyAction = PolicyAction.DENY;
+      const promise = this.controller.onGlobalAccessChange(PolicyAction.DENY);
       promise
         .then(() => {
           expect(this.IntegrationsManagementFakeService.updateGlobalAccessPolicy).toHaveBeenCalledWith('123', PolicyAction.DENY);
           const policy = this.controller.globalAccessPolicy as IGlobalPolicy;
           expect(policy.action).toBe(PolicyAction.DENY);
+          expect(this.controller.globalAccessPolicyAction).toBe(PolicyAction.DENY);
+        })
+        .catch(fail);
+      expect(promise).toBeResolved();
+    });
+
+    it('should not update global access policy and should reset the toggle value back if modal confirmation is canceled', function (this: Test) {
+      this.ModalService.open.and.returnValue({ result: this.$q.reject() });
+      const policy = <IGlobalPolicy>this.controller.globalAccessPolicy;
+      expect(policy.action).toBe(PolicyAction.ALLOW);
+      this.controller.globalAccessPolicyAction = PolicyAction.DENY;
+      const promise = this.controller.onGlobalAccessChange(PolicyAction.DENY);
+      promise
+        .then(() => {
+          expect(this.IntegrationsManagementFakeService.updateGlobalAccessPolicy).not.toHaveBeenCalled();
+          const policy = this.controller.globalAccessPolicy as IGlobalPolicy;
+          expect(policy.action).toBe(PolicyAction.ALLOW);
+          expect(this.controller.globalAccessPolicyAction).toBe(PolicyAction.ALLOW);
         })
         .catch(fail);
       expect(promise).toBeResolved();

@@ -691,16 +691,16 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Webex account. Your Webex site will not be converted to a free site and will be deleted.",
-    "singleMoveUsers": "Convert to a free Cisco Webex account.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free user account that can be used with the Webex Teams app. Your Webex site will not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Webex Teams user account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Webex account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Webex Teams user accounts.",
     "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Webex Teams spaces.",
-    "multMoveUsers": "Convert users to their own free Cisco Webex account.",
+    "multMoveUsers": "Convert users to their own free Webex Teams user accounts.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleUserMove": "You will be converted to a free Cisco Webex account.",
-    "multiUserMove": "All users will be converted to their own free Cisco Webex account.",
+    "singleUserMove": "You will be eligible to use free services in the Webex Teams app.",
+    "multiUserMove": "All users will be eligible to use free services in the Webex Teams app.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
     "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Webex Boards and Cisco TelePresence video conferencing endpoints.",
@@ -6108,7 +6108,7 @@
     "addError": "An error occurred starting a trial for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "editError": "An error occurred editing a trial for {{customerName}}.",
-    "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
+    "startTrialContextServiceError": "Created trial, but failed to enable Context Service. Please go to Edit Trial to try again.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
     "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
     "errorInUse": "Entered value is already in use. Try a different value.",
@@ -9343,7 +9343,7 @@
     "integrations": {
       "title": "Integrations",
       "subtitle": "Manage access to integrations for organizations.",
-      "description": "Authorize access for better management.<br/>This allows or denies your users access to integrations available in your organization."
+      "description": "Authorize access for better management.<br>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {
@@ -9444,7 +9444,7 @@
         "admin": "Admin access to Cisco Webex Control Hub"
       },
       "useFree": {
-        "header": "Use Free Cisco Webex",
+        "header": "Use Free Cisco Webex Teams",
         "meetings": "Free Cisco Webex Meetings with 3 people",
         "messaging": "Free Cisco Webex Teams",
         "button": "Use Free"
@@ -11390,6 +11390,7 @@
         "swProfileNotCoverAll": "Software profile incomplete",
         "swVersionMismatch": "Software mismatch",
         "swUpgradeNeeded": "Upgrade needed",
+        "scheduled": "Scheduled",
         "needToUpdateBatchNumber": "Update batch number",
         "upgradeScheduled": "Upgrade scheduled",
         "upgradeInProgress": "Upgrade in progress",
@@ -11794,11 +11795,31 @@
       "userAdoption": "User Adoption",
       "policyActionAllow": "Allowed",
       "policyActionDeny": "Denied",
-      "globalAccess": "Global Access: {{value}} ",
-      "globalAccessOn": "On",
-      "globalAccessOff": "Off",
+      "globalAccess": {
+        "globalAccessValue": "Global Access: {{value}} ",
+        "modalTitle": "Global Access Alert",
+        "modalOnBody": "Do you want to turn on access to all integrations? ",
+        "modalOffBody": "Do you want to turn off access to all integrations?<br>Note: ALL existing user adoptions will be revoked."
+      },
       "getIntegrationListError": "Could not get records. Need official copy",
       "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
+    },
+    "overview": {
+      "sectionTitle": "Integration Access",
+      "download": "Download",
+      "revokeAccess": "Revoke Access",
+      "details": "Integration Details",
+      "userAdoption": "User Adoption",
+      "access": "Access for Future Users",
+      "accessTooltip": "Any action doesn't impact the existing users of the integration.",
+      "allUsers": "All users",
+      "specificUsers": "Specific users",
+      "revokeAccessDialog": {
+        "title": "Revoke Access Alert",
+        "message": "{count, plural, =1{# user} other{All # users}} will lose access to this integration. Do you want to revoke access?"
+      },
+      "saveSuccess": "Successfully saved integration access.",
+      "saveError": "Error saving integration access."
     }
   }
 }

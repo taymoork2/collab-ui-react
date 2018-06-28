@@ -1,0 +1,32 @@
+{
+  "statusChecks" : {
+    "0626b325-232b-408b-8b4d-c926fd2c76d7" : {
+      "checkTime" : "2018-06-25T18:44:11.118Z",
+      "activeOptions" : [ "ciscocm-ucmgmt-06-25-18.v201806232.k3.cop" ],
+      "inactiveOptions" : [ ],
+      "freeDiskSpace" : 43622396,
+      "totalDiskSpace" : 82568880
+    },
+    "4fa17415-d9f8-4286-9865-f3e22bd9f580" : {
+      "checkTime" : "2018-06-25T18:44:17.877Z",
+      "activeOptions" : [ "ciscocm-ucmgmt-06-25-18.v201806232.k3.cop" ],
+      "inactiveOptions" : [ ],
+      "freeDiskSpace" : 56299640,
+      "totalDiskSpace" : 82569840
+    },
+    "8f7eb1dd-f396-4df3-8ea9-8e4b250e6981" : {
+      "checkTime" : "2018-06-25T18:44:19.603Z",
+      "activeOptions" : [ "ciscocm-ucmgmt-06-25-18.v201806232.k3.cop" ],
+      "inactiveOptions" : [ ],
+      "freeDiskSpace" : 56614424,
+      "totalDiskSpace" : 82569840
+    },
+    "7312f420-ce2d-4c1d-8a8b-39a3d848725f" : {
+      "checkTime" : "2018-06-25T18:44:09.042Z",
+      "activeOptions" : [ "ciscocm-ucmgmt-06-25-18.v201806232.k3.cop" ],
+      "inactiveOptions" : [ ],
+      "freeDiskSpace" : 35547992,
+      "totalDiskSpace" : 50986188
+    }
+  }
+}

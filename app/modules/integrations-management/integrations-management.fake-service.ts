@@ -4,11 +4,15 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
-  ) {}
+    private $timeout: ng.ITimeoutService,
+  ) {
+    this.populateApplicationUsages();
+    this.populateCustomPolicies();
+  }
 
   private customPolicies: ICustomPolicy[] = [];
   private customPolicyId = 1;
-  private applicationUsages: IApplicationUsage[] = this.createApplicationUsages();
+  private applicationUsages: IApplicationUsage[] = [];
   private globalAccessPolicy?: IGlobalPolicy;
 
   private readonly ORG_ID = '55555';
@@ -36,19 +40,19 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     if (sortBy) {
       result = _.orderBy(result, sortBy, sortOrder);
     }
-    return this.$q.resolve(result);
+    return this.$timeout(() => result, this.randomDelay);
   }
 
   public getIntegration(appId: string): IPromise<IApplicationUsage> {
     const applicationUsage = this.getApplicationUsageByAppId(appId);
     if (applicationUsage) {
-      return this.$q.resolve(applicationUsage);
+      return this.$timeout(() => applicationUsage, this.randomDelay);
     }
-    return this.$q.reject();
+    return this.$timeout(() => this.$q.reject(), this.randomDelay);
   }
 
   public getGlobalAccessPolicy(): IPromise<IGlobalPolicy | undefined> {
-    return this.$q.resolve(this.globalAccessPolicy);
+    return this.$timeout(() => this.globalAccessPolicy, this.randomDelay);
   }
 
   public createGlobalAccessPolicy(action: PolicyAction): ng.IPromise<void> {
@@ -59,30 +63,30 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
       type: PolicyType.DEFAULT,
       action,
     };
-    return this.$q.resolve();
+    return this.$timeout(this.randomDelay);
   }
 
   public updateGlobalAccessPolicy(_id: string, action: PolicyAction): ng.IPromise<void> {
     this.globalAccessPolicy!.action = action;
-    return this.$q.resolve();
+    return this.$timeout(this.randomDelay);
   }
 
   public getCustomPolicy(id: string): IPromise<ICustomPolicy> {
     const customPolicy = this.getCustomPolicyById(id);
     if (!customPolicy) {
-      return this.$q.reject('Custom Policy not found');
+      return this.$timeout(() => this.$q.reject('Custom Policy not found'), this.randomDelay);
     }
-    return this.$q.resolve(customPolicy);
+    return this.$timeout(() => customPolicy, this.randomDelay);
   }
 
   public createCustomPolicy(appId: string, action: PolicyAction, userIds?: string[] | undefined): IPromise<void> {
     const applicationUsage = this.getApplicationUsageByAppId(appId);
     if (!applicationUsage) {
-      return this.$q.reject('Application Usage not found');
+      return this.$timeout(() => this.$q.reject('Application Usage not found'), this.randomDelay);
     }
 
     const policyId = `${this.customPolicyId}`;
-    const customPolicy = {
+    const customPolicy: ICustomPolicy = {
       id: policyId,
       orgId: this.ORG_ID,
       name: 'Custom Policy',
@@ -95,46 +99,56 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     this.customPolicyId += 1;
 
     applicationUsage.policyId = policyId;
-    return this.$q.resolve();
+    applicationUsage.policyAction = action;
+    return this.$timeout(this.randomDelay);
   }
 
   public updateCustomPolicy(id: string, appId: string, action: PolicyAction, userIds?: string[]): ng.IPromise<void> {
     const customPolicy = this.getCustomPolicyById(id);
     if (!customPolicy) {
-      return this.$q.reject('Custom Policy not found');
+      return this.$timeout(() => this.$q.reject('Custom Policy not found'), this.randomDelay);
     }
+
+    const applicationUsage = this.getApplicationUsageByAppId(appId);
+    if (!applicationUsage) {
+      return this.$timeout(() => this.$q.reject('Application Usage not found'), this.randomDelay);
+    }
+
     customPolicy.action = action;
     customPolicy.appId = appId;
     customPolicy.personIds = userIds;
-    return this.$q.resolve();
+    applicationUsage.policyAction = action;
+
+    return this.$timeout(this.randomDelay);
   }
 
   public deleteCustomPolicy(id: string): IPromise<void> {
     _.remove(this.customPolicies, customPolicy => customPolicy.id === id);
     const applicationUsage = this.getApplicationUsageByPolicyId(id);
     if (!applicationUsage) {
-      return this.$q.reject('Application Usage not found');
+      return this.$timeout(() => this.$q.reject('Application Usage not found'), this.randomDelay);
     }
     delete applicationUsage.policyId;
-    return this.$q.resolve();
+    applicationUsage.policyAction = this.globalAccessPolicy ? this.globalAccessPolicy.action : PolicyAction.DENY;
+    return this.$timeout(this.randomDelay);
   }
 
   public hasCustomPolicyByAction(action: PolicyAction): IPromise<boolean> {
     const applicationUsageByAction = _.filter(this.applicationUsages, applicationUsage => applicationUsage.policyAction === action);
-    return this.$q.resolve(applicationUsageByAction.length > 0);
+    return this.$timeout(() => applicationUsageByAction.length > 0, this.randomDelay);
   }
 
   public revokeTokensForIntegration(clientId: string): IPromise<void> {
     const applicationUsage = this.getApplicationUsageByAppId(clientId);
     if (!applicationUsage) {
-      return this.$q.reject('Application Usage not found');
+      return this.$timeout(() => this.$q.reject('Application Usage not found'), this.randomDelay);
     }
     applicationUsage.appUserAdoption = 0;
-    return this.$q.resolve();
+    return this.$timeout(this.randomDelay);
   }
 
   public listAdoptedUsersForIntegration(_clientId: string): IPromise<string[]> {
-    return this.$q.resolve([]);
+    return this.$timeout(() => [], this.randomDelay);
   }
 
   private getApplicationUsageByAppId(appId: string): IApplicationUsage | undefined {
@@ -149,8 +163,8 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     return _.find(this.customPolicies, customPolicy => customPolicy.id === id);
   }
 
-  private createApplicationUsages(): IApplicationUsage[] {
-    return _.times(100, index => {
+  private populateApplicationUsages(): void {
+    this.applicationUsages = _.times(100, index => {
       const action = _.random(0, 1, false);
       return {
         id: `${index}`,
@@ -167,5 +181,17 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
         appCreated: '2018-06-08T20:50:19.355Z',
       };
     });
+  }
+
+  private populateCustomPolicies(): void {
+    _.forEach(this.applicationUsages, applicationUsage => {
+      if (applicationUsage.policyAction === PolicyAction.ALLOW) {
+        this.createCustomPolicy(applicationUsage.appId, applicationUsage.policyAction);
+      }
+    });
+  }
+
+  private get randomDelay(): number {
+    return _.random(500, 1000);
   }
 }

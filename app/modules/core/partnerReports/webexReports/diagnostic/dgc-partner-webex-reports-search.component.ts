@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { KeyCodes } from 'modules/core/accessibility';
 import { Notification } from 'modules/core/notifications';
 import { IMeetingDetail } from './partner-search.interfaces';
-import { SearchStorage } from './partner-meeting.enum';
+import { SearchStorage, TrackingEventName } from './partner-meeting.enum';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
@@ -225,6 +225,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private startSearch(): void {
+    this.Analytics.trackEvent(TrackingEventName.MEETING_SEARCH);
     this.gridData = [];
     this.errMsg.ariaLabel = '';
     this.errMsg.search = '';

@@ -15,7 +15,7 @@
       <li class="actions" ng-click="grid.appScope.startPrechecks(row.entity)">
         <a><span translate="hcs.upgrade.upgradeGroup.upgrade.gridColumn.actions.runPrechecks"></span></a>
       </li>
-      <li class="actions" ng-click="grid.appScope.startUpgrade(row.entity)" ng-show="{{row.entity.clusterStatus === grid.appScope.statusSwUpgradeNeeded}}">
+      <li class="actions" ng-click="grid.appScope.startUpgrade(row.entity)" ng-show="{{row.entity.clusterStatus === grid.appScope.statusSwUpgradeNeeded || row.entity.clusterStatus === grid.appScope.statusFailedUpgrade}}">
         <a><span translate="hcs.upgrade.upgradeGroup.upgrade.sectionHeader"></span></a>
       </li>
     </ul>

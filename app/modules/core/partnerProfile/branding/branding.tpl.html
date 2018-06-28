@@ -15,7 +15,7 @@
             <input type="radio" id="partnerLogoRadio" ng-model="bctrl.usePartnerLogo" ng-value="true" ng-change="bctrl.toggleLogo(bctrl.usePartnerLogo)">
             <label for="partnerLogoRadio">
               <span ng-if="bctrl.isPartner || bctrl.isDirectCustomer" translate="branding.useCiscoLogo"></span>
-              <span ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" translate="branding.usePartnerLogo" translate-value-partner="{{bctrl.partner.displayName}}"></span>
+              <span ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" translate="branding.usePartnerLogo" translate-value-partner="{{bctrl.supportProviderCompanyName}}"></span>
               <a href ng-if="!bctrl.isPartner && !bctrl.isDirectCustomer" ng-click="bctrl.showBrandingExample('Partner')" translate="branding.exampleLink"></a>
             </label>
           </div>

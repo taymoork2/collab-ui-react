@@ -11,6 +11,10 @@ export class HcsSidePanelController implements ng.IComponentController {
     this.status = this.$stateParams.status;
     this.node = this.$stateParams.node;
   }
+
+  public cap(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 }
 
 export class HcsSidePanelComponent implements ng.IComponentOptions {

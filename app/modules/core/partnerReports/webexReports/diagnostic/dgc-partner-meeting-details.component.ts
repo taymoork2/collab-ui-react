@@ -1,5 +1,5 @@
 import { ICallType, IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
-import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, TabType } from './partner-meeting.enum';
+import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, TabType, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -65,6 +65,7 @@ class MeetingDetailsController implements ng.IComponentController {
     private $stateParams: ng.ui.IStateParamsService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private Analytics,
     private Notification: Notification,
     private CustomerSearchService: CustomerSearchService,
     private PartnerSearchService: PartnerSearchService,
@@ -87,6 +88,7 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   public $onInit(): void {
+    this.Analytics.trackEvent(TrackingEventName.MEETING_DETAILS);
     this.overview = this.WebexReportsUtilService.getStorage(SearchStorage.WEBEX_OVERVIEW);
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.getParticipants();
