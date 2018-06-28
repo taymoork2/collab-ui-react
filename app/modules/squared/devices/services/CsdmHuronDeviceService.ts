@@ -80,6 +80,9 @@ export class CsdmHuronDeviceService {
   }
 
   public fetchItem(url: string): IPromise<IHuronDevice> {
+    if (!_.startsWith(url, this.UrlConfig.getCsdmServiceUrl())) {
+      return this.$q.reject();
+    }
     return this.$http.get(url).then((res) => {
       return this.CsdmConverter.convertHuronDevice(res.data);
     });
