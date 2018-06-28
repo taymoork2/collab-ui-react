@@ -112,7 +112,8 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
 
     this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_ONE_MEETING, this.meeting);
-    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
+
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
     initSpies.apply(this);
   });
 

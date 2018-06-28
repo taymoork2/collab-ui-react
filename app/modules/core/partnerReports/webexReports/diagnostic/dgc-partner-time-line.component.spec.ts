@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import moduleName from './index';
-import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTimeLine', () => {
   const mockNode = {
@@ -181,14 +180,14 @@ describe('Component: DgcPartnerTimeLine', () => {
     });
 
     it('should call diagnosticPartnerF8105ClientVersionGetStatus if is partner role', function () {
-      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
+      spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
       this.controller.loadFeatureToggle();
       expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).toHaveBeenCalled();
       expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).not.toHaveBeenCalledTimes(2);
     });
 
-    it('should call diagnosticF8105ClientVersionGetStatus if is not customer role', function () {
-      this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
+    it('should call diagnosticF8105ClientVersionGetStatus if is customer role', function () {
+      spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(false);
       this.controller.loadFeatureToggle();
       expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).not.toHaveBeenCalled();
       expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).toHaveBeenCalledTimes(2);

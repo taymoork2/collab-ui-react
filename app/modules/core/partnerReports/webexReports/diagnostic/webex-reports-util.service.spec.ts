@@ -175,4 +175,16 @@ describe('Service: WebexReportsUtilService', () => {
     const version = this.WebexReportsUtilService.getClientVersion('test_key');
     expect(version['osVersion']).toBe('11.0');
   });
+
+  describe('isPartnerReportPage():', () => {
+    it('should get isPartnerReportPage value: true', function () {
+      const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage('partnerreports.dgc');
+      expect(isPartnerRole).toBe(true);
+    });
+
+    it('should get isPartnerReportPage value: false', function () {
+      const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage('webexmetrics.dgc');
+      expect(isPartnerRole).toBe(false);
+    });
+  });
 });
