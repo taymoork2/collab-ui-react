@@ -113,7 +113,7 @@ export class ProvisioningController {
   public updateOrderStatusInGrid(order) {
     if (order.status === Status.COMPLETED) {
       //moving from pending dataset to completed no reason to get results again - just modify existing datasets
-      const completedOrder = _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl }));
+      const completedOrder = _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl, manualCode: order.manualCode }));
       if (completedOrder) {
         this.completedOrders.push(completedOrder);
       }
@@ -160,8 +160,8 @@ export class ProvisioningController {
     };
     return this.$q.all(orders).then((results) => {
       if (searchStr && searchStr.length > 0) {
-        results.completed = _.filter(results.completed, { webOrderID: searchStr });
-        results.pending = _.filter(results.pending, { webOrderID: searchStr });
+        results.completed = this.findCriteria( results.completed , searchStr);
+        results.pending = this.findCriteria( results.pending, searchStr);
       }
       return results;
     });
@@ -228,6 +228,12 @@ export class ProvisioningController {
       cellTooltip: true,
     });
     this.gridOptions.completed.columnDefs = _.reject(completedDefs, obj => obj.field === 'lastModified');
+  }
+
+  private findCriteria( order: IOrder[], searchStr: string): IOrder[] {
+    return _.filter(order, (order) => {
+      return ( _.includes( order.siteUrl, searchStr ) || _.includes( order.adminEmail, searchStr) || _.includes( order.webOrderID, searchStr) || _.includes( order.manualCode, searchStr));
+    });
   }
 
 }
