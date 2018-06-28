@@ -90,12 +90,7 @@ export class ProvisioningService {
           note: noteText,
         }],
     };
-    const config = {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    };
     const url = `${this.postProvisioningUrl}${uuid}/note`;
-    return  this.$http.post(url, payload, config);
+    return  this.$http.post(url, payload);
   }
 }
