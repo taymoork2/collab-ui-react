@@ -860,6 +860,8 @@
   },
   "webexReports": {
     "to": "to",
+    "connection": "Connection",
+    "data": "Data",
     "end": "End",
     "audio": "Audio",
     "video": "Video",
@@ -874,6 +876,7 @@
     "mobilePlatform": "Mobile: {{platform}}",
     "thinClient": "Thin Client",
     "phone": "Phone",
+    "audioQuality": "Audio Quality",
     "voipQuality": "VoIP Quality",
     "videoQuality": "Video Quality",
     "cmrQuality": "CMR Quality",
@@ -945,6 +948,13 @@
       "videoQuality": {
         "good": "If neither of the above, then the quality is Good",
         "poor": "Packet loss > 5.0% or latency > 400ms = Poor"
+      },
+      "connection": {
+        "helper": "Connection indicates the meeting client has a data connection, and shows host and sharing information.",
+        "connected": "Connected",
+        "sharing": "Sharing",
+        "host": "Host",
+        "dataNotEnabled": "Data Not Enabled"
       }
     },
     "featureHelper": {
@@ -969,6 +979,7 @@
       "conferenceDate": "Date",
       "startTime": "Start Date",
       "meetingName": "Meeting Name",
+      "meetingHost": "Meeting Host:",
       "conferenceID": "Conference ID",
       "conferenceIDTitle": "Conference ID:"
     },

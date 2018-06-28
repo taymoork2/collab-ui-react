@@ -211,6 +211,23 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
       ],
     };
     spyOn(this.PartnerSearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockCMRData));
+
+    const mockSharingData = {
+      items: [
+        {
+          key: '50335745',
+          completed: true,
+          items: [
+            {
+              sharingEvent: 'ApplicationSharing',
+              startTime: '1530061874000',
+              endTime: '1530062163000',
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.PartnerSearchService, 'getSharingSessionDetail').and.returnValue(this.$q.resolve(mockSharingData));
   }
 
   it('should switch view when call onChangeQOS', function () {
@@ -230,6 +247,40 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     initComponent.call(this);
     this.controller.getJoinMeetingTime();
     expect(this.controller.circleJoinTime['50335745']).toBe('Good');
+  });
+
+  it('should get meeting hosts', function () {
+    const mockData = [
+      { roleType: 'Host', timestamp: '1530061102000', toNodeId: '33558529' },
+      { roleType: 'Presenter', timestamp: '1530063605000', toNodeId: '33562625' },
+      { roleType: 'Host', timestamp: '1530067759000', toNodeId: '33562625' },
+    ];
+    spyOn(this.PartnerSearchService, 'getRoleChange').and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getHosts();
+    expect(this.controller.activityPoints.length).toBe(2);
+  });
+
+  it('should get sharing session detail when data completed', function () {
+    initComponent.call(this);
+    this.controller.getSharingSessionDetail('');
+    expect(this.controller.sharingLines['50335745'].length).toBe(1);
+  });
+
+  it('should retry to get sharing session detail when data not completed', function () {
+    const mockData = {
+      items: [
+        {
+          key: '50335745',
+          completed: false,
+          items: [],
+        },
+      ],
+    };
+    this.PartnerSearchService.getSharingSessionDetail.and.returnValue(this.$q.resolve(mockData));
+    initComponent.call(this);
+    this.controller.getSharingSessionDetail('');
+    expect(this.controller.sharingLines['50335745'].length).toBe(0);
   });
 
   it('should get voip session detail when data completed', function () {

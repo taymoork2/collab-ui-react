@@ -1,5 +1,5 @@
-import { ICallType, IJoinTime, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
-import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, TabType, TrackingEventName } from './partner-meeting.enum';
+import { ICallType, IJoinTime, IRoleData, ISessionDetail, ISessionDetailItem, IParticipant, IUniqueParticipant } from './partner-search.interfaces';
+import { MosType, Platforms, SearchStorage, Quality, QualityRange, QualityType, QosType, RoleType, SharingEvent, TabType, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -15,6 +15,7 @@ interface IDataStore {
   videoReqTimes: number;
   pstnReqTimes: number;
   cmrReqTimes: number;
+  sharingReqTimes: number;
   currentQos: string;
 }
 
@@ -40,6 +41,12 @@ interface IQualitySet {
   }[];
 }
 
+interface ISharingDetail {
+  sharingEvent: string;
+  startTime: string;
+  endTime: string;
+}
+
 const LATENCY_SHOWUP = 999;
 const LOSSRATE_SHOWUP = 9.9;
 class MeetingDetailsController implements ng.IComponentController {
@@ -48,12 +55,14 @@ class MeetingDetailsController implements ng.IComponentController {
   public overview: { audioSession: string, videoSession: string };
   public circleJoinTime: IJoinTime[];
   public conferenceID: string;
-  public tabType = TabType.AUDIO;
+  public tabType = TabType.DATA;
   public loading = true;
   public lineData: IUniqueParticipant;
+  public activityPoints: IRoleData[];
   public QOS_TYPE = QosType;
   private audioLines: IUniqueParticipant;
   private videoLines: IUniqueParticipant;
+  private sharingLines: IUniqueParticipant;
   private audioEnabled = { PSTN: false, VoIP: false };
   private videoEnabled = false;
   private meetingEndTime: number;
@@ -81,8 +90,9 @@ class MeetingDetailsController implements ng.IComponentController {
       videoReqTimes: 0,
       pstnReqTimes: 0,
       cmrReqTimes: 0,
+      sharingReqTimes: 0,
       retryTimes: 4,
-      currentQos: QosType.VOIP,
+      currentQos: QosType.SHARING,
     };
     const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
     this.dataService = (isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
@@ -98,7 +108,16 @@ class MeetingDetailsController implements ng.IComponentController {
   public onChangeQOS(qos: string): void {
     this.loading = true;
     this.data.currentQos = qos;
-    this.tabType = qos === QosType.VOIP ? TabType.AUDIO : TabType.VIDEO;
+    switch (qos) {
+      case QosType.VOIP:
+        this.tabType = TabType.AUDIO;
+        break;
+      case QosType.VIDEO:
+        this.tabType = TabType.VIDEO;
+        break;
+      default:
+        this.tabType = TabType.DATA;
+    }
     this.setData();
 
     /**
@@ -130,6 +149,8 @@ class MeetingDetailsController implements ng.IComponentController {
         const cmrNodeIds = this.getFilterIds(res, QosType.CMR);
 
         this.getJoinMeetingTime();
+        this.getHosts();
+        this.getSharingSessionDetail(nodeIds);
         this.getVoipSessionDetail(nodeIds);
         this.getVideoSessionDetail(nodeIds);
         this.getPSTNSessionDetail(pstnNodeIds);
@@ -162,6 +183,13 @@ class MeetingDetailsController implements ng.IComponentController {
         });
         this.WebexReportsUtilService.setStorage(SearchStorage.CLIENT_VERSION, clientVersion);
         this.circleJoinTime = res;
+      });
+  }
+
+  private getHosts(): void {
+    this.dataService.getRoleChange(this.conferenceID)
+      .then((res: IRoleData[]) => {
+        this.activityPoints = _.filter(res, role => { return role.roleType === RoleType.HOST; });
       });
   }
 
@@ -200,6 +228,54 @@ class MeetingDetailsController implements ng.IComponentController {
       line.clientKey = `${line.userId}_${line.userName}`;
       return line;
     });
+  }
+
+  private getSharingSessionDetail(nodeIds: string): void {
+    if (!_.size(nodeIds)) {
+      return;
+    }
+    this.dataService.getSharingSessionDetail(this.conferenceID, nodeIds)
+      .then((res: ISessionDetail) => {
+        const retryIds = this.parseSharingSession(res);
+        this.setData();
+        this.retryRequest(QosType.SHARING, this.getSharingSessionDetail, retryIds);
+      });
+  }
+
+  private parseSharingSession(sessionDetail: ISessionDetail): string[] {
+    const retryIds: string[] = [];
+    const details = this.sharingLines || {};
+    _.forEach(sessionDetail.items, (item: ISessionDetailItem) => {
+      if (!details[item.key]) {
+        details[item.key] = [];
+      }
+      if (item.completed) {
+        _.forEach(item.items, (detailItem: ISharingDetail) => {
+          if (detailItem.sharingEvent === SharingEvent.APPLICATION) {
+            const detail = this.parseSharingData(detailItem);
+            details[item.key].push(detail);
+          }
+        });
+      } else {
+        retryIds.push(item.key);
+      }
+    });
+    this.sharingLines = details;
+    return retryIds;
+  }
+
+  private parseSharingData(detailItem: ISharingDetail): IQualitySet {
+    const detail: IQualitySet = { qualities: [], startTime: 0, endTime: 0 };
+    detail.startTime = _.parseInt(detailItem.startTime);
+    detail.endTime = detailItem.endTime ? _.parseInt(detailItem.endTime) : this.meetingEndTime;
+    detail.qualities.push({
+      startTime: detail.startTime,
+      endTime: detail.endTime,
+      quality: 1,
+      tooltip: '',
+      source: QosType.SHARING,
+    });
+    return detail;
   }
 
   private getVoipSessionDetail(nodeIds: string): void {
@@ -542,10 +618,15 @@ class MeetingDetailsController implements ng.IComponentController {
   }
 
   private setData(): void {
-    if (this.data.currentQos === QosType.VOIP) {
-      this.lineData = _.cloneDeep(this.audioLines);
-    } else {
-      this.lineData = _.cloneDeep(this.videoLines);
+    switch (this.data.currentQos) {
+      case QosType.VOIP:
+        this.lineData = _.cloneDeep(this.audioLines);
+        break;
+      case QosType.VIDEO:
+        this.lineData = _.cloneDeep(this.videoLines);
+        break;
+      default:
+        this.lineData = _.cloneDeep(this.sharingLines);
     }
 
     const audioTypes: string[] = [];

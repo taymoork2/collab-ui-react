@@ -2,6 +2,8 @@
 @import '~@collabui/collab-ui/scss/settings/page';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
+$tab-radius: 4px;
+
 .dgc-meeting {
     @extend %page-content-padding;
     $content-padding-size: 1rem;
@@ -79,8 +81,8 @@
         .timeline-tab {
           position: relative;
           width: 100%;
+          margin-bottom: 1rem;
           height: 2rem;
-          margin-bottom: .5rem;
   
           .nav-pills {
             position: absolute;
@@ -98,10 +100,8 @@
   
               > a {
                 border: 1px solid $color-blue-base;
-                border-radius: 4px;
                 background: $white;
                 color: $color-blue-base;
-                padding: 1px 15px;
                 box-shadow: none;
   
                 &:hover {
@@ -119,15 +119,15 @@
   
               &:first-child {
                 > a {
-                  border-top-right-radius: 0;
-                  border-bottom-right-radius: 0;
+                  border-top-left-radius: $tab-radius;
+                  border-bottom-left-radius: $tab-radius;
                 }
               }
   
               &:last-child {
                 > a {
-                  border-top-left-radius: 0;
-                  border-bottom-left-radius: 0;
+                  border-top-right-radius: $tab-radius;
+                  border-bottom-right-radius: $tab-radius;
                 }
               }
             }

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { ICallType, IParticipant, IUniqueData } from './partner-search.interfaces';
-import { Platforms, QualityType, TabType } from './partner-meeting.enum';
+import { ICallType, IParticipant, IRoleData, IUniqueData } from './partner-search.interfaces';
+import { Platforms, QualityType, TabType, QosType } from './partner-meeting.enum';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IDataStore {
@@ -11,6 +11,7 @@ interface IDataStore {
   gridVerticalLineNum: number;
   gridHorizontalLineNum: number;
   lineData: object[];
+  activityPoints: IRoleData[];
 }
 
 interface IGridOption {
@@ -24,8 +25,20 @@ interface IGridOption {
   height?: number;
 }
 
+enum ColorLineCls {
+  DEFAULT = 'defaultLine',
+  GOOD = 'goodLine',
+  FAIR = 'fairLine',
+  POOR = 'poorLine',
+  SHARING = 'sharingLine',
+}
+
+type EmptyString = '';
+
 const DEFAULT_RADIUS = 9;
 const DEFAULT_RECT_WIDTH = 17;
+const ACTIVITY_POINT_WIDTH = 16;
+const ACTIVITY_POINT_HEIGHT = 16;
 class TimeLineController implements ng.IComponentController {
   private tip: d3;
   private svg: d3;
@@ -40,8 +53,9 @@ class TimeLineController implements ng.IComponentController {
   private chartEnd: number;
   private markLabel: d3;
   private yPanel: d3;
-  private lineColorCls = ['goodLine', 'fairLine', 'poorLine', ''];
+  private lineColorCls = [ColorLineCls.GOOD, ColorLineCls.FAIR, ColorLineCls.POOR, ''];
   private isSupportClientVersion = false;
+  private showJMT = true;
   public getDeviceType: Function;
 
   /* @ngInject */
@@ -60,6 +74,7 @@ class TimeLineController implements ng.IComponentController {
       gridVerticalLineNum: 12,
       gridHorizontalLineNum: 7,
       lineData: [],
+      activityPoints: [],
     };
     this.option = {
       width: 960,
@@ -79,8 +94,12 @@ class TimeLineController implements ng.IComponentController {
   }
 
   public $onChanges(changes: { [bindings: string]: ng.IChangesObject<any> }): void {
-    const { circleColor, lineData } = changes;
-    if (_.get(circleColor, 'currentValue')) {
+    const { activityPoints, circleColor, lineData } = changes;
+    if (_.get(activityPoints, 'currentValue') && this.showJMT) {
+      this.drawActivityPoints(_.get(activityPoints, 'currentValue'));
+    }
+
+    if (_.get(circleColor, 'currentValue') && this.showJMT) {
       this.updateStartPoints(_.get(circleColor, 'currentValue'));
     }
 
@@ -95,6 +114,9 @@ class TimeLineController implements ng.IComponentController {
     }
     if (!this.sourceData.lines) {
       this.sourceData.lines = [];
+    }
+    if (this.tabType !== TabType.DATA) {
+      this.showJMT = false;
     }
     this.data.gridHorizontalLineNum = this.getGridHorizontalLineNum();
     this.data.startTime = this.sourceData.startTime;
@@ -139,7 +161,6 @@ class TimeLineController implements ng.IComponentController {
   private initChart(): void {
     this.svg = d3.select('.chartContent')
       .style('padding-left', `${this.option.paddingLeft}px`)
-      .style('padding-top', `${this.option.top}px`)
       .append('svg:svg')
       .attr('class', 'xchart')
       .attr('width', this.option.width)
@@ -152,6 +173,7 @@ class TimeLineController implements ng.IComponentController {
     this.svg.append('g').attr('class', 'timeLine enterLine');
     this.svg.append('g').attr('class', 'timeLine colorLine');
     this.svg.append('g').attr('class', 'jmt jmtPoint');
+    this.svg.append('g').attr('class', 'host activityPoint');
     this.svg.append('g').attr('class', 'crossLine startEnd');
     this.markLabel = d3.select('.chartContent')
       .append('div')
@@ -160,7 +182,7 @@ class TimeLineController implements ng.IComponentController {
     this.yPanel = d3.select('.chartContent')
       .append('div')
       .attr('class', 'yaxis')
-      .attr('style', `height: ${this.option.height}px; top: ${this.option.top}px;`);
+      .attr('style', `height: ${this.option.height}px;`);
     this.tip = d3.select('.timelineSvg')
       .append('div')
       .attr('class', 'timelineTooltip')
@@ -172,7 +194,9 @@ class TimeLineController implements ng.IComponentController {
     this.yAxis();
 
     this.drawBaseLines();
-    this.drawStartPoints();
+    if (this.showJMT) {
+      this.drawStartPoints();
+    }
 
     this.setLegend();
   }
@@ -373,6 +397,7 @@ class TimeLineController implements ng.IComponentController {
 
   private drawBaseLines(): void {
     const baseLines: object[] = [], containers: object[] = [];
+    const activityContainers: object[] = [];
     let y = 0;
     _.forEach(this.sourceData.lines, (line, yIndex) => {
       y += this.option.gridHeight;
@@ -385,7 +410,7 @@ class TimeLineController implements ng.IComponentController {
           id: `myLine${lineItem.cid}_${lineItem.nodeId}`,
           start: lineItem.joinTime,
           end: lineItem.leaveTime,
-          cls: lineItem.platform === Platforms.TP || (lineItem.sessionType === Platforms.PSTN && this.tabType === TabType.AUDIO) ? 'defaultLine' : '',
+          cls: this.getColorLineClass(lineItem),
         });
 
         containers.push({
@@ -394,11 +419,37 @@ class TimeLineController implements ng.IComponentController {
           start: lineItem.joinTime,
           end: lineItem.leaveTime,
         });
+
+        activityContainers.push({
+          id: lineItem.nodeId,
+          y: y,
+        });
       });
     });
 
     this.drawLine('g.baseLine', baseLines);
     this.renderLineContainer(containers);
+    this.renderActivityContainers(activityContainers);
+  }
+
+  private getColorLineClass(lineItem: IParticipant): ColorLineCls | EmptyString {
+    switch (this.tabType) {
+      case TabType.DATA:
+        if (lineItem.sessionType !== Platforms.PSTN) {
+          return ColorLineCls.DEFAULT;
+        }
+        break;
+      case TabType.AUDIO:
+        if (lineItem.platform === Platforms.TP || lineItem.sessionType === Platforms.PSTN) {
+          return ColorLineCls.DEFAULT;
+        }
+        break;
+      default:
+        if (lineItem.platform === Platforms.TP) {
+          return ColorLineCls.DEFAULT;
+        }
+    }
+    return '';
   }
 
   private renderLineContainer(containers: object[]): void {
@@ -416,6 +467,16 @@ class TimeLineController implements ng.IComponentController {
         yIndex: container['yIndex'],
         start: container['start'],
         end: container['end'],
+      });
+    });
+  }
+
+  private renderActivityContainers(containers: object[]): void {
+    const activityNode = d3.select('g.activityPoint');
+    _.forEach(containers, container => {
+      activityNode.append('g').attr({
+        id: `myActivity${container['id']}`,
+        y: container['y'],
       });
     });
   }
@@ -562,7 +623,7 @@ class TimeLineController implements ng.IComponentController {
       _.forEach(line, lineItem => {
         const nodeId_ = lineItem.cid ? nodeId : `_${nodeId}`;
         const enterNode = d3.select(`#myEnter${nodeId_}`);
-        this.drawColorLineSegment(enterNode, lineItem.startTime, lineItem.endTime, 'defaultLine', { nodeId: nodeId_ });
+        this.drawColorLineSegment(enterNode, lineItem.startTime, lineItem.endTime, ColorLineCls.DEFAULT, { nodeId: nodeId_ });
 
         const colorNode = d3.select(`#myColor${nodeId_}`);
         _.forEach(lineItem.qualities, qualityItem => {
@@ -579,6 +640,9 @@ class TimeLineController implements ng.IComponentController {
   }): void {
     if (!lineNode.size()) {
       return;
+    }
+    if (options.source === QosType.SHARING) {
+      cls = ColorLineCls.SHARING;
     }
     const start = lineNode.attr('start') * 1;
     const end = lineNode.attr('end') * 1;
@@ -632,6 +696,50 @@ class TimeLineController implements ng.IComponentController {
       .attr('end', item => item.end ? item.end : '');
   }
 
+  private drawActivityPoints(data: IRoleData[]): void {
+    const OFFSET_X = 3;
+    const end = this.timeScale(this.chartEnd);
+    _.forEach(data, (role: IRoleData) => {
+      if (role.toNodeId === 'N/A') {
+        return;
+      }
+      const node = this.svg.select(`#myActivity${role.toNodeId}`);
+      if (!node.size()) {
+        return;
+      }
+      const g = node.append('g').attr('class', 'activityPoint');
+      let x = this.timeScale(_.parseInt(role.timestamp));
+      if (end - x > ACTIVITY_POINT_WIDTH) {
+        x += ACTIVITY_POINT_WIDTH / 2 + OFFSET_X;
+      } else {
+        x -= ACTIVITY_POINT_WIDTH / 2;
+      }
+      const y = _.parseInt(node.attr('y')) - ACTIVITY_POINT_HEIGHT / 2;
+      g.append('svg:rect').attr({
+        width: ACTIVITY_POINT_WIDTH,
+        height: ACTIVITY_POINT_HEIGHT,
+        rx: 2,
+        ry: 2,
+        transform: `translate(${x} , ${y})`,
+      });
+      g.append('svg:text').attr({
+        x: x + ACTIVITY_POINT_WIDTH * 0.25,
+        y: y + ACTIVITY_POINT_HEIGHT * 0.8,
+        class: 'small',
+      }).text('H');
+      g.on('mouseover', () => {
+        const msgArr = [
+          { key: this.$translate.instant('webexReports.searchGridHeader.meetingHost') },
+          { key: this.formatTime(_.parseInt(role.timestamp)) },
+        ];
+        const tipTop = y + 22;
+        const tipLeft = x + 156;
+        this.makeTips(msgArr, tipTop, tipLeft);
+      }).on('mouseout', () => this.hideTip());
+
+    });
+  }
+
   private getGridHorizontalLineNum(): number {
     return this.sourceData.lines.length + 1 > this.data.gridHorizontalLineNum ? this.sourceData.lines.length + 1 : this.data.gridHorizontalLineNum;
   }
@@ -664,8 +772,9 @@ class TimeLineController implements ng.IComponentController {
       return;
     }
     this.tip.html(tooltip)
-      .classed('Tooltip-bottom', true)
+      .classed('Tooltip-bottom text-center', true)
       .style('display', 'block')
+      .style('max-width', '300px')
       .style('z-index', 1500);
 
     const leftOffset = this.tip.style('width').replace('px', '');
@@ -673,7 +782,7 @@ class TimeLineController implements ng.IComponentController {
     this.tip.transition()
       .duration(500)
       .style('opacity', 1)
-      .style('top', () => (top - topOffset) + 'px')
+      .style('top', () => (top - topOffset - this.option.top) + 'px')
       .style('left', () => (left - leftOffset / 2) + 'px');
   }
 
@@ -684,19 +793,40 @@ class TimeLineController implements ng.IComponentController {
   private setLegend(): void {
     const g = d3.select('.timelineSvg')
       .append('div')
-      .attr('class', 'legend')
-      .attr('style', `min-width: 1100px`);
+      .attr('class', 'legend row showgrid');
 
-    this.legendTitle(g);
-    g.append('div')
-      .attr('class', 'legendCircle')
-      .attr('style', 'padding: 0; float: left;');
-    g.append('div')
-      .attr('class', 'legendLine')
-      .attr('style', 'float: right;');
+    if (this.tabType === TabType.DATA) {
+      this.setDataTabLegend(g);
+    } else {
+      this.setAudioVideoTabLegend(g);
+    }
+  }
+
+  private setDataTabLegend(legendContainer: d3): void {
+    this.renderJMTLegend(legendContainer);
+    this.renderConnectionLegend(legendContainer);
+  }
+
+  private renderJMTLegend(legendContainer: d3): void {
+    const tipIcon = 'icon-tip-jmt';
+    const tips = [
+      { key: this.$translate.instant('webexReports.timelineChartLegend.joinMeetingTime') },
+      { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.good') },
+      { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.fair') },
+      { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.poor') },
+      { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.NA') },
+    ];
+
+    legendContainer.append('div')
+      .attr('class', 'columns small-6 legendCircle')
+      .append('div')
+      .attr('class', 'title')
+      .text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime'))
+      .append('i').attr('class', `icon icon-info-outline ui-pl ${tipIcon}`);
+    this.setLegendTooltip(tipIcon, tips);
 
     _.forEach(this.legendInfo.circle, val => {
-      const colorZone = d3.select('.legendCircle').append('div');
+      const colorZone = d3.select('.legendCircle').append('div').attr('class', 'legendItem');
       const svg = colorZone.append('svg:svg');
       if (val === QualityType.FAIR) {
         this.drawTriangle(svg, { x: 10, y: 2 });
@@ -707,24 +837,113 @@ class TimeLineController implements ng.IComponentController {
       }
       svg.append('text')
         .text(val === QualityType.NA ? this.$translate.instant('webexReports.notAvailable') : val)
-        .attr('transform', `translate(24 , 17)`);
+        .attr('transform', 'translate(24 , 17)');
     });
+  }
 
-    const qualityLegends = [{ cls: 'goodLine', text: this.$translate.instant('webexReports.good'), width: 80 },
-      { cls: 'fairLine', text: this.$translate.instant('webexReports.fair'), width: 65 },
-      { cls: 'poorLine', text: this.$translate.instant('webexReports.poor'), width: 0 },
-      { cls: 'defaultLine', text: this.$translate.instant('webexReports.notAvailable'), width: 130 },
+  private renderConnectionLegend(legendContainer: d3): void {
+    const tipIcon = 'icon-tip-connection';
+    const tips = [
+      { key: this.$translate.instant('webexReports.timelineChartLegend.connection.helper') },
+    ];
+    const connectionLegends = [
+      { text: this.$translate.instant('webexReports.timelineChartLegend.connection.connected'), cls: ColorLineCls.DEFAULT, width: 120, isLine: true },
+      { text: this.$translate.instant('webexReports.timelineChartLegend.connection.sharing'), cls: ColorLineCls.SHARING, width: 100, isLine: true },
+      { text: this.$translate.instant('webexReports.timelineChartLegend.connection.host'), cls: '', width: 65, isLine: false },
+      { text: this.$translate.instant('webexReports.timelineChartLegend.connection.dataNotEnabled'), cls: '', width: 150, isLine: true },
+    ];
+
+    legendContainer.append('div')
+      .attr('class', 'columns small-6 legendLine')
+      .append('div')
+      .attr('class', 'title')
+      .text(this.$translate.instant('webexReports.connection'))
+      .append('i').attr('class', `icon icon-info-outline ui-pl ${tipIcon}`);
+    this.setLegendTooltip(tipIcon, tips);
+
+    _.forEach(connectionLegends, legend => {
+      const legendZone = d3.select('.legendLine').append('div').attr('class', 'legendItem');
+      const svg = legendZone.append('svg:svg').attr('class', 'lineSvg');
+      if (legend.width) {
+        legendZone.attr('style', `width: ${legend.width}px`);
+      }
+      if (legend.isLine) {
+        svg.append('svg:line')
+          .attr({
+            class: legend.cls,
+            x1: 3,
+            y1: 14,
+            x2: 28,
+            y2: 14,
+          });
+        svg.append('text')
+          .text(legend.text)
+          .attr('transform', `translate(33 , 17)`);
+      } else {
+        svg.append('rect').attr({
+          width: ACTIVITY_POINT_WIDTH,
+          height: ACTIVITY_POINT_HEIGHT,
+          rx: 2,
+          ry: 2,
+          class: 'activity',
+          transform: `translate(0 , 5)`,
+        });
+        svg.append('text').attr({
+          x: ACTIVITY_POINT_WIDTH * 0.25,
+          y: ACTIVITY_POINT_HEIGHT + 2,
+          class: 'small',
+        }).text('H');
+        svg.append('text')
+          .text(legend.text)
+          .attr('transform', `translate(20 , 17)`);
+      }
+    });
+  }
+
+  private setAudioVideoTabLegend(legendContainer: d3): void {
+    const legendTitle = this.tabType === TabType.AUDIO ? this.$translate.instant('webexReports.audioQuality') : this.$translate.instant('webexReports.videoQuality');
+    const tipIcon = 'icon-tip-quality';
+    legendContainer.append('div')
+      .attr('class', 'columns small-12 text-center legendLine')
+      .append('div')
+      .attr('class', 'title')
+      .text(legendTitle)
+      .append('i').attr('class', `icon icon-info-outline ui-pl ${tipIcon}`);
+
+    let tips: { key: string }[];
+    const qualityLegends = [
+      { cls: ColorLineCls.GOOD, text: this.$translate.instant('webexReports.good'), width: 80 },
+      { cls: ColorLineCls.POOR, text: this.$translate.instant('webexReports.poor'), width: 0 },
+      { cls: ColorLineCls.DEFAULT, text: this.$translate.instant('webexReports.notAvailable'), width: 130 },
       { cls: '', text: `${this.tabType} ${this.$translate.instant('webexReports.notEnabled')}`, width: 155 },
     ];
-    _.forEach(qualityLegends, (legend, index) => {
-      const colorZone = d3.select('.legendLine').append('div');
+    if (this.tabType === TabType.AUDIO) {
+      qualityLegends.splice(1, 0, { cls: ColorLineCls.FAIR, text: this.$translate.instant('webexReports.fair'), width: 65 });
+      tips = [
+        { key: this.$translate.instant('webexReports.timelineChartLegend.pstn') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.good') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.fair') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.poor') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.voip') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.poor') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.fair') },
+      ];
+    } else {
+      tips = [
+        { key: this.$translate.instant('webexReports.timelineChartLegend.video') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.videoQuality.poor') },
+        { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
+      ];
+    }
+    this.setLegendTooltip(tipIcon, tips);
+
+    _.forEach(qualityLegends, legend => {
+      const legendZone = d3.select('.legendLine').append('div').attr('class', 'legendItem');
+      const svg = legendZone.append('svg:svg').attr('class', 'lineSvg');
       if (legend.width) {
-        colorZone.attr('style', `width: ${legend.width}px`);
+        legendZone.attr('style', `width: ${legend.width}px`);
       }
-      if (index === 1 && this.tabType === 'Video') {
-        colorZone.attr('style', 'display: none;');
-      }
-      const svg = colorZone.append('svg:svg').attr('class', 'lineSvg');
       svg.append('svg:line')
         .attr('class', legend.cls)
         .attr('x1', 3)
@@ -735,6 +954,19 @@ class TimeLineController implements ng.IComponentController {
         .text(legend.text)
         .attr('transform', `translate(33 , 17)`);
     });
+  }
+
+  private setLegendTooltip(iconCls: string, tips: { key: string }[]): void {
+    const icon = this.$element.find(`i.${iconCls}`);
+    icon
+      .on('mouseover', () => {
+        const iconParentPos = icon.closest('.columns').position();
+        const pos = icon.first().position();
+        const tipTop = this.$element.find('.chartContent').height() + 48;
+        const tipLeft = iconParentPos.left + pos.left + 20;
+        this.makeTips(tips, tipTop, tipLeft);
+      })
+      .on('mouseout', () => this.hideTip());
   }
 
   private drawCircle(node: d3, class_: string, pos: d3): object {
@@ -762,61 +994,6 @@ class TimeLineController implements ng.IComponentController {
       .attr('ry', 2)
       .attr('transform', `translate(${pos.x} , ${pos.y})`);
   }
-
-  private legendTitle(g: d3): void {
-    g.append('p')
-      .text(this.$translate.instant('reportsPage.webexMetrics.joinMeetingTime'))
-      .attr('style', 'float: left;')
-      .append('i').attr('class', 'icon icon-info-outline')
-      .on('mouseover', () => {
-        const msgArr = [
-          { key: this.$translate.instant('webexReports.timelineChartLegend.joinMeetingTime') },
-          { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.good') },
-          { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.fair') },
-          { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.poor') },
-          { key: this.$translate.instant('webexReports.timelineChartLegend.jmtQuality.NA') },
-        ];
-        const pos = this.$element.find('.legend p i').first().position();
-
-        const tipTop = pos.top - 10;
-        const tipLeft = pos.left + 17;
-        this.makeTips(msgArr, tipTop, tipLeft);
-      })
-      .on('mouseout', () => this.hideTip());
-
-    g.append('p')
-      .text(this.$translate.instant('webexReports.qualityType', { qualityType: this.tabType }))
-      .attr('style', 'float: right;')
-      .append('i')
-      .attr('class', 'icon icon-info-outline')
-      .on('mouseover', () => {
-        let msgArr: object[];
-        if (this.tabType === TabType.VIDEO) {
-          msgArr = [
-            { key: this.$translate.instant('webexReports.timelineChartLegend.video') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.videoQuality.poor') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
-          ];
-        } else {
-          msgArr = [
-            { key: this.$translate.instant('webexReports.timelineChartLegend.pstn') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.good') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.fair') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.pstnQuality.poor') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.voip') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.good') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.poor') },
-            { key: this.$translate.instant('webexReports.timelineChartLegend.voipQuality.fair') },
-          ];
-        }
-        const pos = this.$element.find('.legend p i').last().position();
-
-        const tipTop = pos.top - 10;
-        const tipLeft = pos.left + 17;
-        this.makeTips(msgArr, tipTop, tipLeft);
-      })
-      .on('mouseout', () => this.hideTip());
-  }
 }
 
 export class DgcPartnerTimeLineComponent implements ng.IComponentOptions {
@@ -828,6 +1005,7 @@ export class DgcPartnerTimeLineComponent implements ng.IComponentOptions {
     circleColor: '<',
     tabType: '<',
     lineData: '<',
+    activityPoints: '<',
     getDeviceType: '&',
   };
 }

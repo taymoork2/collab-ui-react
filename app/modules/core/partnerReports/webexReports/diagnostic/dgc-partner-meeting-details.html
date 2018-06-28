@@ -1,5 +1,6 @@
 <div class="timeline">
   <tabset type="pills" class="timeline-tab">
+    <tab heading="{{::('webexReports.data' | translate)}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.DATA)"></tab>
     <tab heading="{{::('webexReports.audio' | translate)}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VOIP)"></tab>
     <tab heading="{{::('webexReports.video' | translate)}}" ng-click="$ctrl.onChangeQOS($ctrl.QOS_TYPE.VIDEO)"></tab>
   </tabset>
@@ -9,6 +10,7 @@
     cmr-data="$ctrl.cmrData"
     pstn-data="$ctrl.pstnData"
     line-color="$ctrl.lineColor"
+    activity-points="$ctrl.activityPoints"
     circle-color="$ctrl.circleJoinTime"
     call-legs-data="$ctrl.callLegsData"
     line-data="$ctrl.lineData"
