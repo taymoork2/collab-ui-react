@@ -176,7 +176,7 @@ export class ProvisioningDetailsController {
   //US30084 - Changes For Notes/Comments
   public onSave(note: string): void {
     this.ProvisioningService.saveNote(this.order.postProvisioningUUID, note).then((response) => {
-      if (response.data === this.$translate.instant('common.OK')) {
+      if (response.status === 200) {
         this.Notification.success('provisioningConsole.details.notes.noteSaved', response.data);
       } else {
         this.Notification.errorResponse(response, 'provisioningConsole.details.notes.failedSaving');
