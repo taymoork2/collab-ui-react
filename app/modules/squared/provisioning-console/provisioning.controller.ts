@@ -1,6 +1,5 @@
 import { ProvisioningService } from './provisioning.service';
-import { IOrders } from './provisioning.interfaces';
-import { IOrder } from './provisioning.interfaces';
+import { IOrders, IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
@@ -21,6 +20,7 @@ export class ProvisioningController {
   public completedOrders: any;
   public pendingOrders: any;
   private featureToggleFlag: boolean;
+  public tooltipMessage: string;
 
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
@@ -71,7 +71,6 @@ export class ProvisioningController {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
     }];
-
     this.init();
   }
 
@@ -83,9 +82,9 @@ export class ProvisioningController {
       this.updateOrderStatusInGrid(order);
     });
     this.$q.all({
-      atlasWebexFeatureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
+      featureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
       orderDataPromise : this.getOrderData() }).then(promises => {
-        this.featureToggleFlag = promises.atlasWebexFeatureTogglePromise;
+        this.featureToggleFlag = promises.featureTogglePromise;
         if (this.featureToggleFlag) {
           this.updateGridOptions();
         }
@@ -208,6 +207,10 @@ export class ProvisioningController {
     }, {
       field: 'assignedTo',
       displayName: this.$translate.instant('provisioningConsole.assignedTo'),
+    }, {
+      field: 'note',
+      displayName: this.$translate.instant('provisioningConsole.notes'),
+      cellTooltip: true,
     });
     this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field === 'lastModified');
     completedDefs.push({
@@ -219,6 +222,12 @@ export class ProvisioningController {
     }, {
       field: 'completedBy',
       displayName: this.$translate.instant('provisioningConsole.completedBy'),
+    }, {
+      field: 'note',
+      displayName: this.$translate.instant('provisioningConsole.notes'),
+      cellTooltip: true,
     });
+    this.gridOptions.completed.columnDefs = _.reject(completedDefs, obj => obj.field === 'lastModified');
   }
+
 }
