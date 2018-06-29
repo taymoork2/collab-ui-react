@@ -292,7 +292,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           externalNumber: this.externalNumber,
         });
         var place = { cisUuid: this.deviceCisUuid };
-        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve(place));
+        spyOn(this.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(this.$q.resolve(place));
         spyOn(this.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(this.$q.resolve());
         this.controller.save();
         this.$scope.$apply();
@@ -311,7 +311,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           directoryNumber: this.directoryNumber,
           externalNumber: this.externalNumber,
         });
-        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve());
+        spyOn(this.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(this.$q.resolve());
         this.controller.save();
         this.$scope.$apply();
         expect(this.Notification.warning).toHaveBeenCalled();
@@ -323,7 +323,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           directoryNumber: this.directoryNumber,
           externalNumber: this.externalNumber,
         });
-        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.reject());
+        spyOn(this.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(this.$q.reject());
         this.controller.save();
         this.$scope.$apply();
         expect(this.Notification.errorResponse).toHaveBeenCalled();
@@ -335,7 +335,7 @@ describe('AddLinesCtrl: Ctrl', function () {
           directoryNumber: this.directoryNumber,
           externalNumber: this.externalNumber,
         });
-        spyOn(this.CsdmDataModelService, 'reloadPlace').and.returnValue(this.$q.resolve({ cisUuid: this.deviceCisUuid }));
+        spyOn(this.CsdmDataModelService, 'reloadPlaceByCisUuid').and.returnValue(this.$q.resolve({ cisUuid: this.deviceCisUuid }));
         spyOn(this.CsdmDataModelService, 'updateCloudberryPlace').and.returnValue(this.$q.reject());
         this.controller.save();
         this.$scope.$apply();

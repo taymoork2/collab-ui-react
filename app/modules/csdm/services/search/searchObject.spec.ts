@@ -101,7 +101,6 @@ describe('converting search string', () => {
       expect(so.getBullets().length).toBe(0);
     });
 
-
     it('adding an exact field pill should transform an existing of the same field to OR', () => {
 
       //Applies to all fields except tags and errorcodes(?)

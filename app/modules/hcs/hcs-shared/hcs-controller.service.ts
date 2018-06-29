@@ -20,6 +20,7 @@ export class HcsControllerService {
 
   private customerResource: IHcsCustomerResource;
   private agentResource: IHcsAgentResource;
+  private agentVerifyResource: IHcsAgentResource;
   private partnerResource: IHcsPartnerResource;
 
   /* @ngInject */
@@ -31,7 +32,6 @@ export class HcsControllerService {
     private Userservice,
   ) {
     const BASE_URL = this.UrlConfig.getHcsControllerServiceUrl();
-
 
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
@@ -61,10 +61,12 @@ export class HcsControllerService {
         query: queryAction,
       });
 
-    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
+    this.agentVerifyResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId/verify', {},
       {
         update: updateAction,
       });
+
+    this.agentResource = <IHcsAgentResource>this.$resource(BASE_URL + 'inventory/organizations/:partnerId/agents/:agentId', {}, {});
 
     this.partnerResource = <IHcsPartnerResource>this.$resource(BASE_URL + 'partners/:partnerId', {},
       {
@@ -112,14 +114,13 @@ export class HcsControllerService {
     });
   }
 
-  public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
+  public listHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
     return this.customerResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => {
       return response;
     });
   }
-
 
   public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
     return this.customerResource.save({
@@ -137,8 +138,15 @@ export class HcsControllerService {
     }).$promise;
   }
 
+  public rejectAgent(node: IHcsNode): ng.IPromise<any> {
+    return this.agentResource.delete({
+      partnerId: this.Authinfo.getOrgId(),
+      agentId: node.agentUuid,
+    }, {}).$promise;
+  }
+
   public acceptAgent(node: IHcsNode): ng.IPromise<any> {
-    return this.agentResource.update({
+    return this.agentVerifyResource.update({
       partnerId: this.Authinfo.getOrgId(),
       agentId: node.agentUuid,
     }, {}).$promise;

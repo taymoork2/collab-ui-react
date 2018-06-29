@@ -10,6 +10,7 @@
     $sce,
     $scope,
     $state,
+    $stateParams,
     $q,
     $window,
     Analytics,
@@ -73,7 +74,9 @@
         return;
       }
 
-      getSparkPartnerReportData('spark', vm.viewType, userInfo).then(function (data) {
+      var reportType = _.get($stateParams, 'sparktype');
+
+      getSparkPartnerReportData(reportType, vm.viewType, userInfo).then(function (data) {
         vm.sparkReports.appData = {
           QlikTicket: data.ticket,
           appId: data.appName,
@@ -82,7 +85,7 @@
           persistent: true,
           vID: Authinfo.getOrgId(),
         };
-        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qrp, 'spark', vm.viewType);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkReports.appData.qrp, reportType, vm.viewType);
         vm.sparkReports.appData.url = QlikMashupChartsUrl;
         $log.log('Spark partner report: got Mashup Url');
         updateIframe();

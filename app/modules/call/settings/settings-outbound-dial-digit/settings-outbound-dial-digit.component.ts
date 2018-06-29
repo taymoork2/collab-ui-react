@@ -66,4 +66,3 @@ export class OutboundDialDigitComponent implements ng.IComponentOptions {
     onChangeFn: '&',
   };
 }
-

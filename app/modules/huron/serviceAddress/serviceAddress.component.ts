@@ -20,7 +20,6 @@ export class HRServiceAddressComponent implements ng.IComponentOptions {
   };
 }
 
-
 class ServiceAddressCtrl implements ng.IComponentController {
   public stateOptions;
   public countryOptions;

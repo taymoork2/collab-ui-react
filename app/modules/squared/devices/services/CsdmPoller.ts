@@ -148,4 +148,3 @@ module.exports = angular
   .service('CsdmHubFactory', CsdmHubFactory)
   .service('CsdmPoller', CsdmPollerFactory)
   .name;
-

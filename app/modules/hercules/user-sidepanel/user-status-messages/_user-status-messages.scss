@@ -34,9 +34,8 @@ user-status-messages {
 
   .message-column {
     padding-left: 1.75rem;
-  }
-
-  .message-title {
     font-family: $brand-font-light;
+    font-weight: 500;
+    margin: 0;
   }
 }

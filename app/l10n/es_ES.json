@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Desactivar {{serviceName}}",
       "deactivateServiceCommon": "Si desactiva {{serviceName}}, quitará a los usuarios todas las características relacionadas con el servicio.",
       "expresswayDataWiped": "{{connectorName}} se quitará de todos los clústeres de Expressway y se eliminará la configuración local de todos los conectores.",
-      "noClustersWillBeDeregistered": "No se anulará el registro de los clústeres de Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Desactivar {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "¿Está seguro? A los usuarios se les quitarán las características relacionadas con el servicio.",
-      "deactivateServiceConfirmationText": "¿Está seguro? {{connectorName}} y la configuración relacionada se quitarán de sus clústeres, y a los usuarios se les quitarán las características relacionadas con el servicio.",
       "serviceWasDeactivated": "Se ha desactivado {{serviceName}} correctamente.",
       "connectWarning": "¿Está seguro? Se quitará la configuración del dispositivo remoto y el servicio se desactivará para sus usuarios.",
       "deactivateCallServiceConnect": "Desactivar la conexión con servicio de llamada",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} ha activado {{serviceName}} en la organización de Cisco Spark. Esto suele ocurrir cuando un usuario administrador registra un clúster de Expressway que ejecuta {{connectorName}} o añade el primer {{connectorName}} a un clúster de Expressway que ya existe.",
           "callServiceConnectEnabled": "{{username}} ha activado {{serviceName}} en la organización de Cisco Spark. Todos los clústeres de Expressway que ejecuten {{connectorName}} se utilizarán automáticamente para {{serviceName}}.",
-          "serviceDisabled": "{{username}} ha desactivado {{serviceName}} en la organización de Cisco Spark.",
-          "serviceDisabledHelpText": "Los usuarios pierden automáticamente las autorizaciones para {{serviceName}} y {{connectorName}} se desinstala automáticamente de todos los clústeres de Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Los usuarios pierden automáticamente las autorizaciones para {{serviceName}} y se eliminan las configuraciones de dispositivos remotos."
+          "serviceDisabled": "{{username}} ha desactivado {{serviceName}} en la organización de Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Detalles técnicos",

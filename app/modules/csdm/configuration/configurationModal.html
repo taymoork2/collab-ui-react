@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h4 class="modal-title" translate="spacesPage.deviceConfiguration.modalTitle"></h4>
+</div>
+<div class="modal-body">
+
+  <cs-page-sub-header>
+    <cs-page-sub-header-left>
+      <h4 translate="spacesPage.deviceConfiguration.subHeader"></h4>
+    </cs-page-sub-header-left>
+    <cs-page-sub-header-right>
+      <a href sq-click-promise="vm.openDeviceWebPortal()"
+         translate="spacesPage.deviceConfiguration.openDeviceWebPortal"></a>
+    </cs-page-sub-header-right>
+  </cs-page-sub-header>
+  <div class="device">
+    <img
+      class="overviewImage"
+      ng-if="vm.selectedDevice.image"
+      ng-src="{{vm.selectedDevice.image}}"
+    />
+    <div class="overview-holder">
+      <div class="overviewDescription">
+        <p class="form-control-static">{{vm.selectedDevice.product}}</p>
+        <i
+          class="icon icon-circle status-indicator"
+          ng-class="vm.selectedDevice.cssColorClass">
+        </i>
+        <span>{{vm.selectedDevice.state.readableState}}</span>
+        <span ng-show="vm.selectedDevice.state.key === 'OFFLINE_EXPIRED'">
+          <i><span translate="deviceOverviewPage.offlineLong"></span></i>
+        </span>
+        <br>
+        <span ng-hide="deviceOverview.currentDevice.isOnline || !deviceOverview.currentDevice.lastConnectionTime">{{'deviceOverviewPage.lastSeen' | translate}} {{deviceOverview.currentDevice.lastConnectionTime}}</span>
+        <span ng-show="deviceOverview.currentDevice.state.key === 'OFFLINE_EXPIRED'"><br><a href
+                                                                                            ng-click="deviceOverview.reactivateRoomDevice()"
+                                                                                            translate="deviceOverviewPage.reactivate"></a></span>
+      </div>
+    </div>
+  </div>
+  <div class="line-holder">
+    <div class="vline"></div>
+  </div>
+  <div class="vline"></div>
+  <div class="search-expand">
+    <div class="config-input-area" ng-click="dctrl.userSetFocusToInputField()">
+      <div class="config-input">
+        <div class="bullet" ng-repeat="sel in vm.selections" ng-click="vm.selectLevel(sel)">
+          <span>{{sel.name}}</span><i class="icon icon-arrow-next"/></div>
+        <span ng-show="vm.lastSelection.value"> = </span>
+        <input id="config-input" type="text" ng-model="vm.configInput"
+               ng-keydown="vm.onConfigInputKeyDown($event)" ng-keypress="vm.onConfigInputKeyPress($event)"
+               placeholder="{{vm.ghostSelectionsAsString()}}"/>
+        <div class="spacer"></div>
+      </div>
+      <button
+        cs-btn
+        class="btn btn--primary"
+        sq-click-promise="vm.validateAndSetValue()"
+        ng-disabled="!vm.lastSelection.value">
+        <span translate="common.apply"></span>
+      </button>
+      <div class="config-suggest-pos">
+        <div class="config-suggest">
+          <div class="path">
+            <ul>
+              <li ng-repeat="node in vm.suggestions" ng-click="vm.select(node)"
+                  ng-class="{selected: $index === vm.highlightedSuggestion}">
+                <span class="parents" ng-if="vm.lastSelection.parent">{{vm.lastSelection.getNameFrom()}}</span>
+                <span ng-bind-html="node.getNameFrom(vm.lastSelection) | highlight:vm.searchQuery"></span>
+              </li>
+            </ul>
+          </div>
+          <div class="value">
+            <config-value-suggestions selection=vm.lastSelection device="vm.selectedDevice"
+                                      number-of-suggestions="vm.numberOfValueSuggestion"
+                                      highlighted-suggestion="vm.highlightedSuggestion"
+                                      selected-value="vm.selectedValue"></config-value-suggestions>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="log">
+    <span>Configuration log:</span>
+    <ul>
+      <li ng-repeat="log in vm.configLog" ng-class="{success:log.success}">
+        <i class="icon" ng-class="{'icon-warning':!log.success, 'icon-settings':log.success}"></i>
+        <span>{{log.config.getNameFrom()}}</span>
+        <span> = </span>
+        <span>{{log.value}}</span></li>
+    </ul>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    cs-btn
+    class="btn btn--primary"
+    ng-click="vm.dismiss()">
+    <span translate="common.done"></span>
+  </button>
+</div>
+<script type="text/ng-template" id="searchTemplate.html">
+  <a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>

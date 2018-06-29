@@ -15,4 +15,3 @@ export class RetentionSettingComponent implements ng.IComponentOptions {
   public controllerAs = 'vm';
   public template = require('modules/core/settings/retention/retentionSetting.tpl.html');
 }
-

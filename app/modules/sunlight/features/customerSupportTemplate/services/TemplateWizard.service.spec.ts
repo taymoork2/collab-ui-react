@@ -11,7 +11,6 @@ describe('TemplateWizardService ', () => {
 
   }));
 
-
   it('getDefaultTemplate get the right template for mediaTye = chat', () => {
     const template = templateWizardService.getDefaultTemplate('chat');
     expect(template.configuration.mediaType === 'chat').toBe(true);
@@ -46,7 +45,6 @@ describe('TemplateWizardService ', () => {
     expect(templateWizardService.isValidField('sss', 2)).toBe(false);
     expect(templateWizardService.isValidField('sss', 3)).toBe(true);
   });
-
 
   /* UT for ct profile realted functions */
 

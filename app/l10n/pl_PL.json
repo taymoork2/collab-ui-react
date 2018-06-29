@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Dezaktywuj usługę {{serviceName}}",
       "deactivateServiceCommon": "Dezaktywowanie usługi {{serviceName}} spowoduje usunięcie wszystkich związanych z nią funkcji dostępnych dla użytkowników.",
       "expresswayDataWiped": "Łącznik {{connectorName}} zostanie usunięty ze wszystkich klastrów Expressway. Usunięte zostaną też ustawienia lokalne wszystkich łączników.",
-      "noClustersWillBeDeregistered": "Klastry nie zostaną wyrejestrowane z systemu Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Dezaktywuj usługę {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Czy na pewno? Funkcje powiązane z usługą będą niedostępne dla użytkowników.",
-      "deactivateServiceConfirmationText": "Czy na pewno? Łącznik {{connectorName}} oraz powiązana z nim konfiguracja zostaną usunięte z klastrów i funkcje powiązane z usługą będą niedostępne dla użytkowników.",
       "serviceWasDeactivated": "Usługa {{serviceName}} została pomyślnie dezaktywowana.",
       "connectWarning": "Czy na pewno? Konfiguracja urządzenia zdalnego zostanie usunięta i usługa będzie niedostępna dla użytkowników.",
       "deactivateCallServiceConnect": "Wyłącz usługę Call Service Connect",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "Użytkownik {{username}} aktywował usługę {{serviceName}} w organizacji Cisco Spark. Dzieje się to zwykle, gdy administrator rejestruje klaster Expressway z obsługą łącznika {{connectorName}} lub dodaje pierwszy łącznik {{connectorName}} do istniejącego klastra Expressway.",
           "callServiceConnectEnabled": "Użytkownik {{username}} aktywował usługę {{serviceName}} w organizacji Cisco Spark. Wszystkie klastry Expressway z obsługą łącznika {{connectorName}} będą również automatycznie używane w usłudze {{serviceName}}.",
-          "serviceDisabled": "Użytkownik {{username}} wyłączył usługę {{serviceName}} w organizacji Cisco Spark.",
-          "serviceDisabledHelpText": "Upoważnienia usługi {{serviceName}} są automatycznie usuwane z właściwości użytkowników, a łącznik {{connectorName}} zostaje automatycznie odinstalowany ze wszystkich klastrów Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Upoważnienia usługi {{serviceName}} są automatycznie usuwane z właściwości użytkowników, a konfiguracje urządzeń zdalnych zostają usunięte."
+          "serviceDisabled": "Użytkownik {{username}} wyłączył usługę {{serviceName}} w organizacji Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Szczegóły techniczne",

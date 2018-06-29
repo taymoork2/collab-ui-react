@@ -261,7 +261,7 @@
       prod: 'https://proximity-a.wbx2.com/proximity/api/v1',
     },
     QlikServiceUrl: {
-      dev: 'https://qlik1-rl-lab.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
+      dev: 'https://qlik-broker-service.cisco.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       cfe: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       integration: 'https://qlickbts.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
       prod: 'https://qlick.webex.com/qlik-gtwy-server-1.0-SNAPSHOT/qlik-gtwy/api/v1/report/session/%s',
@@ -328,9 +328,31 @@
     MixpanelUrl: 'https://api.mixpanel.com',
     CallflowServiceUrl: 'https://admin-portal-test-public.wbx2.com/atlas-server/admin/api/v1/',
     LogMetricsUrl: 'https://metrics-a.wbx2.com/metrics/api/v1/metrics',
-    SSOTestUrl: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
-    SSOSetupUrl: 'https://idbroker.webex.com/idb/idbconfig/',
+    SSOTestUrl: {
+      dev: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      integration: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+      prod: 'https://idbroker.webex.com/idb/saml2/jsp/spSSOInit.jsp',
+    },
+    SSOSetupUrl: {
+      dev: 'https://idbroker.webex.com/idb/idbconfig/',
+      cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
+      integration: 'https://idbroker.webex.com/idb/idbconfig/',
+      prod: 'https://idbroker.webex.com/idb/idbconfig/',
+    },
     EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/escalation.json',
+    OAuth2Url: {
+      dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',
+      integration: 'https://idbroker.webex.com/idb/oauth2/v1/',
+      prod: 'https://idbroker.webex.com/idb/oauth2/v1/',
+    },
+    Saml2Url: {
+      dev: 'https://idbroker.webex.com/idb/saml2/',
+      cfe: 'https://idbrokerbts.webex.com/idb/saml2/',
+      integration: 'https://idbroker.webex.com/idb/saml2/',
+      prod: 'https://idbroker.webex.com/idb/saml2/',
+    },
   };
 
   module.exports = angular
@@ -341,6 +363,7 @@
     .factory('UrlConfig', UrlConfig)
     .name;
 
+  /* @ngInject */
   function UrlConfig(Config, Utils) {
     return _.reduce(serviceUrlMapping, function (service, urlMapping, key) {
       service['get' + key] = function (specifyEnv) {

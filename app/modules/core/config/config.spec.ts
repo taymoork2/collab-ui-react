@@ -91,7 +91,6 @@ describe('Config', function () {
     expect(this.Config.isDevHostName('dev-admin.webex.com')).toBe(true);
   });
 
-
   it('should get absolute url for dev hosts or fallback to default for invalid', function () {
     const setLocation = (location: {
       protocol?: string,

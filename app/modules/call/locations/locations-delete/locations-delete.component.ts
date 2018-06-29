@@ -40,4 +40,3 @@ export class DeleteLocationComponent implements ng.IComponentOptions {
     uuid: '@',
   };
 }
-

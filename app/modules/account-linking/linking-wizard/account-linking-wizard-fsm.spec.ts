@@ -164,4 +164,3 @@ describe('WizardFsm', () => {
     expect(actionResult).toEqual('has visited third page');
   });
 });
-

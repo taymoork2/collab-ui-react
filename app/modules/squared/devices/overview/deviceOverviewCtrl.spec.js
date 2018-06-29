@@ -1,8 +1,8 @@
 'use strict';
 
 describe('Controller: DeviceOverviewCtrl', function () {
-  var $scope, $controller, $state, controller, $httpBackend;
-  var $q, UrlConfig, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
+  var $scope, $componentController, $state, controller, $httpBackend;
+  var $q, UrlConfig, CsdmConverter, CsdmDeviceService, Authinfo, Notification, CsdmDataModelService;
   var RemoteSupportModal, HuronConfig, FeatureToggleService, Userservice, TerminusService;
   var PstnAreaService, CsdmHuronDeviceService, ServiceSetup, DeviceOverviewService;
 
@@ -21,18 +21,22 @@ describe('Controller: DeviceOverviewCtrl', function () {
   beforeEach(angular.mock.module('Sunlight'));
   beforeEach(inject(dependencies));
   beforeEach(initSpies);
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _Authinfo_,
+  function dependencies(_$q_, $rootScope, _$componentController_, _$httpBackend_, _UrlConfig_, _CsdmDeviceService_, _CsdmConverter_, _Authinfo_,
     _Notification_, _RemoteSupportModal_, _HuronConfig_, _FeatureToggleService_, _Userservice_, _CsdmDataModelService_,
     _PstnAreaService_, _ServiceSetup_, _DeviceOverviewService_, _TerminusService_) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $state = {};
     FeatureToggleService = _FeatureToggleService_;
     Userservice = _Userservice_;
-
+    CsdmConverter = _CsdmConverter_;
     UrlConfig = _UrlConfig_;
     CsdmDeviceService = _CsdmDeviceService_;
     Authinfo = _Authinfo_;
@@ -53,7 +57,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
     $httpBackend.whenGET('https://identity.webex.com/identity/scim/null/v1/Users/me').respond(200);
     $httpBackend.whenGET(HuronConfig.getCmiUrl() + '/voice/customers/sipendpoints/3/addonmodules').respond(200);
     $httpBackend.whenGET('https://cmi.huron-int.com/api/v1/voice/customers/sites').respond([]);
-    spyOn(CsdmDataModelService, 'reloadItem').and.returnValue($q.reject());
+    spyOn(CsdmDataModelService, 'reloadDevice').and.returnValue($q.reject());
     spyOn(CsdmHuronDeviceService, 'getLinesForDevice').and.returnValue($q.resolve([]));
     spyOn(CsdmHuronDeviceService, 'getDeviceInfo').and.returnValue($q.resolve({}));
     spyOn(PstnAreaService, 'getCountryAreas').and.returnValue($q.resolve(location));
@@ -78,32 +82,33 @@ describe('Controller: DeviceOverviewCtrl', function () {
   };
 
   function initControllerWithSettings(channels, stateParams) {
-    controller = $controller('DeviceOverviewCtrl', {
+    controller = $componentController('deviceOverview', {
       $element: {
         find: jasmine.createSpy('find').and.returnValue({
           focus: _.noop,
         }),
       },
       $scope: $scope,
-      channels: channels,
       $stateParams: stateParams,
       $state: $state,
       Userservice: Userservice,
       FeatureToggleService: FeatureToggleService,
+    },
+    {
+      channels: channels,
     });
     $scope.$apply();
   }
 
   function initController() {
     initControllerWithSettings([], {
-      currentDevice: {
+      currentDevice: CsdmConverter.convertCloudberryDevice({
         url: 'http://thedeviceurl',
-        isHuronDevice: false,
         product: 'Cisco 8865',
         cisUuid: 2,
         huronId: 3,
         kem: [],
-      },
+      }),
       huronDeviceService: CsdmHuronDeviceService,
     });
   }
@@ -111,6 +116,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
   it('should init controller', function () {
     initController();
     expect(controller).toBeDefined();
+    $httpBackend.flush();
   });
 
   describe('upgrade channel', function () {
@@ -119,82 +125,87 @@ describe('Controller: DeviceOverviewCtrl', function () {
     describe('with device online', function () {
       beforeEach(function () {
         stateParams = {
-          currentDevice: {
+          currentDevice: CsdmConverter.convertCloudberryDevice({
             isOnline: true,
-          },
+            status: { connectionStatus: 'CONNECTED' },
+          }),
           huronDeviceService: CsdmHuronDeviceService,
         };
       });
 
       it('should show current channel if there are channels to choose for a Cloudberry device', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         stateParams.currentDevice.productFamily = 'Cloudberry';
+        stateParams.currentDevice = CsdmConverter.convertCloudberryDevice(stateParams.currentDevice);
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should be able to change channels if there are channels to choose for a Spark Board device', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         stateParams.currentDevice.productFamily = 'Darling';
+        stateParams.currentDevice = CsdmConverter.convertCloudberryDevice(stateParams.currentDevice);
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBe(true);
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything if there are no channels to choose', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         initControllerWithSettings([], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything for Huron devices', function () {
-        stateParams.currentDevice.isHuronDevice = true;
+        stateParams.currentDevice = CsdmConverter.convertHuronDevice(stateParams.currentDevice);
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
     });
 
     describe('with device offline', function () {
       beforeEach(function () {
         stateParams = {
-          currentDevice: {
+          currentDevice: CsdmConverter.convertCloudberryDevice({
             isOnline: false,
-          },
+          }),
           huronDeviceService: CsdmHuronDeviceService,
         };
       });
 
       it('should show current channel if there are channels to choose for a Cloudberry device', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         stateParams.currentDevice.productFamily = 'Cloudberry';
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should show current channel if there are channels to choose for a Spark Board device', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         stateParams.currentDevice.productFamily = 'Darling';
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBe(true);
+        $httpBackend.flush();
       });
 
       it('should not show anything if there are no channels to choose', function () {
-        stateParams.currentDevice.isHuronDevice = false;
         initControllerWithSettings([], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
 
       it('should not show anything for Huron devices', function () {
-        stateParams.currentDevice.isHuronDevice = true;
+        stateParams.currentDevice = CsdmConverter.convertHuronDevice(stateParams.currentDevice);
         initControllerWithSettings(['very new stuff', 'a bit more conservative stable stuff'], stateParams);
         expect(controller.canChangeUpgradeChannel).toBeFalsy();
         expect(controller.shouldShowUpgradeChannel).toBeFalsy();
+        $httpBackend.flush();
       });
     });
   });
@@ -213,6 +224,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).toHaveBeenCalledTimes(1);
       expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should not show remote support modal when not supported for device', function () {
@@ -220,12 +232,13 @@ describe('Controller: DeviceOverviewCtrl', function () {
       spyOn(Notification, 'notifyReadOnly');
       spyOn(RemoteSupportModal, 'open');
 
-      controller.currentDevice = {};
+      controller.currentDevice.hasRemoteSupport = false;
       controller.showRemoteSupportDialog();
 
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
       expect(RemoteSupportModal.open).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should show remote support modal when supported and not readonly', function () {
@@ -233,27 +246,25 @@ describe('Controller: DeviceOverviewCtrl', function () {
       spyOn(Notification, 'notifyReadOnly');
       spyOn(RemoteSupportModal, 'open');
 
-      controller.currentDevice = {
-        hasRemoteSupport: true,
-      };
+      controller.currentDevice.hasRemoteSupport = true;
       controller.showRemoteSupportDialog();
 
       expect(Authinfo.isReadOnlyAdmin).toHaveBeenCalled();
       expect(Notification.notifyReadOnly).not.toHaveBeenCalled();
       expect(RemoteSupportModal.open).toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should not show remote support button when not supported', function () {
-      controller.currentDevice = {};
-
+      controller.currentDevice.hasRemoteSupport = false;
       expect(controller.showRemoteSupportButton()).toBe(false);
+      $httpBackend.flush();
     });
 
     it('should show remote support button when supported', function () {
-      controller.currentDevice = {
-        hasRemoteSupport: true,
-      };
+      controller.currentDevice.hasRemoteSupport = true;
       expect(controller.showRemoteSupportButton()).toBe(true);
+      $httpBackend.flush();
     });
   });
 
@@ -267,81 +278,105 @@ describe('Controller: DeviceOverviewCtrl', function () {
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should ignore already present tags', function () {
       controller.newTag = 'existing tag';
-      controller.currentDevice = {
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: ['existing tag'],
-      };
+      });
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should ignore leading and trailing whitespace when checking for existing tags', function () {
       controller.newTag = ' existing tag ';
-      controller.currentDevice = {
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: ['existing tag'],
-      };
+      });
       controller.addTag();
       expect(controller.isAddingTag).toBeFalsy();
       expect(controller.newTag).toBeUndefined();
+      $httpBackend.flush();
     });
 
     it('should post new tags to CsdmDeviceService for cloudberry devices', function () {
       controller.newTag = 'new tag';
-      controller.currentDevice = {
-        isCloudberryDevice: true,
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: [],
         url: 'testUrl',
-      };
-      spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
+      });
+      spyOn(CsdmDeviceService, 'updateTags').and.callThrough();
+      $httpBackend.expectPATCH('testUrl').respond(200);
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
+    });
+
+    it('should post new tags to CsdmDeviceService for Huron devices', function () {
+      controller.newTag = 'new tag';
+      controller.currentDevice = CsdmConverter.convertHuronDevice({
+        tags: [],
+        url: 'https://testhuronId',
+        huronId: 'testhuronId',
+        cisUuid: 'testcisUuid',
+      });
+      controller.currentDevice.huronId = 'testhuronId';
+      spyOn(CsdmDeviceService, 'updateTags').and.callThrough();
+
+      var deviceUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/testhuronId?type=huron&cisUuid=testcisUuid';
+      $httpBackend.expectPATCH(deviceUrl).respond(200);
+      controller.addTag();
+      $scope.$apply();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
     });
 
     it('should append new tags to existing tags', function () {
       controller.newTag = 'new tag';
-      controller.currentDevice = {
-        isCloudberryDevice: true,
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: ['old tag'],
         url: 'testUrl',
-      };
+      });
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag', 'new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['old tag', 'new tag']);
+      $httpBackend.flush();
     });
 
     it('should remove deleted tag from existing tags', function () {
-      controller.currentDevice = {
-        isCloudberryDevice: true,
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: ['old tag', 'old tag2'],
         url: 'testUrl',
-      };
+      });
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.removeTag('old tag');
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['old tag2']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['old tag2']);
+      $httpBackend.flush();
     });
 
     it('should leave out leading and trailing whitespace when posting new tags to CsdmDeviceService', function () {
       controller.newTag = ' new tag ';
-      controller.currentDevice = {
-        isCloudberryDevice: true,
+      controller.currentDevice = CsdmConverter.convertCloudberryDevice({
         tags: [],
         url: 'testUrl',
-      };
+      });
       spyOn(CsdmDeviceService, 'updateTags').and.returnValue($q.resolve());
       controller.addTag();
       $scope.$apply();
       expect(CsdmDeviceService.updateTags).toHaveBeenCalled();
-      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith('testUrl', ['new tag']);
+      expect(CsdmDeviceService.updateTags).toHaveBeenCalledWith(controller.currentDevice, ['new tag']);
+      $httpBackend.flush();
     });
 
     it('should ignore keys other than Enter', function () {
@@ -351,6 +386,7 @@ describe('Controller: DeviceOverviewCtrl', function () {
       });
       $scope.$apply();
       expect(controller.addTag).not.toHaveBeenCalled();
+      $httpBackend.flush();
     });
 
     it('should call addTag on Enter', function () {
@@ -360,15 +396,16 @@ describe('Controller: DeviceOverviewCtrl', function () {
       });
       $scope.$apply();
       expect(controller.addTag).toHaveBeenCalled();
+      $httpBackend.flush();
     });
   });
 });
 
 describe('Huron Device', function () {
-  var $scope, $controller, controller, $httpBackend;
+  var $scope, $componentController, controller, $httpBackend;
   var $q, UrlConfig;
   var $stateParams, ServiceSetup, timeZone, newTimeZone, countries, newCountry, HuronConfig,
-    ConfirmAtaRebootModal, PstnModel, PstnService;
+    ConfirmAtaRebootModal, PstnModel, PstnService, CsdmConverter;
   var usStatesList = getJSONFixture('../../app/modules/huron/pstn/pstnAreaService/states.json');
   var $timeout;
 
@@ -380,10 +417,10 @@ describe('Huron Device', function () {
   beforeEach(initSpies);
 
 
-  function dependencies(_$q_, $rootScope, _$controller_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
-    _$timeout_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_) {
+  function dependencies(_$q_, $rootScope, _$componentController_, _$httpBackend_, _UrlConfig_, _ServiceSetup_, _HuronConfig_,
+    _$timeout_, _ConfirmAtaRebootModal_, _PstnModel_, _PstnService_, _CsdmConverter_) {
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $timeout = _$timeout_;
@@ -393,11 +430,11 @@ describe('Huron Device', function () {
     ConfirmAtaRebootModal = _ConfirmAtaRebootModal_;
     PstnModel = _PstnModel_;
     PstnService = _PstnService_;
+    CsdmConverter = _CsdmConverter_;
     $stateParams = {
-      currentDevice: {
+      currentDevice: CsdmConverter.convertHuronDevice({
         url: 'http://thedeviceurl',
-        isHuronDevice: true,
-      },
+      }),
       huronDeviceService: CsdmHuronDeviceService($q),
     };
   }
@@ -478,15 +515,17 @@ describe('Huron Device', function () {
   }
 
   function initController() {
-    controller = $controller('DeviceOverviewCtrl', {
+    controller = $componentController('deviceOverview', {
       $element: {
         find: jasmine.createSpy('find').and.returnValue({
           focus: _.noop,
         }),
       },
       $scope: $scope,
-      channels: {},
       $stateParams: $stateParams,
+    },
+    {
+      channels: {},
     });
 
     $scope.$apply();
@@ -494,7 +533,6 @@ describe('Huron Device', function () {
 
   describe('timezone support', function () {
     beforeEach(initController);
-
 
     it('should init controller', function () {
       expect(controller).toBeDefined();
@@ -512,11 +550,10 @@ describe('Huron Device', function () {
   describe('T38 support', function () {
     it('should show T38 when carrier supports it', function () {
       $stateParams = {
-        currentDevice: {
+        currentDevice: CsdmConverter.convertHuronDevice({
           url: 'http://thedeviceurl',
-          isHuronDevice: true,
-          isATA: true,
-        },
+          product: 'Nico ATA',
+        }),
         huronDeviceService: CsdmHuronDeviceService($q),
       };
       spyOn(PstnModel, 'getProviderId').and.returnValue('carrier');
@@ -529,11 +566,10 @@ describe('Huron Device', function () {
 
     it('should fetch carrier id from PstnService if absent in PstnModel', function () {
       $stateParams = {
-        currentDevice: {
+        currentDevice: CsdmConverter.convertHuronDevice({
           url: 'http://thedeviceurl',
-          isHuronDevice: true,
-          isATA: true,
-        },
+          product: 'Nico ATA',
+        }),
         huronDeviceService: CsdmHuronDeviceService($q),
       };
       spyOn(PstnService, 'getCustomer').and.returnValue($q.resolve({ pstnCarrierId: 'carrier' }));
@@ -546,11 +582,10 @@ describe('Huron Device', function () {
 
     it('should not show T38 when feature toggle is present but carrier does not support it', function () {
       $stateParams = {
-        currentDevice: {
+        currentDevice: CsdmConverter.convertHuronDevice({
           url: 'http://thedeviceurl',
-          isHuronDevice: true,
-          isATA: true,
-        },
+          product: 'Nico ATA',
+        }),
         huronDeviceService: CsdmHuronDeviceService($q),
       };
       spyOn(PstnModel, 'getProviderId').and.returnValue('carrier');
@@ -574,13 +609,12 @@ describe('Huron Device', function () {
   describe('CPC support', function () {
     beforeEach(initController);
 
-
     it('should init controller', function () {
       expect(controller).toBeDefined();
     });
 
     it('should update CPC setting', function () {
-      spyOn(ConfirmAtaRebootModal, 'open').and.returnValue($q.resolve(true));
+      spyOn(ConfirmAtaRebootModal, 'open').and.returnValue($q.resolve());
       controller.saveCpcSettings();
       $scope.$apply();
 

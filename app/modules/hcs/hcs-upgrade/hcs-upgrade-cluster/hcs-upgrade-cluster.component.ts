@@ -1,7 +1,6 @@
 import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, INodeSummaryItem, IHcsClusterSummaryItem, IUpgradeClusterGridRow, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
-//import { STATUS_SOFTWARE_PROFILE_NOT_ASSIGNED, STATUS_NO_AGENT_RUNNING, STATUS_AGENT_OFFLINE, STATUS_UPGRADE_IN_PROGRESS, STATUS_UPGRADE_SCHEDULED, STATUS_FAILED_UPGRADE } from 'modules/hcs/hcs-inventory/shared';
-import { STATUS_SOFTWARE_UPGRADE_NEEDED } from 'modules/hcs/hcs-inventory/shared';
+import { STATUS_SOFTWARE_UPGRADE_NEEDED, STATUS_FAILED_UPGRADE } from 'modules/hcs/hcs-inventory/shared';
 
 export interface IHeaderTab {
   title: string;
@@ -30,6 +29,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
   public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
   public loading: boolean;
   public statusSwUpgradeNeeded: string = STATUS_SOFTWARE_UPGRADE_NEEDED;
+  public statusFailedUpgrade: string = STATUS_FAILED_UPGRADE;
 
   /* @ngInject */
   constructor(
@@ -44,8 +44,15 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
 
   public startUpgrade(entity) {
     this.$modal.open({
-      template: `<hcs-upgrade-modal dismiss="$dismiss()" cluster-name="${entity.clusterName}" cluster-uuid="${entity.clusterUuid}" current-version="${entity.currentVersion}" upgrade-to="${entity.upgradeTo}"></hcs-upgrade-modal>`,
+      template: `<hcs-upgrade-modal dismiss="$dismiss()" group-id="${this.groupId}" cluster-name="${entity.clusterName}" cluster-uuid="${entity.clusterUuid}" current-version="${entity.currentVersion}" upgrade-to="${entity.upgradeTo}"></hcs-upgrade-modal>`,
       type: 'full',
+    });
+  }
+
+  public startPrechecks(entity) {
+    this.$modal.open({
+      template: `<hcs-precheck-modal dismiss="$dismiss()" group-id="${this.groupId}" cluster-uuid="${entity.clusterUuid}"></hcs-precheck-modal>`,
+      type: 'small',
     });
   }
 
@@ -90,12 +97,12 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         width: '20%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
-        cellTemplate:  '<cs-grid-cell row="row" grid="grid" cell-value="row.entity.clusterName" ng-hide="{{row.entity.rowWidth === 0}}"></cs-grid-cell>',
+        cellTemplate:  '<div class="ui-grid-cell-contents align-left name-column" ng-hide="{{row.entity.rowWidth === 0}}">{{row.entity.clusterName}}</div>',
       }, {
         field: 'applicationName',
         enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.application'),
-        width: '15%',
+        width: '10%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
       }, {
@@ -116,7 +123,7 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         field: 'clusterStatus',
         enableSorting: false,
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),
-        width: '15%',
+        width: '20%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
         cellTemplate: require('./templates/clusterStatusColumn.tpl.html'),
@@ -174,7 +181,9 @@ export class UpgradeClusterCtrl implements ng.IComponentController {
         _.forEach(cluster.nodes, (node: INodeSummaryItem) => {
           if (node.publisher) {
             let upgradeVersion: string | undefined;
-            swProfile.applicationVersions ? upgradeVersion = _.find(swProfile.applicationVersions, { typeApplication: node.typeApplication }).appVersion : upgradeVersion = '';
+            if (node.typeApplication) {
+              swProfile.applicationVersions ? upgradeVersion = _.find(swProfile.applicationVersions, { typeApplication: node.typeApplication }).appVersion : upgradeVersion = '';
+            }
             const clusterGridRow: IUpgradeClusterGridRow = {
               customerId: this.groupId,
               clusterUuid: _.get(cluster, 'uuid'),

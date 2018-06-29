@@ -1,6 +1,5 @@
 import { IACSiteInfo, LinkingMode, IACLinkingStatus, IACWebexSiteinfoResponse } from './account-linking.interface';
 
-
 export class LinkedSitesMockService {
 
   /* @ngInject */

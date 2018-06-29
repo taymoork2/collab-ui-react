@@ -163,6 +163,12 @@ describe('UserManageOrgController', () => {
     expect(this.UserManageService.gotoNextStateForManageType).toHaveBeenCalledWith('advancedNoDS');
   });
 
+  it('should go to user task manager page', function () {
+    initControllerAndDefaults.call(this);
+    this.controller.showUserTaskManagerModal();
+    expect(this.$state.go).toHaveBeenCalledWith('users.csv.task-manager');
+  });
+
   describe('onNext():', () => {
     it('should call UserManageService.gotoNextStateForManageType()', function () {
       initControllerAndDefaults.call(this);

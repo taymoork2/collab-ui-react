@@ -166,6 +166,7 @@
     vm.setDefaultCountry = setDefaultCountry;
 
     vm.hasRegisteredContextService = hasRegisteredContextService;
+    vm.disableStartTrialButton = false;
 
     //watch room systems trial 'enabled' for quantity
     $scope.$watch(function () {
@@ -229,6 +230,7 @@
         ftShipDevices: FeatureToggleService.atlasTrialsShipDevicesGetStatus(), //TODO add true for shipping testing.
         adminOrg: Orgservice.getAdminOrgAsPromise().catch(function () { return false; }),
         hybridCare: FeatureToggleService.supports(FeatureToggleService.features.hybridCare),
+        supportsBsftTrial: FeatureToggleService.supports(FeatureToggleService.features.hI1776),
       };
       if (!vm.isNewTrial()) {
         promises.tcHasService = TrialContextService.trialHasService(vm.currentTrial.customerOrgId);
@@ -251,6 +253,7 @@
           vm.devicesModal.enabled = vm.canSeeDevicePage;
           vm.defaultCountryList = results.huronCountryList;
           vm.hybridCare = results.hybridCare;
+          vm.supportsBsftTrial = results.supportsBsftTrial;
 
           vm.navOrder = ['trial.info', 'trial.webex', 'trial.pstn', 'trial.call'];
 
@@ -921,13 +924,15 @@
         return;
       }
       if (vm.contextTrial.enabled) {
-        return TrialContextService.addService(customerOrgId).catch(function (response) {
+        return TrialContextService.addService(customerOrgId, vm.isNewTrial()).catch(function (response) {
           // ignore only the "org already registered" error
           if (_.get(response, 'data.error.statusText') === orgAlreadyRegistered) {
             return;
           }
 
           Notification.errorResponse(response, errorAddResponse);
+          vm.disableStartTrialButton = true;
+          vm.contextTrial.enabled = false;
           return $q.reject(response);
         });
       } else if (isEditTrial()) {

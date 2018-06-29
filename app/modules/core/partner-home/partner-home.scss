@@ -34,6 +34,50 @@
     }
     article {
       padding-bottom: 1.5rem;
+      .notification-style {
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
+        border-top: 1px solid $gray-light-2;
+        display: flex;
+
+        &.no-close {
+          padding-right: vr-adjust(16);
+        }
+
+        .badge {
+          top: rem-calc(-1.5);
+        }
+
+        .text-right {
+          text-align: right;
+        }
+
+        .text {
+          padding-left: .25rem;
+        }
+
+        .close {
+          height: vr-adjust(20);
+        }
+      }
+
+      .notification-style:first-child {
+        border-top: 0px solid $gray-light-2;
+        padding-top: 0;
+        margin-top: 0;
+      }
+    }
+    .notification-spacing {
+      font-size: 0.875rem;
+      line-height: 1.5rem;
+      margin-right: 0.15rem;
+      flex: 1;
+    }
+
+    button.close,
+    button.close::before {
+      font-size: rem-calc(16);
+      color: $gray-light-2;
     }
   }
 }

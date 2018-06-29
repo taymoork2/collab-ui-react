@@ -1,6 +1,9 @@
 @import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
+.hcs-upgrade-cluster-list-page-sub-header-warning .page-sub-header {
+  height: rem-calc(88);
+}
 
 .cluster-list-container {
   padding-bottom: rem-calc(16);

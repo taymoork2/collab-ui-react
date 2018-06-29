@@ -1,5 +1,6 @@
+
 describe('placeOverview component', () => {
-  let Authinfo, FeatureToggleService, CsdmCodeService, $httpBackend, UrlConfig,
+  let Authinfo, FeatureToggleService, CsdmCodeService, $httpBackend, UrlConfig, CsdmConverter,
     $state, $scope, $q, Userservice, ServiceDescriptorService, PlaceCallOverviewService, LocationsService;
 
   let $stateParams;
@@ -22,6 +23,7 @@ describe('placeOverview component', () => {
                      _ServiceDescriptorService_,
                      _PlaceCallOverviewService_,
                      _LocationsService_,
+                     _CsdmConverter_,
                      _Userservice_) => {
     $q = _$q_;
     Authinfo = _Authinfo_;
@@ -37,6 +39,7 @@ describe('placeOverview component', () => {
     ServiceDescriptorService = _ServiceDescriptorService_;
     PlaceCallOverviewService = _PlaceCallOverviewService_;
     LocationsService = _LocationsService_;
+    CsdmConverter = _CsdmConverter_;
   }));
 
   const initController = (stateParams, scope, $state) => {
@@ -124,7 +127,7 @@ describe('placeOverview component', () => {
       describe('with a cloudberry device', () => {
 
         beforeEach(() => {
-          $stateParams = { currentPlace: { displayName: deviceName, type: 'cloudberry', cisUuid: placeCisUuid } };
+          $stateParams = { currentPlace: CsdmConverter.convertPlace({ displayName: deviceName, type: 'cloudberry', cisUuid: placeCisUuid }) };
           controller = initController($stateParams, $scope, $state);
           controller.csdmHybridCallFeature = showHybrid;
         });
@@ -174,7 +177,7 @@ describe('placeOverview component', () => {
       describe('with a huron device', () => {
 
         beforeEach(() => {
-          $stateParams = { currentPlace: { displayName: deviceName, type: 'huron', cisUuid: placeCisUuid } };
+          $stateParams = { currentPlace: CsdmConverter.convertPlace({ displayName: deviceName, type: 'huron', cisUuid: placeCisUuid }) };
           controller = initController($stateParams, $scope, $state);
           controller.adminDisplayName = displayName;
           controller.csdmHybridCallFeature = showHybrid;
@@ -265,12 +268,12 @@ describe('placeOverview component', () => {
       $httpBackend.whenGET(UrlConfig.getCsdmServiceUrl() + '/organization/null/upgradeChannels').respond(200);
 
       $stateParams = {
-        currentPlace: {
+        currentPlace: CsdmConverter.convertPlace({
           displayName: deviceName,
           type: 'cloudberry',
           cisUuid: placeUuid,
           entitlements: entitlements,
-        },
+        }),
       };
       controller = initController($stateParams, $scope, $state);
     });
@@ -297,7 +300,7 @@ describe('placeOverview component', () => {
               name: deviceName,
               cisUuid: placeUuid,
               entitlements: jasmine.anything(),
-              externalLinkedAccounts: undefined,
+              externalLinkedAccounts: [],
             },
           },
           history: jasmine.anything(),

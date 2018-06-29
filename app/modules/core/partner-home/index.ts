@@ -14,6 +14,8 @@ export default angular
     require('modules/core/notifications').default,
     require('modules/core/scripts/services/org.service'),
     require('modules/core/trials/trial.module'),
+    require('modules/core/users/userOverview').default,
+    require('modules/core/partner-home/notifications').default,
   ])
   .component('partnerHome', new PartnerHomeComponent())
   .name;

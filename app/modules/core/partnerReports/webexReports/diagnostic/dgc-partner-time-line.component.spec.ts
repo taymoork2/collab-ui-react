@@ -45,7 +45,7 @@ describe('Component: DgcPartnerTimeLine', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', 'PartnerSearchService', 'Notification', '$timeout');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'FeatureToggleService', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
   });
 
@@ -121,7 +121,7 @@ describe('Component: DgcPartnerTimeLine', () => {
     const msgArr = [{ key: 'SIP', value: '' }];
     const mockData = { completed: true, items: [{ deviceType: 'SIP' }] };
     initComponent.call(this, bindings);
-    spyOn(this.PartnerSearchService, 'getRealDevice').and.callFake(function () { return { then: function (callback) { return callback(mockData); } }; });
+    spyOn(this.controller, 'getDeviceType').and.callFake(function () { return { then: function (callback) { return callback(mockData); } }; });
 
     const mockParam = { conferenceID: '1234340', nodeId: '544234' };
     spyOn(this.controller, 'makeTips').and.returnValue('');
@@ -168,6 +168,29 @@ describe('Component: DgcPartnerTimeLine', () => {
       initComponent.call(this, bindings);
       this.controller.updateStartPoints([{ joinMeetingTime: 30 }]);
       expect(mockData.values['jmtQuality']).toBe('Poor');
+    });
+  });
+
+  describe('loadFeatureToggle():', () => {
+    beforeEach(function() {
+      spyOn(this.FeatureToggleService, 'diagnosticPartnerF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'diagnosticF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
+      const bindings = { sourceData: this.sourceData };
+      initComponent.call(this, bindings);
+    });
+
+    it('should call diagnosticPartnerF8105ClientVersionGetStatus if is partner role', function () {
+      spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
+      this.controller.loadFeatureToggle();
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).not.toHaveBeenCalledTimes(2);
+    });
+
+    it('should call diagnosticF8105ClientVersionGetStatus if is customer role', function () {
+      spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(false);
+      this.controller.loadFeatureToggle();
+      expect(this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus).not.toHaveBeenCalled();
+      expect(this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus).toHaveBeenCalledTimes(2);
     });
   });
 });

@@ -1,4 +1,4 @@
-<div class="ui-grid-cell-contents align-left status-column">
+<div class="ui-grid-cell-contents align-left status-column" ng-class="{'selected' : row.isSelected}" ng-click="grid.appScope.selectRow(grid, row)">
   <div ng-switch="row.entity.nodeStatus">
     <div ng-switch-when="UNASSIGNED">
       <i class="icon icon-circle status-indicator danger"></i>
@@ -7,6 +7,10 @@
     <div ng-switch-when="NO_AGENT_RUNNING">
       <i class="icon icon-circle status-indicator danger"></i>
       <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noAgentRunning' | translate}}</span>
+    </div>
+    <div ng-switch-when="failed">
+      <i class="icon icon-circle status-indicator danger"></i>
+      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
     </div>
     <div ng-switch-when="AGENT_OFFLINE">
       <i class="icon icon-circle status-indicator danger"></i>
@@ -19,6 +23,10 @@
     <div ng-switch-when="SOFTWARE_PROFILE_NOT_ASSIGNED">
       <i class="icon icon-circle status-indicator warning"></i>
       <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swProfileNotAssigned' | translate}}</span>
+    </div>
+    <div ng-switch-when="started">
+      <i class="icon icon-circle status-indicator warning"></i>
+      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.started' | translate}}</span>
     </div>
     <div ng-switch-when="NODES_NEED_ACCEPTANCE">
       <i class="icon icon-circle status-indicator warning"></i>
@@ -55,6 +63,10 @@
     <div ng-switch-when="COMPLIANT">
       <i class="icon icon-circle status-indicator success"></i>
       <span class="h6">{{::'hcs.clusterDetail.nodeStatus.compliant' | translate}}</span>
+    </div>
+    <div ng-switch-when="success">
+      <i class="icon icon-circle status-indicator success"></i>
+      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.success' | translate}}</span>
     </div>
     <div ng-switch-default>
       <i class="icon icon-circle"></i>

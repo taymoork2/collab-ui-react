@@ -178,7 +178,6 @@ describe('Component: hsClusterCard', function () {
       expect($state.go).toHaveBeenCalledWith('hds-cluster.settings', { id: 2 });
     });
 
-
   });
 
 });

@@ -257,6 +257,7 @@ describe('Service: SiteListService', () => {
       'Auth',
       'Authinfo',
       'FeatureToggleService',
+      'OfferNameService',
       'SetupWizardService',
       'SiteListService',
       'UrlConfig',
@@ -375,6 +376,7 @@ describe('Service: SiteListService', () => {
   it('should get list of managed webex subscriptions', function() {
     const subscriptions = ['Subscription-2'];
     const managedSubscriptions = this.SiteListService.getManagedSubscriptions();
+
     expect(this.Authinfo.getCustomerAccounts).toHaveBeenCalled();
     expect(subscriptions).toEqual(managedSubscriptions);
   });
@@ -382,6 +384,7 @@ describe('Service: SiteListService', () => {
   it('should have managed subscription', function() {
     const subscriptionId = 'Subscription-2';
     const managedSubscription = this.SiteListService.canManageSubscription(subscriptionId);
+
     expect(managedSubscription).toBe(true);
   });
 

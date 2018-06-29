@@ -17,6 +17,7 @@ cr-action-card {
 
   cr-action-cards-container & {
     min-height: $cr-action-cards-container__cr-action-card-min-height;
+    min-width: $cr-action-cards-container__cr-action-card-min-width;
 
     @media #{$small-only} {
       max-width: $cr-action-cards-container__cr-action-card-max-width--small;
@@ -32,6 +33,7 @@ cr-action-card {
 
 .cr-action-card {
   &__header {
+    flex: 0 0 auto;
     padding: 2rem 2.625rem 1.5rem;
 
     @media #{$medium-only} {
@@ -41,7 +43,7 @@ cr-action-card {
   }
 
   &__section {
-    flex: 1 0 0px;
+    flex: 1 0 auto;
     padding: 0 2rem;
 
     @media #{$medium-only} {
@@ -51,6 +53,7 @@ cr-action-card {
   }
 
   &__footer {
+    flex: 0 0 auto;
     padding: .5rem 2rem 1rem;
 
     @media #{$medium-only} {

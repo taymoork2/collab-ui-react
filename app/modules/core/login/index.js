@@ -1,3 +1,4 @@
+require('modules/core/shared/cui-panel/cui-panel.scss');
 require('./_login.scss');
 
 (function () {

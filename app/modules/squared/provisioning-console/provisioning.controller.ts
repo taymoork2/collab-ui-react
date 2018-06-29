@@ -1,6 +1,5 @@
 import { ProvisioningService } from './provisioning.service';
-import { IOrders } from './provisioning.interfaces';
-import { IOrder } from './provisioning.interfaces';
+import { IOrders, IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
@@ -21,6 +20,7 @@ export class ProvisioningController {
   public completedOrders: any;
   public pendingOrders: any;
   private featureToggleFlag: boolean;
+  public tooltipMessage: string;
 
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
@@ -41,7 +41,6 @@ export class ProvisioningController {
     private ProvisioningService: ProvisioningService,
     private Notification: Notification,
     private FeatureToggleService: FeatureToggleService ) {
-
 
     this.sharedColumDefs = [{
       field: 'webOrderID',
@@ -72,10 +71,8 @@ export class ProvisioningController {
       field: 'status',
       displayName: this.$translate.instant('provisioningConsole.status'),
     }];
-
     this.init();
   }
-
 
   private init(): void {
     this.isLoading = true;
@@ -85,9 +82,9 @@ export class ProvisioningController {
       this.updateOrderStatusInGrid(order);
     });
     this.$q.all({
-      atlasWebexFeatureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
+      featureTogglePromise : this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole),
       orderDataPromise : this.getOrderData() }).then(promises => {
-        this.featureToggleFlag = promises.atlasWebexFeatureTogglePromise;
+        this.featureToggleFlag = promises.featureTogglePromise;
         if (this.featureToggleFlag) {
           this.updateGridOptions();
         }
@@ -105,7 +102,6 @@ export class ProvisioningController {
       });
   }
 
-
   public showDetails(row) {
     if (!this.actionMenuOpened) {
       this.$state.go('order-details', { order: row });
@@ -117,7 +113,7 @@ export class ProvisioningController {
   public updateOrderStatusInGrid(order) {
     if (order.status === Status.COMPLETED) {
       //moving from pending dataset to completed no reason to get results again - just modify existing datasets
-      const completedOrder = _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl }));
+      const completedOrder = _.head(_.remove(this.pendingOrders, { orderUUID: order.orderUUID, siteUrl: order.siteUrl, manualCode: order.manualCode }));
       if (completedOrder) {
         this.completedOrders.push(completedOrder);
       }
@@ -164,8 +160,8 @@ export class ProvisioningController {
     };
     return this.$q.all(orders).then((results) => {
       if (searchStr && searchStr.length > 0) {
-        results.completed = _.filter(results.completed, { webOrderID: searchStr });
-        results.pending = _.filter(results.pending, { webOrderID: searchStr });
+        results.completed = this.findCriteria(results.completed, searchStr);
+        results.pending = this.findCriteria(results.pending, searchStr);
       }
       return results;
     });
@@ -211,6 +207,10 @@ export class ProvisioningController {
     }, {
       field: 'assignedTo',
       displayName: this.$translate.instant('provisioningConsole.assignedTo'),
+    }, {
+      field: 'note',
+      displayName: this.$translate.instant('provisioningConsole.notes'),
+      cellTooltip: true,
     });
     this.gridOptions.pending.columnDefs = _.reject(pendingDefs, obj => obj.field === 'lastModified');
     completedDefs.push({
@@ -222,7 +222,18 @@ export class ProvisioningController {
     }, {
       field: 'completedBy',
       displayName: this.$translate.instant('provisioningConsole.completedBy'),
+    }, {
+      field: 'note',
+      displayName: this.$translate.instant('provisioningConsole.notes'),
+      cellTooltip: true,
+    });
+    this.gridOptions.completed.columnDefs = _.reject(completedDefs, obj => obj.field === 'lastModified');
+  }
+
+  private findCriteria( order: IOrder[], searchStr: string): IOrder[] {
+    return _.filter(order, (order) => {
+      return (_.includes(order.siteUrl, searchStr) || _.includes(order.adminEmail, searchStr) || _.includes(order.webOrderID, searchStr) || _.includes(order.manualCode, searchStr));
     });
   }
-}
 
+}

@@ -1,0 +1,42 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
+@import '~@collabui/collab-ui/scss/settings/fonts';
+
+hybrid-services-user-assignments {
+
+  .icon-circle-check-mark-success {
+    position: absolute;
+    top: 0.3rem;
+    color: $color-green-base;
+    font-weight: 600;
+  }
+
+  .icon-priority {
+    position: absolute;
+    top: 0.3rem;
+    color: $color-alerts-base;
+  }
+
+  .icon-info {
+    position: absolute;
+    top: 0.3rem;
+    color: $color-attention-base;
+  }
+
+  .hybrid-services-assignment-message {
+    font-weight: 500;
+    margin: 0;
+    font-size: 0.75rem;
+    font-family: $brand-font-light;
+    line-height: 1.5rem;
+  }
+
+  .icon-column {
+    width: 1.75rem;
+    position: relative;
+  }
+
+  .message-column {
+    padding-left: 1.75rem;
+  }
+
+}

@@ -1,6 +1,6 @@
 import { IFeaturesInReport, IJoinMeetingRecord, IMediaInfoInReport, IMediaInReport, IMeetingSummaryInReport, IParticipantInReport, IParticipantsInName, IQualityInReport, ISessionInReport } from './meeting-export.interface';
-import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms, SearchService, SearchStorage } from './searchService';
-import { PartnerSearchService } from 'modules/core/partnerReports/webexReports/diagnostic/partner-search.service';
+import { IDataStorage, IJoinTime, IWebexOneMeeting, ISessionDetail, IUniqueParticipant, Platforms, SearchStorage } from './searchService';
+import { WebexReportsUtilService } from 'modules/core/partnerReports/webexReports/diagnostic/webex-reports-util.service';
 
 export enum MediaType {
   PSTN = 'PSTN',
@@ -18,7 +18,7 @@ export class MeetingExportService {
   }
 
   // TODO (yashen2): add call to backend for report data
-  public generateMeetingReport(dataStoreService: PartnerSearchService | SearchService): IPromise<string> {
+  public generateMeetingReport(dataStoreService: WebexReportsUtilService): IPromise<string> {
     return this.$q((resolve) => {
       const report = {};
       report['Meeting Summary'] = this.getMeetingSummary(dataStoreService);
@@ -29,7 +29,7 @@ export class MeetingExportService {
     });
   }
 
-  private getMeetingSummary(dataStoreService: PartnerSearchService | SearchService): IMeetingSummaryInReport {
+  private getMeetingSummary(dataStoreService: WebexReportsUtilService): IMeetingSummaryInReport {
     const meetingSummary: IMeetingSummaryInReport = {
       'Meeting Name': '',
       'Meeting Number': '',
@@ -89,7 +89,7 @@ export class MeetingExportService {
     return result;
   }
 
-  private getParticipantsInName(dataStoreService: PartnerSearchService | SearchService): IParticipantsInName {
+  private getParticipantsInName(dataStoreService: WebexReportsUtilService): IParticipantsInName {
     const participantsInName: IParticipantsInName = {};
     const uniqueParticipants: IUniqueParticipant[] = <IUniqueParticipant[]>dataStoreService.getStorage(SearchStorage.UNIQUE_PARTICIPANTS);
     const joinMeetingTimes: IJoinTime[] = <IJoinTime[]>dataStoreService.getStorage(SearchStorage.JOIN_MEETING_TIMES);
@@ -140,7 +140,7 @@ export class MeetingExportService {
     return session;
   }
 
-  private mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService: PartnerSearchService | SearchService): IJoinMeetingRecord {
+  private mkJoinMeetingRecord(participant, joinMeetingTimes, session, dataStoreService: WebexReportsUtilService): IJoinMeetingRecord {
     const joinTime = participant.joinTime;
     const guestId = participant.guestId;
     const userId = participant.userId;
@@ -174,7 +174,7 @@ export class MeetingExportService {
     return joinMeetingRecord;
   }
 
-  private getFeatures(dataStoreService: PartnerSearchService | SearchService): IFeaturesInReport {
+  private getFeatures(dataStoreService: WebexReportsUtilService): IFeaturesInReport {
     const webexOneMeeting = <IWebexOneMeeting>dataStoreService.getStorage(SearchStorage.WEBEX_ONE_MEETING);
     const features: IFeaturesInReport = {
       'Screen Share': '',
@@ -190,7 +190,7 @@ export class MeetingExportService {
     return features;
   }
 
-  private generateMediaReport(sessionType: string, nodeId: string, dataStoreService: PartnerSearchService | SearchService): IMediaInReport {
+  private generateMediaReport(sessionType: string, nodeId: string, dataStoreService: WebexReportsUtilService): IMediaInReport {
     const mediaReport: IMediaInReport = {};
     if (!nodeId) {
       return {};

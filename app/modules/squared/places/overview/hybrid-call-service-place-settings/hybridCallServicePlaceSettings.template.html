@@ -1,9 +1,10 @@
 <cs-sp-container>
-  <cs-sp-section ng-if="currentPlace.sipUrl">
+  <cs-sp-section ng-if="currentPlace.sipUrl || currentPlace.additionalSipUrls">
     <section-title
-      title-key="deviceOverviewPage.sipUrl">
+      title-key="common.ciscoWebexSipAddress">
     </section-title>
-    <p>{{currentPlace.sipUrl}}</p>
+    <p>{{currentPlace.sipUrl | giveBreakOpportunities}}<span class="badge primaryItemBadge" ng-if="currentPlace.additionalSipUrls.length > 0" translate="common.primary"></span></p>
+    <p ng-repeat="sipUrl in currentPlace.additionalSipUrls">{{sipUrl | giveBreakOpportunities}}</p>
   </cs-sp-section>
   <cs-sp-section ng-if="directoryNumbers">
     <section-title

@@ -2,58 +2,14 @@
   'use strict';
 
   /* eslint angular/di:0 */
-  var loadedModules = [];
 
-  function resolveLazyLoad(requireFunction) {
-    // https://github.com/ocombe/ocLazyLoad/issues/321
-    // $$animateJs issue when 'ng' module is "reloaded" through $ocLazyLoad
-    // force $$animateJs to be loaded before we try to lazy load
-    return /* @ngInject */ function lazyLoad($$animateJs, $ocLazyLoad, $q) {
-      return $q(function resolvePromise(resolve) {
-        requireFunction(requireDoneCallback);
+  var StatesHelper = require('./states/states.helper');
+  var resolveLazyLoad = StatesHelper.resolveLazyLoad;
+  var translateDisplayName = StatesHelper.translateDisplayName;
+  var stateParamsToResolveParams = StatesHelper.stateParamsToResolveParams;
 
-        function requireDoneCallback(_module) {
-          var moduleName;
-          if (_.isObject(_module) && _.has(_module, 'default')) {
-            moduleName = _module.default;
-          } else {
-            moduleName = _module;
-          }
-          // Don't reload a loaded module or core angular module
-          if (_.includes(loadedModules, moduleName) || _.includes($ocLazyLoad.getModules(), moduleName) || _.startsWith(moduleName, 'ng')) {
-            resolve();
-          } else {
-            loadedModules.push(moduleName);
-            $ocLazyLoad.toggleWatch(true);
-            $ocLazyLoad.inject(moduleName)
-              .finally(function finishLazyLoad() {
-                $ocLazyLoad.toggleWatch(false);
-                resolve();
-              });
-          }
-        }
-      });
-    };
-  }
-
-  function translateDisplayName(translateKey) {
-    return /* @ngInject */ function translate($translate) {
-      _.set(this, 'data.displayName', $translate.instant(translateKey));
-    };
-  }
-
-  function toResolveParam(paramName, defaultVal) {
-    return /* @ngInject */ function ($stateParams) {
-      return _.get($stateParams, paramName, defaultVal);
-    };
-  }
-
-  function stateParamsToResolveParams(stateParams) {
-    return _.reduce(stateParams, function (result, defaultVal, paramName) {
-      result[paramName] = toResolveParam(paramName, defaultVal);
-      return result;
-    }, {});
-  }
+  var States = require('./states');
+  var configureStates = States.configureStates;
 
   angular
     .module('wx2AdminWebClientApp')
@@ -212,9 +168,7 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/unauthorized.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="unauthorizedPage.title" l10n-text="unauthorizedPage.text"></state-redirect-action>',
               },
             },
             authenticate: false,
@@ -223,25 +177,25 @@
             parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/loginError.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="loginErrorPage.title" l10n-text="loginErrorPage.text" l10n-button-text="stateRedirect.tryAgainButton" is-webex-layout="true"></state-redirect-action>',
               },
             },
             authenticate: false,
           })
           .state('backend-temp-unavailable', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/backendTempUnavailable.tpl.html'),
+                template: '<state-redirect-warning l10n-title="backendTempUnavailablePage.title" l10n-text="backendTempUnavailablePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
           })
           .state('server-maintenance', {
+            parent: 'stateRedirectLazyLoad',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/serverMaintenance.tpl.html'),
+                template: '<state-redirect-warning l10n-title="serverMaintenancePage.title" l10n-text="serverMaintenancePage.text"></state-redirect-warning>',
               },
             },
             authenticate: false,
@@ -251,9 +205,7 @@
             url: '/404',
             views: {
               'main@': {
-                template: require('modules/core/stateRedirect/404.tpl.html'),
-                controller: 'StateRedirectCtrl',
-                controllerAs: 'stateRedirect',
+                template: '<state-redirect-action l10n-title="404Page.title" l10n-text="404Page.text"></state-redirect-action>',
               },
             },
             authenticate: false,
@@ -297,7 +249,7 @@
             resolve: {
               lazy: resolveLazyLoad(function (done) {
                 require.ensure([], function () {
-                  done(require('modules/core/stateRedirect/stateRedirect.controller'));
+                  done(require('modules/core/state-redirect'));
                 }, 'state-redirect');
               }),
             },
@@ -1400,9 +1352,7 @@
           .state('user-overview.csdmDevice', {
             views: {
               'side-panel-container@user-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -1696,6 +1646,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'spark-hybrid-impinterop\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
@@ -1725,6 +1689,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-cal.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-cal\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},
@@ -1782,6 +1760,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-uc\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
@@ -1815,6 +1807,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-ec\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},
@@ -2191,13 +2197,16 @@
             },
           })
           .state('reports.sparkMetrics', {
-            url: '/sparkMetrics',
+            url: '/analytics/:sparktype',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
                 template: require('modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html'),
               },
+            },
+            params: {
+              sparktype: 'messaging',
             },
           })
           .state('my-company.autoLicense', {
@@ -2283,7 +2292,7 @@
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
+                template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
               },
             },
           })
@@ -2292,13 +2301,13 @@
             template: '<div ui-view></div>',
           })
           .state('dgc.tab', {
-            template: '<dgc-tab></dgc-tab>',
+            template: '<dgc-partner-tab></dgc-partner-tab>',
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+                template: '<dgc-partner-tab-meeting-detail></dgc-partner-tab-meeting-detail>',
               },
             },
           })
@@ -2306,7 +2315,7 @@
             url: '/diagnostics/participants/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-participants></dgc-tab-participants>',
+                template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
               },
             },
           })
@@ -2421,6 +2430,14 @@
             resolve: {
               hasAtlasHybridCallUserTestTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
+              },
+            },
+          })
+          .state('support.meeting', {
+            url: '/meeting',
+            views: {
+              supportPane: {
+                template: '<support-meeting-component></support-meeting-component>',
               },
             },
           })
@@ -2553,9 +2570,7 @@
           .state('place-overview.csdmDevice', {
             views: {
               'side-panel-container@place-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2893,9 +2908,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
               'header@device-overview': {
                 template: require('modules/squared/devices/overview/deviceHeader.tpl.html'),
@@ -2980,6 +2993,27 @@
               selectedDevices: [],
             },
           })
+          .state('deviceConfiguration', {
+            parent: 'modal',
+            abstract: true,
+          })
+          .state('deviceConfiguration.show', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<configuration-modal ui-view dismiss="$dismiss()"></configuration-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-configuration-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevice: {},
+              title: 'deviceConfiguration.configureDeviceTitle',
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
@@ -3034,10 +3068,13 @@
             template: '<partner-reports-tabs></partner-reports-tabs>',
           })
           .state('partnerreports.tab.spark', {
-            url: '/spark',
+            url: '/analytics/:sparktype',
             template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
             controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
+            params: {
+              sparktype: 'messaging',
+            },
           })
           .state('partnerreports.tab.ccaReports', {
             template: '<cca-reports-tabs></cca-reports-tabs>',
@@ -3050,7 +3087,7 @@
             template: '<webex-reports-tabs></webex-reports-tabs>',
           })
           .state('partnerreports.tab.webexreports.metrics', {
-            url: '/webexreports/metrics',
+            url: '/webexreports/meetings',
             template: '<webex-reports></webex-reports>',
           })
           .state('partnerreports.tab.webexreports.diagnostics', {
@@ -3406,6 +3443,18 @@
               swprofile: /* @ngInject */ function ($stateParams) {
                 return $stateParams.swprofile;
               },
+            },
+          })
+          .state('hcs.sidePanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hcs-side-panel></hcs-side-panel>',
+              },
+            },
+            params: {
+              status: null,
+              node: null,
             },
           })
           .state('taasSuites', {
@@ -5848,6 +5897,30 @@
               },
             },
           })
+          .state('legalhold.export', {
+            parent: 'modalDialog',
+            params: {
+              orgId: null,
+              caseId: null,
+              matterName: null,
+            },
+            views: {
+              'modal@': {
+                template: '<legal-hold-custodian-export org-id="$resolve.orgId" matter-name="$resolve.matterName" case-id="$resolve.caseId"></legal-hold-custodian-export>',
+                resolve: {
+                  orgId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.orgId;
+                  },
+                  caseId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.caseId;
+                  },
+                  matterName: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matterName;
+                  },
+                },
+              },
+            },
+          })
           .state('legalhold.custodians-manage', {
             parent: 'modal',
             params: {
@@ -5867,25 +5940,6 @@
                 },
               },
             },
-          })
-          .state('integrations-management', {
-            template: '<div ui-view></div>',
-            parent: 'main',
-            abstract: true,
-            resolve: {
-              supportsFeature: /* @ngInject */ function (FeatureToggleService) {
-                return FeatureToggleService.stateSupportsFeature(FeatureToggleService.features.atlasIntegrationsManagement);
-              },
-              lazy: resolveLazyLoad(function (done) {
-                require.ensure([], function () {
-                  done(require('modules/integrations-management'));
-                }, 'integrations');
-              }),
-            },
-          })
-          .state('integrations-management.list', {
-            template: '<integrations-management-list></integrations-management-list>',
-            url: '/integrations',
           });
 
         $stateProvider
@@ -6036,6 +6090,7 @@
               actionType: null,
             },
           });
+        configureStates($stateProvider);
       },
     ]);
 })();

@@ -44,10 +44,12 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
   public selectedCalendarType: 'squared-fusion-cal' | 'squared-fusion-gcal';
   public originalEntitledToggle: boolean = false;
   public selectedEntitledToggle: boolean = false;
+  public isActivation2User: boolean = false;
 
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private CloudConnectorService: CloudConnectorService,
     private HybridServiceUserSidepanelHelperService: HybridServiceUserSidepanelHelperService,
@@ -120,17 +122,22 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
         this.userMicrosoftCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-cal' });
         this.userGoogleCalendarStatus = _.find(ussStatuses, { serviceId: 'squared-fusion-gcal' });
         this.userStatus = this.userMicrosoftCalendarStatus || this.userGoogleCalendarStatus;
-        if (this.userStatus && this.userStatus.connectorId) {
-          this.connectorId = this.userStatus.connectorId;
-        }
-        if (this.userStatus && this.userStatus.lastStateChange) {
-          this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
-        }
-        if (this.userStatus && this.userStatus.owner === 'ccc') {
-          this.userOwnedByCCC = true;
-        }
-        if (this.userStatus && this.userStatus.resourceGroupId) {
-          this.resourceGroupId = this.userStatus.resourceGroupId;
+        if (this.userStatus) {
+          if (this.userStatus.connectorId) {
+            this.connectorId = this.userStatus.connectorId;
+          }
+          if (this.userStatus.lastStateChange) {
+            this.lastStateChangeText = this.HybridServicesI18NService.getTimeSinceText(this.userStatus.lastStateChange);
+          }
+          if (this.userStatus.owner === 'ccc') {
+            this.userOwnedByCCC = true;
+          }
+          if (this.userStatus.resourceGroupId) {
+            this.resourceGroupId = this.userStatus.resourceGroupId;
+          }
+          if (this.userStatus.assignments) {
+            this.isActivation2User = true;
+          }
         }
       })
       .catch((error) => {
@@ -257,6 +264,9 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
         this.originalCalendarType = this.selectedCalendarType;
         this.originalEntitledToggle = this.selectedEntitledToggle;
+
+        this.delayedGetUserData();
+
         return this.getUserData();
       })
       .catch((error) => {
@@ -274,6 +284,25 @@ class HybridCalendarServiceUserSettingsCtrl implements ng.IComponentController {
 
   public resourceGroupRefreshCallback() {
     this.loadUserData();
+    this.delayedGetUserData();
+  }
+
+  public reactivateCallback(): void {
+    this.getUserData();
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.originalEntitledToggle && !this.userOwnedByCCC && this.isActivation2User;
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData();
+    }, 5000);
   }
 
 }

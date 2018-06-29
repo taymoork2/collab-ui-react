@@ -73,8 +73,10 @@
           margin-right: rem-calc(4);
         }
       }
-      .node-status-container {
+      .node-status-container.move-right {
         float: right;
+      }
+      .node-status-container {
         .node-status {
           color: $gray-dark-4;
         }

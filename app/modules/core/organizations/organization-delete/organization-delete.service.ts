@@ -25,7 +25,7 @@ export class OrganizationDeleteService {
   public canOnlineOrgBeDeleted(): ng.IPromise<boolean> {
     return (this.FeatureToggleService.atlasOnlineDeleteOrgGetStatus() as ng.IPromise<boolean>)
       .then(toggle => {
-        if (!toggle || !this.Authinfo.isOnlineOnlyCustomer() || this.Authinfo.isOnlinePaid()) {
+        if (!toggle || _.isEmpty(this.Authinfo.getCustomerAccounts()) || !this.Authinfo.isOnlineOnlyCustomer() || this.Authinfo.isOnlinePaid()) {
           return false;
         }
         const dirSyncPromise = (this.DirSyncService.requiresRefresh() ? this.DirSyncService.refreshStatus() : this.$q.resolve());
@@ -96,4 +96,3 @@ export class OrganizationDeleteService {
   }
 
 }
-

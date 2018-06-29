@@ -47,6 +47,7 @@
     "place": "Place",
     "sessionEnablement": "Session Enablement",
     "statusHistory": "Status History",
+    "history": "History",
     "userOverViewMessage": "Message",
     "voiceMail": "Voice Mail",
     "privileges": "Privileges",
@@ -77,7 +78,6 @@
     "lastnameHeader": "Last Name",
     "displayNameHeader": "Display Name",
     "emailHeader": "Email",
-    "sipDomain": "Cisco Webex SIP Address",
     "actionHeader": "Actions",
     "invite": "Send Invites",
     "addedHeader": "ADDED",
@@ -323,7 +323,8 @@
       "retrying": "Retrying...",
       "retryingIn": "retrying in:",
       "retryingUsers": "{users, plural, =1{# User} other{# Users}}",
-      "exportUserList": "Export user list"
+      "exportUserList": "Export user list",
+      "viewImportHistory": "View import history"
     },
     "advanced": {
       "title": "Advanced",
@@ -556,7 +557,7 @@
     "userTab": "Users",
     "deviceTab": "Devices",
     "placeTab": "Places",
-    "reportTab": "Reports",
+    "reportTab": "Analytics",
     "troubleshootingTab": "Troubleshooting",
     "taasOverviewTab": "TaaS",
     "supportTab": "Support",
@@ -690,16 +691,16 @@
       "accountExpired": "Account Expired",
       "deleteAccount": "Delete Account"
     },
-    "singleMoveOrDelete": "You can either delete your account or convert to a free Cisco Webex account. Your Webex site will not be converted to a free site and will be deleted.",
-    "singleMoveUsers": "Convert to a free Cisco Webex account.",
+    "singleMoveOrDelete": "You can either delete your account or convert to a free user account that can be used with the Webex Teams app. Your Webex site will not be converted to a free site and will be deleted.",
+    "singleMoveUsers": "Convert to a free Webex Teams user account.",
     "singleDeleteUsers": "Delete account.",
-    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Cisco Webex account.",
+    "multMoveOrDelete": "There are users that are part of your company account. You can either delete the users or convert them to their own free Webex Teams user accounts.",
     "multiUserDelete": "All users and data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Webex Teams spaces.",
-    "multMoveUsers": "Convert users to their own free Cisco Webex account.",
+    "multMoveUsers": "Convert users to their own free Webex Teams user accounts.",
     "multDeleteUsers": "Delete users.",
     "checkBoxes": "Check all the boxes below to acknowledge the consequences of deleting your account.",
-    "singleUserMove": "You will be converted to a free Cisco Webex account.",
-    "multiUserMove": "All users will be converted to their own free Cisco Webex account.",
+    "singleUserMove": "You will be eligible to use free services in the Webex Teams app.",
+    "multiUserMove": "All users will be eligible to use free services in the Webex Teams app.",
     "notReversible": "Deleting an organization and related data is permanent and CANNOT be reversed.",
     "allData": "All data will be deleted, including Webex meeting URLs, meeting recordings, and posts in Cisco Webex Teams spaces.",
     "allDevices": "All devices will be deregistered, including Cisco IP phones, Cisco Webex Boards and Cisco TelePresence video conferencing endpoints.",
@@ -718,7 +719,7 @@
     "loadingData": "Loading Data",
     "notFound": "Resource not Found",
     "loadingDescription": "For best results, allow reports to finish loading.",
-    "pageTitle": "Reports",
+    "pageTitle": "Analytics",
     "ccaTab": "CCA",
     "engagement": "Engagement",
     "quality": "Quality",
@@ -752,6 +753,8 @@
     "devReports": "Development Customer Reports",
     "sparkReports": "Webex Teams",
     "webexReports": "Webex Meetings",
+    "messageTab": "Messaging",
+    "callTab": "Calling",
     "autoLicense": "Onboarding",
     "downloadOptions": "Download Options",
     "careTab": "Care",
@@ -784,7 +787,7 @@
       "to": "to"
     },
     "usageReports": {
-      "usageReportTitle": "Room Devices",
+      "usageReportTitle": "Devices",
       "pageTitle": "Reports",
       "peakHour": "Peak Hour",
       "distribution": "Distribution",
@@ -831,7 +834,7 @@
       }
     },
     "webexMetrics": {
-      "title": "Webex Meetings",
+      "title": "Meetings",
       "metrics": "Metrics",
       "MEI": "MEI",
       "system": "System",
@@ -1397,6 +1400,12 @@
       }
     }
   },
+  "troubleshootingPage": {
+    "title": "Troubleshooting",
+    "tabs": {
+      "meeting": "Meeting"
+    }
+  },
   "provisioningConsole": {
     "provisioningConsole": "Provisioning Console",
     "orderNumber": "Order Number",
@@ -1412,6 +1421,7 @@
     "lastModified": "Last Modified",
     "siteUrl": "Site Url",
     "completed": "Completion Date",
+    "notes": "Notes",
     "actions": {
       "title": "Actions",
       "progress": "Mark as in progress",
@@ -1429,6 +1439,12 @@
       "noSites": "This order doesn't have any sites listed",
       "completed": "Order completed: {{orderDate}}",
       "pending": "Request received: {{orderDate}}",
+      "notes": {
+        "notesPlaceHolder": "Enter Notes ",
+        "inputLengthError": "{{field}} should be less than {{length}} characters.",
+        "noteSaved": "Saved The Notes",
+        "failedSaving": "Failed to save the Notes"
+      },
       "customerInfo": {
         "title": "Customer Information",
         "partnerName": "Partner Name",
@@ -1670,6 +1686,7 @@
     "cancel": "Cancel",
     "cancelingEllipsis": "Canceling...",
     "ciscoCollaborationCloud": "Cisco Webex Cloud",
+    "ciscoWebexSipAddress": "Cisco Webex SIP Address",
     "clear": "Clear",
     "close": "Close",
     "cluster": "Cluster",
@@ -1761,6 +1778,7 @@
     "optional": "Optional",
     "or": "or",
     "overview": "Overview",
+    "manage": "Manage",
     "pending": "Pending",
     "play": "Play",
     "postpone": "Postpone",
@@ -1806,6 +1824,7 @@
     "status": "Status",
     "step": "Step",
     "stepCurrentOfTotal": "Step {{current}} of {{total}}",
+    "success": "success",
     "submit": "Submit",
     "test": "Test",
     "to": "to",
@@ -2404,6 +2423,11 @@
       "unavailableMessage": "Connecting to the device was unsuccessful.<br><br>Access to Advanced Settings requires that you are connected to the same network as the device.",
       "availableMessage": "This will open Advanced Settings in a new tab.<br><br>Access to Advanced Settings requires that you are on the same network as the device."
     },
+    "deviceConfiguration": {
+      "modalTitle": "Advanced device configurations",
+      "subHeader": "Select and edit configurations",
+      "openDeviceWebPortal": "Open in Device Web Portal"
+    },
     "sameAsCompanyNum": "To edit your emergency service address, the emergency callback number for your device must be different from your company’s callback number.",
     "impactedUserInfo": "Modifying the Emergency Service Address associated to the above selected Callback Number will impact the following users and/or places:",
     "export": {
@@ -2473,6 +2497,7 @@
       "group_by": "Group services by:",
       "cluster_id": "Cluster",
       "host_name": "Node",
+      "host_names": "Nodes",
       "display_name": "Service Name",
       "connector_type": "Connector Type",
       "serial": "Serial",
@@ -2636,6 +2661,14 @@
         "cannotReadUserDataFromUSSPartnerAdmin": "Unable to read user's activation status. This could indicate a caching problem, try logging out and in again to clear the user cache.",
         "cannotReadOrgDataFromFMS": "Unable to read organization's Expressway-based Hybrid Services data.",
         "cannotReadOrgDataFromFMSPartnerAdmin": "Unable to read organization's Expressway-based Hybrid Services data. This could indicate a caching problem, try logging out and in again to clear the user cache."
+      },
+      "reactivateUser": {
+        "title": "Reactivate User",
+        "line1": "Are you sure you want to reactivate this user?",
+        "line2": "The user will temporarily lose service during the reactivation period.",
+        "confirm": "Reactivate",
+        "success": "Reactivate started successfully",
+        "tooltip": "Reactivate a user who is unexpectedly in error state or if you want to speed up synchronized configuration changes"
       }
     },
     "placeSidepanel": {
@@ -2658,7 +2691,17 @@
       "unknown": "Unknown",
       "notFound": "Status not found",
       "pendingNotSetup": "Pending – Service Not Setup",
-      "accountNotActivated": "Account Not Activated"
+      "accountNotActivated": "Account Not Activated",
+      "canNotAccessContextReporting": "Cannot access Context Service reports"
+    },
+    "userAssignment": {
+      "status": {
+        "success": "Assigned",
+        "failure": "Assignment failed",
+        "waiting": "Assigned, awaiting confirmation from connector",
+        "nonOperational": "This connector is currently reported as non-operational. When the connector is operational again, the user will automatically be assigned."
+      },
+      "connectorNotFound": "Connector not found"
     },
     "serviceNames": {
       "squared-fusion-uc": "Call Service",
@@ -2879,10 +2922,10 @@
       "deactivateServiceLabel": "Deactivate {{serviceName}}",
       "deactivateServiceCommon": "Deactivating {{serviceName}} removes all service-related features for users.",
       "expresswayDataWiped": "{{connectorName}} will be removed from all of your Expressway clusters, and all connectors' local settings will be deleted.",
-      "noClustersWillBeDeregistered": "Clusters will not be deregistered from Webex.",
+      "noClustersWillBeDeregistered": "Clusters will remain registered to the Webex cloud and services will remain assigned to users.",
       "deactivateServiceConfirmationHeader": "Deactivate {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Are you sure? Service-related features will be removed for users.",
-      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters and service-related features will be removed for users.",
+      "deactivateServiceConfirmationText": "Are you sure? {{connectorName}} and related configuration will be removed from your clusters.",
       "serviceWasDeactivated": "{{serviceName}} successfully deactivated.",
       "connectWarning": "Are you sure? Remote device configuration will be removed and the service will be disabled for your users.",
       "deactivateCallServiceConnect": "Deactivate Call Service Connect",
@@ -2950,7 +2993,7 @@
       },
       "testAccount": {
         "title": "Test account",
-        "line1": "Enter the G Suite account you want to use to test the connection with Google Calendar.",
+        "line1": "Enter the G Suite account email you want to use to test the connection with Google Calendar. Email entered must have a G Suite license. Cisco Webex will add a test event to the calendar associated with the email, with a subject line \"Test Event from Cisco Webex\".",
         "title2": "Calendar resources",
         "useResources": "My organization uses calendar resources (such as conference devices)",
         "line2": "If you use room resources, you may need to make access control list (ACL) changes to their calendars.",
@@ -3127,11 +3170,21 @@
         "description": "If you need to update or restore your G Suite API client access, retrieve the client name and scope by clicking the button below.",
         "cta": "Update",
         "provisioningResults": {
-          "OK": "The Hybrid Calendar Service is successfully set up with your Office 365 organization.",
+          "OK": "The Hybrid Calendar Service is successfully set up with your organization.",
+          "INVALID_API_ACCESS_KEY": "Invalid API access key.",
+          "DATABASE_ERROR": "Database error.",
+          "REQUIRED_SCOPE_MISSING": "Missing required authorization scope.",
+          "SECURITY_FAILURE": "A security error occurred.",
           "GENERAL_ERROR": "An unexpected error occurred.",
-          "TEST_ACCOUNT_NONEXISTENT": "The test account credentials didn't work. Retest with a licensed Office 365 user with an Exchange Online mailbox.",
-          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize Office 365 from the settings page.",
-          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize."
+          "TEST_ACCOUNT_NONEXISTENT": "The test account does not exist. Retest with a licensed user/mailbox.",
+          "SYNC_KMS_ROLE_FAILURE": "Error creating machine account role.",
+          "MACHINE_ACCOUNT_CREATION_FAILURE": "Error creating machine account.",
+          "PASSWORD_CREATION_FAILURE": "Error creating passwords.",
+          "INVALID_SESSION_ID": "Invalid session id. Please re-authorize from the settings page.",
+          "BAD_ADMIN_CONSENT": "We hit an authorization error with your Office 365 organization. Go to the Hybrid Calendar Office 365 Settings page and reauthorize.",
+          "PRECONDITIONS_NOT_MET": "Preconditions not met.",
+          "MACHINE_ACCOUNT_DELETION_FAILURE": "Error deleting machine account.",
+          "ORGANIZATION_ADDITION_FAILURE": "Error adding organization."
         }
       },
       "hybridCalendarCommon": {
@@ -3442,6 +3495,52 @@
         "SetUserStatus": "User status updated"
       }
     },
+    "userActivationHistory": {
+      "types": {
+        "AddUserService": "Service enabled",
+        "DeleteUserService": "Service disabled",
+        "UpdateUserStatus": "Status set to {{status}}",
+        "SetUserActivationRetry": "Activation will be retried at {{retryAt}}",
+        "RequestUserReactivation": "Reactivation requested",
+        "UpdateUserResourceGroupWithReactivate": "Resource group changed (user will be reactivated)",
+        "DeleteUserResourceGroupWithReactivate": "Resource group changed (user will be reactivated)",
+        "DeleteUserResourceGroup": "Resource group changed",
+        "UpdateUserResourceGroup": "Resource group changed",
+        "AssignUser": "Assignment updated",
+        "UpdateDiscoverStatus": {
+          "found": "User found in cluster",
+          "notFound": "User not found in cluster",
+          "error": "Discover error",
+          "waiting": "Discover requested"
+        },
+        "SetAssignmentState": {
+          "success": "Assignment successful",
+          "failure": "Assignment failed",
+          "nonOperational": "Assignment non-operational"
+        },
+        "DeleteUserAssignment": "Assignment removed",
+        "UpdateConfigureStatus": {
+          "success": "{{service}} configuration successful",
+          "failure": "{{service}} configuration failed",
+          "waiting": "{{service}} configuration requested"
+        },
+        "UpdateUserActivationState": {
+          "activate": "Activation job started",
+          "deactivate": "Deactivate job started",
+          "configureConnect": "Configure Call Service Connect job started",
+          "unconfigureConnect": "Remove Call Service Connect job started",
+          "reactivate": "Reactivate job started"
+        },
+        "UpdateUserActivationStateQueued": {
+          "activate": "Activation job queued",
+          "deactivate": "Deactivate job queued",
+          "configureConnect": "Configure Call Service Connect job queued",
+          "unconfigureConnect": "Remove Call Service Connect job queued",
+          "reactivate": "Reactivate job queued"
+        },
+        "DeleteServiceConfigurationState": "{{service}} configuration removed"
+      }
+    },
     "nodesPage": {
       "connectors": "Connectors",
       "status": "Status",
@@ -3642,7 +3741,7 @@
     "office365SuccessModal": {
       "test": {
         "subtitle": "Test Account",
-        "inputLabel": "Enter the Office 365 account you want to use to test the connection with Exchange Online."
+        "inputLabel": "Enter the Office 365 account email you want to use to test the connection with Office 365 Calendar. Email entered must have an Office 365 license. Cisco Webex will add a test event to the calendar associated with the email, with a subject line \"Test Event from Cisco Webex\"."
       },
       "success": {
         "subtitle": "Setup complete",
@@ -3701,10 +3800,12 @@
         "installing": "{{connectorType}} installing",
         "not_installed": "{{connectorType}} not installed",
         "disabled": "{{connectorType}} disabled",
-        "not_initialized": "{{connectorType}} not initialized",
+        "not_initialized": "{{connectorType}} initializing",
         "not_operational": "{{connectorType}} not operational",
         "not_configured": "{{connectorType}} not configured",
-        "running": "{{connectorType}} version {{version}} running and operational"
+        "running": "{{connectorType}} version {{version}} running and operational",
+        "restarted": "{{connectorType}} restarted",
+        "upgraded": "{{connectorType}} upgraded from {{previousVersion}} to {{version}}"
       },
       "table": {
         "event": "Event",
@@ -3725,6 +3826,7 @@
       "eventClasses": {
         "cluster": "Cluster",
         "connector": "Connector",
+        "node": "Node",
         "alarm": "Alarm",
         "service": "Service",
         "resourceGroup": "Resource Group",
@@ -3734,28 +3836,28 @@
         "mail": "Mail"
       },
       "resourceGroupEvents": {
-        "created": "Resource group {{resourceGroupName}} was created.",
-        "updated": "Resource group {{resourceGroupName}} was updated.",
-        "deleted": "Resource group {{resourceGroupName}} was deleted."
+        "created": "Resource group {{resourceGroupName}} was created",
+        "updated": "Resource group {{resourceGroupName}} was updated",
+        "deleted": "Resource group {{resourceGroupName}} was deleted"
       },
       "hostEvents": {
-        "updated": "Host was updated."
+        "updated": "Host was updated"
       },
       "connectorEvents": {
-        "updated": "{{connectorType}} updated.",
-        "created": "{{connectorType}} created.",
-        "deregistered": "{{connectorType}} de-registered.",
-        "removed": "{{connectorType}} removed."
+        "updated": "{{connectorType}} updated",
+        "created": "{{connectorType}} created",
+        "deregistered": "{{connectorType}} de-registered",
+        "removed": "{{connectorType}} removed"
       },
       "redirectTargetEvents": {
-        "created": "Redirect target created.",
-        "deleted": "Redirect target deleted."
+        "created": "Redirect target created",
+        "deleted": "Redirect target deleted"
       },
       "machineAccountEvents": {
-        "created": "Machine account created."
+        "created": "Machine account created"
       },
       "mailSubscriberEvents": {
-        "updated": "Mail subscriber list updated."
+        "updated": "Mail subscriber list updated"
       },
       "sidepanel": {
         "header": "Event Details",
@@ -3767,10 +3869,13 @@
           "disabled": "{{localizedConnectorName}} is on version {{softwareVersion}}, but the connector has been disabled on the Expressway. Connectors should not be kept in a disabled state: Either log in to the Expressway web interface to start it, or uninstall it using the cluster configuration page in Cisco Webex Control Hub.",
           "downloading": "Version {{softwareVersion}} of {{localizedConnectorName}} is being downloaded from Cisco Webex Cloud. It will be installed when it has finished downloading.",
           "installing": "{{localizedConnectorName}} version {{softwareVersion}} has finished downloading from Cisco Webex Cloud, and is now installing on the Expressway. Installation normally take less than a minute.",
+          "installingMf": "{{localizedConnectorName}} version {{softwareVersion}} finished downloading from Cisco Webex, and is now installing on the Video Mesh node. Installation normally take less than a minute.",
           "not_configured": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the connector has not been configured. Log in to the Expressway to configure it, and then start the connector.",
           "initializing": "{{localizedConnectorName}} version {{softwareVersion}} has been installed, but the new software is still starting up, and is not yet initialized. Initializing the connector software might take several hours for connectors that are running at full capacity and host a lot of users.",
-          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational. This is not expected, and admin intervention is required to correct it.",
-          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation."
+          "not_operational": "{{localizedConnectorName}} version {{softwareVersion}} is running, but is reporting that the software is not operational.",
+          "running": "The {{localizedConnectorName}} software is running version {{softwareVersion}} and is operational. This is the expected state after a successful upgrade or new installation.",
+          "restarted": "The {{localizedConnectorName}} restarted. This is expected after a successful upgrade or new installation.",
+          "upgraded": "The {{localizedConnectorName}} upgraded from {{previousVersion}} to {{version}} and is operational."
         },
         "alarmEvents": {
           "alarmRaisedEmailsSentTitle": "Emails sent about new alarm",
@@ -3783,14 +3888,17 @@
         },
         "clusterEvents": {
           "firstUpgradeSchedule": "All connectors in the Expressway cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
+          "firstUpgradeScheduleMf": "All the nodes in the Video Mesh cluster have been configured with the following upgrade schedule: {{upgradeSchedule}}",
           "changedUpgradeSchedule": "{{username}} has changed the upgrade schedule for all connectors in the Expressway cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
+          "changedUpgradeScheduleMf": "{{username}} changed the upgrade schedule for all nodes in the Video Mesh cluster. The new schedule is: {{newSchedule}}. Its previous upgrade schedule was: {{oldSchedule}}.",
           "automatedProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. This happened as part of a scheduled upgrade.",
           "automatedProvisioning": "The Expressway cluster has been provisioned with {{connectorName}}. This happened automatically.",
           "automatedDeprovisioning": "The Expressway cluster will no longer run {{connectorName}}.",
           "manualProvisioningChange": "The {{connectorName}} target version has changed to {{newValue}}. The upgrade was manually triggered by {{username}}.",
           "manualProvisioning": "{{username}} provisioned the Expressway cluster with {{connectorName}}. This either happened because the user created a new cluster, or because he or she added {{connectorName}} to an existing cluster.",
           "manualDeprovisioning": "{{username}} changed the Expressway configuration so that {{connectorName}} will be removed from all cluster nodes.",
-          "upgradeHelpText": " Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
+          "upgradeHelpText": "Each node in the cluster will sequentially start to upgrade to the new version. The upgrade has succeeded when all nodes are on the new software version, and have reported to Cisco Webex Cloud that they are operational.",
+          "upgradeHelpTextMf": "The nodes in the cluster will start to upgrade to the new version. The upgrade succeeds when all nodes are on the new software version, report to Cisco Webex that they are operational.",
           "provisioningAddedHelpText": "An administrator must log in to the Expressway master peer and configure the {{connectorName}} software once it has been installed on all cluster nodes.",
           "provisioningRemovedHelpText": "The software will be uninstalled, and all local configuration deleted.",
           "automatedDeprovisioningHelpText": "This configuration change happened because of a change to the Cisco Webex organization's configuration, for example because an entitlement was removed or a service was deactivated.",
@@ -3808,10 +3916,11 @@
         },
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers an Expressway cluster that runs {{connectorName}}, or adds the first {{connectorName}} to an existing Expressway cluster.",
+          "serviceEnabledMf": "{{username}} activated {{serviceName}} in the organization. This usually happens when an administrator registers a Video Mesh cluster.",
           "callServiceConnectEnabled": "{{username}} has activated {{serviceName}} in the Cisco Spark organization. All Expressway clusters running {{connectorName}} will automatically also be used for {{serviceName}}.",
           "serviceDisabled": "{{username}} has disabled {{serviceName}} in the Cisco Spark organization.",
-          "serviceDisabledHelpText": "{{serviceName}} entitlements are automatically removed from users, and {{connectorName}} is automatically uninstalled from all Expressway clusters.",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}} entitlements are automatically removed from users, and remote device configurations deleted."
+          "serviceDisabledHelpText": "{{connectorName}} is automatically uninstalled from all Expressway clusters.",
+          "serviceDisabledHelpTextCallServiceConnect": "Remote device configurations are automatically deleted."
         },
         "technicalDetails": {
           "heading": "Technical Details",
@@ -4707,6 +4816,7 @@
     "tosTermsAndConditions": "terms and conditions",
     "invalidCalendarServiceResourceGroup": "Hybrid Calendar Service Resource Group \"{{group}}\" not found",
     "invalidCallServiceResourceGroup": "Hybrid Call Service Resource Group \"{{group}}\" not found",
+    "invalidMessageServiceResourceGroup": "Hybrid Message Service Resource Group \"{{group}}\" not found",
     "unableToUpdateResourceGroups": "Updating Hybrid Services Resource Groups failed",
     "ussUserPropsLoadFailed": "Unable to load the current user Hybrid Services Resource Group assignments. Resource group assignments in the CSV file will not be processed.",
     "fmsResourceGroupsLoadFailed": "Unable to load the Hybrid Services Resource Groups. Resource group assignments in the CSV file will not be processed.",
@@ -4804,9 +4914,10 @@
     "usernameRequiredMsg": "Username is required.",
     "usernameTooLongMsg": "Username exceeded its maximum length of 128 characters.",
     "passwordTooLongMsg": "Password exceeded its maximum length of 128 characters",
-    "configureApiAuthentication": "Use Basic Authentication",
-    "restApiUserName": "Username",
-    "restApiPassword": "Password",
+    "userDoesNotExist": "You have not configured either a user or a Hunt group for this {{route}} in the {{schedule}} lane.",
+    "configureApiAuthentication": "Use Basic Authentication" ,
+    "restApiUserName":"Username",
+    "restApiPassword":"Password",
     "callerInputValue": "Input Value",
     "callerInputLabel": "Name",
     "callerInputNamePlaceHolder": "Name Variable",
@@ -5180,7 +5291,8 @@
     "reversionTimerLabel": "Call Reversion Timer",
     "reversionTimerDesc": "If the call is not answered, send it to the reversion destination after the following wait time",
     "reversionTimerSeconds": "Seconds",
-    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}"
+    "fallbackTimer.validation.error": "Must be a number between {{min}} and {{max}}",
+    "misconfigured": "The {{callParkName}} call park contains a reversion destination to an internal number that is no longer associated with a user.  Please click the link below to edit the configuation."
   },
   "callPickup": {
     "nameLabel": "Call Pickup Name",
@@ -5809,6 +5921,7 @@
     "expireToday": "Expiring Today",
     "errGetTrialsQuery": "Failed to retrieve trials.",
     "errGetOrgs": "Failed to retrieve orgranizations.",
+    "errInitPartnerNotifications": "Error initializing partner notifications",
     "fifty": "50",
     "oneHundred": "100",
     "twoHundred": "200",
@@ -5995,7 +6108,7 @@
     "addError": "An error occurred starting a trial for {{customerName}}.",
     "editSuccess": "You have successfully edited a trial for {{customerName}}.",
     "editError": "An error occurred editing a trial for {{customerName}}.",
-    "startTrialContextServiceError": "Created trial, but failed to enable Context Service.",
+    "startTrialContextServiceError": "Created trial, but failed to enable Context Service. Please go to Edit Trial to try again.",
     "editTrialContextServiceEnableError": "Edited trial, but failed to enable Context Service.",
     "editTrialContextServiceDisableError": "Edited trial, but failed to disable Context Service.",
     "errorInUse": "Entered value is already in use. Try a different value.",
@@ -6136,7 +6249,7 @@
     "branding": "Customer Branding",
     "MS": "Message",
     "CF": "Meeting",
-    "MC": "Webex Team Meetings",
+    "MC": "Webex Meetings",
     "WebExMC": "Webex Meeting Center",
     "SC": "Webex Support Center",
     "CMR": "Webex Collaboration Meeting Rooms",
@@ -6318,6 +6431,8 @@
     "networkConnectivity": "Network Connectivity",
     "macAddr": "MAC Address",
     "sipUrl": "SIP Address",
+    "sipUrls": "SIP Addresses",
+    "primarySipUrl": "Primary SIP Address",
     "issues": "Issues",
     "lastSeen": "Last seen online:",
     "offlineLong": "(offline for over 8 weeks)",
@@ -7380,7 +7495,7 @@
     "shared_devicesSubtitle": "Shared Devices",
     "MS": "Message",
     "CF": "Webex Team Meetings",
-    "MC": "Webex Team Meetings",
+    "MC": "Webex Meetings",
     "WebExMC": "Webex Meeting Center",
     "SC": "Webex Support Center",
     "TC": "Webex Training Center",
@@ -7643,6 +7758,7 @@
     "configureSite": "Configure Site",
     "deleteSite": "Delete Site",
     "partnerHelpMsg": "The ability to delete this site or redistribute licenses between sites has been disallowed by the Cisco partner that sold this subscription. Please contact the Cisco partner to delete this site or to redistribute licenses between sites.",
+    "trialHelpMsg": "The ability to delete this site or redistribute licenses between sites is disallowed for trial sites.",
     "webexUsers": "Webex Users",
     "bulkManageUsers": "Bulk Manage Users",
     "reports": "Reports",
@@ -8174,7 +8290,7 @@
     "deleteFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? Deleting the Customer Virtual Assistant removes it from all Customer Support Templates. Customers can no longer interact with the virtual assistant.",
     "deleteEvaFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? You can no longer escalate chat requests to Cisco Webex expert spaces.",
-    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use iMessage to interact with Care agents or Customer Virtual Assistants.",
+    "deleteAbcFeatureTextConfirmation": "Are you sure you want to delete {{ featureName }}? All customer interactions will be deleted. Customers can no longer use Messages to interact with Care agents or Customer Virtual Assistants.",
     "createSuccessText": "You have successfully created {{ featureName }}.",
     "createTemplateFailureText": "Failed to create Care template.",
     "editSuccessText": "Changes to {{ featureName }} are successfully saved.",
@@ -8486,7 +8602,7 @@
       "featureText": {
         "name": "Apple Business Chat",
         "type": "Apple Business Chat",
-        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using iMessage."
+        "selectDesc": "Configure Apple Business Chat to define how your customers reach you using Messages."
       },
       "businessId": {
         "title": "Apple Business Chat ID Verification",
@@ -8851,7 +8967,8 @@
       "required": "This field is required",
       "minRingSecs": "The shortest ring duration is {{secs}} seconds",
       "maxRingSecs": "The longest ring duration is {{secs}} seconds"
-    }
+    },
+    "misconfigured": "The {{huntGroupName}} hunt group contains a reference to a fallback destination that is no longer associated with a user.  Please click the link below to edit the configuation."
   },
   "digitalRiver": {
     "enterEmailAddr": {
@@ -9222,6 +9339,11 @@
       "turnOffDomainMessage": "Once the domain is turned off, the cloud synchronization will stop.  You must enable the synchronization from Directory Connector.  Are You sure you want to turn it off?",
       "turnOffDirSync": "Turn off All Directory Synchronizations",
       "turnOnDirSync": "How to Turn On Directory Synchronization"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Manage access to integrations for organizations.",
+      "description": "Authorize access for better management.<br>This allows or denies your users access to integrations available in your organization."
     }
   },
   "my-company": {
@@ -9278,7 +9400,7 @@
     "licenseTypes": {
       "MS": "Webex Teams",
       "CF": "Webex Team Meetings",
-      "MC": "Webex Team Meetings",
+      "MC": "Webex Meetings",
       "SC": "Webex Support",
       "TC": "Webex Training",
       "EC": "Webex Events",
@@ -9322,7 +9444,7 @@
         "admin": "Admin access to Cisco Webex Control Hub"
       },
       "useFree": {
-        "header": "Use Free Cisco Webex",
+        "header": "Use Free Cisco Webex Teams",
         "meetings": "Free Cisco Webex Meetings with 3 people",
         "messaging": "Free Cisco Webex Teams",
         "button": "Use Free"
@@ -11251,26 +11373,35 @@
         "enterCustomerNamePlaceholder": "Enter Customer Name",
         "chooseTemplatePlaceholder": "Choose Template",
         "customerExistsErrorMessage": "This customer already exists",
-        "swProfileWarningMsg": "Please add a Software Profile first"
+        "swProfileWarningMsg": {
+          "addSWProfile": "Please add a Software Profile first",
+          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
+        }
       },
       "nodeStatus": {
         "active":"Active",
+        "assignmentNeeded": "Assignment needed",
         "compliant": "Compliant",
         "inactive": "Inactive",
-        "needsAcceptance":"Needs Acceptance",
-        "needsAssigned":"Needs Assigned",
+        "needsAcceptance":"Needs acceptance",
+        "needsAssigned":"Needs assigned",
         "operational": "Operational",
-        "agentOffline": "Agent Offline",
-        "swProfileNotCoverAll": "Software profile does not cover all application",
-        "swVersionMismatch": "Software profile version mismatch",
-        "swUpgradeNeeded": "Software Upgrade Needed",
-        "needToUpdateBatchNumber": "Need to Update Batch Number",
-        "upgradeScheduled": "Upgrade Scheduled",
+        "agentOffline": "Agent offline",
+        "swProfileNotCoverAll": "Software profile incomplete",
+        "swVersionMismatch": "Software mismatch",
+        "swUpgradeNeeded": "Upgrade needed",
+        "scheduled": "Scheduled",
+        "needToUpdateBatchNumber": "Update batch number",
+        "upgradeScheduled": "Upgrade scheduled",
         "upgradeInProgress": "Upgrade in progress",
-        "failedUpgrade": "Failed Upgrade",
-        "unassigned": "Customer Unassigned",
-        "swProfileNotAssigned": "Software profile not Assigned",
-        "noAgentRunning": "No Agent Running"
+        "failedUpgrade": "Failed upgrade",
+        "unassigned": "Customer unassigned",
+        "started": "Started",
+        "swProfileNotAssigned": "No profile",
+        "success": "Success",
+        "noAgentRunning": "No agent",
+        "noClusters": "No clusters",
+        "noActiveVersion": "No active version"
       },
       "settings": {
         "inventoryName": {
@@ -11306,7 +11437,11 @@
     },
     "clustersList": {
       "title":"Clusters",
-      "errorGetClusters": "Error fetching clusters information for {{customerName}}"
+      "errorGetClusters": "Error fetching clusters information for {{customerName}}",
+      "deleteClusterModal": {
+        "title": "Delete {{clusterName}}?",
+        "description": "Deleting the cluster will also remove the agents from all the nodes. Are you sure?"
+      }
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
@@ -11377,6 +11512,11 @@
     },
     "nodesList": {
       "title": "Nodes"
+    },
+    "notifications": {
+      "featureAvailable": {
+        "infoText": "Hosted Collaboration Features are available. Simplify your process by utilizing this new feature."
+      }
     },
     "setup": {
       "finish": "Finish",
@@ -11479,8 +11619,7 @@
         }
       },
       "info": {
-        "1": "You are about to upgrade {{clusterName}} from {{currentVersion}} to {{upgradeTo}}. It is recommended that you endure the prechecks pass before continuing.",
-        "2": "The last time prechecks were run was {{lastRun}} and all passed.",
+        "1": "It is recommended that you ensure the prechecks pass before continuing.",
         "3": "Before you begin, verify that the correct software version files are located on the SFTP server assigned.",
         "precheck": "Run Prechecks"
       },
@@ -11489,8 +11628,24 @@
         "directions": "Use arrows to set the order that the nodes in the cluster will be upgraded",
         "addAnother": "Add Upgrade Group",
         "maxGroups": "Cannot create more than 8 upgrade groups"
-
       }
+    },
+    "sidePanel": {
+      "activeVersion": "Active Version",
+      "inactiveVersion": "Inactive Version",
+      "postTime": "Check Results",
+      "spaceAvailable": "Available Space",
+      "copInstalled": "COP files Installed"
+    },
+    "prechecks" : {
+      "title": "Prechecks",
+      "choose": "Choose the Upgrade Prechecks to run",
+      "availableSpace": "Check available space",
+      "availableSpaceDesc": "Check all nodes in the cluster for enough available space for this upgrade.",
+      "copFiles": "Collect list of installed COP files.",
+      "copFilesDesc": "Collect COP file information from each node.",
+      "runningPrechecks": "Running Prechecks",
+      "runPrechecks": "Run Prechecks"
     },
     "upgradePage": {
       "title": "Upgrades"
@@ -11633,6 +11788,38 @@
     "text": "To address critical security issues, Cisco will no longer support TLS1.0 and TLS1.1 in the near future. Customers should upgrade to Cisco Directory Connector version 3.0 as soon as possible. If customers do not upgrade, the Cisco Directory Connector will not work; user synchronization to the Cisco Webex cloud (provisioning, updating, and de-provisioning) will not occur. To prepare for this update, please make sure the VM or Windows OS has the required Microsoft .NET 4.5 or later installed."
   },
   "integrations": {
-    "mainTitle": "Integrations"
+    "list": {
+      "mainTitle": "Integrations",
+      "integrationName": "Integration Name",
+      "accessStatus": "Access Status",
+      "userAdoption": "User Adoption",
+      "policyActionAllow": "Allowed",
+      "policyActionDeny": "Denied",
+      "globalAccess": {
+        "globalAccessValue": "Global Access: {{value}} ",
+        "modalTitle": "Global Access Alert",
+        "modalOnBody": "Do you want to turn on access to all integrations? ",
+        "modalOffBody": "Do you want to turn off access to all integrations?<br>Note: ALL existing user adoptions will be revoked."
+      },
+      "getIntegrationListError": "Could not get records. Need official copy",
+      "adoptionListRefreshTime": "User adoption list last refreshed on {{refreshDate}}"
+    },
+    "overview": {
+      "sectionTitle": "Integration Access",
+      "download": "Download",
+      "revokeAccess": "Revoke Access",
+      "details": "Integration Details",
+      "userAdoption": "User Adoption",
+      "access": "Access for Future Users",
+      "accessTooltip": "Any action doesn't impact the existing users of the integration.",
+      "allUsers": "All users",
+      "specificUsers": "Specific users",
+      "revokeAccessDialog": {
+        "title": "Revoke Access Alert",
+        "message": "{count, plural, =1{# user} other{All # users}} will lose access to this integration. Do you want to revoke access?"
+      },
+      "saveSuccess": "Successfully saved integration access.",
+      "saveError": "Error saving integration access."
+    }
   }
 }

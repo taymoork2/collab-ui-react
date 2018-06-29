@@ -81,4 +81,3 @@ export class Suggestion implements ISuggestionForUi, ISuggestionAndGroupForUi, I
     this.activeByKeyboard = active;
   }
 }
-

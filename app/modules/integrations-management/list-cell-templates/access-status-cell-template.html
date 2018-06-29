@@ -1,0 +1,10 @@
+<div class="ui-grid-cell-contents">
+  <div ng-if="row.entity.policyAction === grid.appScope.PolicyActionEnum.ALLOW">
+    <i class="icon icon-circle status-indicator success"></i>
+    <span translate="integrations.list.policyActionAllow"></span>
+  </div>
+  <div ng-if="row.entity.policyAction === grid.appScope.PolicyActionEnum.DENY">
+    <i class="icon icon-circle status-indicator danger"></i>
+    <span translate="integrations.list.policyActionDeny"></span>
+  </div>
+</div>

@@ -12,6 +12,7 @@ export * from './hcs-setup';
 export default angular
   .module('hcs.hcs-setup-modal', [
     require('@collabui/collab-ui-ng').default,
+    require('modules/hcs/hcs-shared').default,
     require('angular-translate'),
     sharedModule,
     setupServiceSelectionModule,

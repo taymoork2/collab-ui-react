@@ -1,9 +1,9 @@
-import { SpeedDialService, ISpeedDial } from './speedDial.service';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
-import { Notification } from 'modules/core/notifications';
 import { CallDestinationTranslateService, ICallDestinationTranslate } from 'modules/call/shared/call-destination-translate';
-import { DraggableService, DraggableInstance } from 'modules/core/accessibility';
+import { DraggableInstance, DraggableService } from 'modules/core/accessibility';
 import { IToolkitModalService } from 'modules/core/modal';
+import { Notification } from 'modules/core/notifications';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { ISpeedDial, SpeedDialService } from './speedDial.service';
 
 interface IValidationMessages {
   required: string;

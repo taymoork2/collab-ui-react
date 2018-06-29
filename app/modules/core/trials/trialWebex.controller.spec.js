@@ -13,6 +13,7 @@ describe('Controller: Trial Webex', function () {
     );
     this.injectDependencies(
       '$controller',
+      '$compile',
       '$q',
       '$scope',
       'Analytics',
@@ -59,6 +60,10 @@ describe('Controller: Trial Webex', function () {
     spyOn(this.Analytics, 'trackTrialSteps');
     spyOn(this.TrialTimeZoneService, 'getTimeZones').and.returnValue(this.timeZoneData);
 
+    var template = require('modules/core/trials/trialWebex.tpl.html');
+    this.view = this.$compile(angular.element(template))(this.$scope);
+    this.$scope.$apply();
+
     this.$scope.trialData = this.trialData.enabled;
     this.controller = this.$controller('TrialWebexCtrl', { $scope: this.$scope });
     this.$scope.$apply();
@@ -104,5 +109,17 @@ describe('Controller: Trial Webex', function () {
   it('should sort the timezone list correctly', function () {
     var result = this.controller.getTimeZones();
     expect(result).toEqual(this.sortedTimeZoneData);
+  });
+
+  it('site URL field should be valid with valid characters', function () {
+    var element = this.view.find('#trial--webex--siteUrl');
+    element.val('a.webex.com').change().blur();
+    expect(this.$scope.trialForm.siteUrl.$valid).toBe(true);
+  });
+
+  it('site URL field should not be valid when it contains special characters', function () {
+    var element = this.view.find('#trial--webex--siteUrl');
+    element.val('a .webex.com').change().blur();
+    expect(this.$scope.trialForm.siteUrl.$valid).toBe(false);
   });
 });

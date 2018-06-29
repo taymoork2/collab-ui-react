@@ -130,7 +130,6 @@ export class PstnSwivelNumbersCtrl implements ng.IComponentController {
     $('#' + this.tokenfieldid).attr('placeholder', text);
   }
 
-
   public onAckChange(): void {
     this.onAcknowledge({
       value: this.acknowledge,

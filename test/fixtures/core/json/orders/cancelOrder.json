@@ -1,0 +1,32 @@
+{
+  "orderStatus": "PROVISIONED",
+  "serviceProvisioningId": "PI_12345",
+  "orderingTool": "CCW",
+  "externalOrderId": "12345678-M",
+  "orderUuid": "abc12345-88e4-4dd4-aa82-69d89e8ae491",
+  "productProvisionStatus": {
+     "serviceStatus": []
+    },
+  "orderReceived": "2018-01-17T11: 07: 42.659Z",
+  "serviceId": "Sub133742",
+  "purchaseOrderId": "cab8b41b-2a70-4136-834a-66d451b752bb",
+  "lastProvisioningContact": "fakegmuser@gmail.com",
+  "lastProvisioningEmailTimestamp": "2018-01-17T01: 24: 26.188Z",
+  "lastModified": "2018-01-17T11: 07: 43.000Z",
+  "orderContent": {
+    "common": {
+      "serviceProvisioningId": "PI_12345",
+      "SBPOrderId": "12345678-M/PI_12345",
+      "isTrial": false,
+      "action": "Cancel",
+      "offerName": "Cancel based on inventory",
+      "orderingTool": "CCW",
+      "rtm": "direct",
+      "callbackUrl": "https: //api.cisco.com/sbp/prd/sfl"
+      },
+    "collabServiceInfoCommon": {
+      "serviceId": "Sub133742",
+      "site": []
+    }
+  }
+}

@@ -11,7 +11,6 @@ describe('DirSyncServiceOld', function () {
           getAdminServiceUrl: function () {
             return '/foo/';
           },
-          getOauth2Url: jasmine.createSpy('Url'),
         };
         Authinfo = {
           getOrgId: function () {

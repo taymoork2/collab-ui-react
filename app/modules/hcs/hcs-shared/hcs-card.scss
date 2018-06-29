@@ -4,17 +4,13 @@
 @import '~@collabui/collab-ui/scss/tools/mixins/vendor-prefixes';
 @import '~@collabui/collab-ui/scss/tools/placeholders/page-layout';
 
-.reveal-modal.full div.modal-body {
+.reveal-modal.full hcs-setup-modal div.modal-body {
   padding: 1rem 2rem 0.5rem;
 }
 .hcs-card-header {
 
   header {
     @include vr-spacing(pt, 1);
-    button.close::before {
-      font-size: 1rem;
-      color: $gray-dark-2;
-    }
     padding-left: rem-calc(24);
     padding-bottom: rem-calc(24);
 
@@ -81,7 +77,13 @@
   header {
     padding-left: 0rem;
     .hcs-sftp-path {
-      padding-top: 0rem;
+      padding: rem-calc(8) 0rem;
+    }
+
+    div.header-with-right-icon {
+      p{
+        padding: 0rem;
+      }
     }
   }
 

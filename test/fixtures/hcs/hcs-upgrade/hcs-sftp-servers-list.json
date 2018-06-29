@@ -1,0 +1,23 @@
+{
+  "sftpServers" : [
+    {
+      "uuid" : "ad963088-4a15-4085-a415-fef305be0e04",
+      "name" : "RCDN-Lab",
+      "path" : "/auto/ncs/green/uaas/iso/",
+      "server" : "10.89.118.137",
+      "userName" : "auto"
+    }, {
+      "uuid" : "91bf591a-2df3-41d1-93a3-cbb45e5e8a31",
+      "name" : "Test-SFTP",
+      "path" : "/auto/ncs/green/uaas/iso",
+      "server" : "10.89.68.31",
+      "userName" : "auto"
+    }, {
+      "uuid" : "3e757cf0-bca0-4a74-91fa-d7930500073d",
+      "name" : "SL-local",
+      "path" : "/common/iso/",
+      "server" : "10.5.10.50",
+      "userName" : "root"
+    }
+  ]
+}

@@ -41,8 +41,8 @@ enum ProvisioningResult {
   'PASSWORD_CREATION_FAILURE' = 10,        // Error creating passwords
   'INVALID_SESSION_ID' = 11,               // Invalid session id
   'BAD_ADMIN_CONSENT' = 12,                // Invalid admin consent
-  'PRECONDITIONS_NOT_MET' = 13,            // Session timeout
-  'MACHINE_ACCOUNT_DELETION_FAILURE' = 14, // Error creating machine account
+  'PRECONDITIONS_NOT_MET' = 13,            // Preconditions not met
+  'MACHINE_ACCOUNT_DELETION_FAILURE' = 14, // Error deleting machine account
   'ORGANIZATION_ADDITION_FAILURE' = 15,    // Error adding organization
 }
 
@@ -201,9 +201,7 @@ export class CloudConnectorService {
   }
 
   public getProvisioningResultTranslationKey(provisioningResultCode: number): string {
-    // All other result codes than below are convidering "generic errors" because the admin can't
-    // do anything to fix them
-    if (!_.includes([0, 6, 7, 11, 12], provisioningResultCode)) {
+    if (!_.includes([0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], provisioningResultCode)) {
       provisioningResultCode = 6;
     }
     return `hercules.settings.googleCalendar.provisioningResults.${ProvisioningResult[provisioningResultCode]}`;

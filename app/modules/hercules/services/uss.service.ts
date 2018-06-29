@@ -62,6 +62,8 @@ export interface IUserStatusWithExtendedMessages extends IUserStatus {
 
 type UserStatus = 'activated' | 'notActivated' | 'error';
 
+type AssignmentStatus = 'waiting' | 'success' | 'failure' | 'nonOperational';
+
 interface IUserStatus {
   connectorId?: string;
   clusterId?: string;
@@ -75,6 +77,16 @@ interface IUserStatus {
   state: UserStatus;
   userId: string;
   owner?: string;
+  assignments?: IUserAssignment[];
+}
+
+export interface IUserAssignment {
+  connectorId: string;
+  clusterId: string;
+  status: AssignmentStatus;
+  assignedAt?: string;
+  acknowledgedAt?: string;
+  details?: IMessage[];
 }
 
 export interface IMessage {
@@ -111,6 +123,38 @@ interface IJournalEntry {
       userId: string;
       trackingRoot: string;
     };
+  };
+}
+
+interface IUserActivationHistoryEntry {
+  time: string;
+  record: {
+    payload: {
+      type: string;
+      orgId: string;
+      userId: string;
+      service: HybridServiceId;
+      state?: string;
+      statusDetailsJson?: string;
+      details?: IMessage[];
+      requestedAt?: string;
+      retryAt?: string;
+      resourceGroupId?: string;
+      assignments?: IUserAssignment[];
+      connectorId?: string;
+      clusterId?: string;
+    },
+    context: {
+      jobId: string;
+    };
+  };
+}
+
+interface IUserActivationHistoryResponse {
+  entries: IUserActivationHistoryEntry[];
+  paging: {
+    count: number;
+    next?: string;
   };
 }
 
@@ -174,6 +218,7 @@ export class USSService {
     this.extractAndTweakUserStatuses = this.extractAndTweakUserStatuses.bind(this);
     this.extractData = this.extractData.bind(this);
     this.extractJournalEntries = this.extractJournalEntries.bind(this);
+    this.extractUserActivationHistoryEntries = this.extractUserActivationHistoryEntries.bind(this);
     this.fetchStatusesSummary = this.fetchStatusesSummary.bind(this);
     this.hub.on = this.hub.on.bind(this);
     this.subscribeStatusesSummary = this.hub.on;
@@ -270,6 +315,12 @@ export class USSService {
       .then(this.extractJournalEntries);
   }
 
+  public getUserActivationHistory(userId: string, orgId = this.Authinfo.getOrgId(), limit?: number, serviceId?: HybridServiceId): ng.IPromise<IUserActivationHistoryEntry[]> {
+    return this.$http
+      .get<IUserActivationHistoryResponse>(`${this.USSUrl}/orgs/${(orgId)}/users/${userId}/userJournal${(limit ? `?limit=${limit}` : '')}${(serviceId ? `&service=${serviceId}` : '')}`)
+      .then(this.extractUserActivationHistoryEntries);
+  }
+
   public getUserProps(userId: string, orgId = this.Authinfo.getOrgId()): ng.IPromise<IUserProps> {
     return this.$http
       .get<IUserProps>(`${this.USSUrl}/orgs/${(orgId)}/userProps/${userId}`)
@@ -364,6 +415,12 @@ export class USSService {
       .then(this.extractData);
   }
 
+  public reactivateUser(userId: string, serviceId: HybridServiceId, orgId = this.Authinfo.getOrgId()): ng.IPromise<any> {
+    return this.$http
+      .post<any>(`${this.USSUrl}/orgs/${orgId}/users/${userId}/actions/reactivate/invoke?service=${serviceId}`, null)
+      .then(this.extractData);
+  }
+
   private convertToTranslateReplacements(messageReplacementValues: IReplacementValue[] | undefined): object {
     if (!messageReplacementValues) {
       return {};
@@ -429,6 +486,20 @@ export class USSService {
           entry.entry.payload.messages = this.sortAndTweakUserMessages(entry.entry.payload.messages);
         }
         return entry;
+      })
+      .value();
+    return result;
+  }
+
+  private extractUserActivationHistoryEntries(res: ng.IHttpResponse<any>): IUserActivationHistoryEntry[] {
+    const entries: IUserActivationHistoryEntry[] = res.data.entries || [];
+    const result = _.chain(entries)
+      .map((e) => {
+        if (e.record.payload && e.record.payload.statusDetailsJson) {
+          const details: IMessage[] = JSON.parse(e.record.payload.statusDetailsJson);
+          e.record.payload.details = this.sortAndTweakUserMessages(details);
+        }
+        return e;
       })
       .value();
     return result;

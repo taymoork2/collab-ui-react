@@ -5,7 +5,6 @@ import {
   CCODE_US,
 } from './index';
 
-
 describe('Service: PstnAreaService', () => {
   const STATES_TOTAL: number  = 59;
   const PROVINCES_TOTAL: number = 13;

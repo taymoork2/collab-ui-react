@@ -22,4 +22,3 @@ export default angular
   .component('mediaMgr', new MediaMgrComponent())
   .service('MediaMgrService', MediaMgrService)
   .name;
-

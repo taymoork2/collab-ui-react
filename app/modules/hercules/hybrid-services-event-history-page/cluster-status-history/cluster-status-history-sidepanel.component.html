@@ -95,7 +95,7 @@
           </p>
         </div>
 
-        <div ng-if="$ctrl.eventItem.connectorDetails.upgradeState && $ctrl.eventItem.connectorDetails.oldUpgradeState ">
+        <div ng-if="$ctrl.eventItem.connectorDetails.upgradeState && $ctrl.eventItem.connectorDetails.oldUpgradeState">
           <p class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.connectorUpdatedEvents.updatedHelpTextUpgradeState"
                 translate-values="{ oldUpgradeState: $ctrl.eventItem.connectorDetails.oldUpgradeState, upgradeState: $ctrl.eventItem.connectorDetails.upgradeState }"></span>
@@ -128,8 +128,11 @@
 
       <div ng-if="$ctrl.eventItem.connectorStatus === 'installing'">
         <p class="hybrid-service-description">
-          <span translate="hercules.eventHistory.sidepanel.connectorEvents.installing"
+          <span ng-if="$ctrl.eventItem.connectorType === 'mf_mgmt'" translate="hercules.eventHistory.sidepanel.connectorEvents.installingMf"
                 translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
+
+          <span ng-if="$ctrl.eventItem.connectorType !== 'mf_mgmt'" translate="hercules.eventHistory.sidepanel.connectorEvents.installing"
+          translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName, softwareVersion: $ctrl.eventItem.softwareVersion }"></span>
         </p>
       </div>
 
@@ -172,6 +175,21 @@
         </p>
       </div>
 
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'restarted'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.restarted"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName}"></span>
+        </p>
+      </div>
+
+      <div ng-if="$ctrl.eventItem.connectorStatus === 'upgraded'">
+        <p class="hybrid-service-description">
+          <span translate="hercules.eventHistory.sidepanel.connectorEvents.upgraded"
+                translate-values="{ localizedConnectorName: $ctrl.localizedConnectorName,
+                version: $ctrl.eventItem.softwareVersion, previousVersion: $ctrl.eventItem.previousSoftwareVersion}"></span>
+        </p>
+      </div>
+
       </div>
     </div>
 
@@ -182,13 +200,23 @@
 
         <div ng-if="$ctrl.performedAutomatically($ctrl.eventItem)">
 
-          <div ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue !== null && $ctrl.eventItem.clusterProvisioningDetails.newValue !== null">
+          <div ng-if="$ctrl.eventItem.targetType !== 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue !== null && $ctrl.eventItem.clusterProvisioningDetails.newValue !== null">
             <p class="hybrid-service-description">
               <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedProvisioningChange"
                     translate-values="{ connectorName: $ctrl.localizedConnectorName, newValue: $ctrl.eventItem.clusterProvisioningDetails.newValue }"></span>
             </p>
             <p class="hybrid-service-description">
               <span translate="hercules.eventHistory.sidepanel.clusterEvents.upgradeHelpText"></span>
+            </p>
+          </div>
+
+          <div ng-if="$ctrl.eventItem.targetType === 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue !== null && $ctrl.eventItem.clusterProvisioningDetails.newValue !== null">
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.automatedProvisioningChange"
+                    translate-values="{ connectorName: $ctrl.localizedConnectorName, newValue: $ctrl.eventItem.clusterProvisioningDetails.newValue }"></span>
+            </p>
+            <p class="hybrid-service-description">
+              <span translate="hercules.eventHistory.sidepanel.clusterEvents.upgradeHelpTextMf"></span>
             </p>
           </div>
 
@@ -250,13 +278,24 @@
 
       </div>
 
-      <div ng-if="$ctrl.eventItem.type === 'UpgradeSchedule'">
+        <div ng-if="$ctrl.eventItem.type === 'UpgradeSchedule'">
         <p class="hybrid-service-description">
-          <span ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue === ''"
+          <span ng-if="$ctrl.eventItem.targetType === 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue === ''"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.firstUpgradeScheduleMf"
+                translate-values="{ upgradeSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue }">
+          </span>
+
+          <span ng-if="$ctrl.eventItem.targetType !== 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue === ''"
                 translate="hercules.eventHistory.sidepanel.clusterEvents.firstUpgradeSchedule"
                 translate-values="{ upgradeSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue }">
           </span>
-          <span ng-if="$ctrl.eventItem.clusterProvisioningDetails.oldValue !== '' && $ctrl.eventItem.clusterProvisioningDetails.newValue"
+
+          <span ng-if="$ctrl.eventItem.targetType === 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue !== '' && $ctrl.eventItem.clusterProvisioningDetails.newValue"
+                translate="hercules.eventHistory.sidepanel.clusterEvents.changedUpgradeScheduleMf"
+                translate-values="{ username: $ctrl.eventItem.username , newSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue, oldSchedule: $ctrl.eventItem.clusterProvisioningDetails.oldValue }">
+          </span>
+
+          <span ng-if="$ctrl.eventItem.targetType !== 'mf_mgmt' && $ctrl.eventItem.clusterProvisioningDetails.oldValue !== '' && $ctrl.eventItem.clusterProvisioningDetails.newValue"
                 translate="hercules.eventHistory.sidepanel.clusterEvents.changedUpgradeSchedule"
                 translate-values="{ username: $ctrl.eventItem.username , newSchedule: $ctrl.eventItem.clusterProvisioningDetails.newValue, oldSchedule: $ctrl.eventItem.clusterProvisioningDetails.oldValue }">
           </span>
@@ -311,7 +350,7 @@
                 translate-values="{ newReleaseChannel: $ctrl.eventItem.clusterDetails.releaseChannel, oldReleaseChannel: $ctrl.eventItem.clusterDetails.oldReleaseChannel }">
           </span>
         </p>
-        <p class="hybrid-service-description">
+        <p ng-if="$ctrl.eventItem.targetType !== 'mf_mgmt'" class="hybrid-service-description">
           <span translate="hercules.eventHistory.sidepanel.clusterEvents.changedReleaseChannelHelp">
           </span>
         </p>
@@ -440,9 +479,13 @@
     <div ng-if="$ctrl.isServiceActivationEvent($ctrl.eventItem)">
 
       <div ng-if="$ctrl.eventItem.type === 'ServiceEnabled'">
-        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec'">
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec' && $ctrl.eventItem.serviceId !== 'squared-fusion-media'">
           <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceEnabled"
                 translate-values="{ username: $ctrl.eventItem.username, serviceName: $ctrl.localizedServiceName, connectorName: $ctrl.localizedConnectorName }"></span>
+        </p>
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId === 'squared-fusion-media'">
+          <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceEnabledMf"
+                translate-values="{ username: $ctrl.eventItem.username, serviceName: $ctrl.localizedServiceName}"></span>
         </p>
         <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId === 'squared-fusion-ec'">
           <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.callServiceConnectEnabled"
@@ -455,7 +498,7 @@
           <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceDisabled"
                 translate-values="{ serviceName: $ctrl.localizedServiceName, username: $ctrl.eventItem.username }"></span>
         </p>
-        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec'">
+        <p class="hybrid-service-description" ng-if="$ctrl.eventItem.serviceId !== 'squared-fusion-ec' && $ctrl.eventItem.serviceId !== 'squared-fusion-media'">
           <span translate="hercules.eventHistory.sidepanel.serviceActivationEvents.serviceDisabledHelpText"
                 translate-values="{ serviceName: $ctrl.localizedServiceName, connectorName: $ctrl.localizedConnectorName }"></span>
         </p>

@@ -1,7 +1,7 @@
 import { IToolkitModalService } from 'modules/core/modal';
 import { HcsUpgradeService, HcsControllerService, GROUP_TYPE_UNASSIGNED, IApplicationItem, IClusterItem, IHcsClusterSummaryItem, INodeSummaryItem, IHcsCustomer, IHcsUpgradeCustomer, ISoftwareProfilesObject, ISoftwareProfile } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
-import { ISelectOption, IHeaderTab } from '../shared/hcs-inventory';
+import { ISelectOption, IHeaderTab, STATUS_UPGRADE_IN_PROGRESS, STATUS_UPGRADE_SCHEDULED } from '../shared/hcs-inventory';
 
 export class ClusterListComponent implements ng.IComponentOptions {
   public controller = ClusterListCtrl;
@@ -26,6 +26,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   public loading: boolean;
   public typeUnassigned: string = GROUP_TYPE_UNASSIGNED;
   public disableSwProfileSelect: boolean = false;
+  public warningMsgSwProfileSelect: string;
 
   /* @ngInject */
   constructor(
@@ -69,9 +70,9 @@ export class ClusterListCtrl implements ng.IComponentController {
       template: '<hcs-delete-modal delete-fn="$ctrl.deleteFn()" dismiss="$dismiss()" modal-title="$ctrl.title" modal-description="$ctrl.description"></hcs-delete-modal>',
       controller: () => {
         return {
-          deleteFn: () => this.deleteCluster(),
-          title: this.$translate.instant('hcs.installFiles.deleteModal.title'),
-          description: this.$translate.instant('hcs.installFiles.deleteModal.description'),
+          deleteFn: () => this.deleteCluster(cluster.id),
+          title: this.$translate.instant('hcs.clustersList.deleteClusterModal.title', { clusterName: cluster.name }),
+          description: this.$translate.instant('hcs.clustersList.deleteClusterModal.description'),
         };
       },
       modalClass: 'hcs-delete-modal-class',
@@ -80,14 +81,17 @@ export class ClusterListCtrl implements ng.IComponentController {
     });
   }
 
-  public deleteCluster(): void {
-    //delete intsall file && update install file list
+  public deleteCluster(clusterId: string): void {
+    //delete Cluster && update Cluster list
+    this.HcsUpgradeService.deleteCluster(clusterId)
+      .then(() => this.$state.go('hcs.clusterList', { groupId: this.groupId }, { reload: true }))
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
   }
 
   public initCustomer(): void {
     if (this.groupId === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
-      this.customerId = undefined;
+      this.customerId = '';
     } else {
       this.customerId = this.groupId;
       this.HcsControllerService.getHcsControllerCustomer(this.groupId)
@@ -126,7 +130,8 @@ export class ClusterListCtrl implements ng.IComponentController {
           this.softwareVersionProfiles.push(swProfileListItem);
         });
 
-        if (this.softwareVersionProfiles.length === 0) {
+        if (this.softwareVersionProfiles.length === 0  && !this.disableSwProfileSelect) {
+          this.warningMsgSwProfileSelect = this.$translate.instant('hcs.clusterDetail.addCustomerModal.swProfileWarningMsg.addSWProfile');
           this.disableSwProfileSelect = true;
         }
       })
@@ -147,6 +152,12 @@ export class ClusterListCtrl implements ng.IComponentController {
     this.clusterList = [];
     //function to get cluster data from response object
     _.forEach(clustersData, (cluster: IHcsClusterSummaryItem) => {
+      //if cluster status is STATUS_UPGRADE_IN_PROGRESS or STATUS_UPGRADE_SCHEDULED, disable SW Profile selection.
+      if ((cluster.clusterStatus === STATUS_UPGRADE_IN_PROGRESS || cluster.clusterStatus === STATUS_UPGRADE_SCHEDULED) && !this.disableSwProfileSelect) {
+        this.warningMsgSwProfileSelect = this.$translate.instant('hcs.clusterDetail.addCustomerModal.swProfileWarningMsg.upgradeInProgress');
+        this.disableSwProfileSelect = true;
+      }
+
       const applicationList: IApplicationItem[] = [];
       if (!_.isUndefined(cluster.nodes)) {
         _.forEach(cluster.nodes, (node: INodeSummaryItem) => {

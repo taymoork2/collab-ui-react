@@ -98,7 +98,7 @@
                 class="matter-detail__action__release">
                   <button cs-btn type="button"
                   class="btn btn--circle"
-                  aria-label="{{::'common.release' | translate}}"
+                  aria-label="{{::'legalHold.details.release' | translate}}"
                   ng-disabled="$ctrl.isProcessing"
                   ng-click="$ctrl.releaseMatter()">
                   <span class="icon icon-circle-data"></span>
@@ -130,18 +130,11 @@
               <div class="matter-detail__action__export" ng-if="$ctrl.matter.numberOfCustodians !== 0">
                 <button cs-btn type="button"
                   class="btn btn--circle btn--primary"
-                  ng-disabled="$ctrl.isProcessing"
                   aria-label="{{::'common.export' | translate}}"
                   ng-click="$ctrl.exportCustodians()">
                   <span class="icon icon-search"></span>
               </button>
               <label class="body-small"translate="common.export"></label>
-                <cr-csv-download filename={{::$ctrl.exportFileName}}
-                  is-hidden="true"
-                  csv-data="$ctrl.exportResults"
-                  download-finished-fn="$ctrl.finishDownload()"
-                  l10n-success-string="legalHold.custodianImport.downloadSuccess">
-                </cr-csv-download>
               </div>
               <div ng-if="$ctrl.isActive()"
                 class="matter-detail__action__add">

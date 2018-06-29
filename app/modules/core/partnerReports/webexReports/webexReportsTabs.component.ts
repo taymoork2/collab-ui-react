@@ -1,11 +1,12 @@
 class WebexReportsTabs implements ng.IComponentController {
 
   public tabs;
+  public isUx3Enabled: boolean = true;
 
   /* @ngInject */
   public constructor(
     private FeatureToggleService,
-  ) { }
+  ) {}
 
   public $onInit(): void {
     this.tabs = [
@@ -21,6 +22,7 @@ class WebexReportsTabs implements ng.IComponentController {
             state: `partnerreports.tab.webexreports.diagnostics`,
             title: `reportsPage.webexMetrics.diagnostics`,
           });
+          this.isUx3Enabled = false;
         }
       });
   }

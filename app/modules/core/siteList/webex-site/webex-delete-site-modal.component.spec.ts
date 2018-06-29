@@ -29,7 +29,6 @@ describe('Component: WebexDeleteSiteModalComponent', function () {
     spyOn(this.$rootScope, '$broadcast').and.callThrough();
   }
 
-
   describe('when first opened', function () {
     it('should get services for that particular subscription', function () {
       expect(this.SetupWizardService.getConferenceLicensesBySubscriptionId).toHaveBeenCalledWith('Sub100448');
@@ -79,4 +78,3 @@ describe('Component: WebexDeleteSiteModalComponent', function () {
   });
 
 });
-

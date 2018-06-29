@@ -63,7 +63,7 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
   private data: IData = {
     clientName: '',
     scope: '',
-    testAccount: this.Authinfo.getPrimaryEmail(),
+    testAccount: '',
     adminAccount: '',
     useResources: false,
   };
@@ -86,7 +86,6 @@ export class GoogleCalendarFirstTimeSetupCtrl implements ng.IComponentController
   constructor(
     private $state: ng.ui.IStateService,
     private $translate: ng.translate.ITranslateService,
-    private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
   ) { }

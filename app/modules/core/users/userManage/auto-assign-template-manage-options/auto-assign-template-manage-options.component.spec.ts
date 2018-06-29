@@ -10,8 +10,6 @@ describe('Component: autoAssignTemplateManageOptions:', () => {
   beforeEach(function() {
     this.initModules(moduleName);
     this.injectDependencies(
-      '$q',
-      '$scope',
       '$state',
       'AutoAssignTemplateService',
       'ModalService',

@@ -10,7 +10,6 @@ class HybridMediaUpgradeScheduleCtrl implements ng.IComponentController {
     value: 'everyDay',
   }];
 
-
   public upgradeScheduleTitle = {
     title: 'mediaFusion.easyConfig.upgradeschedule',
   };

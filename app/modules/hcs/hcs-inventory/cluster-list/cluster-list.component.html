@@ -6,9 +6,9 @@
   back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
-<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading">
+<cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading" ng-class="{'hcs-upgrade-cluster-list-page-sub-header-warning': $ctrl.disableSwProfileSelect}">
   <cs-page-sub-header-right class="row">
-    <div class="columns medium-2 hcs-right-header-filter">
+    <div class="columns medium-4 hcs-right-header-filter">
         <cs-select
         name="softwareVersionSelect"
         ng-model="$ctrl.softwareVersionSelected"
@@ -17,22 +17,22 @@
         filter="false"
         is-disabled="$ctrl.disableSwProfileSelect"
         is-warn="{{$ctrl.disableSwProfileSelect}}"
-        warn-msg="{{::'hcs.clusterDetail.addCustomerModal.swProfileWarningMsg' | translate}}">
+        warn-msg="{{$ctrl.warningMsgSwProfileSelect}}">
     </div>
     </cs-select>
   </cs-page-sub-header-right>
 </cs-page-sub-header>
 <div class="cs-card-container cluster-list-container">
   <div class="loading-container" ng-if="$ctrl.loading">
-    <i class="icon icon-spinner"></i>
+    <i class="icon icon-2x icon-spinner"></i>
   </div>
-  <cs-card-layout>
-    <cs-card ng-if="!$ctrl.loading" class="cs-card--medium header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
+  <cs-card-layout ng-if="!$ctrl.loading">
+    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="cluster in $ctrl.clusterList">
       <article  ng-click="$ctrl.cardSelected(cluster)" hover-delay>
         <header>
           <div class="header-with-right-icon">
-            <h4 class="cluster-name" title="Card Name">{{cluster.name}}</h4>
-            <div class="right card-icon-div "  ng-if="groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()">
+            <h4 class="cluster-name ellipsis" title="{{cluster.name}}">{{cluster.name}}</h4>
+            <div class="right card-icon-div">
               <button type="button" class="close"
                 ng-click="$ctrl.closeCard((cluster), $event)"
                 ng-keydown=""
@@ -85,6 +85,10 @@
             <div ng-switch-when="SOFTWARE_UPGRADE_NEEDED">
               <i class="icon icon-circle status-indicator warning"></i>
               <span class="h6">{{::'hcs.clusterDetail.nodeStatus.swUpgradeNeeded' | translate}}</span>
+            </div>
+            <div ng-switch-when="NO_ACTIVE_VERSION">
+              <i class="icon icon-circle status-indicator warning"></i>
+              <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noActiveVersion' | translate}}</span>
             </div>
             <div ng-switch-when="NEED_TO_UPDATE_BATCH_NUMBER">
               <i class="icon icon-circle status-indicator warning"></i>

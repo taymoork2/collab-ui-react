@@ -55,7 +55,6 @@ describe('Component: linkedSites', () => {
       webexInfo: <IACWebexPromises> this.webexInfo,
     };
 
-
   });
 
   describe('at startup', () => {

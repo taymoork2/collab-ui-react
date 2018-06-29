@@ -26,8 +26,7 @@ describe('Component: Banner', function () {
   it('should initialize with default values', function () {
     this.initComponent();
 
-    expect(_.size(this.controller.bannerList)).toBe(1);
-    expect(this.controller.bannerList[0].name).toBe('REBRAND_BANNER_NAME');
+    expect(_.size(this.controller.bannerList)).toBe(0);
     expect(this.$rootScope.$on).toHaveBeenCalledWith(this.broadcast, jasmine.any(Function));
   });
 
@@ -44,8 +43,8 @@ describe('Component: Banner', function () {
     });
     this.$scope.$apply();
 
-    expect(_.size(this.controller.bannerList)).toBe(2);
-    const testBanner = _.cloneDeep(this.controller.bannerList[1]);
+    expect(_.size(this.controller.bannerList)).toBe(1);
+    const testBanner = _.cloneDeep(this.controller.bannerList[0]);
     expect(testBanner.iconCss).toEqual(this.iconCss);
     expect(testBanner.isVisible).toBeTruthy();
     expect(testBanner.type).toEqual(this.type);
@@ -56,7 +55,7 @@ describe('Component: Banner', function () {
       name: 'TEST_BANNER_NAME',
     });
     this.$scope.$apply();
-    expect(_.size(this.controller.bannerList)).toBe(1);
+    expect(_.size(this.controller.bannerList)).toBe(0);
   });
 
   it('html should react as expected', function () {

@@ -1,4 +1,5 @@
 export interface IOrder {
+  postProvisioningUUID: string;
   webOrderID: string;
   orderUUID: string;
   siteUrl: string;
@@ -11,6 +12,7 @@ export interface IOrder {
   queueCompleted: string;
   assignedTo: string;
   completedBy: string;
+  note: string;
 
 }
 

@@ -24,6 +24,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   public softwareProfileSelected: ISelectOption;
   public softwareProfilesList: ISelectOption[];
   public disableSwProfileSelect: boolean = false;
+  public processing: boolean = false;
 
   /* @ngInject */
   constructor(
@@ -44,8 +45,6 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
     };
     this.customerNamePlaceholder = this.$translate.instant('hcs.clusterDetail.addCustomerModal.enterCustomerNamePlaceholder');
     this.softwareProfilesPlaceholder = this.$translate.instant('hcs.clusterDetail.addCustomerModal.chooseTemplatePlaceholder');
-
-    //TODO: get software template default for partner.??
     this.softwareProfileSelected = { label: '', value: '' };
 
     this.HcsUpgradeService.listSoftwareProfiles()
@@ -69,11 +68,13 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
   }
 
   public save() {
+    this.processing = true;
     const addedCustomer: ISelectOption = {
       label: '',
       value: '',
     };
-    this.HcsControllerService.addHcsControllerCustomer(this.customerName, ['UPGRADE'])
+    const services: string[] = ['UPGRADE'];
+    this.HcsControllerService.addHcsControllerCustomer(this.customerName, services)
       .then((resp) => {
         const swProfileSelected: ISoftwareProfile = {
           name: this.softwareProfileSelected.label,
@@ -83,6 +84,7 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
         const upgradeCustomer: IHcsUpgradeCustomer = {
           uuid: resp.uuid,
           softwareProfile: swProfileSelected,
+          name: this.customerName,
         };
 
         addedCustomer.value = resp.uuid;
@@ -98,8 +100,9 @@ export class HcsAddCustomerToClusterCtrl implements ng.IComponentController {
       })
       .catch((err) => {
         this.Notification.errorWithTrackingId(err);
+      })
+      .finally(() => {
+        this.processing = false;
       });
   }
-
-  public onsoftwareProfileChange() {}
 }

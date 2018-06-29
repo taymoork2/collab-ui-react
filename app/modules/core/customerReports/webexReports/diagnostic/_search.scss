@@ -95,10 +95,10 @@
 .content-container .meeting-list {
   position: relative;
   background: $white;
-  padding-left: 0 !important;// FIXME: track down and remove need for '!important'
-  padding-right: 0 !important;// FIXME: track down and remove need for '!important'
+  padding-left: 0;
+  padding-right: 0;
   overflow: hidden;
-  height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height})) !important;
+  height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
 
   .meeting-search {
     display: flex;
@@ -106,10 +106,10 @@
 
     .gridStyle {
       margin-top: 20px;
-      height: calc(100vh - 236px) !important;
+      height: calc(100vh - (#{$page-header-height} + #{$page-sub-header-height}));
 
       .ui-grid-header-cell {
-        height: 40px !important;
+        height: 2.5rem;
 
         .sortable {
           display: flex;

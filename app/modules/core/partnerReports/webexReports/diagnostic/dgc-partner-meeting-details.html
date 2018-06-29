@@ -13,85 +13,85 @@
     call-legs-data="$ctrl.callLegsData"
     line-data="$ctrl.lineData"
     tab-type="$ctrl.tabType"
+    get-device-type="$ctrl.getDeviceType(conferenceId, nodeId)"
     ng-if="!$ctrl.loading"></dgc-partner-time-line>
   <div ng-if="$ctrl.loading" class="loading">
     <i class="icon icon-spinner icon-3x"></i>
   </div>
 </div>
 
-<div class="meeting-overview">
-  <h4 translate="webexReports.meetingOverview"></h4>
-  <ul class="overviewInfo">
-    <li>
-      <h6 translate="webexReports.created"></h6>
-      <p>{{::$ctrl.overview.createTime_}}</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.site"></h6>
-      <p>{{::$ctrl.overview.siteName}}</p>
-      <p>({{::$ctrl.overview.siteId}})</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.meetingType"></h6>
-      <p>{{::$ctrl.overview.meetingType}}</p>
-    </li>
-    <li ng-if="$ctrl.overview.audioSession">
-      <h6>
-        <span class="title" translate="webexReports.audio"></span>
-        <i class="icon icon-info-outline" 
-          tooltip-html-unsafe="{{::'webexReports.featureHelper.audioHelper' | translate}}" 
-          tooltip-placement="top">
-        </i>
-      </h6>
-      <p>{{::$ctrl.overview.audioSession}}</p>
-    </li>
-    <li ng-if="$ctrl.overview.videoSession">
-      <h6>
-        <span class="title" translate="webexReports.video"></span>
-        <i class="icon icon-info-outline" 
-          tooltip-html-unsafe="{{::'webexReports.featureHelper.videoHelper' | translate}}" 
-          tooltip-placement="top">
-        </i>
-      </h6>
-      <p>{{::$ctrl.overview.videoSession}}</p>
-    </li>
-  </ul>
-  <ul class="overviewInfo">
-    <li>
-      <h6 translate="webexReports.hostName"></h6>
-      <p>{{::$ctrl.overview.hostName}}</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.hostID"></h6>
-      <p>{{::$ctrl.overview.hostId}}</p>
-    </li>
-    <li>
-      <h6 translate="webexReports.hostEmail"></h6>
-      <p>{{::$ctrl.overview.hostEmail}}</p>
-    </li>
-  </ul>
+<div class="columns small-12">
+  <div class="row meeting-overview">
+    <h4 translate="webexReports.meetingOverview"></h4>
+    <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6 overviewInfo">
+      <li>
+        <h6 translate="webexReports.created"></h6>
+        <p>{{::$ctrl.overview.createTime_}}</p>
+      </li>
+      <li>
+        <h6 translate="webexReports.site"></h6>
+        <p>{{::$ctrl.overview.siteName}}</p>
+        <p>({{::$ctrl.overview.siteId}})</p>
+      </li>
+      <li>
+        <h6 translate="webexReports.meetingType"></h6>
+        <p>{{::$ctrl.overview.meetingType}}</p>
+      </li>
+      <li>
+        <h6 translate="webexReports.hostName"></h6>
+        <p>{{::$ctrl.overview.hostName}}</p>
+      </li>
+      <li>
+        <h6 translate="webexReports.hostID"></h6>
+        <p>{{::$ctrl.overview.hostId}}</p>
+      </li>
+      <li>
+        <h6 translate="webexReports.hostEmail"></h6>
+        <p>{{::$ctrl.overview.hostEmail}}</p>
+      </li>
+    </ul>
 
-  <div class="features" translate="webexReports.features"></div>
-  <ul class="overviewInfo">
-    <li>
-      <h6>
-        <span class="title" translate="webexReports.screenShare"></span>
-        <i class="icon icon-info-outline" 
-          tooltip-html-unsafe="{{::'webexReports.featureHelper.screenShareHelper' | translate}}" 
-          tooltip-placement="top">
-        </i>
-      </h6>
-      <p ng-class="{ 'green-color': $ctrl.overview.screenShare}">{{::$ctrl.overview.screenShare_}}</p>
-    </li>
-    <li>
-      <h6>
-        <span class="title" translate="webexReports.recording"></span>
-        <i class="icon icon-info-outline" 
-          tooltip-html-unsafe="{{::'webexReports.featureHelper.recordingHelper' | translate}}" 
-          tooltip-placement="top">
-        </i>
-      </h6>
-      <p ng-class="{ 'green-color': $ctrl.overview.recording}">{{::$ctrl.overview.recording_}}</p>
-    </li>
-  </ul>
+    <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6 overviewInfo">
+      <li>
+        <h6>
+          <span class="title" translate="webexReports.screenShare"></span>
+          <i class="icon icon-info-outline" 
+            tooltip-html-unsafe="{{::'webexReports.featureHelper.screenShareHelper' | translate}}" 
+            tooltip-placement="top">
+          </i>
+        </h6>
+        <p ng-class="{'green-color': $ctrl.overview.screenShare}">{{::$ctrl.overview.screenShare_}}</p>
+      </li>
+      <li>
+        <h6>
+          <span class="title" translate="webexReports.recording"></span>
+          <i class="icon icon-info-outline" 
+            tooltip-html-unsafe="{{::'webexReports.featureHelper.recordingHelper' | translate}}" 
+            tooltip-placement="top">
+          </i>
+        </h6>
+        <p ng-class="{'green-color': $ctrl.overview.recording}">{{::$ctrl.overview.recording_}}</p>
+      </li>
+      <li ng-if="$ctrl.overview.audioSession">
+        <h6>
+          <span class="title" translate="webexReports.audio"></span>
+          <i class="icon icon-info-outline" 
+            tooltip-html-unsafe="{{::'webexReports.featureHelper.audioHelper' | translate}}" 
+            tooltip-placement="top">
+          </i>
+        </h6>
+        <p>{{::$ctrl.overview.audioSession}}</p>
+      </li>
+      <li ng-if="$ctrl.overview.videoSession">
+        <h6>
+          <span class="title" translate="webexReports.video"></span>
+          <i class="icon icon-info-outline" 
+            tooltip-html-unsafe="{{::'webexReports.featureHelper.videoHelper' | translate}}" 
+            tooltip-placement="top">
+          </i>
+        </h6>
+        <p>{{::$ctrl.overview.videoSession}}</p>
+      </li>
+    </ul>
+  </div>
 </div>

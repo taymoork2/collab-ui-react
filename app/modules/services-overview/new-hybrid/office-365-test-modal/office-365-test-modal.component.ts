@@ -21,24 +21,12 @@ class Office365TestModalController implements ng.IComponentController {
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
-    private Authinfo,
     private CloudConnectorService: CloudConnectorService,
     private Notification: Notification,
-    private Userservice,
   ) {}
 
   public $onInit() {
-    if (!_.isUndefined(this.Authinfo.getPrimaryEmail())) {
-      this.email = this.Authinfo.getPrimaryEmail();
-    } else {
-      this.Userservice.getUser('me', false, _.noop).then((response) => {
-        const data = response.data;
-        if (data.emails) {
-          this.Authinfo.setEmails(data.emails);
-          this.email = this.Authinfo.getPrimaryEmail();
-        }
-      });
-    }
+    this.email = '';
   }
 
   public test(email: string): void {

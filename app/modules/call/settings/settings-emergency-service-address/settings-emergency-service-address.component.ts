@@ -3,7 +3,6 @@ import { Notification } from 'modules/core/notifications';
 import { PstnModel, PstnAddressService, Address } from 'modules/huron/pstn';
 import { LocationsService } from 'modules/call/locations';
 
-
 const UPDATE_ADDRESS_WAIT_MS: number = 100;
 
 class EmergencyServiceAddressCtrl implements ng.IComponentController {

@@ -5,11 +5,10 @@ import { IHcsCluster, IHcsNode, ISftpServersObject } from 'modules/hcs/hcs-share
 import { IHcsCustomer, HcsCustomer } from 'modules/hcs/hcs-shared/hcs-controller';
 import { Notification } from 'modules/core/notifications';
 
-enum HcsModalTypeSelect {
+export enum HcsModalTypeSelect {
   editSftp = 0,
   addCustomer = 1,
 }
-
 
 interface IClusterDetailsForm extends ng.IFormController {
   clusterCustomerSelect: ng.INgModelController;
@@ -86,11 +85,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     };
     this.sftpSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.sftpLocation.sftpPlaceholder');
     this.clusterNamePlaceholder = this.$translate.instant('hcs.clusterDetail.settings.clustername.enterClusterName');
-
-    this.initCustomer();
-
     this.customerSelectPlaceholder = this.$translate.instant('hcs.clusterDetail.settings.inventoryName.customerSelectPlaceholder');
-
+    this.initCustomer();
     //get cluster details info and initialize the cluster
     this.initSftpServers();
     this.initClusterDetails();
@@ -161,8 +157,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public initCustomerList(): void {
     this.customerSelectOptions = [];
     this.customerList = [];
-    //TODO: get list of customers for partner from ci.
-    this.HcsControllerService.getHcsCustomers()
+    //After BETA: get list of customers for partner from ci.
+    this.HcsControllerService.listHcsCustomers()
       .then((hcsCustomers: IHcsCustomer[]) => {
         _.forEach(hcsCustomers, (hcsCustomer) => {
           const customer = new HcsCustomer(hcsCustomer);
@@ -178,23 +174,6 @@ export class ClusterDetailCtrl implements ng.IComponentController {
       .finally(() => {
         this.customerSelectOptions.push({ label: 'Add Customer', value: 'addCustomer' });
       });
-  }
-
-  public getNodeList(nodeList: IHcsNode[] | null): string[] | null {
-    if (nodeList) {
-      const nodeArray: string[] = [];
-      _.forEach(nodeList, (node) => {
-        if (node.nodeUuid) {
-          nodeArray.push(node.nodeUuid);
-        }
-      });
-      return nodeArray;
-    } else {
-      return null;
-    }
-  }
-
-  public onSftpLocationChanged(): void {
   }
 
   public onCustomerChanged(): void {
@@ -292,6 +271,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
           _.forEach(this.clusterDetail.nodes, (node) => {
             if (node.isAccepted) {
               promises.push(this.HcsControllerService.acceptAgent(node));
+            } else if (node.isRejected) {
+              promises.push(this.HcsControllerService.rejectAgent(node));
             }
           });
           return this.$q.all(promises);
@@ -300,7 +281,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
         }
       })
       .then(() => {
-        this.$state.go('hcs.clusterDetail', { groupId: this.groupId, clusterId: this.clusterId }, { reload: true });
+        //reload state with assigned customer id
+        this.$state.go('hcs.clusterDetail', { groupId: this.customerSelected.value, clusterId: this.clusterId }, { reload: true });
       })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
       .finally(() => {

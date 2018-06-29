@@ -6,7 +6,7 @@
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f",
     "createTime":"2016-09-15T01:12:01.105Z",
-    "description": "[\"one\", \"two\", \"three\"]",
+    "tags": ["one", "two", "three"],
     "product":"SX10",
     "state": "CLAIMED",
     "status": {
@@ -28,7 +28,7 @@
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/b528e32d-ed35-4e00-a20d-d4d3519efb4f",
     "createTime":"2016-09-15T01:12:01.105Z",
-    "description": "[\"two\", \"two\", \"three\"]",
+    "tags": ["two", "three"],
     "product":"SX10",
     "state": "CLAIMED",
     "status": {
@@ -50,7 +50,7 @@
     "accountType":"MACHINE",
     "url":"https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/6ae09bec-c0f0-58af-b490-60ed6a695a89",
     "createTime":"2016-09-15T07:44:30.446Z",
-    "description": "[\"three\", \"two\", \"three\"]",
+    "tags": ["three", "two"],
     "serial":"FTT1944010V",
     "mac":"70:E4:22:F2:3C:7C",
     "product":"Cisco TelePresence SX10",

@@ -186,7 +186,6 @@ class WebexSiteNewCtrl implements ng.IComponentController {
   }
 }
 
-
 export class WebexSiteNewComponent implements ng.IComponentOptions {
   public controller = WebexSiteNewCtrl;
   public template = require('./webex-site-new.html');
@@ -199,4 +198,3 @@ export class WebexSiteNewComponent implements ng.IComponentOptions {
     audioPartnerName: '<',
   };
 }
-
