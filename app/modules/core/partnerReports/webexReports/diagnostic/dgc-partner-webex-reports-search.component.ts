@@ -110,18 +110,45 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     this.FeatureToggleService.diagnosticF8234QueryRangeGetStatus()
       .then((isSupport: boolean) => {
         this.initDateRange(isSupport);
-        this.Analytics.trackEvent(this.dataService.featureName, {});
+        this.trackEvent();
         if (this.searchStr) {
           this.startSearch();
         }
       });
   }
 
+  private trackEvent(): void {
+    const externalFeatureToggle = this.getExternalFeatureToggle();
+    if (externalFeatureToggle) {
+      this.FeatureToggleService.supports(externalFeatureToggle)
+        .then((isSupport: boolean) => {
+          if (isSupport) {
+            this.Analytics.trackEvent(this.dataService.featureName, {});
+          }
+        });
+    } else {
+      this.Analytics.trackEvent(this.dataService.featureName, {});
+    }
+  }
+
+  private getExternalFeatureToggle(): string | undefined {
+    const currentName = this.$state.current.name;
+    const externalFeatureToggles = {
+      'support.meeting': this.FeatureToggleService.features.diagnosticF8193UX3,
+      'support.status': this.FeatureToggleService.features.diagnosticF8193UX3,
+      'partnertroubleshooting.diagnostics': this.FeatureToggleService.features.diagnosticF8193UX3,
+    };
+    if (currentName) {
+      return externalFeatureToggles[currentName];
+    }
+    return undefined;
+  }
+
   private initPartnerRoleMeetingList () {
     this.FeatureToggleService.diagnosticPartnerF8234QueryRangeGetStatus()
       .then((isSupport: boolean) => {
         this.initDateRange(isSupport);
-        this.Analytics.trackEvent(this.dataService.featureName, {});
+        this.trackEvent();
         if (this.searchStr) {
           this.startSearch();
         }
