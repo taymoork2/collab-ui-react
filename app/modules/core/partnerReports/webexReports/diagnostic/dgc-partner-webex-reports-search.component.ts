@@ -141,7 +141,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     return _.includes(externalStates, currentName);
   }
 
-  private getExternalFeatureToggle(): string|undefined {
+  private getExternalFeatureToggle(): string | undefined {
     const currentName = this.$state.current.name;
     const externalFeatureToggles = {
       'support.meeting': this.FeatureToggleService.features.diagnosticF8193UX3,
