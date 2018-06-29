@@ -1,4 +1,4 @@
-/* global mixpanel */
+/* global analytics, mixpanel */
 
 (function () {
   'use strict';
@@ -11,8 +11,14 @@
     var NO_EVENT_NAME = 'eventName not passed';
 
     var token = {
-      PROD_KEY: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
-      TEST_KEY: '536df13b2664a85b06b0b6cf32721c24',
+      PROD_KEY: {
+        mixpanel: 'a64cd4bbec043ed6bf9d5cd31e4b001c',
+        segment: '9J8CjaGsE2QyAeoLYzuYqpE5AR2Eux2D',
+      },
+      TEST_KEY: {
+        mixpanel: '536df13b2664a85b06b0b6cf32721c24',
+        segment: 'OP45JvNoDl6ec6rZ40SJMy4isSQYJmyC',
+      },
     };
 
     var isTestOrgPromise = null;
@@ -350,11 +356,15 @@
       }).then(function (result) {
         hasInit = true;
         if (result) {
-          mixpanel.init(result, {
+          mixpanel.init(result.mixpanel, {
             api_host: UrlConfig.getMixpanelUrl(),
             persistence: 'localStorage', // default to localStorage, fallback to cookie
             cross_subdomain_cookie: false, // when cookies are needed, only use specific subdomain
           });
+
+          if (!Config.isE2E() && _.isFunction(analytics.load)) {
+            analytics.load(result.segment);
+          }
         }
       });
     }
@@ -377,6 +387,9 @@
     }
 
     function _track(eventName, properties) {
+      if (_.isFunction(analytics.track)) {
+        analytics.track(eventName, properties);
+      }
       mixpanel.track(eventName, properties);
     }
 

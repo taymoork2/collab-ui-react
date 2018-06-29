@@ -55,6 +55,7 @@ let cspDevConfig = mkCspConfig({
     '127.0.0.1',
     'http://dev-admin.ciscospark.com:8000', // manual DNS entry for local dev
     'http://dev-admin.webex.com:8000', // manual DNS entry for local dev
+    'http://cdn.segment.com', // non-HTTPS Segment Analytics
   ],
   styleSrc: [
     'blob:', // Webpack Dev

@@ -1,5 +1,6 @@
 'use strict';
 
+/* global analytics */
 /* eslint no-restricted-globals:0 */
 
 var looserKebabCase = require('../utils/looser-kebab-case');
@@ -40,6 +41,12 @@ afterEach(function () {
 });
 
 beforeEach(function () {
+  // Don't track unit tests metrics
+  if (typeof analytics === 'object') {
+    spyOn(analytics, 'load');
+    spyOn(analytics, 'track');
+  }
+
   /**
    * Initialize each argument as a module
    */
