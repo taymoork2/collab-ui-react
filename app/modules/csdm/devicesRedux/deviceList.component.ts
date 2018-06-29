@@ -113,8 +113,7 @@ class DeviceList implements ng.IComponentController {
             return;
           }
           const deviceId = this.extractDeviceId(device);
-          if (
-            _.isUndefined(this.selectedDevices[deviceId])) {
+          if (_.isUndefined(this.selectedDevices[deviceId])) {
             this.selectedDevices[deviceId] = device;
             this.bulkAll = _.size(this.selectedDevices) === _.size(this.allDevicesIdsFromSearch)
               ? true

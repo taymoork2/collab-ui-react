@@ -3,34 +3,48 @@
   <div class="modal-title">{{$ctrl.title | translate}}</div>
 </div>
 
-<div class="modal-body">
-  <h5 class="lead"
-      ng-if="$ctrl.numberOfDevices === 1"
-      translate="deviceBulk.deleteDeviceAreYouSure"></h5>
-  <h5 class="lead"
-      ng-if="$ctrl.numberOfDevices > 1"
-      translate="deviceBulk.deleteDevicesAreYouSure"
-      translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
-  <h5><small translate="deviceBulk.changeCannotBeUndone"></small></h5>
-  <br>
-  <input cs-input
-         id="deleteEmptyPlace"
-         type="checkbox"
-         cs-input-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
-         cs-input-help-text="{{ 'deviceBulk.deleteEmptyPlacesExplanation' | translate }}"
-         tooltip-placement="bottom"
-         tooltip="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
-         aria-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
-         ng-model="$ctrl.deleteEmptyPlaces" />
-  <input cs-input
+<div class="modal-body"
+     ng-if="!$ctrl.searchForActiveDevicesComplete">
+  <div class="loading text-center">
+    <i class="icon icon-spinner icon-3x"></i>
+  </div>
+</div>
+<div class="modal-body"
+     ng-if="$ctrl.searchForActiveDevicesComplete">
+  <div class="delete-info">
+    <h5 class="lead"
+        translate="deviceBulk.deleteDevicesAreYouSure"
+        translate-interpolation="messageformat"
+        translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
+    <p class="lead" translate="deviceBulk.changeCannotBeUndone"></p>
+    <p class="warning" ng-if="$ctrl.numberOfActiveDevices > 0">
+      <i class="icon icon-warning warning"></i>
+      <span translate="deviceBulk.deleteActiveDevicesWarning"
+            translate-interpolation="messageformat"
+            translate-values="{nActiveDevices: $ctrl.numberOfActiveDevices}"></span>
+    </p>
+    <p>
+      <input cs-input
+            id="deleteEmptyPlace"
+            type="checkbox"
+            cs-input-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+            cs-input-help-text="{{ 'deviceBulk.deleteEmptyPlacesExplanation' | translate }}"
+            tooltip-placement="bottom"
+            tooltip="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+            aria-label="{{ 'deviceBulk.deleteEmptyPlaces' | translate }}"
+            ng-model="$ctrl.deleteEmptyPlaces" />
+    </p>
+  </div>
+
+<!--   <input cs-input
          id="reallyDelete"
          type="checkbox"
          cs-input-label="This is a test"
          cs-input-help-text="When this checkbox is checked, no devices will actually be deleted."
-         ng-model="$ctrl.testDelete" />
+         ng-model="$ctrl.testDelete" /> -->
 </div>
 
 <div class="modal-footer">
   <button class="btn btn--default" ng-click="$ctrl.close()" translate="common.cancel"></button>
-  <button class="btn btn--negative" ng-click="$ctrl.delete()" translate="common.delete"></button>
+  <button class="btn btn--negative" ng-if="$ctrl.searchForActiveDevicesComplete" ng-click="$ctrl.delete()" translate="common.delete"></button>
 </div>

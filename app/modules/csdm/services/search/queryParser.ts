@@ -61,6 +61,7 @@ export class QueryParser {
   public static readonly Field_Software = 'software';
   public static readonly Field_SipUrls = 'sipurls';
   public static readonly Field_PrimarySipUrl = 'primarysipurl';
+  public static readonly Field_Url = 'url';
 
   public static readonly validFieldNames = [QueryParser.Field_Displayname,
     QueryParser.Field_CisUUID,
@@ -77,7 +78,8 @@ export class QueryParser {
     QueryParser.Field_SipUrls,
     QueryParser.Field_PrimarySipUrl,
     QueryParser.Field_ErrorCodes,
-    QueryParser.Field_Tag];
+    QueryParser.Field_Tag,
+    QueryParser.Field_Url];
 
   public constructor(private searchTranslator: SearchTranslator) {
   }

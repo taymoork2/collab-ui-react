@@ -24,6 +24,13 @@
         max-height: 700px;
       }
     }
+    .delete-info {
+      p {
+        line-height: 1;
+        margin-top: .875rem;
+      }
+      color: $gray-2;
+    }
   }
   h3 {
     padding-bottom: 8px;
