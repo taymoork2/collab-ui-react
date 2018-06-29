@@ -225,7 +225,6 @@ class CallPickupMembersCtrl implements ng.IComponentController {
     return this.FeatureMemberService.getDisplayNameFromMember(member);
   }
 
-
   public inputKeyup($event: KeyboardEvent) {
     if (_.isFunction(this.ucInputKeyup)) {
       this.ucInputKeyup({ $event: $event });

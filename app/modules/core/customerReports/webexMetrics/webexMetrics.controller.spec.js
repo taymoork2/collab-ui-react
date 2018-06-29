@@ -104,6 +104,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.WebexMetricsService, 'getMetricsSites').and.returnValue(this.$q.resolve(['go.webex.com', 'alpha.webex.com']));
     spyOn(this.WebexMetricsService, 'hasMetricsSites').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMEIGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexSystemGetStatus').and.returnValue(this.$q.resolve(true));
@@ -156,7 +157,7 @@ describe('Controller: WebEx Metrics Ctrl', function () {
       for hiding those tabs
       */
       testWebexMetrics.states.metrics,
-      testWebexMetrics.states.diagnostics,
+      // testWebexMetrics.states.diagnostics, for hiding the Diagnostics tab
       // testWebexMetrics.states.mei, for hiding the MEI tab
       testWebexMetrics.states.classic,
     ];

@@ -170,7 +170,6 @@ describe('In ctCustomerInformationComponent, The controller', () => {
     },
   };
 
-
   it('should set the active item', function () {
     const returnObj = {
       attributes: [{
@@ -296,7 +295,6 @@ describe('In ctCustomerInformationComponent, The controller', () => {
     expect(controller.isCustomerInformationPageValid()).toEqual(false);
   });
 
-
   it('next button should be enabled when optional is selected for category and category is empty', function () {
     controller.currentState = 'customerInformation';
     controller.template.configuration.pages.customerInformation.fields  = customerInfoWithValidAttributeValue;
@@ -305,7 +303,6 @@ describe('In ctCustomerInformationComponent, The controller', () => {
     controller.$onInit();
     expect(controller.isCustomerInformationPageValid()).toEqual(true);
   });
-
 
   it('next button should get disabled when duplicate types are configured in customerInfo page', function () {
     controller.template.configuration.pages.customerInformation.fields = duplicateFieldTypeData;

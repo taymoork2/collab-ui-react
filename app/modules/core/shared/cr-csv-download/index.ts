@@ -11,4 +11,3 @@ export default angular.module('core.shared.cr-csv-download', [
 ])
   .component('crCsvDownload', new CrCsvDownloadComponent())
   .name;
-

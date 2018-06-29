@@ -237,7 +237,8 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateTo('upgradechannel', 'translated.devicesettings.softwareupgradechannel');
       expectFieldToTranslateTo('product', 'translated.spacespage.typeheader');
       expectFieldToTranslateTo('connectionstatus', 'translated.spacespage.statusheader');
-      expectFieldToTranslateTo('sipurl', 'translated.deviceoverviewpage.sipurl');
+      expectFieldToTranslateTo('primarysipurl', 'translated.deviceoverviewpage.primarysipurl');
+      expectFieldToTranslateTo('sipurls', 'translated.deviceoverviewpage.sipurls');
       expectFieldToTranslateTo('errorcodes', 'translated.deviceoverviewpage.issues');
       expectFieldToTranslateTo('tag', 'translated.spacespage.tags');
     });
@@ -282,7 +283,8 @@ describe('SearchTranslator', () => {
       expectFieldToTranslateToDisplayName('upgradechannel', 'translated.deviceSettings.softwareUpgradeChannel');
       expectFieldToTranslateToDisplayName('product', 'translated.spacesPage.typeHeader');
       expectFieldToTranslateToDisplayName('connectionstatus', 'translated.spacesPage.statusHeader');
-      expectFieldToTranslateToDisplayName('sipurl', 'translated.deviceOverviewPage.sipUrl');
+      expectFieldToTranslateToDisplayName('primarysipurl', 'translated.deviceOverviewPage.primarySipUrl');
+      expectFieldToTranslateToDisplayName('sipurls', 'translated.deviceOverviewPage.sipUrls');
       expectFieldToTranslateToDisplayName('errorcodes', 'translated.deviceOverviewPage.issues');
       expectFieldToTranslateToDisplayName('tag', 'translated.spacesPage.tags');
     });
@@ -320,7 +322,8 @@ describe('SearchTranslator', () => {
       expectLookupByTranslatedField('translated.spacesPage.typeHeader', 'product');
       expectLookupByTranslatedField('translated.deviceOverviewPage.macAddr', 'mac');
       expectLookupByTranslatedField('translated.deviceOverviewPage.ipAddr', 'ip');
-      expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrl', 'sipurl');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.primarySipUrl', 'primarysipurl');
+      expectLookupByTranslatedField('translated.deviceOverviewPage.sipUrls', 'sipurls');
       expectLookupByTranslatedField('translated.deviceOverviewPage.issues', 'errorcodes');
       expectLookupByTranslatedField('translated.deviceOverviewPage.serial', 'serial');
       expectLookupByTranslatedField('translated.spacesPage.tags', 'tag');
@@ -442,4 +445,3 @@ describe('SearchTranslator', () => {
     }
   });
 });
-

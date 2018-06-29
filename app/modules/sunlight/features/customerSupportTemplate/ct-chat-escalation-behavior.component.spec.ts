@@ -6,7 +6,6 @@ describe('In ctChatEscalationBehaviorComponent, The controller', () => {
   let controller;
   let evaDataModel;
 
-
   beforeEach(function () {
     this.initModules ('Sunlight', ctChatEscalationBehaviorComponentModule);
     this.injectDependencies (

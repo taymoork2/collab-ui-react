@@ -28,6 +28,7 @@ export interface IHybridServicesEventHistoryItem {
   username?: string;
   type: EventType;
   connectorType: ConnectorType | 'all';
+  targetType?: ConnectorType | 'all';
   connectorId?: string;
   serviceId?: HybridServiceId;
   timestamp: string;
@@ -37,6 +38,7 @@ export interface IHybridServicesEventHistoryItem {
   hostSerial?: string;
   resourceName: string;
   softwareVersion?: string;
+  previousSoftwareVersion?: string;
   trackingId: string;
   severity: ConnectorAlarmSeverity | 'IGNORED' | 'RESOLVED' | 'NONE';
   title: string;
@@ -83,6 +85,7 @@ export interface IHybridServicesEventHistoryItem {
     oldClusterId?: string;
     upgradeState?: string;
     oldUpgradeState?: string;
+    startTimestamp?: string;
   };
   redirectTargetDetails?: {
     hostname?: string;
@@ -123,11 +126,13 @@ interface IRawClusterEvent {
       initialized: boolean;
       operational: boolean;
       state: string;
+      startTimestamp: string;
     };
     previousState?: {
       initialized: boolean;
       operational: boolean;
       state: string;
+      startTimestamp: string;
     }
     version: string;
     description?: string;
@@ -151,6 +156,7 @@ interface IRawClusterEvent {
     roles?: string;
     oldUserList?: string;
     newUserList?: string;
+    previousVersion?: string;
   };
   timestamp: string;
 }
@@ -198,7 +204,6 @@ export class HybridServicesEventHistoryService {
   private extractData(res) {
     return res.data;
   }
-
 
   public getAllEvents(options: IGetAllEventsOptions, next: string | undefined, updateItems: (items: IHybridServicesEventHistoryItem[]) => void, items: IHybridServicesEventHistoryItem[]  ): ng.IPromise<IHybridServicesEventHistoryData | null | undefined> {
     const fromTimestamp = options.eventsSince || moment().subtract(7, 'days').toISOString();
@@ -343,8 +348,38 @@ export class HybridServicesEventHistoryService {
     } else {
       type = (<IHybridServicesEventHistoryItem>event).type;
     }
+
     return type === 'ConnectorStateUpdated' || type === 'ConnectorUpdated' || type === 'ConnectorCreated'
       || type === 'ConnectorDeregistered' || type === 'ConnectorRemoved';
+  }
+
+  public hideConnectorEvent(event: IRawClusterEvent): boolean {
+    let type: EventType | undefined = undefined;
+    if ('payload' in event) {
+      type = (<IRawClusterEvent>event).payload.type;
+    }
+
+    // Only show the last transition: from upgrading -> upgraded
+    if ( type === 'ConnectorUpdated') {
+      const e = (<IRawClusterEvent>event);
+      if (e.payload !== undefined && e.payload.oldUpgradeState !== undefined && e.payload.upgradeState !== undefined) {
+        if (e.payload.upgradeState !== 'upgraded') {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Hide the `initializing` event
+    if (type === 'ConnectorStateUpdated') {
+      const modifiedState = this.getConnectorStateUpdatedType(event) || undefined;
+      if (modifiedState === 'initializing') {
+        return true;
+      }
+    }
+
+    // default show all
+    return false;
   }
 
   public isServiceActivationEvent(event: IRawClusterEvent | IHybridServicesEventHistoryItem): boolean {
@@ -411,7 +446,7 @@ export class HybridServicesEventHistoryService {
       if (this.isClusterEvent(event)) {
         processedEvents = _.concat(processedEvents, this.buildClusterItems(event));
       }
-      if (this.isConnectorEvent(event)) {
+      if (this.isConnectorEvent(event) && !this.hideConnectorEvent(event)) {
         processedEvents.push(this.buildConnectorEvent(event));
       }
       if (this.isServiceActivationEvent(event)) {
@@ -446,6 +481,7 @@ export class HybridServicesEventHistoryService {
       title = this.$translate.instant('hercules.eventHistory.sidepanel.alarmEvents.alarmResolvedEmailsSentTitle');
       severity = 'alert';
     }
+
     return {
       principalType: event.context.principalType,
       type: event.payload.type,
@@ -543,6 +579,8 @@ export class HybridServicesEventHistoryService {
       || event.payload.type === 'ConnectorDeregistered' || event.payload.type === 'ConnectorRemoved') {
       resName = _.get(event, 'payload.connectorId', '');
     }
+
+    const connectorState = this.getConnectorStateUpdatedType(event);
     return {
       principalType: event.context.principalType,
       userId: _.get(event, 'context.principalId'),
@@ -555,8 +593,9 @@ export class HybridServicesEventHistoryService {
       title: this.buildConnectorEventTitle(event) || '',
       hostname: _.get(event, 'payload.currentState.hostname', ''),
       resourceName: resName,
-      connectorStatus: this.getConnectorStateUpdatedType(event),
+      connectorStatus: connectorState,
       softwareVersion: event.payload.version,
+      previousSoftwareVersion: connectorState === 'upgraded' ? event.payload.previousVersion : undefined,
       connectorDetails: {
         registrationState: event.payload.registrationState,
         oldRegistrationState: event.payload.oldRegistrationState,
@@ -727,7 +766,6 @@ export class HybridServicesEventHistoryService {
     };
   }
 
-
   private processClusterItem(event: IRawClusterEvent, type: EventType, name: string, title: string): IHybridServicesEventHistoryItem {
     event.payload.type = type;
     return {
@@ -775,6 +813,7 @@ export class HybridServicesEventHistoryService {
       timestamp: event.timestamp,
       trackingId: event.context.trackingId,
       connectorType: this.getConnectorTypeFromClusterItem(type),
+      targetType: event.payload.targetType,
       severity: 'NONE',
       title: this.buildClusterUpdateTitle(event, newValue, previousValue),
       clusterId: event.payload.clusterId,
@@ -860,7 +899,32 @@ export class HybridServicesEventHistoryService {
     return '';
   }
 
+  private getTimestampIfChanged(event: IRawClusterEvent): string | undefined {
+    if (event.payload && event.payload.currentState && event.payload.previousState) {
+      if (!_.isEqual(event.payload.currentState.startTimestamp, event.payload.previousState.startTimestamp)) {
+        if (event.payload.currentState !== undefined && event.payload.currentState.startTimestamp !== '') {
+          return event.payload.currentState.startTimestamp;
+        }
+      }
+    }
+    return undefined;
+  }
+
   private getConnectorStateUpdatedType(event: IRawClusterEvent): ConnectorState | undefined {
+    // If the version has changed, this event gets precedent.
+    if (event.payload.previousVersion !== undefined
+      && event.payload.version !== undefined
+    && event.payload.previousVersion !== event.payload.version) {
+      return 'upgraded';
+    }
+
+    // if not, we check if the connector has restarted.
+    const newStartTime = this.getTimestampIfChanged(event);
+    if (newStartTime !== undefined) {
+      return 'restarted';
+    }
+
+    // Else, we check for changes in operational state
     let connectorState: ConnectorState;
     if (!_.get(event, 'payload.currentState.initialized') &&
       _.get(event, 'payload.currentState.state') !== 'not_installed' &&
@@ -903,6 +967,18 @@ export class HybridServicesEventHistoryService {
       });
     } else if (event.payload.type === 'ConnectorStateUpdated') {
       const modifiedState = this.getConnectorStateUpdatedType(event) || undefined;
+      if (modifiedState === 'restarted') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.restarted', {
+          connectorType: localizedConnectorName,
+        });
+      }
+      if (modifiedState === 'upgraded') {
+        return this.$translate.instant('hercules.eventHistory.connectorEventTitles.upgraded', {
+          connectorType: localizedConnectorName,
+          version: event.payload.version,
+          previousVersion: event.payload.previousVersion,
+        });
+      }
       if (modifiedState === 'downloading') {
         return this.$translate.instant('hercules.eventHistory.connectorEventTitles.downloading', {
           connectorType: localizedConnectorName,

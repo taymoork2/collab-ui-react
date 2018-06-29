@@ -1,0 +1,70 @@
+<cs-sp-container>
+  <cs-sp-section class="hybrid-services-user-sidepanel" ng-repeat="entry in $ctrl.historyEntries">
+    <div class="history-label">
+      <span class="section-name">{{entry.title}}</span>
+    </div>
+    <div class="row collapse">
+      <div class="columns small-4">
+        <span class="history-label">{{'hercules.userHistory.time' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">{{entry.timestamp}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.description">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description">{{entry.description}}</span>
+      </div>
+    </div>
+
+    <div class="row collapse" ng-if="entry.payload.details.length">
+      <div class="columns small-4">
+        <span class="history-label">{{'cloudExtensions.details' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <user-status-messages messages="entry.payload.details"></user-status-messages>
+      </div>
+    </div>
+
+    <div class="row collapse" ng-if="entry.cluster">
+      <div class="columns small-4">
+        <span class="history-label">{{'cloudExtensions.cluster' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">{{entry.cluster.name}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.connector">
+      <div class="columns small-4">
+        <span class="history-label">{{'hercules.connectors.host_name' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label">{{entry.connector.hostname}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.assignments">
+      <div class="columns small-4">
+        <span class="history-label" ng-if="$ctrl.serviceId === 'squared-fusion-uc'">{{'hercules.connectors.host_names' | translate}}:</span>
+        <span class="history-label" ng-if="$ctrl.serviceId !== 'squared-fusion-uc'">{{'hercules.connectors.host_name' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label" ng-repeat="assignment in entry.assignments">{{assignment.connector.hostname}}{{$last ? '' : ', '}}</span>
+      </div>
+    </div>
+    <div class="row collapse" ng-if="entry.resourceGroup">
+      <div class="columns small-4">
+        <span class="history-label">{{'common.description' | translate}}:</span>
+      </div>
+      <div class="columns small-8">
+        <span class="history-label description" translate="hercules.userHistory.assignedToResourceGroup" translate-values='{ resourceGroupName: entry.resourceGroup.name}'></span>
+      </div>
+    </div>
+  </cs-sp-section>
+  <div class="last-entries-label" ng-if="$ctrl.historyEntries.length === $ctrl.numEntriesToShow">
+    <span class="history-label" translate="hercules.userHistory.showingFirstEntries" translate-values='{ numEntries: $ctrl.numEntriesToShow}'></span>
+  </div>
+</cs-sp-container>
+

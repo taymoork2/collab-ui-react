@@ -53,7 +53,6 @@ export class HybridServiceUserSidepanelHelperService {
     return this.Authinfo.isCustomerLaunchedFromPartner() && response.status === 403;
   }
 
-
 }
 
 export default angular

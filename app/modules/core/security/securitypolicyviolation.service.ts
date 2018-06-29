@@ -2,7 +2,6 @@ import { MetricsService } from 'modules/core/metrics';
 import { OperationalKey } from 'modules/core/metrics/metrics.keys';
 import { WindowEventService } from 'modules/core/window';
 
-
 export class SecurityPolicyViolationService {
   /* @ngInject */
   constructor(

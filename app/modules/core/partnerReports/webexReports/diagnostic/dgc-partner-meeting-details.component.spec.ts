@@ -1,4 +1,5 @@
 import moduleName from './index';
+import { SearchStorage } from './partner-meeting.enum';
 
 describe('Component: DgcPartnerTabMeetingDetail', () => {
   beforeAll(function() {
@@ -108,9 +109,12 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', '$timeout', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
 
-    this.PartnerSearchService.setStorage('webexOneMeeting', this.meeting);
+    this.WebexReportsUtilService.setStorage(SearchStorage.WEBEX_ONE_MEETING, this.meeting);
+
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
+    initSpies.apply(this);
   });
 
   function initComponent(this, isReject?: boolean) {
@@ -122,29 +126,9 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
     this.compileComponent('dgcPartnerTabMeetingDetail');
   }
 
-  it('should switch view when call onChangeQOS', function () {
-    initComponent.call(this);
-    this.controller.onChangeQOS('video');
-    this.$timeout.flush();
-    expect(this.controller.tabType).toBe('Video');
-  });
-
-  it('should call Notification.errorResponse when response status is 404', function () {
-    spyOn(this.Notification, 'errorResponse');
-    initComponent.call(this, true);
-    expect(this.Notification.errorResponse).toHaveBeenCalled();
-  });
-
-  it('should update join meeting time', function () {
-    const mockData = { 50335745: 'Good' };
-    spyOn(this.PartnerSearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve(mockData));
-    initComponent.call(this);
-    this.controller.getJoinMeetingTime();
-    expect(this.controller.circleJoinTime['50335745']).toBe('Good');
-  });
-
-  it('should get voip session detail when data completed', function () {
-    const mockData = {
+  function initSpies() {
+    spyOn(this.PartnerSearchService, 'getJoinMeetingTime').and.returnValue(this.$q.resolve({ 50335745: 'Good' }));
+    const mockVoipData = {
       items: [
         {
           key: '50335745',
@@ -164,7 +148,91 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
         },
       ],
     };
-    spyOn(this.PartnerSearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    spyOn(this.PartnerSearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockVoipData));
+
+    const mockVideoSessionData = {
+      items: [
+        {
+          key: '50335759',
+          completed: true,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              mmpQuality: [
+                {
+                  lossrates: 1,
+                  rtts: 100,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.PartnerSearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockVideoSessionData));
+
+    const mockPSTNData = {
+      items: [
+        {
+          key: '60335752',
+          completed: true,
+          items: [
+            {
+              callId: '2',
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              tahoeQuality: [
+                {
+                  audioMos: 4,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.PartnerSearchService, 'getPSTNSessionDetail').and.returnValue(this.$q.resolve(mockPSTNData));
+
+    const mockCMRData = {
+      items: [
+        {
+          key: '30337718',
+          completed: true,
+          items: [
+            {
+              startTime: 1515393187000,
+              endTime: 1515394215000,
+              audioQos: [],
+              videoQos: [],
+            },
+          ],
+        },
+      ],
+    };
+    spyOn(this.PartnerSearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockCMRData));
+  }
+
+  it('should switch view when call onChangeQOS', function () {
+    initComponent.call(this);
+    this.controller.onChangeQOS('video');
+    this.$timeout.flush();
+    expect(this.controller.tabType).toBe('Video');
+  });
+
+  it('should call Notification.errorResponse when response status is 404', function () {
+    spyOn(this.Notification, 'errorResponse');
+    initComponent.call(this, true);
+    expect(this.Notification.errorResponse).toHaveBeenCalled();
+  });
+
+  it('should update join meeting time', function () {
+    initComponent.call(this);
+    this.controller.getJoinMeetingTime();
+    expect(this.controller.circleJoinTime['50335745']).toBe('Good');
+  });
+
+  it('should get voip session detail when data completed', function () {
     initComponent.call(this);
     this.controller.getVoipSessionDetail('');
     expect(this.controller.audioLines['50335745'].length).toBe(1);
@@ -186,34 +254,13 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
         },
       ],
     };
-    spyOn(this.PartnerSearchService, 'getVoipSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    this.PartnerSearchService.getVoipSessionDetail.and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVoipSessionDetail('');
     expect(this.controller.audioLines['50335745'].length).toBe(0);
   });
 
   it('should get video session detail when data completed', function () {
-    const mockData = {
-      items: [
-        {
-          key: '50335759',
-          completed: true,
-          items: [
-            {
-              startTime: 1515393187000,
-              endTime: 1515394215000,
-              mmpQuality: [
-                {
-                  lossrates: 1,
-                  rtts: 100,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    spyOn(this.PartnerSearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVideoSessionDetail('');
     expect(this.controller.videoLines['50335759'].length).toBe(1);
@@ -235,34 +282,13 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
         },
       ],
     };
-    spyOn(this.PartnerSearchService, 'getVideoSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    this.PartnerSearchService.getVideoSessionDetail.and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getVideoSessionDetail('');
     expect(this.controller.videoLines['50335759'].length).toBe(0);
   });
 
   it('should get pstn session detail when data completed', function () {
-    const mockData = {
-      items: [
-        {
-          key: '60335752',
-          completed: true,
-          items: [
-            {
-              callId: '2',
-              startTime: 1515393187000,
-              endTime: 1515394215000,
-              tahoeQuality: [
-                {
-                  audioMos: 4,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    spyOn(this.PartnerSearchService, 'getPSTNSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getPSTNSessionDetail('');
     expect(this.controller.audioLines['2_60335752'].length).toBe(1);
@@ -285,30 +311,13 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
         },
       ],
     };
-    spyOn(this.PartnerSearchService, 'getPSTNSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    this.PartnerSearchService.getPSTNSessionDetail.and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getPSTNSessionDetail('');
     expect(this.controller.audioLines['2_60335752']).toBeUndefined();
   });
 
   it('should get cmr session detail when data completed', function () {
-    const mockData = {
-      items: [
-        {
-          key: '30337718',
-          completed: true,
-          items: [
-            {
-              startTime: 1515393187000,
-              endTime: 1515394215000,
-              audioQos: [],
-              videoQos: [],
-            },
-          ],
-        },
-      ],
-    };
-    spyOn(this.PartnerSearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getPSTNSessionDetail('');
     expect(this.controller.audioLines['30337718'].length).toBe(1);
@@ -331,7 +340,7 @@ describe('Component: DgcPartnerTabMeetingDetail', () => {
         },
       ],
     };
-    spyOn(this.PartnerSearchService, 'getCMRSessionDetail').and.returnValue(this.$q.resolve(mockData));
+    this.PartnerSearchService.getCMRSessionDetail.and.returnValue(this.$q.resolve(mockData));
     initComponent.call(this);
     this.controller.getPSTNSessionDetail('');
     expect(this.controller.audioLines['40337718'].length).toBe(0);

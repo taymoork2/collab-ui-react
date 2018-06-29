@@ -139,6 +139,7 @@ describe('User Service', function () {
           userEntitlements: [],
           onboardMethod: null,
         }, {
+          displayName: 'john doe',
           name: {
             givenName: 'john',
             familyName: 'doe',

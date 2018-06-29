@@ -59,6 +59,8 @@ describe('OverviewUsersCard', function () {
       },
     };
     spyOn(this.UserListService, 'listUsersAsPromise').and.returnValue(this.$q.resolve(this.listUsersData));
+    spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(true));
+    spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
   });
 
   describe('primary behaviors:', function () {
@@ -94,11 +96,6 @@ describe('OverviewUsersCard', function () {
     });
 
     describe('auto-assign license related behaviors:', function () {
-      beforeEach(function () {
-        spyOn(this.AutoAssignTemplateService, 'hasDefaultTemplate').and.returnValue(this.$q.resolve(true));
-        spyOn(this.AutoAssignTemplateService, 'isEnabledForOrg').and.returnValue(this.$q.resolve(true));
-      });
-
       it('should set "hasAutoAssignDefaultTemplate" and "isAutoAssignTemplateActive" properties as-appropriate', function () {
         this.card = this.OverviewUsersCard.createCard();
         this.$rootScope.$apply();

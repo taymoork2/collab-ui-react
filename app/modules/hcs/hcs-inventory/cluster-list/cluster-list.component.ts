@@ -71,7 +71,7 @@ export class ClusterListCtrl implements ng.IComponentController {
       controller: () => {
         return {
           deleteFn: () => this.deleteCluster(cluster.id),
-          title: this.$translate.instant('hcs.clustersList.deleteClusterModal.title'),
+          title: this.$translate.instant('hcs.clustersList.deleteClusterModal.title', { clusterName: cluster.name }),
           description: this.$translate.instant('hcs.clustersList.deleteClusterModal.description'),
         };
       },
@@ -91,7 +91,7 @@ export class ClusterListCtrl implements ng.IComponentController {
   public initCustomer(): void {
     if (this.groupId === this.typeUnassigned.toLowerCase()) {
       this.groupName = 'Unassigned';
-      this.customerId = undefined;
+      this.customerId = '';
     } else {
       this.customerId = this.groupId;
       this.HcsControllerService.getHcsControllerCustomer(this.groupId)

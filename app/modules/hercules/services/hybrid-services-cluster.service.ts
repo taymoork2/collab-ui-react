@@ -2,7 +2,7 @@ import { HybridServicesUtilsService } from 'modules/hercules/services/hybrid-ser
 import { ICluster, ConnectorType, HybridServiceId, IFMSOrganization, ITimeWindow, ClusterTargetType, IExtendedClusterFusion, ServiceStatusCSSClass, IMoratoria, IHost, IConnector, IExtendedConnector, IConnectorAlarm, IConnectorProvisioning, ConnectorMaintenanceMode, IClusterWithExtendedConnectors, IClusterPropertySet } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterStatesService } from 'modules/hercules/services/hybrid-services-cluster-states.service';
 import { HybridServicesExtrasService, IAllowedRegistrationHost } from 'modules/hercules/services/hybrid-services-extras.service';
-import { USSService } from 'modules/hercules/services/uss.service';
+import { USSService, IUserAssignment } from 'modules/hercules/services/uss.service';
 
 export interface IServiceStatusWithSetup {
   serviceId: HybridServiceId;
@@ -28,6 +28,11 @@ interface IAddDryRun {
   userCapacitiesAfter: {
     [connecotType: string]: number;
   };
+}
+
+export interface IUserAssignmentWithConnector {
+  assignment: IUserAssignment;
+  connector: IConnector;
 }
 
 export interface IResourceGroups {
@@ -204,6 +209,35 @@ export class HybridServicesClusterService {
         return {
           clustername: cluster.name,
           hostname: connector.hostname,
+        };
+      });
+  }
+
+  public getAssignedClusterAndConnectors(assignments: IUserAssignment[], orgId = this.Authinfo.getOrgId()): ng.IPromise<{ clustername: string, assignments: IUserAssignmentWithConnector[]}> {
+    if (_.isEmpty(assignments)) {
+      return this.$q.resolve({
+        clustername: '',
+        assignments: [],
+      });
+    }
+    return this.getAll(orgId)
+      .then((clusters) => {
+        const connectors: IConnector[] = _.chain(clusters)
+          .map((cluster) => cluster.connectors)
+          .flatten<IConnector>()
+          .value();
+        const assignmentsWithConnector = _.chain(assignments)
+          .filter(assignment => _.find(connectors, { id: assignment.connectorId }))
+          .map(assignment => {
+            return {
+              assignment: assignment,
+              connector: _.find(connectors, { id: assignment.connectorId }),
+            };
+          }).value();
+        const cluster = _.find(clusters, { id: _.first(assignments).clusterId });
+        return {
+          clustername: cluster.name,
+          assignments: assignmentsWithConnector,
         };
       });
   }

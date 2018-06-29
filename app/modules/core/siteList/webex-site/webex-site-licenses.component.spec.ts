@@ -162,4 +162,3 @@ describe('Component: WebexSiteLicensesComponent', function () {
 
   });
 });
-

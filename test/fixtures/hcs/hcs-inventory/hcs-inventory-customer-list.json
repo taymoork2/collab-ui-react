@@ -1,0 +1,17 @@
+[{
+    "uuid": "1111",
+    "name": "Shravan",
+    "status": "SOFTWARE_UPGRADE_NEEDED"
+  }, {
+    "uuid": "2222",
+    "name": "Sam",
+    "status": "SOFTWARE_VERSION_MISMATCH"
+  }, {
+    "uuid": "3333",
+    "name": "Jeff",
+    "status": "SOFTWARE_UPGRADE_NEEDED"
+  }, {
+    "uuid": "4444",
+    "name": "Sani",
+    "status": "OPERATIONAL"
+  }]

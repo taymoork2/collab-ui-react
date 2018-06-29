@@ -720,6 +720,7 @@ export class PstnWizardService {
     model.pstn.showAdvancedOrder = false;
     const params = {
       npa: _.get(model, 'pstn.areaCode.code'),
+      nxx: _.get(model, 'pstn.nxx.code'),
       count: this.getCount(model.pstn),
       sequential: model.pstn.consecutive,
       state: model.pstn.stateAbbreviation,

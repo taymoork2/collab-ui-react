@@ -39,7 +39,6 @@ class Chart implements ng.IComponentController {
       'key', 'docCount');
   }
 
-
   private updateGraph(incommingData?: BucketHolder, totalHits: number = 0, _titleField = 'name', valueField = 'value') {
     if (!incommingData) {
       incommingData = { bucketName: 'connectionStatus', buckets: [{ key: 'no_hits', docCount: 1 }] };

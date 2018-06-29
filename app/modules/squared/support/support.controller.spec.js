@@ -11,11 +11,13 @@ describe('Controller: SupportCtrl', function () {
       '$modal',
       '$q',
       '$scope',
+      '$state',
       'Authinfo',
       'Config',
       'FeatureToggleService',
       'HealthService',
       'Notification',
+      'ProPackService',
       'UrlConfig',
       'Userservice',
       'WindowLocation');
@@ -234,6 +236,35 @@ describe('Controller: SupportCtrl', function () {
         metadata: metadata,
       }),
     }));
+  });
+
+  describe('launch Meeting tab', function () {
+    beforeEach(function () {
+      spyOn(this.$state, 'go');
+    });
+
+    it('should NOT show the tab but go to Status tab when ProPack is disabled', function () {
+      spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
+      spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(true));
+      this.$state.current.name = 'support.meeting';
+      initController.call(this);
+      expect(this.$state.go).toHaveBeenCalledWith('support.status');
+    });
+
+    it('should NOT show the tab but go to Status tab when FT is set to false', function () {
+      spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(false));
+      this.$state.current.name = 'support.meeting';
+      initController.call(this);
+      expect(this.$state.go).toHaveBeenCalledWith('support.status');
+    });
+
+    it('should show the tab when ProPack is enabled and FT is set to true', function () {
+      spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
+      spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(true));
+      initController.call(this);
+      expect(this.$scope.tabs[0].state).toBe('support.meeting');
+    });
   });
 });
 

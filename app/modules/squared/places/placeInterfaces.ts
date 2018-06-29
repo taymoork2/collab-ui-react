@@ -1,3 +1,5 @@
+import Dictionary = _.Dictionary;
+
 declare namespace csdm {
 
   interface IPlaceExtended extends IPlace {
@@ -8,7 +10,7 @@ declare namespace csdm {
     locationUuid?: string;
     externalNumber?: string;
     directoryNumber?: string;
-    devices: {};
+    devices: Dictionary<IDevice>;
     id?: string;
     entitlements?: any[];
     externalLinkedAccounts?: any[];
@@ -22,14 +24,16 @@ declare namespace csdm {
     createCmiPlace(name, entitlements, locationUuid, directoryNumber, externalNumber): ng.IPromise<IPlace>;
     createCsdmPlace(name, entitlements, locationUuid , directoryNumber, externalNumber, externalLinkedAccounts: IExternalLinkedAccount[]): ng.IPromise<IPlace>;
     createCodeForExisting(cisUuid: string): ng.IPromise<ICode>;
-    reloadPlace(cisUuid: string): ng.IPromise<IPlace>;
-    reloadItem<T extends IDevicePlaceCommon>(item: T): ng.IPromise<T>;
+    reloadPlaceByCisUuid(cisUuid: string): ng.IPromise<IPlace>;
+    reloadPlace(item: IPlace): IPromise<IPlace>;
+    reloadDevice(item: IDevice): IPromise<IDevice>;
     updateItemName(item: IPlace, newName: string): ng.IPromise<IPlace>;
     isBigOrg(): ng.IPromise<boolean>;
-    getPlacesMap(refreshIfOld: boolean): ng.IPromise<{ [url: string]: IPlace; }>;
-    getSearchPlacesMap(searchString: string): ng.IPromise<{ [url: string]: IPlace; }>;
-    getDevicesMap(refreshHuron: boolean): ng.IPromise<{ [url: string]: IDevice; }>;
+    getPlacesMap(refreshIfOld: boolean): ng.IPromise<Dictionary<IPlace>>;
+    getSearchPlacesMap(searchString: string): ng.IPromise<Dictionary<IPlace>>;
+    getDevicesMap(refreshHuron: boolean): ng.IPromise<Dictionary<IDevice>>;
     subscribeToChanges($scope: ng.IScope, listener: Function): void;
+    updateTags(objectToUpdate: IDevicePlaceCommon, newTags: string[]);
   }
   export interface IExternalLinkedAccount {
     providerID: string;

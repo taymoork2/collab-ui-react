@@ -1,20 +1,20 @@
 export interface IHcsSubscription {
-  id: string;
+  subscriptionId: string;
   licenseType: string;
   ordered: number;
 }
 
 export class HcsSubscription implements IHcsSubscription {
-  public id: string;
+  public subscriptionId: string;
   public licenseType: string;
   public ordered: number;
 
   constructor(obj: IHcsSubscription = {
-    id: '',
+    subscriptionId: '',
     licenseType: '',
     ordered: 0,
   }) {
-    this.id = obj.id;
+    this.subscriptionId = obj.subscriptionId;
     this.licenseType = obj.licenseType;
     this.ordered = obj.ordered;
   }
@@ -75,9 +75,9 @@ export interface IHcsCustomerLicense {
   customerName: string;
   customerGroupId?: string | null | undefined;
   customerGroupName?: string | null | undefined;
-  subscriptionList?: HcsSubscription[] | undefined | null;
-  plmList: HcsPlmBase[];
-  licenseList: HcsLicense[];
+  subscriptions?: HcsSubscription[] | undefined | null;
+  plms: HcsPlmBase[];
+  licenses: HcsLicense[];
 }
 
 export class HcsCustomerLicense implements IHcsCustomerLicense {
@@ -87,16 +87,16 @@ export class HcsCustomerLicense implements IHcsCustomerLicense {
   public customerName: string;
   public customerGroupId?: string | null | undefined;
   public customerGroupName?: string | null | undefined;
-  public subscriptionList?: HcsSubscription[] | undefined | null;
-  public plmList: HcsPlmBase[];
-  public licenseList: HcsLicense[];
+  public subscriptions?: HcsSubscription[] | undefined | null;
+  public plms: HcsPlmBase[];
+  public licenses: HcsLicense[];
 
   constructor(obj: IHcsCustomerLicense = {
     partnerOrgId: '',
     customerId: '',
     customerName: '',
-    plmList: [],
-    licenseList: [],
+    plms: [],
+    licenses: [],
   }) {
     this.partnerOrgId = obj.partnerOrgId;
     this.customerId = obj.customerId;
@@ -104,9 +104,9 @@ export class HcsCustomerLicense implements IHcsCustomerLicense {
     this.customerName = obj.customerName;
     this.customerGroupId = obj.customerGroupId;
     this.customerGroupName = obj.customerGroupName;
-    this.subscriptionList = obj.subscriptionList;
-    this.plmList = obj.plmList;
-    this.licenseList = obj.licenseList;
+    this.subscriptions = obj.subscriptions;
+    this.plms = obj.plms;
+    this.licenses = obj.licenses;
   }
 }
 

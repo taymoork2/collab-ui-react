@@ -11,12 +11,13 @@ describe('Component: tabParticipants', () => {
 
   beforeEach(function () {
     this.initModules(testModule);
-    this.injectDependencies('$q', '$timeout', 'FeatureToggleService', 'Notification', 'SearchService');
+    this.injectDependencies('$q', '$timeout', 'Analytics', 'FeatureToggleService', 'Notification', 'SearchService');
 
     initSpies.apply(this);
   });
 
   function initSpies() {
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.SearchService, 'getParticipants').and.returnValue(this.$q.resolve());
     spyOn(this.FeatureToggleService, 'supports').and.returnValue(this.$q.resolve(true));

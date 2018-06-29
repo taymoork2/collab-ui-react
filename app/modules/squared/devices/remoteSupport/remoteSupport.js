@@ -33,7 +33,7 @@
         }
 
         function pollDeviceForNewRsuKey(endTime, deferred) {
-          CsdmDataModelService.reloadItem(rs.currentDevice).then(function (device) {
+          CsdmDataModelService.reloadDevice(rs.currentDevice).then(function (device) {
             if (device.rsuKey !== rs.oldRsuKey) {
               Notification.success('spacesPage.remoteAccessKey.rsuKeyWasReset');
               rs.resetDone = true;

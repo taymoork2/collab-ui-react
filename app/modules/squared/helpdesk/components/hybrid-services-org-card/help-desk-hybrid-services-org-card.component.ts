@@ -26,7 +26,6 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
   public loadingHSData: boolean;
   public hybridServicesComparator = this.HybridServicesUtilsService.hybridServicesComparator;
 
-
   /* @ngInject */
   constructor(
     private $modal: IToolkitModalService,
@@ -86,7 +85,6 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
         });
     }
 
-
     if (this.LicenseService.orgIsEntitledTo(org, 'squared-fusion-gcal')) {
       this.CloudConnectorService.getService('squared-fusion-gcal', org.id)
         .then((service) => {
@@ -139,7 +137,6 @@ class HelpDeskHybridServicesOrgCardComponentCtrl implements ng.IComponentControl
   }
 
 }
-
 
 export class HelpDeskHybridServicesOrgCardComponent implements ng.IComponentOptions {
   public controller = HelpDeskHybridServicesOrgCardComponentCtrl;

@@ -38,7 +38,6 @@ describe('field modal component', () => {
     spyOn(this.Notification, 'error');
     spyOn(this.Analytics, 'trackEvent');
 
-
     createServiceSpy = spyOn(this.ContextFieldsService, 'createAndGetField').and.returnValue(this.$q.resolve(mockedCreateField));
     updateServiceSpy = spyOn(this.ContextFieldsService, 'updateAndGetField').and.returnValue(this.$q.resolve(mockedUpdateField));
 
@@ -185,7 +184,6 @@ describe('field modal component', () => {
         expect(this.controller.createOrSaveButtonEnabled()).toBe(false);
       });
     });
-
 
     describe('create', function () {
       it('should correctly create a new field', function (done) {

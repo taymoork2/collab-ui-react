@@ -22,9 +22,11 @@
           required
           cs-input-async-validators="webexTrial.siteUrlValidator"
           cs-input-label="{{::'trialModal.meeting.siteUrl' | translate}}"
+          ng-pattern="/^[a-zA-Z-\d\.]+$/"
           ng-model-options="{updateOn: 'blur', debounce: { blur: 0 } }">
         <div class="cs-input-group" ng-class="{'error': trialForm.siteUrl.$invalid && trialForm.siteUrl.$touched}">
           <div class="cs-input__messages" ng-messages="trialForm.siteUrl.$error" role="alert">
+            <div class="message" ng-message="pattern" translate="trialModal.meeting.invalidSite"></div>
             <div ng-repeat="(key, value) in webexTrial.errorMessages" class="message">
               <span ng-message="{{key}}">{{value}}</span>
             </div>

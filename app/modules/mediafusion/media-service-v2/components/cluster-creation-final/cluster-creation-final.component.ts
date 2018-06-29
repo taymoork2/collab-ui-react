@@ -1,6 +1,5 @@
 export class ClusterCreationFinalController implements ng.IComponentController {
 
-
   public clusterName: string = '';
   public hostName: string = '';
   public mfFirstTimeToggle: boolean = false;
@@ -21,7 +20,6 @@ export class ClusterCreationFinalController implements ng.IComponentController {
       this.mfFirstTimeToggle = mfFirstTimeToggle.currentValue;
     }
   }
-
 
 }
 

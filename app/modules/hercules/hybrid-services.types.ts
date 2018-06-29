@@ -3,8 +3,9 @@ import { IServiceStatusDetails, IConnectorStateDetails } from 'modules/hercules/
 
 export type ClusterTargetType = 'c_mgmt' | 'mf_mgmt' | 'hds_app' | 'ucm_mgmt' | 'cs_mgmt' | 'ept' | 'unknown';
 export type ConnectorAlarmSeverity = 'critical' | 'error' | 'warning' | 'alert';
-export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending' | 'partial';
-export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' | 'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown';
+export type ConnectorMaintenanceMode = 'on' | 'off' | 'pending';
+export type ConnectorState = 'running' | 'not_installed' | 'disabled' | 'downloading' | 'installing' | 'not_configured' | 'uninstalling' | 'registered' |
+  'initializing' | 'offline' | 'stopped' | 'not_operational' | 'unknown' | 'restarted' | 'upgraded';
 export type ConnectorType = 'c_mgmt' | 'c_cal' | 'c_ucmc' | 'mf_mgmt' | 'hds_app' | 'cs_mgmt' | 'cs_context' | 'ucm_mgmt' | 'c_serab' | 'c_imp';
 export type ConnectorUpgradeState = 'upgraded' | 'upgrading' | 'pending';
 export type DayOfWeek = 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';

@@ -1,9 +1,15 @@
 import testModule from './index';
 
 describe('Component: partnerReportsTabs', function () {
-  const sparkTab = {
-    state: `partnerreports.tab.spark`,
-    title: `reportsPage.sparkReports`,
+  const sparkTab1 = {
+    state: `partnerreports.tab.spark({sparktype: 'messaging'})`,
+    title: `reportsPage.messageTab`,
+    $$hashKey: jasmine.any(String),
+  };
+
+  const sparkTab2 = {
+    state: `partnerreports.tab.spark({sparktype: 'calling'})`,
+    title: `reportsPage.callTab`,
     $$hashKey: jasmine.any(String),
   };
 
@@ -15,7 +21,7 @@ describe('Component: partnerReportsTabs', function () {
 
   const webexTab = {
     state: `partnerreports.tab.webexreports.metrics`,
-    title: `reportsPage.webexReports`,
+    title: `reportsPage.webexMetrics.title`,
     $$hashKey: jasmine.any(String),
   };
 
@@ -51,7 +57,7 @@ describe('Component: partnerReportsTabs', function () {
   it('should only show the Spark tab when the spark toggle is true', function () {
     this.sparkReportsToggle = true;
     initController.call(this);
-    expect(this.controller.tabs).toEqual([sparkTab]);
+    expect(this.controller.tabs).toEqual([sparkTab1, sparkTab2]);
     expect(this.$state.go).not.toHaveBeenCalled();
   });
 

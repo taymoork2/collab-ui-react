@@ -9,7 +9,6 @@ export class SearchRequestCompressor {
     this.MAX_COUNT_VALUE = this.keyset.charAt(this.keyset.length - 1);
     this.encodingChunkSize = 4;
 
-
     this.fieldCompressionMap[QueryParser.Field_ActiveInterface] = 'a';
     this.fieldCompressionMap[QueryParser.Field_Tag] = 'b';
     this.fieldCompressionMap[QueryParser.Field_ConnectionStatus] = 'c';
@@ -17,7 +16,7 @@ export class SearchRequestCompressor {
     this.fieldCompressionMap[QueryParser.Field_ErrorCodes] = 'e';
     this.fieldCompressionMap[QueryParser.Field_Displayname] = 'f';
     this.fieldCompressionMap[QueryParser.Field_AccountType] = 'g';
-    this.fieldCompressionMap[QueryParser.Field_SipUrl] = 'h';
+    this.fieldCompressionMap[QueryParser.Field_SipUrls] = 'h';
     this.fieldCompressionMap[QueryParser.Field_IP] = 'i';
     this.fieldCompressionMap[QueryParser.Field_CisUUID] = 'j';
     this.fieldCompressionMap[QueryParser.Field_Serial] = 'k';
@@ -25,6 +24,7 @@ export class SearchRequestCompressor {
     this.fieldCompressionMap[QueryParser.Field_Mac] = 'm';
     this.fieldCompressionMap[QueryParser.Field_UpgradeChannel] = 'n';
     this.fieldCompressionMap[QueryParser.Field_Product] = 'o';
+    this.fieldCompressionMap[QueryParser.Field_PrimarySipUrl] = 'p';
     this.fieldCompressionMap[SearchRequestCompressor.CUSTOM_FIELD] = 'z';
 
     this.fieldValueCompressionMap[QueryParser.Field_ConnectionStatus] = {};

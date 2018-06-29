@@ -113,10 +113,9 @@ describe('Controller: ExternalCommunicationSettingController', () => {
     });
 
     it('should notify error and undo checkbox changes when an error occurs while saving', function (this: Test) {
-      this.initSpies({
-        setBlockExternalCommunications: this.$q.reject(),
-      });
+      this.initSpies();
       this.initComponent();
+      (<jasmine.Spy> this.OrgSettingsService.setBlockExternalCommunications).and.returnValue(this.$q.reject());
 
       this.view.find(Checkbox.BLOCK_EXTERNAL_COMMUNICATION).click();
       expect(this.OrgSettingsService.setBlockExternalCommunications).toHaveBeenCalled();

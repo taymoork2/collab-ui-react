@@ -67,4 +67,3 @@ export class CsvSimpleExportComponent implements ng.IComponentOptions {
     tooltipPlacement: '@',      // where to place the tooltip, use 'none' to hide tooltip
   };
 }
-

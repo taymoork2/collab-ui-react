@@ -1,0 +1,13 @@
+{
+  "uuid" : "0000",
+  "name" : "test_sw_Profile1",
+  "applicationVersions" : [
+    {
+    "uuid" : "d7adc1da-eb7b-48eb-a875-a67813214a35",
+    "typeApplication" : "CUCM",
+    "appVersion" : "11.5.1.11900-26",
+    "fileName" : "UCSInstall_UCOS_UNRST_11.5.1.11900-26.sgn.iso",
+    "unrestricted" : true
+    }
+  ]
+}

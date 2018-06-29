@@ -81,7 +81,6 @@ describe('In CVA, The controller', () => {
     checkNextButtonState(true);
   });
 
-
   it('should update modified name of the VA in the template config', function () {
     const VAService = new CVAConfig('id1', 'new-name', undefined);
 

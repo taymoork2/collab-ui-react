@@ -1,4 +1,4 @@
-import { PartnerSearchService } from './partner-search.service';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 class TimeZoneController implements ng.IComponentController {
   private readonly GMT_PREFIX_REGEX = /^\(GMT [+-]\d\d:\d\d\)/;
@@ -12,7 +12,7 @@ class TimeZoneController implements ng.IComponentController {
   /* @ngInject */
   public constructor(
     private $translate: ng.translate.ITranslateService,
-    private PartnerSearchService: PartnerSearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.selectPlaceholder = this.$translate.instant('trialModal.meeting.timeZonePlaceholder');
   }
@@ -44,16 +44,16 @@ class TimeZoneController implements ng.IComponentController {
   }
 
   private setSelected(): void {
-    this.selected = this.timeZone ? this.formatTz(this.timeZone) : this.PartnerSearchService.getGuess('');
+    this.selected = this.timeZone ? this.formatTz(this.timeZone) : this.WebexReportsUtilService.getTzGuess('');
   }
 
   private getOptions(): void {
-    const tzs = this.PartnerSearchService.getNames('');
+    const tzs = this.WebexReportsUtilService.getTzNames('');
     this.options = _.map(tzs, (tz: string) => this.formatTz(tz));
   }
 
   private formatTz(tz: string): string {
-    const offset = this.PartnerSearchService.getOffset(tz);
+    const offset = this.WebexReportsUtilService.getTzOffset(tz);
     return `(GMT ${offset}) ${tz}`;
   }
 }

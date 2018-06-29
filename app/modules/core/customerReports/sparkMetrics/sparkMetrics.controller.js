@@ -9,6 +9,7 @@
   function SparkMetricsCtrl(
     $sce,
     $scope,
+    $stateParams,
     $window,
     Analytics,
     Authinfo,
@@ -76,6 +77,7 @@
       };
 
       var viewType = _.get(vm, 'reportView.view');
+      var reportType = _.get($stateParams, 'sparktype');
 
       // var getSparkReportData = _.get(QlikService, 'getSparkReportQBSfor' + viewType + 'Url');
       var getSparkReportData = _.get(QlikService, 'getQBSInfo');
@@ -83,7 +85,7 @@
       if (!_.isFunction(getSparkReportData)) {
         return;
       }
-      getSparkReportData('spark', viewType, userInfo).then(function (data) {
+      getSparkReportData(reportType, viewType, userInfo).then(function (data) {
         vm.sparkMetrics.appData = {
           ticket: data.ticket,
           appId: data.appName,
@@ -96,7 +98,7 @@
         if (vm.sparkMetrics.appData.persistent === 'false') {
           vm.sparkMetrics.appData.appId = vm.reportView.appName;
         }
-        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, 'spark', viewType);
+        var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.sparkMetrics.appData.qrp, reportType, viewType);
         vm.sparkMetrics.appData.url = QlikMashupChartsUrl;
 
         updateIframe();

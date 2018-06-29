@@ -1,6 +1,5 @@
 import { PhoneNumberUtil, PhoneNumberType, PhoneNumber, PhoneNumberFormat } from 'google-libphonenumber';
 
-
 export interface IREmergencyNumber {
   uuid?: string;
   name: string;
@@ -111,7 +110,6 @@ export class CallPhoneNumber implements IRCallPhoneNumber {
     return '';
   }
 }
-
 
 /**
  * Class containing helper functions for validating and formatting phone numbers.

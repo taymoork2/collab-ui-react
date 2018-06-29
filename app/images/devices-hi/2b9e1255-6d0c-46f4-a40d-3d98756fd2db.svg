@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180px" height="96px" viewBox="0 0 180 96" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Webex Room Kit Mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="57.757163%" x2="100%" y2="57.757163%" id="linearGradient-1">
+            <stop stop-color="#C1C5C7" offset="0%"></stop>
+            <stop stop-color="#9CA1A7" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="81.2825521%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#000000" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.08" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="27.1223958%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#000000" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.08" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#E9E9E8" offset="0%"></stop>
+            <stop stop-color="#E0E2E5" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-5" x="0" y="33" width="180" height="30" rx="5"></rect>
+        <linearGradient x1="36.5615845%" y1="50%" x2="94.128418%" y2="50%" id="linearGradient-6">
+            <stop stop-color="#4F5A6A" offset="0%"></stop>
+            <stop stop-color="#555858" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#D9D9DD" offset="0%"></stop>
+            <stop stop-color="#C7C9CE" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-8" cx="90" cy="48" r="8"></circle>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-9">
+            <stop stop-color="#767687" offset="0%"></stop>
+            <stop stop-color="#626772" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-10">
+            <stop stop-color="#353A43" offset="0%"></stop>
+            <stop stop-color="#353A43" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-11" cx="90" cy="48" r="3"></circle>
+        <path d="M87.0039802,47.8441165 C87.0188233,47.5541414 87.074841,47.275042 87.1663013,47.0125504 L87.518594,47.0957642 C87.3386217,47.7772827 87.2710507,48.1861471 87.315881,48.3223572 C87.315881,48.3223572 87.0721036,48.3841506 87.0626309,48.3223572 C87.0314028,48.1541432 87.0118525,47.9947297 87.0039802,47.8441165 Z" id="path-12"></path>
+    </defs>
+    <g id="Webex-Room-Kit-Mini" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Rectangle-12">
+            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-5"></use>
+            <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-5"></use>
+            <use fill="url(#linearGradient-3)" fill-rule="evenodd" xlink:href="#path-5"></use>
+            <rect stroke-opacity="0.48" stroke="#151B1E" stroke-width="1.25" stroke-linejoin="square" x="0.625" y="33.625" width="178.75" height="28.75" rx="5"></rect>
+            <rect stroke-opacity="0.12" stroke="#151B1E" stroke-width="1.5" stroke-linejoin="square" x="0.75" y="33.75" width="178.5" height="28.5" rx="5"></rect>
+            <rect stroke="url(#linearGradient-4)" stroke-width="1" stroke-linejoin="square" x="0.5" y="33.5" width="179" height="29" rx="5"></rect>
+        </g>
+        <g id="Oval" stroke-linejoin="square">
+            <circle stroke-opacity="0.65905231" stroke="#21242D" stroke-width="0.75" fill="url(#linearGradient-6)" fill-rule="evenodd" cx="90" cy="48" r="7.625"></circle>
+            <circle stroke="url(#linearGradient-7)" stroke-width="0.5" cx="90" cy="48" r="7.75"></circle>
+        </g>
+        <g id="Oval-2">
+            <circle stroke="url(#linearGradient-10)" stroke-width="1" fill="url(#linearGradient-9)" fill-rule="evenodd" cx="90" cy="48" r="3.5"></circle>
+            <circle stroke-opacity="0.64" stroke="#16181C" stroke-width="0.25" cx="90" cy="48" r="3.125"></circle>
+        </g>
+        <path d="M87.0120791,47.7289518 C87.013336,47.7149163 87.0146895,47.7009086 87.0161391,47.6869294 L87.9748535,46.1665039 L90.1269531,47.098877 L92.4616245,46.2847806 C92.8009675,46.7708858 93,47.3621996 93,48 C93,48.1029961 92.9948097,48.20478 92.9846763,48.3051043 C92.40609,48.5044521 91.5239095,48.604126 90.3381348,48.604126 C88.5580513,48.604126 87.4493661,48.3124012 87.0120791,47.7289518 Z" id="Combined-Shape" fill-opacity="0.48" fill="#2A2A35"></path>
+        <path d="M92.4226515,46.2302563 C92.7134036,46.6275982 92.9087676,47.0991403 92.9750329,47.611172 L92.4151611,47.7130127 C92.3434652,47.2728271 92.2050781,46.8745931 92,46.5183105 L92.4226515,46.2302563 Z" id="Combined-Shape" fill="#FFFFFF" opacity="0.959999979"></path>
+        <mask id="mask-13" fill="white">
+            <use xlink:href="#path-12"></use>
+        </mask>
+        <use id="Combined-Shape" fill="#FFFFFF" opacity="0.959999979" xlink:href="#path-12"></use>
+        <path d="M90,42.246621 L90,42.9943386 C90,43.1260393 90.1067645,43.2328038 90.2384651,43.2328038 L90.2384651,43.2328038 C90.3701658,43.2328038 90.4769303,43.1260393 90.4769303,42.9943386 L90.4769303,42.2384997 C90.4769303,42.1090038 90.3719531,42.0040267 90.2424573,42.0040267 C90.2411265,42.0040267 90.2397957,42.004038 90.2384651,42.0040607 L90.2384651,42.0040607 C90.1061128,42.0063144 90,42.1142495 90,42.246621 Z" id="Path-5" fill="#FFFFFF" opacity="0.959999979"></path>
+    </g>
+</svg>

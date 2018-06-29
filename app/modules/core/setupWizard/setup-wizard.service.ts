@@ -432,7 +432,6 @@ export class SetupWizardService {
     return this.$http.post(url, payload);
   }
 
-
   public validateTransferCodeDecorator(payload: { siteUrl: string, transferCode: string } , externalSubscriptionId?: string,  orderUuid?: string): ng.IPromise<any> {
     if (!_.isEmpty(externalSubscriptionId)) {
       return this.validateTransferCodeBySubscriptionId(payload, externalSubscriptionId, orderUuid);

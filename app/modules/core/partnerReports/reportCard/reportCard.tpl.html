@@ -2,24 +2,20 @@
   <article>
     <header>
       <span class='report-section-header' translate="{{::$ctrl.options.headerTitle}}"></span>
-      <i ng-if="$ctrl.isPopover()"
-        class='icon icon-information'
-        tooltip="{{::$ctrl.getPopoverText()}}"
-        aria-label="{{::$ctrl.getPopoverText()}}"
-        tooltip-trigger="mouseenter focus"
-        tooltip-placement="bottom"
-        tooltip-animation="true"
-        tabindex="0"></i>
+      <icon-tooltip
+        ng-if="$ctrl.isPopover()"
+        tt-tooltip-text="{{::$ctrl.getPopoverText()}}"
+        tt-tooltip-placement="bottom">
+      </icon-tooltip>
       <div ng-if="$ctrl.exportDropdown" class="grid-filter dropdown pull-right">
-        <a href ng-click="$ctrl.toggleExportMenu()">
-          <i class='icon icon-three-dots export-dots'></i>
-        </a>
-        <ul class="dropdown-menu dropdown-primary" ng-class="{'export-visible': $ctrl.exportMenu}">
-          <li class="export-item"><a id="{{$ctrl.exportDropdown.header.id}}">{{$ctrl.exportDropdown.header.label}}</a></li>
-          <li ng-repeat="object in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(object)">
-            <a id="{{object.id}}">{{::object.label}}</a>
+        <three-dot-dropdown>
+          <li class="export-item">
+            <a id="{{$ctrl.exportDropdown.header.id}}">{{$ctrl.exportDropdown.header.label}}</a>
           </li>
-        </ul>
+          <li ng-repeat="menuItem in $ctrl.exportDropdown.menu" class="export-item" ng-click="$ctrl.dropdownSelect(menuItem)">
+            <a id="{{menuItem.id}}">{{::menuItem.label}}</a>
+          </li>
+        </three-dot-dropdown>
       </div>
     </header>
     <section class="report-{{$ctrl.options.reportType}}">

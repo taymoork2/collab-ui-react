@@ -3,6 +3,9 @@ import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { CardUtils } from 'modules/core/cards';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { Notification } from 'modules/core/notifications/notification.service';
+import { IOverviewPageNotification } from 'modules/core/overview/overviewPage.types';
+import { HcsFeatureAvailableNotification } from 'modules/core/partner-home/notifications';
+import { UserOverviewService, IUserData } from 'modules/core/users/userOverview/userOverview.service';
 
 type StatusTypes = 'danger' | 'warning' | 'success';
 
@@ -46,6 +49,8 @@ class PartnerHomeController implements ng.IComponentController {
     private Orgservice,
     private PartnerService,
     private TrialService,
+    private HcsFeatureAvailableNotification: HcsFeatureAvailableNotification,
+    private UserOverviewService: UserOverviewService,
   ) {}
 
   public $onInit() {
@@ -53,17 +58,37 @@ class PartnerHomeController implements ng.IComponentController {
       this.getTrialsList();
     }
 
-    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService).then((result) => {
-      this.hcsFeatureToggle = result;
-      if (this.hcsFeatureToggle) {
-        this.cardSize = 'cs-card--large';
-      }
-      this.CardUtils.resize();
-    });
+    this.initPartnerNotifications();
 
     this.Orgservice.isTestOrg()
       .then((isTestOrg) => {
         this.isTestOrg = isTestOrg;
+      });
+  }
+
+  public initPartnerNotifications(): void {
+    this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHostedCloudService)
+      .then((result) => {
+        this.hcsFeatureToggle = result;
+        if (this.hcsFeatureToggle) {
+          this.cardSize = 'cs-card--large';
+          this.CardUtils.resize();
+          return this.UserOverviewService.getUser(this.Authinfo.getUserId());
+        } else {
+          return;
+        }
+      })
+      .then((response: IUserData | undefined) => {
+        if (response) {
+          const user = response.user;
+          const isUpgrade = _.includes(user.entitlements, 'ucmgmt-uaas');
+          if (!isUpgrade) {
+            this.pushNotification(this.HcsFeatureAvailableNotification.createNotification(this.$state));
+          }
+        }
+      })
+      .catch((response) => {
+        this.Notification.errorResponse(response, 'partnerHomePage.errGetTrialsQuery');
       });
   }
 
@@ -138,6 +163,19 @@ class PartnerHomeController implements ng.IComponentController {
         this.showTrialsRefresh = false;
         this.CardUtils.resize();
       });
+  }
+
+  public pushNotification(notification: IOverviewPageNotification, zOrder?: number): void {
+    // Set the notification's zOrder if one is specified or does not exist
+    notification.zOrder = zOrder || notification.zOrder || 0;
+    this.notifications.push(notification);
+  }
+
+  public dismissNotification(notification: IOverviewPageNotification) {
+    this.notifications = _.reject(this.notifications, {
+      name: notification.name,
+    });
+    notification.dismiss();
   }
 }
 

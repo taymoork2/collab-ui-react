@@ -1,0 +1,30 @@
+[
+  {
+    "uuid" : "b5a6a426-4e8f-4d03-b1a5-c0ff6890b4ed",
+    "name" : "rcdn6-vm67-114.cisco.com",
+    "url" : "https://upgrade.int-ucmgmt.cisco.com/api/v1/partners/51f7bc28-eb94-4e17-84d9-2141497a04da/clusters/b5a6a426-4e8f-4d03-b1a5-c0ff6890b4ed",
+    "sftpServer" : null,
+    "nodes" : [ {
+      "hostName" : "rcdn6-vm67-114.cisco.com",
+      "ipAddress" : "10.89.67.114",
+      "typeApplication" : "CUCM",
+      "activeVersion" : "9.1.2.16139-1",
+      "publisher" : true
+    } ],
+    "clusterStatus" : "UNASSIGNED"
+  }, {
+    "uuid" : "1776c06e-a65b-4bf6-b93a-4e81ed12c0f4",
+    "name" : "rcdn6-vm67-81.cisco.com",
+    "url" : "https://upgrade.int-ucmgmt.cisco.com/api/v1/partners/51f7bc28-eb94-4e17-84d9-2141497a04da/clusters/1776c06e-a65b-4bf6-b93a-4e81ed12c0f4",
+    "sftpServer" : null,
+    "nodes" : [ {
+      "hostName" : "rcdn6-vm67-81.cisco.com",
+      "ipAddress" : "10.89.67.81",
+      "typeApplication" : "CUCM",
+      "activeVersion" : "10.0.1.10000-24",
+      "publisher" : true
+    } ],
+    "clusterStatus" : "UNASSIGNED"
+  }
+]
+

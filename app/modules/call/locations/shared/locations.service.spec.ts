@@ -21,7 +21,6 @@ describe('Service: LocationsService', () => {
     this.$httpBackend.verifyNoOutstandingRequest();
   });
 
-
   it('should get locations', function() {
     this.$httpBackend.expectGET(/locations/).respond(200, { locations: locationsList });
     this.LocationsService.getLocationList().then(response => {
@@ -52,7 +51,6 @@ describe('Service: LocationsService', () => {
     });
     this.$httpBackend.flush();
   });
-
 
   it('should reject the promise on a failed response', function () {
     this.$httpBackend.expectGET(/locations/).respond(500);

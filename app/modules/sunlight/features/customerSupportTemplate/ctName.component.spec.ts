@@ -24,7 +24,6 @@ describe('In ctNameComponent, The controller', () => {
     controller = undefined;
   });
 
-
   it('isValid should validate the name requirement', () => {
 
     const string_250Char = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
@@ -44,7 +43,6 @@ describe('In ctNameComponent, The controller', () => {
 
     controller.TemplateWizardService.template.name = string_251Char;
     expect(controller.isValid()).toBe(false);
-
 
   });
 

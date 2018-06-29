@@ -88,7 +88,6 @@ export class LegalHoldMatterListController implements ng.IComponentController {
     });
   }
 
-
   public $onDestroy() {
     this.changeEventListener();
   }

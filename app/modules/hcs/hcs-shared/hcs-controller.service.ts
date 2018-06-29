@@ -33,7 +33,6 @@ export class HcsControllerService {
   ) {
     const BASE_URL = this.UrlConfig.getHcsControllerServiceUrl();
 
-
     const updateAction: ng.resource.IActionDescriptor = {
       method: 'PUT',
     };
@@ -115,14 +114,13 @@ export class HcsControllerService {
     });
   }
 
-  public getHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
+  public listHcsCustomers(): ng.IPromise<IHcsCustomer[]> {
     return this.customerResource.query({
       partnerId: this.Authinfo.getOrgId(),
     }).$promise.then(response => {
       return response;
     });
   }
-
 
   public addHcsControllerCustomer(customerName: string, services: string[]): ng.IPromise<IHcsCustomer> {
     return this.customerResource.save({

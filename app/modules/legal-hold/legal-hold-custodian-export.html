@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h3 class="modal-title"
+    translate="legalHold.detail.exportCustodians"></h3>
+</div>
+<div class="modal-body">
+  <div translate="legalHold.exportWarning"></div>
+  <cr-csv-download filename={{::$ctrl.exportFileName}}
+    is-hidden="true"
+    csv-data="$ctrl.exportResults"
+    download-finished-fn="$ctrl.finishDownload()"
+    l10n-success-string="legalHold.custodianImport.downloadSuccess">
+  </cr-csv-download>
+</div>
+<div class="modal-footer">
+  <button cs-btn
+    type="button"
+    class="btn btn-default"
+    aria-label="{{::'common.cancel' | translate}}"
+    ng-click="$ctrl.cancel()">
+    <span translate="common.cancel"></span>
+  </button>
+  <button cs-btn
+    type="button"
+    class="btn btn--primary"
+    aria-label="{{::'common.continue' | translate}}"
+    loading="$ctrl.isExporting"
+    ng-click="$ctrl.exportCustodians()">
+    <span translate="common.continue"></span>
+  </button>
+</div>

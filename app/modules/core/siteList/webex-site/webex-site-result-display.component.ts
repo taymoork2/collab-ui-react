@@ -33,4 +33,3 @@ export class WebexSiteResultDisplayComponent implements ng.IComponentOptions {
     isSuccess: '<',
   };
 }
-

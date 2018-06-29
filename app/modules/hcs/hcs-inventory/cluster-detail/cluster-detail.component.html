@@ -7,7 +7,7 @@
 </cs-page-header>
 <div class="hcs-cluster-settings hcs-container">
   <div class="loading-container" ng-if="$ctrl.loading">
-    <i class="icon icon-spinner"></i>
+    <i class="icon icon-2x icon-spinner"></i>
   </div>
 
   <form novalidate name="$ctrl.form" ng-if="!$ctrl.loading" class="hcs-cluster-settings-main-container cs-form content-container">
@@ -73,7 +73,7 @@
               <article>
                 <header class="node-header">
                   <div>
-                    <h5 class="node-name" title="Node Name">{{node.hostname}}</h5>
+                    <h5 class="node-name ellipsis" title="{{node.hostname}}">{{node.hostname}}</h5>
                   </div>
                   <div class="node-type" ng-if="node.ipAddress">
                     {{node.ipAddress}}
@@ -97,13 +97,13 @@
                 </section>
                 <footer class="node-footer">
                   <div>
-                    <span class="node-verification-code">
+                    <span class="node-verification-code" ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
                       <span ng-if="node.status.toLowerCase() !== $ctrl.status.noAgentRunning.toLowerCase()">
                         <i class="icon icon-info-outline" tooltip-placement="top" tooltip="{{::'hcs.clusterDetail.settings.nodes.verificationCodeTooltip' | translate}}"></i>
                         <span class="node-verification body-small">{{'hcs.clusterDetail.settings.nodes.verificationCode' | translate}}: {{node.agentVerificationCode}}</span>
                       </span>
                     </span>
-                    <span class="node-status-container">
+                    <span class="node-status-container" ng-class="{'move-right' : (node.status === $ctrl.status.nodeNeedsAcceptance)}">
                       <span ng-if="node.status === $ctrl.status.nodeNeedsAcceptance">
                         <button class="btn btn--circle btn--small btn--white btn--primary" ng-click="$ctrl.acceptNode(node)" ng-class="{'is-accepted': node.isAccepted}">
                           <span class="icon icon-check"></span>
@@ -152,6 +152,10 @@
                         <div ng-switch-when="UPGRADE_IN_PROGRESS">
                           <i class="icon icon-circle status-indicator warning"></i>
                           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
+                        </div>
+                        <div ng-switch-when="NO_ACTIVE_VERSION">
+                          <i class="icon icon-circle status-indicator warning"></i>
+                          <span class="h6">{{::'hcs.clusterDetail.nodeStatus.noActiveVersion' | translate}}</span>
                         </div>
                         <div ng-switch-when="OPERATIONAL">
                           <i class="icon icon-circle status-indicator success"></i>

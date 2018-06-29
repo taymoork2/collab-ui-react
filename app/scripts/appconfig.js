@@ -1352,9 +1352,7 @@
           .state('user-overview.csdmDevice', {
             views: {
               'side-panel-container@user-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -1648,6 +1646,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-spark-hybrid-impinterop.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'spark-hybrid-impinterop\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-cal', {
             views: {
               'side-panel-container@user-overview': {
@@ -1677,6 +1689,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-cal.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-cal\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},
@@ -1734,6 +1760,20 @@
               serviceId: {},
             },
           })
+          .state('user-overview.hybrid-services-squared-fusion-uc.aware-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-uc\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
           .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings', {
             views: {
               'side-panel-container@user-overview': {
@@ -1767,6 +1807,20 @@
             data: {},
             resolve: {
               displayName: translateDisplayName('sidePanelBreadcrumb.statusHistory'),
+            },
+            params: {
+              serviceId: {},
+            },
+          })
+          .state('user-overview.hybrid-services-squared-fusion-uc.connect-settings.activationHistory', {
+            views: {
+              'side-panel-container@user-overview': {
+                template: '<user-activation-history service-id="\'squared-fusion-ec\'"></user-activation-history>',
+              },
+            },
+            data: {},
+            resolve: {
+              displayName: translateDisplayName('sidePanelBreadcrumb.history'),
             },
             params: {
               serviceId: {},
@@ -2143,13 +2197,16 @@
             },
           })
           .state('reports.sparkMetrics', {
-            url: '/sparkMetrics',
+            url: '/analytics/:sparktype',
             views: {
               tabContent: {
                 controllerAs: 'nav',
                 controller: 'SparkMetricsCtrl',
                 template: require('modules/core/customerReports/sparkMetrics/sparkMetrics.tpl.html'),
               },
+            },
+            params: {
+              sparktype: 'messaging',
             },
           })
           .state('my-company.autoLicense', {
@@ -2235,7 +2292,7 @@
             url: '/diagnostics',
             views: {
               metricsContent: {
-                template: '<dgc-webex-reports-search></dgc-webex-reports-search>',
+                template: '<dgc-partner-webex-reports-search></dgc-partner-webex-reports-search>',
               },
             },
           })
@@ -2244,13 +2301,13 @@
             template: '<div ui-view></div>',
           })
           .state('dgc.tab', {
-            template: '<dgc-tab></dgc-tab>',
+            template: '<dgc-partner-tab></dgc-partner-tab>',
           })
           .state('dgc.tab.meetingdetail', {
             url: '/diagnostics/meeting/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-meetingdetail></dgc-tab-meetingdetail>',
+                template: '<dgc-partner-tab-meeting-detail></dgc-partner-tab-meeting-detail>',
               },
             },
           })
@@ -2258,7 +2315,7 @@
             url: '/diagnostics/participants/:cid',
             views: {
               tabContent: {
-                template: '<dgc-tab-participants></dgc-tab-participants>',
+                template: '<dgc-partner-tab-participants></dgc-partner-tab-participants>',
               },
             },
           })
@@ -2373,6 +2430,14 @@
             resolve: {
               hasAtlasHybridCallUserTestTool: /* @ngInject */ function (FeatureToggleService) {
                 return FeatureToggleService.supports(FeatureToggleService.features.atlasHybridCallUserTestTool);
+              },
+            },
+          })
+          .state('support.meeting', {
+            url: '/meeting',
+            views: {
+              supportPane: {
+                template: '<support-meeting-component></support-meeting-component>',
               },
             },
           })
@@ -2505,9 +2570,7 @@
           .state('place-overview.csdmDevice', {
             views: {
               'side-panel-container@place-overview': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
             },
             resolve: {
@@ -2845,9 +2908,7 @@
             parent: 'sidepanel',
             views: {
               'sidepanel@': {
-                controller: 'DeviceOverviewCtrl',
-                controllerAs: 'deviceOverview',
-                template: require('modules/squared/devices/overview/deviceOverview.tpl.html'),
+                template: '<device-overview channels="$resolve.channels"></device-overview>',
               },
               'header@device-overview': {
                 template: require('modules/squared/devices/overview/deviceHeader.tpl.html'),
@@ -2932,6 +2993,27 @@
               selectedDevices: [],
             },
           })
+          .state('deviceConfiguration', {
+            parent: 'modal',
+            abstract: true,
+          })
+          .state('deviceConfiguration.show', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: '<configuration-modal ui-view dismiss="$dismiss()"></configuration-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-configuration-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              selectedDevice: {},
+              title: 'deviceConfiguration.configureDeviceTitle',
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
@@ -2986,10 +3068,13 @@
             template: '<partner-reports-tabs></partner-reports-tabs>',
           })
           .state('partnerreports.tab.spark', {
-            url: '/spark',
+            url: '/analytics/:sparktype',
             template: require('modules/core/partnerReports/sparkReports/sparkReports.tpl.html'),
             controller: 'SparkReportsCtrl',
             controllerAs: 'nav',
+            params: {
+              sparktype: 'messaging',
+            },
           })
           .state('partnerreports.tab.ccaReports', {
             template: '<cca-reports-tabs></cca-reports-tabs>',
@@ -3002,7 +3087,7 @@
             template: '<webex-reports-tabs></webex-reports-tabs>',
           })
           .state('partnerreports.tab.webexreports.metrics', {
-            url: '/webexreports/metrics',
+            url: '/webexreports/meetings',
             template: '<webex-reports></webex-reports>',
           })
           .state('partnerreports.tab.webexreports.diagnostics', {
@@ -3358,6 +3443,18 @@
               swprofile: /* @ngInject */ function ($stateParams) {
                 return $stateParams.swprofile;
               },
+            },
+          })
+          .state('hcs.sidePanel', {
+            parent: 'sidepanel',
+            views: {
+              'sidepanel@': {
+                template: '<hcs-side-panel></hcs-side-panel>',
+              },
+            },
+            params: {
+              status: null,
+              node: null,
             },
           })
           .state('taasSuites', {
@@ -5796,6 +5893,30 @@
                     return $stateParams.matter;
                   },
                   displayName: translateDisplayName('sidePanelBreadcrumb.overview'),
+                },
+              },
+            },
+          })
+          .state('legalhold.export', {
+            parent: 'modalDialog',
+            params: {
+              orgId: null,
+              caseId: null,
+              matterName: null,
+            },
+            views: {
+              'modal@': {
+                template: '<legal-hold-custodian-export org-id="$resolve.orgId" matter-name="$resolve.matterName" case-id="$resolve.caseId"></legal-hold-custodian-export>',
+                resolve: {
+                  orgId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.orgId;
+                  },
+                  caseId: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.caseId;
+                  },
+                  matterName: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matterName;
+                  },
                 },
               },
             },

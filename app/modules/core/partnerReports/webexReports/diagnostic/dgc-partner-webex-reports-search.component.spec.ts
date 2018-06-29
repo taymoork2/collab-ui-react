@@ -48,7 +48,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
 
   beforeEach(function () {
     this.initModules(moduleName);
-    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'PartnerSearchService');
+    this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
 
     initSpies.apply(this);
@@ -58,6 +58,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'atlasPartnerWebexReportsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'diagnosticPartnerF8193TroubleshootingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'diagnosticPartnerF8234QueryRangeGetStatus').and.returnValue(this.$q.resolve(true));
@@ -135,7 +136,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
   });
 
   it('should error notify if PartnerSearchService.getMeetings() rejects', function() {
-    spyOn(this.PartnerSearchService, 'getStorage').and.returnValue('23423432');
+    spyOn(this.WebexReportsUtilService, 'getStorage').and.returnValue('23423432');
     spyOn(this.PartnerSearchService, 'getMeetings').and.returnValue(this.$q.reject({ status: 404 }));
     initComponent.call(this);
     expect(this.Notification.errorResponse).toHaveBeenCalled();
@@ -153,6 +154,14 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     initComponent.call(this);
     this.controller.showDetail({ conferenceID: 111 });
     expect(this.$state.go).toHaveBeenCalledWith('partnerreports.dgc.meetingdetail', { cid: 111 });
+  });
+
+  it('should get empty data when call onClickClearIcon', function () {
+    initComponent.call(this);
+    this.controller.gridData = [{ endTime: '2017-08-09 10:30:33', startTime: '2017-08-07 10:30:33' }];
+    expect(this.controller.gridData.length).toBe(1);
+    this.controller.onClickClearIcon();
+    expect(this.controller.gridData.length).toBe(0);
   });
 
   describe('isValidEmail():', () => {

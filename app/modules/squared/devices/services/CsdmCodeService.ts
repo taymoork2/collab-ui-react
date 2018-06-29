@@ -21,4 +21,3 @@ module.exports = angular
   .module('Squared')
   .service('CsdmCodeService', CsdmCodeService)
   .name;
-

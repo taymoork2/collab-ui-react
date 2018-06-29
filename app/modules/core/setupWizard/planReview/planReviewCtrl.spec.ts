@@ -263,7 +263,6 @@ describe('Controller: PlanReviewCtrl', function () {
     });
   });
 
-
   // TODO rewrite the functionality around this; when an org has multiple subscriptions, the conferenceServices array will not
   // have a length of 1 or 2 necessarily.
   xdescribe('getUserServiceRowClass should return the correct class names', function () {

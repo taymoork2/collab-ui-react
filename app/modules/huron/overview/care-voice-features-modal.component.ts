@@ -70,4 +70,3 @@ export class CareVoiceFeaturesModalComponent implements ng.IComponentOptions {
 export default angular
   .module('huron')
   .component('careVoiceFeaturesModal', new CareVoiceFeaturesModalComponent());
-

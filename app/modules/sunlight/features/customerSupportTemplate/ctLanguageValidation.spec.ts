@@ -37,7 +37,6 @@ describe('Langauage Translations for Config Template Strings', () => {
     });
   }));
 
-
   xit('should conform to character length restrictions', () => {
     languageConfigs.forEach(config => {
       const lang = config.value;

@@ -20,16 +20,24 @@ describe('Service: OrganizationDeleteService', () => {
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.$modal, 'open').and.callThrough();
-    spyOn(this.OrganizationDeleteService, 'cancelDeleteVerify').and.callThrough();
+    spyOn(this.OrganizationDeleteService, 'cancelDeleteVerify');
   });
 
   describe('Org Deletion', function () {
     let canDelete;
     it('should allow an online org with no paid subscriptions to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+      ]);
+      spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([
+        {
+          orderingTool: 'CISCO_ONLINE_OPC',
+        },
+      ]);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
           canDelete = result;
@@ -40,8 +48,16 @@ describe('Service: OrganizationDeleteService', () => {
 
     it('should not allow an online org with a paid subscription to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(true);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(true);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+      ]);
+      spyOn(this.Authinfo, 'getSubscriptions').and.returnValue([
+        {
+          orderingTool: 'DIGITAL_RIVER',
+        },
+      ]);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
@@ -53,8 +69,14 @@ describe('Service: OrganizationDeleteService', () => {
 
     it('should not allow an org with both online and enterprise to be deleted', function () {
       spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.Authinfo, 'isOnlineOnlyCustomer').and.returnValue(false);
-      spyOn(this.Authinfo, 'isOnlinePaid').and.returnValue(false);
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([
+        {
+          customerType: 'Online',
+        },
+        {
+          customerType: 'Enterprise',
+        },
+      ]);
       spyOn(this.DirSyncService, 'isDirSyncEnabled').and.returnValue(false);
       this.OrganizationDeleteService.canOnlineOrgBeDeleted()
         .then((result) => {
@@ -90,6 +112,17 @@ describe('Service: OrganizationDeleteService', () => {
       expect(canDelete).toBe(false);
     });
 
+    it('should not allow an org with no accounts to be deleted', function () {
+      spyOn(this.FeatureToggleService, 'atlasOnlineDeleteOrgGetStatus').and.returnValue(this.$q.resolve(true));
+      spyOn(this.Authinfo, 'getCustomerAccounts').and.returnValue([]);
+      this.OrganizationDeleteService.canOnlineOrgBeDeleted()
+        .then((result) => {
+          canDelete = result;
+        });
+      this.$scope.$apply();
+      expect(canDelete).toBe(false);
+    });
+
     it('should return status location url', function () {
       let statusUrl = '';
       spyOn(this.Orgservice, 'deleteOrg').and.returnValue(this.$q.resolve({
@@ -113,18 +146,12 @@ describe('Service: OrganizationDeleteService', () => {
     });
 
     it('should succeed verification', function () {
-      let success = false;
       spyOn(this.Orgservice, 'getDeleteStatus').and.returnValue(this.$q.resolve(OrgDeleteStatus.COMPLETE));
 
-      this.OrganizationDeleteService.verifyOrgDelete(DELETE_STATUS_URL)
-        .then(() => {
-          success = true;
-        });
+      this.OrganizationDeleteService.verifyOrgDelete(DELETE_STATUS_URL).catch(fail);
       this.$scope.$apply();
       this.$interval.flush(1500);
-      this.$interval.flush(1500);
 
-      expect(success).toBe(true);
       expect(this.OrganizationDeleteService.cancelDeleteVerify).toHaveBeenCalled();
       expect(this.Orgservice.getDeleteStatus).toHaveBeenCalledTimes(1);
     });
@@ -160,7 +187,7 @@ describe('Service: OrganizationDeleteService', () => {
 
     it('should not delete org when status check fails', function () {
       let failure = false;
-      spyOn(this.Orgservice, 'getDeleteStatus').and.returnValue(this.$q.reject());
+      spyOn(this.Orgservice, 'getDeleteStatus').and.callFake(() => this.$q.reject());
 
       this.OrganizationDeleteService.verifyOrgDelete(DELETE_STATUS_URL)
         .catch(() => {

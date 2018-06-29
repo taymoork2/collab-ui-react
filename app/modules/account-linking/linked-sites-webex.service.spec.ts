@@ -16,7 +16,6 @@ describe('Service: LinkedSitesWebExService', () => {
     );
   });
 
-
   describe('ci site linking', () => {
     it('patch includes trustedDomains if domains is included in parameters', function (done) {
       spyOn(this.MetricsService, 'trackDiagnosticMetric');

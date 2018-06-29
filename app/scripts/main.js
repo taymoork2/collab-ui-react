@@ -22,6 +22,7 @@
     'core.localize',
     'core.logmetricsservice',
     'core.meeting-settings',
+    require('modules/core/accessibility/three-dot-dropdown').default,
     require('modules/core/accessibility/tooltips').default,
     require('modules/core/setupWizard/setup-wizard.service').default,
     require('modules/core/notifications').default,
@@ -58,6 +59,7 @@
     require('modules/bmmp/learn-more-banner').default,
     require('modules/core/health-monitor').default,
     require('modules/core/account').default,
+    require('modules/core/card-notifications').default,
     require('modules/core/csgrid').default,
     require('modules/core/users/userOverview').default,
     require('modules/core/analytics'),
@@ -110,6 +112,7 @@
     require('modules/core/overview/usersCard'),
     require('modules/core/organizations/organization-delete').default,
     require('modules/core/siteList').default,
+    require('modules/call/shared/hunt-group-call-park-misconfig').default,
   ])
     .constant('CryptoJS', require('crypto-js'))
     .constant('addressparser', require('emailjs-addressparser'));
@@ -129,6 +132,7 @@
     require('modules/squared/partner-management').default,
     require('modules/squared/provisioning-console').default,
     require('modules/squared/devices/addDeviceNew/Wizard').default,
+    require('modules/squared/support').default,
   ]);
 
   angular.module('DigitalRiver', ['Core']);
@@ -224,6 +228,9 @@
     require('modules/hercules/user-sidepanel/hybrid-services-user-homed-cluster-and-hostname').default,
     require('modules/hercules/user-sidepanel/hybrid-services-user-sidepanel-section').default,
     require('modules/hercules/user-sidepanel/user-status-messages').default,
+    require('modules/hercules/user-sidepanel/hybrid-services-user-assignments').default,
+    require('modules/hercules/user-sidepanel/reactivate-user-modal').default,
+    require('modules/hercules/user-sidepanel/reactivate-user-modal/reactivate-user-modal-link').default,
     require('modules/mediafusion/media-service-v2/components/first-time-calling').default,
   ]);
 
@@ -290,6 +297,7 @@
 
   angular.module('HCS', [
     'Core',
+    require('modules/core/partner-home/notifications').default,
     require('modules/hcs/task-manager').default,
     require('modules/hcs/task-manager/resource').default,
     require('modules/hcs/task-manager/schedule').default,
@@ -309,6 +317,7 @@
     require('modules/hcs/hcs-upgrade/hcs-upgrade-swprofile').default,
     require('modules/hcs/hcs-upgrade/hcs-upgrade-modal').default,
     require('modules/hcs/hcs-upgrade/hcs-precheck-modal').default,
+    require('modules/hcs/hcs-upgrade/hcs-side-panel').default,
     require('modules/hcs/agent-install-files-list').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-subscription').default,
     require('modules/hcs/hcs-licenses/hcs-licenses-plm-report').default,

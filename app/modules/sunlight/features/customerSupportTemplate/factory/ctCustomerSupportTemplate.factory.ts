@@ -55,4 +55,3 @@ export class DefaultChatPlusCallTemplate implements ITemplate {
     this.configuration = new ChatPlusCallbackbackConfiguration(mediaType, authinfo, ctService, $translate, sunlightConstantsService);
   }
 }
-

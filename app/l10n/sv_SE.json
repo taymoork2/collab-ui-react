@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Inaktivera {{serviceName}}",
       "deactivateServiceCommon": "Om {{serviceName}} inaktiveras kommer alla tjänsterelaterade funktioner att tas bort från användarna.",
       "expresswayDataWiped": "{{connectorName}} kommer att tas bort från alla Expressway-kluster, och alla anslutningars lokala inställningar kommer att tas bort.",
-      "noClustersWillBeDeregistered": "Klustren kommer inte att avregistreras från Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Inaktivera {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Är du säker? Tjänsterelaterade funktioner kommer att tas bort för användarna.",
-      "deactivateServiceConfirmationText": "Är du säker? {{connectorName}} och tillhörande konfigurationer kommer att tas bort från dina kluster och tjänsterelaterade funktioner kommer att tas bort för användarna.",
       "serviceWasDeactivated": "{{serviceName}} har inaktiverats.",
       "connectWarning": "Är du säker? Konfigurationer för fjärrenheter kommer att tas bort och tjänsten inaktiveras för dina användare.",
       "deactivateCallServiceConnect": "Inaktivera samtalstjänsten Connect",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} har aktiverat {{serviceName}} i Cisco Spark-organisationen. Detta inträffar normalt när en administratör registrerar ett Expressway-kluster som kör {{connectorName}} eller lägger till det första {{connectorName}} i ett befintligt Expressway-kluster.",
           "callServiceConnectEnabled": "{{username}} har aktiverat {{serviceName}} i Cisco Spark-organisationen. Alla Expressway-kluster som kör {{connectorName}} används automatiskt även för {{serviceName}}.",
-          "serviceDisabled": "{{username}} har inaktiverat {{serviceName}} i Cisco Spark-organisationen.",
-          "serviceDisabledHelpText": "Rättigheterna till {{serviceName}} tas automatiskt bort från användarna och {{connectorName}} avinstalleras automatiskt från alla Expressway-kluster.",
-          "serviceDisabledHelpTextCallServiceConnect": "Rättigheterna till {{serviceName}} tas automatiskt bort från användarna och konfigurationer för fjärrenheter raderas."
+          "serviceDisabled": "{{username}} har inaktiverat {{serviceName}} i Cisco Spark-organisationen."
         },
         "technicalDetails": {
           "heading": "Teknisk information",

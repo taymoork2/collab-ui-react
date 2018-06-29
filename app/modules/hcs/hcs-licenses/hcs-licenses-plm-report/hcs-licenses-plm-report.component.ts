@@ -37,6 +37,8 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
   public searchStr: string = '';
   public statusCompliant: string;
   public statusNoncompliant: string;
+  public back: boolean = true;
+  public backState: string = 'partner-services-overview';
 
   /* @ngInject */
   constructor(

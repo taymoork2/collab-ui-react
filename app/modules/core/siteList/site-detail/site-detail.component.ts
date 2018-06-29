@@ -52,7 +52,7 @@ class SiteDetailComponentCtrl implements ng.IComponentController {
     return this.$translate.instant(labels[this.csvStatus]);
   }
 
-  public isTrial(): boolean {
+  public get isTrial(): boolean {
     return this.selectedSite.license.isTrial;
   }
 

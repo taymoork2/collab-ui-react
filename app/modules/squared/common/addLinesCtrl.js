@@ -94,7 +94,7 @@
       vm.isLoading = true;
       var numbers = vm.getSelectedNumbers();
       if (numbers.directoryNumber || numbers.externalNumber || numbers.locationUuid) {
-        CsdmDataModelService.reloadPlace(wizardData.account.cisUuid).then(function (place) {
+        CsdmDataModelService.reloadPlaceByCisUuid(wizardData.account.cisUuid).then(function (place) {
           if (place) {
             CsdmDataModelService.updateCloudberryPlace(place, {
               entitlements: wizardData.account.entitlements,

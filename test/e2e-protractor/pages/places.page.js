@@ -34,7 +34,7 @@ exports.placeNameInList = function (name) {
   return element(by.cssContainingText('.ui-grid-cell-contents', name));
 };
 
-exports.placeListAction = element(by.id('actionsButton'));
+exports.placeListAction = element(by.css('.actions-menu button.icon.icon-three-dots'));
 
 exports.placeListActionDelete = element(by.id('deletePlaceOption'));
 

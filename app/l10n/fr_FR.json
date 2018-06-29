@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Désactiver {{serviceName}}",
       "deactivateServiceCommon": "Désactiver {{serviceName}} supprime toutes les fonctionnalités liées au service pour les utilisateurs.",
       "expresswayDataWiped": "{{connectorName}} sera supprimé de tous vos clusters Expressway et tous les paramètres locaux des connecteurs seront supprimés.",
-      "noClustersWillBeDeregistered": "Les clusters ne seront pas supprimés de Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "Désactiver {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Êtes-vous sûr ? Les fonctionnalités liées au service seront supprimées pour les utilisateurs.",
-      "deactivateServiceConfirmationText": "Êtes-vous sûr ? {{connectorName}} et la configuration connexe seront supprimés de vos clusters et les fonctionnalités liées au service seront supprimées pour les utilisateurs.",
       "serviceWasDeactivated": "{{serviceName}} a été désactivé avec succès.",
       "connectWarning": "Êtes-vous sûr ? La configuration du périphérique distant sera supprimée et le service sera désactivé pour vos utilisateurs.",
       "deactivateCallServiceConnect": "Désactiver Call Service Connect",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} a activé {{serviceName}} dans l'organisation Cisco Spark. Cette action est généralement effectuée lorsqu'un utilisateur administrateur enregistre un cluster Expressway qui exécute {{connectorName}} ou ajoute le premier {{connectorName}} à un cluster Expressway existant.",
           "callServiceConnectEnabled": "{{username}} a activé {{serviceName}} dans l'organisation Cisco Spark. Tous les clusters Expressway exécutant {{connectorName}} seront également automatiquement utilisés pour {{serviceName}}.",
-          "serviceDisabled": "{{username}} a désactivé {{serviceName}} dans l'organisation Cisco Spark.",
-          "serviceDisabledHelpText": "Les droits {{serviceName}} sont automatiquement supprimés des utilisateurs et {{connectorName}} est automatiquement désinstallé de tous les clusters Expressway.",
-          "serviceDisabledHelpTextCallServiceConnect": "Les droits {{serviceName}} sont automatiquement supprimés des utilisateurs et les configurations des périphériques distants sont supprimées."
+          "serviceDisabled": "{{username}} a désactivé {{serviceName}} dans l'organisation Cisco Spark."
         },
         "technicalDetails": {
           "heading": "Détails techniques",

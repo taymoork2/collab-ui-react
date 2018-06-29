@@ -1,5 +1,6 @@
 import { HcsUpgradeService, IHcsClusterTask, IHcsCluster, INodeTaskStatus, IClusterStatusGridRow, INodeTaskGridRow } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
+import { GridService } from 'modules/core/csgrid';
 
 export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public controller = UpgradeClusterStatusCtrl;
@@ -21,35 +22,32 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
   public clusterId: string;
   public clusterStatus: string;
   public estCompletionTime: any;
+  public clusterStatuses;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
     private $state: ng.ui.IStateService,
+    private $filter: ng.IFilterService,
     private HcsUpgradeService: HcsUpgradeService,
     private Notification: Notification,
+    private GridService: GridService,
   ) {}
 
   public $onInit(): void {
     this.showGrid = false;
-    //demo temp grid data
     this.initCluster();
-    // this.clusterGridData = [
-    //   {
-    //     orderNumber: '1',
-    //     nodeDetails: {
-    //       name: 'CUCM-01',
-    //       application: 'CUCM',
-    //       isPublisher: true,
-    //     },
-    //     previousUpgradeTime: '00:59:00',
-    //     startTime: '2018-05-04:00:29',
-    //     nodeStatus: 'Needs Update',
-    //     elapsedTime: '00:59:00',
-    //   },
-    // ];
     this.initClusterStatuses();
     this.initUIGrid();
+  }
+
+  public getNodeStatus(entity) {
+    this.$state.go('hcs.sidePanel', { node: entity, status: this.clusterStatuses[entity.nodeDetails.uuid] });
+  }
+
+  public selectRow(grid, row) {
+    this.GridService.selectRow(grid, row);
+    this.getNodeStatus(row.entity);
   }
 
   public initCluster() {
@@ -58,6 +56,10 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         this.cluster = cluster;
       })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message));
+
+    this.HcsUpgradeService.getPrecheckStatus(this.clusterId).then(cluster => {
+      this.clusterStatuses = cluster.statusChecks;
+    });
   }
 
   public initClusterStatuses(): void {
@@ -76,11 +78,12 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '10%',
         cellClass: 'cluster-grid-cell text-center',
         headerCellClass: 'cluster-grid-header align-center',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.orderNumber"></cs-grid-cell>',
       }, {
         field: 'nodeDetails',
         displayName: this.$translate.instant('sidePanelBreadcrumb.node'),
         width: '20%',
-        cellClass: 'cluster-grid-cell',
+        cellClass: 'cluster-grid-cell ellipsis',
         headerCellClass: 'cluster-grid-header',
         cellTemplate: require('./templates/nodeDetailsColumn.tpl.html'),
       }, {
@@ -89,18 +92,21 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.previousUpgradeTime"></cs-grid-cell>',
       }, {
         field: 'startTime',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgradeClusterStatus.gridColumn.startTime'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.startTime"></cs-grid-cell>',
       }, {
         field: 'elapsedTime',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgradeClusterStatus.gridColumn.elapsedTime'),
         width: '15%',
         cellClass: 'cluster-grid-cell',
         headerCellClass: 'cluster-grid-header',
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" cell-click-function="grid.appScope.getNodeStatus(row.entity)" cell-value="row.entity.elapsedTime"></cs-grid-cell>',
       }, {
         field: 'nodeStatus',
         displayName: this.$translate.instant('hcs.upgrade.upgradeGroup.upgrade.gridColumn.status'),
@@ -134,23 +140,25 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
     this.clusterStatus = clusterSatuses.status;
     this.estCompletionTime = clusterSatuses.estimatedCompletion;
     _.forEach(clusterSatuses.nodeStatuses, (nodeTask: INodeTaskStatus) => {
+      const elapsedTime = nodeTask.elapsedTime ? moment.duration(nodeTask.elapsedTime) : undefined;
+      const previousTime = nodeTask.previousDuration ? moment.duration(nodeTask.previousDuration) : undefined;
       const nodeDetail: INodeTaskGridRow = {
         name: nodeTask.hostName,
         application: nodeTask.typeApplication,
         isPublisher: nodeTask.publisher,
+        uuid: nodeTask.nodeUuid,
       };
       const clusterStatusGridRow: IClusterStatusGridRow = {
-        orderNumber: nodeTask.sequence,
+        orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
-        previousUpgradeTime: nodeTask.previousDuration,
-        startTime: nodeTask.started,
+        previousUpgradeTime: previousTime ? `${previousTime.hours()}:${previousTime.minutes()}:${previousTime.seconds()}` : '',
+        startTime: nodeTask.started ? this.$filter('date')(nodeTask.started, 'dd MMM y HH:mm', 'UTC') : '',
         nodeStatus: nodeTask.status,
-        elapsedTime: nodeTask.elapsedTime,
+        elapsedTime: elapsedTime ? `${elapsedTime.hours()}:${elapsedTime.minutes()}:${elapsedTime.seconds()}` : '',
       };
       this.clusterGridData.push(clusterStatusGridRow);
-      this.gridOptions.data = this.clusterGridData;
-      this.showGrid = true;
     });
-
+    this.gridOptions.data = this.clusterGridData;
+    this.showGrid = true;
   }
 }

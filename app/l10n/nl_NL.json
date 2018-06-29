@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "{{serviceName}} deactiveren",
       "deactivateServiceCommon": "Het deactiveren van {{serviceName}} verwijdert alle aan de service gerelateerde functies voor gebruikers.",
       "expresswayDataWiped": "{{connectorName}} zal worden verwijderd uit al uw Expressway-clusters en zal alle lokale instellingen van de connectoren verwijderen.",
-      "noClustersWillBeDeregistered": "Clusters worden niet uitgeschreven uit de Cisco Collaboration Cloud.",
       "deactivateServiceConfirmationHeader": "{{serviceName}} deactiveren",
       "deactivateServiceConfirmationTextCloudCalendar": "Weet u het zeker? Servicegerelateerde functies worden verwijderd voor gebruikers.",
-      "deactivateServiceConfirmationText": "Weet u het zeker? {{connectorName}} en de gerelateerde configuratie worden verwijderd uit uw clusters en servicegerelateerde functies worden verwijderd voor gebruikers.",
       "serviceWasDeactivated": "{{serviceName}} is gedeactiveerd.",
       "connectWarning": "Weet u het zeker? De configuratie van externe apparaten wordt verwijderd en de service wordt uitgeschakeld voor uw gebruikers.",
       "deactivateCallServiceConnect": "De gespreksservice Connect deactiveren",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} heeft {{serviceName}} geactiveerd in de Cisco Spark-organisatie. Dit gebeurt meestal wanneer een beheerdergebruiker een Expressway-cluster registreert waarop {{connectorName}} wordt uitgevoerd of wanneer een beheerdergebruiker de eerste {{connectorName}} aan een bestaand Expressway-cluster toevoegt.",
           "callServiceConnectEnabled": "{{username}} heeft {{serviceName}} geactiveerd in de Cisco Spark-organisatie. Alle Expressway-clusters waarop {{connectorName}} wordt uitgevoerd, worden ook automatisch gebruikt voor {{serviceName}}.",
-          "serviceDisabled": "{{username}} heeft {{serviceName}} uitgeschakeld in de Cisco Spark-organisatie.",
-          "serviceDisabledHelpText": "Rechten voor {{serviceName}} worden automatisch voor gebruikers verwijderd en {{connectorName}} wordt automatisch verwijderd uit alle Expressway-clusters.",
-          "serviceDisabledHelpTextCallServiceConnect": "Rechten voor {{serviceName}} worden automatisch voor gebruikers verwijderd en configuraties van externe apparaten wordt verwijderd."
+          "serviceDisabled": "{{username}} heeft {{serviceName}} uitgeschakeld in de Cisco Spark-organisatie."
         },
         "technicalDetails": {
           "heading": "Technische details",

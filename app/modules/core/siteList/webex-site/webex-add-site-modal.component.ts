@@ -108,7 +108,6 @@ class WebexAddSiteModalController implements ng.IComponentController {
     this.Analytics.trackWebExMgmntSteps(event, properties);
   }
 
-
   // wizard navigation logic
   public cancel(): void {
     this.dismiss();
@@ -278,4 +277,3 @@ export class WebexAddSiteModalComponent implements ng.IComponentOptions {
     centerDetailsForAllSubscriptions: '<?',
   };
 }
-

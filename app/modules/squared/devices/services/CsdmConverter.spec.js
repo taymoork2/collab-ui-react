@@ -11,14 +11,14 @@ describe('CsdmConverterSpec', function () {
 
   it('should convert tags', function () {
     var obj = {
-      description: '["foo"]',
+      tags: ['foo'],
     };
     expect(converter.convertCloudberryDevice(obj).tags[0]).toBe('foo');
   });
 
   it('should convert tags for huron devices', function () {
     var obj = {
-      description: '["foo", "bar"]',
+      tags: ['foo', 'bar'],
     };
     expect(converter.convertHuronDevice(obj).tags[0]).toBe('foo');
     expect(converter.convertHuronDevice(obj).tags[1]).toBe('bar');
@@ -415,7 +415,7 @@ describe('CsdmConverterSpec', function () {
       var place = converter.convertPlace({
         url: url,
       });
-      converter.updatePlaceFromItem(place, {});
+      converter.updatePlaceFromItem(place, converter.convertCloudberryDevice({}));
       expect(place.url).toBe(url);
     });
   });

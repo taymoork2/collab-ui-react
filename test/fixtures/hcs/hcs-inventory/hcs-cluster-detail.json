@@ -1,0 +1,77 @@
+{
+  "uuid" : "0000",
+  "name" : "rcdn6-vm69-44.cisco.com",
+  "sftpServer" : {
+    "sftpServerUuid" : "ad963088-4a15-4085-a415-fef305be0e04",
+    "name" : "RCDN-Lab"
+  },
+  "softwareProfile" : {
+    "uuid" : "df0be467-318c-4d5c-8c44-b4d6540f71ee",
+    "name" : "Profile for Shift Left 12.0 to 12.5",
+    "url" : null,
+    "applicationVersions" : [ {
+      "uuid" : "fec1e2e2-a3f6-45bb-83ff-60500b59c196",
+      "typeApplication" : "IM&P",
+      "appVersion" : "12.5.0.98000-887",
+      "fileName" : "UCSInstall_CUP_12.5.0.98000-887.iso",
+      "unrestricted" : false
+    }, {
+      "uuid" : "8fa764f2-17a6-4be9-ac76-a10d0f198aef",
+      "typeApplication" : "CUCM",
+      "appVersion" : "12.5.0.98000-769",
+      "fileName" : "UCSInstall_UCOS_12.5.0.98000-769.iso",
+      "unrestricted" : false
+    }, {
+      "uuid" : "e09750a4-ae8f-480e-8070-66c3796df436",
+      "typeApplication" : "CUC",
+      "appVersion" : "12.0.1.10000-8",
+      "fileName" : "UCSInstall_CUC_12.0.1.10000-8.sgn.iso",
+      "unrestricted" : false
+    } ]
+  },
+  "customerUuid" : "ef9d4768-aef7-4ea7-b365-26d36ee9bd9d",
+  "clusterStatus" : "AGENT_OFFLINE",
+  "nodes" : [ {
+    "uuid" : "05ea1e18-afe0-482b-908e-3feb6e810214",
+    "application" : "CUCM",
+    "apiVersion" : "5.0.3.0",
+    "activeVersion" : "12.5.0.98000-504",
+    "inactiveVersion" : "12.5.0.98000-446",
+    "description" : null,
+    "publisher" : true,
+    "hostname" : "rcdn6-vm69-44.cisco.com",
+    "ipAddress" : "10.89.69.44",
+    "agentUuid" : "a57b5d71-3a38-4523-b175-6108076d3d76",
+    "clusterUuid" : "e650ceb5-d8bb-422c-b752-b913d2d73ed1",
+    "latestTaskName" : "SwitchVersionService",
+    "latestTaskStatus" : "failed",
+    "sftpServer" : null,
+    "batchNumber" : 1,
+    "nodeUuid" : "105e9bf1-c1dc-49e4-9fb2-b8333c023542",
+    "status" : "AGENT_OFFLINE",
+    "agentVerificationCode" : "WECDA7QR"
+  }, {
+    "uuid" : "02e275fe-3d0c-48cf-900f-fdf794c264cc",
+    "application" : "IM&P",
+    "apiVersion" : "5.0.3.0",
+    "activeVersion" : "12.5.0.98000-626",
+    "inactiveVersion" : "12.5.0.98000-532",
+    "description" : null,
+    "publisher" : true,
+    "hostname" : "rcdn6-vm68-66.cisco.com",
+    "ipAddress" : "10.89.68.66",
+    "agentUuid" : "73dd8378-9615-48cf-a7c9-af112d0fd433",
+    "clusterUuid" : "e650ceb5-d8bb-422c-b752-b913d2d73ed1",
+    "latestTaskName" : "PrepareRemoteUpgradeService",
+    "latestTaskStatus" : "failed",
+    "sftpServer" : {
+      "sftpServerUuid" : "ad963088-4a15-4085-a415-fef305be0e04",
+      "name" : "RCDN-Lab"
+    },
+    "batchNumber" : 2,
+    "nodeUuid" : "9029a40e-345b-4860-87cc-7e427fdae4a0",
+    "status" : "SOFTWARE_UPGRADE_NEEDED",
+    "agentVerificationCode" : "VJLHZK63"
+  } ],
+  "publisher" : "rcdn6-vm69-44.cisco.com"
+}

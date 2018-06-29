@@ -1,4 +1,4 @@
-import { IActionItem } from '../../core/components/sectionTitle/sectionTitle.component';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
 
 class DeviceList implements ng.IComponentController {
   private static CISCO_SPARK_VOICE = 'Cisco Spark Voice';

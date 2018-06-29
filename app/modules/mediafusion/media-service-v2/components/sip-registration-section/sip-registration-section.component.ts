@@ -13,7 +13,6 @@ class SipRegistrationSectionCtrl implements ng.IComponentController {
   public isWizard: boolean = false;
   public sipSettingsEnabled: boolean = false;
 
-
   public sipRegistration = {
     title: 'mediaFusion.sipconfiguration.title',
   };
@@ -66,4 +65,3 @@ export class SipRegistrationSectionComponent implements ng.IComponentOptions {
     onSipConfigUrlUpdate: '&?',
   };
 }
-

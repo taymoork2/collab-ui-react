@@ -56,7 +56,6 @@ class CtProactivePromptController extends CtBaseController {
   }
 }
 
-
 export class CtProactivePromptComponent implements ng.IComponentOptions {
   public controller = CtProactivePromptController;
   public template = require('./wizardPagesComponent/ctProactivePrompt.tpl.html');

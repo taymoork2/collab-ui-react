@@ -140,7 +140,6 @@ export class ReportsChartService {
     return opts;
   }
 
-
   public getBasicChartOptions(chartdata) {
     return {
       type: 'serial',

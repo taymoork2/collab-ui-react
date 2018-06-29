@@ -21,7 +21,6 @@ export interface ICustodian {
   error?: string;
 }
 
-
 export interface IMatterJsonDataForDisplay extends IMatterJsonData {
   createdByName: string | null;
   numberOfCustodians: number;

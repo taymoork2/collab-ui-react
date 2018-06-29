@@ -39,10 +39,13 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   public domainVerificationError = false;
   public resourceGroupId: string;
 
+  public isActivation2User: boolean = false;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
     private DomainManagementService: DomainManagementService,
     private ModalService: IToolkitModalService,
@@ -113,6 +116,11 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
         if (this.userIsCurrentlyEntitled && this.userStatusAware) {
           this.getDataFromUCC(userId);
         }
+
+        if (this.userStatusAware && this.userStatusAware.assignments) {
+          this.isActivation2User = true;
+        }
+
       })
       .catch((error) => {
         this.couldNotReadUser = true;
@@ -169,7 +177,6 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
   }
 
   public saveData() {
-
     this.savingPage = true;
 
     const entitlements: IEntitlementNameAndState[] = [{
@@ -188,6 +195,7 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       .then(() => {
         this.userIsCurrentlyEntitled = !!this.newEntitlementValue;
         this.newEntitlementValue = undefined;
+        this.delayedGetUserData();
         return this.getUserData(this.userId);
       })
       .catch((error) => {
@@ -214,6 +222,15 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
     }
   }
 
+  public reactivateCallback(): void {
+    this.getUserData(this.userId);
+    this.delayedGetUserData();
+  }
+
+  public showReactivateLink(): boolean {
+    return !this.loadingPage && this.userIsCurrentlyEntitled && this.isActivation2User;
+  }
+
   private confirmBecauseConnectIsEnabled(): void {
     this.ModalService.open({
       title: this.$translate.instant('hercules.userSidepanel.disableAwareHeader'),
@@ -228,6 +245,15 @@ class HybridCallServiceAwareUserSettingsCtrl implements ng.IComponentController 
       .catch(() => {
         this.cancel();
       });
+  }
+
+  private delayedGetUserData(): void {
+    if (!this.isActivation2User) {
+      return;
+    }
+    this.$timeout(() => {
+      this.getUserData(this.userId);
+    }, 5000);
   }
 
 }

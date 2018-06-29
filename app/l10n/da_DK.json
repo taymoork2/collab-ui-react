@@ -2787,10 +2787,8 @@
       "deactivateServiceLabel": "Deaktiver {{serviceName}}",
       "deactivateServiceCommon": "Deaktivering af {{serviceName}} fjerner alle tjenesterelaterede funktioner for brugere.",
       "expresswayDataWiped": "{{connectorName}} vil blive fjernet fra alle dine Expressway-grupper, og alle tilslutningens lokale indstillinger vil blive slettet.",
-      "noClustersWillBeDeregistered": "Grupper vil ikke blive frameldt fra Cisco Cloud til samarbejde.",
       "deactivateServiceConfirmationHeader": "Deaktiver {{serviceName}}",
       "deactivateServiceConfirmationTextCloudCalendar": "Er du sikker? Tjenesterelaterede funktioner vil blive fjernet for brugere.",
-      "deactivateServiceConfirmationText": "Er du sikker? {{connectorName}} og relateret konfiguration vil blive fjernet fra dine grupper, og tjenesterelaterede funktioner vil blive fjernet for brugere.",
       "serviceWasDeactivated": "{{serviceName}} deaktiveret.",
       "connectWarning": "Er du sikker? Konfiguration af ekstern enhed vil blive fjernet, og tjenesten vil blive deaktiveret for dine brugere.",
       "deactivateCallServiceConnect": "Deaktivér Tilslutning til opkaldstjenester",
@@ -3661,9 +3659,7 @@
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} har aktiveret {{serviceName}} i Cisco Spark-organisationen. Dette sker normalt, når en administratorbruger tilmelder en Expressway-klynge, der kører {{connectorName}}, eller tilføjer den første {{connectorName}} til en eksisterende Expressway-klynge.",
           "callServiceConnectEnabled": "{{username}} har aktiveret {{serviceName}} i Cisco Spark-organisationen. Alle Expressway-klynger, der kører {{connectorName}}, vil også automatisk blive brugt til {{serviceName}}.",
-          "serviceDisabled": "{{username}} har deaktiveret {{serviceName}} i Cisco Spark-organisationen.",
-          "serviceDisabledHelpText": "{{serviceName}}-rettighederne fjernes automatisk fra brugerne, og {{connectorName}} afinstalleres automatisk fra alle Expressway-klynger.",
-          "serviceDisabledHelpTextCallServiceConnect": "{{serviceName}}-rettighederne fjernes automatisk fra brugerne, og konfigurationerne af eksterne enheder slettes."
+          "serviceDisabled": "{{username}} har deaktiveret {{serviceName}} i Cisco Spark-organisationen."
         },
         "technicalDetails": {
           "heading": "Tekniske detaljer",

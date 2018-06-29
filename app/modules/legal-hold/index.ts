@@ -16,6 +16,7 @@ import { LegalHoldMatterNewComponent } from './legal-hold-matter-new.component';
 import { LegalHoldMatterListComponent } from './legal-hold-matter-list.component';
 import { LegalHoldMatterDetailComponent } from './legal-hold-matter-detail.component';
 import { LegalHoldCustodiansManageComponent } from './legal-hold-custodians-manage.component';
+import { LegalHoldCustodianExportComponent } from './legal-hold-custodian-export.component';
 
 export default angular
   .module('legal-hold', [
@@ -38,5 +39,6 @@ export default angular
   .component('legalHoldMatterNew', new LegalHoldMatterNewComponent())
   .component('legalHoldMatterDetail', new LegalHoldMatterDetailComponent())
   .component('legalHoldCustodiansManage', new LegalHoldCustodiansManageComponent())
+  .component('legalHoldCustodianExport', new LegalHoldCustodianExportComponent())
   .service('LegalHoldService', LegalHoldService)
   .name;

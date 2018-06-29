@@ -1,10 +1,10 @@
-import { LineService, LineConsumerType, Line, LINE_CHANGE } from 'modules/huron/lines/services';
-import { IActionItem } from 'modules/core/components/sectionTitle/sectionTitle.component';
 import { IFeature } from 'modules/core/components/featureList/featureList.component';
-import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
-import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
-import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
 import { Config } from 'modules/core/config/config';
+import { IActionItem } from 'modules/core/shared/section-title/section-title.component';
+import { Line, LineConsumerType, LineService, LINE_CHANGE } from 'modules/huron/lines/services';
+import { PrimaryLineService, PrimaryNumber } from 'modules/huron/primaryLine';
+import { HuronUserService, UserRemoteDestination } from 'modules/huron/users';
+import { HuronVoicemailService, VOICEMAIL_CHANGE } from 'modules/huron/voicemail';
 const SNR_CHANGE = 'SNR_CHANGE';
 const PRIMARY_LINE_SELECTION_CHANGE = 'PRIMARY_LINE_SELECTION_CHANGE';
 const CLOUD_CALLING = 'cloud-calling';
@@ -175,7 +175,6 @@ class UserCallOverviewCtrl implements ng.IComponentController {
 
     this.hasCallFeatures = hasEntitlement && hasLicense;
   }
-
 
   public clickFeature(feature: IFeature) {
     const lineSelection = {

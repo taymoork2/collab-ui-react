@@ -264,7 +264,6 @@ export class TaskManagerService {
     }).$promise.then((rtestDefinition: IRHtmTestDefinition) => new HtmTestDefinition(rtestDefinition));
   }
 
-
  //Suites
   public createSuite(suite: HtmSuite): ng.IPromise<string> {
     if (_.isEmpty(suite)) {

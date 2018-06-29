@@ -364,7 +364,6 @@ export class CallLocationSettingsService {
       });
     }
 
-
     return promises;
   }
 

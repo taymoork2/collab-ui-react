@@ -2,7 +2,6 @@ class WebexReportsCtrl {
   private _qbsParameters: any;
   private _reportType: string = 'webex';
   private _viewType: string = 'Partner';
-  private loadContent: boolean = false;
   /* @ngInject */
   constructor(
     private $log: ng.ILogService,
@@ -22,14 +21,9 @@ class WebexReportsCtrl {
         this.$log.log('webex report for partner webex disabled');
         this.$state.go('login');
       } else {
-        this.loadContent = true;
         this.loadMetricsReport();
       }
     });
-  }
-
-  public isLoadContent(): boolean {
-    return this.loadContent;
   }
 
   public loadMetricsReport(): void {

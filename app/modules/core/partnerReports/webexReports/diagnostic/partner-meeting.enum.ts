@@ -30,6 +30,12 @@ export enum SearchStorage {
     VIDEO_SESSION_DETAIL = 'videoSessionDetail',
     PSTN_SESSION_DETAIL = 'pstnSessionDetail',
     WEBEX_ONE_MEETING = 'webexOneMeeting',
+    TIME_ZONE = 'timeZone',
+    WEBEX_OVERVIEW = 'webexOneMeeting.overview',
+    WEBEX_MEETING = 'webexMeeting',
+    SEARCH_STRING = 'searchStr',
+    CLIENT_VERSION = 'ClientVersion',
+    WEBEX_MEETING_ENDTIME = 'webexOneMeeting.endTime',
 }
 
 export enum Platforms {
@@ -98,4 +104,10 @@ export enum QualityRange {
 export enum ResponseStatus {
     INPROGRESS = 'inProgress',
     ENDED = 'ended',
+}
+
+export enum TrackingEventName {
+    MEETING_SEARCH = 'webexReports.diagnostic.meetingSearch',
+    MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
+    MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
 }

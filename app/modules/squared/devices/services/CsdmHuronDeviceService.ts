@@ -1,7 +1,7 @@
 import { CsdmConverter } from './CsdmConverter';
+import IHuronDevice = csdm.IHuronDevice;
 
 class CsdmHuronUserDeviceService {
-
 
   /* @ngInject  */
   constructor(private $http, private $q, private Authinfo, private  HuronConfig, private CsdmConverter, private  UrlConfig) {
@@ -13,7 +13,7 @@ class CsdmHuronUserDeviceService {
 
   }
 }
-class CsdmHuronOrgDeviceService {
+export class CsdmHuronOrgDeviceService {
   private devicesUrl: string;
 
   /* @ngInject  */
@@ -21,12 +21,12 @@ class CsdmHuronOrgDeviceService {
     this.devicesUrl = UrlConfig.getCsdmServiceUrl() + '/organization/' + Authinfo.getOrgId() + '/devices/?type=huron';
   }
 
-  public create() {
+  public create(): CsdmHuronDeviceService {
     return new CsdmHuronDeviceService(this.$http, this.$q, this.Authinfo, this.HuronConfig, this.CsdmConverter, this.UrlConfig, this.devicesUrl);
   }
 }
 
-class CsdmHuronDeviceService {
+export class CsdmHuronDeviceService {
 
   private deviceList = {};
   private loadedData = false;
@@ -62,10 +62,6 @@ class CsdmHuronDeviceService {
     return this.HuronConfig.getCmiV2Url() + '/customers/' + this.Authinfo.getOrgId() + '/users/' + cisUuid + '/phones/' + deviceId + '/ata190s';
   }
 
-  private static encodeHuronTags(description) {
-    return _.replace(description, /"/g, "'");
-  }
-
   public fetch() {
     return this.huronEnabled().then((enabled) => {
       return !enabled ? this.$q.resolve([]) : this.$http.get(this.devicesUrl).then((res) => {
@@ -83,7 +79,10 @@ class CsdmHuronDeviceService {
     });
   }
 
-  public fetchItem(url) {
+  public fetchItem(url: string): IPromise<IHuronDevice> {
+    if (!_.startsWith(url, this.UrlConfig.getCsdmServiceUrl())) {
+      return this.$q.reject();
+    }
     return this.$http.get(url).then((res) => {
       return this.CsdmConverter.convertHuronDevice(res.data);
     });
@@ -132,7 +131,7 @@ class CsdmHuronDeviceService {
       });
   }
 
-  public getDeviceInfo(huronDevice) {
+  public getDeviceInfo(huronDevice: IHuronDevice) {
     return this.$http.get(this.getPhoneUrl(huronDevice.huronId, huronDevice.cisUuid))
       .then((res) => {
         const response: any = {
@@ -197,20 +196,6 @@ class CsdmHuronDeviceService {
       actions: {
         reset: true,
       },
-    });
-  }
-
-  public updateTags(url, tags) {
-    const jsonTags = CsdmHuronDeviceService.encodeHuronTags(JSON.stringify(tags || []));
-    if (jsonTags.length >= 128) {
-      return this.$q.reject('List of tags is longer than supported.');
-    }
-    if (!/^[^"%\\&<>]*$/.test(jsonTags) || _.some(tags, t => /\',\'/.test(CsdmHuronDeviceService.encodeHuronTags(t)))) {
-      return this.$q.reject("'" + tags[tags.length - 1] + "' contains invalid character(s).");
-    }
-
-    return this.$http.put(url, {
-      description: jsonTags,
     });
   }
 

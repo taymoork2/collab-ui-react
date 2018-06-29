@@ -22,7 +22,6 @@ class CcaReportsTabs implements ng.IComponentController {
   public loading: boolean = true;
   public filterEnable: boolean = false;
 
-
   /* @ngInject */
   public constructor(
     private Analytics,
@@ -86,7 +85,6 @@ class CcaReportsTabs implements ng.IComponentController {
     this.startDateFormat = moment(this.startDate).format('MMM Do, YYYY');
     this.setParameters();
   }
-
 
   public onCustomer() {
     this.clearData(['account', 'site', 'session']);

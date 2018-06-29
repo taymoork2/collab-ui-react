@@ -86,9 +86,10 @@
             <div class="notification-style">
               <span translate="overview.nonotifications"></span>
             </div>
-            </section>
+          </section>
 
           <section class="monitoring-panel" ng-if="$ctrl.notifications.length > 0">
+            <card-notifications notifications="$ctrl.notifications" dismiss-notification-fn="$ctrl.dismissNotification(notification)"></card-notifications>
           </section>
         </article>
       </cs-card>

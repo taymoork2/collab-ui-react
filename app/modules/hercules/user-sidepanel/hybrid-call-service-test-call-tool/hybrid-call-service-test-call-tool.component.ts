@@ -23,9 +23,7 @@ class HybridCallServiceTestCallToolCtrl implements ng.IComponentController {
     });
   }
 
-
 }
-
 
 export class HybridCallServiceTestCallToolComponent implements ng.IComponentOptions {
   public controller = HybridCallServiceTestCallToolCtrl;

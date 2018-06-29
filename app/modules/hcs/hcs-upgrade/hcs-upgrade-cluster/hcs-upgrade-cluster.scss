@@ -8,16 +8,13 @@
     .cluster-grid-header {
       background-color: $gray-light-4;
     }
-    .cluster-grid-cell {
-      background-color: $white;
-    }
 
     .ui-grid-row {
       border-bottom: none;
       height: 56px;
       background-color: $white;
       &:hover {
-        background-color: $gray-light-4;
+        background-color: transparent;
       }
     }
   }

@@ -38,5 +38,4 @@ describe('MailValidatorService', () => {
     expect(Service.isValidEmailCsv(str)).toBe(false);
   });
 
-
 });

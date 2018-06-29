@@ -7,7 +7,6 @@
 
   /* @ngInject */
   function WebExMetricsCtrl(
-    $log,
     $location,
     $q,
     $rootScope,
@@ -332,8 +331,6 @@
       vm.isStateReady = true;
       var isSubState = fromState.name.indexOf('reports.webex-metrics.') === 0;
 
-
-      $log.log('onStateChangeStart: checkStatePermission -----------');
       if (/*isSubState &&*/_.startsWith(toState.name, vm.webexMetricsState) && checkStatePermission(toState)) {
         event.preventDefault();
         if (!isSubState || (isSubState && toState.name.indexOf('classic') !== -1)) {
@@ -441,6 +438,7 @@
         isSystemOn: FeatureToggleService.webexSystemGetStatus(),
         isInternalOn: false, //FeatureToggleService.webexInternalGetStatus(),
         isProPackEnabled: ProPackService.hasProPackEnabled(),
+        isUX3: FeatureToggleService.diagnosticF8193UX3GetStatus(),
       };
       $q.all(promises).then(function (features) {
         vm.features = features;
@@ -451,7 +449,7 @@
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
         if (features.isMetricsOn && features.hasMetricsSite) {
-          if (features.isProPackEnabled) {
+          if (features.isProPackEnabled && !features.isUX3) {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
           } else {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics);
@@ -494,6 +492,7 @@
 
     function updateWebexMetrics() {
       $scope.$broadcast('unfreezeState', false);
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_SITE_SELECTED);
 
       if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
         vm.isNoData = true;

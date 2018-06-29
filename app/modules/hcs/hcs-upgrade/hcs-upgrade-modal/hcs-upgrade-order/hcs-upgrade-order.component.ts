@@ -40,7 +40,8 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
     this.loading = true;
     this.HcsUpgradeService.getUpgradeOrder(this.clusterUuid)
       .then(nodes => {
-        this.cluster = this.copyList = _.cloneDeep(nodes.upgradeOrder);
+        this.copyList = _.cloneDeep(nodes.upgradeOrder);
+        this.cluster = nodes.upgradeOrder;
         this.nodeOrderChanged();
       })
       .catch(err => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
@@ -85,7 +86,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
       if (keyCode === 40 && parentIndex !== 7) {
         //down arrow
         this.moveDown(parentIndex, itemIndex);
-      } else if (keyCode === 38 && parentIndex !== 1) {
+      } else if (keyCode === 38 && this.canMoveUp(node, parentIndex)) {
         //up arrow
         this.moveUp(parentIndex, itemIndex);
       } else {
@@ -106,7 +107,7 @@ export class HcsUpgradeOrderController implements ng.IComponentController {
   }
 
   public resetNodes() {
-    this.cluster = this.copyList;
+    this.cluster = _.cloneDeep(this.copyList);
     this.nodeOrderChanged();
   }
 }
@@ -117,5 +118,6 @@ export class HcsUpgradeOrderComponent implements ng.IComponentOptions {
   public bindings = {
     clusterUuid: '<',
     onChangeFn: '&',
+    groupId: '<',
   };
 }

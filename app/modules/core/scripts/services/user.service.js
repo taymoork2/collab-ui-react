@@ -438,6 +438,8 @@
         // set 'displayName' if truthy
         if (user.displayName) {
           _.set(sanitizedUser, 'displayName', user.displayName);
+        } else if (sanitizedUser.name) {
+          _.set(sanitizedUser, 'displayName', generateDisplayName(_.get(sanitizedUser.name, 'givenName'), _.get(sanitizedUser.name, 'familyName')));
         }
 
         if (_.size(licenses)) {
@@ -499,6 +501,8 @@
           }
           if (displayName) {
             user.displayName = displayName;
+          } else if (user.name) {
+            user.displayName = generateDisplayName(_.get(user.name, 'givenName'), _.get(user.name, 'familyName'));
           }
 
           if (!_.isNull(onboardMethod)) {
@@ -520,6 +524,17 @@
       });
 
       return userPayload;
+    }
+
+    function generateDisplayName(givenName, familyName) {
+      if (_.isString(givenName) && _.isString(familyName)) {
+        return givenName + ' ' + familyName;
+      } else if (_.isString(givenName)) {
+        return givenName;
+      } else if (_.isString(familyName)) {
+        return familyName;
+      }
+      return null;
     }
 
     function tokenParseFirstLastName(name) {

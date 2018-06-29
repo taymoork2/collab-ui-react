@@ -29,7 +29,7 @@
           <div class="tag-container" ng-show="deviceOverview.currentDevice.tags && deviceOverview.currentDevice.tags.length > 0">
           <span class="tag" ng-repeat="tag in deviceOverview.currentDevice.tags">
             <span ng-bind-html="tag"></span>
-            <i id="deleteTag{{$index}}" class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice || !$first" ng-click="deviceOverview.removeTag(tag, $index)"></i>
+            <i id="deleteTag{{$index}}" class="icon icon-close" ng-show="!deviceOverview.currentDevice.isHuronDevice() || !$first" ng-click="deviceOverview.removeTag(tag, $index)"></i>
           </span>
           </div>
           <div class="tag-container">
@@ -123,10 +123,10 @@
           <label class="col-sm-4 control-label">Lines</label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.linesAreLoaded"></div>
           <div class="col-sm-8" ng-show="deviceOverview.linesAreLoaded">
-            <p class="form-control-static line-row" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
-              <span class="form-control-static line-row">{{line.directoryNumber}}&nbsp;</span>
-              <span class="form-control-static line-row" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span>
-              <span class="badge primary primaryLineBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
+            <p class="form-control-static" ng-repeat="line in deviceOverview.lines | orderBy:'line.usage'">
+              <span class="form-control-static">{{line.directoryNumber}}&nbsp;</span><span
+              class="form-control-static" ng-if="line.alternate"> {{ 'common.or' | translate }} {{line.alternate}}</span><span
+              class="badge primaryItemBadge" ng-if="deviceOverview.lines.length > 1 && line.usage === 'Primary'">Primary</span>
             </p>
             <p class="form-control-static" ng-hide="deviceOverview.lines && deviceOverview.lines.length > 0" translate="common.none"></p>
           </div>
@@ -149,10 +149,19 @@
             <p class="form-control-static">{{deviceOverview.currentDevice.mac}}</p>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.sipUrl || deviceOverview.currentDevice.additionalSipUrls">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.sipUrl"></label>
           <div class="col-sm-8">
-            <p class="form-control-static" title="{{deviceOverview.currentDevice.sipUrl}}">{{deviceOverview.currentDevice.sipUrl}}</p>
+            <p class="form-control-static"
+               title="{{deviceOverview.currentDevice.sipUrl}}">
+              {{ deviceOverview.currentDevice.sipUrl | giveBreakOpportunities }}<span class="badge primaryItemBadge"
+                    ng-if="deviceOverview.currentDevice.additionalSipUrls.length > 0" translate="common.primary">
+              </span>
+            </p>
+            <p class="form-control-static"
+               ng-repeat="sipUrl in deviceOverview.currentDevice.additionalSipUrls">
+              {{ sipUrl | giveBreakOpportunities }}
+            </p>
           </div>
         </div>
         <div class="form-group" ng-show="deviceOverview.currentDevice.serial">
@@ -161,7 +170,7 @@
             <p class="form-control-static">{{deviceOverview.currentDevice.serial}}</p>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice()">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.timeZone"></label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.tzIsLoaded"></div>
           <div class="col-sm-3" ng-show="deviceOverview.tzIsLoaded">
@@ -181,7 +190,7 @@
             <div cs-loader class="loader-example--small"></div>
           </div>
         </div>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.isHuronDevice()">
           <label class="col-sm-4 control-label" translate="deviceOverviewPage.country"></label>
           <div class="col-sm-8" cs-loader ng-hide="deviceOverview.countryIsLoaded"></div>
           <div class="col-sm-3" ng-show="deviceOverview.countryIsLoaded">
@@ -267,10 +276,16 @@
       <cs-sp-section ng-show="deviceOverview.currentDevice.hasRemoteSupport">
         <section-title title-key="spacesPage.deviceAccess">
         </section-title>
-        <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" cr-feature-toggle feature-show="atlas-devices-advanced-settings">
+        <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" ng-if="deviceOverview.showAdvancedSettings && !deviceOverview.showNewAdvancedSettings">
           <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
           <div class="col-sm-8">
             <a href sq-click-promise="deviceOverview.showAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
+          </div>
+        </div>
+        <div class="form-group" ng-show="deviceOverview.currentDevice.hasAdvancedSettings" ng-if="deviceOverview.showNewAdvancedSettings">
+          <label class="col-sm-4 control-label" translate="spacesPage.advancedSettings.advancedSettings"></label>
+          <div class="col-sm-8">
+            <a href sq-click-promise="deviceOverview.showNewAdvancedSettingsDialog()" translate="spacesPage.advancedSettings.launchAdvancedSettings"></a>
           </div>
         </div>
         <div class="form-group">
@@ -281,6 +296,7 @@
           </div>
         </div>
       </cs-sp-section>
+
 
       <cs-sp-section ng-show="deviceOverview.showE911">
         <div>
@@ -301,8 +317,8 @@
             <label class="col-sm-4 control-label" translate="spacesPage.callbackNumber"></label>
             <div class="col-sm-8" cs-loader ng-hide="deviceOverview.isE911Available"></div>
             <div class="col-sm-8" ng-show="deviceOverview.isE911Available">
-              <p class="form-control-static line-row">
-                <span class="form-control-static line-row">{{deviceOverview.emergencyCallbackNumber}}</span>
+              <p class="form-control-static">
+                <span class="form-control-static">{{deviceOverview.emergencyCallbackNumber}}</span>
               </p>
             </div>
           </div>

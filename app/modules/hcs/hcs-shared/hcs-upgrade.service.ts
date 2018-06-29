@@ -1,5 +1,5 @@
 import { ISftpServer } from 'modules/hcs/hcs-setup/hcs-setup-sftp';
-import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer } from './hcs-upgrade';
+import { IHcsCluster, IHcsCustomerClusters, IHcsClusterSummaryItem, ISftpServerItem, IHcsUpgradeCustomer, IHcsClusterTask } from './hcs-upgrade';
 import { ISoftwareProfile, IApplicationVersion } from './hcs-swprofile';
 
 interface ISftpServerResource extends ng.resource.IResourceClass<ng.resource.IResource<ISftpServer>> {
@@ -21,7 +21,6 @@ interface ICustomerResource extends ng.resource.IResourceClass<ICustomerType> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ICustomerType>>;
 }
 
-
 interface ISwProfileResource extends ng.resource.IResourceClass<ng.resource.IResource<ISoftwareProfile>> {
   update: ng.resource.IResourceMethod<ng.resource.IResource<ISoftwareProfile>>;
 }
@@ -30,8 +29,8 @@ interface IApplicationVersionResource extends ng.resource.IResourceClass<ng.reso
   update: ng.resource.IResourceMethod<ng.resource.IResource<IApplicationVersion>>;
 }
 
-//type IClusterTaskType = IHcsClusterTask & ng.resource.IResource<IHcsClusterTask>;
-//interface IClusterTaskResource extends ng.resource.IResourceClass<IClusterTaskType> {}
+type IClusterTaskType = IHcsClusterTask & ng.resource.IResource<IHcsClusterTask>;
+interface IClusterTaskResource extends ng.resource.IResourceClass<IClusterTaskType> {}
 
 export class HcsUpgradeService {
   private sftpServerResource: ISftpServerResource;
@@ -42,15 +41,13 @@ export class HcsUpgradeService {
   private nodeResource: INodeResource;
   private customerResource: ICustomerResource;
   private clusterUpgradeResource;
-  //private clusterTaskStatusResource: IClusterTaskResource;
+  private clusterTaskStatusResource: IClusterTaskResource;
   private tasksResource;
   private statusCheckResource;
 
   /* @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
-    private $q: ng.IQService,
-    private $timeout: ng.ITimeoutService,
     private Authinfo,
     private UrlConfig,
   ) {
@@ -74,7 +71,7 @@ export class HcsUpgradeService {
         query: queryAction,
       });
 
-    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters?customer=:customerId', {}, {});
+    this.customerClustersResource = <ICustomerClustersResource>this.$resource(BASE_URL + 'partners/:partnerId/clusters', {}, {});
 
     this.swProfileResource = <ISwProfileResource>this.$resource(BASE_URL + 'partners/:partnerId/softwareprofiles/:id', {},
       {
@@ -93,8 +90,8 @@ export class HcsUpgradeService {
     });
     this.clusterUpgradeResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/upgradeorder', {}, {});
 
-    //this.clusterTaskStatusResource = this.$resource<IClusterTaskType>(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/latest', {}, {});
-    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks', {}, {});
+    this.clusterTaskStatusResource = this.$resource<IClusterTaskType>(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/latest', {}, {});
+    this.tasksResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/tasks/:taskId', {}, {});
     this.statusCheckResource = this.$resource(BASE_URL + 'partners/:partnerId/clusters/:clusterId/statusCheck', {}, {});
   }
 
@@ -167,7 +164,7 @@ export class HcsUpgradeService {
   public listClusters(customerId?: string): ng.IPromise <IHcsClusterSummaryItem[]> {
     return this.customerClustersResource.get({
       partnerId: this.Authinfo.getOrgId(),
-      customerId: customerId,
+      customer: customerId,
     }).$promise.then(response => {
       return response.clusters;
     });
@@ -263,50 +260,18 @@ export class HcsUpgradeService {
     }).$promise;
   }
 
+  public listAssignedHcsUpgradeCustomers(): ng.IPromise<IHcsUpgradeCustomer[]> {
+    return this.customerResource.query({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterAssigned: true,
+    }).$promise;
+  }
+
   public getClusterTasksStatus(clusterId: string): ng.IPromise<any> {
-    // return this.clusterTaskStatusResource.get({
-    //   partnerId: this.Authinfo.getOrgId(),
-    //   clusterId: clusterId,
-    // }).$promise;
-    const clusterTaskStatusData = {
-      status: 'UPGRADE_IN_PROGRESS',
-      estimatedCompletion: '2018-05-04 04:19:45.895',
-      nodeStatuses: [
-        {
-          uuid: 'd20538ef-3861-4f44-b633-e093e0a4aef1',
-          sequence: 1,
-          hostName: 'CCM-01',
-          typeApplication: 'CUCM',
-          publisher: true,
-          previousDuration: '00:59:00.000',
-          started: '2018-05-04 04:00:29.895',
-          elapsedTime: '00:59:00.000',
-          status: 'OPERATIONAL',
-        },
-        {
-          uuid: 'd20538ef-3861-4f44-b633-e093e0a4aef2',
-          sequence: 2,
-          hostName: 'IMP-01',
-          typeApplication: 'IM&P',
-          publisher: true,
-          previousDuration: '00:35:00.000',
-          started: '2018-05-04 04:01:30.895',
-          elapsedTime: '00:08:13.000',
-          status: 'UPGRADE_IN_PROGRESS',
-        },
-      ],
-    };
-
-    this.$timeout(() => {
-      if (clusterId) {
-        deferred.resolve(clusterTaskStatusData);
-      } else {
-        deferred.reject('No cluster ID');
-      }
-    }, 200);
-
-    const deferred = this.$q.defer();
-    return deferred.promise;
+    return this.clusterTaskStatusResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterId,
+    }).$promise;
   }
 
   public startTasks(clusterUuid: string, taskType: string, prechecks?: string[]) {
@@ -324,10 +289,18 @@ export class HcsUpgradeService {
     }, taskObj).$promise;
   }
 
+  public getTask(clusterUuid, taskId) {
+    return this.tasksResource.get({
+      partnerId: this.Authinfo.getOrgId(),
+      clusterId: clusterUuid,
+      taskId: taskId,
+    }).$promise;
+  }
+
   public getPrecheckStatus(clusterUuid: string) {
     return this.statusCheckResource.get({
       partnerId: this.Authinfo.getOrgId(),
-      clusterUuid: clusterUuid,
+      clusterId: clusterUuid,
     }, {}).$promise;
   }
 }

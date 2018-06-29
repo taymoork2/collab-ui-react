@@ -1,0 +1,46 @@
+<div class="hcs-side-panel">
+  <cs-sp-header>
+    <div class="header-info">
+      <div class="header-info-wrap">
+        <div class="header-title">
+          <span>{{$ctrl.node.nodeDetails.name}}</span>
+        </div>
+      </div>
+    </div>
+  </cs-sp-header>
+  <div>
+    <cs-sp-container>
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name">{{$ctrl.cap($ctrl.node.nodeStatus)}}</span>
+        </div>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.activeVersion"></strong></span>
+          <span>{{$ctrl.status.activeVersion}}</span>
+        </div>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.inactiveVersion"></strong></span>
+          <span>{{$ctrl.status.inactiveVersion}}</span>
+        </div>
+      </cs-sp-section>
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.postTime"></strong></span>
+          <span>{{$ctrl.status.checkTime | date: 'yyyy-MM-dd HH:mm:ss Z'}}</span>
+        </div>
+        <div class="section-title-row">
+          <span class="section-name" translate="hcs.sidePanel.spaceAvailable"></span>
+          <span>{{$ctrl.status.freeDiskSpace}} B</span>
+        </div>
+      </cs-sp-section>
+      <cs-sp-section>
+        <div class="section-title-row">
+          <span class="section-name"><strong translate="hcs.sidePanel.copInstalled"></strong></span>
+        </div>
+        <div ng-repeat="file in $ctrl.status.activeOptions" class="bottom-padding">
+          <span>{{file}}</span>
+        </div>
+      </cs-sp-section>
+    </cs-sp-container>
+  </div>
+</div>

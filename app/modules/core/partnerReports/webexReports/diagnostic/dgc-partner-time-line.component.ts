@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-import { PartnerSearchService, Platforms } from './partner-search.service';
 import { ICallType, IParticipant, IUniqueData } from './partner-search.interfaces';
-import { QualityType, TabType } from './partner-meeting.enum';
+import { Platforms, QualityType, TabType } from './partner-meeting.enum';
+import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IDataStore {
   ticks: number;
@@ -42,13 +42,15 @@ class TimeLineController implements ng.IComponentController {
   private yPanel: d3;
   private lineColorCls = ['goodLine', 'fairLine', 'poorLine', ''];
   private isSupportClientVersion = false;
+  public getDeviceType: Function;
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
     private FeatureToggleService,
-    private PartnerSearchService: PartnerSearchService,
+    private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.data = {
       ticks: 0,
@@ -127,10 +129,11 @@ class TimeLineController implements ng.IComponentController {
   }
 
   private loadFeatureToggle(): void {
-    this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus()
-      .then((isSupport: boolean) => {
-        this.isSupportClientVersion = isSupport;
-      });
+    const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
+    const promise = isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
+    promise.then((isSupport: boolean) => {
+      this.isSupportClientVersion = isSupport;
+    });
   }
 
   private initChart(): void {
@@ -277,7 +280,7 @@ class TimeLineController implements ng.IComponentController {
             this.detectAndUpdateDevice(item, msgArr, index);
           }
         } else if (item.sessionType === Platforms.PSTN) {
-          msgArr.push({ key: this.PartnerSearchService.getPhoneNumber(item.phoneNumber) });
+          msgArr.push({ key: this.WebexReportsUtilService.getPhoneNumber(item.phoneNumber) });
           if (item.callType === 'Dial In') {
             msgArr.push({ key: this.$translate.instant('webexReports.callIn'), value: item.callInType });
           } else {
@@ -285,7 +288,7 @@ class TimeLineController implements ng.IComponentController {
           }
         } else {
           if (this.isSupportClientVersion) {
-            const clientVersion = this.PartnerSearchService.getClientVersion(item.clientKey);
+            const clientVersion = this.WebexReportsUtilService.getClientVersion(item.clientKey);
             msgArr.push({ key: `${item.platform_} ${clientVersion.osVersion}: ${item.browser_} ${clientVersion.browserVersion}` });
           } else {
             msgArr.push({ key: item.device });
@@ -299,7 +302,7 @@ class TimeLineController implements ng.IComponentController {
         });
         msgArr.push({
           key: this.$translate.instant('webexReports.duration'),
-          value: this.PartnerSearchService.toMinOrSec(duration * 1000),
+          value: this.WebexReportsUtilService.toMinOrSec(duration * 1000),
         });
 
         const tipTop = index * this.option.gridHeight + 50;
@@ -309,8 +312,8 @@ class TimeLineController implements ng.IComponentController {
       .on('mouseout', () => this.hideTip());
   }
 
-  private detectAndUpdateDevice(item: IParticipant, msgArr: object[], index: number) {
-    this.PartnerSearchService.getRealDevice(item.conferenceID, item.nodeId)
+  private detectAndUpdateDevice(item: IParticipant, msgArr: object[], index: number): void {
+    this.getDeviceType({ conferenceId: item.conferenceID, nodeId: item.nodeId })
       .then((res: ICallType) => item.device = this.updateDevice(res, msgArr, index));
   }
 
@@ -644,7 +647,7 @@ class TimeLineController implements ng.IComponentController {
 
   private formatTime(timestamp: number, format?: string): string {
     format = format ? format : 'hh:mm:ss A';
-    return this.PartnerSearchService.timestampToDate(timestamp, format);
+    return this.WebexReportsUtilService.timestampToDate(timestamp, format);
   }
 
   private makeTips(msgs: { key?: string; value?: string; class?: string; }[], top: number, left: number) {
@@ -825,5 +828,6 @@ export class DgcPartnerTimeLineComponent implements ng.IComponentOptions {
     circleColor: '<',
     tabType: '<',
     lineData: '<',
+    getDeviceType: '&',
   };
 }
