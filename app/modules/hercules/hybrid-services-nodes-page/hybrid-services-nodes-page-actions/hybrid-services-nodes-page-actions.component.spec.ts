@@ -248,6 +248,7 @@ describe('HybridServicesNodesPageActionsComponentCtrl', () => {
       expect($modal.open).toHaveBeenCalledWith(jasmine.objectContaining({
         resolve: {
           connectorId: jasmine.any(Function),
+          hostSerial: jasmine.any(Function),
         },
       }));
       expect(callback).toHaveBeenCalledWith(jasmine.objectContaining({ options: { reload: true } }));

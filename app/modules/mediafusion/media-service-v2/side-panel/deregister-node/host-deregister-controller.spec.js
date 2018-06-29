@@ -3,11 +3,12 @@
 describe('Controller: HostDeregisterControllerV2', function () {
   beforeEach(angular.mock.module('Mediafusion'));
 
-  var $rootScope, controller, connectorId, HybridServicesClusterService, $q, modalInstanceMock;
+  var $rootScope, controller, connectorId, hostSerial, HybridServicesClusterService, $q, modalInstanceMock;
 
   beforeEach(inject(function (_$rootScope_, $controller, _HybridServicesClusterService_, _$q_) {
     $rootScope = _$rootScope_;
     connectorId = '12345';
+    hostSerial = 'sampleid123';
     HybridServicesClusterService = _HybridServicesClusterService_;
     $q = _$q_;
 
@@ -17,6 +18,7 @@ describe('Controller: HostDeregisterControllerV2', function () {
 
     controller = $controller('HostDeregisterControllerV2', {
       connectorId: connectorId,
+      hostSerial: hostSerial,
       $modalInstance: modalInstanceMock,
     });
   }));

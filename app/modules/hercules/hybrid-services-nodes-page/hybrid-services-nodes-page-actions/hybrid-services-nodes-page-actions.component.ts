@@ -162,6 +162,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
         connector: () => ({
           id: node.connectors[0].id,
           hostname: node.name,
+          hostserial: node.serial,
         }),
       },
       type: 'small',
@@ -183,6 +184,7 @@ class HybridServicesNodesPageActionsComponentCtrl implements ng.IComponentContro
     this.$modal.open({
       resolve: {
         connectorId: () => node.connectors[0].id,
+        hostSerial: ()  => node.connectors[0].hostSerial,
       },
       type: 'dialog',
       controller: 'HostDeregisterControllerV2',
