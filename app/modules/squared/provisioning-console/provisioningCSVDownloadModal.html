@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <div class="modal-title" translate="provisioningConsole.actions.export.title"></div>
+</div>
+<div class="modal-body">
+  <br>
+  <h4 translate="provisioningConsole.actions.export.helptext"></h4>
+  <br>
+  <cs-select
+    name="reportDateFilter" 
+    ng-model="provisioningCtrl.selectedFilterValue"
+    options="provisioningCtrl.csvFilterOptions">
+  </cs-select>
+  <br>  
+  <span translate="common.dateRange"></span>
+  <div class="detail-reports">
+    <cs-page-sub-header-left>
+      <cs-datepicker required class="startDate" ng-model="provisioningCtrl.selectedFilterOptionStartDate" placeholder="{{'reportsPage.placeholder.startDate' | translate}}" view-format="MM/DD/YY">
+      </cs-datepicker>
+      <cs-datepicker style="margin-left: 15px" required class="endDate" ng-model="provisioningCtrl.selectedFilterOptionEndDate" placeholder="{{'reportsPage.placeholder.endDate' | translate}}"
+       view-format="MM/DD/YY">
+      </cs-datepicker>
+    </cs-page-sub-header-left>
+   </div>
+</div>
+<div class="modal-footer">
+  <button class="btn" ng-click="$dismiss()" translate="common.cancel"></button>
+  <a class="export-users" ng-csv="provisioningCtrl.exportCSV()" filename="{{::'provisioningConsole.actions.export.csvFilename' | translate}}" quote-strings="true">
+    <button class="btn btn--primary" translate="provisioningConsole.actions.export.createButton"></button>
+  </a>
+</div>

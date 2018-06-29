@@ -53,6 +53,15 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.pendingOrders.length).toBe(3);
     });
   });
+  describe('Init controller csv download default filter option', () => {
+    it('should be queue received', function () {
+      initController.apply(this);
+      expect(this.controller.csvFilterOptions.length).toBe(2);
+      expect(this.controller.selectedFilterValue.label).toEqual('provisioningConsole.actions.export.csvFilterOptions.queueReceived');
+      expect(this.controller.selectedFilterValue.value).toBe('0');
+      
+    });
+  });
   describe('init new controller', () => {
     beforeEach(function() {
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));

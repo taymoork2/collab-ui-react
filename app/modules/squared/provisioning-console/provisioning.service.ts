@@ -15,17 +15,17 @@ export const STATUS_UPDATE_EVENT_NAME = 'prov_status_update';
 
 export class ProvisioningService {
 
-  private getOrdersUrl: string;
   private getOrderUrl: string;
   private updateOrderUrl: string;
   private postProvisioningUrl: string;
+  private getOrdersBaseUrl: string;
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
     private UrlConfig,
    ) {
     const adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
-    this.getOrdersUrl = `${adminServiceUrl}orders/postProvisioning/manualCodes?status=`;
+    this.getOrdersBaseUrl = `${adminServiceUrl}orders/postProvisioning/manualCodes?status=`;
     this.getOrderUrl = `${adminServiceUrl}commerce/orders/`;
     this.updateOrderUrl = `${adminServiceUrl}orders/`; //<orderUuid>/postProvisioning
     this.postProvisioningUrl = `${adminServiceUrl}orders/postProvisioning/`;
@@ -35,8 +35,12 @@ export class ProvisioningService {
     return moment(date).format(DATE_FORMAT);
   }
 
-  public getOrders(status: Status, featureToggleFlag: boolean): ng.IPromise<IOrder[]> {
-    return this.$http.get<IOrder[]>(this.getOrdersUrl + status).then((response) => {
+  public getOrders(status: Status, featureToggleFlag: boolean, start?: number, end?: number, filterType?: string): ng.IPromise<IOrder[]> {
+    let getOrdersUrl = this.getOrdersBaseUrl + status;
+    if (start !== undefined && end !== undefined && filterType !== undefined) {
+      getOrdersUrl = getOrdersUrl + `&&start=` + start + `&&end=` + end + `&&filterType=` + filterType;
+    }
+    return this.$http.get<IOrder[]>(getOrdersUrl).then((response) => {
       return _.each(_.get(response, 'data.orderList'), (order) => {
         order.orderReceived = this.formatDate(order.orderReceived);
         if (featureToggleFlag) {

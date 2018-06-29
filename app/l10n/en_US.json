@@ -1432,7 +1432,21 @@
       "completed": "Mark as completed",
       "pending": "Mark as pending",
       "showOrder": "Show Order Data",
-      "hideOrder": "Hide Order Data"
+      "hideOrder": "Hide Order Data",
+      "exportCSV": "Export CSV",
+      "export": {
+        "csvFilename": "exported_manualQueueProvisioningOrders.csv",
+        "title": "Export CSV Report",
+        "helptext": "Please select date ranges below for orders you want to be included in exported CSV file.",
+        "success": "Provisioning records exported to csv successfully",
+        "failure": "Export csv failed",
+        "createButton": "Export Report",
+        "csvFilterOptions": {
+          "queueReceived": "Queue Received",
+          "queueCompleted": "Queue Completed"
+          
+        }
+      }
     },
     "tabs": {
       "pending": "Pending",

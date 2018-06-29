@@ -4016,6 +4016,16 @@
               },
             },
           })
+          .state('provisioning.csvdownload', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: require('modules/squared/provisioning-console/provisioningCSVDownloadModal.html'),
+                controller: 'ProvisioningController',
+                controllerAs: 'provisioningCtrl',
+              },
+            },
+          })
           .state('order-details', {
             parent: 'sidepanel',
             data: {

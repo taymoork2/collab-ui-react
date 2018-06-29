@@ -28,6 +28,11 @@
               search-placeholder-text="{{::'common.search' | translate}}">
               </cs-searchfilter>
             </cs-page-sub-header-left>
+            <cs-page-sub-header-right>
+                <button class="btn btn--people btn--medium" ng-disabled="{{provisioningCtrl.featureToggleFlag}}" ng-click="provisioningCtrl.navigateToCSVDownloadModal()"
+                  translate="provisioningConsole.actions.exportCSV">
+                </button>              
+            </cs-page-sub-header-right>
           </cs-page-sub-header>
           <div class="medium-12 columns content-view" ui-view="provisioningView">
           </div>

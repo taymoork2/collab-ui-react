@@ -35,3 +35,8 @@ export interface IOrderDetail {
   subscriptionUuid: string;
 
 }
+
+export interface IReportOption {
+  label: string;
+  value: string;
+}

@@ -1,5 +1,5 @@
 import { ProvisioningService } from './provisioning.service';
-import { IOrders, IOrder } from './provisioning.interfaces';
+import { IOrders, IReportOption, IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
@@ -14,14 +14,26 @@ export class ProvisioningController {
     title: this.$translate.instant('provisioningConsole.tabs.completed'),
     state: 'provisioning.completed',
   }];
+
+  public csvFilterOptions: IReportOption[] = [{
+    label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueReceived'),
+    value: '0',
+  }, {
+    label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueCompleted'),
+    value: '1',
+  }];
+
+  public selectedFilterValue: IReportOption = this.csvFilterOptions[0];
   public isLoading: boolean = false;
   public gridApi: uiGrid.IGridApi;
+  public exportLoading = false;
   public status = Status;
   public completedOrders: any;
   public pendingOrders: any;
   private featureToggleFlag: boolean;
   public tooltipMessage: string;
-
+  public selectedFilterOptionStartDate: string = '';
+  public selectedFilterOptionEndDate: string = '';
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
   private sharedColumDefs: uiGrid.IColumnDef[];
@@ -120,6 +132,161 @@ export class ProvisioningController {
     }
   }
 
+/**
+ *  Navigation to csv downlad screen
+ */
+  public navigateToCSVDownloadModal() {
+    this.$state.go('provisioning.csvdownload');
+  }
+
+  /**
+   * To download the post provisioning order details as CSV file.
+   */
+  public exportCSV() {
+    this.exportLoading = true;
+    return this.postProvisioningExportCSV().then((res) => {
+      this.Notification.success('provisioningConsole.actions.export.success');
+      this.$state.go('provisioning.completed');
+      return res;
+    }).catch((res) => {
+      this.Notification.errorResponse(res, 'provisioningConsole.actions.export.failure');
+    }).finally(() => {
+      this.$timeout(() => {
+        this.exportLoading = false;
+      }, 5000);
+    });
+  }
+
+  private postProvisioningExportCSV() {
+    let startDate: any;
+    let endDate: any;
+    let today: any;
+    let start: any;
+    let end: any;
+    let isFilterOn = true;
+    if (_.isEmpty(this.selectedFilterOptionStartDate) || _.isEmpty(this.selectedFilterOptionEndDate)) {
+      isFilterOn = false;
+    } else {
+      startDate = moment(this.selectedFilterOptionStartDate, 'YYYY-MM-DD');
+      endDate = moment(this.selectedFilterOptionEndDate, 'YYYY-MM-DD');
+      const todayDate = new Date();
+      today = moment(todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1) + '-' + todayDate.getDate(), 'YYYY-MM-DD');
+      start = today.diff(endDate, 'days');
+      end = today.diff(startDate, 'days');
+    }
+    const optionIndex = this.selectedFilterValue.value;
+    const exportedLines: any[] = [];
+    const headerLine = {
+      webOrderID: this.$translate.instant('provisioningConsole.orderNumber'),
+      customerName: this.$translate.instant('provisioningConsole.customerName'),
+      adminEmail: this.$translate.instant('provisioningConsole.customerMail'),
+      manualCode: this.$translate.instant('provisioningConsole.manualCode'),
+      siteUrl: this.$translate.instant('provisioningConsole.siteUrl'),
+      orderReceived: this.$translate.instant('provisioningConsole.orderReceived'),
+      lastModified: this.$translate.instant('provisioningConsole.lastModified'),
+      status: this.$translate.instant('provisioningConsole.status'),
+      queueReceived: this.$translate.instant('provisioningConsole.queueReceived'),
+      queueCompleted: this.$translate.instant('provisioningConsole.queueCompleted'),
+      assignedTo: this.$translate.instant('provisioningConsole.assignedTo'),
+      completedBy: this.$translate.instant('provisioningConsole.completedBy'),
+    };
+    exportedLines.push(headerLine);
+    const uiparams = { isFilterOn: isFilterOn, startDate: startDate, endDate: endDate, optionIndex: optionIndex };
+    this.filterProcessOrderToCsvDownload(this.pendingOrders, uiparams, exportedLines);
+    let filterType;
+    if (optionIndex === '0') {
+      filterType = 'created';
+    } else if (optionIndex === '1') {
+      filterType = 'completed';
+    }
+    if (start === undefined || end === undefined) {
+      start = 0;
+      end = 30;  // By default setting for 1 month
+    }
+    return this.ProvisioningService.getOrders(Status.COMPLETED, this.featureToggleFlag, start, end, filterType).then((res: any[]) => {
+      if (!res.length) {
+        return exportedLines; // only export the header when is empty
+      }
+      _.forEach(res, (line) => {
+        this.formatCompletedStatusData(line, exportedLines);
+      });
+      return exportedLines;
+    });
+  }
+  private formatCompletedStatusData(order: any, exportedLines: any) {
+    const extractData = {
+      webOrderID: order.webOrderID,
+      customerName: order.customerName,
+      adminEmail: order.adminEmail,
+      manualCode: order.manualCode,
+      siteUrl: order.siteUrl,
+      orderReceived: order.orderReceived,
+      lastModified: order.lastModified,
+      status: order.status,
+      queueReceived: order.queueReceived,
+      queueCompleted: order.queueCompleted,
+      assignedTo: order.assignedTo,
+      completedBy: order.completedBy,
+    };
+    exportedLines.push(extractData);
+    return exportedLines;
+  }
+
+/**
+   * To collect the order details based on given date filter params.
+   * @param orderType
+   * @param isFilterOn
+   * @param startDate
+   * @param endDate
+   * @param optionIndex
+   * @param exportedLines
+   */
+  private filterProcessOrderToCsvDownload(orderType: any, options: any, exportedLines: any[]): any [] {
+    let dateTypeToFilter;
+    _.forEach(orderType, (order) => {
+      if (options.isFilterOn) {
+        if (options.optionIndex === '0') {
+          dateTypeToFilter = moment(order.queueReceived, 'YYYY-MM-DD');
+        } else if (options.optionIndex === '1') {
+          dateTypeToFilter = moment(order.queueCompleted, 'YYYY-MM-DD');
+        }
+      }
+      if (!options.isFilterOn) {
+        const extractData = {
+          webOrderID: order.webOrderID,
+          customerName: order.customerName,
+          adminEmail: order.adminEmail,
+          manualCode: order.manualCode,
+          siteUrl: order.siteUrl,
+          orderReceived: order.orderReceived,
+          lastModified: order.lastModified,
+          status: order.status,
+          queueReceived: order.queueReceived,
+          queueCompleted: order.queueCompleted,
+          assignedTo: order.assignedTo,
+          completedBy: order.completedBy,
+        };
+        exportedLines.push(extractData);
+      } else if ((dateTypeToFilter >= options.startDate) && (dateTypeToFilter <= options.endDate)) {
+        const extractData = {
+          webOrderID: order.webOrderID,
+          customerName: order.customerName,
+          adminEmail: order.adminEmail,
+          manualCode: order.manualCode,
+          siteUrl: order.siteUrl,
+          orderReceived: order.orderReceived,
+          lastModified: order.lastModified,
+          status: order.status,
+          queueReceived: order.queueReceived,
+          queueCompleted: order.queueCompleted,
+          assignedTo: order.assignedTo,
+          completedBy: order.completedBy,
+        };
+        exportedLines.push(extractData);
+      }
+    });
+    return exportedLines;
+  }
   /*
   * Search for a specific order number.
   */
