@@ -118,27 +118,17 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private trackEvent(): void {
-    if (this.isFromExternalMenu()) {
-      const externalFeatureToggle = this.getExternalFeatureToggle();
-      if (externalFeatureToggle) {
-        this.FeatureToggleService.supports(externalFeatureToggle)
-          .then((isSupport: boolean) => {
-            if (isSupport) {
-              this.Analytics.trackEvent(this.dataService.featureName, {});
-            }
-          });
-      } else {
-        this.Analytics.trackEvent(this.dataService.featureName, {});
-      }
+    const externalFeatureToggle = this.getExternalFeatureToggle();
+    if (externalFeatureToggle) {
+      this.FeatureToggleService.supports(externalFeatureToggle)
+        .then((isSupport: boolean) => {
+          if (isSupport) {
+            this.Analytics.trackEvent(this.dataService.featureName, {});
+          }
+        });
     } else {
       this.Analytics.trackEvent(this.dataService.featureName, {});
     }
-  }
-
-  private isFromExternalMenu(): boolean {
-    const currentName = this.$state.current.name;
-    const externalStates = ['support.meeting', 'support.status', 'partnertroubleshooting.diagnostics'];
-    return _.includes(externalStates, currentName);
   }
 
   private getExternalFeatureToggle(): string | undefined {
