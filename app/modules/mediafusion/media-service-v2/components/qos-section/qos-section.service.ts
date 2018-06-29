@@ -15,8 +15,10 @@ export class QosSectionService {
 
   public clusters: ICluster[] = [];
   public qosMessage: string = '';
+  public firstTimeSetup: boolean = false;
 
-  public setQos(qosSettings, qosPropertySetId): void {
+  public setQos(qosSettings, qosPropertySetId, firstTimeSetup): void {
+    this.firstTimeSetup = firstTimeSetup;
     const settings = {
       isMediaFusionQosEnabled: qosSettings,
     };
@@ -54,7 +56,7 @@ export class QosSectionService {
           .then(() => {
             this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet.id, payLoad)
               .then((response) => {
-                this.qosEnablementTracking(response, payLoad.properties['mf.qos']);
+                this.qosEnablementTracking(response, payLoad.properties['mf.qos'], this.firstTimeSetup);
                 this.Notification.success('mediaFusion.qos.success');
               })
               .catch((error) => {
@@ -68,12 +70,14 @@ export class QosSectionService {
 
   }
 
-  private qosEnablementTracking (response, qosValue) {
+  private qosEnablementTracking (response, qosValue, firstTimeSetup) {
     const trackingId = this.Notification.getTrackingId(response);
-    if (qosValue) {
-      this.qosMessage = 'QoS Enabled';
+    if (qosValue && firstTimeSetup) {
+      this.qosMessage = 'QoS is Enabled by Default';
+    } else if (qosValue) {
+      this.qosMessage = 'QoS is Enabled';
     } else {
-      this.qosMessage = 'QoS Disabled';
+      this.qosMessage = 'QoS is Disabled';
     }
     const payload = {
       serviceName: 'QoS',

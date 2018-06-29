@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function ReassignClusterControllerV2(cluster, connector, MediaClusterServiceV2, MediaServiceAuditService, $translate, $modalInstance, Notification, HybridServicesClusterService) {
+  function ReassignClusterControllerV2(cluster, connector, FeatureToggleService, MediaClusterServiceV2, MediaServiceAuditService, $translate, $modalInstance, Notification, HybridServicesClusterService) {
     var vm = this;
 
     vm.options = [];
@@ -11,7 +11,11 @@
     vm.groups = null;
     vm.groupResponse = null;
     vm.clusterDetail = null;
+    vm.hasMfQosFeatureToggle = false;
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos).then(function (response) {
+      vm.hasMfQosFeatureToggle = response;
+    });
     vm.getClusters = function () {
       HybridServicesClusterService.getAll()
         .then(function (clusters) {
@@ -57,9 +61,6 @@
                 vm.videoPropertySet = _.filter(propertySets, {
                   name: 'videoQualityPropertySet',
                 });
-                vm.qosPropertySet = _.filter(propertySets, {
-                  name: 'qosPropertySet',
-                });
                 if (vm.videoPropertySet.length > 0) {
                   var clusterPayload = {
                     assignedClusters: vm.clusterDetail.id,
@@ -67,12 +68,17 @@
                   // Assign it the property set with cluster list
                   MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
                 }
-                if (vm.qosPropertySet.length > 0) {
-                  var clusterQosPayload = {
-                    assignedClusters: vm.clusterDetail.id,
-                  };
-                  // Assign it the property set with cluster list
-                  MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                if (vm.hasMfQosFeatureToggle) {
+                  vm.qosPropertySet = _.filter(propertySets, {
+                    name: 'qosPropertySet',
+                  });
+                  if (vm.qosPropertySet.length > 0) {
+                    var clusterQosPayload = {
+                      assignedClusters: vm.clusterDetail.id,
+                    };
+                    // Assign it the property set with cluster list
+                    MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                  }
                 }
               }
             });

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, Authinfo, DeactivateMediaService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
+  function DeleteClusterSettingControllerV2($filter, $modalInstance, $q, $state, $translate, cluster, Authinfo, DeactivateMediaService, FeatureToggleService, HybridServicesClusterService, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
     var vm = this;
     vm.selectPlaceholder = $translate.instant('mediaFusion.add-resource-dialog.cluster-placeholder');
     vm.options = [];
@@ -21,6 +21,11 @@
     vm.canContinue = canContinue;
     vm.clusters = [];
     vm.loading = true;
+    vm.hasMfQosFeatureToggle = false;
+
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos).then(function (response) {
+      vm.hasMfQosFeatureToggle = response;
+    });
 
     HybridServicesClusterService.getAll()
       .then(function (clusters) {
@@ -137,9 +142,6 @@
               vm.videoPropertySet = _.filter(propertySets, {
                 name: 'videoQualityPropertySet',
               });
-              vm.qosPropertySet = _.filter(propertySets, {
-                name: 'qosPropertySet',
-              });
               if (vm.videoPropertySet.length > 0) {
                 var clusterPayload = {
                   assignedClusters: vm.clusterDetail.id,
@@ -147,12 +149,17 @@
                 // Assign it the property set with cluster list
                 MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
               }
-              if (vm.qosPropertySet.length > 0) {
-                var clusterQosPayload = {
-                  assignedClusters: vm.clusterDetail.id,
-                };
-                // Assign it the property set with cluster list
-                MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+              if (vm.hasMfQosFeatureToggle) {
+                vm.qosPropertySet = _.filter(propertySets, {
+                  name: 'qosPropertySet',
+                });
+                if (vm.qosPropertySet.length > 0) {
+                  var clusterQosPayload = {
+                    assignedClusters: vm.clusterDetail.id,
+                  };
+                  // Assign it the property set with cluster list
+                  MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                }
               }
             }
             MediaServiceAuditService.devOpsAuditEvents('cluster', 'add', vm.clusterDetail.id);

@@ -8,6 +8,7 @@ describe('Controller: DeleteClusterSettingControllerV2', function () {
       '$q',
       '$scope',
       '$state',
+      'FeatureToggleService',
       'HybridServicesClusterService',
       'MediaClusterServiceV2',
       'DeactivateMediaService');
