@@ -1,5 +1,5 @@
 import { ICallType, IParticipant } from './partner-search.interfaces';
-import { Platforms, SearchStorage, TrackingEventName } from './partner-meeting.enum';
+import { Platforms, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -24,6 +24,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $scope: IGridApiScope,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
@@ -39,7 +40,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.platformCellTemplate = require('./platform-cell-template.html');
     this.usernameCellTemplate = require('./username-cell-template.html');
 
-    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
     this.dataService = this.isPartnerRole ? this.PartnerSearchService : this.CustomerSearchService;
   }
 

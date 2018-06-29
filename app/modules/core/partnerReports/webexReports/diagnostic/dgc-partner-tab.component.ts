@@ -45,6 +45,7 @@ class DgcPartnerTab implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
     private Notification: Notification,
@@ -56,8 +57,8 @@ class DgcPartnerTab implements ng.IComponentController {
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.timeZone = this.WebexReportsUtilService.getStorage(SearchStorage.TIME_ZONE);
 
-    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
-    this.dataService = (this.isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
+    this.isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
+    this.dataService = this.isPartnerRole ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
   public $onInit(): void {

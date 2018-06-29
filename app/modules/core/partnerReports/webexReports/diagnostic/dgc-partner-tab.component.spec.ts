@@ -25,12 +25,11 @@ describe('Component: DgcPartnerTab', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies('$q', 'FeatureToggleService', 'PartnerSearchService', 'WebexReportsUtilService');
-
-    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, true);
     initSpies.apply(this);
   });
 
   function initSpies() {
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
     spyOn(this.PartnerSearchService, 'getMeetingDetail').and.returnValue(this.$q.resolve());
   }
 
@@ -52,7 +51,7 @@ describe('Component: DgcPartnerTab', () => {
   });
 
   it('should get the correct init data when call initCustomerRole', function () {
-    this.WebexReportsUtilService.setStorage(SearchStorage.PARTNER_ROLE, false);
+    this.WebexReportsUtilService.isPartnerReportPage.and.returnValue(false);
     spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.FeatureToggleService, 'diagnosticF8194MeetingDetailsGetStatus').and.returnValue(this.$q.resolve(true));
 

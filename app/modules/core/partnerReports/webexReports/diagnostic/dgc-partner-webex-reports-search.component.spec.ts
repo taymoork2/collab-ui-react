@@ -51,7 +51,6 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     this.injectDependencies('$q', '$state', '$timeout', '$translate', 'Analytics', 'FeatureToggleService', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
     moment.tz.setDefault('America/Chicago');
 
-    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
     initSpies.apply(this);
   });
 
@@ -59,6 +58,7 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
     spyOn(this.$state, 'go');
     spyOn(this.Analytics, 'trackEvent');
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
     spyOn(this.FeatureToggleService, 'atlasPartnerWebexReportsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'diagnosticPartnerF8193TroubleshootingGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'diagnosticPartnerF8234QueryRangeGetStatus').and.returnValue(this.$q.resolve(true));
