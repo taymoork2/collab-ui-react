@@ -138,7 +138,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   private isFromExternalMenu(): boolean {
     const currentName = this.$state.current.name;
     const externalStates = ['support.meeting', 'support.status', 'partnertroubleshooting.diagnostics'];
-    return _.indexOf(externalStates, currentName) > -1;
+    return _.includes(externalStates, currentName);
   }
 
   private getExternalFeatureToggle(): string|undefined {
