@@ -266,6 +266,10 @@ export class SetupWizardService {
     return !_.isUndefined(this.getPendingCCAUserPackage());
   }
 
+  public hasPendingCCAUserPartnerName(): boolean {
+    return _.has(this.getPendingCCAUserPackage(), 'ccaspPartnerName');
+  }
+
   public getActiveTSPAudioPackage(): ITSPLicense {
     return <ITSPLicense>_.find(this.getActingSubscriptionLicenses(), { offerName: this.Config.offerCodes.TSP });
   }
