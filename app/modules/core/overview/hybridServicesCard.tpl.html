@@ -12,6 +12,7 @@
         <a ui-sref="{{service.UIstateLink}}">
           <i class="icon icon-circle status-indicator" ng-class="service.healthStatus"></i>
           <span>{{::'overview.cards.hybrid.services.'+ service.serviceId | translate}}</span>
+          <span class="badge badge--outline warning" translate="overview.cards.hybrid.alarm" ng-if="service.alarms"> </span>
         </a>
       </li>
     </ul>

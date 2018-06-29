@@ -33,7 +33,7 @@
           >
             <cs-statusindicator ng-model="connector.extendedProperties.state.cssClass"></cs-statusindicator>
             <span class="feature-name">
-              {{$ctrl.localizedConnectorName}} <span class="badge badge-{{connector.extendedProperties.alarmsBadgeCss}}" ng-if="connector.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
+              {{$ctrl.localizedConnectorName}} <span class="badge badge--outline {{connector.extendedProperties.alarmsBadgeCss}}" ng-if="connector.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
             </span>
             <span class="feature-status">{{connector.runningVersion}}</span>
             <i class="feature-status feature-arrow"></i>

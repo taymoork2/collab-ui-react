@@ -9095,6 +9095,7 @@
       },
       "hybrid": {
         "title": "Hybrid Services",
+        "alarm": "Alarms",
         "googleCalendarError": "Could not reach the service for Google Calendar. Its status may be reported inaccurately during this session.",
         "o365CalendarError": "Could not reach the service for Office 365. Its status may be reported inaccurately during this session.",
         "herculesError": "Could not reach the service for Cisco Webex Hybrid Services.",

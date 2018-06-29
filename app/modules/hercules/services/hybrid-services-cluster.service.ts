@@ -330,6 +330,30 @@ export class HybridServicesClusterService {
     return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
 
+  public processClustersToAggregateAlarms(serviceId: HybridServiceId, clusterList: IExtendedClusterFusion[]) {
+    const connectorType = this.HybridServicesUtilsService.serviceId2ConnectorType(serviceId);
+    const connectors = _.chain(clusterList)
+      .map(cluster => cluster.connectors)
+      .flatten<IExtendedConnector>()
+      .filter(connector => connector.connectorType === connectorType)
+      .value();
+    if (connectors.length === 0) {
+      return false;
+    }
+    //let alarms = false;
+    return _.some(connectors, connector => {
+      if (connector.extendedProperties.alarms !== 'none') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    // TODO: today we piggiyback on the method to compute the status for a service, inside a cluster.
+    // But find the status for a service overall (by taking into account all clusters) could be different.
+    // For Expressways, we would have to look at it per resource group, and them have a different algorithm than today to decide.
+    //return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
+  }
+
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
     const url = `${this.UrlConfig.getHerculesUrlV2()}/organizations/${this.Authinfo.getOrgId()}/clusters/${clusterId}/provisioning/actions/add/invoke?connectorType=${connectorType}`;
     return this.$http.post<''>(url, null)
@@ -392,7 +416,7 @@ export class HybridServicesClusterService {
               ...cluster,
               extendedProperties: {
                 alarms: alarms,
-                alarmsBadgeCss: 'danger',
+                alarmsBadgeCss: 'warning',
                 allowedRedirectTarget: allowList[0],
                 hasUpgradeAvailable: hasUpgradeAvailable,
                 isUpgradeUrgent: isUpgradeUrgent,
@@ -409,7 +433,7 @@ export class HybridServicesClusterService {
           ...cluster,
           extendedProperties: {
             alarms: alarms,
-            alarmsBadgeCss: 'danger',
+            alarmsBadgeCss: 'warning',
             allowedRedirectTarget: undefined,
             hasUpgradeAvailable: hasUpgradeAvailable,
             isUpgradeUrgent: isUpgradeUrgent,
@@ -474,7 +498,7 @@ export class HybridServicesClusterService {
       ...connector,
       extendedProperties: {
         alarms: alarms,
-        alarmsBadgeCss: 'danger',
+        alarmsBadgeCss: 'warning',
         state: this.HybridServicesClusterStatesService.getConnectorStateDetails(connector),
         hasUpgradeAvailable: relevantProvisioning && this.hasConnectorUpgradeAvailable(connector, relevantProvisioning), // TODO: add unit tests
         isUpgradeUrgent: relevantProvisioning && this.isConnectorUpgradeUrgent(connector, relevantProvisioning), // TODO: add unit tests
