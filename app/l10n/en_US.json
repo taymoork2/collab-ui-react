@@ -3563,7 +3563,6 @@
       "maintenancePending": "Pending maintenance",
       "maintenanceReady": "Ready for Maintenance",
       "maintenanceOn": "Shut Down for Maintenance",
-      "maintenanceMode": "Maintenance Mode",
       "enableMaintenanceModeModal": {
         "title": "Enable maintenance mode",
         "message": "<p>The Video Mesh node will be put in maintenance mode as soon as the call activity ends or a two hour timeout is reached. Please wait for the node to move from \"Pending Maintenance\" to \"Maintenance\" before you proceed.</p><p>No alarm notifications are sent for nodes in maintenance mode.</p>",

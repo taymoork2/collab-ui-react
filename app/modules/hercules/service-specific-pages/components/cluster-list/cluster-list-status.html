@@ -16,7 +16,6 @@
       <cs-statusindicator ng-model="row.entity.extendedProperties.servicesStatus.state.cssClass"></cs-statusindicator>
       <span translate="{{'servicesOverview.cardStatus.' + row.entity.extendedProperties.servicesStatus.state.name}}"></span>
       <span class="badge badge-{{row.entity.extendedProperties.alarmsBadgeCss}}" ng-if="row.entity.extendedProperties.alarms !== 'none'" translate="hercules.alarms.alarms"></span>
-      <span ng-if="row.entity.extendedProperties.maintenanceMode === 'partial'" class="badge warning" translate="hercules.nodesPage.maintenanceMode"></span>
     </span>
   </span>
   <span ng-if="row.entity.extendedProperties.maintenanceMode === 'on'" class="badge warning" translate="hercules.nodesPage.maintenanceReady"></span>
