@@ -160,8 +160,8 @@ export class ProvisioningController {
     };
     return this.$q.all(orders).then((results) => {
       if (searchStr && searchStr.length > 0) {
-        results.completed = this.findCriteria( results.completed , searchStr);
-        results.pending = this.findCriteria( results.pending, searchStr);
+        results.completed = this.findCriteria(results.completed, searchStr);
+        results.pending = this.findCriteria(results.pending, searchStr);
       }
       return results;
     });
@@ -232,7 +232,7 @@ export class ProvisioningController {
 
   private findCriteria( order: IOrder[], searchStr: string): IOrder[] {
     return _.filter(order, (order) => {
-      return ( _.includes( order.siteUrl, searchStr ) || _.includes( order.adminEmail, searchStr) || _.includes( order.webOrderID, searchStr) || _.includes( order.manualCode, searchStr));
+      return (_.includes(order.siteUrl, searchStr) || _.includes(order.adminEmail, searchStr) || _.includes(order.webOrderID, searchStr) || _.includes(order.manualCode, searchStr));
     });
   }
 
