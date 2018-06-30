@@ -4,6 +4,7 @@ import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { STATUS_UPDATE_EVENT_NAME } from './provisioning.service';
+import * as moment from 'moment-timezone';
 
 export class ProvisioningController {
 
@@ -17,10 +18,10 @@ export class ProvisioningController {
 
   public csvFilterOptions: IReportOption[] = [{
     label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueReceived'),
-    value: '0',
+    value: 'created',
   }, {
     label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueCompleted'),
-    value: '1',
+    value: 'completed',
   }];
 
   public selectedFilterValue: IReportOption = this.csvFilterOptions[0];
@@ -157,24 +158,23 @@ export class ProvisioningController {
     });
   }
 
-  private postProvisioningExportCSV() {
-    let startDate: any;
-    let endDate: any;
-    let today: any;
-    let start: any;
-    let end: any;
+  private postProvisioningExportCSV(): ng.IPromise<IOrder[]> {
+    let startDate;
+    let endDate;
+    let today;
+    let start;
+    let end;
     let isFilterOn = true;
     if (_.isEmpty(this.selectedFilterOptionStartDate) || _.isEmpty(this.selectedFilterOptionEndDate)) {
       isFilterOn = false;
     } else {
       startDate = moment(this.selectedFilterOptionStartDate, 'YYYY-MM-DD');
       endDate = moment(this.selectedFilterOptionEndDate, 'YYYY-MM-DD');
-      const todayDate = new Date();
-      today = moment(todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1) + '-' + todayDate.getDate(), 'YYYY-MM-DD');
+      today = moment(moment().format('YYYY-MM-DD'));
       start = today.diff(endDate, 'days');
       end = today.diff(startDate, 'days');
     }
-    const optionIndex = this.selectedFilterValue.value;
+    //const optionIndex = this.selectedFilterValue.value;
     const exportedLines: any[] = [];
     const headerLine = {
       webOrderID: this.$translate.instant('provisioningConsole.orderNumber'),
@@ -191,19 +191,14 @@ export class ProvisioningController {
       completedBy: this.$translate.instant('provisioningConsole.completedBy'),
     };
     exportedLines.push(headerLine);
-    const uiparams = { isFilterOn: isFilterOn, startDate: startDate, endDate: endDate, optionIndex: optionIndex };
+    const uiparams = { isFilterOn: isFilterOn, startDate: startDate, endDate: endDate };
     this.filterProcessOrderToCsvDownload(this.pendingOrders, uiparams, exportedLines);
-    let filterType;
-    if (optionIndex === '0') {
-      filterType = 'created';
-    } else if (optionIndex === '1') {
-      filterType = 'completed';
-    }
+
     if (start === undefined || end === undefined) {
       start = 0;
       end = 30;  // By default setting for 1 month
     }
-    return this.ProvisioningService.getOrders(Status.COMPLETED, this.featureToggleFlag, start, end, filterType).then((res: any[]) => {
+    return this.ProvisioningService.getOrders(Status.COMPLETED, this.featureToggleFlag, start, end, this.selectedFilterValue.value).then((res: any[]) => {
       if (!res.length) {
         return exportedLines; // only export the header when is empty
       }
@@ -245,9 +240,9 @@ export class ProvisioningController {
     let dateTypeToFilter;
     _.forEach(orderType, (order) => {
       if (options.isFilterOn) {
-        if (options.optionIndex === '0') {
+        if (this.selectedFilterValue.value === 'created') {
           dateTypeToFilter = moment(order.queueReceived, 'YYYY-MM-DD');
-        } else if (options.optionIndex === '1') {
+        } else if (this.selectedFilterValue.value === 'completed') {
           dateTypeToFilter = moment(order.queueCompleted, 'YYYY-MM-DD');
         }
       }

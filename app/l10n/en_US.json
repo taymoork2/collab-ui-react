@@ -1444,7 +1444,6 @@
         "csvFilterOptions": {
           "queueReceived": "Queue Received",
           "queueCompleted": "Queue Completed"
-          
         }
       }
     },

@@ -59,7 +59,13 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.csvFilterOptions.length).toBe(2);
       expect(this.controller.selectedFilterValue.label).toEqual('provisioningConsole.actions.export.csvFilterOptions.queueReceived');
       expect(this.controller.selectedFilterValue.value).toBe('0');
-      
+    });
+  });
+  describe('Init controller', () => {
+    it('Response should be defined when clicking export csv button', function () {
+      initController.apply(this);
+      const result = this.controller.exportCSV();
+      expect(result).toBeDefined();
     });
   });
   describe('init new controller', () => {

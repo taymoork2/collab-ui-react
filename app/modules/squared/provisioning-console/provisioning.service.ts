@@ -36,11 +36,7 @@ export class ProvisioningService {
   }
 
   public getOrders(status: Status, featureToggleFlag: boolean, start?: number, end?: number, filterType?: string): ng.IPromise<IOrder[]> {
-    let getOrdersUrl = this.getOrdersBaseUrl + status;
-    if (start !== undefined && end !== undefined && filterType !== undefined) {
-      getOrdersUrl = getOrdersUrl + `&&start=` + start + `&&end=` + end + `&&filterType=` + filterType;
-    }
-    return this.$http.get<IOrder[]>(getOrdersUrl).then((response) => {
+    return this.$http.get<IOrder[]>(this.getOrdersBaseUrl + status, { params: { start: start, end: end, filterType: filterType } }).then((response) => {
       return _.each(_.get(response, 'data.orderList'), (order) => {
         order.orderReceived = this.formatDate(order.orderReceived);
         if (featureToggleFlag) {
