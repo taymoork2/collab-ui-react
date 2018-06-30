@@ -489,6 +489,9 @@
       isPartnerUser: function () {
         return this.hasRole('PARTNER_USER');
       },
+      isProvisionAdmin: function () {
+        return this.hasRole('Provision_Admin');
+      },
       isSquaredTeamMember: function () {
         return this.hasRole('WX2_User');
       },

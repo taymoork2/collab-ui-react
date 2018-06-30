@@ -15,6 +15,7 @@ interface IRoleStates {
   Partner_Management: string[];
   PARTNER_READ_ONLY_ADMIN?: string[];
   PARTNER_SALES_ADMIN: string[];
+  Provision_Admin: string[];
   Site_Admin: string[];
   Support: string[];
   Tech_Support: string[];
@@ -641,6 +642,24 @@ export class Config {
     Partner_Management: ['partnerManagement'],
     User_Admin: ['user-overview', 'userprofile', 'users', 'userRedirect', 'editService', 'addDeviceFlow'],
     Device_Admin: ['device-overview', 'bulk-overview', 'devices', 'deviceBulkFlow', 'addDeviceFlow', 'place-overview', 'places'],
+    Provision_Admin: [
+      'firsttimewizard',
+      'overview',
+      'users',
+      'my-company.subscriptions',
+      'my-company.info',
+      'services-overview',
+      'support.status',
+      'site-list',
+      'site-list-add',
+      'site-list-distribute-licenses',
+      'site-list-delete',
+      'site-csv-import',
+      'site-csv',
+      'site-csv-results',
+      'site-settings',
+      'site-setting',
+    ],
   };
 
   private readonly TEST_ENV_CONFIG: string = 'TEST_ENV_CONFIG';
