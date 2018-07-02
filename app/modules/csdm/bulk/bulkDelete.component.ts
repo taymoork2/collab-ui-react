@@ -14,7 +14,7 @@ class BulkDeleteCtrl implements IComponentController {
   public title: string;
   private deleteEmptyPlaces: boolean;
   public numberOfActiveDevices: number = 0;
-  public searchForActiveDevicesComplete: boolean = false;
+  public searchForActiveDevicesComplete = false;
   private testDelete: boolean = false;
 
   /* @ngInject */
@@ -36,7 +36,7 @@ class BulkDeleteCtrl implements IComponentController {
     const selectedDevices: Dictionary<IDevice> = this.$state.params.selectedDevices;
     const queryParser = new QueryParser(new SearchTranslator(null, null));
     const searchObject = SearchObject.createWithQuery(queryParser, 'url=(' + _.join(_.keys(selectedDevices), ' OR ') + ')');
-    searchObject.aggregates = ['connectionStatus']; //[QueryParser.Field_ConnectionStatus];
+    searchObject.aggregates = [SearchObject.Aggregate_ConnectionStatus];
 
     this.CsdmSearchService.search(searchObject, Caller.searchOrLoadMore)
       .then((response) => {

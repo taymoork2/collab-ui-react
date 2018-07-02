@@ -25,6 +25,7 @@ export class SearchRequestCompressor {
     this.fieldCompressionMap[QueryParser.Field_UpgradeChannel] = 'n';
     this.fieldCompressionMap[QueryParser.Field_Product] = 'o';
     this.fieldCompressionMap[QueryParser.Field_PrimarySipUrl] = 'p';
+    this.fieldCompressionMap[QueryParser.Field_Url] = 'q';
     this.fieldCompressionMap[SearchRequestCompressor.CUSTOM_FIELD] = 'z';
 
     this.fieldValueCompressionMap[QueryParser.Field_ConnectionStatus] = {};
