@@ -134,7 +134,11 @@ export class MeetingSettingsCtrl {
     if (this.SetupWizardService.hasPendingCCAUserPackage()) {
       const active = _.get(this.SetupWizardService.getActiveCCAUserPackage(), 'ccaspPartnerName', null);
       const pending = _.get(this.SetupWizardService.getPendingCCAUserPackage(), 'ccaspPartnerName', null);
-      this.audioPartnerName = active || pending;
+      if (!active && !pending) {
+        this.populateCCASPPartnerOptions();
+      } else {
+        this.audioPartnerName = active || pending;
+      }
     }
 
     this.hasTrialSites = this.SetupWizardService.hasWebexMeetingTrial();
@@ -531,6 +535,12 @@ export class MeetingSettingsCtrl {
 
   public ccaspSetNextDisabled() {
     if (!this.audioPartnerName || !this.ccasp.subscriptionId) {
+      this.setNextDisableStatus(true);
+    }
+  }
+
+  public ccaUserSetNextDisabled() {
+    if (!this.audioPartnerName) {
       this.setNextDisableStatus(true);
     }
   }

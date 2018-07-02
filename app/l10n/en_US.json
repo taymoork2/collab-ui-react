@@ -4633,6 +4633,7 @@
     "ccasp": {
       "ccaspSubheading": "Conferencing audio setup",
       "ccaspDescription": "You have purchased audio from an audio partner. Please enter your audio provider's subscription ID number.  If you do not have one then contact your partner from whom you purchased this subscription",
+      "ccaUserDescription": "You have purchased audio from an audio partner. Please select the audio provider. If you do not know the audio provider, then contact your partner from whom you purchased this subscription.",
       "ccaspSubscriptionId": "CCA-SP Provider Subscription ID",
       "chooseCCASPPartner": "Choose CCA-SP Provider",
       "ccaspPartner": "CCA-SP Provider: {{partner}}",
