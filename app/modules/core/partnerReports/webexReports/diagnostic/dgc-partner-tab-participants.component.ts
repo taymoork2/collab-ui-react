@@ -161,7 +161,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   private getDeviceName(participant: IParticipant, device: { name: string, icon: string }): string {
     let deviceName: string = _.get(device, 'name');
     if (!(participant.platform === Platforms.TP || participant.sessionType === Platforms.PSTN) && this.isSupportClientVersion) {
-      const devicePlatform = this.WebexReportsUtilService.getPlatform(_.get(participant, 'platform'));
+      const devicePlatform = this.WebexReportsUtilService.getPlatform(participant);
       const deviceBrowser = this.WebexReportsUtilService.getBrowser(_.get(participant, 'browser'));
       if (devicePlatform && deviceBrowser) {
         const clientVersion = this.WebexReportsUtilService.getClientVersion(`${ participant.userId }_${ participant.userName }`);
