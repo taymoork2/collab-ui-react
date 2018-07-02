@@ -1,0 +1,18 @@
+<div class="meeting-settings" ng-init="meetingCtrl.ccaUserSetNextDisabled()">
+  <h4 class="element-spacing" translate="firstTimeWizard.ccasp.ccaspSubheading"></h4>
+  <p class="element-spacing" translate="firstTimeWizard.ccasp.ccaUserDescription"></p>
+
+  <div class="row element-spacing ccasp-partner__confirmation" ng-if="meetingCtrl.audioPartnerName">
+    <i class="icon icon-check verified-check"></i>
+    <strong><span translate="firstTimeWizard.ccasp.ccaspPartner" translate-values="{partner: meetingCtrl.audioPartnerName}"></span></strong>
+  </div>
+
+  <div class="col-md-5">
+    <label class="cs-input__label" translate="firstTimeWizard.ccasp.chooseCCASPPartner"></label>
+    <cs-select
+      ng-model="meetingCtrl.audioPartnerName"
+      options="meetingCtrl.ccasp.partnerOptions"
+      placeholder="meetingCtrl.dropdownPlaceholder"
+      on-change-fn="meetingCtrl.audioPartnerSelectionChange()">
+    </cs-select>
+  </div>

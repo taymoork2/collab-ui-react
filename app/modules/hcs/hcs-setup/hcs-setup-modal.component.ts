@@ -55,6 +55,8 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
       this.finish = true;
       this.finishDisable = true;
       this.isSftp = this.currentStepIndex === 3;
+    } else {
+      this.hcsServices = { license: false, upgrade: false };
     }
     switch (this.currentStepIndex) {
       case 1:

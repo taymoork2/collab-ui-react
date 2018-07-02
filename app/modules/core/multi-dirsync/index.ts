@@ -14,6 +14,8 @@ export * from './multi-dirsync.interfaces';
 export default angular.module('core.settings.multi-dirsync', [
   require('angular-translate'),
   require('@collabui/collab-ui-ng').default,
+  require('modules/core/accessibility/three-dot-dropdown').default,
+  require('modules/core/accessibility/tooltips').default,
   modalModuleName,
   notificationModuleName,
   orgServiceModule,

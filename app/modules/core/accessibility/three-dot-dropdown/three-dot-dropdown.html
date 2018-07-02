@@ -1,0 +1,15 @@
+<div cs-dropdown class="actions-menu" ng-class="$ctrl.dropdownClass">
+  <button cs-dropdown-toggle
+    aria-label="{{$ctrl.ariaLabel}}"
+    class="btn--none dropdown-toggle icon icon-three-dots"
+    ng-class="$ctrl.buttonClass"
+    ng-click="$ctrl.onClick($event)"
+    ng-keydown="$ctrl.onKeydown($event)">
+  </button>
+  <ul cs-dropdown-menu
+    class="dropdown-menu dropdown-primary"
+    role="menu"
+    ng-class="$ctrl.menuClass"
+    ng-transclude>
+  </ul>
+</div>

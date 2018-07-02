@@ -62,6 +62,7 @@ class MeetingDetailsController implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
@@ -83,7 +84,7 @@ class MeetingDetailsController implements ng.IComponentController {
       retryTimes: 4,
       currentQos: QosType.VOIP,
     };
-    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
     this.dataService = (isPartnerRole) ? this.PartnerSearchService : this.CustomerSearchService;
   }
 

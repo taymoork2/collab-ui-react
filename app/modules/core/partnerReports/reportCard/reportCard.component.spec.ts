@@ -1,9 +1,8 @@
-import reportCard from './index';
-import { IExportMenu } from '../partnerReportInterfaces';
+import reportCardModule from './index';
 
 describe('Component: reportCard', function () {
   beforeEach(function () {
-    this.initModules(reportCard);
+    this.initModules(reportCardModule);
     this.injectDependencies('$componentController', '$scope', '$state', '$translate', 'ReportConstants');
 
     this.activeUserData = getJSONFixture('core/json/partnerReports/activeUserData.json');
@@ -64,21 +63,6 @@ describe('Component: reportCard', function () {
     expect(this.controller.totalPages).toEqual(4);
     expect(this.controller.placeholder).toEqual(this.search);
     expect(this.controller.searchField).toEqual('');
-  });
-
-  it('export menu functions', function () {
-    this.initController();
-    this.controller.toggleExportMenu();
-    expect(this.controller.exportMenu).toBeTruthy();
-
-    const menuItem: IExportMenu = {
-      click: jasmine.createSpy('click'),
-      label: 'label',
-      id: 'id',
-    };
-    this.controller.dropdownSelect(menuItem);
-    expect(menuItem.click).toHaveBeenCalled();
-    expect(this.controller.exportMenu).toBeFalsy();
   });
 
   // Main Report Test Cases

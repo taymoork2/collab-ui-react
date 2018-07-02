@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { ICallType, IParticipant, IUniqueData } from './partner-search.interfaces';
-import { Platforms, QualityType, SearchStorage, TabType } from './partner-meeting.enum';
+import { Platforms, QualityType, TabType } from './partner-meeting.enum';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IDataStore {
@@ -46,6 +46,7 @@ class TimeLineController implements ng.IComponentController {
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $element: ng.IRootElementService,
     private $translate: ng.translate.ITranslateService,
     private FeatureToggleService,
@@ -128,7 +129,7 @@ class TimeLineController implements ng.IComponentController {
   }
 
   private loadFeatureToggle(): void {
-    const isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    const isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
     const promise = isPartnerRole ? this.FeatureToggleService.diagnosticPartnerF8105ClientVersionGetStatus() : this.FeatureToggleService.diagnosticF8105ClientVersionGetStatus();
     promise.then((isSupport: boolean) => {
       this.isSupportClientVersion = isSupport;

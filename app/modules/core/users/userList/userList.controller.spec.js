@@ -367,6 +367,13 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.UserListService.listUsers.calls.count()).toEqual(2);
       expect(this.UserListService.listUsers.calls.mostRecent().args[0]).toEqual(0, 100, 'displayName', 'ascending', Function, '');
     });
+
+    it('should getUserList with default parameters', function () {
+      this.UserListService.listUsers.calls.reset();
+      this.$scope.sortDirection(this.$scope, undefined);
+      expect(this.UserListService.listUsers.calls.count()).toEqual(2);
+      expect(this.UserListService.listUsers.calls.mostRecent().args[0]).toEqual(0, 100, 'name', 'ascending', Function, '');
+    });
   });
 
   describe('canShowActionsMenu', function () {

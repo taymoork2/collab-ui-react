@@ -69,9 +69,6 @@ class BannerController implements ng.IComponentController {
         this.removeBanner(bannerInfo);
       }
     });
-
-    // Temporarily display rebrand banner, to be removed when rebrand task is done
-    this.addRebrandBanner();
   }
 
   public $onDestroy() {
@@ -117,15 +114,6 @@ class BannerController implements ng.IComponentController {
     }
 
     return false;
-  }
-
-  private addRebrandBanner(): void {
-    // Delete this function when the Rebrand task is finished
-    this.$rootScope.$emit(CoreEvent.HEADER_BANNER_TOGGLED, {
-      name: 'REBRAND_BANNER_NAME',
-      isVisible: true,
-      translation: 'rebrand.banner.text',
-    });
   }
 }
 

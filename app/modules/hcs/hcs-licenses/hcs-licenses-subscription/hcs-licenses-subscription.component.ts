@@ -1,5 +1,7 @@
 import { IGridApi } from 'ui-grid';
-import { HcsCustomerLicense, HcsCustomerReport, IHcsCustomerReport, IHcsLicense } from 'modules/hcs/hcs-shared';
+import { HcsCustomerLicense, HcsCustomerReport, IHcsCustomerReport, IHcsLicense, HcsLicenseService } from 'modules/hcs/hcs-shared';
+import { Notification } from 'modules/core/notifications';
+
 type ITab = {
   title: string;
   state: string;
@@ -32,6 +34,8 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
   public licenses: HcsCustomerLicense[] = [];
   public licenseSubscriptionList: HcsCustomerReport[] = [];
   public fieldLabel: string[];
+  public back: boolean = true;
+  public backState: string = 'partner-services-overview';
 
   public columnDefs = [{
     field: 'customer',
@@ -99,7 +103,9 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     private $scope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private HcsLicenseService: HcsLicenseService,
     private Authinfo,
+    private Notification: Notification,
   ) {}
 
   public $onInit() {
@@ -121,88 +127,16 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
     this.setGridOptions();
     this.loading = true;
     //TBD-- remove when Apis are ready
-    this.licenses.push({
-      partnerOrgId: '1234',
-      customerId: '1236',
-      customerOrgId: null,
-      customerName: 'Arizona Diamondbacks',
-      subscriptionList: [{
-        id: 'Sub101123',
-        licenseType: 'standard',
-        ordered: 100,
-      }, {
-        id: 'Sub101123',
-        licenseType: 'foundation',
-        ordered: 100,
-      }, {
-        id: 'Sub101124',
-        licenseType: 'basic',
-        ordered: 100,
-      }],
-      plmList: [{
-        plmId: 'PLMWest',
-        plmName: 'PLMWest',
-        violationsCount: 1,
-      }],
-      licenseList: [{
-        licenseType: 'HCS_Basic',
-        productType: 'CUCM',
-        required: 10, //sum of usages for this license type for the products belonging to this customer.
-        ordered: 100,
-      }, {
-        licenseType: 'HCS_Standard',
-        productType: 'CUCM',
-        required: 10, //sum of usages for this license type for the products belonging to this customer.
-        ordered: 100,
-      }, {
-        licenseType: 'HCS_Foundation',
-        productType: 'CUCM',
-        required: 10, //sum of usages for this license type for the products belonging to this customer.
-        ordered: 100,
-      },
-      ]}, {
-        partnerOrgId: '1234',
-        customerId: '1235',
-        customerOrgId: null,
-        customerName: 'Allen Eagles',
-        subscriptionList: [{
-          id: 'Sub101126',
-          licenseType: 'standard',
-          ordered: 100,
-        }, {
-          id: 'Sub101127',
-          licenseType: 'foundation',
-          ordered: 100,
-        }, {
-          id: 'Sub101127',
-          licenseType: 'basic',
-          ordered: 100,
-        }],
-        plmList: [{
-          plmId: 'PLMWest',
-          plmName: 'PLMWest',
-          violationsCount: 0,
-        }],
-        licenseList: [{
-          licenseType: 'HCS_Basic',
-          productType: 'CUCM',
-          required: 5, //sum of usages for this license type for the products belonging to this customer.
-          ordered: 200,
-        }, {
-          licenseType: 'HCS_Standard',
-          productType: 'CUCM',
-          required: 0, //sum of usages for this license type for the products belonging to this customer.
-          ordered: 20,
-        }, {
-          licenseType: 'HCS_Foundation',
-          productType: 'CUCM',
-          required: 10, //sum of usages for this license type for the products belonging to this customer.
-          ordered: 100,
-        }],
-      });
 
-    this.initCustomerLicenseReport();
-    this.loading = false;
+    this.HcsLicenseService.listCustomerLicenseReports()
+      .then((resp) => {
+        this.licenses = resp;
+        this.initCustomerLicenseReport();
+      })
+      .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))
+      .finally(() => {
+        this.loading = false;
+      });
 
     this.sort = {
       by: 'customer',
@@ -291,17 +225,17 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
 
   public initCustomerLicenseReport(): void {
     _.each(this.licenses, (lic) => {
-      const subIds = _.map(_.get(lic, 'subscriptionList'), sub => _.get(sub, 'id'));
-      const licenses = _.get<IHcsLicense[]>(lic, 'licenseList');
+      const subIds = _.map(_.get(lic, 'subscriptions'), sub => _.get(sub, 'subscriptionId'));
+      const licenses = _.get<IHcsLicense[]>(lic, 'licenses');
       const licenseCust: IHcsCustomerReport = {
         customerName: _.get(lic, 'customerName'),
         subscriptionId: _.join(_.uniq(subIds), ', '),
-        standard: _.find(licenses, { licenseType: 'HCS_Standard' }),
-        foundation: _.find(licenses, { licenseType: 'HCS_Foundation' }),
-        basic: _.find(licenses, { licenseType: 'HCS_Basic' }),
-        telepresence: _.find(licenses, { licenseType: 'HCS_Telepresence' }),
-        essential: _.find(licenses, { licenseType: 'HCS_Essential' }),
-        status: (_.isUndefined(_.find(_.get(lic, 'plmList'), plm => plm.violationsCount > 0 ))) ? 'Compliant' : 'Non-Compliant',
+        standard: _.find(licenses, { licenseType: 'HUCM_Standard' }),
+        foundation: _.find(licenses, { licenseType: 'HUCM_Foundation' }),
+        basic: _.find(licenses, { licenseType: 'HUCM_Basic' }),
+        telepresence: _.find(licenses, { licenseType: 'HUCM_Telepresence' }),
+        essential: _.find(licenses, { licenseType: 'HUCM_Essential' }),
+        status: (_.isUndefined(_.find(_.get(lic, 'plms'), plm => plm.violationsCount > 0 ))) ? 'Compliant' : 'Non-Compliant',
       };
       this.licenseSubscriptionList.push(licenseCust);
     });

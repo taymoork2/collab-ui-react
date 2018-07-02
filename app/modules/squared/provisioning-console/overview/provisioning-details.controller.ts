@@ -1,6 +1,7 @@
 import { ProvisioningService, Status , STATUS_UPDATE_EVENT_NAME } from 'modules/squared/provisioning-console/provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
+import { IOrder } from 'modules/squared/provisioning-console/provisioning.interfaces';
 
 export interface IServiceItem {
   siteUrl: string;
@@ -21,13 +22,15 @@ export interface IServiceItemsSet {
 
 export class ProvisioningDetailsController {
 
-  public order: any;
+  public order: IOrder;
   public selectedSite: any;
   public dateInfo: string = '';
   public isLoading: boolean = false;
   public status = Status;
   public isShowRaw = false;
   public orderContent;
+  public maxLength = 500;
+  public form: ng.IFormController;
   private featureToggleFlag: boolean;
   public customerInfo = {
     customerName: '-',
@@ -44,6 +47,7 @@ export class ProvisioningDetailsController {
 
   };
 
+  public notes: string;
   private serviceItems: IServiceItemsSet;
 
   /* @ngInject */
@@ -58,6 +62,7 @@ export class ProvisioningDetailsController {
     private FeatureToggleService: FeatureToggleService ) {
     this.order = this.$stateParams.order;
     this.items = {};
+    this.notes = _.get(this.order, 'note');
     this.init();
   }
 
@@ -145,7 +150,7 @@ export class ProvisioningDetailsController {
       {updateOrderPromise: this.ProvisioningService.updateOrderStatus<{status: string}>(order, newStatus, userName ),
         featureTogglePromise: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasWebexProvisioningConsole) })
       .then( promises => {
-        this.featureToggleFlag = promises.featureTogglePromise.valueOf();
+        this.featureToggleFlag = promises.featureTogglePromise;
         const result: any = promises.updateOrderPromise;
         if (result) {
           this.order.status = newStatus;
@@ -167,4 +172,24 @@ export class ProvisioningDetailsController {
         this.isLoading = false;
       });
   }
+
+  //US30084 - Changes For Notes/Comments
+  public onSave(note: string): void {
+    this.ProvisioningService.saveNote(this.order.postProvisioningUUID, note).then((response) => {
+      if (response.status === 200) {
+        this.Notification.success('provisioningConsole.details.notes.noteSaved', response.data);
+      } else {
+        this.Notification.errorResponse(response, 'provisioningConsole.details.notes.failedSaving');
+      }
+    },
+);
+    this.$stateParams.order.note = this.notes;
+    this.form.$setPristine();
+  }
+
+  public reset() {
+    this.notes = this.$stateParams.order.note;
+    this.form.$setPristine();
+  }
+
 }

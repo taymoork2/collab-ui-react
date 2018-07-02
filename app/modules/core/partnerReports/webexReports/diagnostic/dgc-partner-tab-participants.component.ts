@@ -1,5 +1,5 @@
-import { ICallType, IParticipant } from './partner-search.interfaces';
-import { Platforms, SearchStorage, TrackingEventName } from './partner-meeting.enum';
+import { ICallType, IParticipant, IRoleData, ISessionDetail, ISessionDetailItem } from './partner-search.interfaces';
+import { Platforms, RoleType, TrackingEventName } from './partner-meeting.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
@@ -18,12 +18,15 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   public reqTimes = 0;
   public platformCellTemplate: string;
   public usernameCellTemplate: string;
+  public activityCellTemplate: string;
   private isSupportClientVersion = false;
   private dataService: (PartnerSearchService | CustomerSearchService);
   private isPartnerRole: boolean;
+  private retryData = { retryTimes: 5, sharingReqTimes: 0, sharedReqTimes: 0 };
 
   /* @ngInject */
   public constructor(
+    private $state: ng.ui.IStateService,
     private $scope: IGridApiScope,
     private $stateParams: ng.ui.IStateParamsService,
     private $translate: ng.translate.ITranslateService,
@@ -38,8 +41,8 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.conferenceID = _.get(this.$stateParams, 'cid');
     this.platformCellTemplate = require('./platform-cell-template.html');
     this.usernameCellTemplate = require('./username-cell-template.html');
-
-    this.isPartnerRole = this.WebexReportsUtilService.getStorage(SearchStorage.PARTNER_ROLE);
+    this.activityCellTemplate = require('./activity-cell-template.html');
+    this.isPartnerRole = this.WebexReportsUtilService.isPartnerReportPage(this.$state.current.name);
     this.dataService = this.isPartnerRole ? this.PartnerSearchService : this.CustomerSearchService;
   }
 
@@ -56,6 +59,8 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     this.dataService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
         this.gridData = this.getGridData(res);
+        this.getParticipantsActivity();
+        this.getParticipantsSharing();
         this.setGridOptions();
         this.detectAndUpdateDevice();
       })
@@ -65,6 +70,73 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  private getParticipantsSharing(nodeIds?: string): void {
+    this.dataService.getSharingSessionDetail(this.conferenceID, nodeIds)
+      .then((res: ISessionDetail) => {
+        if (res.completed) {
+          this.renderSharing(res.items);
+        }
+      })
+      .catch((err) => {
+        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      });
+  }
+
+  private renderSharing(sessions: ISessionDetailItem[]): void {
+    const sharingSessions: ISessionDetailItem[] = [];
+    const retryIds: string[] = [];
+    _.forEach(sessions, (session) => {
+      if (!session.completed) {
+        retryIds.push(session.key);
+      } else if (!_.isEmpty(session.items)) {
+        sharingSessions.push(session);
+      }
+    });
+
+    _.forEach(sharingSessions, (session) => {
+      _.forEach(this.gridData, (item) => {
+        if (session.key === item.nodeId) {
+          item.sharing = this.$translate.instant('webexReports.shared');
+          return false;
+        }
+      });
+    });
+    this.retryRequest('shared', this.getParticipantsSharing, retryIds);
+  }
+
+  private retryRequest(timer: string, request: Function, params: string[]): void {
+    if (_.size(params) && this.retryData[`${timer}ReqTimes`] < this.retryData.retryTimes) {
+      this.$timeout.cancel(this.retryData[`${timer}Timer`]);
+      this.retryData[`${timer}Timer`] = this.$timeout(() => {
+        this.retryData[`${timer}ReqTimes`] += 1;
+        request.call(this, _.join(params));
+      }, 3000);
+    }
+  }
+
+  private getParticipantsActivity(): void {
+    this.dataService.getRoleChange(this.conferenceID)
+      .then((res: IRoleData[]) => {
+        this.renderActivity(res);
+      })
+      .catch((err) => {
+        this.Notification.errorResponse(err, 'errors.statusError', { status: err.status });
+      });
+  }
+
+  private renderActivity(roles: IRoleData[]): void {
+    const hostRoles = _.filter(roles, (role) => { return role.roleType === RoleType.HOST; });
+
+    _.forEach(hostRoles, (role) => {
+      _.forEach(this.gridData, (item) => {
+        if (role.toNodeId === item.nodeId) {
+          item.activity = this.$translate.instant('webexReports.host');
+          return false;
+        }
+      });
+    });
   }
 
   private getGridData(participants: IParticipant[]): IParticipant[] {
@@ -136,6 +208,11 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
       field: 'userName',
       displayName: this.$translate.instant('webexReports.participantsTable.userName'),
       cellTemplate: this.usernameCellTemplate,
+    }, {
+      width: '12%',
+      field: 'activity',
+      displayName: this.$translate.instant('webexReports.participantsTable.activity'),
+      cellTemplate: this.activityCellTemplate,
     }, {
       width: '16%',
       field: 'startDate',

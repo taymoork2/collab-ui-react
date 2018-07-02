@@ -56,7 +56,7 @@ describe('Component: HCS Upgrade Order Modal', () => {
   });
 
   it('should get upgrade order', function () {
-    expect(this.HcsUpgradeService.getUpgradeOrder).toHaveBeenCalledWith('123');
+    expect(this.HcsUpgradeService.getUpgradeOrder).toHaveBeenCalledWith(123);
     expect(this.controller.cluster).toEqual(nodes.upgradeOrder);
     expect(this.$scope.onChangeFn).toHaveBeenCalled();
   });

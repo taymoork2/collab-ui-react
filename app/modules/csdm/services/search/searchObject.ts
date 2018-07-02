@@ -3,27 +3,31 @@ import { QueryParser } from './queryParser';
 import { SearchTranslator } from './searchTranslator';
 import { CollectionOperator, FieldQuery, OperatorAnd, SearchElement } from './searchElement';
 
-enum Aggregate {
-  connectionStatus, product, productFamily, activeInterface, errorCodes, upgradeChannel, software, tag,
-}
-
 export class SearchObject {
+  public static readonly Aggregate_ConnectionStatus = 'connectionStatus';
+  public static readonly Aggregate_Product = 'product';
+  public static readonly Aggregate_ProductFamily = 'productFamily';
+  public static readonly Aggregate_ActiveInterface = 'activeInterface';
+  public static readonly Aggregate_ErrorCodes = 'errorCodes';
+  public static readonly Aggregate_UpgradeChannel = 'upgradeChannel';
+  public static readonly Aggregate_Software = 'software';
+  public static readonly Aggregate_Tag = 'tag';
 
   public query: string;
   public aggregates?: string[] = [
-    Aggregate[Aggregate.product],
-    Aggregate[Aggregate.connectionStatus],
-    Aggregate[Aggregate.productFamily],
-    Aggregate[Aggregate.activeInterface],
-    Aggregate[Aggregate.errorCodes],
-    Aggregate[Aggregate.software],
-    Aggregate[Aggregate.upgradeChannel],
-    Aggregate[Aggregate.tag],
+    SearchObject.Aggregate_Product,
+    SearchObject.Aggregate_ConnectionStatus,
+    SearchObject.Aggregate_ProductFamily,
+    SearchObject.Aggregate_ActiveInterface,
+    SearchObject.Aggregate_ErrorCodes,
+    SearchObject.Aggregate_Software,
+    SearchObject.Aggregate_UpgradeChannel,
+    SearchObject.Aggregate_Tag,
   ];
 
   public size: number = 20;
   public from: number = 0;
-  public sortField: string = Aggregate[Aggregate.product];
+  public sortField: string = SearchObject.Aggregate_Product;
   public sortOrder: string = 'asc';
   public hasError: boolean;
   public lastGoodQuery: SearchElement;

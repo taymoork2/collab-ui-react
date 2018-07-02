@@ -31,7 +31,6 @@ export enum SearchStorage {
     PSTN_SESSION_DETAIL = 'pstnSessionDetail',
     WEBEX_ONE_MEETING = 'webexOneMeeting',
     TIME_ZONE = 'timeZone',
-    PARTNER_ROLE = 'isPartnerRole',
     WEBEX_OVERVIEW = 'webexOneMeeting.overview',
     WEBEX_MEETING = 'webexMeeting',
     SEARCH_STRING = 'searchStr',
@@ -111,4 +110,9 @@ export enum TrackingEventName {
     MEETING_SEARCH = 'webexReports.diagnostic.meetingSearch',
     MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
     MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
+}
+
+export enum RoleType {
+    HOST = 'Host',
+    PRESENTER = 'Presenter',
 }

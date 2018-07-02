@@ -13,6 +13,10 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
   function UserListCtrl($q, $rootScope, $scope, $state, $timeout, $translate, Authinfo, Config, FeatureToggleService, GridService,
     Log, LogMetricsService, Notification, Orgservice, Userservice, UserListService, Utils, DirSyncService, UserOverviewService) {
     var vm = this;
+    var DEFAULT_SORT = {
+      by: 'name',
+      order: 'ascending',
+    };
 
     vm.$onInit = onInit;
     vm.configureGrid = configureGrid;
@@ -38,10 +42,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     $scope.currentUser = null;
     $scope.popup = Notification.popup;
     $scope.filterByAdmin = false;
-    $scope.sort = {
-      by: 'name',
-      order: 'ascending',
-    };
+    $scope.sort = _.cloneDeep(DEFAULT_SORT);
     $scope.placeholder = {
       name: $translate.instant('common.all'),
       filterValue: '',
@@ -548,12 +549,13 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       var columnDefs = [{
         field: 'photos',
         displayName: '',
+        enableSorting: false,
         cellTemplate: require('./templates/photoCell.tpl.html'),
         headerCellTemplate: '<div class="ui-grid-cell-contents" aria-label="{{:: \'usersPage.userImage\' | translate}}" tabindex="0"></div>',
         width: 70,
       }, {
         field: 'name.givenName',
-        id: 'givenName',
+        id: 'name',
         displayName: $translate.instant('usersPage.firstnameHeader'),
         cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.name.givenName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.name.givenName"></cs-grid-cell>',
       }, {
@@ -579,6 +581,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         cellTemplate: require('./templates/status.tpl.html'),
       }, {
         field: 'action',
+        enableSorting: false,
         displayName: $translate.instant('usersPage.actionHeader'),
         cellTemplate: require('./templates/actions.tpl.html'),
       }];
@@ -643,19 +646,20 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     function sortDirection(scope, sortColumns) {
-      if (_.isUndefined(_.get(sortColumns, '[0]'))) {
-        // not a sortable column
-        return;
-      }
-
       if (isMoreDataToLoad()) {
-        // don't have all the data loaded, so request sorted data from server
-        var sortBy = sortColumns[0].colDef.id;
-        var sortOrder = sortColumns[0].sort.direction === 'asc' ? 'ascending' : 'descending';
-        if ($scope.sort.by !== sortBy || $scope.sort.order !== sortOrder) {
-          $scope.sort.by = sortBy;
-          $scope.sort.order = sortOrder.toLowerCase();
+        // sortColumns[0] will only be defined if a column is using asc/dsc sorting
+        // when sortColumns[0] is undefined, the default sort should be the same as the initial call made on page loading
+        if (_.isUndefined(_.get(sortColumns, '[0]'))) {
+          $scope.sort = _.cloneDeep(DEFAULT_SORT);
+        } else {
+          var sortBy = sortColumns[0].colDef.id;
+          var sortOrder = sortColumns[0].sort.direction === 'asc' ? 'ascending' : 'descending';
+          if ($scope.sort.by !== sortBy || $scope.sort.order !== sortOrder) {
+            $scope.sort.by = sortBy;
+            $scope.sort.order = sortOrder.toLowerCase();
+          }
         }
+
         getUserList().then(function () {
           // prevent grid from loading all of the data
           $scope.allowLoadMoreData = false;
