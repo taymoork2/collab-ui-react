@@ -124,7 +124,7 @@
           vm.clusterId = AddResourceSectionService.selectClusterId();
           vm.clusterDetail = AddResourceSectionService.selectedClusterDetails();
           if (!_.isUndefined(vm.videoQuality) && vm.firstTimeSetup) VideoQualitySectionService.setVideoQuality(vm.videoQuality, vm.videoPropertySetId);
-          if (!_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.videoPropertySetId);
+          if (vm.hasMfQosFeatureToggle && !_.isUndefined(vm.qosValue) && vm.firstTimeSetup) QosSectionService.setQos(vm.qosValue, vm.videoPropertySetId, vm.firstTimeSetup);
           if (vm.hasMfFeatureToggle && vm.sipSettingEnabled) SipRegistrationSectionService.saveSipTrunkUrl(vm.sipConfigUrl, vm.clusterId);
           if (vm.hasMfSIPFeatureToggle && vm.sipSettingEnabled) TrustedSipSectionService.saveSipConfigurations(vm.trustedsipconfiguration, vm.clusterId);
           if (vm.hasMfCascadeBwConfigToggle && !_.isUndefined(vm.cascadeBandwidth) && vm.sipSettingEnabled) ClusterCascadeBandwidthService.saveCascadeConfig(vm.clusterId, vm.cascadeBandwidth);

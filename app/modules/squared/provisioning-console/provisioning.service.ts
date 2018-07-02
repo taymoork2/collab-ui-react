@@ -1,6 +1,7 @@
 
 import { IOrder } from './provisioning.interfaces';
 import { IOrderDetail } from './provisioning.interfaces';
+import { IHttpResponse } from 'angular';
 
 export const DATE_FORMAT = 'M/D/YY h:mm a';
 
@@ -17,6 +18,7 @@ export class ProvisioningService {
   private getOrdersUrl: string;
   private getOrderUrl: string;
   private updateOrderUrl: string;
+  private postProvisioningUrl: string;
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
@@ -26,6 +28,7 @@ export class ProvisioningService {
     this.getOrdersUrl = `${adminServiceUrl}orders/postProvisioning/manualCodes?status=`;
     this.getOrderUrl = `${adminServiceUrl}commerce/orders/`;
     this.updateOrderUrl = `${adminServiceUrl}orders/`; //<orderUuid>/postProvisioning
+    this.postProvisioningUrl = `${adminServiceUrl}orders/postProvisioning/`;
   }
 
   private formatDate(date): string {
@@ -78,5 +81,16 @@ export class ProvisioningService {
     return this.$http(config).then((response) => {
       return _.get(response, 'data.postProvisioningStatus[0]');
     });
+  }
+
+  public saveNote(uuid: string , noteText: string): ng.IPromise<IHttpResponse<string>> {
+    const payload = {
+      postProvisioningStatus: [
+        {
+          note: noteText,
+        }],
+    };
+    const url = `${this.postProvisioningUrl}${uuid}/note`;
+    return  this.$http.post(url, payload);
   }
 }

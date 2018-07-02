@@ -116,8 +116,8 @@ export class HcsUpgradeOrderComponent implements ng.IComponentOptions {
   public controller = HcsUpgradeOrderController;
   public template = require('./hcs-upgrade-order.component.html');
   public bindings = {
-    clusterUuid: '@',
+    clusterUuid: '<',
     onChangeFn: '&',
-    groupId: '@',
+    groupId: '<',
   };
 }

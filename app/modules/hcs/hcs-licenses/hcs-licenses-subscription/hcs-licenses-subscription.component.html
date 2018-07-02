@@ -1,6 +1,8 @@
 <cs-page-header
   title-name="{{$ctrl.title}}"
-  back="false"
+  back="$ctrl.back"
+  back-url="$ctrl.backState"
+  back-aria-label="{{::'common.back' | translate}}"
   tabs="$ctrl.tabs">
 </cs-page-header>
 <div class="hcs-license-subscription-list">
@@ -35,7 +37,8 @@
       id="licenseSubscription"
       grid-api="$ctrl.gridApi"
       grid-options="$ctrl.gridOptions"
-      spinner="$ctrl.gridRefresh">
+      spinner="$ctrl.gridRefresh"
+      ng-if="!$ctrl.gridRefresh">
     </cs-grid>
   </div>
 </div>

@@ -2,7 +2,7 @@
   'use strict';
 
   /* @ngInject */
-  function AddResourceCommonServiceV2($translate, $q, $window, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, MediaServiceAuditService, Notification) {
+  function AddResourceCommonServiceV2($translate, $q, $window, FeatureToggleService, HybridServicesClusterService, HybridServicesExtrasService, MediaServiceActivationV2, MediaClusterServiceV2, MediaServiceAuditService, Notification, Orgservice, QosSectionService) {
     var vm = this;
     vm.clusters = null;
     vm.onlineNodeList = [];
@@ -11,7 +11,12 @@
     vm.selectedClusterId = '';
     vm.currentServiceId = 'squared-fusion-media';
     vm.releaseChannel = 'stable';
+    vm.firstTime = true;
+    vm.hasMfQosFeatureToggle = false;
 
+    FeatureToggleService.supports(FeatureToggleService.features.atlasMediaServiceQos).then(function (response) {
+      vm.hasMfQosFeatureToggle = response;
+    });
     // Forming clusterList which contains all cluster name of type mf_mgmt and sorting it.
     function updateClusterLists() {
       vm.clusters = null;
@@ -77,9 +82,6 @@
                   vm.videoPropertySet = _.filter(propertySets, {
                     name: 'videoQualityPropertySet',
                   });
-                  vm.qosPropertySet = _.filter(propertySets, {
-                    name: 'qosPropertySet',
-                  });
                   if (vm.videoPropertySet.length > 0) {
                     var clusterPayload = {
                       assignedClusters: vm.selectedClusterId,
@@ -87,12 +89,17 @@
                     // Assign it the property set with cluster list
                     MediaClusterServiceV2.updatePropertySetById(vm.videoPropertySet[0].id, clusterPayload);
                   }
-                  if (vm.qosPropertySet.length > 0) {
-                    var clusterQosPayload = {
-                      assignedClusters: vm.selectedClusterId,
-                    };
-                    // Assign it the property set with cluster list
-                    MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                  if (vm.hasMfQosFeatureToggle) {
+                    vm.qosPropertySet = _.filter(propertySets, {
+                      name: 'qosPropertySet',
+                    });
+                    if (vm.qosPropertySet.length > 0) {
+                      var clusterQosPayload = {
+                        assignedClusters: vm.selectedClusterId,
+                      };
+                      // Assign it the property set with cluster list
+                      MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySet[0].id, clusterQosPayload);
+                    }
                   }
                 }
               });
@@ -175,25 +182,34 @@
     }
 
     function createQosProperty() {
-      var payLoad = {
-        type: 'mf.group',
-        name: 'qosPropertySet',
-        properties: {
-          'mf.qos': 'true',
-        },
-      };
-      MediaClusterServiceV2.createPropertySet(payLoad)
-        .then(function (response) {
-          vm.qosPropertySetId = response.data.id;
-          var clusterPayload = {
-            assignedClusters: vm.selectedClusterId,
-          };
-          // Assign it the property set with cluster id
-          MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySetId, clusterPayload)
-            .then('', function (err) {
-              Notification.errorWithTrackingId(err, 'mediaFusion.qos.error');
-            });
-        });
+      if (vm.hasMfQosFeatureToggle) {
+        var payLoad = {
+          type: 'mf.group',
+          name: 'qosPropertySet',
+          properties: {
+            'mf.qos': 'true',
+          },
+        };
+        var settings = {
+          isMediaFusionQosEnabled: 'true',
+        };
+        Orgservice.setOrgSettings(this.Authinfo.getOrgId(), settings);
+        MediaClusterServiceV2.createPropertySet(payLoad)
+          .then(function (response) {
+            vm.qosPropertySetId = response.data.id;
+            var clusterPayload = {
+              assignedClusters: vm.selectedClusterId,
+            };
+            // Assign it the property set with cluster id
+            MediaClusterServiceV2.updatePropertySetById(vm.qosPropertySetId, clusterPayload)
+              .then(function (response) {
+                QosSectionService.qosEnablementTracking(response, payLoad.properties['mf.qos'], vm.firstTime);
+              })
+              .catch('', function (err) {
+                Notification.errorWithTrackingId(err, 'mediaFusion.qos.error');
+              });
+          });
+      }
     }
 
     return {

@@ -21,7 +21,11 @@
           <!-- Sub header with search -->
           <cs-page-sub-header>
             <cs-page-sub-header-left>
-              <cs-searchfilter placeholder-text="Order number" search-item-fn="provisioningCtrl.setCurrentSearch(searchStr)" clear-aria-text="{{::'common.clear' | translate}}" search-placeholder-text="{{::'common.search' | translate}}">
+              <cs-searchfilter 
+              placeholder-text="{::'provisioningConsole.orderNumber' | translate}}"
+              search-item-fn="provisioningCtrl.setCurrentSearch(searchStr)" 
+              clear-aria-text="{{::'common.clear' | translate}}" 
+              search-placeholder-text="{{::'common.search' | translate}}">
               </cs-searchfilter>
             </cs-page-sub-header-left>
           </cs-page-sub-header>

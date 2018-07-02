@@ -12,12 +12,12 @@ describe('Component: DgcPartnerTabParticipants', () => {
   beforeEach(function () {
     this.initModules(moduleName);
     this.injectDependencies('$q', 'FeatureToggleService', 'Notification', 'PartnerSearchService', 'WebexReportsUtilService');
-    this.WebexReportsUtilService.setStorage('isPartnerRole', true);
     initSpies.apply(this);
   });
 
   function initSpies() {
     spyOn(this.Notification, 'errorResponse');
+    spyOn(this.WebexReportsUtilService, 'isPartnerReportPage').and.returnValue(true);
     spyOn(this.PartnerSearchService, 'getParticipants').and.returnValue(this.$q.resolve());
     spyOn(this.FeatureToggleService, 'diagnosticPartnerF8105ClientVersionGetStatus').and.returnValue(this.$q.resolve(true));
   }

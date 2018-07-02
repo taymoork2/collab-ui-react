@@ -210,6 +210,19 @@ export class WebexReportsUtilService {
     return phone;
   }
 
+  public isPartnerReportPage(currentState: string | undefined): boolean {
+    const partnerStates = [
+      'partnerreports.dgc',
+      'partnerreports.tab.webexreports.diagnostics',
+      'partnerreports.dgc.meetingdetail',
+      'partnerreports.dgc.participants',
+      'partnertroubleshooting',
+      'partnertroubleshooting.diagnostics',
+    ];
+
+    return _.includes(partnerStates, currentState);
+  }
+
   public getClientVersion(key: string): IVersion {
     const empty = {
       osVersion: '',

@@ -1,3 +1,4 @@
+import { FeatureToggleService } from 'modules/core/featureToggle';
 import { IExtendedClusterFusion, HybridServiceId, ICluster } from 'modules/hercules/hybrid-services.types';
 import { HybridServicesClusterService } from 'modules/hercules/services/hybrid-services-cluster.service';
 import { HybridServicesExtrasService } from 'modules/hercules/services/hybrid-services-extras.service';
@@ -9,11 +10,13 @@ export class AddResourceSectionService {
   constructor(
     private $window: ng.IWindowService,
     private $translate: ng.translate.ITranslateService,
+    private FeatureToggleService: FeatureToggleService,
     private HybridServicesClusterService: HybridServicesClusterService,
     private HybridServicesExtrasService: HybridServicesExtrasService,
     private MediaClusterServiceV2,
     private MediaServiceActivationV2,
     private Notification: Notification,
+    private Orgservice,
   ) { }
 
   private clusterDetail: ICluster;
@@ -37,6 +40,8 @@ export class AddResourceSectionService {
   public releaseChannel: string = 'stable';
   public videoPropertySetId = null;
   public yesProceed: boolean;
+  public hasMfQosFeatureToggle: boolean = false;
+  public qosOrgState: boolean = false;
 
   private getClusterList() {
     return this.HybridServicesClusterService.getAll()
@@ -92,9 +97,6 @@ export class AddResourceSectionService {
                 const videoPropertySet = _.filter(propertySets, {
                   name: 'videoQualityPropertySet',
                 });
-                const qosPropertySet = _.filter(propertySets, {
-                  name: 'qosPropertySet',
-                });
                 if (videoPropertySet.length > 0) {
                   const clusterPayload = {
                     assignedClusters: this.selectedClusterId,
@@ -104,15 +106,22 @@ export class AddResourceSectionService {
                 } else if (videoPropertySet.length === 0) {
                   this.videoPropertySetsForOrg();
                 }
-                if (qosPropertySet.length > 0) {
-                  const clusterQosPayload = {
-                    assignedClusters: this.selectedClusterId,
-                  };
-                  // Assign it the property set with cluster list
-                  this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet[0]['id'], clusterQosPayload);
-                } else if (qosPropertySet.length === 0) {
-                  this.qosPropertySetsForOrg();
-                }
+                this.qosFeatureToggle().then(() => {
+                  if (this.hasMfQosFeatureToggle) {
+                    const qosPropertySet = _.filter(propertySets, {
+                      name: 'qosPropertySet',
+                    });
+                    if (qosPropertySet.length > 0) {
+                      const clusterQosPayload = {
+                        assignedClusters: this.selectedClusterId,
+                      };
+                      // Assign it the property set with cluster list
+                      this.MediaClusterServiceV2.updatePropertySetById(qosPropertySet[0]['id'], clusterQosPayload);
+                    } else if (qosPropertySet.length === 0) {
+                      this.qosPropertySetsForOrg();
+                    }
+                  }
+                });
               } else if (propertySets.length === 0) {
                 this.propertySetsForOrg();
               }
@@ -183,23 +192,43 @@ export class AddResourceSectionService {
       });
   }
   private qosPropertySetsForOrg() {
-    const qospayLoad = {
-      type: 'mf.group',
-      name: 'qosPropertySet',
-      properties: {
-        'mf.qos': 'true',
-      },
-    };
-    return this.MediaClusterServiceV2.createPropertySet(qospayLoad)
-      .then((response) => {
-        this.qosPropertySetId = response.data.id;
-        const qosclusterPayload = {
-          assignedClusters: _.map(this.clusters, 'id'),
+    if (this.hasMfQosFeatureToggle) {
+      this.qosOrgValue().then((response) => {
+        this.qosOrgState = response;
+        const qospayLoad = {
+          type: 'mf.group',
+          name: 'qosPropertySet',
+          properties: {
+            'mf.qos': this.qosOrgState,
+          },
         };
-        this.MediaClusterServiceV2.updatePropertySetById(this.qosPropertySetId, qosclusterPayload)
-          .catch((error) => {
-            this.Notification.errorWithTrackingId(error, 'mediaFusion.qos.error');
+        return this.MediaClusterServiceV2.createPropertySet(qospayLoad)
+          .then((response) => {
+            this.qosPropertySetId = response.data.id;
+            const qosclusterPayload = {
+              assignedClusters: _.map(this.clusters, 'id'),
+            };
+            this.MediaClusterServiceV2.updatePropertySetById(this.qosPropertySetId, qosclusterPayload)
+              .catch((error) => {
+                this.Notification.errorWithTrackingId(error, 'mediaFusion.qos.error');
+              });
           });
+      });
+    }
+  }
+  private qosFeatureToggle = () => {
+    return this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasMediaServiceQos).then( (supported) => {
+      this.hasMfQosFeatureToggle = supported;
+    });
+  }
+
+  public qosOrgValue() {
+    const params = {
+      disableCache: true,
+    };
+    return this.Orgservice.getOrg(_.noop, null, params)
+      .then(response => {
+        return _.get(response.data, 'orgSettings.isMediaFusionQosEnabled', false);
       });
   }
 }
