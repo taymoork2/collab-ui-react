@@ -334,7 +334,7 @@ require('./_setup-wizard.scss');
             });
           }
 
-          if (supportsHI1776) {
+          if (supportsHI1776 || Authinfo.isBroadCloud()) {
             if (!response.bsft.rialtoCustomerId) {
               steps.push(setupBsft);
             }
