@@ -15,7 +15,6 @@ const ngUiRouterModule = require('angular-ui-router');
 
 // TODO: remove this after converting FeatureToggleService to a TypeScript class
 export declare class FeatureToggleService {
-  public hasFeatureToggleOrIsTestOrg(feature: string): ng.IPromise<boolean>;
   public supports(feature: string): ng.IPromise<boolean>;
   public features: features;
 }
