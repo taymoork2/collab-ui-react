@@ -71,7 +71,7 @@ function cleanupOldE2E() {
 function sauceStart() {
   if (args.sauce) {
     console.log('Starting sauce connect tunnel...');
-    cp.spawnSync('./sauce/start.sh', [], { stdio: 'inherit' });
+    cp.spawnSync('./bin/start-sauce-tunnel.sh', [], { stdio: 'inherit' });
     console.log('Sauce connect tunnel complete');
   }
 }
@@ -79,7 +79,7 @@ function sauceStart() {
 function sauceStop() {
   if (args.sauce) {
     console.log('Stopping sauce connect tunnel...');
-    cp.spawnSync('./sauce/stop.sh');
+    cp.spawnSync('./bin/stop-sauce-tunnel.sh');
     console.log('Sauce connect tunnel terminated');
   }
 }
