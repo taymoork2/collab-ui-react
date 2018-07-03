@@ -327,6 +327,7 @@ require('./_user-roles.scss');
       }
     }
 
+    // shrazzac 7/11/18 - Transient State: Provsion_Admin role currently not part of backend role schema; case 0 contains check to exclude this role being passed as part of the PATCH call for roles.
     function rolesFromScope() {
       var roles = [];
       switch ($scope.rolesObj.adminRadioValue) {
@@ -335,7 +336,7 @@ require('./_user-roles.scss');
             if (Config.roles[roleName] !== Config.roles.helpdesk &&
               Config.roles[roleName] !== Config.roles.orderadmin &&
               Config.roles[roleName] !== Config.roles.spark_synckms &&
-              Config.roles[roleName] !== Config.roles.compliance_user) {
+              Config.roles[roleName] !== Config.roles.compliance_user && Config.roles[roleName] !== Config.roles.provision_admin) {
               roles.push({
                 roleName: Config.roles[roleName],
                 roleState: Config.roleState.inactive,

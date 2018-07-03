@@ -1,17 +1,19 @@
 'use strict';
 
 var testModule = require('./auth');
+var featureToggleModule = require('modules/core/featureToggle').default;
 
 describe('Auth Service', function () {
   beforeEach(angular.mock.module(testModule));
+  beforeEach(angular.mock.module(featureToggleModule));
 
-  var Auth, Authinfo, $httpBackend, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService, AccountService;
+  var Auth, Authinfo, $httpBackend, FeatureToggleService, SessionStorage, $rootScope, $state, $q, OAuthConfig, Storage, UrlConfig, WindowLocation, TokenService, AccountService;
 
   afterEach(function () {
-    Auth = Authinfo = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = AccountService = undefined;
+    Auth = Authinfo = FeatureToggleService = $httpBackend = SessionStorage = $rootScope = $state = $q = OAuthConfig = Storage = UrlConfig = WindowLocation = TokenService = AccountService = undefined;
   });
 
-  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_, _AccountService_) {
+  beforeEach(inject(function (_Auth_, _Authinfo_, _$httpBackend_, _FeatureToggleService_, _SessionStorage_, _LocalStorage_, _TokenService_, _$rootScope_, _$state_, _$q_, _OAuthConfig_, _UrlConfig_, _WindowLocation_, _AccountService_) {
     $q = _$q_;
     Auth = _Auth_;
     $state = _$state_;
@@ -25,9 +27,11 @@ describe('Auth Service', function () {
     TokenService = _TokenService_;
     WindowLocation = _WindowLocation_;
     AccountService = _AccountService_;
+    FeatureToggleService = _FeatureToggleService_;
 
     spyOn(WindowLocation, 'set');
     spyOn($state, 'go').and.returnValue($q.resolve());
+    spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
 
     this.orgInfo = {
       orgSettingsWithDomain: {

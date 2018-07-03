@@ -7,7 +7,6 @@ export { IDirSyncService, IDirectoryConnector };
 
 const urlConfigModule = require('modules/core/config/urlConfig');
 const authInfoModule = require('modules/core/scripts/services/authinfo');
-const authModule = require('modules/core/auth/auth');
 const orgServiceModule = require('modules/core/scripts/services/org.service');
 const telephonyConfigModule = require('modules/huron/telephony/telephonyConfig');
 const ngResourceModule = require('angular-resource');
@@ -26,7 +25,6 @@ export default angular
     telephonyConfigModule,
     urlConfigModule,
     authInfoModule,
-    authModule,
     orgServiceModule,
   ])
   .service('FeatureToggleService', FeatureToggleServices)

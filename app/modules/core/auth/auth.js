@@ -21,7 +21,7 @@
     .name;
 
   /* @ngInject */
-  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, Config, FeatureToggleService, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
+  function Auth($http, $injector, $q, $sanitize, $window, AccountService, Authinfo, Config, HuronCompassService, Log, OAuthConfig, SessionStorage, TokenService, UrlConfig, WindowLocation) {
     var service = {
       logout: logout,
       logoutAndRedirectTo: logoutAndRedirectTo,
@@ -310,13 +310,16 @@
     }
 
     function toggleProvisionAdmin(authData) {
-      // authData.roles.push('provision_admin');
+      var FeatureToggleService = $injector.get('FeatureToggleService');
       if (_.includes(authData.roles, Config.roles.provision_admin)) {
         return FeatureToggleService.supports(FeatureToggleService.features.atlasProvisionAdmin).then(function (supported) {
           if (supported) {
             _.pull(authData.roles, Config.roles.full_admin);
           } else {
             _.pull(authData.roles, Config.roles.provision_admin);
+            if (!_.includes(authData.roles, Config.roles.full_admin)) {
+              authData.roles.push(Config.roles.full_admin);
+            }
           }
           return authData;
         });

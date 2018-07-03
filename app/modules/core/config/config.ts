@@ -247,7 +247,7 @@ export class Config {
     tech_support: 'Tech_Support',
     user_admin: 'User_Admin',
     device_admin: 'Device_Admin',
-    provision_admin: 'provision_admin',
+    provision_admin: 'Provision_Admin',
   };
 
   public readonly roleState = {

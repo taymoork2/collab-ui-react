@@ -12,7 +12,7 @@
           no-icon="true"
           status-message="{{::'usersPage.exportingUserAttributes' | translate}}"
           download-state="users.csv"></csv-download>
-        <button ng-id="!isProvisionAdmin()" ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
+        <button ng-if="!isProvisionAdmin()" ng-disabled="!obtainedTotalUserCount" id="manageUsers" class="btn btn--people" ng-click="onManageUsers()"
                 translate="usersPage.manageUsers">
         </button>
       </div>

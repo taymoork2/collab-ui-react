@@ -290,6 +290,19 @@ describe('Authinfo:', function () {
       expect(Authinfo.isAllowedState('support')).toBe(true);
     });
 
+    it('if it is a Provision_Admin, it should return true for some states and false for devices related states', function () {
+      var Authinfo = setupUser({
+        roles: ['Provision_Admin'],
+      });
+
+      expect(Authinfo.isAllowedState('firsttimewizard')).toBe(true);
+      expect(Authinfo.isAllowedState('overview')).toBe(true);
+      expect(Authinfo.isAllowedState('users')).toBe(true);
+      expect(Authinfo.isAllowedState('services-overview')).toBe(true);
+      expect(Authinfo.isAllowedState('places')).toBe(false);
+      expect(Authinfo.isAllowedState('devices')).toBe(false);
+    });
+
     it('should return false if the state is part of the restricted states for customers and the user has not a partner role', function () {
       setupConfig({
         restrictedStates: {
