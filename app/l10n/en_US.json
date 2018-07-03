@@ -11732,7 +11732,6 @@
     "deleteDevices": "Delete devices",
     "editDevices": "Edit devices",
     "deleteDevicesAreYouSure": "{nDevices, plural, =1{Are you sure you want to delete this device?} other{Are you sure you want to delete # devices?}}",
-    "changeCannotBeUndone": "This action cannot be undone.",
     "deleteActiveDevicesWarning": "{nActiveDevices, plural, =1{This device is not expired and could be in use. A deleted device must be reactivated to work again.} other{# of these devices are not expired and could be in use. All deleted devices must be reactivated individually to work again.}}",
     "failedToSearchForActiveDevices": "Failed to count the number of active devices: ",
     "deleteEmptyPlaces": "Delete resulting empty places",

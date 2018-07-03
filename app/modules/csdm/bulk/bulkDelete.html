@@ -13,14 +13,13 @@
           translate="deviceBulk.deleteDevicesAreYouSure"
           translate-interpolation="messageformat"
           translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
-      <p class="lead" translate="deviceBulk.changeCannotBeUndone"></p>
-      <p class="warning" ng-if="$ctrl.numberOfActiveDevices > 0">
+      <p class="warning activeDevicesWarning" ng-if="$ctrl.numberOfActiveDevices > 0">
         <i class="icon icon-warning warning"></i>
         <span translate="deviceBulk.deleteActiveDevicesWarning"
               translate-interpolation="messageformat"
               translate-values="{nActiveDevices: $ctrl.numberOfActiveDevices}"></span>
       </p>
-      <p>
+      <p class="emptyPlacesPrompt">
         <input cs-input
               id="deleteEmptyPlace"
               type="checkbox"
