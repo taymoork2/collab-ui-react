@@ -161,15 +161,8 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   private getGatewayIP(urlStr: string): string {
-    let ipStr = '';
-    if (!_.isEmpty(urlStr)) {
-      let strArray = urlStr.split('//');
-      if (strArray.length > 1) {
-        strArray = strArray[1].split(':');
-      }
-      ipStr = strArray[0];
-    }
-    return ipStr;
+    const ip = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.exec(urlStr);
+    return ip ? ip[0] : '';
   }
 
   private getDeviceName(participant: IParticipant, device: { name: string, icon: string }): string {
