@@ -21,7 +21,12 @@
     "state": "running",
     "hostname": "thomitte-ex.rd.cisco.com",
     "hostSerial": "070EC9D0",
-    "alarms": [],
+    "extendedProperties": {
+      "alarms": "none",
+      "alarmsBadgeCss": "warning",
+      "isUpgradeUrgent": false,
+      "maintenanceMode": "off"
+    },
     "runningVersion": "8.7-1.0.2265",
     "packageUrl": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_ucmc"
   }, {
@@ -32,7 +37,12 @@
     "state": "running",
     "hostname": "thomitte-ex.rd.cisco.com",
     "hostSerial": "070EC9D0",
-    "alarms": [],
+    "extendedProperties": {
+      "alarms": "warning",
+      "alarmsBadgeCss": "warning",
+      "isUpgradeUrgent": false,
+      "maintenanceMode": "off"
+    },
     "runningVersion": "8.7-1.0.3208",
     "packageUrl": "https://hercules-intb.ciscospark.com/hercules/api/v2/organizations/fe5acf7a-6246-484f-8f43-3e8c910fc50d/channels/GA/packages/c_cal"
   }],

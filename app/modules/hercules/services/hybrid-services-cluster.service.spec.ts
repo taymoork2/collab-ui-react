@@ -460,6 +460,31 @@ describe('Service: HybridServicesClusterService', function () {
     });
   });
 
+  describe('processClustersToAggregateAlarms()', function () {
+
+    let twoClusters: IExtendedClusterFusion[];
+    let emptyClusters: IExtendedClusterFusion[];
+    beforeEach(function () {
+      jasmine.getJSONFixtures().clearCache(); // See https://github.com/velesin/jasmine-jquery/issues/239
+      twoClusters = getJSONFixture('hercules/fusion-cluster-service-test-clusters.json');
+      emptyClusters = getJSONFixture('hercules/empty-clusters.json');
+    });
+
+    it('should return *true* when atleast one of the cluster has an alarm', function () {
+      expect(HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-cal', twoClusters)).toBe(true);
+    });
+
+    it('should return *false* when the cluster has no alarm', function () {
+      expect(HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-media', twoClusters)).toBe(false);
+      expect(HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-uc', twoClusters)).toBe(false);
+    });
+
+    it('should return *false* if no connectors in the cluster', function () {
+      expect(HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-cal', emptyClusters)).toBe(false);
+      expect(HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-uc', emptyClusters)).toBe(false);
+    });
+  });
+
   describe('serviceHasHighAvailability() and hasOnlyOneExpresswayWithConnectorProvisioned()', () => {
 
     function createExpresswayCluster(connectorType: ConnectorType): IExtendedClusterFusion {
