@@ -92,6 +92,8 @@ export interface IParticipant {
   platform_: string;
   browser_: string;
   clientKey: string;
+  activity: string;
+  sharing: string;
 }
 
 export interface IJoinTime {
@@ -127,6 +129,15 @@ export interface ICallLegs {
   tahoeInfo: object[];
   videoInfo: object[];
   voIPInfo: object[];
+}
+
+export interface IRoleData {
+  fromNodeId: string;
+  fromUserName: string;
+  roleType: string;
+  timestamp: string;
+  toNodeId: string;
+  toUserName: string;
 }
 
 export interface IServerTime {

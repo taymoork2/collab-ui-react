@@ -78,6 +78,13 @@
       return !_.isUndefined(licenseData);
     }
 
+    function isLicensedWithOffer(license, offer) {
+      var hasOffer = _.find(authData.licenses, function (searchLicense) {
+        return searchLicense.offerName === offer && searchLicense.licenseType === license;
+      });
+      return !_.isUndefined(hasOffer);
+    }
+
     return {
       initialize: function (data) {
         authData.isInDelegatedAdministrationOrg = data.isInDelegatedAdministrationOrg;
@@ -546,7 +553,7 @@
         return isEntitled(Config.entitlements.huron);
       },
       isBroadCloud: function () {
-        return isEntitled(Config.entitlements.broadCloud);
+        return isEntitled(Config.entitlements.broadCloud) || isLicensedWithOffer(Config.licenseTypes.COMMUNICATION, Config.offerTypes.spca);
       },
       isFusion: function () {
         return isEntitled(Config.entitlements.fusion_mgmt);

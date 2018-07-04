@@ -124,7 +124,7 @@ describe('searchRequestCompressor', () => {
       const compressor = this.SearchRequestCompressor;
       expect(compressor.compress(new FieldQuery('', 'connectionstatus')).length).toBe(3);
       expect(compressor.compress(new FieldQuery('', 'connectionStatus')).length).toBe(3);
-      _.each(QueryParser.validFieldNames, fn => expect(compressor.compress(new FieldQuery('', fn)).length).toBe(3));
+      _.each(QueryParser.validFieldNames, fn => expect(compressor.compress(new FieldQuery('', fn)).length).toBe(3, fn));
     });
 
     it('an empty query should compress to an empty string', function () {

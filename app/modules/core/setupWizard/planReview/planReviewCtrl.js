@@ -8,9 +8,11 @@
     .controller('PlanReviewCtrl', PlanReviewCtrl);
 
   /* @ngInject */
-  function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, SetupWizardService, TrialService, WebExUtilsFact) {
+  function PlanReviewCtrl($state, $translate, Analytics, Authinfo, Config, FeatureToggleService, SetupWizardService, TrialService, WebExUtilsFact) {
     var vm = this;
     var TRIAL = 'Trial';
+
+    vm.isCiscoBC = false;
 
     var classes = {
       userService: 'user-service-',
@@ -269,6 +271,10 @@
           return vm.hasAdvancedLicenses();
         }
       };
+
+      FeatureToggleService.supports(FeatureToggleService.features.hI1776).then(function (results) {
+        vm.isCiscoBC = results || Authinfo.isBroadCloud();
+      });
 
       vm.commServices.services = Authinfo.getCommunicationServices() || [];
       _.forEach(vm.commServices.services, function (service) {

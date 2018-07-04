@@ -141,6 +141,7 @@ export class Config {
     care: 'CARE',
     advanceCare: 'CAREVOICE',
     context: 'CONTEXT',
+    spca: 'SPCA', //Broadcloud common area offer
   };
 
   public readonly shallowValidationSourceTypes = {

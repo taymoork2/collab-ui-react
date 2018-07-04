@@ -24,6 +24,24 @@
         max-height: 700px;
       }
     }
+    .delete-info {
+      .activeDevicesWarning {
+        line-height: 1.4;
+        margin-top: 0.6rem;
+        font-size: 13px;
+        display: flex;
+        align-items: flex-start;
+        i {
+          margin-top: 2px;
+          margin-right: 5px;
+        }
+      }
+      .emptyPlacesPrompt {
+        line-height: 1;
+        margin-top: 1.75rem;
+      }
+      color: $gray-2;
+    }
   }
   h3 {
     padding-bottom: 8px;

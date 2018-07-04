@@ -660,10 +660,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
           }
         }
 
-        getUserList().then(function () {
-          // prevent grid from loading all of the data
-          $scope.allowLoadMoreData = false;
-        });
+        getUserList();
       }
     }
 

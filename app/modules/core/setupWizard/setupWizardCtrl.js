@@ -17,6 +17,7 @@ require('./_setup-wizard.scss');
   var meetingSettingsLicenseDistributionTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-license-distribution.html');
   var meetingSettingsSetPartnerAudioTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-audio-partner.html');
   var meetingSettingsSetCCASPTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-ccasp.html');
+  var meetingSettingsSetCCAUserTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-cca-user.html');
   var meetingSettingsSummaryTemplatePath = require('ngtemplate-loader?module=Core!./meeting-settings/meeting-summary.html');
 
   var callSettingsCallPickupCountryTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceHuronCustomerCreate.html');
@@ -229,6 +230,10 @@ require('./_setup-wizard.scss');
           template: meetingSettingsSetCCASPTemplatePath,
         },
         {
+          name: 'setCCAUser',
+          template: meetingSettingsSetCCAUserTemplatePath,
+        },
+        {
           name: 'summary',
           template: meetingSettingsSummaryTemplatePath,
         }],
@@ -240,6 +245,11 @@ require('./_setup-wizard.scss');
         }
         if (!SetupWizardService.hasPendingCCASPPackage() || SetupWizardService.getActiveCCASPPackage() !== undefined) {
           _.remove(meetingTab.steps, { name: 'setCCASP' });
+        }
+        if (!SetupWizardService.hasPendingCCAUserPackage() ||
+          SetupWizardService.hasPendingCCAUserPartnerName() ||
+          !_.isUndefined(SetupWizardService.getActiveCCAUserPackage())) {
+          _.remove(meetingTab.steps, { name: 'setCCAUser' });
         }
         tabs.splice(1, 0, meetingTab);
       }
@@ -324,7 +334,7 @@ require('./_setup-wizard.scss');
             });
           }
 
-          if (supportsHI1776) {
+          if (supportsHI1776 || Authinfo.isBroadCloud()) {
             if (!response.bsft.rialtoCustomerId) {
               steps.push(setupBsft);
             }

@@ -111,3 +111,8 @@ export enum TrackingEventName {
     MEETING_DETAILS = 'webexReports.diagnostic.meetingDetails',
     MEETING_PARTICIPANTS = 'webexReports.diagnostic.meetingParticipants',
 }
+
+export enum RoleType {
+    HOST = 'Host',
+    PRESENTER = 'Presenter',
+}

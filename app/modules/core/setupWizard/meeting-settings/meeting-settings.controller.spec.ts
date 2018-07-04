@@ -236,10 +236,10 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
-  describe('pending when licenses include CCAUser active license', function () {
+  describe('when pending licenses include CCAUser and there is a CCAUser active license', function () {
     beforeEach(function () {
       const license = {
-        licenseId: 'CCAUser_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        licenseId: 'CCAUser_ittest.dmz.webex.com',
         offerName: 'CCAUser',
         licenseType: 'AUDIO',
         status: 'ACTIVE',
@@ -257,10 +257,10 @@ describe('Controller: MeetingSettingsCtrl', () => {
     });
   });
 
-  describe('pending when licenses include CCAUser and no active license', function () {
+  describe('when pending licenses include CCAUser and ccaspPartnerName', function () {
     beforeEach(function () {
       const license = {
-        licenseId: 'CCAUser_8c8098f4-e324-45af-8abc-ff75594090c8_testccanew002-ittest.dmz.webex.com',
+        licenseId: 'CCAUser_ittest.dmz.webex.com',
         offerName: 'CCAUser',
         licenseType: 'AUDIO',
         status: 'INACTIVE',
@@ -271,11 +271,32 @@ describe('Controller: MeetingSettingsCtrl', () => {
       spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(null);
       initController.apply(this);
     });
-    it('should not get the list of ccaspPartners ', function () {
+
+    it('should not get ccaspPartners when license has ccaspPartnerName', function () {
       expect(this.SetupWizardService.getCCASPPartners).not.toHaveBeenCalled();
     });
+
     it('should populate partner name from pending subscription', function () {
       expect(this.controller.audioPartnerName).toBe('West IP Communications');
+    });
+  });
+
+  describe('when pending licenses include CCAUser and there is no active CCAUser license', function () {
+    beforeEach(function () {
+      const license = {
+        licenseId: 'CCAUser_ittest.dmz.webex.com',
+        offerName: 'CCAUser',
+        licenseType: 'AUDIO',
+        status: 'INACTIVE',
+      };
+      spyOn(this.SetupWizardService, 'hasPendingCCAUserPackage').and.returnValue(true);
+      spyOn(this.SetupWizardService, 'getPendingCCAUserPackage').and.returnValue(license);
+      spyOn(this.SetupWizardService, 'getActiveCCAUserPackage').and.returnValue(null);
+      initController.apply(this);
+    });
+
+    it('should get ccaspPartners when license does not have ccaspPartnerName', function () {
+      expect(this.SetupWizardService.getCCASPPartners).toHaveBeenCalled();
     });
   });
 

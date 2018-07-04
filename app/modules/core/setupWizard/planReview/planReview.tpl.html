@@ -197,12 +197,30 @@
             <div class="item-paid"
               ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
               ng-repeat="service in planReview.commServices.services track by $index">
-              <div class="item-webex" translate="onboardModal.paidCiscoSparkMessaging"></div>
-              <div>
-                <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
-                class="badge badge-warning" translate="firstTimeWizard.trial"></span>
-                <span class="quantity" translate="firstTimeWizard.quantity"></span>
-                <span class="quantity">{{service.license.volume}}</span>
+              <div ng-if="planReview.isCiscoBC">
+                <div class="item-webex">Standard</div>
+                <div style="padding-bottom: 1rem;">
+                  <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
+                  class="badge badge-warning" translate="firstTimeWizard.trial"></span>
+                  <span class="quantity" translate="firstTimeWizard.quantity"></span>
+                  <span class="quantity">{{service.license.volume}}</span>
+                </div>
+                <div class="item-webex">Places</div>
+                <div>
+                  <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
+                  class="badge badge-warning" translate="firstTimeWizard.trial"></span>
+                  <span class="quantity" translate="firstTimeWizard.quantity"></span>
+                  <span class="quantity">{{service.license.volume}}</span>
+                </div>
+              </div>
+              <div ng-if="!planReview.isCiscoBC">
+                <div class="item-webex" translate="onboardModal.paidCiscoSparkMessaging"></div>
+                <div>
+                  <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
+                  class="badge badge-warning" translate="firstTimeWizard.trial"></span>
+                  <span class="quantity" translate="firstTimeWizard.quantity"></span>
+                  <span class="quantity">{{service.license.volume}}</span>
+                </div>
               </div>
             </div>
           </div>

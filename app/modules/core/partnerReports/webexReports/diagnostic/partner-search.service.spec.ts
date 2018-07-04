@@ -130,4 +130,26 @@ describe('Service: SearchService', () => {
 
     this.$httpBackend.flush();
   });
+
+  it('should get correct data when call getRoleChange', function () {
+    const mockData = [{ roleType: 'HOST' }];
+    const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/rolechange`;
+    this.$httpBackend.expectGET(url).respond(200, mockData);
+    this.PartnerSearchService.getRoleChange(this.conferenceID)
+      .then(res => expect(res[0].roleType).toBeDefined())
+      .catch(fail);
+
+    this.$httpBackend.flush();
+  });
+
+  it('should get correct data when call getSharingSessionDetail', function () {
+    const mockData = { code: 0, items: [{ code: 200, completed: true }] };
+    const url = `${this.UrlConfig.getDiagnosticUrl()}v3/partner/meetings/${this.conferenceID}/sharing-session-detail`;
+    this.$httpBackend.expectPOST(url).respond(200, mockData);
+    this.PartnerSearchService.getSharingSessionDetail(this.conferenceID, this.nodeId)
+      .then(res => expect(res.items.length).toBe(1))
+      .catch(fail);
+
+    this.$httpBackend.flush();
+  });
 });
