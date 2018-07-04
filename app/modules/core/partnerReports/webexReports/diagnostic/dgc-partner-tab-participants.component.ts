@@ -147,6 +147,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
       }
 
       const deviceName = this.getDeviceName(participant, device);
+      const gatewayIP = this.getGatewayIP(participant.gatewayIP);
       return _.assignIn({}, participant, {
         phoneNumber: this.WebexReportsUtilService.getPhoneNumber(participant.phoneNumber),
         callInNumber: this.WebexReportsUtilService.getPhoneNumber(participant.callInNumber),
@@ -154,8 +155,21 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
         duration: this.WebexReportsUtilService.getDuration(participant.duration),
         endReason: this.WebexReportsUtilService.getParticipantEndReason(participant.reason),
         startDate: this.WebexReportsUtilService.timestampToDate(participant.joinTime, 'YYYY-MM-DD hh:mm:ss'),
+        gatewayIP: gatewayIP,
       });
     });
+  }
+
+  private getGatewayIP(urlStr: string): string {
+    let ipStr = '';
+    if (!_.isEmpty(urlStr)) {
+      let strArray = urlStr.split('//');
+      if (strArray.length > 1) {
+        strArray = strArray[1].split(':');
+      }
+      ipStr = strArray[0];
+    }
+    return ipStr;
   }
 
   private getDeviceName(participant: IParticipant, device: { name: string, icon: string }): string {
