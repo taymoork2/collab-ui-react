@@ -9,7 +9,7 @@
     .factory('OverviewHybridServicesCard', OverviewHybridServicesCard);
 
   /* @ngInject */
-  function OverviewHybridServicesCard($q, $log, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesClusterStatesService, HybridServicesUtilsService, Notification, ServiceDescriptorService) {
+  function OverviewHybridServicesCard($q, Authinfo, CloudConnectorService, Config, FeatureToggleService, HybridServicesClusterService, HybridServicesClusterStatesService, HybridServicesUtilsService, Notification, ServiceDescriptorService) {
     return {
       createCard: function createCard() {
         var card = {};
@@ -49,7 +49,6 @@
             if (response.o365Service.status === 'fulfilled') {
               var value = response.o365Service.value;
               value.serviceId = 'squared-fusion-o365';
-              //value.alarmClass = HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-o365', response.clusterList.value);
               card.serviceList.push(value);
             } else {
               Notification.errorWithTrackingId(response.o365Service.reason, 'overview.cards.hybrid.o365CalendarError');
@@ -66,7 +65,6 @@
                 });
                 card.serviceList.push({
                   serviceId: 'squared-fusion-cal',
-                  //alarmClass: true,
                   alarmClass: HybridServicesClusterService.processClustersToAggregateAlarms('squared-fusion-cal', response.clusterList.value),
                   cssClass: HybridServicesClusterStatesService.getServiceStatusCSSClassFromLabel(HybridServicesClusterService.processClustersToAggregateStatusForService('squared-fusion-cal', response.clusterList.value)),
                   setup: statusInFMS && statusInFMS.enabled,
@@ -96,7 +94,6 @@
               }
               if (Authinfo.isEntitled(Config.entitlements.mediafusion)) {
                 statusInFMS = _.find(serviceStatuses, function (service) {
-                  $log.info('serviceStatuses' + JSON.stringify(serviceStatuses));
                   return service.id === 'squared-fusion-media';
                 });
                 card.serviceList.push({
@@ -140,7 +137,6 @@
             });
             if (card.enabled) {
               _.each(card.serviceList, function (service) {
-                $log.info('service' + JSON.stringify(service));
                 service.UIstateLink = getUIStateLink(service.serviceId);
                 service.healthStatus = service.cssClass;
                 service.alarms = service.alarmClass;

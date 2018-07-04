@@ -116,9 +116,10 @@
 
     .hybrid-ul {
       margin: rem-calc(2) 1.5rem 0;
-      padding: 0;
       width: 15rem;
-      //margin-left: auto;
+      padding-left: 16px;
+      padding-right: 16px;
+      margin-left: auto;
       margin-right: auto;
     }
 
@@ -127,7 +128,26 @@
       color: $gray-dark-1;
       line-height: rem-calc(24);
     }
-
+    .adjusted-hybrid-service-name {
+      @media screen and (min-width: 1200px) {
+        .hybrid-service-name {
+          font-size: .875rem;
+        }
+        .hybrid-alarm-position {
+          float: right;
+        }
+      }
+      @media screen and (max-width: 1280px) {
+        .hybrid-service-name {
+          font-size: .730rem;
+        }
+        .hybrid-alarm-position {
+          position: absolute;
+          right: 16px;
+        }
+      }
+    }
+  
     .hybrid-disabled-footer {
       padding-bottom: 40px;
     }

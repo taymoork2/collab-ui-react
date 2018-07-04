@@ -69,9 +69,9 @@
           <span class="badge badge--outline info" ng-if="connector.hasUpgradeAvailable" translate="hercules.fusion.list.upgrade"></span>
           <span class="badge badge--outline info" ng-if="connector.upgradesAutomatically" translate="hercules.fusion.list.upgradesAutomatically"></span>
           <span ng-hide="connector.maintenanceMode === 'on' && connector.connectorType === 'mf_mgmt'">
-            <span class="badge badge--outline" ng-if="connector.upgradeState === 'upgrading'" translate="hercules.fusion.list.upgrading"></span>
+            <span class="badge badge--outline info" ng-if="connector.upgradeState === 'upgrading'" translate="hercules.fusion.list.upgrading"></span>
           </span>
-          <span class="badge badge--outline" ng-if="connector.upgradeState === 'pending'" translate="hercules.fusion.list.pending"></span>
+          <span class="badge badge--outline info" ng-if="connector.upgradeState === 'pending'" translate="hercules.fusion.list.pending"></span>
         </td>
       </tr>
       <tr class="connector-row-filler" ng-if="!$last">

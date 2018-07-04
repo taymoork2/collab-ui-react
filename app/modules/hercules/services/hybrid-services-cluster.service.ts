@@ -340,18 +340,16 @@ export class HybridServicesClusterService {
     if (connectors.length === 0) {
       return false;
     }
-    //let alarms = false;
     return _.some(connectors, connector => {
-      if (connector.extendedProperties.alarms !== 'none') {
-        return true;
-      } else {
-        return false;
+      if (!_.isUndefined(connector.extendedProperties)) {
+        if (connector.extendedProperties.alarms !== 'none') {
+          return true;
+        } else {
+          return false;
+        }
       }
+
     });
-    // TODO: today we piggiyback on the method to compute the status for a service, inside a cluster.
-    // But find the status for a service overall (by taking into account all clusters) could be different.
-    // For Expressways, we would have to look at it per resource group, and them have a different algorithm than today to decide.
-    //return this.HybridServicesClusterStatesService.getServiceStatusDetails(connectors).name;
   }
 
   public provisionConnector(clusterId: string, connectorType: ConnectorType): ng.IPromise<''> {
