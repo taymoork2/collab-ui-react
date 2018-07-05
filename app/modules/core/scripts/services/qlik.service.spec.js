@@ -3,14 +3,15 @@
 describe('Service: QlikService', function () {
   beforeEach(angular.mock.module('Core'));
 
-  var $httpBackend, Config, QlikService, UrlConfig;
+  var $httpBackend, Config, QlikService, UrlConfig, Authinfo;
   var testData;
 
-  beforeEach(inject(function (_$httpBackend_, _Config_, _QlikService_, _UrlConfig_) {
+  beforeEach(inject(function (_$httpBackend_, _Config_, _QlikService_, _UrlConfig_, _Authinfo_) {
     $httpBackend = _$httpBackend_;
     Config = _Config_;
     QlikService = _QlikService_;
     UrlConfig = _UrlConfig_;
+    Authinfo = _Authinfo_;
 
     testData = {
       postParam: {
@@ -59,6 +60,7 @@ describe('Service: QlikService', function () {
     it('should return webex appId and ticket on integration if call getProdToBTSQBSInfo API without siteId', function () {
       $httpBackend.expectPOST(/.*\/premium_webex_v1\.*/, testData.postParam).respond(200, testData.appSuccessResult);
       spyOn(Config, 'getEnv').and.returnValue('prod');
+      Authinfo.isCisco = jasmine.createSpy('isCisco').and.returnValue(true);
       spyOn(QlikService, 'callReportQBSBTS').and.returnValue(testData.appSuccessResult);
       QlikService.getProdToBTSQBSInfo('webex', 'Premium', testData.postParam, 'prod').then(function (response) {
         expect(QlikService.callReportQBSBTS).toHaveBeenCalled();

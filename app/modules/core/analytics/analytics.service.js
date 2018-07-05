@@ -164,7 +164,7 @@
           CUST_SPARK_REPORT: 'Reports: Customer Spark Qlik report',
           CUST_WEBEX_REPORT: 'Reports: Customer WebEx Qlik report',
           PARTNER_SPARK_REPORT: 'Reports: Partner Spark Qlik report',
-          CUST_MEETING_SITE_SELECTED: 'Customer Portal Analytics: Meeting - site selected',
+          CUST_MEETING_REPORT_LOADING_STATUS: 'Analytics: Customer Meeting Report loading status',
         },
         persistentProperties: null,
       },

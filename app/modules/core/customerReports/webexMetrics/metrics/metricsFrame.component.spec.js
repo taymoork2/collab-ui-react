@@ -41,7 +41,12 @@ describe('Component: metricsFrame', function () {
   });
 
   it('should set the iframeLoaded state to false when send the messageHandle with false', function () {
+    controller.timeTrack = {};
+    controller.onTrackLoadStatus = function () {
+      return true;
+    };
     controller.messageHandle({ data: 'unfreeze' });
+    expect(controller.timeTrack.status).toBe(true);
     expect(controller.isIframeLoaded).toBeTruthy();
   });
 

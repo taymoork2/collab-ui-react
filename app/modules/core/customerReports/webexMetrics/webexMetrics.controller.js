@@ -29,6 +29,7 @@
     vm.metricsOptions = [];
     vm.metricsSiteOptions = [];
     vm.metricsSelected = '';
+    vm.timeTrack = {};
 
     vm.selectEnable = false;
     vm.isWebexClassicEnabled = false;
@@ -129,6 +130,7 @@
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
+    vm.onTrackLoadStatus = onTrackLoadStatus;
     vm.pushClassicTab = pushClassicTab;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
@@ -274,6 +276,7 @@
     }
 
     function loadMetricsReport() {
+      vm.timeTrack.start = moment().valueOf();
       var reportView = vm.webexMetrics.views[vm.webexMetricsViews];
       if (isMetrics()) {
         reportView = vm.webexMetrics.views[vm.webexMetricsViews][vm.viewType];
@@ -318,7 +321,26 @@
           resetSiteSelector();
           $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'reportsPage.webexMetrics.errorRequest');
+          vm.onTrackLoadStatus(false);
         });
+    }
+
+    function onTrackLoadStatus() {
+      if (!isMetrics() && _.isNil(vm.timeTrack.start)) {
+        return;
+      }
+      vm.timeTrack.end = moment().valueOf();
+      vm.timeTrack.loadParams = {
+        site: vm.metricsSelected,
+        loadTime: _.round((vm.timeTrack.end - vm.timeTrack.start) / 1000, 2),
+        status: vm.timeTrack.status ? 'success' : 'failure',
+      };
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_REPORT_LOADING_STATUS, vm.timeTrack.loadParams);
+      resetTrackTime();
+    }
+
+    function resetTrackTime() {
+      vm.timeTrack = {};
     }
 
     function onDestory() {
@@ -492,7 +514,6 @@
 
     function updateWebexMetrics() {
       $scope.$broadcast('unfreezeState', false);
-      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_SITE_SELECTED);
 
       if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
         vm.isNoData = true;

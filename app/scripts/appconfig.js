@@ -2233,7 +2233,7 @@
             url: '/:siteUrl/metrics',
             views: {
               metricsContent: {
-                template: '<metrics-frame></metrics-frame>',
+                template: '<metrics-frame time-track = "nav.timeTrack" on-track-load-status="nav.onTrackLoadStatus(nav.startTime)"></metrics-frame>',
               },
             },
           })

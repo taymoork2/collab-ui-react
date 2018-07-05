@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $log, /*$injector, */$q, Config, UrlConfig) {
+  function QlikService($http, $log, /*$injector, */$q, Config, UrlConfig, Authinfo) {
     var QlikUrlParams = {
       webexBasic: ['basic_webex_v1', 'webex-report-basic'],
       webexPremium: ['premium_webex_v1', 'webex-report-premium'],
@@ -74,7 +74,7 @@
       var resultData = _.get(result, 'data', '');
       var siteId = _.get(resultData, 'siteId', '');
 
-      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
+      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '') && Authinfo.isCisco()) {
         $log.log('turns to call QBS BTS');
         return service.callReportQBSBTS(reportType, viewType, data);
       }
