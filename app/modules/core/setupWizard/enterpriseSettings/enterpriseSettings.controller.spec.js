@@ -134,27 +134,4 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       expect(promise).toBeResolved();
     });
   });
-
-  describe('test Personal Meeting Room Setup', function () {
-    it('should handle valid org settings', function () {
-      this.initController();
-      expect(this.controller.pmrField.inputValue).toEqual('amtest2.ciscospark.com');
-    });
-
-    it('should handle org data not having a sipCloudDomain in orgSettings', function () {
-      this.Orgservice.getOrg.and.callFake(function (callback) {
-        var org = _.cloneDeep(orgServiceJSONFixture.getOrg);
-        org.orgSettings.sipCloudDomain = undefined;
-        callback(org, getOrgStatus);
-      });
-      this.initController();
-
-      expect(this.controller.pmrField.inputValue).toEqual('');
-    });
-
-    it('should shallow validate the Sip Domain', function () {
-      this.initController();
-      expect(this.Orgservice.validateSiteUrl).toHaveBeenCalledWith('amtest2.ciscospark.com');
-    });
-  });
 });

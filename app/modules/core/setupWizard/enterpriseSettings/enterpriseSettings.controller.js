@@ -14,12 +14,10 @@
     $translate,
     $window,
     Authinfo,
-    Config,
     FeatureToggleService,
     Log,
     Notification,
     Orgservice,
-    PersonalMeetingRoomManagementService,
     ServiceSetup,
     SSOService,
     SsoCertificateService,
@@ -45,20 +43,6 @@
     var vm = this;
     vm.sparkAssistantToggle = false;
 
-    vm.pmrField = {
-      inputValue: '',
-      isDisabled: false,
-      isAvailable: false,
-      isButtonDisabled: false,
-      isLoading: false,
-      isConfirmed: null,
-      availableUrlValue: '',
-      isRoomLicensed: false,
-      domainSuffix: UrlConfig.getSparkDomainCheckUrl(),
-      errorMsg: $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage'),
-    };
-
-    var pmrField = vm.pmrField;
     vm.timeZoneOptions = [];
     vm._buildTimeZoneOptions = _buildTimeZoneOptions;
     vm.loadTimeZoneOptions = loadTimeZoneOptions;
@@ -94,104 +78,9 @@
         vm.sparkAssistantToggle = toggles.sparkAssistantToggle;
       });
 
-      setPMRSiteUrlFromSipDomain();
       updateSSO();
     }
     init();
-
-    // Personal Meeting Room Controller code
-
-    function setPMRSiteUrlFromSipDomain() {
-      var pmrSiteUrl = '';
-      var params = {
-        basicInfo: true,
-      };
-      Orgservice.getOrg(function (data, status) {
-        if (status === 200) {
-          var sparkDomainStr = UrlConfig.getSparkDomainCheckUrl();
-          var sipCloudDomain = _.get(data.orgSettings, 'sipCloudDomain');
-          pmrSiteUrl = sipCloudDomain ? data.orgSettings.sipCloudDomain.replace(sparkDomainStr, Config.siteDomainUrl.webexUrl) : '';
-          Orgservice.validateSiteUrl(pmrSiteUrl).then(function (response) {
-            if (response.isValid) {
-              pmrField.inputValue = pmrSiteUrl.replace(Config.siteDomainUrl.webexUrl, '');
-              pmrField.isAvailable = true;
-              pmrField.availableUrlValue = pmrField.inputValue;
-              pmrField.isError = false;
-            } else {
-              pmrField.inputValue = '';
-            }
-          });
-        }
-      }, null, params);
-    }
-
-    vm.checkPMRSiteUrlAvailability = function () {
-      var pmrSiteUrl = pmrField.inputValue + Config.siteDomainUrl.webexUrl;
-      pmrField.isAvailable = false;
-      pmrField.isLoading = true;
-      pmrField.isButtonDisabled = true;
-      pmrField.errorMsg = $translate.instant('firstTimeWizard.setPersonalMeetingRoomInputFieldErrorMessage');
-      return Orgservice.validateSiteUrl(pmrSiteUrl)
-        .then(function (response) {
-          if (response.isValid) {
-            pmrField.isAvailable = true;
-            pmrField.availableUrlValue = pmrField.inputValue;
-            pmrField.isError = false;
-          } else {
-            pmrField.isError = true;
-            pmrField.isButtonDisabled = false;
-          }
-          pmrField.isLoading = false;
-        })
-        .catch(function (response) {
-          if (response.status === 400) {
-            pmrField.errorMsg = $translate.instant('firstTimeWizard.personalMeetingRoomServiceErrorMessage');
-            pmrField.isError = true;
-          } else {
-            Notification.errorWithTrackingId(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
-          }
-          pmrField.isLoading = false;
-          pmrField.isButtonDisabled = false;
-        });
-    };
-
-    vm._savePersonalMeetingRoomSiteUrl = function () {
-      var url = pmrField.inputValue;
-      if (pmrField.isAvailable && pmrField.isConfirmed) {
-        PersonalMeetingRoomManagementService.addPmrSiteUrl(url)
-          .then(function () {
-            pmrField.isError = false;
-            pmrField.isDisabled = true;
-            pmrField.isButtonDisabled = true;
-            Notification.success('firstTimeWizard.setPersonalMeetingRoomSuccessMessage');
-            $rootScope.$broadcast('DISMISS_PMR_NOTIFICATION');
-          })
-          .catch(function (response) {
-            Notification.errorResponse(response, 'firstTimeWizard.personalMeetingRoomServiceErrorMessage');
-          });
-      }
-    };
-
-    $scope.$on('wizard-enterprise-pmr-event', $scope._savePersonalMeetingRoomSiteUrl);
-
-    vm.validatePmrSiteUrl = function () {
-      if (pmrField.inputValue.length > 40) {
-        pmrField.isError = true;
-      }
-
-      return pmrField.isError;
-    };
-
-    vm.onPmrInputChange = function (inputValue) {
-      if (inputValue !== pmrField.availableUrlValue && !pmrField.isDisabled) {
-        pmrField.isAvailable = false;
-        pmrField.isError = false;
-        pmrField.isButtonDisabled = false;
-        pmrField.isConfirmed = false;
-      } else if (inputValue === pmrField.availableUrlValue) {
-        pmrField.isAvailable = true;
-      }
-    };
 
     // SSO controller code
 
