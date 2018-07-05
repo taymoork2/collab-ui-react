@@ -43,7 +43,6 @@
       label: $translate.instant('timeZones.America/Los_Angeles'),
     };
     var vm = this;
-    vm.sipUpdateToggle = false;
     vm.sparkAssistantToggle = false;
 
     vm.pmrField = {
@@ -90,10 +89,8 @@
 
     function init() {
       $q.all({
-        sipUpdateToggle: FeatureToggleService.atlasSubdomainUpdateGetStatus(),
         sparkAssistantToggle: FeatureToggleService.atlasSparkAssistantGetStatus(),
       }).then(function (toggles) {
-        vm.sipUpdateToggle = toggles.sipUpdateToggle;
         vm.sparkAssistantToggle = toggles.sparkAssistantToggle;
       });
 

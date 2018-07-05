@@ -15,7 +15,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
       '$q',
       '$timeout',
       'Authinfo',
-      'FeatureToggleService',
       'Notification',
       'Orgservice',
       'SSOService',
@@ -26,7 +25,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
     this.$scope.wizard = { nextTab: jasmine.createSpy('nextTab') };
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('bcd7afcd-839d-4c61-a7a8-31c6c7f016d7');
     spyOn(this.UrlConfig, 'getSSOSetupUrl').and.returnValue('https://idbroker.webex.com/idb/idbconfig/');
-    spyOn(this.FeatureToggleService, 'atlasSubdomainUpdateGetStatus').and.returnValue(this.$q.resolve(false));
     spyOn(this.ServiceSetup, 'getTimeZones').and.returnValue(this.$q.resolve());
     spyOn(this.ServiceSetup, 'getTranslatedTimeZones').and.returnValue(['1', '2', '3']);
     spyOn(this.Notification, 'errorWithTrackingId').and.callThrough();
@@ -44,7 +42,6 @@ describe('Controller: EnterpriseSettingsCtrl', function () {
         $scope: this.$scope,
         $rootScope: this.$rootScope,
         Authinfo: this.Authinfo,
-        FeatureToggleService: this.FeatureToggleService,
       });
       this.$scope.$apply();
     };
