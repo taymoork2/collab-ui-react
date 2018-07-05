@@ -60,7 +60,7 @@ require('./_setup-wizard.scss');
       return $state.go('overview');
     }
 
-    if (Authinfo.isCustomerAdmin()) {
+    if (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) {
       sendAnalytics();
       SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);

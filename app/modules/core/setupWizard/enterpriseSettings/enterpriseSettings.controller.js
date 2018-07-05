@@ -28,6 +28,7 @@
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
     $scope.updateSSO = updateSSO;
+    $scope.isReadOnly = Authinfo.isReadOnlyAdmin();
 
     $scope.options = {
       configureSSO: 1,

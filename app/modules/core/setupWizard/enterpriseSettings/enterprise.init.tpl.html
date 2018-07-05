@@ -10,7 +10,7 @@
         <div ng-show="ssoEnabled">
           <i class="icon icon-circle status-indicator success"></i>
           <span translate="ssoModal.ssoEnabledStatus"></span>
-          <a id="modifySso" ng-if="!options.modifySSO" translate="ssoModal.modifySSOLabel" ng-click="handleModify()"></a>
+          <a id="modifySso" ng-if="!options.modifySSO && !isReadOnly" translate="ssoModal.modifySSOLabel" ng-click="handleModify()"></a>
         </div>
       </li>
     </ul>
