@@ -28,9 +28,11 @@
     <br>
     <p class="domain" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
 
-    <form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
-      <div class="domain-input" ng-if="vm.sipForm || !vm.isSSAReserved">
-        <input cs-input type="text"
+    <div ng-form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
+      <div class="domain-input-group" ng-if="vm.sipForm || !vm.isSSAReserved">
+        <input cs-input
+          class="domain-input"
+          type="text"
           id="sipDomainInput"
           name="sipDomainInput"
           cs-input-messages="vm.messages"
@@ -54,6 +56,6 @@
           ng-disabled="this.saving">
         </button>
       </div>
-    </form>
+    </div>
   </p></div>
 </div>

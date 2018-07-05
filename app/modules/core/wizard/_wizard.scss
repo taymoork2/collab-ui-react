@@ -8,10 +8,6 @@
   justify-content: center;
   margin: 3vh 4vw;
 
-  .btn {
-    margin: 0;
-  }
-
   a {
     cursor: pointer;
   }
@@ -248,6 +244,11 @@ cr-wizard-main,
 
 .wizard-main-btns {
   padding-top: 32px;
+}
+
+.wizard-default-buttons {
+  display: flex;
+  justify-content: flex-end;
 }
 
 #terms-link {
