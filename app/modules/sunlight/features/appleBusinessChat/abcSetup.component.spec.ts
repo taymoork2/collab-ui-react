@@ -494,7 +494,24 @@ describe('Care ABC Setup Component', () => {
 
       const featureNameObj = { featureName: 'careChatTpl.appleBusinessChat.featureText.name' };
       expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(controller.customErrorMessage).toBeFalsy();
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedData, jasmine.any(String), featureNameObj);
+    });
+
+    it('should display custom error message when failure contains an error type', function () {
+      //by default, this flag is false
+      expect(controller.saveTemplateErrorOccurred).toBeFalsy();
+      const failedDataWithErrorType = _.assign({}, failedData, { data: { type: 'invalidInput.duplicateId' } });
+      deferred.reject(failedDataWithErrorType);
+      controller.isEditFeature = true;
+
+      controller.submitFeature();
+      this.$scope.$apply();
+
+      const featureNameObj = { featureName: 'careChatTpl.appleBusinessChat.featureText.name' };
+      expect(controller.saveTemplateErrorOccurred).toBeTruthy();
+      expect(controller.customErrorMessage).toEqual(this.$translate.instant('careChatTpl.virtualAssistant.invalidInput.duplicateId'));
+      expect(this.Notification.errorWithTrackingId).toHaveBeenCalledWith(failedDataWithErrorType, jasmine.any(String), featureNameObj);
     });
   });
 });

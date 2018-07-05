@@ -138,6 +138,7 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
+    controller.customErrorMessage = '';
     controller.templateButtonText = this.$translate.instant('common.finish');
     controller.retryButtonDisabled = false;
     controller.$timeout(function () {

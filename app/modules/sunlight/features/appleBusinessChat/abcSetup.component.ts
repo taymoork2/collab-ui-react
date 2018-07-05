@@ -229,6 +229,7 @@ class AbcSetupCtrl extends CommonSetupCtrl {
     const controller = this;
     controller.animation = 'slide-right';
     controller.saveTemplateErrorOccurred = false;
+    controller.customErrorMessage = '';
     controller.templateButtonText = this.$translate.instant('common.finish');
     controller.retryButtonDisabled = false;
     controller.$timeout(function () {
@@ -448,7 +449,7 @@ class AbcSetupCtrl extends CommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, 'careChatTpl.virtualAssistant.messages.updateConfigFailureText', {
           featureName: controller.$translate.instant('careChatTpl.appleBusinessChat.featureText.name'),
         });
@@ -470,7 +471,7 @@ class AbcSetupCtrl extends CommonSetupCtrl {
         controller.writeMetrics();
       })
       .catch(function (response) {
-        controller.handleFeatureError();
+        controller.handleFeatureError(response);
         controller.Notification.errorWithTrackingId(response, 'careChatTpl.virtualAssistant.messages.createConfigFailureText', {
           featureName: controller.$translate.instant('careChatTpl.appleBusinessChat.featureText.name'),
         });
