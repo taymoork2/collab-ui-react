@@ -6829,6 +6829,7 @@
       "requiredclusterconfig": "Required Cluster Configuration",
       "optionalclusterconfig": "Optional Cluster Configuration",
       "hmsconfig":"Configure Video Mesh Node",
+      "hmsconfigcluster": "Configure Video Mesh Cluster",
       "finaltitle": "Finish Video Mesh Registration",
       "toNode": "Go to Node",
       "serviceconfig": "Service Configuration",
