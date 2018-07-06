@@ -242,6 +242,7 @@ module.exports = {
   uploadCallLogs: 'upload-call-logs',
   userPresence: 'user-presence',
   uwpImportantFilter: 'uwp-important-filter',
+  spark14176JabberToWebexTeams: 'spark-14176-jabber-to-webex-teams',
   webexCSV: 'webex-CSV',
   webexInternal: 'webex-internal',
   webexMEI: 'webex-MEI',
