@@ -237,8 +237,12 @@ export class DevicesCtrl implements ng.IComponentController {
       this.addDeviceIsDisabled = false;
     });
 
-    this.FeatureToggleService.atlasDeviceExportGetStatus().then((result: boolean) => {
-      this.deviceExportFeature = result;
+    const bulkPromise = this.FeatureToggleService.csdmBulkGetStatus();
+    const exportPromise = this.FeatureToggleService.atlasDeviceExportGetStatus();
+    this.$q.all([bulkPromise, exportPromise]).then(results => {
+      const bulkSupport = results[0];
+      const exportSupport = results[1];
+      this.deviceExportFeature = exportSupport && !bulkSupport;
     });
   }
 
