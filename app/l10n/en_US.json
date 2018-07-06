@@ -8519,6 +8519,7 @@
       "appleBusinessChat": "Apple Business Chat"
     },
     "featureCard": {
+      "inUseText": "In Use: {{ count }}",
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
       "templatesInUseText": "Templates: {{ numOfTemplates }}",
       "unavailableSpacesInUseText": "Usage data unavailable",
@@ -8527,7 +8528,8 @@
       "popoverDefaultSpace": "(Default Space)",
       "popoverErrorMessage": "Cannot retrieve space usage data for this Expert Virtual Assistant. Try again later.",
       "cvaPopoverMainHeader": "Customer Virtual Assistant Usage",
-      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}"
+      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}",
+      "popoverABCHeader": "Apple Business Chat: {{ numOfABC }}"
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
