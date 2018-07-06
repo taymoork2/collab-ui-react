@@ -174,6 +174,7 @@ export interface IConnectorStatus {
   clusterSerials?: string[];
   initialized?: boolean;
   maintenanceMode: ConnectorMaintenanceMode;
+  isQosOn: boolean;
   operational: boolean;
   userCapacity?: number;
   services: {

@@ -2,8 +2,9 @@ import moduleName from './index';
 
 describe('QosSectionCtrl', () => {
 
-  let $componentController, $httpBackend, $q, $scope, HybridServicesClusterService, MediaClusterServiceV2, Notification, Orgservice;
+  let $componentController, $httpBackend, $q, $scope, AddResourceSectionService, HybridServicesClusterService, MediaClusterServiceV2, Notification, Orgservice;
 
+  beforeEach(angular.mock.module('Mediafusion'));
   beforeEach(angular.mock.module(moduleName));
 
   const sampleCluster = [{
@@ -14,10 +15,14 @@ describe('QosSectionCtrl', () => {
       connectorType: 'mf-mgmt',
       upgradeState: 'some-state',
       hostname: '1.1.1.1',
+      maintenanceMode: 'off',
+      state: 'running',
     }, {
       id: 'sample-id',
       connectorType: 'mf-mgmt',
-      hostname: '1.1.1.1',
+      hostname: '1.2.3.4',
+      maintenanceMode: 'off',
+      state: 'running',
     }],
     releaseChannel: 'some-channel',
     targetType: 'mf-mgmt',
@@ -27,11 +32,12 @@ describe('QosSectionCtrl', () => {
   beforeEach(initSpies);
   afterEach(cleanup);
 
-  function dependencies (_$componentController_, _$httpBackend_, _$q_, $rootScope, _HybridServicesClusterService_, _MediaClusterServiceV2_, _Notification_, _Orgservice_) {
+  function dependencies (_$componentController_, _$httpBackend_, _$q_, $rootScope, _AddResourceSectionService_, _HybridServicesClusterService_, _MediaClusterServiceV2_, _Notification_, _Orgservice_) {
     $componentController = _$componentController_;
     $httpBackend = _$httpBackend_;
     $q = _$q_;
     $scope = $rootScope.$new();
+    AddResourceSectionService = _AddResourceSectionService_;
     HybridServicesClusterService = _HybridServicesClusterService_;
     MediaClusterServiceV2 = _MediaClusterServiceV2_;
     Notification = _Notification_;
@@ -39,11 +45,13 @@ describe('QosSectionCtrl', () => {
   }
 
   function cleanup() {
-    $componentController = $httpBackend = $q = $scope = HybridServicesClusterService = MediaClusterServiceV2 = Notification = Orgservice = undefined;
+    $componentController = $httpBackend = $q = $scope = AddResourceSectionService = HybridServicesClusterService = MediaClusterServiceV2 = Notification = Orgservice = undefined;
   }
 
   function initSpies() {
     spyOn(HybridServicesClusterService, 'getAll').and.returnValue($q.resolve(sampleCluster));
+    spyOn(AddResourceSectionService, 'getClusterList').and.returnValue($q.resolve(sampleCluster));
+    spyOn(HybridServicesClusterService, 'getQosStateForConnector').and.returnValue($q.resolve(true));
     spyOn(MediaClusterServiceV2, 'createPropertySet').and.returnValue($q.resolve({
       data: {
         id: '1234',
@@ -117,6 +125,35 @@ describe('QosSectionCtrl', () => {
     expect(controller.clusters.length).toBe(0);
     expect(controller.qosPropertySetId).toBe('1234');
     expect(Notification.errorWithTrackingId).toHaveBeenCalled();
+  });
+
+  it('should get Connector QoS state for each cluster when isQosOn is true', function () {
+    const controller = initController();
+    controller.getConnectorQosState();
+    $httpBackend.verifyNoOutstandingExpectation();
+    expect(HybridServicesClusterService.getQosStateForConnector).toHaveBeenCalled();
+    expect(controller.connectorQosEnabledCount).toBe(2);
+    expect(controller.connectorQosDisabledCount).toBe(0);
+    expect(controller.connectorQosStatus).toBe(true);
+  });
+
+  it('should get Connector QoS state for org as success', function () {
+    const controller = initController();
+    controller.enableQos = true;
+    controller.connectorCount = 2;
+    controller.connectorQosEnabledCount = 2;
+    controller.qosStateMessage();
+    $httpBackend.verifyNoOutstandingExpectation();
+    expect(controller.qosStatus).toBe('success');
+  });
+
+  it('should get Connector QoS state for org with warning', function () {
+    const controller = initController();
+    controller.enableQos = false;
+    controller.connectorQosEnabledCount = 2;
+    controller.qosStateMessage();
+    $httpBackend.verifyNoOutstandingExpectation();
+    expect(controller.qosStatus).toBe('warning');
   });
 
 });

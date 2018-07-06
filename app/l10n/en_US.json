@@ -6809,10 +6809,42 @@
     },
     "qos": {
       "title": "QoS",
+      "detail": "Quality of Service",
       "fulltitle": "Extended port range for QoS",
-      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (EF) and video (AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the Ports and Protocols <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'>documentation</a> for guidance.",
+      "shortdescription": "Enabling this setting modifies the UDP port range for Video Mesh cascade media and the Quality of Service (QoS) markings for both Video Mesh cascade and SIP client media. See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
+      "documentation":"See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
+      "longdescription": "For Video Mesh cascade media, the audio and video UDP ports are extended from two UDP ports (5004, 5006) to a larger port range. Disabling this setting reduces the required port range to two UDP ports (5004, 5006) for cascade media (beneficial for firewall traversal). However, both audio and video QoS are natively marked to a single class of #AF41.",
+      "description": "Enable this setting for quality of service (QoS) on Video Mesh node traffic. This setting marks audio (#EF) and video (#AF41) separately. Disabling this setting reduces the required port range, but you'll lose QoS functionality. See the <a href='https://collaborationhelp.cisco.com/article/WBX000028782' class='issue-link'> Ports and Protocols documentation</a> for guidance.",
       "success": "Extended port range for QoS setting was set successfully.",
-      "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later."
+      "error": "Error in saving extended port range for QoS setting. Please revert the change and try again later.",
+      "disclaimar1": "If Quality of Service enablement is taking more than two hours, ", 
+      "disclaimar2": "<a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue and temporarily disable the setting.",
+      "pendingnodes": "review pending nodes,",
+      "cluster": "(Cluster)",
+      "nodespending": "nodes pending",
+      "qosmessages": {
+        "off" : "Off",
+        "enabling": "Enabling ...",
+        "disabling": "Disabling ...",
+        "error": "Enabled, with errors",
+        "enabled": "Enabled"
+      },
+      "qosenable": {
+        "qosenabletitle": "Enable Quality of Service",
+        "qosenableline1": "Enabling Quality of Service might take up to 2 hours if there are ongoing calls on your Video Mesh Node clusters.",
+        "qosenableline2": "After you enable this setting, the nodes do not accept new calls and are restarted when current calls end.",
+        "qosenableline3": "We recommend that you bring all nodes online before you enable Quality of Service."
+      },
+      "qosdisable": {
+        "qosdisabletitle": "Disable Quality of Service",
+        "qosdisableline1": "Disabling Quality of Service might take up to 2 hours if there are ongoing calls on your Video Mesh Node clusters.",
+        "qosdisableline2": "After you disable this setting, the nodes do not accept new calls and are restarted when current calls end."
+      },
+      "pendingnodescontent": {
+        "pendingnodestitle": "Qualaity of Service pending nodes",
+        "nodes": "Pending nodes",
+        "description": "Below are the nodes where enabling Quality of Service is still pending. If the update is not applied within 2 hours, <a href='https://mycase.cloudapps.cisco.com/'  target='_blank'> open a new case </a>to resolve the issue."
+      }
     },
     "report": {
       "title": "Video Mesh",

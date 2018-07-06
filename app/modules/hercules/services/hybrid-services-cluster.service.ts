@@ -698,6 +698,12 @@ export class HybridServicesClusterService {
     }
   }
 
+  public getQosStateForConnector(connector: IConnector): boolean {
+    // `connector.connectorStatus.isQosOn` is the latest mode received via an heartbeat
+    const fromHeartbeat = (connector.maintenanceMode !== 'on' && _.get<IConnector, boolean>(connector, 'connectorStatus.isQosOn'));
+    return fromHeartbeat;
+  }
+
   private getUpgradeState(connectors: IExtendedConnector[]): 'upgraded' | 'upgrading' {
     const allAreUpgraded = _.every(connectors, { upgradeState: 'upgraded' });
     return allAreUpgraded ? 'upgraded' : 'upgrading';
