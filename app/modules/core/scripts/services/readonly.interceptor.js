@@ -41,8 +41,6 @@
       '/preloadCaches',
       'webex.com/status',
       'collaborationhelp.cisco.com/status',
-      '/orders/actions/shallowvalidation/invoke',
-      'hercules/api/v2/internals/actions/invalidateUser/invoke',
     ];
 
     var allowedState = [
