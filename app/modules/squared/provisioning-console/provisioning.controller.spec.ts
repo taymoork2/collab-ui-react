@@ -71,12 +71,12 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.pendingOrders.length).toBe(3);
     });
   });
-    describe('csv data download response', () => {
+  describe('csv data download response', () => {
     it('failure', function () {
       this.ProvisioningService.getOrders.and.returnValue(this.$q.reject({ error: 'error' }));
       initController.apply(this);
       this.controller.exportCSV(() => {
-        this.$q.reject({ error: 'error' })
+        this.$q.reject({ error: 'error' });
       });
       this.$scope.$apply();
       expect(this.Notification.errorResponse).toHaveBeenCalled();
