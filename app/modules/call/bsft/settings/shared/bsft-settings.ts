@@ -1,4 +1,4 @@
-const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
+import { ISite, Site } from 'modules/call/bsft/shared';
 
 export interface IBsftSettings {
   orgId: string;
@@ -42,6 +42,7 @@ export class BsftSettings implements IBsftSettings {
     this.site = _.isNull(bsftSettings.site) ? new Site() : new Site({
       name: _.get(bsftSettings.site, 'name'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
+      numbers: _.get(bsftSettings.site, 'numbers'),
     });
   }
 }
@@ -123,24 +124,6 @@ export class TelephoneNumber implements ITelephoneNumber {
   }) {
     this.countryCode = telephoneNumber.countryCode;
     this.number = telephoneNumber.number;
-  }
-}
-
-export interface ISite {
-  name: string;
-  timeZone: string;
-}
-
-export class Site implements Site {
-  public name: string;
-  public timeZone: string;
-
-  constructor(site: ISite = {
-    name: '',
-    timeZone: DEFAULT_TIME_ZONE,
-  }) {
-    this.name = site.name;
-    this.timeZone = site.timeZone;
   }
 }
 
