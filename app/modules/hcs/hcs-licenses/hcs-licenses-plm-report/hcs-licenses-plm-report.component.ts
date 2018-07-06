@@ -1,4 +1,6 @@
+//TODO: shravash: implement export csv function.
 //import { Promise } from 'q';
+import { HcsLicenseService, IHcsPlmLicense, IHcsPlmLicenseInfo } from 'modules/hcs/hcs-shared';
 
 type ITab = {
   title: string;
@@ -8,10 +10,10 @@ type ITab = {
 export interface IPlmGrid {
   id: string;
   plmName: string;
-  basicLicense?: string | undefined;
-  essentialLicense?: string | undefined;
-  foundationLicense?: string | undefined;
-  standardLicense?: string | undefined;
+  basicLicense?: object | undefined;
+  essentialLicense?: object | undefined;
+  foundationLicense?: object | undefined;
+  standardLicense?: object | undefined;
   plmStatus: string;
 }
 
@@ -26,6 +28,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
   public gridColumns;
   public customerId: string;
   private plmData: IPlmGrid[];
+  private plmResponseData: IHcsPlmLicense[];
   public showGrid: boolean = false;
   public tabs: ITab[];
   public title: string;
@@ -44,6 +47,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
   constructor(
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
+    private HcsLicenseService: HcsLicenseService,
     //private $rootScope: ng.IRootScopeService,
   ) {}
 
@@ -75,60 +79,15 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
       filterValue: 'Non-compliant',
       count: 0,
     }];
-    //demo temp grid data
-    this.plmData = [
-      {
-        id: '4f73f623-0197-4217-9069-50423a0cfef3',
-        plmName: 'PLM-WEST',
-        basicLicense: '2250/5000',
-        essentialLicense: '1800/2000',
-        foundationLicense: '1800/2000',
-        standardLicense: '1800/3000',
-        plmStatus: 'Compliant',
-      },
-      {
-        id: '4f73f623-0197-4217-9069-50423a0cfef5',
-        plmName: 'PLM-SOUTH',
-        basicLicense: '1070/1000',
-        essentialLicense: '1550/3000',
-        foundationLicense: '1550/2000',
-        standardLicense: '1550/3000',
-        plmStatus: 'Compliant',
-      },
-      {
-        id: '4f73f623-0197-4217-9069-50423a0cfer4',
-        plmName: 'PLM-EAST',
-        basicLicense: '1000/500',
-        essentialLicense: '3800/3000',
-        foundationLicense: '400/0',
-        standardLicense: '380/400',
-        plmStatus: 'Non-compliant',
-      },
-      {
-        id: '4f73f623-0197-4217-9069-50423a0cfem5',
-        plmName: 'PLM-NORTH',
-        basicLicense: '0/500',
-        essentialLicense: '19800/20000',
-        foundationLicense: '19800/3330',
-        standardLicense: '19800/4000',
-        plmStatus: 'Compliant',
-      },
-      {
-        id: '4f73f623-0197-4217-9069-50423a0cfeo7',
-        plmName: 'PLM-EUROPE',
-        basicLicense: '440/200',
-        essentialLicense: '10000/20000',
-        foundationLicense: '10000/20000',
-        standardLicense: '1000/2000',
-        plmStatus: 'Compliant',
-      },
-    ];
+
+    this.plmData = [];
+    this.HcsLicenseService.listPlmLicenseReports()
+      .then((resp) => {
+        this.plmResponseData = resp;
+        this.initPlmLicenseReport();
+      });
+
     this.initUIGrid();
-    // Below lines Must come in the then fxn after data is retrieved.
-    this.gridOptions.data = this.plmData;
-    this.placeholder.count = this.plmData.length;
-    this.filters[0].count = this.plmData.filter(plm => this.statusCompliant.toLowerCase() === plm.plmStatus.toLowerCase()).length;
-    this.filters[1].count = this.placeholder.count - this.filters[0].count;
   }
 
   public initUIGrid() {
@@ -156,6 +115,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
         width: '16.6%',
         cellClass: 'basicLicenseColumn',
         headerCellClass: 'basicLicense',
+        cellTemplate: require('./templates/basic.tpl.html'),
       }, {
         field: 'essentialLicense',
         displayName: this.$translate.instant('hcs.license.plmReport.essentialLicense'),
@@ -167,6 +127,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
         width: '16.6%',
         cellClass: 'essentialLicenseColumn',
         headerCellClass: 'essentialLicense',
+        cellTemplate: require('./templates/essential.tpl.html'),
       }, {
         field: 'foundationLicense',
         displayName: this.$translate.instant('hcs.license.plmReport.foundationLicense'),
@@ -178,6 +139,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
         width: '16.6%',
         cellClass: 'foundationLicenseColumn',
         headerCellClass: 'foundationLicense',
+        cellTemplate: require('./templates/foundation.tpl.html'),
       }, {
         field: 'standardLicense',
         displayName: this.$translate.instant('hcs.license.plmReport.standardLicense'),
@@ -189,6 +151,7 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
         width: '16.6%',
         cellClass: 'standardLicenseColumn',
         headerCellClass: 'standardLicense',
+        cellTemplate: require('./templates/standard.tpl.html'),
       }, {
         field: 'plmStatus',
         displayName: this.$translate.instant('hcs.license.status'),
@@ -277,5 +240,26 @@ export class HcsLicensesPlmReportCtrl implements ng.IComponentController {
     // return this.exportCsvPromise.then(res => {
     //   return res;
     // });
+  }
+
+  public initPlmLicenseReport() {
+    _.forEach(this.plmResponseData, (plm) => {
+      const licenses = _.get<IHcsPlmLicenseInfo[]>(plm, 'licenses');
+      const licenseCust: IPlmGrid = {
+        plmName: _.get(plm, 'plmName'),
+        id:  _.get(plm, 'plmId'),
+        standardLicense: _.find(licenses, { licenseType: 'HUCM_Standard' }),
+        foundationLicense: _.find(licenses, { licenseType: 'HUCM_Foundation' }),
+        basicLicense: _.find(licenses, { licenseType: 'HUCM_Basic' }),
+        essentialLicense: _.find(licenses, { licenseType: 'HUCM_Essential' }),
+        plmStatus: _.isUndefined(plm.violationsCount > 0) ? 'Compliant' : 'Non-Compliant',
+      };
+      this.plmData.push(licenseCust);
+    });
+    this.showGrid = true;
+    this.gridOptions.data = this.plmData;
+    this.placeholder.count = this.plmData.length;
+    this.filters[0].count = this.plmData.filter(plm => this.statusCompliant.toLowerCase() === plm.plmStatus.toLowerCase()).length;
+    this.filters[1].count = this.placeholder.count - this.filters[0].count;
   }
 }
