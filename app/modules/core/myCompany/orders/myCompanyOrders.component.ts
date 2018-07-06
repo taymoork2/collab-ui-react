@@ -12,7 +12,7 @@ enum OrderStatus {
 }
 enum OrderType {
   ONLINE_SPARK = 'A-SPK-M',
-  ONLINE_WEBEX = '-ONL-',
+  ONLINE_WEBEX = 'ONL-',
   TRIAL = 'Trial',
   FREE = 'Free',
 }
