@@ -15,9 +15,11 @@
           translate-values="{nDevices: $ctrl.numberOfDevices}"></h5>
       <p class="warning activeDevicesWarning" ng-if="$ctrl.numberOfActiveDevices > 0">
         <i class="icon icon-warning warning"></i>
-        <span translate="deviceBulk.deleteActiveDevicesWarning"
-              translate-interpolation="messageformat"
+        <span ng-if="$ctrl.numberOfDevices > 1"
+              translate="deviceBulk.deleteActiveDevicesWarning"
               translate-values="{nActiveDevices: $ctrl.numberOfActiveDevices}"></span>
+        <span ng-if="$ctrl.numberOfDevices === 1 && $ctrl.numberOfActiveDevices === 1"
+              translate="deviceBulk.deleteActiveDeviceWarning"></span>
       </p>
       <p class="emptyPlacesPrompt">
         <input cs-input
