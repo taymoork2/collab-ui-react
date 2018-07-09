@@ -29,6 +29,7 @@ export default angular
     notificationModuleName,
     urlConfigModuleName,
     userServiceModuleName,
+    require('ct-ui-router-extras.previous').default,
     require('@collabui/collab-ui-ng').default,
     require('angular-translate'),
     require('angular-ui-router'),

@@ -98,7 +98,7 @@
                 class="matter-detail__action__release">
                   <button cs-btn type="button"
                   class="btn btn--circle"
-                  aria-label="{{::'legalHold.details.release' | translate}}"
+                  aria-label="{{::'legalHold.detail.release' | translate}}"
                   ng-disabled="$ctrl.isProcessing"
                   ng-click="$ctrl.releaseMatter()">
                   <span class="icon icon-circle-data"></span>
@@ -127,7 +127,7 @@
           </div>
           <div class="row">
             <div class="cs-input-group small-block-grid-3 medium-block-grid-5 text-center">
-              <div class="matter-detail__action__export" ng-if="$ctrl.matter.numberOfCustodians !== 0">
+              <div class="matter-detail__action__export" ng-if="$ctrl.hasCustodians">
                 <button cs-btn type="button"
                   class="btn btn--circle btn--primary"
                   aria-label="{{::'common.export' | translate}}"
@@ -148,7 +148,7 @@
                   translate="common.add">
                 </label>
               </div>
-              <div ng-if="$ctrl.isActive()"
+              <div ng-if="$ctrl.isActive() && $ctrl.hasCustodians"
                 class="matter-detail__action__remove">
                 <button cs-btn type="button"
                 class="btn btn--circle btn--attention"

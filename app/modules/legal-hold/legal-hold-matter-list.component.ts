@@ -233,10 +233,7 @@ export class LegalHoldMatterListController implements ng.IComponentController {
 
   public showDetail(item: IMatterJsonDataForDisplay) {
     const matter = _.find(this.gridData_, { caseId: item.caseId });
-    this.$state.go('legalhold.detail', {
-      matter: matter,
-      createdByName: item.createdByName,
-    });
+    this.$state.go('legalhold.detail', { matter: matter });
   }
 }
 
