@@ -14,7 +14,7 @@ export class BsftSettings implements IBsftSettings {
   public name: string;
   public postalAddress: IPostalAddress | null;
   public contactInfo: IContactInfo | null;
-  public site: ISite | null;
+  public site: ISite;
   public order: IBsftOrder | null;
 
   constructor(bsftSettings: IBsftSettings = {
@@ -43,6 +43,8 @@ export class BsftSettings implements IBsftSettings {
       name: _.get(bsftSettings.site, 'name'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
       numbers: _.get(bsftSettings.site, 'numbers'),
+      emergencyAddress: _.get(bsftSettings.site, 'emergencyAddress'),
+      contact: _.get(bsftSettings.site, 'contact'),
     });
   }
 }
@@ -63,11 +65,11 @@ export class PostalAddress implements IPostalAddress {
   public country: string;
 
   constructor(postalAddress: IPostalAddress = {
-    address1: '123 Jupiter',
-    city: 'Richardson',
-    state: 'TX',
-    postalCode: '75041',
-    country: 'US',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
   }) {
     this.address1 = postalAddress.address1;
     this.city = postalAddress.city;
@@ -91,9 +93,9 @@ export class ContactInfo implements IContactInfo {
   public telephoneNumber: ITelephoneNumber | null;
 
   constructor(contactInfo: IContactInfo = {
-    contactFirstName: 'Art',
-    contactLastName: 'Vandelay',
-    emailAddress: 'samwiforcisco+bsfttest@gmail.com',
+    contactFirstName: '',
+    contactLastName: '',
+    emailAddress: '',
     telephoneNumber: null,
   }) {
     this.contactFirstName = contactInfo.contactFirstName;
