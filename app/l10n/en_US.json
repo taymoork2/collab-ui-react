@@ -10345,6 +10345,10 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Webex remote SIP destinations configuration and disables the service for all users."
+      },
+      "jabberToWebexTeams": {
+        "title": "Jabber Service",
+        "description": "Enables Webex Teams messaging for Jabber users, to replace other Jabber messaging providers. You cannot use Jabber Service with XMPP options like IM and Presence."
       }
     },
     "showMore": "View all",

@@ -65,7 +65,7 @@
       <hybrid-media-inactive-card ng-if="$ctrl.isInactive('squared-fusion-media')" class="cs-card cs-card--small inactive-card"></hybrid-media-inactive-card>
       <hybrid-data-security-inactive-card ng-if="$ctrl.isInactive('spark-hybrid-datasecurity')" class="cs-card cs-card--small inactive-card"></hybrid-data-security-inactive-card>
       <hybrid-testing-inactive-card ng-if="$ctrl.isInactive('spark-hybrid-testing')" class="cs-card cs-card--small inactive-card"></hybrid-testing-inactive-card>
-      <div
+      <jabber-to-webex-teams-inactive-card
         cr-feature-toggle
         feature-show="spark-14176-jabber-to-webex-teams"
         ng-if="!$ctrl.fakeIsJabberSetupDone()"
@@ -73,7 +73,7 @@
         class="cs-card cs-card--small inactive-card"
       >
         TODO (spark-14176): implement 'jabber-to-webex-teams-inactive-card'
-      </div>
+      </jabber-to-webex-teams-inactive-card>
     </cs-card-layout>
     <cs-card-layout block-view="true" ng-if="$ctrl.isPartnerAdmin()">
       <hcs-inactive-card ng-if="$ctrl.isInactive('hcs')" class="cs-card cs-card--small inactive-card"></hcs-inactive-card>

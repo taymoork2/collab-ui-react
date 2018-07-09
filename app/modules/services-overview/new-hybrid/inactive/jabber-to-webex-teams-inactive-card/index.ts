@@ -1,5 +1,3 @@
-import './jabber-to-webex-teams-inactive-card.scss';
-
 import { JabberToWebexTeamsInactiveCardComponent } from './jabber-to-webex-teams-inactive-card.component';
 import * as ngTranslateModuleName from 'angular-translate';
 import collabUiModuleName from '@collabui/collab-ui-ng';
