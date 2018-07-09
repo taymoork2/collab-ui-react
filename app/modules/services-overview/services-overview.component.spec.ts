@@ -14,6 +14,7 @@ describe('ServicesOverviewController', () => {
   let $scope: ng.IScope;
   let $state: ng.ui.IStateService;
   let ctrl: ServicesOverviewController;
+  let Analytics;
   let Authinfo;
   let CloudConnectorService: CloudConnectorService;
   let Config: Config;
@@ -44,6 +45,7 @@ describe('ServicesOverviewController', () => {
   beforeEach(inject(dependencies));
   beforeEach(() => {
     enabledFeatureToggles = [];
+    spyOn(Analytics, 'trackEvent');
     spyOn(Authinfo, 'getConferenceServicesWithoutSiteUrl').and.returnValue(false);
     spyOn(Authinfo, 'getConferenceServicesWithLinkedSiteUrl').and.returnValue(false);
     getRoles = spyOn(Authinfo, 'getRoles').and.returnValue([]);
@@ -67,10 +69,11 @@ describe('ServicesOverviewController', () => {
 
   });
 
-  function dependencies(_$componentController_, _$q_, _$rootScope_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_, _UserOverviewService_) {
+  function dependencies(_$componentController_, _$q_, _$rootScope_, _Analytics_, _Authinfo_, _CloudConnectorService_, _Config_, _EnterprisePrivateTrunkService_, _FeatureToggleService_, _HybridServicesClusterService_, _HybridServicesClusterStatesService_, _ServiceDescriptorService_, _$state_, _UserOverviewService_) {
     $componentController = _$componentController_;
     $q = _$q_;
     $scope = _$rootScope_.$new();
+    Analytics = _Analytics_;
     Authinfo = _Authinfo_;
     CloudConnectorService = _CloudConnectorService_;
     Config = _Config_;

@@ -18,6 +18,7 @@ describe('component: speedDial', () => {
       '$scope',
       '$timeout',
       '$httpBackend',
+      'Analytics',
       'Authinfo',
       'BlfInternalExtValidation',
       'BlfURIValidation',
@@ -36,6 +37,7 @@ describe('component: speedDial', () => {
     this.reordering = false;
     this.callDest = { phonenumber: '1234' };
 
+    spyOn(this.Analytics, 'trackEvent');
     spyOn(this.SpeedDialService, 'getSpeedDials').and.returnValue(this.$q.resolve({
       speedDials: [],
     }));
