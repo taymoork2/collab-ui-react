@@ -1,6 +1,6 @@
 export enum MatterState {
-  ACTIVE = 'active',
-  RELEASED = 'released',
+  ACTIVE = 'ACTIVE',
+  RELEASED = 'RELEASED',
 }
 
 export enum ImportMode {
