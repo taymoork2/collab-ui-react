@@ -55,4 +55,11 @@ describe('Component: DgcPartnerTabParticipants', () => {
     this.controller.getParticipantsActivity();
     expect(this.controller.gridData[0].activity).toBeDefined();
   });
+
+  it('should get correct data when call getGatewayIP', function () {
+    const mockData = 'https://189.113.165.38:80';
+    initComponent.call(this);
+    const ipStr = this.controller.getGatewayIP(mockData);
+    expect(ipStr).toBe('189.113.165.38');
+  });
 });

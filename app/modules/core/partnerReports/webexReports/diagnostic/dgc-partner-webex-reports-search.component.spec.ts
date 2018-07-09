@@ -169,6 +169,9 @@ describe('Component: DgcPartnerWebexReportsSearch', () => {
       initComponent.call(this);
       expect(this.controller.isValidEmail('foo@bar.com')).toBe(true);
       expect(this.controller.isValidEmail('f1@b.ar')).toBe(true);
+      expect(this.controller.isValidEmail('foo+@bar.com')).toBe(true);
+      expect(this.controller.isValidEmail('foo@bar+.com')).toBe(true);
+      expect(this.controller.isValidEmail('foo@bar.com+')).toBe(true);
       expect(this.controller.isValidEmail('f@b.ar')).toBe(false);
       expect(this.controller.isValidEmail('foo@a.r')).toBe(false);
     });
