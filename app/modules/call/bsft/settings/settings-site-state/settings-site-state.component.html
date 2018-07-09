@@ -1,0 +1,17 @@
+<div ng-form="siteStateForm">
+  <label class="sub-section__label">State</label>
+  <div class="row">
+    <div class="columns medium-4 collapse-both" style="padding-bottom: 1rem;">
+      <cs-select
+        ng-model="$ctrl.state"
+        options="$ctrl.stateList"
+        labelfield="name"
+        valuefield="abbreviation"
+        placeholder="::'common.select' | translate"
+        input-placeholder=""
+        required="true"
+        filter="true"
+        on-change-fn="$ctrl.onStateChanged()">
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { BsftSettingsOptionsService, BsftSettingsOptions, BsftSettingsService, BsftSettingsData } from './shared';
 import { Notification } from 'modules/core/notifications';
+import { FtswConfigService } from 'modules/call/bsft/shared/ftsw-config.service';
 
 class BsftSettingsCtrl implements ng.IComponentController {
   public ftsw: boolean;
@@ -17,6 +18,7 @@ class BsftSettingsCtrl implements ng.IComponentController {
     private $q: ng.IQService,
     private $scope: ng.IScope,
     private Authinfo,
+    private FtswConfigService: FtswConfigService,
     ) {}
 
   public $onInit(): void {
@@ -56,31 +58,62 @@ class BsftSettingsCtrl implements ng.IComponentController {
     _.set(this.bsftSettingsData.bsftSettings.site, 'name', name);
   }
 
+  public onSiteAddressChanged(address1, address2) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'address1', address1);
+    _.set(this.bsftSettingsData.bsftSettings.site, 'address2', address2);
+  }
+
+  public onSiteCityChanged(city) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'city', city);
+  }
+
+  public onSiteStateChanged(state) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'state', state);
+  }
+
+  public onSiteCountryChanged(country) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'country', country);
+  }
+
   public onTimeZoneChanged(timeZone) {
     _.set(this.bsftSettingsData.bsftSettings.site, 'timeZone', timeZone);
   }
 
   public onContactFirstNameChanged(firstName) {
-    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'contactFirstName', firstName);
+    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'firstName', firstName);
   }
 
   public onContactLastNameChanged(lastName) {
-    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'contactLastName', lastName);
+    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'lastName', lastName);
+  }
+
+  public onContactPhoneNumberChanged(phoneNumber) {
+    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'phoneNumber', phoneNumber);
   }
 
   public onContactEmailChanged(email) {
-    _.set(this.bsftSettingsData.bsftSettings.contactInfo, 'emailAddress', email);
+    _.set(this.bsftSettingsData.bsftSettings.site.contact, 'email', email);
   }
 
-  public setupBsftNext(): ng.IPromise<void> {
-    return this.save();
+  public onSiteEmergencyAddressChanged(address1, address2) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address1', address1);
+    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address2', address2);
   }
 
-  public save(): ng.IPromise<void> {
-    this.loading = true;
-    return this.BsftSettingsService.save(this.bsftSettingsData.bsftSettings)
-      .then(() => {})
-      .finally(() => this.loading = false);
+  public onSiteEmergencyCityChanged(city) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.city', city);
+  }
+
+  public onSiteEmergencyStateChanged(state) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.state', state);
+  }
+
+  public onSiteEmergencyCountryChanged(country) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.country', country);
+  }
+
+  public setupBsftNext(): void {
+    return this.FtswConfigService.addSite(this.bsftSettingsData.bsftSettings.site);
   }
 }
 

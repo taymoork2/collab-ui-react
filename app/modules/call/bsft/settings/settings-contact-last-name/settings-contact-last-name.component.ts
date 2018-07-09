@@ -14,7 +14,7 @@ class BsftContactLastNameCtrl implements ng.IComponentController {
 
   public onNameChanged(): void {
     this.onChangeFn({
-      name: this.lastName,
+      lastName: this.lastName,
     });
   }
 }

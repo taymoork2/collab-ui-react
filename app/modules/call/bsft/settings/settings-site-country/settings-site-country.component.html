@@ -1,0 +1,17 @@
+<div ng-form="siteCountryForm">
+  <label class="sub-section__label">Country</label>
+  <div class="row">
+    <div class="columns medium-4 collapse-both" style="padding-bottom: 1rem;">
+      <cs-select
+        ng-model="$ctrl.country"
+        options="$ctrl.countryList"
+        labelfield="name"
+        valuefield="abbreviation"
+        placeholder="::'common.select' | translate"
+        input-placeholder=""
+        required="true"
+        filter="true"
+        on-change-fn="$ctrl.onCountryChanged()">
+    </div>
+  </div>
+</div>

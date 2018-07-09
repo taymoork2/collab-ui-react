@@ -21,4 +21,8 @@ export class FtswConfigService {
   public setSites(sites: Site[]) {
     _.set(this.ftswConfig, 'sites', sites);
   }
+
+  public addSite(site: Site) {
+    this.ftswConfig.sites.push(site);
+  }
 }
