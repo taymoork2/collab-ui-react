@@ -4,7 +4,7 @@ import { JabberToWebexTeamsActiveCardComponent } from './jabber-to-webex-teams-a
 import * as ngTranslateModuleName from 'angular-translate';
 import collabUiModuleName from '@collabui/collab-ui-ng';
 
-export default angular.module('services-overview.new-hybrid.active.jabber-to-webex-teams-inactive-card', [
+export default angular.module('services-overview.new-hybrid.active.jabber-to-webex-teams-active-card', [
   ngTranslateModuleName,
   collabUiModuleName,
 ])

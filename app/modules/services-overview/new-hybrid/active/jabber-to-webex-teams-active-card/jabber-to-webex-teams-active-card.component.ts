@@ -10,9 +10,8 @@ export class JabberToWebexTeamsActiveCardController implements ng.IComponentCont
   }
 
   // TODO (spark-14176): rm this method once back-end is hooked up and can start using appropriate service id
-  public fakeAtLeastOneProfileSet(): boolean {
-    const ucManagerProfiles = this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles');
-    return ucManagerProfiles !== null && ucManagerProfiles.length > 0;
+  public fakeHasAtLeastOneProfileSet(): boolean {
+    return !_.isEmpty(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
   }
 }
 

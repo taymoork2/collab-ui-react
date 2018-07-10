@@ -1,18 +1,16 @@
 <article>
   <div class="active-card_header">
-    <h4 translate="servicesOverview.cards.jabberForWebexTeams.title"></h4>
+    <h4 translate="servicesOverview.cards.jabberToWebexTeams.title"></h4>
   </div>
   <div class="active-card_content">
-    <p translate="servicesOverview.cards.jabberForWebexTeams.description"></p>
-  </div>
-  <div class="active-card_content">
-    <div class="active-card_section">
-      <div class="active-card_action" ng-if="$ctrl.fakeAtLeastOneProfileSet()"><a ng-click="$ctrl.manageProfiles()"  translate="servicesOverview.cards.jabberForWebexTeams.edit"></a></div>
-      <div class="active-card_action" ng-if="!$ctrl.fakeAtLeastOneProfileSet()"><a ng-click="$ctrl.manageProfiles()"  translate="servicesOverview.cards.jabberForWebexTeams.add"></a></div>
+    <p translate="servicesOverview.cards.jabberToWebexTeams.description"></p>
+    <div class="active-card_section active-card__content-links">
+      <div class="active-card_action" ng-if="$ctrl.fakeHasAtLeastOneProfileSet()">
+        <a ng-click="$ctrl.manageProfiles()"  translate="servicesOverview.cards.jabberToWebexTeams.edit"></a>
+      </div>
+      <div class="active-card_action" ng-if="!$ctrl.fakeHasAtLeastOneProfileSet()">
+        <a ng-click="$ctrl.manageProfiles()"  translate="servicesOverview.cards.jabberToWebexTeams.add"></a>
+      </div>
     </div>
-  </div>
-  
-  <div class="active-card_footer">
-    
   </div>
 </article>

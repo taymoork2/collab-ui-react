@@ -3,7 +3,7 @@ import { JabberToWebexTeamsActiveCardController } from './jabber-to-webex-teams-
 
 type Test = atlas.test.IComponentTest<JabberToWebexTeamsActiveCardController, {}, {}>;
 
-// TODO (mipark2): add unit-tests
+// TODO (changlol): add unit-tests
 describe('Component: jabberToWebexTeamsActiveCard:', () => {
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
