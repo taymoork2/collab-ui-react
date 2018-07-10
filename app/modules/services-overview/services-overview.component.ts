@@ -48,6 +48,7 @@ export class ServicesOverviewController implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $q: ng.IQService,
     private $state: ng.ui.IStateService,
+    private $window: ng.IWindowService,
     private Analytics,
     private Authinfo,
     private CloudConnectorService: CloudConnectorService,
@@ -288,8 +289,14 @@ export class ServicesOverviewController implements ng.IComponentController {
     return _.includes(this._servicesToDisplay, serviceId) && _.includes(this._servicesInactive, serviceId);
   }
 
+  // TODO (spark-14176): rm this method once back-end is hooked up and can start using appropriate service id
+  public fakeIsJabberSetupDone(): boolean {
+    return this.$window.sessionStorage.getItem('spark14176.isJabberSetupDone') === 'true';
+  }
+
   public isAnyHybridServiceActive(): boolean {
-    return this._servicesActive.length > 0;
+    // TODO (spark-14176): rm call to 'this.fakeIsJabberSetupDone()' once back-end is hooked up
+    return this._servicesActive.length > 0 || this.fakeIsJabberSetupDone();
   }
 
   public showOnPremisesCard(): boolean {
