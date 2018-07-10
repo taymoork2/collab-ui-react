@@ -181,7 +181,9 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
       this.resetFile();
       return false;
     }
-    this.csvEmailsArray = this.$.csv.toArrays(this.file);
+    //algendel: '\n' is added as a workaround for this bug: https://github.com/evanplaice/jquery-csv/issues/72
+    // toArrays() cuts off last record without new line on single columns csv
+    this.csvEmailsArray = this.$.csv.toArrays(this.file + '\n');
     if (_.isEmpty(this.csvEmailsArray) || !_.isArray(this.csvEmailsArray[0])) {
       return this.returnValidationResult(false, this.$translate.instant('legalHold.custodianImport.errorCsvBadFormat'));
     }
@@ -217,8 +219,7 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
     if (_.indexOf(this.csvEmailsArray[0], this.CSV_IMPORT_HEADER) > -1) {
       this.csvEmailsArray.shift();
     }
-    const emailsArray = _.flatten(this.csvEmailsArray);
-    const chunkedArray = _.chunk(emailsArray, LegalHoldCustodianImportController.DEFAULTS.importChunkSize);
+    const chunkedArray = this.cleanAndChunkUserArray(this.csvEmailsArray, LegalHoldCustodianImportController.DEFAULTS.importChunkSize);
     this.totalChunks = chunkedArray.length;
     return this.LegalHoldService.convertUsersChunk(chunkedArray, GetUserBy.EMAIL)
       .then((result) => {
@@ -231,6 +232,13 @@ export class LegalHoldCustodianImportController implements ng.IComponentControll
         };
         this.setResults(false, result, errorResponse);
       });
+  }
+
+  private cleanAndChunkUserArray(userArray: string[], chunkSize: number): string[][] {
+    return _.chain(userArray).flatten().uniq()
+      .without('')
+      .chunk(chunkSize)
+      .value() as string[][];
   }
 
   private setResults(isSuccess: boolean, result: IImportResult, errorResponse?): void {
