@@ -2,6 +2,8 @@ require('./_trials.scss');
 
 var TrialService = require('./trial.service');
 var TrialWebexService = require('./trialWebex.service');
+var TrialBroadCloudCommonAreaService = require('./trial-broadcloud-common-area.service');
+var TrialBroadCloudStdService = require('./trial-broadcloud-std.service');
 
 (function () {
   'use strict';
@@ -31,6 +33,8 @@ var TrialWebexService = require('./trialWebex.service');
     .factory('TrialTimeZoneService', require('./trialTimeZone.service'))
     .factory('TrialWebexService', TrialWebexService.TrialWebexService)
     .factory('WebexOrderStatusResource', TrialWebexService.WebexOrderStatusResource)
+    .service('TrialBroadCloudStdService', TrialBroadCloudStdService.TrialBroadCloudStdService)
+    .service('TrialBroadCloudCommonAreaService', TrialBroadCloudCommonAreaService.TrialBroadCloudCommonAreaService)
     .name;
 })();
 

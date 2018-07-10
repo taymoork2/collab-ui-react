@@ -153,7 +153,7 @@ module.exports = {
   hI1635: 'h-i1635', //PSTN Porting
   hI1638: 'h-i1638', //TaaS
   hI802: 'h-i802',
-  hI1776: 'h-i1776',
+  hI1776: 'h-i1776', // BroadFlex Trial Support
   hRegionalTones: 'h-regional-tones',
   huronAAContextService: 'huron-aa-context-service',
   huronAADynannounce: 'huron-aa-dynannounce',

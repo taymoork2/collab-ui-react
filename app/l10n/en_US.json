@@ -6164,6 +6164,9 @@
     "meeting": "Cisco Webex Team Meetings",
     "webex": "Cisco Webex Enterprise Edition 200 with CMR/TNU+",
     "call": "Cisco Webex Calling",
+    "broadCloudFlex": "BroadCloud Flex",
+    "broadCloudStandard": "Standard",
+    "broadCloudPlaces": "Places",
     "careDescription": "Care services require Cisco Webex Teams as a prerequisite.<br>Additionally, Cisco Webex Calling is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
@@ -9401,6 +9404,7 @@
   "subscriptions": {
     "activeUsers": "Active Users",
     "advancedReporting": "Advanced Reporting",
+    "broadCloudFlex": "BroadCloud Flex",
     "call": "Calling",
     "care": "Care",
     "changePlan": "Change Plan",
