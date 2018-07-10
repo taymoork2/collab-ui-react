@@ -72,6 +72,11 @@ describe('UserListCtrl: Ctrl', function () {
     spyOn(this.Orgservice, 'getOrg').and.callFake(function (callback) {
       callback(_this.getOrgJson, 200);
     });
+    spyOn(this.Orgservice, 'getAdminOrgAsPromise').and.returnValue(this.$q.resolve({
+      data: {
+        isOnBoardingEmailSuppressed: false,
+      },
+    }));
     spyOn(this.Authinfo, 'isCSB').and.returnValue(true);
     spyOn(this.Authinfo, 'getOrgId').and.returnValue(this.currentUser.meta.organizationID);
     this.isCiscoSpy = spyOn(this.Authinfo, 'isCisco').and.returnValue(false);
@@ -510,6 +515,20 @@ describe('UserListCtrl: Ctrl', function () {
       expect(this.controller.canShowResendInvite(this.user)).toBeFalsy();
       this.user.userStatus = 'error';
       expect(this.controller.canShowResendInvite(this.user)).toBeTruthy();
+    });
+
+    it('should return false if isEmailSuppressed is true', function () {
+      this.user.userStatus = 'pending';
+      expect(this.controller.isEmailSuppressed).toBe(false);
+      expect(this.controller.canShowResendInvite(this.user)).toBe(true);
+
+      this.Orgservice.getAdminOrgAsPromise.and.returnValue(this.$q.resolve({
+        data: {
+          isOnBoardingEmailSuppressed: true,
+        },
+      }));
+      initController.apply(this);
+      expect(this.controller.canShowResendInvite(this.user)).toBe(false);
     });
 
     it('should return false if org is dirsynch', function () {
