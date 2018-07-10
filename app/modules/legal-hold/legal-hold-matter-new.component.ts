@@ -56,10 +56,9 @@ export class LegalHoldMatterNewController implements ng.IComponentController {
 
   public addUsersToMatter(custodianIds: string[]) {
     this.LegalHoldService.addUsersToMatter(this.Authinfo.getOrgId(), this.matter.caseId, custodianIds)
-      .then(matter => {
-        this.matter = matter;
+      .then(updateResults => {
         this.isDone = true;
-        this.importComponentApi.displayResults();
+        this.importComponentApi.displayResults(updateResults.failList, ImportMode.ADD);
         this.$rootScope.$emit(Events.CHANGED);
       })
       .catch(error => {

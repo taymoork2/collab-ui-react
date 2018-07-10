@@ -3,7 +3,6 @@ import { LegalHoldCustodiansManageController } from './legal-hold-custodians-man
 import { ImportMode, Events } from './legal-hold.enums';
 import { LegalHoldCustodianImportComponent } from './legal-hold-custodian-import.component';
 import { IMatterJsonDataForDisplay } from './legal-hold.interfaces';
-import { Matter } from './matter.model';
 
 type Test = atlas.test.IComponentTest<LegalHoldCustodiansManageController, {
   $previousState
@@ -22,6 +21,10 @@ type Test = atlas.test.IComponentTest<LegalHoldCustodiansManageController, {
 
 describe('Component: legalHoldMatterDetail', () => {
   const testMatter = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'))[1];
+  const returnFromUpdateUsers = {
+    failList: ['123', 345],
+    userListSize: 3,
+  };
 
   beforeEach(function (this: Test) {
     this.components = {
@@ -48,8 +51,8 @@ describe('Component: legalHoldMatterDetail', () => {
     spyOn(this.Notification, 'errorResponse');
     spyOn(this.$rootScope, '$emit').and.callThrough();
     spyOn(this.$state, 'go');
-    spyOn(this.LegalHoldService, 'addUsersToMatter').and.returnValue(this.$q.resolve(Matter.matterFromResponseData(testMatter)));
-    spyOn(this.LegalHoldService, 'removeUsersFromMatter').and.returnValue(this.$q.resolve(Matter.matterFromResponseData(testMatter)));
+    spyOn(this.LegalHoldService, 'addUsersToMatter').and.returnValue(this.$q.resolve(returnFromUpdateUsers));
+    spyOn(this.LegalHoldService, 'removeUsersFromMatter').and.returnValue(this.$q.resolve(returnFromUpdateUsers));
     this.$scope.fakeMode = ImportMode.ADD;
     this.$scope.fakeMatter = testMatter as IMatterJsonDataForDisplay;
   });
@@ -106,13 +109,13 @@ describe('Component: legalHoldMatterDetail', () => {
       const updatedMatter = _.clone(testMatter);
       expect(_.get(updatedMatter, 'usersUUIDList.length')).toBe(3);
       updatedMatter.usersUUIDList = ['singleUser'];
-      this.LegalHoldService.addUsersToMatter.and.returnValue(this.$q.resolve(Matter.matterFromResponseData(updatedMatter)));
+      this.LegalHoldService.addUsersToMatter.and.returnValue(this.$q.resolve(returnFromUpdateUsers));
       const promise: ng.IPromise<any> = this.controller.updateCustodians([]);
       expect(promise).toBeResolved();
       const eventArgs = this.$rootScope.$emit.calls.mostRecent().args;
       expect(eventArgs[0]).toBe(Events.CHANGED);
       expect(eventArgs[1]).toEqual([this.$scope.fakeMatter.caseId]);
-      expect(this.controller.matter.numberOfCustodians).toBe(1);
+      expect(this.controller.matter.numberOfCustodians).toBe(3);
       expect(this.Notification.errorResponse).not.toHaveBeenCalled();
     });
 

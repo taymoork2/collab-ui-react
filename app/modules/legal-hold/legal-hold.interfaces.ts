@@ -31,6 +31,11 @@ export interface IImportComponentApi {
   displayResults: Function;
 }
 
+export interface IUserUpdateResult {
+  userListSize: number;
+  failList: string[];
+}
+
 export interface IImportResult {
   success: ICustodian[];
   error: ICustodian[];

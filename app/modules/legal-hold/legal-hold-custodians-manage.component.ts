@@ -2,8 +2,7 @@ import { LegalHoldService } from './legal-hold.service';
 import { Notification } from 'modules/core/notifications';
 import { Authinfo } from 'modules/core/scripts/services/authinfo';
 import { ImportMode, Events } from './legal-hold.enums';
-import { Matter } from './matter.model';
-import { IImportComponentApi, IMatterJsonDataForDisplay } from './legal-hold.interfaces';
+import { IImportComponentApi, IMatterJsonDataForDisplay, IUserUpdateResult } from './legal-hold.interfaces';
 
 export class LegalHoldCustodiansManageController implements ng.IComponentController {
   public matter: IMatterJsonDataForDisplay;
@@ -45,13 +44,13 @@ export class LegalHoldCustodiansManageController implements ng.IComponentControl
   }
 
   public updateCustodians(custodianList: string[]): ng.IPromise<void> {
-    const promise: ng.IPromise<Matter> = (this.mode === ImportMode.ADD) ?
+    const promise: ng.IPromise<IUserUpdateResult> = (this.mode === ImportMode.ADD) ?
       this.LegalHoldService.addUsersToMatter(this.Authinfo.getOrgId(), this.matter.caseId, custodianList)
       : this.LegalHoldService.removeUsersFromMatter(this.Authinfo.getOrgId(), this.matter.caseId, custodianList);
-    return promise.then((matterObject: Matter) => {
+    return promise.then(updateResult => {
       this.isDone = true;
-      this.matter.numberOfCustodians = _.isArray(matterObject.userList) ? _.size(matterObject.userList) : 0;
-      this.importComponentApi.displayResults();
+      this.matter.numberOfCustodians = updateResult.userListSize;
+      this.importComponentApi.displayResults(updateResult.failList, this.mode);
       this.$rootScope.$emit(Events.CHANGED, [this.matter.caseId] );
     })
       .catch((result) => {
