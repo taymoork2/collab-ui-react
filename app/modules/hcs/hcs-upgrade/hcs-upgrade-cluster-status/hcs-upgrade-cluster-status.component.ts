@@ -151,10 +151,10 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
       const clusterStatusGridRow: IClusterStatusGridRow = {
         orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
-        previousUpgradeTime: previousTime ? `${previousTime.hours()}:${previousTime.minutes()}:${previousTime.seconds()}` : '',
+        previousUpgradeTime: previousTime ? `${previousTime.hours()}:${_.toString(previousTime.minutes()).length > 1 ? previousTime.minutes() : '0' + previousTime.minutes()}:${_.toString(previousTime.seconds()).length > 1 ? previousTime.seconds() : '0' + previousTime.seconds()}` : '',
         startTime: nodeTask.started ? this.$filter('date')(nodeTask.started, 'dd MMM y HH:mm', 'UTC') : '',
         nodeStatus: nodeTask.status,
-        elapsedTime: elapsedTime ? `${elapsedTime.hours()}:${elapsedTime.minutes()}:${elapsedTime.seconds()}` : '',
+        elapsedTime: elapsedTime ? `${elapsedTime.hours()}:${_.toString(elapsedTime.minutes()).length > 1 ? elapsedTime.minutes() : '0' + elapsedTime.minutes()}:${_.toString(elapsedTime.seconds()).length > 1 ? elapsedTime.seconds() : '0' + elapsedTime.seconds()}` : '',
       };
       this.clusterGridData.push(clusterStatusGridRow);
     });

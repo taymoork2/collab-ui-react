@@ -45,6 +45,8 @@ export class BsftSettings implements IBsftSettings {
       numbers: _.get(bsftSettings.site, 'numbers'),
       address: _.get(bsftSettings.site, 'address'),
       contact: _.get(bsftSettings.site, 'contact'),
+      defaultLocation: _.get(bsftSettings.site, 'defaultLocation'),
+      licenses: _.get(bsftSettings.site, 'licenses'),
     });
   }
 }

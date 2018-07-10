@@ -1779,6 +1779,10 @@
     "lastName": "Last Name",
     "learnMore": "Learn More",
     "leave": "Leave",
+    "licenses": {
+      "standard": "Standard",
+      "places": "Places"
+    },
     "loading": "Loading",
     "memberCount": "{{count}} Members",
     "members": "Members",
@@ -11895,6 +11899,18 @@
       "phoneNumber": "Phone Numbers",
       "prevPortedNumber": "Previously Ported",
       "bcPortedNumber": "BroadCloud Ported"
+    },
+    "ftsw": {
+      "siteList": {
+        "deleteModal": {
+          "title": "Are you sure?",
+          "description": "You are about to delete a Location"
+        },
+        "infoHeader": "Add up to 10 locations. You can add more later in Control Hub after setup is complete.",
+        "licenseCount": "{{available}} of {{total}}",
+        "placesLicenseAvilable": "Places Licenses Available",
+        "standardLicenseAvailable": "Standared Licenses Available"
+      }
     }
   }
 }
