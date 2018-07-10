@@ -19,11 +19,6 @@ describe('Service: WebExSite Service', function () {
         subscriptionId: '284bcf35-dc0e-441c-ae1b-11a255959016',
         externalSubscriptionId: 'ex456',
       },
-      {
-        subscriptionId: 'af3bcf35-dc0e-441c-ae1b-11a255959016',
-        externalSubscriptionId: 'ex789',
-        status: 'PENDING',
-      },
     ];
     this.allLicenses = getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json').allLicenses;
     const allCenterDetails = getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json');
@@ -54,7 +49,7 @@ describe('Service: WebExSite Service', function () {
       this.WebExSiteService.getAllCenterDetailsFromSubscriptions();
       this.$scope.$apply();
     });
-    it('should call the server once for each subscrption', function () {
+    it('should call the server once for each subscription', function () {
       expect(this.SetupWizardService.getExistingConferenceServiceDetails).toHaveBeenCalledTimes(2);
     });
     it('should assign the filtered results to the centerDetailsFromSubscriptions property', function () {
