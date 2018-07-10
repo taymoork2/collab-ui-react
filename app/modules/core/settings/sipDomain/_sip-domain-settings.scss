@@ -1,4 +1,3 @@
-@import '~@collabui/collab-ui/scss/settings/colors';
 @import '~@collabui/collab-ui/scss/tools/functions/core'; // vr-adjust(), rem-calc()
 @import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
 
@@ -8,38 +7,25 @@
   }
 }
 
-.domain-page {
-  .domain {
-    color: $gray-dark-4;
+sipdomain-setting {
+  .loading {
+    text-align: center;
+    font-size: 50px;
+    line-height: 1;
   }
+}
+
+.domain-page {
   .domain-header {
     @include vr-spacing(mt, 1.25);
     @include vr-spacing(mb, 0.5);
   }
-  .domain-description {
-    position: relative;
-    top: vr-adjust(-16);
-  }
-  .domain-error {
-    color: $color-negative-base;
-    @include vr-spacing(mr, 0.25);
-  }
-  .domain-success {
-    color: $color-cta-base;
-    font-size: vr-adjust(20);
-    @include vr-spacing(mr, 0.25);
-  }
-  .domain-icon {
-    position: relative;
-    top: vr-adjust(4);
-    @include vr-spacing(ml, 0.25);
-  }
-  .domain-space {
-    @include vr-spacing(mt, 1);
-    height: vr-adjust(20);
+
+  .domain--top-margin {
+    margin-top: 1rem;
   }
 
-  .domain-form {
+  .domain--flex {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
@@ -52,6 +38,7 @@
     }
     .domain-input-group {
       flex-grow: 1;
+      flex-basis: 0;
       min-width: vr-adjust(200);
       max-width: vr-adjust(400);
       @include vr-spacing(mr, 0.5);

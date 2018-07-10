@@ -74,12 +74,6 @@
       integration: 'https://identity.webex.com/organization/%s/v1/',
       prod: 'https://identity.webex.com/organization/%s/v1/',
     },
-    SparkDomainManagementUrl: {
-      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
-      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
-    },
     SparkDomainCheckUrl: {
       dev: '.wbx2.com',
       cfe: '.wbx2.com',

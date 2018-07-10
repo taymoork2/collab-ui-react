@@ -1,9 +1,8 @@
-import { SipDomainSettingComponent } from './sipDomainSetting.component';
-
-import './_sip-domain-settings.scss';
-
-import notificationModule from 'modules/core/notifications';
 import featureToggleModule from 'modules/core/featureToggle';
+import notificationModule from 'modules/core/notifications';
+import sipAddressModuleName from 'modules/core/shared/sip-address';
+import { SipDomainSettingComponent } from './sipDomainSetting.component';
+import './_sip-domain-settings.scss';
 
 export default angular.module('core.settings.sipDomain', [
   require('angular-cache'),
@@ -12,8 +11,9 @@ export default angular.module('core.settings.sipDomain', [
   require('modules/core/config/config').default,
   require('modules/hercules/services/service-descriptor.service').default,
   require('modules/core/scripts/services/sparkDomainManagement.service'),
-  notificationModule,
   featureToggleModule,
+  notificationModule,
+  sipAddressModuleName,
 ])
   .component('sipdomainSetting', new SipDomainSettingComponent())
   .name;

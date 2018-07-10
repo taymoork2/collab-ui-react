@@ -146,15 +146,6 @@ describe('UrlConfigSpec', function () {
     });
   });
 
-  it('should return correct spark domain mgmt url', function () {
-    whenCalling('getSparkDomainManagementUrl').expectUrlToBe({
-      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
-      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
-    });
-  });
-
   it('should return correct spark domain check url', function () {
     whenCalling('getSparkDomainCheckUrl').expectUrlToBe({
       dev: '.wbx2.com',

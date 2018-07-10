@@ -1,61 +1,93 @@
-<div class="domain-page">
-  <div class="domain-flow">
-    <div ng-if="vm.isSSAReserved" ng-class="{'domain-description': vm.showSaveButton}">
-      <p translate="firstTimeWizard.currentSubdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
-      <p ng-if="!vm.isCsc" translate="firstTimeWizard.subdomainChangesDescription"></p>
-    </div>
-    <p ng-if="!vm.isSSAReserved" translate="firstTimeWizard.subdomainDescription" translate-values="{count: vm.subdomainCount}" translate-interpolation="messageformat"></p>
+<div class="loading" ng-if="!vm.isLoaded">
+  <i class="icon icon-spinner"></i>
+</div>
+<div class="domain-page" ng-if="vm.isLoaded">
+  <div ng-if="vm.isDomainReserved">
+    <p translate="firstTimeWizard.currentSubdomainDescriptionWithLink"
+      translate-interpolation="messageformat"
+      translate-value-count="{{vm.subdomainCount}}"
+      translate-value-href="{{:: vm.sipHelpLink}}"
+    ></p>
+    <p ng-if="!vm.isCsc" translate="firstTimeWizard.subdomainChangesDescription"></p>
+  </div>
+  <p ng-if="!vm.isDomainReserved"
+    translate="firstTimeWizard.subdomainDescriptionWithLink"
+    translate-interpolation="messageformat"
+    translate-value-count="{{vm.subdomainCount}}"
+    translate-value-href="{{:: vm.sipHelpLink}}"
+  ></p>
 
-    <p ng-class="{'domain-space': !vm.showSaveButton}">
-      <a href class="redirect-link" translate="firstTimeWizard.setSipDomainLink" ng-click="vm.openSipHelpWiki()"></a>
+  <div ng-if="!vm.showModifyForm" class="domain--top-margin">
+    <h6 translate="firstTimeWizard.reservedSubdomains"></h6>
+    <div class="p domain--top-margin">
+      <div>{{vm.callFQDN}}</div>
+      <div ng-if="vm.isRoomLicensed">{{vm.roomFQDN}}</div>
+    </div>
+    <p ng-if="vm.showEditLink" class="domain--top-margin">
+      <a href
+        id="editSubdomainLink"
+        translate="firstTimeWizard.editSubdomain"
+        ng-click="vm.editSubdomain()"
+      ></a>
     </p>
-    <br>
-    <p class="domain" translate="firstTimeWizard.reservedSubdomains"></p>
-    <div class="domain-space">
-      <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
-      <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
-      <span class="p">{{vm.inputValue}}.call{{vm.domainSuffix}}</span>
-    </div>
-    <div ng-if="vm.isRoomLicensed">
-      <i class="icon icon-error domain-icon domain-error" ng-if="vm.form.$invalid && !vm.emptyOrUnchangedInput()"></i>
-      <i class="icon icon-check domain-icon domain-success" ng-if="!vm.form.$invalid && vm.verified"></i>
-      <span class="p">{{vm.inputValue}}.room{{vm.domainSuffix}}</span>
-    </div>
+  </div>
 
-    <p ng-if="!vm.sipForm && vm.isSSAReserved && !vm.isCsc" class="domain-space">
-      <a href id="editSubdomainLink" class="redirect-link" translate="firstTimeWizard.editSubdomain" ng-click="vm.editSubdomain()"></a>
-    </p>
-    <br>
-    <p class="domain" ng-if="vm.sipForm || !vm.isSSAReserved" translate="firstTimeWizard.enterSubdomain"></p>
-
-    <div ng-form ng-show="vm.sipForm || !vm.isSSAReserved" name="vm.form" novalidate role="form" class="domain-form">
-      <div class="domain-input-group" ng-if="vm.sipForm || !vm.isSSAReserved">
-        <input cs-input
+  <div ng-if="vm.showModifyForm"
+    ng-form
+    name="vm.form"
+    novalidate
+    role="form"
+    class="domain--top-margin"
+  >
+    <label for="sipDomainInput"
+      translate="firstTimeWizard.enterSubdomain"
+    ></label>
+    <div class="domain--flex">
+      <div class="domain-input-group"
+        ng-class="{info: vm.isDomainAvailable, error: vm.form.sipDomainInput.$invalid && vm.form.sipDomainInput.$touched}"
+      >
+        <input
           class="domain-input"
           type="text"
           id="sipDomainInput"
           name="sipDomainInput"
-          cs-input-messages="vm.messages"
-          ng-change="vm.notVerified()"
+          ng-change="vm.resetDomainAvailability()"
           ng-required="true"
           ng-maxlength="40"
-          ng-model="vm.inputValue">
+          ng-model="vm.subdomain"
+        >
+        <div class="cs-input__messages"
+          ng-messages="vm.form.sipDomainInput.$error"
+          role="alert"
+        >
+          <div ng-repeat="(msgKey, msgValue) in vm.messages"
+            class="message"
+            ng-message="{{msgKey}}"
+          >{{msgValue}}</div>
+          <div class="message" ng-if="vm.isDomainAvailable">
+            <div>{{::'common.available' | translate}}:</div>
+            <div>{{vm.callFQDN}}</div>
+            <div ng-if="vm.isRoomLicensed">{{vm.roomFQDN}}</div>
+          </div>
+        </div>
       </div>
-      <div class="domain-buttons" ng-if="vm.sipForm || !vm.isSSAReserved">
-        <button cs-btn type="button"
+      <div class="domain-buttons">
+        <button cs-btn
+          type="button"
           class="btn btn--cta domain-button"
           loading="vm.isSubdomainLoading"
           ng-click="vm.verifyAvailabilityAndValidity()"
-          ng-disabled="vm.emptyOrUnchangedInput() || this.saving">
+          ng-disabled="vm.isEmptyOrUnchangedInput || vm.isSaving"
+        >
           <span translate="firstTimeWizard.setSipDomainCheckAvailability"></span>
         </button>
         <button type="button"
           class="btn"
           translate="common.cancel"
-          ng-click="vm.toggleSipForm(); vm.resetFocus();"
-          ng-disabled="this.saving">
-        </button>
+          ng-click="vm.cancel()"
+          ng-disabled="vm.isSaving"
+        ></button>
       </div>
     </div>
-  </p></div>
+  </div>
 </div>
