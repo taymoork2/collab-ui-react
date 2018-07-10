@@ -1,8 +1,8 @@
-<div class="abc-cva-selection">
+<div class="abc-cva-selection" ng-if="!$ctrl.isCvaOnSiteStorage()">
   <div class="ct-title">
     <span class="h3">{{$ctrl.getText('cvaSelection.virtualAssistantPageTitle')}}</span>
   </div>
-  <div class="h5 ct-title-desc">{{$ctrl.getText('cvaSelection.virtualAssistantDesc')}}</div>
+  <div class="h5 ct-title-desc">{{$ctrl.getText('cvaSelection.virtualAssistantOrig')}}</div>
   <div class="cs-card-container ct-virtual-assistant ct-sa-content">
     <cs-card-layout block-view="true" class="va-card-center">
       <cs-card class="ct-card">
@@ -28,6 +28,117 @@
               <span class="setting-info-text" translate="careChatTpl.virtualAssistantSettingInfo"></span>
             </div>
 
+          </section>
+        </article>
+      </cs-card>
+    </cs-card-layout>
+  </div>
+</div>
+
+<!-- CONTROLLED VIA FEATURE FLAG -->
+<div ng-if="$ctrl.isCvaOnSiteStorage()">
+  <div class="ct-title">
+    <span class="h3">{{$ctrl.getText('cvaSelection.virtualAssistantPageTitle')}}</span>
+  </div>
+  <div class="h5 ct-title-desc">{{$ctrl.getText('cvaSelection.virtualAssistantDesc')}}</div>
+
+  <div class="cs-card-container">
+    <cs-card-layout block-view="true" class="abc-card-center">
+      <cs-card class="large ct-virtual-assistant abc-sa-disabled" ng-if="!$ctrl.toggleCVA">
+        <article>
+          <section class="abc-cva-panel-padding abc-cva-panel">
+            <span class="column-small">
+              <cs-toggle-switch ng-model="$ctrl.toggleCVA" id="toggleCvaOff" toggle-id="toggleCvaDisabled" name="toggleCvaDisabled" size="small"></cs-toggle-switch>
+            </span>
+            <span class="column-large">
+              <span class="h4">{{$ctrl.getText('cvaSelection.virtualAssistantEnableOptional')}}</span>
+            </span>
+          </section>
+        </article>
+      </cs-card>
+
+      <cs-card class="large abc-card-spacing" ng-if="$ctrl.toggleCVA">
+        <article>
+          <section class="abc-cva-panel-padding abc-cva-panel">
+            <span class="column-small">
+              <cs-toggle-switch ng-model="$ctrl.toggleCVA" id="toggleCvaOn" toggle-id="toggleCvaEnabled" name="toggleCvaEnabled" size="small"></cs-toggle-switch>
+            </span>
+            <span class="column-large">
+              <span class="h4">{{$ctrl.getText('cvaSelection.virtualAssistantEnableOptional')}}</span>
+              <div class="abc-card-center profile-attributes ct-article">
+                  <div class="h4"  translate="careChatTpl.virtualAssistantSelector"></div>
+                  <div class="abc-cva-panel">
+                    <cs-select
+                      class="column-not-padded"
+                      id="virtualAssistantSelectStorage"
+                      name="virtualAssistantSelect"
+                      ng-model="$ctrl.template.configuration.pages.abcCvaSelection.selectedCVA"
+                      options="$ctrl.template.configuration.pages.abcCvaSelection.configuredCVAs"
+                      labelfield="name"
+                      valuefield="id"
+                      placeholder="$ctrl.getText('cvaSelection.virtualAssistantSelectText')"
+                      filter="false">
+                    </cs-select>
+                    <span class="column-icon"
+                      tooltip-class="context-tooltip"
+                      tooltip="{{$ctrl.getText('cvaSelection.virtualAssistantTooltip')}}"
+                      tooltip-placement="bottom"
+                      tooltip-trigger="mouseenter focus">
+                      <i class="icon icon-info"></i>
+                    </span>
+                  </div>
+              </div>
+              <div>
+                <cs-card class="large section-background abc-card-center abc-card-spacing">
+                  <article>
+                    <section class="abc-card">
+                      <div class="cs-input-group medium-input columns">
+                        <label class="h4" for="storageUrl">{{$ctrl.getText('cvaSelection.virtualAssistantStorageLocationTitle')}}</label>
+                        <label class="cs-input__label" for="storageUrl">{{$ctrl.getText('cvaSelection.virtualAssistantStorageLocationDesc')}}</label>
+                        <input
+                          class="cs-input"
+                          type="text"
+                          id="storageUrl"
+                          autocomplete="off"
+                          ng-class="!$ctrl.isStorageUrlError() ? 'cs-input' : 'error-input'"
+                          ng-model="$ctrl.template.configuration.pages.abcCvaSelection.storageUrl"
+                          ng-change="$ctrl.checkStorageUrlInput()"
+                          required/>
+                        <div class="error-line" ng-if="$ctrl.isStorageUrlError()" ng-switch="$ctrl.errorValidation">
+                            <i class="icon icon-error"></i>
+                            <span ng-switch-when="errorStorageUrl">{{$ctrl.getText('cvaSelection.virtualAssistantStorageError')}}</span>
+                            <span ng-switch-when="errorStorageProtocol">{{$ctrl.getText('cvaSelection.virtualAssistantStorageProtocolError')}}</span>
+                        </div>
+                        <label class="cs-input__help-text">{{$ctrl.getText('cvaSelection.virtualAssistantStorageLocationHelp')}}</label>
+                      </div>
+                    </section>
+                    <section class="abc-card">
+                      <div class="cs-input-group medium-input columns">
+                        <label class="cs-input__label h4" for="storageToken">{{$ctrl.getText('cvaSelection.virtualAssistantStorageToken')}}</label>
+                        <input
+                          type="text"
+                          id="storageToken"
+                          autocomplete="off"
+                          ng-class="!$ctrl.isStorageTokenError() ? 'cs-input' : 'error-input'"
+                          ng-model="$ctrl.template.configuration.pages.abcCvaSelection.storageToken"
+                          required/>
+                        <div class="error-line" ng-if="$ctrl.isStorageTokenError()">
+                            <i class="icon icon-error"></i>
+                            <span >{{$ctrl.getText('cvaSelection.virtualAssistantStorageTokenError')}}</span>
+                        </div>
+                        <label ng-if="$ctrl.turnValidationOn()" class="cs-input__help-text" translate="careChatTpl.appleBusinessChat.cvaSelection.virtualAssistantStorageTokenHelp"></label>
+                      </div>
+                    </section>
+                    <section class="button-validate" ng_if="$ctrl.turnValidationOn()">
+                      <button type="button" class="button btn--primary" ng-click="$ctrl.clickedValidateButton()" style="float: right;">
+                        {{$ctrl.getText('cvaSelection.virtualAssistantValidateButton')}}
+                      </button>
+                      <p></p>
+                     </section>
+                  </article>
+                </cs-card>
+              </div>
+            </span>
           </section>
         </article>
       </cs-card>

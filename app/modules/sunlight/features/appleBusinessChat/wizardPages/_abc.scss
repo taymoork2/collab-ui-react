@@ -18,6 +18,111 @@
   }
 }
 
+.abc-sa-disabled {
+  display: block;
+  height: calc(100vh - #{($top-bar-height + $page-header-height + $ct-title-height + $ct-desc-height + 100)});
+  overflow: auto;
+
+  .cs-card section ul {
+    @include vr-spacing(p, 0);
+    @include vr-spacing(pb, 1.25);
+  }
+}
+
+.abc-cva-panel {
+  text-align: left;
+
+  .column-small {
+    float: left;
+    width: 15%;
+    padding-left: 5%;
+    white-space: normal;
+  }
+
+  .column-large {
+    float: left;
+    width: 85%;
+    line-height: 100%;
+    font-size: 0.875rem;
+    @include vr-spacing(pl, 0.5);
+    @include vr-spacing(pr, 3.75);
+    white-space: normal;
+  }
+
+  .column-not-padded {
+    float: left;
+    width: 98%;
+    @include vr-spacing(pl, 0.25);
+  }
+
+  .column-icon {
+    vertical-align: middle;
+    float: left;
+    width: 2%;
+    line-height: 100%;
+    @include vr-spacing(pl, 0.5);
+    @include vr-spacing(pt, 0.5);
+    &:focus {
+      color: $blue-base;
+    }
+    &:focus:hover {
+      color: $blue-base;
+    }
+    &:hover {
+      color: $blue-base;
+    }
+  }
+}
+
+.abc-cva-panel-padding {
+  @include vr-spacing(pt, 1);
+  @include vr-spacing(pr, 0);
+  @include vr-spacing(pb, 1.25);
+}
+
+
+.abc-card {
+  @include vr-spacing(pl, 1.5);
+
+  .medium-input {
+    width: 90%;
+  }
+
+  .error-line {
+    color: $red;
+
+    .icon {
+      vertical-align: middle;
+    }
+  }
+
+  .error-input {
+    width: 90%;
+    border-radius: 3px;
+    border:solid rem(1px) $red;
+    background: $red-light;
+    color: $gray-1;
+    &:focus {
+      box-shadow: none;
+      border:solid rem(1px) $red;
+      background: $white;
+    }
+  }
+}
+
+.abc-card-center {
+  justify-content: center;
+  width: 100% !important;
+
+  .button-validate {
+    @include vr-spacing(pr, 3.25);
+  }
+}
+
+.abc-card-spacing {
+  @include vr-spacing(pt, 1);
+}
+
 .abc-business-id {
   .ct-sa-content {
     display: flex;

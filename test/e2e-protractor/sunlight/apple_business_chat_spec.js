@@ -7,6 +7,29 @@ describe('Apple Business Chat', () => {
     login.login('expertvirtualassistant-admin', '#/services');
   });
 
+  const testCustomerVirtualAssistants = () => {
+    utils.click(careAppleBusinessChatPage.setUpRightBtn);
+    utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
+    utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
+
+    if (careAppleBusinessChatPage.isNewPage) {
+      utils.click(careAppleBusinessChatPage.toggleCvaOff);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.toggleCvaOn);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdownStorage);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.storageUrl);
+      utils.expectIsDisplayed(careAppleBusinessChatPage.storageToken);
+    } else {
+      utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
+    }
+
+    utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
+    utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+
+    if (careAppleBusinessChatPage.isNewPage) {
+      utils.click(careAppleBusinessChatPage.toggleCvaOn);
+    }
+  };
+
   it('should go to Care Features page', function () {
     utils.expectIsDisplayed(careLandingPage.careFeature);
     utils.click(careLandingPage.careFeature);
@@ -39,12 +62,7 @@ describe('Apple Business Chat', () => {
     });
 
     it('should display list of Customer Virtual Assistants', () => {
-      utils.click(careAppleBusinessChatPage.setUpRightBtn);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpLeftBtn);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpRightBtn);
+      testCustomerVirtualAssistants();
     });
 
     it('should proceed to Status Messages page', () => {
@@ -100,10 +118,7 @@ describe('Apple Business Chat', () => {
     });
 
     it('should display list of Customer Virtual Assistants', () => {
-      utils.click(careAppleBusinessChatPage.setUpRightBtn);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpTitle);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.setUpDesc);
-      utils.expectIsDisplayed(careAppleBusinessChatPage.cvaDropdown);
+      testCustomerVirtualAssistants();
     });
 
     it('should proceed to Status Messages page', () => {

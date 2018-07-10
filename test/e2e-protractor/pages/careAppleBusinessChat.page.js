@@ -14,9 +14,22 @@ const CareAppleBusinessChatPage = function () {
   this.name = element(by.name('nameInput'));
 
   //cva page
+  const context = this;
+  context.isNewPage = false;
+  element.all(by.id('toggleCvaOn')).then(function (elements) {
+    if (elements.length > 0) {
+      context.toggleCvaOff = element(by.id('toggleCvaOff'));
+      context.cvaDropdownStorage = element(by.id('virtualAssistantSelectStorage'));
+      context.storageUrl = element(by.id('storageUrl'));
+      context.storageToken = element(by.id('storageToken'));
+      context.toggleCvaOn = element(by.id('toggleCvaOn'));
+      context.isNewPage = true;
+    }
+  });
+
   this.cvaDropdown = element(by.id('virtualAssistantSelect'));
 
-  //status message page
+  // status message page
   this.waitingMessage = element(by.name('waitingMessageInput'));
   this.leftChatMessage = element(by.name('leftChatMessageInput'));
 
