@@ -12,7 +12,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     });
 
   /* @ngInject */
-  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, AbcService, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CvaService, CTService, EvaService, FeatureToggleService, HuronFeaturesListService, Log, Notification) {
+  function CareFeaturesCtrl($filter, $modal, $q, $translate, $state, $scope, $rootScope, $window, AbcService, AutoAttendantCeInfoModelService, Authinfo, CardUtils, CareFeatureList, CvaService, CTService, EvaService, FeatureToggleService, HuronFeaturesListService, Log, Notification, SunlightUtilitiesService, UrlConfig) {
     var vm = this;
     vm.isVirtualAssistantEnabled = $state.isVirtualAssistantEnabled;
     vm.isExpertVirtualAssistantEnabled = $state.isExpertVirtualAssistantEnabled;
@@ -203,9 +203,31 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       }
     }
 
+    function openDocument() {
+      $window.open(UrlConfig.getCareDocumentUrl());
+    }
+
+    function showCareNotSetupModalForPartner() {
+      $modal.open({
+        template: require('modules/sunlight/modals/careNotSetupModal.tpl.html'),
+        type: 'small',
+        modalClass: 'care-modal',
+        controller: function () {
+          this.isCareInitialized = SunlightUtilitiesService.isCareSetUpInitialized;
+          this.openDocument = openDocument;
+        },
+        controllerAs: 'careNotSetupModalCtrl',
+      });
+    }
+
     init();
 
     function init() {
+      SunlightUtilitiesService.isCareSetup().then(function (isOrgOnboarded) {
+        if (!isOrgOnboarded && Authinfo.isCustomerLaunchedFromPartner()) {
+          showCareNotSetupModalForPartner();
+        }
+      });
       vm.pageState = pageStates.loading;
       setupHybridFeatures()
         .then(_.noop)

@@ -38,6 +38,7 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     Orgservice,
     OverviewCardFactory,
     OverviewNotificationFactory,
+    OverviewCareNotSetupPartnerNotification,
     PrivacyDataSheetsNotificationService,
     PrivateTrunkService,
     ProPackService,
@@ -384,7 +385,11 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
     if (Authinfo.isCare() && Authinfo.isCustomerAdmin()) {
       SunlightUtilitiesService.isCareSetup().then(function (isOrgOnboarded) {
         if (!isOrgOnboarded && SunlightUtilitiesService.showSetUpCareNotification()) {
-          pushNotification(OverviewNotificationFactory.createCareNotSetupNotification());
+          if (Authinfo.isCustomerLaunchedFromPartner()) {
+            pushNotification(OverviewCareNotSetupPartnerNotification.createNotification());
+          } else {
+            pushNotification(OverviewNotificationFactory.createCareNotSetupNotification());
+          }
         }
       });
     }

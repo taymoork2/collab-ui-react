@@ -453,7 +453,7 @@ var Events = require('modules/core/shared/event.constants');
         vm.nextText = $translate.instant('common.provision');
       } else if (isFirstTime() && isLastTab() && isLastStep()) {
         vm.nextText = $translate.instant('common.finish');
-      } else if ((getTab().name === 'meetingSettings') && isLastStep()) {
+      } else if ((getTab().name === 'meetingSettings' || (getTab().name === 'careSettings' && Authinfo.isCustomerLaunchedFromPartner())) && isLastStep()) {
         vm.nextText = $translate.instant('common.next');
       } else if (isLastStep()) {
         vm.nextText = $translate.instant('common.save');
@@ -462,7 +462,7 @@ var Events = require('modules/core/shared/event.constants');
       }
 
       // enable/disable skip tab button
-      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || vm.current.tab.name === 'careSettings' || vm.current.tab.name === 'meetingSettings')
+      vm.showSkipTabBtn = (vm.isFirstTime() && (vm.current.tab.name === 'addUsers' || (vm.current.tab.name === 'careSettings' && !Authinfo.isCustomerLaunchedFromPartner()) || vm.current.tab.name === 'meetingSettings')
         && vm.isFirstStep());
     }
 

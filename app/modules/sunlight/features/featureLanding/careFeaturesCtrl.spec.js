@@ -1,12 +1,14 @@
 'use strict';
 
 describe('Care Feature Ctrl', function () {
-  var controller, $controller, $filter, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, aaDeferred,
+  var controller, $controller, $filter, $modal, $q, $rootScope, $state, $scope, Authinfo, CareFeatureList, CvaService, EvaService, aaDeferred,
     Log, Notification, deferred, callbackDeferred, chatPlusCallbackDeferred, cvaDeferred, evaDeferred, $translate,
-    SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService, abcDeferred, AbcService;
+    SparkService, getPersonDeferred, FeatureToggleService, AutoAttendantCeInfoModelService, abcDeferred, AbcService,
+    SunlightUtilitiesService;
 
   var spiedAuthinfo = {
     getOrgId: jasmine.createSpy('getOrgId').and.returnValue('Test-Org-Id'),
+    isCustomerLaunchedFromPartner: jasmine.createSpy('isCustomerLaunchedFromPartner').and.returnValue(true),
     isMessageEntitled: jasmine.createSpy('isMessageEntitled').and.returnValue(true),
     isSquaredUC: jasmine.createSpy('isSquaredUC').and.returnValue(true),
     getUserName: jasmine.createSpy('getUserName').and.returnValue('some_user'),
@@ -199,10 +201,11 @@ describe('Care Feature Ctrl', function () {
     $provide.value('Authinfo', spiedAuthinfo);
   }));
 
-  beforeEach(inject(function (_$filter_, _$controller_, _$q_, _$translate_, _$state_, _$rootScope_, _AbcService_, _AutoAttendantCeInfoModelService_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _FeatureToggleService_, _Log_, _Notification_, _SparkService_) {
+  beforeEach(inject(function (_$filter_, _$controller_, _$modal_, _$q_, _$translate_, _$state_, _$rootScope_, _AbcService_, _AutoAttendantCeInfoModelService_, _Authinfo_, _CareFeatureList_, _CvaService_, _EvaService_, _FeatureToggleService_, _Log_, _Notification_, _SparkService_, _SunlightUtilitiesService_) {
     $rootScope = _$rootScope_;
     $filter = _$filter_;
     $controller = _$controller_;
+    $modal = _$modal_;
     $q = _$q_;
     $state = _$state_;
     $scope = _$rootScope_.$new();
@@ -217,6 +220,7 @@ describe('Care Feature Ctrl', function () {
     SparkService = _SparkService_;
     AutoAttendantCeInfoModelService = _AutoAttendantCeInfoModelService_;
     FeatureToggleService = _FeatureToggleService_;
+    SunlightUtilitiesService = _SunlightUtilitiesService_;
 
     //create mock deferred object which will be used to return promises
     deferred = $q.defer();
@@ -259,11 +263,16 @@ describe('Care Feature Ctrl', function () {
 
   describe('with Hybrid Feature Toggle disabled', function () {
     beforeEach(function () {
+      spyOn(SunlightUtilitiesService, 'isCareSetup').and.returnValue($q.resolve(true));
       spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+      spyOn($modal, 'open').and.returnValue({
+        result: $q.resolve(),
+      });
       controller = $controller('CareFeaturesCtrl', {
         $scope: $scope,
         $state: $state,
         $filter: $filter,
+        $modal: $modal,
         Authinfo: Authinfo,
         CareFeatureList: CareFeatureList,
         Log: Log,
@@ -273,21 +282,26 @@ describe('Care Feature Ctrl', function () {
         EvaService: EvaService,
         SparkService: SparkService,
         AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
+        SunlightUtilitiesService: SunlightUtilitiesService,
       });
       $scope.$apply();
     });
 
     it('should initialize and get the list of templates and update pageState ', function () {
       expect(controller.pageState).toEqual('Loading');
+      expect(SunlightUtilitiesService.isCareSetup).toHaveBeenCalled();
       getAllTemplatesDeferred();
       $scope.$apply();
+      expect($modal.open).not.toHaveBeenCalled();
       expect(controller.pageState).toEqual('ShowFeatures');
     });
 
     it('should initialize and populate usage counts under customerVirtualAssistant feature', function () {
       expect(controller.pageState).toEqual('Loading');
+      expect(SunlightUtilitiesService.isCareSetup).toHaveBeenCalled();
       getAllTemplatesDeferred();
       $scope.$apply();
+      expect($modal.open).not.toHaveBeenCalled();
       expect(controller.pageState).toEqual('ShowFeatures');
 
       var cvaFeature = _.find(controller.filteredListOfFeatures, function (feature) {
@@ -310,6 +324,7 @@ describe('Care Feature Ctrl', function () {
 
     it('should initialize and show error page when get templates fails ', function () {
       expect(controller.pageState).toEqual('Loading');
+      expect(SunlightUtilitiesService.isCareSetup).toHaveBeenCalled();
       deferred.reject(getTemplateFailure);
       $scope.$apply();
       expect(controller.pageState).toEqual('Error');
@@ -654,6 +669,39 @@ describe('Care Feature Ctrl', function () {
     it('should not push AutoAttendant feature in feature tab if Hybrid toggle is disabled', function () {
       expect(controller.features.length).toBe(6);
       expect(controller.filters.length).toBe(4);
+    });
+  });
+
+  describe('Features controller for Partner Admin', function () {
+    beforeEach(function () {
+      spyOn(SunlightUtilitiesService, 'isCareSetup').and.returnValue($q.resolve(false));
+      spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(false));
+      spyOn($modal, 'open').and.returnValue({
+        result: $q.resolve(),
+      });
+      controller = $controller('CareFeaturesCtrl', {
+        $scope: $scope,
+        $state: $state,
+        $filter: $filter,
+        $modal: $modal,
+        Authinfo: Authinfo,
+        CareFeatureList: CareFeatureList,
+        Log: Log,
+        Notification: Notification,
+        $translate: $translate,
+        CvaService: CvaService,
+        EvaService: EvaService,
+        SparkService: SparkService,
+        AutoAttendantCeInfoModelService: AutoAttendantCeInfoModelService,
+        SunlightUtilitiesService: SunlightUtilitiesService,
+      });
+      $scope.$apply();
+    });
+
+    it('should open careNotSetup model if org is not onboadered', function () {
+      expect(SunlightUtilitiesService.isCareSetup).toHaveBeenCalled();
+      $scope.$apply();
+      expect($modal.open).toHaveBeenCalled();
     });
   });
 

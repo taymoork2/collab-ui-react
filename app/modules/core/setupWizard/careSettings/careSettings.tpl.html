@@ -1,13 +1,17 @@
 <div class="care-settings-review">
-  <div ng-if="careSettings.state !== careSettings.ONBOARDED">
+  <div ng-if="careSettings.state !== careSettings.ONBOARDED && !careSettings.careSetupDoneByAdmin">
     <p translate="firstTimeWizard.careSettingsDescription"></p>
+  </div>
+  <div ng-if="careSettings.state !== careSettings.ONBOARDED && careSettings.careSetupDoneByAdmin">
+    <p translate="firstTimeWizard.careSettingsPartner"></p>
   </div>
   <div ng-if="careSettings.state === careSettings.ONBOARDED">
     <p translate="firstTimeWizard.careSettingsComplete"></p>
   </div>
   <div>
     <button id="ccfsBtn" class="space btn--cta" ng-click="careSettings.onboardToCare()"
-      ng-disabled="careSettings.state === careSettings.IN_PROGRESS || careSettings.state === careSettings.ONBOARDED">
+      ng-disabled="careSettings.careSetupDoneByAdmin ||
+      careSettings.state === careSettings.IN_PROGRESS || careSettings.state === careSettings.ONBOARDED">
       <span translate="firstTimeWizard.careSettingsButton"></span>
     </button>
     <div ng-if="careSettings.state === careSettings.IN_PROGRESS">

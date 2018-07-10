@@ -152,6 +152,12 @@
       integration: 'https://reporting.appstaging.ciscoccservice.com/reporting/v1',
       prod: 'https://reporting.produs1.ciscoccservice.com/reporting/v1',
     },
+    CareDocumentUrl: {
+      dev: 'https://collaborationhelp.cisco.com/tutorial/article/en-us/g3yqlq#concept_lnv_f2n_f5',
+      cfe: 'https://collaborationhelp.cisco.com/tutorial/article/en-us/g3yqlq#concept_lnv_f2n_f5',
+      integration: 'https://collaborationhelp.cisco.com/tutorial/article/en-us/g3yqlq#concept_lnv_f2n_f5',
+      prod: 'https://collaborationhelp.cisco.com/tutorial/article/en-us/g3yqlq#concept_lnv_f2n_f5',
+    },
     CalliopeUrl: {
       dev: 'https://calliope-intb.ciscospark.com/calliope/api/authorization/v1',
       cfe: 'https://calliope-loada.ciscospark.com/calliope/api/authorization/v1',

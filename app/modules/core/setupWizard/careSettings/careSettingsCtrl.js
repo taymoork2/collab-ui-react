@@ -29,7 +29,7 @@ var HttpStatus = require('http-status-codes');
     vm.cesOnboardingStatus = vm.status.UNKNOWN;
 
     vm.defaultQueueId = Authinfo.getOrgId();
-    vm.careSetupDoneByAdmin = (Authinfo.getOrgId() === Authinfo.getUserOrgId());
+    vm.careSetupDoneByAdmin = Authinfo.isCustomerLaunchedFromPartner();
 
     vm.state = vm.status.UNKNOWN;
     vm.sunlightOnboardingState = vm.status.UNKNOWN;
@@ -45,23 +45,21 @@ var HttpStatus = require('http-status-codes');
           }
         }).catch(_.noop);
       }
-      if (vm.careSetupDoneByAdmin) {
-        if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
-          promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
-          promises.onBoardBotApp.then(function (result) {
-            if (result.status === HttpStatus.NO_CONTENT) {
-              vm.appOnboardingStatus = vm.status.SUCCESS;
-            }
-          }).catch(_.noop);
-        }
-        if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
-          promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
-          promises.onBoardJwtApp.then(function (result) {
-            if (result.status === HttpStatus.NO_CONTENT) {
-              vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
-            }
-          }).catch(_.noop);
-        }
+      if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
+        promises.onBoardBotApp = SunlightConfigService.onboardCareBot();
+        promises.onBoardBotApp.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.appOnboardingStatus = vm.status.SUCCESS;
+          }
+        }).catch(_.noop);
+      }
+      if (vm.jwtAppOnboardingStatus !== vm.status.SUCCESS) {
+        promises.onBoardJwtApp = SunlightConfigService.onboardJwtApp();
+        promises.onBoardJwtApp.then(function (result) {
+          if (result.status === HttpStatus.NO_CONTENT) {
+            vm.jwtAppOnboardingStatus = vm.status.SUCCESS;
+          }
+        }).catch(_.noop);
       }
       $q.all(promises).then(function (results) {
         Log.debug('Care onboarding is success', results);
@@ -167,38 +165,18 @@ var HttpStatus = require('http-status-codes');
     function getOnboardingStatus(result) {
       var onboardingStatus = vm.status.UNKNOWN;
       vm.csOnboardingStatus = _.get(result, 'data.csOnboardingStatus');
-      if (vm.careSetupDoneByAdmin) {
-        onboardingStatus = onboardingDoneByAdminStatus(result);
-      } else {
-        onboardingStatus = onboardingDoneByPartnerStatus();
-      }
-      return onboardingStatus;
-    }
-
-    function onboardingDoneByAdminStatus(result) {
-      var onboardingDoneByAdminStatus = vm.status.UNKNOWN;
       vm.appOnboardingStatus = _.get(result, 'data.appOnboardStatus');
       vm.jwtAppOnboardingStatus = _.get(result, 'data.jwtAppOnboardingStatus');
       if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = vm.defaultQueueStatus;
+        onboardingStatus = vm.defaultQueueStatus;
       } else if (vm.csOnboardingStatus === vm.status.SUCCESS && vm.appOnboardingStatus === vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = vm.jwtAppOnboardingStatus;
+        onboardingStatus = vm.jwtAppOnboardingStatus;
       } else if (vm.csOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = vm.csOnboardingStatus;
+        onboardingStatus = vm.csOnboardingStatus;
       } else if (vm.appOnboardingStatus !== vm.status.SUCCESS) {
-        onboardingDoneByAdminStatus = vm.appOnboardingStatus;
+        onboardingStatus = vm.appOnboardingStatus;
       }
-      return onboardingDoneByAdminStatus;
-    }
-
-    function onboardingDoneByPartnerStatus() {
-      var onboardingDoneByPartnerStatus = vm.status.UNKNOWN;
-      if (vm.defaultQueueStatus !== vm.status.SUCCESS) {
-        onboardingDoneByPartnerStatus = vm.defaultQueueStatus;
-      } else {
-        onboardingDoneByPartnerStatus = vm.csOnboardingStatus;
-      }
-      return onboardingDoneByPartnerStatus;
+      return onboardingStatus;
     }
 
     function enableNext() {
@@ -279,7 +257,11 @@ var HttpStatus = require('http-status-codes');
 
 
     function init() {
-      disableNext();
+      if (vm.careSetupDoneByAdmin) {
+        enableNext();
+      } else {
+        disableNext();
+      }
       var sunlightPromise;
       URService.getQueue(vm.defaultQueueId).then(function () {
         vm.defaultQueueStatus = vm.status.SUCCESS;

@@ -1,4 +1,7 @@
 export class SunlightUtilitiesService {
+
+  public isCareSetUpInitialized = true;
+
   /* @ngInject */
   constructor(
     private StorageKeys,
@@ -7,6 +10,8 @@ export class SunlightUtilitiesService {
     private SunlightConfigService,
     private SunlightConstantsService,
     private ContextAdminAuthorizationService,
+    private Log,
+    private URService,
   ) {}
 
   public getCareSetupKey() {
@@ -28,19 +33,10 @@ export class SunlightUtilitiesService {
     return this.LocalStorage.get(this.getCareSetupKey());
   }
 
-  public isOrgAdmin() {
-    return (this.Authinfo.getOrgId() === this.Authinfo.getUserOrgId());
-  }
-
-  public getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, jwtOnboarded) {
+  public getCareOnboardStatus(csOnboarded, appOnboarded, jwtOnboarded) {
     const success = this.SunlightConstantsService.status.SUCCESS;
-    return (this.isOrgAdmin() && csOnboarded === success
+    return (csOnboarded === success
     && appOnboarded === success && jwtOnboarded === success);
-  }
-
-  public getCareOnboardStatusForPartner(csOnboarded) {
-    const success = this.SunlightConstantsService.status.SUCCESS;
-    return (!this.isOrgAdmin() && csOnboarded === success);
   }
 
   public getCareSetupNotificationText() {
@@ -57,17 +53,31 @@ export class SunlightUtilitiesService {
   }
 
   public getCareOnboardingStatus(result) {
-    let isCareOnboarded = false;
+    this.Log.debug('Get Org Chat config is success.');
     const csOnboarded = _.get(result, 'data.csOnboardingStatus');
     const appOnboarded = _.get(result, 'data.appOnboardStatus');
     const jwtOnboarded = _.get(result, 'data.jwtAppOnboardingStatus');
+    this.setCareSetupInitStatus(csOnboarded, appOnboarded, jwtOnboarded);
     return this.ContextAdminAuthorizationService.isMigrationNeeded().then((migrationNeeded) => {
-      if (!migrationNeeded && (this.getCareOnboardStatusForAdmin(csOnboarded, appOnboarded, jwtOnboarded) ||
-        this.getCareOnboardStatusForPartner(csOnboarded))) {
-        isCareOnboarded = true;
+      if (!migrationNeeded) {
+        return this.URService.getQueue(this.Authinfo.getOrgId()).then(() => {
+          return this.getCareOnboardStatus(csOnboarded, appOnboarded, jwtOnboarded);
+        }).catch(function (error) {
+          return !(error.status === 404);
+        });
       }
-      return isCareOnboarded;
+      return false;
+    }, (error) => {
+      this.Log.debug('Fetching migration details failed: ', error);
+      return true;
     });
+  }
+
+  public setCareSetupInitStatus(csOnboarded, appOnboarded, jwtOnboarded) {
+    const unknown = this.SunlightConstantsService.status.UNKNOWN;
+    if (csOnboarded === unknown && appOnboarded === unknown && jwtOnboarded === unknown) {
+      this.isCareSetUpInitialized = false;
+    }
   }
 
   public isCareSetup() {
@@ -75,7 +85,10 @@ export class SunlightUtilitiesService {
     return this.SunlightConfigService.getChatConfig().then(function (result) {
       return this.getCareOnboardingStatus(result);
     }.bind(this), function (error) {
+      if (error.status === 404) {
+        this.isCareSetUpInitialized = false;
+      }
       return !(error.status === 404);
-    });
+    }.bind(this));
   }
 }

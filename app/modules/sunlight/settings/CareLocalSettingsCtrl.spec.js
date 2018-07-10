@@ -2,7 +2,7 @@
 
 describe('CareLocalSettingsCtrl', function () {
   function initDependencies() {
-    this.injectDependencies('$controller', '$httpBackend', '$interval', '$q', '$scope', '$translate', 'AutoAttendantConfigService', 'Authinfo', 'ContextAdminAuthorizationService', 'FeatureToggleService', 'HuronConfig', 'Notification', 'SunlightConfigService', 'SunlightUtilitiesService', 'UrlConfig', 'URService');
+    this.injectDependencies('$controller', '$httpBackend', '$interval', '$modal', '$q', '$scope', '$translate', 'AutoAttendantConfigService', 'Authinfo', 'ContextAdminAuthorizationService', 'FeatureToggleService', 'HuronConfig', 'Notification', 'SunlightConfigService', 'SunlightUtilitiesService', 'UrlConfig', 'URService');
     this.$scope.orgConfigForm = { dirty: false };
     this.orgId = 'deba1221-ab12-cd34-de56-abcdef123456';
     this.userOrgId = 'aeba1221-ab12-cd34-de56-abcdef123456';
@@ -28,7 +28,7 @@ describe('CareLocalSettingsCtrl', function () {
     };
   }
 
-  function initSpies(userOrgId, isCareVoice, dontSpyJwt) {
+  function initSpies(userOrgId, isCareVoice, isPartnerAdmin, dontSpyJwt) {
     spyOn(this.URService, 'createQueue').and.returnValue(this.$q.resolve('fake createQueue response'));
     spyOn(this.URService, 'updateQueue').and.returnValue(this.$q.resolve('fake updateQueue response'));
     spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
@@ -42,7 +42,11 @@ describe('CareLocalSettingsCtrl', function () {
     spyOn(this.Authinfo, 'getUserOrgId').and.returnValue(userOrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue('SunlightConfigService test org');
     spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
+    spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isCareVoice);
     spyOn(this, '$interval').and.callThrough();
+    spyOn(this.$modal, 'open').and.returnValue({
+      result: this.$q.resolve(),
+    });
     spyOn(this.SunlightUtilitiesService, 'removeCareSetupKey').and.callFake(function () { });
     this.sunlightChatConfigUrl = this.UrlConfig.getSunlightConfigServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/chat';
     this.aaCSOnboardingUrl = this.HuronConfig.getCesUrl() + '/customers/' + this.Authinfo.getOrgId() + '/config/csOnboardingStatus';
@@ -80,7 +84,6 @@ describe('CareLocalSettingsCtrl', function () {
       .respond(200, {
         csOnboardingStatus: this.constants.status.SUCCESS,
         appOnboardStatus: this.constants.status.SUCCESS,
-        aaOnboardingStatus: this.constants.status.SUCCESS,
         jwtAppOnboardingStatus: jwtState,
       });
     initController.call(this);
@@ -103,7 +106,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -113,7 +116,9 @@ describe('CareLocalSettingsCtrl', function () {
         initController.call(this);
         expect(this.controller.state).toBe(this.constants.ONBOARDED);
         this.$httpBackend.flush();
+        expect(this.controller.isCareSetUpInitialized).toBe(false);
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+        expect(this.$modal.open).not.toHaveBeenCalled();
       });
 
       it('should disable setup care, if already onboarded', function () {
@@ -121,7 +126,6 @@ describe('CareLocalSettingsCtrl', function () {
           .respond(200, {
             csOnboardingStatus: this.constants.status.SUCCESS,
             appOnboardStatus: this.constants.status.SUCCESS,
-            aaOnboardingStatus: this.constants.status.SUCCESS,
             jwtAppOnboardingStatus: this.constants.status.SUCCESS,
           });
         initController.call(this);
@@ -281,7 +285,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -306,7 +310,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -321,7 +324,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.PENDING,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -329,21 +331,6 @@ describe('CareLocalSettingsCtrl', function () {
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.IN_PROGRESS);
-    });
-
-    it('should show loading animation on setup care button, if csOnboarding  is pending', function () {
-      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
-        .respond(200, {
-          csOnboardingStatus: this.constants.status.SUCCESS,
-          appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
-          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
-        });
-      initController.call(this);
-      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
-      this.$httpBackend.flush();
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
     });
 
     it('should disable setup care button, after onboarding is complete', function () {
@@ -361,7 +348,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       this.$interval.flush(10001);
@@ -387,7 +373,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       this.$interval.flush(10001);
@@ -407,7 +392,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false, true);
+      initSpies.call(this, this.orgId, false, false, true);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -439,7 +424,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -447,7 +432,6 @@ describe('CareLocalSettingsCtrl', function () {
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.UNKNOWN,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
         });
       initController.call(this);
       this.$httpBackend.flush();
@@ -460,7 +444,7 @@ describe('CareLocalSettingsCtrl', function () {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
+
         });
       initController.call(this);
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
@@ -474,7 +458,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -489,7 +472,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.PENDING,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -529,27 +511,11 @@ describe('CareLocalSettingsCtrl', function () {
       expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
     });
 
-    it('should show loading animation on setup care button, if csOnboarding is pending', function () {
-      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
-        .respond(200, {
-          csOnboardingStatus: this.constants.status.SUCCESS,
-          appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
-          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
-        });
-      initController.call(this);
-      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
-      this.$httpBackend.flush();
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
-    });
-
-    it('should enable setup care button, if csOnboarding is failure', function () {
+    it('should enable setup care button, if any app onboarding is failure', function () {
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
         });
       initController.call(this);
@@ -574,7 +540,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       this.$interval.flush(10001);
@@ -594,7 +559,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
     beforeEach(
@@ -689,7 +654,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, true);
+      initSpies.call(this, this.orgId, true, false);
 
       this.$scope.isAdminAuthorized = false;
       this.$scope.synchronizeButtonTooltip = '';
@@ -782,7 +747,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, true);
+      initSpies.call(this, this.orgId, true, false);
     });
 
     function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
@@ -795,7 +760,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, false, false);
@@ -811,7 +775,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, true, true);
@@ -829,7 +792,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -845,7 +807,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, true, true);
@@ -863,7 +824,7 @@ describe('CareLocalSettingsCtrl', function () {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
+
         });
       this.$interval.flush(10001);
       this.$httpBackend.flush();
@@ -878,7 +839,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, true, true);
@@ -905,7 +865,7 @@ describe('CareLocalSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.userOrgId, true);
+      initSpies.call(this, this.userOrgId, true, true);
     });
 
     function initMigrationAdminSpies(isFeatureEnabled, isMigrationNeeded) {
@@ -913,12 +873,23 @@ describe('CareLocalSettingsCtrl', function () {
       spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(isMigrationNeeded));
     }
 
-    it('should not enable setup care, if migration is not needed for the org ', function () {
+    it('should show careNotSetup modal for partner, if Org is not onboarded.', function () {
+      this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
+      initMigrationAdminSpies.call(this, false, false);
+      initController.call(this);
+      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
+      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      this.$httpBackend.flush();
+      expect(this.controller.isCareSetUpInitialized).toBe(false);
+      expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
+      expect(this.$modal.open).toHaveBeenCalled();
+    });
+
+    it('should not enable setup care, if all app onboarding is success and migration is not needed', function () {
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, false, false);
@@ -926,40 +897,25 @@ describe('CareLocalSettingsCtrl', function () {
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       this.$httpBackend.flush();
+      expect(this.controller.isCareSetUpInitialized).toBe(true);
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.$modal.open).not.toHaveBeenCalled();
     });
 
-    it('should enable setup care, if feature flag is enabled and migration is needed for the org ', function () {
+    it('should enable setup care, if all app onboarding success but migration is required', function () {
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
-      initMigrationAdminSpies.call(this, true, true);
+      initMigrationAdminSpies.call(this, false, true);
       initController.call(this);
       this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
       expect(this.controller.state).toBe(this.constants.ONBOARDED);
       this.$httpBackend.flush();
       expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-    });
-
-    it('should not enable setup care, if isMigrationNeeded  is false ', function () {
-      spyOn(this.ContextAdminAuthorizationService, 'isMigrationNeeded').and.returnValue(this.$q.resolve(false));
-      spyOn(this.ContextAdminAuthorizationService, 'getAdminAuthorizationStatus').and.returnValue(this.$q.resolve(this.constants.AUTHORIZED));
-      this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
-        .respond(200, {
-          csOnboardingStatus: this.constants.status.SUCCESS,
-          appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
-          jwtAppOnboardingStatus: this.constants.status.SUCCESS,
-        });
-      initController.call(this);
-      this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
-      this.$httpBackend.flush();
-      expect(this.controller.state).toBe(this.constants.ONBOARDED);
+      expect(this.$modal.open).toHaveBeenCalled();
     });
 
     it('should  call migrateOrganization when setup care is done for is migration needed org ', function () {
@@ -968,7 +924,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, true, true);
@@ -986,7 +941,6 @@ describe('CareLocalSettingsCtrl', function () {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
         });
       this.$interval.flush(10001);
       this.$httpBackend.flush();
@@ -1000,7 +954,6 @@ describe('CareLocalSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initMigrationAdminSpies.call(this, true, true);

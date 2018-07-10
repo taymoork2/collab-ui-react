@@ -2022,6 +2022,8 @@
     "setUpAllCalendarsNoneIsSetup": "Use it with Exchange, Google Calendar or Office365.",
     "setUpCarePrimaryNotification": "Your Organization is enabled for Cisco Care.",
     "setUpCareSecondaryNotification": "Looks like you haven’t set up Cisco Care yet!",
+    "setUpCarePartnerNotification": "Action required by organization administrator to use Care features.",
+    "learnMoreLink": "Learn More",
     "setUpCareLinkText": "Setup Care Service",
     "autoAssignText": "Manage your licenses in a productive way with the Auto-Assign template.",
     "autoAssignLink": "Set Up Now",
@@ -4790,6 +4792,7 @@
     "careSettingsSub": "Set up Care Service",
     "careSettingsDescription": "Click here to complete Care setup.",
     "careSettingsComplete": "Care service has been setup successfully.",
+    "careSettingsPartner": "To set up Care, contact your organization administrator.",
     "careSettingsButton": "Set up Care",
     "careSettingsFetchFailed": "Error retrieving onboarding status.",
     "careSettingsTimeout": "Request timed out while checking Care setup status.",
@@ -8390,6 +8393,12 @@
     "pstnNumbers": "PSTN Numbers",
     "internalDialing": "Internal Dialing",
     "duplicateNumber": "{{number}} is a duplicate number."
+  },
+  "careNotSetupModal": {
+    "header": "Action Required",
+    "existingCustomerMessage": "To enable Care features for this organization, please have an organization administrator update Care settings.",
+    "newCustomerMessage": "To enable Care features for this organization, please have an organization administrator set up Care.",
+    "buttonTxt": "Learn More"
   },
   "careChatTpl": {
     "editAction": "Edit",

@@ -22,7 +22,7 @@ describe('CareSettingsCtrl', function () {
     };
   }
 
-  function initSpies(userOrgId, isCareVoice, dontSpyJwt) {
+  function initSpies(userOrgId, isCareVoice, isPartnerAdmin, dontSpyJwt) {
     spyOn(this.SunlightConfigService, 'updateChatConfig').and.returnValue(this.$q.resolve('fake updateChatConfig response'));
     spyOn(this.SunlightConfigService, 'onBoardCare').and.returnValue(this.$q.resolve('fake onBoardCare response'));
     spyOn(this.SunlightConfigService, 'onboardCareBot').and.returnValue(this.$q.resolve('fake onboardCareBot response'));
@@ -33,6 +33,7 @@ describe('CareSettingsCtrl', function () {
     spyOn(this.Authinfo, 'getUserOrgId').and.returnValue(userOrgId);
     spyOn(this.Authinfo, 'getOrgName').and.returnValue('SunlightConfigService test org');
     spyOn(this.Authinfo, 'isCareVoice').and.returnValue(isCareVoice);
+    spyOn(this.Authinfo, 'isCustomerLaunchedFromPartner').and.returnValue(isPartnerAdmin);
     spyOn(this.Notification, 'errorWithTrackingId');
     spyOn(this.Notification, 'success');
     spyOn(this.Notification, 'error');
@@ -113,25 +114,27 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.userOrgId, false);
+      initSpies.call(this, this.userOrgId, false, true);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
     describe('CareSettings - Init', function () {
-      it('should show enabled setup care button and disabled next button, if Org is not onboarded already.', function () {
+      it('should show disabled setup care button and enabled next button, if Org is not onboarded already.', function () {
         this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
         spyOn(this.URService, 'getQueue').and.returnValue(this.$q.resolve('fake getQueue response'));
         initController.call(this);
         expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
         this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
+        expect(this.controller.careSetupDoneByAdmin).toBe(true);
+        expect(this.$scope.wizard.isNextDisabled).toBe(false);
       });
 
-      it('should show enabled setup care button and disabled next button, if onboarded status is UNKNOWN', function () {
+      it('should show disabled setup care button and enabled next button, if onboarded status is UNKNOWN', function () {
         var chatConfigResponse = {
           csOnboardingStatus: this.constants.status.UNKNOWN,
           aaOnboardingStatus: this.constants.status.SUCCESS,
+          jwtAppOnboardingStatus: this.constants.status.UNKNOWN,
         };
         this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, chatConfigResponse);
         spyOn(this.URService, 'getQueue').and.returnValue(this.$q.resolve('fake getQueue response'));
@@ -139,27 +142,28 @@ describe('CareSettingsCtrl', function () {
         expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
         this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
+        expect(this.controller.careSetupDoneByAdmin).toBe(true);
+        expect(this.$scope.wizard.isNextDisabled).toBe(false);
       });
 
-      it('should show enabled setup care button and disabled next button, if default sunlight queue is not created', function () {
+      it('should show disabled setup care button and enabled next button, if default sunlight queue is not created', function () {
         this.$httpBackend.expectGET(this.urServiceUrlRegEx).respond(404);
         initController.call(this);
         expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
         this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
+        expect(this.controller.careSetupDoneByAdmin).toBe(true);
+        expect(this.$scope.wizard.isNextDisabled).toBe(false);
       });
 
-      it('should allow proceeding with next steps, if queue is created, cs and aa are already onboarded', function () {
+      it('should show disabled setup care button, if queue is created and all apps are onboarded', function () {
         var getQueueResponse = {
           defaultQueueStatus: this.constants.status.SUCCESS,
         };
         this.$httpBackend.expectGET(this.urServiceUrlRegEx).respond(200, getQueueResponse);
         var chatConfigResponse = {
           csOnboardingStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
-          appOnboardStatus: this.constants.status.UNKNOWN,
+          appOnboardStatus: this.constants.status.SUCCESS,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         };
         this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, chatConfigResponse);
@@ -168,152 +172,6 @@ describe('CareSettingsCtrl', function () {
         this.$httpBackend.flush();
         expect(this.controller.state).toBe(this.constants.ONBOARDED);
         expect(this.$scope.wizard.isNextDisabled).toBe(false);
-      });
-
-      it('should show loading and disabled next button, if csOnboardingStatus is Pending ', function () {
-        var getQueueResponse = {
-          defaultQueueStatus: this.constants.status.SUCCESS,
-        };
-        this.$httpBackend.expectGET(this.urServiceUrlRegEx).respond(200, getQueueResponse);
-        var chatConfigResponse = {
-          csOnboardingStatus: this.constants.status.PENDING,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
-        };
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, chatConfigResponse);
-        initController.call(this);
-        expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.IN_PROGRESS);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
-      });
-
-      it('should show loading and enable next button, if aaOnboardStatus is Pending because isCareVoice is false ', function () {
-        var getQueueResponse = {
-          defaultQueueStatus: this.constants.status.SUCCESS,
-        };
-        this.$httpBackend.expectGET(this.urServiceUrlRegEx).respond(200, getQueueResponse);
-        var chatConfigResponse = {
-          csOnboardingStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.PENDING,
-        };
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, chatConfigResponse);
-        initController.call(this);
-        expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.ONBOARDED);
-        expect(this.$scope.wizard.isNextDisabled).toBe(false);
-      });
-
-      it('should allow proceeding with next steps- if jwt fails ', function () {
-        checkJwtCtrlState.call(this, this.constants.status.FAILURE, this.constants.ONBOARDED, false);
-      });
-
-      it('should allow proceeding with next steps- if jwt Unknown ', function () {
-        checkJwtCtrlState.call(this, this.constants.status.UNKNOWN, this.constants.ONBOARDED, false);
-      });
-
-      it('should allow proceeding with next steps- if jwt pending ', function () {
-        checkJwtCtrlState.call(this, this.constants.status.PENDING, this.constants.ONBOARDED, false);
-      });
-
-      it('should allow proceeding with next steps- if jwt success ', function () {
-        checkJwtCtrlState.call(this, this.constants.status.SUCCESS, this.constants.ONBOARDED, false);
-      });
-    });
-
-    describe('CareSettings - Setup Care - Success', function () {
-      beforeEach(function () {
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
-        initController.call(this);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-        this.controller.onboardToCare();
-        this.$scope.$apply();
-      });
-
-      it('should call the onboard config api and flash setup care button', function () {
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, {
-          csOnboardingStatus: 'Pending',
-        });
-        this.$interval.flush(10002);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.IN_PROGRESS);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
-      });
-
-      it('should allow proceeding with next steps, after onboard config api completes', function () {
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, {
-          csOnboardingStatus: this.constants.status.SUCCESS,
-          aaOnboardStatus: this.constants.status.SUCCESS,
-        });
-        this.$interval.flush(10002);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.ONBOARDED);
-        expect(this.SunlightConfigService.onboardJwtApp).not.toHaveBeenCalled();
-        expect(this.Notification.success).toHaveBeenCalled();
-        expect(this.$scope.wizard.isNextDisabled).toBe(false);
-      });
-    });
-
-    describe('CareSettings - Setup Care - Failure', function () {
-      it('should show error toaster if timed out', function () {
-        this.$httpBackend.whenGET(this.urServiceUrlRegEx).respond(200);
-        this.$httpBackend.whenGET(this.sunlightChatConfigUrl).respond(404, {});
-        initController.call(this);
-        this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-        this.controller.onboardToCare();
-        this.$scope.$apply();
-        for (var i = 30; i >= 0; i--) {
-          this.$httpBackend.whenGET(this.sunlightChatConfigUrl).respond(404, {});
-          this.$interval.flush(10001);
-        }
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        expect(this.Notification.error).toHaveBeenCalled();
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
-      });
-
-      it('should show error toaster if backend API fails', function () {
-        this.$httpBackend.whenGET(this.urServiceUrlRegEx).respond(500);
-        this.$httpBackend.whenGET(this.sunlightChatConfigUrl).respond(500, {});
-        initController.call(this);
-        this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-        this.controller.onboardToCare();
-        this.$scope.$apply();
-        this.$httpBackend.flush();
-        for (var i = 3; i >= 0; i--) {
-          this.$httpBackend.whenGET(this.sunlightChatConfigUrl).respond(500, {});
-          this.$interval.flush(10001);
-        }
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
-        expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
-      });
-
-      it('should allow proceeding with next steps, if failed to get status on loading', function () {
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(403, {});
-        initController.call(this);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.status.UNKNOWN);
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
-      });
-
-      it('should show error toaster if onboardStatus is failure', function () {
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(404, {});
-        initController.call(this);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        this.controller.defaultQueueStatus = this.constants.status.SUCCESS;
-        this.controller.onboardToCare();
-        this.$scope.$apply();
-        this.$httpBackend.expectGET(this.sunlightChatConfigUrl).respond(200, { csOnboardingStatus: 'Failure' });
-        this.$interval.flush(10001);
-        this.$httpBackend.flush();
-        expect(this.controller.state).toBe(this.constants.NOT_ONBOARDED);
-        expect(this.Notification.errorWithTrackingId).toHaveBeenCalled();
-        expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });
     });
   });
@@ -326,7 +184,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -354,10 +212,9 @@ describe('CareSettingsCtrl', function () {
         expect(this.$scope.wizard.isNextDisabled).toBe(true);
       });
 
-      it('should not allow proceeding with next steps, if cs and aa are already onboarded but apponboarding is UNKNOWN', function () {
+      it('should not allow proceeding with next steps, if cs and jwt are already onboarded but apponboarding is UNKNOWN', function () {
         var chatConfigResponse = {
           csOnboardingStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         };
@@ -523,7 +380,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false, true);
+      initSpies.call(this, this.orgId, false, false, true);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -547,7 +404,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -570,7 +427,6 @@ describe('CareSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -586,7 +442,6 @@ describe('CareSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.PENDING,
           appOnboardStatus: this.constants.status.SUCCESS,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -601,7 +456,6 @@ describe('CareSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.PENDING,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -616,7 +470,6 @@ describe('CareSettingsCtrl', function () {
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
           appOnboardStatus: this.constants.status.UNKNOWN,
-          aaOnboardingStatus: this.constants.status.UNKNOWN,
           jwtAppOnboardingStatus: this.constants.status.SUCCESS,
         });
       initController.call(this);
@@ -673,7 +526,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, true);
+      initSpies.call(this, this.orgId, true, false);
       initAAFeatureToggleSpies.call(this, false, true);
     });
 
@@ -708,7 +561,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, true);
+      initSpies.call(this, this.orgId, true, false);
       this.$httpBackend.expectGET(this.sunlightChatConfigUrl)
         .respond(200, {
           csOnboardingStatus: this.constants.status.SUCCESS,
@@ -790,7 +643,7 @@ describe('CareSettingsCtrl', function () {
     });
     beforeEach(initDependencies);
     beforeEach(function () {
-      initSpies.call(this, this.orgId, false);
+      initSpies.call(this, this.orgId, false, false);
     });
     it('should check for AA Onboarding, if CS is already Onboarded', function () {
       var fakeResponse = {

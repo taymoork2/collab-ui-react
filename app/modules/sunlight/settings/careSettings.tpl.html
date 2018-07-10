@@ -15,7 +15,7 @@
             class="btn--primary loading-button"
             loading="localCareSettings.state === localCareSettings.IN_PROGRESS"
             ng-click="localCareSettings.onboardToCare()"
-            ng-disabled="localCareSettings.state === localCareSettings.IN_PROGRESS || localCareSettings.state === localCareSettings.ONBOARDED">
+            ng-disabled="localCareSettings.isPartnerAdmin || localCareSettings.state === localCareSettings.IN_PROGRESS || localCareSettings.state === localCareSettings.ONBOARDED">
             <span translate="firstTimeWizard.careSettingsButton"></span>
           </button>
         </div>
@@ -140,5 +140,3 @@
     </form>
   </div>
 </div>
-
-

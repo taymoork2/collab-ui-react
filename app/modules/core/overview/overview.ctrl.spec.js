@@ -189,6 +189,12 @@ describe('Controller: OverviewCtrl', function () {
     return careNotificationExists;
   }
 
+  function checkForCareNotSetPartnerNotification(notifications) {
+    return _.some(notifications, function (notif) {
+      return notif.name === 'careSetupPartnerViewNotification';
+    });
+  }
+
   describe('Wire up', function () {
     beforeEach(function () {
       this.initController();
@@ -326,6 +332,7 @@ describe('Controller: OverviewCtrl', function () {
       this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(false));
       this.Authinfo.isCare.and.returnValue(true);
       this.Authinfo.isCustomerAdmin.and.returnValue(true);
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
       this.SunlightUtilitiesService.removeCareSetupKey();
       this.initController();
     });
@@ -357,6 +364,12 @@ describe('Controller: OverviewCtrl', function () {
       expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
     });
 
+    it('should not show notification if partner admin', function () {
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
+      this.initController();
+      expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+
     it('should show notification if snooze time is up', function () {
       this.SunlightUtilitiesService.removeCareSetupKey();
       this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().subtract(49, 'hours').toISOString());
@@ -369,6 +382,45 @@ describe('Controller: OverviewCtrl', function () {
       this.LocalStorage.put(this.SunlightUtilitiesService.getCareSetupKey(), moment().add(4, 'hours').toISOString());
       this.initController();
       expect(checkForCareNotification(this.controller.notifications)).toEqual(false);
+    });
+  });
+
+  describe('Notifications - Login as Partner Admin, create CareNotSetup notification ', function () {
+    beforeEach(function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(false));
+      this.Authinfo.isCare.and.returnValue(true);
+      this.Authinfo.isCustomerAdmin.and.returnValue(true);
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(true);
+      this.SunlightUtilitiesService.removeCareSetupKey();
+      this.initController();
+    });
+
+    it('should show CareNotSetup notification', function () {
+      expect(checkForCareNotSetPartnerNotification(this.controller.notifications)).toEqual(true);
+    });
+
+    it('should not show notification if care is onboarded', function () {
+      this.SunlightUtilitiesService.isCareSetup.and.returnValue(this.$q.resolve(true));
+      this.initController();
+      expect(checkForCareNotSetPartnerNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if care not enabled', function () {
+      this.Authinfo.isCare.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotSetPartnerNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if not full admin', function () {
+      this.Authinfo.isCustomerAdmin.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotSetPartnerNotification(this.controller.notifications)).toEqual(false);
+    });
+
+    it('should not show notification if not partner admin', function () {
+      this.Authinfo.isCustomerLaunchedFromPartner.and.returnValue(false);
+      this.initController();
+      expect(checkForCareNotSetPartnerNotification(this.controller.notifications)).toEqual(false);
     });
   });
 
