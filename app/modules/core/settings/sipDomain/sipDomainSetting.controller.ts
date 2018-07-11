@@ -169,7 +169,6 @@ export class SipDomainSettingController implements ng.IComponentController {
     this.resetDomainAvailability();
     this.SipAddressService.validateSipAddress(this.sipAddressModel!)
       .then((response) => {
-        this.resetErrors();
         this.sipAddressModel = response.model;
         if (response.isDomainAvailable) {
           this.isDomainAvailable = true;
