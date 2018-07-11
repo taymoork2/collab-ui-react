@@ -344,9 +344,9 @@ require('./_setup-wizard.scss');
           if (supportsHI1776 || Authinfo.isBroadCloud()) {
             if (!response.bsft.rialtoCustomerId) {
               steps.push(setupBsft);
+              steps.push(setupNumberBsft);
               steps.push(siteListBsft);
             }
-            steps.push(setupNumberBsft);
           } else {
             if (supportsHI1484) {
               steps.push(setupLocation);

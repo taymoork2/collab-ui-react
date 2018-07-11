@@ -42,8 +42,8 @@ class FtswSiteListCtrl implements ng.IComponentController {
       controller: () => {
         return {
           deleteFn: () => this.FtswConfigService.removeSite(site),
-          title: this.$translate.instant('broadSoft.ftsw.siteList.deleteModal.title'),
-          description: this.$translate.instant('broadSoft.ftsw.siteList.deleteModal.description'),
+          title: this.$translate.instant('broadCloud.ftsw.siteList.deleteModal.title'),
+          description: this.$translate.instant('broadCloud.ftsw.siteList.deleteModal.description'),
         };
       },
       modalClass: 'hcs-delete-modal-class',

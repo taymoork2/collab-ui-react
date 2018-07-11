@@ -440,7 +440,7 @@ describe('SetupWizardCtrl', function () {
     it('the wizard should have a lot of settings', function () {
       this.expectStepOrder(['planReview', 'serviceSetup', 'meetingSettings', 'enterpriseSettings']);
       this.expectSubStepOrder('planReview', ['init']);
-      this.expectSubStepOrder('serviceSetup', ['setupBsft', 'setupNumberBsft']);
+      this.expectSubStepOrder('serviceSetup', ['setupBsft', 'setupNumberBsft', 'siteListBsft']);
       this.expectSubStepOrder('meetingSettings', ['migrateTrial', 'siteSetup', 'licenseDistribution', 'summary']);
       this.expectSubStepOrder('enterpriseSettings', ['enterpriseSipUrl', 'init', 'exportMetadata', 'importIdp', 'testSSO']);
     });
