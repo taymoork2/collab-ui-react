@@ -10,7 +10,6 @@ export default angular.module('core.settings.sipDomain', [
   require('@collabui/collab-ui-ng').default,
   require('modules/core/config/config').default,
   require('modules/hercules/services/service-descriptor.service').default,
-  require('modules/core/scripts/services/sparkDomainManagement.service'),
   featureToggleModule,
   notificationModule,
   sipAddressModuleName,
