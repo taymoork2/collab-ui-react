@@ -11981,6 +11981,18 @@
       "dnsSrvRecordsPrereqLabel": "DNS SRV records are deployed for Cisco UC services.",
       "savePrereqsSuccess": "Jabber with Webex Teams setup is complete.",
       "savePrereqsError": "Jabber with Webex Teams settings failed to save."
+    },
+    "addProfileModal":{
+      "title": "Jabber Service",
+      "sectionTitle": "Configure a UC Manager Profile",
+      "description": "Select Voice Services Domain or UDS Server as your deployment requires.",
+      "profileName": "Profile Name",
+      "voiceServiceDomain": "Voice Services Domain",
+      "voiceServiceDomainName": "Voice Services Domain Name",
+      "udsServer": "UDS Server",
+      "udsServerAddress": "UDS Server Address",
+      "udsBackupServerAddress": "UDS Backup Server Address",
+      "allowUserEdit": "Allow users to edit server address"
     }
   }
 }

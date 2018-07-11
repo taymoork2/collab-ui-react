@@ -35,6 +35,7 @@ import { HcsLicenseActiveCardComponent } from 'modules/services-overview/new-hyb
 import jabberToWebexTeamsInactiveCardModuleName from 'modules/services-overview/new-hybrid/inactive/jabber-to-webex-teams-inactive-card';
 import jabberToWebexTeamsActiveCardModuleName from 'modules/services-overview/new-hybrid/active/jabber-to-webex-teams-active-card';
 import jabberToWebexTeamsPrerequisitesModalModuleName from 'modules/services-overview/new-hybrid/prerequisites-modals/jabber-to-webex-teams-prerequisites-modal';
+import jabberToWebexTeamsAddProfileModalModuleName from 'modules/services-overview/new-hybrid/jabber-to-webex-teams-add-profile-modal';
 
 import userOverviewServiceModule from 'modules/core/users/userOverview';
 
@@ -62,6 +63,7 @@ export default angular
     jabberToWebexTeamsInactiveCardModuleName,
     jabberToWebexTeamsActiveCardModuleName,
     jabberToWebexTeamsPrerequisitesModalModuleName,
+    jabberToWebexTeamsAddProfileModalModuleName,
     userOverviewServiceModule,
   ])
   .component('cardCapacityBar', new CardCapacityBarComponent())

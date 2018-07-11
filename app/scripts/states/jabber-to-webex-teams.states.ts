@@ -21,5 +21,12 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
           template: '<jabber-to-webex-teams-prerequisites-modal dismiss="$dismiss()"></jabber-to-webex-teams-prerequisites-modal>',
         },
       },
+    })
+    .state('jabber-to-webex-teams.modal.add-profile', {
+      views: {
+        'modal@': {
+          template: '<jabber-to-webex-teams-add-profile-modal dismiss="$dismiss()"></jabber-to-webex-teams-add-profile-modal>',
+        },
+      },
     });
 }

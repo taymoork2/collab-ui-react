@@ -1,14 +1,16 @@
 import moduleName from './index';
 import { JabberToWebexTeamsActiveCardController } from './jabber-to-webex-teams-active-card.component';
 
-type Test = atlas.test.IComponentTest<JabberToWebexTeamsActiveCardController, {}, {}>;
+type Test = atlas.test.IComponentTest<JabberToWebexTeamsActiveCardController, {
+  $state: ng.ui.IStateService,
+}, {}>;
 
 // TODO (changlol): add unit-tests
 describe('Component: jabberToWebexTeamsActiveCard:', () => {
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies(
-      // TODO: add dependencies here
+      '$state',
     );
   });
 
@@ -17,14 +19,17 @@ describe('Component: jabberToWebexTeamsActiveCard:', () => {
   });
 
   describe('primary behaviors (view):', () => {
-    it('...', function (this: Test) {
-      // TODO: implement
+    it('should render a add or edit link', function (this: Test) {
+      //TODO : add link check
     });
   });
 
   describe('primary behaviors (controller):', () => {
-    it('...', function (this: Test) {
-      // TODO: implement
+    describe('addProfile():', () => {
+      it('should transition to the add-profile wizard', function (this: Test) {
+        this.controller.addProfile();
+        expect(this.$state.go).toHaveBeenCalledWith('jabber-to-webex-teams.modal.add-profile');
+      });
     });
   });
 });
