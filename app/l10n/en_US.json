@@ -10348,7 +10348,9 @@
       },
       "jabberToWebexTeams": {
         "title": "Jabber Service",
-        "description": "Enables Webex Teams messaging for Jabber users, to replace other Jabber messaging providers. You cannot use Jabber Service with XMPP options like IM and Presence."
+        "description": "Enables Webex Teams messaging for Jabber users, to replace other Jabber messaging providers. You cannot use Jabber Service with XMPP options like IM and Presence.",
+        "add": "Add a UC Manager Profile",
+        "edit": "Edit UC Manager Profiles"
       }
     },
     "showMore": "View all",
