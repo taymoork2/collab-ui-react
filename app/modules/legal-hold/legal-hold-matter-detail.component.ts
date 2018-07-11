@@ -55,6 +55,10 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
     return this.matter.matterState === MatterState.ACTIVE;
   }
 
+  public get hasCustodians(): boolean {
+    return this.matter.numberOfCustodians > 0;
+  }
+
   public get name(): string {
     return this.matter.matterName;
   }
@@ -153,14 +157,14 @@ export class LegalHoldMatterDetailController implements ng.IComponentController 
 
   public addCustodians(): void {
     this.$state.go('legalhold.custodians-manage', {
-      caseId: this.matter.caseId,
+      matter: this.matter,
       mode: ImportMode.ADD,
     });
   }
 
   public removeCustodians(): void {
     this.$state.go('legalhold.custodians-manage', {
-      caseId: this.matter.caseId,
+      matter: this.matter,
       mode: ImportMode.REMOVE,
     });
   }

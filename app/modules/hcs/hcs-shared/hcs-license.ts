@@ -186,31 +186,34 @@ export interface IHcsPlmProduct {
   productId: string;
   productName: string;
   productType: string;
-  productStatus: string;
+  productLicenseStatus: string;
 }
 
 export class HcsPlmProduct implements IHcsPlmProduct {
   public productId: string;
   public productName: string;
   public productType: string;
-  public productStatus: string;
+  public productLicenseStatus: string;
   constructor(obj = {
     productId: '',
     productName: '',
     productType: '',
-    productStatus: '',
+    productLicenseStatus: '',
   }) {
     this.productId = obj.productId;
     this.productName = obj.productName;
-    this.productStatus = obj.productStatus;
+    this.productLicenseStatus = obj.productLicenseStatus;
     this.productType = obj.productType;
   }
 }
 
 export interface IHcsPlmLicense extends IHcsPlmBase {
   partnerOrgId: string;
+  plmName: string;
+  plmId: string;
+  violationsCount: number;
   productCount: number;
-  plmLicenses: IHcsPlmLicenseInfo[];
+  licenses: IHcsPlmLicenseInfo[];
   products: IHcsPlmProduct[];
 }
 
@@ -220,7 +223,7 @@ export class HcsPlmLicense implements IHcsPlmLicense {
   public plmName: string;
   public violationsCount: number;
   public productCount: number;
-  public plmLicenses: IHcsPlmLicenseInfo[];
+  public licenses: IHcsPlmLicenseInfo[];
   public products: IHcsPlmProduct[];
   constructor(obj = {
     partnerOrgId: '',
@@ -228,7 +231,7 @@ export class HcsPlmLicense implements IHcsPlmLicense {
     plmName: '',
     violationsCount: 0,
     productCount: 0,
-    plmLicenses: [],
+    licenses: [],
     products: [],
   }) {
     this.partnerOrgId = obj.partnerOrgId;
@@ -236,7 +239,7 @@ export class HcsPlmLicense implements IHcsPlmLicense {
     this.plmName = obj.plmName;
     this.violationsCount = obj.violationsCount;
     this.productCount = obj.productCount;
-    this.plmLicenses = obj.plmLicenses;
+    this.licenses = obj.licenses;
     this.products = obj.products;
   }
 }

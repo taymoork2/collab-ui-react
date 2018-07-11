@@ -7,6 +7,7 @@ describe('callServiceSettingsPage template', () => {
     this.injectDependencies(
       '$q',
       'Analytics',
+      'FeatureToggleService',
       'ServiceDescriptorService',
     );
     spyOn(this.Analytics, 'trackHybridServiceEvent');
@@ -28,6 +29,26 @@ describe('callServiceSettingsPage template', () => {
     expect(this.view.find('sip-destination-settings-section').length).toBe(0);
     expect(this.view.find('private-trunk-certificate').length).toBe(0);
     expect(this.view.find('div#private-trunk-certificate-defaults').length).toBe(0);
+  });
+
+  it('should show the Migrate SIP Addresses section if both Call Service Connect and feature toggle are enabled', function () {
+    spyOn(this.ServiceDescriptorService, 'isServiceEnabled').and.returnValue(this.$q.resolve(true));
+    spyOn(this.FeatureToggleService, 'atlasJ9614SipUriRebrandingGetStatus').and.returnValue(this.$q.resolve(false));
+    this.compileComponent('call-service-settings-page');
+
+    expect(this.view.find('migrate-sip-address-section')).not.toExist();
+
+    this.ServiceDescriptorService.isServiceEnabled.and.returnValue(this.$q.resolve(false));
+    this.FeatureToggleService.atlasJ9614SipUriRebrandingGetStatus.and.returnValue(this.$q.resolve(true));
+    this.compileComponent('call-service-settings-page');
+
+    expect(this.view.find('migrate-sip-address-section')).not.toExist();
+
+    this.ServiceDescriptorService.isServiceEnabled.and.returnValue(this.$q.resolve(true));
+    this.FeatureToggleService.atlasJ9614SipUriRebrandingGetStatus.and.returnValue(this.$q.resolve(true));
+    this.compileComponent('call-service-settings-page');
+
+    expect(this.view.find('migrate-sip-address-section')).toExist();
   });
 
 });

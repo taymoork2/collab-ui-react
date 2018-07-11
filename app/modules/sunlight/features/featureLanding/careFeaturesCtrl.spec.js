@@ -127,6 +127,7 @@ describe('Care Feature Ctrl', function () {
         {
           id: 'ID 1',
           name: 'Apple Business Chat Dev Config',
+          cvaId: 'CVA ID 3',
         },
         {
           id: 'ID 2',
@@ -283,7 +284,7 @@ describe('Care Feature Ctrl', function () {
       expect(controller.pageState).toEqual('ShowFeatures');
     });
 
-    it('should initialize and populate template counts under customerVirtualAssistant feature', function () {
+    it('should initialize and populate usage counts under customerVirtualAssistant feature', function () {
       expect(controller.pageState).toEqual('Loading');
       getAllTemplatesDeferred();
       $scope.$apply();
@@ -296,11 +297,15 @@ describe('Care Feature Ctrl', function () {
       expect(cvaFeature.templates.length).toEqual(1);
       expect(cvaFeature.templatesHtmlPopover).toContain('Sunlight Staging Template');
 
+      expect(cvaFeature.abcUsage.length).toEqual(1);
+      expect(cvaFeature.abcHtmlPopover).toContain('Apple Business Chat Dev Config');
+
       var cvaFeature2 = _.find(controller.filteredListOfFeatures, function (feature) {
         return feature.templateId === 'Customer Virtual Assistant PR Config';
       });
 
       expect(cvaFeature2.templates.length).toEqual(0);
+      expect(cvaFeature2.abcUsage.length).toEqual(0);
     });
 
     it('should initialize and show error page when get templates fails ', function () {
@@ -596,6 +601,54 @@ describe('Care Feature Ctrl', function () {
       var htmlString = controller.generateHtmlPopover(evaFeature);
       expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverErrorMessage');
       expect(htmlString).toEqual('<div class="feature-card-popover-error">messageKey</div>');
+    });
+
+    it('should return expected html string when CVA not used in any Apple Business Chats ', function () {
+      var cvaFeature = {
+        id: 'Customer Virtual Assistant Feature',
+        name: 'Customer Virtual Assistant Staging Config',
+        type: 'APIAI',
+        config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
+        abcUsage: [],
+      };
+
+      var htmlString = controller.generateABCHtmlPopover(cvaFeature);
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverABCHeader', {
+        numOfABC: 0,
+      });
+      var htmlExpected = '<div class="feature-card-popover"><h3 class="sub-header">messageKey</h3><ul class="spaces-list"></ul></div>';
+      expect(htmlString).toEqual(htmlExpected);
+    });
+
+    it('should return sorted list when CVA is used in multiple Apple Business Chats ', function () {
+      var cvaFeature = {
+        id: 'Customer Virtual Assistant Feature',
+        name: 'Customer Virtual Assistant Staging Config',
+        type: 'APIAI',
+        config: { token: '22e724e0bc604e99b0cfd281cd6c282a' },
+        abcUsage: ['Z123', 'A blah', 'a123'],
+      };
+
+      var htmlString = controller.generateABCHtmlPopover(cvaFeature);
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.popoverABCHeader', {
+        numOfABC: 3,
+      });
+      var htmlExpected = '<div class="feature-card-popover"><h3 class="sub-header">messageKey</h3><ul class="spaces-list"><li>A blah</li><li>a123</li><li>Z123</li></ul></div>';
+      expect(htmlString).toEqual(htmlExpected);
+    });
+
+    it('should calculate total usage counts for customerVirtualAssistant feature', function () {
+      var cvaFeature = {
+        id: 'Customer Virtual Assistant Feature',
+        templates: ['chat test'],
+        abcUsage: ['Z123', 'A blah', 'a123'],
+      };
+
+      controller.cvaUsageCountText(cvaFeature);
+      // in use count should equal abc count + template count
+      expect($translate.instant).toHaveBeenCalledWith('careChatTpl.featureCard.inUseText', {
+        count: 4,
+      });
     });
 
     it('should not push AutoAttendant feature in feature tab if Hybrid toggle is disabled', function () {

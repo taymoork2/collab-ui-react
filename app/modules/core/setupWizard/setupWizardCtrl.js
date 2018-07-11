@@ -60,7 +60,7 @@ require('./_setup-wizard.scss');
       return $state.go('overview');
     }
 
-    if (Authinfo.isCustomerAdmin()) {
+    if (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) {
       sendAnalytics();
       SetupWizardService.onActingSubscriptionChange(init);
       initToggles().finally(init);
@@ -350,10 +350,10 @@ require('./_setup-wizard.scss');
           tabs.splice(1, 0, {
             name: 'serviceSetup',
             required: true,
-            label: 'firstTimeWizard.callSettings',
+            label: Authinfo.isBroadCloud() ? 'firstTimeWizard.bsftFlex' : 'firstTimeWizard.callSettings',
             description: 'firstTimeWizard.serviceSetupSub',
             icon: 'icon-calls',
-            title: 'firstTimeWizard.unifiedCommunication',
+            title: Authinfo.isBroadCloud() ? 'firstTimeWizard.bsftFlex' : 'firstTimeWizard.unifiedCommunication',
             controllerAs: '$ctrl',
             steps: steps,
           });

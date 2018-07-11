@@ -1,4 +1,4 @@
-const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
+import { ISite, Site } from 'modules/call/bsft/shared';
 
 export interface IBsftSettings {
   orgId: string;
@@ -14,7 +14,7 @@ export class BsftSettings implements IBsftSettings {
   public name: string;
   public postalAddress: IPostalAddress | null;
   public contactInfo: IContactInfo | null;
-  public site: ISite | null;
+  public site: ISite;
   public order: IBsftOrder | null;
 
   constructor(bsftSettings: IBsftSettings = {
@@ -42,6 +42,9 @@ export class BsftSettings implements IBsftSettings {
     this.site = _.isNull(bsftSettings.site) ? new Site() : new Site({
       name: _.get(bsftSettings.site, 'name'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
+      numbers: _.get(bsftSettings.site, 'numbers'),
+      emergencyAddress: _.get(bsftSettings.site, 'emergencyAddress'),
+      contact: _.get(bsftSettings.site, 'contact'),
     });
   }
 }
@@ -62,11 +65,11 @@ export class PostalAddress implements IPostalAddress {
   public country: string;
 
   constructor(postalAddress: IPostalAddress = {
-    address1: '123 Jupiter',
-    city: 'Richardson',
-    state: 'TX',
-    postalCode: '75041',
-    country: 'US',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
   }) {
     this.address1 = postalAddress.address1;
     this.city = postalAddress.city;
@@ -90,9 +93,9 @@ export class ContactInfo implements IContactInfo {
   public telephoneNumber: ITelephoneNumber | null;
 
   constructor(contactInfo: IContactInfo = {
-    contactFirstName: 'Art',
-    contactLastName: 'Vandelay',
-    emailAddress: 'samwiforcisco+bsfttest@gmail.com',
+    contactFirstName: '',
+    contactLastName: '',
+    emailAddress: '',
     telephoneNumber: null,
   }) {
     this.contactFirstName = contactInfo.contactFirstName;
@@ -123,24 +126,6 @@ export class TelephoneNumber implements ITelephoneNumber {
   }) {
     this.countryCode = telephoneNumber.countryCode;
     this.number = telephoneNumber.number;
-  }
-}
-
-export interface ISite {
-  name: string;
-  timeZone: string;
-}
-
-export class Site implements Site {
-  public name: string;
-  public timeZone: string;
-
-  constructor(site: ISite = {
-    name: '',
-    timeZone: DEFAULT_TIME_ZONE,
-  }) {
-    this.name = site.name;
-    this.timeZone = site.timeZone;
   }
 }
 

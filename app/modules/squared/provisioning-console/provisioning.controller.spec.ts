@@ -53,6 +53,37 @@ describe('Controller: ProvisioningController', function () {
       expect(this.controller.pendingOrders.length).toBe(3);
     });
   });
+  describe('csv data download filter option by default', () => {
+    it('should be queue received', function () {
+      initController.apply(this);
+      expect(this.controller.csvFilterOptions.length).toBe(2);
+      expect(this.controller.selectedFilterValue.label).toEqual('provisioningConsole.actions.export.csvFilterOptions.queueReceived');
+      expect(this.controller.selectedFilterValue.value).toBe('created');
+    });
+  });
+  describe('csv data download response', () => {
+    it('success', function () {
+      initController.apply(this);
+      spyOn(this.controller, 'exportCSV').and.returnValue(this.$q.resolve(orders));
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).not.toHaveBeenCalled();
+      expect(this.controller.completedOrders.length).toBe(1);
+      expect(this.controller.pendingOrders.length).toBe(3);
+    });
+  });
+  describe('csv data download response', () => {
+    it('failure', function () {
+      this.ProvisioningService.getOrders.and.returnValue(this.$q.reject({ error: 'error' }));
+      initController.apply(this);
+      this.controller.exportCSV(() => {
+        this.$q.reject({ error: 'error' });
+      });
+      this.$scope.$apply();
+      expect(this.Notification.errorResponse).toHaveBeenCalled();
+      expect(this.controller.completedOrders.length).toBe(0);
+      expect(this.controller.pendingOrders.length).toBe(0);
+    });
+  });
   describe('init new controller', () => {
     beforeEach(function() {
       this.FeatureToggleService.supports.and.returnValue(this.$q.resolve(true));

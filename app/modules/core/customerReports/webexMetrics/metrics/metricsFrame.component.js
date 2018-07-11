@@ -8,6 +8,11 @@ require('./metrics-frame.scss');
     .component('metricsFrame', {
       template: require('./metricsFrame.tpl.html'),
       controller: metricsFrameController,
+      bindings: {
+        timeTrack: '=',
+        onTrackLoadStatus: '&',
+        onIframeLoad: '&',
+      },
     });
 
   /* @ngInject */
@@ -55,6 +60,8 @@ require('./metrics-frame.scss');
         $log.log('Unfreeze message received.');
         unfreezeState(null, true);
         $timeout.cancel(vm.startLoadReportTimer);
+        vm.timeTrack.status = true;
+        vm.onTrackLoadStatus(vm.timeTrack);
       }
     }
 
@@ -72,6 +79,8 @@ require('./metrics-frame.scss');
       vm.startLoadReportTimer = $timeout(
         function () {
           unfreezeState(null, true);
+          vm.timeTrack.status = false;
+          vm.onTrackLoadStatus(vm.timeTrack);
         },
         LoadingTimeout
       );

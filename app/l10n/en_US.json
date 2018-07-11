@@ -1432,7 +1432,20 @@
       "completed": "Mark as completed",
       "pending": "Mark as pending",
       "showOrder": "Show Order Data",
-      "hideOrder": "Hide Order Data"
+      "hideOrder": "Hide Order Data",
+      "exportCSV": "Export CSV",
+      "export": {
+        "csvFilename": "exported_manualQueueProvisioningOrders.csv",
+        "title": "Export CSV Report",
+        "helptext": "Please select date ranges below for orders you want to be included in exported CSV file.",
+        "success": "Provisioning records exported to csv successfully",
+        "failure": "Export csv failed",
+        "createButton": "Export Report",
+        "csvFilterOptions": {
+          "queueReceived": "Queue Received",
+          "queueCompleted": "Queue Completed"
+        }
+      }
     },
     "tabs": {
       "pending": "Pending",
@@ -3215,6 +3228,22 @@
           "title": "Urgent upgrade schedule",
           "description": "Urgent upgrades for this cluster are applied as soon as they are available."
         }
+      },
+      "migrateSipAddress": {
+        "title": "Migrate SIP Addresses",
+        "subsectionTitle": "Migrate Cisco Spark SIP Addresses",
+        "subsectionDescription": "Cisco Spark SIP Addresses are changing to reflect the Webex rebranding. You must migrate your organization to the new *.webex.com domain for calling and meetings. We recommend that you test a few users or devices before you do the full migration. For more information, <a href=\"{{href}}\" target=\"_blank\">{{href}}</a>.",
+        "test": "Test",
+        "undoTest": "Undo Test",
+        "migrateAll": "Migrate All",
+        "undoTestModal": {
+          "title": "Undo Migration Test",
+          "message": "This step undoes the test SIP addresses. Are you sure?"
+        },
+        "migrateAllModal": {
+          "title": "Migrate All SIP Addresses to Webex",
+          "message": "This step migrates all SIP addresses to the new Webex domain. Are you sure?"
+        }
       }
     },
     "notifications": {
@@ -4830,6 +4859,7 @@
     "callSettingBasicDialingDesc": "Assign unique extensions to each user within your company.  Users can dial each other with their exension number.",
     "callSettingMultiDialing": "Multi-tier Dialing",
     "callSettingMultiDialingDesc": "Divide your company into number blocks by selecting a routing prefix for each logical block.  Users in the same block can dial each other with extension numbers.  Between blocks users dial the routing prefix and extension number.",
+    "bsftFlex": "BroadCloud Flex Settings",
     "error": {
       "overCapacity": "Capacity exceeded for data center, please contact Cisco T.A.C. for further assistance.",
       "capacityFail": "Failed to activate and check capacity"
@@ -6134,6 +6164,9 @@
     "meeting": "Cisco Webex Team Meetings",
     "webex": "Cisco Webex Enterprise Edition 200 with CMR/TNU+",
     "call": "Cisco Webex Calling",
+    "broadCloudFlex": "BroadCloud Flex",
+    "broadCloudStandard": "Standard",
+    "broadCloudPlaces": "Places",
     "careDescription": "Care services require Cisco Webex Teams as a prerequisite.<br>Additionally, Cisco Webex Calling is required for voice-based interactions.",
     "sparkCare": "Care",
     "care": "Chat and Callback",
@@ -6813,6 +6846,7 @@
       "requiredclusterconfig": "Required Cluster Configuration",
       "optionalclusterconfig": "Optional Cluster Configuration",
       "hmsconfig":"Configure Video Mesh Node",
+      "hmsconfigcluster": "Configure Video Mesh Cluster",
       "finaltitle": "Finish Video Mesh Registration",
       "toNode": "Go to Node",
       "serviceconfig": "Service Configuration",
@@ -8488,6 +8522,7 @@
       "appleBusinessChat": "Apple Business Chat"
     },
     "featureCard": {
+      "inUseText": "In Use: {{ count }}",
       "spacesInUseText": "Expert Spaces: {{ numOfSpaces }}",
       "templatesInUseText": "Templates: {{ numOfTemplates }}",
       "unavailableSpacesInUseText": "Usage data unavailable",
@@ -8496,7 +8531,8 @@
       "popoverDefaultSpace": "(Default Space)",
       "popoverErrorMessage": "Cannot retrieve space usage data for this Expert Virtual Assistant. Try again later.",
       "cvaPopoverMainHeader": "Customer Virtual Assistant Usage",
-      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}"
+      "popoverTemplatesHeader": "Customer Support Templates: {{ numOfTemplates }}",
+      "popoverABCHeader": "Apple Business Chat: {{ numOfABC }}"
     },
     "ctValidation": {
       "errorChar250": "Character length cannot be more than 250.",
@@ -8623,10 +8659,22 @@
         "invalidChars": "Name cannot contain the following characters: <>"
       },
       "cvaSelection": {
-        "virtualAssistantPageTitle": "Customer Virtual Assistant (Optional)",
-        "virtualAssistantDesc": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantPageTitle": "Customer Virtual Assistant",
+        "virtualAssistantOrig": "Select a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
+        "virtualAssistantDesc": "Enable a preconfigured Customer Virtual Assistant who provides initial automated support in your Apple Business Chat experience",
         "virtualAssistantSelector": "Customer Virtual Assistant",
-        "virtualAssistantSelectText": "Select ..."
+        "virtualAssistantSelectText": "Select ...",
+        "virtualAssistantTooltip": "Create a new Customer Virtual Assistant from the Care Features page.",
+        "virtualAssistantEnableOptional": "Enable Optional Customer Virtual Assistant",
+        "virtualAssistantStorageLocationTitle": "File Storage Location",
+        "virtualAssistantStorageLocationDesc": "Specify a location to store files that customers send to the Customer Virtual Assistant.",
+        "virtualAssistantStorageLocationHelp": "Enter the URL starting with http:// or https://. Apple Business Chat customers cannot send files over 100MB.",
+        "virtualAssistantStorageError": "Cannot access storage location. Verify the URL and try again.",
+        "virtualAssistantStorageProtocolError": "URL must start with 'http://' or 'https://'.",
+        "virtualAssistantStorageToken": "Authentication Token",
+        "virtualAssistantStorageTokenHelp": "Enter the token and click <strong>Validate</strong> to test your storage location.",
+        "virtualAssistantStorageTokenError": "Invalid token. Verify token for storage location and try again.",
+        "virtualAssistantValidateButton": "Validate"
       },
       "statusMessage": {
         "title": "Status Messages",
@@ -9369,6 +9417,7 @@
   "subscriptions": {
     "activeUsers": "Active Users",
     "advancedReporting": "Advanced Reporting",
+    "broadCloudFlex": "BroadCloud Flex",
     "call": "Calling",
     "care": "Care",
     "changePlan": "Change Plan",
@@ -9428,7 +9477,9 @@
       "TSP": "TSP Audio",
       "ST": "Webex Storage",
       "STSPK": "Webex Storage",
-      "MSGR": "Messenger"
+      "MSGR": "Messenger",
+      "SPCA": "Places",
+      "SPSTD": "Standard"
     }
   },
   "onlineUpgradeModal": {
@@ -10295,6 +10346,12 @@
         "routing": "Routing from the cloud to your premise over the enterprise private trunk will happen via the verified domains you selected:",
         "deactivateTitle": "Confirm Deactivate Enterprise Private Trunk",
         "deactivateConfirm": "You are about to deactivate Enterprise Private Trunk Service. Be aware that this action deletes all Cisco Webex remote SIP destinations configuration and disables the service for all users."
+      },
+      "jabberToWebexTeams": {
+        "title": "Jabber Service",
+        "description": "Enables Webex Teams messaging for Jabber users, to replace other Jabber messaging providers. You cannot use Jabber Service with XMPP options like IM and Presence.",
+        "add": "Add a UC Manager Profile",
+        "edit": "Edit UC Manager Profiles"
       }
     },
     "showMore": "View all",
@@ -11734,7 +11791,8 @@
     "deleteDevices": "Delete devices",
     "editDevices": "Edit devices",
     "deleteDevicesAreYouSure": "{nDevices, plural, =1{Are you sure you want to delete this device?} other{Are you sure you want to delete # devices?}}",
-    "deleteActiveDevicesWarning": "{nActiveDevices, plural, =1{This device is not expired and could be in use. A deleted device must be reactivated to work again.} other{# of these devices are not expired and could be in use. All deleted devices must be reactivated individually to work again.}}",
+    "deleteActiveDeviceWarning": "This device has not expired and could be in use. A deleted device must be reactivated to work again.",
+    "deleteActiveDevicesWarning": "{{nActiveDevices}} of these devices have not expired and could be in use. All deleted devices must be reactivated individually to work again.",
     "failedToSearchForActiveDevices": "Failed to count the number of active devices: ",
     "deleteEmptyPlaces": "Delete resulting empty places",
     "deleteEmptyPlacesExplanation": "If the last device in a place is deleted, the place will be deleted too.",

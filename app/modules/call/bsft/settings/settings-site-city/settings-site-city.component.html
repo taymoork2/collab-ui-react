@@ -1,0 +1,15 @@
+<div ng-form="siteCityForm">
+  <label class="sub-section__label">City</label>
+  <div class="row">
+    <input
+      cs-input
+      type="text"
+      name="siteCity"
+      ng-model="$ctrl.city"
+      ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+      ng-change="$ctrl.onCityChanged()"
+      placeholder="{{'common.name' | translate}}"
+      cs-input-messages="$ctrl.messages"
+      cs-input-group-size="medium-4">
+  </div>
+</div>

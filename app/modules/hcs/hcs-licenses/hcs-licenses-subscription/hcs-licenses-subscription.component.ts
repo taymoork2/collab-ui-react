@@ -224,7 +224,7 @@ export class HcsLicensesSubscriptionCtrl implements ng.IComponentController {
   }
 
   public initCustomerLicenseReport(): void {
-    _.each(this.licenses, (lic) => {
+    _.forEach(this.licenses, (lic) => {
       const subIds = _.map(_.get(lic, 'subscriptions'), sub => _.get(sub, 'subscriptionId'));
       const licenses = _.get<IHcsLicense[]>(lic, 'licenses');
       const licenseCust: IHcsCustomerReport = {

@@ -59,6 +59,7 @@ module.exports = {
   atlasIntegrationsManagement: 'atlas-integrations-management',
   atlasITProPack: 'atlas-it-pro-pack',
   atlasITProPackPurchased: 'atlas-it-pro-pack-purchased',
+  atlasJ9614SipUriRebranding: 'atlas-j9614-sip-uri-rebranding',
   atlasJabberInterop: 'atlas-jabber-interop',
   atlasJira2126UseAltEndpoint: 'atlas-jira-2126-use-alt-endpoint',
   atlasMediaServiceCascadeBwConfig: 'atlas-media-service-cascade-bw-config',
@@ -113,6 +114,7 @@ module.exports = {
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
   careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',
+  careApplebuschatOnSiteFileStorageEnable: 'care-applebuschat-onsite-file-storage-enable',
   ccaReports: 'ccaReports',
   ceAllowNolockdown: 'ce-allow-nolockdown',
   clientRingbackV2: 'client-ringback-v2',
@@ -152,7 +154,7 @@ module.exports = {
   hI1635: 'h-i1635', //PSTN Porting
   hI1638: 'h-i1638', //TaaS
   hI802: 'h-i802',
-  hI1776: 'h-i1776',
+  hI1776: 'h-i1776', // BroadFlex Trial Support
   hRegionalTones: 'h-regional-tones',
   huronAAContextService: 'huron-aa-context-service',
   huronAADynannounce: 'huron-aa-dynannounce',
@@ -241,10 +243,10 @@ module.exports = {
   uploadCallLogs: 'upload-call-logs',
   userPresence: 'user-presence',
   uwpImportantFilter: 'uwp-important-filter',
+  spark14176JabberToWebexTeams: 'spark-14176-jabber-to-webex-teams',
   webexCSV: 'webex-CSV',
   webexInternal: 'webex-internal',
   webexMEI: 'webex-MEI',
-  webexMetrics: 'webex-metrics',
   webexSystem: 'webex-system',
   webGuestCall: 'web-guest-call',
   webHuronCalls: 'web-huron-calls',

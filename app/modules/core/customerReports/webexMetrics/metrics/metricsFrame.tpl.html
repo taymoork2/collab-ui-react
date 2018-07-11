@@ -17,6 +17,8 @@
     <iframe id="webexMetricsIframeContainer"
             name="webexMetricsIframeContainer"
             class="fullSize"
+            load-event
+            on-load-event="$ctrl.onIframeLoad({elem: elem})"
             frameborder="0"
             ng-src={{$ctrl.qlikReportUrl}}>
     </iframe>

@@ -18,7 +18,7 @@ describe('Component: myCompanyOrders', () => {
       total: 15.95,
       buyerEmail: 'admin@cisco.com',
       productList: [
-        { description: 'Cisco WebEx 25 Monthly', sku: 'MC25-SPK-ONL-US-M' },
+        { description: 'Cisco WebEx 25 Monthly', sku: 'ONL-STARTER-US-M' },
       ],
     }, {
       externalOrderId: '2',

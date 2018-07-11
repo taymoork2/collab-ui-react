@@ -84,6 +84,12 @@
                 $state.isAppleBusinessChatEnabled = isEnabled;
               });
           },
+          isAppleBusinessChatOnSiteFileStorageEnable: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.careApplebuschatOnSiteFileStorageEnable)
+              .then(function (isEnabled) {
+                $state.isAppleBusinessChatOnSiteFileStorageEnable = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {

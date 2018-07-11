@@ -229,10 +229,10 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private isValidEmail(testStr: string): boolean {
-    const USER_COMPONENT = '^[\\w\\d]([\\w\\d.-])+';
-    const DOMAIN_PREFIX = '([\\w\\d-])+';
+    const USER_COMPONENT = '^[\\w\\d]([\+\\w\\d.-])+';
+    const DOMAIN_PREFIX = '([\+\\w\\d-])+';
     const DOT = '\\.';
-    const DOMAIN_SUFFIX = '([\\w\\d-]){2,}';
+    const DOMAIN_SUFFIX = '([\+\\w\\d-]){2,}';
     const emailRegex = new RegExp(`${USER_COMPONENT}@${DOMAIN_PREFIX}${DOT}${DOMAIN_SUFFIX}`);
     return emailRegex.test(testStr);
   }

@@ -15,6 +15,7 @@
     $state,
     $stateParams,
     $timeout,
+    $window,
     Analytics,
     Authinfo,
     FeatureToggleService,
@@ -29,6 +30,7 @@
     vm.metricsOptions = [];
     vm.metricsSiteOptions = [];
     vm.metricsSelected = '';
+    vm.timeTrack = {};
 
     vm.selectEnable = false;
     vm.isWebexClassicEnabled = false;
@@ -129,6 +131,7 @@
     vm.loadMetricsReport = loadMetricsReport;
     vm.onStateChangeStart = onStateChangeStart;
     vm.onStateChangeSuccess = onStateChangeSuccess;
+    vm.onTrackLoadStatus = onTrackLoadStatus;
     vm.pushClassicTab = pushClassicTab;
     vm.updateWebexMetrics = updateWebexMetrics;
     vm.updateIframe = updateIframe;
@@ -156,14 +159,12 @@
     }
 
     function checkClassic() {
-      FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
-        if (isMetricsOn && vm.isWebexClassicEnabled) {
-          vm.pushClassicTab();
-          if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
-            $timeout(goMetricsInitState, 0);
-          }
+      if (vm.isWebexClassicEnabled) {
+        vm.pushClassicTab();
+        if (!_.isNull(vm.features) && vm.metricsOptions.length === 1) {
+          $timeout(goMetricsInitState, 0);
         }
-      });
+      }
     }
 
     function checkStatePermission(toState) {
@@ -171,10 +172,6 @@
       var stateName = $state.current.name;
       if (!_.isUndefined(toState)) {
         stateName = toState.name;
-      }
-      if (!vm.features.isMetricsOn) {
-        isRedirected = true;
-        goLogin();
       }
       if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.metrics.state)) {
         isRedirected = true;
@@ -274,6 +271,7 @@
     }
 
     function loadMetricsReport() {
+      vm.timeTrack.start = moment().valueOf();
       var reportView = vm.webexMetrics.views[vm.webexMetricsViews];
       if (isMetrics()) {
         reportView = vm.webexMetrics.views[vm.webexMetricsViews][vm.viewType];
@@ -296,19 +294,14 @@
       }
       getWebExReportData(vm.reportType, viewType, userInfo).then(function (data) {
         if (!_.isUndefined(data) && !isReportsChanged(viewType, userInfo)) {
-          vm.webexMetrics.appData = {
-            ticket: data.ticket,
-            appId: data.appName,
-            node: data.host,
-            qrp: data.qlik_reverse_proxy,
-            persistent: data.isPersistent,
-            vID: data.siteId,
-          };
-          //TODO remove this 'if' segment, if QBS can handle this parameter
-          if (vm.webexMetrics.appData.persistent === 'false') {
-            vm.webexMetrics.appData.appId = reportView.appName;
+          if (_.isObject(data)) {
+            vm.webexMetrics.appData = data;
           }
-          var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.webexMetrics.appData.qrp, vm.reportType, viewType);
+          //TODO remove this 'if' segment, if QBS can handle this parameter
+          if (vm.webexMetrics.appData.isPersistent === 'false') {
+            vm.webexMetrics.appData.appName = reportView.appName;
+          }
+          var QlikMashupChartsUrl = _.get(QlikService, 'getQlikMashupUrl')(vm.webexMetrics.appData.qlik_reverse_proxy, vm.reportType, viewType);
           vm.webexMetrics.appData.url = QlikMashupChartsUrl;
           setStorageSite(vm.metricsSelected);
           updateIframe();
@@ -318,7 +311,26 @@
           resetSiteSelector();
           $scope.$broadcast('unfreezeState', true);
           Notification.errorWithTrackingId(error, 'reportsPage.webexMetrics.errorRequest');
+          vm.onTrackLoadStatus(false);
         });
+    }
+
+    function onTrackLoadStatus() {
+      if (!isMetrics() && _.isNil(vm.timeTrack.start)) {
+        return;
+      }
+      vm.timeTrack.end = moment().valueOf();
+      vm.timeTrack.loadParams = {
+        site: vm.metricsSelected,
+        loadTime: _.round((vm.timeTrack.end - vm.timeTrack.start) / 1000, 2),
+        status: vm.timeTrack.status ? 'success' : 'failure',
+      };
+      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_REPORT_LOADING_STATUS, vm.timeTrack.loadParams);
+      resetTrackTime();
+    }
+
+    function resetTrackTime() {
+      vm.timeTrack = {};
     }
 
     function onDestory() {
@@ -431,7 +443,6 @@
 
     function setupSubTabs() {
       var promises = {
-        isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
         // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
         isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
@@ -448,7 +459,7 @@
         if (features.isInternalOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
-        if (features.isMetricsOn && features.hasMetricsSite) {
+        if (features.hasMetricsSite) {
           if (features.isProPackEnabled && !features.isUX3) {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
           } else {
@@ -476,11 +487,14 @@
       var iframeUrl = vm.webexMetrics.appData.url;
       var data = {
         trustIframeUrl: $sce.trustAsResourceUrl(iframeUrl),
-        appid: vm.webexMetrics.appData.appId,
+        appid: vm.webexMetrics.appData.appName,
         QlikTicket: vm.webexMetrics.appData.ticket,
-        node: vm.webexMetrics.appData.node,
-        persistent: vm.webexMetrics.appData.persistent,
-        vID: vm.webexMetrics.appData.vID,
+        node: vm.webexMetrics.appData.host,
+        persistent: vm.webexMetrics.appData.isPersistent,
+        vID: vm.webexMetrics.appData.vid,
+        responseid: vm.webexMetrics.appData.responseid,
+        qbs: vm.webexMetrics.appData.qbsUrl,
+        package: vm.webexMetrics.appData.package,
       };
       $scope.$broadcast('updateIframe', iframeUrl, data);
     }
@@ -492,7 +506,6 @@
 
     function updateWebexMetrics() {
       $scope.$broadcast('unfreezeState', false);
-      Analytics.trackReportsEvent(Analytics.sections.REPORTS.eventNames.CUST_MEETING_SITE_SELECTED);
 
       if (vm.selectEnable && (_.isNull(vm.metricsSelected) || _.isUndefined(vm.metricsSelected))) {
         vm.isNoData = true;
@@ -501,5 +514,15 @@
         vm.loadMetricsReport();
       }
     }
+
+    $scope.iframeLoaded = function (elem) {
+      elem.ready(function () {
+        if (!_.startsWith(elem[0].src, 'about')) {
+          var token = $window.sessionStorage.getItem('accessToken');
+          var orgID = Authinfo.getOrgId();
+          elem[0].contentWindow.postMessage(token + ',' + orgID, '*');
+        }
+      });
+    };
   }
 })();

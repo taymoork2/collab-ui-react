@@ -60,7 +60,7 @@
       label: $translate.instant('mediaFusion.easyConfig.hmsconfig'),
     }, {
       value: 2,
-      label: $translate.instant('mediaFusion.easyConfig.hmsconfig'),
+      label: $translate.instant('mediaFusion.easyConfig.hmsconfigcluster'),
     }, {
       value: 3,
       label: $translate.instant('mediaFusion.easyConfig.serviceconfig'),

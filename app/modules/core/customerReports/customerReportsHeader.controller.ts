@@ -19,7 +19,7 @@ class CustomerReportsHeaderCtrl {
       });
     }
     this.$q.all(this.promises).then((features: any): void => {
-      if (features.webexMetrics && features.proPackEnabled) {
+      if (features.proPackEnabled) {
         this.headerTabs.push(
           {
             title: this.$translate.instant('reportsPage.messageTab'),
@@ -64,48 +64,34 @@ class CustomerReportsHeaderCtrl {
   private promises: any = {
     isMfEnabled: this.MediaServiceActivationV2.getMediaServiceState(),
     isQlikEnabled: this.FeatureToggleService.atlasHybridMediaServiceQlikReportsGetStatus(),
-    webexMetrics: this.FeatureToggleService.webexMetricsGetStatus(),
     proPackEnabled: this.ProPackService.hasProPackEnabled(),
     autoLicenseEnabled: this.FeatureToggleService.autoLicenseGetStatus(),
   };
 
   public checkWebex(): void {
-    this.FeatureToggleService.webexMetricsGetStatus().then((isMetricsOn: any) => {
-      this.isWebexMetricsEnabled = isMetricsOn;
-      if (isMetricsOn) {
-        this.WebexMetricsService.checkWebexAccessiblity().then((supports: any): void => {
-          const isSupported: any[] = this.WebexMetricsService.isAnySupported(supports);
-          if (isSupported) {
-            this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webexMetrics.title'),
-              state: 'reports.webex-metrics',
-            });
-          }
-          this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
-            if (hasClassicSite) {
-              this.isWebexClassicEnabled = true;
-              this.$scope.$broadcast('classicEnabled', this.isWebexMetricsEnabled);
-              if (!isSupported) {
-                this.headerTabs.push(
-                  {
-                    title: this.$translate.instant('reportsPage.webexMetrics.title'),
-                    state: 'reports.webex-metrics',
-                  },
-               );
-              }
-            }
-          });
-        });
-      } else {
-        this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: any) => {
-          if (hasClassicSite) {
-            this.headerTabs.push({
-              title: this.$translate.instant('reportsPage.webex'),
-              state: 'reports.webex',
-            });
-          }
+    this.WebexMetricsService.checkWebexAccessiblity().then((supports: boolean[]): void => {
+      const isSupported: boolean = this.WebexMetricsService.isAnySupported(supports);
+
+      if (isSupported) {
+        this.headerTabs.push({
+          title: this.$translate.instant('reportsPage.webexMetrics.title'),
+          state: 'reports.webex-metrics',
         });
       }
+      this.WebexMetricsService.hasClassicEnabled().then((hasClassicSite: boolean) => {
+        if (hasClassicSite) {
+          this.isWebexClassicEnabled = true;
+          this.$scope.$broadcast('classicEnabled', this.isWebexMetricsEnabled);
+          if (!isSupported) {
+            this.headerTabs.push(
+              {
+                title: this.$translate.instant('reportsPage.webexMetrics.title'),
+                state: 'reports.webex-metrics',
+              },
+            );
+          }
+        }
+      });
     });
   }
 

@@ -1,9 +1,10 @@
 import { ProvisioningService } from './provisioning.service';
-import { IOrders, IOrder } from './provisioning.interfaces';
+import { IOrders, IReportOption, IOrder } from './provisioning.interfaces';
 import { Status } from './provisioning.service';
 import { Notification } from 'modules/core/notifications';
 import { FeatureToggleService } from 'modules/core/featureToggle';
 import { STATUS_UPDATE_EVENT_NAME } from './provisioning.service';
+import * as moment from 'moment-timezone';
 
 export class ProvisioningController {
 
@@ -14,14 +15,26 @@ export class ProvisioningController {
     title: this.$translate.instant('provisioningConsole.tabs.completed'),
     state: 'provisioning.completed',
   }];
+
+  public csvFilterOptions: IReportOption[] = [{
+    label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueReceived'),
+    value: 'created',
+  }, {
+    label: this.$translate.instant('provisioningConsole.actions.export.csvFilterOptions.queueCompleted'),
+    value: 'completed',
+  }];
+
+  public selectedFilterValue: IReportOption = this.csvFilterOptions[0];
   public isLoading: boolean = false;
   public gridApi: uiGrid.IGridApi;
+  public exportLoading = false;
   public status = Status;
   public completedOrders: any;
   public pendingOrders: any;
   private featureToggleFlag: boolean;
   public tooltipMessage: string;
-
+  public selectedFilterOptionStartDate: string = '';
+  public selectedFilterOptionEndDate: string = '';
   private timer: any;
   private gridOptions: { pending: uiGrid.IGridOptions, completed: uiGrid.IGridOptions };
   private sharedColumDefs: uiGrid.IColumnDef[];
@@ -120,6 +133,122 @@ export class ProvisioningController {
     }
   }
 
+/**
+ *  Navigation to csv downlad screen
+ */
+  public navigateToCSVDownloadModal() {
+    this.$state.go('provisioning.csvdownload');
+  }
+
+  /**
+   * To download the post provisioning order details as CSV file.
+   */
+  public exportCSV(): ng.IPromise<void | IOrder[]>   {
+    this.exportLoading = true;
+    return this.postProvisioningExportCSV().then((res) => {
+      this.Notification.success('provisioningConsole.actions.export.success');
+      this.$state.go('provisioning.completed');
+      return res;
+    }).catch((res) => {
+      this.Notification.errorResponse(res, 'provisioningConsole.actions.export.failure');
+    }).finally(() => {
+      this.$timeout(() => {
+        this.exportLoading = false;
+      }, 5000);
+    });
+  }
+
+  private postProvisioningExportCSV(): ng.IPromise<IOrder[]> {
+    let startDate;
+    let endDate;
+    let today;
+    let start;
+    let end;
+    let isFilterOn = true;
+    if (_.isEmpty(this.selectedFilterOptionStartDate) || _.isEmpty(this.selectedFilterOptionEndDate)) {
+      isFilterOn = false;
+    } else {
+      startDate = moment(this.selectedFilterOptionStartDate, 'YYYY-MM-DD');
+      endDate = moment(this.selectedFilterOptionEndDate, 'YYYY-MM-DD');
+      today = moment(moment().format('YYYY-MM-DD'));
+      start = today.diff(endDate, 'days');
+      end = today.diff(startDate, 'days');
+    }
+    const exportedLines: any[] = [];
+    const headerLine = {
+      webOrderID: this.$translate.instant('provisioningConsole.orderNumber'),
+      customerName: this.$translate.instant('provisioningConsole.customerName'),
+      adminEmail: this.$translate.instant('provisioningConsole.customerMail'),
+      manualCode: this.$translate.instant('provisioningConsole.manualCode'),
+      siteUrl: this.$translate.instant('provisioningConsole.siteUrl'),
+      orderReceived: this.$translate.instant('provisioningConsole.orderReceived'),
+      lastModified: this.$translate.instant('provisioningConsole.lastModified'),
+      status: this.$translate.instant('provisioningConsole.status'),
+      queueReceived: this.$translate.instant('provisioningConsole.queueReceived'),
+      queueCompleted: this.$translate.instant('provisioningConsole.queueCompleted'),
+      assignedTo: this.$translate.instant('provisioningConsole.assignedTo'),
+      completedBy: this.$translate.instant('provisioningConsole.completedBy'),
+    };
+    exportedLines.push(headerLine);
+    const uiparams = { isFilterOn: isFilterOn, startDate: startDate, endDate: endDate };
+    this.filterProcessOrderToCsvDownload(this.pendingOrders, uiparams, exportedLines);
+
+    if (start === undefined || end === undefined) {
+      start = 0;
+      end = 30;  // By default setting for 1 month
+    }
+    return this.ProvisioningService.getOrders(Status.COMPLETED, this.featureToggleFlag, start, end, this.selectedFilterValue.value).then((res: IOrder[]) => {
+      if (!res.length) {
+        return exportedLines; // only export the header when is empty
+      }
+      _.forEach(res, (line) => {
+        this.formatCompletedStatusData(line, exportedLines);
+      });
+      return exportedLines;
+    });
+  }
+  private formatCompletedStatusData(order: any, exportedLines: any): any[] {
+    exportedLines = this.collectData(order, exportedLines);
+    return exportedLines;
+  }
+
+  private filterProcessOrderToCsvDownload(orderType: any, options: any, exportedLines: any[]): any [] {
+    let dateTypeToFilter;
+    _.forEach(orderType, (order) => {
+      if (options.isFilterOn) {
+        if (this.selectedFilterValue.value === 'created') {
+          dateTypeToFilter = moment(order.queueReceived, 'YYYY-MM-DD');
+        } else if (this.selectedFilterValue.value === 'completed') {
+          dateTypeToFilter = moment(order.queueCompleted, 'YYYY-MM-DD');
+        }
+      }
+      if (!options.isFilterOn) {
+        exportedLines = this.collectData(order, exportedLines);
+      } else if ((dateTypeToFilter >= options.startDate) && (dateTypeToFilter <= options.endDate)) {
+        exportedLines = this.collectData(order, exportedLines);
+      }
+    });
+    return exportedLines;
+  }
+
+  private collectData(order: any, exportedLines: any[]): any[] {
+    const extractData = {
+      webOrderID: order.webOrderID,
+      customerName: order.customerName,
+      adminEmail: order.adminEmail,
+      manualCode: order.manualCode,
+      siteUrl: order.siteUrl,
+      orderReceived: order.orderReceived,
+      lastModified: order.lastModified,
+      status: order.status,
+      queueReceived: order.queueReceived,
+      queueCompleted: order.queueCompleted,
+      assignedTo: order.assignedTo,
+      completedBy: order.completedBy,
+    };
+    exportedLines.push(extractData);
+    return exportedLines;
+  }
   /*
   * Search for a specific order number.
   */

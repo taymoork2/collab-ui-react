@@ -105,7 +105,6 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     spyOn(this.WebexMetricsService, 'hasMetricsSites').and.returnValue(this.$q.resolve(true));
     spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'diagnosticF8193UX3GetStatus').and.returnValue(this.$q.resolve(true));
-    spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexMEIGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexSystemGetStatus').and.returnValue(this.$q.resolve(true));
     spyOn(this.FeatureToggleService, 'webexInternalGetStatus').and.returnValue(this.$q.resolve(true));
@@ -148,6 +147,15 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(this.controller.iframeContainerClass).toBe('webexMetricsContentWithReadOnly');
   });
 
+  it('should track the loading time event when onTrackLoadStatus called', function () {
+    this.controller.webexMetricsViews = 'metrics';
+    this.controller.timeTrack.start = moment().valueOf();
+    this.controller.timeTrack.status = true;
+    this.controller.onTrackLoadStatus();
+    this.$scope.$apply();
+    expect(this.Analytics.trackReportsEvent).toHaveBeenCalled();
+  });
+
   it('should set the metrics tab depends on the rules', function () {
     var testMetricsOptions = [
       testWebexMetrics.states.system,
@@ -183,15 +191,11 @@ describe('Controller: WebEx Metrics Ctrl', function () {
   it('should check classic when classicEnabled event fired', function () {
     this.$scope.$broadcast('classicEnabled', false);
     expect(this.controller.isWebexClassicEnabled).toBeFalsy();
-    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
-    // this.FeatureToggleService.webexMetricsGetStatus.and.returnValue(this.$q.resolve(false));
   });
 
   it('should check classic and push the tab when classicEnabled event fired with true', function () {
     this.$scope.$broadcast('classicEnabled', true);
     expect(this.controller.isWebexClassicEnabled).toBeTruthy();
-    expect(this.FeatureToggleService.webexMetricsGetStatus).toHaveBeenCalled();
-    // expect(this.controller.pushClassicTab).toHaveBeenCalled();
   });
 
   it('should broadcast the event when updateWebexMetrics called', function () {
@@ -228,9 +232,6 @@ describe('Controller: WebEx Metrics Ctrl', function () {
     expect(event.preventDefault).toHaveBeenCalled();
 
     spyOn(this.controller.$state, 'go');
-    this.controller.features.isMetricsOn = false;
-    this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.metrics' }, {}, { name: 'overview' });
-    expect(this.controller.$state.go).toHaveBeenCalledWith('login');
 
     this.controller.features.isMEIOn = false;
     this.controller.onStateChangeStart(event, { name: 'reports.webex-metrics.MEI' }, {}, { name: 'reports.webex-metrics.system' });

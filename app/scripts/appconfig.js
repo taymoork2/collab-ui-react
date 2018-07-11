@@ -2233,7 +2233,7 @@
             url: '/:siteUrl/metrics',
             views: {
               metricsContent: {
-                template: '<metrics-frame></metrics-frame>',
+                template: '<metrics-frame time-track = "nav.timeTrack" on-track-load-status="nav.onTrackLoadStatus(nav.startTime)"  on-iframe-load="iframeLoaded(elem)"></metrics-frame>',
               },
             },
           })
@@ -4013,6 +4013,16 @@
             views: {
               provisioningView: {
                 template: require('modules/squared/provisioning-console/completed/provisioning-completed.html'),
+              },
+            },
+          })
+          .state('provisioning.csvdownload', {
+            parent: 'modal',
+            views: {
+              'modal@': {
+                template: require('modules/squared/provisioning-console/provisioningCSVDownloadModal.html'),
+                controller: 'ProvisioningController',
+                controllerAs: 'provisioningCtrl',
               },
             },
           })
@@ -5925,14 +5935,14 @@
             parent: 'modal',
             params: {
               mode: null,
-              caseId: null,
+              matter: null,
             },
             views: {
               'modal@': {
-                template: '<legal-hold-custodians-manage dismiss="$dismiss()" case-id="$resolve.caseId" mode="$resolve.mode"></legal-hold-custodians-manage>',
+                template: '<legal-hold-custodians-manage dismiss="$ctrl.cancelModal()" matter="$resolve.matter" mode="$resolve.mode"></legal-hold-custodians-manage>',
                 resolve: {
-                  caseId: /* @ngInject */ function ($stateParams) {
-                    return $stateParams.caseId;
+                  matter: /* @ngInject */ function ($stateParams) {
+                    return $stateParams.matter;
                   },
                   mode: /* @ngInject */ function ($stateParams) {
                     return $stateParams.mode;

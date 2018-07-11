@@ -8,7 +8,7 @@
     .name;
 
   /* @ngInject */
-  function QlikService($http, $log, /*$injector, */$q, Config, UrlConfig) {
+  function QlikService($http, $log, /*$injector, */$q, Config, UrlConfig, Authinfo) {
     var QlikUrlParams = {
       webexBasic: ['basic_webex_v1', 'webex-report-basic'],
       webexPremium: ['premium_webex_v1', 'webex-report-premium'],
@@ -37,6 +37,7 @@
       getProdToBTSQBSInfo: getProdToBTSQBSInfo,
       callReportQBSBTS: callReportQBSBTS,
     };
+    var qbsPackage = 'qlik-gtwy-server-1.0-SNAPSHOT';
 
     return service;
 
@@ -51,7 +52,9 @@
     }
 
     function getQlikServiceData(url, data) {
-      return $http.post(url, data).then(extractData).catch(catchError);
+      return $http.post(url, data).then(function (response) {
+        return extractData(response, url);
+      }).catch(catchError);
     }
 
     function getQlikMashupUrl(qrp, reportType, viewType) { //qlik_reverse_proxy
@@ -62,7 +65,12 @@
       return reportsAppUrl + mashupAppUrl;
     }
 
-    function extractData(response) {
+    function extractData(response, qbsUrl) {
+      response.data.package = qbsPackage;
+      response.data.qbsUrl = getQbsServer(qbsUrl);
+      if (_.isEmpty(_.get(response.data, 'responseid'))) {
+        response.data.responseid = 'NONE';
+      }
       return response.data;
     }
 
@@ -70,11 +78,11 @@
       return $q.reject(error);
     }
 
-    function specifyReportQBS(isError, result, reportType, viewType, data, env) {
+    function specifyReportQBS(isError, result, reportType, viewType, data, env, qbsUrl) {
       var resultData = _.get(result, 'data', '');
       var siteId = _.get(resultData, 'siteId', '');
 
-      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '')) {
+      if (Config.getEnv() === 'prod' && (env !== 'integration') && (isError || siteId === '') && Authinfo.isCisco()) {
         $log.log('turns to call QBS BTS');
         return service.callReportQBSBTS(reportType, viewType, data);
       }
@@ -82,7 +90,7 @@
       if (isError) {
         return catchError(result);
       } else {
-        return extractData(result);
+        return extractData(result, qbsUrl);
       }
     }
 
@@ -107,10 +115,18 @@
       var QBSUrl = getServiceUrl(reportType, viewType, env);
 
       return $http.post(QBSUrl, data).then(function (response) {
-        return specifyReportQBS(false, response, reportType, viewType, data, env);
+        return specifyReportQBS(false, response, reportType, viewType, data, env, QBSUrl);
       }).catch(function (error) {
         return specifyReportQBS(true, error, reportType, viewType, data, env);
       });
+    }
+
+    function getQbsServer(url) {
+      var qbsUrl = url;
+      if (!_.isNil(qbsUrl) && _.startsWith(qbsUrl, 'http')) {
+        qbsUrl = url.split('/')[2];
+      }
+      return qbsUrl;
     }
   }
 }());

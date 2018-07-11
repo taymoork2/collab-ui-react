@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="provisioningConsole.actions.export.title"></h3>  
+</div>
+<div class="modal-body">
+    <div class="row">
+      <div class="columns">
+        <h4 translate="provisioningConsole.actions.export.helptext"></h4>  
+      </div>
+    </div>
+    <div class="row">
+        <div class="columns"><span>&nbsp;</span></div>
+    </div>
+    <div class="row">
+        <div class="columns"><span translate="common.dateRange"></span></div>
+    </div>
+    <div class="row">
+        <div class="columns medium-5">
+            <cs-select
+            name="reportDateFilter" 
+            ng-model="provisioningCtrl.selectedFilterValue"
+            options="provisioningCtrl.csvFilterOptions">
+        </div>
+    </div>
+    <div class="row">
+        <div class="columns"><span>&nbsp;</span></div>
+    </div>
+    <div class="row">
+        <div class="columns medium-5">
+            <div class="detail-reports">
+                <cs-page-sub-header-left>
+                  <cs-datepicker required class="startDate" ng-model="provisioningCtrl.selectedFilterOptionStartDate" placeholder="{{'reportsPage.placeholder.startDate' | translate}}" view-format="MM/DD/YY">
+                  </cs-datepicker>
+                  <cs-datepicker required class="endDate" ng-model="provisioningCtrl.selectedFilterOptionEndDate" placeholder="{{'reportsPage.placeholder.endDate' | translate}}"
+                  view-format="MM/DD/YY">
+                  </cs-datepicker>
+                </cs-page-sub-header-left>
+              </div>
+        </div>
+   </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="$dismiss()" translate="common.cancel"></button>
+  <a class="export-users" ng-csv="provisioningCtrl.exportCSV()" filename="{{::'provisioningConsole.actions.export.csvFilename' | translate}}" quote-strings="true">
+    <button class="btn btn--primary" translate="provisioningConsole.actions.export.createButton"></button>
+  </a>
+</div>

@@ -28,6 +28,7 @@
     var strEntityId = 'entityID="';
     var strEntityIdEnd = '"';
     $scope.updateSSO = updateSSO;
+    $scope.isReadOnly = Authinfo.isReadOnlyAdmin();
 
     $scope.options = {
       configureSSO: 1,
@@ -214,11 +215,13 @@
       value: 1,
       name: 'ssoOptions',
       id: 'ssoNoProvider',
+      isDisabled: $scope.isReadOnly,
     }, {
       label: $translate.instant('ssoModal.enableSSO'),
       value: 0,
       name: 'ssoOptions',
       id: 'ssoProvider',
+      isDisabled: $scope.isReadOnly,
     }];
 
     $scope.SSOSelfSignedOptions = [{
@@ -226,11 +229,13 @@
       value: 0,
       name: 'ssoSelfSignedCert',
       id: 'ssoNoSelfSigned',
+      isDisabled: $scope.isReadOnly,
     }, {
       label: $translate.instant('ssoModal.allowSelfCertMetadata'),
       value: 1,
       name: 'ssoSelfSignedCert',
       id: 'ssoSelfSigned',
+      isDisabled: $scope.isReadOnly,
     }];
 
     $scope.enableSSOOptions = [{
@@ -238,11 +243,13 @@
       value: 1,
       name: 'finalssoOptions',
       id: 'finalSsoProvider',
+      isDisabled: $scope.isReadOnly,
     }, {
       label: $translate.instant('ssoModal.finalDisableSSO'),
       value: 0,
       name: 'finalssoOptions',
       id: 'finalSsoNoProvider',
+      isDisabled: $scope.isReadOnly,
     }];
 
     $scope.$watch('options.configureSSO', function (updatedConfigureSSOValue) {
