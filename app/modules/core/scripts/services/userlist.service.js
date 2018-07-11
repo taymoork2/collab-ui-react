@@ -217,7 +217,7 @@
       // crunch 'filter.*' properties to make a proper filter expression, then set as 'ci.filter'
       var filterParams = _.get(params, 'filter');
       var filterExpr = service._helpers.mkFilterExpr(filterParams);
-      _.set(params, 'ci.attributes', CI_QUERY.DEFAULT_ATTRS);
+      _.set(params, 'ci.attributes', params.attributes || CI_QUERY.DEFAULT_ATTRS);
       _.set(params, 'ci.filter', filterExpr);
       _.set(params, 'ci.count', params.count);
       _.set(params, 'ci.startIndex', params.startIndex);

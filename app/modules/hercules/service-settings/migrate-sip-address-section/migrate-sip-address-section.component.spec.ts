@@ -3,6 +3,7 @@ import moduleName from './index';
 import { MigrateSipAddressSection } from './migrate-sip-address-section.component';
 
 type Test = atlas.test.IComponentTest<MigrateSipAddressSection, {
+  $modal: ng.ui.bootstrap.IModalService,
   ModalService: IToolkitModalService,
 }>;
 
@@ -17,6 +18,7 @@ describe('Component: migrateSipAddressSection', () => {
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies(
+      '$modal',
       '$q',
       'ModalService',
     );
@@ -24,11 +26,14 @@ describe('Component: migrateSipAddressSection', () => {
 
     this.initSpies = (spies: {
       modalResult?,
+      modalServiceResult?,
     } = {}) => {
       const {
         modalResult = this.$q.resolve(),
+        modalServiceResult = this.$q.resolve(),
       } = spies;
-      spyOn(this.ModalService, 'open').and.returnValue({ result: modalResult });
+      spyOn(this.$modal, 'open').and.returnValue({ result: modalResult });
+      spyOn(this.ModalService, 'open').and.returnValue({ result: modalServiceResult });
     };
   });
 

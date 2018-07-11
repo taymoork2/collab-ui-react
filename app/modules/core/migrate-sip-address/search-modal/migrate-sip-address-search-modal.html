@@ -1,0 +1,45 @@
+<script type="text/ng-template" id="typeahead.html">
+  <a>
+    <span ng-bind-html="match.label | typeaheadHighlight:query"></span>
+  </a>
+</script>
+<multi-step-modal
+  cancel="$ctrl.dismiss()"
+  custom-finish="$ctrl.testMigrateSipAddress()"
+  custom-finish-disabled="!$ctrl.hasMembers"
+  custom-finish-l10n-label="common.test"
+  dismiss="$ctrl.dismiss()"
+  l10n-title="migrateSipAddressSearchModal.title"
+>
+  <p translate="migrateSipAddressSearchModal.description"></p>
+  <div class="typeahead-group row search-modal__search-input-row">
+    <input class="underline small-6"
+      type="text"
+      placeholder="{{::'migrateSipAddressSearchModal.searchPlaceholder' | translate}}"
+      ng-model="$ctrl.searchString"
+      typeahead="$ctrl.formatResultLabel(result) for result in $ctrl.search($viewValue)"
+      typeahead-on-select="$ctrl.selectMember($item)"
+      typeahead-template-url="typeahead.html"
+      typeahead-wait-ms="250"
+      focus-on
+    >
+    <i class="icon icon-spinner"
+      ng-if="$ctrl.isSearching"
+    ></i>
+  </div>
+  <p class="body-small search-modal__search-description"
+    translate="migrateSipAddressSearchModal.searchDescription"
+  ></p>
+  <div class="search-modal__card-member-container">
+    <cs-card-member
+      ng-repeat="member in $ctrl.selectedMembers track by $index"
+      cs-type="simple"
+      cs-member-type="{{::member.type}}"
+      cs-id="member.id"
+      cs-title="member.title"
+      cs-subtitle="member.subtitle"
+      cs-image="member.image"
+      on-remove="$ctrl.removeMember(member)"
+    ></cs-card-member>
+  </div>
+</multi-step-modal>

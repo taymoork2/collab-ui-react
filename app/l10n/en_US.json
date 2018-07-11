@@ -11994,6 +11994,12 @@
       "developerNameEmail": "Developer Name and Email"
     }
   },
+  "migrateSipAddressSearchModal": {
+    "title": "Migrate SIP Addresses",
+    "description": "To test the *.webex.com SIP addresses on specific users or places, search for and select them here.",
+    "searchPlaceholder": "Search for users and places to test",
+    "searchDescription": "We'll apply the new SIP addresses only to the test cases you choose here, not your entire organization."
+  },
   "broadCloud": {
     "ftsw": {
       "siteList": {

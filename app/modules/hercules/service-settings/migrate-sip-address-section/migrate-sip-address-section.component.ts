@@ -9,6 +9,7 @@ export class MigrateSipAddressSection implements ng.IComponentController {
 
   /* @ngInject */
   constructor(
+    private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
     private ModalService: IToolkitModalService,
   ) {}
@@ -38,10 +39,8 @@ export class MigrateSipAddressSection implements ng.IComponentController {
   }
 
   private runTest(): void {
-    this.ModalService.open({
-      message: 'placeholder test',
-      hideDismiss: true,
-      hideTitle: true,
+    this.$modal.open({
+      template: '<migrate-sip-address-search-modal close="$close()" dismiss="$dismiss()"></migrate-sip-address-search-modal>',
     }).result
       .then(() => this.isTestDone = true);
   }

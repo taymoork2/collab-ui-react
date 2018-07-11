@@ -1,0 +1,20 @@
+@import 'styles/partials/mixins';
+
+migrate-sip-address-search-modal {
+  @include keep-flex-container(column);
+
+  .search-modal__search-input-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-modal__search-description {
+    font-style: oblique;
+  }
+
+  .search-modal__card-member-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+}
