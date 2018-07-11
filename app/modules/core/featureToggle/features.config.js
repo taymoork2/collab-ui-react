@@ -247,7 +247,6 @@ module.exports = {
   webexCSV: 'webex-CSV',
   webexInternal: 'webex-internal',
   webexMEI: 'webex-MEI',
-  webexMetrics: 'webex-metrics',
   webexSystem: 'webex-system',
   webGuestCall: 'web-guest-call',
   webHuronCalls: 'web-huron-calls',

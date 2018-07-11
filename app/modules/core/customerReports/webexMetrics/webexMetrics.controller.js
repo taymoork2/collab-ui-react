@@ -159,14 +159,12 @@
     }
 
     function checkClassic() {
-      FeatureToggleService.webexMetricsGetStatus().then(function (isMetricsOn) {
-        if (isMetricsOn && vm.isWebexClassicEnabled) {
-          vm.pushClassicTab();
-          if (!_.isNull(vm.features) && vm.webexOptions.length === 1) {
-            $timeout(goMetricsInitState, 0);
-          }
+      if (vm.isWebexClassicEnabled) {
+        vm.pushClassicTab();
+        if (!_.isNull(vm.features) && vm.metricsOptions.length === 1) {
+          $timeout(goMetricsInitState, 0);
         }
-      });
+      }
     }
 
     function checkStatePermission(toState) {
@@ -174,10 +172,6 @@
       var stateName = $state.current.name;
       if (!_.isUndefined(toState)) {
         stateName = toState.name;
-      }
-      if (!vm.features.isMetricsOn) {
-        isRedirected = true;
-        goLogin();
       }
       if (!vm.features.hasMetricsSite && _.isEqual(stateName, vm.webexMetrics.states.metrics.state)) {
         isRedirected = true;
@@ -449,7 +443,6 @@
 
     function setupSubTabs() {
       var promises = {
-        isMetricsOn: FeatureToggleService.webexMetricsGetStatus(),
         // hasClassicSite: WebexMetricsService.hasClassicEnabled(),
         hasMetricsSite: WebexMetricsService.hasMetricsSites(),
         isMEIOn: false, //FeatureToggleService.webexMEIGetStatus(),
@@ -466,7 +459,7 @@
         if (features.isInternalOn) {
           vm.metricsOptions.push(vm.webexMetrics.states.dashboard, vm.webexMetrics.states.jms, vm.webexMetrics.states.jmt);
         }
-        if (features.isMetricsOn && features.hasMetricsSite) {
+        if (features.hasMetricsSite) {
           if (features.isProPackEnabled && !features.isUX3) {
             vm.metricsOptions.push(vm.webexMetrics.states.metrics, vm.webexMetrics.states.diagnostics);
           } else {

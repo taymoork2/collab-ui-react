@@ -15,7 +15,6 @@
     $window,
     Log,
     Authinfo,
-    FeatureToggleService,
     TokenService,
     WebExUtilsFact
   ) {
@@ -75,26 +74,12 @@
       'trustIframeUrl=' + $scope.trustIframeUrl;
     Log.debug(_this.logMsg);
 
-    // $scope.classicLink = getWebexClassicLink();
-    getWebexClassicLink();
+    $scope.classicLink = getWebexClassicLink();
 
     function getWebexClassicLink() {
-      FeatureToggleService.webexMetricsGetStatus().then(function (isWebexMetricsOn) {
-        var classicLink = 'reports.webex';
-        if (isWebexMetricsOn) {
-          classicLink = 'reports.webex-metrics.classic';
-        }
-        classicLink += '({siteUrl:' + siteUrl + '})';
-        $scope.classicLink = classicLink;
-        return classicLink;
-      });
-      /*var isClassicOn = FeatureToggleService.webexMetricsGetStatus();
       var classicLink = 'reports.webex-metrics.classic';
-      if (isClassicOn) {
-        classicLink = 'reports.webex';
-      }
       classicLink += '({siteUrl:' + siteUrl + '})';
-      return classicLink;*/
+      return classicLink;
     }
 
     $rootScope.lastSite = siteUrl;

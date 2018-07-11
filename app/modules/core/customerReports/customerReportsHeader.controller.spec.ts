@@ -68,7 +68,6 @@ describe('Controller: Customer Reports Ctrl', function () {
     beforeEach(function () {
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(false));
       spyOn(this.FeatureToggleService, 'atlasHybridMediaServiceQlikReportsGetStatus').and.returnValue(this.$q.resolve(false));
-      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(false));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(false));
       spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve([false]));
       spyOn(this.WebexMetricsService, 'checkWebexAccessiblity').and.returnValue(this.$q.resolve([true]));
@@ -85,9 +84,8 @@ describe('Controller: Customer Reports Ctrl', function () {
       this.$scope.$apply();
     });
 
-    it('should only display spark and care reports tab', function () {
-      expect(this.controller.headerTabs).toContain(headerTabs[0], headerTabs[1]);
-      expect(this.controller.headerTabs).toContain(headerTabs[2], headerTabs[4]);
+    it('should only display webx metrics and care reports tab', function () {
+      expect(this.controller.headerTabs).toContain(headerTabs[0], propackTabs[2]);
     });
 
   });
@@ -96,7 +94,6 @@ describe('Controller: Customer Reports Ctrl', function () {
     beforeEach(function () {
       spyOn(this.MediaServiceActivationV2, 'getMediaServiceState').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'atlasHybridMediaServiceQlikReportsGetStatus').and.returnValue(this.$q.resolve(true));
-      spyOn(this.FeatureToggleService, 'webexMetricsGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.FeatureToggleService, 'autoLicenseGetStatus').and.returnValue(this.$q.resolve(true));
       spyOn(this.ProPackService, 'hasProPackEnabled').and.returnValue(this.$q.resolve(true));
       spyOn(this.WebexMetricsService, 'hasClassicEnabled').and.returnValue(this.$q.resolve([true]));
