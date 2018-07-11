@@ -18,7 +18,7 @@ export default function configureStates($stateProvider: ng.ui.IStateProvider) {
     .state('jabber-to-webex-teams.modal.confirm-prerequisites', {
       views: {
         'modal@': {
-          template: '<jabber-to-webex-teams-prerequisites-modal></jabber-to-webex-teams-prerequisites-modal>',
+          template: '<jabber-to-webex-teams-prerequisites-modal dismiss="$dismiss()"></jabber-to-webex-teams-prerequisites-modal>',
         },
       },
     });
