@@ -43,7 +43,7 @@ export class BsftSettings implements IBsftSettings {
       name: _.get(bsftSettings.site, 'name'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
       numbers: _.get(bsftSettings.site, 'numbers'),
-      emergencyAddress: _.get(bsftSettings.site, 'emergencyAddress'),
+      address: _.get(bsftSettings.site, 'address'),
       contact: _.get(bsftSettings.site, 'contact'),
     });
   }

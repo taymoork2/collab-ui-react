@@ -3,6 +3,7 @@ import bsftSettingsSharedModule from './shared';
 import bsftSiteNameModule from './settings-site-name';
 import bsftSiteAddress from './settings-site-address';
 import bsftSiteCity from './settings-site-city';
+import bsftSiteZipcode from './settings-site-zipcode';
 import bsftSiteState from './settings-site-state';
 import bsftSiteCountry from './settings-site-country';
 import bsftContactFirstNameModule from './settings-contact-first-name';
@@ -20,6 +21,7 @@ export default angular
     bsftSiteNameModule,
     bsftSiteAddress,
     bsftSiteCity,
+    bsftSiteZipcode,
     bsftSiteState,
     bsftSiteCountry,
     bsftContactFirstNameModule,

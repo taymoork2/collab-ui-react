@@ -67,6 +67,10 @@ class BsftSettingsCtrl implements ng.IComponentController {
     _.set(this.bsftSettingsData.bsftSettings.site, 'city', city);
   }
 
+  public onSiteZipcodeChanged(zipcode) {
+    _.set(this.bsftSettingsData.bsftSettings.site, 'zipcode', zipcode);
+  }
+
   public onSiteStateChanged(state) {
     _.set(this.bsftSettingsData.bsftSettings.site, 'state', state);
   }
@@ -93,23 +97,6 @@ class BsftSettingsCtrl implements ng.IComponentController {
 
   public onContactEmailChanged(email) {
     _.set(this.bsftSettingsData.bsftSettings.site.contact, 'email', email);
-  }
-
-  public onSiteEmergencyAddressChanged(address1, address2) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address1', address1);
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.address2', address2);
-  }
-
-  public onSiteEmergencyCityChanged(city) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.city', city);
-  }
-
-  public onSiteEmergencyStateChanged(state) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.state', state);
-  }
-
-  public onSiteEmergencyCountryChanged(country) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'emergencyAddress.country', country);
   }
 
   public setupBsftNext(): void {

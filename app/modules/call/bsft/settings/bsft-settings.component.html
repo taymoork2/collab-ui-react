@@ -26,6 +26,12 @@
       </bsft-site-city>
     </div>
     <div class="row full service-setup">
+      <bsft-site-zipcode
+        zipcode="$ctrl.bsftSettingsData.bsftSettings.site.zipcode"
+        on-change-fn="$ctrl.onSiteZipcodeChanged(zipcode)">
+      </bsft-site-zipcode>
+    </div>
+    <div class="row full service-setup">
       <bsft-site-state
         state="$ctrl.bsftSettingsData.bsftSettings.site.state"
         on-change-fn="$ctrl.onSiteStateChanged(state)">
@@ -68,35 +74,6 @@
         email="$ctrl.bsftSettingsData.bsftSettings.site.contact.email"
         on-change-fn="$ctrl.onContactEmailChanged(email)">
       </bsft-contact-email>
-    </div>
-    <h4 style="margin-bottom: .5rem;">Emergency Address</h4>
-    <input cs-input type="checkbox" ng-model="$ctrl.copySiteAddress" id="sameEmergencyAddress" name="sameEmergencyAddress" cs-input-label="Same as location address" />
-    <div ng-if="!$ctrl.copySiteAddress">
-      <div class="row full service-setup">
-        <bsft-site-address
-          address1="$ctrl.bsftSettingsData.bsftSettings.site.emergency.address1"
-          address2="$ctrl.bsftSettingsData.bsftSettings.site.emergency.address2"
-          on-change-fn="$ctrl.onSiteEmergencyAddressChanged(address1, address2)">
-        </bsft-site-address>
-      </div>
-      <div class="row full service-setup">
-        <bsft-site-city
-          city="$ctrl.bsftSettingsData.bsftSettings.site.emergency.city"
-          on-change-fn="$ctrl.onSiteEmergencyCityChanged(city)">
-        </bsft-site-city>
-      </div>
-      <div class="row full service-setup">
-        <bsft-site-state
-          state="$ctrl.bsftSettingsData.bsftSettings.site.emergency.state"
-          on-change-fn="$ctrl.onSiteEmergencyStateChanged(state)">
-        </bsft-site-state>
-      </div>
-      <div class="row full service-setup">
-        <bsft-site-country
-          city="$ctrl.bsftSettingsData.bsftSettings.site.emergency.country"
-          on-change-fn="$ctrl.onSiteEmergencyCountryChanged(country)">
-        </bsft-site-country>
-      </div>
     </div>
   </div>
 </form>

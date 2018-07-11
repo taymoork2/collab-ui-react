@@ -4,14 +4,15 @@ export interface ISite {
   name: string;
   timeZone: string;
   numbers: string[];
-  emergencyAddress: IEmergencySiteAddress;
+  address: ISiteAddress;
   contact: IContact;
 }
 
-export interface IEmergencySiteAddress {
+export interface ISiteAddress {
   address1: string;
   address2: string | null;
   city: string;
+  zipcode: string;
   state: string;
   country: string;
 }
@@ -27,7 +28,7 @@ export class Site implements Site {
   public name: string;
   public timeZone: string;
   public numbers: string[];
-  public emergencyAddress: IEmergencySiteAddress;
+  public address: ISiteAddress;
   public contact: IContact;
 
   constructor(site: ISite = {
@@ -40,10 +41,11 @@ export class Site implements Site {
       phoneNumber: '',
       email: '',
     },
-    emergencyAddress: {
+    address: {
       address1: '',
       address2: '',
       city: '',
+      zipcode: '',
       state: '',
       country: '',
     },
@@ -51,7 +53,7 @@ export class Site implements Site {
     this.name = site.name;
     this.timeZone = site.timeZone;
     this.numbers = site.numbers;
-    this.emergencyAddress = site.emergencyAddress;
+    this.address = site.address;
     this.contact = site.contact;
   }
 }
