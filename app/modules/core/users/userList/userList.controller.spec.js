@@ -117,6 +117,22 @@ describe('UserListCtrl: Ctrl', function () {
           rowSelectionChanged: _.noop,
         },
       },
+      grid: {
+        columns: [
+          {
+            field: 'userRole',
+            colDef: {
+              visable: true,
+            },
+          },
+          {
+            field: 'action',
+            colDef: {
+              visable: true,
+            },
+          },
+        ],
+      },
     });
 
     this.$scope.$apply();
