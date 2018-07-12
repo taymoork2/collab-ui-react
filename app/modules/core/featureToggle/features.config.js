@@ -129,6 +129,7 @@ module.exports = {
   csdmHybridCall: 'csdm-hybrid-call',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',
   csdmDeviceConfig: 'csdm-device-config',
+  csdmDeviceDeleteConfigurationOption: 'csdm-device-delete-configuration-option',
   csdmProximityOptIn: 'csdm-proximity-opt',
   deleteContent: 'delete-content',
   dirSync: 'atlas-dir-sync',

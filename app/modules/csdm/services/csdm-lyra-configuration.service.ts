@@ -45,4 +45,14 @@ export class CsdmLyraConfigurationService {
       return res.data;
     });
   }
+
+  public deleteConfig(cisUuid: string, deviceWdmUrl: string): angular.IPromise<any> {
+    const configUrl = this.UrlConfig.getLyraServiceUrl() + '/configuration/rules';
+    const encodedWdmUrl = this.Utils.Base64.encode(deviceWdmUrl);
+    const url = configUrl + '/organization/' + this.Authinfo.getOrgId() + '/accounts/' + cisUuid + '/devices/' + encodedWdmUrl;
+    return this.$http({
+      method: 'DELETE',
+      url: url,
+    });
+  }
 }
