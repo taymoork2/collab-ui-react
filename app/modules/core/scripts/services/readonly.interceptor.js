@@ -33,6 +33,7 @@
       '/api/v1/internals/actions/invalidateUser/invoke',
       '/releaseChannels',
       '/qlik-gtwy/api/v1/report/',
+      '/qlik-gtwy/api/v1/log',
       '/custportal/extensions/',
       '/users/report',
       '/devices/_search',

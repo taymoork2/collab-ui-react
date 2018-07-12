@@ -1,9 +1,11 @@
 import { IMeeting, IMeetingDetail, IServerTime, ISession } from './partner-search.interfaces';
 import { SearchStorage } from './partner-meeting.enum';
+import { TrackUsageEvent } from './track-usage.enum';
 import { SERVICE_TYPE } from 'modules/core/customerReports/webexReports/diagnostic/meeting-export.component';
 import { Notification } from 'modules/core/notifications/notification.service';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
+import { TrackUsageService } from './track-usage.service';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 export enum SessionTypes {
@@ -52,6 +54,7 @@ class DgcPartnerTab implements ng.IComponentController {
     private CustomerSearchService: CustomerSearchService,
     private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
+    private TrackUsageService: TrackUsageService,
     private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
@@ -121,6 +124,7 @@ class DgcPartnerTab implements ng.IComponentController {
   }
 
   private getMeetingDetail(): void {
+    this.TrackUsageService.track(TrackUsageEvent.MEETING_DETAIL);
     this.dataService.getMeetingDetail(this.conferenceID)
       .then((res: IMeeting) => {
         const mbi = res.meetingBasicInfo;
