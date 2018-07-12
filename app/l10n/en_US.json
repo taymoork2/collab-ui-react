@@ -11870,5 +11870,19 @@
       "saveSuccess": "Successfully saved integration access.",
       "saveError": "Error saving integration access."
     }
+  },
+  "broadCloud": {
+    "numbers" : {
+      "addNumbers": "Add Numbers",
+      "addNumberHint": "Enter upto 25 numbers, no less than 2, comma separated. You can add more later in Control Hub after setup is complete.",
+      "numberType": "Number Type",
+      "prevPorted": "Previously Ported or Partner Provided Numbers",
+      "prevPortedHint": "Numbers you've previously ported yourself or by your Partner. It may take up to 20 minutes to appear in the system.",
+      "bcProvided": "BroadCloud Provided Numbers",
+      "bcProvidedHint": "Numbers that will be ported by BoardCloud. It may take from 3 days to a month to appear in the system.",
+      "phoneNumber": "Phone Numbers",
+      "prevPortedNumber": "Previously Ported",
+      "bcPortedNumber": "BroadCloud Ported"
+    }
   }
 }
