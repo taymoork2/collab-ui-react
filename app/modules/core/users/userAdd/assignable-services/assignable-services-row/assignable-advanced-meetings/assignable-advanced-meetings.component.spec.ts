@@ -32,7 +32,6 @@ describe('Component: assignableAdvancedMeetings:', () => {
         siteUrls: 'siteUrls',
       });
       expect(this.view.find('.advanced-meetings').length).toBe(1);
-      expect(this.view.find('.license__category[translate="firstTimeWizard.advancedMeetings"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox[l10n-label="subscriptions.licenseTypes.EC"]').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox advanced-meeting-license-description').length).toBe(1);
       expect(this.view.find('assignable-license-checkbox usage-line').length).toBe(1);

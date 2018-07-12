@@ -128,7 +128,6 @@
             </div>
           </div>
         </div>
-        <div class="item-mtg-license item-space" ng-if="$ctrl.selectedSubscriptionHasAdvancedLicenses(multipleSubscriptions.selectedSubscription)" translate="firstTimeWizard.advancedMeetings"></div>
         <div class="entitle-check-grp" ng-repeat="lic in $ctrl.advancedLicenses">
           <div class="item-mtg" ng-if="lic.site">
             <div class="license-space" ng-show="multipleSubscriptions.showLicenses(cfLic.billing, cfLic.isTrial)" ng-repeat="cfLic in lic.confLic">
@@ -140,7 +139,7 @@
                   class="license-entity-type"
                   ng-model="cfLic.confModel"
                   ng-click="$ctrl.checkCMR(cfLic, lic.cmrLic)"
-                  cs-input-label="Webex {{cfLic.label}}">
+                  cs-input-label="{{:: 'subscriptions.licenseTypes.' + cfLic.offerName | translate}}">
                 <span class="license-entity under-label-reposition">{{$ctrl.determineLicenseType(lic)}}
                   <span class="license-entity-tooltip">
                     <i class="icon icon-info icon-offset-l" tooltip-trigger="focus mouseenter" tooltip-placement="top" tooltip-animation="false"
@@ -155,7 +154,7 @@
                 </div>
               </div>
               <div ng-if="!lic.isCISite" class="item-webex">
-                <span>Webex {{cfLic.label}}</span><br>
+                <span>{{:: 'subscriptions.licenseTypes.' + cfLic.offerName | translate}}</span><br>
                 <span class="license-siteUrl">
                   <a target="_blank"
                     href="{{lic.siteAdminUrl}}"

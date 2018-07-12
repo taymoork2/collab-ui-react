@@ -1,5 +1,4 @@
 <div ng-if="$ctrl.hasAdvancedMeetings()" class="advanced-meetings">
-  <div translate="firstTimeWizard.advancedMeetings" class="license__category"></div>
   <div ng-repeat="license in $ctrl.licenses track by license.licenseId">
     <assignable-license-checkbox
       license="license"
