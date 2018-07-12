@@ -2225,7 +2225,7 @@
       "autoAttendantPost": "L'enregistrement des informations site du répondeur automatique a échoué.",
       "updateVoicemailPostalCode": "La modification du code postal de la messagerie vocale a échoué.",
       "updateVoicemailAddress": "Échec de la mise à jour de l'adresse de messagerie vocale",
-      "updateCustomerVoice": "Échec de la mise à jour de l'abonnement vocal du client."
+      "updateCustomerVoice": "Échec de la mise à jour de l'abonnement vocal du client."
     },
     "warning": {
       "siteSteering": "Le premier chiffre du préfixe d'accès à la messagerie vocale est en conflit avec le premier chiffre d'une plage d'extension interne. Si vous utilisez ce préfixe, un délai peut être observé lors de la numérotation d'extensions commençant par le même numéro.",
@@ -6554,7 +6554,7 @@
       "placeNotFound": "Emplacement non trouvé, réessayez de le trouver dans la liste"
     },
     "editServices": {
-      "whichServices": "Quel est le service nécessaire dans cet emplacement ?",
+      "whichServices": "Quel est le service nécessaire dans cet emplacement?",
       "sparkOnly": "Appel gratuit (par défaut)",
       "sparkOnlyHelp": "Les appels en provenance et vers cet emplacement, appairés à l'application Cisco Webex Teams ou via les adresses SIP.",
       "sparkCall": "Appel Cisco Webex",

@@ -8811,7 +8811,7 @@
     "orgEvaSettingInfo": "설정 페이지에서 미리 보기에 표시되는 로고를 변경할 수 있습니다.",
     "profile_org_info_eva": "한 개의 프로필을 사용하여 조직에 있는 모든 사용자를 표시하십시오.",
     "user_non_cva": "개인 사용자",
-    "user_info_non_cva": "고유한 프로필을 사용하여 조직에서 다른 ‎사용자를 표시하십시오.",
+    "user_info_non_cva": "고유한 프로필을 사용하여 조직에서 다른 사용자를 표시하십시오.",
     "helpTextWaitingEVA": "고객의 요청이 응답될 때까지 기다리는 동안 고객에게 이 메시지가 표시됩니다.",
     "helpTextLeaveRoomEVA": "고객과 사용자의 상호 작업 때문에 채팅이 종료될 때 고객에게 이 메시지가 표시됩니다.",
     "templateConfig": {
