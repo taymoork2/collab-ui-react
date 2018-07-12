@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Удалить устройства",
     "deleteDevices": "Удалить устройства",
     "editDevices": "Редактировать устройства",
-    "deleteDevicesAreYouSure": "Действительно хотите удалить устройства в количестве {{nDevices}}?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Действительно удалить это устройство?} other{Действительно удалить это # устройство?}}?",
     "deleteDeviceAreYouSure": "Действительно удалить это устройство?",
     "changeCannotBeUndone": "Это действие невозможно отменить.",
     "deleteEmptyPlaces": "Удалить полученные пустые рабочие места",

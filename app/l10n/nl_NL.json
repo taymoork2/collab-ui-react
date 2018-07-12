@@ -6823,7 +6823,7 @@
       "removesip": "De configuratie voor SIP-gesprekken verwijderen",
       "mainteancemodemsg": "De onderhoudsmodus is ingeschakeld op alle knooppunten van deze cluster. Schakel de onderhoudsmodus uit om {{callType}}-gesprekken te testen",
       "upgrademsg": "Er worden momenteel upgrades geïnstalleerd op deze cluster. Probeer het later opnieuw.",
-      "unoperationalmsg": "Deze cluster is niet actief. Zorg dat ten minste één knooppunt online is om {{gesprek}}-gesprekken te testen",
+      "unoperationalmsg": "Deze cluster is niet actief. Zorg dat ten minste één knooppunt online is om {{callType}}-gesprekken te testen",
       "callwait": "Zoeken naar gesprekken",
       "nocalls": "Geen {{callType}}-gesprekken op deze cluster in de afgelopen 15 minuten.",
       "sparkcallline1": "Start een gesprek met een gebruiker in de buurt van de cluster en controleer of het gesprek daar te zien is. U kunt ook wachten en zien of het gesprek van iemand anders automatisch wordt verwerkt door deze cluster. Gebruikers die de testgesprekken uitvoeren, moeten de app opnieuw starten om te verifiëren.",
@@ -11616,7 +11616,7 @@
         "precheck": "Voorafgaande controles uitvoeren"
       },
       "order" : {
-        "title": "Volgorde cluster {{clustername}}",
+        "title": "Volgorde cluster {{clusterName}}",
         "directions": "Gebruik de pijltjestoetsen om de volgorde in te stellen, waarop de knooppunten in de cluster worden geüpgraded",
         "addAnother": "Upgradegroep toevoegen",
         "maxGroups": "Er kunnen niet meer dan acht upgradegroepen worden gemaakt"
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Apparaten verwijderen",
     "deleteDevices": "Apparaten verwijderen",
     "editDevices": "Apparaten bewerken",
-    "deleteDevicesAreYouSure": "Weet u zeker dat u {{nDevices}} apparaten wilt verwijderen?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Weet u zeker dat u dit apparaat wilt verwijderen?} other{Weet u zeker dat u dit apparaat wilt # verwijderen?}}?",
     "deleteDeviceAreYouSure": "Weet u zeker dat u dit apparaat wilt verwijderen?",
     "changeCannotBeUndone": "Deze actie kan niet ongedaan worden gemaakt.",
     "deleteEmptyPlaces": "Resulterende lege ruimten verwijderen",

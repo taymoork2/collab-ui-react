@@ -184,7 +184,7 @@
     "loadError": "Det uppstod ett fel då användarlistan skulle läsas in.",
     "ciscoSparkJabberInteropTooltip": "Aktivera meddelanden mellan Cisco Webex Teams och Jabber. Ge Jabber-användare åtkomst till Cisco Webex Teams-utrymmen. Ändringar kan ta upp till 24 timmar.",
     "userImage": "Användarbild",
-    "mustConvertUserBeforeAdding": "{{e-mail}} kan inte läggas till. Använd alternativet Konvertera användare för att flytta denna användare till organisationen."
+    "mustConvertUserBeforeAdding": "{{email}} kan inte läggas till. Använd alternativet Konvertera användare för att flytta denna användare till organisationen."
   },
   "userManage": {
     "org": {
@@ -6825,7 +6825,7 @@
       "upgrademsg": "Uppgraderingar håller på att installeras på detta kluster. Försök igen senare.",
       "unoperationalmsg": "Detta kluster fungerar inte. Se till att minst en nod är online för att testa {{callType}}-samtal",
       "callwait": "Söker samtal",
-      "nocalls": "Inga {{CALLTYPE}}-samtal på detta kluster under de senaste 15 minuterna.",
+      "nocalls": "Inga {{callType}}-samtal på detta kluster under de senaste 15 minuterna.",
       "sparkcallline1": "Starta ett samtal till en användare nära klustret och se om det visas här. Du kan också vänta och se om någon annans samtal automatiskt landar på detta kluster. Användare som utför testsamtalen måste starta om appen för att bekräfta.",
       "sparkcallline2":"Om du försöker att ringa en annan person som är geografiskt nära noden och samtalet inte visas här kan noden vara felaktigt konfigurerad.<br>Se <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Distributionsguide för Cisco Webex videonät</a> och bekräfta att du har öppnat alla nödvändiga portar i brandväggen.",
       "sipcallline1": "Starta ett SIP-samtal till en användare nära klustret och se om det visas här. Du kan också vänta och se om någon annans samtal automatiskt landar på detta kluster.",
@@ -9762,10 +9762,10 @@
     },
     "adminElevation": {
       "title": "Cisco Webex Control Hub",
-      "init": "Vill du bevilja Help Desk-operatör {{helpDeskOperatorName}} tillfällig fullständig administratörsåtkomst till organisationen {{ORGNAME}} under 1 timme?",
+      "init": "Vill du bevilja Help Desk-operatör {{helpDeskOperatorName}} tillfällig fullständig administratörsåtkomst till organisationen {{orgName}} under 1 timme?",
       "grant": "Bevilja",
       "reject": "Avvisa",
-      "elevationDone": "Help Desk-operatör {{helpDeskOperatorName}} beviljades fullständig administratörsåtkomst till organisationen {{ORGNAME}} under 1 timme.<br><br>Du kan stänga sidan och invänta vidare instruktioner.",
+      "elevationDone": "Help Desk-operatör {{helpDeskOperatorName}} beviljades fullständig administratörsåtkomst till organisationen {{orgName}} under 1 timme.<br><br>Du kan stänga sidan och invänta vidare instruktioner.",
       "elevationRejected": "Du avvisade begäran från Help Desk-operatören {{helpDeskOperatorName}} om att få tillfällig fullständig administratörsåtkomst.<br><br>Om du behöver bevilja privilegier senare kan du be operatören att skicka in åtkomstbegäran på nytt.",
       "invalidSignature": "Denna sida öppnades med ogiltiga parametrar eller så har signaturen löpt ut.<br><br>Kontakta Help Desk-operatören för mer hjälp.",
       "error": "Ett fel inträffade. Kontakta Help Desk-operatören för mer hjälp."
@@ -11424,7 +11424,7 @@
       },
       "editNodeSftpModal": {
         "title": "Redigera SFTP-server",
-        "selectLabel": "Välj SFTP-server för {{nodename}}"
+        "selectLabel": "Välj SFTP-server för {{nodeName}}"
       }
     },
     "clustersList": {
@@ -11616,7 +11616,7 @@
         "precheck": "Kör förkontroller"
       },
       "order" : {
-        "title": "Beställ kluster {{clustername}}",
+        "title": "Beställ kluster {{clusterName}}",
         "directions": "Använd pilarna för att ange ordningsföljden för uppgraderingen av noderna i klustret",
         "addAnother": "Lägg till uppgraderingsgrupp",
         "maxGroups": "Det går inte att skapa fler än 8 uppgraderingsgrupper"
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Ta bort enheter",
     "deleteDevices": "Ta bort enheter",
     "editDevices": "Redigera enheter",
-    "deleteDevicesAreYouSure": "Är du säker på att du vill ta bort {{nDevices}}-enheter?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Vill du ta bort den här enheten?} other{Vill du ta bort den här # enheten?}}?",
     "deleteDeviceAreYouSure": "Vill du ta bort den här enheten?",
     "changeCannotBeUndone": "Åtgärden kan inte ångras.",
     "deleteEmptyPlaces": "Ta bort tomma platser som uppstår",
@@ -11788,7 +11788,7 @@
       "policyActionAllow": "Tillåten",
       "policyActionDeny": "Nekad",
       "globalAccess": {
-        "globalAccessValue": "Global åtkomst: {{värde}} ",
+        "globalAccessValue": "Global åtkomst: {{value}} ",
         "modalTitle": "Global åtkomstvarning",
         "modalOnBody": "Vill du aktivera åtkomst till alla integreringar? ",
         "modalOffBody": "Vill du inaktivera åtkomst till alla integreringar?<br>Obs! ALLA befintliga användarinföringar återkallas."

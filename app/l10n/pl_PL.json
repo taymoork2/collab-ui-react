@@ -821,7 +821,7 @@
       "deviceOptions": {
         "all": "Wszystkie",
         "roomSystems": "Cisco Webex Room Kit, urządzenie serii DX, MX lub SX",
-        "sparkBoard": "Tablica Cisco Webex Board"
+        "sparkBoard": "Cisco Webex Board"
       },
       "export": {
         "deviceUsageExportTitle": "Eksportuj atrybuty wykorzystania urządzeń do pliku CSV",
@@ -6131,7 +6131,7 @@
     "supportedLocationWarning": "Zaznacz powyższe pole wyboru, aby zaświadczyć, że ten klient znajduje się lokalizacji obsługiwanej przez usługę Cisco Webex Teams",
     "context": "Włącz usługę Context przeznaczoną do Cisco Unified Contact Center.",
     "roomSystem": "Urządzenia Cisco Webex Room i urządzenia Cisco Webex Desk",
-    "sparkBoardSystem": "Tablica Cisco Webex Board",
+    "sparkBoardSystem": "Cisco Webex Board",
     "roomSysUsOnly": "Urządzenie Cisco Webex Room (aktualnie tylko w USA)",
     "expireWarningMsg": "Liczba dni do zakończenia okresu próbnego: {{numDaysLeft}}.",
     "expiredMsg": "Okres próbny wygasł.",
@@ -6237,7 +6237,7 @@
     "myOrganization": "Moja organizacja",
     "meetingParty": "Spotkania Webex Teams Meeting",
     "roomSystem": "Cisco Webex Room Kit, urządzenie serii DX, MX lub SX",
-    "sparkBoard": "Tablica Cisco Webex Board",
+    "sparkBoard": "Cisco Webex Board",
     "branding": "Dostosowanie elementów graficznych",
     "MS": "Wiadomość",
     "CF": "Spotkanie",
@@ -6283,7 +6283,7 @@
       "call": "Zadzwoń",
       "webexOverview": "Webex",
       "roomSystem": "Urządzenia pokoju",
-      "sparkBoard": "Tablica Cisco Webex Board",
+      "sparkBoard": "Cisco Webex Board",
       "care": "Usługa Care",
       "trialAccounts": "Konta próbne ({{count}})",
       "activeAccounts": "Konta zakupione ({{count}})",
@@ -6958,7 +6958,7 @@
         "iphone": "iPhone",
         "jabber": "Jabber",
         "sip": "SIP",
-        "board": "Tablica Cisco Webex Board",
+        "board": "Cisco Webex Board",
         "test": "Test",
         "tp": "TelePresence",
         "uc": "UC",
@@ -9063,7 +9063,7 @@
         "unassignedLicenses": "Masz <span class=\"convert-nr h4\">{{licenseNumber}}</span> nieprzypisanych licencji typu {{licenseType}}",
         "unassignedLicensesOnboarding": "nieprzypisanych licencji typu {{licenseType}}",
         "potentialConversions": "Potencjalnie nowych {total, plural, =0{użytkowników} =1{użytkownik} other{użytkowników}}",
-        "pendingConversions": "Opóźnione {total, plural, =0{konwersji} =1{konwersja} other{konw.}}"
+        "pendingConversions": "Opóźniony {total, plural, =0{konwersji} =1{konwersja} other{konw.}}"
       },
       "message": {
         "title": "Wiadomość",
@@ -9400,7 +9400,7 @@
       "CMR": "Pokoje spotkań Webex CMR",
       "CO": "Połączenia Webex",
       "SD": "Webex Room Kit, urządzenie serii DX, MX lub SX",
-      "SB": "Tablica Cisco Webex Board",
+      "SB": "Cisco Webex Board",
       "CDC": "Czat i połączenie zwrotne",
       "CVC": "Czat, połączenie zwrotne i połączenie przychodzące",
       "MGMTPRO": "Pakiet Pro Pack",
@@ -9619,7 +9619,7 @@
       "CMR": "Pokoje spotkań CMR",
       "ST": "Miejsce do przechowywania",
       "SD": "Cisco Webex Room Kit, urządzenie serii DX, MX lub SX",
-      "SB": "Tablica Cisco Webex Board",
+      "SB": "Cisco Webex Board",
       "linkedSite": "Starsza licencja usługi Webex",
       "CDC": "Czat i połączenie zwrotne",
       "CVC": "Czat, połączenie zwrotne i połączenie przychodzące",
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Usuń urządzenia",
     "deleteDevices": "Usuń urządzenia",
     "editDevices": "Edytuj urządzenia",
-    "deleteDevicesAreYouSure": "Czy na pewno chcesz usunąć urządzenia ({{nDevices}})?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Czy na pewno chcesz usunąć to urządzenie?} other{Czy na pewno chcesz usunąć to # urządzenie?}}?",
     "deleteDeviceAreYouSure": "Czy na pewno chcesz usunąć to urządzenie?",
     "changeCannotBeUndone": "Tej czynności nie można cofnąć.",
     "deleteEmptyPlaces": "Usuń powstałe puste miejsca",

@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Geräte löschen",
     "deleteDevices": "Geräte löschen",
     "editDevices": "Geräte bearbeiten",
-    "deleteDevicesAreYouSure": "Möchten Sie die {{nDevices}} Geräte wirklich löschen?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Möchten Sie dieses Gerät wirklich löschen?} other{Möchten Sie dieses Gerät # wirklich löschen?}}?",
     "deleteDeviceAreYouSure": "Möchten Sie dieses Gerät wirklich löschen?",
     "changeCannotBeUndone": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteEmptyPlaces": "Resultierende leere Orte löschen",

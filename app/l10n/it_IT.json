@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Elimina dispositivi",
     "deleteDevices": "Elimina dispositivi",
     "editDevices": "Modifica dispositivi",
-    "deleteDevicesAreYouSure": "Eliminare {{nDevices}} dispositivi?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Eliminare dispositivi?} other{Eliminare # dispositivi?}}?",
     "deleteDeviceAreYouSure": "Eliminare questo dispositivo?",
     "changeCannotBeUndone": "Questa azione non può essere annullata.",
     "deleteEmptyPlaces": "Elimina le ubicazioni vuote risultanti",

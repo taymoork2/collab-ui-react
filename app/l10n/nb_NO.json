@@ -393,7 +393,7 @@
     "anotherJobIsRunning": "Importering av brukere mislyktes fordi en jobb allerede kjører."
   },
   "ssoCertificateModal": {
-    "certificateExpirationWarning": "SSO-sertifikat kan utløpe om {{dager}} dager. Sjekk nedenfor for neste trinn.",
+    "certificateExpirationWarning": "SSO-sertifikat kan utløpe om {{days}} dager. Sjekk nedenfor for neste trinn.",
     "certificateExpirationNotice": "SSO-sertifikat utløpt. Se nedenfor for neste trinn.",
     "updateCertificate": "Oppdater SSO-sertifikat",
     "checkCertificate": "La oss kontrollere om du trenger å foreta denne oppdateringen. Gjelder en av følgende for din IdP? <a href='{{href}}' target='_blank'>Dokumentasjon</a>",
@@ -1153,7 +1153,7 @@
   },
   "avgRooms": {
     "avgRooms": "Totalt antall rom",
-    "avgRoomsDescription": "Fremstillingen viser totalt antall Webex Teams-rom brukt til meldingsutveksling og/eller fildeling gjennom {{tid}}. Hold pekeren over kolonnene for en oppsummering av totalt antall grupperom og en-til-en-rom i tillegg til gjennomsnittlig antall rom per bruker.",
+    "avgRoomsDescription": "Fremstillingen viser totalt antall Webex Teams-rom brukt til meldingsutveksling og/eller fildeling gjennom {{time}}. Hold pekeren over kolonnene for en oppsummering av totalt antall grupperom og en-til-en-rom i tillegg til gjennomsnittlig antall rom per bruker.",
     "groupError": "Det oppstod en feil under lasting av data for grupperom.",
     "oneToOneError": "Det oppstod en feil under lasting av data for en-til-en rom.",
     "avgError": "Det oppstod en feil under lasting av data for gjennomsnittlig antall rom per bruker.",
@@ -1712,7 +1712,7 @@
     "enabled": "Aktivert",
     "error": "Feil",
     "errors": "Feil",
-    "errorMessage": "Følgende feil {{feil}}",
+    "errorMessage": "Følgende feil {{error}}",
     "export": "Eksporter",
     "fieldRequired": "Dette feltet er nødvendig",
     "finish": "Fullfør",
@@ -1907,7 +1907,7 @@
     "convert": "Konverter",
     "convertUsers": "Konverter brukere uten lisens",
     "unlicensedUsers": "Brukere uten lisens",
-    "licensesNeedToBeRedistributed": "Lisensantallet stemmer ikke for Webex Meetings-områder som er tilknyttet abonnementet {{abonnementId}}. Omfordel lisenser blant Webex Meetings-områdene dine.",
+    "licensesNeedToBeRedistributed": "Lisensantallet stemmer ikke for Webex Meetings-områder som er tilknyttet abonnementet {{subscriptionId}}. Omfordel lisenser blant Webex Meetings-områdene dine.",
     "convertUsersText": "Konverter ansatte som har registrert seg for Cisco Webex Teams selv med en firma-e-postadresse til en lisensiert bruker. Lisensierte brukere får ekstra firmafunksjoner og er underlagt din organisasjons regelverk og administrasjon.",
     "convertUsersDirSyncEnabledWarning": "Brukere kan ikke konverteres mens katalogsynkronisering er aktivert. Deaktiver katalogsynkronisering fra innstillinger-siden for å konvertere brukere.",
     "convertError": " kunne ikke konverteres. Kontakt support for hjelp til å konvertere denne brukeren.",
@@ -1972,8 +1972,8 @@
     "autoAssignText": "Administrer lisenser på en produktiv måte med malen for automatisk tilordning.",
     "autoAssignLink": "Konfigurer nå",
     "goToEditNow": "Rediger nå",
-    "evaMissingDefaultSpace": "Virtuell ekspertassistent <b>{{navn}}</b> ble fjernet fra standardområdet i Cisco Webex Teams. Rediger <b>{{navn}}</b> for å velge et nytt standardområde.",
-    "evaMissingDefaultSpaceAndNoPermission": "Virtuell ekspertassistent ble fjernet fra standardområdet i Cisco Webex Teams. Ta kontakt med <b>{{eier}}</b> for å tildele et nytt standardområde.",
+    "evaMissingDefaultSpace": "Virtuell ekspertassistent <b>{{name}}</b> ble fjernet fra standardområdet i Cisco Webex Teams. Rediger <b>{{name}}</b> for å velge et nytt standardområde.",
+    "evaMissingDefaultSpaceAndNoPermission": "Virtuell ekspertassistent ble fjernet fra standardområdet i Cisco Webex Teams. Ta kontakt med <b>{{owner}}</b> for å tildele et nytt standardområde.",
     "optInToWifiProximity": "Gjør deling av innhold på Webex-enheter enklere, ved å aktivere forslag til Wi-Fi-baserte enheter."
   },
   "inviteModal": {
@@ -2346,7 +2346,7 @@
     "searchError": "Søket ble ikke gjenkjent.",
     "allDevices": "Alt",
     "containingQuery": "som inneholder {{query}}",
-    "equalsQuery": "tilsvarer {{spørring}}",
+    "equalsQuery": "tilsvarer {{query}}",
     "query": "{{query}}",
     "typeHeader": "Type",
     "nameHeader": "Tilhører",
@@ -2593,7 +2593,7 @@
       "title": "Deaktiver {{serviceName}}",
       "intro": "Du er i ferd med å fjerne {{serviceName}} fra Expressway-klyngen {{clusterName}}.",
       "settingsWillBeWiped": "Dette vil fjerne {{connectorName}} og slette alle lokale innstillinger for tilkoblingen.",
-      "notDeregistered": "{{klyngenavn}} vil fremdeles være registrert ved Webex, og Expressway-klyngen kan fremdeles brukes som vert for hybridtjenestene.",
+      "notDeregistered": "{{clusterName}} vil fremdeles være registrert ved Webex, og Expressway-klyngen kan fremdeles brukes som vert for hybridtjenestene.",
       "lastClusterWarning": "Dette er siste klynge som kjører {{connectorName}} for denne organisasjonen. Hvis du deaktiverer {{connectorName}}, vil tjenesten være utilgjengelig for brukerne helt til du legger til flere ressurser. Hvis du vil deaktivere tjenesten for denne organisasjonen og brukerne deres, går du til innstillingssiden for {{serviceName}}."
     },
     "clusters": {
@@ -3512,9 +3512,9 @@
         },
         "DeleteUserAssignment": "Oppdrag fjernet",
         "UpdateConfigureStatus": {
-          "success": "{{tjeneste}} konfigurasjon lyktes",
-          "failure": "{{tjeneste}} konfigurasjon mislyktes",
-          "waiting": "{{tjeneste}} konfigurasjon forespurt"
+          "success": "{{service}} konfigurasjon lyktes",
+          "failure": "{{service}} konfigurasjon mislyktes",
+          "waiting": "{{service}} konfigurasjon forespurt"
         },
         "UpdateUserActivationState": {
           "activate": "Aktiveringsjobb startet",
@@ -3530,7 +3530,7 @@
           "unconfigureConnect": "Fjerne samtaletjenesten Connect – jobb satt i kø",
           "reactivate": "Reaktiveringsjobb satt i kø"
         },
-        "DeleteServiceConfigurationState": "{{tjeneste}} konfigurasjon fjernet"
+        "DeleteServiceConfigurationState": "{{service}} konfigurasjon fjernet"
       }
     },
     "nodesPage": {
@@ -3903,8 +3903,8 @@
           "changedReleaseChannel": "{{username}} endret klyngens frigivningskanal.",
           "oldAndNewReleaseChannel": "Den nye frigivningskanalen er: <strong>{{newReleaseChannel}}</strong>. Den gamle frigivningskanalen var: {{oldReleaseChannel}}.",
           "changedReleaseChannelHelp": "Frigivningskanalen til en Expressway-klynge kan endres enten hvis klyngen flyttes inn i eller ut av en ressursgruppe, eller hvis noen endrer frigivningskanalen i den tilknyttede ressursgruppen.",
-          "created": "{{brukernavn}} opprettet klyngen {{clusterName}}.",
-          "deleted": "{{brukernavn}} slettet klyngen {{clusterName}}."
+          "created": "{{username}} opprettet klyngen {{clusterName}}.",
+          "deleted": "{{username}} slettet klyngen {{clusterName}}."
         },
         "serviceActivationEvents": {
           "serviceEnabled": "{{username}} har aktivert {{serviceName}} i organisasjonen. Dette skjer som oftest når en administrator registrerer en Expressway-klynge som kjører {{connectorName}}, eller legger til første {{connectorName}} i en eksisterende Expressway-klynge.",
@@ -3928,20 +3928,20 @@
           "trackingId": "Sporings-ID:"
         },
         "resourceGroupEvents": {
-          "createdHelpText": "{{brukernavn}} opprettet <strong>{{resourceGroupName}}</strong> med frigivningskanal <strong>{{releaseChannel}}</strong>.",
-          "updatedHelpTextIntro": "{{brukernavn}} oppdaterte ressursgruppen.",
-          "updatedHelpTextNameChanged": "Ressursgruppenavnet ble endret fra <strong>{{oldname}}</strong> til <strong>{{newname}}</strong>",
+          "createdHelpText": "{{username}} opprettet <strong>{{resourceGroupName}}</strong> med frigivningskanal <strong>{{releaseChannel}}</strong>.",
+          "updatedHelpTextIntro": "{{username}} oppdaterte ressursgruppen.",
+          "updatedHelpTextNameChanged": "Ressursgruppenavnet ble endret fra <strong>{{oldName}}</strong> til <strong>{{newName}}</strong>",
           "updatedHelpTextReleaseChannelChanged": "Frigivningskanalen ble endret fra <strong>{{oldReleaseChannel}}</strong> til <strong>{{newReleaseChannel}}</strong>",
-          "deletedHelpText": "{{brukernavn}} slettet ressursgruppe <strong>{{resourceGroupName}}</strong>."
+          "deletedHelpText": "{{username}} slettet ressursgruppe <strong>{{resourceGroupName}}</strong>."
         },
         "hostEvents": {
-          "updatedHelpText": "{{brukernavn}} oppdaterte verten. Vedlikeholdsmodusen ble endret fra <strong>{{oldMaintenanceMode}}</strong> til <strong>{{maintenanceMode}}</strong>."
+          "updatedHelpText": "{{username}} oppdaterte verten. Vedlikeholdsmodusen ble endret fra <strong>{{oldMaintenanceMode}}</strong> til <strong>{{maintenanceMode}}</strong>."
         },
         "connectorUpdatedEvents": {
           "updatedHelpText" : "{{localizedConnectorName}} ble oppdatert.",
           "updatedHelpTextRegistrationState" : "Registreringsstatus ble endret fra <strong>{{oldRegistrationState}}</strong> til <strong>{{registrationState}}</strong>.",
           "updatedHelpTextMaintenanceMode" : "Vedlikeholdsmodus ble endret fra <strong>{{maintenanceMode}}</strong> til <strong>{{oldMaintenanceMode}}</strong>.",
-          "updatedHelpTextClusterId" : "Klynge-ID ble endret fra <strong>{{oldClusterId}}</strong> til <strong>{{ClusterId}}</strong>.",
+          "updatedHelpTextClusterId" : "Klynge-ID ble endret fra <strong>{{oldClusterId}}</strong> til <strong>{{clusterId}}</strong>.",
           "updatedHelpTextUpgradeState" : "Oppgraderingsstatus ble endret fra <strong>{{oldUpgradeState}}</strong> til <strong>{{upgradeState}}</strong>.",
           "createdHelpText" : "{{localizedConnectorName}} ble opprettet.",
           "deregisteredHelpText" : "{{localizedConnectorName}} ble avregistrert.",
@@ -4657,7 +4657,7 @@
     "userManagementSpark": "Webex Control Hub",
     "userManagementViaSpark": "Brukeradministrasjon via Webex Control Hub",
     "userManagementViaWebex": "Brukeradministrasjon via Webex Meetings-nettsideadministrasjon",
-    "theseWillBeYourWebExSites": "Disse vil bli dine {{nettstedsantall}} Webex Meetings-nettsteder. Hvis du ikke har flere nettsteder å legge til, klikk «Neste».",
+    "theseWillBeYourWebExSites": "Disse vil bli dine {{siteCount}} Webex Meetings-nettsteder. Hvis du ikke har flere nettsteder å legge til, klikk «Neste».",
     "thisWillBeYourWebExSite": "Dette vil bli din Webex Meetings-nettsted. Hvis du ikke har flere nettsteder å legge til, klikk «Neste».",
     "basicMeetings": "Webex Teams Meetings",
     "advancedMeetings": "Webex forretningsutgave",
@@ -4906,7 +4906,7 @@
     "usernameRequiredMsg": "Brukernavn er påkrevd.",
     "usernameTooLongMsg": "Brukernavn overstiger maksimal lengde på 128 tegn.",
     "passwordTooLongMsg": "Passord overstiger maksimal lengde på 128 tegn",
-    "userDoesNotExist": "Du har ikke konfigurert en bruker eller en huntgruppe for denne {{rute}} i {{schedule}} banen.",
+    "userDoesNotExist": "Du har ikke konfigurert en bruker eller en huntgruppe for denne {{route}} i {{schedule}} banen.",
     "configureApiAuthentication": "Brukerbasert godkjenning" ,
     "restApiUserName":"Brukernavn",
     "restApiPassword":"Passord",
@@ -6004,7 +6004,7 @@
       "deviceTrialUnavailable": "Systemet kan midlertidig ikke legge til nye enheter, prøv igjen senere.",
       "selectDevicesHeader": "Velg Enheter",
       "deviceLimitDescription": "Velg opp til {{max}} enheter totalt",
-      "meetingRoomCamera": "Cisco Webex Room-enhet <span class='small-hint'>(en blanding på opp til {{maks}} enheter)</span>",
+      "meetingRoomCamera": "Cisco Webex Room-enhet <span class='small-hint'>(en blanding på opp til {{max}} enheter)</span>",
       "deskPhones": "Personlige og delte bordtelefoner <span class='small-hint'>(enhver miks på opp til {{max}} enheter)</span>",
       "sx10": "SX10",
       "dx80": "DX80",
@@ -6019,7 +6019,7 @@
       "invalidQuantity": "Antallet må være mellom {{min}} og {{max}}",
       "invalidQuantitySingle": "Antall må være {{qty}}",
       "invalidTotalQuantity": "Hele bestillingen må ha mellom {{min}} og {{max}} enheter",
-      "invalidRoomSystemsQuantity": "Begrenset til {{maks}} Cisco Webex Room-enheter",
+      "invalidRoomSystemsQuantity": "Begrenset til {{max}} Cisco Webex Room-enheter",
       "invalidPhonesQuantity": "Begrenset til {{max}} personlige og delte bordtelefoner",
       "shippingInfo": "Forsendelsesinformasjon",
       "recipient": "Hvor blir enhetene sendt?",
@@ -6821,17 +6821,17 @@
       "verifysipcalls": "Bekreft SIP-samtaler",
       "sipcallsdesc": "Bekreft at SIP-samtaler leveres til denne klyngen",
       "removesip": "Fjern konfigurasjon for SIP-samtaler",
-      "mainteancemodemsg": "Vedlikeholdsmodus er aktivert på alle noder i denne klyngen. Deaktivere vedlikeholdsmodus for å teste {{CallType}}-samtaler",
+      "mainteancemodemsg": "Vedlikeholdsmodus er aktivert på alle noder i denne klyngen. Deaktivere vedlikeholdsmodus for å teste {{callType}}-samtaler",
       "upgrademsg": "Oppgraderinger blir installert på denne klyngen. Prøv igjen senere.",
-      "unoperationalmsg": "Klyngen er ikke i drift. Få minst én node på nett for å teste {{CallType}}-samtaler",
+      "unoperationalmsg": "Klyngen er ikke i drift. Få minst én node på nett for å teste {{callType}}-samtaler",
       "callwait": "Lete etter samtaler",
-      "nocalls": "Ingen {{CallType}}-samtaler på denne klyngen i løpet av de siste 15 minuttene.",
+      "nocalls": "Ingen {{callType}}-samtaler på denne klyngen i løpet av de siste 15 minuttene.",
       "sparkcallline1": "Start en samtale rettet mot en bruker i nærheten av klyngen, og se deretter om den vises her. Du kan også vente og se om noen andres samtale automatisk lander i denne klyngen. Brukere som foretar testsamtaler må starte appen på nytt for å bekrefte.",
       "sparkcallline2":"Hvis du prøver å ringe noen som er geografisk nær noden, og samtalen ikke vises her, kan noden være feilkonfigurert.<br>Se <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Distribusjonsveiledning for Cisco Webex-videonett</a> og bekreft at du åpnet alle nødvendige porter i brannmuren.",
       "sipcallline1": "Start en SIP-samtale rettet mot en bruker i nærheten av klyngen, og se deretter om den vises her. Du kan også vente og se om noen andres samtale automatisk lander i denne klyngen.",
       "sipcallline2": "Hvis du prøver å ringe noen som er geografisk nær noden, og samtalen ikke vises, kan noden være feilkonfigurert.<br>Juster Unified CM SIP Trunk og klarerte SIP-kilder, og se <a href='https://www.cisco.com/go/video-mesh' target='_blank'>Distribusjonsveiledning for Cisco Webex videonett</a> <br> hvis du trenger ytterligere hjelp.",
       "removesipdesc": "Er du sikker på at du ønsker å fjerne konfigurasjon for SIP-anrop? Hvis du gjøre dette, vil denne videnettklyngen ikke lenger kunne behandle SIP-anrop",
-      "callsuccess": "{{CallType}}-samtaler riktig konfigurert",
+      "callsuccess": "{{callType}}-samtaler riktig konfigurert",
       "lastcalldetails": "Informasjon om siste samtale",
       "callfrom": "Samtale fra",
       "callto": "Ring til",
@@ -6839,7 +6839,7 @@
       "participant": "Deltaker",
       "testconfiguremsg": "Når du har fullført registreringen, kan du teste konfigurasjonen fra klyngeinnstillingene.",
       "grant-success-information": "Gå til din videonett-node innen én time for å fullføre registreringen. Videonett <br> blir klar til bruk så snart du er ferdig med registreringen.",
-      "grant-registration-success-header-old-cluster": "Du kan nå registrere videonett-noden din til Webex. <br> Nodens IP-adresse/FQDN: {{vertsnavn}} Klynge: {{klyngenavn}}"
+      "grant-registration-success-header-old-cluster": "Du kan nå registrere videonett-noden din til Webex. <br> Nodens IP-adresse/FQDN: {{hostname}} Klynge: {{clustername}}"
     },
     "clusterBandwidth": {
       "success": "Maksimum båndbredde for klyngeoverlapping er lagret.",
@@ -7039,9 +7039,9 @@
     },
     "reassign": {
       "reassignHost": "Tilordne verten på nytt",
-      "reassignTextV2": "Du er i ferd med å flytte videonett-noden {{klyngenavn}} fra {{visingsnavn}}",
+      "reassignTextV2": "Du er i ferd med å flytte videonett-noden {{clusterName}} fra {{displayName}}",
       "reassignErrorHeader": "Uventet feil",
-      "reassignErrorMessage": "Kunne ikke flytte til videonett-noden {{vertsnavn}}. Prøv på nytt om en stund.",
+      "reassignErrorMessage": "Kunne ikke flytte til videonett-noden {{hostName}}. Prøv på nytt om en stund.",
       "moveHost": "Flytt vert",
       "deregister_host": "Avregistrere vert",
       "moveNode": "Flytte node",
@@ -7065,7 +7065,7 @@
       "register": "Gå til node",
       "cluster-placeholder": "Opprett eller velg klynge",
       "hostname-placeholder": "Oppgi FQDN- eller IP-adresse",
-      "grant-registration-success-header-old-cluster": "Du kan nå registrere videonett-noden din til Webex. Nodens IP-adresse/FQDN: {{vertsnavn}} Klynge: {{klyngenavn}}",
+      "grant-registration-success-header-old-cluster": "Du kan nå registrere videonett-noden din til Webex. Nodens IP-adresse/FQDN: {{hostname}} Klynge: {{clustername}}",
       "grant-success-information": "Gå til din videonett-node innen en time for å fullføre registreringen.",
       "titleV2": "Registrer videonett-node",
       "text1V2": "Opprett en ny eller velg en gjeldende videonett-klynge der du ønsker å legge til videonett-noden.",
@@ -7092,7 +7092,7 @@
       "fullOva-helpText": "(Full kapasitet og brukt for produksjonsinstallasjon av videonett)",
       "demoOva-helpText": "(Begrenset kapasitet, funksjonstid, og lavere prosessorkrav for demo-installasjon av videonett)",
       "noProceed-helptext": "(Programvaren vil automatisk bli lastet ned)",
-      "noInfo": "Installer og konfigurer programvaren på serveren din og gå tilbake til {{apptittel}} for å registrere din videonett-node.",
+      "noInfo": "Installer og konfigurer programvaren på serveren din og gå tilbake til {{appTitle}} for å registrere din videonett-node.",
       "noRetryInfo": "Ble ikke programvaren lastet ned automatisk? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/Media-Fusion-Management-Connector/mfusion.ova'>Prøv igjen.</a>",
       "noRetryDemoInfo": "Ble ikke programvaren lastet ned automatisk? <a href='https://7f3b835a2983943a12b7-f3ec652549fc8fa11516a139bfb29b79.ssl.cf5.rackcdn.com/hybrid-media-demo/hybridmedia_demo.ova'>Prøv igjen.</a>",
       "noDesc1": "For detaljer om installasjon og konfigurasjon, gå til ",
@@ -7579,7 +7579,7 @@
     "companyLogo": "{{name}} Logo",
     "brandingExampleIntro": "Etter opplasting, vil logoen din automatisk bli justert i størrelse og vises slik som de følgende eksemplene.",
     "uploadLogo": "Last opp logo",
-    "logoOnAbout": "{{navn}} eksempellogo vist i fanen Om Cisco Webex Teams.",
+    "logoOnAbout": "{{name}} eksempellogo vist i fanen Om Cisco Webex Teams.",
     "logoOnWebEx": "{{name}} eksempellogo vist på Webex-nettstedet.",
     "partner": "Partner",
     "customer": "Kunde",
@@ -7765,7 +7765,7 @@
       "allLicensesAssigned": "Alle lisenser er tildelt.",
       "allSitesHaveLicense": "Hvert område har minst én lisens."
     },
-    "redistributeLicensesDelete": "<strong>Fullfør slettingen av området:</strong> Cisco Webex Meetings-området <strong>{{nettstedsadresse}}</strong> er klar til sletting. Først må du omfordele lisensene fra dette området til de gjenværende områdene i dette abonnementet.",
+    "redistributeLicensesDelete": "<strong>Fullfør slettingen av området:</strong> Cisco Webex Meetings-området <strong>{{siteUrl}}</strong> er klar til sletting. Først må du omfordele lisensene fra dette området til de gjenværende områdene i dette abonnementet.",
     "redistributeRejectModalTitle": "Kan ikke omdistribuere lisenser",
     "redistributeRejectModalBodyOnlySite": "Du kan ikke omdistribuere lisenser mellom nettsteder, fordi det er kun ett nettsted.",
     "redistributeRejectModalBodyPending": "Du kan ikke omdistribuere lisenser i dette abonnementet siden forrige handling på dette abonnementet fortsatt venter på klargjøring. Du kan omdistribuere lisenser når klargjøringen er fullført",
@@ -8281,8 +8281,8 @@
     "editAction": "Rediger",
     "deleteFeatureTextConfirmation": "Er du sikker på at du vil slette {{ featureName }}?",
     "deleteVaFeatureTextConfirmation": "Er du sikker på at du vil slette {{ featureName }}? Hvis du sletter den virtuelle kundeassistenten, fjernes den fra alle kundestøttemalene. Interaksjon mellom kunden og den virtuelle assistenten er ikke lenger mulig.",
-    "deleteEvaFeatureTextConfirmation": "Er du sikker på at du vil slette {{ funksjonsnavn }}? Du kan ikke lenger eskalere chat-forespørsler til Cisco Webex-ekspertrom.",
-    "deleteAbcFeatureTextConfirmation": "Er du sikker på at du vil slette {{ funksjonsnavn }}? Alle kundens aktiviteter blir slettet. Kunder kan ikke lenger bruke Messages til å samhandle med Care-agenter eller Customer Virtual-assistenter.",
+    "deleteEvaFeatureTextConfirmation": "Er du sikker på at du vil slette {{ featureName }}? Du kan ikke lenger eskalere chat-forespørsler til Cisco Webex-ekspertrom.",
+    "deleteAbcFeatureTextConfirmation": "Er du sikker på at du vil slette {{ featureName }}? Alle kundens aktiviteter blir slettet. Kunder kan ikke lenger bruke Messages til å samhandle med Care-agenter eller Customer Virtual-assistenter.",
     "createSuccessText": "Du har opprettet {{ featureName }}.",
     "createTemplateFailureText": "Kunne ikke opprette mal for Care selvbetjeningstjeneste.",
     "editSuccessText": "Endringer i {{ featureName }} ble lagret.",
@@ -8357,7 +8357,7 @@
     "customerInfoDesc_chat": "Dette er skjermen som en kunde fyller inn før de chatter med en agent",
     "customerInfoDesc_chat_expert": "Bruk disse egenskapene for å samle inn kundeinformasjon og lette eskalering til et Cisco Webex Teams\n-ekspertområde ved å identifisere emnet for kundens henvendelse.",
     "customerInfoDesc_callback": "Dette er skjermbildet som kunder fyller inn når de ber om å bli tilbakeringt fra en agent",
-    "evaSpaceDetailsText": ", den virtuelle ekspertassistenten din, er i {{antallVirtuellekspertassisentområder}} ekspertområder i Cisco Webex Teams:",
+    "evaSpaceDetailsText": ", den virtuelle ekspertassistenten din, er i {{numberOfEvaSpaces}} ekspertområder i Cisco Webex Teams:",
     "evaSpaceDetailsTextOneSpace": ", den virtuelle ekspertassistenten din, er i ekspertområde 1 i Cisco Webex Teams:",
     "evaDefaultName": "EVA",
     "customerInfoToggleTooltipMessage": "Dette skjermbildet er nødvendig for denne malen og kan ikke deaktiveres.",
@@ -8477,7 +8477,7 @@
       "templatesInUseText": "Maler: {{ numOfTemplates }}",
       "unavailableSpacesInUseText": "Brukerdata er utilgjengelige",
       "evaPopoverMainHeader": "Bruk av virtuell ekspertassistent",
-      "popoverSpacesHeader": "Eksperområder i Cisco Webex Teams: {{ antallOmråder }}",
+      "popoverSpacesHeader": "Eksperområder i Cisco Webex Teams: {{ numOfSpaces }}",
       "popoverDefaultSpace": "(Standardområde)",
       "popoverErrorMessage": "Kunne ikke hente data om plassbruk fra den virtuelle ekspertassistenten. Prøv igjen senere.",
       "cvaPopoverMainHeader": "Bruk av virtuell kundeassistent",
@@ -8650,7 +8650,7 @@
           "selectDesc": "Opprett en virtuell assistent som kobler eksperter på emnet i Cisco Webex Teams-områder til kunder med chatteforespørsler.",
           "disabledTooltip": "Du kan kun ha én virtuell ekspertassistent for organisasjonen. For å endre innstillingene for den eksisterende virtuelle ekspertassistenten må du redigere den fra funksjonssiden.",
           "nonAdminEditDeleteWarning": "Du er ikke autorisert til å endre denne virtuelle assistenten. Ta kontakt med {{owner}} for å utføre endringer.",
-          "nonAdminNoDefaultSpace": "Virtuell ekspertassistent ble fjernet fra standardområdet i Cisco Webex Teams. Ta kontakt med {{eier}} for å tildele et nytt standardområde.",
+          "nonAdminNoDefaultSpace": "Virtuell ekspertassistent ble fjernet fra standardområdet i Cisco Webex Teams. Ta kontakt med {{owner}} for å tildele et nytt standardområde.",
           "noDefaultSpaceWarning": "Virtuell ekspertassistent er ikke i et standardområde for Cisco Webex Teams. Rediger konfigureringen."
         }
       },
@@ -8740,8 +8740,8 @@
         "cvaDesc": "Du har konfigurert {{ name }}. For å bruke den assisterte tjenestefunksjonen i chat-applikasjonen til organisasjonen, må du legge assistenten til en kundestøttemal.",
         "cvaDescEdit": "Du har redigert {{ name }}. Klikk på Fullfør for å lagre konfigurasjonen slik at kunder kan samhandle med denne oppdaterte {{featureName}} under chatter med organisasjonen.",
         "descCont": "Klikk Fullfør for å lagre konfigurasjonen.",
-        "evaDesc": "Du har konfigurert {{ navn }}. Hvis du vil aktivere eskalering til Cisco Webex Teams, må du legge en virtuell ekspertassistent til kundestøttemaler og ekspertområder.",
-        "evaDescEdit": "Du har redigert {{ navn }}. Klikk på Fullfør for å lagre konfigurasjonen slik at Cisco Webex Teams-brukere i organisasjonen som arbeider i ekspertområder, kan samhandle med denne oppdaterte {{ funksjonsnavn }}.",
+        "evaDesc": "Du har konfigurert {{ name }}. Hvis du vil aktivere eskalering til Cisco Webex Teams, må du legge en virtuell ekspertassistent til kundestøttemaler og ekspertområder.",
+        "evaDescEdit": "Du har redigert {{ name }}. Klikk på Fullfør for å lagre konfigurasjonen slik at Cisco Webex Teams-brukere i organisasjonen som arbeider i ekspertområder, kan samhandle med denne oppdaterte {{ featureName }}.",
         "errorCreateTemplate": "Kan ikke lagre {{ featureName }}. Prøv på nytt.",
         "invalidEmailError": "E-postadressen du oppga, er ugyldig. Angi en gyldig e-postadresse.",
         "duplicateEmailError": "E-postadressen du oppga, finnes allerede. Angi en unik e-post.",
@@ -8749,14 +8749,14 @@
       },
       "overview": {
         "title": "Oversikt over {{ featureName }}",
-        "desc": "En {{ funksjonsnavn }} fungerer som et bindeledd mellom kunder og eksperter i Cisco Webex Teams.",
+        "desc": "En {{ featureName }} fungerer som et bindeledd mellom kunder og eksperter i Cisco Webex Teams.",
         "boxTitle": "Eskalering ved bruk av en {{ featureName}}",
         "boxDesc": "Se hvordan en {{ featureName}} aktiverer smarte eskaleringer, som sikrer rask og effektiv håndtering av kundeproblemer.",
         "learnMoreLink": "Finn ut mer"
       },
       "email": {
         "namePlaceholder": "Opprett e-post for {{ featureName }}",
-        "nameHint": "Opprett e-posten du bruker for å legge {{ funksjonsnavn }} til i Cisco Webex Teams-ekspertområder.",
+        "nameHint": "Opprett e-posten du bruker for å legge {{ featureName }} til i Cisco Webex Teams-ekspertområder.",
         "pending": "Kontrollerer at e-post for {{ featureName}} er tilgjengelig…",
         "duplicateError": "E-postadressen er opptatt. Prøv på nytt.",
         "errorChar63": "E-postadressen kan ikke overstige 63 tegn.",
@@ -8774,7 +8774,7 @@
       },
       "configurationSteps": {
         "title": "Obligatorisk konfigurasjon i Cisco Webex Teams",
-        "desc": "Konfigurer ekspertområder i Cisco Webex Teams der du kan legge til {{ funksjonsnavn }}.",
+        "desc": "Konfigurer ekspertområder i Cisco Webex Teams der du kan legge til {{ featureName }}.",
         "boxTitle": "Hvis du vil aktivere den virtuelle ekspertassistenten for å eskalere forespørsler til de rette personene i Cisco Webex Teams:",
         "boxStepOne": "Opprett flere eksperområder i Cisco Webex Teams.",
         "boxStepOneTooltip": "Gi hvert område et unikt emnenavn som hjelper {{ featureName }} med å matche nøkkelord fra chatten til området.",
@@ -9762,7 +9762,7 @@
     },
     "adminElevation": {
       "title": "Cisco Webex Control Hub",
-      "init": "Vil du gi brukerstøtteoperatøren {{helpDeskOperatorName}} midlertidig full administratortilgang til {{ORGNAME}}-organisasjon i én time?",
+      "init": "Vil du gi brukerstøtteoperatøren {{helpDeskOperatorName}} midlertidig full administratortilgang til {{orgName}}-organisasjon i én time?",
       "grant": "Tillat",
       "reject": "Avvis",
       "elevationDone": "Brukerstøtteoperatør {{helpDeskOperatorName}} har fått full administratortilgang til {{orgName}}-organisasjonen i én time.<br><br>Du kan lukke denne siden og vente på ytterligere instruksjoner.",
@@ -9851,7 +9851,7 @@
     "verificationComplete": "Bekreftelse ferdig",
     "returnToApp": "Gå tilbake til Cisco Webex Teams på mobilenheten og fullfør registreringen.",
     "codeExpired": "Aktiveringskoden utløpt",
-    "requestNewCode": "Cisco Webex Teams-aktiveringskode sendt til {{brukere-post}} for {{enhetsnavn}} er utløpt! For å be om en ny kode, klikk nedenfor.",
+    "requestNewCode": "Cisco Webex Teams-aktiveringskode sendt til {{userEmail}} for {{deviceName}} er utløpt! For å be om en ny kode, klikk nedenfor.",
     "sendCodeLink": "Send ny aktiveringskode",
     "newCodeSent": "Bekreftelseskode sendt",
     "useLatestCode": "En ny kode har blitt sendt til {{userEmail}}",
@@ -10369,7 +10369,7 @@
       "selectTdPlaceholder": "Velg telefonidomene…",
       "selectExistingTd": "Velg eksisterende telefonidomene",
       "selectPhoneNumberTips": "Velg alle eller individuelle telefonnumre for importering.",
-      "importFilterNumbers": "Importering fullført.{{tall}} numre er enda ikke synkronisert til Webex og kan ikke importeres. Prøv igjen senere.",
+      "importFilterNumbers": "Importering fullført.{{number}} numre er enda ikke synkronisert til Webex og kan ikke importeres. Prøv igjen senere.",
       "submissionMsg": "Forespørselen om telefonidomene har blitt sendt.",
       "rejectSubmissionMsg": "Forespørselen om telefonidomene har blitt avvist.",
       "downloadConfirmMsg": "Den eksporterte malfilen er i .xls-format med rullegardinlister for brukervennlighet. Etter at du er ferdig med å redigere malen, må du allikevel <b>«Lagre som» CSV-format</b> før du importerer.",
@@ -10396,7 +10396,7 @@
           "resultMsg": {
             "noItemFound": "Ingen element funnet.",
             "exceedMax": "{{importedNumbersCount}}/{{allNumbersCount}} nye numre er importert. Maksimalantallet for oppførte telefoninumre er 300. Ekstra nummer har blitt forkastet.",
-            "importTD": "{{tall}} numre er enda ikke synkronisert til Webex og kan ikke importeres. Prøv igjen senere.",
+            "importTD": "{{number}} numre er enda ikke synkronisert til Webex og kan ikke importeres. Prøv igjen senere.",
             "success": "Import fullført. {{importedNumbersCount}} nye numre importert. Tilordne ett nummer som standard betalingsnummer, før du sender inn forespørselen."
           },
           "csvConfirm": {
@@ -11424,14 +11424,14 @@
       },
       "editNodeSftpModal": {
         "title": "Rediger SFTP-server",
-        "selectLabel": "Velg SFTP-server for {{nodename}}"
+        "selectLabel": "Velg SFTP-server for {{nodeName}}"
       }
     },
     "clustersList": {
       "title":"Klynger",
       "errorGetClusters": "Feil ved henting av klyngeinformasjon for {{customerName}}",
       "deleteClusterModal": {
-        "title": "Slette {{clustername}}?",
+        "title": "Slette {{clusterName}}?",
         "description": "Sletting av klyngen vil også fjerne agentene fra alle noder. Er du sikker?"
       }
     },
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Slett enheter",
     "deleteDevices": "Slett enheter",
     "editDevices": "Rediger enheter",
-    "deleteDevicesAreYouSure": "Er du sikker på at du vil slette {{nDevices}} enheter?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Er du sikker på at du vil slette denne enheten?} other{Er du sikker på at du vil slette denne # enheten?}}?",
     "deleteDeviceAreYouSure": "Er du sikker på at du vil slette denne enheten?",
     "changeCannotBeUndone": "Denne handlingen kan ikke angres.",
     "deleteEmptyPlaces": "Slett alle resulterende tomme steder",

@@ -3929,26 +3929,26 @@
         },
         "resourceGroupEvents": {
           "createdHelpText": "{{username}} har oprettet <strong>{{resourceGroupName}}</strong> med udgivelseskanalen <strong>{{releaseChannel}}</strong>.",
-          "updatedHelpTextIntro": "{{brugernavn}} har opdateret ressourcegruppen.",
-          "updatedHelpTextNameChanged": "Ressourcegruppenavnet er blevet ændret fra <strong>{{oldname}}</strong> til <strong>{{newname}}</strong>",
+          "updatedHelpTextIntro": "{{username}} har opdateret ressourcegruppen.",
+          "updatedHelpTextNameChanged": "Ressourcegruppenavnet er blevet ændret fra <strong>{{oldName}}</strong> til <strong>{{newName}}</strong>",
           "updatedHelpTextReleaseChannelChanged": "Udgivelseskanalen er blevet ændret fra <strong>{{oldReleaseChannel}}</strong> til <strong>{{newReleaseChannel}}</strong>",
-          "deletedHelpText": "{{brugernavn}} har slettet ressourcegruppen <strong>{{resourceGroupName}}</strong>."
+          "deletedHelpText": "{{username}} har slettet ressourcegruppen <strong>{{resourceGroupName}}</strong>."
         },
         "hostEvents": {
-          "updatedHelpText": "{{brugernavn}} har opdateret værten. Vedligeholdelsestilstanden er blevet ændret fra <strong>{{oldMaintenanceMode}}</strong> til <strong>{{maintenanceMode}}</strong>."
+          "updatedHelpText": "{{username}} har opdateret værten. Vedligeholdelsestilstanden er blevet ændret fra <strong>{{oldMaintenanceMode}}</strong> til <strong>{{maintenanceMode}}</strong>."
         },
         "connectorUpdatedEvents": {
           "updatedHelpText" : "{{localizedConnectorName}} er blevet opdateret.",
           "updatedHelpTextRegistrationState" : "Tilmeldingstilstanden er blevet ændret fra <strong>{{oldRegistrationState}}</strong> til <strong>{{registrationState}}</strong>.",
           "updatedHelpTextMaintenanceMode" : "Vedligeholdelsestilstanden er blevet ændret fra <strong>{{maintenanceMode}}</strong> til <strong>{{oldMaintenanceMode}}</strong>.",
-          "updatedHelpTextClusterId" : "Klynge-ID'et er blevet ændret fra <strong>{{oldClusterId}}</strong> til <strong>{{ClusterIDog#39;en}}</strong>.",
+          "updatedHelpTextClusterId" : "Klynge-ID'et er blevet ændret fra <strong>{{oldClusterId}}</strong> til <strong>{{clusterId}}</strong>.",
           "updatedHelpTextUpgradeState" : "Opgraderingstilstanden er blevet ændret fra <strong>{{oldUpgradeState}}</strong> til <strong>{{upgradeState}}</strong>.",
           "createdHelpText" : "{{localizedConnectorName}} er blevet oprettet.",
           "deregisteredHelpText" : "{{localizedConnectorName}} er ikke længere tilmeldt.",
           "removedHelpText" : "{{localizedConnectorName}} er blevet fjernet."
         },
         "redirectTargetEvents" : {
-          "createdHelpText" : "{{brugernavn}} har oprettet omdirigeringsmålet for {{hostName}}. Omdirigeringsmålet er gyldigt i {{ttl}} sekunder.",
+          "createdHelpText" : "{{username}} har oprettet omdirigeringsmålet for {{hostName}}. Omdirigeringsmålet er gyldigt i {{ttl}} sekunder.",
           "deletedHelpText" : "{{username}} har slettet omdirigeringsmålet for {{hostName}}."
         },
         "machineAccountEvents" : {
@@ -6019,7 +6019,7 @@
       "invalidQuantity": "Antallet skal være mellem {{min}} og {{max}}",
       "invalidQuantitySingle": "Antallet skal være {{qty}}",
       "invalidTotalQuantity": "Hele ordren skal have mellem {{min}} og {{max}} enheder",
-      "invalidRoomSystemsQuantity": "Begrænset til {{maks}} Cisco Webex-rumenheder",
+      "invalidRoomSystemsQuantity": "Begrænset til {{max}} Cisco Webex-rumenheder",
       "invalidPhonesQuantity": "Begrænset til {{max}} personlige og delte fastnettelefoner",
       "shippingInfo": "Forsendelsesoplysninger",
       "recipient": "Hvor skal enhederne sendes til?",
@@ -6253,7 +6253,7 @@
     "SD": "Cisco Webex-rumenhed",
     "deleteOrgTitle": "Slet kunde",
     "deleteOrgConfirmMsg": "Er du sikker på du permanent vil slette kunden \"{{orgName}}\"?",
-    "deleteOrgHmsError": "For kunden {{OrgName}} er Webex Video Mesh aktiv i øjeblikket. Deaktiver WebEx Video Mesh-tjenesten, før du sletter kunden.",
+    "deleteOrgHmsError": "For kunden {{orgName}} er Webex Video Mesh aktiv i øjeblikket. Deaktiver WebEx Video Mesh-tjenesten, før du sletter kunden.",
     "deleteOrg": "Slet kunde",
     "deleteOrgSuccess": "{{orgName}} blev slettet",
     "deleteOrgError": "{{orgName}} blev ikke slettet.",
@@ -9762,10 +9762,10 @@
     },
     "adminElevation": {
       "title": "Cisco Webex Control Hub",
-      "init": "Vil du give Help Desk-operatøren {{helpDeskOperatorName}} midlertidig komplet administratoradgang til organisationen {{OrgName}} i 1 time?",
+      "init": "Vil du give Help Desk-operatøren {{helpDeskOperatorName}} midlertidig komplet administratoradgang til organisationen {{orgName}} i 1 time?",
       "grant": "Tildel",
       "reject": "Afvis",
-      "elevationDone": "Help Desk-operatøren {{helpDeskOperatorName}} blev tildelt komplet administratoradgang til organisationen {{OrgName}} i 1 time.<br><br>Du kan lukke denne side og vente på yderligere oplysninger.",
+      "elevationDone": "Help Desk-operatøren {{helpDeskOperatorName}} blev tildelt komplet administratoradgang til organisationen {{orgName}} i 1 time.<br><br>Du kan lukke denne side og vente på yderligere oplysninger.",
       "elevationRejected": "Du har afvist anmodningen fra Help Desk-operatøren {{helpDeskOperatorName}} om midlertidig komplet administratoradgang.<br><br>Hvis du ønsker at give rettigheder senere, kan du bede operatøren om at gensende adgangsanmodningen.",
       "invalidSignature": "Denne side er åbnet med ugyldige parametre, eller der opstod timeout for signaturen.<br><br>Kontakt Help Desk-operatøren for at få yderligere hjælp.",
       "error": "Der opstod en fejl. Kontakt Help Desk-operatøren for at få yderligere hjælp."
@@ -9941,7 +9941,7 @@
     "userIsMissingEntitlements": "Den aktuelle bruger har ingen hybrid-tjenester-rettigheder.",
     "userStatusesSummary": {
       "users": "Brugere",
-      "assigned": "{total, plural, =1{# user enabled} anden{# users enabled}}",
+      "assigned": "{total, plural, =1{# user enabled} other{# users enabled}}",
       "inError": "i fejl",
       "inPending": "afventer aktivering",
       "active": "aktive",
@@ -11424,7 +11424,7 @@
       },
       "editNodeSftpModal": {
         "title": "Rediger SFTP-server",
-        "selectLabel": "Vælg SFTP-server til {{nodename}}"
+        "selectLabel": "Vælg SFTP-server til {{nodeName}}"
       }
     },
     "clustersList": {
@@ -11616,7 +11616,7 @@
         "precheck": "Kør forhåndskontrol"
       },
       "order" : {
-        "title": "Sæt klynge {{clustername}} i rækkefølge",
+        "title": "Sæt klynge {{clusterName}} i rækkefølge",
         "directions": "Brug pilene til at indstille den rækkefølge, i henhold til hvilken knudepunkterne i klyngen vil blive opgraderet",
         "addAnother": "Tilføj Opgraderingsgruppe",
         "maxGroups": "Kan ikke oprette mere end 8 opgraderingsgrupper"
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Slet enheder",
     "deleteDevices": "Slet enheder",
     "editDevices": "Rediger enheder",
-    "deleteDevicesAreYouSure": "Er du sikker på, at du vil slette {{nDevices}} enheder?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Er du sikker på, du vil slette denne enhed?} other{Er du sikker på, du vil slette # denne enhed?}}?",
     "deleteDeviceAreYouSure": "Er du sikker på, du vil slette denne enhed?",
     "changeCannotBeUndone": "Denne handling kan ikke fortrydes.",
     "deleteEmptyPlaces": "Slet alle tomme områder, der måtte opstå",
@@ -11731,7 +11731,7 @@
   "convertUsersModal": {
     "title": "Konverter Brugere",
     "desc": "Konverter ansatte til brugere med licens, der er tilmeldt Cisco Webex Teams på deres egen virksomheds-e-mailadresse. Licenserede brugere modtager yderligere virksomhedsfunktioner og er underlagt din organisations politik og administration.",
-    "desc2": "Brugere, der ikke har aktiveret deres konto, konverteres øjeblikkeligt. Andre brugere modtager en e-mail med en invitation til konvertering. Brugere, der ikke agerer i forbindelse med invitationen til konvertering, konverteres, når der er gået {count, plural, =1{# day} yderligere {# days}}.",
+    "desc2": "Brugere, der ikke har aktiveret deres konto, konverteres øjeblikkeligt. Andre brugere modtager en e-mail med en invitation til konvertering. Brugere, der ikke agerer i forbindelse med invitationen til konvertering, konverteres, når der er gået {count, plural, =1{# day} other{# days}}.",
     "csv": "CSV",
     "csvFilename": "users_delayed_conversion.csv",
     "csvResultsFilename": "users_converted_results.csv",
@@ -11767,7 +11767,7 @@
       "subTitle": "Konverteringsresultater",
       "desc": "<strong>Udskudt konvertering</strong> brugere fik tilsendt en e-mail med en invitation til konvertering. Brugere, der ikke udfører nogen handling, bliver konverteret efter {count, plural, =1{# day} other{# days}}.",
       "desc2": "Hvis din virksomhed bruger <strong>mappesynkronisering</strong>, skal du downloade den CSV-fil med oplysninger om de brugere, som er konverteret, og udskudte konverteringer <strong>og tilføje alle disse brugere i dit bibliotek</strong>. Ellers vil de blive deaktiveret ved den næste komplette mappesynkronisering.",
-      "usersConverted": "{total, plural, =0{Users} =1{User} øvrige {Users}} blev konverteret",
+      "usersConverted": "{total, plural, =0{Users} =1{User} other{Users}} blev konverteret",
       "usersPending": "Udskudt konvertering"
     }
   },
@@ -11808,7 +11808,7 @@
       "specificUsers": "Specifikke brugere",
       "revokeAccessDialog": {
         "title": "Tilbagekald adgangsvarsel",
-        "message": "{count, plural, =1{# user} andre{All # users}} vil miste adgang til integrationen. Vil du tilbagekalde adgang?"
+        "message": "{count, plural, =1{# user} other{All # users}} vil miste adgang til integrationen. Vil du tilbagekalde adgang?"
       },
       "saveSuccess": "Integrationsadgang blev gemt.",
       "saveError": "Fejl under lagring af integrationsadgang."

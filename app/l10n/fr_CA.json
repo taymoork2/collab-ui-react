@@ -184,7 +184,7 @@
     "loadError": "Erreur lors du chargement de la liste des utilisateurs.",
     "ciscoSparkJabberInteropTooltip": "Permettre les messages entre Cisco Webex Teams et Jabber. Fournir aux utilisateurs de Jabber un accès aux espaces Cisco Webex Teams. Les modifications peuvent prendre jusqu’à 24 heures.",
     "userImage": "Image de l’utilisateur",
-    "mustConvertUserBeforeAdding": "{{Email}} ne peut être ajouté. Utilisez l’option Convertir l’utilisateur pour déplacer cet utilisateur vers l’organisation."
+    "mustConvertUserBeforeAdding": "{{email}} ne peut être ajouté. Utilisez l’option Convertir l’utilisateur pour déplacer cet utilisateur vers l’organisation."
   },
   "userManage": {
     "org": {
@@ -489,7 +489,7 @@
     "proceedFree": "Continuer avec des licences gratuites",
     "proceedFreeMessage": "Si vous n’avez plus de licences pour un service Cisco Webex, une licence gratuite sera affectée à tous les utilisateurs restants pour ce service.",
     "reviewPlanButton": "Révisez votre plan",
-    "proceedFreeButton": "Continuez avec le/l’/les {{serviceName}} gratuit(s)",
+    "proceedFreeButton": "Proceed with Free",
     "getCareEntitlementsErrorForuser": "Échec de l’obtention d’autorisations de l’assistance pour l’utilisateur",
     "result": {
       "200": "autorisé avec succès",
@@ -3530,7 +3530,7 @@
           "unconfigureConnect": "Tâche de suppression du service d’appels Connect mise en file d’attente",
           "reactivate": "Tâche de réactivation mise en file d’attente"
         },
-        "DeleteServiceConfigurationState": "Configuration de {{Service}} supprimée"
+        "DeleteServiceConfigurationState": "Configuration de {{service}} supprimée"
       }
     },
     "nodesPage": {
@@ -4270,7 +4270,7 @@
   "ediscovery": {
     "browserTabHeaderTitle": "Recherche et extraction eDiscovery",
     "heading": "Rechercher les données de conformité",
-    "subheading": "Choisir pour rechercher des utilisateurs ou des espaces précis. Ajouter jusqu’à {{limite}} utilisateurs ou espaces en les séparant par des virgules.",
+    "subheading": "Choisir pour rechercher des utilisateurs ou des espaces précis. Ajouter jusqu’à {{limit}} utilisateurs ou espaces en les séparant par des virgules.",
     "searchTip": "Rechercher des données par ID d’espace",
     "searchingHeader": "Recherche des données de conformité",
     "searchingSubheader": "La recherche peut prendre quelques minutes",
@@ -4501,7 +4501,7 @@
     "uploadCsvBadHeaders": "En-tête requis manquant dans le fichier CSV",
     "csvMaxSizeError": "La taille du fichier dépasse le maximum de 10 Mo.",
     "csvMaxLinesError": "Le CSV contient plus d’utilisateurs que le maximum autorisé. Veuillez réduire le nombre d’utilisateurs à {{max}} ou moins et téléverser le CSV à nouveau.",
-    "csvHeaderNameMismatch": "Le fichier téléversé contient un nom de colonne non reconnu « {{Nom}} ». Utiliser le modèle le plus récent pour continuer.",
+    "csvHeaderNameMismatch": "Le fichier téléversé contient un nom de colonne non reconnu « {{name}} ». Utiliser le modèle le plus récent pour continuer.",
     "processCsvStep": "Traitement du fichier CSV",
     "processing": "Traitement...",
     "canceling": "Annulation...",
@@ -9667,7 +9667,7 @@
     "requestFullAdminAccessToOrgTooltip": "Vous pouvez envoyer une demande à l’utilisateur pour qu’il accorde des privilèges temporaires d’administrateur complet dans des cas où un dépannage vous demanderait d’exécuter des actions au nom de l’administrateur du client.",
     "requestFullAdminSentSuccess": "Demande envoyée. Vous recevrez un courriel lorsque {{customerUser}} acceptera de vous accorder des privilèges d’administrateur complet.",
     "confirmFullAdminElevationTitle": "Demande de privilèges d’administrateur complet",
-    "confirmFullAdminElevationText": "Êtes-vous certain de vouloir soumettre une demande temporaire de privilèges d’administrateur complet? {{CustomerUser}} recevra un courriel aux fins de confirmation.",
+    "confirmFullAdminElevationText": "Êtes-vous certain de vouloir soumettre une demande temporaire de privilèges d’administrateur complet? {{customerUser}} recevra un courriel aux fins de confirmation.",
     "confirmFullAdminElevationRequestBtn": "Demande",
     "sendRequestForFullAdminAccess": "Envoyer la demande",
     "sendCode": "Envoyer le code",
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Supprimer les appareils",
     "deleteDevices": "Supprimer les appareils",
     "editDevices": "Modifier les appareils",
-    "deleteDevicesAreYouSure": "Voulez-vous vraiment supprimer les {{nDevices}} appareils sélectionnés?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Voulez-vous vraiment supprimer cet appareil?} other{Voulez-vous vraiment supprimer cet # appareil?}}?",
     "deleteDeviceAreYouSure": "Voulez-vous vraiment supprimer cet appareil?",
     "changeCannotBeUndone": "Cette action ne peut pas être annulée.",
     "deleteEmptyPlaces": "Supprimer les emplacements vides",

@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Eliminar dispositivos",
     "deleteDevices": "Eliminar dispositivos",
     "editDevices": "Editar dispositivos",
-    "deleteDevicesAreYouSure": "¿Seguro de que desea eliminar {{nDevices}} dispositivos?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{¿Está seguro de que desea eliminar este dispositivo?} other{¿Está seguro de que desea eliminar este # dispositivo?}}?",
     "deleteDeviceAreYouSure": "¿Está seguro de que desea eliminar este dispositivo?",
     "changeCannotBeUndone": "Esta acción no se puede deshacer.",
     "deleteEmptyPlaces": "Eliminar lugares vacíos resultantes",
@@ -11725,7 +11725,7 @@
     "pollProgressError": "Errores al recuperar el progreso en masa",
     "exportData": {
       "exportAsCSV": "Exportar como CSV",
-      "deviceExportDescription": "{nDevices, plural, =1{Exportar atributos de dispositivo para 1 dispositivo} y {Exportar atributos de dispositivo para # dispositivos}}"
+      "deviceExportDescription": "{nDevices, plural, =1{Exportar atributos de dispositivo para 1 dispositivo} other{Exportar atributos de dispositivo para # dispositivos}}"
     }
   },
   "convertUsersModal": {
@@ -11808,7 +11808,7 @@
       "specificUsers": "Usuarios específicos",
       "revokeAccessDialog": {
         "title": "Alerta de impedimento de acceso",
-        "message": "{count, plural, =1{# user} y {All # users}} perderán el acceso a esta integración. ¿Quiere revocar su acceso?"
+        "message": "{count, plural, =1{# user} other{All # users}} perderán el acceso a esta integración. ¿Quiere revocar su acceso?"
       },
       "saveSuccess": "El acceso de integración se ha guardado con éxito.",
       "saveError": "Error al guardar el acceso de integración."

@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "장치 삭제",
     "deleteDevices": "장치 삭제",
     "editDevices": "장치 편집",
-    "deleteDevicesAreYouSure": "{{nDevices}}개의 장치를 삭제하시겠습니까?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{개의 장치를 삭제하시겠습니까?} other{개의 장치를 삭제하시겠습니까 #?}}?",
     "deleteDeviceAreYouSure": "이 장치를 삭제하시겠습니까?",
     "changeCannotBeUndone": "이 작업은 실행 취소할 수 없습니다.",
     "deleteEmptyPlaces": "삭제하면 빈 장소가 만들어집니다.",

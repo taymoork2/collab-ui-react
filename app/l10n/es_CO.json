@@ -3777,8 +3777,8 @@
         "dateSince": "Desde"
       },
       "connectorProvisioned": "El grupo se aprovisionó con {{connectorName}} versión {{newVersion}}",
-      "clusterCreated": "Se creó el grupo {{clustername}}",
-      "clusterDeleted": "Se eliminó el grupo {{clustername}}",
+      "clusterCreated": "Se creó el grupo {{clusterName}}",
+      "clusterDeleted": "Se eliminó el grupo {{clusterName}}",
       "connectorDeprovisioned": "{{connectorName}} se eliminó del grupo",
       "connectorProvisioningChanged": "Se inició el {{connectorName}} mejorado a {{newVersion}}",
       "serviceEnabled": "{{serviceName}} se ha habilitado",
@@ -11616,7 +11616,7 @@
         "precheck": "Ejecutar comprobaciones previas"
       },
       "order" : {
-        "title": "Ordenar grupo {{clustername}}",
+        "title": "Ordenar grupo {{clusterName}}",
         "directions": "Utilice las flechas para establecer el orden en que se mejorarán los nodos del grupo",
         "addAnother": "Agregar grupo de mejora",
         "maxGroups": "No se pueden crear más de 8 grupos de mejora"
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Eliminar dispositivos",
     "deleteDevices": "Eliminar dispositivos",
     "editDevices": "Editar dispositivos",
-    "deleteDevicesAreYouSure": "¿Está seguro de que desea eliminar {{nDevices}} dispositivos?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{¿Está seguro de que desea eliminar este dispositivo?} other{¿Está seguro de que desea eliminar este # dispositivo?}}?",
     "deleteDeviceAreYouSure": "¿Está seguro de que desea eliminar este dispositivo?",
     "changeCannotBeUndone": "Esta acción no se puede deshacer.",
     "deleteEmptyPlaces": "Eliminar los lugares vacíos resultantes",

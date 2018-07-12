@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Hapus Perangkat",
     "deleteDevices": "Hapus perangkat",
     "editDevices": "Edit perangkat",
-    "deleteDevicesAreYouSure": "Anda yakin ingin menghapus {{nDevices}} perangkat?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Anda yakin ingin menghapus perangkat?} other{Anda yakin ingin menghapus # perangkat?}}",
     "deleteDeviceAreYouSure": "Anda yakin ingin menghapus perangkat ini?",
     "changeCannotBeUndone": "Tindakan ini tidak dapat dibatalkan.",
     "deleteEmptyPlaces": "Hapus tempat kosong yang dihasilkan",
@@ -11725,7 +11725,7 @@
     "pollProgressError": "Gagal saat membuka kemajuan sekaligus",
     "exportData": {
       "exportAsCSV": "Ekspor sebagai CSV",
-      "deviceExportDescription": "{nDevices, plural, =1{Export device attributes for 1 device} lainnya{Export device attributes for # devices}}"
+      "deviceExportDescription": "{nDevices, plural, =1{Export device attributes for 1 device} other{Export device attributes for # devices}}"
     }
   },
   "convertUsersModal": {

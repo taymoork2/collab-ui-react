@@ -4392,7 +4392,7 @@
     "title": "Sujets légaux",
     "matterName": "Nom du sujet",
     "manageCustodiansTitle": "Gérer les modérateurs",
-    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimerle sujet de {{email}} ?",
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimerle sujet de {{name}} ?",
     "releaseConfirmation1": "Êtes-vous sûr de vouloir publier le sujet de {{name}} ?",
     "releaseConfirmation2": "Les modérateurs n'auront plus leurs données en attente à moins qu'elles n'appartiennent à un autre sujet.",
     "exportWarning": "La collecte de données pour l'exportation peut prendre un certain temps. Si vous vous déconnectez ou actualisez votre navigateur, l'exportation sera annulée.",
@@ -4448,7 +4448,7 @@
         "title": "Ajouter des modérateurs",
         "description": "Tout le contenu des utilisateurs ajoutés dans les espaces actuels et nouvellement rejoints ou créés est mis en attente. Si un utilisateur quitte le cas soit résolu.",
         "statusTitle": "Ajouter le statut des modérateurs",
-        "resultPartial": "Certains utilisateurs ont été ajoutés avec succès, mais des utilisateurs non valides ont été détectés dans {{fineName}}. Effectuez la mise à jour de votre fichier et réessayez.",
+        "resultPartial": "Certains utilisateurs ont été ajoutés avec succès, mais des utilisateurs non valides ont été détectés dans {{fileName}}. Effectuez la mise à jour de votre fichier et réessayez.",
         "resultSuccess": "Utilisateurs ajoutés avec succès avec {{fileName}}.",
         "resultFailure": "Des utilisateurs non valides ont été détectés dans {{fileName}}. Aucun utilisateur n'a été ajouté.",
         "resultCanceled": "Toutes les importations des modérateurs ont été annulées avec succès",
@@ -4467,7 +4467,7 @@
         "title": "Supprimer des modérateurs",
         "description": "Les utilisateurs supprimés n'auront plus leur contenu placé en attente",
         "statusTitle": "Supprimer le statut des modérateurs",
-        "resultPartial": "Certains utilisateurs ont été supprimés avec succès, mais des utilisateurs non valides ont été détectés dans {{fineName}}. Effectuez la mise à jour de votre fichier et réessayez.",
+        "resultPartial": "Certains utilisateurs ont été supprimés avec succès, mais des utilisateurs non valides ont été détectés dans {{fileName}}. Effectuez la mise à jour de votre fichier et réessayez.",
         "resultSuccess": "Les utilisateurs ont été supprimés avec succès avec {{fileName}}.",
         "resultFailure": "Des utilisateurs non valides ont été détectés dans {{fileName}}. Aucun utilisateur n'a été supprimé.",
         "resultCanceled": "La suppression de l'importation des modérateurs a été annulée avec succès",
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Supprimer les périphériques",
     "deleteDevices": "Supprimer les périphériques",
     "editDevices": "Modifier les périphériques",
-    "deleteDevicesAreYouSure": "Êtes-vous sûr de vouloir supprimer les périphériques {{nDevices}} ?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Êtes-vous sûr de vouloir supprimer les périphériques?} other{Êtes-vous sûr de vouloir supprimer # les périphériques?}}",
     "deleteDeviceAreYouSure": "Êtes-vous sûr(e) de vouloir supprimer ce périphérique ?",
     "changeCannotBeUndone": "Cette action est irréversible.",
     "deleteEmptyPlaces": "Supprimer les emplacements vides résultants",
@@ -11765,7 +11765,7 @@
     },
     "results": {
       "subTitle": "Résultats de la conversion",
-      "desc": "<strong>Les utilisateurs pour lesquels la conversion est reportée</strong> ont reçu un courrier électronique d'invitation pour la conversion. Les utilisateurs qui n'entreprennent aucune action seront convertis après {compte, pluriel, =1{# jour} autres{# jours}}.",
+      "desc": "<strong>Les utilisateurs pour lesquels la conversion est reportée</strong> ont reçu un courrier électronique d'invitation pour la conversion. Les utilisateurs qui n'entreprennent aucune action seront convertis après {count, plural, =1{# jour} other{# jours}}.",
       "desc2": "Si votre entreprise utilise la <strong>Synchronisation du répertoire</strong>, vous devez télécharger le fichier CSV qui contient les utilisateurs convertis et les conversions reportées <strong>et ajoutez tous ces utilisateurs à votre répertoire</strong>, sinon ils seront désactivés lors de la prochaine synchronisation complète du répertoire.",
       "usersConverted": "{total, plural, =0{Users} =1{utilisateur} other{utilisateurs}} convertis",
       "usersPending": "Conversion reportée"
@@ -11808,7 +11808,7 @@
       "specificUsers": "Utilisateurs spécifiques",
       "revokeAccessDialog": {
         "title": "Alerte de révocation d'accès",
-        "message": "{count, plural, =1{# utilisateur} autres{Tous les # utilisateurs}} perdront l'accès à cette extension. Voulez-vous révoquer l'accès ?"
+        "message": "{count, plural, =1{# utilisateur} other{Tous les # utilisateurs}} perdront l'accès à cette extension. Voulez-vous révoquer l'accès ?"
       },
       "saveSuccess": "L'accès aux extensions a été enregistré avec succès.",
       "saveError": "Erreur lors de l'enregistrement de l'accès aux extensions."

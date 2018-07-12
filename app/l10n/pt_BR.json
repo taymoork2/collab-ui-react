@@ -3943,7 +3943,7 @@
           "updatedHelpTextMaintenanceMode" : "O modo de manutenção foi alterado de <strong>{{maintenanceMode}}</strong> para <strong>{{oldMaintenanceMode}}</strong>.",
           "updatedHelpTextClusterId" : "A ID do grupo foi alterada de <strong>{{oldClusterId}}</strong> para <strong>{{clusterId}}</strong>.",
           "updatedHelpTextUpgradeState" : "O estado de atualização foi alterado de <strong>{{oldUpgradeState}}</strong> para <strong>{{upgradeState}}</strong>.",
-          "createdHelpText" : "O {{locateedConnectorName}} foi criado.",
+          "createdHelpText" : "O {{localizedConnectorName}} foi criado.",
           "deregisteredHelpText" : "O {{localizedConnectorName}} teve o registro cancelado.",
           "removedHelpText" : "O {{localizedConnectorName}} foi removido."
         },
@@ -11716,7 +11716,7 @@
     "deleteDevicesTitle": "Excluir Dispositivos",
     "deleteDevices": "Excluir dispositivos",
     "editDevices": "Editar dispositivos",
-    "deleteDevicesAreYouSure": "Tem certeza de que deseja excluir os {{nDevices}} dispositivos?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{Tem certeza de que deseja excluir este dispositivo?} other{Tem certeza de que deseja excluir este # dispositivo?}}?",
     "deleteDeviceAreYouSure": "Tem certeza de que deseja excluir este dispositivo?",
     "changeCannotBeUndone": "Essa ação não pode ser desfeita.",
     "deleteEmptyPlaces": "Exclua os locais vazios resultantes",

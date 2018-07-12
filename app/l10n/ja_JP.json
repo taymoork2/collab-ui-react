@@ -3512,9 +3512,9 @@
         },
         "DeleteUserAssignment": "割り当てが削除されました",
         "UpdateConfigureStatus": {
-          "success": "{{Service}} 構成に成功しました",
-          "failure": "{{Service}} 構成に失敗しました",
-          "waiting": "{{Service}} 構成が要求されました"
+          "success": "{{service}} 構成に成功しました",
+          "failure": "{{service}} 構成に失敗しました",
+          "waiting": "{{service}} 構成が要求されました"
         },
         "UpdateUserActivationState": {
           "activate": "アクティベーション ジョブが開始されました",
@@ -3530,7 +3530,7 @@
           "unconfigureConnect": "通話サービス接続の削除ジョブがキューされました",
           "reactivate": "再アクティベート ジョブキューされました"
         },
-        "DeleteServiceConfigurationState": "{{Service}} 構成が削除されました"
+        "DeleteServiceConfigurationState": "{{service}} 構成が削除されました"
       }
     },
     "nodesPage": {
@@ -11716,8 +11716,8 @@
     "deleteDevicesTitle": "デバイスの削除",
     "deleteDevices": "デバイスを削除する",
     "editDevices": "デバイスを編集する",
-    "deleteDevicesAreYouSure": "{{nDevices}} 台のデバイスを本当に削除しますか?",
-    "deleteDeviceAreYouSure": "このデバイスを削除してもよろしいですか?",
+    "deleteDevicesAreYouSure": "{nDevices, plural, =1{台のデバイスを本当に削除しますか?} other{台のデバイスを本当に削除しますか?}}?",
+    "deleteDeviceAreYouSure": "このデバイスを削除してもよろしいで#すか?",
     "changeCannotBeUndone": "このアクションを元に戻すことはできません。",
     "deleteEmptyPlaces": "結果として空になった場所を削除する",
     "deleteEmptyPlacesExplanation": "最後のデバイスが削除されると、その場所も削除されます。",
