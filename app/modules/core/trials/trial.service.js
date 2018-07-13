@@ -13,7 +13,7 @@
   }
 
   /* @ngInject */
-  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialBroadCloudCommonAreaService, TrialBroadCloudStdService, TrialCallService, TrialAdvanceCareService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
+  function TrialService($http, $q, Authinfo, Config, LogMetricsService, TrialBroadCloudStdService, TrialCallService, TrialAdvanceCareService, TrialCareService, TrialContextService, TrialDeviceService, TrialMeetingService, TrialMessageService, TrialPstnService, TrialResource, TrialRoomSystemService, TrialSparkBoardService, TrialWebexService, UrlConfig) {
     var _trialData;
     var trialsUrl = UrlConfig.getAdminServiceUrl() + 'organization/' + Authinfo.getOrgId() + '/trials';
 
@@ -320,7 +320,6 @@
       TrialContextService.reset();
       TrialAdvanceCareService.reset();
       TrialBroadCloudStdService.reset();
-      TrialBroadCloudCommonAreaService.reset();
 
       var defaults = {
         customerName: '',
@@ -346,8 +345,7 @@
           deviceTrial: TrialDeviceService.getData(),
           pstnTrial: TrialPstnService.getData(),
           contextTrial: TrialContextService.getData(),
-          spstdTrial: TrialBroadCloudStdService.getData(),
-          spcaTrial: TrialBroadCloudCommonAreaService.getData(),
+          bcallTrial: TrialBroadCloudStdService.getData(),
         },
       };
 

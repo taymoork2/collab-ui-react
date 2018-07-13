@@ -144,6 +144,7 @@ export class Config {
     context: 'CONTEXT',
     spca: 'SPCA', //Broadcloud common area offer
     spstd: 'SPSTD', // Broadcloud standard offer
+    bcall: 'BCALL', // Broadcloud trial offer
   };
 
   public readonly shallowValidationSourceTypes = {
