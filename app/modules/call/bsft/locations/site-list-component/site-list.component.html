@@ -1,0 +1,46 @@
+<div class="site-list-container">
+  <div>
+    <span class="licenses-info">
+      <span class="license-detail h4" translate="broadCloud.ftsw.siteList.licenseCount" translate-values="{available: $ctrl.standardLicense.available, total: $ctrl.standardLicense.total}"></span>
+      <span class="license-detail-info h6" translate="broadCloud.ftsw.siteList.standardLicenseAvailable"></span>
+    </span>
+    <span class="licenses-info">
+      <span class="license-detail h4" translate="broadCloud.ftsw.siteList.licenseCount" translate-values="{available: $ctrl.placesLicense.available, total: $ctrl.placesLicense.total}"></span>
+      <span class="license-detail-info h6" translate="broadCloud.ftsw.siteList.placesLicenseAvilable"></span>
+    </span>
+  </div>
+  <cs-card-layout>
+    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="site in $ctrl.siteList">
+      <article  ng-click="$ctrl.selectCard(site)" hover-delay>
+        <header>
+          <div class="row">
+            <i class="columns medium-1 icon icon-star" ng-if="site.defaultLocation"></i>
+            <div class="site-header columns" ng-class="{ 'medium-11': site.defaultLocation, 'medium-12': !site.defaultLocation }">
+              <div class="header-with-right-icon">
+                <h4 class="h4 ellipsis" title="{{site.name}}">{{site.name}}</h4>
+                <div class="right card-icon-div" ng-hide="site.defaultLocation">
+                  <span>
+                    <button type="button" class="close"
+                    ng-click="$ctrl.closeCard((site), $event)"
+                    aria-label="{{::'common.delete' | translate}}">
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <div class="license-section">
+                <span>
+                  <span class="license-count">{{site.licenses.standard}}</span>
+                  <span class="license-name" translate="common.licenses.standard"></span>
+                </span>
+                <span>
+                  <span class="license-count">{{site.licenses.places}}</span>
+                  <span class="license-name" translate="common.licenses.places"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
+      </article>
+    </cs-card>
+  </cs-card-layout>
+</div>

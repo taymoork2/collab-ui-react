@@ -1,0 +1,11 @@
+<div class="ftsw-site-list-container">
+  <div class="info-header">
+    <span class="h6" translate="broadCloud.ftsw.siteList.infoHeader"></span>
+    <span class="add-location-button">
+      <button name="addLocation" class="btn  btn--people" type="button" ng-click="$ctrl.addLocation()">
+        <span translate="locations.addText"></span>
+      </button>
+    </span>
+  </div>
+  <bsft-site-list is-detailed="false" get-sites="$ctrl.getSites()" standard-license="$ctrl.standardLicense" places-license="$ctrl.placesLicense" card-selected="$ctrl.cardSelected(site)" remove-site="$ctrl.removeSite(site)" get-licenses-info="$ctrl.getLicensesInfo()"></bsft-site-list>
+</div>

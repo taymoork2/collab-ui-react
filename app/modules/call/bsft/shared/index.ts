@@ -4,6 +4,8 @@ export * from './bsft-site';
 export * from './bsft-number';
 export * from './bsft-order';
 
+export { FtswConfigService };
+
 export default angular
   .module('bsft.services', [])
   .service('FtswConfigService', FtswConfigService)

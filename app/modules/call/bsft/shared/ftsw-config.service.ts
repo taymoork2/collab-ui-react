@@ -1,6 +1,6 @@
 import { FtswConfig } from './ftsw-config';
-import { Site } from './bsft-site';
 import { BsftOrder } from './bsft-order';
+import { Site, ILicenseInfo } from './bsft-site';
 
 export class FtswConfigService {
 
@@ -9,6 +9,15 @@ export class FtswConfigService {
   /* @ngInject */
   constructor() {
     this.ftswConfig = new FtswConfig();
+    this.ftswConfig.licenses.push({
+      name: 'standard',
+      available: 35,
+      total: 100,
+    }, {
+      name: 'places',
+      available: 70,
+      total: 100,
+    });
   }
 
   public getFtswConfig(): FtswConfig {
@@ -37,5 +46,17 @@ export class FtswConfigService {
 
   public addOrder(order: BsftOrder) {
     this.ftswConfig.bsftOrders.push(order);
+  }
+
+  public removeSite(site: Site) {
+    _.remove(this.ftswConfig.sites, (s) => s.name === site.name);
+  }
+
+  public getLicensesInfo(): ILicenseInfo[] {
+    return _.get(this.ftswConfig, 'licenses', []);
+  }
+
+  public setLicensesInfo(licenses: ILicenseInfo[]) {
+    _.set(this.ftswConfig, 'licenses', licenses);
   }
 }

@@ -100,6 +100,8 @@
     require('modules/call/locations').default,
     require('modules/call/bsft/settings').default,
     require('modules/call/bsft/numbers').default,
+    require('modules/call/bsft/locations/site-list-component').default,
+    require('modules/call/bsft/locations/ftsw-site-list').default,
     require('modules/huron/dialPlans').default,
     require('modules/core/domainManagement').default,
     require('modules/huron/features/featureLanding/hoverDelay.directive').default,

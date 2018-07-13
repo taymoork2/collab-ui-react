@@ -59,24 +59,24 @@ class BsftSettingsCtrl implements ng.IComponentController {
   }
 
   public onSiteAddressChanged(address1, address2) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'address1', address1);
-    _.set(this.bsftSettingsData.bsftSettings.site, 'address2', address2);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'address1', address1);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'address2', address2);
   }
 
   public onSiteCityChanged(city) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'city', city);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'city', city);
   }
 
   public onSiteZipcodeChanged(zipcode) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'zipcode', zipcode);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'zipcode', zipcode);
   }
 
   public onSiteStateChanged(state) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'state', state);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'state', state);
   }
 
   public onSiteCountryChanged(country) {
-    _.set(this.bsftSettingsData.bsftSettings.site, 'country', country);
+    _.set(this.bsftSettingsData.bsftSettings.site.address, 'country', country);
   }
 
   public onTimeZoneChanged(timeZone) {
