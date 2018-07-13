@@ -1,4 +1,5 @@
 require('./_wizard.scss');
+var CoreEvent = require('modules/core/shared/event.constants');
 
 (function () {
   'use strict';
@@ -472,6 +473,10 @@ require('./_wizard.scss');
     $scope.$on('wizardNextButtonLoading', function (event, status) {
       event.stopPropagation();
       vm.wizardNextLoad = status;
+    });
+
+    $scope.$on(CoreEvent.WIZARD_TO_STEP, function (step) {
+      goToStep(step);
     });
 
     function openTermsAndConditions() {
