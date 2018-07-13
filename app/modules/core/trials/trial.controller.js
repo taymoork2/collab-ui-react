@@ -77,8 +77,7 @@
     vm.meetingTrial = vm.trialData.trials.meetingTrial;
     vm.webexTrial = vm.trialData.trials.webexTrial;
     vm.callTrial = vm.trialData.trials.callTrial;
-    vm.spstdTrial = vm.trialData.trials.spstdTrial;
-    vm.spcaTrial = vm.trialData.trials.spcaTrial;
+    vm.bcallTrial = vm.trialData.trials.bcallTrial;
     vm.roomSystemTrial = vm.trialData.trials.roomSystemTrial;
     vm.sparkBoardTrial = vm.trialData.trials.sparkBoardTrial;
     vm.pstnTrial = vm.trialData.trials.pstnTrial;
@@ -145,8 +144,7 @@
       hasEnabledMeetingTrial: hasEnabledMeetingTrial,
       hasEnabledWebexTrial: hasEnabledWebexTrial,
       hasEnabledCallTrial: hasEnabledCallTrial,
-      hasEnabledSpstdTrial: hasEnabledSpstdTrial,
-      hasEnabledSpcaTrial: hasEnabledSpcaTrial,
+      hasEnabledBcallTrial: hasEnabledBcallTrial,
       hasEnabledRoomSystemTrial: hasEnabledRoomSystemTrial,
       hasEnabledSparkBoardTrial: hasEnabledSparkBoardTrial,
       hasEnabledCareTrial: hasEnabledCareTrial,
@@ -306,7 +304,7 @@
     }
 
     function hasUserServices() {
-      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial, vm.spcaTrial, vm.spstdTrial];
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial, vm.bcallTrial];
       var result = _.some(services, {
         enabled: true,
       });
@@ -631,16 +629,10 @@
       return hasEnabled(trial.enabled, preset.call);
     }
 
-    function hasEnabledSpstdTrial(vmSpstdTrial, vmPreset) {
-      var trial = vmSpstdTrial || vm.spstdTrial;
+    function hasEnabledBcallTrial(vmBcallTrial, vmPreset) {
+      var trial = vmBcallTrial || vm.bcallTrial;
       var preset = vmPreset || vm.preset;
-      return hasEnabled(trial.enabled, preset.spstd);
-    }
-
-    function hasEnabledSpcaTrial(vmSpcaTrial, vmPreset) {
-      var trial = vmSpcaTrial || vm.spcaTrial;
-      var preset = vmPreset || vm.preset;
-      return hasEnabled(trial.enabled, preset.spca);
+      return hasEnabled(trial.enabled, preset.bcall);
     }
 
     function hasEnabledRoomSystemTrial(vmRoomSystemTrial, vmPreset) {
@@ -667,8 +659,7 @@
         hasEnabledMeetingTrial(vm.meetingTrial, vmPreset) ||
         hasEnabledWebexTrial(vm.webexTrial, vmPreset) ||
         hasEnabledCallTrial(vm.callTrial, vmPreset) ||
-        hasEnabledSpstdTrial(vm.spstdTrial, vmPreset) ||
-        hasEnabledSpcaTrial(vm.spcaTrial, vmPreset) ||
+        hasEnabledBcallTrial(vm.bcallTrial, vmPreset) ||
         hasEnabledRoomSystemTrial(vm.roomSystemTrial, vmPreset) ||
         hasEnabledSparkBoardTrial(vm.sparkBoardTrial, vmPreset) ||
         hasEnabledCareTrial(vm.careTrial, vmPreset);
@@ -797,8 +788,7 @@
         meeting: hasOfferType(Config.trials.message, Config.offerTypes.meeting, Config.offerTypes.meetings),
         webex: hasOfferType(Config.trials.meeting, Config.offerTypes.meetings, Config.offerTypes.webex),
         call: hasOfferType(Config.trials.call, Config.offerTypes.call),
-        broadCloudFlexStd: hasOfferType(Config.offerTypes.spstd),
-        broadCloudFlexPlaces: hasOfferType(Config.offerTypes.spca),
+        broadCloudFlex: hasOfferType(Config.offerTypes.bcall),
         roomSystems: hasOfferType(Config.offerTypes.roomSystems),
         roomSystemsValue: _.get(findOffer(Config.offerTypes.roomSystems), 'licenseCount', 0),
         sparkBoard: hasOfferType(Config.offerTypes.sparkBoard),

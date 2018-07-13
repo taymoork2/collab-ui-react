@@ -17,7 +17,7 @@ export class TrialBroadCloudStdService {
 
   private makeTrial() {
     const defaults = {
-      type: this.Config.offerTypes.spstd,
+      type: this.Config.offerTypes.bcall,
       enabled: false,
     };
 
