@@ -1,5 +1,6 @@
 import { FtswConfig } from './ftsw-config';
 import { Site } from './bsft-site';
+import { BsftOrder } from './bsft-order';
 
 export class FtswConfigService {
 
@@ -24,5 +25,17 @@ export class FtswConfigService {
 
   public addSite(site: Site) {
     this.ftswConfig.sites.push(site);
+  }
+
+  public getOrders(): BsftOrder[] {
+    return _.get(this.ftswConfig, 'orders', []);
+  }
+
+  public setOrders(orders: BsftOrder[]) {
+    _.set(this.ftswConfig, 'Orders', orders);
+  }
+
+  public addOrder(order: BsftOrder) {
+    this.ftswConfig.bsftOrders.push(order);
   }
 }

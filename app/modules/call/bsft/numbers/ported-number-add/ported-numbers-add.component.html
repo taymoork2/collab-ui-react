@@ -1,0 +1,33 @@
+<input
+  cs-input
+  type="radio"
+  ng-model="$ctrl.portedTypeRadio"
+  value="prev"
+  id="prevPorted"
+  name="prevPorted"
+  ng-change="$ctrl.setPortingNumberType('prev')"
+  cs-input-label="{{::'broadCloud.numbers.prevPorted' | translate}}">
+  <label class="bsft-margin" translate="broadCloud.numbers.prevPortedHint"></label>
+<input
+  cs-input
+  type="radio"
+  ng-model="$ctrl.portedTypeRadio"
+  id="bsftPorted"
+  name="bsftPorted"
+  value="bsft"
+  ng-change="$ctrl.setPortingNumberType('bsft')"
+  cs-input-label="{{::'broadCloud.numbers.bcProvided' | translate}}">
+  <label class="bsft-margin" translate="broadCloud.numbers.bcProvidedHint"></label>
+  <div class="hcs-padding__token" ng-class="{'has-error': $ctrl.invalidCount}">
+    <cs-token-field
+      tokens="token"
+      tokenfieldid="$ctrl.tokenfieldid"
+      tokenplaceholder="$ctrl.tokenplaceholder"
+      tokenoptions="$ctrl.tokenoptions"
+      tokenmethods="$ctrl.tokenmethods">
+    </cs-token-field>
+  </div>
+  <div class="bsft__number_subheading">
+    <button class="btn btn--primary"  ng-disabled="$ctrl.numbers.length===0" ng-click="$ctrl.addNumbers()" translate="common.add" focus-on></button>
+    <button class="btn" ng-disabled="$ctrl.numbers.length===0" ng-click="$ctrl.clear()" translate="common.clear"></button>
+  </div>

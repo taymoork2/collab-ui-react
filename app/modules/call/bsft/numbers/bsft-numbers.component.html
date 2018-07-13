@@ -1,0 +1,20 @@
+<div>
+  <h3 translate="broadCloud.numbers.addNumbers"></h3>
+  <h5 class="bsft__number_desc" translate="broadCloud.numbers.addNumberHint"></h5>
+  <h4 class="bsft__number_subheading"translate="broadCloud.numbers.numberType"></h4>
+  <div class="row full service-setup">
+    <ported-numbers-add
+      numbers="$ctrl.numbers"
+      on-change="$ctrl.onChange(numbers)"
+      on-add="$ctrl.onAdd(numbers,isBsftPorted)">
+    </ported-numbers-add>
+    <prev-ported-numbers ng-if="$ctrl.prevNumbers.length"
+      numbers="$ctrl.prevNumbers"
+      on-change="$ctrl.onChangePrevPortedNumbers(numbers)">
+    </prev-ported-numbers>
+    <bsft-ported-numbers ng-if="$ctrl.bsftNumbers.length"
+      numbers="$ctrl.bsftNumbers"
+      on-change="$ctrl.onChangeBsftPortedNumbers(numbers)">
+    </bsft-ported-numbers>
+  </div>
+</div>

@@ -24,7 +24,7 @@ require('./_setup-wizard.scss');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
   var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
-  var bsftPstnSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftPstn.html');
+  var bsftNumberSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftNumber.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -295,9 +295,9 @@ require('./_setup-wizard.scss');
         template: bsftSettingsSetupTemplatePath,
       };
 
-      var bsftPstn = {
-        name: 'bsftPstn',
-        template: bsftPstnSetupTemplatePath,
+      var setupNumberBsft = {
+        name: 'setupNumberBsft',
+        template: bsftNumberSetupTemplatePath,
       };
 
       if (showCallSettings()) {
@@ -338,7 +338,7 @@ require('./_setup-wizard.scss');
             if (!response.bsft.rialtoCustomerId) {
               steps.push(setupBsft);
             }
-            steps.push(bsftPstn);
+            steps.push(setupNumberBsft);
           } else {
             if (supportsHI1484) {
               steps.push(setupLocation);
