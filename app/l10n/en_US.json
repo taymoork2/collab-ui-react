@@ -11910,7 +11910,9 @@
       "bcProvidedHint": "Numbers that will be ported by BoardCloud. It may take from 3 days to a month to appear in the system.",
       "phoneNumber": "Phone Numbers",
       "prevPortedNumber": "Previously Ported",
-      "bcPortedNumber": "BroadCloud Ported"
+      "bcPortedNumber": "BroadCloud Ported",
+      "numberHint": "e.g. 2143335555, +12143335555",
+      "maxlimit": "Exceeded max allowed numbers {{max}}. Minimum limit is {{min}}"
     },
     "wizardButton": {
       "nextAssignLicenses": "Next: Assign Licenses",

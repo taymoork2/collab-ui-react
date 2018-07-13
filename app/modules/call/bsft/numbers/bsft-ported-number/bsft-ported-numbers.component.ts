@@ -3,6 +3,7 @@ import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { TokenMethods } from 'modules/call/bsft/numbers/token-methods';
 
 export class BsftPortedNumbersComponentCtrl implements ng.IComponentController {
+  public form: ng.IFormController;
   public numbers: any[] = [];
   public onChange: Function;
   public tokenfieldid: string = 'TOKEN_FIELD_BSFT_ID';
@@ -23,10 +24,9 @@ export class BsftPortedNumbersComponentCtrl implements ng.IComponentController {
   constructor(private $timeout: ng.ITimeoutService,
               private Notification: Notification,
               private PhoneNumberService: PhoneNumberService,
-              private $translate: ng.translate.ITranslateService,
               private Authinfo) {
 
-    this.tokenplaceholder = this.$translate.instant('didManageModal.inputPlacehoder');
+    this.tokenplaceholder = '';
     this.tokenmethods = new TokenMethods(
       this.createToken.bind(this),
       this.createdToken.bind(this),
@@ -37,14 +37,14 @@ export class BsftPortedNumbersComponentCtrl implements ng.IComponentController {
 
   public $onInit() {
     const tokenfieldlimit: string = 'limit';
-    const maxNumberOfTokens: number = 50;
+    const maxNumberOfTokens: number = 25;
     this.isCiscoBsft = this.Authinfo.isBroadCloud();
     _.set(this.tokenoptions, tokenfieldlimit, maxNumberOfTokens);
   }
 
   public $onChanges(changes): void {
     const { numbers } = changes;
-    if (numbers && numbers.isFirstChange()) {
+    if (numbers) {
       this.$timeout(() => {
         this.numbers = numbers.currentValue;
         this.setBsftPortedNumberTokens(numbers.currentValue);

@@ -1,3 +1,6 @@
+export enum EnumCountryCode {
+ US = '1',
+}
 export interface IPhoneNumber {
   number?: string;
   countryCode?: string;

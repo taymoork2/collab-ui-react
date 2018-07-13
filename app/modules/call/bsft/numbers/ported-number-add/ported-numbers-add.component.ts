@@ -1,16 +1,21 @@
 import { Notification } from 'modules/core/notifications';
 import { PhoneNumberService } from 'modules/huron/phoneNumber';
 import { TokenMethods } from 'modules/call/bsft/numbers/token-methods';
+import { EnumCountryCode } from 'modules/call/bsft/shared';
 
 export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
+  public form: ng.IFormController;
   public numbers: any[] = [];
   public onChange: Function;
   public onAdd: Function;
   public tokenfieldid: string = 'TOKEN_FIELD_ID';
   public tokenplaceholder: string;
   private static readonly TIMEOUT: number = 100;
+  private static readonly MINLENGTH: number = 10;
+  private static readonly NUMBER_MAX_LIMIT: number = 4;
+  private static readonly NUMBER_MIN_LIMIT: number = 2;
   public tokenoptions: Object = {
-    delimiter: [',', ';'],
+    delimiter: [','],
     createTokensOnBlur: true,
     tokens: [],
     minLength: 9,
@@ -21,6 +26,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   public isCiscoBsft: boolean = false;
   public portedTypeRadio: string = 'prev';
   public isBsftPorted: boolean = false;
+  public portingNumbersCount: number = 0;
   /* @ngInject */
   constructor(private $timeout: ng.ITimeoutService,
               private Notification: Notification,
@@ -39,14 +45,16 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
 
   public $onInit() {
     const tokenfieldlimit: string = 'limit';
-    const maxNumberOfTokens: number = 50;
     this.isCiscoBsft = this.Authinfo.isBroadCloud();
-    _.set(this.tokenoptions, tokenfieldlimit, maxNumberOfTokens);
+    _.set(this.tokenoptions, tokenfieldlimit, PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT);
+    if (this.form) {
+      this.form.$setValidity('', false, this.form);
+    }
   }
 
   public $onChanges(changes): void {
     const { numbers } = changes;
-    if (numbers && numbers.isFirstChange()) {
+    if (numbers) {
       this.$timeout(() => {
         this.setBsftPortedNumberTokens(numbers.currentValue);
       }, PortedNumbersAddComponentCtrl.TIMEOUT);
@@ -54,6 +62,11 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   }
 
   public createToken(e): void {
+    if (e.attrs.value.length === PortedNumbersAddComponentCtrl.MINLENGTH) {
+      if (e.attrs.value.charAt(0) !== EnumCountryCode.US) {
+        e.attrs.value = EnumCountryCode.US.concat(e.attrs.value);
+      }
+    }
     if (e.attrs.value.charAt(0) !== '+') {
       e.attrs.value = '+'.concat(e.attrs.value);
     }
@@ -90,6 +103,8 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
     } else {
       if (this.numbers.indexOf(e.attrs.value) === -1) {
         this.numbers.push(e.attrs.value);
+        this.portingNumbersCount++;
+        this.validateForm();
       }
       this.setPlaceholderText('');
     }
@@ -113,6 +128,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   }
 
   private removeToken(e): void {
+    this.portingNumbersCount--;
     this.removeNumber(e.attrs.value);
     if (angular.element(e.relatedTarget).hasClass('invalid')) {
       this.invalidCount--;
@@ -128,6 +144,7 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
     if (index > -1) {
       this.numbers.splice(index, 1);
     }
+    this.validateForm();
   }
 
   private getBsftPortedNumberTokens(): {value, label}[] {
@@ -135,7 +152,31 @@ export class PortedNumbersAddComponentCtrl implements ng.IComponentController {
   }
 
   private setBsftPortedNumberTokens(tokens): void {
+    if (this.invalidCount || !this.validateForm()) {
+      return;
+    }
     (angular.element('#' + this.tokenfieldid) as any).tokenfield('setTokens', tokens);
+  }
+
+  public validateForm(): boolean {
+    let isValid: boolean = true;
+    if (this.form) {
+      this.form.$setValidity('', true, this.form);
+      if (this.invalidCount || this.portingNumbersCount < PortedNumbersAddComponentCtrl.NUMBER_MIN_LIMIT) {
+        this.form.$setValidity('', false, this.form);
+        isValid = false;
+      }
+      if (this.portingNumbersCount > PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT
+          ) {
+        this.form.$setValidity('', false, this.form);
+        this.Notification.error('broadCloud.numbers.maxlimit', {
+          max: PortedNumbersAddComponentCtrl.NUMBER_MAX_LIMIT,
+          min: PortedNumbersAddComponentCtrl.NUMBER_MIN_LIMIT,
+        });
+        isValid = false;
+      }
+    }
+    return isValid;
   }
 
   public setPortingNumberType(type: string): void {

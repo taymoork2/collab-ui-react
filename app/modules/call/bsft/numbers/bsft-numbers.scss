@@ -1,20 +1,39 @@
+@import '~@collabui/collab-ui/scss/tools/mixins/spacing-responsive';
+@import '~@collabui/collab-ui/scss/settings/colors';
 
-.bsft__number_subheading {
+.bsft-number_subheading {
   padding-bottom: 1rem;
   padding-top: 1rem;
 }
 
-.bsft__number_desc {
+.bsft-number_desc {
   padding-top: .5rem;
-}
-.bsft-number__token .tokenfield {
-  height: 10rem;
-}
-
-.bsft-padding__token {
-  margin-top: 1rem;
 }
 
 .bsft-margin {
   margin-left: 2rem;
+}
+.bsft-number {
+  .cs-input, .form-control, .textarea {
+    border: 0 none;
+    height: 2.5rem;
+  }
+
+  .tokenfield .token {
+    border: 2px solid $gray-light-4;
+    background-color: transparent;
+    color: $gray-darkest;
+  }
+  .form-control {
+    margin-left: -10px;
+    .token .close {
+      font-size: 1.6em;
+      line-height: initial;
+    }
+  }
+  .tokenfield .token .close {
+    border: none;
+    background-color: transparent;
+    color: $gray-light-1;
+  }
 }

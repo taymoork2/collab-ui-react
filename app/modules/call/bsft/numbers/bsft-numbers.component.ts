@@ -1,13 +1,13 @@
-
 class BsftNumbersCtrl implements ng.IComponentController {
   public ftsw: boolean;
   public uuid: string;
+  public siteid: string;
   public loading: boolean = false;
   public form: ng.IFormController;
   public prevNumbers: string[] = [];
   public bsftNumbers: string[] = [];
   public isBsftPorted: boolean = false;
-  public tokenNumbers: string[] = [];
+  public numbers: string[] = [];
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
@@ -41,23 +41,23 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public onAdd(numbers, isBsftPorted): void {
     this.isBsftPorted = isBsftPorted;
     if (isBsftPorted) {
-      this.onChangeBsftPortedNumbers(numbers);
+      this.bsftNumbers = _.concat(this.bsftNumbers, numbers);
     } else {
-      this.onChangePrevPortedNumbers(numbers);
+      this.prevNumbers = _.concat(this.prevNumbers, numbers);
     }
     this.$onInit();
   }
 
   public onChangePrevPortedNumbers(numbers): void {
-    this.prevNumbers = _.concat(this.prevNumbers, numbers);
+    this.prevNumbers = numbers;
   }
 
   public onChangeBsftPortedNumbers(numbers): void {
-    this.bsftNumbers = _.concat(this.bsftNumbers, numbers);
+    this.bsftNumbers = numbers;
   }
 
   public onChange(numbers: string[]): void {
-    this.tokenNumbers = numbers;
+    this.numbers = numbers;
   }
 }
 
@@ -67,5 +67,6 @@ export class BsftNumbersComponent implements ng.IComponentOptions {
   public bindings = {
     ftsw: '<',
     uuid: '<',
+    siteid: '<',
   };
 }
