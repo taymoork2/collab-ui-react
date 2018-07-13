@@ -502,10 +502,27 @@ var CoreEvent = require('modules/core/shared/event.constants');
 
     $scope.$on('wizardNextText', function (event, action) {
       event.stopPropagation();
-      if (action === 'next') {
-        vm.nextText = $translate.instant('common.next');
-      } else if (action === 'finish') {
-        vm.nextText = $translate.instant('common.save');
+      switch (action) {
+        case 'next':
+          vm.nextText = $translate.instant('common.next');
+          break;
+        case 'finish':
+          vm.nextText = $translate.instant('common.save');
+          break;
+        case 'nextAssignLicenses':
+          vm.nextText = $translate.instant('broadCloud.wizardButton.nextAssignLicenses');
+          break;
+        case 'nextAddNumbers':
+          vm.nextText = $translate.instant('broadCloud.wizardButton.nextAddNumbers');
+          break;
+        case 'saveLocation':
+          vm.nextText = $translate.instant('broadCloud.wizardButton.saveLocation');
+          break;
+        case 'nextEnterpriseSettings':
+          vm.nextText = $translate.instant('broadCloud.wizardButton.nextEnterpriseSettings');
+          break;
+        default:
+          break;
       }
     });
   }

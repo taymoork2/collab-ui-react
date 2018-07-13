@@ -11895,6 +11895,12 @@
       "phoneNumber": "Phone Numbers",
       "prevPortedNumber": "Previously Ported",
       "bcPortedNumber": "BroadCloud Ported"
+    },
+    "wizardButton": {
+      "nextAssignLicenses": "Next: Assign Licenses",
+      "nextAddNumbers": "Next: Add Numbers",
+      "saveLocation": "Save Location",
+      "nextEnterpriseSettings": "Next: Enterprise Settings"
     }
   }
 }
