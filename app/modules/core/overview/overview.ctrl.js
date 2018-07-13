@@ -99,6 +99,16 @@ var OverviewEvent = require('./overview.keys').OverviewEvent;
       updateSsoCertificateNow = true;
     }
 
+    // Hide license/onboarding card for Provision Admins
+    if (Authinfo.isProvisionAdmin()) {
+      _.remove(vm.cards, {
+        name: 'overview.cards.licenses.title',
+      });
+      _.remove(vm.cards, {
+        name: 'overview.cards.users.onboardTitle',
+      });
+    }
+
     $q.all({
       enabledNotPurchased: ProPackService.hasProPackEnabledAndNotPurchased(),
       purchased: ProPackService.hasProPackPurchased(),

@@ -81,6 +81,7 @@ module.exports = {
   atlasPartnerManagement: 'atlas-partner-management',
   atlasPartnerSparkReports: 'atlas-partner-spark-reports',
   atlasPartnerWebexReports: 'atlas-partner-webex-reports',
+  atlasProvisionAdmin: 'atlas-provision-admin',
   atlasReadOnlyAdmin: 'atlas-read-only-admin',
   atlasReportsUpdate: 'atlas-reports-update',
   atlasSendEmailViaBMMP: 'atlas-send-email-via-bmmp',

@@ -42,7 +42,7 @@
     }
 
     function showMyCompany() {
-      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin()) && Authinfo.isCustomerView();
+      return Utils.isAdminPage() && (Authinfo.isCustomerAdmin() || Authinfo.isReadOnlyAdmin() || Authinfo.isProvisionAdmin()) && Authinfo.isCustomerView();
     }
 
     function showProBadge() {

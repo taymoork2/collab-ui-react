@@ -43,20 +43,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     $scope.popup = Notification.popup;
     $scope.filterByAdmin = false;
     $scope.sort = _.cloneDeep(DEFAULT_SORT);
-    $scope.placeholder = {
-      name: $translate.instant('common.all'),
-      filterValue: '',
-      count: 0,
-    };
-    $scope.filters = [{
-      name: $translate.instant('usersPage.administrators'),
-      filterValue: 'administrators',
-      count: 0,
-    }, {
-      name: $translate.instant('usersPage.partners'),
-      filterValue: 'partners',
-      count: 0,
-    }];
+    initializeListFiltersAndPlaceholders();
     $scope.dirsyncEnabled = false;
     $scope.isCSB = Authinfo.isCSB();
 
@@ -77,6 +64,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     $scope.isHuronEnabled = isHuronEnabled;
     $scope.isOnlyAdmin = isOnlyAdmin;
     $scope.isOnlineBuyer = isOnlineBuyer;
+    $scope.isProvisionAdmin = isProvisionAdmin;
     $scope.setDeactivateUser = setDeactivateUser;
     $scope.setDeactivateSelf = setDeactivateSelf;
     $scope.getUserLicenses = getUserLicenses;
@@ -103,8 +91,31 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     $scope.sortDirection = sortDirection;
     $scope.deselectRow = deselectRow;
 
-    ////////////////
     var eventListeners = [];
+
+    function initializeListFiltersAndPlaceholders() {
+      $scope.placeholder = {
+        name: $translate.instant('common.all'),
+        filterValue: '',
+        count: 0,
+      };
+      $scope.filters = [{
+        name: $translate.instant('usersPage.administrators'),
+        filterValue: 'administrators',
+        count: 0,
+      }, {
+        name: $translate.instant('usersPage.partners'),
+        filterValue: 'partners',
+        count: 0,
+      }];
+
+      if (Authinfo.isProvisionAdmin()) {
+        $scope.placeholder = {};
+        $scope.filters = _.reject($scope.filters, { filterValue: 'administrators' });
+      }
+    }
+
+    ////////////////
 
     function onInit() {
       var promises = {
@@ -224,7 +235,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             Log.debug('Returned data.', data.Resources);
             var adminUsers = _.get(data, 'Resources', []);
             var totalAdminUsers = _.toNumber(_.get(data, 'totalResults', 0));
-            $scope.filters[0].count = totalAdminUsers;
+            _.find($scope.filters, { filterValue: 'administrators' }).count = totalAdminUsers;
             if (startIndex === 0) {
               $scope.userList.adminUsers = adminUsers;
               $scope.totalAdminUsersExpected = totalAdminUsers;
@@ -353,7 +364,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
           if (data.success) {
             Log.debug('Returned data.', data.partners);
             var partnerUsers = _.get(data, 'partners', []);
-            $scope.filters[1].count = partnerUsers.length;
+            _.find($scope.filters, { filterValue: 'partners' }).count = partnerUsers.length;
             // partner list does not have pagination or startIndex
             $scope.userList.partnerUsers = partnerUsers;
             $scope.setFilter($scope.activeFilter);
@@ -440,6 +451,13 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     function setFilter(filter) {
+      // restrict filter to partner admin users for provisioning admins
+      if (Authinfo.isProvisionAdmin()) {
+        $scope.activeFilter = 'partners';
+        $scope.gridOptions.data = $scope.userList.partnerUsers;
+        return;
+      }
+
       $scope.activeFilter = filter || 'all';
       if (filter === 'administrators') {
         $scope.gridOptions.data = $scope.userList.adminUsers;
@@ -496,6 +514,10 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     // cannot delete an online buyer
     function isOnlineBuyer(user) {
       return Authinfo.isOnline() && _.eq(user.userName, Authinfo.getCustomerAdminEmail());
+    }
+
+    function isProvisionAdmin() {
+      return Authinfo.isProvisionAdmin();
     }
 
     function canShowResendInvite(user) {
