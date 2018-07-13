@@ -306,7 +306,7 @@
     }
 
     function hasUserServices() {
-      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial];
+      var services = [vm.callTrial, vm.meetingTrial, vm.webexTrial, vm.messageTrial, vm.spcaTrial, vm.spstdTrial];
       var result = _.some(services, {
         enabled: true,
       });
