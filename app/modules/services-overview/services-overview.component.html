@@ -53,8 +53,8 @@
 
     <h5><span translate="servicesOverview.inactiveHybridServices" ng-if="!$ctrl.isPartnerAdmin() || $ctrl.hasInactiveHcsHybridCards()"></span></h5>
     <cs-card-layout block-view="true" ng-if="!$ctrl.isPartnerAdmin()">
-      <hybrid-calendar-exchange-inactive-card ng-if="$ctrl.isInactive('squared-fusion-cal')" class="cs-card cs-card--small inactive-card"></hybrid-calendar-exchange-inactive-card>
-      <hybrid-calendar-o365-inactive-card ng-if="$ctrl.isInactive('squared-fusion-o365')" class="cs-card cs-card--small inactive-card"></hybrid-calendar-o365-inactive-card>
+      <hybrid-calendar-exchange-inactive-card ng-if="$ctrl.isInactive('squared-fusion-cal')" can-setup="!$ctrl.isActive('squared-fusion-o365') || $ctrl.hasCalsvcHybridExchangeDeploymentFeatureToggle" class="cs-card cs-card--small inactive-card"></hybrid-calendar-exchange-inactive-card>
+      <hybrid-calendar-o365-inactive-card ng-if="$ctrl.isInactive('squared-fusion-o365')" can-setup="!$ctrl.isActive('squared-fusion-cal') || $ctrl.hasCalsvcHybridExchangeDeploymentFeatureToggle" class="cs-card cs-card--small inactive-card"></hybrid-calendar-o365-inactive-card>
       <hybrid-calendar-google-inactive-card ng-if="$ctrl.isInactive('squared-fusion-gcal')" class="cs-card cs-card--small inactive-card"></hybrid-calendar-google-inactive-card>
       <hybrid-call-inactive-card ng-if="$ctrl.isInactive('squared-fusion-uc')" class="cs-card cs-card--small inactive-card"></hybrid-call-inactive-card>
       <hybrid-context-inactive-card ng-if="$ctrl.isInactive('contact-center-context')" class="cs-card cs-card--small inactive-card"></hybrid-context-inactive-card>
