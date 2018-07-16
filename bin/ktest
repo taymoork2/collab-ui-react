@@ -138,6 +138,13 @@ if [ "${no_parallel}" = "true" ]; then
 fi
 # shellcheck disable=SC2086
 lines_per_file=$(calc_lines_per_file $total_specs $num_cores)
+# notes:
+# - as of 2018-07-16, the default threshold of 999 has been breached, which:
+#   - results in always having at least two file lists
+#   - causes the standalone karma command to run with multiple '--shimFile' options (not supported)
+if [ "${no_parallel}" = "true" ]; then
+    lines_per_file=10000
+fi
 
 # shellcheck disable=SC2086
 # list all spec files, splitting list into roughly equal sizes
