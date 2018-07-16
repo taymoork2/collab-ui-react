@@ -29,7 +29,7 @@ const View = {
     userAccess: 'input#custom-policy',
     radioAll: 'input#custom-policy-all',
     radioSpecific: 'input#custom-policy-specific',
-    specificUsers: 'input#custom-policy-specific-list',
+    specificUsers: 'integrations-management-tokens',
   },
 };
 

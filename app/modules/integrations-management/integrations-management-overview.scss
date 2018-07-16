@@ -1,3 +1,4 @@
+@import '~@collabui/collab-ui/scss/settings/colors';
 integrations-management-overview {
   .integrations-management-overview {
     // TODO(brspence) create generic toolkit class
@@ -15,5 +16,8 @@ integrations-management-overview {
       margin-left: .5rem;
       vertical-align: middle;
     }
+  }
+  .tokenfield .token.disabled {
+    background-color: $gray-light-2;
   }
 }

@@ -10,6 +10,9 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
   public globalPolicyAction: PolicyAction;
   public integration: IApplicationUsage;
   public origIntegration: IApplicationUsage;
+  public personIds?: string[];
+  public origPersonIds?: string[];
+  public usersValid = true;
 
   public actionList: IActionItem[] = [{
     actionKey: 'integrations.overview.download',
@@ -102,6 +105,7 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
 
   public resetForm(): void {
     this.integration = _.cloneDeep(this.origIntegration);
+    this.personIds = _.clone(this.origPersonIds);
     this.form.$setPristine();
   }
 
@@ -112,11 +116,13 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
           this.integration.policyId!,
           this.integration.appId,
           this.integration.policyAction,
+          this.personIds,
         );
       } else {
         return this.IntegrationsManagementFakeService.createCustomPolicy(
           this.integration.appId,
           this.integration.policyAction,
+          this.personIds,
         );
       }
     } else {
@@ -142,10 +148,20 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
       });
   }
 
+  public updateUsersForCustomPolicy(userIds: string[]) {
+    this.personIds = _.clone(userIds);
+  }
+
+  public setUsersValid(areValid: boolean) {
+    this.usersValid = areValid;
+  }
+
   private loadCustomPolicy(id: string): ng.IPromise<void> {
     return this.IntegrationsManagementFakeService.getCustomPolicy(id)
       .then(customPolicy => {
         this.customPolicyRestriction = this.getPolicyRestrictionFromCustomPolicy(customPolicy);
+        this.personIds = customPolicy.personIds;
+        this.origPersonIds = _.clone(this.personIds);
       });
   }
 
@@ -175,7 +191,9 @@ export class IntegrationsManagementOverview implements ng.IComponentController {
   }
 
   private isModelChanged(): boolean {
-    return !_.isEqual(this.integration, this.origIntegration);
+    const newUsers = _.isArray(this.personIds) ? [...this.personIds].sort() : null;
+    const oldUsers = _.isArray(this.origPersonIds) ? [...this.origPersonIds].sort() : null;
+    return !_.isEqual(this.integration, this.origIntegration) || !_.isEqual(oldUsers, newUsers)  ;
   }
 }
 
