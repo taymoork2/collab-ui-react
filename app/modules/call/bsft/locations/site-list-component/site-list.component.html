@@ -10,7 +10,7 @@
     </span>
   </div>
   <cs-card-layout>
-    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="site in $ctrl.siteList">
+    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="site in $ctrl.siteList track by $index">
       <article  ng-click="$ctrl.selectCard(site)" hover-delay>
         <header>
           <div class="row">

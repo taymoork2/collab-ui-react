@@ -39,5 +39,6 @@ export class TimeZoneComponent implements ng.IComponentOptions {
     timeZone: '<',
     timeZoneOptions: '<',
     onChangeFn: '&',
+    disableDescriptionText: '<',
   };
 }

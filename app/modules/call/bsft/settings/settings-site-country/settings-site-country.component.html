@@ -1,5 +1,5 @@
 <div ng-form="siteCountryForm">
-  <label class="sub-section__label">Country</label>
+  <label class="sub-section__label" translate="broadCloud.site.country"></label>
   <div class="row">
     <div class="columns medium-4 collapse-both" style="padding-bottom: 1rem;">
       <cs-select
@@ -7,11 +7,10 @@
         options="$ctrl.countryList"
         labelfield="name"
         valuefield="abbreviation"
-        placeholder="::'common.select' | translate"
-        input-placeholder=""
         required="true"
         filter="true"
-        on-change-fn="$ctrl.onCountryChanged()">
+        on-change-fn="$ctrl.onCountryChanged()"
+        placeholder="$ctrl.countryPlaceholder">
     </div>
   </div>
 </div>

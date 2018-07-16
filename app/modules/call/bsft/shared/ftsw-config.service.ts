@@ -5,6 +5,7 @@ import { Site, ILicenseInfo } from './bsft-site';
 export class FtswConfigService {
 
   private ftswConfig: FtswConfig;
+  private editSite: Site | undefined;
 
   /* @ngInject */
   constructor() {
@@ -58,5 +59,20 @@ export class FtswConfigService {
 
   public setLicensesInfo(licenses: ILicenseInfo[]) {
     _.set(this.ftswConfig, 'licenses', licenses);
+  }
+
+  public setEditSite(site: Site) {
+    this.editSite = site;
+  }
+
+  public getEditSite() {
+    const copySite = _.cloneDeep(this.editSite);
+    this.editSite = undefined;
+    return copySite;
+  }
+
+  public updateSite(site) {
+    const siteindex = _.findIndex(this.getSites(), (findSite) => findSite.uuid === site.uuid);
+    this.getSites()[siteindex] = site;
   }
 }

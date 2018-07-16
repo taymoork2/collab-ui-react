@@ -1,5 +1,5 @@
 require('./_wizard.scss');
-var CoreEvent = require('modules/core/shared/event.constants');
+var Events = require('modules/core/shared/event.constants');
 
 (function () {
   'use strict';
@@ -475,7 +475,8 @@ var CoreEvent = require('modules/core/shared/event.constants');
       vm.wizardNextLoad = status;
     });
 
-    $scope.$on(CoreEvent.WIZARD_TO_STEP, function (step) {
+    $scope.$on(Events.CoreEvent.WIZARD_TO_STEP, function (event, step) {
+      event.stopPropagation();
       goToStep(step);
     });
 

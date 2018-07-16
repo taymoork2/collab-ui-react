@@ -1,5 +1,6 @@
 import { ILicenseInfo, ISite, FtswConfigService } from 'modules/call/bsft/shared';
 import { IToolkitModalService } from 'modules/core/modal';
+import { CoreEvent } from 'modules/core/shared/event.constants';
 
 export class FtswSiteListComponent implements ng.IComponentOptions {
   public controller = FtswSiteListCtrl;
@@ -19,16 +20,21 @@ class FtswSiteListCtrl implements ng.IComponentController {
     private $translate: ng.translate.ITranslateService,
     private FtswConfigService: FtswConfigService,
     private $log: ng.ILogService,
+    private $scope: ng.IScope,
   ) {}
 
   public getSites() {
     return this.FtswConfigService.getSites();
   }
 
-  public addLocation() {}
+  public addLocation() {
+    this.$scope.$emit(CoreEvent.WIZARD_TO_STEP, 'setupBsft');
+  }
 
   public cardSelected(site: ISite) {
     this.$log.log(site);
+    this.FtswConfigService.setEditSite(site);
+    this.$scope.$emit(CoreEvent.WIZARD_TO_STEP, 'setupBsft');
   }
 
   public getLicensesInfo(): ILicenseInfo[] {

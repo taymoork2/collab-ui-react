@@ -11919,6 +11919,19 @@
       "nextAddNumbers": "Next: Add Numbers",
       "saveLocation": "Save Location",
       "nextEnterpriseSettings": "Next: Enterprise Settings"
+    },
+    "site": {
+      "address": "Address",
+      "address1": "Street Address",
+      "address2": "Unit, Suite, etc.",
+      "city": "City",
+      "zipcode": "Zipcode",
+      "state": "State",
+      "selectState": "Select State",
+      "country": "Country",
+      "selectCountry": "Select Country",
+      "locationContactInfo": "Location Contact Info",
+      "phoneNumber": "Phone Number"
     }
   }
 }
