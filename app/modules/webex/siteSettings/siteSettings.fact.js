@@ -57,7 +57,7 @@
         }; // webExSiteSettingsObj
 
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('CommonSettings', null));
-        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('MC', 'Meeting Center'));
+        webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('MC', 'Webex Meeting Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('TC', 'Training Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('SC', 'Support Center'));
         webExSiteSettingsObj.siteSettingCardObjs.push(newCardObj('EC', 'Event Center'));
