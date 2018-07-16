@@ -10,6 +10,7 @@ class BsftSettingsCtrl implements ng.IComponentController {
   public site = new Site();
   public editing = false;
   public timeZoneOptions;
+  public makeDefault: boolean;
 
   /* @ngInject */
   constructor(
@@ -24,6 +25,10 @@ class BsftSettingsCtrl implements ng.IComponentController {
     this.loading = true;
     this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
     this.$scope.$emit('wizardNextText', 'nextAssignLicenses');
+
+    if (this.FtswConfigService.getSites().length === 0) {
+      this.site.defaultLocation = true;
+    }
 
     if (this.ftsw) {
       this.$scope.$watch(() => {
@@ -97,6 +102,11 @@ class BsftSettingsCtrl implements ng.IComponentController {
   }
 
   public setupBsftNext(): void {
+    if (this.makeDefault) {
+      this.site.defaultLocation = true;
+      this.FtswConfigService.removeDefault();
+    }
+
     if (!this.editing) {
       this.site.uuid = this.Utils.getUUID();
       this.FtswConfigService.addSite(this.site);
