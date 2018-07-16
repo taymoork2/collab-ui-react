@@ -3,11 +3,14 @@ class BsftSiteStateCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public messages: any = {};
   public stateList = require('modules/huron/pstn/pstnAreaService/states.json');
+  public statePlaceholder;
 
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {
+    this.statePlaceholder = this.$translate.instant('broadCloud.site.selectState');
+
     this.messages = {
       required: this.$translate.instant('common.invalidRequired'),
     };

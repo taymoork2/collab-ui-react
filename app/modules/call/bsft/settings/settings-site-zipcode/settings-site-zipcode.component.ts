@@ -12,7 +12,7 @@ class BsftSiteZipcodeCtrl implements ng.IComponentController {
     };
   }
 
-  public onzipcodeChanged(): void {
+  public onZipcodeChanged(): void {
     this.onChangeFn({
       zipcode: this.zipcode,
     });

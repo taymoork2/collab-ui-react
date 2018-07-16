@@ -1,5 +1,5 @@
 <label class="sub-section__label" translate="serviceSetupModal.timeZone"></label>
-<p class="description-block" translate="serviceSetupModal.tzDescription"></p>
+<p ng-if="!$ctrl.disableDescriptionText" class="description-block" translate="serviceSetupModal.tzDescription"></p>
 <div class="medium-5">
   <cs-select
     name="timeZone"

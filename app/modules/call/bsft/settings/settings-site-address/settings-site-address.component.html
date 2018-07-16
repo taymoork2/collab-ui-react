@@ -1,5 +1,5 @@
 <div ng-form="siteAddressForm">
-  <label class="sub-section__label">Address</label>
+  <label class="sub-section__label" translate="broadCloud.site.address"></label>
   <div class="row">
     <input
       cs-input
@@ -9,17 +9,19 @@
       ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
       ng-change="$ctrl.onAddressChanged()"
       cs-input-messages="$ctrl.messages"
-      cs-input-group-size="medium-6">
+      cs-input-group-size="medium-6"
+      placeholder="{{'broadCloud.site.address1' | translate}}">
   </div>
   <div class="row">
     <input
-    cs-input
-    type="text"
-    name="siteAddress2"
-    ng-model="$ctrl.address2"
-    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
-    ng-change="$ctrl.onAddressChanged()"
-    cs-input-messages="$ctrl.messages"
-    cs-input-group-size="medium-6">
+      cs-input
+      type="text"
+      name="siteAddress2"
+      ng-model="$ctrl.address2"
+      ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+      ng-change="$ctrl.onAddressChanged()"
+      cs-input-messages="$ctrl.messages"
+      cs-input-group-size="medium-6"
+      placeholder="{{'broadCloud.site.address2' | translate}}">
   </div>
 </div>

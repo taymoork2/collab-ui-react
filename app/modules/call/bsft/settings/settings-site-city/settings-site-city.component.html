@@ -1,5 +1,5 @@
 <div ng-form="siteCityForm">
-  <label class="sub-section__label">City</label>
+  <label class="sub-section__label" translate="broadCloud.site.city"></label>
   <div class="row">
     <input
       cs-input
@@ -10,6 +10,7 @@
       ng-change="$ctrl.onCityChanged()"
       placeholder="{{'common.name' | translate}}"
       cs-input-messages="$ctrl.messages"
-      cs-input-group-size="medium-4">
+      cs-input-group-size="medium-4"
+      placeholder="{{'broadCloud.site.city' | translate}}">
   </div>
 </div>

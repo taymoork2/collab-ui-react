@@ -41,6 +41,7 @@ export class BsftSettings implements IBsftSettings {
     });
     this.site = _.isNull(bsftSettings.site) ? new Site() : new Site({
       name: _.get(bsftSettings.site, 'name'),
+      uuid: _.get(bsftSettings.site, 'uuid'),
       timeZone: _.get(bsftSettings.site, 'timeZone'),
       numbers: _.get(bsftSettings.site, 'numbers'),
       address: _.get(bsftSettings.site, 'address'),
