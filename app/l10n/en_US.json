@@ -9674,11 +9674,11 @@
     "delegatedAdministration": "manages {{numManages}} organizations",
     "licenses": "Licenses",
     "licenseDisplayNames": {
-      "MC": "Meeting Center {{capacity}}",
+      "MC": "Webex Meeting Center {{capacity}}",
       "TC": "Training Center {{capacity}}",
       "MS": "Standard Webex Teams",
       "CF": "Webex Team Meetings",
-      "EE": "Enterprise Edition {{capacity}}",
+      "EE": "Webex Enterprise Edition {{capacity}}",
       "SC": "Support Center {{capacity}}",
       "EC": "Event Center {{capacity}}",
       "CO": "Advanced Cisco Webex Calling",
