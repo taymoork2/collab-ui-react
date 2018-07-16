@@ -1,4 +1,5 @@
 import bannerModuleName from './banner';
+import crCheckboxItemModuleName from './cr-checkbox-item';
 import crIconInfoModuleName from './cr-icon-info';
 import crProgressbarModuleName from './cr-progressbar';
 import crTotalTileModuleName from './cr-total-tile';
@@ -19,6 +20,7 @@ export { StringUtilService };
 export default angular
   .module('core.shared', [
     bannerModuleName,
+    crCheckboxItemModuleName,
     crIconInfoModuleName,
     crProgressbarModuleName,
     crTotalTileModuleName,
