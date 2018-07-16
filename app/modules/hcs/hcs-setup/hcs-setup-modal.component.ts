@@ -238,7 +238,7 @@ export class HcsSetupModalCtrl implements ng.IComponentController {
   }
 
   public setSoftwareProfile(profile: ISoftwareProfile) {
-    this.nextEnabled = ( profile && this.hcsSetupModalForm.$valid);
+    this.nextEnabled =  profile && this.hcsSetupModalForm.$valid && _.size(_.get(profile, 'applicationVersions')) > 0;
     this.softwareProfile = profile;
     this.enableSave();
   }
