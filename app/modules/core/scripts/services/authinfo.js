@@ -197,7 +197,14 @@
                 msgLicenses.push(service);
                 break;
               case Config.licenseTypes.COMMUNICATION:
-                service = new ServiceFeature($translate.instant('onboardModal.paidComm'), accountIndex + 1, 'commRadio', license);
+                var subType = _.split(license.licenseId, '_', 1);
+                if (subType[0] === 'SPSTD') {
+                  service = new ServiceFeature($translate.instant('common.licenses.standard'), accountIndex + 1, 'commStandardRadio', license);
+                } else if (subType[0] === 'SPCA') {
+                  service = new ServiceFeature($translate.instant('common.licenses.places'), accountIndex + 1, 'commPlacesRadio', license);
+                } else {
+                  service = new ServiceFeature($translate.instant('onboardModal.paidComm'), accountIndex + 1, 'commRadio', license);
+                }
                 commLicenses.push(service);
                 // store the partner for Communication license
                 authData.commPartnerOrgId = license.partnerOrgId;

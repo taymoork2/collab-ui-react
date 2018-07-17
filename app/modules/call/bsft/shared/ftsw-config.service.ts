@@ -1,6 +1,7 @@
 import { FtswConfig } from './ftsw-config';
 import { BsftOrder } from './bsft-order';
 import { Site, ILicenseInfo } from './bsft-site';
+import { Authinfo } from 'modules/core/scripts/services/authinfo';
 
 export class FtswConfigService {
 
@@ -8,17 +9,27 @@ export class FtswConfigService {
   private editSite: Site | undefined;
 
   /* @ngInject */
-  constructor() {
+  constructor(
+    private Authinfo: Authinfo,
+  ) {
     this.ftswConfig = new FtswConfig();
-    this.ftswConfig.licenses.push({
-      name: 'standard',
-      available: 35,
-      total: 100,
-    }, {
-      name: 'places',
-      available: 70,
-      total: 100,
-    });
+    const services = this.Authinfo.getCommunicationServices();
+    const standardLicense: any = _.find(services, { name: 'commStandardRadio' });
+    const placesLicense: any = _.find(services, { name: 'commPlacesRadio' });
+    if (!_.isUndefined(standardLicense)) {
+      this.ftswConfig.licenses.push({
+        name: 'standard',
+        available: standardLicense.license.volume,
+        total: standardLicense.license.volume,
+      });
+    }
+    if (!_.isUndefined(placesLicense)) {
+      this.ftswConfig.licenses.push({
+        name: 'places',
+        available: placesLicense.license.volume,
+        total: placesLicense.license.volume,
+      });
+    }
   }
 
   public getFtswConfig(): FtswConfig {
@@ -59,6 +70,14 @@ export class FtswConfigService {
 
   public setLicensesInfo(licenses: ILicenseInfo[]) {
     _.set(this.ftswConfig, 'licenses', licenses);
+  }
+
+  public setLicenseInfo(name: string, available: number) {
+    _.set(_.find(this.ftswConfig.licenses, { name: name }), 'available' , available);
+  }
+
+  public isLicensePresent(name: string) {
+    return !_.isUndefined(_.find(this.ftswConfig.licenses, { name: name }));
   }
 
   public setEditSite(site: Site) {
