@@ -20,9 +20,9 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   public nextOrFinish(): void {
     if (!this.hasPrereqs) {
       this.next();
-      return;
+    } else {
+      this.finish();
     }
-    this.finish();
   }
 
   private next(): void {
