@@ -11,8 +11,10 @@ import { IntegrationsManagementOverviewComponent } from './integrations-manageme
 import './integrations-management-overview.scss';
 import { IntegrationsManagementFakeService } from './integrations-management.fake-service';
 import { IntegrationsManagementService } from './integrations-management.service';
+import { IntegrationsManagementTokensComponent } from './integrations-management-tokens.component';
 
 require('angular-ui-grid/ui-grid.js');
+require('bootstrap-tokenfield');
 
 export default angular.module('integrations-management', [
   authinfoModuleName,
@@ -26,6 +28,7 @@ export default angular.module('integrations-management', [
 ])
   .component('integrationsManagementList', new IntegrationsManagementListComponent())
   .component('integrationsManagementOverview', new IntegrationsManagementOverviewComponent())
+  .component('integrationsManagementTokens', new IntegrationsManagementTokensComponent())
   .service('IntegrationsManagementFakeService', IntegrationsManagementFakeService)
   .service('IntegrationsManagementService', IntegrationsManagementService)
   .name;

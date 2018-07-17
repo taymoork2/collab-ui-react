@@ -11883,6 +11883,8 @@
       "accessTooltip": "Any action doesn't impact the existing users of the integration.",
       "allUsers": "All users",
       "specificUsers": "Specific users",
+      "tokenPlaceholder": "User email",
+      "userRetrievalError": "Error Retrieving users",
       "revokeAccessDialog": {
         "title": "Revoke Access Alert",
         "message": "{count, plural, =1{# user} other{All # users}} will lose access to this integration. Do you want to revoke access?"

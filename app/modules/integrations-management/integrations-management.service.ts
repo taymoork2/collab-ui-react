@@ -1,13 +1,18 @@
-import { IApplicationAdoptedUsers, IApplicationUsage, IApplicationUsageList, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, PolicyAction, PolicyType } from './integrations-management.types';
+import { IApplicationAdoptedUsers, IApplicationUsage, IApplicationUsageList, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, IUserInfo, PolicyAction, PolicyType, UserQueryType } from './integrations-management.types';
+import { Notification } from 'modules/core/notifications';
 
 export class IntegrationsManagementService implements IIntegrationsManagementService {
+
+  private readonly USER_CHUNK_SIZE = 40;
 
   /* @ngInject */
   constructor(
     private $http: ng.IHttpService,
+    private $q: ng.IQService,
     private Authinfo,
+    private Notification: Notification,
     private UrlConfig,
-  ) {}
+  ) { }
 
   public listIntegrations(options: IListOptions = {}): ng.IPromise<IApplicationUsage[]> {
     return this.$http.get<IApplicationUsageList>(this.applicationUsageUrl, {
@@ -116,4 +121,54 @@ export class IntegrationsManagementService implements IIntegrationsManagementSer
   private getAdoptedUsersUrl(clientId: string) {
     return `${this.UrlConfig.getOAuth2Url()}${encodeURIComponent(this.orgId)}/adoptedUsers/${encodeURIComponent(clientId)}`;
   }
+
+  public getUsers(searchType: UserQueryType, uidOrEmail: string[] | string): ng.IPromise<IUserInfo[]> {
+    let filter;
+    if (_.isArray(uidOrEmail)) {
+      filter = uidOrEmail.join(`" or ${searchType} eq "`);
+    } else {
+      filter = uidOrEmail;
+    }
+    filter = `${searchType} eq "${filter}"`;
+    const url = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
+    return this.$http.get(url, {
+      params: {
+        attributes: 'userName,id',
+        filter: filter,
+      },
+    },
+    ).then((reply) => {
+      const users = _.get(reply.data, 'Resources', []) as IUserInfo[];
+      return _.map(users, user => {
+        return {
+          username: _.get(user, 'userName'),
+          id: _.get(user, 'id'),
+        } as IUserInfo;
+      });
+    });
+  }
+
+  public getUsersBulk(searchType: UserQueryType, emailsOrIdsArray: string[]): IPromise<IUserInfo[]> {
+    let result: IUserInfo[] = [];
+    let isErrorNotified = false;
+    const emailsOrIdsChunked = _.chunk(emailsOrIdsArray, this.USER_CHUNK_SIZE);
+    const getUsersInChunkPromiseArr = _.map(emailsOrIdsChunked, (emailsOrIdsChunk: string[]) => {
+      return this.getUsers(searchType, emailsOrIdsChunk)
+        .then((userInfos: IUserInfo[]) => {
+          result = _.concat(result, userInfos);
+        })
+        .catch((error) => {
+          if (!isErrorNotified) {
+            //agendel: to avoid multiple error notifications in case of connection failure etc. - only display error once.
+            isErrorNotified = true;
+            //algendel todo: copy for user retrieval error.
+            this.Notification.errorResponse(error, 'integrations.overview.userRetrievalError');
+          }
+        });
+    });
+    return this.$q.all(getUsersInChunkPromiseArr).then(() => {
+      return result;
+    });
+  }
+
 }
