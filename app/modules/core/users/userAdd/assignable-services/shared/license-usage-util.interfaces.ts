@@ -1,5 +1,5 @@
 import { OfferName } from 'modules/core/shared/offer-name';
-import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
+import { ICrCheckboxItemState } from 'modules/core/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export enum LicenseStatus {
   ACTIVE = 'ACTIVE',

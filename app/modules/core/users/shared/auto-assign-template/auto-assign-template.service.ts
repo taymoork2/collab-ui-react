@@ -2,7 +2,7 @@ import { ILicenseRequestItem, ILicenseResponseItem, IUserEntitlementRequestItem,
 import { AssignableServicesItemCategory, IAssignableLicenseCheckboxState, ILicenseUsage, ILicenseUsageMap, ISubscription } from 'modules/core/users/userAdd/assignable-services/shared';
 import { MessengerInteropService } from 'modules/core/users/userAdd/shared/messenger-interop/messenger-interop.service';
 import { IAutoAssignTemplateData, IAutoAssignTemplateDataViewData, IAutoAssignTemplateResponse, IUserEntitlementsViewState } from 'modules/core/users/shared/auto-assign-template/auto-assign-template.interfaces';
-import { ICrCheckboxItemState } from 'modules/core/users/shared/cr-checkbox-item/cr-checkbox-item.component';
+import { ICrCheckboxItemState } from 'modules/core/shared/cr-checkbox-item/cr-checkbox-item.component';
 
 export class AutoAssignTemplateService {
 
