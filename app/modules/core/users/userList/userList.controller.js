@@ -24,6 +24,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
 
     vm.$onInit = onInit;
     vm.configureGrid = configureGrid;
+    vm.isEmailSuppressed = false;
 
     $scope.$on('$destroy', onDestroy);
 
@@ -122,13 +123,22 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     ////////////////
 
     function onInit() {
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
+        adminOrg: Orgservice.getAdminOrgAsPromise(null, params),
       };
 
       $q.all(promises).then(function (results) {
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
+
+        // retrieve org data to determine if invite emails are suppressed
+        vm.isEmailSuppressed = _.get(results.adminOrg, 'data.isOnBoardingEmailSuppressed', false);
 
         bind();
         getUserList();
@@ -551,7 +561,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     function canShowResendInvite(user) {
-      if ($scope.isCSB || $scope.dirsyncEnabled) {
+      if ($scope.isCSB || $scope.dirsyncEnabled || vm.isEmailSuppressed) {
         return false;
       } else {
         var isHuronUser = Userservice.isHuronUser(user.entitlements);
