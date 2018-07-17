@@ -26,6 +26,7 @@ require('./_setup-wizard.scss');
   var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
   var bsftNumberSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftNumber.html');
   var bsftSiteListTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSiteList.html');
+  var bsftAssignNumberTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftAssignNumber.html');
 
   var careSettingsTemplatePath = require('ngtemplate-loader?module=Core!./careSettings/careSettings.tpl.html');
 
@@ -301,6 +302,11 @@ require('./_setup-wizard.scss');
         template: bsftNumberSetupTemplatePath,
       };
 
+      var assignNumberBsft = {
+        name: 'assignNumberBsft',
+        template: bsftAssignNumberTemplatePath,
+      };
+
       var siteListBsft = {
         name: 'siteListBsft',
         template: bsftSiteListTemplatePath,
@@ -345,6 +351,7 @@ require('./_setup-wizard.scss');
             if (!response.bsft.rialtoCustomerId) {
               steps.push(setupBsft);
               steps.push(setupNumberBsft);
+              steps.push(assignNumberBsft);
               steps.push(siteListBsft);
             }
           } else {

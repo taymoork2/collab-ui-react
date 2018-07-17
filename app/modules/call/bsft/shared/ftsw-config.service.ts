@@ -48,6 +48,18 @@ export class FtswConfigService {
     this.ftswConfig.sites.push(site);
   }
 
+  public removeSite(site: Site) {
+    _.remove(this.ftswConfig.sites, (s) => s.name === site.name);
+  }
+
+  public getLicensesInfo(): ILicenseInfo[] {
+    return _.get(this.ftswConfig, 'licenses', []);
+  }
+
+  public setLicensesInfo(licenses: ILicenseInfo[]) {
+    _.set(this.ftswConfig, 'licenses', licenses);
+  }
+
   public getOrders(): BsftOrder[] {
     return _.get(this.ftswConfig, 'orders', []);
   }
@@ -60,16 +72,11 @@ export class FtswConfigService {
     this.ftswConfig.bsftOrders.push(order);
   }
 
-  public removeSite(site: Site) {
-    _.remove(this.ftswConfig.sites, (s) => s.name === site.name);
-  }
-
-  public getLicensesInfo(): ILicenseInfo[] {
-    return _.get(this.ftswConfig, 'licenses', []);
-  }
-
-  public setLicensesInfo(licenses: ILicenseInfo[]) {
-    _.set(this.ftswConfig, 'licenses', licenses);
+  public getOrder(siteId: string): BsftOrder {
+    const bsftOrder: BsftOrder = new BsftOrder();
+    bsftOrder.siteId = siteId;
+    this.addOrder(bsftOrder);
+    return bsftOrder;
   }
 
   public setLicenseInfo(name: string, available: number) {

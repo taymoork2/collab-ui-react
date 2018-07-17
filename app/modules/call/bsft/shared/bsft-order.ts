@@ -2,13 +2,13 @@ import { IPhoneNumber, PhoneNumber } from './bsft-number';
 
 export interface IBsftOrder {
   siteId: string;
-  billingNumber: IPhoneNumber | null;
+  billingNumber?: IPhoneNumber | null;
   numbers: IPhoneNumber[];
 }
 
 export class BsftOrder implements IBsftOrder {
   public siteId: string;
-  public billingNumber: IPhoneNumber;
+  public billingNumber?: IPhoneNumber | null;
   public numbers: IPhoneNumber[];
 
   constructor (bsftOrder: IBsftOrder = {
