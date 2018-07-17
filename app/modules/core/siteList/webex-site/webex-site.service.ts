@@ -58,19 +58,23 @@ export class WebExSiteService {
   // Gets center details directly from api.
   // Used when modifying existing license distribution
   private getCenterDetailsForAllSubscriptions(): ng.IPromise<ICenterDetailsFromAPI[]> {
-    const externalIds: string[] = _.chain(this.Authinfo.getSubscriptions())
-      .map((subscription) => subscription.externalSubscriptionId)
-      .value();
+    const externalIds = this.getExternalSubscriptionIds();
     const centerDetailsPromises: ng.IPromise<any>[] = _.map(externalIds, subId => {
       return this.SetupWizardService.getExistingConferenceServiceDetails(subId);
     });
     return this.$q.all(centerDetailsPromises).then((centerDetailsForAllSubscriptions) => {
       _.forEach(centerDetailsForAllSubscriptions, subscription => {
-        subscription.externalSubscriptionId = this.getExternalSubscriptionIdFromSubscriptionId(subscription.subscriptionId);
         subscription.purchasedServices = this.filterPurchasedServicesArray(subscription.purchasedServices);
       });
       return centerDetailsForAllSubscriptions;
     });
+  }
+
+  private getExternalSubscriptionIds(): string[] {
+    const idsFromSubscriptions = _.map(this.Authinfo.getSubscriptions(), (subscription: IPendingOrderSubscription) => subscription.externalSubscriptionId);
+    const idsFromLicenses = _.uniq(_.map(this.SetupWizardService.getNonTrialWebexLicenses(), license => license.billingServiceId));
+
+    return !_.isEmpty(idsFromSubscriptions) ? idsFromSubscriptions : idsFromLicenses;
   }
 
   public findSubscriptionsWithUnsyncedLicenses(): ng.IPromise<(ICenterDetailsFromAPI | undefined)[]> {
@@ -79,11 +83,6 @@ export class WebExSiteService {
         return details.pendingLicenseDistribution;
       });
     });
-  }
-
-  private getExternalSubscriptionIdFromSubscriptionId(subId): string {
-    const subscriptionDetails: IPendingOrderSubscription = _.find(this.Authinfo.getSubscriptions(), { subscriptionId: subId });
-    return subscriptionDetails && subscriptionDetails.externalSubscriptionId;
   }
 
   public getExistingSites(confServicesInActingSubscription): IWebExSite[] {

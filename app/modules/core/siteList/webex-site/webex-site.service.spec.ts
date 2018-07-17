@@ -20,6 +20,10 @@ describe('Service: WebExSite Service', function () {
         externalSubscriptionId: 'ex456',
       },
     ];
+    const webexLicenses = [
+      { billingServiceId: 'ex321' },
+      { billingServiceId: 'ex654' },
+    ];
     this.allLicenses = getJSONFixture('core/json/authInfo/complexCustomerCases/customerWithCCASPActiveLicenses.json').allLicenses;
     const allCenterDetails = getJSONFixture('core/json/setupWizard/meeting-settings/centerDetails.json');
     this.allConferenceLicenses = getJSONFixture('core/json/setupWizard/sites/conference-licenses.json');
@@ -35,13 +39,14 @@ describe('Service: WebExSite Service', function () {
     });
     spyOn(this.SetupWizardService, 'getExistingConferenceServiceDetails').and.callFake(subId => {
       if (subId === 'ex123') {
-        return allCenterDetails[0];
+        return { externalSubscriptionId: 'ex123', ...allCenterDetails[0] };
       }
       if (subId === 'ex456') {
-        return allCenterDetails[1];
+        return { externalSubscriptionId: 'ex456', ...allCenterDetails[1] };
       }
     });
     spyOn(this.Authinfo, 'getSubscriptions').and.returnValue(subscriptions);
+    spyOn(this.SetupWizardService, 'getNonTrialWebexLicenses').and.returnValue(webexLicenses);
   });
 
   describe('getting center details for all subscriptions', function () {
@@ -82,6 +87,20 @@ describe('Service: WebExSite Service', function () {
         },
       ];
       expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription(this.allConferenceLicenses[1])).toEqual(expectedResults);
+    });
+  });
+
+  describe('getting external subscription ids', function () {
+    it('should get from subscriptions', function () {
+      const externalIds = this.WebExSiteService.getExternalSubscriptionIds();
+
+      expect(externalIds).toEqual(['ex123', 'ex456']);
+    });
+    it('should get from licenses', function () {
+      this.Authinfo.getSubscriptions.and.returnValue([]);
+      const externalIds = this.WebExSiteService.getExternalSubscriptionIds();
+
+      expect(externalIds).toEqual(['ex321', 'ex654']);
     });
   });
 
