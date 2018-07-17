@@ -2,10 +2,21 @@
   <i class="icon icon-spinner"></i>
 </div>
 
-<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading" class="bsft-site-setup">
   <div class="container-fluid service-setup-container">
-    <h4 style="margin-bottom: .5rem;">Setup Default Location</h4>
-    <h6 style="margin-bottom: 1rem;">You can also edit location information after setup is complete in Control Hub</h6>
+    <h4 ng-if="!$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setupDefault"></h4>
+    <h4 ng-if="$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.editDefault"></h4>
+    <h4 ng-if="!$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setup"></h4>
+    <h4 ng-if="$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.edit"></h4>
+    <h6 class="later-margin" translate="broadCloud.site.editLater"></h6>
+    <input
+      ng-if="!$ctrl.site.defaultLocation"
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.makeDefault"
+      id="defaultLocation"
+      name="defaultLocation"
+      cs-input-label="{{'broadCloud.site.makeDefault' | translate}}">
     <div class="row full service-setup">
       <bsft-site-name
         name="$ctrl.site.name"
@@ -43,7 +54,7 @@
         on-change-fn="$ctrl.onSiteCountryChanged(country)">
       </bsft-site-country>
     </div>
-    <div class="row full service-setup" style="margin-bottom: 1.5rem;">
+    <div class="row full service-setup time-zone-margin">
       <uc-time-zone
         time-zone="$ctrl.site.timeZone"
         time-zone-options="$ctrl.timeZoneOptions"
@@ -51,7 +62,7 @@
         on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
       </uc-time-zone>
     </div>
-    <h4 style="padding-bottom: 1rem;">Location Contact Info</h4>
+    <h4 class="location-contact-margin" translate="broadCloud.site.locationContactInfo"></h4>
     <div class="row full service-setup">
       <bsft-contact-first-name
         first-name="$ctrl.site.contact.firstName"

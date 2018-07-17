@@ -75,4 +75,10 @@ export class FtswConfigService {
     const siteindex = _.findIndex(this.getSites(), (findSite) => findSite.uuid === site.uuid);
     this.getSites()[siteindex] = site;
   }
+
+  public removeDefault() {
+    const site = _.find(this.getSites(), (findSite) => findSite.defaultLocation === true);
+    site.defaultLocation = false;
+    this.updateSite(site);
+  }
 }

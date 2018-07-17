@@ -1,3 +1,5 @@
+import './bsft-settings.scss';
+
 import { BsftSettingsComponent } from './bsft-settings.component';
 import bsftSettingsSharedModule from './shared';
 import bsftSiteNameModule from './settings-site-name';
