@@ -1,6 +1,6 @@
 import { TokenMethods } from './tokenMethods';
 import { Notification } from 'modules/core/notifications';
-
+import { HcsControllerService } from 'modules/hcs/hcs-shared';
 class SetupAgentInstallFileCtrl implements ng.IComponentController {
   private readonly DOMAIN_MAX_LENGTH = 253;
   private readonly MIN_PORT = 0;
@@ -23,6 +23,7 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   public invalidCount: number = 0;
   public messages: Object;
   public validators: Object;
+  public asyncValidator: Object;
   public onChangeFn: Function;
   public form: ng.IFormController;
 
@@ -31,6 +32,8 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
     private $timeout: ng.ITimeoutService,
     public $translate: ng.translate.ITranslateService,
     private Notification: Notification,
+    private HcsControllerService: HcsControllerService,
+    private $q: ng.IQService,
   ) {
     this.tokenplaceholder = this.$translate.instant('hcs.installFiles.placeholderHttpProxy');
     this.tokenmethods = new TokenMethods(
@@ -48,9 +51,13 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
       maxlength: this.$translate.instant('common.invalidMaxLength', {
         max: this.MAX_FILENAME_LENGTH,
       }),
+      unique: this.$translate.instant('hcs.installFiles.duplicateFile'),
     };
     this.validators = {
       invalid: (viewValue: string) => this.validateFileName(viewValue),
+    };
+    this.asyncValidator = {
+      unique: (viewValue: string) => this.validateUniqueFileLabel(viewValue),
     };
   }
   public createToken(e): void {
@@ -142,6 +149,19 @@ class SetupAgentInstallFileCtrl implements ng.IComponentController {
   public validateFileName(file: string): boolean {
     const regex = new RegExp(/(^[\w]*[^\~\#\%\&\*\{\}\\\:\<\>\?\/\+\|\"\'\s]*[\w]*)$/g);
     return regex.test(file);
+  }
+
+  public validateUniqueFileLabel(fileLabel: string): ng.IPromise<void> {
+    const validateDefer = this.$q.defer<void>();
+    this.HcsControllerService.listAgentInstallFile()
+      .then((res) => {
+        if (!_.find(res, install => install.label === fileLabel)) {
+          validateDefer.resolve();
+        } else {
+          validateDefer.reject();
+        }
+      });
+    return validateDefer.promise;
   }
 
   private setPlaceholderText(text): void {

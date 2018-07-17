@@ -11534,6 +11534,7 @@
         "description": "You are about to delete an Agent Install File. You can not undo this action."
       },
       "description": "Create an Agent Install file (.cop file). This file will be installed on each Unified Communications instance or Prime License Manager that you want to manage with HCS features. Creation can take several minutes. When it's done, the file is available on the Agent Install File page to download and install.",
+      "duplicateFile": "Duplicate File Label",
       "duplicateProxy": "Duplicate HTTP Proxy Address",
       "enterFileName": "Enter a file label",
       "fileName": "File Label",
@@ -11599,6 +11600,7 @@
       "description": "Configure an SFTP Server to be used for upgrading software images.",
       "directory": "Directory",
       "dirPlace": "Enter Directory",
+      "duplicateSftpName": "Duplicate SFTP Server Name",
       "error": "SFTP Server creation failed",
       "loginCred": "Login Credentials",
       "name": "SFTP Server Name",

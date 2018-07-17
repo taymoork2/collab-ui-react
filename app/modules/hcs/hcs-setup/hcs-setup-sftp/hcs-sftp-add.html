@@ -11,6 +11,8 @@
       placeholder="{{::'hcs.sftp.namePlace' | translate}}"
       ng-change="$ctrl.processChange()"
       cs-input-messages="$ctrl.errors"
+      cs-input-async-validators="$ctrl.asyncValidator"
+      ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
       cs-input-label="{{:: 'hcs.sftp.name' | translate}}">
     <input
       cs-input
