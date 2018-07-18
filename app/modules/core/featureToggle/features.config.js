@@ -113,6 +113,7 @@ module.exports = {
   calsvcDefaultAction: 'calsvc-default-action',
   calsvcShowPreferredSiteName: 'calsvc-show-preferred-sitename',
   calsvcWebexMeetingRegistries: 'calsvc_webex_meeting_registries',
+  calsvcHybridExchangeDeployment: 'calsvc-hybrid-exchange-deployment',
   careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',
   careApplebuschatOnSiteFileStorageEnable: 'care-applebuschat-onsite-file-storage-enable',
   ccaReports: 'ccaReports',
