@@ -86,7 +86,7 @@ describe('Controller: RemDeviceController', function () {
         expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
       });
 
-      it('should call CsdmHuronDeviceService and CsdmLyraConfigurationService to delete a Huron device and its config', function () {
+      it('should call CsdmHuronDeviceService to delete a Huron device', function () {
         controller.device = CsdmConverter.convertHuronDevice({
           needsActivation: false,
           type: 'huron',
@@ -98,7 +98,7 @@ describe('Controller: RemDeviceController', function () {
 
         expect(fakeModal.close).toHaveBeenCalled();
         expect(CsdmHuronDeviceService.deleteItem).toHaveBeenCalled();
-        expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
+        expect(CsdmLyraConfigurationService.deleteConfig).not.toHaveBeenCalled();
       });
     });
 
@@ -155,7 +155,7 @@ describe('Controller: RemDeviceController', function () {
         expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
       });
 
-      it('should call CsdmHuronDeviceService and CsdmLyraConfigurationService to delete a Huron device and its config', function () {
+      it('should call CsdmHuronDeviceService to delete a Huron device', function () {
         controller.deleteConfig = true;
         controller.device = CsdmConverter.convertHuronDevice({
           needsActivation: false,
@@ -168,7 +168,7 @@ describe('Controller: RemDeviceController', function () {
 
         expect(fakeModal.close).toHaveBeenCalled();
         expect(CsdmHuronDeviceService.deleteItem).toHaveBeenCalled();
-        expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
+        expect(CsdmLyraConfigurationService.deleteConfig).not.toHaveBeenCalled();
       });
     });
 

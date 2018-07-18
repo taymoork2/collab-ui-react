@@ -34,7 +34,7 @@
         rdc.deleteDevice = function () {
           var deleteConfigPromise;
 
-          if (rdc.deleteConfig || !rdc.deleteConfigurationOptionAvailable) {
+          if (rdc.device.isCloudberryDevice() && (rdc.deleteConfig || !rdc.deleteConfigurationOptionAvailable)) {
             deleteConfigPromise = CsdmLyraConfigurationService.deleteConfig(rdc.device.cisUuid, rdc.device.wdmUrl);
           } else {
             deleteConfigPromise = $q.resolve();
