@@ -256,7 +256,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             } else if (adminUsers.length > 0) {
               $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
             }
-            setAdminRoles(adminUsers);
+            setAdminRoles(adminUsers, false);
             $scope.setFilter($scope.activeFilter);
             deferred.resolve();
           } else {
@@ -382,7 +382,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             _.find($scope.filters, { filterValue: 'partners' }).count = partnerUsers.length;
             // partner list does not have pagination or startIndex
             $scope.userList.partnerUsers = partnerUsers;
-            setAdminRoles(partnerUsers);
+            setAdminRoles(partnerUsers, true);
             $scope.setFilter($scope.activeFilter);
             $scope.obtainedPartners = true;
             deferred.resolve();
@@ -395,10 +395,19 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       return deferred.promise;
     }
 
-    function setAdminRoles(admins) {
+    function setAdminRoles(admins, isPartner) {
       _.forEach(admins, function (user) {
         var adminRoles = [];
-        _.forEach(user.roles, function (role) {
+        var roles = [];
+        if (isPartner) {
+          var customerOrg = _.find(user.managedOrgs, { orgId: Authinfo.getOrgId() });
+          if (customerOrg) {
+            roles.push(customerOrg.role);
+          }
+        } else {
+          roles = user.roles;
+        }
+        _.forEach(roles, function (role) {
           if (role === Config.backend_roles.full_admin) {
             // Display Full Admin first in the list
             adminRoles.unshift($translate.instant('ciRoles.' + role));
