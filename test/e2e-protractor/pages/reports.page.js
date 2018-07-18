@@ -67,18 +67,18 @@ var ReportsPage = function () {
   this.mediaDescription = element(by.id('mediaQuality')).element(by.css('article section p'));
 
   // Task Incoming
-  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Incoming Chats'));
-  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'This chart represents the total number of incoming chats for today. Hover over the chart to see the details.'));
+  this.taskIncomingHeader = element(by.cssContainingText('.report-section-header', 'Total Incoming Web Chats'));
+  this.taskIncomingDescription = element(by.cssContainingText('.report-description', 'This chart represents the total number of incoming web chats for today. Hover over the chart to see the details.'));
   this.taskIncomingGraph = element(by.id('taskIncomingdiv'));
 
   // Task Time
-  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Chat Completion Time'));
-  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'This chart represents the average time taken to complete a chat for yesterday. Hover over the chart to see the details.'));
+  this.taskTimeHeader = element(by.cssContainingText('.report-section-header', 'Web Chat Completion Time'));
+  this.taskTimeDescription = element(by.cssContainingText('.report-description', 'This chart represents the average time taken to complete a web chat for yesterday. Hover over the chart to see the details.'));
   this.taskTimeGraph = element(by.id('taskTimeDiv'));
 
   // Task Aggregate
-  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Chats'));
-  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'This chart represents the number of active and queued chats aggregated today. Hover over the chart to see the details.'));
+  this.taskAggregateHeader = element(by.cssContainingText('.report-section-header', 'Aggregated Web Chats'));
+  this.taskAggregateDescription = element(by.cssContainingText('.report-description', 'This chart represents the number of active and queued web chats aggregated today. Hover over the chart to see the details.'));
   this.taskAggregateGraph = element(by.id('taskAggregateDiv'));
 
   // Average CSAT

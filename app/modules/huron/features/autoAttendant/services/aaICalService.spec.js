@@ -69,6 +69,11 @@ describe('Service: AACalendarService', function () {
     endtime = '05:00 PM';
   }));
 
+  // Set the clock back to normal
+  afterEach(function () {
+    jasmine.clock().uninstall();
+  });
+
   describe('createCalendar', function () {
     it('should return a new calendar object from ical', function () {
       var actual = AAICalService.createCalendar();
