@@ -11953,6 +11953,14 @@
       },
       "saveSuccess": "Successfully saved integration access.",
       "saveError": "Error saving integration access."
+    },
+    "detail": {
+      "integrationId": "Integration ID",
+      "clientId": "Client ID",
+      "privacyPolicy": "Privacy Policy",
+      "support": "Support",
+      "developerWebsite": "Developer Website",
+      "developerNameEmail": "Developer Name and Email"
     }
   },
   "broadCloud": {
