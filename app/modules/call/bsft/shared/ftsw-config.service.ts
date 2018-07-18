@@ -13,20 +13,22 @@ export class FtswConfigService {
     private Authinfo: Authinfo,
   ) {
     this.ftswConfig = new FtswConfig();
+    this.initLicenseInfo();
+  }
+
+  public initLicenseInfo() {
     const services = this.Authinfo.getCommunicationServices();
     const standardLicense: any = _.find(services, { name: 'commStandardRadio' });
     const placesLicense: any = _.find(services, { name: 'commPlacesRadio' });
     if (!_.isUndefined(standardLicense)) {
       this.ftswConfig.licenses.push({
         name: 'standard',
-        available: standardLicense.license.volume,
         total: standardLicense.license.volume,
       });
     }
     if (!_.isUndefined(placesLicense)) {
       this.ftswConfig.licenses.push({
         name: 'places',
-        available: placesLicense.license.volume,
         total: placesLicense.license.volume,
       });
     }
@@ -72,6 +74,7 @@ export class FtswConfigService {
     this.ftswConfig.bsftOrders.push(order);
   }
 
+<<<<<<< HEAD
   public getOrder(siteId: string): BsftOrder {
     const bsftOrder: BsftOrder = new BsftOrder();
     bsftOrder.siteId = siteId;
@@ -83,6 +86,33 @@ export class FtswConfigService {
     _.set(_.find(this.ftswConfig.licenses, { name: name }), 'available' , available);
   }
 
+||||||| merged common ancestors
+  public removeSite(site: Site) {
+    _.remove(this.ftswConfig.sites, (s) => s.name === site.name);
+  }
+
+  public getLicensesInfo(): ILicenseInfo[] {
+    return _.get(this.ftswConfig, 'licenses', []);
+  }
+
+  public setLicensesInfo(licenses: ILicenseInfo[]) {
+    _.set(this.ftswConfig, 'licenses', licenses);
+  }
+
+  public setLicenseInfo(name: string, available: number) {
+    _.set(_.find(this.ftswConfig.licenses, { name: name }), 'available' , available);
+  }
+
+=======
+  public removeSite(site: Site) {
+    _.remove(this.ftswConfig.sites, (s) => s.name === site.name);
+  }
+
+  public getLicensesInfo(): ILicenseInfo[] {
+    return _.get(this.ftswConfig, 'licenses', []);
+  }
+
+>>>>>>> WIP(bsft): updated UI for plan review and moved license count logic from service to component
   public isLicensePresent(name: string) {
     return !_.isUndefined(_.find(this.ftswConfig.licenses, { name: name }));
   }

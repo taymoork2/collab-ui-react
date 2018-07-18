@@ -19,7 +19,6 @@ class FtswSiteListCtrl implements ng.IComponentController {
     private $modal: IToolkitModalService,
     private $translate: ng.translate.ITranslateService,
     private FtswConfigService: FtswConfigService,
-    private $log: ng.ILogService,
     private $scope: ng.IScope,
   ) {}
 
@@ -32,14 +31,25 @@ class FtswSiteListCtrl implements ng.IComponentController {
   }
 
   public cardSelected(site: ISite) {
-    this.$log.log(site);
     this.FtswConfigService.setEditSite(site);
     this.$scope.$emit(CoreEvent.WIZARD_TO_STEP, 'setupBsft');
   }
 
   public getLicensesInfo(): ILicenseInfo[] {
-    this.$log.log('ftsw is called');
-    return this.FtswConfigService.getLicensesInfo();
+    const licenses = this.FtswConfigService.getLicensesInfo();
+    let placesLicUsed = 0;
+    let standardLicUsed = 0;
+    _.forEach(this.FtswConfigService.getSites(), (site) => {
+      if (!_.isUndefined(site.licenses.standard)) {
+        standardLicUsed = standardLicUsed + site.licenses.standard;
+      }
+      if (!_.isUndefined(site.licenses.places)) {
+        placesLicUsed = placesLicUsed + site.licenses.places;
+      }
+    });
+    _.set(_.find(licenses, { name: 'standard' }), 'available', _.find(licenses, { name: 'standard' }).total - standardLicUsed);
+    _.set(_.find(licenses, { name: 'places' }), 'available', _.find(licenses, { name: 'places' }).total - placesLicUsed);
+    return licenses;
   }
 
   public removeSite(site: ISite) {

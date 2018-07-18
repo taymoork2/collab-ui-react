@@ -79,18 +79,18 @@ export class Site implements ISite {
 }
 
 export interface ILicenseInfo {
-  available: number;
+  available?: number;
   total: number;
   name: string;
 }
 
 export class LicenseInfo implements ILicenseInfo {
-  public available: number;
+  public available?: number;
   public total: number;
   public name: string;
 
   constructor(license: ILicenseInfo = {
-    available: 0,
+    available: undefined,
     total: 0,
     name: '',
   }) {

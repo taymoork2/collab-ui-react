@@ -66,8 +66,7 @@
         <div ng-class="planReview.getGridColumnClassName()" class="columns column-title">
           <div class="column-header">
             <i class="icon icon-circle-call"></i>
-            <h3 translate="firstTimeWizard.calling" ng-if="!planReview.isCiscoBC"></h3>
-            <h3 translate="trials.broadCloudFlex" ng-if="planReview.isCiscoBC"></h3>
+            <h3 translate="firstTimeWizard.calling"></h3>
           </div>
         </div>
         <div ng-if="planReview.isCareEnabled" id="careHeader" class="small-3 columns column-title">
@@ -194,22 +193,29 @@
             translate-values="{days: planReview.trial.trialPeriod}"></div>
           <div ng-class="{'column-paid' : !planReview.commServices.isNewTrial, 'column-trial' : planReview.commServices.isNewTrial}">
             <div ng-if="multipleSubscriptions.showSection(planReview.commServices.services)" class="item-call-license">
-              <span translate="firstTimeWizard.calling" ng-if="!planReview.isCiscoBC"></span>
-              <span translate="trials.broadCloudFlex" ng-if="planReview.isCiscoBC"></span>
+              <span translate="firstTimeWizard.calling"></span>
             </div>
-            <div class="item-paid"
-              ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
-              ng-repeat="service in planReview.commServices.services track by $index">
-              <div ng-if="planReview.isCiscoBC">
-                <div class="item-webex">{{service.label}}</div>
-                <div style="padding-bottom: 1rem;">
-                  <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
+            <div ng-if="planReview.isCiscoBC" ng-class="{ 'row bsft-license-container': (service.license.isTrial || planReview.messagingServices.isNewTrial)}">
+              <div class="columns medium-5 large-3" ng-if="(service.license.isTrial || planReview.messagingServices.isNewTrial)">
+                  <span
                   class="badge badge-warning" translate="firstTimeWizard.trial"></span>
-                  <span class="quantity" translate="firstTimeWizard.quantity"></span>
-                  <span class="quantity">{{service.license.volume}}</span>
+              </div>
+              <div class="item-paid" ng-class="{ 'columns medium-7 large-9': (service.license.isTrial || planReview.messagingServices.isNewTrial) }">
+                <div translate="trials.broadCloudFlex" class="item-webex"></div>
+                <div ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
+                  ng-repeat="service in planReview.commServices.services track by $index">
+                  <span>
+                    <span class="quantity">{{service.label}}</span>
+                    <span class="quantity" translate="firstTimeWizard.quantity"></span>
+                    <span class="quantity">{{service.license.volume}}</span>
+                  </span>
                 </div>
               </div>
-              <div ng-if="!planReview.isCiscoBC">
+            </div>
+            <div ng-if="!planReview.isCiscoBC">
+              <div class="item-paid"
+                ng-if="multipleSubscriptions.showLicenses(service.license.billingServiceId, service.license.isTrial)"
+                ng-repeat="service in planReview.commServices.services track by $index">
                 <div class="item-webex" translate="onboardModal.paidCiscoSparkMessaging"></div>
                 <div>
                   <span ng-if="service.license.isTrial || planReview.messagingServices.isNewTrial"
