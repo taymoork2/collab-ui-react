@@ -5,6 +5,7 @@
         "appId": "0",
         "appName": "Fake Integration 0",
         "appClientId": "0",
+        "appSupportUrl":  "http://fake-0.support.url/",
         "appPrivacyUrl": "http://fake-0.privacy.url/",
         "appCompanyUrl": "http://fake-0.company.url/",
         "appContactName": "Fake Contact Name 0",
@@ -12,6 +13,7 @@
         "appUserAdoption": 500,
         "policyAction": "deny",
         "appCreated": "3018-06-08T30:50:19.355Z"
+
     },
     {
         "id": "1",
@@ -19,6 +21,7 @@
         "appId": "1",
         "appName": "Fake Integration 1",
         "appClientId": "1",
+        "appSupportUrl":  "http://fake-1.support.url/",
         "appPrivacyUrl": "http://fake-1.privacy.url/",
         "appCompanyUrl": "http://fake-1.company.url/",
         "appContactName": "Fake Contact Name 1",
@@ -33,6 +36,7 @@
         "appId": "2",
         "appName": "Fake Integration 2",
         "appClientId": "2",
+        "appSupportUrl":  "http://fake-2.support.url/",
         "appPrivacyUrl": "http://fake-2.privacy.url/",
         "appCompanyUrl": "http://fake-2.company.url/",
         "appContactName": "Fake Contact Name 2",
@@ -47,6 +51,7 @@
         "appId": "3",
         "appName": "Fake Integration 3",
         "appClientId": "3",
+        "appSupportUrl":  "http://fake-3.support.url/",
         "appPrivacyUrl": "http://fake-3.privacy.url/",
         "appCompanyUrl": "http://fake-3.company.url/",
         "appContactName": "Fake Contact Name 3",

@@ -185,6 +185,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
         appName: `Fake Integration ${index}`,
         appClientId: `${index}`,
         appPrivacyUrl: `http://fake-${index}.privacy.url/`,
+        appSupportUrl: `http://fake-${index}.support.url/`,
         appCompanyUrl: `http://fake-${index}.company.url/`,
         appContactName: `Fake Contact Name ${index}`,
         appContactEmail: `fake-${index}@contact-email.com`,

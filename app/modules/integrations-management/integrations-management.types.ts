@@ -24,6 +24,7 @@ export interface IApplicationUsage {
   appClientId: string;
   appPrivacyUrl: string;
   appCompanyUrl: string;
+  appSupportUrl: string;
   appContactName: string;
   appContactEmail: string;
   appUserAdoption: number;
