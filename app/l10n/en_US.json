@@ -1947,7 +1947,7 @@
     "convert": "Convert",
     "convertUsers": "Convert Unlicensed Users",
     "unlicensedUsers": "Unlicensed Users",
-    "licensesNeedToBeRedistributed": "The license count is off for Webex Meetings sites associated with subscription {{subscriptionId}}. Please redistribute licenses among your Webex Meetings sites.",
+    "licensesNeedToBeRedistributed": "Webex licenses in subscription {{subscriptionId}} have not been completely allocated to the sites associated with this subscription. Please use the Redistribute licenses feature to reallocate the licenses among the sites.",
     "convertUsersText": "Convert employees to a licensed user who have signed up for Cisco Webex Teams on their own with a company email address.  Licensed users receive additional enterprise features, and are subject to your organization’s policies and administration.",
     "convertUsersDirSyncEnabledWarning": "Users cannot be converted while Directory Synchronization is enabled. Disable Directory Synchronization from the Settings page in order to convert users.",
     "convertError": " could not be converted. Contact support for assistance converting this user.",

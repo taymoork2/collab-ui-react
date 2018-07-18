@@ -58,11 +58,11 @@ describe('Component: WebexSiteLicensesComponent', function () {
   }
 
   describe('When first opened', () => {
-    it('should get centerDetails and distributedLicensesArray correctly', function () {
+    it('should get centerDetails and sitesByCenterType correctly', function () {
       expect(this.controller.centerDetails).toEqual(this.$scope.fixtures.centerDetails);
       expect(this.WebExSiteService.extractCenterDetailsFromSingleSubscription).toHaveBeenCalled();
-      expect(this.controller.distributedLicensesArray.length).toBe(3);
-      expect(this.controller.distributedLicensesArray[0].length).toBe(2);
+      expect(this.controller.sitesByCenterType.length).toBe(3);
+      expect(this.controller.sitesByCenterType[0].length).toBe(2);
     });
   });
 
@@ -70,34 +70,34 @@ describe('Component: WebexSiteLicensesComponent', function () {
     it('should getLicensesRemaining', function () {
       const remaining = this.controller.getLicensesRemaining('EE');
       const total = this.controller.getLicensesAssignedTotal('EE');
-      expect(remaining).toEqual(0);
-      expect(total).toEqual(200);
+      expect(remaining).toBe(0);
+      expect(total).toBe(200);
     });
 
     it('should getLicensesForSite correctly ', function () {
       const remaining = this.controller.getLicensesForSite('abc.dmz');
-      expect(remaining).toEqual(200);
+      expect(remaining).toBe(200);
     });
 
     it('should getLicensesAssignedTotal correctly', function () {
       const result = this.controller.getLicensesAssignedTotal('EE');
-      expect(result).toEqual(200);
+      expect(result).toBe(200);
     });
 
     it('should set default site license value when only site', function () {
       const sitesArray = [
         { quantity: 10, siteUrl: 'site1' },
       ];
-      const distributedLicensesArray = [];
+      const sitesByCenterType = [];
       const centerDetails = [
         { serviceName: 'MC', quantity: 150 },
       ];
       this.controller.sitesArray = _.clone(sitesArray);
-      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.sitesByCenterType = _.clone(sitesByCenterType);
       this.controller.centerDetails = _.clone(centerDetails);
-      this.controller.constructDistributedSitesArray();
+      this.controller.sitesByCenterType = this.controller.getSitesByCenterType();
       this.$scope.$apply();
-      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(150);
+      expect(this.controller.sitesByCenterType[0][0].quantity).toBe(150);
     });
 
     it('should set site license to zero when more then one site', function () {
@@ -105,16 +105,16 @@ describe('Component: WebexSiteLicensesComponent', function () {
         { quantity: 10, siteUrl: 'site1' },
         { quantity: 20, siteUrl: 'site1' },
       ];
-      const distributedLicensesArray = [];
+      const sitesByCenterType = [];
       const centerDetails = [
         { serviceName: 'MC', quantity: 150 },
       ];
       this.controller.sitesArray = _.clone(sitesArray);
-      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.sitesByCenterType = _.clone(sitesByCenterType);
       this.controller.centerDetails = _.clone(centerDetails);
-      this.controller.constructDistributedSitesArray();
+      this.controller.sitesByCenterType = this.controller.getSitesByCenterType();
       this.$scope.$apply();
-      expect(this.controller.distributedLicensesArray[0][0].quantity).toEqual(0);
+      expect(this.controller.sitesByCenterType[0][0].quantity).toBe(0);
     });
 
     it('should calculate license quantity for sites correctly', function () {
@@ -122,7 +122,7 @@ describe('Component: WebexSiteLicensesComponent', function () {
         { quantity: 1, siteUrl: 'site1' },
         { quantity: 5, siteUrl: 'site2' },
       ];
-      const distributedLicensesArray = [
+      const sitesByCenterType = [
         [{ centerType: 'EC', quantity: 3, siteUrl: 'site1' },
         { centerType: 'MC', quantity: 1, siteUrl: 'site1' },
         { centerType: 'TC', quantity: 4, siteUrl: 'site1' }],
@@ -131,31 +131,31 @@ describe('Component: WebexSiteLicensesComponent', function () {
         { centerType: 'TC', quantity: 0, siteUrl: 'site2' }],
       ];
       this.controller.sitesArray = _.clone(sitesArray);
-      this.controller.distributedLicensesArray = _.clone(distributedLicensesArray);
+      this.controller.sitesByCenterType = _.clone(sitesByCenterType);
       this.controller.updateSitesLicenseCount();
       this.$scope.$apply();
-      expect(this.controller.sitesArray[0].quantity).toEqual(8);
-      expect(this.controller.sitesArray[1].quantity).toEqual(2);
+      expect(this.controller.sitesArray[0].quantity).toBe(8);
+      expect(this.controller.sitesArray[1].quantity).toBe(2);
     });
   });
 
   describe('Validation of license distribution', () => {
     it('should NOT validate if there is a site without licenses', function () {
-      expect(this.controller.distributedLicensesArray[1][0].quantity).toBe(0);
-      expect(this.controller.distributedLicensesArray[1][1].quantity).toBe(0);
+      expect(this.controller.sitesByCenterType[1][0].quantity).toBe(0);
+      expect(this.controller.sitesByCenterType[1][1].quantity).toBe(0);
       this.controller.validateData();
       expect(this.$scope.onDistributionChangeFn).toHaveBeenCalledWith([], false );
     });
 
     it('should NOT validate if there are more licenses assigned to the sites than actual licenses', function () {
-      this.controller.distributedLicensesArray[2][0].quantity = 2;
+      this.controller.sitesByCenterType[2][0].quantity = 2;
       this.controller.validateData();
       expect(this.$scope.onDistributionChangeFn).toHaveBeenCalledWith([], false );
     });
 
     it('should validate if all licenses are asigned and there are no sites without licenses', function () {
-      this.controller.distributedLicensesArray[1][0].quantity = 2;
-      this.controller.distributedLicensesArray[0][0].quantity = this.controller.distributedLicensesArray[0][0].quantity - 2;
+      this.controller.sitesByCenterType[1][0].quantity = 2;
+      this.controller.sitesByCenterType[0][0].quantity = this.controller.sitesByCenterType[0][0].quantity - 2;
       this.controller.validateData();
       expect(this.$scope.onDistributionChangeFn).toHaveBeenCalledWith(jasmine.any(Object), true);
     });
