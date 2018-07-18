@@ -1,6 +1,12 @@
 export class JabberToWebexTeamsInactiveCardController implements ng.IComponentController {
+  /* @ngInject */
+  constructor(
+    private $state: ng.ui.IStateService,
+  ) {
+  }
+
   public openSetUp(): void {
-    // TODO (spark-14176): implement jump to setup wizard
+    this.$state.go('jabber-to-webex-teams.modal.confirm-prerequisites');
   }
 }
 
