@@ -382,6 +382,7 @@ export class Config {
       'device-overview',
       'bulk-overview',
       'deviceConfiguration',
+      'deviceAlerts',
       'devices',
       'deviceBulkFlow',
       'didadd',

@@ -14,10 +14,15 @@
 
   <div ng-if="devices.anyDevicesOrCodesLoaded">
     <cs-page-sub-header ng-hide="devices.emptydatasource()">
-      <device-search search-object="devices.searchObject"
-                     is-searching="devices.issearching"
-                     search-interaction="devices.searchInteraction"
-                     search-result-changed="devices.searchResultChanged(result)"></device-search>
+      <div>
+        <device-search search-object="devices.searchObject"
+                       is-searching="devices.issearching"
+                       search-interaction="devices.searchInteraction"
+                       search-result-changed="devices.searchResultChanged(result)"></device-search>
+        <div ng-if="!devices.emptysearch() && devices.deviceSearchAlertsFeature">
+          <a href class="show-alerts-link" sq-click-promise="devices.showSubscribeToAlertsDialog()"><i class="icon icon-subscribe"/>Alert me with new results</a>
+        </div>
+      </div>
       <div class="spacer count-spacer"></div>
       <device-count search-result="devices.searchResult"></device-count>
       <div class="spacer"></div>

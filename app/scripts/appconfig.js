@@ -3014,6 +3014,22 @@
               title: 'deviceConfiguration.configureDeviceTitle',
             },
           })
+          .state('deviceAlerts', {
+            parent: 'modalDialog',
+            views: {
+              'modal@': {
+                template: '<device-alerts-modal ui-view dismiss="$dismiss()"></device-alerts-modal>',
+                resolve: {
+                  modalInfo: function ($state) {
+                    $state.params.modalClass = 'device-alerts-modal';
+                  },
+                },
+              },
+            },
+            params: {
+              searchObject: {},
+            },
+          })
           .state('device-overview.emergencyServices', {
             parent: 'device-overview',
             views: {
