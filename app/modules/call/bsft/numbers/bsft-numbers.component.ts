@@ -1,3 +1,5 @@
+import { FtswConfigService, Site } from 'modules/call/bsft/shared';
+
 class BsftNumbersCtrl implements ng.IComponentController {
   public ftsw: boolean;
   public uuid: string;
@@ -8,10 +10,13 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public bsftNumbers: string[] = [];
   public isBsftPorted: boolean = false;
   public numbers: string[] = [];
+  public site: Site;
+
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $scope: ng.IScope,
+    private FtswConfigService: FtswConfigService,
     // private Authinfo, //todo
     ) {}
 
@@ -19,7 +24,14 @@ class BsftNumbersCtrl implements ng.IComponentController {
     this.loading = true;
     this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
 
+    const currentSite = this.FtswConfigService.getCurentSite();
+    if (currentSite !== undefined) {
+      this.site = currentSite;
+    }
+
     if (this.ftsw) {
+      this.$scope.$emit('wizardNextText', 'nextAssignNumbers');
+
       this.$scope.$watch(() => {
         return _.get(this.form, '$invalid');
       }, invalid => {
@@ -60,6 +72,9 @@ class BsftNumbersCtrl implements ng.IComponentController {
     this.numbers = numbers;
   }
 
+  public setupNumberBsftNext() {
+    this.FtswConfigService.setCurrentSite(this.site);
+  }
 }
 
 export class BsftNumbersComponent implements ng.IComponentOptions {

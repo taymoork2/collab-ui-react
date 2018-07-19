@@ -13,6 +13,7 @@ export class FtswSiteListComponent implements ng.IComponentOptions {
 class FtswSiteListCtrl implements ng.IComponentController {
   public standardLicense: ILicenseInfo;
   public placesLicense: ILicenseInfo;
+  public ftsw: boolean;
 
   /* @ngInject */
   constructor(
@@ -21,6 +22,12 @@ class FtswSiteListCtrl implements ng.IComponentController {
     private FtswConfigService: FtswConfigService,
     private $scope: ng.IScope,
   ) {}
+
+  public $onInit() {
+    if (this.ftsw) {
+      this.$scope.$emit('wizardNextText', 'nextEnterpriseSettings');
+    }
+  }
 
   public getSites() {
     return this.FtswConfigService.getSites();

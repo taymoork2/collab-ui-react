@@ -47,7 +47,10 @@ class BsftSettingsCtrl implements ng.IComponentController {
 
   private initComponentData() {
     const editSite = this.FtswConfigService.getEditSite();
-    if (editSite) {
+    const currentSite = this.FtswConfigService.getCurentSite();
+    if (currentSite !== undefined) {
+      this.site = currentSite;
+    } else if (editSite) {
       this.editing = true;
       this.site = _.cloneDeep(editSite);
     }
@@ -101,18 +104,18 @@ class BsftSettingsCtrl implements ng.IComponentController {
     _.set(this.site.contact, 'email', email);
   }
 
+  //use step name with 'Next' to hook in to wizard next functionality
   public setupBsftNext(): void {
     if (this.makeDefault) {
       this.site.defaultLocation = true;
       this.FtswConfigService.removeDefault();
     }
 
-    if (!this.editing) {
+    if (!this.site.uuid) {
       this.site.uuid = this.Utils.getUUID();
-      this.FtswConfigService.addSite(this.site);
-    } else {
-      this.FtswConfigService.updateSite(this.site);
     }
+
+    this.FtswConfigService.setCurrentSite(this.site);
   }
 }
 
