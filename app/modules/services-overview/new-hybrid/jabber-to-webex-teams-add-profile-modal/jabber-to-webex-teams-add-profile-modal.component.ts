@@ -58,7 +58,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   }
 
   private finish(): void {
-    this.JabberProfileService.create(this.profileData.profileName, this.profileData.voiceServerDomainName, this.profileData.udsServerAddress, this.profileData.udsBackupServerAddress).then(() => {
+    this.JabberProfileService.create(this.profileData).then(() => {
       const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
       ucManagerProfiles.push(this.profileData);
       this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
