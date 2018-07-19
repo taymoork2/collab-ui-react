@@ -31,7 +31,7 @@ export class OrgSettingsService {
 
   public getSipCloudDomain(orgId: string): ng.IPromise<string | undefined> {
     return this.getSettings(orgId)
-      .then(settings => settings['sipCloudDomain']);
+      .then(settings => settings[OrgSetting.SIP_CLOUD_DOMAIN]);
   }
 
   public getClientSecurityPolicy(orgId: string): ng.IPromise<boolean> {

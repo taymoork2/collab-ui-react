@@ -60,7 +60,7 @@
           ng-messages="vm.form.sipDomainInput.$error"
           role="alert"
         >
-          <div ng-repeat="(msgKey, msgValue) in vm.messages"
+          <div ng-repeat="(msgKey, msgValue) in vm.messages track by $index"
             class="message"
             ng-message="{{msgKey}}"
           >{{msgValue}}</div>

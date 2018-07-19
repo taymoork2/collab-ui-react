@@ -27,33 +27,42 @@ export class SipAddressService {
   }
 
   public validateSipAddress(model: SipAddressModel): ng.IPromise<IValidateResponse> {
-    return this.postSipAddress(model, true)
-      .then(response => ({
-        isDomainAvailable: response.isDomainAvailable,
-        isDomainInvalid: false,
-        model: model.createNewModel(),
-      }))
-      .catch<IValidateResponse>(response => {
-        if (response.status === 400) {
-          return {
-            isDomainAvailable: false,
-            isDomainInvalid: true,
-            model: model.createNewModel(),
-          };
-        }
-        return this.$q.reject(response);
-      });
+    return this.postSipAddress({
+      model,
+      isVerifyDomainOnly: true,
+    }).then(response => ({
+      isDomainAvailable: response.isDomainAvailable,
+      isDomainInvalid: false,
+      model: model.createNewModel(),
+    })).catch<IValidateResponse>(response => {
+      if (response.status === 400) {
+        return {
+          isDomainAvailable: false,
+          isDomainInvalid: true,
+          model: model.createNewModel(),
+        };
+      }
+      return this.$q.reject(response);
+    });
   }
 
   public saveSipAddress(model: SipAddressModel): ng.IPromise<ISaveResponse> {
-    return this.postSipAddress(model, false)
-      .then(response => ({
-        isDomainReserved: response.isDomainReserved,
-        model: model.createNewModel(),
-      }));
+    return this.postSipAddress({
+      model,
+    }).then(response => ({
+      isDomainReserved: response.isDomainReserved,
+      model: model.createNewModel(),
+    }));
   }
 
-  private postSipAddress(model: SipAddressModel, isVerifyDomainOnly: boolean): ng.IPromise<IDomainResponse> {
+  private postSipAddress(options: {
+    model: SipAddressModel,
+    isVerifyDomainOnly?: boolean,
+  }): ng.IPromise<IDomainResponse> {
+    const {
+      model,
+      isVerifyDomainOnly = false,
+    } = options;
     const name = model.sipCloudDomain;
     const payload = {
       name,
