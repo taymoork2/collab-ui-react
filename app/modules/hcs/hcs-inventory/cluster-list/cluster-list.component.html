@@ -8,6 +8,7 @@
 </cs-page-header>
 <cs-page-sub-header ng-hide="$ctrl.groupId.toLowerCase() === $ctrl.typeUnassigned.toLowerCase()" ng-if="!$ctrl.loading" ng-class="{'hcs-upgrade-cluster-list-page-sub-header-warning': $ctrl.disableSwProfileSelect}">
   <cs-page-sub-header-right class="row">
+    <span>{{:: 'hcs.clustersList.softwareProfile' | translate}}: </span>
     <div class="columns medium-4 hcs-right-header-filter">
         <cs-select
         name="softwareVersionSelect"

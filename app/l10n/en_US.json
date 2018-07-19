@@ -11443,8 +11443,9 @@
         "customerExistsErrorMessage": "This customer already exists",
         "swProfileWarningMsg": {
           "addSWProfile": "Please add a Software Profile first",
-          "upgradeInProgress": "Can not change Software Profile when upgrade is in progress."
-        }
+          "upgradeInProgress": "Cannot change Software profile when upgrade is in progress."
+        },
+        "upgradeInProgress": "Cannot change customer when upgrade is in progress."
       },
       "nodeStatus": {
         "active":"Active",
@@ -11516,7 +11517,8 @@
       "deleteClusterModal": {
         "title": "Delete {{clusterName}}?",
         "description": "Deleting the cluster will also remove the agents from all the nodes. Are you sure?"
-      }
+      },
+      "softwareProfile": "Software profile"
     },
     "customerName": "Customer Name",
     "description": "Extend Cloud services to Hosted Cloud Solution.",
