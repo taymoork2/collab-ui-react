@@ -3,7 +3,7 @@
   dismiss="$ctrl.dismissModal()"
   cancel="$ctrl.dismissModal()"
   custom-finish="$ctrl.checkAndFinish()"
-  custom-finish-l10n-label="{{'common.save'}}"
+  custom-finish-l10n-label="common.save"
   custom-finish-disabled="!$ctrl.isValidProfile"
 >
   <div class="jabber-to-webex-teams-add-profile-modal">
@@ -18,7 +18,7 @@
           type="text"
           name="profileName"
           required
-          ng-model="$ctrl.data.profileName"
+          ng-model="$ctrl.profileData.profileName"
           cs-input-messages="$ctrl.errorMessages.profileName">
       </div>
       <div class="row form-group">
@@ -31,7 +31,7 @@
           ng-model="$ctrl.backendType"
           cs-input-label="{{:: 'jabberToWebexTeams.addProfileModal.voiceServiceDomain' | translate}}">
       </div>
-      <div ng-show="$ctrl.getBackendType==='voiceServiceDomain'">   
+      <div ng-if="$ctrl.backendType === $ctrl.BackendTypes.VOICE">   
         <div class="cs-input-subgroup" ng-class="{'error': addProfileForm.voiceServerDomainName.$invalid}">
           <p translate="jabberToWebexTeams.addProfileModal.voiceServiceDomainName"></p>
           <input
@@ -39,7 +39,7 @@
             class="medium-6"
             type="text"
             name="voiceServerDomainName"
-            ng-model="$ctrl.data.voiceServerDomainName"
+            ng-model="$ctrl.profileData.voiceServerDomainName"
             cs-input-messages="$ctrl.errorMessages.voiceServerDomainName">
         </div>
       </div>
@@ -53,7 +53,7 @@
           ng-model="$ctrl.backendType"
           cs-input-label="{{:: 'jabberToWebexTeams.addProfileModal.udsServer' | translate}}">
       </div>
-      <div ng-show="$ctrl.getBackendType==='udsServer'">
+      <div ng-if="$ctrl.backendType === $ctrl.BackendTypes.UDS">
         <div class="cs-input-subgroup" ng-class="{'error': addProfileForm.udsServerAddress.$invalid}">
           <p translate="jabberToWebexTeams.addProfileModal.udsServerAddress"></p>
           <input
@@ -61,7 +61,7 @@
             class="medium-6"
             type="text"
             name="udsServerAddress"
-            ng-model="$ctrl.data.udsServerAddress"
+            ng-model="$ctrl.profileData.udsServerAddress"
             cs-input-messages="$ctrl.errorMessages.udsServerAddress">
         </div>
         <div class="cs-input-subgroup" ng-class="{'error': addProfileForm.udsBackupServerAddress.$invalid}">
@@ -71,14 +71,14 @@
             class="medium-6"
             type="text"
             name="udsBackupServerAddress"
-            ng-model="$ctrl.data.udsBackupServerAddress"
+            ng-model="$ctrl.profileData.udsBackupServerAddress"
             cs-input-messages="$ctrl.errorMessages.udsBackupServerAddress">
         </div>  
       </div>
       <input
         cs-input
         type="checkbox"
-        ng-model="$ctrl.data.allowUserEdit"
+        ng-model="$ctrl.profileData.allowUserEdit"
         id="allowUserEdit"
         name="allowUserEdit"
         cs-input-label="{{:: 'jabberToWebexTeams.addProfileModal.allowUserEdit' | translate}}">

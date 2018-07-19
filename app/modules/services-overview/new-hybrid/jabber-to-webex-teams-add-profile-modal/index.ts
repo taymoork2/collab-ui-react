@@ -1,7 +1,7 @@
 import './jabber-to-webex-teams-add-profile-modal.scss';
 
 import { JabberToWebexTeamsAddProfileModalComponent } from './jabber-to-webex-teams-add-profile-modal.component';
-import { JabberProfileService } from 'modules/services-overview/shared/jabber-to-webex-teams.service';
+import { JabberProfileService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 import * as ngTranslateModuleName from 'angular-translate';
 import collabUiModuleName from '@collabui/collab-ui-ng';
 

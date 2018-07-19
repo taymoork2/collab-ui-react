@@ -1,7 +1,13 @@
-import { JabberProfileService } from 'modules/services-overview/shared/jabber-to-webex-teams.service';
+import { JabberProfileService } from 'modules/services-overview/new-hybrid/shared/jabber-to-webex-teams.service';
 import { Notification } from 'modules/core/notifications';
 
-interface IData {
+enum BackendTypes {
+  VOICE = 'voiceServiceDomain',
+  UDS  = 'udsServer',
+  NONE = 'none',
+}
+
+interface IUCManagerProfileData {
   profileName: string;
   voiceServerDomainName: string;
   udsServerAddress: string;
@@ -19,15 +25,16 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
       required: this.$translate.instant('common.invalidRequired'),
     },
   };
-  private data: IData = {
+  private profileData: IUCManagerProfileData = {
     profileName: '',
     voiceServerDomainName: '',
     udsServerAddress: '',
     udsBackupServerAddress: '',
     allowUserEdit: false,
   };
-  public backendType = '';
+  public backendType: BackendTypes = BackendTypes.NONE;
   public finishDisable: boolean = true;
+  public BackendTypes = BackendTypes;
 
   /* @ngInject */
   constructor(
@@ -51,9 +58,9 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   }
 
   private finish(): void {
-    this.JabberProfileService.create(this.data.profileName, this.data.voiceServerDomainName, this.data.udsServerAddress, this.data.udsBackupServerAddress).then(() => {
+    this.JabberProfileService.create(this.profileData.profileName, this.profileData.voiceServerDomainName, this.profileData.udsServerAddress, this.profileData.udsBackupServerAddress).then(() => {
       const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
-      ucManagerProfiles.push(this.data);
+      ucManagerProfiles.push(this.profileData);
       this.$window.sessionStorage.setItem('spark14176.ucManagerProfiles', JSON.stringify(ucManagerProfiles));
       this.dismissModal();
       this.Notification.success('common.OK');
@@ -62,18 +69,14 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     });
   }
 
-  public get getBackendType(): string {
-    return this.backendType;
-  }
-
   public get isValidProfile(): boolean {
-    if (_.isEmpty(_.trim(this.data.profileName))) {
+    if (_.isEmpty(_.trim(this.profileData.profileName))) {
       return false;
     }
-    if (this.backendType === 'voiceServiceDomain') {
-      return !_.isEmpty(_.trim(this.data.voiceServerDomainName));
-    } else if (this.backendType === 'udsServer') {
-      return !_.isEmpty(_.trim(this.data.udsServerAddress));
+    if (this.backendType === BackendTypes.VOICE) {
+      return !_.isEmpty(_.trim(this.profileData.voiceServerDomainName));
+    } else if (this.backendType === BackendTypes.UDS) {
+      return !_.isEmpty(_.trim(this.profileData.udsServerAddress));
     }
     return false;
   }
