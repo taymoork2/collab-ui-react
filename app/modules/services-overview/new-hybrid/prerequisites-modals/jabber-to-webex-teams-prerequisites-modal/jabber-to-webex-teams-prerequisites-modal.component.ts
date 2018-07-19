@@ -1,3 +1,5 @@
+import { Notification } from 'modules/core/notifications';
+
 interface ICheckboxSelection {
   isSelected: boolean;
 }
@@ -9,26 +11,21 @@ interface ICheckboxSelections {
 export class JabberToWebexTeamsPrerequisitesModalController implements ng.IComponentController {
   public dismiss: Function;
   private preReqs: ICheckboxSelections;
-  private numPreReqs: number | undefined;
+  public readonly preReqIds = {
+    VOICE_SERVICE: 'voice-service-domain-prereq',
+    DNS_SRV_RECORDS: 'dns-srv-records-prereq',
+  };
 
   /* @ngInject */
   constructor(
-    private $element: ng.IRootElementService,
+    private $state: ng.ui.IStateService,
     private Analytics,
+    private Notification: Notification,
   ) {}
 
   public $onInit(): void {
     // TODO (mipark2, spark-14176): may need to restore selections instead of re-initializing
     this.preReqs = {};
-  }
-
-  public $postLink(): void {
-    this.updateNumPreReqs();
-  }
-
-  private updateNumPreReqs(): void {
-    const CR_CHECKBOX_ITEM = 'cr-checkbox-item';
-    this.numPreReqs = this.$element.find(CR_CHECKBOX_ITEM).length;
   }
 
   public dismissModal(): void {
@@ -37,7 +34,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   }
 
   public get hasPrereqs(): boolean {
-    if (_.isUndefined(this.numPreReqs) || _.size(this.preReqs) !== this.numPreReqs) {
+    if (_.size(this.preReqs) !== _.size(this.preReqIds)) {
       return false;
     }
     return _.every(this.preReqs, { isSelected: true });
@@ -61,11 +58,13 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   }
 
   private next(): void {
-    // TODO (spark-14176): transition to add-a-profile step
+    this.$state.go('jabber-to-webex-teams.modal.add-profile');
   }
 
   private finish(): void {
-    // TODO (spark-14176): dismiss modal + notify success/error
+    // TODO (spark-14176): revisit - confirm copy to use for success notification
+    this.Notification.success('common.notAvailable');
+    this.dismiss();
   }
 }
 
