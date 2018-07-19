@@ -57,11 +57,11 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
     _.set(this.preReqs, itemId, item);
   }
 
-  private next(): void {
+  public next(): void {
     this.$state.go('jabber-to-webex-teams.modal.add-profile');
   }
 
-  private finish(): void {
+  public finish(): void {
     // TODO (spark-14176): revisit - confirm copy to use for success notification
     this.Notification.success('common.notAvailable');
     this.dismiss();
