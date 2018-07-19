@@ -83,7 +83,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
   }
 
   public checkAndFinish(): void {
-    if (!this.isValidProfile) {
+    if (!this.addProfileForm.$valid) {
       return;
     }
     this.finish();
@@ -100,18 +100,6 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     }).catch(( reason: any ) => {
       this.Notification.errorResponse(reason);
     });
-  }
-
-  public get isValidProfile(): boolean {
-    if (_.isEmpty(_.trim(this.profileData.profileName))) {
-      return false;
-    }
-    if (this.backendType === BackendTypes.VOICE) {
-      return !_.isEmpty(_.trim(this.profileData.voiceServerDomainName));
-    } else if (this.backendType === BackendTypes.UDS) {
-      return !_.isEmpty(_.trim(this.profileData.udsServerAddress));
-    }
-    return false;
   }
 }
 
