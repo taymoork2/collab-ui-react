@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@atlas/bmmp@=0.0.4":
-  version "0.0.4"
-  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@atlas/bmmp/-/@atlas/bmmp-0.0.4.tgz#96789ba21ba1904755f4efc20a1a46a57c9b18ad"
+"@atlas/bmmp@=0.0.6":
+  version "0.0.6"
+  resolved "http://engci-maven.cisco.com/artifactory/api/npm/collab-npm/@atlas/bmmp/-/@atlas/bmmp-0.0.6.tgz#42fe1828c52434ff96f3773bcdbd197f74185e42"
 
 "@atlas/eslint-plugin-atlas-ui@^5.0.0":
   version "5.0.0"
