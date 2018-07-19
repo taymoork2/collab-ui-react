@@ -52,6 +52,7 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.downloadEscalationIntentBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.warningMessage);
   });
 
   it('Create: Move to Client Access Token Modal', function () {
@@ -134,6 +135,7 @@ describe('CVA feature setup', function () {
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.downloadEscalationIntentBtn);
+    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.warningMessage);
   });
 
   it('Edit: Move to Client Access Token Modal', function () {

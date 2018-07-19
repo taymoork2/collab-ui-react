@@ -342,6 +342,7 @@
       prod: 'https://retention-a.wbx2.com/retention/api/v1/',
     },
     EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/escalation.json',
+    DialogFlowIntentsUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/intents.zip',
     OAuth2Url: {
       dev: 'https://idbroker.webex.com/idb/oauth2/v1/',
       cfe: 'https://idbrokerbts.webex.com/idb/oauth2/v1/',

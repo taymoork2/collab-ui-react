@@ -117,6 +117,7 @@ module.exports = {
   calsvcHybridExchangeDeployment: 'calsvc-hybrid-exchange-deployment',
   careApplebuschatBasicEnable: 'care-applebuschat-basic-enable',
   careApplebuschatOnSiteFileStorageEnable: 'care-applebuschat-onsite-file-storage-enable',
+  careCVASelfServiceEnable: 'care-cva-selfservice-support-enable',
   ccaReports: 'ccaReports',
   ceAllowNolockdown: 'ce-allow-nolockdown',
   clientRingbackV2: 'client-ringback-v2',

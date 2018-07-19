@@ -14,6 +14,7 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
   public logoFile = '';
   public logoUploaded = false;
   public escalationIntentUrl: string;
+  public dialogFlowIntentsUrl: string;
   public evaAlreadyExisted = false;
   public summaryErrorMessage: string;
 
@@ -62,6 +63,7 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
       controller.logoUploaded = true;
     });
     this.escalationIntentUrl = this.UrlConfig.getEscalationIntentUrl();
+    this.dialogFlowIntentsUrl = this.UrlConfig.getDialogFlowIntentsUrl();
   }
 
   /**
@@ -86,6 +88,14 @@ export class VaCommonSetupCtrl extends CommonSetupCtrl {
       textString += 'Edit';
     }
     return this.getText(textString, { name });
+  }
+
+  /**
+   * obtain feature name
+   * @returns {*}
+   */
+  public getFeatureName(): string {
+    return this.service.getFeatureName();
   }
 
   /**

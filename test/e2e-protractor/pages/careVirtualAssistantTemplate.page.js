@@ -12,6 +12,7 @@ var VirtualAssistantTemplateCreation = function () {
   this.dialogflowIsPreconfigured = element(by.cssContainingText('label', 'Yes, I have a preconfigured Dialogflow agent and am ready to proceed'));
 
   // Config dialog integration page info
+  this.warningMessage = element(by.css('.warning-message'));
   this.downloadEscalationIntentBtn = element(by.css('.btn.download-button'));
 
   // Access Token page info

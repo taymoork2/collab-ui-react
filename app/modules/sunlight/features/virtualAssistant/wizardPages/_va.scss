@@ -73,3 +73,16 @@
     vertical-align: -30%;
    }
 }
+
+.warning-message {
+  @include vr-spacing(pt, 1.2);
+  color: $color-attention-darker;
+  line-height: initial;
+  display: flex;
+  flex-direction: row;
+}
+
+.warning-sign {
+  color: $color-attention-base;
+  @include vr-spacing(mr, 0.5);
+}

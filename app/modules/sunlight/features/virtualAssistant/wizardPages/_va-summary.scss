@@ -47,8 +47,4 @@
     width: rem-calc(100px);
   }
 
-  .warning-sign {
-    color: $color-attention-base;
-    @include vr-spacing(mr, 0.5);
-  }
 }

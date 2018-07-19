@@ -177,6 +177,13 @@ class CustomerVirtualAssistantSetupCtrl extends VaCommonSetupCtrl {
   }
 
   /**
+  *  Determine if handled intent should be displayed if feature flag is on
+  */
+  protected isCVASelfServiceEnabled(): boolean {
+    return this.$state.isCVASelfServiceEnabled;
+  }
+
+  /**
    * should next button be rendered.
    * @returns {boolean}
    */

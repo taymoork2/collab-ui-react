@@ -90,6 +90,12 @@
                 $state.isAppleBusinessChatOnSiteFileStorageEnable = isEnabled;
               });
           },
+          isCVASelfServiceEnabled: /* @ngInject */ function (FeatureToggleService, $state) {
+            return FeatureToggleService.supports(FeatureToggleService.features.careCVASelfServiceEnable)
+              .then(function (isEnabled) {
+                $state.isCVASelfServiceEnabled = isEnabled;
+              });
+          },
         },
       })
       .state('care.setupAssistant', {

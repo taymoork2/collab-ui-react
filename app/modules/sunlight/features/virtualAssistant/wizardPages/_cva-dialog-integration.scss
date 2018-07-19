@@ -54,7 +54,11 @@
     height: rem-calc(48px);
     letter-spacing: 0;
     line-height: rem-calc(20px);
-    width: rem-calc(240px);
+    width: rem-calc(165px);
+
+    &.orig-button {
+      width: rem-calc(240px);
+    }
 
     &:hover {
       background: $color-mint-dark;

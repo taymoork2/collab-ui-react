@@ -8817,8 +8817,20 @@
         "boxBulletTwo": "Contain a reference to @sys.any:Topic",
         "boxStepThreeDescCont": "The @ symbol next to the user expression indicates the template mode. Click the symbol to toggle the mode. Do not modify the GetExpert action.",
         "downloadButtonText": "Download Escalation Intent",
+        "finalNote": "about integrating {{ featureName }}s.",
+        "descNew": "Add predefined Intents to your Dialogflow agent",
+        "boxStepOneNew": "Download preconfigured intents.",
+        "boxStepOneDescNew": "Download a ZIP file containing JSON files that define:",
+        "stepOneBulletOne": "<b>Handled intent:</b> Enables your {{featureName}} to indicate that it handled a task.",
+        "stepOneBulletTwo": "<b>Escalation intent:</b> Enables your {{featureName}} to escalate a conversation to an agent.",
+        "boxStepTwoNew": "Import intent files to Dialogflow Agent.",
+        "boxStepTwoDescNew": "Go to the Settings page of your Dialogflow agent and import the intents from the ZIP file you downloaded.",
+        "boxStepThreeNew": "Customize Intents in Dialogflow.",
+        "boxStepThreeDescNew": "Edit your Dialogflow agent’s intents to modify the training phrases for both your intents. Training phrases trigger intents as defined.",
+        "intentWarning": "Do not change the names \"GetExpert\" action in Escalation intent and the \"Handled\" action in the Handled intent.",
+        "downloadButtonTextNew": "Download Intents",
         "learnMoreLink": "Learn more",
-        "finalNote": "about integrating {{ featureName }}s."
+        "finalNoteNew": "about Dialogflow intents."
       },
       "accessToken": {
         "title": "Complete Dialogue Integration",
