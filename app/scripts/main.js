@@ -74,7 +74,6 @@
     require('modules/core/scripts/services/user.service'),
     require('modules/core/scripts/services/userlist.service'),
     require('modules/core/scripts/services/brand.service'),
-    require('modules/core/scripts/services/sparkDomainManagement.service'),
     require('modules/core/users/userCsv/userCsv.service'),
     require('modules/core/scripts/services/retention.service'),
     require('modules/core/myCompany/mySubscriptions').default,

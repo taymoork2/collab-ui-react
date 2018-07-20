@@ -9,6 +9,7 @@ import orgSettingsModuleName from './org-settings';
 import { RetryingPromiseService } from './retrying-promise.service';
 import runningTaskStatusModuleName from './running-task-status';
 import sectionTitleModuleName from './section-title';
+import sipAddressModuleName from './sip-address';
 import { StringUtilService } from './string-util.service';
 import taskContainerModuleName from './task-container';
 import usageLineModuleName from './usage-line';
@@ -29,6 +30,7 @@ export default angular
     orgSettingsModuleName,
     runningTaskStatusModuleName,
     sectionTitleModuleName,
+    sipAddressModuleName,
     taskContainerModuleName,
     usageLineModuleName,
     waitingIntervalModuleName,
