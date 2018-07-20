@@ -514,7 +514,7 @@
               if ('CommonSettings' == siteSettingCardObjId) {
                 siteSettingCardObj.label = $translate.instant('webexSiteSettingsLabels.commonSettingsCardTitle');
                 siteSettingCardObj.comment = $translate.instant('webexSiteSettingsLabels.commonSettingsCardNote');
-              } else if ('RecordingManagement' == siteSettingCardObjId) {
+              } else if ('RecordingManagement' === siteSettingCardObjId) {
                 siteSettingCardObj.label = $translate.instant('webexSiteSettingsLabels.recordingManagementCardTitle');
               } else {
                 siteSettingCardObj.lang = 'en'; //Centre names are in English
