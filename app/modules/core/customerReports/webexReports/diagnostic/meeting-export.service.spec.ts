@@ -42,4 +42,16 @@ describe('Service: MeetingExportService', () => {
     const res = this.MeetingExportService.normalizeKey(mockData);
     expect(res).toBe('hostName');
   });
+
+  it('should contain sharing sessions in generated MeetingReport', function () {
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
+      .then(res => expect(res).toContain('ApplicationSharing'))
+      .catch(fail);
+  });
+
+  it('should contain role change sessions in generated MeetingReport', function () {
+    this.MeetingExportService.generateMeetingReport(this.WebexReportsUtilService)
+      .then(res => expect(res).toContain('Role Type'))
+      .catch(fail);
+  });
 });

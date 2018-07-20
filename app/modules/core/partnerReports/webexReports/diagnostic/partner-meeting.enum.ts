@@ -38,6 +38,8 @@ export enum SearchStorage {
   SEARCH_STRING = 'searchStr',
   CLIENT_VERSION = 'ClientVersion',
   WEBEX_MEETING_ENDTIME = 'webexOneMeeting.endTime',
+  SHARING_SESSION_DETAIL = 'sharingSessionDetail',
+  ROLE_CHANGE_SESSION_DETAIL = 'roleChangeSessionDetail',
 }
 
 export enum Platforms {

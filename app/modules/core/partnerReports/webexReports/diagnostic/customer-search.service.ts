@@ -70,12 +70,12 @@ export class CustomerSearchService {
   }
 
   public getRoleChange(conferenceID: string): ng.IPromise<IRoleData[]> {
-    const url = `${this.url}v3/meetings/${conferenceID}/rolechange`;
+    const url = this.getRequestUrl(`v3/meetings/${conferenceID}/rolechange`);
     return this.$http.get<IRoleData[]>(url).then(this.WebexReportsUtilService.extractData);
   }
 
   public getSharingSessionDetail(conferenceID: string, nodeID: string = ''): ng.IPromise<ISessionDetail> {
-    const url = `${this.url}v2/meetings/${conferenceID}/sharing-session-detail`;
+    const url = this.getRequestUrl(`v2/meetings/${conferenceID}/sharing-session-detail`);
     return this.$http.post<ISessionDetail>(url, { nodeIds: nodeID }).then(this.WebexReportsUtilService.extractData);
   }
 

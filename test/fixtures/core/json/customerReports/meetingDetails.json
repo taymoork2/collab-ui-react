@@ -362,5 +362,25 @@
     "numberOfParticipants": "3",
     "Duration": "29:24"
   },
+  "sharingSessionDetail": [
+    {
+      "sharingEvent": "ApplicationSharing",
+      "endTime": "1531966596000",
+      "startTime": "1531966283000",
+      "clientType": "MAC",
+      "nodeId": "16781313",
+      "userName": "Mukul Khirwadkar"      
+    }
+  ],
+  "roleChangeSessionDetail": [
+    {
+      "timestamp": "1531965545000",
+      "roleType": "Host",
+      "fromNodeId": "N/A",
+      "fromUserName": "N/A",
+      "toNodeId": "16781313",
+      "toUserName": "Mukul Khirwadkar"
+    }
+  ],
   "searchStr": "bobryan@cisco.com"
 }
