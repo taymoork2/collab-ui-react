@@ -5,8 +5,8 @@
   <div class="row full service-setup">
     <ported-numbers-add
       numbers="$ctrl.numbers"
-      on-change="$ctrl.onChange(numbers)"
-      on-add="$ctrl.onAdd(numbers,isBsftPorted)">
+      on-add="$ctrl.onAdd(numbers,isBsftPorted)"
+      total-numbers="$ctrl.totalNumbers">
     </ported-numbers-add>
     <prev-ported-numbers ng-if="$ctrl.prevNumbers.length"
       numbers="$ctrl.prevNumbers"
