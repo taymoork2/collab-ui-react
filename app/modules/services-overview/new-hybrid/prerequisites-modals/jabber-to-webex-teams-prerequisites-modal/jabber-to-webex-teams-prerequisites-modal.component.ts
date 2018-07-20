@@ -34,10 +34,7 @@ export class JabberToWebexTeamsPrerequisitesModalController implements ng.ICompo
   }
 
   public get hasPrereqs(): boolean {
-    if (_.size(this.preReqs) !== _.size(this.preReqIds)) {
-      return false;
-    }
-    return _.every(this.preReqs, { isSelected: true });
+    return (_.size(this.preReqs) === _.size(this.preReqIds)) && _.every(this.preReqs, { isSelected: true });
   }
 
   public nextOrFinish(): void {

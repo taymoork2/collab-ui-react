@@ -86,15 +86,12 @@ describe('Component: jabberToWebexTeamsPrerequisitesModal:', () => {
         expect(this.controller.hasPrereqs).toBe(false);
       });
 
-      it('should return true if "preReqs" property has enough entries and all entries are selected', function () {
+      it('should return true if "preReqs" property has enough entries and all entries are selected, false otherwise', function () {
         expect(_.size(this.controller.preReqIds)).toBe(2);
         _.set(this.controller.preReqs, 'fake-entry-1', { isSelected: true });
         _.set(this.controller.preReqs, 'fake-entry-2', { isSelected: true });
         expect(this.controller.hasPrereqs).toBe(true);
-      });
 
-      it('should return false if "preReqs" property has enough entries but not all entries are selected', function () {
-        _.set(this.controller.preReqs, 'fake-entry-1', { isSelected: true });
         _.set(this.controller.preReqs, 'fake-entry-2', { isSelected: false });
         expect(this.controller.hasPrereqs).toBe(false);
       });
