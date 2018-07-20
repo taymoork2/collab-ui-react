@@ -1,14 +1,15 @@
 <div ng-form="siteZipcodeForm">
-  <label class="sub-section__label">Zipcode</label>
+  <label class="sub-section__label" translate="broadCloud.site.zipcode"></label>
   <div class="row">
     <input
-    cs-input
-    type="text"
-    name="siteZipcode"
-    ng-model="$ctrl.zipcode"
-    ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
-    ng-change="$ctrl.onZipcodeChanged()"
-    cs-input-messages="$ctrl.messages"
-    cs-input-group-size="medium-4">
+      cs-input
+      type="text"
+      name="siteZipcode"
+      ng-model="$ctrl.zipcode"
+      ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+      ng-change="$ctrl.onZipcodeChanged()"
+      cs-input-messages="$ctrl.messages"
+      cs-input-group-size="medium-4"
+      placeholder="{{'broadCloud.site.zipcode' | translate}}">
   </div>
 </div>

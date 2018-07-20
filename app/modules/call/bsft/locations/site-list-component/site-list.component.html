@@ -10,7 +10,7 @@
     </span>
   </div>
   <cs-card-layout>
-    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="site in $ctrl.siteList">
+    <cs-card class="cs-card--medium header-background hoverable" ng-repeat="site in $ctrl.siteList track by $index">
       <article  ng-click="$ctrl.selectCard(site)" hover-delay>
         <header>
           <div class="row">
@@ -27,14 +27,12 @@
                   </span>
                 </div>
               </div>
-              <div class="license-section">
-                <span>
-                  <span class="license-count">{{site.licenses.standard}}</span>
-                  <span class="license-name" translate="common.licenses.standard"></span>
+              <div class="license-section row">
+                <span class="columns medium-6">
+                  <span class="license-count">{{site.licenses.standard}}<span class="license-name" translate="common.licenses.standard"></span></span>
                 </span>
-                <span>
-                  <span class="license-count">{{site.licenses.places}}</span>
-                  <span class="license-name" translate="common.licenses.places"></span>
+                <span class="columns medium-6">
+                  <span class="license-count">{{site.licenses.places}}<span class="license-name" translate="common.licenses.places"></span></span>
                 </span>
               </div>
             </div>

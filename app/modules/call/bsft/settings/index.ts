@@ -1,3 +1,5 @@
+import './bsft-settings.scss';
+
 import { BsftSettingsComponent } from './bsft-settings.component';
 import bsftSettingsSharedModule from './shared';
 import bsftSiteNameModule from './settings-site-name';
@@ -11,6 +13,7 @@ import bsftContactLastNameModule from './settings-contact-last-name';
 import bsftContactPhoneNumberModule from './settings-contact-phone-number';
 import bsftContactEmailModule from './settings-contact-email';
 import bsftSharedModule from 'modules/call/bsft/shared';
+import * as config from 'modules/core/scripts/services/utils.js';
 
 export default angular
   .module('call.bsft.settings', [
@@ -28,6 +31,7 @@ export default angular
     bsftContactLastNameModule,
     bsftContactPhoneNumberModule,
     bsftContactEmailModule,
+    config,
   ])
   .component('bsftSettings', new BsftSettingsComponent())
   .name;

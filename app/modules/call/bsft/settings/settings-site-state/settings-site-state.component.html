@@ -1,5 +1,5 @@
 <div ng-form="siteStateForm">
-  <label class="sub-section__label">State</label>
+  <label class="sub-section__label" translate="broadCloud.site.state"></label>
   <div class="row">
     <div class="columns medium-4 collapse-both" style="padding-bottom: 1rem;">
       <cs-select
@@ -7,11 +7,10 @@
         options="$ctrl.stateList"
         labelfield="name"
         valuefield="abbreviation"
-        placeholder="::'common.select' | translate"
-        input-placeholder=""
         required="true"
         filter="true"
-        on-change-fn="$ctrl.onStateChanged()">
+        on-change-fn="$ctrl.onStateChanged()"
+        placeholder="$ctrl.statePlaceholder">
     </div>
   </div>
 </div>

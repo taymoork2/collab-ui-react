@@ -3,6 +3,7 @@ import legalHoldModalModuleName, {
 import { LegalHoldMatterNewController } from './legal-hold-matter-new.component';
 import { ImportMode } from './legal-hold.enums';
 import { Matter } from './matter.model';
+import { IUserUpdateResult } from './legal-hold.interfaces';
 import { LegalHoldCustodianImportComponent } from './legal-hold-custodian-import.component';
 
 type Test = atlas.test.IComponentTest<LegalHoldMatterNewController, {
@@ -32,6 +33,11 @@ describe('Component: legalHoldMatterNew', () => {
   const NAME_INPUT = 'input[type="text"]';
   const DESCRIPTION_INPUT = 'input[type="textarea"]';
 
+  const updateUsersResponse: IUserUpdateResult = {
+    userListSize: 6,
+    failList: [],
+  };
+
   beforeEach(function (this: Test) {
     this.components = {
       legalHoldCustodianImport: this.spyOnComponent('legalHoldCustodianImport'),
@@ -52,7 +58,7 @@ describe('Component: legalHoldMatterNew', () => {
 
     spyOn(this.Authinfo, 'getOrgId').and.returnValue('123');
     spyOn(this.Notification, 'errorResponse');
-    spyOn(this.LegalHoldService, 'addUsersToMatter').and.returnValue(this.$q.resolve(testMatterWithUsers));
+    spyOn(this.LegalHoldService, 'addUsersToMatter').and.returnValue(this.$q.resolve(updateUsersResponse));
     spyOn(this.LegalHoldService, 'createMatter').and.returnValue(this.$q.resolve(testMatter));
 
   });
@@ -141,8 +147,7 @@ describe('Component: legalHoldMatterNew', () => {
       this.$scope.$digest();
       expect(isVisible(this, DONE_BUTTON)).toBe(true);
       expect(this.LegalHoldService.addUsersToMatter).toHaveBeenCalledWith('123', this.controller.matter.caseId, matterUsers);
-      expect(this.controller.importComponentApi.displayResults).toHaveBeenCalled();
-      expect(_.get(this.controller.matter.userList, 'length', 0)).toBe(matterUsers.length);
+      expect(this.controller.importComponentApi.displayResults).toHaveBeenCalledWith([], ImportMode.ADD);
       expect(this.controller.isDone).toBe(true);
     });
 

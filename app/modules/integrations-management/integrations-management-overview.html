@@ -18,6 +18,7 @@
   <cs-sp-buttons ng-if="$ctrl.showSaveButtons">
     <button cs-btn
       class="btn-primary"
+      ng-disabled="!$ctrl.usersValid"
       ng-click="$ctrl.saveForm()"
       loading="$ctrl.formSaving"
     >
@@ -86,14 +87,12 @@
           ng-value="$ctrl.PolicyRestriction.SPECIFIC"
           cs-input-label="{{::'integrations.overview.specificUsers' | translate}}">
         <div class="row" ng-if="$ctrl.showCustomPolicySpecificList">
-          <input
-            cs-input
-            cs-input-group-size="small-offset-1 small-11"
-            type="text"
-            id="custom-policy-specific-list"
-            name="customPolicySpecificList"
-            placeholder="Temporary Placeholder Control">
-        </div>
+          <integrations-management-tokens
+            person-ids="$ctrl.personIds"
+            on-change="$ctrl.updateUsersForCustomPolicy(userIds)"
+            set-valid="$ctrl.setUsersValid(isValid)">
+          </integrations-management-tokens>
+      </div>
       </div>
     </cs-sp-section>
   </cs-sp-container>

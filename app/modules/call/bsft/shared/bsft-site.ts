@@ -2,6 +2,7 @@ const DEFAULT_TIME_ZONE: string = 'America/Los_Angeles';
 
 export interface ISite {
   name: string;
+  uuid: string;
   timeZone: string;
   numbers: string[];
   address: ISiteAddress;
@@ -33,6 +34,7 @@ export interface ILicenses {
 
 export class Site implements ISite {
   public name: string;
+  public uuid: string;
   public timeZone: string;
   public numbers: string[];
   public address: ISiteAddress;
@@ -42,6 +44,7 @@ export class Site implements ISite {
 
   constructor(site: ISite = {
     name: '',
+    uuid: '',
     timeZone: DEFAULT_TIME_ZONE,
     numbers: [],
     defaultLocation: false,
@@ -65,6 +68,7 @@ export class Site implements ISite {
     },
   }) {
     this.name = site.name;
+    this.uuid = site.uuid;
     this.timeZone = site.timeZone;
     this.numbers = site.numbers;
     this.address = site.address;

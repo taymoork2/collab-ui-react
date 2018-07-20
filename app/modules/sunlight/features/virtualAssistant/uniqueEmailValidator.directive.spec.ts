@@ -115,6 +115,7 @@ describe('Directive: uniqueEmailValidator', function () {
       emailInput.$setViewValue(testUniqueEmail);
       $scope.$digest();
       expect(sparkServiceMock.getPersonByEmail).toHaveBeenCalledWith(`${testUniqueEmail}@sparkbot.io`);
+      expect(sparkServiceMock.getPersonByEmail).toHaveBeenCalledWith(`${testUniqueEmail}@webex.bot`);
       expect(emailInput.$valid).toBe(true);
     });
   });

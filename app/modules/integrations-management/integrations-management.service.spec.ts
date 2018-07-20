@@ -1,6 +1,6 @@
 import moduleName from './index';
 import { IntegrationsManagementService } from './integrations-management.service';
-import { IApplicationUsage, IApplicationUsageList, ICustomPolicy, IGlobalPolicy, PolicyAction, PolicyType, SortOrder } from './integrations-management.types';
+import { IApplicationUsage, IApplicationUsageList, ICustomPolicy, UserQueryType, IGlobalPolicy, PolicyAction, PolicyType, SortOrder } from './integrations-management.types';
 
 type Test = atlas.test.IServiceTest<{
   Authinfo,
@@ -9,6 +9,20 @@ type Test = atlas.test.IServiceTest<{
 }>;
 
 describe('Service: IntegrationsManagementService', () => {
+
+  // notes:
+  // - angular encodes params in a different way from encodeUriComponent.
+  // - for more info, see: https://stackoverflow.com/questions/24542465/angularjs-how-uri-components-are-encoded
+  function encodeUriQuery(val, pctEncodeSpaces) {
+    return encodeURIComponent(val).
+      replace(/%40/gi, '@').
+      replace(/%3A/gi, ':').
+      replace(/%24/g, '$').
+      replace(/%2C/gi, ',').
+      replace(/%3B/gi, ';').
+      replace(/%20/g, (pctEncodeSpaces ? '%20' : '+'));
+  }
+
   beforeEach(function (this: Test) {
     this.initModules(moduleName);
     this.injectDependencies(
@@ -143,6 +157,54 @@ describe('Service: IntegrationsManagementService', () => {
       expect(promise).toBeResolvedWith(['email-1', 'email-2']);
     });
   });
+
+  describe('getUsersFunction', () => {
+    it('should get username and address for a user given an array of user ids', function (this: Test) {
+      const expectedResponse = [{
+        username: responsesFromCI[0].Resources[0].userName,
+        id: responsesFromCI[0].Resources[0].id,
+      }];
+      const idArr = ['id1', 'id2'];
+      const filter = encodeUriQuery('id eq "id1" or id eq "id2"', false);
+      this.$httpBackend.expectGET('https://identity.webex.com/identity/scim/org-id/v1/Users?attributes=userName,id&filter=' + filter).respond(responsesFromCI[0]);
+      const promise = this.IntegrationsManagementService.getUsers(UserQueryType.ID, idArr);
+      expect(promise).toBeResolvedWith(expectedResponse);
+    });
+
+    it('should get username and address for a user given an array of user email addresses', function (this: Test) {
+      const emailArr = ['email1@gmail.com', 'email2@gmail.com'];
+      const filter = encodeUriQuery('username eq "email1@gmail.com" or username eq "email2@gmail.com"', false);
+      this.$httpBackend.expectGET('https://identity.webex.com/identity/scim/org-id/v1/Users?attributes=userName,id&filter=' + filter).respond(responsesFromCI[0]);
+      const promise = this.IntegrationsManagementService.getUsers(UserQueryType.EMAIL, emailArr);
+      expect(promise).toBeResolved();
+    });
+
+    it('should get username and address for a user given a single email', function (this: Test) {
+      const email = 'email1@gmail.com';
+      const filter = encodeUriQuery('username eq "email1@gmail.com"', false);
+      this.$httpBackend.expectGET('https://identity.webex.com/identity/scim/org-id/v1/Users?attributes=userName,id&filter=' + filter).respond(responsesFromCI[0]);
+      const promise = this.IntegrationsManagementService.getUsers(UserQueryType.EMAIL, email);
+      expect(promise).toBeResolved();
+    });
+  });
+
+  it('should break up a large array of users and call getUsers for each of the subarrays', function (this: Test) {
+    const emailArr: string[] = [];
+    const returnFromUsers = [{
+      username: 'user1',
+      id: '1',
+    }, {
+      username: 'user2',
+      id: '2',
+    }];
+
+    _.times(50, (number) =>
+      emailArr.push('bob' + number + '@gmail.com'));
+    const promise = this.IntegrationsManagementService.getUsersBulk(UserQueryType.ID, emailArr);
+    this.$httpBackend.expectGET(/.*\/Users.*/g).respond(responsesFromCI[0]);
+    this.$httpBackend.expectGET(/.*\/Users.*/g).respond(responsesFromCI[1]);
+    expect(promise).toBeResolvedWith(_.concat(returnFromUsers));
+  });
 });
 
 const applicationUsage: IApplicationUsage = {
@@ -177,3 +239,15 @@ const customPolicy: ICustomPolicy = {
   personIds: ['123', '456'],
   type: PolicyType.CUSTOM,
 };
+
+const responsesFromCI = [{
+  Resources: [{
+    userName: 'user1',
+    id: '1',
+  }],
+}, {
+  Resources: [{
+    userName: 'user2',
+    id: '2',
+  }],
+}];

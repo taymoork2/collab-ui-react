@@ -11,6 +11,8 @@
     ng-change="$ctrl.setInstallFileInfo()"
     cs-input-messages="$ctrl.messages"
     cs-input-validators="$ctrl.validators"
+    cs-input-async-validators="$ctrl.asyncValidator"
+    ng-model-options="{updateOn: 'default blur', debounce: { default: 1000, blur: 0 } }"
     cs-input-label="{{:: 'hcs.installFiles.fileName' | translate}}">
   <label class="cs-input__label " translate="hcs.installFiles.httpProxies"></label>
   <div class="hcs-padding__token" ng-class="{'has-error': $ctrl.invalidCount}">

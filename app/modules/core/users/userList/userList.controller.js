@@ -17,9 +17,14 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       by: 'name',
       order: 'ascending',
     };
+    var USER_STATES = {
+      active: 'active',
+      pending: 'pending',
+    };
 
     vm.$onInit = onInit;
     vm.configureGrid = configureGrid;
+    vm.isEmailSuppressed = false;
 
     $scope.$on('$destroy', onDestroy);
 
@@ -104,7 +109,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         filterValue: 'administrators',
         count: 0,
       }, {
-        name: $translate.instant('usersPage.partners'),
+        name: $translate.instant('usersPage.externalAdmins'),
         filterValue: 'partners',
         count: 0,
       }];
@@ -118,13 +123,22 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     ////////////////
 
     function onInit() {
+      var params = {
+        basicInfo: true,
+        disableCache: true,
+      };
+
       var promises = {
         atlasEmailStatus: FeatureToggleService.atlasEmailStatusGetStatus(),
         configureGrid: vm.configureGrid(),
+        adminOrg: Orgservice.getAdminOrgAsPromise(null, params),
       };
 
       $q.all(promises).then(function (results) {
         $scope.isEmailStatusToggled = results.atlasEmailStatus;
+
+        // retrieve org data to determine if invite emails are suppressed
+        vm.isEmailSuppressed = _.get(results.adminOrg, 'data.isOnBoardingEmailSuppressed', false);
 
         bind();
         getUserList();
@@ -242,6 +256,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             } else if (adminUsers.length > 0) {
               $scope.userList.adminUsers = $scope.userList.adminUsers.concat(adminUsers);
             }
+            setAdminRoles(adminUsers, false);
             $scope.setFilter($scope.activeFilter);
             deferred.resolve();
           } else {
@@ -284,7 +299,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
                 _.forEach($scope.userList.allUsers, function (user) {
                   // user status
                   var isActiveUser = UserOverviewService.getAccountActiveStatus(user);
-                  user.userStatus = isActiveUser ? 'active' : 'pending';
+                  user.userStatus = isActiveUser ? USER_STATES.active : USER_STATES.pending;
 
                   // email status
                   if (!user.active && $scope.isEmailStatusToggled) {
@@ -367,6 +382,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
             _.find($scope.filters, { filterValue: 'partners' }).count = partnerUsers.length;
             // partner list does not have pagination or startIndex
             $scope.userList.partnerUsers = partnerUsers;
+            setAdminRoles(partnerUsers, true);
             $scope.setFilter($scope.activeFilter);
             $scope.obtainedPartners = true;
             deferred.resolve();
@@ -377,6 +393,34 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         });
       }
       return deferred.promise;
+    }
+
+    function setAdminRoles(admins, isPartner) {
+      _.forEach(admins, function (user) {
+        var adminRoles = [];
+        var roles = [];
+        if (isPartner) {
+          var customerOrg = _.find(user.managedOrgs, { orgId: Authinfo.getOrgId() });
+          if (customerOrg) {
+            roles.push(customerOrg.role);
+          }
+        } else {
+          roles = user.roles;
+        }
+        _.forEach(roles, function (role) {
+          if (role === Config.backend_roles.full_admin) {
+            // Display Full Admin first in the list
+            adminRoles.unshift($translate.instant('ciRoles.' + role));
+          } else {
+            adminRoles.push($translate.instant('ciRoles.' + role));
+          }
+        });
+        user.adminRoles = _(adminRoles)
+          .uniq()
+          .join(', ');
+        var isActiveUser = UserOverviewService.getAccountActiveStatus(user);
+        user.userStatus = isActiveUser ? USER_STATES.active : USER_STATES.pending;
+      });
     }
 
     function getOrg() {
@@ -459,11 +503,16 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
       }
 
       $scope.activeFilter = filter || 'all';
+      var roleCol = _.find($scope.gridApi.grid.columns, { field: 'userRole' });
+      // Show/hide columns based on tab
       if (filter === 'administrators') {
+        roleCol.colDef.visible = true;
         $scope.gridOptions.data = $scope.userList.adminUsers;
       } else if (filter === 'partners') {
+        roleCol.colDef.visible = true;
         $scope.gridOptions.data = $scope.userList.partnerUsers;
       } else {
+        roleCol.colDef.visible = false;
         $scope.gridOptions.data = $scope.userList.allUsers;
       }
     }
@@ -521,7 +570,7 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
     }
 
     function canShowResendInvite(user) {
-      if ($scope.isCSB || $scope.dirsyncEnabled) {
+      if ($scope.isCSB || $scope.dirsyncEnabled || vm.isEmailSuppressed) {
         return false;
       } else {
         var isHuronUser = Userservice.isHuronUser(user.entitlements);
@@ -595,6 +644,12 @@ var KeyCodes = require('modules/core/accessibility').KeyCodes;
         id: 'userName',
         displayName: $translate.instant('usersPage.emailHeader'),
         cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.userName}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.userName"></cs-grid-cell>',
+      }, {
+        field: 'userRole',
+        id: 'userRole',
+        visible: false,
+        displayName: $translate.instant('usersPage.role'),
+        cellTemplate: '<cs-grid-cell row="row" grid="grid" title="{{row.entity.adminRoles}}" cell-click-function="grid.appScope.showUserDetails(row.entity)" cell-value="row.entity.adminRoles"></cs-grid-cell>',
       }, {
         field: 'userStatus',
         id: 'userStatus',

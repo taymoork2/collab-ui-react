@@ -150,8 +150,7 @@ describe('EVA feature setup', function () {
     utils.click(careVirtualAssistantTemplateSetupPage.setUpRightBtn);
 
     utils.expectIsDisabled(careVirtualAssistantTemplateSetupPage.email);
-    utils.expectValueToContain(careVirtualAssistantTemplateSetupPage.email, evaTestEmailPrefix);
-    utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.disabledEmailExtension);
+    utils.expectValueToContain(careVirtualAssistantTemplateSetupPage.email, `${evaTestEmailPrefix}@webex.bot`);
     utils.expectIsNotDisplayed(careVirtualAssistantTemplateSetupPage.errorMessage);
 
     utils.expectIsDisplayed(careVirtualAssistantTemplateSetupPage.setUpLeftBtn);

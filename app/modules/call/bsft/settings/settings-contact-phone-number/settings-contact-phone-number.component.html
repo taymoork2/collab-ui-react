@@ -1,5 +1,5 @@
 <div ng-form="contactPhoneNumberForm">
-  <label class="sub-section__label">Phone Number</label>
+  <label class="sub-section__label" translate="broadCloud.site.phoneNumber"></label>
   <div class="row">
     <input
       cs-input
@@ -8,6 +8,7 @@
       ng-model="$ctrl.phoneNumber"
       ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
       ng-change="$ctrl.onPhoneNumberChanged()"
+      placeholder="{{'broadCloud.site.phoneNumber' | translate}}"
       cs-input-messages="$ctrl.messages"
       cs-input-group-size="medium-6"
       required>

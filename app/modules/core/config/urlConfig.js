@@ -315,6 +315,7 @@
       prod: 'https://controller.ucmgmt.cisco.com/api/v1/', //TBD
     },
     QlikReportAppUrl: 'https://%s/custportal/extensions/',
+    QlikUsageLogUrl: 'https://%s/%s/qlik-gtwy/api/v1/log',
     ProdAdminServiceUrl: 'https://atlas-a.wbx2.com/admin/api/v1/',
     WebexAdvancedEditUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminEditUserPage',
     WebexAdvancedHomeUrl: 'https://%s/dispatcher/AtlasIntegration.do?cmd=GoToSiteAdminHomePage',

@@ -2,76 +2,88 @@
   <i class="icon icon-spinner"></i>
 </div>
 
-<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading">
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading" class="bsft-site-setup">
   <div class="container-fluid service-setup-container">
-    <h4 style="margin-bottom: .5rem;">Setup Default Location</h4>
-    <h6 style="margin-bottom: 1rem;">You can also edit location information after setup is complete in Control Hub</h6>
+    <h4 ng-if="!$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setupDefault"></h4>
+    <h4 ng-if="$ctrl.editing && $ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.editDefault"></h4>
+    <h4 ng-if="!$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.setup"></h4>
+    <h4 ng-if="$ctrl.editing && !$ctrl.site.defaultLocation" class="title-margin" translate="broadCloud.site.edit"></h4>
+    <h6 class="later-margin" translate="broadCloud.site.editLater"></h6>
+    <input
+      ng-if="!$ctrl.site.defaultLocation"
+      cs-input
+      type="checkbox"
+      ng-model="$ctrl.makeDefault"
+      id="defaultLocation"
+      name="defaultLocation"
+      cs-input-label="{{'broadCloud.site.makeDefault' | translate}}">
     <div class="row full service-setup">
       <bsft-site-name
-        name="$ctrl.bsftSettingsData.bsftSettings.site.name"
+        name="$ctrl.site.name"
         on-change-fn="$ctrl.onSiteNameChanged(name)">
       </bsft-site-name>
     </div>
     <div class="row full service-setup">
       <bsft-site-address
-        address1="$ctrl.bsftSettingsData.bsftSettings.site.address1"
-        address2="$ctrl.bsftSettingsData.bsftSettings.site.address2"
+        address1="$ctrl.site.address.address1"
+        address2="$ctrl.site.address.address2"
         on-change-fn="$ctrl.onSiteAddressChanged(address1, address2)">
       </bsft-site-address>
     </div>
     <div class="row full service-setup">
       <bsft-site-city
-        city="$ctrl.bsftSettingsData.bsftSettings.site.city"
+        city="$ctrl.site.address.city"
         on-change-fn="$ctrl.onSiteCityChanged(city)">
       </bsft-site-city>
     </div>
     <div class="row full service-setup">
       <bsft-site-zipcode
-        zipcode="$ctrl.bsftSettingsData.bsftSettings.site.zipcode"
+        zipcode="$ctrl.site.address.zipcode"
         on-change-fn="$ctrl.onSiteZipcodeChanged(zipcode)">
       </bsft-site-zipcode>
     </div>
     <div class="row full service-setup">
       <bsft-site-state
-        state="$ctrl.bsftSettingsData.bsftSettings.site.state"
+        state="$ctrl.site.address.state"
         on-change-fn="$ctrl.onSiteStateChanged(state)">
       </bsft-site-state>
     </div>
     <div class="row full service-setup">
       <bsft-site-country
-        city="$ctrl.bsftSettingsData.bsftSettings.site.country"
+        country="$ctrl.site.address.country"
         on-change-fn="$ctrl.onSiteCountryChanged(country)">
       </bsft-site-country>
     </div>
-    <div class="row full service-setup" style="margin-bottom: 1.5rem;">
+    <div class="row full service-setup time-zone-margin">
       <uc-time-zone
-        time-zone="$ctrl.bsftSettingsData.bsftSettings.site.timeZone"
-        time-zone-options="$ctrl.bsftSettingsOptions.timeZoneOptions"
+        time-zone="$ctrl.site.timeZone"
+        time-zone-options="$ctrl.timeZoneOptions"
+        disable-description-text="true"
         on-change-fn="$ctrl.onTimeZoneChanged(timeZone)">
       </uc-time-zone>
     </div>
-    <h4 style="padding-bottom: 1rem;">Location Contact Info</h4>
+    <h4 class="location-contact-margin" translate="broadCloud.site.locationContactInfo"></h4>
     <div class="row full service-setup">
       <bsft-contact-first-name
-        first-name="$ctrl.bsftSettingsData.bsftSettings.site.contact.firstName"
+        first-name="$ctrl.site.contact.firstName"
         on-change-fn="$ctrl.onContactFirstNameChanged(firstName)">
       </bsft-contact-first-name>
     </div>
     <div class="row full service-setup">
       <bsft-contact-last-name
-        last-name="$ctrl.bsftSettingsData.bsftSettings.site.contact.lastName"
+        last-name="$ctrl.site.contact.lastName"
         on-change-fn="$ctrl.onContactLastNameChanged(lastName)">
       </bsft-contact-last-name>
     </div>
     <div class="row full service-setup">
         <bsft-contact-phone-number
-          phone-number="$ctrl.bsftSettingsData.bsftSettings.site.contact.phoneNumber"
+          phone-number="$ctrl.site.contact.phoneNumber"
           on-change-fn="$ctrl.onContactPhoneNumberChanged(phoneNumber)">
         </bsft-contact-phone-number>
       </div>
     <div class="row full service-setup bottom-margin">
       <bsft-contact-email
-        email="$ctrl.bsftSettingsData.bsftSettings.site.contact.email"
+        email="$ctrl.site.contact.email"
         on-change-fn="$ctrl.onContactEmailChanged(email)">
       </bsft-contact-email>
     </div>

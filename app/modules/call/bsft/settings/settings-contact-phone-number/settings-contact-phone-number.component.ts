@@ -12,9 +12,9 @@ class BsftContactPhoneNumberCtrl implements ng.IComponentController {
     };
   }
 
-  public onNameChanged(): void {
+  public onPhoneNumberChanged(): void {
     this.onChangeFn({
-      phone: this.phoneNumber,
+      phoneNumber: this.phoneNumber,
     });
   }
 }

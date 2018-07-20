@@ -5,7 +5,7 @@ import * as userServiceModuleName from 'modules/core/scripts/services/user.servi
 import OnboardService from './onboard.service';
 import OnboardStore from './onboard.store';
 
-export default angular.module('modules.core.users.shared.onboard', [
+export default angular.module('core.users.shared.onboard', [
   analyticsModuleName,
   logMetricsServiceModuleName,
   userCsvServiceModuleName,

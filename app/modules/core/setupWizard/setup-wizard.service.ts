@@ -100,7 +100,11 @@ export class SetupWizardService {
 
   public getExistingConferenceServiceDetails(externalSubscriptionId: string): ng.IPromise<any> {
     const servicesDetailsUrl = `${this.UrlConfig.getAdminServiceUrl()}subscriptions/orderDetail?externalSubscriptionId=${externalSubscriptionId}`;
-    return this.$http.get(servicesDetailsUrl).then(response => _.get(response, 'data', {}))
+    return this.$http.get(servicesDetailsUrl)
+      .then(response => {
+        const orderDetails = _.get(response, 'data', {});
+        return _.assign(orderDetails, { externalSubscriptionId });
+      })
       .catch(() => {});
   }
 

@@ -21,7 +21,7 @@
       </section>
     </div>
   </div>
-  <div ng-repeat="site in $ctrl.distributedLicensesArray" class="license_distrib__row--site">
+  <div ng-repeat="site in $ctrl.sitesByCenterType track by $index" class="license_distrib__row--site">
     <cs-card>
       <article>
         <h4>{{site[0].siteUrl}}.webex.com</h4>

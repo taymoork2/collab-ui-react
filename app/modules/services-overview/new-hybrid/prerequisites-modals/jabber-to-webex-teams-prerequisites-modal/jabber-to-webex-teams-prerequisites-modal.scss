@@ -1,0 +1,5 @@
+@import 'styles/partials/mixins';  // <- for 'keep-flex-container()'
+
+jabber-to-webex-teams-prerequisites-modal {
+  @include keep-flex-container();
+}

@@ -19,8 +19,14 @@ export class UniqueEmailValidator implements ng.IDirective {
       if (ctrl.$isEmpty($viewValue)) {
         return this.$q.resolve();
       }
-      return this.SparkService.getPersonByEmail(`${$viewValue}@sparkbot.io`).then((existingEmails) => {
-        if (_.get(existingEmails, 'items.length', 0) === 0) {
+      const sparkBotPromise = this.SparkService.getPersonByEmail(`${$viewValue}@sparkbot.io`);
+      const webexBotPromise = this.SparkService.getPersonByEmail(`${$viewValue}@webex.bot`);
+      return this.$q.all([sparkBotPromise, webexBotPromise]).then((existingEmails) => {
+        // promise.all returns [ {sparkEmails}, {webexEmails} ]
+        const [sparkEmails, webexBotEmails] = existingEmails;
+        const sparkBotEmailCount = _.get(sparkEmails, 'items.length', 0);
+        const webexBotEmailCount = _.get(webexBotEmails, 'items.length', 0);
+        if (sparkBotEmailCount === 0 &&  webexBotEmailCount === 0) {
           return this.$q.resolve();
         }
         return this.$q.reject();

@@ -2,9 +2,7 @@
 
 describe('Controller: RemDeviceController', function () {
   var controller, $controller, $q, $rootScope, $httpBackend, CsdmDeviceService, CsdmHuronDeviceService, CsdmPlaceService, CsdmConverter, CsdmLyraConfigurationService, FeatureToggleService, device;
-  var fakeModal = {
-    close: jasmine.createSpy('close'),
-  };
+  var fakeModal;
 
   var cisUidOfPlace = 'a19b308a-PlaceWithDevice-71898e423bec';
   var device1Url = 'https://csdm-intb.ciscospark.com/csdm/api/v1/organization/584cf4cd-eea7-4c8c-83ee-67d88fc6eab5/devices/c528e32d-ed35-4e00-a20d-d4d3519efb4f';
@@ -20,9 +18,12 @@ describe('Controller: RemDeviceController', function () {
     CsdmHuronDeviceService = CsdmHuronOrgDeviceService.create();
 
     spyOn(FeatureToggleService, 'supports').and.returnValue($q.resolve(true));
-    spyOn(FeatureToggleService, 'csdmDeviceDeleteConfigurationOptionGetStatus');
     spyOn(CsdmHuronOrgDeviceService, 'create').and.returnValue(CsdmHuronDeviceService);
     spyOn(CsdmHuronDeviceService, 'deleteItem').and.returnValue($q.resolve());
+
+    fakeModal = {
+      close: jasmine.createSpy('close'),
+    };
   }));
 
   describe('Expected Responses', function () {
@@ -48,7 +49,6 @@ describe('Controller: RemDeviceController', function () {
 
       spyOn(CsdmDeviceService, 'deleteItem').and.returnValue($q.resolve());
       spyOn(CsdmPlaceService, 'deleteItem').and.returnValue($q.resolve());
-      spyOn(CsdmLyraConfigurationService, 'deleteConfig').and.returnValue($q.resolve());
     }));
 
     function initController() {
@@ -67,12 +67,12 @@ describe('Controller: RemDeviceController', function () {
 
     describe('when the csdm-device-delete-configuration-option is disabled', function () {
       beforeEach(function () {
-        FeatureToggleService.csdmDeviceDeleteConfigurationOptionGetStatus.and.returnValue($q.resolve(false));
+        spyOn(FeatureToggleService, 'csdmDeviceDeleteConfigurationOptionGetStatus').and.returnValue($q.resolve(false));
+        spyOn(CsdmLyraConfigurationService, 'deleteConfig').and.returnValue($q.resolve());
         initController();
       });
 
       it('should call CsdmDeviceService and CsdmLyraConfigurationService to delete a Cloudberry device and its config', function () {
-        controller.deleteConfig = false;
         controller.device = CsdmConverter.convertCloudberryDevice({
           type: 'cloudberry',
           url: device1Url,
@@ -86,8 +86,7 @@ describe('Controller: RemDeviceController', function () {
         expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
       });
 
-      it('should call CsdmHuronDeviceService and CsdmLyraConfigurationService to delete a Huron device and its config', function () {
-        controller.deleteConfig = false;
+      it('should call CsdmHuronDeviceService to delete a Huron device', function () {
         controller.device = CsdmConverter.convertHuronDevice({
           needsActivation: false,
           type: 'huron',
@@ -99,13 +98,14 @@ describe('Controller: RemDeviceController', function () {
 
         expect(fakeModal.close).toHaveBeenCalled();
         expect(CsdmHuronDeviceService.deleteItem).toHaveBeenCalled();
-        expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
+        expect(CsdmLyraConfigurationService.deleteConfig).not.toHaveBeenCalled();
       });
     });
 
     describe('when the csdm-device-delete-configuration-option toggle is enabled', function () {
       beforeEach(function () {
-        FeatureToggleService.csdmDeviceDeleteConfigurationOptionGetStatus.and.returnValue($q.resolve(true));
+        spyOn(FeatureToggleService, 'csdmDeviceDeleteConfigurationOptionGetStatus').and.returnValue($q.resolve(true));
+        spyOn(CsdmLyraConfigurationService, 'deleteConfig').and.returnValue($q.resolve());
         initController();
       });
 
@@ -155,7 +155,7 @@ describe('Controller: RemDeviceController', function () {
         expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
       });
 
-      it('should call CsdmHuronDeviceService and CsdmLyraConfigurationService to delete a Huron device and its config', function () {
+      it('should call CsdmHuronDeviceService to delete a Huron device', function () {
         controller.deleteConfig = true;
         controller.device = CsdmConverter.convertHuronDevice({
           needsActivation: false,
@@ -168,6 +168,52 @@ describe('Controller: RemDeviceController', function () {
 
         expect(fakeModal.close).toHaveBeenCalled();
         expect(CsdmHuronDeviceService.deleteItem).toHaveBeenCalled();
+        expect(CsdmLyraConfigurationService.deleteConfig).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when the configuration delete fails with 404', function () {
+      beforeEach(function () {
+        spyOn(FeatureToggleService, 'csdmDeviceDeleteConfigurationOptionGetStatus').and.returnValue($q.resolve(false));
+        spyOn(CsdmLyraConfigurationService, 'deleteConfig').and.returnValue($q.reject({ status: 404 }));
+        initController();
+      });
+
+      it('should still delete the device', function () {
+        controller.deleteConfig = true;
+        controller.device = CsdmConverter.convertCloudberryDevice({
+          type: 'cloudberry',
+          url: device1Url,
+          cisUuid: cisUidOfPlace,
+        });
+        controller.deleteDevice();
+        $rootScope.$digest();
+
+        expect(fakeModal.close).toHaveBeenCalled();
+        expect(CsdmDeviceService.deleteItem).toHaveBeenCalledWith(controller.device);
+        expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
+      });
+    });
+
+    describe('when the configuration delete fails with any other code', function () {
+      beforeEach(function () {
+        spyOn(FeatureToggleService, 'csdmDeviceDeleteConfigurationOptionGetStatus').and.returnValue($q.resolve(false));
+        spyOn(CsdmLyraConfigurationService, 'deleteConfig').and.returnValue($q.reject({ status: 500 }));
+        initController();
+      });
+
+      it('should not delete the device', function () {
+        controller.deleteConfig = true;
+        controller.device = CsdmConverter.convertCloudberryDevice({
+          type: 'cloudberry',
+          url: device1Url,
+          cisUuid: cisUidOfPlace,
+        });
+        controller.deleteDevice();
+        $rootScope.$digest();
+
+        expect(fakeModal.close).not.toHaveBeenCalled();
+        expect(CsdmDeviceService.deleteItem).not.toHaveBeenCalled();
         expect(CsdmLyraConfigurationService.deleteConfig).toHaveBeenCalled();
       });
     });

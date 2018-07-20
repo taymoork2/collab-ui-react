@@ -42,6 +42,7 @@ export class ServicesOverviewController implements ng.IComponentController {
   public loadingHybridServicesCards = true;
   public hasCapacityFeatureToggle: boolean;
   public hasEventsHistoryFeatureToggle: boolean;
+  public hasCalsvcHybridExchangeDeploymentFeatureToggle: boolean;
 
   /* @ngInject */
   constructor(
@@ -84,6 +85,7 @@ export class ServicesOverviewController implements ng.IComponentController {
         atlasHybridAuditLog: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridAuditLog),
         atlasHybridImp: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasHybridImp),
         atlasOffice365Support: this.FeatureToggleService.supports(this.FeatureToggleService.features.atlasOffice365Support),
+        calsvcHybridExchangeDeployment: this.FeatureToggleService.supports(this.FeatureToggleService.features.calsvcHybridExchangeDeployment),
         hI1484: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1484),
         hI1638: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI1638),
         hI802: this.FeatureToggleService.supports(this.FeatureToggleService.features.hI802),
@@ -101,6 +103,7 @@ export class ServicesOverviewController implements ng.IComponentController {
           // Used by hybrid cards
           this.hasCapacityFeatureToggle = response.atlasHybridCapacity;
           this.hasEventsHistoryFeatureToggle = response.atlasHybridAuditLog;
+          this.hasCalsvcHybridExchangeDeploymentFeatureToggle = response.calsvcHybridExchangeDeployment;
           if (this.Authinfo.isFusionUC() || ((this.Authinfo.hasCallLicense() || this.Authinfo.hasCareLicense()) && response.hybridCare)) {
             this._servicesToDisplay.push('squared-fusion-uc');
           }

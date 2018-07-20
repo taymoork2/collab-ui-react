@@ -26,13 +26,12 @@
         color: #f0a309;
       }
       .license-section {
-        color: $gray-dark-4;
         .license-count {
           color: $color-blue-base;
-          margin-right: rem-calc(8);
-        }
-        .license-name {
-          margin-right: rem-calc(16);
+          .license-name {
+            margin-left: rem-calc(8);
+            color: $gray-dark-4;
+          }
         }
       }
     }

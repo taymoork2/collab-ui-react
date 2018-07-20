@@ -1,8 +1,10 @@
 import { ICallType, IParticipant, IRoleData, ISessionDetail, ISessionDetailItem } from './partner-search.interfaces';
 import { Platforms, RoleType, TrackingEventName } from './partner-meeting.enum';
+import { TrackUsageEvent } from './track-usage.enum';
 import { Notification } from 'modules/core/notifications';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
+import { TrackUsageService } from './track-usage.service';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IGridApiScope extends ng.IScope {
@@ -36,6 +38,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
     private CustomerSearchService: CustomerSearchService,
     private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
+    private TrackUsageService: TrackUsageService,
     private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.conferenceID = _.get(this.$stateParams, 'cid');
@@ -56,6 +59,7 @@ class DgcPartnerTabParticipantsController implements ng.IComponentController {
   }
 
   private getParticipants(): void {
+    this.TrackUsageService.track(TrackUsageEvent.MEETING_PARTICIPANTS);
     this.dataService.getParticipants(this.conferenceID)
       .then((res: IParticipant[]) => {
         this.gridData = this.getGridData(res);

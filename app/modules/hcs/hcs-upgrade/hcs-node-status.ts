@@ -1,0 +1,11 @@
+export const STATUS_UNKNOWN: string = 'unknown';
+export const STATUS_SCHEDULED: string = 'scheduled';
+export const STATUS_STARTED: string = 'started';
+export const STATUS_FAIL_TO_SCHEDULE: string = 'fail.to.schedule';
+export const STATUS_SUCCESSFUL: string = 'success';
+export const STATUS_FAILED: string = 'failed';
+export const STATUS_CANCELLED: string = 'cancelled';
+export const STATUS_FAIL_TO_CANCEL: string = 'fail.to.cancel';
+export const STATUS_PAUSE_ERROR: string = 'pause.error';
+export const STATUS_PAUSED: string = 'paused';
+export const STATUS_POSTED: string = 'posted';

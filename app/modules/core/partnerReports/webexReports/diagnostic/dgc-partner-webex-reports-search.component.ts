@@ -3,9 +3,11 @@ import { KeyCodes } from 'modules/core/accessibility';
 import { Notification } from 'modules/core/notifications';
 import { IMeetingDetail } from './partner-search.interfaces';
 import { SearchStorage, TrackingEventName } from './partner-meeting.enum';
+import { TrackUsageEvent } from './track-usage.enum';
 import { CustomerSearchService } from './customer-search.service';
 import { PartnerSearchService } from './partner-search.service';
 import { ProPackService } from 'modules/core/proPack/proPack.service';
+import { TrackUsageService } from './track-usage.service';
 import { WebexReportsUtilService } from './webex-reports-util.service';
 
 interface IGridApiScope extends ng.IScope {
@@ -58,6 +60,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
     private FeatureToggleService,
     private PartnerSearchService: PartnerSearchService,
     private ProPackService: ProPackService,
+    private TrackUsageService: TrackUsageService,
     private WebexReportsUtilService: WebexReportsUtilService,
   ) {
     this.gridData = [];
@@ -248,6 +251,7 @@ class DgcPartnerWebexReportsSearchController implements ng.IComponentController 
   }
 
   private startSearch(): void {
+    this.TrackUsageService.track(TrackUsageEvent.MEETINGS);
     this.Analytics.trackEvent(TrackingEventName.MEETING_SEARCH);
     this.gridData = [];
     this.errMsg.ariaLabel = '';

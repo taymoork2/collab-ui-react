@@ -1,10 +1,15 @@
-import { IApplicationUsage, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, PolicyAction, PolicyType, SortOrder } from './integrations-management.types';
+import { IntegrationsManagementService } from 'modules/integrations-management/integrations-management.service';
+import { IApplicationUsage, ICustomPolicy, IGlobalPolicy, IIntegrationsManagementService, IListOptions, IUserInfo, PolicyAction, PolicyType, SortOrder, UserQueryType } from './integrations-management.types';
 
 export class IntegrationsManagementFakeService implements IIntegrationsManagementService {
   /* @ngInject */
   constructor(
     private $q: ng.IQService,
     private $timeout: ng.ITimeoutService,
+    private Authinfo,
+    private $http: ng.IHttpService,
+    private IntegrationsManagementService: IntegrationsManagementService,
+    private UrlConfig,
   ) {
     this.populateApplicationUsages();
     this.populateCustomPolicies();
@@ -15,7 +20,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
   private applicationUsages: IApplicationUsage[] = [];
   private globalAccessPolicy?: IGlobalPolicy;
 
-  private readonly ORG_ID = '55555';
+  private readonly ORG_ID = this.Authinfo.getOrgId;
 
   public listIntegrations(options: IListOptions = {}): IPromise<IApplicationUsage[]> {
 
@@ -27,7 +32,7 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
       sortOrder = SortOrder.ASC,
     } = options;
 
-    let result =  _.clone(this.applicationUsages);
+    let result = _.clone(this.applicationUsages);
     if (sortBy) {
       result = _.orderBy(result, sortBy, sortOrder);
     }
@@ -76,7 +81,14 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
     if (!customPolicy) {
       return this.$timeout(() => this.$q.reject('Custom Policy not found'), this.randomDelay);
     }
-    return this.$timeout(() => customPolicy, this.randomDelay);
+    const url = this.UrlConfig.getScimUrl(this.Authinfo.getOrgId());
+    return this.$http.get(url, {
+      params: { attributes: 'userName,id', count: this.randomUserNumber },
+    }).then((reply) => {
+      const users: { id: string }[] = _.get(reply.data, 'Resources', []);
+      customPolicy.personIds = _.map(users, 'id');
+      return this.$timeout(() => customPolicy, this.randomDelay);
+    });
   }
 
   public createCustomPolicy(appId: string, action: PolicyAction, userIds?: string[] | undefined): IPromise<void> {
@@ -193,5 +205,17 @@ export class IntegrationsManagementFakeService implements IIntegrationsManagemen
 
   private get randomDelay(): number {
     return _.random(500, 1000);
+  }
+
+  private get randomUserNumber(): number {
+    return _.random(1, 10);
+  }
+
+  public getUsers(searchType: UserQueryType, uidOrEmail: string[] | string): ng.IPromise<IUserInfo[]> {
+    return this.IntegrationsManagementService.getUsers(searchType, uidOrEmail);
+  }
+
+  public getUsersBulk(searchType: UserQueryType, emailsOrIdsArray: string[]): IPromise<IUserInfo[]> {
+    return this.IntegrationsManagementService.getUsersBulk(searchType, emailsOrIdsArray);
   }
 }

@@ -34,7 +34,7 @@
         rdc.deleteDevice = function () {
           var deleteConfigPromise;
 
-          if (rdc.deleteConfig || !rdc.deleteConfigurationOptionAvailable) {
+          if (rdc.device.isCloudberryDevice() && (rdc.deleteConfig || !rdc.deleteConfigurationOptionAvailable)) {
             deleteConfigPromise = CsdmLyraConfigurationService.deleteConfig(rdc.device.cisUuid, rdc.device.wdmUrl);
           } else {
             deleteConfigPromise = $q.resolve();
@@ -44,10 +44,18 @@
             .then(function () {
               return CsdmDataModelService.deleteItem(rdc.device);
             })
-            .then($modalInstance.close)
+            .then(function () {
+              $modalInstance.close();
+            })
             .catch(function (error) {
-              Notification.errorResponse(error, 'spacesPage.failedToDelete');
-              return $q.reject(error);
+              // If Lyra cannot find the device, there is nothing to delete
+              if (error.status === 404) {
+                return CsdmDataModelService.deleteItem(rdc.device)
+                  .then($modalInstance.close);
+              } else {
+                Notification.errorResponse(error, 'spacesPage.failedToDelete');
+                return $q.reject(error);
+              }
             });
         };
       }

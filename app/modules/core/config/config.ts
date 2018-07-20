@@ -561,6 +561,7 @@ export class Config {
       'editService',
       'firsttimewizard',
       'integrations-management',
+      'jabber-to-webex-teams',
       'my-company',
       'overview',
       'profile',

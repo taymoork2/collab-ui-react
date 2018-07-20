@@ -132,17 +132,16 @@ describe('Manage Users - CSV File -', function () {
       utils.click(manageUsersPage.buttons.submit);
 
       // status screen should now be displayed
-      utils.expectIsDisplayed(manageUsersPage.importStatus.statusDisplay);
       utils.waitForText(manageUsersPage.importStatus.progressFileName, CSV_FILE_NAME);
 
       // import complete.  check our results
-      utils.waitForText(manageUsersPage.importStatus.uploadComplete, 'Completed ' + CSV_FILE_NAME + ' at');
+      utils.waitForText(manageUsersPage.importStatus.uploadComplete, 'Completed');
 
       utils.waitForText(manageUsersPage.importStatus.newUsers, '' + userList.length);
       utils.waitForText(manageUsersPage.importStatus.updatedUsers, '0');
       utils.waitForText(manageUsersPage.importStatus.errorUsers, '0');
 
-      utils.click(manageUsersPage.buttons.done);
+      utils.click(manageUsersPage.buttons.modalCloseButton);
     });
 
     it('should confirm first user onboarded', function () {
