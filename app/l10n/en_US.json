@@ -11938,6 +11938,7 @@
     "wizardButton": {
       "nextAssignLicenses": "Next: Assign Licenses",
       "nextAddNumbers": "Next: Add Numbers",
+      "nextAssignNumbers": "Next: Assign Numbers",
       "saveLocation": "Save Location",
       "nextEnterpriseSettings": "Next: Enterprise Settings"
     },
@@ -11959,6 +11960,13 @@
       "selectCountry": "Select Country",
       "locationContactInfo": "Location Contact Info",
       "phoneNumber": "Phone Number"
+    },
+    "licenseAllocation": {
+      "title": "Assign Total Licenses",
+      "desc": "Enter the total number for each license type you want to assign for this location. Enter 0 if you do not want to assign any",
+      "standard": "Standard",
+      "places": "Places",
+      "remaining": "{{available}} of {{total}} remaining"
     }
   },
   "jabberToWebexTeams": {
