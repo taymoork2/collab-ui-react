@@ -27,9 +27,10 @@ export class JabberProfileService {
   }): ng.IPromise<IUcManagerProfile> {
     // TODO : the allowUserEdit need to be added after CI enable this property.
     const { profileName, voiceServerDomainName, udsServerAddress, udsBackupServerAddress } = options;
-    const requestData = {};
+    let requestData = {};
     _.assignIn(requestData, PROFILE_TEMPLATE);
     _.assignIn(requestData, { templateName: profileName, VoiceMailServer: voiceServerDomainName, CUCMServer: udsServerAddress, BackupCUCMServer: udsBackupServerAddress });
+    requestData = _(requestData).omitBy(_.isEmpty);
     return this.$http.post(this.getConfigTemplatesUrl(), requestData, {
       headers: {
         Accept: 'application/json',
