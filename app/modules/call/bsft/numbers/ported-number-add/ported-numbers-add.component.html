@@ -20,18 +20,30 @@
     cs-input-label="{{::'broadCloud.numbers.bcProvided' | translate}}">
   <label class="bsft-margin" translate="broadCloud.numbers.bcProvidedHint"></label>
   <h4 class="" translate="broadCloud.numbers.phoneNumber"></h4>
-  <div class="hcs-padding__token" ng-class="{'has-error': $ctrl.invalidCount}">
-    <cs-token-field
-      tokens="token"
-      tokenfieldid="$ctrl.tokenfieldid"
-      tokenplaceholder="$ctrl.tokenplaceholder"
-      tokenoptions="$ctrl.tokenoptions"
-      tokenmethods="$ctrl.tokenmethods">
-    </cs-token-field>
+   <!-- <div class="hcs-padding__token" ng-class="{'has-error': $ctrl.isInvalid}"> -->
+    <form name="$ctrl.textForm" novalidate
+       ng-class="{'error': $ctrl.textForm.numberPorting.$invalid && $ctrl.textForm.numberPorting.$dirty && $ctrl.textForm.numberPorting.$touched}">
+      <textarea
+        type="text"
+        name="numberPorting"
+        ng-model="$ctrl.texttoken"
+        ng-change="$ctrl.onChange()"
+        class="form-control optional-row"
+        placeholder="{{'broadCloud.numbers.addNumbers'| translate}}">
+      </textarea>
+      <div class="pull-left">
+        <div class="cs-input__messages" ng-messages="$ctrl.textForm.numberPorting.$error" role="alert" ng-if='$ctrl.textForm.numberPorting.$touched'>
+          <div id="maxlimit" class="message" ng-message="maxlimit" translate="broadCloud.numbers.addlimit"></div>
+          <div id="minlimit" class="message" ng-message="minlimit" translate="broadCloud.numbers.minlimit"></div>
+          <div id="duplicate" class="message" ng-message="duplicate" translate="broadCloud.numbers.duplicate"></div>
+          <div id="invalid" class="message" ng-message="invalid" translate="broadCloud.numbers.invalid"></div>
+        </div>
+      </div>
+      </form>
     <label translate="broadCloud.numbers.numberHint"></label>
   </div>
   <div class="bsft__number_subheading">
-    <button class="btn btn--primary"  ng-disabled="$ctrl.numbers.length===0" ng-click="$ctrl.addNumbers()" translate="common.add" focus-on></button>
-    <button class="btn" ng-disabled="$ctrl.numbers.length===0" ng-click="$ctrl.clear()" translate="common.clear"></button>
+    <button class="btn btn--primary"  ng-disabled="$ctrl.texttoken.length===0 || $ctrl.isInvalid" ng-click="$ctrl.addNumbers()" translate="common.add" focus-on></button>
+    <button class="btn" ng-disabled="$ctrl.texttoken.length===0" ng-click="$ctrl.clear()" translate="common.clear"></button>
   </div>
 </div>
