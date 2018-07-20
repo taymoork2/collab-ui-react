@@ -64,16 +64,9 @@
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
 
           // Irrespective of response in get we are doing put now
-          // See if org id is already mapped to user org id
-          // if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
           mediaAgentOrgIdsArray.push(orgId);
           updateMediaAgentOrgId = true;
-          // }
-          // See if 'squared' org id is already mapped to user org id
-          // if (mediaAgentOrgIdsArray.indexOf('squared') == -1) {
           mediaAgentOrgIdsArray.push('squared');
-          //   updateMediaAgentOrgId = true;
-          // }
 
           if (updateMediaAgentOrgId) {
             addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
