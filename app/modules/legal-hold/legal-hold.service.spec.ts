@@ -27,8 +27,8 @@ describe('Service: LegalHoldService', () => {
     );
 
     this.matterList = _.cloneDeep(getJSONFixture('core/json/legalHold/matters.json'));
-    this.matterUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/matter?operationType=';
-    this.matterUsersUrl = 'https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/users?operationType=';
+    this.matterUrl = 'https://retention-intb.ciscospark.com/retention/api/v1/admin/onhold/matter?operationType=';
+    this.matterUsersUrl = 'https://retention-intb.ciscospark.com/retention/api/v1/admin/onhold/users?operationType=';
     this.getUserUrl = 'https://atlas-intb.ciscospark.com/admin/api/v1/user?email=';
     this.userserviceUser = {
       id: '123',
