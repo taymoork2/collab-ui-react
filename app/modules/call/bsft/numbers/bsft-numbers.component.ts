@@ -59,6 +59,7 @@ class BsftNumbersCtrl implements ng.IComponentController {
   public onChange(numbers: string[]): void {
     this.numbers = numbers;
   }
+
 }
 
 export class BsftNumbersComponent implements ng.IComponentOptions {

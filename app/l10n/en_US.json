@@ -11927,7 +11927,11 @@
       "prevPortedNumber": "Previously Ported",
       "bcPortedNumber": "BroadCloud Ported",
       "numberHint": "e.g. 2143335555, +12143335555",
-      "maxlimit": "Exceeded max allowed numbers {{max}}. Minimum limit is {{min}}"
+      "maxlimit": "Exceeded max allowed numbers {{max}}. Minimum limit is {{min}}",
+      "assignNumber": "Assign Numbers",
+      "assignNumberDesc": "Select which numbers you want to use for your location.",
+      "locationNumber": "Location Number",
+      "vmNumber": "Voicemail Number"
     },
     "wizardButton": {
       "nextAssignLicenses": "Next: Assign Licenses",

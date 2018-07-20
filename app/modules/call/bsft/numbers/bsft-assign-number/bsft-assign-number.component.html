@@ -1,0 +1,11 @@
+<div ng-form="assignNumberForm">
+  <h3 translate="broadCloud.numbers.assignNumber"></h3>
+  <label class="bsft-number_subheading" translate="broadCloud.numbers.assignNumberDesc"></label>
+  <div class="row">
+    <site-assign-number
+      number-options="$ctrl.numberOptions"
+      on-change-fn="$ctrl.onChangeNumber(number)"
+      on-change-vm-fn="$ctrl.onChangeVmNumber(vmnumber)">
+    </site-assign-number>
+  </div>
+</div>
