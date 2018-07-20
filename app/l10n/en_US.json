@@ -8843,7 +8843,7 @@
         "boxStepOne": "Create more expert spaces in Cisco Webex Teams.",
         "boxStepOneTooltip": "Give each space a unique topic name that helps the {{ featureName }} match keywords from a chat to the space.",
         "boxStepTwo": "Add the Expert Virtual Assistant to the expert spaces.",
-        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @sparkbot.io email you specified to add the assistant to your expert spaces.",
+        "boxStepTwoTooltip": "After you configure the {{ featureName }}, use the @webex.bot email you specified to add the assistant to your expert spaces.",
         "boxStepThree": "Add users to the expert spaces you create.",
         "boxStepThreeTooltip": "Add appropriate users who can answer customer questions about the expert space topics.",
         "boxStepFour": "Configure chat escalation to Cisco Webex Teams in your Customer Support Templates.",

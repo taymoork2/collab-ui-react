@@ -437,6 +437,8 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       spyOn(this.EvaService, 'updateExpertAssistant').and.returnValue(updateDeferred.promise);
       spyOn(this.EvaService, 'updateExpertAssistantIcon').and.returnValue(updateIconDeferred.promise);
       spyOn(this.EvaService, 'listExpertAssistants').and.returnValue(listEvasDeferred.promise);
+
+      controller.emailAddress =  'test@webex.bot';
     });
 
     afterEach(function () {
@@ -516,7 +518,7 @@ describe('Care Expert Virtual Assistant Setup Component', () => {
       });
       controller.submitFeature();
       this.$scope.$apply();
-
+      expect(this.EvaService.updateExpertAssistant).toHaveBeenCalledWith('', testName, OrgId, controller.emailAddress, '', '');
       expect(this.Notification.success).toHaveBeenCalledWith('careChatTpl.editSuccessText', {
         featureName: testName,
       });
