@@ -4,7 +4,6 @@ import { Notification } from 'modules/core/notifications';
 enum BackendTypes {
   VOICE = 'voiceServiceDomain',
   UDS  = 'udsServer',
-  NONE = 'none',
 }
 
 interface IUCManagerProfileData {
@@ -56,14 +55,14 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
       }),
     },
   };
-  private profileData: IUCManagerProfileData = {
+  public profileData: IUCManagerProfileData = {
     profileName: '',
     voiceServerDomainName: '',
     udsServerAddress: '',
     udsBackupServerAddress: '',
     allowUserEdit: false,
   };
-  public backendType: BackendTypes = BackendTypes.NONE;
+  public backendType: BackendTypes = BackendTypes.VOICE;
   public finishDisable: boolean = true;
   public BackendTypes = BackendTypes;
   public addProfileForm: ng.IFormController;
@@ -73,7 +72,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     private Analytics,
     private $translate: ng.translate.ITranslateService,
     private $window: ng.IWindowService,
-    private JabberProfileService: JabberProfileService,
+    public JabberProfileService: JabberProfileService,
     private Notification: Notification,
   ) {}
 
@@ -89,7 +88,7 @@ export class JabberToWebexTeamsAddProfileModalController implements ng.IComponen
     this.finish();
   }
 
-  private finish(): void {
+  public finish(): void {
     this.JabberProfileService.create(this.profileData).then(() => {
       // TODO : 'spark14176.ucManagerProfiles' logic should be removed after the CI service is fullly coded
       const ucManagerProfiles = _.toArray(JSON.parse(this.$window.sessionStorage.getItem('spark14176.ucManagerProfiles') || '[]'));
