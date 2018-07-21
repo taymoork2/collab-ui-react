@@ -149,7 +149,7 @@ export class MeetingExportService {
   }
 
   private mkSharingSessionInReport(uniqueParticipant: IUniqueParticipant, sharingSessions: ISharingDetail[]): ISessionInReport {
-    const sharingSession: ISharingSessionInReport = {
+    const resultSession: ISharingSessionInReport = {
       'Session Type': 'Sharing',
       'Sharing Records': [],
     };
@@ -164,13 +164,13 @@ export class MeetingExportService {
     const sharingData = _.filter(sharingSessions, sharingSession => {
       return sharingSession.userName === uniqueParticipant.userName;
     });
-    sharingSession['Sharing Records'] = <ISharingRecord[]>this.mkDataRecords(sharingRecord, sharingData);
+    resultSession['Sharing Records'] = <ISharingRecord[]>this.mkDataRecords(sharingRecord, sharingData);
 
-    return sharingSession;
+    return resultSession;
   }
 
   private mkRoleChangeSessionInReport(uniqueParticipant: IUniqueParticipant, roleChangeSessions: IRoleData[]): ISessionInReport {
-    const roleChangeSession: IRoleChangeSessionInReport = {
+    const resultSession: IRoleChangeSessionInReport = {
       'Session Type': 'Role Change',
       'Role Change Records': [],
     };
@@ -185,9 +185,9 @@ export class MeetingExportService {
     const roleChangeData = _.filter(roleChangeSessions, roleChangeSession => {
       return roleChangeSession.toUserName === uniqueParticipant.userName;
     });
-    roleChangeSession['Role Change Records'] = <IRoleChangeRecord[]>this.mkDataRecords(roleChangeRecord, roleChangeData);
+    resultSession['Role Change Records'] = <IRoleChangeRecord[]>this.mkDataRecords(roleChangeRecord, roleChangeData);
 
-    return roleChangeSession;
+    return resultSession;
   }
 
   private mkDataRecords(dataTemplate: IDataRecord, dataStore: object[]): IDataRecord[] {
