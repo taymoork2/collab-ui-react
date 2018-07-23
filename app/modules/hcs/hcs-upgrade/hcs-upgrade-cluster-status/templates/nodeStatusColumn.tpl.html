@@ -4,9 +4,13 @@
       <i class="icon icon-circle status-indicator danger"></i>
       <span class="h6">{{::'hcs.clusterDetail.nodeStatus.failedUpgrade' | translate}}</span>
     </div>
+    <div ng-switch-when="aborted">
+        <i class="icon icon-circle status-indicator danger"></i>
+        <span class="h6">{{::'hcs.clusterDetail.nodeStatus.aborted' | translate}}</span>
+      </div>
     <div ng-switch-when="unknown">
       <i class="icon icon-circle status-indicator danger"></i>
-      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.unknown' | translate}}</span>
+      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
     </div>
     <div ng-switch-when="fail.to.cancel">
       <i class="icon icon-circle status-indicator danger"></i>
@@ -22,7 +26,7 @@
     </div>
     <div ng-switch-when="started">
       <i class="icon icon-circle status-indicator warning"></i>
-      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.started' | translate}}</span>
+      <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
     </div>
     <div ng-switch-when="scheduled">
       <i class="icon icon-circle status-indicator warning"></i>
@@ -38,7 +42,7 @@
     </div>
     <div ng-switch-when="posted">
         <i class="icon icon-circle status-indicator warning"></i>
-        <span class="h6">{{::'hcs.clusterDetail.nodeStatus.posted' | translate}}</span>
+        <span class="h6">{{::'hcs.clusterDetail.nodeStatus.upgradeInProgress' | translate}}</span>
       </div>
     <div ng-switch-when="success">
       <i class="icon icon-circle status-indicator success"></i>

@@ -70,12 +70,18 @@
           <i class="icon icon-circle status-indicator success"></i>
           <span class="h6">{{::'hcs.clusterDetail.nodeStatus.success' | translate}}</span>
         </span>
+        <span ng-switch-when="unknown">
+            <i class="icon icon-circle"></i>
+            <span class="h6">{{::'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
+          </span>
         <span ng-switch-default>
           <i class="icon icon-circle"></i>
           <span translate="common.unknown"></span>
         </span>
       </span>
       <span ng-if="$ctrl.estCompletionTime">, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{$ctrl.estCompletionTime | date:'dd MMM y HH:mm':'UTC'}}</span>
+      <span ng-if="!$ctrl.estCompletionTime">, {{:: 'hcs.upgrade.upgradeGroup.upgradeClusterStatus.estimatedCompletion' | translate}}: {{:: 'hcs.clusterDetail.nodeStatus.notAvailable' | translate}}</span>
+
     </div>
   </cs-page-sub-header-left>
 </cs-page-sub-header>

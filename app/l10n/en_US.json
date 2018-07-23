@@ -11480,7 +11480,8 @@
         "upgradeInProgress": "Cannot change customer when upgrade is in progress."
       },
       "nodeStatus": {
-        "active":"Active",
+        "aborted": "Aborted",
+        "active": "Active",
         "assignmentNeeded": "Assignment needed",
         "agentOffline": "Agent offline",
         "cancelled": "Cancelled",
@@ -11494,6 +11495,7 @@
         "needToUpdateBatchNumber": "Update batch number",
         "noActiveVersion": "No active version",
         "noAgentRunning": "No agent",
+        "notAvailable": "Not available",
         "noClusters": "No clusters",
         "operational": "Operational",
         "paused": "Paused",

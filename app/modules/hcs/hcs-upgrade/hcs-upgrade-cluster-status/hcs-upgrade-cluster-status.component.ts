@@ -1,6 +1,7 @@
 import { HcsUpgradeService, IHcsClusterTask, IHcsCluster, INodeTaskStatus, IClusterStatusGridRow, INodeTaskGridRow } from 'modules/hcs/hcs-shared';
 import { Notification } from 'modules/core/notifications';
 import { GridService } from 'modules/core/csgrid';
+import { Duration } from '../../../../../node_modules/moment';
 
 export class UpgradeClusterStatusComponent implements ng.IComponentOptions {
   public controller = UpgradeClusterStatusCtrl;
@@ -151,14 +152,22 @@ export class UpgradeClusterStatusCtrl implements ng.IComponentController {
       const clusterStatusGridRow: IClusterStatusGridRow = {
         orderNumber: nodeTask.order,
         nodeDetails: nodeDetail,
-        previousUpgradeTime: previousTime ? `${previousTime.hours()}:${_.toString(previousTime.minutes()).length > 1 ? previousTime.minutes() : '0' + previousTime.minutes()}:${_.toString(previousTime.seconds()).length > 1 ? previousTime.seconds() : '0' + previousTime.seconds()}` : '',
+        previousUpgradeTime: this.formatDuration(previousTime),
         startTime: nodeTask.started ? this.$filter('date')(nodeTask.started, 'dd MMM y HH:mm', 'UTC') : '',
         nodeStatus: nodeTask.status,
-        elapsedTime: elapsedTime ? `${elapsedTime.hours()}:${_.toString(elapsedTime.minutes()).length > 1 ? elapsedTime.minutes() : '0' + elapsedTime.minutes()}:${_.toString(elapsedTime.seconds()).length > 1 ? elapsedTime.seconds() : '0' + elapsedTime.seconds()}` : '',
+        elapsedTime: this.formatDuration(elapsedTime),
       };
       this.clusterGridData.push(clusterStatusGridRow);
     });
     this.gridOptions.data = this.clusterGridData;
     this.showGrid = true;
+  }
+
+  private formatDuration(duration?: Duration): string {
+    if (duration === undefined) {
+      return '';
+    }
+    const daysToHours = duration.days() * 24;
+    return duration ? `${duration.hours() + daysToHours}:${_.toString(duration.minutes()).length > 1 ? duration.minutes() : '0' + duration.minutes()}:${_.toString(duration.seconds()).length > 1 ? duration.seconds() : '0' + duration.seconds()}` : '';
   }
 }
