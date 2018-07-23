@@ -126,6 +126,7 @@ module.exports = {
   csdmDeviceAccountJump: 'csdm-device-account-jump',
   csdmDeviceBranding: 'csdm-device-branding',
   csdmDevicePlaceLink: 'csdm-device-place-link',
+  csdmDeviceSearchAlerts: 'csdm-device-search-alerts',
   csdmDeviceSupport: 'csdm-device-support',
   csdmHybridCall: 'csdm-hybrid-call',
   csdmMultipleDevicesPerPlace: 'csdm-multiple-devices-per-place',

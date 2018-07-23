@@ -28,6 +28,7 @@ export class DevicesCtrl implements ng.IComponentController {
   private hybridCalendarEnabledOnOrg: boolean;
   private csdmHybridCallFeature: boolean;
   private csdmMultipleDevicesPerPlaceFeature: boolean;
+  public deviceSearchAlertsFeature: boolean;
   public deviceExportFeature: boolean;
   public exporting: boolean;
   private exportProgressDialog: ng.ui.bootstrap.IModalServiceInstance;
@@ -115,13 +116,17 @@ export class DevicesCtrl implements ng.IComponentController {
     return !this.initializing() && !this.emptydatasource() && !this.emptysearchresult();
   }
 
+  public emptysearch(): boolean {
+    return !this._searchObject || this._searchObject.getTranslatedQueryString(null) === '';
+  }
+
   public emptysearchresult(): boolean {
-    return !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) !== ''
+    return !this.issearching && this._searchObject && !this.emptysearch()
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
   public emptydatasource(): boolean {
-    return !this.devicesHaveBeenSeen && !this.issearching && this._searchObject && this._searchObject.getTranslatedQueryString(null) === ''
+    return !this.devicesHaveBeenSeen && !this.issearching && this._searchObject && this.emptysearch()
       && (this._searchResult && this._searchResult.hits.total === 0);
   }
 
@@ -131,6 +136,12 @@ export class DevicesCtrl implements ng.IComponentController {
 
   public $onInit(): void {
 
+  }
+
+  public showSubscribeToAlertsDialog() {
+    this.$state.go('deviceAlerts', {
+      searchObject: this.searchObject,
+    });
   }
 
   public startDeviceExport() {
@@ -243,6 +254,9 @@ export class DevicesCtrl implements ng.IComponentController {
       const bulkSupport = results[0];
       const exportSupport = results[1];
       this.deviceExportFeature = exportSupport && !bulkSupport;
+    });
+    this.FeatureToggleService.csdmDeviceSearchAlertsGetStatus().then(feature => {
+      this.deviceSearchAlertsFeature = feature;
     });
   }
 
