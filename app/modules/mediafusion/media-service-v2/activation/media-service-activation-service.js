@@ -63,16 +63,10 @@
           var updateMediaAgentOrgId = false;
           mediaAgentOrgIdsArray = response.data.mediaAgentOrgIds;
 
-          // See if org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf(orgId) == -1) {
-            mediaAgentOrgIdsArray.push(orgId);
-            updateMediaAgentOrgId = true;
-          }
-          // See if 'squared' org id is already mapped to user org id
-          if (mediaAgentOrgIdsArray.indexOf('squared') == -1) {
-            mediaAgentOrgIdsArray.push('squared');
-            updateMediaAgentOrgId = true;
-          }
+          // Irrespective of response in get we are doing put now
+          mediaAgentOrgIdsArray.push(orgId);
+          updateMediaAgentOrgId = true;
+          mediaAgentOrgIdsArray.push('squared');
 
           if (updateMediaAgentOrgId) {
             addUserIdentityToMediaAgentOrgMapping(mediaAgentOrgIdsArray);
@@ -89,7 +83,10 @@
     };
 
     var addUserIdentityToMediaAgentOrgMapping = function (mediaAgentOrgIdsArray) {
-      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
+      setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
+        function success(response) {
+          logUserIdentityOrgToMediaAgentOrgMapping(response, 'Calliope Auth added successfully');
+        },
         function error() {
           $timeout(function () {
             //Adding a 3 sec timeout here so that on failure this API will be retried.
@@ -97,7 +94,7 @@
             //Hence the tab won’t be closed in the given timeout period.
             setUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).catch(
               function error(errorResponse) {
-                logUserIdentityOrgToMediaAgentOrgMapping(errorResponse);
+                logUserIdentityOrgToMediaAgentOrgMapping(errorResponse, 'Calliope Auth addition failed');
                 Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
               });
           }, 3000);
@@ -145,9 +142,12 @@
               });
           } else {
             deleteUserIdentityOrgToMediaAgentOrgMapping(mediaAgentOrgIdsArray).then(
-              function success() {},
+              function success(response) {
+                logUserIdentityOrgToMediaAgentOrgMapping(response, 'Calliope Auth deleted successfully');
+              },
               function error(errorResponse) {
                 Notification.errorWithTrackingId(errorResponse, 'mediaFusion.mediaMicroserviceFailure');
+                logUserIdentityOrgToMediaAgentOrgMapping(errorResponse, 'Calliope Auth deletion failed');
               });
           }
         });
@@ -199,10 +199,10 @@
       return $http.post(url, payload);
     };
 
-    var logUserIdentityOrgToMediaAgentOrgMapping = function (response) {
+    var logUserIdentityOrgToMediaAgentOrgMapping = function (response, info) {
       var status = response.status;
       var statusText = response.statusText;
-      var message = 'statusCode: ' + status + ', statusText: ' + statusText;
+      var message = 'Message: ' + info + ', statusCode: ' + status + ', statusText: ' + statusText;
       var trackingId = Notification.getTrackingId(response);
       var payload = {
         serviceName: 'Orpheus',

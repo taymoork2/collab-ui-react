@@ -1,71 +1,72 @@
 import { Config } from 'modules/core/config/config';
+import { IToolkitModalService } from 'modules/core/modal';
 import { Notification } from 'modules/core/notifications';
+import { SipAddressModel } from 'modules/core/shared/sip-address/sip-address.model';
+import { SipAddressService } from 'modules/core/shared/sip-address/sip-address.service';
 import { ServiceDescriptorService } from 'modules/hercules/services/service-descriptor.service';
 
 interface ISipForm extends ng.IFormController {
   sipDomainInput: ng.INgModelController;
 }
 
-export class SipDomainSettingController {
+export class SipDomainSettingController implements ng.IComponentController {
   public showSaveButton: boolean;
 
-  public isSubdomainLoading = false;
-  public saving = false;
-  public domainSuffix = '';
-  public isRoomLicensed = false;
-  public isSSAReserved = false;
-  public sipForm = false;
-  public verified = false;
-  public subdomainCount = 0;
   public form: ISipForm;
+  public isLoaded = false;
+  public isSubdomainLoading = false;
+  public isSaving = false;
+  public isRoomLicensed = false;
+  public isDomainReserved = false;
+  public isDomainAvailable = false;
   public messages = {
     invalidSubdomain: this.$translate.instant('firstTimeWizard.subdomainInvalid'),
     maxlength: this.$translate.instant('firstTimeWizard.longSubdomain'),
     required: this.$translate.instant('firstTimeWizard.required'),
     subdomainUnavailable: this.$translate.instant('firstTimeWizard.subdomainUnavailable'),
   };
-  public inputValue = '';
+  public sipHelpLink = 'https://collaborationhelp.cisco.com/article/en-us/DOC-7763';
+  public subdomainCount = 0;
 
-  private currentDisplayName: string;
   private isCsc = false;
+  private isEditMode = false;
+  private sipAddressModel?: SipAddressModel;
+  private sipAddressModelOrig?: SipAddressModel;
 
-  private readonly ACTIVATE_SAVE_BUTTONS: string = 'settings-control-activate-footer';
-  private readonly REMOVE_SAVE_BUTTONS: string = 'settings-control-remove-footer';
-  private readonly SAVE_BROADCAST: string = 'settings-control-save';
-  private readonly CANCEL_BROADCAST: string = 'settings-control-cancel';
-  private readonly WIZARD_BROADCAST: string = 'wizard-enterprise-sip-url-event';
-  private readonly WIZARD_EMIT: string = 'wizard-enterprise-sip-save';
-  private readonly DISMISS_BROADCAST: string = 'DISMISS_SIP_NOTIFICATION';
-  private readonly DISMISS_DISABLE: string = 'wizardNextButtonDisable';
-  private readonly WIZARD_NEXT_LOADING: string = 'wizardNextButtonLoading';
+  private readonly ACTIVATE_SAVE_BUTTONS = 'settings-control-activate-footer';
+  private readonly REMOVE_SAVE_BUTTONS = 'settings-control-remove-footer';
+  private readonly SAVE_BROADCAST = 'settings-control-save';
+  private readonly CANCEL_BROADCAST = 'settings-control-cancel';
+  private readonly WIZARD_BROADCAST = 'wizard-enterprise-sip-url-event';
+  private readonly WIZARD_EMIT = 'wizard-enterprise-sip-save';
+  private readonly DISMISS_BROADCAST = 'DISMISS_SIP_NOTIFICATION';
+  private readonly DISMISS_DISABLE = 'wizardNextButtonDisable';
+  private readonly WIZARD_NEXT_LOADING = 'wizardNextButtonLoading';
 
   /* @ngInject */
   constructor(
     private $element: ng.IRootElementService,
-    private $modal,
+    private $modal: IToolkitModalService,
     private $rootScope: ng.IRootScopeService,
     private $scope: ng.IScope,
     private $timeout: ng.ITimeoutService,
     private $translate: ng.translate.ITranslateService,
-    private $window: ng.IWindowService,
     private Config: Config,
     private Notification: Notification,
     private Orgservice,
     private ServiceDescriptorService: ServiceDescriptorService,
-    private SparkDomainManagementService,
-    private UrlConfig,
+    private SipAddressService: SipAddressService,
   ) {}
 
   public $onInit() {
-    this.$scope.$emit(this.DISMISS_DISABLE, true);
-    this.domainSuffix = this.UrlConfig.getSparkDomainCheckUrl();
+    this.disableWizardButtons();
     this.subdomainCount++;
     this.checkRoomLicense();
 
     const onSaveEventDeregister = this.$scope.$on(this.WIZARD_BROADCAST, (): void => {
-      if (this.inputValue === this.currentDisplayName) {
-        this.$rootScope.$emit(this.WIZARD_EMIT);
-      } else if (this.isSSAReserved) {
+      if (this.subdomain === this.origSubdomain) {
+        this.gotoNextWizardStep();
+      } else if (this.isDomainReserved) {
         this.$timeout(() => this.updateSubdomain());
       } else {
         this.$timeout(() => this.saveSubdomain());
@@ -90,115 +91,179 @@ export class SipDomainSettingController {
     this.loadSubdomains();
   }
 
-  public resetFocus() {
-    this.$timeout(() => { this.$element.find('#editSubdomainLink').focus(); });
+  public resetFocus(): void {
+    this.$timeout(() => this.$element.find('#editSubdomainLink').focus());
   }
 
-  public editSubdomain() {
+  public editSubdomain(): void {
     if (!this.isCsc) {
       this.toggleSipForm();
-      this.$timeout(() => { this.$element.find('#sipDomainInput').focus(); });
+      this.$timeout(() => this.$element.find('#sipDomainInput').focus());
     }
   }
 
-  public emptyOrUnchangedInput(): boolean {
-    return this.inputValue === '' || _.isUndefined(this.inputValue) || _.isNull(this.inputValue) || this.inputValue === this.currentDisplayName;
+  public cancel(): void {
+    this.toggleSipForm();
+    this.resetFocus();
   }
 
-  public notVerified(): void {
-    this.verified = false;
-    this.$scope.$emit(this.DISMISS_DISABLE, true);
-  }
-
-  public openSipHelpWiki() {
-    this.$window.open('https://collaborationhelp.cisco.com/article/en-us/DOC-7763', '_blank');
+  public resetDomainAvailability(): void {
+    this.isDomainAvailable = false;
+    this.resetErrors();
+    this.hideSettingsButtons();
+    this.disableWizardButtons();
   }
 
   public toggleSipForm(): void {
-    this.sipForm = !this.sipForm;
-    this.inputValue = this.currentDisplayName;
-    this.resetForm();
-    this.verified = false;
-    if (this.isSSAReserved) {
-      this.$scope.$emit(this.DISMISS_DISABLE, false);
-      this.$rootScope.$broadcast(this.REMOVE_SAVE_BUTTONS);
-    } else {
-      this.$scope.$emit(this.DISMISS_DISABLE, true);
+    this.isEditMode = !this.isEditMode;
+    if (this.sipAddressModelOrig) {
+      this.sipAddressModel = _.cloneDeep(this.sipAddressModelOrig);
+      this.sipAddressModel.reset();
     }
+    this.resetForm();
+    this.isDomainAvailable = false;
+    if (this.isDomainReserved) {
+      this.enableWizardButtons();
+      this.hideSettingsButtons();
+    } else {
+      this.disableWizardButtons();
+    }
+  }
+
+  public get isEmptyOrUnchangedInput(): boolean {
+    return !this.subdomain || !this.sipAddressModel || !this.sipAddressModel.isChanged();
+  }
+
+  public get showModifyForm(): boolean {
+    return this.isEditMode || !this.isDomainReserved;
+  }
+
+  public get showEditLink(): boolean {
+    return !this.showModifyForm && !this.isCsc;
+  }
+
+  public get callFQDN(): string {
+    return this.sipAddressModel ? this.sipAddressModel.callFQDN : '';
+  }
+
+  public get roomFQDN(): string {
+    return this.sipAddressModel ? this.sipAddressModel.roomFQDN : '';
+  }
+
+  public get subdomain(): string {
+    return this.sipAddressModel ? this.sipAddressModel.subdomain : '';
+  }
+
+  public set subdomain(value) {
+    if (this.sipAddressModel) {
+      this.sipAddressModel.subdomain = value;
+    }
+  }
+
+  public get origSubdomain(): string {
+    return this.sipAddressModelOrig ? this.sipAddressModelOrig.subdomain : '';
   }
 
   public verifyAvailabilityAndValidity(): void {
     this.isSubdomainLoading = true;
-    this.SparkDomainManagementService.checkDomainAvailability(this.inputValue)
+    this.resetDomainAvailability();
+    this.SipAddressService.validateSipAddress(this.sipAddressModel!)
       .then((response) => {
-        this.resetErrors();
-        this.notVerified();
-        if (response.data.isDomainAvailable) {
-          this.verified = true;
-          this.$scope.$emit(this.DISMISS_DISABLE, false);
-          this.$rootScope.$broadcast(this.ACTIVATE_SAVE_BUTTONS);
-        } else if (!response.data.isDomainAvailable && this.form) {
+        this.sipAddressModel = response.model;
+        if (response.isDomainAvailable) {
+          this.isDomainAvailable = true;
+          this.enableWizardButtons();
+          this.showSettingsButtons();
+        } else if (response.isDomainInvalid && this.form) {
+          this.form.sipDomainInput.$setValidity('invalidSubdomain', false);
+        } else if (!response.isDomainAvailable && this.form) {
           this.form.sipDomainInput.$setValidity('subdomainUnavailable', false);
         }
       })
       .catch((response) => {
-        this.notVerified();
-        if (response.status === 400) {
-          this.resetErrors();
-          this.form.sipDomainInput.$setValidity('invalidSubdomain', false);
-        } else {
-          this.errorResponse(response);
-        }
+        this.errorResponse(response);
       })
       .finally(() => {
         this.isSubdomainLoading = false;
       });
   }
 
+  private showSettingsButtons(): void {
+    this.$scope.$emit(this.ACTIVATE_SAVE_BUTTONS);
+  }
+
+  private hideSettingsButtons(): void {
+    this.$scope.$emit(this.REMOVE_SAVE_BUTTONS);
+  }
+
+  private disableWizardButtons(shouldDisable = true): void {
+    this.$scope.$emit(this.DISMISS_DISABLE, shouldDisable);
+  }
+
+  private enableWizardButtons(): void {
+    this.disableWizardButtons(false);
+  }
+
+  private dismissOverviewNotification(): void {
+    this.$rootScope.$broadcast(this.DISMISS_BROADCAST);
+  }
+
+  private setWizardButtonLoading(isLoading: boolean): void {
+    this.$scope.$emit(this.WIZARD_NEXT_LOADING, isLoading);
+  }
+
+  private gotoNextWizardStep(): void {
+    this.$rootScope.$emit(this.WIZARD_EMIT);
+  }
+
+  private setIsSaving(isSaving: boolean): void {
+    this.isSaving = isSaving;
+    this.setWizardButtonLoading(isSaving);
+  }
+
   private saveSubdomain(): void {
-    this.saving = true;
-    this.$scope.$emit(this.WIZARD_NEXT_LOADING, true);
-    this.SparkDomainManagementService.addSipDomain(this.inputValue).then((response: any): void => {
-      this.verified = false;
-      if (response.data.isDomainReserved) {
-        this.sipForm = false;
-        this.currentDisplayName = this.inputValue;
+    this.setIsSaving(true);
+    this.SipAddressService.saveSipAddress(this.sipAddressModel!).then(response => {
+      this.isDomainAvailable = false;
+      if (response.isDomainReserved) {
         this.resetForm();
-        if (this.isSSAReserved && this.showSaveButton) {
+        this.isDomainAvailable = true;
+        this.isEditMode = false;
+        this.sipAddressModel = response.model;
+        this.sipAddressModelOrig = _.cloneDeep(response.model);
+        if (this.showSaveButton) {
           this.Notification.success('firstTimeWizard.subdomainSaveSuccess');
-          this.$rootScope.$broadcast(this.DISMISS_BROADCAST);
+          this.dismissOverviewNotification();
         }
       } else {
         this.Notification.error('firstTimeWizard.subdomainSaveError');
       }
-      this.saving = false;
     }).catch((response) => {
-      this.saving = false;
       if (response.status === 502) {
         this.Notification.errorWithTrackingId(response, 'firstTimeWizard.subdomainSaveError');
       } else {
         this.errorResponse(response);
       }
     }).finally(() => {
-      this.$scope.$emit(this.WIZARD_NEXT_LOADING, false);
-      this.$rootScope.$emit(this.WIZARD_EMIT);
+      this.setIsSaving(false);
+      this.gotoNextWizardStep();
     });
   }
 
   private updateSubdomain(): void {
-    this.saving = true;
+    this.setIsSaving(true);
     this.$modal.open({
-      template: require('modules/core/settings/sipDomain/updateSipDomainWarning.tpl.html'),
+      template: require('./updateSipDomainWarning.tpl.html'),
       type: 'dialog',
     }).result.then((): void => {
       this.saveSubdomain();
     }).catch((): void => {
-      this.$rootScope.$broadcast(this.ACTIVATE_SAVE_BUTTONS);
-      this.saving = false;
+      this.showSettingsButtons();
+      this.setIsSaving(false);
     });
   }
 
-  private checkRoomLicense() {
+  private checkRoomLicense(): void {
     this.Orgservice.getLicensesUsage().then((response) => {
       this.isRoomLicensed = _.some(response, function (subscription) {
         const licenses = _.get(subscription, 'licenses');
@@ -235,29 +300,25 @@ export class SipDomainSettingController {
     }
   }
 
-  private loadSubdomains() {
-    const params = {
-      basicInfo: true,
-      disableCache: true,
-    };
-    this.Orgservice.getOrg(_.noop, false, params).then((response) => {
-      let displayName = '';
-      const sparkDomainStr = this.UrlConfig.getSparkDomainCheckUrl();
-      const sipCloudDomain = _.get<string>(response.data, 'orgSettings.sipCloudDomain');
-      if (sipCloudDomain) {
-        displayName = sipCloudDomain.replace(sparkDomainStr, '');
-        this.isSSAReserved = true;
-        this.$scope.$emit(this.DISMISS_DISABLE, false);
-      }
-      this.inputValue = displayName;
-      this.currentDisplayName = displayName;
-    }).catch(response => {
-      this.errorResponse(response);
-      this.$scope.$emit(this.DISMISS_DISABLE, true);
-    }).finally(() => {
-      if (this.Config.isE2E()) {
-        this.$scope.$emit(this.DISMISS_DISABLE, false);
-      }
-    });
+  private loadSubdomains(): void {
+    this.SipAddressService.loadSipAddressModel()
+      .then(sipAddressModel => {
+        this.sipAddressModel = sipAddressModel;
+        this.sipAddressModelOrig = _.cloneDeep(sipAddressModel);
+        if (this.subdomain) {
+          this.isDomainReserved = true;
+          this.enableWizardButtons();
+        }
+      })
+      .catch(response => {
+        this.errorResponse(response);
+        this.disableWizardButtons();
+      })
+      .finally(() => {
+        this.isLoaded = true;
+        if (this.Config.isE2E()) {
+          this.enableWizardButtons();
+        }
+      });
   }
 }

@@ -35,6 +35,9 @@
       line-height: initial;
     }
   }
+  .tokenfield.focus {
+    box-shadow: none;
+  }
   .tokenfield .token .close {
     border: none;
     background-color: transparent;

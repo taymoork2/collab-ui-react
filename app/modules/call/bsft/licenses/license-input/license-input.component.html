@@ -1,0 +1,18 @@
+<div ng-form="licenseAllocationForm" class="license-input-form">
+  <label class="sub-section__label"><strong>{{$ctrl.title}}</strong></label>
+  <div class="row">
+    <input
+      cs-input
+      type="number"
+      name="licenseInput"
+      ng-model="$ctrl.licenses"
+      ng-max="$ctrl.availableLicenses"
+      ng-min="0"
+      ng-model-options="{updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+      ng-change="$ctrl.onLicensesChanged()"
+      cs-input-messages="$ctrl.messages"
+      cs-input-group-size="medium-4"
+      required>
+  </div>
+  <span translate="broadCloud.licenseAllocation.remaining" translate-values="{available: $ctrl.availableLicensesCopy, total: $ctrl.totalLicenses}"></span>
+</div>

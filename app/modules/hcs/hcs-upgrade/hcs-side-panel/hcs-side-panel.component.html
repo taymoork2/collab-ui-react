@@ -12,9 +12,6 @@
     <cs-sp-container>
       <cs-sp-section>
         <div class="section-title-row">
-          <span class="section-name">{{$ctrl.cap($ctrl.node.nodeStatus)}}</span>
-        </div>
-        <div class="section-title-row">
           <span class="section-name"><strong translate="hcs.sidePanel.activeVersion"></strong></span>
           <span>{{$ctrl.status.activeVersion}}</span>
         </div>
@@ -30,7 +27,7 @@
         </div>
         <div class="section-title-row">
           <span class="section-name" translate="hcs.sidePanel.spaceAvailable"></span>
-          <span>{{$ctrl.status.freeDiskSpace}} B</span>
+          <span>{{$ctrl.convertBytes($ctrl.status.freeDiskSpace)}}</span>
         </div>
       </cs-sp-section>
       <cs-sp-section>

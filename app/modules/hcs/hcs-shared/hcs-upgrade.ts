@@ -17,6 +17,7 @@ export interface IHcsCluster {
   uuid?: string;
   name: string;
   url?: string;
+  clusterStatus?: string;
   sftpServer?: ISftpServerItem | null;
   nodes?: IHcsNode[] | null;
   customerUuid?: string | null;

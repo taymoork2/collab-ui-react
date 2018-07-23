@@ -1,0 +1,26 @@
+<form name="$ctrl.form" novalidate  ng-if="!$ctrl.loading" class="bsft-site-setup">
+  <div class="container-fluid service-setup-container">
+    <h4 translate="broadCloud.licenseAllocation.title" style="margin-bottom: 1rem;"></h4>
+    <h6 translate="broadCloud.licenseAllocation.desc" style="margin-bottom: 1rem;"></h6>
+    <div class="row full service-setup" style="margin-bottom: 1rem;">
+      <license-input
+        ng-if="$ctrl.licenses.standard"
+        title="{{'broadCloud.licenseAllocation.standard' | translate}}"
+        site-licenses="$ctrl.site.licenses.standard"
+        available-licenses="$ctrl.licenses.standard.available"
+        total-licenses="$ctrl.licenses.standard.total"
+        on-change-fn="$ctrl.onStandardLicenseChanged(licenses)">
+      </license-input>
+    </div>
+    <div class="row full service-setup">
+      <license-input
+        ng-if="$ctrl.licenses.places"
+        title="{{'broadCloud.licenseAllocation.places' | translate}}"
+        site-licenses="$ctrl.site.licenses.places"
+        available-licenses="$ctrl.licenses.places.available"
+        total-licenses="$ctrl.licenses.places.total"
+        on-change-fn="$ctrl.onPlacesLicenseChanged(licenses)">
+      </license-input>
+    </div>
+  </div>
+</form>
