@@ -688,7 +688,7 @@ export class Config {
     ],
   };
 
-  public readonlyViewStates: IReadOnlyViewStates = {
+  public readOnlyViewStates: IReadOnlyViewStates = {
     Provision_Admin: [
       'settings',
     ],

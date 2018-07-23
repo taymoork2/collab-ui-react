@@ -12,7 +12,7 @@
     .name;
 
   /* @ngInject */
-  function ReadonlyInterceptor($q, $injector, $log) {
+  function ReadonlyInterceptor($q, $injector, $log, Config) {
     var allowedList = [
       '/pcs/api/v2/',
       '/pcs/api/v3/',
@@ -58,15 +58,43 @@
     function rejectOnNotRead(config) {
       // injected manually to get around circular dependency problem with $translateProvider
       var Notification = $injector.get('Notification');
-      var $state = $injector.get('$state');
-      var currentState = _.get($state, 'current.name');
-      if (isReadOnly() && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState)) {
+      if (hasSomeReadOnlyRestrictions(config)) {
         Notification.notifyReadOnly(config);
         $log.warn('Intercepting request in read-only mode: ', config);
         return $q.reject(config);
       } else {
         return config;
       }
+    }
+
+    function hasSomeReadOnlyRestrictions(config) {
+      var $state = $injector.get('$state');
+      var currentState = _.get($state, 'current.name');
+
+      return (isReadOnly() || hasReadOnlyViewRestrictions()) && isWriteOp(config.method) && !isInAllowedList(config.url) && !isInAllowedState(currentState);
+    }
+
+    function hasReadOnlyViewRestrictions() {
+      return isReadOnlyStateForRole();
+    }
+
+    function isReadOnlyStateForRole() {
+      var Authinfo = $injector.get('Authinfo');
+      var $state = $injector.get('$state');
+      var currentState = _.get($state, 'current.name');
+
+      // if user has role and currentState in readOnlyViewStates List
+      var roles = Authinfo.getRoles();
+      var readOnlyRoles = _.keys(Config.readOnlyViewStates);
+      var usersRestrictedRoles = _.intersection(roles, readOnlyRoles);
+      if (!_.isEmpty(usersRestrictedRoles)) {
+        //Check if current state is in restricted list for role
+        return _.some(usersRestrictedRoles, function (restrictedRole) {
+          return _.includes(Config.readOnlyViewStates[restrictedRole], currentState);
+        });
+      }
+
+      return false;
     }
 
     function isReadOnly() {
