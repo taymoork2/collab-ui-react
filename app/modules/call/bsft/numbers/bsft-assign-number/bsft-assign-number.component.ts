@@ -1,4 +1,5 @@
 import { FtswConfigService, Site } from 'modules/call/bsft/shared';
+import { BsftOrder, IPortingNumber } from '../../shared';
 
 class BsftAssignNumberCtrl implements ng.IComponentController {
   public isFtsw: boolean;
@@ -7,17 +8,17 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   public onChangeFn: Function;
   public site: Site;
   public messages: any = {};
-  public numberOptions: string[] = ['+12145556666', '+12145556668', '+12145556667', '+12145559999', '+121455599889']; //to-do temp data
+  public numberOptions: string[] = [];
   public currentOptions: string[] = [];
   public loading: boolean;
   public ftsw: boolean;
   public form: ng.IFormController;
+  public bsftOrder: BsftOrder;
   /* @ngInject */
   constructor(
     private $scope: ng.IScope,
     private $translate: ng.translate.ITranslateService,
     private FtswConfigService: FtswConfigService,
-    private $q: ng.IQService,
   ) {
     this.messages = {
       required: this.$translate.instant('common.invalidRequired'),
@@ -28,16 +29,15 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
     if (this.isFtsw) {
       this.$scope.$emit('wizardNextText', 'saveLocation');
     }
-
-    this.currentOptions = _.clone(this.numberOptions);
+    this.numberOptions = [];
 
     const currentSite = this.FtswConfigService.getCurentSite();
     if (currentSite !== undefined) {
       this.site = currentSite;
     }
-    this.loading = true;
-    this.$q.resolve(this.initComponentData()).finally( () => this.loading = false);
 
+    this.initComponentData();
+    this.loading = false;
     if (this.ftsw) {
       this.$scope.$watch(() => {
         return _.get(this.form, '$invalid');
@@ -54,7 +54,21 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   }
 
   private initComponentData() {
-    //todo
+    if (!_.isUndefined(this.site)) {
+      this.bsftOrder = this.FtswConfigService.getOrder(this.site.uuid);
+      const nums: IPortingNumber[] = _.get(this.bsftOrder, 'portedNumbers');
+      if (!_.isEmpty(nums)) {
+        //existing order
+        this.numberOptions = _.map(nums, num => _.get(num.telephoneNumber, 'e164Number'));
+      }
+      if (!_.isUndefined(this.bsftOrder.mainNumber)) {
+        this.mainNumber = _.get(_.get(this.bsftOrder.mainNumber, 'telephoneNumber'), 'e164Number');
+      }
+      if (!_.isUndefined(this.bsftOrder.vmNumber)) {
+        this.vmNumber = _.get(_.get(this.bsftOrder.vmNumber, 'telephoneNumber'), 'e164Number');
+      }
+      this.currentOptions = _.clone(this.numberOptions);
+    }
   }
 
   public onChangeNumber(number): void {
@@ -74,7 +88,9 @@ class BsftAssignNumberCtrl implements ng.IComponentController {
   }
 
   public assignNumberBsftNext() {
-    this.FtswConfigService.addSite(this.site); //move to number assignment when available
+    this.FtswConfigService.addSite(this.site);
+    this.FtswConfigService.assignNumbers(this.site.uuid, this.mainNumber, this.vmNumber);
+    //move to number assignment when available
   }
 }
 
@@ -83,5 +99,7 @@ export class BsftAssignNumberComponent implements ng.IComponentOptions {
   public template = require('./bsft-assign-number.component.html');
   public bindings = {
     ftsw: '<',
+    mainNumber: '<',
+    vmNumber: '<',
   };
 }
