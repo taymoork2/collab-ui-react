@@ -12,6 +12,7 @@ export enum WhiteboardFileShareControlType {
 export enum OrgSetting {
   BLOCK_EXTERNAL_COMMUNICATIONS = 'blockExternalCommunications',
   CLIENT_SECURITY_POLICY = 'clientSecurityPolicy',
+  SIP_CLOUD_DOMAIN = 'sipCloudDomain',
   WHITEBOARD_FILE_SHARE_CONTROL = 'whiteboardFileShareControl',
 }
 

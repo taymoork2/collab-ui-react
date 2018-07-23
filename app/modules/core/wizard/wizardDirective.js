@@ -516,6 +516,9 @@ var Events = require('modules/core/shared/event.constants');
         case 'nextAddNumbers':
           vm.nextText = $translate.instant('broadCloud.wizardButton.nextAddNumbers');
           break;
+        case 'nextAssignNumbers':
+          vm.nextText = $translate.instant('broadCloud.wizardButton.nextAssignNumbers');
+          break;
         case 'saveLocation':
           vm.nextText = $translate.instant('broadCloud.wizardButton.saveLocation');
           break;

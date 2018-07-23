@@ -1,4 +1,4 @@
-import { StringUtilService } from 'modules/core/shared';
+import { StringUtilService } from 'modules/core/shared/string-util/string-util.service';
 
 export interface ICrCheckboxItemState {
   isSelected: boolean;

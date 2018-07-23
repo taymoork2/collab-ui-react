@@ -342,7 +342,7 @@ export class HybridServicesClusterService {
     }
     return _.some(connectors, connector => {
       if (!_.isUndefined(connector.extendedProperties)) {
-        if (connector.extendedProperties.alarms !== 'none') {
+        if (connector.extendedProperties.alarms !== 'none' && connector.maintenanceMode === 'off') {
           return true;
         } else {
           return false;

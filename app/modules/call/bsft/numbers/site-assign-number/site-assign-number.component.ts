@@ -3,17 +3,16 @@ class SiteAssignNumberCtrl implements ng.IComponentController {
   public vmselected: string;
   public onChangeFn: Function;
   public onChangeVmFn: Function;
-  public messages: any = {};
   public numberOptions: string[];
+  public form: ng.IFormController;
+  public placeholder: string;
+
   /* @ngInject */
   constructor(
     private $translate: ng.translate.ITranslateService,
   ) {
-    this.messages = {
-      required: this.$translate.instant('common.invalidRequired'),
-    };
+    this.placeholder = this.$translate.instant('common.selectNumber');
   }
-
   public onNumberChanged(): void {
     this.onChangeFn({
       number: this.selected,

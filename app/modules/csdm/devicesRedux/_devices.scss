@@ -159,6 +159,13 @@
     device-chart {
       flex-grow: 1;
     }
+    .show-alerts-link {
+      display: flex;
+      box-shadow: unset;
+      i {
+        padding: 4px;
+      }
+    }
     .title {
       margin-left: .25rem;
       margin-right: 1rem;

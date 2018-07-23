@@ -5,6 +5,7 @@
       class="btn--none dropdown-toggle"
       ng-click="$event.stopPropagation()"
       ng-class="dropdown-toggle"
+      ng-disabled="{{row.entity.clusterStatus === 'AGENT_OFFLINE' || row.entity.clusterStatus === 'NO_AGENT_RUNNING'}}"
       aria-label="{{::'common.toggleMenu' | translate}}">
       <i class="icon icon-three-dots"></i>
     </button>

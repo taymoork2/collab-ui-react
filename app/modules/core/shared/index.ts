@@ -9,13 +9,13 @@ import orgSettingsModuleName from './org-settings';
 import { RetryingPromiseService } from './retrying-promise.service';
 import runningTaskStatusModuleName from './running-task-status';
 import sectionTitleModuleName from './section-title';
-import { StringUtilService } from './string-util.service';
+import sipAddressModuleName from './sip-address';
+import stringUtilModuleName from './string-util';
 import taskContainerModuleName from './task-container';
 import usageLineModuleName from './usage-line';
 import waitingIntervalModuleName from './waiting-interval';
 
 export { RetryingPromiseService };
-export { StringUtilService };
 
 export default angular
   .module('core.shared', [
@@ -29,10 +29,11 @@ export default angular
     orgSettingsModuleName,
     runningTaskStatusModuleName,
     sectionTitleModuleName,
+    sipAddressModuleName,
+    stringUtilModuleName,
     taskContainerModuleName,
     usageLineModuleName,
     waitingIntervalModuleName,
   ])
   .service('RetryingPromiseService', RetryingPromiseService)
-  .service('StringUtilService', StringUtilService)
   .name;

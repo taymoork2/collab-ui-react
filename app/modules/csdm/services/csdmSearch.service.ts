@@ -16,6 +16,11 @@ interface ISearchRequest {
   sortOrder?: string;
 }
 
+interface ISearchAlertRequest {
+  query: SearchElement;
+  url: string;
+}
+
 export class CsdmSearchService {
   private pendingPromise: Map<Caller, IDeferred<undefined>> = {};
 
@@ -49,6 +54,11 @@ export class CsdmSearchService {
       .catch(response => {
         return this.$q.reject(response);
       });
+  }
+
+  public subscribeToSearch(searchAlertRequest: ISearchAlertRequest): IHttpPromise<string> {
+    const url = this.UrlConfig.getCsdmServiceUrl() + '/organization/' + this.Authinfo.getOrgId() + '/devices/_alert';
+    return this.$http.post<string>(url, searchAlertRequest);
   }
 
   private constructSearchRequestFromQueryString(queryString: string, size: number): ISearchRequest {

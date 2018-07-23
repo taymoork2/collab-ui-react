@@ -26,6 +26,7 @@ export enum OperationObject {
 export class LegalHoldService {
   private adminServiceUrl: string;
   private shouldCancel = false;
+  private retentionUrl: string;
 
   /* @ngInject */
   constructor(
@@ -39,10 +40,11 @@ export class LegalHoldService {
     private Userservice,
   ) {
     this.adminServiceUrl = this.UrlConfig.getAdminServiceUrl();
+    this.retentionUrl = this.UrlConfig.getRetentionUrl();
   }
 
   private getActionUrl(action: Actions, operationObject: OperationObject = OperationObject.MATTER): string {
-    return `https://retention-integration.wbx2.com/retention/api/v1/admin/onhold/${operationObject}?operationType=${action}`;
+    return `${this.retentionUrl}admin/onhold/${operationObject}?operationType=${action}`;
   }
 
   private getUserUrl(userEmailAddress: string): string {

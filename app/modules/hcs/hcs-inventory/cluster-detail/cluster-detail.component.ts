@@ -45,6 +45,8 @@ export class ClusterDetailCtrl implements ng.IComponentController {
   public sftpServersList: ISelectOption[];
   public processing: boolean = false;
   public disableSftpSelect: boolean = false;
+  public disableCustomerSelect: boolean = false;
+  public warningMsgCustomerSelect: string;
 
   private timer: any;
   private timeoutVal: number;
@@ -97,6 +99,10 @@ export class ClusterDetailCtrl implements ng.IComponentController {
     this.HcsUpgradeService.getCluster(this.clusterId).then((cluster: IHcsCluster) => {
       this.clusterDetail = cluster;
       this.clusterName = this.clusterDetail.name;
+      if ((this.clusterDetail.clusterStatus === STATUS_UPGRADE_IN_PROGRESS || cluster.clusterStatus === STATUS_UPGRADE_SCHEDULED)) {
+        this.warningMsgCustomerSelect = this.$translate.instant('hcs.clusterDetail.addCustomerModal.upgradeInProgress');
+        this.disableCustomerSelect = true;
+      }
       this.initSelectedSftpServer();
     })
       .catch((err) => this.Notification.errorWithTrackingId(err, err.data.errors[0].message))

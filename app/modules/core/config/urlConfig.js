@@ -74,12 +74,6 @@
       integration: 'https://identity.webex.com/organization/%s/v1/',
       prod: 'https://identity.webex.com/organization/%s/v1/',
     },
-    SparkDomainManagementUrl: {
-      dev: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      cfe: 'https://atlas-loada.ciscospark.com/admin/api/v1/',
-      integration: 'https://atlas-intb.ciscospark.com/admin/api/v1/',
-      prod: 'https://atlas-a.wbx2.com/admin/api/v1/',
-    },
     SparkDomainCheckUrl: {
       dev: '.wbx2.com',
       cfe: '.wbx2.com',
@@ -340,6 +334,12 @@
       cfe: 'https://idbrokerbts.webex.com/idb/idbconfig/',
       integration: 'https://idbroker.webex.com/idb/idbconfig/',
       prod: 'https://idbroker.webex.com/idb/idbconfig/',
+    },
+    RetentionUrl: {
+      dev: 'https://retention-intb.ciscospark.com/retention/api/v1/',
+      cfe: 'https://retention-loada.ciscospark.com/retention/api/v1/',
+      integration: 'https://retention-intb.ciscospark.com/retention/api/v1/',
+      prod: 'https://retention-a.wbx2.com/retention/api/v1/',
     },
     EscalationIntentUrl: 'https://virtual-assistant.produs1.ciscoccservice.com/dialogflow/escalation.json',
     OAuth2Url: {

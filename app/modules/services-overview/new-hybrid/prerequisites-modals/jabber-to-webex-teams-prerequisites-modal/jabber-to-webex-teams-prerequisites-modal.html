@@ -6,5 +6,20 @@
   custom-finish-l10n-label="{{ $ctrl.hasPrereqs ? 'common.finish' : 'common.next' }}"
 >
   <div translate="jabberToWebexTeams.prerequisitesModal.description"></div>
-  TODO (mipark2): implement prerequisites confirmation modal
+  <div class="prereqs-list">
+    <div class="prereqs-list__item">
+      <cr-checkbox-item
+        item-id="$ctrl.preReqIds.VOICE_SERVICE"
+        l10n-label="jabberToWebexTeams.prerequisitesModal.voiceServiceDomainPrereqLabel"
+        on-update="$ctrl.recvUpdate($event)"
+      ></cr-checkbox-item>
+    </div>
+    <div class="prereqs-list__item">
+      <cr-checkbox-item
+        item-id="$ctrl.preReqIds.DNS_SRV_RECORDS"
+        l10n-label="jabberToWebexTeams.prerequisitesModal.dnsSrvRecordsPrereqLabel"
+        on-update="$ctrl.recvUpdate($event)"
+      ></cr-checkbox-item>
+    </div>
+  </div>
 </multi-step-modal>

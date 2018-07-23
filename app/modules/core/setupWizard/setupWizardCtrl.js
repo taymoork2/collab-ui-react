@@ -24,6 +24,7 @@ require('./_setup-wizard.scss');
   var callSettingsSetupLocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/locationSetup.html');
   var callSettingsSetupSiteTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/serviceSetup.html');
   var bsftSettingsSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSetup.html');
+  var bsftLicenseAllocationTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftLicenseAllocation.html');
   var bsftNumberSetupTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftNumber.html');
   var bsftSiteListTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftSiteList.html');
   var bsftAssignNumberTemplatePath = require('ngtemplate-loader?module=Core!./callSettings/bsftAssignNumber.html');
@@ -297,6 +298,11 @@ require('./_setup-wizard.scss');
         template: bsftSettingsSetupTemplatePath,
       };
 
+      var bsftLicenseAllocation = {
+        name: 'bsftLicenseAllocation',
+        template: bsftLicenseAllocationTemplatePath,
+      };
+
       var setupNumberBsft = {
         name: 'setupNumberBsft',
         template: bsftNumberSetupTemplatePath,
@@ -349,10 +355,7 @@ require('./_setup-wizard.scss');
 
           if (supportsHI1776 || Authinfo.isBroadCloud()) {
             if (!response.bsft.rialtoCustomerId) {
-              steps.push(setupBsft);
-              steps.push(setupNumberBsft);
-              steps.push(assignNumberBsft);
-              steps.push(siteListBsft);
+              steps.push(setupBsft, bsftLicenseAllocation, setupNumberBsft, assignNumberBsft, siteListBsft);
             }
           } else {
             if (supportsHI1484) {

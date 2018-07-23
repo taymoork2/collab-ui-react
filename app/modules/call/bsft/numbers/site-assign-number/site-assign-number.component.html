@@ -1,4 +1,4 @@
-<div ng-form="assignMainNumberForm">
+<div ng-form="$ctrl.form">
   <label class="sub-section__label" translate="broadCloud.numbers.locationNumber"></label>
   <div class="row">
     <div class="columns medium-6 collapse-both">
@@ -7,7 +7,7 @@
         ng-model="$ctrl.selected"
         options="$ctrl.numberOptions"
         filter="true"
-        placeholder="::'common.selectNumber' | translate"
+        placeholder="$ctrl.placeholder"
         required="true"
         ng-change="$ctrl.onNumberChanged()">
       </cs-select>
@@ -21,7 +21,7 @@
           ng-model="$ctrl.vmselected"
           options="$ctrl.numberOptions"
           filter="true"
-          placeholder="::'common.selectNumber' | translate"
+          placeholder="$ctrl.placeholder"
           required="true"
           ng-change="$ctrl.onVMNumberChanged()">
         </cs-select>
