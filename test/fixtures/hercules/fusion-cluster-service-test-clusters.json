@@ -21,6 +21,7 @@
     "state": "running",
     "hostname": "thomitte-ex.rd.cisco.com",
     "hostSerial": "070EC9D0",
+    "maintenanceMode": "off",
     "extendedProperties": {
       "alarms": "none",
       "alarmsBadgeCss": "warning",
@@ -37,6 +38,7 @@
     "state": "running",
     "hostname": "thomitte-ex.rd.cisco.com",
     "hostSerial": "070EC9D0",
+    "maintenanceMode": "off",
     "extendedProperties": {
       "alarms": "warning",
       "alarmsBadgeCss": "warning",
